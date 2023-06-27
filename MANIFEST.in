@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include fossu_platform *.css
+recursive-include fossu_platform *.csv
+recursive-include fossu_platform *.html
+recursive-include fossu_platform *.ico
+recursive-include fossu_platform *.js
+recursive-include fossu_platform *.json
+recursive-include fossu_platform *.md
+recursive-include fossu_platform *.png
+recursive-include fossu_platform *.py
+recursive-include fossu_platform *.svg
+recursive-include fossu_platform *.txt
+recursive-exclude fossu_platform *.pyc
