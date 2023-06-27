@@ -10,7 +10,7 @@ For automatic running of linters before you commit:
 
 ```
 $ pip install pre-commit
-$ pre-commit
+$ pre-commit install
 ```
 
 #### License
