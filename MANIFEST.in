@@ -4,15 +4,15 @@ include *.json
 include *.md
 include *.py
 include *.txt
-recursive-include fossu_platform *.css
-recursive-include fossu_platform *.csv
-recursive-include fossu_platform *.html
-recursive-include fossu_platform *.ico
-recursive-include fossu_platform *.js
-recursive-include fossu_platform *.json
-recursive-include fossu_platform *.md
-recursive-include fossu_platform *.png
-recursive-include fossu_platform *.py
-recursive-include fossu_platform *.svg
-recursive-include fossu_platform *.txt
-recursive-exclude fossu_platform *.pyc
+recursive-include fossunited *.css
+recursive-include fossunited *.csv
+recursive-include fossunited *.html
+recursive-include fossunited *.ico
+recursive-include fossunited *.js
+recursive-include fossunited *.json
+recursive-include fossunited *.md
+recursive-include fossunited *.png
+recursive-include fossunited *.py
+recursive-include fossunited *.svg
+recursive-include fossunited *.txt
+recursive-exclude fossunited *.pyc
