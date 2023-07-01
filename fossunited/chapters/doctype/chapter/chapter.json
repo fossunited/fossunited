@@ -1,0 +1,123 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{chapter_name}-{chapter_type}",
+ "creation": "2023-06-30 01:25:06.245665",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "basic_information_section",
+  "chapter_type",
+  "column_break_ou9p",
+  "chapter_name",
+  "location_section",
+  "country",
+  "city",
+  "column_break_uljz",
+  "state",
+  "chapter_members_section",
+  "chapter_lead",
+  "chapter_member"
+ ],
+ "fields": [
+  {
+   "fieldname": "chapter_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Chapter Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chapter_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Chapter Type",
+   "options": "City Chapter\nCollege Chapter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Link",
+   "label": "State",
+   "options": "State",
+   "reqd": 1
+  },
+  {
+   "default": "India",
+   "fieldname": "country",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Country",
+   "options": "Country",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chapter_lead",
+   "fieldtype": "Link",
+   "label": "Chapter Lead",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chapter_member",
+   "fieldtype": "Table",
+   "label": "Chapter Members",
+   "options": "Chapter Member"
+  },
+  {
+   "fieldname": "basic_information_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "column_break_ou9p",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_uljz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "chapter_members_section",
+   "fieldtype": "Section Break",
+   "label": "Member Information"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-01 23:48:01.137469",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "Chapter",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
