@@ -1,0 +1,73 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-06-30 14:53:47.843759",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "volunteer_name",
+  "i_am",
+  "photo",
+  "volunteer_as",
+  "column_break_uknn",
+  "bio"
+ ],
+ "fields": [
+  {
+   "fieldname": "volunteer_name",
+   "fieldtype": "Data",
+   "label": "Name"
+  },
+  {
+   "fieldname": "i_am",
+   "fieldtype": "Data",
+   "label": "I am"
+  },
+  {
+   "fieldname": "photo",
+   "fieldtype": "Attach Image",
+   "label": "Photo"
+  },
+  {
+   "default": "Logistics",
+   "fieldname": "volunteer_as",
+   "fieldtype": "Select",
+   "label": "Volunteer as",
+   "options": "Logistics\nOutreach\nDesigner\nWebsite Management\nCFP Management"
+  },
+  {
+   "fieldname": "column_break_uknn",
+   "fieldtype": "Column Break",
+   "label": "About "
+  },
+  {
+   "fieldname": "bio",
+   "fieldtype": "Text",
+   "label": "Bio"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-06 14:35:12.603040",
+ "modified_by": "Administrator",
+ "module": "Volunteering",
+ "name": "Event Volunteer",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

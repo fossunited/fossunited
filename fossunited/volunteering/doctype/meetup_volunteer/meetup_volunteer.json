@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-06-30 12:08:34.613231",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "volunteer_name",
+  "volunteer_as",
+  "photo",
+  "column_break_eenj",
+  "email",
+  "city_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "volunteer_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name"
+  },
+  {
+   "fieldname": "volunteer_as",
+   "fieldtype": "Select",
+   "label": "Volunteer as",
+   "options": "\nLogistics\nOutreach\nDesigner\nWebsite Management\nCFP Management"
+  },
+  {
+   "fieldname": "photo",
+   "fieldtype": "Attach Image",
+   "label": "Photo"
+  },
+  {
+   "fieldname": "column_break_eenj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  },
+  {
+   "fieldname": "city_name",
+   "fieldtype": "Data",
+   "label": "City Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-06 14:35:03.389925",
+ "modified_by": "Administrator",
+ "module": "Volunteering",
+ "name": "Meetup Volunteer",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
