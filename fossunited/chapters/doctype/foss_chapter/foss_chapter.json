@@ -69,7 +69,7 @@
    "fieldname": "chapter_member",
    "fieldtype": "Table",
    "label": "Chapter Members",
-   "options": "Chapter Member"
+   "options": "FOSS Chapter Member"
   },
   {
    "fieldname": "basic_information_section",
@@ -97,10 +97,10 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-01 23:48:01.137469",
+ "modified": "2023-07-08 14:09:49.772559",
  "modified_by": "Administrator",
  "module": "Chapters",
- "name": "Chapter",
+ "name": "FOSS Chapter",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

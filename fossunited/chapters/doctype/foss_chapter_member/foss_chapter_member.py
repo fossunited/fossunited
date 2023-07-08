@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class Chapter(Document):
+class FOSSChapterMember(Document):
 	pass
