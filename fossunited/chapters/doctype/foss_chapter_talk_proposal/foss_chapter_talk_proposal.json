@@ -1,0 +1,185 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-07-10 01:05:08.149329",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "event_information_section",
+  "chapter",
+  "column_break_je1w",
+  "chapter_event",
+  "personal_information_section",
+  "full_name",
+  "bio",
+  "column_break_qgtq",
+  "email",
+  "phone",
+  "section_break_39bf",
+  "status",
+  "about_talk_section",
+  "talk_title",
+  "talk_references",
+  "is_available_offline",
+  "column_break_qzxz",
+  "talk_abstract",
+  "reference_url",
+  "socials_section",
+  "linkedin",
+  "column_break_uavn",
+  "twitter"
+ ],
+ "fields": [
+  {
+   "fieldname": "personal_information_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Information"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "bio",
+   "fieldtype": "Small Text",
+   "label": "Bio"
+  },
+  {
+   "fieldname": "column_break_qgtq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "phone",
+   "fieldtype": "Data",
+   "label": "Phone",
+   "options": "Phone"
+  },
+  {
+   "fieldname": "section_break_39bf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Under Consideration\nApproved\nFinalised"
+  },
+  {
+   "fieldname": "about_talk_section",
+   "fieldtype": "Section Break",
+   "label": "About Talk"
+  },
+  {
+   "fieldname": "talk_title",
+   "fieldtype": "Data",
+   "label": "Talk Title"
+  },
+  {
+   "fieldname": "talk_references",
+   "fieldtype": "Attach",
+   "label": "Talk References"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_available_offline",
+   "fieldtype": "Check",
+   "label": "Is Available Offline?"
+  },
+  {
+   "fieldname": "column_break_qzxz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "talk_abstract",
+   "fieldtype": "Text",
+   "label": "Talk Abstract"
+  },
+  {
+   "fieldname": "reference_url",
+   "fieldtype": "Data",
+   "label": "Reference URL"
+  },
+  {
+   "fieldname": "socials_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "LinkedIn",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_uavn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "twitter",
+   "fieldtype": "Data",
+   "label": "Twitter",
+   "options": "URL"
+  },
+  {
+   "fieldname": "event_information_section",
+   "fieldtype": "Section Break",
+   "label": "Event Information"
+  },
+  {
+   "fieldname": "chapter",
+   "fieldtype": "Link",
+   "label": "Chapter",
+   "options": "FOSS Chapter",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_je1w",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "chapter_event",
+   "fieldtype": "Link",
+   "label": "Chapter Event",
+   "options": "FOSS Chapter Events",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-07-10 01:08:25.027940",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "FOSS Chapter Talk Proposal",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
