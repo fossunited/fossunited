@@ -64,7 +64,7 @@
    "fieldname": "education_timeline",
    "fieldtype": "Table",
    "label": "Education Timeline",
-   "options": "FOSSU User Education"
+   "options": "FOSS User Profile Education"
   },
   {
    "fieldname": "work_experience_section",
@@ -75,12 +75,12 @@
    "fieldname": "work_timeline",
    "fieldtype": "Table",
    "label": "Work Timeline",
-   "options": "FOSSU User Work Experience"
+   "options": "FOSS User Profile Work Experience"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-10 01:39:39.865055",
+ "modified": "2023-07-10 12:24:21.942456",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS User Profile",

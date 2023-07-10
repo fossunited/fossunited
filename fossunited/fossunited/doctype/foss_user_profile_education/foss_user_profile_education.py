@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FOSSUUserWorkExperience(Document):
+class FOSSUserProfileEducation(Document):
 	pass
