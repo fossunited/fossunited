@@ -6,27 +6,27 @@
  "engine": "InnoDB",
  "field_order": [
   "volunteer_name",
-  "i_am",
+  "identification",
   "photo",
   "volunteer_as",
+  "city",
   "column_break_uknn",
-  "bio"
+  "bio",
+  "email"
  ],
  "fields": [
   {
    "fieldname": "volunteer_name",
    "fieldtype": "Data",
-   "label": "Name"
-  },
-  {
-   "fieldname": "i_am",
-   "fieldtype": "Data",
-   "label": "I am"
+   "in_list_view": 1,
+   "label": "Name",
+   "reqd": 1
   },
   {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
-   "label": "Photo"
+   "label": "Photo",
+   "reqd": 1
   },
   {
    "default": "Logistics",
@@ -42,13 +42,33 @@
   },
   {
    "fieldname": "bio",
-   "fieldtype": "Text",
-   "label": "Bio"
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Short Bio",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "identification",
+   "fieldtype": "Data",
+   "label": "I am"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-06 14:35:12.603040",
+ "modified": "2023-07-13 13:37:21.916257",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",
