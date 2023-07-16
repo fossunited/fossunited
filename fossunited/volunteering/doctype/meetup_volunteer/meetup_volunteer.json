@@ -22,13 +22,13 @@
   {
    "fieldname": "volunteer_as",
    "fieldtype": "Select",
-   "label": "Volunteer as",
+   "label": "Volunteer for",
    "options": "\nLogistics\nOutreach\nDesigner\nWebsite Management\nCFP Management"
   },
   {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
-   "label": "Photo"
+   "label": "Profile Photo"
   },
   {
    "fieldname": "column_break_eenj",
@@ -47,7 +47,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-06 14:35:03.389925",
+ "modified": "2023-07-16 14:32:41.252275",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Meetup Volunteer",

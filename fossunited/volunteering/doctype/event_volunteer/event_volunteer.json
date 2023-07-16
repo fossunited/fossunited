@@ -19,20 +19,20 @@
    "fieldname": "volunteer_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Name",
+   "label": "Full Name",
    "reqd": 1
   },
   {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
-   "label": "Photo",
+   "label": "Profile Photo",
    "reqd": 1
   },
   {
    "default": "Logistics",
    "fieldname": "volunteer_as",
    "fieldtype": "Select",
-   "label": "Volunteer as",
+   "label": "Volunteer for",
    "options": "Logistics\nOutreach\nDesigner\nWebsite Management\nCFP Management"
   },
   {
@@ -68,7 +68,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-13 13:37:21.916257",
+ "modified": "2023-07-16 14:32:23.630488",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",
