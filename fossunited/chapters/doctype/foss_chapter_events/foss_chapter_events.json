@@ -1,0 +1,189 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-07-01 23:55:20.934607",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "event_infomation_section",
+  "event_name",
+  "event_description",
+  "event_location",
+  "column_break_pua4",
+  "status",
+  "event_type",
+  "must_attend",
+  "map_link",
+  "chapter_information_section",
+  "chapter",
+  "chapter_name",
+  "chapter_lead",
+  "event_timeline_section",
+  "event_start_date",
+  "event_end_date",
+  "column_break_ae9v",
+  "event_start_time",
+  "event_end_time",
+  "event_members_section",
+  "event_members"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_infomation_section",
+   "fieldtype": "Section Break",
+   "label": "Event Infomation"
+  },
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pua4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event Type",
+   "options": "FOSS Event Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chapter_information_section",
+   "fieldtype": "Section Break",
+   "label": "Chapter Information"
+  },
+  {
+   "fieldname": "chapter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Chapter",
+   "options": "FOSS Chapter",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "chapter.chapter_name",
+   "fieldname": "chapter_name",
+   "fieldtype": "Data",
+   "label": "Chapter Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "chapter.chapter_lead",
+   "fieldname": "chapter_lead",
+   "fieldtype": "Data",
+   "label": "Chapter Lead"
+  },
+  {
+   "default": "0",
+   "fieldname": "must_attend",
+   "fieldtype": "Check",
+   "label": "Must Attend"
+  },
+  {
+   "fieldname": "map_link",
+   "fieldtype": "Data",
+   "label": "Map Link",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_timeline_section",
+   "fieldtype": "Section Break",
+   "label": "Event Timeline"
+  },
+  {
+   "fieldname": "event_start_date",
+   "fieldtype": "Date",
+   "label": "Event Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_end_date",
+   "fieldtype": "Date",
+   "label": "Event End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ae9v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_start_time",
+   "fieldtype": "Time",
+   "label": "Event Start Time"
+  },
+  {
+   "fieldname": "event_end_time",
+   "fieldtype": "Time",
+   "label": "Event End Time"
+  },
+  {
+   "fieldname": "event_location",
+   "fieldtype": "Data",
+   "label": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_description",
+   "fieldtype": "Data",
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nIn Progress\nCancelled\nApproved\nBeing Reviewed"
+  },
+  {
+   "fieldname": "event_members_section",
+   "fieldtype": "Section Break",
+   "label": "Event Members"
+  },
+  {
+   "fieldname": "event_members",
+   "fieldtype": "Table",
+   "label": "Event Members",
+   "options": "FOSS Chapter Event Member",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Participants",
+   "link_doctype": "FOSS Chapter Event Participants",
+   "link_fieldname": "event_name"
+  }
+ ],
+ "modified": "2023-07-10 00:05:14.766399",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "FOSS Chapter Events",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
