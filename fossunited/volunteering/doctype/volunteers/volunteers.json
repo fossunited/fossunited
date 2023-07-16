@@ -38,7 +38,7 @@
   {
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "email",
+   "label": "Email",
    "reqd": 1
   },
   {
@@ -60,7 +60,7 @@
    "link_fieldname": "github__gitlab_profile"
   }
  ],
- "modified": "2023-07-11 16:38:14.042973",
+ "modified": "2023-07-16 14:31:53.619371",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Volunteers",

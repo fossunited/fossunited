@@ -23,12 +23,12 @@
   {
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Volunteer Name"
+   "label": "Full Name"
   },
   {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
-   "label": "Photo"
+   "label": "Profile Photo"
   },
   {
    "fieldname": "city",
@@ -38,7 +38,7 @@
   {
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "email"
+   "label": "Email"
   },
   {
    "fieldname": "column_break_gcaw",
@@ -63,7 +63,7 @@
    "link_fieldname": "volunteer_name"
   }
  ],
- "modified": "2023-07-06 14:34:19.789781",
+ "modified": "2023-07-16 14:33:04.631211",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "NGO or NPO Volunteer",
