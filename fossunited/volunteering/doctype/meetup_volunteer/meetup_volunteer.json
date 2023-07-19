@@ -41,13 +41,14 @@
   },
   {
    "fieldname": "city_name",
-   "fieldtype": "Data",
-   "label": "City Name"
+   "fieldtype": "Link",
+   "label": "City Name",
+   "options": "City"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-16 14:32:41.252275",
+ "modified": "2023-07-19 20:42:43.165031",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Meetup Volunteer",
