@@ -9,10 +9,20 @@
  "field_order": [
   "basic_information_section",
   "user",
-  "current_city",
+  "username",
+  "bio",
   "column_break_yqk3",
+  "profile_photo",
   "email",
-  "github__gitlab_profile",
+  "current_city",
+  "socials_section",
+  "github_gitlab_link",
+  "linkedin",
+  "column_break_hmr6",
+  "twitter",
+  "instagram",
+  "skills_section",
+  "skills_known",
   "employment_status_section",
   "education_timeline",
   "work_experience_section",
@@ -51,11 +61,6 @@
    "options": "Email"
   },
   {
-   "fieldname": "github__gitlab_profile",
-   "fieldtype": "Data",
-   "label": "Github / GitLab Profile"
-  },
-  {
    "fieldname": "employment_status_section",
    "fieldtype": "Section Break",
    "label": "Education"
@@ -76,11 +81,73 @@
    "fieldtype": "Table",
    "label": "Work Timeline",
    "options": "FOSS User Profile Work Experience"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "bio",
+   "fieldtype": "Small Text",
+   "label": "Bio"
+  },
+  {
+   "fieldname": "socials_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "LinkedIn",
+   "options": "URL"
+  },
+  {
+   "fieldname": "twitter",
+   "fieldtype": "Data",
+   "label": "Twitter",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_hmr6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "github_gitlab_link",
+   "fieldtype": "Data",
+   "label": "Github / GitLab Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "profile_photo",
+   "fieldtype": "Attach Image",
+   "label": "Profile Photo"
+  },
+  {
+   "fieldname": "skills_section",
+   "fieldtype": "Section Break",
+   "label": "Skills"
+  },
+  {
+   "fieldname": "skills_known",
+   "fieldtype": "Table MultiSelect",
+   "label": "Skills Known",
+   "options": "FOSS User Skill Multiselect"
   }
  ],
+ "image_field": "profile_photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-10 12:24:21.942456",
+ "modified": "2023-07-20 14:55:26.886646",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS User Profile",
