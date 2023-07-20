@@ -22,7 +22,7 @@
   "twitter",
   "instagram",
   "skills_section",
-  "skills_known",
+  "skills",
   "employment_status_section",
   "education_timeline",
   "work_experience_section",
@@ -138,16 +138,16 @@
    "label": "Skills"
   },
   {
-   "fieldname": "skills_known",
+   "fieldname": "skills",
    "fieldtype": "Table MultiSelect",
-   "label": "Skills Known",
+   "label": "Skills",
    "options": "FOSS User Skill Multiselect"
   }
  ],
  "image_field": "profile_photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-20 14:55:26.886646",
+ "modified": "2023-07-20 15:28:34.720431",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS User Profile",
