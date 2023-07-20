@@ -8,8 +8,10 @@
  "field_order": [
   "basic_information_section",
   "chapter_type",
-  "column_break_ou9p",
   "chapter_name",
+  "column_break_3gye",
+  "institution_name",
+  "about_chapter",
   "location_section",
   "country",
   "city",
@@ -77,10 +79,6 @@
    "label": "Basic Information"
   },
   {
-   "fieldname": "column_break_ou9p",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "location_section",
    "fieldtype": "Section Break",
    "label": "Location"
@@ -93,11 +91,27 @@
    "fieldname": "chapter_members_section",
    "fieldtype": "Section Break",
    "label": "Member Information"
+  },
+  {
+   "fieldname": "about_chapter",
+   "fieldtype": "Small Text",
+   "label": "About Chapter"
+  },
+  {
+   "depends_on": "eval: doc.chapter_type==='College Chapter'",
+   "fieldname": "institution_name",
+   "fieldtype": "Link",
+   "label": "Institution Name",
+   "options": "Organization"
+  },
+  {
+   "fieldname": "column_break_3gye",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-19 23:51:27.299690",
+ "modified": "2023-07-20 13:33:58.999354",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
