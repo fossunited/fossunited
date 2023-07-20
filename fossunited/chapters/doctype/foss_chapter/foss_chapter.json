@@ -17,6 +17,7 @@
   "city",
   "column_break_uljz",
   "state",
+  "google_map_link",
   "chapter_members_section",
   "chapter_lead",
   "chapter_member"
@@ -107,11 +108,17 @@
   {
    "fieldname": "column_break_3gye",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "google_map_link",
+   "fieldtype": "Data",
+   "label": "Google Map Link",
+   "options": "URL"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-20 13:33:58.999354",
+ "modified": "2023-07-20 14:01:15.394205",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
