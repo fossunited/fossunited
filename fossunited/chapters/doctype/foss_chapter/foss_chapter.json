@@ -65,7 +65,7 @@
    "fieldname": "chapter_lead",
    "fieldtype": "Link",
    "label": "Chapter Lead",
-   "options": "User",
+   "options": "FOSS User Profile",
    "reqd": 1
   },
   {
@@ -118,7 +118,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-20 14:01:15.394205",
+ "modified": "2023-07-20 15:45:45.128999",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
