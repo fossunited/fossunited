@@ -35,7 +35,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Participant",
-   "options": "User",
+   "options": "FOSS User Profile",
    "reqd": 1
   },
   {
@@ -48,7 +48,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-10 00:51:28.113154",
+ "modified": "2023-07-20 15:46:35.411640",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event Participants",
