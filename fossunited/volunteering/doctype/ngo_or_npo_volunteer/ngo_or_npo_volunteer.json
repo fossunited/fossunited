@@ -32,8 +32,9 @@
   },
   {
    "fieldname": "city",
-   "fieldtype": "Data",
-   "label": "City"
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City"
   },
   {
    "fieldname": "email",
@@ -63,7 +64,7 @@
    "link_fieldname": "volunteer_name"
   }
  ],
- "modified": "2023-07-16 14:33:04.631211",
+ "modified": "2023-07-19 20:37:14.528755",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "NGO or NPO Volunteer",
