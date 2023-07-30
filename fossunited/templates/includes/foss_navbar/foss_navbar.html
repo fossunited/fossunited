@@ -1,14 +1,16 @@
-<nav class="navbar navbar-light navbar-expand-lg">
+<nav class="navbar">
 	<div class="container">
-		<a class="navbar-brand" href="{{ url_prefix }}{{ home_page or "/" }}">
-			{%- if brand_html -%}
+		<div class="navbar-brand">
+			<a href="{{ url_prefix }}{{ home_page or " /" }}">
+				{%- if brand_html -%}
 				{{ brand_html }}
-			{%- elif banner_image -%}
+				{%- elif banner_image -%}
 				<img src='{{ banner_image }}'>
-			{%- else -%}
+				{%- else -%}
 				<span>{{ (frappe.get_hooks("brand_html") or [_("Home")])[0] }}</span>
-			{%- endif -%}
-		</a>
+				{%- endif -%}
+			</a>
+		</div>
 		<button class="navbar-toggler" type="button"
 			data-toggle="collapse"
 			data-target="#navbarSupportedContent"
@@ -23,10 +25,13 @@
 		</button>
 
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-			{% include "templates/includes/navbar/navbar_items.html" %}
+			{% include "templates/includes/foss_navbar/foss_navbar_items.html" %}
 		</div>
-		<div class="form-group mb-0 hide" id="language-switcher">
-			<select class="form-control"></select>
+
+		<div class="navbar-login">
+			{% include "templates/includes/foss_navbar/foss_navbar_login.html" %}
 		</div>
+
 	</div>
+
 </nav>

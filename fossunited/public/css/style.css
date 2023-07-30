@@ -1,3 +1,30 @@
-:root{
-    font-size: 18px;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap');
+
+*{
+    font-family: 'Inter', sans-serif;
+}
+
+.navbar-brand > img{
+    min-height: 40px;
+}
+
+.page-title{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2rem;
+    font-weight: 500;
+    color: #000;
+    width: 100%;
+    text-align: center;
+}
+
+.base-placeholder{
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-logo{
+    min-height: 40px;
 }
