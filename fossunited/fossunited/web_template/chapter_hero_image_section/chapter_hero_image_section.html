@@ -12,19 +12,32 @@
         background-image: url("{{ background_pattern }}");
         background-repeat: repeat;
     }
+    .community-image{
+        padding: 0;
+        margin: 0;
+        max-width: 420px;
+        max-height: auto;
+    }
+
+    .community-image > img{
+        width: 100%;
+        height: auto;
+        border-radius: 28px;
+    }
+
     .image-2{
         align-self: end;
     }
 </style>
 
 <div class="background-pattern">
-    <div class="image-1">
+    <div class="community-image image-1">
         <img src="{{ image_1 }}" alt="Image 1">
     </div>
-    <div class="image-2">
+    <div class="community-image image-2">
         <img src="{{ image_2 }}" alt="Image 2">
     </div>
-    <div class="image-3">
+    <div class="community-image image-3">
         <img src="{{ image_3 }}" alt="Image 3">
     </div>
 </div>
