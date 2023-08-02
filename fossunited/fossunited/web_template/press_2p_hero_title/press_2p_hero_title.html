@@ -71,6 +71,25 @@
         width: auto;
     }
 
+    @media screen and (max-width: 768px) {
+        .hero-title{
+            font-size: 1.6rem;
+        }
+        
+        .hero-icon {
+            height: 3rem;
+            width: auto;
+        }
+        .content{
+            font-size: 16px;
+        }
+
+        .button{
+            width: 200px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 
 <div class="hero {{ 'align-center' if align == 'Center' else '' }}">
