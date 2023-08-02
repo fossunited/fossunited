@@ -15,6 +15,59 @@
         font-weight: 400;
         line-height: normal;
     }
+    .hero-buttons{
+        display: flex;
+        flex-direction: row;
+        gap: 24px;
+        justify-content: center;
+    }
+    .hero-buttons>a:hover{
+        color: #eef;
+        opacity: 0.8;
+        text-decoration: none;
+    }
+    .button{
+        display: flex;
+        width: 240px;
+        padding: 8px 16px;
+        justify-content: center;
+        align-items: center;
+        gap: 4px;
+        border-radius: 10px;
+        text-align: center;
+        font-family: Inter;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+    }
+
+    .primary-button{
+        background-color: #4BA306;
+        color: white;
+    }
+
+    .secondary-button{
+        background-color: black;
+        color: white;
+    }
+
+    .btn-icon{
+        height: 16px;
+        width: auto;
+    }
+
+    @media screen and (max-width: 768px) {
+        .content{
+            font-size: 16px;
+        }
+
+        .button{
+            width: 200px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 
 <div div="section-container">
