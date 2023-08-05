@@ -23,9 +23,10 @@
     }
 
     .select-box{
+        box-sizing: border-box;
         display: flex;
         width: 320px;
-        height: 400px;
+        height: max-content;
         padding: 30px;
         flex-direction: column;
         justify-content: start;
@@ -33,13 +34,13 @@
         gap: 20px;
         flex-shrink: 0;
         border-radius: 20px;
-        border: 1px solid #808080;
-        transition: border 0.05s;
+        transition: box-shadow 0.1s;
+        box-shadow: inset 0px 0px 0px 1px #808080;
     }
     
     .select-box:hover{
         text-decoration: none;
-        border: 3px solid #4BA306;
+        box-shadow: inset 0px 0px 0px 3px #4BA306;
     }
 
     .select-icon{
