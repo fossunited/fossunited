@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FOSSChapterMember(Document):
+class FOSSUserSkillMultiselect(Document):
 	pass

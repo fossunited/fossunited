@@ -25,9 +25,10 @@
   },
   {
    "fieldname": "city",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "City",
+   "options": "City",
    "reqd": 1
   },
   {
@@ -60,7 +61,7 @@
    "link_fieldname": "github__gitlab_profile"
   }
  ],
- "modified": "2023-07-16 14:31:53.619371",
+ "modified": "2023-07-19 20:37:01.795829",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Volunteers",
