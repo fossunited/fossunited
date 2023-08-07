@@ -65,8 +65,7 @@
    "fieldname": "chapter_lead",
    "fieldtype": "Link",
    "label": "Chapter Lead",
-   "options": "FOSS User Profile",
-   "reqd": 1
+   "options": "FOSS User Profile"
   },
   {
    "fieldname": "chapter_member",
@@ -94,9 +93,8 @@
    "label": "Member Information"
   },
   {
-   "fieldname": "about_chapter",
-   "fieldtype": "Small Text",
-   "label": "About Chapter"
+   "fieldname": "column_break_3gye",
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval: doc.chapter_type==='College Chapter'",
@@ -106,8 +104,9 @@
    "options": "Organization"
   },
   {
-   "fieldname": "column_break_3gye",
-   "fieldtype": "Column Break"
+   "fieldname": "about_chapter",
+   "fieldtype": "Small Text",
+   "label": "About Chapter"
   },
   {
    "fieldname": "google_map_link",
@@ -118,7 +117,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-20 15:45:45.128999",
+ "modified": "2023-08-05 00:26:18.053868",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
