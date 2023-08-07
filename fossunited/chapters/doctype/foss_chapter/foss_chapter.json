@@ -20,7 +20,9 @@
   "google_map_link",
   "chapter_members_section",
   "chapter_lead",
-  "chapter_member"
+  "chapter_member",
+  "route",
+  "is_published"
  ],
  "fields": [
   {
@@ -113,11 +115,25 @@
    "fieldtype": "Data",
    "label": "Google Map Link",
    "options": "URL"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?",
+   "reqd": 1
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [],
- "modified": "2023-08-05 00:26:18.053868",
+ "modified": "2023-08-07 13:08:58.529994",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
@@ -137,6 +153,7 @@
    "write": 1
   }
  ],
+ "route": "chapters",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
