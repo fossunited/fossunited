@@ -18,6 +18,13 @@
   "column_break_uljz",
   "state",
   "google_map_link",
+  "socials_section",
+  "email",
+  "twitterx",
+  "linkedin",
+  "column_break_fifp",
+  "facebook",
+  "instagram",
   "chapter_members_section",
   "chapter_lead",
   "chapter_member",
@@ -127,13 +134,52 @@
    "fieldtype": "Check",
    "label": "Is Published?",
    "reqd": 1
+  },
+  {
+   "fieldname": "socials_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "LinkedIn",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_fifp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "facebook",
+   "fieldtype": "Data",
+   "label": "Facebook",
+   "options": "URL"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "twitterx",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-08-07 13:08:58.529994",
+ "modified": "2023-08-08 10:43:46.330069",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
