@@ -25,9 +25,10 @@
   "column_break_fifp",
   "facebook",
   "instagram",
+  "mastodon",
   "chapter_members_section",
-  "chapter_lead",
   "chapter_member",
+  "chapter_lead",
   "route",
   "is_published"
  ],
@@ -74,7 +75,8 @@
    "fieldname": "chapter_lead",
    "fieldtype": "Link",
    "label": "Chapter Lead",
-   "options": "FOSS User Profile"
+   "options": "FOSS User Profile",
+   "read_only": 1
   },
   {
    "fieldname": "chapter_member",
@@ -173,13 +175,19 @@
    "fieldtype": "Data",
    "label": "X",
    "options": "URL"
+  },
+  {
+   "fieldname": "mastodon",
+   "fieldtype": "Data",
+   "label": "Mastodon",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-08-08 10:43:46.330069",
+ "modified": "2023-08-10 10:46:31.716053",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",

@@ -1,7 +1,190 @@
-{% extends "templates/web.html" %}
+{% extends "templates/foss_base.html" %}
 
 {% block page_content %}
-<h1>{{ title }}</h1>
-{% endblock %}
+{% if chapter_type == 'City Chapter' %}
+<div class="hero-icon-container">
+    <div class="hero-page-icon">
+        {% include "public/icons/city_chapter_icon.svg" %}
+    </div>
+</div>
+{% else %}
+<div class="hero-icon-container">
+    <div class="hero-page-icon">
+        {% include "public/icons/foss_club_icon.svg" %}
+    </div>
+</div>
+{% endif %}
+<h1 class="page-title">
+    {{ doc.chapter_name }}
+</h1>
 
-<!-- this is a sample default web page template -->
+<!-- Location and Social Media Links -->
+<div class="container-center">
+    <div class="location-social-flex">
+        <div class="location-container">
+            <div class="icon-regular">
+                {% include "public/icons/location-marker.svg" %}
+            </div>
+            <a class="text-md-rg" href="{{ doc.google_map_link }}" target="_blank">
+                {{ doc.city }}, {{ doc.country }}
+            </a>
+        </div>
+        {% if doc.email or doc.twitter or doc.facebook or doc.instagram or doc.linkedin or doc.mastodon %}
+        <div class="social-container">
+            {% if doc.email %}
+            <a href="mailto:{{ doc.email }}" target="_blank" class="social-icon">
+                    {% include "public/icons/email.svg" %}
+            </a>
+            {% endif %}
+            {% if doc.twitterx %}
+            <a href="{{ doc.twitterx }}" target="_blank" class="social-icon">
+                    {% include "public/icons/x.svg" %}
+            </a>
+            {% endif %}
+            {% if doc.facebook %}
+            <a href="{{ doc.facebook }}" target="_blank" class="social-icon">
+                    {% include "public/icons/facebook.svg" %}
+            </a>
+            {% endif %}
+            {% if doc.instagram %}
+            <a href="{{ doc.instagram }}" target="_blank" class="social-icon">
+                    {% include "public/icons/instagram.svg" %}
+            </a>
+            {% endif %}
+            {% if doc.linkedin %}
+            <a href="{{ doc.linkedin }}" target="_blank" class="social-icon">
+                    {% include "public/icons/linkedin.svg" %}
+            </a>
+            {% endif %}
+            {% if doc.mastodon %}
+            <a href="{{ doc.mastodon }}" target="_blank" class="social-icon">
+                    {% include "public/icons/mastodon.svg" %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ToDo: Add options to edit/follow and become team member -->
+
+<!-- About Section -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("About") }}
+        </h3>
+        <p class="about-section">
+            {% if doc.about_chapter %}
+            {{ doc.about_chapter }}
+            {% else %}
+            {{ _("No information available") }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+<!-- Upcoming Events -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Upcoming Events") }}
+        </h3>
+        <div class="events-grid">
+            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location"], filters={"chapter_name":doc.chapter_name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"]}) %}
+            {% if upcoming_events %}
+            {% for event in upcoming_events %}
+                {% if status=='Approved' or 'In Progress' %}
+                <div class="event-container upcoming-event">
+                    {% if event.must_attend == 1 %}
+                        <div class="must-attend">
+                            <div class="must-attend-icon">
+                                {% include "public/icons/pixel-star.svg" %}
+                            </div>
+                            <div class="text-xs green">
+                                {{ _("Must Attend") }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="text-sm">{{ frappe.format_date(event.event_start_date) }}</div>
+                    <div class="text-base semi-bold">{{ event.event_name }}</div>
+                    <div class="text-sm gray">{{ event.event_location }}</div>
+                </div>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if not upcoming_events %}
+        <div class="no-events">
+            {{ _("No upcoming events") }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Past Events -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Past Events") }}
+        </h3>
+        <div class="events-grid">
+            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "event_type", "status", "event_start_date", "event_end_date", "event_location"], filters={"chapter_name":doc.chapter_name, "status":["=", "Concluded"]}) %}
+            {% if past_events %}
+            {% for event in past_events %}
+                <div class="event-container past-event">
+                    <div class="text-sm gray">{{ frappe.format_date(event.event_start_date) }}</div>
+                    <div class="text-base semi-bold gray">{{ event.event_name }}</div>
+                    <div class="text-sm gray">{{ event.event_location }}</div>
+                </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% if not past_events %}
+        <div class="no-events">
+            {{ _("No past events") }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Team -->
+{% if doc.chapter_member %}
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Team") }}
+        </h3>
+        <div class="team-grid">
+            {% for member in doc.chapter_member %}
+                <div class="member-container">
+                    {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.chapter_member, ["full_name", "profile_photo", ]) %}
+                    <div class="profile-image-lg">
+                        {% if profile_photo %}
+                            <img class="grayscale-image" src="{{ profile_photo }}" alt="{{ full_name }}">
+                        {% else %}
+                        <div class="large-avatar">
+                            {% set name_parts = full_name.split(' ') %}
+                            {% set initials = name_parts[0][:1] %}
+                            {% if name_parts|length > 1 %}
+                                {% set initials = initials ~ name_parts[1][:1] %}
+                            {% endif %}
+                            {{ initials|upper }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-xl semibold">
+                        {{ full_name }}
+                    </div>
+                    <div class="text-base">
+                        {{ member.role }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+
+{% endblock %}
