@@ -1,0 +1,114 @@
+{
+ "__islocal": true,
+ "__unsaved": 1,
+ "creation": "2023-08-11 23:37:49.488829",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_1",
+   "fieldtype": "Data",
+   "label": "title 1",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_1",
+   "fieldtype": "Text",
+   "label": "text 1",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_2",
+   "fieldtype": "Data",
+   "label": "title 2",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_2",
+   "fieldtype": "Text",
+   "label": "text 2",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_3",
+   "fieldtype": "Data",
+   "label": "title 3",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_3",
+   "fieldtype": "Text",
+   "label": "text 3",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_4",
+   "fieldtype": "Data",
+   "label": "title 4",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_4",
+   "fieldtype": "Text",
+   "label": "text 4",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_5",
+   "fieldtype": "Data",
+   "label": "title 5",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_5",
+   "fieldtype": "Text",
+   "label": "text 5",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "title_6",
+   "fieldtype": "Data",
+   "label": "title 6",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "text_6",
+   "fieldtype": "Text",
+   "label": "text 6",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2023-08-11 23:37:49.488829",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "FOSS Club - Criteria for Lead",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}
