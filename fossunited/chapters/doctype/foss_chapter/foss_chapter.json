@@ -146,7 +146,8 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "options": "Email"
+   "options": "Email",
+   "reqd": 1
   },
   {
    "fieldname": "linkedin",
@@ -187,7 +188,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-08-10 10:46:31.716053",
+ "modified": "2023-08-12 17:21:34.608841",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
