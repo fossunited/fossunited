@@ -1,0 +1,107 @@
+<style>
+    .support-parent{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .support-grid{
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(320px, 1fr));
+        row-gap: 24px;
+        gap: 40px;
+        justify-items: center;
+    }
+
+    .support-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .title-with-icon{
+        display: flex;
+        gap: 8px;
+    }
+
+    .icon-container{
+        height: 32px;
+        width: auto;
+    }
+
+    .icon-container > svg{
+        width: auto;
+        height: 32px;
+    }
+
+    @media screen and (max-width: 480px){
+        .support-grid{
+            grid-template-columns: repeat(1, minmax(280px, 1fr));
+        }
+    }
+</style>
+
+
+<div class="support-parent">
+    <h2>
+        {{ _("Support from Foss United") }}
+    </h2>
+    <div class="support-grid">
+        <div class="support-container">
+            <div class="title-with-icon">
+                <div class="icon-container">
+                    {% include "public/icons/mic-8bit.svg" %}
+                </div>
+                <h5>
+                    Expert Speakers
+                </h5>
+            </div>
+            <p>
+                Provide experienced speakers for lectures and workshops.
+            </p>
+        </div>
+        <div class="support-container">
+            <div class="title-with-icon">
+                <div class="icon-container">
+                    {% include "public/icons/book-8bit.svg" %}
+                </div>
+                <h5>
+                    Educational Resources
+                </h5>
+            </div>
+            <p>
+                Supply educational material and resources to facilitate learning.
+            </p>
+        </div>
+        <div class="support-container">
+            <div class="title-with-icon">
+                <div class="icon-container">
+                    {% include "public/icons/funding-8bit.svg" %}
+                </div>
+                <h5>
+                    Funding Support
+                </h5>
+            </div>
+            <p>
+                Offer financial aid of up to ₹ 50,000 per club / year to organize events.
+            </p>
+        </div>
+        <div class="support-container">
+            <div class="title-with-icon">
+                <div class="icon-container">
+                    {% include "public/icons/pixel-star.svg" %}
+                </div>
+                <h5>
+                    Mentorship
+                </h5>
+            </div>
+            <p>
+                Provide access to mentors for guidance and assistance in projects.
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<style>
+    .background-pattern{
+        display: flex;
+        justify-content: center;
+        align-items: start;
+        vertical-align: middle;
+        gap: 48px;
+        margin-top: 30px;
+        width: 100%;
+        height: 440px;
+        padding: 32px 24px;
+        background-image: url("{{ background_pattern }}");
+        background-repeat: repeat;
+    }
+    .community-image{
+        padding: 0;
+        margin: 0;
+        max-width: 420px;
+        max-height: auto;
+    }
+
+    .community-image > img{
+        width: 100%;
+        height: auto;
+        border-radius: 28px;
+    }
+
+    .image-2{
+        align-self: end;
+    }
+
+    @media screen and (max-width: 768px){
+        .background-pattern{
+            align-items: center;
+            justify-items: center;
+            height: auto;
+        }
+        .community-image{
+            max-width: 80%;
+            max-height: auto;
+        }
+        .image-1{
+            display: none;
+        }
+        .image-3{
+            display: none;
+        }
+    }
+</style>
+
+<div class="background-pattern">
+    <div class="community-image image-1">
+        <img src="{{ image_1 }}" alt="Image 1">
+    </div>
+    <div class="community-image image-2">
+        <img src="{{ image_2 }}" alt="Image 2">
+    </div>
+    <div class="community-image image-3">
+        <img src="{{ image_3 }}" alt="Image 3">
+    </div>
+</div>

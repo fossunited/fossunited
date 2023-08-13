@@ -1,0 +1,60 @@
+<style>
+    .full-with-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 24px 48px 24px;
+        width: 100%;
+        text-align: center;
+        background: #E8F5E9;
+    }
+
+    .cta-button{
+        display: flex;
+        width: max-content;
+        padding: 8px 24px;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        gap: 4px;
+        border-radius: 10px;
+        text-align: center;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        background-color: #4BA306;
+        color: #FFFFFF;
+    }
+    .cta-button:hover{
+        background-color: #3A7E02;
+        color: #FFFFFF;
+    }
+
+    a:hover{
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+
+    h4{
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        color: #4BA306;
+    }
+</style>
+<div class="full-with-container">
+    <h4>
+        {{ title }}
+    </h4>
+    <h6>
+        {{ subtext }}
+    </h6>
+    <a href="{{ url }}" class="cta-button" >
+        <img src="{{ icon }}" alt="Flag Icon">
+        <div>
+            {{ label }}
+        </div>
+    </a>
+</div>

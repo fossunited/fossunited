@@ -18,9 +18,19 @@
   "column_break_uljz",
   "state",
   "google_map_link",
+  "socials_section",
+  "email",
+  "twitterx",
+  "linkedin",
+  "column_break_fifp",
+  "facebook",
+  "instagram",
+  "mastodon",
   "chapter_members_section",
+  "chapter_member",
   "chapter_lead",
-  "chapter_member"
+  "route",
+  "is_published"
  ],
  "fields": [
   {
@@ -66,7 +76,7 @@
    "fieldtype": "Link",
    "label": "Chapter Lead",
    "options": "FOSS User Profile",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "chapter_member",
@@ -94,9 +104,8 @@
    "label": "Member Information"
   },
   {
-   "fieldname": "about_chapter",
-   "fieldtype": "Small Text",
-   "label": "About Chapter"
+   "fieldname": "column_break_3gye",
+   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval: doc.chapter_type==='College Chapter'",
@@ -106,19 +115,80 @@
    "options": "Organization"
   },
   {
-   "fieldname": "column_break_3gye",
-   "fieldtype": "Column Break"
+   "fieldname": "about_chapter",
+   "fieldtype": "Small Text",
+   "label": "About Chapter"
   },
   {
    "fieldname": "google_map_link",
    "fieldtype": "Data",
    "label": "Google Map Link",
    "options": "URL"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?",
+   "reqd": 1
+  },
+  {
+   "fieldname": "socials_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "LinkedIn",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_fifp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "facebook",
+   "fieldtype": "Data",
+   "label": "Facebook",
+   "options": "URL"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "twitterx",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
+  },
+  {
+   "fieldname": "mastodon",
+   "fieldtype": "Data",
+   "label": "Mastodon",
+   "options": "URL"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [],
- "modified": "2023-07-20 15:45:45.128999",
+ "modified": "2023-08-12 17:21:34.608841",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
@@ -138,6 +208,7 @@
    "write": 1
   }
  ],
+ "route": "chapters",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
