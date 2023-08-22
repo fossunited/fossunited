@@ -131,7 +131,7 @@
    "label": "Route"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?",
@@ -188,7 +188,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-08-12 17:21:34.608841",
+ "modified": "2023-08-16 12:39:43.986168",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
