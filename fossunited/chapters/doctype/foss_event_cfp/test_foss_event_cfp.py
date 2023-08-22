@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestFOSSChapterTalkProposal(FrappeTestCase):
+class TestFOSSEventCFP(FrappeTestCase):
 	pass

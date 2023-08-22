@@ -10,32 +10,47 @@
  "field_order": [
   "chapter_information_section",
   "chapter",
-  "chapter_lead",
   "column_break_tzza",
-  "chapter_name",
   "event_infomation_section",
+  "must_attend",
   "event_name",
-  "event_description",
-  "event_location",
-  "column_break_pua4",
   "status",
   "event_type",
-  "must_attend",
+  "column_break_pua4",
+  "event_banner_image",
+  "event_location",
   "map_link",
+  "cta_section_section",
+  "primary_button_label",
+  "primary_button_url",
+  "column_break_hrox",
+  "secondary_button_label",
+  "secondary_button_url",
   "event_timeline_section",
   "event_start_date",
   "event_end_date",
   "column_break_ae9v",
   "event_start_time",
   "event_end_time",
+  "event_information_section",
+  "event_description",
+  "agenda",
+  "event_sponsors_section",
+  "sponsor_list",
+  "deck_link",
+  "community_partners_section",
+  "community_partners",
+  "volunteers_tab",
   "event_members_section",
-  "event_members"
+  "event_members",
+  "schedule_tab",
+  "event_schedule"
  ],
  "fields": [
   {
    "fieldname": "event_infomation_section",
    "fieldtype": "Section Break",
-   "label": "Event Infomation"
+   "label": "Basic Information"
   },
   {
    "fieldname": "event_name",
@@ -68,19 +83,6 @@
    "label": "Chapter",
    "options": "FOSS Chapter",
    "reqd": 1
-  },
-  {
-   "fetch_from": "chapter.chapter_name",
-   "fieldname": "chapter_name",
-   "fieldtype": "Data",
-   "label": "Chapter Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "chapter.chapter_lead",
-   "fieldname": "chapter_lead",
-   "fieldtype": "Data",
-   "label": "Chapter Lead"
   },
   {
    "default": "0",
@@ -132,7 +134,7 @@
   },
   {
    "fieldname": "event_description",
-   "fieldtype": "Text",
+   "fieldtype": "Text Editor",
    "label": "Description",
    "reqd": 1
   },
@@ -140,12 +142,13 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nBeing Reviewed\nApproved\nIn Progress\nConcluded\nCancelled"
+   "options": "\nBeing Reviewed\nApproved\nIn Progress\nConcluded\nCancelled",
+   "reqd": 1
   },
   {
    "fieldname": "event_members_section",
    "fieldtype": "Section Break",
-   "label": "Event Team Members"
+   "label": "Event Volunteers"
   },
   {
    "fieldname": "event_members",
@@ -156,6 +159,94 @@
   {
    "fieldname": "column_break_tzza",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Event Banner Image"
+  },
+  {
+   "fieldname": "event_information_section",
+   "fieldtype": "Section Break",
+   "label": "Event Information"
+  },
+  {
+   "fieldname": "agenda",
+   "fieldtype": "Text Editor",
+   "label": "Agenda"
+  },
+  {
+   "fieldname": "event_sponsors_section",
+   "fieldtype": "Section Break",
+   "label": "Event Sponsors"
+  },
+  {
+   "fieldname": "sponsor_list",
+   "fieldtype": "Table",
+   "label": "Sponsors",
+   "options": "FOSS Event Sponsors"
+  },
+  {
+   "fieldname": "community_partners_section",
+   "fieldtype": "Section Break",
+   "label": "Community Partners"
+  },
+  {
+   "fieldname": "community_partners",
+   "fieldtype": "Table",
+   "label": "Community Partners",
+   "options": "FOSS Event Sponsors"
+  },
+  {
+   "fieldname": "deck_link",
+   "fieldtype": "Data",
+   "label": "Deck Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "cta_section_section",
+   "fieldtype": "Section Break",
+   "label": "CTA Section"
+  },
+  {
+   "fieldname": "primary_button_label",
+   "fieldtype": "Data",
+   "label": "Primary Button Label"
+  },
+  {
+   "fieldname": "primary_button_url",
+   "fieldtype": "Data",
+   "label": "Primary Button URL"
+  },
+  {
+   "fieldname": "column_break_hrox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "secondary_button_label",
+   "fieldtype": "Data",
+   "label": "Secondary Button Label"
+  },
+  {
+   "fieldname": "secondary_button_url",
+   "fieldtype": "Data",
+   "label": "Secondary Button URL"
+  },
+  {
+   "fieldname": "volunteers_tab",
+   "fieldtype": "Tab Break",
+   "label": "Volunteers"
+  },
+  {
+   "fieldname": "schedule_tab",
+   "fieldtype": "Tab Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "event_schedule",
+   "fieldtype": "Table",
+   "label": "Event Schedule",
+   "options": "FOSS Event Schedule"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -166,7 +257,7 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2023-08-09 19:08:47.870809",
+ "modified": "2023-08-22 10:23:51.510123",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FOSSChapterTalkProposal(Document):
+class FOSSEventSponsors(Document):
 	pass
