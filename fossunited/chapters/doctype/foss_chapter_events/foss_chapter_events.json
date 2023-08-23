@@ -8,6 +8,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "route",
+  "column_break_yozf",
+  "is_published",
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
@@ -247,9 +250,26 @@
    "fieldtype": "Table",
    "label": "Event Schedule",
    "options": "FOSS Event Schedule"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "column_break_yozf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [
   {
    "group": "Participants",
@@ -257,7 +277,7 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2023-08-22 10:23:51.510123",
+ "modified": "2023-08-23 22:15:30.174628",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -277,6 +297,7 @@
    "write": 1
   }
  ],
+ "route": "events",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
