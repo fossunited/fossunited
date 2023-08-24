@@ -80,9 +80,15 @@
                 <div class="icon-reg">
                     {% include "public/icons/location-marker.svg" %}
                 </div>
+                {% if doc.event_location %}
                 <a href="{{doc.map_link}}" class="text-md-rg" target="_blank">
                     {{ doc.event_location }}
                 </a>
+                {% else %}
+                <div class="text-md-rg">
+                    {{ _("To be announced") }}
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

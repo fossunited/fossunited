@@ -292,7 +292,7 @@
 
 .event-banner-image{
     align-self: center;
-    max-width: 720px;
+    width: 720px;    
     border-radius: 2rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
