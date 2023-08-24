@@ -10,6 +10,16 @@
 <h1 class="page-title">
     {{ doc.event_name }}
 </h1>
+
+{% if doc.event_bio %}
+<div class="container-center">
+        <p>
+            {{ doc.event_bio }}
+        </p>
+</div>
+{% endif %}
+
+
 <!-- Social Icons -->
 <div class="container-center">
     <div class="location-social-flex">
@@ -109,21 +119,6 @@
     </div>
 </div>
 
-<!-- Agenda -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Agenda") }}
-        </h3>
-        <p class="about-section">
-            {% if doc.agenda %}
-            {{ doc.agenda }}
-            {% else %}
-            {{ _("No information available") }}
-            {% endif %}
-        </p>
-    </div>
-</div>
 
 <!-- Sponsors -->
 {% if doc.sponsor_list %}

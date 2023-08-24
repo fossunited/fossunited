@@ -36,8 +36,8 @@
   "event_start_time",
   "event_end_time",
   "event_information_section",
+  "event_bio",
   "event_description",
-  "agenda",
   "event_sponsors_section",
   "sponsor_list",
   "deck_link",
@@ -174,11 +174,6 @@
    "label": "Event Information"
   },
   {
-   "fieldname": "agenda",
-   "fieldtype": "Text Editor",
-   "label": "Agenda"
-  },
-  {
    "fieldname": "event_sponsors_section",
    "fieldtype": "Section Break",
    "label": "Event Sponsors"
@@ -265,6 +260,11 @@
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?"
+  },
+  {
+   "fieldname": "event_bio",
+   "fieldtype": "Data",
+   "label": "Short Event Bio"
   }
  ],
  "has_web_view": 1,
@@ -277,7 +277,7 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2023-08-23 22:15:30.174628",
+ "modified": "2023-08-24 10:21:30.469777",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
