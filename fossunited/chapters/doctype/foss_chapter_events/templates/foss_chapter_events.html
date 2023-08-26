@@ -4,20 +4,22 @@
 
 {% block page_content %}
 {% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
-{% if doc.event_banner_image %}
-<img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image">
-{% endif %}
-<h1 class="page-title">
-    {{ doc.event_name }}
-</h1>
-
-{% if doc.event_bio %}
-<div class="container-center">
-        <p>
-            {{ doc.event_bio }}
-        </p>
+<div class="bg-pattern">
+    {% if doc.event_banner_image %}
+    <img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image">
+    {% endif %}
+    <h1 class="page-title">
+        {{ doc.event_name }}
+    </h1>
+    
+    {% if doc.event_bio %}
+    <div class="container-center">
+            <p>
+                {{ doc.event_bio }}
+            </p>
+    </div>
+    {% endif %}
 </div>
-{% endif %}
 
 
 <!-- Social Icons -->

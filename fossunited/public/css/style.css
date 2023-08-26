@@ -338,6 +338,14 @@
     padding: 8px;
 }
 
+.bg-pattern{
+    display: flex;
+    flex-direction: column;
+    background-repeat: repeat-x;
+    background-image: url('/assets/fossunited/images/dots-bg-inverted.png');
+    justify-content: center;
+}
+
 @media screen and (max-width: 1200px){
     .events-grid{
         grid-template-columns: repeat(3, minmax(300px, 1fr));
