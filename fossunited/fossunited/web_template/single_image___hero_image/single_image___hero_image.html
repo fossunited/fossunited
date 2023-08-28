@@ -1,0 +1,28 @@
+<style>
+    .container-center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .container-center img {
+        width: 60%;
+        height: auto;
+    }
+
+    .bg-dotted {
+        background-image: url('/assets/fossunited/images/dots-bg.png');
+        background-repeat: repeat-x;
+        background-position: bottom;
+    }
+
+    @media screen and (max-width: 425px) {
+        .container-center {
+            display: none;
+        }
+    }
+</style>
+
+<div class="container-center bg-dotted">
+    <img src="{{image}}" alt="Hero Image">
+</div>

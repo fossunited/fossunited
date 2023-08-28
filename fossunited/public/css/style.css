@@ -194,6 +194,10 @@
     color: #4BA306;
 }
 
+.event-by-month{
+    display: flex;
+}
+
 .events-grid{
     margin-top: 24px;
     display: grid;
