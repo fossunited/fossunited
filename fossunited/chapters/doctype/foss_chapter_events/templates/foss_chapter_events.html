@@ -1,0 +1,207 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}{{ doc.event_name }}{% endblock %}
+
+{% block page_content %}
+{% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
+<div class="bg-pattern">
+    {% if doc.event_banner_image %}
+    <img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image">
+    {% endif %}
+    <h1 class="page-title">
+        {{ doc.event_name }}
+    </h1>
+    
+    {% if doc.event_bio %}
+    <div class="container-center">
+            <p>
+                {{ doc.event_bio }}
+            </p>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- Social Icons -->
+<div class="container-center">
+    <div class="location-social-flex">
+        {% if chapter.email or chapter.twitter or chapter.facebook or chapter.instagram or chapter.linkedin or
+        chapter.mastodon %}
+        <div class="social-container">
+            {% if chapter.email %}
+            <a href="mailto:{{ doc.email }}" target="_blank" class="social-icon">
+                {% include "public/icons/email.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.twitterx %}
+            <a href="{{ chapter.twitterx }}" target="_blank" class="social-icon">
+                {% include "public/icons/x.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.facebook %}
+            <a href="{{ chapter.facebook }}" target="_blank" class="social-icon">
+                {% include "public/icons/facebook.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.instagram %}
+            <a href="{{ chapter.instagram }}" target="_blank" class="social-icon">
+                {% include "public/icons/instagram.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.linkedin %}
+            <a href="{{ chapter.linkedin }}" target="_blank" class="social-icon">
+                {% include "public/icons/linkedin.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.mastodon %}
+            <a href="{{ chapter.mastodon }}" target="_blank" class="social-icon">
+                {% include "public/icons/mastodon.svg" %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Date and Location -->
+<div class="container-center">
+    <div class="base-container d-flex justify-content-center">
+        <div class="date-location-container">
+            <div class="container-flex-400px">
+                {% include "public/icons/calendar.svg" %}
+                <div class=" d-flex flex-column " >
+                    <div class="event-start-date">
+                        {{ frappe.format_date(doc.event_start_date) }} - {{ doc.event_start_time }}
+                    </div>
+                    <div class="event-end-date">
+                        to {{ frappe.format_date(doc.event_end_date) }} - {{ doc.event_end_time }}
+                    </div>
+                </div>
+            </div>
+            <div class="location-container">
+                <div class="icon-reg">
+                    {% include "public/icons/location-marker.svg" %}
+                </div>
+                {% if doc.event_location %}
+                <a href="{{doc.map_link}}" class="text-md-rg" target="_blank">
+                    {{ doc.event_location }}
+                </a>
+                {% else %}
+                <div class="text-md-rg">
+                    {{ _("To be announced") }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- if doc.primary_button_url or doc.secondary_button_url -%}
+        <div class="hero-buttons">
+            {%- if doc.primary_button_url -%}
+            <a class="button primary-button" href="{{ primary_button_url }}">
+                {{ _(primary_button_label) }}
+            </a>
+            {%- endif -%}
+            {%- if secondary_button_url -%}
+            <a class="button secondary-button" href="{{ secondary_button_url }}">
+                {{ _(secondary_button_label) }}
+            </a>
+            {%- endif -%}
+        </div>
+{%- endif -%}
+
+<!-- Description -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Description") }}
+        </h3>
+        <p class="about-section">
+            {% if doc.event_description %}
+            {{ doc.event_description }}
+            {% else %}
+            {{ _("No information available") }}
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+
+<!-- Sponsors -->
+{% if doc.sponsor_list %}
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Sponsors") }}
+        </h3>
+        <div class="sponsor-grid">
+            {% for sponsor in doc.sponsor_list %}
+                <a href="{{ sponsor.redirect_link }}" class="sponsor-container" target="_blank">
+                    {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                    <img src="{{logo}}" alt="{{ sponsor.organization }}">
+                </a>
+            {% endfor %}
+        </div>
+        <p class="mt-5">
+            Want to sponsor us? Check out <a href="{{ doc.deck_link }}">this deck</a>
+        </p>
+    </div>
+</div>
+{% endif %}
+
+{% if doc.community_partners %}
+<!-- Community Partners -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Community Partners") }}
+        </h3>
+        <div class="sponsor-grid">
+            {% for partner in doc.community_partners %}
+                <a href="{{ partner.redirect_link }}" class="sponsor-container" target="_blank">
+                    {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                    <img src="{{logo}}" alt="{{ partner.organization }}">
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if doc.event_members %}
+<!-- Volunteers -->
+<div class="container-center">
+    <div class="base-container">
+        <h3 class="subtitle">
+            {{ _("Volunteers") }}
+        </h3>
+        <div class="team-grid">
+            {% for member in doc.event_members %}
+                <div class="member-container">
+                    {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.member, ["full_name", "profile_photo", ]) %}
+                    <div class="profile-image-lg">
+                        {% if profile_photo %}
+                            <img class="grayscale-image" src="{{ profile_photo }}" alt="{{ full_name }}">
+                        {% else %}
+                        <div class="large-avatar">
+                            {% set name_parts = full_name.split(' ') %}
+                            {% set initials = name_parts[0][:1] %}
+                            {% if name_parts|length > 1 %}
+                                {% set initials = initials ~ name_parts[1][:1] %}
+                            {% endif %}
+                            {{ initials|upper }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div class="text-xl semibold">
+                        {{ full_name }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

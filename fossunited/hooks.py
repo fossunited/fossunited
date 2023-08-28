@@ -54,10 +54,12 @@ app_license = "AGPL-3.0"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "fossunited.utils.jinja_methods",
-# 	"filters": "fossunited.utils.jinja_filters"
-# }
+jinja = {
+	"methods": [
+		"fossunited.fossunited.utils.get_month",
+	],
+	"filters": [],
+}
 
 # Installation
 # ------------
