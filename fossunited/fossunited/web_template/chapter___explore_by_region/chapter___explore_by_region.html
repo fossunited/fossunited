@@ -134,11 +134,11 @@
         Explore by Region
     </div>
     <div class="chapter-list">
-        {% set states = frappe.get_all("State", fields=["name", "country"]) %}
+        {% set states = frappe.get_all("State", fields=["name", "country"], order_by="state asc") %}
         <div class="state-list">
             {% for state in states %}
-                {% set city_chapters = frappe.get_all("FOSS Chapter", fields=["chapter_name", "chapter_type"] ,filters={"state":state.name, "chapter_type":"City Chapter"}, order_by="chapter_name") %}
-                {% set college_chapters = frappe.get_all("FOSS Chapter", fields=["chapter_name", "chapter_type"] ,filters={"state":state.name, "chapter_type":"College Chapter"}, order_by="chapter_name") %}
+                {% set city_chapters = frappe.get_all("FOSS Chapter", fields=["chapter_name", "chapter_type", "route"] ,filters={"state":state.name, "chapter_type":"City Chapter", "is_published": 1}, order_by="chapter_name") %}
+                {% set college_chapters = frappe.get_all("FOSS Chapter", fields=["chapter_name", "chapter_type", "route"] ,filters={"state":state.name, "chapter_type":"College Chapter", "is_published": 1}, order_by="chapter_name") %}
                 {% if city_chapters or college_chapters %}
                     <div class="state-container">
                     <div class="state-title">
@@ -147,7 +147,7 @@
                     {% if city_chapters %}
                     <div class="chapter-grid">
                             {% for chapter in city_chapters %}
-                            <div class="chapter">
+                            <a href="{{chapter.route}}" class="chapter">
                                 <div class="flag-icon">
                                     {% include "public/icons/chapter_flag_green.svg" %}
                                 </div>
@@ -157,14 +157,14 @@
                                         City Chapter
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                             {% endfor %}
                     </div>
                     {% endif %}
                     {% if college_chapters %}
                     <div class="chapter-grid">
                             {% for chapter in college_chapters %}
-                            <div class="chapter">
+                            <a href="{{chapter.route}}" class="chapter">
                                 <div class="flag-icon">
                                     {% include "public/icons/chapter_flag_blue.svg" %}
                                 </div>
@@ -174,7 +174,7 @@
                                         Student Club
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                             {% endfor %}
                     </div>
                     {% endif %}
