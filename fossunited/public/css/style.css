@@ -33,6 +33,11 @@
     justify-content: center;
 }
 
+.hero-page-icon > svg{
+    width: auto;
+    height: 68px;
+}
+
 .container-center{
     display: flex;
     justify-content: center;
