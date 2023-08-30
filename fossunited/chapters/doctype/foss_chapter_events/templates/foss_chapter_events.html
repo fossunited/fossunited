@@ -4,9 +4,9 @@
 
 {% block page_content %}
 {% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
-<div class="bg-pattern">
+<div class="{% if doc.event_banner_image %} bg-pattern {% else %} content-center mt-lg-8  {% endif %}">
     {% if doc.event_banner_image %}
-    <img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image">
+    <img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image" >
     {% endif %}
     <h1 class="page-title">
         {{ doc.event_name }}
