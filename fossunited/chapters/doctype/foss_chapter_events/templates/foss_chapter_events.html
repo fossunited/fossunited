@@ -71,10 +71,10 @@
                 {% include "public/icons/calendar.svg" %}
                 <div class=" d-flex flex-column " >
                     <div class="event-start-date">
-                        {{ frappe.format_date(doc.event_start_date) }} - {{ doc.event_start_time }}
+                        {{ formatted_datetime_with_tz(doc.event_start_date) }}
                     </div>
                     <div class="event-end-date">
-                        to {{ frappe.format_date(doc.event_end_date) }} - {{ doc.event_end_time }}
+                        to {{ formatted_datetime_with_tz(doc.event_end_date) }}
                     </div>
                 </div>
             </div>

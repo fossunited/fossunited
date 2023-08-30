@@ -31,10 +31,8 @@
   "secondary_button_url",
   "event_timeline_section",
   "event_start_date",
-  "event_end_date",
   "column_break_ae9v",
-  "event_start_time",
-  "event_end_time",
+  "event_end_date",
   "event_information_section",
   "event_bio",
   "event_description",
@@ -106,29 +104,19 @@
   },
   {
    "fieldname": "event_start_date",
-   "fieldtype": "Date",
-   "label": "Event Start Date",
+   "fieldtype": "Datetime",
+   "label": "Event Start Date & Time",
    "reqd": 1
   },
   {
    "fieldname": "event_end_date",
-   "fieldtype": "Date",
-   "label": "Event End Date",
+   "fieldtype": "Datetime",
+   "label": "Event End Date & Time",
    "reqd": 1
   },
   {
    "fieldname": "column_break_ae9v",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "event_start_time",
-   "fieldtype": "Time",
-   "label": "Event Start Time"
-  },
-  {
-   "fieldname": "event_end_time",
-   "fieldtype": "Time",
-   "label": "Event End Time"
   },
   {
    "fieldname": "event_location",
@@ -277,7 +265,7 @@
    "link_fieldname": "event_name"
   }
  ],
- "modified": "2023-08-24 10:21:30.469777",
+ "modified": "2023-08-30 19:31:18.851243",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
