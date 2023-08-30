@@ -91,25 +91,20 @@
             {{ _("Upcoming Events") }}
         </h3>
         <div class="events-grid">
-            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location"], filters={"chapter_name":doc.chapter_name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"]}) %}
+            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=[ "event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter_name":doc.chapter_name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"], "is_published": 1}) %}
             {% if upcoming_events %}
             {% for event in upcoming_events %}
                 {% if status=='Approved' or 'In Progress' %}
-                <div class="event-container upcoming-event">
-                    {% if event.must_attend == 1 %}
-                        <div class="must-attend">
-                            <div class="must-attend-icon">
-                                {% include "public/icons/pixel-star.svg" %}
-                            </div>
-                            <div class="text-xs green">
-                                {{ _("Must Attend") }}
-                            </div>
+                <a href="{{frappe.get_url()}}/{{event.route }}" class="event-container upcoming-event">
+                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail">
+                    <div class="event-container-info">
+                        <div class=" event-container-title">{{ event.event_name }}</div>
+                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
+                        <div class="event-container-date-location">
+                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
                         </div>
-                    {% endif %}
-                    <div class="text-sm">{{ frappe.format_date(event.event_start_date) }}</div>
-                    <div class="text-base semi-bold">{{ event.event_name }}</div>
-                    <div class="text-sm gray">{{ event.event_location }}</div>
-                </div>
+                    </div>
+                </a>
                 {% endif %}
             {% endfor %}
             {% endif %}
@@ -129,14 +124,19 @@
             {{ _("Past Events") }}
         </h3>
         <div class="events-grid">
-            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "event_type", "status", "event_start_date", "event_end_date", "event_location"], filters={"chapter_name":doc.chapter_name, "status":["=", "Concluded"]}) %}
+            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter_name":doc.chapter_name, "status":["=", "Concluded"]}) %}
             {% if past_events %}
             {% for event in past_events %}
-                <div class="event-container past-event">
-                    <div class="text-sm gray">{{ frappe.format_date(event.event_start_date) }}</div>
-                    <div class="text-base semi-bold gray">{{ event.event_name }}</div>
-                    <div class="text-sm gray">{{ event.event_location }}</div>
-                </div>
+                <a href="{{frappe.get_url()}}/{{event.route }}" class="event-container past-event gray">
+                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail grayscale-image">
+                    <div class="event-container-info">
+                        <div class=" event-container-title">{{ event.event_name }}</div>
+                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
+                        <div class="event-container-date-location">
+                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
+                        </div>
+                    </div>
+                </a>
             {% endfor %}
             {% endif %}
         </div>
