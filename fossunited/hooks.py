@@ -57,6 +57,7 @@ app_license = "AGPL-3.0"
 jinja = {
 	"methods": [
 		"fossunited.fossunited.utils.get_month",
+		"fossunited.fossunited.utils.formatted_datetime_with_tz",
 	],
 	"filters": [],
 }
