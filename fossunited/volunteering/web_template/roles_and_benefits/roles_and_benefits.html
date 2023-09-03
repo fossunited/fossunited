@@ -3,17 +3,21 @@
         <h3 class="text-center mx-auto my-auto">Roles of the Volunteer</h3>
         <div class="roles-benefits-grid text-center row">
             <div class="role col-lg-4 col-md-6 col-sm-12">
-                <i class="fa fa-brush icon" aria-hidden="true"></i>
+                <!-- /* Accept only iconic glyphs */  -->
+                <img src="{{icon_design}}" alt="icon_1" />
+                <!-- <i class="fa fa-brush icon" aria-hidden="true"></i> -->
                 <h4>Design</h4>
                 <p>Make social media content</p>
             </div>
             <div class="role col-lg-4 col-md-6 col-sm-12">
-                <i class="fa fa-users icon" aria-hidden="true"></i>
+                <!-- <i class="fa fa-users icon" aria-hidden="true"></i> -->
+                <img src="{{icon_teamwork}}" alt="icon_2" />
                 <h4>Team Work</h4>
                 <p>Collaborate with other volunteers</p>
             </div>
             <div class="role col-lg-4 col-md-6 col-sm-12">
-                <i class="fa fa-globe icon" aria-hidden="true"></i>
+                <!-- <i class="fa fa-globe icon" aria-hidden="true"></i> -->
+                <img src="{{icon_outreach}}" alt="icon_3" />
                 <h4>Outreach</h4>
                 <p>Help with outreaching for venue's</p>
             </div>
@@ -24,13 +28,11 @@
         <div>
             <div class="roles-benefits-grid text-left row">
                 <div class="benefit col-lg-4 col-md-6 col-sm-12">
-                        <h4>Working Together</h4>
+                    <h4>Working Together</h4>
                     <p>You will develop better communication abilities by working in a team.</p>
                 </div>
                 <div class="benefit col-lg-4 col-md-6 col-sm-12">
-                    <div class="">
                         <h4 class="text-left">Decision Making</h4>
-                    </div>
                     <p>Arranging an event/meetup is not as easy as it seems. There are certain moments when you have to take decision.</p>
                 </div>
                 <div class="benefit col-lg-4 col-md-6 col-sm-12">
@@ -50,13 +52,21 @@
         position: relative;
         width: 100%;
     }
-
+    #roles-benefits h3 {
+      position: relative;
+    }
+    #roles-benefits h3::after {
+      content: "";
+      height: 2px;
+      width: 10%;
+      background-color: green; 
+      position: absolute; 
+      bottom: -.5em; 
+      left: 50%; 
+      transform: translate(-50%);
+    }
     h4 {
         margin-top: 0.5em;
-    }
-
-    .item {
-        max-width: 500px;
     }
 
     #roles-benefits {
@@ -70,7 +80,7 @@
     .roles-benefits-grid {
         margin: 2em 0.5em 2em 0.5em;
         justify-content: center
-    }
+    } 
 
     .role {
         border: 1px solid green;
@@ -79,13 +89,18 @@
         margin: 1em;
         border-radius: 2%;
     }
-
+    
+    .role img {
+        max-height: 70px;
+        max-width: 70px;
+    }
     #benefits {
         margin: 2em 0em 2em 0em;
     }
 
     .benefit {
         border: 0px solid green;
+        padding: 1em 1.5em 1em 1.5em;
         max-width: 300px;
         margin: 1em;
         background-color: rgba(234, 234, 234, 0.50);
