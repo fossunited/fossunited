@@ -4,20 +4,26 @@
         <div class="roles-benefits-grid text-center row">
             <div class="role col-lg-4 col-md-6 col-sm-12">
                 <!-- /* Accept only iconic glyphs */  -->
-                <img src="{{icon_design}}" alt="icon_1" />
+                <div class="role-icon">
+                    <img src="{{icon_design}}" alt="icon_1" />
+                </div>
                 <!-- <i class="fa fa-brush icon" aria-hidden="true"></i> -->
                 <h4>Design</h4>
                 <p>Make social media content</p>
             </div>
             <div class="role col-lg-4 col-md-6 col-sm-12">
                 <!-- <i class="fa fa-users icon" aria-hidden="true"></i> -->
-                <img src="{{icon_teamwork}}" alt="icon_2" />
+                <div class="role-icon":>
+                    <img src="{{icon_teamwork}}" alt="icon_2" />
+                </div>
                 <h4>Team Work</h4>
                 <p>Collaborate with other volunteers</p>
             </div>
             <div class="role col-lg-4 col-md-6 col-sm-12">
                 <!-- <i class="fa fa-globe icon" aria-hidden="true"></i> -->
-                <img src="{{icon_outreach}}" alt="icon_3" />
+                <div class="role-icon">
+                    <img src="{{icon_outreach}}" alt="icon_3" />
+                </div>
                 <h4>Outreach</h4>
                 <p>Help with outreaching for venue's</p>
             </div>
@@ -51,6 +57,15 @@
         padding: 0.5em 0em 0em 0em;
         position: relative;
         width: 100%;
+    }
+    .role-icon {
+        max-height: 180px;
+    }
+    .role-icon img {
+        padding-top: 1em;
+        object-fit: contain;
+        max-height: 70px;
+        max-width: 70px
     }
     #roles-benefits h3 {
       position: relative;
@@ -87,11 +102,6 @@
         max-width: 300px;
         margin: 1em;
         border-radius: 2%;
-    }
-    
-    .role img {
-        max-height: 70px;
-        max-width: 70px;
     }
     #benefits {
         margin: 2em 0em 2em 0em;
