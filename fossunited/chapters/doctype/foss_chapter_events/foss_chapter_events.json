@@ -263,9 +263,14 @@
    "group": "Participants",
    "link_doctype": "FOSS Chapter Event Participants",
    "link_fieldname": "event_name"
+  },
+  {
+   "group": "RSVP",
+   "link_doctype": "FOSS Event RSVP Submission",
+   "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-08-30 19:31:18.851243",
+ "modified": "2023-09-05 11:13:40.610374",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",

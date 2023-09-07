@@ -1,0 +1,113 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-09-04 19:50:13.664495",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_qrdc",
+  "linked_rsvp",
+  "event",
+  "column_break_tpys",
+  "submitted_by",
+  "chapter",
+  "standard_questions_section",
+  "im_a",
+  "column_break_bkxf",
+  "confirm_attendance",
+  "section_break_vzwa",
+  "custom_answers"
+ ],
+ "fields": [
+  {
+   "fieldname": "linked_rsvp",
+   "fieldtype": "Link",
+   "label": "Linked RSVP",
+   "options": "FOSS Event RSVP"
+  },
+  {
+   "fieldname": "column_break_tpys",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "submitted_by",
+   "fieldtype": "Link",
+   "label": "Submitted By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_vzwa",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "custom_answers",
+   "fieldtype": "Table",
+   "label": "Custom Answers",
+   "options": "FOSS RSVP Custom Answer"
+  },
+  {
+   "fetch_from": "linked_rsvp.event",
+   "fieldname": "event",
+   "fieldtype": "Data",
+   "label": "Event"
+  },
+  {
+   "fetch_from": "linked_rsvp.chapter",
+   "fieldname": "chapter",
+   "fieldtype": "Data",
+   "label": "Chapter"
+  },
+  {
+   "fieldname": "standard_questions_section",
+   "fieldtype": "Section Break",
+   "label": "Standard Questions"
+  },
+  {
+   "fetch_from": ".",
+   "fieldname": "im_a",
+   "fieldtype": "Select",
+   "label": "I'm a",
+   "options": "\nStudent\nProfessional\nFOSS Enthusiast"
+  },
+  {
+   "fieldname": "column_break_bkxf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "confirm_attendance",
+   "fieldtype": "Check",
+   "label": "Confirm attendance"
+  },
+  {
+   "fieldname": "section_break_qrdc",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-09-05 11:46:32.057907",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "FOSS Event RSVP Submission",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
