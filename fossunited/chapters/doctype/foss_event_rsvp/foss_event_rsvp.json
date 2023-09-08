@@ -17,10 +17,6 @@
   "chapter",
   "rsvp_description_section",
   "rsvp_description",
-  "standard_questions_section",
-  "i_am_a",
-  "column_break_ciss",
-  "confirm_attendance",
   "custom_questions_section",
   "customized_questions"
  ],
@@ -60,27 +56,6 @@
    "options": "FOSS RSVP Custom Questions"
   },
   {
-   "fieldname": "standard_questions_section",
-   "fieldtype": "Section Break",
-   "label": "Standard Questions"
-  },
-  {
-   "fieldname": "i_am_a",
-   "fieldtype": "Select",
-   "label": "I am a",
-   "options": "\nStudent\nProfessional\nFOSS Enthusiast"
-  },
-  {
-   "fieldname": "column_break_ciss",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "confirm_attendance",
-   "fieldtype": "Check",
-   "label": "Confirm Attendance?"
-  },
-  {
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route"
@@ -110,7 +85,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-09-05 12:25:30.401606",
+ "modified": "2023-09-09 00:40:10.134156",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",
