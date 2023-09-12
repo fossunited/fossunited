@@ -6,4 +6,8 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSEventRSVP(WebsiteGenerator):
-	pass
+	def before_save(self):
+		self.set_route()
+
+	def set_route(self):
+		self.route = f"events/{self.event}/rsvp"

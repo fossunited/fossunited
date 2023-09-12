@@ -1,7 +1,230 @@
-{% extends "templates/web.html" %}
+{% extends "templates/foss_base.html" %}
 
-{% block page_content %}
-<h1>{{ title }}</h1>
+{% set user = frappe.get_doc("User", frappe.session.user) %}
+
+{% set event = frappe.get_doc("FOSS Chapter Events", doc.event) %}
+
+{% block title %}
+    {{ _("RSVP - ") }} {{ event.event_name }}
 {% endblock %}
 
-<!-- this is a sample default web page template -->
+
+{% block page_content %}
+<!-- If Already Filled Form -->
+{% if frappe.db.exists({"doctype": "FOSS Event RSVP Submission", "linked_rsvp":doc.name, "submitted_by": frappe.session.user}) %}
+<div class="container-center d-flex flex-column vh-100">
+    <div class="hero-page-icon hero-icon-container">
+        {% include "/public/icons/rocket-8bit.svg" %}
+    </div>
+    <div class="press2p p-3 ">You have RSVP'd for this event!</div>
+    <p> 
+        You have successfully RSVP'd for this event!<br> 
+        Keep an eye on your mailbox for updates 👀
+    </p>
+    <a href="/events/{{doc.event}}" class="button w-25"><strong>Go to event</strong><span><img src="" alt=""></span></a>
+</div>
+{% else %}
+<div class="bg-pattern">
+    <div style="height: 2vh;">
+    </div>
+    <div class="hero-icon-container">
+        <div class="hero-page-icon">
+            {% include "public/icons/rsvp-8bit.svg" %}
+        </div>
+    </div>
+    
+    
+    <h1 class="page-title">
+        {{ event.event_name }} RSVP
+    </h1>
+    
+    <div class="container-center">
+        <div class="base-container d-flex justify-content-center">
+            <div class="date-location-container">
+                <div class="container-flex-400px">
+                    {% include "public/icons/calendar.svg" %}
+                    <div class=" d-flex flex-column " >
+                        <div class="event-start-date">
+                            {{ formatted_datetime_with_tz(event.event_start_date) }}
+                        </div>
+                        <div class="event-end-date">
+                            to {{ formatted_datetime_with_tz(event.event_end_date) }}
+                        </div>
+                    </div>
+                </div>
+                <div class="location-container">
+                    <div class="icon-reg">
+                        {% include "public/icons/location-marker.svg" %}
+                    </div>
+                    {% if event.event_location %}
+                    <a href="{{doc.map_link}}" class="text-md-rg" target="_blank">
+                        {{ event.event_location }}
+                    </a>
+                    {% else %}
+                    <div class="text-md-rg">
+                        {{ _("To be announced") }}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container-center pb-4 px-4">
+        <p>
+            {{ doc.rsvp_description }}
+        </p>
+    </div>
+</div>
+
+
+<div class="container-center pb-4 ">
+    <div class="rsvp-form-container mb-5">
+        <form>
+            <div class="text-lg semi-bold mb-3">
+                Personal Information
+            </div>
+            <div class="mb-4 py-1">
+                <label for="email" class="form-label text-sm">Email</label>
+                <input type="email" class="form-control text-sm rounded-input" id="email" value="{{ user.email }}" readonly>
+            </div>
+            <div class="mb-4 py-1">
+                <label for="name" class="form-label text-sm">Name</label>
+                <input type="text" class="form-control text-sm rounded-input" id="name" value="{{user.full_name}}" readonly>
+            </div>
+            
+            <div class="mb-4 py-1">
+                <label for="role" class="form-label text-sm">I'm a</label>
+                <div>
+                    <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1" id="role">
+                        <option value="Student">Student</option>
+                        <option value="Professional">Professional</option>
+                        <option value="Foss Enthusiast">FOSS Enthusiast</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-divider"></div>
+            {% for question in doc.custom_questions %}
+                {{ CustomQuestion(question) }}
+            {% endfor %}
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input text-sm" id="confirmAttendance" checked required>
+                <label class="form-check-label" for="confirmAttendance">Confirm my attendance for this event!<span style="color: red;">*</span></label>
+            </div>
+        </form>
+        <div class="pt-4 d-flex flex-lg-row-reverse ">
+            <button type="button" class="btn btn-primary w-50 text-sm" id="submitRSVP">Submit RSVP</button>
+        </div>        
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% macro CustomQuestion(question) %}
+    <div class="mb-4 mt-4 py-1">
+        <label for="{{question.question}}" class="form-label text-sm" >{{question.question}}</label>
+        {% if question.type == "Text" %}
+            <input type="text" class="form-control text-sm rounded-input custom-question" data-question="{{question.question}}" id="{{question.question}}">
+        {% elif question.type == "Paragraph" %}
+            <textarea class="form-control text-sm rounded-input custom-question" id="{{question.question}}" data-question="{{question.question}}" rows="3"></textarea>
+        {% elif question.type == "Choice" %}
+            <div>
+                <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1 custom-question" id="{{question}}" data-question="{{question.question}}">
+                    {% for option in question.options.splitlines() %}
+                        <option value="{{option}}">{{option}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% block script %}
+    {{super()}}
+    <script>
+        if ('{{ frappe.session.user }}' == 'Guest') {
+            frappe.msgprint({
+                title: "Login Required", 
+                message: "You need to login to RSVP for this event.",
+                primary_action: {
+                    'label': 'Log in',
+                    action(){
+                        window.location.href = "/login";
+                    }
+                }
+            })
+            setTimeout(() => {
+                window.location.href = "/login";
+            }, 2000)
+        }
+
+        // Get references to the checkbox and submit button
+        let confirmAttendanceCheckbox = document.getElementById("confirmAttendance");
+        let submitButton = document.getElementById("submitRSVP");
+    
+        // Function to update the submit button state based on the checkbox
+        function updateSubmitButtonState() {
+            if (confirmAttendanceCheckbox.checked) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }    
+        // Attach a change event handler to the checkbox
+        confirmAttendanceCheckbox.addEventListener("change", updateSubmitButtonState);    
+        updateSubmitButtonState();
+        
+        // Event handler to the submit button
+        document.getElementById("submitRSVP").addEventListener("click", function () {
+
+            let custom_responses = [];
+            // Loop through custom questions and gather their responses
+            document.querySelectorAll('.custom-question').forEach(function (customQuestionElement) {
+                let question = customQuestionElement.getAttribute("data-question");
+                let response;
+                if (customQuestionElement.type === "text" || customQuestionElement.tagName === "TEXTAREA") {
+                    response = customQuestionElement.value;
+                } else if (customQuestionElement.tagName === "SELECT") {
+                    response = customQuestionElement.options[customQuestionElement.selectedIndex].value;
+                }
+
+                // Add the question-response pair to the custom_responses list
+                custom_responses.push({
+                    question: question,
+                    response: response,
+                });
+            });
+
+            
+            let formData = {
+                doctype: "FOSS Event RSVP Submission",
+                linked_rsvp: "{{ doc.name }}",
+                submitted_by: "{{ frappe.session.user }}",
+                im_a: document.getElementById("role").value,
+                confirm_attendance: document.getElementById("confirmAttendance").checked ? 1 : 0,
+                custom_answers: custom_responses,
+            };
+
+            frappe.call({
+                method: 'frappe.client.insert',
+                args: {
+                    'doc': formData,
+                },
+                callback: (r) =>{
+                    console.log(r)
+                    location.reload();
+                },
+                error: (r) => {
+                    frappe.msgprint({
+                        title: "Error",
+                        message: "There was an error submitting your RSVP. Please try again later.",
+                        indicator: "red",
+                    })
+                },
+            })    
+            
+        });
+    </script>
+    
+{% endblock %}

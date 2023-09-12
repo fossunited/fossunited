@@ -11,6 +11,9 @@
   "route",
   "column_break_vitn",
   "is_published",
+  "section_break_ioxz",
+  "allow_edit",
+  "column_break_rwlt",
   "event_information_section",
   "event",
   "column_break_yrzh",
@@ -18,7 +21,7 @@
   "rsvp_description_section",
   "rsvp_description",
   "custom_questions_section",
-  "customized_questions"
+  "custom_questions"
  ],
  "fields": [
   {
@@ -50,12 +53,6 @@
    "label": "Custom Questions"
   },
   {
-   "fieldname": "customized_questions",
-   "fieldtype": "Table",
-   "label": "Customized Questions",
-   "options": "FOSS RSVP Custom Questions"
-  },
-  {
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route"
@@ -76,16 +73,37 @@
    "label": "RSVP Description"
   },
   {
+   "description": "Please make it center aligned for better layout on website.",
    "fieldname": "rsvp_description",
    "fieldtype": "Text Editor",
    "label": "RSVP Description"
+  },
+  {
+   "fieldname": "custom_questions",
+   "fieldtype": "Table",
+   "label": "Custom Questions",
+   "options": "FOSS RSVP Custom Questions"
+  },
+  {
+   "fieldname": "section_break_ioxz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rwlt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_edit",
+   "fieldtype": "Check",
+   "label": "Allow RSVP Edit"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-09-09 00:40:10.134156",
+ "modified": "2023-09-12 15:09:57.530535",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",

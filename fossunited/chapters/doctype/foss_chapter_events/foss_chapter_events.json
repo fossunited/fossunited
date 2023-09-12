@@ -270,7 +270,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-09-05 11:13:40.610374",
+ "modified": "2023-09-09 01:00:12.618718",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -291,6 +291,7 @@
   }
  ],
  "route": "events",
+ "search_fields": "event_name, chapter",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

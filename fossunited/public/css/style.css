@@ -2,7 +2,7 @@
 
 *{
     font-family: 'Inter', sans-serif;
-    color: #000;
+    color: #4c5a67;
 }
 
 .page-title{
@@ -14,6 +14,18 @@
     text-align: center;
     margin: 0px;
     padding: 16px;
+}
+
+.press2p{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 8px;
+    color: #000;
+}
+
+.foss-green{
+    color: #4BA306;
 }
 
 .base-placeholder{
@@ -415,7 +427,27 @@
     flex-direction: column;
     background-repeat: repeat-x;
     background-image: url('/assets/fossunited/images/dots-bg-inverted.png');
+    background-size: 250px;
     justify-content: center;
+}
+
+.rsvp-form-container{
+    min-width: 800px;
+    padding: 2rem;
+    border: 2px solid #4BA306;
+    border-radius: 2rem;
+}
+
+.custom-select{
+    background-color: #f5f5f5;
+}
+
+.form-divider{
+    height: 4px;
+    width: 100%;
+    border-bottom: #abd888 1px solid;
+    margin-bottom: 4px;
+    margin-top: 4px;
 }
 
 @media screen and (max-width: 1200px){
@@ -437,6 +469,10 @@
     }
 }
 @media screen and (max-width:768px){
+    .page-title{
+        font-size: 1.5rem;
+    }
+
     .location-social-flex{
         display: flex;
         flex-direction: column;
