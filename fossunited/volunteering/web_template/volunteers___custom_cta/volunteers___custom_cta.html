@@ -1,0 +1,73 @@
+<style>
+    #custom-cta {
+        max-height: 50vh;
+    }
+
+    .cta {
+        border-radius: 20px;
+        background-color: rgba(234, 234, 234, 30%) !important;
+        padding: 1em;
+    }
+
+    .type {
+        margin: 1em;
+    }
+
+    .item {
+        font-size: 15px;
+        width: 100px;
+        padding: 0.5em;
+        border: 1px solid #0b8a4f;
+        border-radius: 5px;
+    }
+
+    a {
+        color: #4BA306 !important;
+    }
+
+    /* --- Media Queries-- */
+    @media (max-width: 576px) {
+        #volunteer-type {
+            display: flex;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center;
+        }
+        .item {
+            width: 100px;
+        }
+    }
+</style>
+<div id="custom-cta" class="container">
+    <div class="cta">
+        <div class="cta-headers text-center">
+            <h3>
+                Choose what you will volunteer for
+            </h3>
+            <p>
+                Make sure you checkout the <a href="#">guidelines!</a>
+            </p>
+        </div>
+        <div>
+            <div id="volunteer-type" class="d-flex mx-auto justify-content-center">
+                <div class="type">
+                    <button type="button" class="item btn btn-block d-lg-block">
+                        <a href="#">Meetup</a>
+                    </button>
+                </div>
+                <div class="type">
+                    <button type="button" class="item btn btn-block d-lg-block">
+                        <a href="#">Event</a>
+                    </button>
+                </div>
+                <div class="type">
+                    <button type="button" class="item btn btn-block d-lg-block">
+                        <a href="#">NGO/NPO</a>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
