@@ -187,8 +187,13 @@
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
- "links": [],
- "modified": "2023-08-21 22:46:34.074331",
+ "links": [
+  {
+   "link_doctype": "FOSS Chapter Events",
+   "link_fieldname": "chapter"
+  }
+ ],
+ "modified": "2023-09-05 11:16:05.917014",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
