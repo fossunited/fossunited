@@ -1,0 +1,1 @@
+<h1>Thank you for RSVPing</h1>
