@@ -95,9 +95,11 @@
    "options": "CFP Custom Questions"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [],
- "modified": "2023-09-17 16:42:36.243387",
+ "modified": "2023-09-17 22:24:32.057587",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
@@ -117,6 +119,7 @@
    "write": 1
   }
  ],
+ "route": "cfp/new",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],

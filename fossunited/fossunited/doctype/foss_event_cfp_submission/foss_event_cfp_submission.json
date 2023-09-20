@@ -59,6 +59,8 @@
   {
    "fieldname": "submitted_by",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Submitted By",
    "options": "User"
   },
@@ -66,6 +68,8 @@
    "fetch_from": "linked_cfp.event_name",
    "fieldname": "event_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Event Name"
   },
   {
@@ -137,6 +141,8 @@
   {
    "fieldname": "talk_title",
    "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Talk Title"
   },
   {
@@ -163,6 +169,8 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "Open\nConfirmed\nRejected"
   },
@@ -183,6 +191,8 @@
   {
    "fieldname": "category",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Category",
    "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther"
   },
@@ -205,7 +215,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-17 16:42:09.875017",
+ "modified": "2023-09-21 01:50:29.515882",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -226,7 +236,20 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Light Blue",
+   "title": "Open"
+  },
+  {
+   "color": "Red",
+   "title": "Rejected"
+  },
+  {
+   "color": "Green",
+   "title": "Confirmed"
+  }
+ ],
  "track_changes": 1,
  "track_seen": 1
 }
