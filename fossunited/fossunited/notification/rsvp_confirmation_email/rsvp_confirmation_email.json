@@ -1,0 +1,27 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2023-09-15 13:19:36.044576",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "FOSS Event RSVP Submission",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<h2>Thank you for RSVPing!!</h2>\n\n<p>\nWe have recieved your RSVP for {{ doc.event_name }}!<br>\nStay tuned for updates regarding it.\n</p>\n\n<p>\nRegards,<br>\nTeam {{ doc.chapter }}\n</p>",
+ "modified": "2023-09-17 12:38:11.523043",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "RSVP Confirmation Email",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "submitted_by"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Thank you for confirming you attendance! See you at {{doc.event_name}}"
+}

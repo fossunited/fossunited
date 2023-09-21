@@ -497,7 +497,9 @@
         max-width: 150px;
         max-height: 60px;
     }
-
+    .rsvp-form-container{
+        min-width: 75%;
+    }
 }
 @media screen and (max-width: 425px){
     .events-grid{

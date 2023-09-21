@@ -14,9 +14,12 @@
   "section_break_ioxz",
   "allow_edit",
   "column_break_rwlt",
+  "rsvp_count",
   "event_information_section",
   "event",
+  "max_rsvp_count",
   "column_break_yrzh",
+  "event_name",
   "chapter",
   "rsvp_description_section",
   "rsvp_description",
@@ -97,13 +100,32 @@
    "fieldname": "allow_edit",
    "fieldtype": "Check",
    "label": "Allow RSVP Edit"
+  },
+  {
+   "default": "100",
+   "description": "Default Max RSVP Count is 100",
+   "fieldname": "max_rsvp_count",
+   "fieldtype": "Int",
+   "label": "Max RSVP Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "rsvp_count",
+   "fieldtype": "Int",
+   "label": "RSVP Count"
+  },
+  {
+   "fetch_from": "event.event_name",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "label": "Event Name"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-09-12 15:09:57.530535",
+ "modified": "2023-09-16 21:06:23.329566",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",

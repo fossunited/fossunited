@@ -21,7 +21,7 @@
         You have successfully RSVP'd for this event!<br> 
         Keep an eye on your mailbox for updates 👀
     </p>
-    <a href="/events/{{doc.event}}" class="button w-25"><strong>Go to event</strong><span><img src="" alt=""></span></a>
+    <a href="/events/{{doc.event}}" class="button"><strong>Go to event</strong><span><img src="" alt=""></span></a>
 </div>
 {% else %}
 <div class="bg-pattern">
@@ -99,7 +99,7 @@
                     <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1" id="role">
                         <option value="Student">Student</option>
                         <option value="Professional">Professional</option>
-                        <option value="Foss Enthusiast">FOSS Enthusiast</option>
+                        <option value="FOSS Enthusiast">FOSS Enthusiast</option>
                     </select>
                 </div>
             </div>
@@ -213,7 +213,16 @@
                 },
                 callback: (r) =>{
                     console.log(r)
-                    location.reload();
+                    frappe.call({
+                        method: 'fossunited.fossunited.utils.update_rsvp_count',
+                        args: {
+                            rsvp: "{{ doc.name }}",
+                        },
+                        error: (e) => {
+                            console.log(e)
+                        },
+                    })
+                    window.location.reload();
                 },
                 error: (r) => {
                     frappe.msgprint({
