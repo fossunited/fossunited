@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status == \"Confirmed\"",
+ "creation": "2023-09-21 19:14:48.372770",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "FOSS Event CFP Submission",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "",
+ "modified": "2023-09-21 19:14:48.372770",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "CFP Acceptance!",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "submitted_by"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "Congratulations! You CFP is accepted for {{ doc.event_name }}",
+ "value_changed": "status"
+}
