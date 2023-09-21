@@ -16,6 +16,7 @@
   "event",
   "event_name",
   "personal_information_section",
+  "full_name",
   "email",
   "phone",
   "github",
@@ -211,11 +212,18 @@
    "fieldtype": "Table",
    "label": "Custom Answers",
    "options": "CFP Custom Answers"
+  },
+  {
+   "fetch_from": "submitted_by.full_name",
+   "fetch_if_empty": 1,
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-21 01:50:29.515882",
+ "modified": "2023-09-21 17:44:55.714069",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

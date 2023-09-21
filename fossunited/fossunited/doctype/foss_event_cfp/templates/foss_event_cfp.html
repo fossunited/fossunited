@@ -273,6 +273,7 @@
                 doctype: "FOSS Event CFP Submission",
                 linked_cfp: "{{ doc.name }}",
                 submitted_by: "{{ frappe.session.user }}",
+                name: document.getElementById("name").value,
                 email: document.getElementById("email"),
                 phone: document.getElementById("phone").value,
                 github: document.getElementById("github").value,
