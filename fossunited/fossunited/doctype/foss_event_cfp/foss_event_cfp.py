@@ -7,7 +7,7 @@ from frappe.website.website_generator import WebsiteGenerator
 
 class FOSSEventCFP(WebsiteGenerator):
 	def before_save(self):
-		self.self_route()
+		self.set_route()
 
-	def self_route(self):
+	def set_route(self):
 		self.route = f"events/{self.event}/cfp"
