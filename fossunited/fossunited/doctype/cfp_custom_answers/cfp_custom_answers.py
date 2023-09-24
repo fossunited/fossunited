@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FOSSEventCFP(Document):
+class CFPCustomAnswers(Document):
 	pass
