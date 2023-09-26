@@ -6,6 +6,10 @@ app_email = "developers@frappe.io"
 app_license = "AGPL-3.0"
 # required_apps = []
 
+fixtures = [
+	"Web Page",
+]
+
 # Includes in <head>
 # ------------------
 
