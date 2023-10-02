@@ -79,12 +79,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "chapter_member",
-   "fieldtype": "Table",
-   "label": "Chapter Members",
-   "options": "FOSS Chapter Lead Team Members"
-  },
-  {
    "fieldname": "basic_information_section",
    "fieldtype": "Section Break",
    "label": "Basic Information"
@@ -182,6 +176,12 @@
    "fieldtype": "Data",
    "label": "Mastodon",
    "options": "URL"
+  },
+  {
+   "fieldname": "chapter_member",
+   "fieldtype": "Table",
+   "label": "Chapter Members",
+   "options": "FOSS Chapter Lead Team Members"
   }
  ],
  "has_web_view": 1,
@@ -193,7 +193,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-09-05 11:16:05.917014",
+ "modified": "2023-09-30 16:20:19.953911",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",

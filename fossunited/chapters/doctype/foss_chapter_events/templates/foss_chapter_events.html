@@ -65,7 +65,7 @@
 
 <!-- Date and Location -->
 <div class="container-center">
-    <div class="base-container d-flex justify-content-center">
+    <div class="d-flex justify-content-center">
         <div class="date-location-container">
             <div class="container-flex-400px">
                 {% include "public/icons/calendar.svg" %}
@@ -111,97 +111,220 @@
         </div>
 {%- endif -%}
 
-<!-- Description -->
+<!-- Navbar Section -->
+{% set navbar_items = get_event_navbar_items(doc.chapter, doc.show_speakers, doc.show_rsvp, doc.show_cfp, doc.show_photos, doc.event_schedule) %}
+{% if navbar_items | length > 1 %}
 <div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Description") }}
-        </h3>
-        <p class="about-section">
-            {% if doc.event_description %}
-            {{ doc.event_description }}
-            {% else %}
-            {{ _("No information available") }}
-            {% endif %}
-        </p>
-    </div>
-</div>
-
-
-<!-- Sponsors -->
-{% if doc.sponsor_list %}
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Sponsors") }}
-        </h3>
-        <div class="sponsor-grid">
-            {% for sponsor in doc.sponsor_list %}
-                <a href="{{ sponsor.redirect_link }}" class="sponsor-container" target="_blank">
-                    {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
-                    <img src="{{logo}}" alt="{{ sponsor.organization }}">
-                </a>
-            {% endfor %}
-        </div>
-        <p class="mt-5">
-            Want to sponsor us? Check out <a href="{{ doc.deck_link }}">this deck</a>
-        </p>
-    </div>
+    <div class="navbar-section">
+        {% for key in navbar_items %}
+            <div class="navbar-item">
+                {{ key }}
+            </div>
+        {% endfor %}
+    </div>   
 </div>
 {% endif %}
 
-{% if doc.community_partners %}
-<!-- Community Partners -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Community Partners") }}
-        </h3>
-        <div class="sponsor-grid">
-            {% for partner in doc.community_partners %}
-                <a href="{{ partner.redirect_link }}" class="sponsor-container" target="_blank">
-                    {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
-                    <img src="{{logo}}" alt="{{ partner.organization }}">
-                </a>
-            {% endfor %}
+<div id="event-description" class="content-div">
+    <!-- Description -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Description") }}
+            </h3>
+            <p class="about-section">
+                {% if doc.event_description %}
+                {{ doc.event_description }}
+                {% else %}
+                {{ _("No information available") }}
+                {% endif %}
+            </p>
         </div>
     </div>
-</div>
-{% endif %}
-
-{% if doc.event_members %}
-<!-- Volunteers -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Volunteers") }}
-        </h3>
-        <div class="team-grid">
-            {% for member in doc.event_members %}
-                <div class="member-container">
-                    {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.member, ["full_name", "profile_photo", ]) %}
-                    <div class="profile-image-lg">
+    
+    
+    <!-- Sponsors -->
+    {% if doc.sponsor_list %}
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Sponsors") }}
+            </h3>
+            <div class="sponsor-grid">
+                {% for sponsor in doc.sponsor_list %}
+                    <a href="{{ sponsor.redirect_link }}" class="sponsor-container" target="_blank">
+                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                        <img src="{{logo}}" alt="{{ sponsor.organization }}">
+                    </a>
+                {% endfor %}
+            </div>
+            <p class="mt-5">
+                Want to sponsor us? Check out <a href="{{ doc.deck_link }}">this deck</a>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if doc.community_partners %}
+    <!-- Community Partners -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Community Partners") }}
+            </h3>
+            <div class="sponsor-grid">
+                {% for partner in doc.community_partners %}
+                    <a href="{{ partner.redirect_link }}" class="sponsor-container" target="_blank">
+                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                        <img src="{{logo}}" alt="{{ partner.organization }}">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    {% if doc.event_members %}
+    <!-- Volunteers -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Volunteers") }}
+            </h3>
+            <div class="team-grid">
+                {% for member in doc.event_members %}
+                    <div class="person-container">
+                        {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.member, ["full_name", "profile_photo", ]) %}
                         {% if profile_photo %}
-                            <img class="grayscale-image" src="{{ profile_photo }}" alt="{{ full_name }}">
+                            <img class="grayscale-image profile-image-xs" src="{{ profile_photo }}" alt="{{ full_name }}">
                         {% else %}
-                        <div class="large-avatar">
-                            {% set name_parts = full_name.split(' ') %}
-                            {% set initials = name_parts[0][:1] %}
-                            {% if name_parts|length > 1 %}
-                                {% set initials = initials ~ name_parts[1][:1] %}
-                            {% endif %}
-                            {{ initials|upper }}
-                        </div>
+                            <div class="avatar-sm">
+                                {% set name_parts = full_name.split(' ') %}
+                                {% set initials = name_parts[0][:1] %}
+                                {% if name_parts|length > 1 %}
+                                    {% set initials = initials ~ name_parts[1][:1] %}
+                                {% endif %}
+                                {{ initials|upper }}
+                            </div>
                         {% endif %}
+                        <div class="text-base semi-bold" style="color: #000">
+                            {{ full_name }}
+                        </div>
                     </div>
-                    <div class="text-xl semibold">
-                        {{ full_name }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+
+<div id="speakers" class="content-div">
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Speakers") }}
+            </h3>
+            {% set speakers = frappe.db.get_list('FOSS Event CFP Submission', filters={ 'event': doc.name, 'status': 'Confirmed'}, fields=['submitted_by', 'full_name', 'designation', 'organization']) %}
+            {% if speakers %}
+            <div class="team-grid">
+                {% for speaker in speakers %}
+                    <div class="person-container">
+                        {% set profile_photo = frappe.db.get_value("FOSS User Profile", speaker.submitted_by, [ "profile_photo" ]) %}
+                        {% if profile_photo %}
+                            <img class="grayscale-image profile-image-xs" src="{{ profile_photo }}" alt="{{ full_name }}">
+                        {% else %}
+                            <div class="avatar-sm">
+                                {% set name_parts = speaker.full_name.split(' ') %}
+                                {% set initials = name_parts[0][:1] %}
+                                {% if name_parts|length > 1 %}
+                                    {% set initials = initials ~ name_parts[1][:1] %}
+                                {% endif %}
+                                {{ initials|upper }}
+                            </div>
+                        {% endif %}
+                        <div class="name-designation-flex">
+                            <div class="text-base semi-bold" style="color: #000">
+                                {{ speaker.full_name }}
+                            </div>
+                            <div class="text-sm" style="color: #000">
+                                {{ speaker.designation }}, {{ speaker.organization }}
+                            </div>
+                        </div>
                     </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="container-center empty-state-navbar">
+                <div class="text-xl semi-bold">
+                    {{ _("No speakers announced yet") }}
                 </div>
-            {% endfor %}
+                <div>
+                    {{ _("Stay tuned for updates!") }}
+                </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
-{% endif %}
 
+<div id="schedule" class="content-div">
+    <div class="container-center">
+        Schedule
+    </div>
+</div>
+
+<div id="cfp" class="content-div">
+    <div class="container-center">
+        CFP
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block script %}
+    {{ super() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all the navbar items
+            var navbarItems = document.querySelectorAll(".navbar-item");
+
+            // Get all the content divs
+            var contentDivs = document.querySelectorAll(".content-div");
+
+            // Hide all content divs initially
+            contentDivs.forEach(function (div) {
+                div.style.display = "none";
+            });
+
+            // Add a click event listener to each navbar item
+            navbarItems.forEach(function (navbarItem) {
+                navbarItem.addEventListener("click", function () {
+                    // Get the text of the clicked navbar item
+                    var clickedText = navbarItem.textContent.trim();
+
+                    // Remove 'active' class from all navbar items
+                    navbarItems.forEach(function (item) {
+                        item.classList.remove("active");
+                    });
+
+                    // Add 'active' class to the clicked navbar item
+                    navbarItem.classList.add("active");
+
+                    // Hide all content divs
+                    contentDivs.forEach(function (div) {
+                        div.style.display = "none";
+                    });
+
+                    // Show the content div corresponding to the clicked navbar item
+                    var contentDivId = clickedText.toLowerCase().replace(/\s+/g, "-");
+                    document.getElementById(contentDivId).style.display = "block";
+                });
+            });
+
+            // Make the first navbar item ('Event Description') active by default
+            navbarItems[0].click();
+        });
+    </script>
 {% endblock %}

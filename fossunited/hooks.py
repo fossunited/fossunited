@@ -58,6 +58,8 @@ jinja = {
 	"methods": [
 		"fossunited.fossunited.utils.get_month",
 		"fossunited.fossunited.utils.formatted_datetime_with_tz",
+		"fossunited.fossunited.utils.is_session_user_team_member",
+		"fossunited.fossunited.utils.get_event_navbar_items",
 	],
 	"filters": [],
 }
