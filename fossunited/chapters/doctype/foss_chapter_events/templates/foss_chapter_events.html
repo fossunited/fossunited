@@ -113,7 +113,6 @@
 
 <!-- Navbar Section -->
 {% set navbar_items = get_event_navbar_items(doc.chapter, doc.show_speakers, doc.show_rsvp, doc.show_cfp, doc.show_photos, doc.event_schedule) %}
-{% if navbar_items | length > 1 %}
 <div class="container-center">
     <div class="navbar-section">
         {% for key in navbar_items %}
@@ -123,7 +122,6 @@
         {% endfor %}
     </div>   
 </div>
-{% endif %}
 
 <div id="event-description" class="content-div">
     <!-- Description -->
@@ -218,7 +216,6 @@
     {% endif %}
 </div>
 
-
 <div id="speakers" class="content-div">
     <div class="container-center">
         <div class="base-container">
@@ -270,7 +267,50 @@
 
 <div id="schedule" class="content-div">
     <div class="container-center">
-        Schedule
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Schedule") }}
+            </h3>
+            <!-- Schedule Empty State -->
+            {% if not doc.event_schedule %}
+
+                <!-- If user is a chapter team member, provide option to create a schedule -->
+                {% if is_session_user_team_member(doc.chapter) %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                {{ _("No schedule formed yet.") }}
+                            </div>
+                            <div>
+                                {{ _("As an organizer, create event schedule for better planning and structure of events") }}
+                            </div>
+                        </div>
+                        <a href="" class="button secondary-button text-sm">
+                            {{ _("Create Schedule") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- If user is not a team member -->
+                {% else %}
+                <div class="container-center empty-state-navbar">
+                    <div class="text-xl semi-bold">
+                        {{ _("Schedule Coming Soon!") }}
+                    </div>
+                    <div>
+                        {{ _("Schedule for this event has not been formed yet. But it will be coming soon!") }}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+            <div class="schedule-grid">
+                {% for schedule in doc.event_schedule %}
+                    {{ generateScheduleLayout(schedule) }}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -280,8 +320,57 @@
     </div>
 </div>
 
+<div class="content-div" id="rsvp">
+    <div class="container-center">
+        RSVP
+    </div>
+</div>
+
 {% endblock %}
 
+{% macro generateScheduleLayout(schedule) %}
+    {% if schedule.type == 'Break' %}
+    <div class="schedule-container schedule-break d-flex flex-column ">
+        <div class="text-xl semi-bold" style="color: #015828;">
+            {{ schedule.title }}
+        </div>
+        <div class="icon-text-container">
+            {% include "public/icons/clock-01.svg" %}
+            <div class="semi-bold" style="color: #015828;">
+                {{ format_time_with_zone(schedule.start_time ,'h:mm a') }} - {{ format_time_with_zone(schedule.end_time ,'h:mm a') }}
+            </div>
+        </div>
+    </div>    
+    {% else %}
+    <div class="schedule-container d-flex flex-column ">
+        <div class="date-time-category-flex">
+            <div class="icon-text-container">
+                {% include "public/icons/calendar-07.svg" %}
+                    {{ schedule.scheduled_date.strftime('%b %-d, %Y') }}
+            </div>
+            <div class="icon-text-container">
+                {% include "public/icons/clock-01.svg" %}
+                {{ format_time_with_zone(schedule.start_time ,'h:mm a') }}
+            </div>
+            <div class="icon-text-container">
+                {% include "public/icons/hash-02.svg" %}
+                {{ schedule.type }}
+            </div>
+        </div>
+        <div class="text-xl semi-bold">
+            {{ schedule.title }}
+        </div>                  
+        <div>
+            <div class="text-md-rg text-sm">
+                Speakers
+            </div>
+            <div class="semi-bold">
+            {{ schedule.speaker }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endmacro %}
 
 {% block script %}
     {{ super() }}

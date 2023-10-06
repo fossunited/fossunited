@@ -2,7 +2,7 @@
 
 *{
     font-family: 'Inter', sans-serif;
-    color: #4c5a67;
+    color: #101828;
 }
 
 .page-title{
@@ -86,7 +86,7 @@
 .text-md-rg{
     font-size: 1rem;
     font-weight: 500;
-    color: #000;
+    color: inherit;
     margin: 0px;
     padding: 0px;
 }
@@ -139,6 +139,7 @@
 .button{
     display: flex;
     width: max-content;
+    height: fit-content;
     padding: 8px 16px;
     justify-content: center;
     justify-items: center;
@@ -159,6 +160,12 @@
 
 .secondary-button{
     background-color: black;
+    color: white;
+}
+
+.secondary-button:hover{
+    text-decoration: none;
+    background: var(--gray-800, #383838);
     color: white;
 }
 
@@ -379,7 +386,7 @@
     flex-wrap: wrap;
     margin-top: 16px;
     margin-bottom: 16px;
-    gap: 8px;
+    gap: 4px;
     align-items: center;
     background: var(--gray-100, #F2F4F7);
     padding: 2px;
@@ -399,7 +406,7 @@
 
 .navbar-item.active{
     color: #FFF;
-    background: var(--gray-900, #171717);
+    background: black;
 }
 
 
@@ -528,6 +535,67 @@
     margin-bottom: 4px;
     margin-top: 4px;
 }
+
+.date-time-category-flex{
+    display: flex;
+    gap: 24px;
+    align-items: center;    
+    color: var(--gray-600, #475467);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.schedule-grid{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    gap: 24px;
+    justify-items: center;
+    margin-top: 24px;
+    margin-bottom: 24px;
+}
+
+
+.schedule-container{
+    display: flex;
+    gap: 24px;
+    width: 100%;
+    padding: 24px 32px;
+    border-radius: 16px;
+    background: #F2F4F7;
+    color: #1D2939;
+    margin: 0px 16px;;
+}
+
+.schedule-break{
+    background: #E6F9EF;
+    color: #015828;
+}
+
+.schedule-break svg path{
+    fill: #015828;
+}
+
+.schedule-container-left{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-basis: 66.66%;
+}
+
+.schedule-container-right{
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex-basis: 33.33%;
+}
+
+.icon-text-container{
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    color: #475467;
+}
+
 
 @media screen and (max-width: 1200px){
     .events-grid{
