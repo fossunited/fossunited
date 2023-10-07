@@ -3,6 +3,8 @@
 {% block title %}{{ doc.event_name }}{% endblock %}
 
 {% block page_content %}
+{% set is_team_member = is_session_user_team_member(doc.chapter) %}
+
 {% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
 <div class="{% if doc.event_banner_image %} bg-pattern {% else %} content-center mt-lg-8  {% endif %}">
     {% if doc.event_banner_image %}
@@ -275,7 +277,7 @@
             {% if not doc.event_schedule %}
 
                 <!-- If user is a chapter team member, provide option to create a schedule -->
-                {% if is_session_user_team_member(doc.chapter) %}
+                {% if is_team_member %}
                 <div class="empty-state-navbar">
                     <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                         <div class="d-flex flex-column">
@@ -304,11 +306,29 @@
                 </div>
                 {% endif %}
             {% else %}
-            <div class="schedule-grid">
-                {% for schedule in doc.event_schedule %}
-                    {{ generateScheduleLayout(schedule) }}
-                {% endfor %}
-            </div>
+                {% if is_team_member %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("Schedules are") }} <span style="color: var(--success-600, #039855);
+                                    ">live!</span>
+                                </div>
+                                <div>
+                                    {{ _("Schedule is visible to the user.") }}
+                                </div>
+                            </div>
+                            <a href="" class="button secondary-button text-sm">
+                                {{ _("Edit Schedule") }}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="schedule-grid">
+                    {% for schedule in doc.event_schedule %}
+                        {{ generateScheduleLayout(schedule) }}
+                    {% endfor %}
+                </div>
             {% endif %}
         </div>
     </div>
