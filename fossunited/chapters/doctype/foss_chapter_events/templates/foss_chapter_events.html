@@ -153,7 +153,7 @@
             <div class="sponsor-grid">
                 {% for sponsor in doc.sponsor_list %}
                     <a href="{{ sponsor.redirect_link }}" class="sponsor-container" target="_blank">
-                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, "logo") %}
                         <img src="{{logo}}" alt="{{ sponsor.organization }}">
                     </a>
                 {% endfor %}
@@ -624,10 +624,10 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Get all the navbar items
-            var navbarItems = document.querySelectorAll(".navbar-item");
+            let navbarItems = document.querySelectorAll(".navbar-item");
 
             // Get all the content divs
-            var contentDivs = document.querySelectorAll(".content-div");
+            let contentDivs = document.querySelectorAll(".content-div");
 
             // Hide all content divs initially
             contentDivs.forEach(function (div) {
@@ -638,7 +638,7 @@
             navbarItems.forEach(function (navbarItem) {
                 navbarItem.addEventListener("click", function () {
                     // Get the text of the clicked navbar item
-                    var clickedText = navbarItem.textContent.trim();
+                    let clickedText = navbarItem.textContent.trim();
 
                     // Remove 'active' class from all navbar items
                     navbarItems.forEach(function (item) {
@@ -654,7 +654,7 @@
                     });
 
                     // Show the content div corresponding to the clicked navbar item
-                    var contentDivId = clickedText.toLowerCase().replace(/\s+/g, "-");
+                    let contentDivId = clickedText.toLowerCase().replace(/\s+/g, "-");
                     document.getElementById(contentDivId).style.display = "block";
                 });
             });
