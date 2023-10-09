@@ -544,17 +544,27 @@
                         <div class="d-flex flex-column">
                             <div class="text-xl semi-bold">
                                 {{ _("RSVP form is") }} 
+                                {% if rsvp_is_published %}
                                 <span style="color: var(--success-600, #039855);">live!</span>
-                            </div>
-                            <div>
-                                {{ _("RSVP for this event right now!") }}
-                            </div>
+                                </div>
+                                <div>
+                                    {{ _("RSVP for this event right now!") }}
+                                </div>
+                                {% else %}
+                                <span style="color: #D92D20;">closed!</span>
+                                </div>
+                                <div>
+                                    {{ _("RSVP for this event is closed.") }}
+                                </div>
+                                {% endif %}
                         </div>
+                        {% if rsvp_is_published %}
                         <div class="hero-buttons">
                             <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
                                 {{ _("RSVP for this event!") }}
                             </a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
