@@ -336,7 +336,113 @@
 
 <div id="cfp" class="content-div">
     <div class="container-center">
-        CFP
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("CFP") }}
+            </h3>
+
+            {% set has_cfp = frappe.db.exists("FOSS Event CFP", {"event": doc.name}) %}
+            <!-- No CFP -->
+            {% if not has_cfp %}
+                <!-- If user is a chapter team member, provide option to create a CFP form -->
+                {% if is_team_member %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                CFP form <span style="color: #D92D20;">not created</span> yet.
+                            </div>
+                            <div>
+                                {{ _("Make CFP form live, in order to review talk requests for the event.") }}
+                            </div>
+                        </div>
+                        <a href="" class="button secondary-button text-sm">
+                            {{ _("Create CFP Form") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- If user is not a team member -->
+                {% else %}
+                <div class="container-center empty-state-navbar">
+                    <div class="text-xl semi-bold">
+                        {{ _("CFP Forms Coming Soon!") }}
+                    </div>
+                    <div>
+                        {{ _("CFP for this event is not available yet. But it is coming soon!") }}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                {% set event_cfp, cfp_is_published = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published"]) %}
+                {% if is_team_member %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("CFP form is") }} 
+                                    {% if cfp_is_published %}
+                                    <span style="color: var(--success-600, #039855);">live!</span>
+                                    </div>
+                                    <div>
+                                        {{ _("CFP form for this event is live. You can unpublish it anytime.") }}
+                                    </div>                                    
+                                    {% else %}
+                                    <span style="color: #D92D20;">not published</span>
+                                    </div>
+                                    <div>
+                                        {{ _("CFP form for this event is created. You can publish it anytime.") }}
+                                    </div>
+                                {% endif %}                                
+                            </div>
+                            <div class="hero-buttons">
+                                <a href="" class="button secondary-button text-sm">
+                                    {{ _("Edit CFP Form") }}
+                                </a>
+                                {% if cfp_is_published %}
+                                <div class="button danger-button text-sm" onclick="unpublishForm('FOSS Event CFP', '{{event_cfp}}', 'cfp')">
+                                    {{ _("Close Form") }}
+                                </div>
+                                {% else %}
+                                <div class="button primary-button text-sm" onclick="publishForm('FOSS Event CFP', '{{event_cfp}}', 'cfp')">
+                                    {{ _("Publish Form") }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                {{ _("CFP form is") }} 
+                                {% if cfp_is_published %}
+                                <span style="color: var(--success-600, #039855);">live!</span>
+                                </div>
+                                <div>
+                                    {{ _("Propose a talk for this event!") }}
+                                </div>                                    
+                                {% else %}
+                                <span style="color: #D92D20;">closed!</span>
+                                </div>
+                                <div>
+                                    {{ _("CFP form has been closed for this event.") }}
+                                </div>
+                                {% endif %} 
+                        </div>
+                        {% if cfp_is_published %}
+                        <div class="hero-buttons">
+                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/cfp" class="button primary-button text-sm">
+                                {{ _("Propose a talk!") }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
     </div>
 </div>
 
@@ -350,7 +456,7 @@
             {% set has_rsvp = frappe.db.exists("FOSS Event RSVP", {"event": doc.name}) %}
             <!-- No RSVP -->
             {% if not has_rsvp %}
-                <!-- If user is a chapter team member, provide option to create a schedule -->
+                <!-- If user is a chapter team member, provide option to create a RSVP Form -->
                 {% if is_team_member %}
                 <div class="empty-state-navbar">
                     <div class="d-flex w-100 justify-content-lg-between align-items-center ">
