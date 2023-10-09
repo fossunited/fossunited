@@ -13,6 +13,7 @@
   "event_name",
   "column_break_tpys",
   "submitted_by",
+  "name1",
   "chapter",
   "standard_questions_section",
   "im_a",
@@ -99,11 +100,17 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Event Name"
+  },
+  {
+   "fetch_from": "submitted_by.full_name",
+   "fieldname": "name1",
+   "fieldtype": "Data",
+   "label": "Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-15 13:15:51.027062",
+ "modified": "2023-10-09 02:13:17.908192",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",

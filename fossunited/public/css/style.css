@@ -153,10 +153,6 @@
     line-height: normal;
 }
 
-.primary-button{
-    background-color: #4BA306;
-    color: white;
-}
 
 .secondary-button{
     background-color: black;
@@ -166,6 +162,30 @@
 .secondary-button:hover{
     text-decoration: none;
     background: var(--gray-800, #383838);
+    color: white;
+}
+
+.danger-button{
+    background: var(--red-600, #CC2929);
+    cursor: pointer;
+    color: white;
+}
+
+.danger-button:hover{
+    text-decoration: none;
+    background: var(--red-700, #B52A2A);
+    color: white;
+}
+
+.primary-button{
+    background: var(--success-600, #30A66D); 
+    color: white;
+    cursor: pointer;
+}
+
+.primary-button:hover{
+    text-decoration: none;
+    background: var(--success-700, #278F5E);
     color: white;
 }
 
@@ -596,6 +616,14 @@
     color: #475467;
 }
 
+.rsvp-list-element{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border-bottom: 1px solid #E6E6E6;
+}
 
 @media screen and (max-width: 1200px){
     .events-grid{

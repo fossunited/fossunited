@@ -54,3 +54,17 @@ def get_event_navbar_items(
 		navbar_items["Photos"] = "photos"
 
 	return navbar_items
+
+
+def hide_email(email):
+
+	username, domain = email.split("@")
+	username_length = len(username)
+
+	# Calculate the number of characters to hide (5 characters or 50% of the username length, whichever is smaller)
+	num_to_hide = min(5, username_length // 2)
+
+	hidden_username = username[:-num_to_hide] + "*" * num_to_hide
+
+	partially_hidden_email = hidden_username + "@" + domain
+	return partially_hidden_email

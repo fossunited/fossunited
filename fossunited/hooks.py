@@ -61,6 +61,7 @@ jinja = {
 		"fossunited.fossunited.utils.is_session_user_team_member",
 		"fossunited.fossunited.utils.get_event_navbar_items",
 		"fossunited.fossunited.utils.format_time_with_zone",
+		"fossunited.fossunited.utils.hide_email",
 	],
 	"filters": [],
 }
