@@ -26,8 +26,9 @@ def update_rsvp_count(rsvp):
 def is_session_user_team_member(chapter):
 	members = frappe.get_doc("FOSS Chapter", chapter).chapter_member
 	for member in members:
-		if member.email == frappe.session.user:
-			return True
+		return member.email == frappe.session.user
+
+	return False
 
 
 def get_event_navbar_items(
