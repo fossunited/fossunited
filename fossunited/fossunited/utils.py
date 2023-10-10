@@ -75,7 +75,6 @@ def get_avatar(user):
 	person = frappe.db.get_value(
 		"FOSS User Profile", {"email": user}, ["profile_photo", "full_name"], as_dict=1
 	)
-	print(user)
 
 	if person is None:
 		return f'<div class="avatar-sm">{get_initials(user)}</div>'
