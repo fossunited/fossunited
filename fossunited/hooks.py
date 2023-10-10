@@ -63,7 +63,9 @@ jinja = {
 		"fossunited.fossunited.utils.format_time_with_zone",
 		"fossunited.fossunited.utils.hide_email",
 	],
-	"filters": [],
+	"filters": [
+		"fossunited.fossunited.utils.get_avatar",
+	],
 }
 
 # Installation

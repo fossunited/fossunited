@@ -194,21 +194,9 @@
             <div class="team-grid">
                 {% for member in doc.event_members %}
                     <div class="person-container">
-                        {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.member, ["full_name", "profile_photo", ]) %}
-                        {% if profile_photo %}
-                            <img class="grayscale-image profile-image-xs" src="{{ profile_photo }}" alt="{{ full_name }}">
-                        {% else %}
-                            <div class="avatar-sm">
-                                {% set name_parts = full_name.split(' ') %}
-                                {% set initials = name_parts[0][:1] %}
-                                {% if name_parts|length > 1 %}
-                                    {% set initials = initials ~ name_parts[1][:1] %}
-                                {% endif %}
-                                {{ initials|upper }}
-                            </div>
-                        {% endif %}
+                        {{ member.email | get_avatar }}
                         <div class="text-base semi-bold" style="color: #000">
-                            {{ full_name }}
+                            {{ member.full_name }}
                         </div>
                     </div>
                 {% endfor %}
@@ -229,19 +217,7 @@
             <div class="team-grid">
                 {% for speaker in speakers %}
                     <div class="person-container">
-                        {% set profile_photo = frappe.db.get_value("FOSS User Profile", speaker.submitted_by, [ "profile_photo" ]) %}
-                        {% if profile_photo %}
-                            <img class="grayscale-image profile-image-xs" src="{{ profile_photo }}" alt="{{ full_name }}">
-                        {% else %}
-                            <div class="avatar-sm">
-                                {% set name_parts = speaker.full_name.split(' ') %}
-                                {% set initials = name_parts[0][:1] %}
-                                {% if name_parts|length > 1 %}
-                                    {% set initials = initials ~ name_parts[1][:1] %}
-                                {% endif %}
-                                {{ initials|upper }}
-                            </div>
-                        {% endif %}
+                        {{ speaker.submitted_by | get_avatar }}
                         <div class="name-designation-flex">
                             <div class="text-base semi-bold" style="color: #000">
                                 {{ speaker.full_name }}

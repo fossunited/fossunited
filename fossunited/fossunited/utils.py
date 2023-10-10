@@ -68,3 +68,27 @@ def hide_email(email):
 
 	partially_hidden_email = hidden_username + "@" + domain
 	return partially_hidden_email
+
+
+def get_avatar(user):
+	person = frappe.db.get_value(
+		"FOSS User Profile", {"email": user}, ["profile_photo", "full_name"], as_dict=1
+	)
+	print(user)
+
+	if person is None:
+		return f'<div class="avatar-sm">{get_initials(user)}</div>'
+
+	if person.profile_photo:
+		return f'<img class="grayscale-image profile-image-xs" src="{person.profile_photo}" alt="{person.full_name}">'
+
+	return f'<div class="avatar-sm">{get_initials(person.full_name)}</div>'
+
+
+def get_initials(name):
+	words = name.split(" ")
+	initials = ""
+	for word in words:
+		initials += word[0].upper()
+
+	return initials
