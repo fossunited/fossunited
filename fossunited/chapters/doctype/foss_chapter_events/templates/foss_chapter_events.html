@@ -417,6 +417,70 @@
                     </div>
                 </div>
                 {% endif %}
+
+
+                {% set cfp_submissions = frappe.db.get_all(
+                    "FOSS Event CFP Submission", 
+                    filters={
+                        "linked_cfp": event_cfp,
+                        "event": doc.name,
+                    },
+                    fields=[
+                        "status",
+                        "full_name",
+                        "email",
+                        "organization",
+                        "designation",
+                        "talk_title",
+                        "category",
+                        "talk_duration",
+                    ],
+                ) %}
+                
+                {% if cfp_submissions %}
+                    <div class="form-divider mt-5 mb-5"></div>
+                    <div class="text-xl semi-bold mb-4">
+                        {{ _("Submitted Talks") }}
+                    </div>
+                    <div class="cfp-list">
+                        {% for submission in cfp_submissions %}
+                            <div class="cfp-container">
+                                <div class="cfp-container-left">
+                                    <div class="d-flex">
+                                        <div class="text-xl semi-bold">
+                                            {{ submission.talk_title }}
+                                        </div>
+                                        <div style="width: 8px;"></div>
+                                        {{ submission.status | make_badge('md') }}
+                                    </div>
+                                    <div class="date-time-category-flex">
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hash-02.svg" %}
+                                            {{ submission.category }}
+                                        </div>
+                                        |
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hourglass-02.svg" %}
+                                            {{ submission.talk_duration }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cfp-container-right">
+                                    {{ submission.submitted_by | get_avatar }}
+                                    <div class="d-flex flex-column">
+                                        <div class="semi-bold">
+                                            {{ submission.full_name }}
+                                        </div>
+                                        <div class="text-sm">
+                                            {{ submission.designation }}, {{ submission.organization }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
             {% endif %}
         </div>
     </div>

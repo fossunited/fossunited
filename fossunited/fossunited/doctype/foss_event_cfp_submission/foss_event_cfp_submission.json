@@ -173,7 +173,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nConfirmed\nRejected"
+   "options": "Open\nApproved\nRejected"
   },
   {
    "fieldname": "column_break_tfhh",
@@ -223,7 +223,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-09-21 17:44:55.714069",
+ "modified": "2023-10-12 01:34:02.031663",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
