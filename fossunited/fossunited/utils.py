@@ -51,9 +51,6 @@ def get_event_navbar_items(
 	if event_schedule or is_team_member:
 		navbar_items["Schedule"] = "schedule"
 
-	if show_photos or is_team_member:
-		navbar_items["Photos"] = "photos"
-
 	return navbar_items
 
 
