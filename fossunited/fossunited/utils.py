@@ -89,3 +89,22 @@ def get_initials(name):
 		initials += word[0].upper()
 
 	return initials
+
+
+def make_badge(text="Default", size="sm"):
+	print(size + " " + text)
+
+	# stored in the form of [background-color, text-color]
+	colors = {
+		"Approved": ["#30A66D", "#FFFFFF"],
+		"Open": ["#DB7706", "#FFFFFF"],
+		"Review Pending": ["#DB7706", "#FFFFFF"],
+		"Rejected": ["#E74C3C", "#FFFFFF"],
+		"Cancelled": ["#E74C3C", "#FFFFFF"],
+		"Default": ["#171717", "#FFFFFF"],
+	}
+
+	if text in colors:
+		return f'<span class="badge badge-{size}" style="background-color: {colors[text][0]}; color: {colors[text][1]};">{text}</span>'
+
+	return f'<span class="badge badge-{size}" style="background-color: {colors["Default"][0]}; color: {colors["Default"][1]};">{text}</span>'

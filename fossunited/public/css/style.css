@@ -551,7 +551,7 @@
 .form-divider{
     height: 4px;
     width: 100%;
-    border-bottom: #abd888 1px solid;
+    border-bottom: #D0D5DD 1px solid;
     margin-bottom: 4px;
     margin-top: 4px;
 }
@@ -624,6 +624,33 @@
     padding: 8px 16px;
     border-bottom: 1px solid #E6E6E6;
 }
+
+.badge{
+    font-weight: 420;
+    display: inline-flex;
+    padding: 4px 8px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 6px;
+    background: #30A66D;
+    color: white;
+    line-height: 115%; 
+    letter-spacing: 0.28px;
+}
+
+.badge .badge-sm{
+    font-size: 12px;
+}
+
+.badge .badge-md{
+    font-size: 14px;
+}
+
+.badge .badge-lg{
+    font-size: 16px;
+}
+
 
 @media screen and (max-width: 1200px){
     .events-grid{
