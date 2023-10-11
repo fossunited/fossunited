@@ -74,7 +74,7 @@ def get_avatar(user):
 	)
 
 	if person is None:
-		return f'<div class="avatar-sm">{get_initials(user)}</div>'
+		return f'<div class="avatar-sm">{get_initials(f"{user}")}</div>'
 
 	if person.profile_photo:
 		return f'<img class="grayscale-image profile-image-xs" src="{person.profile_photo}" alt="{person.full_name}">'
