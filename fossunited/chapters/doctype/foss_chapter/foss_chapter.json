@@ -27,7 +27,7 @@
   "instagram",
   "mastodon",
   "chapter_members_section",
-  "chapter_member",
+  "chapter_members",
   "chapter_lead",
   "route",
   "is_published"
@@ -178,7 +178,7 @@
    "options": "URL"
   },
   {
-   "fieldname": "chapter_member",
+   "fieldname": "chapter_members",
    "fieldtype": "Table",
    "label": "Chapter Members",
    "options": "FOSS Chapter Lead Team Members"
@@ -193,7 +193,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-09-30 16:20:19.953911",
+ "modified": "2023-10-13 22:32:02.580563",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",

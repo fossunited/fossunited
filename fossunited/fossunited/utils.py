@@ -24,7 +24,7 @@ def update_rsvp_count(rsvp):
 
 
 def is_session_user_team_member(chapter):
-	members = frappe.get_doc("FOSS Chapter", chapter).chapter_member
+	members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
 	for member in members:
 		return member.email == frappe.session.user
 
