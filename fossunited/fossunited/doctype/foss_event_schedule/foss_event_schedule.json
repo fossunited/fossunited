@@ -7,12 +7,15 @@
  "engine": "InnoDB",
  "field_order": [
   "cfp",
-  "proposal_title",
+  "title",
+  "schedule_description",
   "column_break_apus",
   "type",
+  "speaker",
   "section_break_cmsn",
-  "start_time",
+  "scheduled_date",
   "column_break_iitq",
+  "start_time",
   "end_time"
  ],
  "fields": [
@@ -21,21 +24,15 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "CFP",
-   "options": "FOSS Event CFP"
+   "options": "FOSS Event CFP Submission"
   },
   {
-   "fetch_from": "cfp.talk_title",
-   "fieldname": "proposal_title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title"
-  },
-  {
+   "fetch_from": "cfp.category",
    "fieldname": "type",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Type",
-   "options": "\nOpening Note\nFOSS\nCommunity\nProject Showcase\nHardware\nBreak",
+   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nBreak\nClosing Ceremony\nOther",
    "sort_options": 1
   },
   {
@@ -48,7 +45,7 @@
   },
   {
    "fieldname": "start_time",
-   "fieldtype": "Datetime",
+   "fieldtype": "Time",
    "in_list_view": 1,
    "label": "Start Time"
   },
@@ -58,15 +55,42 @@
   },
   {
    "fieldname": "end_time",
-   "fieldtype": "Datetime",
+   "fieldtype": "Time",
    "in_list_view": 1,
    "label": "End Time"
+  },
+  {
+   "fetch_from": "cfp.submitted_by",
+   "fieldname": "speaker",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Speaker"
+  },
+  {
+   "fieldname": "scheduled_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Scheduled Date"
+  },
+  {
+   "fetch_from": "cfp.talk_title",
+   "fetch_if_empty": 1,
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title"
+  },
+  {
+   "fetch_from": ".",
+   "fieldname": "schedule_description",
+   "fieldtype": "Small Text",
+   "label": "Schedule Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-22 00:18:15.913381",
+ "modified": "2023-10-05 19:49:51.553711",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Schedule",

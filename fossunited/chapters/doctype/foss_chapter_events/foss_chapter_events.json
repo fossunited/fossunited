@@ -11,6 +11,12 @@
   "route",
   "column_break_yozf",
   "is_published",
+  "navbar_controls_section",
+  "show_speakers",
+  "show_rsvp",
+  "column_break_moaa",
+  "show_cfp",
+  "show_photos",
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
@@ -253,6 +259,39 @@
    "fieldname": "event_bio",
    "fieldtype": "Data",
    "label": "Short Event Bio"
+  },
+  {
+   "fieldname": "navbar_controls_section",
+   "fieldtype": "Section Break",
+   "label": "Navbar Controls"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_speakers",
+   "fieldtype": "Check",
+   "label": "Show Speakers"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_rsvp",
+   "fieldtype": "Check",
+   "label": "Show RSVP"
+  },
+  {
+   "fieldname": "column_break_moaa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_cfp",
+   "fieldtype": "Check",
+   "label": "Show CFP"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_photos",
+   "fieldtype": "Check",
+   "label": "Show Photos"
   }
  ],
  "has_web_view": 1,
@@ -270,7 +309,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-09-09 01:00:12.618718",
+ "modified": "2023-09-30 16:52:13.995033",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",

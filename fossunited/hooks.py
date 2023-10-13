@@ -62,8 +62,15 @@ jinja = {
 	"methods": [
 		"fossunited.fossunited.utils.get_month",
 		"fossunited.fossunited.utils.formatted_datetime_with_tz",
+		"fossunited.fossunited.utils.is_session_user_team_member",
+		"fossunited.fossunited.utils.get_event_navbar_items",
+		"fossunited.fossunited.utils.format_time_with_zone",
+		"fossunited.fossunited.utils.hide_email",
 	],
-	"filters": [],
+	"filters": [
+		"fossunited.fossunited.utils.get_avatar",
+		"fossunited.fossunited.utils.make_badge",
+	],
 }
 
 # Installation
