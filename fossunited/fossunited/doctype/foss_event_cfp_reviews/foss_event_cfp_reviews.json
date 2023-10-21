@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-10-17 10:32:37.288145",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "reviewer",
+  "email",
+  "can_approve",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "reviewer",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Reviewer"
+  },
+  {
+   "fieldname": "can_approve",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Can Approve?",
+   "options": "\nMaybe\nYes\nNo",
+   "reqd": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-10-21 18:47:45.396756",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "FOSS Event CFP Reviews",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

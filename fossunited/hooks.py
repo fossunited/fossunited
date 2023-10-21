@@ -66,6 +66,13 @@ jinja = {
 		"fossunited.fossunited.utils.get_event_navbar_items",
 		"fossunited.fossunited.utils.format_time_with_zone",
 		"fossunited.fossunited.utils.hide_email",
+		"fossunited.fossunited.utils.make_badge",
+        "fossunited.fossunited.utils.get_doc_likes",
+        "fossunited.fossunited.utils.get_cfp_navbar",
+        "fossunited.fossunited.utils.format_date_time",
+        "fossunited.fossunited.utils.get_cfp_review_statistics",
+        "fossunited.fossunited.utils.get_reviewers",
+        "fossunited.fossunited.utils.user_already_reviewed",
 	],
 	"filters": [
 		"fossunited.fossunited.utils.get_avatar",

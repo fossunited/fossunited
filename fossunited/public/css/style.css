@@ -227,6 +227,15 @@
 .text-xl{
     font-size: 20px;
 }
+
+.text-2xl{
+    font-size: 24px;
+}
+
+.medium{
+    font-weight: 500;
+}
+
 .semi-bold{
     font-weight: 600;
 }
@@ -234,6 +243,11 @@
 .gray{
     color: #5B5B5B;
 }
+
+.gray-600{
+    color: #475467;
+}
+
 .green{
     color: #4BA306;
 }
@@ -375,12 +389,24 @@
     box-shadow: inset 0px 0px 0px 2.5px #000;
 }
 
-.profile-image-xs{
+.profile-image-sm{
     width: 60px;
     height: 60px;
-    border-radius: 10px;
-    border: 1.5px solid #000;
     flex-shrink: 0;
+}
+
+.profile-image-xs{
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+}
+
+.corners-rounded{
+    border-radius: 10px;
+}
+
+.corners-circle{
+    border-radius: 100%;
 }
 
 .name-designation-flex{
@@ -444,19 +470,28 @@
     filter: grayscale(100%) contrast(0.95);
 }
 
-.avatar-sm{
-    width: 60px;
-    height: 60px;
+.foss-avatar{
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: large;
     font-weight: 500;
-    border-radius: 10px;
-    border: 1px solid #000;
-    background-color: #B1ECCC;
+    background-color: #E6F9EF;
     flex-shrink: 0; 
 }
+.foss-avatar-xs{
+    width: 44px;
+    height: 44px;
+}
+.foss-avatar-sm{
+    width: 60px;
+    height: 60px;
+}
+
+.stroke{
+    border: 1.2px solid #000;
+}
+
 
 .large-avatar{
     display: flex;
@@ -558,8 +593,8 @@
 
 .date-time-category-flex{
     display: flex;
-    gap: 24px;
-    align-items: center;    
+    gap: 16px;
+    align-items: center;
     color: var(--gray-600, #475467);
     font-size: 14px;
     font-weight: 500;
@@ -628,7 +663,7 @@
 .badge{
     font-weight: 420;
     display: inline-flex;
-    padding: 4px 8px;
+    padding: 7px 10px;
     justify-content: center;
     align-items: center;
     gap: 4px;
@@ -643,11 +678,11 @@
     font-size: 12px;
 }
 
-.badge .badge-md{
+.badge-md{
     font-size: 14px;
 }
 
-.badge .badge-lg{
+.badge-lg{
     font-size: 16px;
 }
 
@@ -702,6 +737,40 @@
     flex-basis: 25%;
     gap: 8px;
     align-items: center;
+}
+
+.dark-links{
+    color: #101828;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.like-button svg{
+    fill: none;
+}
+.like-button path{
+    stroke: #475467;
+}
+
+.liked path{
+    stroke: #B42318;
+}
+.liked svg{
+    fill: #F04438;
+}
+
+.cfp-statistic-container{
+    min-width: 184px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin: 0px 8px;
+    border-radius: 10px;
+    background-color: #F2F4F7;
+    color: #1D2939;
 }
 
 @media screen and (max-width: 1200px){

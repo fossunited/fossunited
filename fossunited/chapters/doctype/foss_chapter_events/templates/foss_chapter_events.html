@@ -4,7 +4,6 @@
 
 {% block page_content %}
 {% set is_team_member = is_session_user_team_member(doc.chapter) %}
-
 {% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
 <div class="{% if doc.event_banner_image %} bg-pattern {% else %} content-center mt-lg-8  {% endif %}">
     {% if doc.event_banner_image %}
@@ -114,7 +113,7 @@
 {%- endif -%}
 
 <!-- Navbar Section -->
-{% set navbar_items = get_event_navbar_items(doc.chapter, doc.show_speakers, doc.show_rsvp, doc.show_cfp, doc.show_photos, doc.event_schedule) %}
+{% set navbar_items = get_event_navbar_items(doc.chapter, doc.show_speakers, doc.show_rsvp, doc.show_cfp, doc.event_schedule) %}
 <div class="container-center">
     <div class="navbar-section">
         {% for key in navbar_items %}
