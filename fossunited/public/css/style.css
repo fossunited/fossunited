@@ -773,6 +773,15 @@
     color: #1D2939;
 }
 
+.dropdown-with-button{
+    display: flex;
+    flex-basis: 40%;
+    align-items: center;
+    justify-content: center;
+    margin: 16px 0px;
+}
+
+
 @media screen and (max-width: 1200px){
     .events-grid{
         grid-template-columns: repeat(3, minmax(300px, 1fr));

@@ -4,7 +4,7 @@
 
 {% block page_content %}
 
-{% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["anonymous_proposals", "allow_cfp_edit"], as_dict=True) %}
+{% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["chapter", "anonymous_proposals", "allow_cfp_edit"], as_dict=True) %}
 
 <div class="container" id="head-cfp">
     <div class="my-6">
@@ -57,16 +57,37 @@
             |
         </div>
         <div class="d-flex align-items-center gap-2">
-            <!-- <div class="mr-2">
-                Status: 
-            </div> -->
             {{ make_badge(doc.status, "md") }}
         </div>
+
     </div>
+    <!-- if is_session_user_team_member(cfp.chapter) and if not (frappe.session.user in get_reviewers(doc.event)["Emails"])  -->
+    {% if is_session_user_team_member(cfp.chapter) %}
+    <div class="d-flex">
+        <div class="dropdown-with-button">
+            <label class="semi-bold m-0" for="cfp-status">Status</label>
+            <select class="mx-4 input-with-feedback form-control ellipsis bold" maxlength="6" name="cfp-status" id="cfp-status">
+                {% for option in ['Open', 'Approved', 'Rejected'] %}
+                    {% if option == doc.status %}
+                        <option class="my-1" value="{{ option }}" selected>{{ option }}</option>
+                    {% else %}
+                        <option class="my-1" value="{{ option }}">{{ option }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <img src="/assets/fossunited/icons/chevron-down.svg" class="h-50" style="right: 48px; margin: 0px;">
+            <div class="btn primary-button" onClick="update_status()" id="update-status-button" style="visibility: hidden;">
+                Update
+            </div>
+        </div>
+    </div>
+
+    {% endif %}
+
 </div>
 
 {% set navbar_items = get_cfp_navbar(doc.event , cfp.anonymous_proposals) %}
-<div class="container-center mt-4 mb-4">
+<div class="container-center mb-4">
     <div class="navbar-section">
         {% for key in navbar_items %}
             <div class="navbar-item">
@@ -107,7 +128,7 @@
             </div>
             <div class="w-100 h-25">
                 <textarea name="comment" id="cfp-comment" class="form-control text-sm rounded-input mb-3" placeholder="Write a comment..." rows="4" cols="10"></textarea>
-                <div class="btn primary-button mb-1" onClick="add_comment()">
+                <div class="btn secondary-button mb-1" onClick="add_comment()">
                     Comment
                 </div>
             </div>
@@ -399,6 +420,28 @@
 
             navbarItems[0].click();
         })
+
+        document.getElementById("cfp-status").addEventListener("change", function () {
+            document.getElementById("update-status-button").style.visibility = "visible";
+        });
+
+        function update_status(){
+            frappe.call({
+                method: 'frappe.client.set_value',
+                args: {
+                    doctype: "FOSS Event CFP Submission", 
+                    name: "{{ doc.name }}", 
+                    fieldname: "status", 
+                    value: document.getElementById("cfp-status").value, 
+                },
+                callback: (r)=>{
+                    location.reload();
+                },
+                error: (r)=>{
+                    console.log("ERROR" + r)
+                }
+            })
+        }
 
     </script>
 {% endblock %}
