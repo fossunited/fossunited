@@ -40,9 +40,9 @@ def is_session_user_team_member(chapter):
 	members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
 
 	user = get_foss_profile(frappe.session.user)
-	
+
 	for member in members:
-		return member.member == user.username
+		return member.chapter_member == user.username
 
 def get_event_navbar_items(
 	chapter, show_speakers, show_rsvp, show_cfp, event_schedule
@@ -213,4 +213,4 @@ def post_review(submission, reviewer, can_approve, remarks):
 		"remarks": remarks,
 	})
 	submission_doc.save(ignore_permissions=True)
-	
+
