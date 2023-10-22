@@ -4,7 +4,7 @@
 
 {% block page_content %}
 
-{% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["chapter", "anonymous_proposals", "allow_cfp_edit"], as_dict=True) %}
+{% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["chapter", "anonymise_proposals", "allow_cfp_edit"], as_dict=True) %}
 
 <div class="container" id="head-cfp">
     <div class="my-6">
@@ -33,7 +33,7 @@
     </h3>
 
     <div class="date-time-category-flex" style="font-size: 1rem;">
-        {% if cfp.anonymous_proposals == 0 %}
+        {% if cfp.anonymise_proposals == 0 %}
         <div class="gray-600">
             {{ _("By") }} {{ doc.full_name }} 
         </div>
@@ -86,7 +86,7 @@
 
 </div>
 
-{% set navbar_items = get_cfp_navbar(doc.event , cfp.anonymous_proposals) %}
+{% set navbar_items = get_cfp_navbar(doc.event , cfp.anonymise_proposals) %}
 <div class="container-center mb-4">
     <div class="navbar-section">
         {% for key in navbar_items %}
@@ -167,7 +167,7 @@
     </div>
 </div>
 
-{% if not cfp.anonymous_proposals %}
+{% if not cfp.anonymise_proposals %}
 <div class="content-div container mb-6" id="about-speaker">
     <div class="text-xl my-4 semi-bold">
         {{ _("About Speaker") }}

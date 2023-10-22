@@ -12,7 +12,7 @@
   "column_break_puww",
   "is_published",
   "allow_cfp_edit",
-  "anonymous_proposals",
+  "anonymise_proposals",
   "event_information_section",
   "event",
   "event_name",
@@ -111,16 +111,16 @@
   {
    "default": "0",
    "description": "The CFPs will not show the name of the proposer.",
-   "fieldname": "anonymous_proposals",
+   "fieldname": "anonymise_proposals",
    "fieldtype": "Check",
-   "label": "Anonymous Proposals?"
+   "label": "Anonymise Proposals?"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-10-20 16:15:00.766093",
+ "modified": "2023-10-22 16:55:45.527660",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
