@@ -379,7 +379,7 @@
                 args: {
                     submission: '{{ doc.name }}',
                     reviewer: '{{ frappe.db.get_value("User", frappe.session.user, "full_name") }}',
-                    can_approve: $('#can-approve').val(),
+                    to_approve: $('#can-approve').val(),
                     remarks: $('#cfp-review-remark').val(),
                 },
                 callback: (r)=>{

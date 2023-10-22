@@ -166,7 +166,7 @@ def get_cfp_review_statistics(event, submission):
 	}
 
 	for review in reviews:
-		score[review.can_approve] += 1
+		score[review.to_approve] += 1
 
 	not_reviewed = len(reviewers) - (score["Yes"] + score["No"] + score["Maybe"])
 
@@ -204,12 +204,12 @@ def user_already_reviewed(cfp_submission):
 	return False
 
 @frappe.whitelist()
-def post_review(submission, reviewer, can_approve, remarks):
+def post_review(submission, reviewer, to_approve, remarks):
 	submission_doc = frappe.get_doc("FOSS Event CFP Submission", submission)
 	submission_doc.append("reviews", {
 		"reviewer": reviewer,
 		"email": frappe.session.user,
-		"can_approve": can_approve,
+		"to_approve": to_approve,
 		"remarks": remarks,
 	})
 	submission_doc.save(ignore_permissions=True)
