@@ -20,7 +20,7 @@
             <img src="/assets/fossunited/icons/hourglass-02.svg">
             {{ doc.talk_duration }}
         </div>
-        {% if doc.first_talk == "Yes" %}
+        {% if doc.is_first_talk %}
         <div class="icon-text-container">
             <img src="/assets/fossunited/icons/stars.svg">
             {{ _("First Talk") }}
