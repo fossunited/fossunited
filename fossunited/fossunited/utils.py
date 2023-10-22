@@ -51,7 +51,6 @@ def get_event_navbar_items(
 		"Event Description": "event-description",
 	}
 	is_team_member = is_session_user_team_member(chapter)
-	print(is_team_member)
 
 	if show_speakers or is_team_member:
 		navbar_items["Speakers"] = "speakers"
@@ -127,7 +126,7 @@ def get_doc_likes(doctype, name):
 		# Parse the string into a list
 		likes = json.loads(likes)
 	except json.JSONDecodeError as e:
-		print(f"Error decoding JSON: {e}")
+		frappe.throw("Error parsing likes: " + str(e))
 
 	return likes
 
@@ -148,7 +147,6 @@ def get_cfp_navbar(event, anonymise_proposals):
 	return navbar_items
 
 def check_if_reviewer(event):
-	print(event)
 	reviewers = frappe.get_doc("FOSS Event CFP", {"event": event}).cfp_reviewers
 	user = get_foss_profile(frappe.session.user)
 
@@ -185,7 +183,6 @@ def get_reviewers(event):
 	reviewers_dict = {
 		"Names": [],
 		"Emails": [],
-		"Anonymous Number": [],
 	}
 
 	for reviewer in reviewers:

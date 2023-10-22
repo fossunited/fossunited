@@ -8,7 +8,7 @@
 
 <div class="container" id="head-cfp">
     <div class="my-6">
-        {{ BreadCrumb(doc.route) }}
+        {{ breadcrumb(doc.route) }}
     </div>
 
     <div class="date-time-category-flex">
@@ -49,7 +49,7 @@
             {% if likes %}
                 {{ likes | length }}
             {% else %}
-                {{ _("0") }}
+                0
             {% endif %}
             Likes
         </div>
@@ -67,7 +67,7 @@
         <div class="dropdown-with-button">
             <label class="semi-bold m-0" for="cfp-status">Status</label>
             <select class="mx-4 input-with-feedback form-control ellipsis bold" maxlength="6" name="cfp-status" id="cfp-status">
-                {% for option in ['Open', 'Approved', 'Rejected'] %}
+            {% for option in ('Open', 'Approved', 'Rejected') %}
                     {% if option == doc.status %}
                         <option class="my-1" value="{{ option }}" selected>{{ option }}</option>
                     {% else %}
@@ -144,7 +144,7 @@
                     fields=["comment_email", "comment_by", "creation", "content", "owner"],
                 ) %}
             {% for comment in comments %}
-            {{ RenderComment(comment) }}
+            {{ rendercomment(comment) }}
             {% endfor %}
         </div>
     </div>
@@ -185,7 +185,7 @@
 <div class="container">
     <div class="content-div" id="review-proposals">
         {% set statistics = get_cfp_review_statistics(doc.event, doc.name) %}
-        {% set style = ({
+        {% set style_map = ({
             "Yes" : ({
                 "icon": "thumb-up",
                 "color": "#015828",
@@ -208,9 +208,9 @@
         }) %}
         <div class="d-flex justify-content-center mb-4">
             {% for statistic in statistics.score %}
-                <div class="cfp-statistic-container" style="background-color: {{ style[statistic]['background-color'] }}">
-                    {% include "public/icons/" + style[statistic].icon + ".svg" %}
-                    <div class="text-xl semi-bold" style="color: {{ style[statistic].color }}">
+                <div class="cfp-statistic-container" style="background-color: {{ style_map[statistic]['background-color'] }}">
+                    {% include "public/icons/" + style_map[statistic].icon + ".svg" %}
+                    <div class="text-xl semi-bold" style="color: {{ style_map[statistic].color }}">
                         {{ statistics.score[statistic] }} {{ statistic }}
                     </div>
                 </div>
@@ -297,7 +297,7 @@
 
 {% endblock %}
 
-{% macro BreadCrumb(route) %}
+{% macro breadcrumb(route) %}
     {% set route = route.split('/') %}
     {% set event = frappe.db.get_value("FOSS Chapter Events", route[0], "event_name") %}
     {% set cfp = route[-1] %}
@@ -310,7 +310,7 @@
     </div>
 {% endmacro %}
 
-{% macro RenderComment(comment) %}
+{% macro rendercomment(comment) %}
     <div class="d-flex my-6">
         <div class="mr-4">
             {{ comment.comment_email | get_avatar(size='xs', corners='circle', grayscale=False, stroke="") }}
