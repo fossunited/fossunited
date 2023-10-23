@@ -7,6 +7,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "is_published",
+  "column_break_vctq",
+  "route",
+  "section_break_duug",
   "status",
   "column_break_tfhh",
   "section_break_cksd",
@@ -33,12 +37,14 @@
   "talk_title",
   "category",
   "talk_duration",
-  "first_talk",
+  "is_first_talk",
   "talk_reference",
   "column_break_mhza",
   "talk_description",
   "section_break_ilij",
-  "custom_answers"
+  "custom_answers",
+  "reviews_tab",
+  "reviews"
  ],
  "fields": [
   {
@@ -184,12 +190,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "first_talk",
-   "fieldtype": "Select",
-   "label": "First Talk?",
-   "options": "\nYes\nNo"
-  },
-  {
    "fieldname": "category",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -219,11 +219,49 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name"
+  },
+  {
+   "fieldname": "reviews_tab",
+   "fieldtype": "Tab Break",
+   "label": "Reviews"
+  },
+  {
+   "fieldname": "reviews",
+   "fieldtype": "Table",
+   "label": "Reviews",
+   "options": "FOSS Event CFP Reviews"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "column_break_vctq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_duug",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_first_talk",
+   "fieldtype": "Check",
+   "label": "Is First Talk?"
   }
  ],
+ "has_web_view": 1,
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [],
- "modified": "2023-10-12 01:34:02.031663",
+ "modified": "2023-10-22 18:03:41.625963",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

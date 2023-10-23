@@ -151,12 +151,9 @@
                     </div>
                 </div>
                 <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="first-talk" class="form-label text-sm">First Talk?</label>
-                        <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1" id="first-talk">
-                            <option value="Yes">Yes</option>
-                            <option value="No">No</option>
-                        </select>
+                    <div class="mb-4 py-1 col-sm-6 d-flex align-items-center ">
+                        <input type="checkbox" name="first-talk" id="first-talk">
+                        <label for="first-talk" class="form-label text-sm mx-1 my-1 medium">This is my first talk!</label>
                     </div>
                 </div>
             </div>
@@ -168,7 +165,7 @@
             {% endfor %}
         </form>
         <div class="pt-4 d-flex flex-lg-row-reverse ">
-            <button type="button" class="btn btn-primary w-50 text-sm" id="submitCFP">Submit CFP</button>
+            <button type="button" class="btn btn-primary w-50 text-sm" onClick="submit_cfp()">Submit CFP</button>
         </div>        
     </div>
 </div>
@@ -247,10 +244,10 @@
             theme: 'snow'
         });
 
-        // Event handler to the submit button
-        document.getElementById("submitCFP").addEventListener("click", function () {
+        function submit_cfp() {
 
             let custom_responses = [];
+
             // Loop through custom questions and gather their responses
             document.querySelectorAll('.custom-question').forEach(function (customQuestionElement) {
                 let question = customQuestionElement.getAttribute("data-question");
@@ -288,10 +285,12 @@
                 talk_description: quill2.root.innerHTML,
                 talk_duration: document.getElementById("talk-duration").value,
                 talk_reference: document.getElementById("talk-reference").value,
-                first_talk: document.getElementById("first-talk").value,
+                is_first_talk: document.getElementById("first-talk").checked,
                 custom_answers: custom_responses,
             };
-
+            console.log(formData)
+            
+            
             frappe.call({
                 method: 'frappe.client.insert',
                 args: {
@@ -308,9 +307,9 @@
                         indicator: "red",
                     })
                 },
-            })    
-            
-        });
+            })            
+        };
+        
     </script>
     
 {% endblock %}

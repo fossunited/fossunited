@@ -2,8 +2,13 @@
 # For license information, please see license.txt
 
 # import frappe
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
 
 
-class FOSSEventCFPSubmission(Document):
-	pass
+class FOSSEventCFPSubmission(WebsiteGenerator):
+	def before_save(self):
+		self.set_route()
+		self.is_published = 1
+
+	def set_route(self):
+		self.route = f"{self.event}/cfp/{self.name}"
