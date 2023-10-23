@@ -33,7 +33,7 @@
     </h3>
 
     <div class="date-time-category-flex" style="font-size: 1rem;">
-        {% if cfp.anonymise_proposals == 0 %}
+        {% if not cfp.anonymise_proposals %}
         <div class="gray-600">
             {{ _("By") }} {{ doc.full_name }} 
         </div>

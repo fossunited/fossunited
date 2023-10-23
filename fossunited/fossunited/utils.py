@@ -136,7 +136,7 @@ def get_cfp_navbar(event, anonymise_proposals):
 		"Form Responses": "form-responses",		
 	}
 
-	if anonymise_proposals == 0:
+	if not anonymise_proposals:
 		navbar_items["About Speaker"] = "about-speaker"
 	
 	chapter = frappe.db.get_value("FOSS Event CFP", {"event" : event}, "chapter")
