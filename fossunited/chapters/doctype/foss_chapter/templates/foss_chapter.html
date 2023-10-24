@@ -91,7 +91,7 @@
             {{ _("Upcoming Events") }}
         </h3>
         <div class="events-grid">
-            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=[ "event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter_name":doc.chapter_name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"], "is_published": 1}) %}
+            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=[ "event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter":doc.name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"], "is_published": 1}) %}
             {% if upcoming_events %}
             {% for event in upcoming_events %}
                 {% if status=='Approved' or 'In Progress' %}
@@ -124,7 +124,7 @@
             {{ _("Past Events") }}
         </h3>
         <div class="events-grid">
-            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter_name":doc.chapter_name, "status":["=", "Concluded"]}) %}
+            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter":doc.name, "status":["=", "Concluded"]}) %}
             {% if past_events %}
             {% for event in past_events %}
                 <a href="{{frappe.get_url()}}/{{event.route }}" class="event-container past-event gray">
