@@ -149,35 +149,21 @@
 </div>
 
 <!-- Team -->
-{% if doc.chapter_member %}
+{% if doc.chapter_members %}
 <div class="container-center">
     <div class="base-container">
         <h3 class="subtitle">
             {{ _("Team") }}
         </h3>
         <div class="team-grid">
-            {% for member in doc.chapter_member %}
-                <div class="member-container">
-                    {% set full_name, profile_photo = frappe.db.get_value("FOSS User Profile", member.chapter_member, ["full_name", "profile_photo", ]) %}
-                    <div class="profile-image-lg">
-                        {% if profile_photo %}
-                            <img class="grayscale-image" src="{{ profile_photo }}" alt="{{ full_name }}">
-                        {% else %}
-                        <div class="large-avatar">
-                            {% set name_parts = full_name.split(' ') %}
-                            {% set initials = name_parts[0][:1] %}
-                            {% if name_parts|length > 1 %}
-                                {% set initials = initials ~ name_parts[1][:1] %}
-                            {% endif %}
-                            {{ initials|upper }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="text-xl semibold">
-                        {{ full_name }}
-                    </div>
-                    <div class="text-base">
-                        {{ member.role }}
+            {% for member in doc.chapter_members %}
+                <div class="person-container">
+                    {{ member.email | get_avatar }}
+                    <div class="flex-column align-items-baseline   text-base semi-bold" style="color: #000">
+                        {{ member.full_name }}
+                        <span class="text-sm">
+                            {{ member.role  }}
+                        </span>
                     </div>
                 </div>
             {% endfor %}
