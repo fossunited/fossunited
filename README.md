@@ -3,9 +3,9 @@
 </div>
 
 <div align="center">
-<img alt="Static Badge" src="https://img.shields.io/badge/Built%20on-Frappe-blue?style=for-the-badge&logo=https%3A%2F%2Favatars.githubusercontent.com%2Fu%2F836974%3Fs%3D48%26v%3D4&link=https%3A%2F%2Ffrappe.io"/>
+<img alt="Static Badge" src="https://img.shields.io/badge/Builton-Frappe-blue?style=for-the-badge&labelColor=%231a1a1a&color=blue&link=https%3A%2F%2Ffrappe.io"/>
 
-<img alt="static badge" src="https://img.shields.io/badge/LIcense-AGPL-yellow?style=for-the-badge&link=https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fagpl-3.0.en.html"/>
+<img alt="static badge" src="https://img.shields.io/badge/License-AGPL-%2308b47f?style=for-the-badge&labelColor=%231a1a1a&color=%2308b47f&link=https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fagpl-3.0.en.html"/>
 </div>
 
 ## The FOSS United Platform 
