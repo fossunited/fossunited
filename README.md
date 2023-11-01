@@ -1,5 +1,5 @@
 <div align="center">
-    <img alt="fossunited logo" src="https://raw.githubusercontent.com/fossunited/Branding/main/asset/general-logos/logo-white.png" width="150px" height="120px">
+    <img alt="fossunited logo" src=".github/logo.png" width="150px" height="120px">
 </div>
 
 <div align="center">
