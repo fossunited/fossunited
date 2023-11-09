@@ -36,7 +36,7 @@ body:
       - **Device**: [e.g. Desktop, Mobile(Pixel 7)]
       - **OS**: [e.g. Debian GNU/Linux 12, Fedora 34]
       - **Browser**: [e.g. firefox, safari]
-    values: |
+    value: |
       - Device:
       - OS:
       - Browser:
