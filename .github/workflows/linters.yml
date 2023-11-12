@@ -8,9 +8,8 @@ on:
 
 jobs:
   linters:
-    name: Semantic Commits
+    name: Formatter and Linters
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
 
     steps:
       - uses: actions/checkout@v3
