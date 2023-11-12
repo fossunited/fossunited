@@ -12,7 +12,7 @@
     <h1 class="page-title">
         {{ doc.event_name }}
     </h1>
-    
+
     {% if doc.event_bio %}
     <div class="container-center">
             <p>
@@ -121,7 +121,7 @@
                 {{ key }}
             </div>
         {% endfor %}
-    </div>   
+    </div>
 </div>
 
 <div id="event-description" class="content-div">
@@ -140,8 +140,8 @@
             </p>
         </div>
     </div>
-    
-    
+
+
     <!-- Sponsors -->
     {% if doc.sponsor_list %}
     <div class="container-center">
@@ -163,7 +163,7 @@
         </div>
     </div>
     {% endif %}
-    
+
     {% if doc.community_partners %}
     <!-- Community Partners -->
     <div class="container-center">
@@ -182,7 +182,7 @@
         </div>
     </div>
     {% endif %}
-    
+
     {% if doc.event_members %}
     <!-- Volunteers -->
     <div class="container-center">
@@ -355,20 +355,20 @@
                         <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                             <div class="d-flex flex-column">
                                 <div class="text-xl semi-bold">
-                                    {{ _("CFP form is") }} 
+                                    {{ _("CFP form is") }}
                                     {% if cfp_is_published %}
                                     <span style="color: var(--success-600, #039855);">live!</span>
                                     </div>
                                     <div>
                                         {{ _("CFP form for this event is live. You can unpublish it anytime.") }}
-                                    </div>                                    
+                                    </div>
                                     {% else %}
                                     <span style="color: #D92D20;">not published</span>
                                     </div>
                                     <div>
                                         {{ _("CFP form for this event is created. You can publish it anytime.") }}
                                     </div>
-                                {% endif %}                                
+                                {% endif %}
                             </div>
                             <div class="hero-buttons">
                                 <a href="" class="button secondary-button text-sm">
@@ -391,20 +391,20 @@
                     <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                         <div class="d-flex flex-column">
                             <div class="text-xl semi-bold">
-                                {{ _("CFP form is") }} 
+                                {{ _("CFP form is") }}
                                 {% if cfp_is_published %}
                                 <span style="color: var(--success-600, #039855);">live!</span>
                                 </div>
                                 <div>
                                     {{ _("Propose a talk for this event!") }}
-                                </div>                                    
+                                </div>
                                 {% else %}
                                 <span style="color: #D92D20;">closed!</span>
                                 </div>
                                 <div>
                                     {{ _("CFP form has been closed for this event.") }}
                                 </div>
-                                {% endif %} 
+                                {% endif %}
                         </div>
                         {% if cfp_is_published %}
                         <div class="hero-buttons">
@@ -419,7 +419,7 @@
 
 
                 {% set cfp_submissions = frappe.db.get_all(
-                    "FOSS Event CFP Submission", 
+                    "FOSS Event CFP Submission",
                     filters={
                         "linked_cfp": event_cfp,
                         "event": doc.name,
@@ -435,7 +435,7 @@
                         "talk_duration",
                     ],
                 ) %}
-                
+
                 {% if cfp_submissions %}
                     <div class="form-divider mt-5 mb-5"></div>
                     <div class="text-xl semi-bold mb-4">
@@ -531,20 +531,20 @@
                         <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                             <div class="d-flex flex-column">
                                 <div class="text-xl semi-bold">
-                                    {{ _("RSVP form is") }} 
+                                    {{ _("RSVP form is") }}
                                     {% if rsvp_is_published %}
                                     <span style="color: var(--success-600, #039855);">live!</span>
                                     </div>
                                     <div>
                                         {{ _("RSVP form for this event is live. You can unpublish it anytime.") }}
-                                    </div>                                    
+                                    </div>
                                     {% else %}
                                     <span style="color: #D92D20;">not published</span>
                                     </div>
                                     <div>
                                         {{ _("RSVP form for this event is created. You can publish it anytime.") }}
                                     </div>
-                                {% endif %}                                
+                                {% endif %}
                             </div>
                             <div class="hero-buttons">
                                 <a href="" class="button secondary-button text-sm">
@@ -582,7 +582,7 @@
                     <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                         <div class="d-flex flex-column">
                             <div class="text-xl semi-bold">
-                                {{ _("RSVP form is") }} 
+                                {{ _("RSVP form is") }}
                                 {% if rsvp_is_published %}
                                 <span style="color: var(--success-600, #039855);">live!</span>
                                 </div>
@@ -626,7 +626,7 @@
                 {{ format_time_with_zone(schedule.start_time ,'h:mm a') }} - {{ format_time_with_zone(schedule.end_time ,'h:mm a') }}
             </div>
         </div>
-    </div>    
+    </div>
     {% else %}
     <div class="schedule-container d-flex flex-column ">
         <div class="date-time-category-flex">
@@ -645,7 +645,7 @@
         </div>
         <div class="text-xl semi-bold">
             {{ schedule.title }}
-        </div>                  
+        </div>
         <div>
             <div class="text-md-rg text-sm">
                 Speakers
@@ -701,7 +701,7 @@
             // Make the first navbar item ('Event Description') active by default
             navbarItems[0].click();
         });
-        
+
         // publish  a form
         function publishForm(doctype, docname, section_id) {
             frappe.call({

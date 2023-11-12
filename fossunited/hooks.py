@@ -7,7 +7,7 @@ app_license = "AGPL-3.0"
 # required_apps = []
 
 fixtures = [
-	"Web Page",
+    "Web Page",
 ]
 
 # Includes in <head>
@@ -59,25 +59,25 @@ fixtures = [
 
 # add methods and filters to jinja environment
 jinja = {
-	"methods": [
-		"fossunited.fossunited.utils.get_month",
-		"fossunited.fossunited.utils.formatted_datetime_with_tz",
-		"fossunited.fossunited.utils.is_session_user_team_member",
-		"fossunited.fossunited.utils.get_event_navbar_items",
-		"fossunited.fossunited.utils.format_time_with_zone",
-		"fossunited.fossunited.utils.hide_email",
-		"fossunited.fossunited.utils.make_badge",
+    "methods": [
+        "fossunited.fossunited.utils.get_month",
+        "fossunited.fossunited.utils.formatted_datetime_with_tz",
+        "fossunited.fossunited.utils.is_session_user_team_member",
+        "fossunited.fossunited.utils.get_event_navbar_items",
+        "fossunited.fossunited.utils.format_time_with_zone",
+        "fossunited.fossunited.utils.hide_email",
+        "fossunited.fossunited.utils.make_badge",
         "fossunited.fossunited.utils.get_doc_likes",
         "fossunited.fossunited.utils.get_cfp_navbar",
         "fossunited.fossunited.utils.format_date_time",
         "fossunited.fossunited.utils.get_cfp_review_statistics",
         "fossunited.fossunited.utils.get_reviewers",
         "fossunited.fossunited.utils.user_already_reviewed",
-	],
-	"filters": [
-		"fossunited.fossunited.utils.get_avatar",
-		"fossunited.fossunited.utils.make_badge",
-	],
+    ],
+    "filters": [
+        "fossunited.fossunited.utils.get_avatar",
+        "fossunited.fossunited.utils.make_badge",
+    ],
 }
 
 # Installation

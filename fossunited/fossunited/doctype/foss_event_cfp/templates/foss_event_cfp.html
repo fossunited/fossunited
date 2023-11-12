@@ -17,8 +17,8 @@
         {% include "/public/icons/rocket-8bit.svg" %}
     </div>
     <div class="press2p p-3 ">CFP Submitted Successfully!</div>
-    <p class=" text-center "> 
-        You have successfully submitted the CFP for this event!<br> 
+    <p class=" text-center ">
+        You have successfully submitted the CFP for this event!<br>
         Keep an eye on your mailbox for updates 👀
     </p>
     <a href="/events/{{doc.event}}" class="button w-25"><strong>Go to event</strong></a>
@@ -32,12 +32,12 @@
             {% include "public/icons/cfp-8bit.svg" %}
         </div>
     </div>
-    
-    
+
+
     <h1 class="page-title">
         CFP - {{ event.event_name }}
     </h1>
-    
+
     <div class="container-center pb-4 px-4">
         <p>
             {{ doc.cfp_form_description }}
@@ -166,7 +166,7 @@
         </form>
         <div class="pt-4 d-flex flex-lg-row-reverse ">
             <button type="button" class="btn btn-primary w-50 text-sm" onClick="submit_cfp()">Submit CFP</button>
-        </div>        
+        </div>
     </div>
 </div>
 {% endif %}
@@ -198,7 +198,7 @@
     <script>
         if ('{{ frappe.session.user }}' == 'Guest') {
             frappe.msgprint({
-                title: "Login Required", 
+                title: "Login Required",
                 message: "You need to login to RSVP for this event.",
                 primary_action: {
                     'label': 'Log in',
@@ -213,8 +213,8 @@
         }
 
         let submitButton = document.getElementById("submitRSVP");
-    
-        
+
+
         var toolbarOptions = [
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
         ['bold', 'italic', 'underline', 'strike'],
@@ -227,7 +227,7 @@
         [{ 'align': [] }],
         ['clean']
         ];
-      
+
         var quill = new Quill('#bio', {
             modules: {
                 toolbar: toolbarOptions
@@ -265,7 +265,7 @@
                 });
             });
 
-            
+
             let formData = {
                 doctype: "FOSS Event CFP Submission",
                 linked_cfp: "{{ doc.name }}",
@@ -289,8 +289,8 @@
                 custom_answers: custom_responses,
             };
             console.log(formData)
-            
-            
+
+
             frappe.call({
                 method: 'frappe.client.insert',
                 args: {
@@ -307,9 +307,9 @@
                         indicator: "red",
                     })
                 },
-            })            
+            })
         };
-        
+
     </script>
-    
+
 {% endblock %}

@@ -6,4 +6,4 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSChapterEvents(WebsiteGenerator):
-	pass
+    pass

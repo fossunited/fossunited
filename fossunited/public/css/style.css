@@ -115,7 +115,7 @@
 
 .social-icon:hover{
     box-shadow: inset 0px 0px 0px 1px #000, 0px 0px 0px 1px #000;
-}   
+}
 
 .icon-sm > svg {
     width: 18px;
@@ -178,7 +178,7 @@
 }
 
 .primary-button{
-    background: var(--success-600, #30A66D); 
+    background: var(--success-600, #30A66D);
     color: white;
     cursor: pointer;
 }
@@ -354,7 +354,7 @@
 .past-event{
     box-shadow: inset 0px 0px 0px 1px #5b5b5b;
     transition: box-shadow 0.2s ease-in-out;
-    
+
 }
 .past-event:hover{
     box-shadow: inset 0px 0px 0px 3px #5b5b5b;
@@ -477,7 +477,7 @@
     font-size: large;
     font-weight: 500;
     background-color: #E6F9EF;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
 .foss-avatar-xs{
     width: 44px;
@@ -507,7 +507,7 @@
 
 .event-banner-image{
     align-self: center;
-    width: 720px;    
+    width: 720px;
     border-radius: 2rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
@@ -670,7 +670,7 @@
     border-radius: 6px;
     background: #30A66D;
     color: white;
-    line-height: 115%; 
+    line-height: 115%;
     letter-spacing: 0.28px;
 }
 
@@ -844,7 +844,7 @@
         justify-content: center;
         row-gap: 24px;
     }
-    
+
     .sponsor-grid{
         grid-template-columns: repeat(2, minmax(160px, 1fr));
         gap: 16px;

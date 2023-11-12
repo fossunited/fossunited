@@ -17,8 +17,8 @@
         {% include "/public/icons/rocket-8bit.svg" %}
     </div>
     <div class="press2p p-3 ">You have RSVP'd for this event!</div>
-    <p> 
-        You have successfully RSVP'd for this event!<br> 
+    <p>
+        You have successfully RSVP'd for this event!<br>
         Keep an eye on your mailbox for updates 👀
     </p>
     <a href="/events/{{doc.event}}" class="button"><strong>Go to event</strong><span><img src="" alt=""></span></a>
@@ -32,12 +32,12 @@
             {% include "public/icons/rsvp-8bit.svg" %}
         </div>
     </div>
-    
-    
+
+
     <h1 class="page-title">
         {{ event.event_name }} RSVP
     </h1>
-    
+
     <div class="container-center">
         <div class="base-container d-flex justify-content-center">
             <div class="date-location-container">
@@ -69,7 +69,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="container-center pb-4 px-4">
         <p>
             {{ doc.rsvp_description }}
@@ -92,7 +92,7 @@
                 <label for="name" class="form-label text-sm">Name</label>
                 <input type="text" class="form-control text-sm rounded-input" id="name" value="{{user.full_name}}" readonly>
             </div>
-            
+
             <div class="mb-4 py-1">
                 <label for="role" class="form-label text-sm">I'm a</label>
                 <div>
@@ -114,7 +114,7 @@
         </form>
         <div class="pt-4 d-flex flex-lg-row-reverse ">
             <button type="button" class="btn btn-primary w-50 text-sm" id="submitRSVP">Submit RSVP</button>
-        </div>        
+        </div>
     </div>
 </div>
 {% endif %}
@@ -145,7 +145,7 @@
     <script>
         if ('{{ frappe.session.user }}' == 'Guest') {
             frappe.msgprint({
-                title: "Login Required", 
+                title: "Login Required",
                 message: "You need to login to RSVP for this event.",
                 primary_action: {
                     'label': 'Log in',
@@ -162,7 +162,7 @@
         // Get references to the checkbox and submit button
         let confirmAttendanceCheckbox = document.getElementById("confirmAttendance");
         let submitButton = document.getElementById("submitRSVP");
-    
+
         // Function to update the submit button state based on the checkbox
         function updateSubmitButtonState() {
             if (confirmAttendanceCheckbox.checked) {
@@ -170,11 +170,11 @@
             } else {
                 submitButton.disabled = true;
             }
-        }    
+        }
         // Attach a change event handler to the checkbox
-        confirmAttendanceCheckbox.addEventListener("change", updateSubmitButtonState);    
+        confirmAttendanceCheckbox.addEventListener("change", updateSubmitButtonState);
         updateSubmitButtonState();
-        
+
         // Event handler to the submit button
         document.getElementById("submitRSVP").addEventListener("click", function () {
 
@@ -196,7 +196,7 @@
                 });
             });
 
-            
+
             let formData = {
                 doctype: "FOSS Event RSVP Submission",
                 linked_rsvp: "{{ doc.name }}",
@@ -231,9 +231,9 @@
                         indicator: "red",
                     })
                 },
-            })    
-            
+            })
+
         });
     </script>
-    
+
 {% endblock %}

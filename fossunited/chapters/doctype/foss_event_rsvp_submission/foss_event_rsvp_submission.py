@@ -8,4 +8,4 @@ from fossunited.fossunited.utils import update_rsvp_count
 
 
 class FOSSEventRSVPSubmission(Document):
-	pass
+    pass

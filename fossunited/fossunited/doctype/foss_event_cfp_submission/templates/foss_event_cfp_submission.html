@@ -35,7 +35,7 @@
     <div class="date-time-category-flex" style="font-size: 1rem;">
         {% if not cfp.anonymise_proposals %}
         <div class="gray-600">
-            {{ _("By") }} {{ doc.full_name }} 
+            {{ _("By") }} {{ doc.full_name }}
         </div>
         <div class="gray-600">
             |
@@ -45,7 +45,7 @@
             {% set likes = get_doc_likes("FOSS Event CFP Submission", doc.name) %}
             <div class=" d-flex align-items-center like-button {% if frappe.session.user in likes %} liked {% endif %}" type="button" onClick="toggle_likes('{{doc.name}}' {% if frappe.session.user not in likes %}, 'Yes' {% endif %})">
                 {% include "public/icons/heart.svg" %}
-            </div>            
+            </div>
             {% if likes %}
                 {{ likes | length }}
             {% else %}
@@ -94,7 +94,7 @@
                 {{ key }}
             </div>
         {% endfor %}
-    </div>   
+    </div>
 </div>
 
 <div class="content-div container mb-4" id="proposal-details">
@@ -110,7 +110,7 @@
     <div class="text-xl my-4 semi-bold">
         {{ _("Talk Description") }}
     </div>
-    
+
     <div class="my-4">
         {{ doc.talk_description }}
     </div>
@@ -135,7 +135,7 @@
         </div>
         <div class="mt-4" id="comments-section">
             {% set comments = frappe.db.get_all(
-                    "Comment", 
+                    "Comment",
                     filters={
                         "reference_doctype": "FOSS Event CFP Submission",
                         "reference_name": doc.name,
@@ -172,7 +172,7 @@
     <div class="text-xl my-4 semi-bold">
         {{ _("About Speaker") }}
     </div>
-    
+
     <div class="my-4">
         <div class="mb-4 py-1">
             {{ doc.bio }}
@@ -195,7 +195,7 @@
                 "icon": "thumb-down",
                 "color": "#912018",
                 "background-color": "#FEE4E2",
-            }),    
+            }),
             "Maybe" : ({
                 "icon": "help-square-contained",
                 "color": "#93370D",
@@ -215,17 +215,17 @@
                     </div>
                 </div>
             {% endfor %}
-    
+
             <div class="cfp-statistic-container" style="align-items: flex-start; padding: 8px 24px;">
                 <div class="text-xl semi-bold">
                     {{ _("Not Reviewed") }}
                 </div>
                 <div class="text-xl">
-                    {{ statistics["Not Reviewed"] }} 
+                    {{ statistics["Not Reviewed"] }}
                     <span class="text-xs">PENDING</span>
                 </div>
             </div>
-    
+
             <div class="cfp-statistic-container" style="align-items: flex-start; padding: 16px 24px;">
                 <div class="text-xl semi-bold">
                     {{ _("Approvability") }}
@@ -235,8 +235,8 @@
                 </div>
             </div>
         </div>
-    
-        
+
+
         {% if (frappe.session.user in get_reviewers(doc.event)["Emails"]) and not user_already_reviewed(doc.name) %}
         <div class="form-divider mb-4"></div>
         <div class="d-flex flex-column">
@@ -259,9 +259,9 @@
             </div>
         </div>
         {% endif %}
-    
+
         <div class="form-divider my-4"></div>
-    
+
         <div class="my-4">
             <div class="text-xl my-4 semi-bold">
                 {{ _("Reviews") }}
@@ -288,7 +288,7 @@
                 {% endfor %}
             {% endif %}
         </div>
-    
+
     </div>
 </div>
 
@@ -372,7 +372,7 @@
                 }
             })
         }
-        
+
         function post_review() {
             frappe.call({
                 method: 'fossunited.fossunited.utils.post_review',
@@ -429,10 +429,10 @@
             frappe.call({
                 method: 'frappe.client.set_value',
                 args: {
-                    doctype: "FOSS Event CFP Submission", 
-                    name: "{{ doc.name }}", 
-                    fieldname: "status", 
-                    value: document.getElementById("cfp-status").value, 
+                    doctype: "FOSS Event CFP Submission",
+                    name: "{{ doc.name }}",
+                    fieldname: "status",
+                    value: document.getElementById("cfp-status").value,
                 },
                 callback: (r)=>{
                     location.reload();

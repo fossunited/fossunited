@@ -6,9 +6,9 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
-	def before_save(self):
-		self.set_route()
-		self.is_published = 1
+    def before_save(self):
+        self.set_route()
+        self.is_published = 1
 
-	def set_route(self):
-		self.route = f"{self.event}/cfp/{self.name}"
+    def set_route(self):
+        self.route = f"{self.event}/cfp/{self.name}"
