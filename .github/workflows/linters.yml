@@ -1,10 +1,10 @@
 name: Linters
 
 on:
-  pull_request:
-  workflow_dispatch:
   push:
-    branches: [ develop ]
+    branches:
+      - develop
+  pull_request:
 
 jobs:
   linters:
