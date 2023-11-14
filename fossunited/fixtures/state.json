@@ -270,5 +270,13 @@
   "modified": "2023-11-14 16:30:20.702983",
   "name": "Puducherry",
   "state": "Puducherry"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 17:38:35.658982",
+  "name": "Jammu and Kashmir",
+  "state": "Jammu and Kashmir"
  }
 ]
