@@ -8,6 +8,7 @@ app_license = "AGPL-3.0"
 
 fixtures = [
     "Web Page",
+    "State",
 ]
 
 # Includes in <head>
