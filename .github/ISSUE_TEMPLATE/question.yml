@@ -1,0 +1,18 @@
+name: ❓ Question / Help Request
+description: Ask a question or request assistance
+title: "[QUESTION] <title>"
+labels: [question, help wanted]
+
+body:
+- type: textarea
+  attributes:
+    label: Question or issue
+    description: Clearly state your question or describe the problem you need help with.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Additional context
+    description: Provide any additional context or information that might help others understand your question.
+  validations:
+    required: false

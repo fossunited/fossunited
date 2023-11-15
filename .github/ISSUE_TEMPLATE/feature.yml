@@ -1,0 +1,36 @@
+name: ✨ Feature Request
+description: Submit a request for a new feature
+title: "[FEATURE] <title>"
+labels: [feature request]
+
+body:
+- type: textarea
+  attributes:
+    label: Feature description
+    description: Provide a clear and concise description of the new feature.
+  validations:
+    required: true
+- type: textarea
+  attributes:
+    label: Use case
+    description: Describe the use case for this feature.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Benefits
+    description: Outline the benefits of implementing this feature.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Alternatives considered
+    description: List any alternatives or solutions you've considered.
+  validations:
+    required: false
+- type: textarea
+  attributes:
+    label: Additional context
+    description: Add any other context or information about the feature request.
+  validations:
+    required: false
