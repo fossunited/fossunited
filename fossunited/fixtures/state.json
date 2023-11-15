@@ -1,0 +1,282 @@
+[
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.289836",
+  "name": "Andhra Pradesh",
+  "state": "Andhra Pradesh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.440559",
+  "name": "Arunachal Pradesh",
+  "state": "Arunachal Pradesh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.529619",
+  "name": "Assam",
+  "state": "Assam"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.570368",
+  "name": "Bihar",
+  "state": "Bihar"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.605827",
+  "name": "Chhattisgarh",
+  "state": "Chhattisgarh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.638998",
+  "name": "Goa",
+  "state": "Goa"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.674299",
+  "name": "Gujarat",
+  "state": "Gujarat"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.703510",
+  "name": "Haryana",
+  "state": "Haryana"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.738745",
+  "name": "Himachal Pradesh",
+  "state": "Himachal Pradesh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.769859",
+  "name": "Jharkhand",
+  "state": "Jharkhand"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.811475",
+  "name": "Karnataka",
+  "state": "Karnataka"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.850135",
+  "name": "Kerala",
+  "state": "Kerala"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.904457",
+  "name": "Madhya Pradesh",
+  "state": "Madhya Pradesh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.928558",
+  "name": "Maharashtra",
+  "state": "Maharashtra"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.958270",
+  "name": "Manipur",
+  "state": "Manipur"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:19.987830",
+  "name": "Meghalaya",
+  "state": "Meghalaya"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.027742",
+  "name": "Mizoram",
+  "state": "Mizoram"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.067194",
+  "name": "Nagaland",
+  "state": "Nagaland"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.104985",
+  "name": "Odisha",
+  "state": "Odisha"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.144293",
+  "name": "Punjab",
+  "state": "Punjab"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.183979",
+  "name": "Rajasthan",
+  "state": "Rajasthan"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.221855",
+  "name": "Sikkim",
+  "state": "Sikkim"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.278121",
+  "name": "Tamil Nadu",
+  "state": "Tamil Nadu"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.318302",
+  "name": "Telangana",
+  "state": "Telangana"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.355949",
+  "name": "Tripura",
+  "state": "Tripura"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.396985",
+  "name": "Uttar Pradesh",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.435340",
+  "name": "Uttarakhand",
+  "state": "Uttarakhand"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.477917",
+  "name": "West Bengal",
+  "state": "West Bengal"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.514111",
+  "name": "Andaman and Nicobar Islands",
+  "state": "Andaman and Nicobar Islands"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.553811",
+  "name": "Chandigarh",
+  "state": "Chandigarh"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.608273",
+  "name": "Daman and Diu",
+  "state": "Daman and Diu"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.644693",
+  "name": "Lakshadweep",
+  "state": "Lakshadweep"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.671006",
+  "name": "Delhi (National Capital Territory of Delhi)",
+  "state": "Delhi (National Capital Territory of Delhi)"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 16:30:20.702983",
+  "name": "Puducherry",
+  "state": "Puducherry"
+ },
+ {
+  "country": "India",
+  "docstatus": 0,
+  "doctype": "State",
+  "modified": "2023-11-14 17:38:35.658982",
+  "name": "Jammu and Kashmir",
+  "state": "Jammu and Kashmir"
+ }
+]
