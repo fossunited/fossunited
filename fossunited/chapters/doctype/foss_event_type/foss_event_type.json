@@ -22,7 +22,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-01 23:54:46.695025",
+ "modified": "2023-11-18 13:56:20.612268",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event Type",
@@ -43,7 +43,9 @@
   }
  ],
  "quick_entry": 1,
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "type"
 }
