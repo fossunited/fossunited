@@ -2,15 +2,11 @@ app_name = "fossunited"
 app_title = "FOSSUnited Platform"
 app_publisher = "Frappe x FOSSUnited"
 app_description = "Built on Frappe"
-app_email = "developers@frappe.io"
+app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 # required_apps = []
 
-fixtures = [
-    "Web Page",
-    "State",
-    "City",
-]
+fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 
 # Includes in <head>
 # ------------------

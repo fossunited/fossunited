@@ -1,0 +1,51 @@
+[
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "CityFOSS Conference",
+  "modified": "2023-11-18 14:09:31.237796",
+  "name": "CityFOSS Conference"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "Conference",
+  "modified": "2023-11-18 14:09:39.521394",
+  "name": "Conference"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "FOSS Hack",
+  "modified": "2023-11-18 14:09:47.027395",
+  "name": "FOSS Hack"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "Hackathon",
+  "modified": "2023-11-18 14:09:53.651035",
+  "name": "Hackathon"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "FOSS Meetup",
+  "modified": "2023-11-18 14:10:04.506767",
+  "name": "FOSS Meetup"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "City Meetup",
+  "modified": "2023-11-18 14:10:10.707990",
+  "name": "City Meetup"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "FOSS Event Type",
+  "event_type": "Linux Installation Party",
+  "modified": "2023-11-18 14:10:22.951970",
+  "name": "Linux Installation Party"
+ }
+]
