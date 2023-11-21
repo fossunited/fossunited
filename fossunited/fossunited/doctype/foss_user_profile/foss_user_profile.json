@@ -60,7 +60,8 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "options": "Email"
+   "options": "Email",
+   "unique": 1
   },
   {
    "fieldname": "employment_status_section",
@@ -155,7 +156,7 @@
  "image_field": "profile_photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-22 02:27:11.424128",
+ "modified": "2023-11-21 13:13:13.838556",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS User Profile",
