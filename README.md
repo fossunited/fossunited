@@ -35,6 +35,10 @@ For automatic running of linters before you commit:
 $ pip install pre-commit
 $ pre-commit install
 ```
+
+### Contribution 
+Want to contribute to the platform ? Checkout the [contribution guidelines](https://github.com/fossunited/fossunited/blob/develop/CONTRIBUTING.md). 
+
 ## License
 The repository has been released under [AGPL-3.0](https://github.com/fossunited/fossunited/blob/develop/LICENSE).
 By Contributing to the FOSS United Platform, you agree that all your contributions will be licensed under AGPL License.
