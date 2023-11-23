@@ -2,44 +2,36 @@
  "actions": [],
  "allow_rename": 1,
  "autoname": "prompt",
- "creation": "2023-07-03 02:50:02.854745",
+ "creation": "2023-08-21 22:50:48.655899",
  "default_view": "List",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "state",
-  "city",
-  "country"
+  "country_of_origin",
+  "column_break_sbxo",
+  "logo"
  ],
  "fields": [
   {
-   "fieldname": "city",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "City",
-   "options": "City",
-   "reqd": 1
+   "fieldname": "country_of_origin",
+   "fieldtype": "Data",
+   "label": "Country of Origin"
   },
   {
-   "fieldname": "state",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "State",
-   "options": "State",
-   "reqd": 1
+   "fieldname": "column_break_sbxo",
+   "fieldtype": "Column Break"
   },
   {
-   "default": "India",
-   "fieldname": "country",
-   "fieldtype": "Link",
-   "label": "Country",
-   "options": "Country"
+   "description": "Attach image in .png or .svg format",
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-10 01:40:56.440580",
+ "modified": "2023-08-21 22:50:48.655899",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Organization",

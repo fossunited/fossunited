@@ -1,0 +1,156 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-09-04 18:31:59.413740",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "route",
+  "column_break_vitn",
+  "is_published",
+  "section_break_ioxz",
+  "allow_edit",
+  "column_break_rwlt",
+  "rsvp_count",
+  "event_information_section",
+  "event",
+  "max_rsvp_count",
+  "column_break_yrzh",
+  "event_name",
+  "chapter",
+  "rsvp_description_section",
+  "rsvp_description",
+  "custom_questions_section",
+  "custom_questions"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_information_section",
+   "fieldtype": "Section Break",
+   "label": "Event Information"
+  },
+  {
+   "fieldname": "event",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event",
+   "options": "FOSS Chapter Events"
+  },
+  {
+   "fieldname": "column_break_yrzh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "event.chapter",
+   "fieldname": "chapter",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Chapter"
+  },
+  {
+   "fieldname": "custom_questions_section",
+   "fieldtype": "Section Break",
+   "label": "Custom Questions"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "column_break_vitn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?"
+  },
+  {
+   "fieldname": "rsvp_description_section",
+   "fieldtype": "Section Break",
+   "label": "RSVP Description"
+  },
+  {
+   "description": "Please make it center aligned for better layout on website.",
+   "fieldname": "rsvp_description",
+   "fieldtype": "Text Editor",
+   "label": "RSVP Description"
+  },
+  {
+   "fieldname": "custom_questions",
+   "fieldtype": "Table",
+   "label": "Custom Questions",
+   "options": "FOSS RSVP Custom Questions"
+  },
+  {
+   "fieldname": "section_break_ioxz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_rwlt",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_edit",
+   "fieldtype": "Check",
+   "label": "Allow RSVP Edit"
+  },
+  {
+   "default": "100",
+   "description": "Default Max RSVP Count is 100",
+   "fieldname": "max_rsvp_count",
+   "fieldtype": "Int",
+   "label": "Max RSVP Count"
+  },
+  {
+   "default": "0",
+   "fieldname": "rsvp_count",
+   "fieldtype": "Int",
+   "label": "RSVP Count"
+  },
+  {
+   "fetch_from": "event.event_name",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "label": "Event Name"
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
+ "links": [],
+ "modified": "2023-09-16 21:06:23.329566",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "FOSS Event RSVP",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "events/rsvp",
+ "search_fields": "chapter",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "event",
+ "track_changes": 1
+}

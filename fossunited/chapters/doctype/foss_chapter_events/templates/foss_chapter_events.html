@@ -1,0 +1,745 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}{{ doc.event_name }}{% endblock %}
+
+{% block page_content %}
+{% set is_team_member = is_session_user_team_member(doc.chapter) %}
+{% set chapter = frappe.get_doc("FOSS Chapter", doc.chapter) %}
+<div class="{% if doc.event_banner_image %} bg-pattern {% else %} content-center mt-lg-8  {% endif %}">
+    {% if doc.event_banner_image %}
+    <img src="{{doc.event_banner_image}}" alt="Event Banner Image" class="event-banner-image" >
+    {% endif %}
+    <h1 class="page-title">
+        {{ doc.event_name }}
+    </h1>
+
+    {% if doc.event_bio %}
+    <div class="container-center">
+            <p>
+                {{ doc.event_bio }}
+            </p>
+    </div>
+    {% endif %}
+</div>
+
+
+<!-- Social Icons -->
+<div class="container-center">
+    <div class="location-social-flex">
+        {% if chapter.email or chapter.twitter or chapter.facebook or chapter.instagram or chapter.linkedin or
+        chapter.mastodon %}
+        <div class="social-container">
+            {% if chapter.email %}
+            <a href="mailto:{{ doc.email }}" target="_blank" class="social-icon">
+                {% include "public/icons/email.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.twitterx %}
+            <a href="{{ chapter.twitterx }}" target="_blank" class="social-icon">
+                {% include "public/icons/x.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.facebook %}
+            <a href="{{ chapter.facebook }}" target="_blank" class="social-icon">
+                {% include "public/icons/facebook.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.instagram %}
+            <a href="{{ chapter.instagram }}" target="_blank" class="social-icon">
+                {% include "public/icons/instagram.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.linkedin %}
+            <a href="{{ chapter.linkedin }}" target="_blank" class="social-icon">
+                {% include "public/icons/linkedin.svg" %}
+            </a>
+            {% endif %}
+            {% if chapter.mastodon %}
+            <a href="{{ chapter.mastodon }}" target="_blank" class="social-icon">
+                {% include "public/icons/mastodon.svg" %}
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Date and Location -->
+<div class="container-center">
+    <div class="d-flex justify-content-center">
+        <div class="date-location-container">
+            <div class="container-flex-400px">
+                {% include "public/icons/calendar.svg" %}
+                <div class=" d-flex flex-column " >
+                    <div class="event-start-date">
+                        {{ formatted_datetime_with_tz(doc.event_start_date) }}
+                    </div>
+                    <div class="event-end-date">
+                        to {{ formatted_datetime_with_tz(doc.event_end_date) }}
+                    </div>
+                </div>
+            </div>
+            <div class="location-container">
+                <div class="icon-reg">
+                    {% include "public/icons/location-marker.svg" %}
+                </div>
+                {% if doc.event_location %}
+                <a href="{{doc.map_link}}" class="text-md-rg" target="_blank">
+                    {{ doc.event_location }}
+                </a>
+                {% else %}
+                <div class="text-md-rg">
+                    {{ _("To be announced") }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- if doc.primary_button_url or doc.secondary_button_url -%}
+        <div class="hero-buttons">
+            {%- if doc.primary_button_url -%}
+            <a class="button primary-button" href="{{ primary_button_url }}">
+                {{ _(primary_button_label) }}
+            </a>
+            {%- endif -%}
+            {%- if secondary_button_url -%}
+            <a class="button secondary-button" href="{{ secondary_button_url }}">
+                {{ _(secondary_button_label) }}
+            </a>
+            {%- endif -%}
+        </div>
+{%- endif -%}
+
+<!-- Navbar Section -->
+{% set navbar_items = get_event_navbar_items(doc.chapter, doc.show_speakers, doc.show_rsvp, doc.show_cfp, doc.event_schedule) %}
+<div class="container-center">
+    <div class="navbar-section">
+        {% for key in navbar_items %}
+            <div class="navbar-item">
+                {{ key }}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div id="event-description" class="content-div">
+    <!-- Description -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Description") }}
+            </h3>
+            <p class="about-section">
+                {% if doc.event_description %}
+                {{ doc.event_description }}
+                {% else %}
+                {{ _("No information available") }}
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+
+    <!-- Sponsors -->
+    {% if doc.sponsor_list %}
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Sponsors") }}
+            </h3>
+            <div class="sponsor-grid">
+                {% for sponsor in doc.sponsor_list %}
+                    <a href="{{ sponsor.redirect_link }}" class="sponsor-container" target="_blank">
+                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, "logo") %}
+                        <img src="{{logo}}" alt="{{ sponsor.organization }}">
+                    </a>
+                {% endfor %}
+            </div>
+            <p class="mt-5">
+                Want to sponsor us? Check out <a href="{{ doc.deck_link }}">this deck</a>
+            </p>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if doc.community_partners %}
+    <!-- Community Partners -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Community Partners") }}
+            </h3>
+            <div class="sponsor-grid">
+                {% for partner in doc.community_partners %}
+                    <a href="{{ partner.redirect_link }}" class="sponsor-container" target="_blank">
+                        {% set logo = frappe.db.get_value("Organization", sponsor.organization, [ "logo" ]) %}
+                        <img src="{{logo}}" alt="{{ partner.organization }}">
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if doc.event_members %}
+    <!-- Volunteers -->
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Volunteers") }}
+            </h3>
+            <div class="team-grid">
+                {% for member in doc.event_members %}
+                    <div class="person-container">
+                        {{ member.email | get_avatar }}
+                        <div class="text-base semi-bold" style="color: #000">
+                            {{ member.full_name }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div id="speakers" class="content-div">
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Speakers") }}
+            </h3>
+            {% set speakers = frappe.db.get_list('FOSS Event CFP Submission', filters={ 'event': doc.name, 'status': 'Confirmed'}, fields=['submitted_by', 'full_name', 'designation', 'organization']) %}
+            {% if speakers %}
+            <div class="team-grid">
+                {% for speaker in speakers %}
+                    <div class="person-container">
+                        {{ speaker.submitted_by | get_avatar }}
+                        <div class="name-designation-flex">
+                            <div class="text-base semi-bold" style="color: #000">
+                                {{ speaker.full_name }}
+                            </div>
+                            <div class="text-sm" style="color: #000">
+                                {{ speaker.designation }}, {{ speaker.organization }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="container-center empty-state-navbar">
+                <div class="text-xl semi-bold">
+                    {{ _("No speakers announced yet") }}
+                </div>
+                <div>
+                    {{ _("Stay tuned for updates!") }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="schedule" class="content-div">
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("Schedule") }}
+            </h3>
+            <!-- Schedule Empty State -->
+            {% if not doc.event_schedule %}
+
+                <!-- If user is a chapter team member, provide option to create a schedule -->
+                {% if is_team_member %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                {{ _("No schedule formed yet.") }}
+                            </div>
+                            <div>
+                                {{ _("As an organizer, create event schedule for better planning and structure of events") }}
+                            </div>
+                        </div>
+                        <a href="" class="button secondary-button text-sm">
+                            {{ _("Create Schedule") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- If user is not a team member -->
+                {% else %}
+                <div class="container-center empty-state-navbar">
+                    <div class="text-xl semi-bold">
+                        {{ _("Schedule Coming Soon!") }}
+                    </div>
+                    <div>
+                        {{ _("Schedule for this event has not been formed yet. But it will be coming soon!") }}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                {% if is_team_member %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("Schedules are") }} <span style="color: var(--success-600, #039855);
+                                    ">live!</span>
+                                </div>
+                                <div>
+                                    {{ _("Schedule is visible to the user.") }}
+                                </div>
+                            </div>
+                            <a href="" class="button secondary-button text-sm">
+                                {{ _("Edit Schedule") }}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="schedule-grid">
+                    {% for schedule in doc.event_schedule %}
+                        {{ generateScheduleLayout(schedule) }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div id="cfp" class="content-div">
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("CFP") }}
+            </h3>
+
+            {% set has_cfp = frappe.db.exists("FOSS Event CFP", {"event": doc.name}) %}
+            <!-- No CFP -->
+            {% if not has_cfp %}
+                <!-- If user is a chapter team member, provide option to create a CFP form -->
+                {% if is_team_member %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                CFP form <span style="color: #D92D20;">not created</span> yet.
+                            </div>
+                            <div>
+                                {{ _("Make CFP form live, in order to review talk requests for the event.") }}
+                            </div>
+                        </div>
+                        <a href="" class="button secondary-button text-sm">
+                            {{ _("Create CFP Form") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- If user is not a team member -->
+                {% else %}
+                <div class="container-center empty-state-navbar">
+                    <div class="text-xl semi-bold">
+                        {{ _("CFP Forms Coming Soon!") }}
+                    </div>
+                    <div>
+                        {{ _("CFP for this event is not available yet. But it is coming soon!") }}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                {% set event_cfp, cfp_is_published = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published"]) %}
+                {% if is_team_member %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("CFP form is") }}
+                                    {% if cfp_is_published %}
+                                    <span style="color: var(--success-600, #039855);">live!</span>
+                                    </div>
+                                    <div>
+                                        {{ _("CFP form for this event is live. You can unpublish it anytime.") }}
+                                    </div>
+                                    {% else %}
+                                    <span style="color: #D92D20;">not published</span>
+                                    </div>
+                                    <div>
+                                        {{ _("CFP form for this event is created. You can publish it anytime.") }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="hero-buttons">
+                                <a href="" class="button secondary-button text-sm">
+                                    {{ _("Edit CFP Form") }}
+                                </a>
+                                {% if cfp_is_published %}
+                                <div class="button danger-button text-sm" onclick="unpublishForm('FOSS Event CFP', '{{event_cfp}}', 'cfp')">
+                                    {{ _("Close Form") }}
+                                </div>
+                                {% else %}
+                                <div class="button primary-button text-sm" onclick="publishForm('FOSS Event CFP', '{{event_cfp}}', 'cfp')">
+                                    {{ _("Publish Form") }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                {{ _("CFP form is") }}
+                                {% if cfp_is_published %}
+                                <span style="color: var(--success-600, #039855);">live!</span>
+                                </div>
+                                <div>
+                                    {{ _("Propose a talk for this event!") }}
+                                </div>
+                                {% else %}
+                                <span style="color: #D92D20;">closed!</span>
+                                </div>
+                                <div>
+                                    {{ _("CFP form has been closed for this event.") }}
+                                </div>
+                                {% endif %}
+                        </div>
+                        {% if cfp_is_published %}
+                        <div class="hero-buttons">
+                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/cfp" class="button primary-button text-sm">
+                                {{ _("Propose a talk!") }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+
+                {% set cfp_submissions = frappe.db.get_all(
+                    "FOSS Event CFP Submission",
+                    filters={
+                        "linked_cfp": event_cfp,
+                        "event": doc.name,
+                    },
+                    fields=[
+                        "status",
+                        "full_name",
+                        "email",
+                        "organization",
+                        "designation",
+                        "talk_title",
+                        "category",
+                        "talk_duration",
+                    ],
+                ) %}
+
+                {% if cfp_submissions %}
+                    <div class="form-divider mt-5 mb-5"></div>
+                    <div class="text-xl semi-bold mb-4">
+                        {{ _("Submitted Talks") }}
+                    </div>
+                    <div class="cfp-list">
+                        {% for submission in cfp_submissions %}
+                            <div class="cfp-container">
+                                <div class="cfp-container-left">
+                                    <div class="d-flex">
+                                        <div class="text-xl semi-bold">
+                                            {{ submission.talk_title }}
+                                        </div>
+                                        <div style="width: 8px;"></div>
+                                        {{ submission.status | make_badge('md') }}
+                                    </div>
+                                    <div class="date-time-category-flex">
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hash-02.svg" %}
+                                            {{ submission.category }}
+                                        </div>
+                                        |
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hourglass-02.svg" %}
+                                            {{ submission.talk_duration }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cfp-container-right">
+                                    {{ submission.submitted_by | get_avatar }}
+                                    <div class="d-flex flex-column">
+                                        <div class="semi-bold">
+                                            {{ submission.full_name }}
+                                        </div>
+                                        <div class="text-sm">
+                                            {{ submission.designation }}, {{ submission.organization }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="content-div" id="rsvp">
+    <div class="container-center">
+        <div class="base-container">
+            <h3 class="subtitle">
+                {{ _("RSVP") }}
+            </h3>
+
+            {% set has_rsvp = frappe.db.exists("FOSS Event RSVP", {"event": doc.name}) %}
+            <!-- No RSVP -->
+            {% if not has_rsvp %}
+                <!-- If user is a chapter team member, provide option to create a RSVP Form -->
+                {% if is_team_member %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                RSVP form <span style="color: #D92D20;">not created</span> yet.
+                            </div>
+                            <div>
+                                {{ _("Make RSVP form live to enable users to let their attendance known!") }}
+                            </div>
+                        </div>
+                        <a href="" class="button secondary-button text-sm">
+                            {{ _("Create RSVP Form") }}
+                        </a>
+                    </div>
+                </div>
+
+                <!-- If user is not a team member -->
+                {% else %}
+                <div class="container-center empty-state-navbar">
+                    <div class="text-xl semi-bold">
+                        {{ _("RSVP Forms Coming Soon!") }}
+                    </div>
+                    <div>
+                        {{ _("RSVP for this event is not available yet. But it is coming soon!") }}
+                    </div>
+                </div>
+                {% endif %}
+            {% else %}
+                {% set event_rsvp, rsvp_count, max_rsvp_count, rsvp_is_published = frappe.db.get_value("FOSS Event RSVP", {"event": doc.name}, ["name", "rsvp_count", "max_rsvp_count", "is_published"]) %}
+                {% if is_team_member %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("RSVP form is") }}
+                                    {% if rsvp_is_published %}
+                                    <span style="color: var(--success-600, #039855);">live!</span>
+                                    </div>
+                                    <div>
+                                        {{ _("RSVP form for this event is live. You can unpublish it anytime.") }}
+                                    </div>
+                                    {% else %}
+                                    <span style="color: #D92D20;">not published</span>
+                                    </div>
+                                    <div>
+                                        {{ _("RSVP form for this event is created. You can publish it anytime.") }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="hero-buttons">
+                                <a href="" class="button secondary-button text-sm">
+                                    {{ _("Edit RSVP Form") }}
+                                </a>
+                                {% if rsvp_is_published %}
+                                <div class="button danger-button text-sm" onclick="unpublishForm('FOSS Event RSVP', '{{event_rsvp}}', 'rsvp')">
+                                    {{ _("Close Form") }}
+                                </div>
+                                {% else %}
+                                <div class="button primary-button text-sm" onclick="publishForm('FOSS Event RSVP', '{{event_rsvp}}', 'rsvp')">
+                                    {{ _("Publish Form") }}
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" m-4 ">
+                        <span class="text-lg semi-bold">RSVP Count: {{ rsvp_count }}</span> out of {{ max_rsvp_count }}
+                    </div>
+                    <div>
+                        {% set rsvp_submissions = frappe.db.get_all("FOSS Event RSVP Submission", fields=["submitted_by", "name1", "im_a"], filters={"linked_rsvp":event_rsvp, "event": doc.name}) %}
+                        {% for submission in rsvp_submissions %}
+                            <div class="rsvp-list-element">
+                                <span class="semi-bold" style="flex-basis: 25%;">{{ submission.name1 }}</span>
+                                <div style="width:100%; display: flex;  flex-basis: 75%; justify-content: space-between;">
+                                    <span style="color: #667085;">{{ hide_email(submission.submitted_by) }}</span>
+                                    <span style="color: #667085;">{{ submission.im_a }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                <div class="empty-state-navbar">
+                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                        <div class="d-flex flex-column">
+                            <div class="text-xl semi-bold">
+                                {{ _("RSVP form is") }}
+                                {% if rsvp_is_published %}
+                                <span style="color: var(--success-600, #039855);">live!</span>
+                                </div>
+                                <div>
+                                    {{ _("RSVP for this event right now!") }}
+                                </div>
+                                {% else %}
+                                <span style="color: #D92D20;">closed!</span>
+                                </div>
+                                <div>
+                                    {{ _("RSVP for this event is closed.") }}
+                                </div>
+                                {% endif %}
+                        </div>
+                        {% if rsvp_is_published %}
+                        <div class="hero-buttons">
+                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
+                                {{ _("RSVP for this event!") }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% macro generateScheduleLayout(schedule) %}
+    {% if schedule.type == 'Break' %}
+    <div class="schedule-container schedule-break d-flex flex-column ">
+        <div class="text-xl semi-bold" style="color: #015828;">
+            {{ schedule.title }}
+        </div>
+        <div class="icon-text-container">
+            {% include "public/icons/clock-01.svg" %}
+            <div class="semi-bold" style="color: #015828;">
+                {{ format_time_with_zone(schedule.start_time ,'h:mm a') }} - {{ format_time_with_zone(schedule.end_time ,'h:mm a') }}
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="schedule-container d-flex flex-column ">
+        <div class="date-time-category-flex">
+            <div class="icon-text-container">
+                {% include "public/icons/calendar-07.svg" %}
+                    {{ schedule.scheduled_date.strftime('%b %-d, %Y') }}
+            </div>
+            <div class="icon-text-container">
+                {% include "public/icons/clock-01.svg" %}
+                {{ format_time_with_zone(schedule.start_time ,'h:mm a') }}
+            </div>
+            <div class="icon-text-container">
+                {% include "public/icons/hash-02.svg" %}
+                {{ schedule.type }}
+            </div>
+        </div>
+        <div class="text-xl semi-bold">
+            {{ schedule.title }}
+        </div>
+        <div>
+            <div class="text-md-rg text-sm">
+                Speakers
+            </div>
+            <div class="semi-bold">
+            {{ schedule.speaker }}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endmacro %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get all the navbar items
+            let navbarItems = document.querySelectorAll(".navbar-item");
+
+            // Get all the content divs
+            let contentDivs = document.querySelectorAll(".content-div");
+
+            // Hide all content divs initially
+            contentDivs.forEach(function (div) {
+                div.style.display = "none";
+            });
+
+            // Add a click event listener to each navbar item
+            navbarItems.forEach(function (navbarItem) {
+                navbarItem.addEventListener("click", function () {
+                    // Get the text of the clicked navbar item
+                    let clickedText = navbarItem.textContent.trim();
+
+                    // Remove 'active' class from all navbar items
+                    navbarItems.forEach(function (item) {
+                        item.classList.remove("active");
+                    });
+
+                    // Add 'active' class to the clicked navbar item
+                    navbarItem.classList.add("active");
+
+                    // Hide all content divs
+                    contentDivs.forEach(function (div) {
+                        div.style.display = "none";
+                    });
+
+                    // Show the content div corresponding to the clicked navbar item
+                    let contentDivId = clickedText.toLowerCase().replace(/\s+/g, "-");
+                    document.getElementById(contentDivId).style.display = "block";
+                });
+            });
+
+            // Make the first navbar item ('Event Description') active by default
+            navbarItems[0].click();
+        });
+
+        // publish  a form
+        function publishForm(doctype, docname, section_id) {
+            frappe.call({
+                method: "frappe.client.set_value",
+                args: {
+                    doctype: `${doctype}`,
+                    name: `${docname}`,
+                    fieldname: "is_published",
+                    value: 1,
+                },
+                callback: (r) =>{
+                    console.log(r)
+                    $(`#${section_id}`).load(window.location.href + ` #${section_id}` );
+                },
+                error: (e) =>{
+                    console.log(e)
+                },
+            });
+        }
+
+        // unpublish a form
+        function unpublishForm(doctype, docname, section_id) {
+            frappe.call({
+                method: "frappe.client.set_value",
+                args: {
+                    doctype: `${doctype}`,
+                    name: `${docname}`,
+                    fieldname: "is_published",
+                    value: 0,
+                },
+                callback: (r) =>{
+                    console.log(r)
+                    $(`#${section_id}`).load(window.location.href + ` #${section_id}` );
+                },
+                error: (e) =>{
+                    console.log(e)
+                },
+            });
+        }
+    </script>
+{% endblock %}

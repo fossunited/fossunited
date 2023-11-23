@@ -1,0 +1,29 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "condition": "doc.status == 'Rejected'",
+ "creation": "2023-09-21 19:34:21.072580",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "FOSS Event CFP Submission",
+ "enabled": 1,
+ "event": "Value Change",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "",
+ "modified": "2023-09-21 19:34:24.965994",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "CFP Rejection Mail",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "submitted_by"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{ doc.event_name }} - Update on your proposal",
+ "value_changed": "status"
+}

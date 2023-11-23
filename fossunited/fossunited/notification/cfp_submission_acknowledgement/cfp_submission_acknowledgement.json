@@ -1,0 +1,27 @@
+{
+ "attach_print": 0,
+ "channel": "Email",
+ "creation": "2023-09-21 02:30:15.264519",
+ "days_in_advance": 0,
+ "docstatus": 0,
+ "doctype": "Notification",
+ "document_type": "FOSS Event CFP Submission",
+ "enabled": 1,
+ "event": "New",
+ "idx": 0,
+ "is_standard": 1,
+ "message": "<html>\n<body style=\"font-family: Arial, sans-serif; background-color: #f5f5f5;\">\n\n<center>\n<img src=\"https://fossunited.org/files/logo618eee.svg\" alt=\"FOSS United Logo\" style=\"max-height: 60px;\">\n</center>\n\n<div style=\"margin: 0 auto; width: 600px;\">\n<h5>Hi {{doc.full_name}},</h5>\n\n<p>We are happy to inform you that we have received your talk submission for {{ doc.event_name }}. Your contribution is greatly valued and we look forward to reviewing.</p>\n<p>Title of Your Proposal: <span style=\"color: #08B74F; font-weight: bold;\">{{ doc.talk_title }}</span></p>\n\n\n<ul style=\"list-style-type: disc;\">\n    <li>Our review panel will carry out a meticulous review of all proposals after the submission deadline.<br/>\n    <li>Post deadline, you will receive feedback on your proposal, as well as information about its status. Our goal is to curate a selection of talks that inspire, inform, and engage our community.</li><br/>\n</ul>\n\n<p>Once again, we thank you for your contribution. Should you have any questions or need further assistance, please do not hesitate to contact us.</p>\n<p>Write to us at <a style=\"color: #08B74F;\" href=\"mailto:foundation@fossunited.org\">foundation@fossunited.org</a> or join our <a style=\"color: #08B74F;\" href=\"https://t.me/fossunited/54660\">telegram channel</a>.</p><br/>\n<p>Best Regards,</p>\n<p>The FOSSUnited Team</p>\n</div>\n\n</body>\n</html>\n",
+ "modified": "2023-09-21 19:02:49.841854",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "CFP Submission Acknowledgement",
+ "owner": "Administrator",
+ "recipients": [
+  {
+   "receiver_by_document_field": "submitted_by"
+  }
+ ],
+ "send_system_notification": 0,
+ "send_to_all_assignees": 0,
+ "subject": "{{ doc.event_name }} CFP Submitted Successfully! "
+}

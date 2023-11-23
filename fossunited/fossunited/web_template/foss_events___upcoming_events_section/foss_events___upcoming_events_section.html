@@ -1,0 +1,173 @@
+<style>
+    .container-center {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .base-container {
+        max-width: 1200px;
+        width: 100%;
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .title-subtitle{
+        width: auto;
+    }
+
+    .month-divider{
+        border-bottom: 2px dotted #4BA306;
+        width: 25%;
+    }
+
+    .month{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 24px;
+    }
+
+    .event-container{
+        max-width: 320px;
+        width: 100%;
+        border-radius: 32px;
+        box-shadow: inset 0px 0px 0px 1px #000;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding-bottom: 8px;
+    }
+
+    .event-container:hover{
+        text-decoration: none;
+    }
+
+    .event-thumbnail{
+        width: 100% !important;
+        border-radius: 32px 32px 0 0;
+        height: 158px !important;
+        object-fit: cover;
+        z-index: -10;
+    }
+
+    .event-container-info{
+        display: flex;
+        padding: 8px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        align-self: stretch;
+    }
+
+    .event-container-title{
+        color: #000;
+        text-align: center;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+    }
+
+    .event-container-bio{
+        color: #000;
+        text-align: center;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .event-container-date-location{
+        color: #5B5B5B;
+        text-align: center;
+        font-family: Inter;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+    }
+
+    .upcoming-event{
+        box-shadow: inset 0px 0px 0px 1px #4BA306;
+        transition: box-shadow 0.2s ease-in-out;
+    }
+
+    .upcoming-event:hover{
+        box-shadow: inset 0px 0px 0px 3px #4BA306;
+    }
+
+    .events-grid{
+        margin-top: 24px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(320px, 1fr));
+        row-gap: 24px;
+        justify-items: center;
+    }
+
+</style>
+<div class="container-center">
+    <div class="base-container">
+
+        <!-- Heading and Description -->
+        <div class="container-center">
+            <h3>
+                {{ heading }}
+            </h3>
+            <p>
+                {{ description }}
+            </p>
+        </div>
+
+        <!-- Events by Date -->
+        {% set all_events = frappe.get_all("FOSS Chapter Events", fields=['event_banner_image', 'event_name',
+        'event_location', 'event_start_date', 'event_bio', 'must_attend', 'route'], filters={'is_published': 1,
+        'status': ['not in', ['Concluded', 'Cancelled']]}, order_by='event_start_date') %}
+
+        {% set events_by_month = {} %}
+
+        <!-- ToDo: Filter by Event Type -->
+
+        {% if all_events %}
+        {% for event in all_events %}
+        {% set event_month = get_month(event.event_start_date, "%B") %}
+        {% if event_month not in events_by_month %}
+        {% set _ = events_by_month.update({event_month: []}) %}
+        {% endif %}
+        {% set _ = events_by_month[event_month].append(event) %}
+        {% endfor %}
+        <div class="event-by-month">
+            {% for month, events in events_by_month.items() %}
+            <div class="month">
+                <h4>{{ month }}</h4>
+                <div class="month-divider">
+                </div>
+            </div>
+            <div class="events-grid">
+                {% for event in events %}
+                <a href="{{ event.route }}" class="event-container upcoming-event">
+                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail">
+                    <div class="event-container-info">
+                        <div class=" event-container-title">{{ event.event_name }}</div>
+                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
+                        <div class="event-container-date-location">
+                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="container-center mt-4 mb-4">
+            <p>No events yet. Coming Soon 🚀</p>
+        </div>
+        {% endif %}
+    </div>
+</div>

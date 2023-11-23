@@ -2,9 +2,11 @@ app_name = "fossunited"
 app_title = "FOSSUnited Platform"
 app_publisher = "Frappe x FOSSUnited"
 app_description = "Built on Frappe"
-app_email = "developers@frappe.io"
+app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 # required_apps = []
+
+fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 
 # Includes in <head>
 # ------------------
@@ -54,10 +56,27 @@ app_license = "AGPL-3.0"
 # ----------
 
 # add methods and filters to jinja environment
-# jinja = {
-# 	"methods": "fossunited.utils.jinja_methods",
-# 	"filters": "fossunited.utils.jinja_filters"
-# }
+jinja = {
+    "methods": [
+        "fossunited.fossunited.utils.get_month",
+        "fossunited.fossunited.utils.formatted_datetime_with_tz",
+        "fossunited.fossunited.utils.is_session_user_team_member",
+        "fossunited.fossunited.utils.get_event_navbar_items",
+        "fossunited.fossunited.utils.format_time_with_zone",
+        "fossunited.fossunited.utils.hide_email",
+        "fossunited.fossunited.utils.make_badge",
+        "fossunited.fossunited.utils.get_doc_likes",
+        "fossunited.fossunited.utils.get_cfp_navbar",
+        "fossunited.fossunited.utils.format_date_time",
+        "fossunited.fossunited.utils.get_cfp_review_statistics",
+        "fossunited.fossunited.utils.get_reviewers",
+        "fossunited.fossunited.utils.user_already_reviewed",
+    ],
+    "filters": [
+        "fossunited.fossunited.utils.get_avatar",
+        "fossunited.fossunited.utils.make_badge",
+    ],
+}
 
 # Installation
 # ------------

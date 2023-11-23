@@ -4,3 +4,4 @@
 *.swp
 tags
 node_modules
+__pycache__

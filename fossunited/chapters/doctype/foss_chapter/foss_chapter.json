@@ -27,7 +27,7 @@
   "instagram",
   "mastodon",
   "chapter_members_section",
-  "chapter_member",
+  "chapter_members",
   "chapter_lead",
   "route",
   "is_published"
@@ -79,12 +79,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "chapter_member",
-   "fieldtype": "Table",
-   "label": "Chapter Members",
-   "options": "FOSS Chapter Lead Team Members"
-  },
-  {
    "fieldname": "basic_information_section",
    "fieldtype": "Section Break",
    "label": "Basic Information"
@@ -112,7 +106,7 @@
    "fieldname": "institution_name",
    "fieldtype": "Link",
    "label": "Institution Name",
-   "options": "Organization"
+   "options": "Institute"
   },
   {
    "fieldname": "about_chapter",
@@ -131,7 +125,7 @@
    "label": "Route"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?",
@@ -182,13 +176,24 @@
    "fieldtype": "Data",
    "label": "Mastodon",
    "options": "URL"
+  },
+  {
+   "fieldname": "chapter_members",
+   "fieldtype": "Table",
+   "label": "Chapter Members",
+   "options": "FOSS Chapter Lead Team Members"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
- "links": [],
- "modified": "2023-08-12 17:21:34.608841",
+ "links": [
+  {
+   "link_doctype": "FOSS Chapter Events",
+   "link_fieldname": "chapter"
+  }
+ ],
+ "modified": "2023-10-13 22:32:02.580563",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",

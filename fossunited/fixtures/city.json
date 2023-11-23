@@ -1,0 +1,418 @@
+[
+ {
+  "city": "Mumbai",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:49.290089",
+  "name": "Mumbai",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Delhi",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:50.431074",
+  "name": "Delhi",
+  "state": "Delhi (National Capital Territory of Delhi)"
+ },
+ {
+  "city": "Bangalore",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:51.035015",
+  "name": "Bangalore",
+  "state": "Karnataka"
+ },
+ {
+  "city": "Chennai",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:51.443594",
+  "name": "Chennai",
+  "state": "Tamil Nadu"
+ },
+ {
+  "city": "Hyderabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:51.842491",
+  "name": "Hyderabad",
+  "state": "Telangana"
+ },
+ {
+  "city": "Kolkata",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:52.448444",
+  "name": "Kolkata",
+  "state": "West Bengal"
+ },
+ {
+  "city": "Ahmedabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:52.664813",
+  "name": "Ahmedabad",
+  "state": "Gujarat"
+ },
+ {
+  "city": "Pune",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:52.901775",
+  "name": "Pune",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Surat",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:53.305205",
+  "name": "Surat",
+  "state": "Gujarat"
+ },
+ {
+  "city": "Jaipur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:53.505987",
+  "name": "Jaipur",
+  "state": "Rajasthan"
+ },
+ {
+  "city": "Lucknow",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:53.713259",
+  "name": "Lucknow",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Kanpur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:53.927260",
+  "name": "Kanpur",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Nagpur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:54.144120",
+  "name": "Nagpur",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Indore",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:54.355532",
+  "name": "Indore",
+  "state": "Madhya Pradesh"
+ },
+ {
+  "city": "Thane",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:54.551474",
+  "name": "Thane",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Bhopal",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:54.745929",
+  "name": "Bhopal",
+  "state": "Madhya Pradesh"
+ },
+ {
+  "city": "Visakhapatnam",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:54.973966",
+  "name": "Visakhapatnam",
+  "state": "Andhra Pradesh"
+ },
+ {
+  "city": "Pimpri-Chinchwad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:55.448919",
+  "name": "Pimpri-Chinchwad",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Patna",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:55.697823",
+  "name": "Patna",
+  "state": "Bihar"
+ },
+ {
+  "city": "Vadodara",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:55.928755",
+  "name": "Vadodara",
+  "state": "Gujarat"
+ },
+ {
+  "city": "Ghaziabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:56.175509",
+  "name": "Ghaziabad",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Ludhiana",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:56.379445",
+  "name": "Ludhiana",
+  "state": "Punjab"
+ },
+ {
+  "city": "Agra",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:56.594004",
+  "name": "Agra",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Nashik",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:56.806750",
+  "name": "Nashik",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Faridabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:57.039232",
+  "name": "Faridabad",
+  "state": "Haryana"
+ },
+ {
+  "city": "Meerut",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:57.266131",
+  "name": "Meerut",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Rajkot",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:57.492731",
+  "name": "Rajkot",
+  "state": "Gujarat"
+ },
+ {
+  "city": "Kalyan-Dombivali",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:58.364555",
+  "name": "Kalyan-Dombivali",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Vasai-Virar",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:58.596925",
+  "name": "Vasai-Virar",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Varanasi",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:58.833757",
+  "name": "Varanasi",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Srinagar",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:59.061588",
+  "name": "Srinagar",
+  "state": "Jammu and Kashmir"
+ },
+ {
+  "city": "Aurangabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:59.309330",
+  "name": "Aurangabad",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Dhanbad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:59.525816",
+  "name": "Dhanbad",
+  "state": "Jharkhand"
+ },
+ {
+  "city": "Amritsar",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:59.746468",
+  "name": "Amritsar",
+  "state": "Punjab"
+ },
+ {
+  "city": "Navi Mumbai",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:39:59.934882",
+  "name": "Navi Mumbai",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Allahabad",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:00.162758",
+  "name": "Allahabad",
+  "state": "Uttar Pradesh"
+ },
+ {
+  "city": "Ranchi",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:00.528749",
+  "name": "Ranchi",
+  "state": "Jharkhand"
+ },
+ {
+  "city": "Howrah",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:00.744243",
+  "name": "Howrah",
+  "state": "West Bengal"
+ },
+ {
+  "city": "Coimbatore",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:00.963964",
+  "name": "Coimbatore",
+  "state": "Tamil Nadu"
+ },
+ {
+  "city": "Jabalpur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:01.152372",
+  "name": "Jabalpur",
+  "state": "Madhya Pradesh"
+ },
+ {
+  "city": "Gwalior",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:01.369023",
+  "name": "Gwalior",
+  "state": "Madhya Pradesh"
+ },
+ {
+  "city": "Vijayawada",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:01.595657",
+  "name": "Vijayawada",
+  "state": "Andhra Pradesh"
+ },
+ {
+  "city": "Jodhpur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:02.210852",
+  "name": "Jodhpur",
+  "state": "Rajasthan"
+ },
+ {
+  "city": "Madurai",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:02.448330",
+  "name": "Madurai",
+  "state": "Tamil Nadu"
+ },
+ {
+  "city": "Raipur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:02.664772",
+  "name": "Raipur",
+  "state": "Chhattisgarh"
+ },
+ {
+  "city": "Kota",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:02.880138",
+  "name": "Kota",
+  "state": "Rajasthan"
+ },
+ {
+  "city": "Chandigarh",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:03.120838",
+  "name": "Chandigarh",
+  "state": "Chandigarh"
+ },
+ {
+  "city": "Guwahati",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:03.506780",
+  "name": "Guwahati",
+  "state": "Assam"
+ },
+ {
+  "city": "Solapur",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:03.723249",
+  "name": "Solapur",
+  "state": "Maharashtra"
+ },
+ {
+  "city": "Bhilai",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:03.960583",
+  "name": "Bhilai",
+  "state": "Chhattisgarh"
+ },
+ {
+  "city": "Durg",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:04.176271",
+  "name": "Durg",
+  "state": "Chhattisgarh"
+ },
+ {
+  "city": "Kochi",
+  "docstatus": 0,
+  "doctype": "City",
+  "modified": "2023-11-14 17:40:04.392441",
+  "name": "Kochi",
+  "state": "Kerala"
+ }
+]

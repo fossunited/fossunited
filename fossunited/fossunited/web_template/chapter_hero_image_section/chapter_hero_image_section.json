@@ -1,45 +1,30 @@
 {
- "__islocal": true,
  "__unsaved": 1,
  "creation": "2023-08-02 14:05:16.626716",
  "docstatus": 0,
  "doctype": "Web Template",
  "fields": [
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "image_1",
    "fieldtype": "Attach Image",
    "label": "Image 1",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "image_2",
    "fieldtype": "Attach Image",
    "label": "Image 2",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "image_3",
    "fieldtype": "Attach Image",
    "label": "Image 3",
    "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "background_pattern",
-   "fieldtype": "Attach Image",
-   "label": "Background Pattern",
-   "reqd": 0
   }
  ],
- "idx": 0,
- "modified": "2023-08-02 14:05:16.626716",
+ "idx": 16,
+ "modified": "2023-08-30 00:23:19.723584",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Chapter Hero Image Section",
