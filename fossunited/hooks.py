@@ -55,6 +55,15 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 # Jinja
 # ----------
 
+# Add all simple route rules here
+website_route_rules = [
+    {
+        "from_route": "/events/<event>/cfp/new",
+        "to_route": "/cfp/create/new",
+    },
+]
+
+
 # add methods and filters to jinja environment
 jinja = {
     "methods": [

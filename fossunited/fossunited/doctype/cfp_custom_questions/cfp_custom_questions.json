@@ -24,23 +24,24 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Type",
-   "options": "Text\nParagraph\nChoice"
+   "options": "Text\nParagraph\nSelect"
   },
   {
    "fieldname": "column_break_alox",
    "fieldtype": "Column Break"
   },
   {
-   "description": "For Choice, enter list of Options, each on a new line.",
+   "description": "For select, enter each option on a new line.",
    "fieldname": "options",
    "fieldtype": "Small Text",
+   "in_list_view": 1,
    "label": "Options"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-09-17 16:35:06.218549",
+ "modified": "2023-12-01 21:08:25.765348",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "CFP Custom Questions",

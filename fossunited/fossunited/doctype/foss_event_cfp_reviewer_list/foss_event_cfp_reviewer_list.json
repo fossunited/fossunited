@@ -22,21 +22,19 @@
    "fetch_from": "reviewer.full_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Full Name"
   },
   {
    "fetch_from": "reviewer.email",
    "fieldname": "email",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-21 18:29:55.893898",
+ "modified": "2023-12-03 00:01:18.585687",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Reviewer List",

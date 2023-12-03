@@ -153,6 +153,10 @@
     line-height: normal;
 }
 
+.button:hover{
+    cursor: pointer;
+}
+
 
 .secondary-button{
     background-color: black;

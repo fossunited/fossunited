@@ -331,7 +331,7 @@
                                 {{ _("Make CFP form live, in order to review talk requests for the event.") }}
                             </div>
                         </div>
-                        <a href="" class="button secondary-button text-sm">
+                        <a href="{{doc.name}}/cfp/new?event={{doc.name}}" class="button secondary-button text-sm">
                             {{ _("Create CFP Form") }}
                         </a>
                     </div>
@@ -371,7 +371,7 @@
                                 {% endif %}
                             </div>
                             <div class="hero-buttons">
-                                <a href="" class="button secondary-button text-sm">
+                                <a href="/cfp/create/{{event_cfp}}/edit" class="button secondary-button text-sm">
                                     {{ _("Edit CFP Form") }}
                                 </a>
                                 {% if cfp_is_published %}
