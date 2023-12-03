@@ -211,7 +211,7 @@
             <h3 class="subtitle">
                 {{ _("Speakers") }}
             </h3>
-            {% set speakers = frappe.db.get_list('FOSS Event CFP Submission', filters={ 'event': doc.name, 'status': 'Confirmed'}, fields=['submitted_by', 'full_name', 'designation', 'organization']) %}
+            {% set speakers = frappe.db.get_all('FOSS Event CFP Submission', filters={ 'event': doc.name, 'status': 'Confirmed'}, fields=['submitted_by', 'full_name', 'designation', 'organization']) %}
             {% if speakers %}
             <div class="team-grid">
                 {% for speaker in speakers %}
