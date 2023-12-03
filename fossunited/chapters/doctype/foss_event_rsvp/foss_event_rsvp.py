@@ -18,7 +18,6 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def set_route(self):
         self.route = f"events/{self.event}/rsvp"
-        self.is_published = 1
 
     def enable_rsvp_tab(self):
         frappe.db.set_value(
