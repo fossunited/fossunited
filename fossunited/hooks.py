@@ -61,6 +61,10 @@ website_route_rules = [
         "from_route": "/events/<event>/cfp/new",
         "to_route": "/cfp/create/new",
     },
+    {
+        "from_route": "/events/<event>/rsvp/new",
+        "to_route": "/rsvp/create/new",
+    },
 ]
 
 

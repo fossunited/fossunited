@@ -1,13 +1,14 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSEventRSVP(WebsiteGenerator):
     def before_save(self):
         self.set_route()
+        self.enable_rsvp_tab()
 
     def on_update(self):
         if self.rsvp_count >= self.max_rsvp_count:
@@ -17,3 +18,9 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def set_route(self):
         self.route = f"events/{self.event}/rsvp"
+        self.is_published = 1
+
+    def enable_rsvp_tab(self):
+        frappe.db.set_value(
+            "FOSS Chapter Events", self.event, "show_rsvp", 1
+        )

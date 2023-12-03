@@ -1,12 +1,12 @@
 frappe.ready(function() {
-    replace_breadcrumb_link()
-    handle_cfp_edit()
+	replace_breadcrumb_link()
+	handle_rsvp_edit()
 
-    frappe.web_form.after_save = () => {
-        setTimeout(() => {
-            window.location.href = "/events/" + frappe.web_form.doc.event;
-        }, 3000);
-    }
+	frappe.web_form.after_save = () => {
+		setTimeout(() => {
+			window.location.href = "/events/" + frappe.web_form.doc.event;
+		}, 3000);
+	}
 })
 
 function replace_breadcrumb_link(){
@@ -19,24 +19,18 @@ function replace_breadcrumb_link(){
     document.getElementsByClassName("breadcrumb-item")[0].style.fontWeight = "600"
 }
 
-function handle_cfp_edit(){
-    /*
-        If the link to this page ends with /edit, then the user is trying to edit the cfp.
-    */
+function handle_rsvp_edit(){
     if(window.location.href.endsWith("/edit")){
-
-        // Change the title of the page to "Edit CFP"
-        document.getElementsByClassName("web-form-title")[0].getElementsByTagName("h1")[0].innerText = "Edit CFP"
+        document.getElementsByClassName("web-form-title")[0].getElementsByTagName("h1")[0].innerText = "Edit RSVP"
 
         // Show Chapter and Event name in place of CFP name
         frappe.call({
             method: "frappe.client.get",
             args: {
-                doctype: "FOSS Event CFP",
+                doctype: "FOSS Event RSVP",
                 name: frappe.web_form.doc.name,
             },
             callback: (r) => {
-                console.log(r)
                 if (r.message) {
                     document.getElementsByClassName("web-form-title")[0].getElementsByTagName("p")[0].innerHTML = "</br><b>Chapter: </b>" + r.message.chapter + "</br><b>" + "Event: " + "</b>" + r.message.event_name
                 }
@@ -47,6 +41,6 @@ function handle_cfp_edit(){
         document.getElementsByClassName("btn-primary")[0].innerText = "Update"
 
         // change description of the form
-        document.getElementsByClassName("web-form-introduction")[0].getElementsByClassName("ql-editor")[0].getElementsByTagName("p")[0].innerText = "Edit the CFP form for the event"
+        document.getElementsByClassName("web-form-introduction")[0].getElementsByClassName("ql-editor")[0].getElementsByTagName("p")[0].innerText = "Edit the RSVP form for the event"
     }
 }

@@ -507,7 +507,7 @@
                                 {{ _("Make RSVP form live to enable users to let their attendance known!") }}
                             </div>
                         </div>
-                        <a href="" class="button secondary-button text-sm">
+                        <a href="{{doc.name}}/rsvp/new?event={{doc.name}}" class="button secondary-button text-sm">
                             {{ _("Create RSVP Form") }}
                         </a>
                     </div>
@@ -547,7 +547,7 @@
                                 {% endif %}
                             </div>
                             <div class="hero-buttons">
-                                <a href="" class="button secondary-button text-sm">
+                                <a href="/rsvp/create/{{event_rsvp}}/edit" class="button secondary-button text-sm">
                                     {{ _("Edit RSVP Form") }}
                                 </a>
                                 {% if rsvp_is_published %}
