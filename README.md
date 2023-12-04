@@ -18,7 +18,7 @@ Repo for the website and open-source platform of FOSS United. The whole platform
 - Checkout Frappe Framework [Installation Docs](https://frappeframework.com/docs/) for setting up frappe on your [bench](https://frappeframework.com/docs/user/en/tutorial/install-and-setup-bench).
 
 - Create a new bench with
-```bench fossu-bench```
+```bench init fossu-bench```
 - Clone the FOSS United Platform App.
 ```bench get-app https://github.com/fossunited/fossunited```
 - Create a [new site](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
