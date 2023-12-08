@@ -155,7 +155,7 @@ def get_doc_likes(doctype, name):
     return likes
 
 
-def get_cfp_navbar(event, anonymise_proposals):
+def get_cfp_navbar(event, submitted_by, anonymise_proposals):
     navbar_items = {
         "Proposal Details": "proposal-details",
         "Form Responses": "form-responses",
@@ -168,8 +168,10 @@ def get_cfp_navbar(event, anonymise_proposals):
         "FOSS Event CFP", {"event": event}, "chapter"
     )
 
-    if check_if_reviewer(event) or is_session_user_team_member(
-        chapter
+    if (
+        check_if_reviewer(event)
+        or is_session_user_team_member(chapter)
+        or frappe.session.user == submitted_by
     ):
         navbar_items["Review Proposals"] = "review-proposals"
 

@@ -433,6 +433,7 @@
                         "talk_title",
                         "category",
                         "talk_duration",
+                        "route",
                     ],
                 ) %}
 
@@ -443,7 +444,7 @@
                     </div>
                     <div class="cfp-list">
                         {% for submission in cfp_submissions %}
-                            <div class="cfp-container">
+                            <a href="/{{ submission.route }}" class="cfp-container">
                                 <div class="cfp-container-left">
                                     <div class="d-flex">
                                         <div class="text-xl semi-bold">
@@ -475,7 +476,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         {% endfor %}
                     </div>
 

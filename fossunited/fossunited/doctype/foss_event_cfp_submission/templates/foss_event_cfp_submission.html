@@ -86,7 +86,7 @@
 
 </div>
 
-{% set navbar_items = get_cfp_navbar(doc.event , cfp.anonymise_proposals) %}
+{% set navbar_items = get_cfp_navbar(doc.event , doc.submitted_by, cfp.anonymise_proposals) %}
 <div class="container-center mb-4">
     <div class="navbar-section">
         {% for key in navbar_items %}

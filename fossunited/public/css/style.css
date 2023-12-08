@@ -709,6 +709,8 @@
 
 .cfp-container:hover{
     box-shadow: inset 0px 0px 0px 3px #1D2939;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .cfp-container-left{
