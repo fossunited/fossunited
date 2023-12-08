@@ -288,16 +288,13 @@
                 is_first_talk: document.getElementById("first-talk").checked,
                 custom_answers: custom_responses,
             };
-            console.log(formData)
-
 
             frappe.call({
-                method: 'frappe.client.insert',
+                method: 'fossunited.fossunited.utils.create_submission',
                 args: {
-                    'doc': formData,
+                    'fields': formData,
                 },
                 callback: (r) =>{
-                    console.log(r)
                     location.reload();
                 },
                 error: (r) => {

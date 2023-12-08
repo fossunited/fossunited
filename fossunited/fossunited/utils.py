@@ -143,11 +143,14 @@ def make_badge(text="Default", size="sm"):
 
 def get_doc_likes(doctype, name):
     likes = frappe.db.get_value(doctype, name, "_liked_by")
-    try:
-        # Parse the string into a list
-        likes = json.loads(likes)
-    except json.JSONDecodeError as e:
-        frappe.throw("Error parsing likes: " + str(e))
+    if likes is None:
+        return []
+    else:
+        try:
+            # Parse the string into a list
+            likes = json.loads(likes)
+        except json.JSONDecodeError as e:
+            frappe.throw("Error parsing likes: " + str(e))
 
     return likes
 
@@ -258,3 +261,10 @@ def post_review(submission, reviewer, to_approve, remarks):
         },
     )
     submission_doc.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def create_submission(fields):
+    fields = json.loads(fields)
+    doc = frappe.get_doc(fields)
+    doc.insert(ignore_permissions=True)
