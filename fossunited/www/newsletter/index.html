@@ -45,8 +45,9 @@
     </div>
   </div>
 </section>
+
 <section id="footer-cta">
-  <div id="cta-container" class="base-container container h-full">
+  <div id="cta-container" class="base-container container-center h-full">
     <div id="cta">
       <div class="text-center">
         <h4>Connect with us</h4>
@@ -60,6 +61,7 @@
     </div>
   </div>
 </section>
+
 <!-- Subject to display Change -->
 <section id="subscribed-page">
   <div id="success">
@@ -73,6 +75,7 @@
     </div>
   </div>
 </section>
+
 <style>
 #hero h1 {
   font-size: 40px;
@@ -88,6 +91,9 @@
     }
     .newsletter-icon img {
       margin-bottom: -50px !important;
+    }
+    #newsletters-list {
+      margin: auto;
     }
     #email {
       border: 1px solid black;
@@ -121,6 +127,7 @@
     }
     #cta-container {
       border-radius: 16px;
+      margin: auto;
       background: var(--gray-50, #F9FAFB);
     }
     #telegram-channel {
@@ -146,7 +153,6 @@
     #subscribed-page {
       display: none;
     }
-
     .subscribed-page-show {
       display: block;
     }
@@ -175,7 +181,7 @@
         font-size: 12px;
         padding: 8px;
       }
-    }
+
     @media (min-width: 426px) and(max-width: 576px) {
       .newsletter-icon img {
         height: 100px;
@@ -194,6 +200,7 @@
         font-size: 15px;
       }
     }
+
     @media (min-width: 577px) and(max-width: 768px) {
       #email {
         width: 280px;
@@ -206,14 +213,15 @@
         width: 300px;
         font-size: 14px;
       }
-
     }
+
     @media (min-width: 426px) and(max-width: 768px) {
       #news {
         padding: 24px 36px;
         width: 350px;
       }
     }
+
     /* Footer Section - CTA */
     @media (min-width: 320px) and (max-width: 425px) {
       #telegram-channel {
