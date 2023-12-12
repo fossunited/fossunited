@@ -14,7 +14,10 @@
   "hackathon_start_date",
   "hackathon_end_date",
   "hackathon_start_time",
-  "hackathon_end_time"
+  "hackathon_end_time",
+  "hackathon_details_section",
+  "hackathon_description",
+  "hackathon_banner"
  ],
  "fields": [
   {
@@ -78,11 +81,28 @@
    "fieldtype": "Time",
    "label": "Hackathon End Time",
    "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_details_section",
+   "fieldtype": "Section Break",
+   "label": "Hackathon Details"
+  },
+  {
+   "fieldname": "hackathon_description",
+   "fieldtype": "Markdown Editor",
+   "label": "Hackathon Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_banner",
+   "fieldtype": "Attach Image",
+   "label": "Hackathon Banner",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-12 18:20:35.302556",
+ "modified": "2023-12-12 18:43:28.732303",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",
