@@ -350,6 +350,7 @@
                 {% endif %}
             {% else %}
                 {% set event_cfp, cfp_is_published = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published"]) %}
+                {% set self_cfp = frappe.db.get_all("FOSS Event CFP Submission", {"event": doc.name, "submitted_by": frappe.session.user}, ["status","full_name","email","organization","designation","talk_title","category","talk_duration","route",]) %}
                 {% if is_team_member %}
                     <div class="empty-state-navbar">
                         <div class="d-flex w-100 justify-content-lg-between align-items-center ">
@@ -391,12 +392,22 @@
                     <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                         <div class="d-flex flex-column">
                             <div class="text-xl semi-bold">
+                                {% if self_cfp %}
+                                {{ _("You have alrady proposed a talk for this event.") }}
+                                {% else %}
                                 {{ _("CFP form is") }}
+                                {% endif %}
                                 {% if cfp_is_published %}
+                                {% if not self_cfp %}
                                 <span style="color: var(--success-600, #039855);">live!</span>
+                                {% endif %}
                                 </div>
                                 <div>
+                                    {% if self_cfp %}
+                                    {{ _("However you can still fill up the CFP form for a new talk proposal!") }}
+                                    {% else %}
                                     {{ _("Propose a talk for this event!") }}
+                                    {% endif %}
                                 </div>
                                 {% else %}
                                 <span style="color: #D92D20;">closed!</span>
@@ -415,7 +426,39 @@
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
+                <div>
+                    <div class="text-xl semi-bold my-4">
+                        {{ _("Your CFPs: ") }}
+                    </div>
+                    {% for submission in self_cfp %}
+                            <a href="/{{ submission.route }}" class="cfp-container">
+                                <div class="cfp-container-left">
+                                    <div class="d-flex">
+                                        <div class="text-xl semi-bold">
+                                            {{ submission.talk_title }}
+                                        </div>
+                                        <div style="width: 8px;"></div>
+                                        {{ submission.status | make_badge('md') }}
+                                    </div>
+                                    <div class="date-time-category-flex">
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hash-02.svg" %}
+                                            {{ submission.category }}
+                                        </div>
+                                        |
+                                        <div class="icon-text-container">
+                                            {% include "public/icons/hourglass-02.svg" %}
+                                            {{ submission.talk_duration }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cfp-container-right">
+
+                                </div>
+                            </a>
+                        {% endfor %}
+                </div>
+            {% endif %}
 
 
                 {% set cfp_submissions = frappe.db.get_all(
@@ -423,6 +466,7 @@
                     filters={
                         "linked_cfp": event_cfp,
                         "event": doc.name,
+                        "submitted_by": ["!=", frappe.session.user],
                     },
                     fields=[
                         "status",
@@ -440,7 +484,7 @@
                 {% if cfp_submissions %}
                     <div class="form-divider mt-5 mb-5"></div>
                     <div class="text-xl semi-bold mb-4">
-                        {{ _("Submitted Talks") }}
+                        {{ _("All CFP Submissions") }}
                     </div>
                     <div class="cfp-list">
                         {% for submission in cfp_submissions %}
@@ -579,34 +623,55 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                <div class="empty-state-navbar">
-                    <div class="d-flex w-100 justify-content-lg-between align-items-center ">
-                        <div class="d-flex flex-column">
-                            <div class="text-xl semi-bold">
-                                {{ _("RSVP form is") }}
-                                {% if rsvp_is_published %}
-                                <span style="color: var(--success-600, #039855);">live!</span>
+                    {% set already_rsvp = frappe.db.exists("FOSS Event RSVP Submission", {"event": doc.name, "submitted_by": frappe.session.user}) %}
+                    {% if already_rsvp %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("You have already RSVPed for this event!") }}
                                 </div>
                                 <div>
-                                    {{ _("RSVP for this event right now!") }}
+                                    {{ _("You can edit your RSVP form anytime.") }}
                                 </div>
-                                {% else %}
-                                <span style="color: #D92D20;">closed!</span>
-                                </div>
-                                <div>
-                                    {{ _("RSVP for this event is closed.") }}
-                                </div>
-                                {% endif %}
+                            </div>
+                            <div class="hero-buttons">
+                                <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
+                                    {{ _("Edit RSVP") }}
+                                </a>
+                            </div>
                         </div>
-                        {% if rsvp_is_published %}
-                        <div class="hero-buttons">
-                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
-                                {{ _("RSVP for this event!") }}
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
-                </div>
+                    {% else %}
+                    <div class="empty-state-navbar">
+                        <div class="d-flex w-100 justify-content-lg-between align-items-center ">
+                            <div class="d-flex flex-column">
+                                <div class="text-xl semi-bold">
+                                    {{ _("RSVP form is") }}
+                                    {% if rsvp_is_published %}
+                                    <span style="color: var(--success-600, #039855);">live!</span>
+                                    </div>
+                                    <div>
+                                        {{ _("RSVP for this event right now!") }}
+                                    </div>
+                                    {% else %}
+                                    <span style="color: #D92D20;">closed!</span>
+                                    </div>
+                                    <div>
+                                        {{ _("RSVP for this event is closed.") }}
+                                    </div>
+                                    {% endif %}
+                            </div>
+                            {% if rsvp_is_published %}
+                            <div class="hero-buttons">
+                                <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
+                                    {{ _("RSVP for this event!") }}
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
                 {% endif %}
             {% endif %}
         </div>
