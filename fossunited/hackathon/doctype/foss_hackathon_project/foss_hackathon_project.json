@@ -10,6 +10,7 @@
   "status_checks_section",
   "disabled",
   "judging",
+  "hackathon_permalink_name",
   "column_break_ekbb",
   "is_published",
   "route",
@@ -141,12 +142,18 @@
    "fieldtype": "Select",
    "label": "Prize Type",
    "options": "First prize\nSecond prize\nThird prize"
+  },
+  {
+   "fetch_from": "hackathon.hackathon_permalink_name",
+   "fieldname": "hackathon_permalink_name",
+   "fieldtype": "Data",
+   "label": "Hackathon Permalink Name"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-13 19:20:41.779123",
+ "modified": "2023-12-13 22:02:35.483492",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Project",

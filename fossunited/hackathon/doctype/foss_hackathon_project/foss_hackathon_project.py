@@ -2,8 +2,12 @@
 # For license information, please see license.txt
 
 # import frappe
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
 
 
-class FOSSHackathonProject(Document):
-    pass
+class FOSSHackathonProject(WebsiteGenerator):
+    def before_save(self):
+        self.set_route()
+
+    def set_route(self):
+        self.route = f"hackathon/{self.hackathon_permalink_name}/{self.project_name.lower().replace(' ', '-')}"

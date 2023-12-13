@@ -8,8 +8,10 @@
   "route_details_section",
   "route",
   "is_published",
+  "hackathon_permalink_name",
   "team_details_section",
-  "team_name"
+  "team_name",
+  "hackathon_name"
  ],
  "fields": [
   {
@@ -39,6 +41,18 @@
    "in_list_view": 1,
    "label": "Team Name",
    "reqd": 1
+  },
+  {
+   "fetch_from": "hackathon_name.hackathon_permalink_name",
+   "fieldname": "hackathon_permalink_name",
+   "fieldtype": "Data",
+   "label": "Hackathon Permalink Name"
+  },
+  {
+   "fieldname": "hackathon_name",
+   "fieldtype": "Link",
+   "label": "Hackathon Name",
+   "options": "FOSS Hackathons"
   }
  ],
  "has_web_view": 1,
@@ -54,7 +68,7 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-13 19:11:29.445270",
+ "modified": "2023-12-13 22:07:43.216320",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Teams",

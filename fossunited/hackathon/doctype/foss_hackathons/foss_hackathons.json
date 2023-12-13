@@ -2,12 +2,14 @@
  "actions": [],
  "allow_guest_to_view": 1,
  "allow_rename": 1,
+ "autoname": "field:hackathon_permalink_name",
  "creation": "2023-12-12 18:15:08.888693",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "route_info_section",
   "route",
+  "hackathon_permalink_name",
   "column_break_ysex",
   "is_published",
   "hackathon_basic_info_section",
@@ -240,6 +242,13 @@
    "fieldtype": "Table",
    "label": "Community Partners",
    "options": "FOSS Event Sponsors"
+  },
+  {
+   "fieldname": "hackathon_permalink_name",
+   "fieldtype": "Data",
+   "label": "Hackathon Permalink Name",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "has_web_view": 1,
@@ -259,10 +268,11 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-13 19:12:06.319665",
+ "modified": "2023-12-13 22:39:30.995799",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
