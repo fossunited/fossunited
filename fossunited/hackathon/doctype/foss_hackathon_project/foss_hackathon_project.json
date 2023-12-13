@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "creation": "2023-12-13 14:51:40.966943",
  "doctype": "DocType",
@@ -22,7 +23,6 @@
   "hackathon",
   "team_name",
   "number_of_likes",
-  "project_images",
   "tab_2_tab",
   "project_prizing_section",
   "prize_type"
@@ -127,11 +127,6 @@
    "non_negative": 1
   },
   {
-   "fieldname": "project_images",
-   "fieldtype": "Attach Image",
-   "label": "Project Images "
-  },
-  {
    "fieldname": "tab_2_tab",
    "fieldtype": "Tab Break",
    "label": "Prizing"
@@ -151,7 +146,7 @@
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-13 19:14:04.333535",
+ "modified": "2023-12-13 19:20:41.779123",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Project",
