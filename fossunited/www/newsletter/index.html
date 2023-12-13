@@ -36,10 +36,9 @@
     <div>
       <ul class="m-auto py-8 list-unstyled gap-2 text-left row justify-content-center">
         {% for newsletter in newsletters %}
-        <li id="news" class="py-4 text-center col-md-3 position-relative">
+        <a id="news" href="{{ frappe.get_url() }} / {{ newsletter.route }}" class="py-4 text-center col-md-3 position-relative">
           {{ newsletter.subject }}
-          <a class="stretched-link" href="{{ frappe.get_url() }}/{{ newsletter.route }}"></a>
-        </li>
+        </a>
         {% endfor %}
       </ul>
     </div>
