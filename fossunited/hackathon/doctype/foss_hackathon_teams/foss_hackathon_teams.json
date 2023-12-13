@@ -1,0 +1,94 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-13 15:39:49.517553",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "route_details_section",
+  "route",
+  "is_published",
+  "hackathon_permalink_name",
+  "team_details_section",
+  "team_name",
+  "hackathon_name"
+ ],
+ "fields": [
+  {
+   "fieldname": "route_details_section",
+   "fieldtype": "Section Break",
+   "label": "Route Details"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is published"
+  },
+  {
+   "fieldname": "team_details_section",
+   "fieldtype": "Section Break",
+   "label": "Team Details"
+  },
+  {
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Team Name",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "hackathon_name.hackathon_permalink_name",
+   "fieldname": "hackathon_permalink_name",
+   "fieldtype": "Data",
+   "label": "Hackathon Permalink Name"
+  },
+  {
+   "fieldname": "hackathon_name",
+   "fieldtype": "Link",
+   "label": "Hackathon Name",
+   "options": "FOSS Hackathons"
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
+ "links": [
+  {
+   "link_doctype": "FOSS Hackathon Participant",
+   "link_fieldname": "team_name"
+  },
+  {
+   "link_doctype": "FOSS Hackathon Project",
+   "link_fieldname": "team_name"
+  }
+ ],
+ "modified": "2023-12-13 22:07:43.216320",
+ "modified_by": "Administrator",
+ "module": "Hackathon",
+ "name": "FOSS Hackathon Teams",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "team",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

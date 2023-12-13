@@ -5,5 +5,5 @@
 from frappe.website.website_generator import WebsiteGenerator
 
 
-class FOSSHackathons(WebsiteGenerator):
+class FOSSHackathonTeams(WebsiteGenerator):
     pass
