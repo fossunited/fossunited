@@ -21,11 +21,9 @@
           <label for="email"></label>
           <input id="email" type="email" placeholder="johndoe@example.com" name="email_address" />
         </div>
-        <div>
           <button id="subscribe">
             Subscribe
           </button>
-        </div>
       </div>
     </div>
   </div>
@@ -36,7 +34,7 @@
     <div>
       <ul class="m-auto py-8 list-unstyled gap-2 text-left row justify-content-center">
         {% for newsletter in newsletters %}
-        <a id="news" href="{{ frappe.get_url() }} / {{ newsletter.route }}" class="py-4 text-center col-md-3 position-relative">
+        <a id="news"  href="{{ frappe.get_url() }}/{{ newsletter.route }}" class="py-4 text-center col-md-3 position-relative">
           {{ newsletter.subject }}
         </a>
         {% endfor %}
@@ -44,8 +42,9 @@
     </div>
   </div>
 </section>
+
 <section id="footer-cta">
-  <div id="cta-container" class="base-container container h-full">
+  <div id="cta-container" class="base-container container-center h-full">
     <div id="cta">
       <div class="text-center">
         <h4>Connect with us</h4>
@@ -59,6 +58,7 @@
     </div>
   </div>
 </section>
+
 <!-- Subject to display Change -->
 <section id="subscribed-page">
   <div id="success d-flex">
@@ -74,6 +74,7 @@
     </div>
   </div>
 </section>
+
 <style>
 #hero h1 {
   font-size: 40px;
@@ -114,156 +115,40 @@
   color: #08b74f;
   margin: 15px;
 }
-#news a {
-  color: #08b74f;
-  max-width: 500px;
-}
-p {
-  padding: 0px 20px 0px 20px;
-}
-#subscribe {
-  padding: 12px;
-  color: white;
-  font-style: bold;
-  border-radius: 8px;
-  border: 1px solid var(--primary-500, #03B051);
-  background: var(--primary-500, #03B051);
-  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-}
-#cta-container {
-  border-radius: 16px;
-  margin: auto;
-  background: var(--gray-50, #F9FAFB);
-}
-#telegram-channel {
-  border-radius: 8px;
-  border: 1px solid var(--primary-500, #03B051);
-  background: var(--primary-500, #03B051);
-  box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-  padding: 12px;
-}
-#telegram-channel a {
-  font-family: Inter;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  /* 150% */
-  color: white;
-  padding: 12px;
-}
-#success {
-  margin: auto;
-  width: 500px;
-}
-#success-icon-div {
-  height: 200px;
-  width: 500px;
-}
-.success-icon {
-  margin-bottom: -60px !important;
-  width: 100px !important;
-  height: 250px !important;
-}
-div#success-wrapper {
-  display: flex;
-  height: 100vh;
-  width: 500px;
-  margin: auto;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
-#subscribed-page {
-  display: none;
-}
-.subscribed-page-show {
-  display: block;
-}
 
-  /* media queries */
-  /* Header - Page 1 */
-  @media (min-width: 320px) and (max-width: 425px) {
-    .newsletter-icon img {
-      height: 100px;
-      width: 100px;
+    #news a {
+      color: #08b74f;
+      max-width: 500px;
     }
-    #hero h1 {
-      font-size: 25px;
-    }
-    #hero p {
-      font-size: 15px;
-      margin: auto;
-      width: auto;
-      max-width: 900px;
-      font-size: 20px;
-    }
-    .newsletter-icon img {
-      margin-bottom: -50px !important;
-    }
-    #email {
-      height: 35px;
-      width: 200px !important;
-    }
-    #email {
-      font-size: 12px;
-      padding-left: 8px;
+
+    p {
+      padding: 0px 20px 0px 20px;
     }
     #subscribe {
-      font-size: 12px;
-      padding: 8px;
+      padding: 12px;
+      color: white;
+      font-style: bold;
+      border-radius: 8px;
+      border: 1px solid var(--primary-500, #03B051);
+      background: var(--primary-500, #03B051);
+      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
     }
-  }
-  @media (min-width: 426px) and(max-width: 576px) {
-    .newsletter-icon img {
-      height: 100px;
-      width: 100px;
 
     #cta-container {
       border-radius: 16px;
+      margin: auto;
       background: var(--gray-50, #F9FAFB);
     }
-    #hero h1 {
-      font-size: 30px;
-    }
-    #hero p {
-      font-size: 18px;
-    }
-    #email {
-      width: 230px !important;
-    }
-    #subscribe {
-      font-size: 15px;
-    }
-  }
-  @media (min-width: 577px) and(max-width: 768px) {
-    #email {
-      width: 280px;
-    }
-  }
 
-  /* Middle Section - Past Newsletters */
-  @media (min-width: 320px) and(max-width: 425px) {
-    #news {
-      padding: 24px;
-      width: 300px;
-      font-size: 14px;
-    }
-
-  }
-  @media (min-width: 426px) and(max-width: 768px) {
-    #news {
-      padding: 24px 36px;
-      width: 350px;
-    }
-  }
-
-  /* Footer Section - CTA */
-  @media (min-width: 320px) and (max-width: 425px) {
     #telegram-channel {
-      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid var(--primary-500, #03B051);
+      background: var(--primary-500, #03B051);
+      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+      padding: 12px;
     }
+
     #telegram-channel a {
-      font-size: 15px;
       font-family: Inter;
       font-size: 16px;
       font-weight: 500;
@@ -272,92 +157,125 @@ div#success-wrapper {
       color: white;
       padding: 12px;
     }
+
     #success {
       margin: auto;
       width: 500px;
     }
-    #subscribed-page {
+    #success-icon-div {
+      height: 200px;
+      width: 500px;
+    }
+    .success-icon {
+      margin-bottom: -60px !important;
+      width: 100px !important;
+      height: 250px !important;
+    }
+    div#success-wrapper {
+      display: flex;
+      height: 100vh;
+      width: 500px;
+      margin: auto;
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+    }
+     #subscribed-page {
       display: none;
     }
 
     .subscribed-page-show {
       display: block;
     }
+
     /* media queries */
-    /* Header - Page 1 */
+    /* Header - Page 1
     @media (min-width: 320px) and (max-width: 425px) {
       .newsletter-icon img {
         height: 100px;
-        width: 100px;
-      }
-      #hero h1 {
-        font-size: 25px;
-      }
-      #hero p {
-        font-size: 15px;
-      }
-      #email {
-        height: 35px;
-        width: 200px !important;
-      }
-      #email {
-        font-size: 12px;
-        padding-left: 8px;
-      }
-      #subscribe {
-        font-size: 12px;
-        padding: 8px;
-      }
+            width: 100px;
+        }
+
+        #hero h1 {
+            font-size: 25px;
+        }
+
+        #hero p {
+            font-size: 15px;
+        }
+
+        #email {
+            height: 35px;
+            width: 200px !important;
+        }
+
+        #email {
+            font-size: 12px;
+            padding-left: 8px;
+        }
+
+        #subscribe {
+            font-size: 12px;
+            padding: 8px;
+        }
     }
+
     @media (min-width: 426px) and(max-width: 576px) {
-      .newsletter-icon img {
-        height: 100px;
-        width: 100px;
-      }
-      #hero h1 {
-        font-size: 30px;
-      }
-      #hero p {
-        font-size: 18px;
-      }
-      #email {
-        width: 230px !important;
-      }
-      #subscribe {
-        font-size: 15px;
-      }
+        .newsletter-icon img {
+            height: 100px;
+            width: 100px;
+        }
+
+        #hero h1 {
+            font-size: 30px;
+        }
+
+        #hero p {
+            font-size: 18px;
+        }
+
+        #email {
+            width: 230px !important;
+        }
+
+        #subscribe {
+            font-size: 15px;
+        }
     }
+
     @media (min-width: 577px) and(max-width: 768px) {
-      #email {
-        width: 280px;
-      }
+        #email {
+            width: 280px;
+        }
     }
+
     /* Middle Section - Past Newsletters */
     @media (min-width: 320px) and(max-width: 425px) {
-      #news {
-        padding: 24px;
-        width: 300px;
-        font-size: 14px;
-      }
+        #news {
+            padding: 24px;
+            width: 300px;
+            font-size: 14px;
+        }
 
     }
+
     @media (min-width: 426px) and(max-width: 768px) {
-      #news {
-        padding: 24px 36px;
-        width: 350px;
-      }
+        #news {
+            padding: 24px 36px;
+            width: 350px;
+        }
     }
+
     /* Footer Section - CTA */
     @media (min-width: 320px) and (max-width: 425px) {
-      #telegram-channel {
-        padding: 10px;
-      }
+        #telegram-channel {
+            padding: 10px;
+        }
 
-      #telegram-channel a {
-        font-size: 15px;
-      }
+        #telegram-channel a {
+            font-size: 15px;
+        }
     }
-  }
 </style>
 
 <script src="/newsletter/index.js" type="text/javascript"></script>
