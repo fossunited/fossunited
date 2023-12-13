@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-12 18:15:08.888693",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "hackathon_basic_info_section",
+  "hackathon_name",
+  "hackathon_organiser_name",
+  "hackathon_organiser_email",
+  "hackathon_short_description",
+  "column_break_jepp",
+  "hackathon_start_date",
+  "hackathon_end_date",
+  "hackathon_start_time",
+  "hackathon_end_time",
+  "hackathon_details_section",
+  "hackathon_description",
+  "hackathon_banner"
+ ],
+ "fields": [
+  {
+   "fieldname": "hackathon_basic_info_section",
+   "fieldtype": "Section Break",
+   "label": "Hackathon Basic Info"
+  },
+  {
+   "fieldname": "hackathon_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hackathon Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_organiser_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hackathon Organiser Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_organiser_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hackathon Organiser Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_short_description",
+   "fieldtype": "Data",
+   "label": "Hackathon Short Description",
+   "length": 100
+  },
+  {
+   "fieldname": "column_break_jepp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hackathon_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Hackathon Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_end_date",
+   "fieldtype": "Date",
+   "label": "Hackathon End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_start_time",
+   "fieldtype": "Time",
+   "label": "Hackathon Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_end_time",
+   "fieldtype": "Time",
+   "label": "Hackathon End Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_details_section",
+   "fieldtype": "Section Break",
+   "label": "Hackathon Details"
+  },
+  {
+   "fieldname": "hackathon_description",
+   "fieldtype": "Markdown Editor",
+   "label": "Hackathon Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon_banner",
+   "fieldtype": "Attach Image",
+   "label": "Hackathon Banner",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-12 18:43:28.732303",
+ "modified_by": "Administrator",
+ "module": "Hackathon",
+ "name": "FOSS Hackathons",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
