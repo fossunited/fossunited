@@ -18,13 +18,13 @@
   "hackathon_organiser_email",
   "hackathon_short_description",
   "hackathon_type",
-  "hackathon_state",
+  "state",
   "column_break_jepp",
-  "hackathon_city",
-  "hackathon_start_date",
-  "hackathon_end_date",
-  "hackathon_start_time",
-  "hackathon_end_time",
+  "city",
+  "start_date",
+  "end_date",
+  "start_time",
+  "end_time",
   "hackathon_details_section",
   "hackathon_description",
   "hackathon_logo",
@@ -83,31 +83,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "hackathon_start_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Hackathon Start Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon_end_date",
-   "fieldtype": "Date",
-   "label": "Hackathon End Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon_start_time",
-   "fieldtype": "Time",
-   "label": "Hackathon Start Time",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon_end_time",
-   "fieldtype": "Time",
-   "label": "Hackathon End Time",
-   "reqd": 1
-  },
-  {
    "fieldname": "hackathon_details_section",
    "fieldtype": "Section Break",
    "label": "Hackathon Details"
@@ -148,20 +123,6 @@
    "fieldtype": "Select",
    "label": "Hackathon Type",
    "options": "Remote\nIn-person\nHybrid",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon_state",
-   "fieldtype": "Link",
-   "label": "Hackathon State",
-   "options": "State",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon_city",
-   "fieldtype": "Link",
-   "label": "Hackathon City",
-   "options": "City",
    "reqd": 1
   },
   {
@@ -249,6 +210,45 @@
    "label": "Hackathon Permalink Name",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Link",
+   "label": "Hackathon State",
+   "options": "State",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "Hackathon City",
+   "options": "City",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Hackathon Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "Hackathon End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Time",
+   "label": "Hackathon Start Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Time",
+   "label": "Hackathon End Time",
+   "reqd": 1
   }
  ],
  "has_web_view": 1,
@@ -268,7 +268,7 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-13 22:39:30.995799",
+ "modified": "2023-12-13 23:19:56.655155",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",
