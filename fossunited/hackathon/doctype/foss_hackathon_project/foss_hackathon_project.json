@@ -1,0 +1,177 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-13 14:51:40.966943",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project_details_tab",
+  "status_checks_section",
+  "disabled",
+  "judging",
+  "column_break_ekbb",
+  "is_published",
+  "route",
+  "project_details_section",
+  "project_name",
+  "project_short_description",
+  "project_description",
+  "project_repository_link",
+  "project_demo_link",
+  "column_break_xfpp",
+  "hackathon",
+  "team_name",
+  "number_of_likes",
+  "project_images",
+  "tab_2_tab",
+  "project_prizing_section",
+  "prize_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "project_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Project Details"
+  },
+  {
+   "fieldname": "status_checks_section",
+   "fieldtype": "Section Break",
+   "label": "Status Checks"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
+  },
+  {
+   "fieldname": "judging",
+   "fieldtype": "Select",
+   "label": "Judging",
+   "options": "Incomplete\nIn Progress\nCompleted"
+  },
+  {
+   "fieldname": "column_break_ekbb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "project_details_section",
+   "fieldtype": "Section Break",
+   "label": "Project Details "
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project_short_description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Short Description",
+   "length": 500,
+   "reqd": 1
+  },
+  {
+   "fieldname": "project_description",
+   "fieldtype": "Markdown Editor",
+   "label": "Project Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project_repository_link",
+   "fieldtype": "Data",
+   "label": "Project Repository Link",
+   "options": "URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project_demo_link",
+   "fieldtype": "Data",
+   "label": "Project Demo Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_xfpp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hackathon",
+   "fieldtype": "Link",
+   "label": "Hackathon ",
+   "options": "FOSS Hackathons",
+   "reqd": 1
+  },
+  {
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "label": "Team Name"
+  },
+  {
+   "fieldname": "number_of_likes",
+   "fieldtype": "Int",
+   "label": "Number of Likes",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "project_images",
+   "fieldtype": "Attach Image",
+   "label": "Project Images "
+  },
+  {
+   "fieldname": "tab_2_tab",
+   "fieldtype": "Tab Break",
+   "label": "Prizing"
+  },
+  {
+   "fieldname": "project_prizing_section",
+   "fieldtype": "Section Break",
+   "label": "Project Prizing"
+  },
+  {
+   "fieldname": "prize_type",
+   "fieldtype": "Select",
+   "label": "Prize Type",
+   "options": "First prize\nSecond prize\nThird prize"
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2023-12-13 19:14:04.333535",
+ "modified_by": "Administrator",
+ "module": "Hackathon",
+ "name": "FOSS Hackathon Project",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "project",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
