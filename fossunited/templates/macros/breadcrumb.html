@@ -1,0 +1,11 @@
+{% macro breadcrumb(route) %}
+    {% set route = route.split('/') %}
+    {% set event = frappe.db.get_value("FOSS Chapter Events", route[1], "event_name") %}
+    <div class="breadcrumb">
+        <a class="dark-links" href="/events/{{route[1]}}">{{ event }}</a>
+        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
+        <a class="dark-links" href="/events/{{route[1]}}/{{route[2]}}">{{ route[2] | upper }}</a>
+        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
+        <span class="breadcrumb-destination">{{ route[-1] }}</span>
+    </div>
+{% endmacro %}

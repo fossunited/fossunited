@@ -7,6 +7,8 @@
 {% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["chapter", "anonymise_proposals", "allow_cfp_edit"], as_dict=True) %}
 
 <div class="container" id="head-cfp">
+
+    {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
     <div class="my-6">
         {{ breadcrumb(doc.route) }}
     </div>
@@ -296,19 +298,6 @@
 
 
 {% endblock %}
-
-{% macro breadcrumb(route) %}
-    {% set route = route.split('/') %}
-    {% set event = frappe.db.get_value("FOSS Chapter Events", route[0], "event_name") %}
-    {% set cfp = route[-1] %}
-    <div class="breadcrumb">
-        <a class="dark-links" href="">{{ event }}</a>
-        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
-        <a class="dark-links" href="">{{ _("CFP") }}</a>
-        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
-        <span class="breadcrumb-destination">{{ cfp }}</span>
-    </div>
-{% endmacro %}
 
 {% macro rendercomment(comment) %}
     <div class="d-flex my-6">
