@@ -65,6 +65,10 @@ website_route_rules = [
         "from_route": "/events/<event>/rsvp/new",
         "to_route": "/rsvp/create/new",
     },
+    {
+        "from_route": "/events/<event>/cfp/<cfp>/edit",
+        "to_route": "/cfp/submission/edit",
+    },
 ]
 
 
@@ -84,6 +88,7 @@ jinja = {
         "fossunited.fossunited.utils.get_cfp_review_statistics",
         "fossunited.fossunited.utils.get_reviewers",
         "fossunited.fossunited.utils.user_already_reviewed",
+        "fossunited.fossunited.utils.get_form_fields",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",

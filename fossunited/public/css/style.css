@@ -781,12 +781,27 @@
 
 .dropdown-with-button{
     display: flex;
-    flex-basis: 40%;
+    padding: 4px 0px;
+    flex-basis: 30%;
     align-items: center;
     justify-content: center;
     margin: 16px 0px;
 }
 
+#cfp-status{
+    height: 100%;
+    padding: 4px 16px;
+}
+
+.submission-form-container{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    margin: 2rem 0;
+    gap: 2rem;
+    border-radius: 0.8rem;
+    border: #E6E6E6 1px solid;
+}
 
 @media screen and (max-width: 1200px){
     .events-grid{

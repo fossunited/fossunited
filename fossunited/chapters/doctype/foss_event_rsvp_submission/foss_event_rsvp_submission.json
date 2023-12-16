@@ -49,7 +49,7 @@
    "fieldname": "custom_answers",
    "fieldtype": "Table",
    "label": "Custom Answers",
-   "options": "FOSS RSVP Custom Answer"
+   "options": "FOSS Custom Answers"
   },
   {
    "fetch_from": "linked_rsvp.event",
@@ -110,7 +110,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-09 02:13:17.908192",
+ "modified": "2023-12-17 02:20:41.882000",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",

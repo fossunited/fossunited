@@ -270,3 +270,67 @@ def create_submission(fields):
     fields = json.loads(fields)
     doc = frappe.get_doc(fields)
     doc.insert(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def update_submission(doctype, submission, fields, custom):
+    fields = json.loads(fields)
+    custom = json.loads(custom)
+    frappe.db.set_value(doctype, submission, fields)
+
+    doc = frappe.get_doc(doctype, submission).as_dict()
+    for field in doc.custom_answers:
+        frappe.db.set_value(
+            "FOSS Custom Answers",
+            field.name,
+            "response",
+            custom[field.idx - 1]["response"],
+        )
+
+
+def filter_field_values(key):
+    ACCEPTED_FIELD_TYPES = [
+        "fieldname",
+        "label",
+        "fieldtype",
+        "options",
+        "description",
+        "reqd",
+        "read_only",
+        "description",
+    ]
+
+    if key in ACCEPTED_FIELD_TYPES:
+        return True
+
+    return False
+
+
+def get_form_fields(doctype):
+    meta = frappe.get_meta(doctype).as_dict()
+    fields = {}
+    current_section = None
+
+    for field in meta["fields"]:
+        if (
+            field["fieldtype"] == "Section Break"
+            or field["fieldtype"] == "Tab Break"
+        ):
+            current_section = field["label"]
+            if (
+                current_section == "Meta Info"
+                or current_section == "Reviews"
+            ):
+                continue
+            fields[current_section] = []
+
+        if current_section not in ["Meta Info", "Reviews"]:
+            fields[current_section].append(
+                {
+                    k: v
+                    for k, v in field.items()
+                    if filter_field_values(k)
+                }
+            )
+
+    return fields

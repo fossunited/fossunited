@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class FOSSRSVPCustomAnswer(Document):
+class FOSSCustomAnswers(Document):
     pass
