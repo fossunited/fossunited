@@ -426,6 +426,7 @@
                         {% endif %}
                     </div>
                 </div>
+                {% if self_cfp %}
                 <div>
                     <div class="text-xl semi-bold my-4">
                         {{ _("Your CFPs: ") }}
@@ -458,6 +459,7 @@
                             </a>
                         {% endfor %}
                 </div>
+                {% endif %}
             {% endif %}
 
 

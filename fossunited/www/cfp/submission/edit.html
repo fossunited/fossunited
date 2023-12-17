@@ -100,7 +100,7 @@
                         indicator:'green'
                     }, 5);
                     setTimeout(() => {
-                        window.location.href = window.history.back();
+                        window.location.href = '/events/{{ event.name }}/cfp/{{ frappe.form_dict["cfp"] }}';
                     }, 3000);
                 },
                 error: (e) => {
