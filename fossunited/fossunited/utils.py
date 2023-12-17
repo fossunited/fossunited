@@ -311,11 +311,13 @@ def get_form_fields(doctype):
     fields = {}
     current_section = None
     submission = {}
-    submission["doc"] = "RSVP" if frappe.form_dict["rsvp"] else "CFP"
+    submission["doc"] = (
+        "RSVP" if frappe.form_dict.get("rsvp") else "CFP"
+    )
     submission["value"] = (
-        frappe.form_dict["rsvp"]
-        if frappe.form_dict["rsvp"]
-        else frappe.form_dict["cfp"]
+        frappe.form_dict.get("rsvp")
+        if frappe.form_dict.get("rsvp")
+        else frappe.form_dict.get("cfp")
     )
     submission["custom_len"] = len(
         frappe.get_doc(
