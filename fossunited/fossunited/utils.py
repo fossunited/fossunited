@@ -310,6 +310,19 @@ def get_form_fields(doctype):
     meta = frappe.get_meta(doctype).as_dict()
     fields = {}
     current_section = None
+    submission = {}
+    submission["doc"] = "RSVP" if frappe.form_dict["rsvp"] else "CFP"
+    submission["value"] = (
+        frappe.form_dict["rsvp"]
+        if frappe.form_dict["rsvp"]
+        else frappe.form_dict["cfp"]
+    )
+    submission["custom_len"] = len(
+        frappe.get_doc(
+            f'FOSS Event {submission["doc"]} Submission',
+            submission["value"],
+        ).custom_answers
+    )
 
     for field in meta["fields"]:
         if (
@@ -320,11 +333,19 @@ def get_form_fields(doctype):
             if (
                 current_section == "Meta Info"
                 or current_section == "Reviews"
+                or (
+                    current_section == "Custom Answers"
+                    and submission["custom_len"] == 0
+                )
             ):
                 continue
             fields[current_section] = []
 
-        if current_section not in ["Meta Info", "Reviews"]:
+        if current_section not in [
+            "Meta Info",
+            "Reviews",
+            "Custom Answers" if submission["custom_len"] == 0 else "",
+        ]:
             fields[current_section].append(
                 {
                     k: v

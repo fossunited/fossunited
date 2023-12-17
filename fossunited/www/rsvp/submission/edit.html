@@ -1,23 +1,23 @@
 {% extends "templates/foss_base.html" %}
 
-{% block title %}Edit CFP Submission{% endblock %}
+{% block title %}Edit RSVP Submission{% endblock %}
 
 {% block page_content %}
     <div class="container">
         <div class="page-content">
             <div>
                 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
-                {{ breadcrumb('events/' + event.name + '/CFP Submission/edit') }}
+                {{ breadcrumb('events/' + event.name + '/RSVP Submission/edit') }}
             </div>
             <div class="header-container">
                 <div class="d-flex justify-content-between align-items-center ">
-                    <h3 class="my-2 ">Edit CFP Submission</h3>
-                    <div class="button primary-button text-sm" id="update-btn" onClick="updateCfpForm()">
+                    <h3 class="my-2 ">Edit RSVP Submission</h3>
+                    <div class="button primary-button text-sm" id="update-btn" onClick="updateRsvpForm()">
                         Update
                     </div>
                 </div>
                 <div class="mt-2">
-                    Edit your CFP Submission for the event.
+                    Edit your RSVP Submission for the event.
                     <div class="d-flex flex-column my-3">
                         <div class="my-1">
                             Chapter: {{ event.chapter }}
@@ -29,9 +29,9 @@
                 </div>
             </div>
             <div class="submission-form-container">
-                {% set fields = get_form_fields('FOSS Event CFP Submission') %}
+                {% set fields = get_form_fields('FOSS Event RSVP Submission') %}
                 {% for k,v in fields.items() %}
-                    <div id="cfp-{{ k | replace(' ', '-') | lower }}">
+                    <div id="rsvp-{{ k | replace(' ', '-') | lower }}">
                         <h5>
                             {{ k }}
                         </h5>
@@ -52,7 +52,7 @@
     {{ super() }}
     <script>
 
-        function updateCfpForm() {
+        function updateRsvpForm() {
             let formFields = document.querySelectorAll('.form-control:not(.custom-question), [type="text-editor"]');
             let submission = {};
             formFields.forEach((field) => {
@@ -89,8 +89,8 @@
             frappe.call({
                 method: 'fossunited.fossunited.utils.update_submission',
                 args: {
-                    'doctype': 'FOSS Event CFP Submission',
-                    'submission': '{{ frappe.form_dict["cfp"] }}',
+                    'doctype': 'FOSS Event RSVP Submission',
+                    'submission': '{{ frappe.form_dict["rsvp"] }}',
                     'fields': submission,
                     'custom': customAnswers
                 },
@@ -100,7 +100,7 @@
                         indicator:'green'
                     }, 5);
                     setTimeout(() => {
-                        window.location.href = '/events/{{ event.name }}/cfp/{{ frappe.form_dict["cfp"] }}';
+                        window.location.href = '/events/{{ event.name }}';
                     }, 2000);
                 },
                 error: (e) => {

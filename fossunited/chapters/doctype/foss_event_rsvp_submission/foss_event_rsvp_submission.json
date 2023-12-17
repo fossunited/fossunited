@@ -13,9 +13,9 @@
   "event_name",
   "column_break_tpys",
   "submitted_by",
-  "name1",
   "chapter",
   "standard_questions_section",
+  "name1",
   "im_a",
   "column_break_bkxf",
   "confirm_attendance",
@@ -43,7 +43,8 @@
   },
   {
    "fieldname": "section_break_vzwa",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Custom Answers"
   },
   {
    "fieldname": "custom_answers",
@@ -70,9 +71,10 @@
   {
    "fieldname": "standard_questions_section",
    "fieldtype": "Section Break",
-   "label": "Standard Questions"
+   "label": "Personal Information"
   },
   {
+   "description": "Select your current profession",
    "fetch_from": ".",
    "fieldname": "im_a",
    "fieldtype": "Select",
@@ -87,11 +89,12 @@
    "default": "0",
    "fieldname": "confirm_attendance",
    "fieldtype": "Check",
-   "label": "Confirm attendance"
+   "label": "Confirm your attendance!"
   },
   {
    "fieldname": "section_break_qrdc",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
   },
   {
    "fetch_from": "linked_rsvp.event_name",
@@ -103,6 +106,7 @@
   },
   {
    "fetch_from": "submitted_by.full_name",
+   "fetch_if_empty": 1,
    "fieldname": "name1",
    "fieldtype": "Data",
    "label": "Name"
@@ -110,7 +114,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-17 02:20:41.882000",
+ "modified": "2023-12-17 18:31:00.396433",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",

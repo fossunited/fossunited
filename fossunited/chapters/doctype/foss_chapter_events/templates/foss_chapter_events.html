@@ -625,8 +625,8 @@
                         {% endfor %}
                     </div>
                 {% else %}
-                    {% set already_rsvp = frappe.db.exists("FOSS Event RSVP Submission", {"event": doc.name, "submitted_by": frappe.session.user}) %}
-                    {% if already_rsvp %}
+                    {% set already_rsvp = frappe.db.get_value("FOSS Event RSVP Submission", {"event": doc.name, "submitted_by": frappe.session.user}, ["name"]) %}
+                    {% if already_rsvp != None %}
                     <div class="empty-state-navbar">
                         <div class="d-flex w-100 justify-content-lg-between align-items-center ">
                             <div class="d-flex flex-column">
@@ -638,8 +638,8 @@
                                 </div>
                             </div>
                             <div class="hero-buttons">
-                                <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp" class="button primary-button text-sm">
-                                    {{ _("Edit RSVP") }}
+                                <a href="{{ frappe.get_url() }}/events/{{doc.name}}/rsvp/{{ already_rsvp }}/edit" class="button primary-button text-sm">
+                                    {{ _("Edit RSVP Submission Form") }}
                                 </a>
                             </div>
                         </div>

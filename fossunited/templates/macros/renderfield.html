@@ -6,8 +6,11 @@
     {% elif field.fieldtype == 'Table' %}
         {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
         {% if frappe.form_dict['cfp'] %}
-            {# set custom_questions = frappe.get_doc("FOSS Event CFP", submission.linked_cfp).cfp_custom_questions #}
             {% for question in frappe.get_doc("FOSS Event CFP", submission.linked_cfp).cfp_custom_questions %}
+                {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
+            {% endfor %}
+        {% elif frappe.form_dict['rsvp'] %}
+            {% for question in frappe.get_doc("FOSS Event RSVP", submission.linked_cfp).cfp_custom_questions %}
                 {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
             {% endfor %}
         {% endif %}
@@ -81,7 +84,8 @@
     {% endif %}
 
     {% if field.description %}
-        <small>{{ field.description }}</small>
+        <div class="mt-2"></div>
+        <small class="text-sm">{{ field.description }}</small>
     {% endif %}
 
     {% if field.fieldtype == 'Text Editor' %}
