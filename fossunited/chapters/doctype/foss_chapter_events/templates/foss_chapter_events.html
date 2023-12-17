@@ -404,7 +404,7 @@
                                 </div>
                                 <div>
                                     {% if self_cfp %}
-                                    {{ _("However you can still fill up the CFP form for a new talk proposal!") }}
+                                    {{ _("You have already proposed a talk for this event! You can edit the details for it below.") }}
                                     {% else %}
                                     {{ _("Propose a talk for this event!") }}
                                     {% endif %}
@@ -417,13 +417,6 @@
                                 </div>
                                 {% endif %}
                         </div>
-                        {% if cfp_is_published %}
-                        <div class="hero-buttons">
-                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/cfp" class="button primary-button text-sm">
-                                {{ _("Propose a talk!") }}
-                            </a>
-                        </div>
-                        {% endif %}
                     </div>
                 </div>
                 {% if self_cfp %}
