@@ -425,7 +425,7 @@
                         {{ _("Your CFPs: ") }}
                     </div>
                     {% for submission in self_cfp %}
-                            <a href="/{{ submission.route }}" class="cfp-container">
+                            <div onClick='window.location.href="/{{ submission.route }}"' class="cfp-container">
                                 <div class="cfp-container-left">
                                     <div class="d-flex">
                                         <div class="text-xl semi-bold">
@@ -447,9 +447,11 @@
                                     </div>
                                 </div>
                                 <div class="cfp-container-right">
-
+                                    <a class=" button secondary-button text-sm" href="/{{ submission.route }}/edit">
+                                        Edit Talk Proposal
+                                    </a>
                                 </div>
-                            </a>
+                            </div>
                         {% endfor %}
                 </div>
                 {% endif %}

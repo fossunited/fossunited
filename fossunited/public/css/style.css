@@ -740,6 +740,7 @@
 
 .cfp-container-right{
     display: flex;
+    flex-direction: row-reverse;
     flex-basis: 25%;
     gap: 8px;
     align-items: center;
