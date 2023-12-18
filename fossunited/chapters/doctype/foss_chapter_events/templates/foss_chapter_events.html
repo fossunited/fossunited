@@ -398,25 +398,32 @@
                                 {{ _("CFP form is") }}
                                 {% endif %}
                                 {% if cfp_is_published %}
-                                {% if not self_cfp %}
-                                <span style="color: var(--success-600, #039855);">live!</span>
-                                {% endif %}
-                                </div>
-                                <div>
+                                    {% if not self_cfp %}
+                                        <span style="color: var(--success-600, #039855);">live!</span>
+                                    {% endif %}
+                            </div>
+                            <div>
                                     {% if self_cfp %}
                                     {{ _("You have already proposed a talk for this event! You can edit the details for it below.") }}
                                     {% else %}
                                     {{ _("Propose a talk for this event!") }}
                                     {% endif %}
-                                </div>
+                            </div>
                                 {% else %}
-                                <span style="color: #D92D20;">closed!</span>
-                                </div>
+                                    <span style="color: #D92D20;">closed!</span>
+                            </div>
                                 <div>
                                     {{ _("CFP form has been closed for this event.") }}
                                 </div>
-                                {% endif %}
+                            {% endif %}
                         </div>
+                        {% if cfp_is_published and not self_cfp %}
+                        <div class="hero-buttons">
+                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/cfp" class="button primary-button text-sm">
+                                {{ _("Propose a talk!") }}
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% if self_cfp %}
