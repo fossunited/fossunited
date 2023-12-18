@@ -349,7 +349,7 @@
                 </div>
                 {% endif %}
             {% else %}
-                {% set event_cfp, cfp_is_published = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published"]) %}
+                {% set event_cfp, cfp_is_published, anonymise_proposals = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published", "anonymise_proposals"]) %}
                 {% set self_cfp = frappe.db.get_all("FOSS Event CFP Submission", {"event": doc.name, "submitted_by": frappe.session.user}, ["status","full_name","email","organization","designation","talk_title","category","talk_duration","route",]) %}
                 {% if is_team_member %}
                     <div class="empty-state-navbar">
@@ -514,6 +514,7 @@
                                     </div>
                                 </div>
                                 <div class="cfp-container-right">
+                                    {% if not anonymise_proposals or (submission.status not in ['Review Pending']) or check_if_reviewer(doc.name) %}
                                     {{ submission.submitted_by | get_avatar }}
                                     <div class="d-flex flex-column">
                                         <div class="semi-bold">
@@ -523,6 +524,7 @@
                                             {{ submission.designation }}, {{ submission.organization }}
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </a>
                         {% endfor %}

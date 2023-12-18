@@ -88,6 +88,7 @@ jinja = {
         "fossunited.fossunited.utils.make_badge",
         "fossunited.fossunited.utils.get_doc_likes",
         "fossunited.fossunited.utils.get_cfp_navbar",
+        "fossunited.fossunited.utils.check_if_reviewer",
         "fossunited.fossunited.utils.format_date_time",
         "fossunited.fossunited.utils.get_cfp_review_statistics",
         "fossunited.fossunited.utils.get_reviewers",
