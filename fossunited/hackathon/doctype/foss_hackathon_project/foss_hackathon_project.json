@@ -24,6 +24,7 @@
   "hackathon",
   "team_name",
   "number_of_likes",
+  "project_owner",
   "tab_2_tab",
   "project_prizing_section",
   "prize_type"
@@ -148,12 +149,19 @@
    "fieldname": "hackathon_permalink_name",
    "fieldtype": "Data",
    "label": "Hackathon Permalink Name"
+  },
+  {
+   "fieldname": "project_owner",
+   "fieldtype": "Link",
+   "label": "Project Owner",
+   "options": "FOSS User Profile",
+   "reqd": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-13 22:02:35.483492",
+ "modified": "2023-12-18 15:39:28.195281",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Project",
