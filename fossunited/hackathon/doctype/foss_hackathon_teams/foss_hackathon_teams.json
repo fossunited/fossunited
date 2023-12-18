@@ -13,6 +13,7 @@
   "team_name",
   "hackathon_name",
   "column_break_idir",
+  "team_created_by",
   "team_owner"
  ],
  "fields": [
@@ -61,9 +62,16 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "team_created_by.full_name",
    "fieldname": "team_owner",
+   "fieldtype": "Data",
+   "label": "Team Owner"
+  },
+  {
+   "fetch_from": "hackathon_name.",
+   "fieldname": "team_created_by",
    "fieldtype": "Link",
-   "label": "Team Owner",
+   "label": "Team Created By",
    "options": "FOSS User Profile",
    "reqd": 1
   }
@@ -81,7 +89,7 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-18 15:37:37.050641",
+ "modified": "2023-12-18 16:39:10.010056",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Teams",
