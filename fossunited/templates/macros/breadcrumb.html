@@ -9,7 +9,7 @@
             {% elif crumb == 'cfp' or crumb == 'rsvp' %}
                 <a class="dark-links" href="/events/{{route[1]}}/{{route[2]}}">{{ crumb | upper }}</a>
                 <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
-            {% elif crumb == 'edit' %}
+            {% elif crumb in ['edit', 'submission'] %}
                 <span class="breadcrumb-destination">{{ crumb | capitalize }}</span>
             {% else %}
                 <span class="breadcrumb-destination">{{ crumb }}</span>
