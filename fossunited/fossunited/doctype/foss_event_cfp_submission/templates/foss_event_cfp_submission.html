@@ -177,19 +177,17 @@
     </div>
 </div>
 
-{% if not cfp.anonymise_proposals %}
 <div class="content-div container mb-6" id="about-speaker">
     <div class="text-xl my-4 semi-bold">
         {{ _("About Speaker") }}
     </div>
-
     <div class="my-4">
         <div class="mb-4 py-1">
             {{ doc.bio }}
         </div>
     </div>
 </div>
-{% endif %}
+
 
 {% if navbar_items['Review Proposals'] %}
 <div class="container">
