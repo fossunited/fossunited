@@ -155,13 +155,18 @@ def get_doc_likes(doctype, name):
     return likes
 
 
-def get_cfp_navbar(event, submitted_by, anonymise_proposals):
+def get_cfp_navbar(
+    event, submitted_by, anonymise_proposals, cfp_status
+):
     navbar_items = {
         "Proposal Details": "proposal-details",
         "Form Responses": "form-responses",
     }
 
-    if not anonymise_proposals:
+    if not anonymise_proposals or (
+        cfp_status not in ["Review Pending"]
+        or check_if_reviewer(event)
+    ):
         navbar_items["About Speaker"] = "about-speaker"
 
     chapter = frappe.db.get_value(
@@ -178,6 +183,7 @@ def get_cfp_navbar(event, submitted_by, anonymise_proposals):
     return navbar_items
 
 
+# checks if the user is a CFP reviewer for the event
 def check_if_reviewer(event):
     reviewers = frappe.get_doc(
         "FOSS Event CFP", {"event": event}

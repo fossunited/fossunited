@@ -349,7 +349,7 @@
                 </div>
                 {% endif %}
             {% else %}
-                {% set event_cfp, cfp_is_published = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published"]) %}
+                {% set event_cfp, cfp_is_published, anonymise_proposals = frappe.db.get_value("FOSS Event CFP", {"event": doc.name}, ["name", "is_published", "anonymise_proposals"]) %}
                 {% set self_cfp = frappe.db.get_all("FOSS Event CFP Submission", {"event": doc.name, "submitted_by": frappe.session.user}, ["status","full_name","email","organization","designation","talk_title","category","talk_duration","route",]) %}
                 {% if is_team_member %}
                     <div class="empty-state-navbar">
@@ -398,25 +398,32 @@
                                 {{ _("CFP form is") }}
                                 {% endif %}
                                 {% if cfp_is_published %}
-                                {% if not self_cfp %}
-                                <span style="color: var(--success-600, #039855);">live!</span>
-                                {% endif %}
-                                </div>
-                                <div>
+                                    {% if not self_cfp %}
+                                        <span style="color: var(--success-600, #039855);">live!</span>
+                                    {% endif %}
+                            </div>
+                            <div>
                                     {% if self_cfp %}
                                     {{ _("You have already proposed a talk for this event! You can edit the details for it below.") }}
                                     {% else %}
                                     {{ _("Propose a talk for this event!") }}
                                     {% endif %}
-                                </div>
+                            </div>
                                 {% else %}
-                                <span style="color: #D92D20;">closed!</span>
-                                </div>
+                                    <span style="color: #D92D20;">closed!</span>
+                            </div>
                                 <div>
                                     {{ _("CFP form has been closed for this event.") }}
                                 </div>
-                                {% endif %}
+                            {% endif %}
                         </div>
+                        {% if cfp_is_published and not self_cfp %}
+                        <div class="hero-buttons">
+                            <a href="{{ frappe.get_url() }}/events/{{doc.name}}/cfp" class="button primary-button text-sm">
+                                {{ _("Propose a talk!") }}
+                            </a>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
                 {% if self_cfp %}
@@ -507,6 +514,7 @@
                                     </div>
                                 </div>
                                 <div class="cfp-container-right">
+                                    {% if not anonymise_proposals or (submission.status not in ['Review Pending']) or check_if_reviewer(doc.name) %}
                                     {{ submission.submitted_by | get_avatar }}
                                     <div class="d-flex flex-column">
                                         <div class="semi-bold">
@@ -516,6 +524,7 @@
                                             {{ submission.designation }}, {{ submission.organization }}
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </a>
                         {% endfor %}
