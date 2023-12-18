@@ -21,7 +21,7 @@
   "project_repository_link",
   "project_demo_link",
   "column_break_xfpp",
-  "hackathon",
+  "hackathon_name",
   "linked_team",
   "number_of_likes",
   "project_owner",
@@ -111,13 +111,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "hackathon",
-   "fieldtype": "Link",
-   "label": "Hackathon ",
-   "options": "FOSS Hackathons",
-   "reqd": 1
-  },
-  {
    "fieldname": "number_of_likes",
    "fieldtype": "Int",
    "label": "Number of Likes",
@@ -157,12 +150,19 @@
    "fieldtype": "Link",
    "label": "Linked Team",
    "options": "FOSS Hackathon Teams"
+  },
+  {
+   "fieldname": "hackathon_name",
+   "fieldtype": "Link",
+   "label": "Hackathon ",
+   "options": "FOSS Hackathons",
+   "reqd": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-18 16:29:02.924263",
+ "modified": "2023-12-18 18:14:35.884070",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Project",

@@ -68,7 +68,7 @@
    "label": "Team Owner"
   },
   {
-   "fetch_from": "hackathon_name.",
+   "fetch_from": ".",
    "fieldname": "team_created_by",
    "fieldtype": "Link",
    "label": "Team Created By",
@@ -89,7 +89,7 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-18 16:39:10.010056",
+ "modified": "2023-12-18 17:57:02.368530",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Teams",

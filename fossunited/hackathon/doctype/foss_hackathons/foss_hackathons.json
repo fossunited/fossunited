@@ -285,18 +285,18 @@
  "links": [
   {
    "link_doctype": "FOSS Hackathon Participant",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   },
   {
    "link_doctype": "FOSS Hackathon Teams",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   },
   {
    "link_doctype": "FOSS Hackathon Project",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   }
  ],
- "modified": "2023-12-18 16:31:19.186833",
+ "modified": "2023-12-18 18:14:40.023299",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",
