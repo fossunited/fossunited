@@ -11,4 +11,4 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.is_published = 1
 
     def set_route(self):
-        self.route = f"{self.event}/cfp/{self.name}"
+        self.route = f"events/{self.event}/cfp/{self.name}"

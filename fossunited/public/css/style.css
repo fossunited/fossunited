@@ -153,6 +153,10 @@
     line-height: normal;
 }
 
+.button:hover{
+    cursor: pointer;
+}
+
 
 .secondary-button{
     background-color: black;
@@ -705,6 +709,8 @@
 
 .cfp-container:hover{
     box-shadow: inset 0px 0px 0px 3px #1D2939;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .cfp-container-left{
@@ -734,6 +740,7 @@
 
 .cfp-container-right{
     display: flex;
+    flex-direction: row-reverse;
     flex-basis: 25%;
     gap: 8px;
     align-items: center;
@@ -775,12 +782,27 @@
 
 .dropdown-with-button{
     display: flex;
-    flex-basis: 40%;
+    padding: 4px 0px;
+    flex-basis: 30%;
     align-items: center;
     justify-content: center;
     margin: 16px 0px;
 }
 
+#cfp-status{
+    height: 100%;
+    padding: 4px 16px;
+}
+
+.submission-form-container{
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    margin: 2rem 0;
+    gap: 2rem;
+    border-radius: 0.8rem;
+    border: #E6E6E6 1px solid;
+}
 
 @media screen and (max-width: 1200px){
     .events-grid{

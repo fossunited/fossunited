@@ -55,6 +55,27 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 # Jinja
 # ----------
 
+# Add all simple route rules here
+website_route_rules = [
+    {
+        "from_route": "/events/<event>/cfp/new",
+        "to_route": "/cfp/create/new",
+    },
+    {
+        "from_route": "/events/<event>/rsvp/new",
+        "to_route": "/rsvp/create/new",
+    },
+    {
+        "from_route": "/events/<event>/cfp/<cfp>/edit",
+        "to_route": "/cfp/submission/edit",
+    },
+    {
+        "from_route": "/events/<event>/rsvp/<rsvp>/edit",
+        "to_route": "/rsvp/submission/edit",
+    },
+]
+
+
 # add methods and filters to jinja environment
 jinja = {
     "methods": [
@@ -71,6 +92,7 @@ jinja = {
         "fossunited.fossunited.utils.get_cfp_review_statistics",
         "fossunited.fossunited.utils.get_reviewers",
         "fossunited.fossunited.utils.user_already_reviewed",
+        "fossunited.fossunited.utils.get_form_fields",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",

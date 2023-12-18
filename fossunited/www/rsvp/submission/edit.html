@@ -1,0 +1,113 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}Edit RSVP Submission{% endblock %}
+
+{% block page_content %}
+    <div class="container">
+        <div class="page-content">
+            <div>
+                {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
+                {{ breadcrumb('events/' + event.name + '/RSVP Submission/edit') }}
+            </div>
+            <div class="header-container">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <h3 class="my-2 ">Edit RSVP Submission</h3>
+                    <div class="button primary-button text-sm" id="update-btn" onClick="updateRsvpForm()">
+                        Update
+                    </div>
+                </div>
+                <div class="mt-2">
+                    Edit your RSVP Submission for the event.
+                    <div class="d-flex flex-column my-3">
+                        <div class="my-1">
+                            Chapter: {{ event.chapter }}
+                        </div>
+                        <div>
+                            Event: {{ submission.event_name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="submission-form-container">
+                {% set fields = get_form_fields('FOSS Event RSVP Submission') %}
+                {% for k,v in fields.items() %}
+                    <div id="rsvp-{{ k | replace(' ', '-') | lower }}">
+                        <h5>
+                            {{ k }}
+                        </h5>
+                        {% for field in v %}
+                            {% from "fossunited/templates/macros/renderfield.html" import renderfield %}
+                            <div class="my-4">
+                                {{ renderfield(field, submission) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {{ super() }}
+    <script>
+
+        function updateRsvpForm() {
+            let formFields = document.querySelectorAll('.form-control:not(.custom-question), [type="text-editor"]');
+            let submission = {};
+            formFields.forEach((field) => {
+                if(field.className.includes('ql-container')){
+                    submission[field.id] = field.innerText
+                }
+                else if(field.type == 'checkbox'){
+                    submission[field.id] = field.checked
+                }
+                else{
+                    submission[field.id] = field.value;
+                }
+            });
+
+            let customAnswers = []
+            customFields = document.querySelectorAll('.custom-question')
+            customFields.forEach((field) => {
+                let question = field.getAttribute('data-question')
+                let response;
+                if (field.type === "text" || field.tagName === "TEXTAREA") {
+                    response = field.value;
+                } else if (field.tagName == "SELECT") {
+                    response = field.options[field.selectedIndex].value;
+                }
+                customAnswers.push({
+                    question: question,
+                    response: response,
+                })
+            })
+
+            // removing empty string keys
+            submission = Object.fromEntries(Object.entries(submission).filter(([k,v]) => k !== ''))
+
+            frappe.call({
+                method: 'fossunited.fossunited.utils.update_submission',
+                args: {
+                    'doctype': 'FOSS Event RSVP Submission',
+                    'submission': '{{ frappe.form_dict["rsvp"] }}',
+                    'fields': submission,
+                    'custom': customAnswers
+                },
+                callback: (r) =>{
+                    frappe.show_alert({
+                        message:__('Submission updated successfully!'),
+                        indicator:'green'
+                    }, 5);
+                    setTimeout(() => {
+                        window.location.href = '/events/{{ event.name }}';
+                    }, 2000);
+                },
+                error: (e) => {
+                    frappe.throw(e.message)
+                }
+            })
+        }
+
+    </script>
+{% endblock %}

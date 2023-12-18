@@ -7,6 +7,8 @@
 {% set cfp = frappe.db.get_value("FOSS Event CFP", linked_cfp, ["chapter", "anonymise_proposals", "allow_cfp_edit"], as_dict=True) %}
 
 <div class="container" id="head-cfp">
+
+    {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
     <div class="my-6">
         {{ breadcrumb(doc.route) }}
     </div>
@@ -28,9 +30,18 @@
         {% endif %}
     </div>
 
-    <h3 class="mt-2 py-2 ">
-        {{ doc.talk_title }}
-    </h3>
+    <div class="d-flex justify-content-between ">
+        <h4 class="mt-2 py-2">
+            {{ doc.talk_title }}
+        </h4>
+        {% if frappe.session.user == doc.submitted_by %}
+        <div>
+            <a href="/events/{{doc.event}}/cfp/{{doc.name}}/edit" class="button secondary-button text-sm">
+                Edit Submission
+            </a>
+        </div>
+        {% endif %}
+    </div>
 
     <div class="date-time-category-flex" style="font-size: 1rem;">
         {% if not cfp.anonymise_proposals %}
@@ -66,7 +77,7 @@
     <div class="d-flex">
         <div class="dropdown-with-button">
             <label class="semi-bold m-0" for="cfp-status">Status</label>
-            <select class="mx-4 input-with-feedback form-control ellipsis bold" maxlength="6" name="cfp-status" id="cfp-status">
+            <select class="ml-4 input-with-feedback form-control ellipsis bold" maxlength="6" name="cfp-status" id="cfp-status">
             {% for option in ('Open', 'Approved', 'Rejected') %}
                     {% if option == doc.status %}
                         <option class="my-1" value="{{ option }}" selected>{{ option }}</option>
@@ -75,18 +86,17 @@
                     {% endif %}
                 {% endfor %}
             </select>
-            <img src="/assets/fossunited/icons/chevron-down.svg" class="h-50" style="right: 48px; margin: 0px;">
+            <img src="/assets/fossunited/icons/chevron-down.svg" class="h-50" style="right: 36px; margin: 0px;">
             <div class="btn primary-button" onClick="update_status()" id="update-status-button" style="visibility: hidden;">
                 Update
             </div>
         </div>
     </div>
-
     {% endif %}
 
 </div>
 
-{% set navbar_items = get_cfp_navbar(doc.event , cfp.anonymise_proposals) %}
+{% set navbar_items = get_cfp_navbar(doc.event , doc.submitted_by, cfp.anonymise_proposals) %}
 <div class="container-center mb-4">
     <div class="navbar-section">
         {% for key in navbar_items %}
@@ -296,19 +306,6 @@
 
 
 {% endblock %}
-
-{% macro breadcrumb(route) %}
-    {% set route = route.split('/') %}
-    {% set event = frappe.db.get_value("FOSS Chapter Events", route[0], "event_name") %}
-    {% set cfp = route[-1] %}
-    <div class="breadcrumb">
-        <a class="dark-links" href="">{{ event }}</a>
-        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
-        <a class="dark-links" href="">{{ _("CFP") }}</a>
-        <img class="ml-1 mr-1" src="/assets/fossunited/icons/chevron-right.svg">
-        <span class="breadcrumb-destination">{{ cfp }}</span>
-    </div>
-{% endmacro %}
 
 {% macro rendercomment(comment) %}
     <div class="d-flex my-6">

@@ -180,7 +180,7 @@
             <input type="text" class="form-control text-sm rounded-input custom-question" data-question="{{question.question}}" id="{{question.question}}">
         {% elif question.type == "Paragraph" %}
             <textarea class="form-control text-sm rounded-input custom-question" id="{{question.question}}" data-question="{{question.question}}" rows="3"></textarea>
-        {% elif question.type == "Choice" %}
+        {% elif question.type == "Select" %}
             <div>
                 <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1 custom-question" id="{{question}}" data-question="{{question.question}}">
                     {% for option in question.options.splitlines() %}
@@ -288,16 +288,13 @@
                 is_first_talk: document.getElementById("first-talk").checked,
                 custom_answers: custom_responses,
             };
-            console.log(formData)
-
 
             frappe.call({
-                method: 'frappe.client.insert',
+                method: 'fossunited.fossunited.utils.create_submission',
                 args: {
-                    'doc': formData,
+                    'fields': formData,
                 },
                 callback: (r) =>{
-                    console.log(r)
                     location.reload();
                 },
                 error: (r) => {
