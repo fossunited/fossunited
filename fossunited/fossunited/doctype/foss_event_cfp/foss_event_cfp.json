@@ -109,7 +109,7 @@
    "options": "FOSS Event CFP Reviewer List"
   },
   {
-   "default": "0",
+   "default": "1",
    "description": "The CFPs will not show the name of the proposer.",
    "fieldname": "anonymise_proposals",
    "fieldtype": "Check",
@@ -120,7 +120,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-17 02:18:27.811099",
+ "modified": "2023-12-18 16:47:49.896212",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",

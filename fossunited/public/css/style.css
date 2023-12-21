@@ -1,8 +1,205 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap');
 
-*{
-    font-family: 'Inter', sans-serif;
-    color: #101828;
+/* Importing Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+:root{
+    /* font-families */
+    --ff-san-serif: 'Inter', sans-serif;
+    --ff-mono: 'Source Code Pro', monospace;
+    --ff-serif: 'Source Serif Pro', serif;
+    --ff-pixel: 'Press Start 2P', cursive;
+
+    /* font-sizes */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 2rem;
+    --text-4xl: 2.5rem;
+    --text-5xl: 3rem;
+    --text-6xl: 3.5rem;
+    --text-7xl: 4.5rem;
+    --text-8xl: 6rem;
+
+    /* font-weights */
+    --fw-x-thin: 100;
+    --fw-thin: 200;
+    --fw-light: 300;
+    --fw-normal: 400;
+    --fw-medium: 500;
+    --fw-semibold: 600;
+    --fw-bold: 700;
+    --fw-x-bold: 800;
+    --fw-black: 900;
+
+    /* spacing */
+    --ls-tight: -0.02em;
+    --ls-normal: 0;
+    --ls-wide: 0.02em;
+
+    /* colors */
+    /* Stored as HSL values, to use the variables, use it inside an hsl() */
+    --clr-foss-mint-50: 143, 56%, 94%;
+    --clr-foss-mint-100: 144, 56%, 81%;
+    --clr-foss-mint-200: 144, 55%, 71%;
+    --clr-foss-mint-300: 144, 55%, 58%;
+    --clr-foss-mint-400: 144, 55%, 50%;
+    --clr-foss-mint-500: 144, 92%, 37%;
+    --clr-foss-mint-600: 144, 92%, 34%;
+    --clr-foss-mint-700: 144, 91%, 27%;
+    --clr-foss-mint-800: 144, 92%, 21%;
+    --clr-foss-mint-900: 144, 93%, 16%;
+
+    --clr-libre-white-50: 232, 52%, 94%;
+    --clr-libre-white-100: 232, 52%, 94%;
+    --clr-libre-white-200: 232, 52%, 94%;
+    --clr-libre-white-300: 232, 52%, 94%;
+    --clr-libre-white-400: 232, 52%, 94%;
+    --clr-libre-white-500: 232, 52%, 94%;
+    --clr-libre-white-600: 0, 0%, 91%;
+    --clr-libre-white-700: 0, 0%, 71%;
+    --clr-libre-white-800: 0, 0%, 55%;
+    --clr-libre-white-900: 0, 0%, 42%;
+
+    --clr-open-gray-50: 0, 0%, 91%;
+    --clr-open-gray-100: 0, 0%, 73%;
+    --clr-open-gray-200: 0, 0%, 60%;
+    --clr-open-gray-300: 0, 0%, 41%;
+    --clr-open-gray-400: 0, 0%, 29%;
+    --clr-open-gray-500: 0, 0%, 12%;
+    --clr-open-gray-600: 0, 0%, 11%;
+    --clr-open-gray-700: 0, 0%, 8%;
+    --clr-open-gray-800: 0, 0%, 7%;
+    --clr-open-gray-900: 0, 0%, 5%;
+
+    --clr-code-night-50: 0, 0%, 91%;
+    --clr-code-night-100: 0, 0%, 72%;
+    --clr-code-night-200: 0, 0%, 59%;
+    --clr-code-night-300: 0, 0%, 40%;
+    --clr-code-night-400: 0, 0%, 28%;
+    --clr-code-night-500: 0, 0%, 10%;
+    --clr-code-night-600: 0, 0%, 9%;
+    --clr-code-night-700: 0, 0%, 7%;
+    --clr-code-night-800: 0, 0%, 5%;
+    --clr-code-night-900: 0, 0%, 4%;
+
+    --clr-error-50: 4, 88%, 97%;
+    --clr-error-100: 4, 95%, 94%;
+    --clr-error-200: 4, 98%, 89%;
+    --clr-error-300: 4, 96%, 80%;
+    --clr-error-400: 4, 93%, 69%;
+    --clr-error-500: 4, 86%, 58%;
+    --clr-error-600: 4, 74%, 49%;
+    --clr-error-700: 4, 76%, 40%;
+    --clr-error-800: 4, 72%, 33%;
+    --clr-error-900: 8, 65%, 29%;
+
+    --clr-warning-50: 44, 100%, 96;
+    --clr-warning-100: 44, 98%, 89%;
+    --clr-warning-200: 44, 99%, 77%;
+    --clr-warning-300: 42, 99%, 65%;
+    --clr-warning-400: 39, 98%, 56%;
+    --clr-warning-500: 34, 94%, 50%;
+    --clr-warning-600: 28, 97%, 44%;
+    --clr-warning-700: 22, 92%, 37%;
+    --clr-warning-800: 19, 84%, 31%;
+    --clr-warning-900: 18, 80%, 26%;
+
+}
+
+/* ---------- */
+/* Resets     */
+/* ---------- */
+
+/* Referring to https://andy-bell.co.uk/a-more-modern-css-reset/ */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Prevent font size inflation */
+html {
+    -moz-text-size-adjust: none;
+    -webkit-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body, h1, h2, h3, h4, p,
+figure, blockquote, dl, dd {
+    margin: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core body defaults */
+body {
+    min-height: 100vh;
+    line-height: 1.2;
+    letter-spacing: var(--ls-tight);
+}
+
+/* Set shorter line heights on headings and interactive elements */
+h1, h2, h3, h4,
+button, input, label {
+    line-height: 1.1;
+}
+
+/* Balance text wrapping on headings */
+h1, h2,
+h3, h4, h5, h6 {
+    text-wrap: balance;
+    font-weight: var(--fw-bold);
+    --ls-tight: -0.04em;
+    letter-spacing: var(--ls-tight);
+}
+
+/* Inherit fonts for inputs and buttons */
+input, button,
+textarea, select {
+    font: inherit;
+}
+
+/* Make sure textareas without a rows attribute are not tiny */
+textarea:not([rows]) {
+  min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+  scroll-margin-block: 5ex;
+}
+
+/* ---------- */
+
+h1{
+    font-size: var(--text-7xl);
+}
+h2{
+    font-size: var(--text-6xl);
+}
+h3{
+    font-size: var(--text-5xl);
+}
+h4{
+    font-size: var(--text-3xl);
+}
+h5{
+    font-size: var(--text-2xl);
+}
+h6{
+    font-size: var(--text-lg);
 }
 
 .page-title{

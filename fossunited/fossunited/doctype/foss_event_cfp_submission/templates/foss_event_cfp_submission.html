@@ -10,7 +10,7 @@
 
     {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
     <div class="my-6">
-        {{ breadcrumb(doc.route) }}
+        {{ breadcrumb(doc.route + '/submission') }}
     </div>
 
     <div class="date-time-category-flex">
@@ -44,7 +44,7 @@
     </div>
 
     <div class="date-time-category-flex" style="font-size: 1rem;">
-        {% if not cfp.anonymise_proposals %}
+        {% if not cfp.anonymise_proposals or (doc.status not in ['Review Pending']) or check_if_reviewer(doc.event) %}
         <div class="gray-600">
             {{ _("By") }} {{ doc.full_name }}
         </div>
@@ -78,7 +78,7 @@
         <div class="dropdown-with-button">
             <label class="semi-bold m-0" for="cfp-status">Status</label>
             <select class="ml-4 input-with-feedback form-control ellipsis bold" maxlength="6" name="cfp-status" id="cfp-status">
-            {% for option in ('Open', 'Approved', 'Rejected') %}
+            {% for option in ('Review Pending', 'Approved', 'Rejected') %}
                     {% if option == doc.status %}
                         <option class="my-1" value="{{ option }}" selected>{{ option }}</option>
                     {% else %}
@@ -96,7 +96,7 @@
 
 </div>
 
-{% set navbar_items = get_cfp_navbar(doc.event , doc.submitted_by, cfp.anonymise_proposals) %}
+{% set navbar_items = get_cfp_navbar(doc.event , doc.submitted_by, cfp.anonymise_proposals, doc.status) %}
 <div class="container-center mb-4">
     <div class="navbar-section">
         {% for key in navbar_items %}
@@ -177,19 +177,17 @@
     </div>
 </div>
 
-{% if not cfp.anonymise_proposals %}
 <div class="content-div container mb-6" id="about-speaker">
     <div class="text-xl my-4 semi-bold">
         {{ _("About Speaker") }}
     </div>
-
     <div class="my-4">
         <div class="mb-4 py-1">
             {{ doc.bio }}
         </div>
     </div>
 </div>
-{% endif %}
+
 
 {% if navbar_items['Review Proposals'] %}
 <div class="container">
