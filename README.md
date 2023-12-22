@@ -2,12 +2,6 @@
     <img alt="fossunited logo" src=".github/logo.png" width="150px" height="120px">
 </div>
 
-<div align="center">
-<img alt="Static Badge" src="https://img.shields.io/badge/Builton-Frappe-blue?style=for-the-badge&labelColor=%231a1a1a&color=blue&link=https%3A%2F%2Ffrappe.io"/>
-
-<img alt="static badge" src="https://img.shields.io/badge/License-AGPL-%2308b47f?style=for-the-badge&labelColor=%231a1a1a&color=%2308b47f&link=https%3A%2F%2Fwww.gnu.org%2Flicenses%2Fagpl-3.0.en.html"/>
-</div>
-
 ## The FOSS United Platform
 
 Repo for the website and open-source platform of FOSS United. The whole platform is being built on [Frappe](https://frappe.io).
