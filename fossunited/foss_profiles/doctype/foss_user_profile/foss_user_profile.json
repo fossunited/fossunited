@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "field:username",
  "creation": "2023-07-03 02:44:46.631269",
@@ -8,6 +9,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "meta_info_section",
+  "is_published",
+  "column_break_jkxk",
+  "route",
   "basic_information_section",
   "user",
   "username",
@@ -53,6 +58,7 @@
    "unique": 1
   },
   {
+   "description": "Short bio about yourself",
    "fieldname": "bio",
    "fieldtype": "Small Text",
    "label": "Bio"
@@ -150,12 +156,34 @@
    "fieldtype": "Table",
    "label": "Work Timeline",
    "options": "FOSS User Profile Work Experience"
+  },
+  {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?"
+  },
+  {
+   "fieldname": "column_break_jkxk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
   }
  ],
+ "has_web_view": 1,
  "image_field": "profile_photo",
  "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-27 17:49:43.351471",
+ "modified": "2023-12-27 18:10:56.506377",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
