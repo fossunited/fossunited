@@ -46,14 +46,31 @@
    "unique": 1
   },
   {
-   "fieldname": "current_city",
-   "fieldtype": "Link",
-   "label": "Current City",
-   "options": "City"
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "label": "Username",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "bio",
+   "fieldtype": "Small Text",
+   "label": "Bio"
   },
   {
    "fieldname": "column_break_yqk3",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "user.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "profile_photo",
+   "fieldtype": "Attach Image",
+   "label": "Profile Photo"
   },
   {
    "fetch_from": "user.email",
@@ -61,6 +78,56 @@
    "fieldtype": "Data",
    "label": "Email",
    "options": "Email"
+  },
+  {
+   "fieldname": "current_city",
+   "fieldtype": "Link",
+   "label": "Current City",
+   "options": "City"
+  },
+  {
+   "fieldname": "socials_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "github_gitlab_link",
+   "fieldtype": "Data",
+   "label": "Github / GitLab Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "LinkedIn",
+   "options": "URL"
+  },
+  {
+   "fieldname": "column_break_hmr6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "twitter",
+   "fieldtype": "Data",
+   "label": "Twitter",
+   "options": "URL"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "skills_section",
+   "fieldtype": "Section Break",
+   "label": "Skills"
+  },
+  {
+   "fieldname": "skills",
+   "fieldtype": "Table MultiSelect",
+   "label": "Skills",
+   "options": "FOSS User Skill Multiselect"
   },
   {
    "fieldname": "employment_status_section",
@@ -83,81 +150,14 @@
    "fieldtype": "Table",
    "label": "Work Timeline",
    "options": "FOSS User Profile Work Experience"
-  },
-  {
-   "fieldname": "username",
-   "fieldtype": "Data",
-   "label": "Username",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "bio",
-   "fieldtype": "Small Text",
-   "label": "Bio"
-  },
-  {
-   "fieldname": "socials_section",
-   "fieldtype": "Section Break",
-   "label": "Socials"
-  },
-  {
-   "fieldname": "linkedin",
-   "fieldtype": "Data",
-   "label": "LinkedIn",
-   "options": "URL"
-  },
-  {
-   "fieldname": "twitter",
-   "fieldtype": "Data",
-   "label": "Twitter",
-   "options": "URL"
-  },
-  {
-   "fieldname": "column_break_hmr6",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "instagram",
-   "fieldtype": "Data",
-   "label": "Instagram",
-   "options": "URL"
-  },
-  {
-   "fieldname": "github_gitlab_link",
-   "fieldtype": "Data",
-   "label": "Github / GitLab Link",
-   "options": "URL"
-  },
-  {
-   "fieldname": "profile_photo",
-   "fieldtype": "Attach Image",
-   "label": "Profile Photo"
-  },
-  {
-   "fieldname": "skills_section",
-   "fieldtype": "Section Break",
-   "label": "Skills"
-  },
-  {
-   "fieldname": "skills",
-   "fieldtype": "Table MultiSelect",
-   "label": "Skills",
-   "options": "FOSS User Skill Multiselect"
-  },
-  {
-   "fetch_from": "user.full_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name"
   }
  ],
  "image_field": "profile_photo",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-10-22 02:27:11.424128",
+ "modified": "2023-12-27 17:49:43.351471",
  "modified_by": "Administrator",
- "module": "FOSSUnited",
+ "module": "FOSS Profiles",
  "name": "FOSS User Profile",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
@@ -181,5 +181,7 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "username"
+ "title_field": "username",
+ "track_changes": 1,
+ "track_views": 1
 }
