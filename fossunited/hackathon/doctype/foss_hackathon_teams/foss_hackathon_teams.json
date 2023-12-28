@@ -11,7 +11,10 @@
   "hackathon_permalink_name",
   "team_details_section",
   "team_name",
-  "hackathon_name"
+  "hackathon_name",
+  "column_break_idir",
+  "team_created_by",
+  "team_owner"
  ],
  "fields": [
   {
@@ -53,6 +56,24 @@
    "fieldtype": "Link",
    "label": "Hackathon Name",
    "options": "FOSS Hackathons"
+  },
+  {
+   "fieldname": "column_break_idir",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "team_created_by.full_name",
+   "fieldname": "team_owner",
+   "fieldtype": "Data",
+   "label": "Team Owner"
+  },
+  {
+   "fetch_from": ".",
+   "fieldname": "team_created_by",
+   "fieldtype": "Link",
+   "label": "Team Created By",
+   "options": "FOSS User Profile",
+   "reqd": 1
   }
  ],
  "has_web_view": 1,
@@ -68,7 +89,7 @@
    "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-13 22:07:43.216320",
+ "modified": "2023-12-18 17:57:02.368530",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Teams",
