@@ -7,7 +7,7 @@ from frappe.website.website_generator import WebsiteGenerator
 
 class FOSSHackathonTeams(WebsiteGenerator):
     def after_insert(self):
-        participant_hash = frappe.db.get_value(
+        participant = frappe.db.get_value(
             "FOSS Hackathon Participant",
             {
                 "participant_email": frappe.session.user,
@@ -15,9 +15,8 @@ class FOSSHackathonTeams(WebsiteGenerator):
             },
             "name",
         )
-        print(participant_hash)
         team_owner_doc = frappe.get_doc(
-            "FOSS Hackathon Participant", participant_hash
+            "FOSS Hackathon Participant", participant
         )
         team_owner_doc.team_name = self.name
         team_owner_doc.is_lead = 1
