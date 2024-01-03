@@ -7,19 +7,16 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "meta_info_section",
   "is_published",
-  "column_break_vctq",
   "route",
-  "section_break_duug",
   "status",
-  "column_break_tfhh",
-  "section_break_cksd",
+  "column_break_vctq",
   "linked_cfp",
-  "submitted_by",
-  "column_break_ifen",
   "event",
   "event_name",
   "event_date",
+  "submitted_by",
   "personal_information_section",
   "full_name",
   "email",
@@ -28,12 +25,10 @@
   "linkedin",
   "twitter",
   "picture_url",
+  "organization",
+  "designation",
   "column_break_dcfl",
   "bio",
-  "section_break_zhpl",
-  "organization",
-  "column_break_pios",
-  "designation",
   "about_talk_section",
   "talk_title",
   "category",
@@ -52,7 +47,8 @@
    "fieldname": "linked_cfp",
    "fieldtype": "Link",
    "label": "Linked CFP",
-   "options": "FOSS Event CFP"
+   "options": "FOSS Event CFP",
+   "reqd": 1
   },
   {
    "fetch_from": "linked_cfp.event",
@@ -117,7 +113,8 @@
   {
    "fieldname": "bio",
    "fieldtype": "Text Editor",
-   "label": "Speaker Bio"
+   "label": "Speaker Bio",
+   "reqd": 1
   },
   {
    "fieldname": "organization",
@@ -139,7 +136,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Talk Title"
+   "label": "Talk Title",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_mhza",
@@ -160,7 +158,8 @@
   {
    "fieldname": "talk_description",
    "fieldtype": "Text Editor",
-   "label": "Talk Description"
+   "label": "Talk Description",
+   "reqd": 1
   },
   {
    "fieldname": "status",
@@ -176,7 +175,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Category",
-   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther"
+   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther",
+   "reqd": 1
   },
   {
    "fieldname": "talk_reference",
@@ -191,7 +191,7 @@
   {
    "fieldname": "custom_answers",
    "fieldtype": "Table",
-   "label": "CFP Custom Answers",
+   "label": "Custom Answers",
    "options": "FOSS Custom Answers"
   },
   {
@@ -199,7 +199,8 @@
    "fetch_if_empty": 1,
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "label": "Full Name",
+   "reqd": 1
   },
   {
    "fieldname": "reviews_tab",
@@ -234,41 +235,22 @@
    "label": "Is First Talk?"
   },
   {
-   "fieldname": "section_break_duug",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_tfhh",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_cksd",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_ifen",
-   "fieldtype": "Column Break"
-  },
-  {
    "fetch_from": "linked_cfp.event_date",
    "fieldname": "event_date",
    "fieldtype": "Date",
    "label": "Event Date"
   },
   {
-   "fieldname": "section_break_zhpl",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_pios",
-   "fieldtype": "Column Break"
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-01-01 18:13:10.930772",
+ "modified": "2024-01-03 14:27:35.682892",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
