@@ -8,15 +8,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "skill_icon",
   "skill"
  ],
  "fields": [
-  {
-   "fieldname": "skill_icon",
-   "fieldtype": "Data",
-   "label": "Skill Icon"
-  },
   {
    "fieldname": "skill",
    "fieldtype": "Data",
@@ -28,7 +22,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-27 17:50:18.344548",
+ "modified": "2023-12-29 20:54:10.838706",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Skills",

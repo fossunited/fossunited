@@ -94,6 +94,7 @@ jinja = {
         "fossunited.fossunited.utils.get_reviewers",
         "fossunited.fossunited.utils.user_already_reviewed",
         "fossunited.fossunited.utils.get_form_fields",
+        "fossunited.fossunited.utils.get_user_socials",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",

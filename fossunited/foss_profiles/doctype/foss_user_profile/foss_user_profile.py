@@ -6,4 +6,12 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSUserProfile(WebsiteGenerator):
-    pass
+    def get_context(self, context):
+        experiences_dict = {}
+        for experience in self.experience:
+            if experience.company not in experiences_dict:
+                experiences_dict[experience.company] = []
+            experiences_dict[experience.company].append(
+                experience.as_dict()
+            )
+        context.experiences_dict = experiences_dict

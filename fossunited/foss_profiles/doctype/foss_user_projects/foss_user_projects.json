@@ -1,0 +1,60 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-02 12:30:31.643845",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "project_name",
+  "project_link",
+  "tagline",
+  "cover_image",
+  "collaborators"
+ ],
+ "fields": [
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "project_link",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Project Link",
+   "reqd": 1
+  },
+  {
+   "fieldname": "cover_image",
+   "fieldtype": "Attach Image",
+   "label": "Cover Image"
+  },
+  {
+   "fieldname": "collaborators",
+   "fieldtype": "Data",
+   "label": "Collaborators"
+  },
+  {
+   "fieldname": "tagline",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Tagline",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-02 15:05:16.129895",
+ "modified_by": "Administrator",
+ "module": "FOSS Profiles",
+ "name": "FOSS User Projects",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

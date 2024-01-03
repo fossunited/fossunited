@@ -13,27 +13,39 @@
   "is_published",
   "column_break_jkxk",
   "route",
+  "header_section",
+  "profile_photo",
+  "column_break_tnli",
+  "cover_image",
   "basic_information_section",
   "user",
   "username",
   "bio",
   "column_break_yqk3",
   "full_name",
-  "profile_photo",
   "email",
   "current_city",
+  "website",
+  "about",
   "socials_section",
-  "github_gitlab_link",
+  "github",
+  "gitlab",
   "linkedin",
+  "mastodon",
+  "medium",
   "column_break_hmr6",
-  "twitter",
+  "x",
   "instagram",
+  "devto",
+  "youtube",
   "skills_section",
   "skills",
   "employment_status_section",
-  "education_timeline",
+  "education",
   "work_experience_section",
-  "work_timeline"
+  "experience",
+  "projects_section",
+  "projects"
  ],
  "fields": [
   {
@@ -97,12 +109,6 @@
    "label": "Socials"
   },
   {
-   "fieldname": "github_gitlab_link",
-   "fieldtype": "Data",
-   "label": "Github / GitLab Link",
-   "options": "URL"
-  },
-  {
    "fieldname": "linkedin",
    "fieldtype": "Data",
    "label": "LinkedIn",
@@ -111,12 +117,6 @@
   {
    "fieldname": "column_break_hmr6",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "twitter",
-   "fieldtype": "Data",
-   "label": "Twitter",
-   "options": "URL"
   },
   {
    "fieldname": "instagram",
@@ -141,21 +141,9 @@
    "label": "Education"
   },
   {
-   "fieldname": "education_timeline",
-   "fieldtype": "Table",
-   "label": "Education Timeline",
-   "options": "FOSS User Profile Education"
-  },
-  {
    "fieldname": "work_experience_section",
    "fieldtype": "Section Break",
    "label": "Work Experience"
-  },
-  {
-   "fieldname": "work_timeline",
-   "fieldtype": "Table",
-   "label": "Work Timeline",
-   "options": "FOSS User Profile Work Experience"
   },
   {
    "fieldname": "meta_info_section",
@@ -176,6 +164,96 @@
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route"
+  },
+  {
+   "fieldname": "header_section",
+   "fieldtype": "Section Break",
+   "label": "Header"
+  },
+  {
+   "fieldname": "column_break_tnli",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cover_image",
+   "fieldtype": "Attach Image",
+   "label": "Cover Image"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Website",
+   "options": "URL"
+  },
+  {
+   "fieldname": "github",
+   "fieldtype": "Data",
+   "label": "Github",
+   "options": "URL"
+  },
+  {
+   "fieldname": "gitlab",
+   "fieldtype": "Data",
+   "label": "Gitlab",
+   "options": "URL"
+  },
+  {
+   "fieldname": "mastodon",
+   "fieldtype": "Data",
+   "label": "Mastodon",
+   "options": "URL"
+  },
+  {
+   "fieldname": "x",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
+  },
+  {
+   "fieldname": "devto",
+   "fieldtype": "Data",
+   "label": "Dev.to",
+   "options": "URL"
+  },
+  {
+   "fieldname": "youtube",
+   "fieldtype": "Data",
+   "label": "YouTube",
+   "options": "URL"
+  },
+  {
+   "fieldname": "medium",
+   "fieldtype": "Data",
+   "label": "Medium",
+   "options": "URL"
+  },
+  {
+   "fieldname": "about",
+   "fieldtype": "Text Editor",
+   "label": "About"
+  },
+  {
+   "fieldname": "education",
+   "fieldtype": "Table",
+   "label": "Education",
+   "options": "FOSS User Profile Education"
+  },
+  {
+   "fieldname": "experience",
+   "fieldtype": "Table",
+   "label": "Experience",
+   "options": "FOSS User Profile Work Experience"
+  },
+  {
+   "fieldname": "projects_section",
+   "fieldtype": "Section Break",
+   "label": "Projects"
+  },
+  {
+   "fieldname": "projects",
+   "fieldtype": "Table",
+   "label": "Projects",
+   "options": "FOSS User Projects"
   }
  ],
  "has_web_view": 1,
@@ -183,7 +261,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-27 18:10:56.506377",
+ "modified": "2024-01-02 12:41:00.854127",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",

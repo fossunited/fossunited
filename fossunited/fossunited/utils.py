@@ -363,3 +363,29 @@ def get_form_fields(doctype):
             )
 
     return fields
+
+
+def get_user_socials(foss_user):
+    user = frappe.get_doc("FOSS User Profile", foss_user).as_dict()
+    SOCIAL_LINK_FIELDNAMES = [
+        "github",
+        "gitlab",
+        "x",
+        "linkedin",
+        "instagram",
+        "mastodon",
+        "youtube",
+        "medium",
+    ]
+
+    links = {}
+    for field in user:
+        if field in SOCIAL_LINK_FIELDNAMES and user[field]:
+            links[field] = user[field]
+
+    return links
+
+
+@frappe.whitelist()
+def get_meta(doctype):
+    return frappe.get_meta(doctype).as_dict()
