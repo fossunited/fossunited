@@ -18,6 +18,7 @@
   "event_name",
   "column_break_je1w",
   "chapter",
+  "event_date",
   "cfp_form_description_section",
   "cfp_form_description",
   "custom_questions_section",
@@ -109,18 +110,24 @@
    "options": "FOSS Event CFP Reviewer List"
   },
   {
-   "default": "1",
+   "default": "0",
    "description": "The CFPs will not show the name of the proposer.",
    "fieldname": "anonymise_proposals",
    "fieldtype": "Check",
    "label": "Anonymise Proposals?"
+  },
+  {
+   "fetch_from": "event.event_start_date",
+   "fieldname": "event_date",
+   "fieldtype": "Date",
+   "label": "Event Date"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-18 16:47:49.896212",
+ "modified": "2024-01-01 18:11:44.106312",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
