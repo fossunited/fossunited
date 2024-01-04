@@ -9,7 +9,8 @@
  "engine": "InnoDB",
  "field_order": [
   "city",
-  "state"
+  "state",
+  "country"
  ],
  "fields": [
   {
@@ -25,11 +26,18 @@
    "fieldtype": "Link",
    "label": "State",
    "options": "State"
+  },
+  {
+   "fetch_from": "state.country",
+   "fetch_if_empty": 1,
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-01 14:12:52.948710",
+ "modified": "2023-12-28 14:52:31.001864",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "City",
