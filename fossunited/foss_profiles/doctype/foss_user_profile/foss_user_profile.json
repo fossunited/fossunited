@@ -81,6 +81,7 @@
   },
   {
    "fetch_from": "user.full_name",
+   "fetch_if_empty": 1,
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name"
@@ -92,6 +93,7 @@
   },
   {
    "fetch_from": "user.email",
+   "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
@@ -261,7 +263,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-01-02 12:41:00.854127",
+ "modified": "2024-01-07 00:14:28.833166",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",

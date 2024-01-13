@@ -1,0 +1,292 @@
+{% extends "templates/foss_base.html" %}
+
+{% block content %}
+<div class="dashboard-container">
+    <div class="container">
+        {% from 'fossunited/templates/macros/title_with_button.html' import title_with_button %}
+        {{ title_with_button('Edit Profile', button={'text': 'Update', 'method': 'updateProfile', 'icon':'ti ti-edit', 'id': 'update-foss-profile'},) }}
+        {{ render_profile_details() }}
+    </div>
+</div>
+{% endblock %}
+
+{% macro render_profile_details() %}
+<div class="submission-form-container" style="background: #fff;">
+    <h6 class="d-flex align-items-center ">
+        {{ _("Profile Details") }}
+    </h6>
+    <div class="banner-section">
+        <div class="field-title">
+            Cover Image
+        </div>
+        <img src="{{ foss_user.cover_image or '/assets/fossunited/images/default_profile_cover_image.png'}}" data-original="{{ foss_user.cover_image or '/assets/fossunited/images/default_profile_cover_image.png'}}" alt="Profile Cover Image" class="cover-image my-4" id="preview-cover-image">
+        <button style="font-size: var(--text-sm);" onclick="uploadImage(this)" id="upload_cover_image">
+            <i class="ti ti-upload"></i>
+            <span>Upload Cover Image</span>
+        </button>
+    </div>
+    <div class="form-col-2">
+        <div class="d-flex flex-column ">
+            <div class="d-flex">
+                <img src="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" data-original="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" alt="Profile Image" class="profile-image-lg" style="width: 120px; height: 120px;" id="preview-profile-image">
+                <div class="d-flex flex-column mx-4 my-2">
+                    <div class="field-title">
+                        Profile Photo
+                    </div>
+                    <small>Recommended size 300x300</small>
+                    <button style="font-size: var(--text-sm);" onclick="uploadImage(this)" id="upload_profile_photo">
+                        <i class="ti ti-upload"></i>
+                        <span>Upload Profile Photo</span>
+                    </button>
+                </div>
+            </div>
+            <div>
+                <div class="mt-2 mb-4">
+                    <label for="full_name" class="field-title">Full Name</label>
+                    <input type="text" name="full_name" value="{{ foss_user.full_name }}" class="form-control" id="full_name">
+                </div>
+                <div class="my-4">
+                    <label for="email" class="field-title">Email</label>
+                    <input type="email" name="email" value="{{ foss_user.email }}" class="form-control" id="email">
+                </div>
+                <div class="my-4">
+                    <div class="d-flex flex-column">
+                        <label for="bio" class="field-title">Tagline</label>
+                        <small>A short tagline that appears on your profile cards</small>
+                        <textarea name="bio" id="bio" cols="30" rows="10" class="form-control mt-2" style="height: 64px;">{{ foss_user.bio }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=" d-flex flex-column ">
+            <label class="field-title">
+                About
+            </label>
+            <small class="mb-1">Tell more about yourself here.</small>
+            <div id="about" name="about" style="height: auto;">
+                {{ foss_user.about }}
+            </div>
+        </div>
+    </div>
+    <div>
+        <h6 class="d-flex align-items-center mb-1">
+            {{ _("Social Links") }}
+        </h6>
+        <small>
+            Enter the complete URL of your social media profiles. Leave blank if you don't have one.
+        </small>
+     <div class="form-col-2">
+            <div>
+                <div class="mb-4">
+                    <label for="website" class="field-title">
+                        <i class="ti ti-world"></i>
+                        <span>Website</span>
+                    </label>
+                    <input type="text" name="facebook" value="{{ foss_user.website }}" class="form-control" id="website">
+                </div>
+                <div class="mb-4">
+                    <label for="github" class="field-title">
+                        <i class="ti ti-brand-github"></i>
+                        <span>Github</span>
+                    </label>
+                    <input type="text" name="github" value="{{ foss_user.github }}" class="form-control" id="github">
+                </div>
+                <div class="my-4">
+                    <label for="linkedin" class="field-title">
+                        <i class="ti ti-brand-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </label>
+                    <input type="text" name="linkedin" value="{{ foss_user.linkedin }}" class="form-control" id="linkedin">
+                </div>
+                <div class="my-4">
+                    <label for="twitter" class="field-title">
+                        <i class="ti ti-brand-twitter"></i>
+                        <span>Twitter</span>
+                    </label>
+                    <input type="text" name="twitter" value="{{ foss_user.x }}" class="form-control" id="x">
+                </div>
+                <div class="my-4">
+                    <label for="devto" class="field-title">
+                        <i class="ti ti-brand-devto"></i>
+                        <span>Dev.to</span>
+                    </label>
+                    <input type="text" name="devto" value="{{ foss_user.devto }}" class="form-control" id="devto">
+                </div>
+            </div>
+            <div>
+                <div class="mb-4">
+                    <label for="gitlab" class="field-title">
+                        <i class="ti ti-brand-gitlab"></i>
+                        <span>Gitlab</span>
+                    </label>
+                    <input type="text" name="gitlab" value="{{ foss_user.gitlab }}" class="form-control" id="gitlab">
+                </div>
+                <div class="my-4">
+                    <label for="instagram" class="field-title">
+                        <i class="ti ti-brand-instagram"></i>
+                        <span>Instagram</span>
+                    </label>
+                    <input type="text" name="instagram" value="{{ foss_user.instagram }}" class="form-control" id="instagram">
+                </div>
+                <div class="my-4">
+                    <label for="mastodon" class="field-title">
+                        <i class="ti ti-brand-mastodon"></i>
+                        <span>Mastodon</span>
+                    </label>
+                    <input type="text" name="mastodon" value="{{ foss_user.mastodon }}" class="form-control" id="mastodon">
+                </div>
+                <div class="my-4">
+                    <label for="youtube" class="field-title">
+                        <i class="ti ti-brand-youtube"></i>
+                        <span>Youtube</span>
+                    </label>
+                    <input type="text" name="youtube" value="{{ foss_user.youtube }}" class="form-control" id="youtube">
+                </div>
+                <div class="my-4">
+                    <label for="medium" class="field-title">
+                        <i class="ti ti-brand-medium"></i>
+                        <span>Medium</span>
+                    </label>
+                    <input type="text" name="medium" value="{{ foss_user.medium }}" class="form-control" id="medium">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% block script %}
+{{ super() }}
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    let changedFields = {}
+
+    $(document).ready(() => {
+        checkValidUser();
+        makeQuill('#about', [[],['bold', 'italic', 'underline', 'strike'],['blockquote', 'code-block'],[{ 'script': 'sub'}, { 'script': 'super' }],['clean']]);
+
+        let originalFieldValues = getOriginalValues();
+
+        $("input, textarea, .ql-editor").on('change keyup paste', (e) => {
+            if (e.target.className.includes('ql-editor')){
+                changedFields[$(e.target).parent().attr('id')] = e.target.innerHTML;
+            }
+            else{
+                changedFields[e.target.id] = e.target.value;
+            }
+            Object.keys(changedFields).forEach((key) => {
+                if(changedFields[key] == originalFieldValues[key]){
+                    delete changedFields[key]
+                }
+            })
+        });
+
+        $("#update-foss-profile").click((e) => {
+            updateProfile(e)
+        })
+    });
+
+    function getOriginalValues (){
+        let originalFieldValues = $("input, textarea, .ql-container").serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+
+        originalFieldValues['about'] = $('.ql-editor').html();
+
+        return originalFieldValues;
+    }
+
+    function checkValidUser(){
+        if(frappe.session.user != '{{ foss_user.user }}'){
+            frappe.msgprint("You are not authorized to view this page");
+            window.location.href = "/";
+        }
+    }
+
+    function updateProfile(e){
+        if (Object.keys(changedFields).length == 0){
+            frappe.show_alert("No changes to update", 3);
+            return;
+        }
+
+        frappe.call({
+            method: 'frappe.client.set_value',
+            args: {
+                doctype: 'FOSS User Profile',
+                name: '{{ foss_user.name }}',
+                fieldname: changedFields,
+            },
+            callback: (r)=> {
+                frappe.show_alert({
+                    message:__('Profile updated successfully!'),
+                    indicator:'green'
+                }, 5);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        })
+
+    }
+
+    function uploadImage(e){
+        let parentDiv = $(e).parent();
+        let crop_ratio = 4.96 / 1;
+        if($(e).attr('id').includes('profile_photo')){
+            parentDiv = $(e).parent().parent();
+            crop_ratio = 1 / 1;
+        }
+
+        new frappe.ui.FileUploader({
+            doctype: 'FOSS User Profile',
+            docname: '{{ foss_user.name }}',
+            disable_file_browser: true,
+            allow_multiple: false,
+            folder: "Home/Attachments",
+            make_attachments_public: true,
+            restrictions: {
+                allowed_file_types: ["image/*"],
+                max_file_size: 5242880,
+                max_number_of_files: 1,
+                crop_image_aspect_ratio: crop_ratio,
+            },
+            on_success: (file_doc) => {
+
+                frappe.call({
+                    method: 'frappe.client.get_value',
+                    args:{
+                        doctype: 'File',
+                        fieldname: 'name',
+                        filters: {
+                            file_url: parentDiv.find('img').attr('data-original')
+                        }
+                    },
+                    callback: (r) => {
+                        frappe.call({
+                            method: 'frappe.client.delete',
+                            args:{
+                                doctype: 'File',
+                                name: r.message.name,
+                            }
+                        })
+                    }
+                })
+
+                parentDiv.find('img').attr("src", file_doc.file_url);
+                parentDiv.find('img').attr("data-original", file_doc.file_url);
+
+                frappe.call({
+                    method: 'frappe.client.set_value',
+                    args:{
+                        doctype: 'FOSS User Profile',
+                        name: '{{foss_user.name}}',
+                        fieldname: $(e).attr('id').replace('upload_', ''),
+                        value: file_doc.file_url,
+                    }
+                })
+            }
+        })
+    }
+</script>
+{% endblock %}

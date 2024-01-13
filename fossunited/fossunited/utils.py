@@ -312,6 +312,19 @@ def filter_field_values(key):
     return False
 
 
+@frappe.whitelist()
+def get_user_editable_doctype_fields(doctype):
+    meta = frappe.get_meta(doctype).as_dict()
+    print(meta["fields"])
+    NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
+    # filter meta.fields to have only those fields whose fieldname is not in NOT_EDITABLE_FIELDS
+    for field in meta["fields"]:
+        if field["fieldname"] in NOT_EDITABLE_FIELDS:
+            meta["fields"].remove(field)
+
+    return meta["fields"]
+
+
 def get_form_fields(doctype):
     meta = frappe.get_meta(doctype).as_dict()
     fields = {}

@@ -17,7 +17,7 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/fossunited/css/fossunited.css"
-# web_include_js = "/assets/fossunited/js/fossunited.js"
+web_include_js = ["website.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "fossunited/public/scss/website"
@@ -73,6 +73,10 @@ website_route_rules = [
         "from_route": "/events/<event>/rsvp/<rsvp>/edit",
         "to_route": "/rsvp/submission/edit",
     },
+    {
+        "from_route": "/<foss_user>/edit-profile",
+        "to_route": "/foss_profile/edit",
+    },
 ]
 
 
@@ -95,6 +99,7 @@ jinja = {
         "fossunited.fossunited.utils.user_already_reviewed",
         "fossunited.fossunited.utils.get_form_fields",
         "fossunited.fossunited.utils.get_user_socials",
+        "fossunited.fossunited.utils.get_user_editable_doctype_fields",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",

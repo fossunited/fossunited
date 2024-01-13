@@ -1,9 +1,5 @@
-{% macro renderfield(field, submission) %}
-    {% if field.fieldtype == 'Section Break' %}
-    <div></div>
-    {% elif field.fieldtype == 'Column Break' %}
-    <div></div>
-    {% elif field.fieldtype == 'Table' %}
+{% macro renderfield(field, submission = None) %}
+    {% if field.fieldtype == 'Table' %}
         {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
         {% if frappe.form_dict['cfp'] %}
             {% for question in frappe.get_doc("FOSS Event CFP", submission.linked_cfp).cfp_custom_questions %}

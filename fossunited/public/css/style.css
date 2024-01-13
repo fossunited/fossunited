@@ -183,6 +183,13 @@ textarea, select {
     font: inherit;
 }
 
+small{
+    line-height: 1.4;
+    font-size: var(--text-sm);
+    font-weight: var(--fw-medium);
+    color: hsl(var(--clr-code-night-200));
+}
+
 /* Make sure textareas without a rows attribute are not tiny */
 textarea:not([rows]) {
   min-height: 10em;
@@ -201,10 +208,14 @@ a:hover{
 }
 
 button {
-    border-radius: 0.5em;
-    border: 0.5px solid hsl(var(--clr-open-gray-100));
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 0.5em;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--clr-open-gray-100));
     font-size: var(--text-base);
-    padding: 4px 6px;
+    padding: 7px 10px;
     cursor: pointer;
     background: none;
     transition: background 0.1s ease-in-out;
@@ -214,6 +225,37 @@ button:hover{
     background: hsl(var(--clr-open-gray-50));
 }
 
+button.sm{
+    font-size: var(--text-sm);
+}
+
+input[type="file"]{
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.inputFileLabel{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    gap: 0.5em;
+    width: fit-content;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--clr-open-gray-100));
+    font-size: var(--text-base);
+    padding: 7px 10px;
+    cursor: pointer;
+    background: none;
+    transition: background 0.1s ease-in-out;
+}
+
+.inputFileLabel:hover{
+    background: hsl(var(--clr-open-gray-50));
+}
 
 /* ---------- */
 
@@ -237,6 +279,8 @@ h6{
     font-size: var(--text-lg);
     font-weight: var(--fw-semibold);
 }
+
+
 
 .page-title{
     font-family: 'Press Start 2P', cursive;
@@ -435,7 +479,7 @@ h6{
 }
 
 .subtitle{
-    color: #000;
+    color: hsl(var(--clr-code-night-600));
     margin: 0;
     padding-top: 24px;
     padding-bottom: 16px;
@@ -694,9 +738,11 @@ h6{
 
 
 .profile-image-lg{
-    width: 150px;
-    height: 150px;
-    border-radius: 32px;
+    width: 9.375rem;
+    height: 9.375rem;
+    aspect-ratio: 1;
+    border-radius: 0.5rem;
+    border: 3px solid hsl(var(--clr-gray-200));
 }
 
 .profile-image-lg > img{
@@ -1032,9 +1078,9 @@ h6{
     flex-direction: column;
     padding: 2rem;
     margin: 2rem 0;
-    gap: 2rem;
+    gap: 1rem;
     border-radius: 0.8rem;
-    border: #E6E6E6 1px solid;
+    border: 1px solid hsl(var(--clr-gray-300));
 }
 
 .profile-container{
@@ -1301,6 +1347,39 @@ h6{
 }
 
 
+.dashboard-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 0;
+    background:hsl(var(--clr-gray-100));
+}
+
+.field-title{
+    font-size: var(--text-sm);
+    font-weight: var(--fw-semibold);
+    color: hsl(var(--clr-code-night-400));
+}
+
+.profile-banner-section{
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+}
+
+.cover-image{
+    height: 15.625rem;
+    width: 100%;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.form-col-2{
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+}
 
 @media screen and (max-width: 1200px){
     .events-grid{

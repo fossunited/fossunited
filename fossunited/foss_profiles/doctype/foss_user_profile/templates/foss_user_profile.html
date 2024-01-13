@@ -243,7 +243,7 @@
 
         if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
             $('.header-content-section').append(`
-                <button style="height: fit-content;" onClick="window.location.href='/edit-profile'">Edit Profile</button>
+                <button style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
             `);
         }
 
