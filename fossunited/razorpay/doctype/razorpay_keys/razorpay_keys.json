@@ -1,0 +1,46 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-12-28 19:50:14.692521",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "rzp_key",
+  "key_secret"
+ ],
+ "fields": [
+  {
+   "fieldname": "rzp_key",
+   "fieldtype": "Data",
+   "label": "Key"
+  },
+  {
+   "fieldname": "key_secret",
+   "fieldtype": "Password",
+   "label": "Key Secret"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-01-04 20:19:56.061745",
+ "modified_by": "Administrator",
+ "module": "Razorpay",
+ "name": "Razorpay Keys",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
