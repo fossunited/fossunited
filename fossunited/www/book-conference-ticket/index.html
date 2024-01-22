@@ -123,22 +123,6 @@
         </div>
       </div>
 
-      <!-- <div class="form-row"> -->
-      <!--   <div class="form-group col-md-6"> -->
-      <!--     <input class="form-check-input" type="checkbox" value="" id="tshirt_addon"> -->
-      <!--     <label class="form-check-label" for="tshirt_addon">Add T-Shirt</label> -->
-      <!--   </div> -->
-      <!---->
-      <!--   <div class="form-group col-md-6"> -->
-      <!--     <label for="tshirt_size">T-Shirt Size</label> -->
-      <!--     <select class="custom-select custom-select-sm" name="tshirt_size" style="width: 84px;" id="tshirt_size"> -->
-      <!--       {% for sizes in tshirt_sizes %} -->
-      <!--       <option value="{{ sizes }}">{{ sizes }}</option> -->
-      <!--       {% endfor %} -->
-      <!--     </select> -->
-      <!--   </div> -->
-      <!-- </div> -->
-
       <div class="form-row mb-5">
         <div class="form-group col-md-6">
           <label for="pin_code">PIN Code</label>
@@ -262,12 +246,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
 
-    /* function and jquery event listener to update the total_amount and also to pass this ahead in the tickets variable which adds data to document */
-    $(document).ready(function() {
-      $('#general_tickets, #student_tickets').change(function() {
-        getTotalAmount();
-      });
+  $(document).ready(function() {
+    $('#general_tickets, #student_tickets').change(function() {
+      getTotalAmount();
     });
+  });
 
   function getTotalAmount() {
     /* student ticket price and general ticket price */
@@ -285,8 +268,7 @@
     return total_amount
   }
 
-  /* Remember to use frappe.get_meta with a for loop to fetch the fields from the doctype */
-  /* Razorpay Payment checkout Pop up function */
+  /* function to call/open the razorpay checkout */
   function open_razorpay_checkout({
     ticket_id,
     razorpay_key,
@@ -331,6 +313,7 @@
     rzp.open();
   }
 
+  /* Function to add ticket data into the document with frappe whitelisted method*/
   function addInputsToDoc() {
     let ticketsData = {
       'doctype': 'Conference Tickets',
