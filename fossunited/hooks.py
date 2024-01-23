@@ -13,10 +13,10 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/fossunited/css/fossunited.css"
-# app_include_js = "/assets/fossunited/js/fossunited.js"
+# app_include_js = ["website.bundle.js", "dialog.bundle.js", "form.bundle.js"]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/fossunited/css/fossunited.css"
+# web_include_css = ["website.bundle.less"]
 web_include_js = ["website.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
@@ -24,7 +24,7 @@ web_include_js = ["website.bundle.js"]
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
-# webform_include_css = {"doctype": "public/css/doctype.css"}
+# webform_include_css = {"doctype": "public/css/doctype.css"}tele
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}

@@ -16,10 +16,9 @@
  "fields": [
   {
    "fieldname": "institution",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "College/Institution",
-   "options": "Institute",
    "reqd": 1
   },
   {
@@ -59,7 +58,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-02 02:08:42.145101",
+ "modified": "2024-01-22 22:04:54.725697",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile Education",

@@ -49,19 +49,15 @@
         {% if frappe.session.user == doc.user %}
         <div style="display: flex; gap: 0.5rem;">
             {% if edit %}
-            <button name="edit-{{section}}" onClick="editModal(name)">
+            <button class="edit-modal-button" name="edit-{{section}}">
                 <i class="ti ti-edit"></i>
-                <span>
                     Edit {{section | capitalize}}
-                </span>
             </button>
             {% endif %}
             {% if add %}
-            <button name="add-{{section}}" onClick="addModal(name)">
+            <button class="add-modal-button" name="add-{{section}}">
                 <i class="ti ti-plus"></i>
-                <span>
                     Add {{section | capitalize}}
-                </span>
             </button>
             {% endif %}
         </div>
@@ -101,7 +97,7 @@
 
 {% macro render_experience() %}
 <div class="profile-content-div" id="experience">
-    {{ render_section_header("experience", add=True, edit=True) }}
+    {{ render_section_header("experience", add=True) }}
     {% for (key, values) in experiences_dict.items() %}
     <div class="experience-card">
         <img src="https://logo.clearbit.com/{{values[0].company_website}}" alt="{{key}}" class="experience-card-logo">
@@ -142,7 +138,7 @@
 
 {% macro render_education() %}
 <div class="profile-content-div" id="education">
-    {{ render_section_header("education", add=True, edit=True) }}
+    {{ render_section_header("education", add=True) }}
     {% for education in doc.education %}
     <div class="education-detail-item">
         <div>{{ education.start_year }} - {{ education.end_year }}</div>
@@ -215,95 +211,107 @@
 {% endmacro %}
 
 
-{% block page_script %}
+{% block script %}
+{{ super() }}
 <script>
-        document.addEventListener('DOMContentLoaded', ()=>{
-            let navItems = document.querySelectorAll('.horizontal-navbar--item');
-            let contentDivs = document.querySelectorAll('.content-div');
-            let activeNavItem = navItems[0];
-            let activeContentDiv = contentDivs[0];
+    $(document).ready(() => {
+        frappe.require('controls.bundle.js');
+        setNavbarControl();console.log
+        validateEditOption()
 
-            contentDivs.forEach((contentDiv) => {
-                contentDiv.classList.add('hide');
-            });
-            activeContentDiv.classList.remove('hide');
-            activeNavItem.classList.add('active');
+        $('.add-modal-button').click((e) => {
+            addModal(e);
+        })
 
-            navItems.forEach((navItem) => {
-                navItem.addEventListener('click', () => {
-                    activeNavItem.classList.remove('active');
-                    activeContentDiv.classList.add('hide');
-                    navItem.classList.add('active');
-                    activeNavItem = navItem;
-                    activeContentDiv = document.querySelector(`#${navItem.id.split('-')[0]}`);
-                    activeContentDiv.classList.remove('hide');
-                });
+        $('.edit-modal-button').click((e) => {
+            editModal(e);
+        })
+    })
+
+    function setNavbarControl(){
+        let navItems = document.querySelectorAll('.horizontal-navbar--item');
+        let contentDivs = document.querySelectorAll('.content-div');
+        let activeNavItem = navItems[0];
+        let activeContentDiv = contentDivs[0];
+
+        contentDivs.forEach((contentDiv) => {
+            contentDiv.classList.add('hide');
+        });
+        activeContentDiv.classList.remove('hide');
+        activeNavItem.classList.add('active');
+
+        navItems.forEach((navItem) => {
+            navItem.addEventListener('click', () => {
+                activeNavItem.classList.remove('active');
+                activeContentDiv.classList.add('hide');
+                navItem.classList.add('active');
+                activeNavItem = navItem;
+                activeContentDiv = document.querySelector(`#${navItem.id.split('-')[0]}`);
+                activeContentDiv.classList.remove('hide');
             });
         });
+    }
 
+    function validateEditOption(){
         if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
             $('.header-content-section').append(`
                 <button style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
             `);
         }
+    }
 
-        function removeElement(element) {
-            element.parentNode.removeChild(element);
-        }
+    function removeElement(element) {
+        element.parentNode.removeChild(element);
+    }
 
-        function addModal(name){
-            name = name.split("-")[1]
+    let child_docs = {
+        "projects": "FOSS User Projects",
+        "experience": "FOSS User Profile Work Experience",
+        "education": "FOSS User Profile Education"
+    }
 
-            let doctype = {
-                experience: "FOSS User Profile Work Experience",
-                education: "FOSS User Profile Education",
-                projects: "FOSS User Projects",
-            }
-
-            frappe.call({
-                method: "fossunited.fossunited.utils.get_meta",
-                args: {
-                    "doctype": doctype[name],
-                },
-                callback: (r) => {
-                    fields = r.message.fields
-
-                    let formFields = fields
-                    .filter((field) => field.fieldtype != 'Section Break' && field.fieldtype != 'Column Break')
-                    .map((field) => ({
-                        "label": field.label,
-                        "fieldname": field.fieldname,
-                        "fieldtype": field.fieldtype,
-                        "reqd": field.reqd,
-                        "options": field.options,
-                        "description": field.description,
-                    }));
-
-                    let addModal = new frappe.ui.Dialog({
-                        title: `Add ${name}`,
-                        fields: formFields,
-                        primary_action_label: `Add ${name}`,
-                        primary_action(values) {
-                            console.log("VALUES" + values);
-                            d.hide();
-                        }
-                    });
-                    addModal.show();
-                },
-                error: (r) => {
-                    frappe.msgprint({
-                        title: __('Error'),
-                        indicator: 'red',
-                        message: __('Something went wrong. Please try again.'),
-                        primary_action: {
-                            action: () => {
-                                window.location.reload();
+    function addModal(e){
+        let id = e.target.name.split('-')[1];
+        let table = child_docs[id];
+        frappe.call({
+            method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
+            args: {
+                'doctype': table,
+            },
+            callback: (r) => {
+                d = new frappe.ui.Dialog({
+                    title: `Add ${id}`,
+                    fields: r.message,
+                    size: 'large',
+                    primary_action_label: 'Add',
+                    primary_action: (v) => {
+                        frappe.call({
+                            method: 'fossunited.fossunited.utils.insert_foss_profile_child_doc',
+                            args: {
+                                'parent': '{{doc.name}}',
+                                'parenttype': 'FOSS User Profile',
+                                'parentfield': id,
+                                'doctype': table,
+                                'fields': v,
                             },
-                            label: __('Refresh')
-                        }
-                    });
-                }
-            })
-        }
+                            callback: () => {
+                                d.hide();
+                                $(`#${id}`).load(location.href + " #"+id + ">*", "");
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    }
+                });
+                d.show();
+            }
+        })
+    }
+
+    function editModal(e){
+        console.log("Edit Modal");
+        console.log(e)
+    }
 </script>
 {% endblock %}

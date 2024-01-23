@@ -200,6 +200,11 @@ textarea:not([rows]) {
   scroll-margin-block: 5ex;
 }
 
+::selection{
+    background: hsl(var(--clr-foss-mint-500));
+    color: #FFF
+}
+
 a{
     color: inherit;
 }
@@ -280,7 +285,9 @@ h6{
     font-weight: var(--fw-semibold);
 }
 
-
+.tooltip-content {
+    display: none;
+}
 
 .page-title{
     font-family: 'Press Start 2P', cursive;

@@ -29,10 +29,9 @@
  "fields": [
   {
    "fieldname": "company",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Company",
-   "options": "Organization",
    "reqd": 1
   },
   {
@@ -84,9 +83,8 @@
   },
   {
    "fieldname": "city",
-   "fieldtype": "Link",
-   "label": "City",
-   "options": "City"
+   "fieldtype": "Data",
+   "label": "City"
   },
   {
    "fetch_from": "city.country",
@@ -141,7 +139,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-28 15:45:06.177971",
+ "modified": "2024-01-23 16:06:41.530320",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile Work Experience",

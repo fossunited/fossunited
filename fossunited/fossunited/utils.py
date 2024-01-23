@@ -315,14 +315,37 @@ def filter_field_values(key):
 @frappe.whitelist()
 def get_user_editable_doctype_fields(doctype):
     meta = frappe.get_meta(doctype).as_dict()
-    print(meta["fields"])
     NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
-    # filter meta.fields to have only those fields whose fieldname is not in NOT_EDITABLE_FIELDS
     for field in meta["fields"]:
         if field["fieldname"] in NOT_EDITABLE_FIELDS:
             meta["fields"].remove(field)
 
+    meta["fields"] = [
+        {k: v for k, v in field.items() if filter_field_values(k)}
+        for field in meta["fields"]
+    ]
+
     return meta["fields"]
+
+
+@frappe.whitelist()
+def insert_foss_profile_child_doc(
+    parent, parenttype, parentfield, doctype, fields
+):
+    fields = json.loads(fields)
+    doc = frappe.get_doc(
+        {
+            "doctype": doctype,
+        }
+    )
+    for field in fields:
+        doc.set(field, fields[field])
+    doc.parent = parent
+    doc.parenttype = parenttype
+    doc.insert(ignore_permissions=True)
+    parentdoc = frappe.get_doc(parenttype, parent)
+    parentdoc.append(parentfield, doc)
+    parentdoc.save(ignore_permissions=True)
 
 
 def get_form_fields(doctype):
