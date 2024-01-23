@@ -1,0 +1,123 @@
+{% extends "templates/foss_base.html" %} {% block title %} {{ _("Your Payment
+Was Successful!") }}{% endblock %} {% block page_content %}
+<div id="payment-success-page">
+  <div class="payment-success">
+    <div id="success-icon-div">
+      <svg class="success-icon container-center icon">
+        <use href="#icon-solid-success"></use>
+      </svg>
+    </div>
+    <div class="text-center">
+      <p>
+        Your Payment was successful!!
+        <br />
+        You will receive a copy of your ticket on your email.
+        <br />
+        See you at the Event!!
+        <br />
+        <br />
+        <span>
+          <b class="footer">
+            <i>"May the FOSS be with you!!"</i>
+          </b>
+        </span>
+      </p>
+    </div>
+  </div>
+</div>
+<script>
+  setTimeout(function() {
+    window.location.href = "https://fossunited.org"
+  }, 5000);
+</script>
+<style>
+  #payment-success-page {
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px 10px;
+  }
+  .payment-success {
+    width: 600px;
+    background-color: #f4faee;
+    margin: 15px;
+    border-radius: 10px;
+    padding: 20px 20px;
+  }
+  p {
+    margin: auto;
+    font-size: 20px;
+    width: 600px;
+  }
+  .success-icon {
+    height: 100px;
+    width: 100px;
+  }
+  .footer {
+    color: #08b74f;
+  }
+
+  @media (min-width: 320px) and (max-width: 475px) {
+    #payment-success-page {
+      width: auto;
+      margin: 25px 25px;
+      justify-content: center;
+      align-items: center;
+    }
+    .payment-success {
+      width: 500px !important;
+      margin: auto;
+      border-radius: 10px;
+    }
+    #success-icon-div {
+      width: auto;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+    }
+    .success-icon {
+      height: 50px;
+      width: 50px;
+      margin: auto;
+    }
+    p {
+      width: auto;
+      margin: auto;
+      justify-content: center;
+      font-size: 15px;
+    }
+  }
+  @media (min-width: 475px) and (max-width: 768px) {
+    #payment-success-page {
+      width: auto;
+      margin: 25px 25px;
+      justify-content: center;
+      align-items: center;
+    }
+    .payment-success {
+      width: 500px !important;
+      margin: auto;
+      border-radius: 10px;
+    }
+    #success-icon-div {
+      width: auto;
+      margin: auto;
+      display: flex;
+      justify-content: center;
+    }
+    .success-icon {
+      height: 70px;
+      width: 70px;
+      margin: auto;
+    }
+    p {
+      width: auto;
+      margin: auto;
+      justify-content: center;
+      font-size: 18px;
+    }
+  }
+</style>
+{% endblock %}

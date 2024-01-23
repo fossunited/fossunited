@@ -7,8 +7,9 @@ from frappe.integrations.utils import (
     make_post_request,
 )
 
-
 # getting conference name data
+
+
 def get_context(context):
     context.events = frappe.get_all(
         "FOSS Chapter Events",
@@ -21,6 +22,8 @@ def get_context(context):
 
 
 # Script Script for creating order ID
+
+
 @frappe.whitelist()
 def add_ticket_to_doc(ticketsData):
     values = json.loads(ticketsData)
@@ -79,9 +82,6 @@ def add_ticket_to_doc(ticketsData):
 
     return {
         "ticket_id": ticket.name,
-        "razorpay_key": frappe.db.get_single_value(
-            "Razorpay Keys", "rzp_key"
-        ),
         "order_id": ticket.order_id,
         "amount": ticket.total_amount,
         "currency": "INR",

@@ -1,8 +1,5 @@
-{% extends "templates/foss_base.html" %}
-{% block title %}
-{{ _("Book Conference Tickets") }}
-{% endblock %}
-{% block page_content %}
+{% extends "templates/foss_base.html" %} {% block title %} {{ _("Book Conference
+Tickets") }}{% endblock %} {% block page_content %}
 <section class="ticket-form">
   <div class="about">
     <div class="header px-5 py-2 mt-20">
@@ -122,7 +119,6 @@
           />
         </div>
       </div>
-
       <div class="form-row mb-5">
         <div class="form-group col-md-6">
           <label for="pin_code">PIN Code</label>
@@ -220,7 +216,7 @@
     <div class="form-row">
       <div id="total-amount" class="col-md-12 flex justify-content-between">
         <h6>Total Amount</h6>
-        <h6 id="displayTotalAmount"> </h6>
+        <h6 id="displayTotalAmount"></h6>
       </div>
     </div>
     <div>
@@ -245,30 +241,31 @@
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-
-  $(document).ready(function() {
-    $('#general_tickets, #student_tickets').change(function() {
+  /* function and jquery event listener to update the total_amount and also to pass this ahead in the tickets variable which adds data to document */
+  $(document).ready(function () {
+    $("#general_tickets, #student_tickets").change(function () {
       getTotalAmount();
     });
   });
 
   function getTotalAmount() {
     /* student ticket price and general ticket price */
-    let stp = parseFloat($('#student_ticket_price').val()) || 0;
-    let gtp = parseFloat($('#general_ticket_price').val()) || 0;
+    let stp = parseFloat($("#student_ticket_price").val()) || 0;
+    let gtp = parseFloat($("#general_ticket_price").val()) || 0;
 
-    let general_count = parseFloat($('#general_tickets').val());
-    let student_count = parseFloat($('#student_tickets').val());
+    let general_count = parseFloat($("#general_tickets").val());
+    let student_count = parseFloat($("#student_tickets").val());
 
-    let total_amount = (stp * student_count) + (gtp * general_count);
+    let total_amount = stp * student_count + gtp * general_count;
 
-    $('#displayTotalAmount').text("₹ " + total_amount)
-    console.log(total_amount)
+    $("#displayTotalAmount").text("₹ " + total_amount);
+    console.log(total_amount);
 
-    return total_amount
+    return total_amount;
   }
 
-  /* function to call/open the razorpay checkout */
+  /* Remember to use frappe.get_meta with a for loop to fetch the fields from the doctype */
+  /* Razorpay Payment checkout Pop up function */
   function open_razorpay_checkout({
     ticket_id,
     razorpay_key,
@@ -288,13 +285,18 @@
       currency,
       order_id,
       handler: function (response) {
-        response.ticket_id = ticket_id,
-          frappe.call('fossunited.www.book-conference-ticket.index.capture_payment', response)
-          .then(() => {
-            window.location.href = '/payment-success'
-          }).catch(error => {
-            window.location.href = '/payment-failed'
-          })
+        (response.ticket_id = ticket_id),
+          frappe
+            .call(
+              "fossunited.www.book-conference-ticket.index.capture_payment",
+              response
+            )
+            .then(() => {
+              window.location.href = "/payment-success";
+            })
+            .catch((error) => {
+              window.location.href = "/payment-failed";
+            });
       },
       prefill: {
         name: fullname,
@@ -307,37 +309,36 @@
     rzp.on("payment.failed", function (response) {
       console.log("failed");
       console.log(response);
-      frappe.msgprint('There was an error. Please try again.');
+      frappe.msgprint("There was an error. Please try again.");
     });
 
     rzp.open();
   }
 
-  /* Function to add ticket data into the document with frappe whitelisted method*/
   function addInputsToDoc() {
     let ticketsData = {
-      'doctype': 'Conference Tickets',
-      'event_name': $('#event_name').val(),
-      'first_name': $('#first_name').val(),
-      'last_name': $('#last_name').val(),
-      'organization': $('#organization').val(),
-      'phone': $('#phone').val(),
-      'email': $('#email').val(),
-      'state': $('#state').val(),
-      'pin_code': $('#pin_code').val(),
-      'general_tickets': $('#general_tickets').val(),
-      'student_tickets': $('#student_tickets').val(),
-      'general_ticket_price': $('#general_ticket_price').val(),
-      'student_ticket_price': $('#student_ticket_price').val(),
-      'total_amount': getTotalAmount()
+      doctype: "Conference Tickets",
+      event_name: $("#event_name").val(),
+      first_name: $("#first_name").val(),
+      last_name: $("#last_name").val(),
+      organization: $("#organization").val(),
+      phone: $("#phone").val(),
+      email: $("#email").val(),
+      state: $("#state").val(),
+      pin_code: $("#pin_code").val(),
+      general_tickets: $("#general_tickets").val(),
+      student_tickets: $("#student_tickets").val(),
+      general_ticket_price: $("#general_ticket_price").val(),
+      student_ticket_price: $("#student_ticket_price").val(),
+      total_amount: getTotalAmount(),
     };
 
     frappe.call({
-      method: 'fossunited.www.book-conference-ticket.index.add_ticket_to_doc',
+      method: "fossunited.www.book-conference-ticket.index.add_ticket_to_doc",
       args: {
-        ticketsData: ticketsData
+        ticketsData: ticketsData,
       },
-      callback: function(r) {
+      callback: function (r) {
         console.log(r);
         let data = r.message;
         open_razorpay_checkout({
@@ -350,19 +351,18 @@
           email: data.email,
         });
       },
-      error: function(r) {
-        console.log(r)
-      }
+      error: function (r) {
+        console.log(r);
+      },
     });
   }
 </script>
-{% endblock %}
+
 <style>
   .ticket-form {
     margin-top: 20%;
     margin: auto;
     width: 700px;
-    /* padding: 25px 25px; */
   }
   .header h3 {
     margin-top: 0.2em !important;
@@ -370,7 +370,6 @@
 
   .about {
     background-color: #f4faee;
-    /* margin: auto; */
   }
 
   .about p {
@@ -417,7 +416,7 @@
       font-size: 15px;
     }
     input {
-      font-size: 15px
+      font-size: 15px;
       padding: 5px 0px 5px 0px;
     }
     #total-amount {
@@ -446,7 +445,7 @@
       font-size: 17px;
     }
     input {
-      font-size: 15px
+      font-size: 15px;
       padding: 5px 0px 5px 0px;
     }
     #total-amount {
@@ -475,7 +474,7 @@
       font-size: 18px;
     }
     input {
-      font-size: 15px
+      font-size: 15px;
       padding: 5px 0px 5px 0px;
     }
     #total-amount {
@@ -504,11 +503,12 @@
       font-size: 18px;
     }
     input {
-      font-size: 15px
+      font-size: 15px;
       padding: 5px 0px 5px 0px;
     }
     #total-amount {
       padding: 10px 0px 10px 0px;
     }
+  }
 </style>
 {% endblock %}
