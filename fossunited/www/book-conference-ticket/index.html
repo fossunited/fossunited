@@ -1,11 +1,12 @@
 {% extends "templates/foss_base.html" %} {% block title %} {{ _("Book Conference
-Tickets") }}{% endblock %} {% block page_content %}
+Tickets") }}{% endblock %}
+
+{% block page_content %}
 <section class="ticket-form">
   <div class="about">
     <div class="header px-5 py-2 mt-20">
-      {% for event in events %}
-      <h3>Book Conference Ticket for {{ event.event_name }}</h3>
-      {% endfor %}
+      {% set event_name = frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_name') %}
+      <h3>Book Conference Ticket for {{ event_name }}</h3>
     </div>
     <p class="px-5 py-2">
       Free and Open Source Software conference by the FOSS community.
@@ -264,57 +265,6 @@ Tickets") }}{% endblock %} {% block page_content %}
     return total_amount;
   }
 
-  /* Remember to use frappe.get_meta with a for loop to fetch the fields from the doctype */
-  /* Razorpay Payment checkout Pop up function */
-  function open_razorpay_checkout({
-    ticket_id,
-    razorpay_key,
-    order_id,
-    total_amount,
-    currency,
-    fullname,
-    email,
-    phone,
-  }) {
-    var options = {
-      name: "{{frappe.form_dict.conference}}",
-      description: "",
-      image: "https://indiafoss.net//files/fossunited-200_200px.png",
-      key: razorpay_key,
-      total_amount,
-      currency,
-      order_id,
-      handler: function (response) {
-        (response.ticket_id = ticket_id),
-          frappe
-            .call(
-              "fossunited.www.book-conference-ticket.index.capture_payment",
-              response
-            )
-            .then(() => {
-              window.location.href = "/payment-success";
-            })
-            .catch((error) => {
-              window.location.href = "/payment-failed";
-            });
-      },
-      prefill: {
-        name: fullname,
-        email: email,
-        contact: phone,
-      },
-      theme: { color: "#08B74F" },
-    };
-    var rzp = new Razorpay(options);
-    rzp.on("payment.failed", function (response) {
-      console.log("failed");
-      console.log(response);
-      frappe.msgprint("There was an error. Please try again.");
-    });
-
-    rzp.open();
-  }
-
   function addInputsToDoc() {
     let ticketsData = {
       doctype: "Conference Tickets",
@@ -342,10 +292,10 @@ Tickets") }}{% endblock %} {% block page_content %}
         console.log(r);
         let data = r.message;
         open_razorpay_checkout({
-          ticket_id: data.ticket_id,
           razorpay_key: data.razorpay_key,
-          order_id: data.razorpay_order_id,
-          amount: data.total_amount,
+          ticket_id: data.ticket_id,
+          order_id: data.order_id,
+          amount: data.amount,
           currency: data.currency,
           fullname: data.fullname,
           email: data.email,
@@ -356,8 +306,60 @@ Tickets") }}{% endblock %} {% block page_content %}
       },
     });
   }
-</script>
 
+  /* Remember to use frappe.get_meta with a for loop to fetch the fields from the doctype */
+  /* Razorpay Payment checkout Pop up function */
+  function open_razorpay_checkout({
+    ticket_id,
+    razorpay_key,
+    order_id,
+    total_amount,
+    currency,
+    fullname,
+    email,
+    phone,
+  }) {
+    var options = {
+      name: "{{frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_name')}}",
+      description: "frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_bio')",
+      image: "https://indiafoss.net//files/fossunited-200_200px.png",
+      key: razorpay_key,
+      total_amount,
+      currency,
+      order_id,
+      handler: function (response) {
+        (response.ticket_id = ticket_id),
+          frappe
+            .call(
+              "fossunited.www.book-conference-ticket.index.capture_payment",
+              response
+            )
+            .then(() => {
+              window.location.href = "/payment-success";
+            })
+            .catch((error) => {
+              window.location.href = "/payment-failed";
+            });
+      },
+      prefill: {
+        name: fullname,
+        email: email,
+        contact: phone,
+      },
+      theme: { color: "#08B74F" },
+    };
+
+    var rzp = new Razorpay(options);
+    rzp.on("payment.failed", function (response) {
+      console.log("failed");
+      console.log(response);
+      frappe.msgprint("There was an error. Please try again.");
+    });
+
+    rzp.open();
+  }
+</script>
+{% endblock %}
 <style>
   .ticket-form {
     margin-top: 20%;

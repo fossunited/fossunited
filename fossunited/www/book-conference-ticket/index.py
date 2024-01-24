@@ -7,9 +7,8 @@ from frappe.integrations.utils import (
     make_post_request,
 )
 
+
 # getting conference name data
-
-
 def get_context(context):
     context.events = frappe.get_all(
         "FOSS Chapter Events",
@@ -22,13 +21,9 @@ def get_context(context):
 
 
 # Script Script for creating order ID
-
-
 @frappe.whitelist()
 def add_ticket_to_doc(ticketsData):
     values = json.loads(ticketsData)
-
-    print(values)
 
     # events = frappe.get_doc("Conference Tickets", values['events'])
     student_tickets = values["student_tickets"]
@@ -78,12 +73,13 @@ def add_ticket_to_doc(ticketsData):
     ticket.order_id = makeOrderId(ticket.name, ticket.total_amount)
     ticket.save()
 
-    print(values.get("total_amount"))
-
     return {
         "ticket_id": ticket.name,
         "order_id": ticket.order_id,
         "amount": ticket.total_amount,
+        "razorpay_key": frappe.db.get_single_value(
+            "Razorpay Keys", "rzp_key"
+        ),
         "currency": "INR",
         "fullname": ticket.first_name + " " + ticket.last_name,
         "email": ticket.email,
@@ -109,9 +105,6 @@ doc = frappe.db.get_all(
 
 @frappe.whitelist()
 def makeOrderId(ticket_id, total_amount):
-    rzp_creds = frappe.get_single("Razorpay Keys")
-    rzp_keys = rzp_creds.rzp_key
-
     rzp_basic_auth = f"Basic {createBase()}"
 
     order = make_post_request(
@@ -122,7 +115,7 @@ def makeOrderId(ticket_id, total_amount):
         },
         data=json.dumps(
             {
-                "amount": total_amount * 100,
+                "amount": f"{total_amount * 100}",
                 "currency": "INR",
                 "notes": {"ticket_id": ticket_id},
             }
@@ -157,7 +150,6 @@ def capture_payment():
         razorpay_key = frappe.db.get_single_value(
             "Razorpay Keys", "rzp_key"
         )
-        basic_auth = f"Basic {createBase()}"
 
         order = make_get_request(
             f"https://api.razorpay.com/v1/orders/{doc.order_id}",
