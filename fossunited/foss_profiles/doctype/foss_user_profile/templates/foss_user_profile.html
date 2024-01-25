@@ -71,10 +71,10 @@
     {{ render_section_header("projects", add=True) }}
     <div class="projects-grid">
         {% for project in doc.projects %}
-        <div class="project-container">
+        <div class="project-container edit-hover" data-docname="{{project.name}}">
             <img src="{{project.cover_image}}" alt="{{project.project_name}}" class="project-banner">
             {% if frappe.session.user == doc.user %}
-            <button class="project-edit-button"><i class="ti ti-pencil" onclick="editProject(project)"></i></button>
+            <button class="edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
             {% endif %}
             <div class="project-title">{{project.project_name}}</div>
             <div class="project-description">
@@ -109,25 +109,32 @@
             </div> -->
             {# endif #}
             {% for value in values %}
-            <div class="experience-item">
-                <h5>{{ value.title }}</h5>
-                <span>{{ value.start_date.strftime("%B %Y") }} - {% if value.end_date != None %}{{ value.end_date.strftime("%B %Y") }}{% else %}{{_("Present")}}{% endif %}</span>
-                <div class="d-flex align-items-center ">
-                    {# if values | len < 2 #}
-                    <span style="color: hsl(var(--clr-foss-mint-500))">
-                        <a href="https://www.{{value.company_website}}" target="_blank">{{ value.company }}</a>
-                    </span>
-                    <div class="seperator-circle"></div>
-                        {% if value.is_remote %}
-                        <span>{{_("Remote")}}</span>
-                        {% else %}
-                        <span>{{ value.city }}, {{ value.country }}</span>
-                        {% endif %}
-                    {# endif #}
+            <div class="d-flex justify-content-between align-items-baseline edit-hover">
+                <div class="experience-item" data-docname="{{value.name}}">
+                    <h5>{{ value.title }}</h5>
+                    <span>{{ value.start_date.strftime("%B %Y") }} - {% if value.end_date != None %}{{ value.end_date.strftime("%B %Y") }}{% else %}{{_("Present")}}{% endif %}</span>
+                    <div class="d-flex align-items-center ">
+                        {# if values | len < 2 #}
+                        <span style="color: hsl(var(--clr-foss-mint-500))">
+                            <a href="https://www.{{value.company_website}}" target="_blank">{{ value.company }}</a>
+                        </span>
+                        <div class="seperator-circle"></div>
+                            {% if value.is_remote %}
+                            <span>{{_("Remote")}}</span>
+                            {% else %}
+                            <span>{{ value.city }}, {{ value.country }}</span>
+                            {% endif %}
+                        {# endif #}
+                    </div>
+                    <div>
+                        {{ value.description or ""}}
+                    </div>
                 </div>
-                <div>
-                    {{ value.description or ""}}
-                </div>
+                {% if frappe.session.user == doc.user %}
+                <button class="edit-modal-button" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
+                    <i class="ti ti-pencil"></i>
+                </button>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -140,16 +147,23 @@
 <div class="profile-content-div" id="education">
     {{ render_section_header("education", add=True) }}
     {% for education in doc.education %}
-    <div class="education-detail-item">
-        <div>{{ education.start_year }} - {{ education.end_year }}</div>
-        <h5>
-            {{ education.institution }}
-        </h5>
-        <div class="d-flex align-items-center">
-            <span style="color:hsl(var(--clr-foss-mint-500))">
-                {{ education.degree }}, {{ education.field_of_study }}
-            </span>
+    <div class="d-flex justify-content-between edit-hover">
+        <div class="education-detail-item" data-docname="{{education.name}}">
+            <div>{{ education.start_year }} - {{ education.end_year }}</div>
+            <h5>
+                {{ education.institution }}
+            </h5>
+            <div class="d-flex align-items-center">
+                <span style="color:hsl(var(--clr-foss-mint-500))">
+                    {{ education.degree }}, {{ education.field_of_study }}
+                </span>
+            </div>
         </div>
+        {% if frappe.session.user == doc.user %}
+        <button class="edit-modal-button" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
+            <i class="ti ti-pencil"></i>
+        </button>
+        {% endif %}
     </div>
     {% endfor %}
 </div>
@@ -218,6 +232,14 @@
         frappe.require('controls.bundle.js');
         setNavbarControl();console.log
         validateEditOption()
+
+        $('.edit-modal-button').hide();
+
+        $('.edit-hover').hover((e) => {
+            $(e.currentTarget).find('.edit-modal-button').show();
+        }, (e) => {
+            $(e.currentTarget).find('.edit-modal-button').hide();
+        })
 
         $('.add-modal-button').click((e) => {
             addModal(e);
@@ -310,8 +332,59 @@
     }
 
     function editModal(e){
-        console.log("Edit Modal");
-        console.log(e)
+        let doctype = $(e.currentTarget).data('doctype');
+        let docname = $(e.currentTarget).data('docname');
+        frappe.call({
+            method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
+            args: {
+                'doctype': doctype,
+                'docname': docname,
+            },
+            callback: (r) => {
+                d = new frappe.ui.Dialog({
+                    title: `Edit ${$(e.currentTarget).data('doctype')}`,
+                    fields: r.message,
+                    size: 'large',
+                    primary_action_label: 'Update',
+                    primary_action: (v) => {
+                        v = JSON.stringify(v)
+                        frappe.call({
+                            method: 'frappe.client.set_value',
+                            args: {
+                                'doctype': doctype,
+                                'name': docname,
+                                'fieldname': v,
+                            },
+                            callback: () => {
+                                d.hide();
+                                location.reload();
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    },
+                    secondary_action_label: 'Delete',
+                    secondary_action: (v) => {
+                        frappe.call({
+                            method: 'frappe.client.delete',
+                            args: {
+                                'doctype': doctype,
+                                'name': docname,
+                            },
+                            callback: () => {
+                                d.hide();
+                                location.reload();
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    }
+                });
+                d.show();
+            }
+        })
     }
 </script>
 {% endblock %}

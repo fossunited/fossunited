@@ -1274,6 +1274,7 @@ h6{
 .experience-details{
     display: flex;
     flex-direction: column;
+    width: 100%;
     gap: 1.5rem;
     padding: 0.5rem;
 }
@@ -1287,6 +1288,7 @@ h6{
 .education-detail-item{
     padding: 1rem 0;
     display: flex;
+    width: 100%;
     flex-direction: column;
     gap: 0.5rem;
 }
@@ -1386,6 +1388,16 @@ h6{
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
     margin: 1.5rem 0;
+}
+
+.edit-modal-button{
+    padding: 6px;
+    margin: 8px;
+    border-radius: 100%;
+    align-self: flex-start;
+    width: min-content;
+    height: min-content;
+    aspect-ratio: 1;
 }
 
 @media screen and (max-width: 1200px){

@@ -10,8 +10,7 @@
   "degree",
   "field_of_study",
   "start_year",
-  "end_year",
-  "description"
+  "end_year"
  ],
  "fields": [
   {
@@ -36,11 +35,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
-  },
-  {
    "fieldname": "start_year",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -58,7 +52,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-01-22 22:04:54.725697",
+ "modified": "2024-01-25 16:57:43.542964",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile Education",

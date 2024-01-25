@@ -313,7 +313,7 @@ def filter_field_values(key):
 
 
 @frappe.whitelist()
-def get_user_editable_doctype_fields(doctype):
+def get_user_editable_doctype_fields(doctype, docname=None):
     meta = frappe.get_meta(doctype).as_dict()
     NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
     for field in meta["fields"]:
@@ -324,6 +324,12 @@ def get_user_editable_doctype_fields(doctype):
         {k: v for k, v in field.items() if filter_field_values(k)}
         for field in meta["fields"]
     ]
+
+    if docname is not None:
+        doc = frappe.get_doc(doctype, docname).as_dict()
+        for field in meta["fields"]:
+            if field["fieldname"] in doc:
+                field["default"] = doc[field["fieldname"]]
 
     return meta["fields"]
 
