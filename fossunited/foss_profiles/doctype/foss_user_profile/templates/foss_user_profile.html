@@ -69,6 +69,7 @@
 {% macro render_projects() %}
 <div class="profile-content-div">
     {{ render_section_header("projects", add=True) }}
+    {% if doc.projects | len > 0 %}
     <div class="projects-grid">
         {% for project in doc.projects %}
         <div class="project-container edit-hover" data-docname="{{project.name}}">
@@ -92,12 +93,18 @@
         </div>
         {% endfor %}
     </div>
+    {% else %}
+    <div>
+        No projects to showcase.
+    </div>
+    {% endif %}
 </div>
 {% endmacro %}
 
 {% macro render_experience() %}
 <div class="profile-content-div" id="experience">
     {{ render_section_header("experience", add=True) }}
+    {% if experiences_dict %}
     {% for (key, values) in experiences_dict.items() %}
     <div class="experience-card">
         <img src="https://logo.clearbit.com/{{values[0].company_website}}" alt="{{key}}" class="experience-card-logo">
@@ -140,12 +147,18 @@
         </div>
     </div>
     {% endfor %}
+    {% else %}
+    <div>
+        No experience added.
+    </div>
+    {% endif %}
 </div>
 {% endmacro %}
 
 {% macro render_education() %}
 <div class="profile-content-div" id="education">
     {{ render_section_header("education", add=True) }}
+    {% if doc.education %}
     {% for education in doc.education %}
     <div class="d-flex justify-content-between edit-hover">
         <div class="education-detail-item" data-docname="{{education.name}}">
@@ -166,6 +179,11 @@
         {% endif %}
     </div>
     {% endfor %}
+    {% else %}
+    <div>
+        No education added.
+    </div>
+    {% endif %}
 </div>
 {% endmacro %}
 
@@ -174,7 +192,11 @@
     <div class="header-section">
         <img class="header-cover-image" src="{{ doc.cover_image }}" alt="cover-image">
         <div class="profile-detail-section">
+                {% if doc.profile_photo %}
                 <img class="header-profile-image" src="{{ doc.profile_photo }}" alt="profile-image">
+                {% else %}
+                <img class="header-profile-image" src="https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b2e9c8,5acf89" alt="profile-image">
+                {% endif %}
                 <div class="header-content-section">
                     <div class="pl-4 d-flex flex-column" style="height: min-content">
                         <div class="d-flex mb-1">
@@ -189,11 +211,13 @@
                             <span style="color: hsl(var(--clr-foss-mint-500));">{{doc.username}}</span>
                             <div class="seperator-circle"></div>
                             <span>Joined {{doc.creation.strftime("%B %Y")}}</span>
+                            {% if doc.current_city %}
                             <div class="seperator-circle"></div>
                             <div>
                                 {% include 'fossunited/public/icons/ff-rr-marker.svg' %}
                                 {{ doc.current_city }}
                             </div>
+                            {% endif %}
                             {% if doc.website %}
                             <div class="seperator-circle"></div>
                             {% include 'fossunited/public/icons/ff-rr-link.svg' %}
