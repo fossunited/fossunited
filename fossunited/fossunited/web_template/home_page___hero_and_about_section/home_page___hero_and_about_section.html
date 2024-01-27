@@ -5,13 +5,13 @@
         padding: 0;
     }
     .section > .container{
-        background: linear-gradient(355deg, #eaecf0 0%, #ffffff 90.79%);
         max-width:none;
         padding:0;
     }
 
     .hero-section{
-
+        background: linear-gradient(355deg, #eaecf0 0%, #ffffff 90.79%);
+        max-width: none;
         align-items: center;
         padding:5rem 10rem 5rem;
     }
@@ -118,8 +118,126 @@
     }
 
     .btn-secondary a{
-        color:#16794C;
+        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
         text-decoration: none;
+    }
+
+    .about-section{
+        display: flex;
+        padding: 0rem 14rem 0.625rem 14rem;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .about-section-innerblock{
+        margin-top: -2.4rem;
+        display: flex;
+        width: 58.75rem;
+        height: 26rem;
+        padding: 2.84275rem;
+        flex-direction: column;
+        align-items: flex-start;
+        flex-shrink: 0;
+        border-radius: 0.5rem;
+        border: 0.379px solid var(--Gray-300, #D0D5DD);
+        background: #FFF;
+
+    }
+
+    .about-section-tag{
+        width: 24.63713rem;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 140%; /* 1.19394rem */
+        letter-spacing: -0.03413rem;
+    }
+
+    .about_headtext{
+        align-self: stretch;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%; /* 1.8rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .about_subtext{
+        align-self: stretch;
+        color: var(--Gray-500, #667085);
+        font-family: Inter;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.225rem */
+        letter-spacing: -0.0175rem;
+    }
+
+    .goals-section{
+
+        margin-top: 0.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        align-self: stretch;
+    }
+
+    .goals-card{
+
+        width: 16.25rem;
+        height: 7.5rem;
+        padding: 0.97rem;
+        border-radius: 0.5rem;
+        border: 0.379px solid var(--Gray-300, #D0D5DD);
+        background: #FFF;
+    }
+
+    .goals-card-header{
+        display: flex;
+        width: 14.3125rem;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .goals-card-tag{
+        color: var(--Gray-500, #667085);
+        font-size: 0.6rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 0.56856rem */
+        letter-spacing: -0.01138rem;
+    }
+
+    .goals-card-number{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        text-align: right;
+        font-size: 0.6rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 0.56856rem */
+        letter-spacing: -0.02275rem;
+    }
+
+    .goal-text{
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1rem */
+        letter-spacing: -0.04rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .goal-icon{
+        display: flex;
+        width: 1.89519rem;
+        height: 0.94888rem;
+        padding-right: 0rem;
+        justify-content: center;
+        align-items: flex-end;
+        flex-shrink: 0;
+        margin-bottom:0.5rem;
     }
 
 
@@ -155,5 +273,80 @@
                     <a href="{{secondary_cta_url}}">{{secondary_cta}}</a>
                 </button>
         </div>
+
+</div>
+
+<div class="about-section">
+
+    <div class="about-section-innerblock">
+
+        <div class="about-section-tag">
+            <p>ABOUT</p>
+        </div>
+
+        <div>
+
+            <p class="about_headtext">{{about_headtext}}</p>
+            <p class="about_subtext">{{about_subtext}}</p>
+
+        </div>
+
+
+        <div class="goals-section">
+
+            <div class="goals-card">
+
+                <div class="goals-card-header">
+                    <p class="goals-card-tag">GOALS</p>
+                    <p class="goals-card-number">01</p>
+                </div>
+
+                <div>
+                    <p class="goal-text">{{goal_text_1}}</p>
+                </div>
+
+                <div class="goal_icons">
+                    <img src="assets/fossunited/images/illustrations/goal_icon1.svg" alt="">
+                </div>
+
+            </div>
+
+            <div class="goals-card">
+                <div class="goals-card-header">
+                    <p class="goals-card-tag">GOALS</p>
+                    <p class="goals-card-number">02</p>
+                </div>
+
+                <div>
+                    <p class="goal-text">{{goal_text_2}}</p>
+                </div>
+
+                <div class="goal_icons">
+                    <img src="assets/fossunited/images/illustrations/goal_icon2.svg" alt="">
+                </div>
+
+            </div>
+
+            <div class="goals-card">
+                <div class="goals-card-header">
+                    <p class="goals-card-tag">GOALS</p>
+                    <p class="goals-card-number">03</p>
+                </div>
+
+                <div>
+                    <p class="goal-text">{{goal_text_3}}</p>
+                </div>
+
+                <div class="goal_icons">
+                    <img src="assets/fossunited/images/illustrations/goal_icon3.svg" alt="">
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
 
 </div>
