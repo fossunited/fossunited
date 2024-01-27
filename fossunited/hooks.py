@@ -73,14 +73,6 @@ website_route_rules = [
         "from_route": "/events/<event>/rsvp/<rsvp>/edit",
         "to_route": "/rsvp/submission/edit",
     },
-    {
-        "from_route": "/book-conference-ticket/payment-success",
-        "to_route": "/payment-success",
-    },
-    {
-        "from_route": "/book-conference-ticket/payment-failed",
-        "to_route": "/payment-failed",
-    },
 ]
 
 
