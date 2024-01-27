@@ -11,7 +11,6 @@
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "heading_b",
    "fieldtype": "Data",
    "label": "Heading - Part B ",
@@ -45,17 +44,43 @@
    "reqd": 0
   },
   {
-   "fieldname": "subtext",
+   "fieldname": "about_headtext",
    "fieldtype": "Data",
-   "label": "Sub-text",
+   "label": "About Head Text",
+   "reqd": 0
+  },
+  {
+   "fieldname": "about_subtext",
+   "fieldtype": "Small Text",
+   "label": "About Sub Text",
+   "reqd": 0
+  },
+  {
+   "fieldname": "goal_text_1",
+   "fieldtype": "Data",
+   "label": "Goal Text 1",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "goal_text_2",
+   "fieldtype": "Data",
+   "label": "Goal Text 2",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "goal_text_3",
+   "fieldtype": "Data",
+   "label": "Goal Text 3",
    "reqd": 0
   }
  ],
- "idx": 0,
- "modified": "2024-01-23 21:14:20.333395",
+ "idx": 2,
+ "modified": "2024-01-27 14:58:38.623545",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
- "name": "Home Page - Hero Section",
+ "name": "Home Page - Hero and About Section",
  "owner": "Administrator",
  "standard": 1,
  "template": "",
