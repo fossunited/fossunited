@@ -6,7 +6,7 @@ app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 # required_apps = []
 
-fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
+fixtures = ["State", "City", "FOSS Event Type"]
 
 # Includes in <head>
 # ------------------
