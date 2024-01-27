@@ -18,6 +18,9 @@ def get_context(context):
         },
         fields=["event_name", "event_type"],
     )
+    context.event = frappe.get_doc(
+        "FOSS Chapter Events", frappe.form_dict.event
+    ).as_dict()
 
 
 # Script Script for creating order ID
@@ -25,20 +28,25 @@ def get_context(context):
 def add_ticket_to_doc(ticketsData):
     values = json.loads(ticketsData)
 
-    # events = frappe.get_doc("Conference Tickets", values['events'])
+    student_ticket_price = frappe.db.get_value(
+        "FOSS Chapter Events", values["event"], "student_ticket_price"
+    )
+    general_ticket_price = frappe.db.get_value(
+        "FOSS Chapter Events", values["event"], "general_ticket_price"
+    )
+
     student_tickets = values["student_tickets"]
     general_tickets = values["general_tickets"]
 
     total_tickets_selected = int(student_tickets) + int(
         general_tickets
     )
+
     max_tickets_allowed = frappe.db.get_value(
-        "FOSS Chapter Events", values.get("event_name"), "max_tickets"
+        "FOSS Chapter Events", values["event"], "max_tickets"
     )
     tickets_sold = frappe.db.get_value(
-        "FOSS Chapter Events",
-        values.get("event_name"),
-        "tickets_sold",
+        "FOSS Chapter Events", values["event"], "tickets_sold"
     )
 
     tickets_remaining = max(max_tickets_allowed - tickets_sold, 0)
@@ -50,7 +58,8 @@ def add_ticket_to_doc(ticketsData):
     ticket = frappe.get_doc(
         {
             "doctype": "Conference Tickets",
-            "event_name": values.get("event_name"),
+            "event": values["event"],
+            "event_name": values["event_name"],
             "first_name": values.get("first_name"),
             "last_name": values.get("last_name"),
             "pin_code": values.get("pin_code"),
@@ -59,18 +68,17 @@ def add_ticket_to_doc(ticketsData):
             "state": values.get("state"),
             "general_tickets": values.get("general_tickets"),
             "student_tickets": values.get("student_tickets"),
-            "general_ticket_price": values.get(
-                "general_ticket_price"
-            ),
-            "student_ticket_price": values.get(
-                "student_ticket_price"
-            ),
-            "total_amount": values.get("total_amount"),
         }
     )
 
+    total_amount = (
+        float(student_ticket_price) * int(ticket.student_tickets)
+    ) + (float(general_ticket_price) * int(ticket.general_tickets))
+
+    ticket.total_amount = total_amount
+
     ticket.insert()
-    ticket.order_id = makeOrderId(ticket.name, ticket.total_amount)
+    ticket.order_id = makeOrderId(ticket.name, total_amount)
     ticket.save()
 
     return {
@@ -86,23 +94,6 @@ def add_ticket_to_doc(ticketsData):
     }
 
 
-doc = frappe.db.get_all(
-    "Conference Tickets",
-    fields=[
-        "order_id",
-        "payment_id",
-        "first_name",
-        "last_name",
-        "email",
-        "general_ticket_price",
-        "student_ticket_price",
-        "general_tickets",
-        "student_tickets",
-        "total_amount",
-    ],
-)
-
-
 @frappe.whitelist()
 def makeOrderId(ticket_id, total_amount):
     rzp_basic_auth = f"Basic {createBase()}"
@@ -115,13 +106,29 @@ def makeOrderId(ticket_id, total_amount):
         },
         data=json.dumps(
             {
-                "amount": f"{total_amount * 100}",
+                "amount": total_amount * 100,
                 "currency": "INR",
                 "notes": {"ticket_id": ticket_id},
             }
         ),
     )
+
     return order["id"]
+
+
+@frappe.whitelist()
+def getPaymentId(order_id):
+    rzp_basic_auth = f"Basic {createBase()}"
+
+    payment = make_get_request(
+        f"https://api.razorpay.com/v1/orders/{order_id}/payments",
+        headers={
+            "Authorization": rzp_basic_auth,
+            "Content-Type": "application/json",
+        },
+    )
+
+    return payment["items"][0]["id"]
 
 
 # Function to auomate the formatting of api_key:api_secret
@@ -138,18 +145,13 @@ def createBase():
 
 # Function to update captured payment state
 @frappe.whitelist()
-def capture_payment():
-    doc = frappe.get_doc(
-        "Conference Tickets", frappe.form_dict.ticket_id
-    )
+def capture_payment(doctype, ticket_id):
+    doc = frappe.get_doc("Conference Tickets", ticket_id)
+
+    basic_auth = f"Basic {createBase()}"
 
     if not doc.payment_captured:
-        doc.razorpay_payment_id = frappe.form_dict.razorpay_payment_id
-        doc.razorpay_signature = frappe.form_dict.razorpay_signature
-
-        razorpay_key = frappe.db.get_single_value(
-            "Razorpay Keys", "rzp_key"
-        )
+        doc.razorpay_payment_id = getPaymentId(doc.order_id)
 
         order = make_get_request(
             f"https://api.razorpay.com/v1/orders/{doc.order_id}",
@@ -164,22 +166,24 @@ def capture_payment():
         )
 
         if doc.payment_captured:
-            if doc.total_amount != order["amount_paid"] / 100:
-                frappe.throw(
-                    f"invalid amounts {doc.total_amount} {order['amount_paid'] / 100}"
-                )
+            if float(doc.total_amount) != float(
+                order["amount_paid"] / 100
+            ):
+                frappe.throw(f"Invalid Amount, payment not captured")
 
         tickets_booked = int(
             frappe.db.get_value(
-                "FOSS Chapter Events", doc.event_name, "tickets_sold"
+                "FOSS Chapter Events", doc.event, "tickets_sold"
             )
         )
+
         frappe.db.set_value(
             "FOSS Chapter Events",
-            doc.event_name,
+            doc.event,
             "tickets_sold",
             int(doc.student_tickets)
             + int(doc.general_tickets)
-            + tickets_booked,
+            + int(tickets_booked),
         )
+
     doc.save(ignore_permissions=True)

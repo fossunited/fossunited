@@ -1,17 +1,14 @@
 {% extends "templates/foss_base.html" %} {% block title %} {{ _("Book Conference
-Tickets") }}{% endblock %}
-
-{% block page_content %}
+Tickets") }}{% endblock %} {% block page_content %}
 <section class="ticket-form">
   <div class="about">
     <div class="header px-5 py-2 mt-20">
-      {% set event_name = frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_name') %}
-      <h3>Book Conference Ticket for {{ event_name }}</h3>
+      <h3>Book Conference Ticket for {{ event.event_name }}</h3>
     </div>
     <p class="px-5 py-2">
       Free and Open Source Software conference by the FOSS community.
       <br />
-      <br/>
+      <br />
       About FOSS United FOSS United is a non-profit foundation that aims at
       promoting and strengthening the Free and Open Source Software (FOSS)
       ecosystem in India.
@@ -38,27 +35,30 @@ Tickets") }}{% endblock %}
 
     <div class="form-row">
       <div class="form-group col-md-12">
-        <label for="first_name">Event name</label>
+        <label for="event_name">Event name</label>
         <input
           type="text"
           class="form-control"
           id="event_name"
           name="event_name"
-          value="SolapurFOSS'23"
+          value="{{event.event_name}}"
           required
           disabled
         />
       </div>
     </div>
+
+    <input
+      type="text"
+      class="form-control"
+      id="event"
+      name="event"
+      required
+      disabled
+      hidden
+    />
+
     <div class="form-padding form-group">
-      <input
-        type="hidden"
-        class="form-control"
-        id="conference"
-        name="conference"
-        required
-        value="{{frappe.form_dict.conference}}"
-      />
       <div class="form-row">
         <div class="form-group col-md-6">
           <label for="first_name">First Name</label>
@@ -130,7 +130,7 @@ Tickets") }}{% endblock %}
         </div>
 
         <div class="form-group col-md-6">
-          <label for="stateDropdown">State</label>
+          <label for="state">State</label>
           <select
             id="state"
             name="State"
@@ -146,31 +146,25 @@ Tickets") }}{% endblock %}
       </div>
 
       <div class="form-row tickets">
-        {% set general_price = frappe.db.get_value('FOSS Chapter Events',
-        {'status': 'Approved', 'event_type':'CityFOSS Conference'},
-        'general_ticket_price') %}
         <div class="form-group col-md-6">
           <label for="general_ticket_price">General Ticket Price</label>
           <input
             type="text"
             class="form-control"
             id="general_ticket_price"
-            value="{{ general_price }}"
+            value="{{ event.general_ticket_price }}"
             name="general_ticket_price"
             disabled
           />
         </div>
 
-        {% set student_price = frappe.db.get_value('FOSS Chapter Events',
-        {'status': 'Approved', 'event_type': 'CityFOSS Conference'},
-        'student_ticket_price') %}
         <div class="form-group col-md-6">
           <label for="student_ticket_price">Student Ticket Price</label>
           <input
             type="text"
             class="form-control"
             id="student_ticket_price"
-            value="{{ student_price }}"
+            value="{{ event.student_ticket_price }}"
             name="student_ticket_price"
             disabled
           />
@@ -214,21 +208,19 @@ Tickets") }}{% endblock %}
     <div class="form-row">
       <div id="total-amount" class="col-md-12 flex justify-content-between">
         <h6>Total Amount</h6>
-        <h6 id="displayTotalAmount"></h6>
+        <h6 id="displayTotalAmount">₹ 0</h6>
       </div>
     </div>
     <div>
       <div id="buy-btn">
-        <a href="#" alt="buy-now button">
-          <button
-            id="buy-ticket"
-            onclick="addInputsToDoc()"
-            type="submit"
-            class="buy-btn"
-          >
-            Buy Tickets
-          </button>
-        </a>
+        <button
+          id="buy-ticket"
+          onclick="addInputsToDoc()"
+          type="submit"
+          class="buy-btn"
+        >
+          Buy Tickets
+        </button>
       </div>
     </div>
   </div>
@@ -257,15 +249,14 @@ Tickets") }}{% endblock %}
     let total_amount = stp * student_count + gtp * general_count;
 
     $("#displayTotalAmount").text("₹ " + total_amount);
-    console.log(total_amount);
 
     return total_amount;
   }
-
   function addInputsToDoc() {
     let ticketsData = {
       doctype: "Conference Tickets",
-      event_name: $("#event_name").val(),
+      event: "{{ event.name }}",
+      event_name: "{{ event.event_name }}",
       first_name: $("#first_name").val(),
       last_name: $("#last_name").val(),
       organization: $("#organization").val(),
@@ -275,31 +266,35 @@ Tickets") }}{% endblock %}
       pin_code: $("#pin_code").val(),
       general_tickets: $("#general_tickets").val(),
       student_tickets: $("#student_tickets").val(),
-      general_ticket_price: $("#general_ticket_price").val(),
-      student_ticket_price: $("#student_ticket_price").val(),
-      total_amount: getTotalAmount(),
     };
 
     frappe.call({
       method: "fossunited.www.book-conference-ticket.index.add_ticket_to_doc",
       args: {
-        ticketsData: ticketsData,
+        'ticketsData': ticketsData,
       },
       callback: function (r) {
-        console.log(r);
+        console.log(r)
         let data = r.message;
+
         open_razorpay_checkout({
           razorpay_key: data.razorpay_key,
           ticket_id: data.ticket_id,
           order_id: data.order_id,
+          razorpay_payment_id: data.razorpay_payment_id,
           amount: data.amount,
           currency: data.currency,
           fullname: data.fullname,
           email: data.email,
         });
+        console.log(data)
       },
       error: function (r) {
-        console.log(r);
+        frappe.msgprint(
+          (msg = "Payment Checkout Failed, please contact admins"),
+          (title = "Callback Error"),
+          (indicator = red)
+        );
       },
     });
   }
@@ -310,33 +305,39 @@ Tickets") }}{% endblock %}
     ticket_id,
     razorpay_key,
     order_id,
-    total_amount,
+    amount,
     currency,
     fullname,
     email,
     phone,
   }) {
     var options = {
-      name: "{{frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_name')}}",
-      description: "frappe.db.get_value('FOSS Chapter Events', {'event_type': 'CityFOSS Conference', 'status': 'Approved'}, 'event_bio')",
-      image: "https://indiafoss.net//files/fossunited-200_200px.png",
+      name: "{{ event.event_name }}",
+      description: "{{ event.event_bio }}",
+      image: "https://avatars.githubusercontent.com/u/61445214?v=4",
       key: razorpay_key,
-      total_amount,
+      amount,
       currency,
       order_id,
+      ticket_id,
       handler: function (response) {
         (response.ticket_id = ticket_id),
-          frappe
-            .call(
+          frappe.call({
+            method:
               "fossunited.www.book-conference-ticket.index.capture_payment",
-              response
-            )
-            .then(() => {
-              window.location.href = "/payment-success";
-            })
-            .catch((error) => {
-              window.location.href = "/payment-failed";
-            });
+            args: {
+              'doctype': 'Conference Tickets',
+              'ticket_id': ticket_id
+            },
+            callback: (r) => {
+              window.location.href = "/payment-success?event={{event.name}}";
+              console.log(r);
+            },
+            error: (r) => {
+              window.location.href = "/payment-failed?event={{event.name}}";
+              console.log(r);
+            },
+          });
       },
       prefill: {
         name: fullname,
@@ -345,11 +346,10 @@ Tickets") }}{% endblock %}
       },
       theme: { color: "#08B74F" },
     };
+    console.log(options)
 
     var rzp = new Razorpay(options);
     rzp.on("payment.failed", function (response) {
-      console.log("failed");
-      console.log(response);
       frappe.msgprint("There was an error. Please try again.");
     });
 
@@ -358,33 +358,33 @@ Tickets") }}{% endblock %}
 </script>
 {% endblock %}
 <style>
-.ticket-form {
+  .ticket-form {
     margin-top: 1.25rem;
     margin: auto;
     width: 43.75rem;
-}
+  }
 
-.header h3 {
+  .header h3 {
     margin-top: 0.0125rem !important;
-}
+  }
 
-.about {
+  .about {
     background-color: #f4faee;
-}
+  }
 
-.about p {
+  .about p {
     width: auto;
-}
+  }
 
-input {
+  input {
     height: 2.1875rem;
-}
+  }
 
-.total-amount {
+  .total-amount {
     padding: 0rem 0.625rem 0rem 0.625rem !important;
-}
+  }
 
-.buy-btn {
+  .buy-btn {
     background-color: #08b74f !important;
     color: white;
     padding: 0.625rem 0.625rem;
@@ -395,110 +395,110 @@ input {
     border-radius: 0.3125rem;
     border: 0px none;
     margin: 0.625rem 0rem 1.25rem 0rem;
-}
+  }
 
-@media (min-width: 320px) and (max-width: 375px) {
+  @media (min-width: 320px) and (max-width: 375px) {
     .ticket-form {
-        margin: 1.25rem;
-        width: auto;
-        padding: 0.25rem;
+      margin: 1.25rem;
+      width: auto;
+      padding: 0.25rem;
     }
     .ticket-form p {
-        width: auto;
-        padding: 0.625rem;
-        font-size: 0.8125rem;
+      width: auto;
+      padding: 0.625rem;
+      font-size: 0.8125rem;
     }
     .ticket-form h3 {
-        font-size: 1.25rem !important;
+      font-size: 1.25rem !important;
     }
     label {
-        font-size: 0.9375rem;
+      font-size: 0.9375rem;
     }
     input {
-        font-size: 0.9375rem;
-        padding: 0.3125rem 0px 0.3125rem 0px;
+      font-size: 0.9375rem;
+      padding: 0.3125rem 0px 0.3125rem 0px;
     }
     #total-amount {
-        padding: 0.625rem 0px 0.625rem 0px;
+      padding: 0.625rem 0px 0.625rem 0px;
     }
-}
+  }
 
-@media (min-width: 375px) and (max-width: 425px) {
+  @media (min-width: 375px) and (max-width: 425px) {
     .ticket-form {
-        margin: 1.875rem;
-        width: auto;
-        padding: 0.25rem;
+      margin: 1.875rem;
+      width: auto;
+      padding: 0.25rem;
     }
     .ticket-form p {
-        width: auto;
-        padding: 0.5rem;
-        font-size: 0.9375rem;
+      width: auto;
+      padding: 0.5rem;
+      font-size: 0.9375rem;
     }
     .ticket-form h3 {
-        font-size: 1.5625rem !important;
+      font-size: 1.5625rem !important;
     }
     label {
-        font-size: 1.0625rem;
+      font-size: 1.0625rem;
     }
     input {
-        font-size: 0.9375rem;
-        padding: 0.3125rem 0px 0.3125rem 0px;
+      font-size: 0.9375rem;
+      padding: 0.3125rem 0px 0.3125rem 0px;
     }
     #total-amount {
-        padding: 0.625rem 0px 0.625rem 0px;
+      padding: 0.625rem 0px 0.625rem 0px;
     }
-}
+  }
 
-@media (min-width: 425px) and (max-width: 576px) {
+  @media (min-width: 425px) and (max-width: 576px) {
     .ticket-form {
-        margin: 1.875rem;
-        width: auto;
-        padding: 0.25rem;
+      margin: 1.875rem;
+      width: auto;
+      padding: 0.25rem;
     }
     .ticket-form p {
-        width: auto;
-        padding: 0.5rem;
-        font-size: 0.9375rem;
+      width: auto;
+      padding: 0.5rem;
+      font-size: 0.9375rem;
     }
     .ticket-form h3 {
-        font-size: 1.5625rem !important;
+      font-size: 1.5625rem !important;
     }
     label {
-        font-size: 1.125rem;
+      font-size: 1.125rem;
     }
     input {
-        font-size: 0.9375rem;
-        padding: 0.3125rem 0px 0.3125rem 0px;
+      font-size: 0.9375rem;
+      padding: 0.3125rem 0px 0.3125rem 0px;
     }
     #total-amount {
-        padding: 0.625rem 0px 0.625rem 0px;
+      padding: 0.625rem 0px 0.625rem 0px;
     }
-}
+  }
 
-@media (min-width: 576px) and (max-width: 768px) {
+  @media (min-width: 576px) and (max-width: 768px) {
     .ticket-form {
-        margin: 1.875rem;
-        width: auto;
-        padding: 0.200rem;
+      margin: 1.875rem;
+      width: auto;
+      padding: 0.2rem;
     }
     .ticket-form p {
-        width: auto;
-        padding: 0.5rem;
-        font-size: 1.125rem;
+      width: auto;
+      padding: 0.5rem;
+      font-size: 1.125rem;
     }
     .ticket-form h3 {
-        font-size: 1.875rem !important;
+      font-size: 1.875rem !important;
     }
     label {
-        font-size: 1.125rem;
+      font-size: 1.125rem;
     }
     input {
-        font-size: 0.9375rem;
-        padding: 0.3125rem 0px 0.3125rem 0px;
+      font-size: 0.9375rem;
+      padding: 0.3125rem 0px 0.3125rem 0px;
     }
     #total-amount {
-        padding: 0.625rem 0px 0.625rem 0px;
+      padding: 0.625rem 0px 0.625rem 0px;
     }
-}
+  }
 </style>
 {% endblock %}

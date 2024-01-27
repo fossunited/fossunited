@@ -1,10 +1,9 @@
 {% extends "templates/foss_base.html" %} {% block title %} {{ _("Your Payment
-Was failedful!") }}{% endblock %} {% block page_content %}
+Was failed") }}{% endblock %} {% block page_content %}
 <div id="payment-failed-page">
   <div class="payment-failed">
     <div id="failed-icon-div">
       <img class="failure-icon container-center icon" src="/assets/fossunited/icons/failure-icon.svg">
-          </img>
     </div>
     <div class="text-center">
       <p>
@@ -13,16 +12,17 @@ Was failedful!") }}{% endblock %} {% block page_content %}
         Please contact the admins or drop us a email at <b>tickets@fossunited.org</b>.
         <br />
         <br />
+
       </p>
     </div>
   </div>
 </div>
 
 <script>
-//   setTimeout(function() {
-//     window.location.href = "https://fossunited.org"
-//   }, 5000);
-// </script>
+  setTimeout(function() {
+    window.location.href = '/events/{{ frappe.form_dict.event }}'
+  }, 3000);
+</script>
 <style>
 #payment-failed-page {
   width: auto;

@@ -26,9 +26,9 @@ Was Successful!") }}{% endblock %} {% block page_content %}
   </div>
 </div>
 <script>
-  setTimeout(function () {
-    window.location.href = "https://fossunited.org";
-  }, 5000);
+  setTimeout(function() {
+    window.location.href = '/events/{{ frappe.form_dict.event }}'
+  }, 3000);
 </script>
 <style>
   #payment-success-page {
