@@ -28837,6 +28837,1851 @@ class Tooltip {
     }
   });
 
+  // node_modules/fast-deep-equal/index.js
+  var require_fast_deep_equal = __commonJS({
+    "node_modules/fast-deep-equal/index.js"(exports2, module2) {
+      "use strict";
+      var isArray = Array.isArray;
+      var keyList = Object.keys;
+      var hasProp = Object.prototype.hasOwnProperty;
+      module2.exports = function equal(a2, b2) {
+        if (a2 === b2)
+          return true;
+        if (a2 && b2 && typeof a2 == "object" && typeof b2 == "object") {
+          var arrA = isArray(a2), arrB = isArray(b2), i2, length, key;
+          if (arrA && arrB) {
+            length = a2.length;
+            if (length != b2.length)
+              return false;
+            for (i2 = length; i2-- !== 0; )
+              if (!equal(a2[i2], b2[i2]))
+                return false;
+            return true;
+          }
+          if (arrA != arrB)
+            return false;
+          var dateA = a2 instanceof Date, dateB = b2 instanceof Date;
+          if (dateA != dateB)
+            return false;
+          if (dateA && dateB)
+            return a2.getTime() == b2.getTime();
+          var regexpA = a2 instanceof RegExp, regexpB = b2 instanceof RegExp;
+          if (regexpA != regexpB)
+            return false;
+          if (regexpA && regexpB)
+            return a2.toString() == b2.toString();
+          var keys = keyList(a2);
+          length = keys.length;
+          if (length !== keyList(b2).length)
+            return false;
+          for (i2 = length; i2-- !== 0; )
+            if (!hasProp.call(b2, keys[i2]))
+              return false;
+          for (i2 = length; i2-- !== 0; ) {
+            key = keys[i2];
+            if (!equal(a2[key], b2[key]))
+              return false;
+          }
+          return true;
+        }
+        return a2 !== a2 && b2 !== b2;
+      };
+    }
+  });
+
+  // node_modules/lodash/_listCacheClear.js
+  var require_listCacheClear = __commonJS({
+    "node_modules/lodash/_listCacheClear.js"(exports2, module2) {
+      function listCacheClear() {
+        this.__data__ = [];
+        this.size = 0;
+      }
+      module2.exports = listCacheClear;
+    }
+  });
+
+  // node_modules/lodash/eq.js
+  var require_eq = __commonJS({
+    "node_modules/lodash/eq.js"(exports2, module2) {
+      function eq(value2, other) {
+        return value2 === other || value2 !== value2 && other !== other;
+      }
+      module2.exports = eq;
+    }
+  });
+
+  // node_modules/lodash/_assocIndexOf.js
+  var require_assocIndexOf = __commonJS({
+    "node_modules/lodash/_assocIndexOf.js"(exports2, module2) {
+      var eq = require_eq();
+      function assocIndexOf(array, key) {
+        var length = array.length;
+        while (length--) {
+          if (eq(array[length][0], key)) {
+            return length;
+          }
+        }
+        return -1;
+      }
+      module2.exports = assocIndexOf;
+    }
+  });
+
+  // node_modules/lodash/_listCacheDelete.js
+  var require_listCacheDelete = __commonJS({
+    "node_modules/lodash/_listCacheDelete.js"(exports2, module2) {
+      var assocIndexOf = require_assocIndexOf();
+      var arrayProto = Array.prototype;
+      var splice = arrayProto.splice;
+      function listCacheDelete(key) {
+        var data = this.__data__, index = assocIndexOf(data, key);
+        if (index < 0) {
+          return false;
+        }
+        var lastIndex = data.length - 1;
+        if (index == lastIndex) {
+          data.pop();
+        } else {
+          splice.call(data, index, 1);
+        }
+        --this.size;
+        return true;
+      }
+      module2.exports = listCacheDelete;
+    }
+  });
+
+  // node_modules/lodash/_listCacheGet.js
+  var require_listCacheGet = __commonJS({
+    "node_modules/lodash/_listCacheGet.js"(exports2, module2) {
+      var assocIndexOf = require_assocIndexOf();
+      function listCacheGet(key) {
+        var data = this.__data__, index = assocIndexOf(data, key);
+        return index < 0 ? void 0 : data[index][1];
+      }
+      module2.exports = listCacheGet;
+    }
+  });
+
+  // node_modules/lodash/_listCacheHas.js
+  var require_listCacheHas = __commonJS({
+    "node_modules/lodash/_listCacheHas.js"(exports2, module2) {
+      var assocIndexOf = require_assocIndexOf();
+      function listCacheHas(key) {
+        return assocIndexOf(this.__data__, key) > -1;
+      }
+      module2.exports = listCacheHas;
+    }
+  });
+
+  // node_modules/lodash/_listCacheSet.js
+  var require_listCacheSet = __commonJS({
+    "node_modules/lodash/_listCacheSet.js"(exports2, module2) {
+      var assocIndexOf = require_assocIndexOf();
+      function listCacheSet(key, value2) {
+        var data = this.__data__, index = assocIndexOf(data, key);
+        if (index < 0) {
+          ++this.size;
+          data.push([key, value2]);
+        } else {
+          data[index][1] = value2;
+        }
+        return this;
+      }
+      module2.exports = listCacheSet;
+    }
+  });
+
+  // node_modules/lodash/_ListCache.js
+  var require_ListCache = __commonJS({
+    "node_modules/lodash/_ListCache.js"(exports2, module2) {
+      var listCacheClear = require_listCacheClear();
+      var listCacheDelete = require_listCacheDelete();
+      var listCacheGet = require_listCacheGet();
+      var listCacheHas = require_listCacheHas();
+      var listCacheSet = require_listCacheSet();
+      function ListCache(entries) {
+        var index = -1, length = entries == null ? 0 : entries.length;
+        this.clear();
+        while (++index < length) {
+          var entry = entries[index];
+          this.set(entry[0], entry[1]);
+        }
+      }
+      ListCache.prototype.clear = listCacheClear;
+      ListCache.prototype["delete"] = listCacheDelete;
+      ListCache.prototype.get = listCacheGet;
+      ListCache.prototype.has = listCacheHas;
+      ListCache.prototype.set = listCacheSet;
+      module2.exports = ListCache;
+    }
+  });
+
+  // node_modules/lodash/_stackClear.js
+  var require_stackClear = __commonJS({
+    "node_modules/lodash/_stackClear.js"(exports2, module2) {
+      var ListCache = require_ListCache();
+      function stackClear() {
+        this.__data__ = new ListCache();
+        this.size = 0;
+      }
+      module2.exports = stackClear;
+    }
+  });
+
+  // node_modules/lodash/_stackDelete.js
+  var require_stackDelete = __commonJS({
+    "node_modules/lodash/_stackDelete.js"(exports2, module2) {
+      function stackDelete(key) {
+        var data = this.__data__, result = data["delete"](key);
+        this.size = data.size;
+        return result;
+      }
+      module2.exports = stackDelete;
+    }
+  });
+
+  // node_modules/lodash/_stackGet.js
+  var require_stackGet = __commonJS({
+    "node_modules/lodash/_stackGet.js"(exports2, module2) {
+      function stackGet(key) {
+        return this.__data__.get(key);
+      }
+      module2.exports = stackGet;
+    }
+  });
+
+  // node_modules/lodash/_stackHas.js
+  var require_stackHas = __commonJS({
+    "node_modules/lodash/_stackHas.js"(exports2, module2) {
+      function stackHas(key) {
+        return this.__data__.has(key);
+      }
+      module2.exports = stackHas;
+    }
+  });
+
+  // node_modules/lodash/_freeGlobal.js
+  var require_freeGlobal = __commonJS({
+    "node_modules/lodash/_freeGlobal.js"(exports2, module2) {
+      var freeGlobal = typeof global == "object" && global && global.Object === Object && global;
+      module2.exports = freeGlobal;
+    }
+  });
+
+  // node_modules/lodash/_root.js
+  var require_root = __commonJS({
+    "node_modules/lodash/_root.js"(exports2, module2) {
+      var freeGlobal = require_freeGlobal();
+      var freeSelf = typeof self == "object" && self && self.Object === Object && self;
+      var root = freeGlobal || freeSelf || Function("return this")();
+      module2.exports = root;
+    }
+  });
+
+  // node_modules/lodash/_Symbol.js
+  var require_Symbol = __commonJS({
+    "node_modules/lodash/_Symbol.js"(exports2, module2) {
+      var root = require_root();
+      var Symbol2 = root.Symbol;
+      module2.exports = Symbol2;
+    }
+  });
+
+  // node_modules/lodash/_getRawTag.js
+  var require_getRawTag = __commonJS({
+    "node_modules/lodash/_getRawTag.js"(exports2, module2) {
+      var Symbol2 = require_Symbol();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var nativeObjectToString = objectProto.toString;
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function getRawTag(value2) {
+        var isOwn = hasOwnProperty.call(value2, symToStringTag), tag = value2[symToStringTag];
+        try {
+          value2[symToStringTag] = void 0;
+          var unmasked = true;
+        } catch (e2) {
+        }
+        var result = nativeObjectToString.call(value2);
+        if (unmasked) {
+          if (isOwn) {
+            value2[symToStringTag] = tag;
+          } else {
+            delete value2[symToStringTag];
+          }
+        }
+        return result;
+      }
+      module2.exports = getRawTag;
+    }
+  });
+
+  // node_modules/lodash/_objectToString.js
+  var require_objectToString = __commonJS({
+    "node_modules/lodash/_objectToString.js"(exports2, module2) {
+      var objectProto = Object.prototype;
+      var nativeObjectToString = objectProto.toString;
+      function objectToString(value2) {
+        return nativeObjectToString.call(value2);
+      }
+      module2.exports = objectToString;
+    }
+  });
+
+  // node_modules/lodash/_baseGetTag.js
+  var require_baseGetTag = __commonJS({
+    "node_modules/lodash/_baseGetTag.js"(exports2, module2) {
+      var Symbol2 = require_Symbol();
+      var getRawTag = require_getRawTag();
+      var objectToString = require_objectToString();
+      var nullTag = "[object Null]";
+      var undefinedTag = "[object Undefined]";
+      var symToStringTag = Symbol2 ? Symbol2.toStringTag : void 0;
+      function baseGetTag(value2) {
+        if (value2 == null) {
+          return value2 === void 0 ? undefinedTag : nullTag;
+        }
+        return symToStringTag && symToStringTag in Object(value2) ? getRawTag(value2) : objectToString(value2);
+      }
+      module2.exports = baseGetTag;
+    }
+  });
+
+  // node_modules/lodash/isObject.js
+  var require_isObject = __commonJS({
+    "node_modules/lodash/isObject.js"(exports2, module2) {
+      function isObject(value2) {
+        var type = typeof value2;
+        return value2 != null && (type == "object" || type == "function");
+      }
+      module2.exports = isObject;
+    }
+  });
+
+  // node_modules/lodash/isFunction.js
+  var require_isFunction = __commonJS({
+    "node_modules/lodash/isFunction.js"(exports2, module2) {
+      var baseGetTag = require_baseGetTag();
+      var isObject = require_isObject();
+      var asyncTag = "[object AsyncFunction]";
+      var funcTag = "[object Function]";
+      var genTag = "[object GeneratorFunction]";
+      var proxyTag = "[object Proxy]";
+      function isFunction(value2) {
+        if (!isObject(value2)) {
+          return false;
+        }
+        var tag = baseGetTag(value2);
+        return tag == funcTag || tag == genTag || tag == asyncTag || tag == proxyTag;
+      }
+      module2.exports = isFunction;
+    }
+  });
+
+  // node_modules/lodash/_coreJsData.js
+  var require_coreJsData = __commonJS({
+    "node_modules/lodash/_coreJsData.js"(exports2, module2) {
+      var root = require_root();
+      var coreJsData = root["__core-js_shared__"];
+      module2.exports = coreJsData;
+    }
+  });
+
+  // node_modules/lodash/_isMasked.js
+  var require_isMasked = __commonJS({
+    "node_modules/lodash/_isMasked.js"(exports2, module2) {
+      var coreJsData = require_coreJsData();
+      var maskSrcKey = function() {
+        var uid = /[^.]+$/.exec(coreJsData && coreJsData.keys && coreJsData.keys.IE_PROTO || "");
+        return uid ? "Symbol(src)_1." + uid : "";
+      }();
+      function isMasked(func) {
+        return !!maskSrcKey && maskSrcKey in func;
+      }
+      module2.exports = isMasked;
+    }
+  });
+
+  // node_modules/lodash/_toSource.js
+  var require_toSource = __commonJS({
+    "node_modules/lodash/_toSource.js"(exports2, module2) {
+      var funcProto = Function.prototype;
+      var funcToString = funcProto.toString;
+      function toSource(func) {
+        if (func != null) {
+          try {
+            return funcToString.call(func);
+          } catch (e2) {
+          }
+          try {
+            return func + "";
+          } catch (e2) {
+          }
+        }
+        return "";
+      }
+      module2.exports = toSource;
+    }
+  });
+
+  // node_modules/lodash/_baseIsNative.js
+  var require_baseIsNative = __commonJS({
+    "node_modules/lodash/_baseIsNative.js"(exports2, module2) {
+      var isFunction = require_isFunction();
+      var isMasked = require_isMasked();
+      var isObject = require_isObject();
+      var toSource = require_toSource();
+      var reRegExpChar = /[\\^$.*+?()[\]{}|]/g;
+      var reIsHostCtor = /^\[object .+?Constructor\]$/;
+      var funcProto = Function.prototype;
+      var objectProto = Object.prototype;
+      var funcToString = funcProto.toString;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var reIsNative = RegExp(
+        "^" + funcToString.call(hasOwnProperty).replace(reRegExpChar, "\\$&").replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, "$1.*?") + "$"
+      );
+      function baseIsNative(value2) {
+        if (!isObject(value2) || isMasked(value2)) {
+          return false;
+        }
+        var pattern = isFunction(value2) ? reIsNative : reIsHostCtor;
+        return pattern.test(toSource(value2));
+      }
+      module2.exports = baseIsNative;
+    }
+  });
+
+  // node_modules/lodash/_getValue.js
+  var require_getValue = __commonJS({
+    "node_modules/lodash/_getValue.js"(exports2, module2) {
+      function getValue(object, key) {
+        return object == null ? void 0 : object[key];
+      }
+      module2.exports = getValue;
+    }
+  });
+
+  // node_modules/lodash/_getNative.js
+  var require_getNative = __commonJS({
+    "node_modules/lodash/_getNative.js"(exports2, module2) {
+      var baseIsNative = require_baseIsNative();
+      var getValue = require_getValue();
+      function getNative(object, key) {
+        var value2 = getValue(object, key);
+        return baseIsNative(value2) ? value2 : void 0;
+      }
+      module2.exports = getNative;
+    }
+  });
+
+  // node_modules/lodash/_Map.js
+  var require_Map = __commonJS({
+    "node_modules/lodash/_Map.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var root = require_root();
+      var Map2 = getNative(root, "Map");
+      module2.exports = Map2;
+    }
+  });
+
+  // node_modules/lodash/_nativeCreate.js
+  var require_nativeCreate = __commonJS({
+    "node_modules/lodash/_nativeCreate.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var nativeCreate = getNative(Object, "create");
+      module2.exports = nativeCreate;
+    }
+  });
+
+  // node_modules/lodash/_hashClear.js
+  var require_hashClear = __commonJS({
+    "node_modules/lodash/_hashClear.js"(exports2, module2) {
+      var nativeCreate = require_nativeCreate();
+      function hashClear() {
+        this.__data__ = nativeCreate ? nativeCreate(null) : {};
+        this.size = 0;
+      }
+      module2.exports = hashClear;
+    }
+  });
+
+  // node_modules/lodash/_hashDelete.js
+  var require_hashDelete = __commonJS({
+    "node_modules/lodash/_hashDelete.js"(exports2, module2) {
+      function hashDelete(key) {
+        var result = this.has(key) && delete this.__data__[key];
+        this.size -= result ? 1 : 0;
+        return result;
+      }
+      module2.exports = hashDelete;
+    }
+  });
+
+  // node_modules/lodash/_hashGet.js
+  var require_hashGet = __commonJS({
+    "node_modules/lodash/_hashGet.js"(exports2, module2) {
+      var nativeCreate = require_nativeCreate();
+      var HASH_UNDEFINED = "__lodash_hash_undefined__";
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function hashGet(key) {
+        var data = this.__data__;
+        if (nativeCreate) {
+          var result = data[key];
+          return result === HASH_UNDEFINED ? void 0 : result;
+        }
+        return hasOwnProperty.call(data, key) ? data[key] : void 0;
+      }
+      module2.exports = hashGet;
+    }
+  });
+
+  // node_modules/lodash/_hashHas.js
+  var require_hashHas = __commonJS({
+    "node_modules/lodash/_hashHas.js"(exports2, module2) {
+      var nativeCreate = require_nativeCreate();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function hashHas(key) {
+        var data = this.__data__;
+        return nativeCreate ? data[key] !== void 0 : hasOwnProperty.call(data, key);
+      }
+      module2.exports = hashHas;
+    }
+  });
+
+  // node_modules/lodash/_hashSet.js
+  var require_hashSet = __commonJS({
+    "node_modules/lodash/_hashSet.js"(exports2, module2) {
+      var nativeCreate = require_nativeCreate();
+      var HASH_UNDEFINED = "__lodash_hash_undefined__";
+      function hashSet(key, value2) {
+        var data = this.__data__;
+        this.size += this.has(key) ? 0 : 1;
+        data[key] = nativeCreate && value2 === void 0 ? HASH_UNDEFINED : value2;
+        return this;
+      }
+      module2.exports = hashSet;
+    }
+  });
+
+  // node_modules/lodash/_Hash.js
+  var require_Hash = __commonJS({
+    "node_modules/lodash/_Hash.js"(exports2, module2) {
+      var hashClear = require_hashClear();
+      var hashDelete = require_hashDelete();
+      var hashGet = require_hashGet();
+      var hashHas = require_hashHas();
+      var hashSet = require_hashSet();
+      function Hash(entries) {
+        var index = -1, length = entries == null ? 0 : entries.length;
+        this.clear();
+        while (++index < length) {
+          var entry = entries[index];
+          this.set(entry[0], entry[1]);
+        }
+      }
+      Hash.prototype.clear = hashClear;
+      Hash.prototype["delete"] = hashDelete;
+      Hash.prototype.get = hashGet;
+      Hash.prototype.has = hashHas;
+      Hash.prototype.set = hashSet;
+      module2.exports = Hash;
+    }
+  });
+
+  // node_modules/lodash/_mapCacheClear.js
+  var require_mapCacheClear = __commonJS({
+    "node_modules/lodash/_mapCacheClear.js"(exports2, module2) {
+      var Hash = require_Hash();
+      var ListCache = require_ListCache();
+      var Map2 = require_Map();
+      function mapCacheClear() {
+        this.size = 0;
+        this.__data__ = {
+          "hash": new Hash(),
+          "map": new (Map2 || ListCache)(),
+          "string": new Hash()
+        };
+      }
+      module2.exports = mapCacheClear;
+    }
+  });
+
+  // node_modules/lodash/_isKeyable.js
+  var require_isKeyable = __commonJS({
+    "node_modules/lodash/_isKeyable.js"(exports2, module2) {
+      function isKeyable(value2) {
+        var type = typeof value2;
+        return type == "string" || type == "number" || type == "symbol" || type == "boolean" ? value2 !== "__proto__" : value2 === null;
+      }
+      module2.exports = isKeyable;
+    }
+  });
+
+  // node_modules/lodash/_getMapData.js
+  var require_getMapData = __commonJS({
+    "node_modules/lodash/_getMapData.js"(exports2, module2) {
+      var isKeyable = require_isKeyable();
+      function getMapData(map, key) {
+        var data = map.__data__;
+        return isKeyable(key) ? data[typeof key == "string" ? "string" : "hash"] : data.map;
+      }
+      module2.exports = getMapData;
+    }
+  });
+
+  // node_modules/lodash/_mapCacheDelete.js
+  var require_mapCacheDelete = __commonJS({
+    "node_modules/lodash/_mapCacheDelete.js"(exports2, module2) {
+      var getMapData = require_getMapData();
+      function mapCacheDelete(key) {
+        var result = getMapData(this, key)["delete"](key);
+        this.size -= result ? 1 : 0;
+        return result;
+      }
+      module2.exports = mapCacheDelete;
+    }
+  });
+
+  // node_modules/lodash/_mapCacheGet.js
+  var require_mapCacheGet = __commonJS({
+    "node_modules/lodash/_mapCacheGet.js"(exports2, module2) {
+      var getMapData = require_getMapData();
+      function mapCacheGet(key) {
+        return getMapData(this, key).get(key);
+      }
+      module2.exports = mapCacheGet;
+    }
+  });
+
+  // node_modules/lodash/_mapCacheHas.js
+  var require_mapCacheHas = __commonJS({
+    "node_modules/lodash/_mapCacheHas.js"(exports2, module2) {
+      var getMapData = require_getMapData();
+      function mapCacheHas(key) {
+        return getMapData(this, key).has(key);
+      }
+      module2.exports = mapCacheHas;
+    }
+  });
+
+  // node_modules/lodash/_mapCacheSet.js
+  var require_mapCacheSet = __commonJS({
+    "node_modules/lodash/_mapCacheSet.js"(exports2, module2) {
+      var getMapData = require_getMapData();
+      function mapCacheSet(key, value2) {
+        var data = getMapData(this, key), size = data.size;
+        data.set(key, value2);
+        this.size += data.size == size ? 0 : 1;
+        return this;
+      }
+      module2.exports = mapCacheSet;
+    }
+  });
+
+  // node_modules/lodash/_MapCache.js
+  var require_MapCache = __commonJS({
+    "node_modules/lodash/_MapCache.js"(exports2, module2) {
+      var mapCacheClear = require_mapCacheClear();
+      var mapCacheDelete = require_mapCacheDelete();
+      var mapCacheGet = require_mapCacheGet();
+      var mapCacheHas = require_mapCacheHas();
+      var mapCacheSet = require_mapCacheSet();
+      function MapCache(entries) {
+        var index = -1, length = entries == null ? 0 : entries.length;
+        this.clear();
+        while (++index < length) {
+          var entry = entries[index];
+          this.set(entry[0], entry[1]);
+        }
+      }
+      MapCache.prototype.clear = mapCacheClear;
+      MapCache.prototype["delete"] = mapCacheDelete;
+      MapCache.prototype.get = mapCacheGet;
+      MapCache.prototype.has = mapCacheHas;
+      MapCache.prototype.set = mapCacheSet;
+      module2.exports = MapCache;
+    }
+  });
+
+  // node_modules/lodash/_stackSet.js
+  var require_stackSet = __commonJS({
+    "node_modules/lodash/_stackSet.js"(exports2, module2) {
+      var ListCache = require_ListCache();
+      var Map2 = require_Map();
+      var MapCache = require_MapCache();
+      var LARGE_ARRAY_SIZE = 200;
+      function stackSet(key, value2) {
+        var data = this.__data__;
+        if (data instanceof ListCache) {
+          var pairs = data.__data__;
+          if (!Map2 || pairs.length < LARGE_ARRAY_SIZE - 1) {
+            pairs.push([key, value2]);
+            this.size = ++data.size;
+            return this;
+          }
+          data = this.__data__ = new MapCache(pairs);
+        }
+        data.set(key, value2);
+        this.size = data.size;
+        return this;
+      }
+      module2.exports = stackSet;
+    }
+  });
+
+  // node_modules/lodash/_Stack.js
+  var require_Stack = __commonJS({
+    "node_modules/lodash/_Stack.js"(exports2, module2) {
+      var ListCache = require_ListCache();
+      var stackClear = require_stackClear();
+      var stackDelete = require_stackDelete();
+      var stackGet = require_stackGet();
+      var stackHas = require_stackHas();
+      var stackSet = require_stackSet();
+      function Stack(entries) {
+        var data = this.__data__ = new ListCache(entries);
+        this.size = data.size;
+      }
+      Stack.prototype.clear = stackClear;
+      Stack.prototype["delete"] = stackDelete;
+      Stack.prototype.get = stackGet;
+      Stack.prototype.has = stackHas;
+      Stack.prototype.set = stackSet;
+      module2.exports = Stack;
+    }
+  });
+
+  // node_modules/lodash/_arrayEach.js
+  var require_arrayEach = __commonJS({
+    "node_modules/lodash/_arrayEach.js"(exports2, module2) {
+      function arrayEach(array, iteratee) {
+        var index = -1, length = array == null ? 0 : array.length;
+        while (++index < length) {
+          if (iteratee(array[index], index, array) === false) {
+            break;
+          }
+        }
+        return array;
+      }
+      module2.exports = arrayEach;
+    }
+  });
+
+  // node_modules/lodash/_defineProperty.js
+  var require_defineProperty = __commonJS({
+    "node_modules/lodash/_defineProperty.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var defineProperty = function() {
+        try {
+          var func = getNative(Object, "defineProperty");
+          func({}, "", {});
+          return func;
+        } catch (e2) {
+        }
+      }();
+      module2.exports = defineProperty;
+    }
+  });
+
+  // node_modules/lodash/_baseAssignValue.js
+  var require_baseAssignValue = __commonJS({
+    "node_modules/lodash/_baseAssignValue.js"(exports2, module2) {
+      var defineProperty = require_defineProperty();
+      function baseAssignValue(object, key, value2) {
+        if (key == "__proto__" && defineProperty) {
+          defineProperty(object, key, {
+            "configurable": true,
+            "enumerable": true,
+            "value": value2,
+            "writable": true
+          });
+        } else {
+          object[key] = value2;
+        }
+      }
+      module2.exports = baseAssignValue;
+    }
+  });
+
+  // node_modules/lodash/_assignValue.js
+  var require_assignValue = __commonJS({
+    "node_modules/lodash/_assignValue.js"(exports2, module2) {
+      var baseAssignValue = require_baseAssignValue();
+      var eq = require_eq();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function assignValue(object, key, value2) {
+        var objValue = object[key];
+        if (!(hasOwnProperty.call(object, key) && eq(objValue, value2)) || value2 === void 0 && !(key in object)) {
+          baseAssignValue(object, key, value2);
+        }
+      }
+      module2.exports = assignValue;
+    }
+  });
+
+  // node_modules/lodash/_copyObject.js
+  var require_copyObject = __commonJS({
+    "node_modules/lodash/_copyObject.js"(exports2, module2) {
+      var assignValue = require_assignValue();
+      var baseAssignValue = require_baseAssignValue();
+      function copyObject(source, props, object, customizer) {
+        var isNew = !object;
+        object || (object = {});
+        var index = -1, length = props.length;
+        while (++index < length) {
+          var key = props[index];
+          var newValue = customizer ? customizer(object[key], source[key], key, object, source) : void 0;
+          if (newValue === void 0) {
+            newValue = source[key];
+          }
+          if (isNew) {
+            baseAssignValue(object, key, newValue);
+          } else {
+            assignValue(object, key, newValue);
+          }
+        }
+        return object;
+      }
+      module2.exports = copyObject;
+    }
+  });
+
+  // node_modules/lodash/_baseTimes.js
+  var require_baseTimes = __commonJS({
+    "node_modules/lodash/_baseTimes.js"(exports2, module2) {
+      function baseTimes(n2, iteratee) {
+        var index = -1, result = Array(n2);
+        while (++index < n2) {
+          result[index] = iteratee(index);
+        }
+        return result;
+      }
+      module2.exports = baseTimes;
+    }
+  });
+
+  // node_modules/lodash/isObjectLike.js
+  var require_isObjectLike = __commonJS({
+    "node_modules/lodash/isObjectLike.js"(exports2, module2) {
+      function isObjectLike(value2) {
+        return value2 != null && typeof value2 == "object";
+      }
+      module2.exports = isObjectLike;
+    }
+  });
+
+  // node_modules/lodash/_baseIsArguments.js
+  var require_baseIsArguments = __commonJS({
+    "node_modules/lodash/_baseIsArguments.js"(exports2, module2) {
+      var baseGetTag = require_baseGetTag();
+      var isObjectLike = require_isObjectLike();
+      var argsTag = "[object Arguments]";
+      function baseIsArguments(value2) {
+        return isObjectLike(value2) && baseGetTag(value2) == argsTag;
+      }
+      module2.exports = baseIsArguments;
+    }
+  });
+
+  // node_modules/lodash/isArguments.js
+  var require_isArguments = __commonJS({
+    "node_modules/lodash/isArguments.js"(exports2, module2) {
+      var baseIsArguments = require_baseIsArguments();
+      var isObjectLike = require_isObjectLike();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+      var isArguments = baseIsArguments(function() {
+        return arguments;
+      }()) ? baseIsArguments : function(value2) {
+        return isObjectLike(value2) && hasOwnProperty.call(value2, "callee") && !propertyIsEnumerable.call(value2, "callee");
+      };
+      module2.exports = isArguments;
+    }
+  });
+
+  // node_modules/lodash/isArray.js
+  var require_isArray = __commonJS({
+    "node_modules/lodash/isArray.js"(exports2, module2) {
+      var isArray = Array.isArray;
+      module2.exports = isArray;
+    }
+  });
+
+  // node_modules/lodash/stubFalse.js
+  var require_stubFalse = __commonJS({
+    "node_modules/lodash/stubFalse.js"(exports2, module2) {
+      function stubFalse() {
+        return false;
+      }
+      module2.exports = stubFalse;
+    }
+  });
+
+  // node_modules/lodash/isBuffer.js
+  var require_isBuffer = __commonJS({
+    "node_modules/lodash/isBuffer.js"(exports2, module2) {
+      var root = require_root();
+      var stubFalse = require_stubFalse();
+      var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
+      var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+      var moduleExports = freeModule && freeModule.exports === freeExports;
+      var Buffer2 = moduleExports ? root.Buffer : void 0;
+      var nativeIsBuffer = Buffer2 ? Buffer2.isBuffer : void 0;
+      var isBuffer = nativeIsBuffer || stubFalse;
+      module2.exports = isBuffer;
+    }
+  });
+
+  // node_modules/lodash/_isIndex.js
+  var require_isIndex = __commonJS({
+    "node_modules/lodash/_isIndex.js"(exports2, module2) {
+      var MAX_SAFE_INTEGER = 9007199254740991;
+      var reIsUint = /^(?:0|[1-9]\d*)$/;
+      function isIndex(value2, length) {
+        var type = typeof value2;
+        length = length == null ? MAX_SAFE_INTEGER : length;
+        return !!length && (type == "number" || type != "symbol" && reIsUint.test(value2)) && (value2 > -1 && value2 % 1 == 0 && value2 < length);
+      }
+      module2.exports = isIndex;
+    }
+  });
+
+  // node_modules/lodash/isLength.js
+  var require_isLength = __commonJS({
+    "node_modules/lodash/isLength.js"(exports2, module2) {
+      var MAX_SAFE_INTEGER = 9007199254740991;
+      function isLength(value2) {
+        return typeof value2 == "number" && value2 > -1 && value2 % 1 == 0 && value2 <= MAX_SAFE_INTEGER;
+      }
+      module2.exports = isLength;
+    }
+  });
+
+  // node_modules/lodash/_baseIsTypedArray.js
+  var require_baseIsTypedArray = __commonJS({
+    "node_modules/lodash/_baseIsTypedArray.js"(exports2, module2) {
+      var baseGetTag = require_baseGetTag();
+      var isLength = require_isLength();
+      var isObjectLike = require_isObjectLike();
+      var argsTag = "[object Arguments]";
+      var arrayTag = "[object Array]";
+      var boolTag = "[object Boolean]";
+      var dateTag = "[object Date]";
+      var errorTag = "[object Error]";
+      var funcTag = "[object Function]";
+      var mapTag = "[object Map]";
+      var numberTag = "[object Number]";
+      var objectTag = "[object Object]";
+      var regexpTag = "[object RegExp]";
+      var setTag = "[object Set]";
+      var stringTag = "[object String]";
+      var weakMapTag = "[object WeakMap]";
+      var arrayBufferTag = "[object ArrayBuffer]";
+      var dataViewTag = "[object DataView]";
+      var float32Tag = "[object Float32Array]";
+      var float64Tag = "[object Float64Array]";
+      var int8Tag = "[object Int8Array]";
+      var int16Tag = "[object Int16Array]";
+      var int32Tag = "[object Int32Array]";
+      var uint8Tag = "[object Uint8Array]";
+      var uint8ClampedTag = "[object Uint8ClampedArray]";
+      var uint16Tag = "[object Uint16Array]";
+      var uint32Tag = "[object Uint32Array]";
+      var typedArrayTags = {};
+      typedArrayTags[float32Tag] = typedArrayTags[float64Tag] = typedArrayTags[int8Tag] = typedArrayTags[int16Tag] = typedArrayTags[int32Tag] = typedArrayTags[uint8Tag] = typedArrayTags[uint8ClampedTag] = typedArrayTags[uint16Tag] = typedArrayTags[uint32Tag] = true;
+      typedArrayTags[argsTag] = typedArrayTags[arrayTag] = typedArrayTags[arrayBufferTag] = typedArrayTags[boolTag] = typedArrayTags[dataViewTag] = typedArrayTags[dateTag] = typedArrayTags[errorTag] = typedArrayTags[funcTag] = typedArrayTags[mapTag] = typedArrayTags[numberTag] = typedArrayTags[objectTag] = typedArrayTags[regexpTag] = typedArrayTags[setTag] = typedArrayTags[stringTag] = typedArrayTags[weakMapTag] = false;
+      function baseIsTypedArray(value2) {
+        return isObjectLike(value2) && isLength(value2.length) && !!typedArrayTags[baseGetTag(value2)];
+      }
+      module2.exports = baseIsTypedArray;
+    }
+  });
+
+  // node_modules/lodash/_baseUnary.js
+  var require_baseUnary = __commonJS({
+    "node_modules/lodash/_baseUnary.js"(exports2, module2) {
+      function baseUnary(func) {
+        return function(value2) {
+          return func(value2);
+        };
+      }
+      module2.exports = baseUnary;
+    }
+  });
+
+  // node_modules/lodash/_nodeUtil.js
+  var require_nodeUtil = __commonJS({
+    "node_modules/lodash/_nodeUtil.js"(exports2, module2) {
+      var freeGlobal = require_freeGlobal();
+      var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
+      var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+      var moduleExports = freeModule && freeModule.exports === freeExports;
+      var freeProcess = moduleExports && freeGlobal.process;
+      var nodeUtil = function() {
+        try {
+          var types = freeModule && freeModule.require && freeModule.require("util").types;
+          if (types) {
+            return types;
+          }
+          return freeProcess && freeProcess.binding && freeProcess.binding("util");
+        } catch (e2) {
+        }
+      }();
+      module2.exports = nodeUtil;
+    }
+  });
+
+  // node_modules/lodash/isTypedArray.js
+  var require_isTypedArray = __commonJS({
+    "node_modules/lodash/isTypedArray.js"(exports2, module2) {
+      var baseIsTypedArray = require_baseIsTypedArray();
+      var baseUnary = require_baseUnary();
+      var nodeUtil = require_nodeUtil();
+      var nodeIsTypedArray = nodeUtil && nodeUtil.isTypedArray;
+      var isTypedArray = nodeIsTypedArray ? baseUnary(nodeIsTypedArray) : baseIsTypedArray;
+      module2.exports = isTypedArray;
+    }
+  });
+
+  // node_modules/lodash/_arrayLikeKeys.js
+  var require_arrayLikeKeys = __commonJS({
+    "node_modules/lodash/_arrayLikeKeys.js"(exports2, module2) {
+      var baseTimes = require_baseTimes();
+      var isArguments = require_isArguments();
+      var isArray = require_isArray();
+      var isBuffer = require_isBuffer();
+      var isIndex = require_isIndex();
+      var isTypedArray = require_isTypedArray();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function arrayLikeKeys(value2, inherited) {
+        var isArr = isArray(value2), isArg = !isArr && isArguments(value2), isBuff = !isArr && !isArg && isBuffer(value2), isType = !isArr && !isArg && !isBuff && isTypedArray(value2), skipIndexes = isArr || isArg || isBuff || isType, result = skipIndexes ? baseTimes(value2.length, String) : [], length = result.length;
+        for (var key in value2) {
+          if ((inherited || hasOwnProperty.call(value2, key)) && !(skipIndexes && (key == "length" || isBuff && (key == "offset" || key == "parent") || isType && (key == "buffer" || key == "byteLength" || key == "byteOffset") || isIndex(key, length)))) {
+            result.push(key);
+          }
+        }
+        return result;
+      }
+      module2.exports = arrayLikeKeys;
+    }
+  });
+
+  // node_modules/lodash/_isPrototype.js
+  var require_isPrototype = __commonJS({
+    "node_modules/lodash/_isPrototype.js"(exports2, module2) {
+      var objectProto = Object.prototype;
+      function isPrototype(value2) {
+        var Ctor = value2 && value2.constructor, proto = typeof Ctor == "function" && Ctor.prototype || objectProto;
+        return value2 === proto;
+      }
+      module2.exports = isPrototype;
+    }
+  });
+
+  // node_modules/lodash/_overArg.js
+  var require_overArg = __commonJS({
+    "node_modules/lodash/_overArg.js"(exports2, module2) {
+      function overArg(func, transform) {
+        return function(arg) {
+          return func(transform(arg));
+        };
+      }
+      module2.exports = overArg;
+    }
+  });
+
+  // node_modules/lodash/_nativeKeys.js
+  var require_nativeKeys = __commonJS({
+    "node_modules/lodash/_nativeKeys.js"(exports2, module2) {
+      var overArg = require_overArg();
+      var nativeKeys = overArg(Object.keys, Object);
+      module2.exports = nativeKeys;
+    }
+  });
+
+  // node_modules/lodash/_baseKeys.js
+  var require_baseKeys = __commonJS({
+    "node_modules/lodash/_baseKeys.js"(exports2, module2) {
+      var isPrototype = require_isPrototype();
+      var nativeKeys = require_nativeKeys();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function baseKeys(object) {
+        if (!isPrototype(object)) {
+          return nativeKeys(object);
+        }
+        var result = [];
+        for (var key in Object(object)) {
+          if (hasOwnProperty.call(object, key) && key != "constructor") {
+            result.push(key);
+          }
+        }
+        return result;
+      }
+      module2.exports = baseKeys;
+    }
+  });
+
+  // node_modules/lodash/isArrayLike.js
+  var require_isArrayLike = __commonJS({
+    "node_modules/lodash/isArrayLike.js"(exports2, module2) {
+      var isFunction = require_isFunction();
+      var isLength = require_isLength();
+      function isArrayLike(value2) {
+        return value2 != null && isLength(value2.length) && !isFunction(value2);
+      }
+      module2.exports = isArrayLike;
+    }
+  });
+
+  // node_modules/lodash/keys.js
+  var require_keys = __commonJS({
+    "node_modules/lodash/keys.js"(exports2, module2) {
+      var arrayLikeKeys = require_arrayLikeKeys();
+      var baseKeys = require_baseKeys();
+      var isArrayLike = require_isArrayLike();
+      function keys(object) {
+        return isArrayLike(object) ? arrayLikeKeys(object) : baseKeys(object);
+      }
+      module2.exports = keys;
+    }
+  });
+
+  // node_modules/lodash/_baseAssign.js
+  var require_baseAssign = __commonJS({
+    "node_modules/lodash/_baseAssign.js"(exports2, module2) {
+      var copyObject = require_copyObject();
+      var keys = require_keys();
+      function baseAssign(object, source) {
+        return object && copyObject(source, keys(source), object);
+      }
+      module2.exports = baseAssign;
+    }
+  });
+
+  // node_modules/lodash/_nativeKeysIn.js
+  var require_nativeKeysIn = __commonJS({
+    "node_modules/lodash/_nativeKeysIn.js"(exports2, module2) {
+      function nativeKeysIn(object) {
+        var result = [];
+        if (object != null) {
+          for (var key in Object(object)) {
+            result.push(key);
+          }
+        }
+        return result;
+      }
+      module2.exports = nativeKeysIn;
+    }
+  });
+
+  // node_modules/lodash/_baseKeysIn.js
+  var require_baseKeysIn = __commonJS({
+    "node_modules/lodash/_baseKeysIn.js"(exports2, module2) {
+      var isObject = require_isObject();
+      var isPrototype = require_isPrototype();
+      var nativeKeysIn = require_nativeKeysIn();
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function baseKeysIn(object) {
+        if (!isObject(object)) {
+          return nativeKeysIn(object);
+        }
+        var isProto = isPrototype(object), result = [];
+        for (var key in object) {
+          if (!(key == "constructor" && (isProto || !hasOwnProperty.call(object, key)))) {
+            result.push(key);
+          }
+        }
+        return result;
+      }
+      module2.exports = baseKeysIn;
+    }
+  });
+
+  // node_modules/lodash/keysIn.js
+  var require_keysIn = __commonJS({
+    "node_modules/lodash/keysIn.js"(exports2, module2) {
+      var arrayLikeKeys = require_arrayLikeKeys();
+      var baseKeysIn = require_baseKeysIn();
+      var isArrayLike = require_isArrayLike();
+      function keysIn(object) {
+        return isArrayLike(object) ? arrayLikeKeys(object, true) : baseKeysIn(object);
+      }
+      module2.exports = keysIn;
+    }
+  });
+
+  // node_modules/lodash/_baseAssignIn.js
+  var require_baseAssignIn = __commonJS({
+    "node_modules/lodash/_baseAssignIn.js"(exports2, module2) {
+      var copyObject = require_copyObject();
+      var keysIn = require_keysIn();
+      function baseAssignIn(object, source) {
+        return object && copyObject(source, keysIn(source), object);
+      }
+      module2.exports = baseAssignIn;
+    }
+  });
+
+  // node_modules/lodash/_cloneBuffer.js
+  var require_cloneBuffer = __commonJS({
+    "node_modules/lodash/_cloneBuffer.js"(exports2, module2) {
+      var root = require_root();
+      var freeExports = typeof exports2 == "object" && exports2 && !exports2.nodeType && exports2;
+      var freeModule = freeExports && typeof module2 == "object" && module2 && !module2.nodeType && module2;
+      var moduleExports = freeModule && freeModule.exports === freeExports;
+      var Buffer2 = moduleExports ? root.Buffer : void 0;
+      var allocUnsafe = Buffer2 ? Buffer2.allocUnsafe : void 0;
+      function cloneBuffer(buffer, isDeep) {
+        if (isDeep) {
+          return buffer.slice();
+        }
+        var length = buffer.length, result = allocUnsafe ? allocUnsafe(length) : new buffer.constructor(length);
+        buffer.copy(result);
+        return result;
+      }
+      module2.exports = cloneBuffer;
+    }
+  });
+
+  // node_modules/lodash/_copyArray.js
+  var require_copyArray = __commonJS({
+    "node_modules/lodash/_copyArray.js"(exports2, module2) {
+      function copyArray(source, array) {
+        var index = -1, length = source.length;
+        array || (array = Array(length));
+        while (++index < length) {
+          array[index] = source[index];
+        }
+        return array;
+      }
+      module2.exports = copyArray;
+    }
+  });
+
+  // node_modules/lodash/_arrayFilter.js
+  var require_arrayFilter = __commonJS({
+    "node_modules/lodash/_arrayFilter.js"(exports2, module2) {
+      function arrayFilter(array, predicate) {
+        var index = -1, length = array == null ? 0 : array.length, resIndex = 0, result = [];
+        while (++index < length) {
+          var value2 = array[index];
+          if (predicate(value2, index, array)) {
+            result[resIndex++] = value2;
+          }
+        }
+        return result;
+      }
+      module2.exports = arrayFilter;
+    }
+  });
+
+  // node_modules/lodash/stubArray.js
+  var require_stubArray = __commonJS({
+    "node_modules/lodash/stubArray.js"(exports2, module2) {
+      function stubArray() {
+        return [];
+      }
+      module2.exports = stubArray;
+    }
+  });
+
+  // node_modules/lodash/_getSymbols.js
+  var require_getSymbols = __commonJS({
+    "node_modules/lodash/_getSymbols.js"(exports2, module2) {
+      var arrayFilter = require_arrayFilter();
+      var stubArray = require_stubArray();
+      var objectProto = Object.prototype;
+      var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+      var nativeGetSymbols = Object.getOwnPropertySymbols;
+      var getSymbols = !nativeGetSymbols ? stubArray : function(object) {
+        if (object == null) {
+          return [];
+        }
+        object = Object(object);
+        return arrayFilter(nativeGetSymbols(object), function(symbol) {
+          return propertyIsEnumerable.call(object, symbol);
+        });
+      };
+      module2.exports = getSymbols;
+    }
+  });
+
+  // node_modules/lodash/_copySymbols.js
+  var require_copySymbols = __commonJS({
+    "node_modules/lodash/_copySymbols.js"(exports2, module2) {
+      var copyObject = require_copyObject();
+      var getSymbols = require_getSymbols();
+      function copySymbols(source, object) {
+        return copyObject(source, getSymbols(source), object);
+      }
+      module2.exports = copySymbols;
+    }
+  });
+
+  // node_modules/lodash/_arrayPush.js
+  var require_arrayPush = __commonJS({
+    "node_modules/lodash/_arrayPush.js"(exports2, module2) {
+      function arrayPush(array, values) {
+        var index = -1, length = values.length, offset = array.length;
+        while (++index < length) {
+          array[offset + index] = values[index];
+        }
+        return array;
+      }
+      module2.exports = arrayPush;
+    }
+  });
+
+  // node_modules/lodash/_getPrototype.js
+  var require_getPrototype = __commonJS({
+    "node_modules/lodash/_getPrototype.js"(exports2, module2) {
+      var overArg = require_overArg();
+      var getPrototype = overArg(Object.getPrototypeOf, Object);
+      module2.exports = getPrototype;
+    }
+  });
+
+  // node_modules/lodash/_getSymbolsIn.js
+  var require_getSymbolsIn = __commonJS({
+    "node_modules/lodash/_getSymbolsIn.js"(exports2, module2) {
+      var arrayPush = require_arrayPush();
+      var getPrototype = require_getPrototype();
+      var getSymbols = require_getSymbols();
+      var stubArray = require_stubArray();
+      var nativeGetSymbols = Object.getOwnPropertySymbols;
+      var getSymbolsIn = !nativeGetSymbols ? stubArray : function(object) {
+        var result = [];
+        while (object) {
+          arrayPush(result, getSymbols(object));
+          object = getPrototype(object);
+        }
+        return result;
+      };
+      module2.exports = getSymbolsIn;
+    }
+  });
+
+  // node_modules/lodash/_copySymbolsIn.js
+  var require_copySymbolsIn = __commonJS({
+    "node_modules/lodash/_copySymbolsIn.js"(exports2, module2) {
+      var copyObject = require_copyObject();
+      var getSymbolsIn = require_getSymbolsIn();
+      function copySymbolsIn(source, object) {
+        return copyObject(source, getSymbolsIn(source), object);
+      }
+      module2.exports = copySymbolsIn;
+    }
+  });
+
+  // node_modules/lodash/_baseGetAllKeys.js
+  var require_baseGetAllKeys = __commonJS({
+    "node_modules/lodash/_baseGetAllKeys.js"(exports2, module2) {
+      var arrayPush = require_arrayPush();
+      var isArray = require_isArray();
+      function baseGetAllKeys(object, keysFunc, symbolsFunc) {
+        var result = keysFunc(object);
+        return isArray(object) ? result : arrayPush(result, symbolsFunc(object));
+      }
+      module2.exports = baseGetAllKeys;
+    }
+  });
+
+  // node_modules/lodash/_getAllKeys.js
+  var require_getAllKeys = __commonJS({
+    "node_modules/lodash/_getAllKeys.js"(exports2, module2) {
+      var baseGetAllKeys = require_baseGetAllKeys();
+      var getSymbols = require_getSymbols();
+      var keys = require_keys();
+      function getAllKeys(object) {
+        return baseGetAllKeys(object, keys, getSymbols);
+      }
+      module2.exports = getAllKeys;
+    }
+  });
+
+  // node_modules/lodash/_getAllKeysIn.js
+  var require_getAllKeysIn = __commonJS({
+    "node_modules/lodash/_getAllKeysIn.js"(exports2, module2) {
+      var baseGetAllKeys = require_baseGetAllKeys();
+      var getSymbolsIn = require_getSymbolsIn();
+      var keysIn = require_keysIn();
+      function getAllKeysIn(object) {
+        return baseGetAllKeys(object, keysIn, getSymbolsIn);
+      }
+      module2.exports = getAllKeysIn;
+    }
+  });
+
+  // node_modules/lodash/_DataView.js
+  var require_DataView = __commonJS({
+    "node_modules/lodash/_DataView.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var root = require_root();
+      var DataView2 = getNative(root, "DataView");
+      module2.exports = DataView2;
+    }
+  });
+
+  // node_modules/lodash/_Promise.js
+  var require_Promise = __commonJS({
+    "node_modules/lodash/_Promise.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var root = require_root();
+      var Promise2 = getNative(root, "Promise");
+      module2.exports = Promise2;
+    }
+  });
+
+  // node_modules/lodash/_Set.js
+  var require_Set = __commonJS({
+    "node_modules/lodash/_Set.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var root = require_root();
+      var Set2 = getNative(root, "Set");
+      module2.exports = Set2;
+    }
+  });
+
+  // node_modules/lodash/_WeakMap.js
+  var require_WeakMap = __commonJS({
+    "node_modules/lodash/_WeakMap.js"(exports2, module2) {
+      var getNative = require_getNative();
+      var root = require_root();
+      var WeakMap2 = getNative(root, "WeakMap");
+      module2.exports = WeakMap2;
+    }
+  });
+
+  // node_modules/lodash/_getTag.js
+  var require_getTag = __commonJS({
+    "node_modules/lodash/_getTag.js"(exports2, module2) {
+      var DataView2 = require_DataView();
+      var Map2 = require_Map();
+      var Promise2 = require_Promise();
+      var Set2 = require_Set();
+      var WeakMap2 = require_WeakMap();
+      var baseGetTag = require_baseGetTag();
+      var toSource = require_toSource();
+      var mapTag = "[object Map]";
+      var objectTag = "[object Object]";
+      var promiseTag = "[object Promise]";
+      var setTag = "[object Set]";
+      var weakMapTag = "[object WeakMap]";
+      var dataViewTag = "[object DataView]";
+      var dataViewCtorString = toSource(DataView2);
+      var mapCtorString = toSource(Map2);
+      var promiseCtorString = toSource(Promise2);
+      var setCtorString = toSource(Set2);
+      var weakMapCtorString = toSource(WeakMap2);
+      var getTag = baseGetTag;
+      if (DataView2 && getTag(new DataView2(new ArrayBuffer(1))) != dataViewTag || Map2 && getTag(new Map2()) != mapTag || Promise2 && getTag(Promise2.resolve()) != promiseTag || Set2 && getTag(new Set2()) != setTag || WeakMap2 && getTag(new WeakMap2()) != weakMapTag) {
+        getTag = function(value2) {
+          var result = baseGetTag(value2), Ctor = result == objectTag ? value2.constructor : void 0, ctorString = Ctor ? toSource(Ctor) : "";
+          if (ctorString) {
+            switch (ctorString) {
+              case dataViewCtorString:
+                return dataViewTag;
+              case mapCtorString:
+                return mapTag;
+              case promiseCtorString:
+                return promiseTag;
+              case setCtorString:
+                return setTag;
+              case weakMapCtorString:
+                return weakMapTag;
+            }
+          }
+          return result;
+        };
+      }
+      module2.exports = getTag;
+    }
+  });
+
+  // node_modules/lodash/_initCloneArray.js
+  var require_initCloneArray = __commonJS({
+    "node_modules/lodash/_initCloneArray.js"(exports2, module2) {
+      var objectProto = Object.prototype;
+      var hasOwnProperty = objectProto.hasOwnProperty;
+      function initCloneArray(array) {
+        var length = array.length, result = new array.constructor(length);
+        if (length && typeof array[0] == "string" && hasOwnProperty.call(array, "index")) {
+          result.index = array.index;
+          result.input = array.input;
+        }
+        return result;
+      }
+      module2.exports = initCloneArray;
+    }
+  });
+
+  // node_modules/lodash/_Uint8Array.js
+  var require_Uint8Array = __commonJS({
+    "node_modules/lodash/_Uint8Array.js"(exports2, module2) {
+      var root = require_root();
+      var Uint8Array2 = root.Uint8Array;
+      module2.exports = Uint8Array2;
+    }
+  });
+
+  // node_modules/lodash/_cloneArrayBuffer.js
+  var require_cloneArrayBuffer = __commonJS({
+    "node_modules/lodash/_cloneArrayBuffer.js"(exports2, module2) {
+      var Uint8Array2 = require_Uint8Array();
+      function cloneArrayBuffer(arrayBuffer) {
+        var result = new arrayBuffer.constructor(arrayBuffer.byteLength);
+        new Uint8Array2(result).set(new Uint8Array2(arrayBuffer));
+        return result;
+      }
+      module2.exports = cloneArrayBuffer;
+    }
+  });
+
+  // node_modules/lodash/_cloneDataView.js
+  var require_cloneDataView = __commonJS({
+    "node_modules/lodash/_cloneDataView.js"(exports2, module2) {
+      var cloneArrayBuffer = require_cloneArrayBuffer();
+      function cloneDataView(dataView, isDeep) {
+        var buffer = isDeep ? cloneArrayBuffer(dataView.buffer) : dataView.buffer;
+        return new dataView.constructor(buffer, dataView.byteOffset, dataView.byteLength);
+      }
+      module2.exports = cloneDataView;
+    }
+  });
+
+  // node_modules/lodash/_cloneRegExp.js
+  var require_cloneRegExp = __commonJS({
+    "node_modules/lodash/_cloneRegExp.js"(exports2, module2) {
+      var reFlags = /\w*$/;
+      function cloneRegExp(regexp) {
+        var result = new regexp.constructor(regexp.source, reFlags.exec(regexp));
+        result.lastIndex = regexp.lastIndex;
+        return result;
+      }
+      module2.exports = cloneRegExp;
+    }
+  });
+
+  // node_modules/lodash/_cloneSymbol.js
+  var require_cloneSymbol = __commonJS({
+    "node_modules/lodash/_cloneSymbol.js"(exports2, module2) {
+      var Symbol2 = require_Symbol();
+      var symbolProto = Symbol2 ? Symbol2.prototype : void 0;
+      var symbolValueOf = symbolProto ? symbolProto.valueOf : void 0;
+      function cloneSymbol(symbol) {
+        return symbolValueOf ? Object(symbolValueOf.call(symbol)) : {};
+      }
+      module2.exports = cloneSymbol;
+    }
+  });
+
+  // node_modules/lodash/_cloneTypedArray.js
+  var require_cloneTypedArray = __commonJS({
+    "node_modules/lodash/_cloneTypedArray.js"(exports2, module2) {
+      var cloneArrayBuffer = require_cloneArrayBuffer();
+      function cloneTypedArray(typedArray, isDeep) {
+        var buffer = isDeep ? cloneArrayBuffer(typedArray.buffer) : typedArray.buffer;
+        return new typedArray.constructor(buffer, typedArray.byteOffset, typedArray.length);
+      }
+      module2.exports = cloneTypedArray;
+    }
+  });
+
+  // node_modules/lodash/_initCloneByTag.js
+  var require_initCloneByTag = __commonJS({
+    "node_modules/lodash/_initCloneByTag.js"(exports2, module2) {
+      var cloneArrayBuffer = require_cloneArrayBuffer();
+      var cloneDataView = require_cloneDataView();
+      var cloneRegExp = require_cloneRegExp();
+      var cloneSymbol = require_cloneSymbol();
+      var cloneTypedArray = require_cloneTypedArray();
+      var boolTag = "[object Boolean]";
+      var dateTag = "[object Date]";
+      var mapTag = "[object Map]";
+      var numberTag = "[object Number]";
+      var regexpTag = "[object RegExp]";
+      var setTag = "[object Set]";
+      var stringTag = "[object String]";
+      var symbolTag = "[object Symbol]";
+      var arrayBufferTag = "[object ArrayBuffer]";
+      var dataViewTag = "[object DataView]";
+      var float32Tag = "[object Float32Array]";
+      var float64Tag = "[object Float64Array]";
+      var int8Tag = "[object Int8Array]";
+      var int16Tag = "[object Int16Array]";
+      var int32Tag = "[object Int32Array]";
+      var uint8Tag = "[object Uint8Array]";
+      var uint8ClampedTag = "[object Uint8ClampedArray]";
+      var uint16Tag = "[object Uint16Array]";
+      var uint32Tag = "[object Uint32Array]";
+      function initCloneByTag(object, tag, isDeep) {
+        var Ctor = object.constructor;
+        switch (tag) {
+          case arrayBufferTag:
+            return cloneArrayBuffer(object);
+          case boolTag:
+          case dateTag:
+            return new Ctor(+object);
+          case dataViewTag:
+            return cloneDataView(object, isDeep);
+          case float32Tag:
+          case float64Tag:
+          case int8Tag:
+          case int16Tag:
+          case int32Tag:
+          case uint8Tag:
+          case uint8ClampedTag:
+          case uint16Tag:
+          case uint32Tag:
+            return cloneTypedArray(object, isDeep);
+          case mapTag:
+            return new Ctor();
+          case numberTag:
+          case stringTag:
+            return new Ctor(object);
+          case regexpTag:
+            return cloneRegExp(object);
+          case setTag:
+            return new Ctor();
+          case symbolTag:
+            return cloneSymbol(object);
+        }
+      }
+      module2.exports = initCloneByTag;
+    }
+  });
+
+  // node_modules/lodash/_baseCreate.js
+  var require_baseCreate = __commonJS({
+    "node_modules/lodash/_baseCreate.js"(exports2, module2) {
+      var isObject = require_isObject();
+      var objectCreate = Object.create;
+      var baseCreate = function() {
+        function object() {
+        }
+        return function(proto) {
+          if (!isObject(proto)) {
+            return {};
+          }
+          if (objectCreate) {
+            return objectCreate(proto);
+          }
+          object.prototype = proto;
+          var result = new object();
+          object.prototype = void 0;
+          return result;
+        };
+      }();
+      module2.exports = baseCreate;
+    }
+  });
+
+  // node_modules/lodash/_initCloneObject.js
+  var require_initCloneObject = __commonJS({
+    "node_modules/lodash/_initCloneObject.js"(exports2, module2) {
+      var baseCreate = require_baseCreate();
+      var getPrototype = require_getPrototype();
+      var isPrototype = require_isPrototype();
+      function initCloneObject(object) {
+        return typeof object.constructor == "function" && !isPrototype(object) ? baseCreate(getPrototype(object)) : {};
+      }
+      module2.exports = initCloneObject;
+    }
+  });
+
+  // node_modules/lodash/_baseIsMap.js
+  var require_baseIsMap = __commonJS({
+    "node_modules/lodash/_baseIsMap.js"(exports2, module2) {
+      var getTag = require_getTag();
+      var isObjectLike = require_isObjectLike();
+      var mapTag = "[object Map]";
+      function baseIsMap(value2) {
+        return isObjectLike(value2) && getTag(value2) == mapTag;
+      }
+      module2.exports = baseIsMap;
+    }
+  });
+
+  // node_modules/lodash/isMap.js
+  var require_isMap = __commonJS({
+    "node_modules/lodash/isMap.js"(exports2, module2) {
+      var baseIsMap = require_baseIsMap();
+      var baseUnary = require_baseUnary();
+      var nodeUtil = require_nodeUtil();
+      var nodeIsMap = nodeUtil && nodeUtil.isMap;
+      var isMap = nodeIsMap ? baseUnary(nodeIsMap) : baseIsMap;
+      module2.exports = isMap;
+    }
+  });
+
+  // node_modules/lodash/_baseIsSet.js
+  var require_baseIsSet = __commonJS({
+    "node_modules/lodash/_baseIsSet.js"(exports2, module2) {
+      var getTag = require_getTag();
+      var isObjectLike = require_isObjectLike();
+      var setTag = "[object Set]";
+      function baseIsSet(value2) {
+        return isObjectLike(value2) && getTag(value2) == setTag;
+      }
+      module2.exports = baseIsSet;
+    }
+  });
+
+  // node_modules/lodash/isSet.js
+  var require_isSet = __commonJS({
+    "node_modules/lodash/isSet.js"(exports2, module2) {
+      var baseIsSet = require_baseIsSet();
+      var baseUnary = require_baseUnary();
+      var nodeUtil = require_nodeUtil();
+      var nodeIsSet = nodeUtil && nodeUtil.isSet;
+      var isSet = nodeIsSet ? baseUnary(nodeIsSet) : baseIsSet;
+      module2.exports = isSet;
+    }
+  });
+
+  // node_modules/lodash/_baseClone.js
+  var require_baseClone = __commonJS({
+    "node_modules/lodash/_baseClone.js"(exports2, module2) {
+      var Stack = require_Stack();
+      var arrayEach = require_arrayEach();
+      var assignValue = require_assignValue();
+      var baseAssign = require_baseAssign();
+      var baseAssignIn = require_baseAssignIn();
+      var cloneBuffer = require_cloneBuffer();
+      var copyArray = require_copyArray();
+      var copySymbols = require_copySymbols();
+      var copySymbolsIn = require_copySymbolsIn();
+      var getAllKeys = require_getAllKeys();
+      var getAllKeysIn = require_getAllKeysIn();
+      var getTag = require_getTag();
+      var initCloneArray = require_initCloneArray();
+      var initCloneByTag = require_initCloneByTag();
+      var initCloneObject = require_initCloneObject();
+      var isArray = require_isArray();
+      var isBuffer = require_isBuffer();
+      var isMap = require_isMap();
+      var isObject = require_isObject();
+      var isSet = require_isSet();
+      var keys = require_keys();
+      var keysIn = require_keysIn();
+      var CLONE_DEEP_FLAG = 1;
+      var CLONE_FLAT_FLAG = 2;
+      var CLONE_SYMBOLS_FLAG = 4;
+      var argsTag = "[object Arguments]";
+      var arrayTag = "[object Array]";
+      var boolTag = "[object Boolean]";
+      var dateTag = "[object Date]";
+      var errorTag = "[object Error]";
+      var funcTag = "[object Function]";
+      var genTag = "[object GeneratorFunction]";
+      var mapTag = "[object Map]";
+      var numberTag = "[object Number]";
+      var objectTag = "[object Object]";
+      var regexpTag = "[object RegExp]";
+      var setTag = "[object Set]";
+      var stringTag = "[object String]";
+      var symbolTag = "[object Symbol]";
+      var weakMapTag = "[object WeakMap]";
+      var arrayBufferTag = "[object ArrayBuffer]";
+      var dataViewTag = "[object DataView]";
+      var float32Tag = "[object Float32Array]";
+      var float64Tag = "[object Float64Array]";
+      var int8Tag = "[object Int8Array]";
+      var int16Tag = "[object Int16Array]";
+      var int32Tag = "[object Int32Array]";
+      var uint8Tag = "[object Uint8Array]";
+      var uint8ClampedTag = "[object Uint8ClampedArray]";
+      var uint16Tag = "[object Uint16Array]";
+      var uint32Tag = "[object Uint32Array]";
+      var cloneableTags = {};
+      cloneableTags[argsTag] = cloneableTags[arrayTag] = cloneableTags[arrayBufferTag] = cloneableTags[dataViewTag] = cloneableTags[boolTag] = cloneableTags[dateTag] = cloneableTags[float32Tag] = cloneableTags[float64Tag] = cloneableTags[int8Tag] = cloneableTags[int16Tag] = cloneableTags[int32Tag] = cloneableTags[mapTag] = cloneableTags[numberTag] = cloneableTags[objectTag] = cloneableTags[regexpTag] = cloneableTags[setTag] = cloneableTags[stringTag] = cloneableTags[symbolTag] = cloneableTags[uint8Tag] = cloneableTags[uint8ClampedTag] = cloneableTags[uint16Tag] = cloneableTags[uint32Tag] = true;
+      cloneableTags[errorTag] = cloneableTags[funcTag] = cloneableTags[weakMapTag] = false;
+      function baseClone(value2, bitmask, customizer, key, object, stack) {
+        var result, isDeep = bitmask & CLONE_DEEP_FLAG, isFlat = bitmask & CLONE_FLAT_FLAG, isFull = bitmask & CLONE_SYMBOLS_FLAG;
+        if (customizer) {
+          result = object ? customizer(value2, key, object, stack) : customizer(value2);
+        }
+        if (result !== void 0) {
+          return result;
+        }
+        if (!isObject(value2)) {
+          return value2;
+        }
+        var isArr = isArray(value2);
+        if (isArr) {
+          result = initCloneArray(value2);
+          if (!isDeep) {
+            return copyArray(value2, result);
+          }
+        } else {
+          var tag = getTag(value2), isFunc = tag == funcTag || tag == genTag;
+          if (isBuffer(value2)) {
+            return cloneBuffer(value2, isDeep);
+          }
+          if (tag == objectTag || tag == argsTag || isFunc && !object) {
+            result = isFlat || isFunc ? {} : initCloneObject(value2);
+            if (!isDeep) {
+              return isFlat ? copySymbolsIn(value2, baseAssignIn(result, value2)) : copySymbols(value2, baseAssign(result, value2));
+            }
+          } else {
+            if (!cloneableTags[tag]) {
+              return object ? value2 : {};
+            }
+            result = initCloneByTag(value2, tag, isDeep);
+          }
+        }
+        stack || (stack = new Stack());
+        var stacked = stack.get(value2);
+        if (stacked) {
+          return stacked;
+        }
+        stack.set(value2, result);
+        if (isSet(value2)) {
+          value2.forEach(function(subValue) {
+            result.add(baseClone(subValue, bitmask, customizer, subValue, value2, stack));
+          });
+        } else if (isMap(value2)) {
+          value2.forEach(function(subValue, key2) {
+            result.set(key2, baseClone(subValue, bitmask, customizer, key2, value2, stack));
+          });
+        }
+        var keysFunc = isFull ? isFlat ? getAllKeysIn : getAllKeys : isFlat ? keysIn : keys;
+        var props = isArr ? void 0 : keysFunc(value2);
+        arrayEach(props || value2, function(subValue, key2) {
+          if (props) {
+            key2 = subValue;
+            subValue = value2[key2];
+          }
+          assignValue(result, key2, baseClone(subValue, bitmask, customizer, key2, value2, stack));
+        });
+        return result;
+      }
+      module2.exports = baseClone;
+    }
+  });
+
+  // node_modules/lodash/cloneDeepWith.js
+  var require_cloneDeepWith = __commonJS({
+    "node_modules/lodash/cloneDeepWith.js"(exports2, module2) {
+      var baseClone = require_baseClone();
+      var CLONE_DEEP_FLAG = 1;
+      var CLONE_SYMBOLS_FLAG = 4;
+      function cloneDeepWith2(value2, customizer) {
+        customizer = typeof customizer == "function" ? customizer : void 0;
+        return baseClone(value2, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
+      }
+      module2.exports = cloneDeepWith2;
+    }
+  });
+
   // ../fossunited/fossunited/public/js/common_functions.js
   $(document).ready(function() {
     window.full_name = frappe.get_cookie("full_name");
@@ -39567,6 +41412,1494 @@ class Tooltip {
       return precision;
     }
   });
+
+  // frappe/public/js/frappe/utils/utils.js
+  var import_fast_deep_equal = __toESM(require_fast_deep_equal());
+
+  // frappe/public/js/frappe/utils/number_systems.js
+  var number_systems_default = {
+    default: [
+      {
+        divisor: 1e12,
+        symbol: __("T", null, "Number system")
+      },
+      {
+        divisor: 1e9,
+        symbol: __("B", null, "Number system")
+      },
+      {
+        divisor: 1e6,
+        symbol: __("M", null, "Number system")
+      },
+      {
+        divisor: 1e3,
+        symbol: __("K", null, "Number system")
+      }
+    ],
+    indian: [
+      {
+        divisor: 1e7,
+        symbol: __("Cr", null, "Number system")
+      },
+      {
+        divisor: 1e5,
+        symbol: __("L", null, "Number system")
+      },
+      {
+        divisor: 1e3,
+        symbol: __("K", null, "Number system")
+      }
+    ],
+    nepalese: [
+      {
+        divisor: 1e11,
+        symbol: __("Kh", null, "Number system")
+      },
+      {
+        divisor: 1e9,
+        symbol: __("Ar", null, "Number system")
+      },
+      {
+        divisor: 1e7,
+        symbol: __("Cr", null, "Number system")
+      },
+      {
+        divisor: 1e5,
+        symbol: __("L", null, "Number system")
+      },
+      {
+        divisor: 1e3,
+        symbol: __("K", null, "Number system")
+      }
+    ]
+  };
+
+  // frappe/public/js/frappe/utils/utils.js
+  var import_cloneDeepWith = __toESM(require_cloneDeepWith());
+  frappe.provide("frappe.utils");
+  if (!Array.prototype.uniqBy) {
+    Object.defineProperty(Array.prototype, "uniqBy", {
+      value: function(key) {
+        var seen = {};
+        return this.filter(function(item) {
+          var k2 = key(item);
+          return k2 in seen ? false : seen[k2] = true;
+        });
+      }
+    });
+    Object.defineProperty(Array.prototype, "move", {
+      value: function(from, to) {
+        this.splice(to, 0, this.splice(from, 1)[0]);
+      }
+    });
+  }
+  Object.defineProperty(Object.prototype, "setDefault", {
+    value: function(key, default_value) {
+      if (!(key in this))
+        this[key] = default_value;
+      return this[key];
+    },
+    writable: true
+  });
+  String.prototype.plural = function(revert) {
+    const plural = {
+      "(quiz)$": "$1zes",
+      "^(ox)$": "$1en",
+      "([m|l])ouse$": "$1ice",
+      "(matr|vert|ind)ix|ex$": "$1ices",
+      "(x|ch|ss|sh)$": "$1es",
+      "([^aeiouy]|qu)y$": "$1ies",
+      "(hive)$": "$1s",
+      "(?:([^f])fe|([lr])f)$": "$1$2ves",
+      "(shea|lea|loa|thie)f$": "$1ves",
+      sis$: "ses",
+      "([ti])um$": "$1a",
+      "(tomat|potat|ech|her|vet)o$": "$1oes",
+      "(bu)s$": "$1ses",
+      "(alias)$": "$1es",
+      "(octop)us$": "$1i",
+      "(ax|test)is$": "$1es",
+      "(us)$": "$1es",
+      "([^s]+)$": "$1s"
+    };
+    const singular = {
+      "(quiz)zes$": "$1",
+      "(matr)ices$": "$1ix",
+      "(vert|ind)ices$": "$1ex",
+      "^(ox)en$": "$1",
+      "(alias)es$": "$1",
+      "(octop|vir)i$": "$1us",
+      "(cris|ax|test)es$": "$1is",
+      "(shoe)s$": "$1",
+      "(o)es$": "$1",
+      "(bus)es$": "$1",
+      "([m|l])ice$": "$1ouse",
+      "(x|ch|ss|sh)es$": "$1",
+      "(m)ovies$": "$1ovie",
+      "(s)eries$": "$1eries",
+      "([^aeiouy]|qu)ies$": "$1y",
+      "([lr])ves$": "$1f",
+      "(tive)s$": "$1",
+      "(hive)s$": "$1",
+      "(li|wi|kni)ves$": "$1fe",
+      "(shea|loa|lea|thie)ves$": "$1f",
+      "(^analy)ses$": "$1sis",
+      "((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$": "$1$2sis",
+      "([ti])a$": "$1um",
+      "(n)ews$": "$1ews",
+      "(h|bl)ouses$": "$1ouse",
+      "(corpse)s$": "$1",
+      "(us)es$": "$1",
+      s$: ""
+    };
+    const irregular = {
+      move: "moves",
+      foot: "feet",
+      goose: "geese",
+      sex: "sexes",
+      child: "children",
+      man: "men",
+      tooth: "teeth",
+      person: "people"
+    };
+    const uncountable = [
+      "sheep",
+      "fish",
+      "deer",
+      "moose",
+      "series",
+      "species",
+      "money",
+      "rice",
+      "information",
+      "equipment"
+    ];
+    if (uncountable.indexOf(this.toLowerCase()) >= 0)
+      return this;
+    let word;
+    let pattern;
+    let replace;
+    for (word in irregular) {
+      if (revert) {
+        pattern = new RegExp(irregular[word] + "$", "i");
+        replace = word;
+      } else {
+        pattern = new RegExp(word + "$", "i");
+        replace = irregular[word];
+      }
+      if (pattern.test(this))
+        return this.replace(pattern, replace);
+    }
+    let array;
+    if (revert)
+      array = singular;
+    else
+      array = plural;
+    let reg;
+    for (reg in array) {
+      pattern = new RegExp(reg, "i");
+      if (pattern.test(this))
+        return this.replace(pattern, array[reg]);
+    }
+    return this;
+  };
+  Object.assign(frappe.utils, {
+    get_random: function(len) {
+      var text = "";
+      var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+      for (var i2 = 0; i2 < len; i2++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+      return text;
+    },
+    get_file_link: function(filename) {
+      filename = cstr(filename);
+      if (frappe.utils.is_url(filename)) {
+        return filename;
+      } else if (filename.indexOf("/") === -1) {
+        return "files/" + filename;
+      } else {
+        return filename;
+      }
+    },
+    replace_newlines(t3) {
+      return t3 ? t3.replace(/\n/g, "<br>") : "";
+    },
+    is_html: function(txt) {
+      if (!txt)
+        return false;
+      if (txt.indexOf("<br>") == -1 && txt.indexOf("<p") == -1 && txt.indexOf("<img") == -1 && txt.indexOf("<div") == -1 && !txt.includes("<span")) {
+        return false;
+      }
+      return true;
+    },
+    is_mac: function() {
+      return window.navigator.platform === "MacIntel";
+    },
+    is_xs: function() {
+      return $(document).width() < 768;
+    },
+    is_sm: function() {
+      return $(document).width() < 991 && $(document).width() >= 768;
+    },
+    is_md: function() {
+      return $(document).width() < 1199 && $(document).width() >= 991;
+    },
+    is_json: function(str) {
+      try {
+        JSON.parse(str);
+      } catch (e2) {
+        return false;
+      }
+      return true;
+    },
+    parse_json: function(str) {
+      let parsed_json = "";
+      try {
+        parsed_json = JSON.parse(str);
+      } catch (e2) {
+        return str;
+      }
+      return parsed_json;
+    },
+    strip_whitespace: function(html) {
+      return (html || "").replace(/<p>\s*<\/p>/g, "").replace(/<br>(\s*<br>\s*)+/g, "<br><br>");
+    },
+    encode_tags: function(html) {
+      var tagsToReplace = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;"
+      };
+      function replaceTag(tag) {
+        return tagsToReplace[tag] || tag;
+      }
+      return html.replace(/[&<>]/g, replaceTag);
+    },
+    strip_original_content: function(txt) {
+      var out = [], part = [], newline = txt.indexOf("<br>") === -1 ? "\n" : "<br>";
+      $.each(txt.split(newline), function(i2, t3) {
+        var tt2 = strip(t3);
+        if (tt2 && (tt2.substr(0, 1) === ">" || tt2.substr(0, 4) === "&gt;")) {
+          part.push(t3);
+        } else {
+          out = out.concat(part);
+          out.push(t3);
+          part = [];
+        }
+      });
+      return out.join(newline);
+    },
+    escape_html: function(txt) {
+      if (!txt)
+        return "";
+      let escape_html_mapping = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+        "`": "&#x60;",
+        "=": "&#x3D;"
+      };
+      return String(txt).replace(/[&<>"'`=]/g, (char) => escape_html_mapping[char] || char);
+    },
+    unescape_html: function(txt) {
+      let unescape_html_mapping = {
+        "&amp;": "&",
+        "&lt;": "<",
+        "&gt;": ">",
+        "&quot;": '"',
+        "&#39;": "'",
+        "&#x60;": "`",
+        "&#x3D;": "="
+      };
+      return String(txt).replace(
+        /&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
+        (char) => unescape_html_mapping[char] || char
+      );
+    },
+    html2text: function(html) {
+      const parser = new DOMParser();
+      const dom = parser.parseFromString(html, "text/html");
+      return dom.body.textContent;
+    },
+    is_url: function(txt) {
+      return txt.toLowerCase().substr(0, 7) == "http://" || txt.toLowerCase().substr(0, 8) == "https://";
+    },
+    to_title_case: function(string, with_space = false) {
+      let titlecased_string = string.toLowerCase().replace(/(?:^|[\s-/])\w/g, function(match) {
+        return match.toUpperCase();
+      });
+      let replace_with = with_space ? " " : "";
+      return titlecased_string.replace(/-|_/g, replace_with);
+    },
+    toggle_blockquote: function(txt) {
+      if (!txt)
+        return txt;
+      var content = $("<div></div>").html(txt);
+      content.find("blockquote").parent("blockquote").addClass("hidden").before(
+        '<p><a class="text-muted btn btn-default toggle-blockquote" style="padding: 2px 7px 0px; line-height: 1;"> 					\u2022 \u2022 \u2022 				</a></p>'
+      );
+      return content.html();
+    },
+    scroll_to: function(element, animate = true, additional_offset, element_to_be_scrolled, callback, highlight_element = false) {
+      if (frappe.flags.disable_auto_scroll)
+        return;
+      element_to_be_scrolled = element_to_be_scrolled || $("html, body");
+      let scroll_top = 0;
+      if (element) {
+        scroll_top = typeof element == "number" ? element - cint(additional_offset) : this.get_scroll_position(element, additional_offset);
+      }
+      if (scroll_top < 0) {
+        scroll_top = 0;
+      }
+      const highlight = () => {
+        if (highlight_element) {
+          $(element).addClass("highlight");
+          document.addEventListener(
+            "click",
+            function() {
+              $(element).removeClass("highlight");
+            },
+            { once: true }
+          );
+        }
+      };
+      if (scroll_top == element_to_be_scrolled.scrollTop()) {
+        return highlight();
+      }
+      if (animate) {
+        element_to_be_scrolled.animate({
+          scrollTop: scroll_top
+        }).promise().then(() => {
+          highlight();
+          callback && callback();
+        });
+      } else {
+        element_to_be_scrolled.scrollTop(scroll_top);
+      }
+    },
+    get_scroll_position: function(element, additional_offset) {
+      let header_offset = $(".navbar").height() + $(".page-head:visible").height() || $(".navbar").height();
+      return $(element).offset().top - header_offset - cint(additional_offset);
+    },
+    filter_dict: function(dict, filters) {
+      var ret = [];
+      if (typeof filters == "string") {
+        return [dict[filters]];
+      }
+      $.each(dict, function(i2, d2) {
+        for (var key in filters) {
+          if ($.isArray(filters[key])) {
+            if (filters[key][0] == "in") {
+              if (filters[key][1].indexOf(d2[key]) == -1)
+                return;
+            } else if (filters[key][0] == "not in") {
+              if (filters[key][1].indexOf(d2[key]) != -1)
+                return;
+            } else if (filters[key][0] == "<") {
+              if (!(d2[key] < filters[key]))
+                return;
+            } else if (filters[key][0] == "<=") {
+              if (!(d2[key] <= filters[key]))
+                return;
+            } else if (filters[key][0] == ">") {
+              if (!(d2[key] > filters[key]))
+                return;
+            } else if (filters[key][0] == ">=") {
+              if (!(d2[key] >= filters[key]))
+                return;
+            }
+          } else {
+            if (d2[key] != filters[key])
+              return;
+          }
+        }
+        ret.push(d2);
+      });
+      return ret;
+    },
+    comma_or: function(list) {
+      return frappe.utils.comma_sep(list, " " + __("or") + " ");
+    },
+    comma_and: function(list) {
+      return frappe.utils.comma_sep(list, " " + __("and") + " ");
+    },
+    comma_sep: function(list, sep) {
+      if (list instanceof Array) {
+        if (list.length == 0) {
+          return "";
+        } else if (list.length == 1) {
+          return list[0];
+        } else {
+          return list.slice(0, list.length - 1).join(", ") + sep + list.slice(-1)[0];
+        }
+      } else {
+        return list;
+      }
+    },
+    set_footnote: function(footnote_area, wrapper, txt) {
+      if (!footnote_area) {
+        footnote_area = $('<div class="text-muted footnote-area level">').appendTo(wrapper);
+      }
+      if (txt) {
+        footnote_area.html(txt);
+      } else {
+        footnote_area.remove();
+        footnote_area = null;
+      }
+      return footnote_area;
+    },
+    get_args_dict_from_url: function(txt) {
+      var args = {};
+      $.each(decodeURIComponent(txt).split("&"), function(i2, arg) {
+        arg = arg.split("=");
+        args[arg[0]] = arg[1];
+      });
+      return args;
+    },
+    get_url_from_dict: function(args) {
+      return $.map(args, function(val, key) {
+        if (val !== null)
+          return encodeURIComponent(key) + "=" + encodeURIComponent(val);
+        else
+          return null;
+      }).join("&") || "";
+    },
+    validate_type: function(val, type) {
+      var regExp;
+      switch (type) {
+        case "phone":
+          regExp = /^([0-9 +_\-,.*#()]){1,20}$/;
+          break;
+        case "name":
+          regExp = /^[\w][\w'-]*([ \w][\w'-]+)*$/;
+          break;
+        case "number":
+          regExp = /^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/;
+          break;
+        case "digits":
+          regExp = /^\d+$/;
+          break;
+        case "alphanum":
+          regExp = /^\w+$/;
+          break;
+        case "email":
+          regExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          break;
+        case "url":
+          regExp = /^((([A-Za-z0-9.+-]+:(?:\/\/)?)(?:[-;:&=\+\,\w]@)?[A-Za-z0-9.-]+(:[0-9]+)?|(?:www.|[-;:&=\+\$,\w]+@)[A-Za-z0-9.-]+)((?:\/[\+~%\/.\w-_]*)?\??(?:[-\+=&;%@.\w_]*)#?(?:[\w]*))?)$/i;
+          break;
+        case "dateIso":
+          regExp = /^(\d{4})\D?(0[1-9]|1[0-2])\D?([12]\d|0[1-9]|3[01])$/;
+          break;
+        default:
+          return false;
+      }
+      return "" !== val ? regExp.test(val) : false;
+    },
+    guess_style: function(text, default_style, _colour) {
+      var style = default_style || "default";
+      var colour = "gray";
+      if (text) {
+        if (has_words(["Pending", "Review", "Medium", "Not Approved"], text)) {
+          style = "warning";
+          colour = "orange";
+        } else if (has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)) {
+          style = "danger";
+          colour = "red";
+        } else if (has_words(
+          [
+            "Closed",
+            "Finished",
+            "Converted",
+            "Completed",
+            "Complete",
+            "Confirmed",
+            "Approved",
+            "Yes",
+            "Active",
+            "Available",
+            "Paid",
+            "Success"
+          ],
+          text
+        )) {
+          style = "success";
+          colour = "green";
+        } else if (has_words(["Submitted"], text)) {
+          style = "info";
+          colour = "blue";
+        }
+      }
+      return _colour ? colour : style;
+    },
+    guess_colour: function(text) {
+      return frappe.utils.guess_style(text, null, true);
+    },
+    get_indicator_color: function(state) {
+      return frappe.db.get_list("Workflow State", { filters: { name: state }, fields: ["name", "style"] }).then((res) => {
+        const state2 = res[0];
+        if (!state2.style) {
+          return frappe.utils.guess_colour(state2.name);
+        }
+        const style = state2.style;
+        const colour_map = {
+          Success: "green",
+          Warning: "orange",
+          Danger: "red",
+          Primary: "blue"
+        };
+        return colour_map[style];
+      });
+    },
+    sort: function(list, key, compare_type, reverse) {
+      if (!list || list.length < 2)
+        return list || [];
+      var sort_fn = {
+        string: function(a2, b2) {
+          return cstr(a2[key]).localeCompare(cstr(b2[key]));
+        },
+        number: function(a2, b2) {
+          return flt(a2[key]) - flt(b2[key]);
+        }
+      };
+      if (!compare_type)
+        compare_type = typeof list[0][key] === "string" ? "string" : "number";
+      list.sort(sort_fn[compare_type]);
+      if (reverse) {
+        list.reverse();
+      }
+      return list;
+    },
+    unique: function(list) {
+      var dict = {}, arr = [];
+      for (var i2 = 0, l2 = list.length; i2 < l2; i2++) {
+        if (!(list[i2] in dict)) {
+          dict[list[i2]] = null;
+          arr.push(list[i2]);
+        }
+      }
+      return arr;
+    },
+    remove_nulls: function(list) {
+      var new_list = [];
+      for (var i2 = 0, l2 = list.length; i2 < l2; i2++) {
+        if (!is_null(list[i2])) {
+          new_list.push(list[i2]);
+        }
+      }
+      return new_list;
+    },
+    all: function(lst) {
+      for (var i2 = 0, l2 = lst.length; i2 < l2; i2++) {
+        if (!lst[i2]) {
+          return false;
+        }
+      }
+      return true;
+    },
+    dict: function(keys, values) {
+      var out = [];
+      $.each(values, function(row_idx, row) {
+        var new_row = {};
+        $.each(keys, function(key_idx, key) {
+          new_row[key] = row[key_idx];
+        });
+        out.push(new_row);
+      });
+      return out;
+    },
+    sum: function(list) {
+      return list.reduce(function(previous_value, current_value) {
+        return flt(previous_value) + flt(current_value);
+      }, 0);
+    },
+    arrays_equal: function(arr1, arr2) {
+      if (!arr1 || !arr2) {
+        return false;
+      }
+      if (arr1.length != arr2.length) {
+        return false;
+      }
+      for (var i2 = 0; i2 < arr1.length; i2++) {
+        if ($.isArray(arr1[i2])) {
+          if (!frappe.utils.arrays_equal(arr1[i2], arr2[i2])) {
+            return false;
+          }
+        } else if (arr1[i2] !== arr2[i2]) {
+          return false;
+        }
+      }
+      return true;
+    },
+    intersection: function(a2, b2) {
+      var ai = 0, bi = 0;
+      var result = new Array();
+      a2 = [].concat(a2).sort();
+      b2 = [].concat(b2).sort();
+      while (ai < a2.length && bi < b2.length) {
+        if (a2[ai] < b2[bi]) {
+          ai++;
+        } else if (a2[ai] > b2[bi]) {
+          bi++;
+        } else {
+          result.push(a2[ai]);
+          ai++;
+          bi++;
+        }
+      }
+      return result;
+    },
+    resize_image: function(reader, callback, max_width, max_height) {
+      var tempImg = new Image();
+      if (!max_width)
+        max_width = 600;
+      if (!max_height)
+        max_height = 400;
+      tempImg.src = reader.result;
+      tempImg.onload = function() {
+        var tempW = tempImg.width;
+        var tempH = tempImg.height;
+        if (tempW > tempH) {
+          if (tempW > max_width) {
+            tempH *= max_width / tempW;
+            tempW = max_width;
+          }
+        } else {
+          if (tempH > max_height) {
+            tempW *= max_height / tempH;
+            tempH = max_height;
+          }
+        }
+        var canvas = document.createElement("canvas");
+        canvas.width = tempW;
+        canvas.height = tempH;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(this, 0, 0, tempW, tempH);
+        var dataURL = canvas.toDataURL("image/jpeg");
+        setTimeout(function() {
+          callback(dataURL);
+        }, 10);
+      };
+    },
+    csv_to_array: function(strData, strDelimiter) {
+      strDelimiter = strDelimiter || ",";
+      var objPattern = new RegExp(
+        "(\\" + strDelimiter + '|\\r?\\n|\\r|^)(?:"([^"]*(?:""[^"]*)*)"|([^"\\' + strDelimiter + "\\r\\n]*))",
+        "gi"
+      );
+      var arrData = [[]];
+      var arrMatches = null;
+      while (arrMatches = objPattern.exec(strData)) {
+        var strMatchedDelimiter = arrMatches[1];
+        if (strMatchedDelimiter.length && strMatchedDelimiter !== strDelimiter) {
+          arrData.push([]);
+        }
+        var strMatchedValue;
+        if (arrMatches[2]) {
+          strMatchedValue = arrMatches[2].replace(new RegExp('""', "g"), '"');
+        } else {
+          strMatchedValue = arrMatches[3];
+        }
+        arrData[arrData.length - 1].push(strMatchedValue);
+      }
+      return arrData;
+    },
+    warn_page_name_change: function() {
+      frappe.msgprint(__("Note: Changing the Page Name will break previous URL to this page."));
+    },
+    set_title: function(title) {
+      frappe._original_title = title;
+      if (frappe._title_prefix) {
+        title = frappe._title_prefix + " " + title.replace(/<[^>]*>/g, "");
+      }
+      document.title = title;
+      const sub_path = frappe.router.get_sub_path();
+      frappe.route_titles[sub_path] = title;
+    },
+    set_title_prefix: function(prefix) {
+      frappe._title_prefix = prefix;
+      frappe.utils.set_title(frappe._original_title);
+    },
+    is_image_file: function(filename) {
+      if (!filename)
+        return false;
+      filename = filename.split("?")[0];
+      return /\.(gif|jpg|jpeg|tiff|png|svg)$/i.test(filename);
+    },
+    is_video_file: function(filename) {
+      if (!filename)
+        return false;
+      filename = filename.split("?")[0];
+      return /\.(mov|mp4|mkv|webm)$/i.test(filename);
+    },
+    play_sound: function(name2) {
+      try {
+        if (frappe.boot.user.mute_sounds) {
+          return;
+        }
+        var audio = $("#sound-" + name2)[0];
+        audio.volume = audio.getAttribute("volume");
+        audio.play();
+      } catch (e2) {
+        console.log("Cannot play sound", name2, e2);
+      }
+    },
+    split_emails: function(txt) {
+      var email_list = [];
+      if (!txt) {
+        return email_list;
+      }
+      txt.split(/[,\n](?=(?:[^"]|"[^"]*")*$)/g).forEach(function(email) {
+        email = email.trim();
+        if (email) {
+          email_list.push(email);
+        }
+      });
+      return email_list;
+    },
+    supportsES6: function() {
+      try {
+        new Function("(a = 0) => a");
+        return true;
+      } catch (err) {
+        return false;
+      }
+    }(),
+    throttle: function(func, wait, options) {
+      var context, args, result;
+      var timeout = null;
+      var previous = 0;
+      if (!options)
+        options = {};
+      let later = function() {
+        previous = options.leading === false ? 0 : Date.now();
+        timeout = null;
+        result = func.apply(context, args);
+        if (!timeout)
+          context = args = null;
+      };
+      return function() {
+        var now = Date.now();
+        if (!previous && options.leading === false)
+          previous = now;
+        let remaining = wait - (now - previous);
+        context = this;
+        args = arguments;
+        if (remaining <= 0 || remaining > wait) {
+          if (timeout) {
+            clearTimeout(timeout);
+            timeout = null;
+          }
+          previous = now;
+          result = func.apply(context, args);
+          if (!timeout)
+            context = args = null;
+        } else if (!timeout && options.trailing !== false) {
+          timeout = setTimeout(later, remaining);
+        }
+        return result;
+      };
+    },
+    debounce: function(func, wait, immediate) {
+      var timeout;
+      return function() {
+        var context = this, args = arguments;
+        var later = function() {
+          timeout = null;
+          if (!immediate)
+            func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow)
+          func.apply(context, args);
+      };
+    },
+    get_form_link: function(doctype, name2, html = false, display_text = null, query_params_obj = null) {
+      display_text = display_text || name2;
+      name2 = encodeURIComponent(name2);
+      let route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, "-"))}/${name2}`;
+      if (query_params_obj) {
+        route += frappe.utils.make_query_string(query_params_obj);
+      }
+      if (html) {
+        return `<a href="${route}">${display_text}</a>`;
+      }
+      return route;
+    },
+    get_route_label(route_str) {
+      let route = route_str.split("/");
+      if (route[2] === "Report" || route[0] === "query-report") {
+        return __("{0} Report", [route[3] || route[1]]);
+      }
+      if (route[0] === "List") {
+        return __("{0} List", [route[1]]);
+      }
+      if (route[0] === "modules") {
+        return __("{0} Modules", [route[1]]);
+      }
+      if (route[0] === "dashboard") {
+        return __("{0} Dashboard", [route[1]]);
+      }
+      return __(frappe.utils.to_title_case(route[0], true));
+    },
+    report_column_total: function(values, column, type) {
+      if (column.column.disable_total) {
+        return "";
+      } else if (values.length > 0) {
+        if (column.column.fieldtype == "Percent" || type === "mean") {
+          return values.reduce((a2, b2) => flt(a2) + flt(b2)) / values.length;
+        } else if (column.column.fieldtype == "Int") {
+          return values.reduce((a2, b2) => cint(a2) + cint(b2));
+        } else if (frappe.model.is_numeric_field(column.column.fieldtype)) {
+          return values.reduce((a2, b2) => flt(a2) + flt(b2));
+        } else {
+          return null;
+        }
+      } else {
+        return null;
+      }
+    },
+    setup_search($wrapper, el_class, text_class, data_attr) {
+      const $search_input = $wrapper.find('[data-element="search"]').show();
+      $search_input.focus().val("");
+      const $elements = $wrapper.find(el_class).show();
+      $search_input.off("keyup").on("keyup", () => {
+        let text_filter = $search_input.val().toLowerCase();
+        text_filter = text_filter.replace(/^\s+|\s+$/g, "");
+        for (let i2 = 0; i2 < $elements.length; i2++) {
+          const text_element = $elements.eq(i2).find(text_class);
+          const text = text_element.text().toLowerCase();
+          let name2 = "";
+          if (data_attr && text_element.attr(data_attr)) {
+            name2 = text_element.attr(data_attr).toLowerCase();
+          }
+          if (text.includes(text_filter) || name2.includes(text_filter)) {
+            $elements.eq(i2).css("display", "");
+          } else {
+            $elements.eq(i2).css("display", "none");
+          }
+        }
+      });
+    },
+    setup_timer(start, end, $element) {
+      const increment = end > start;
+      let counter = start;
+      let interval = setInterval(() => {
+        increment ? counter++ : counter--;
+        if (increment ? counter > end : counter < end) {
+          clearInterval(interval);
+          return;
+        }
+        $element.text(counter);
+      }, 1e3);
+    },
+    deep_equal(a2, b2) {
+      return (0, import_fast_deep_equal.default)(a2, b2);
+    },
+    deep_clone(obj, customizer) {
+      return (0, import_cloneDeepWith.default)(obj, customizer);
+    },
+    file_name_ellipsis(filename, length) {
+      let first_part_length = length * 2 / 3;
+      let last_part_length = length - first_part_length;
+      let parts = filename.split(".");
+      let extn = parts.pop();
+      let name2 = parts.join("");
+      let first_part = name2.slice(0, first_part_length);
+      let last_part = name2.slice(-last_part_length);
+      if (name2.length > length) {
+        return `${first_part}...${last_part}.${extn}`;
+      } else {
+        return filename;
+      }
+    },
+    get_decoded_string(dataURI) {
+      let parts = dataURI.split(",");
+      const encoded_data = parts[1];
+      let decoded = atob(encoded_data);
+      try {
+        const escaped = escape(decoded);
+        decoded = decodeURIComponent(escaped);
+      } catch (e2) {
+      }
+      return decoded;
+    },
+    copy_to_clipboard(string) {
+      const show_success_alert = () => {
+        frappe.show_alert({
+          indicator: "green",
+          message: __("Copied to clipboard.")
+        });
+      };
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(string).then(show_success_alert);
+      } else {
+        let input = $("<textarea>");
+        $("body").append(input);
+        input.val(string).select();
+        document.execCommand("copy");
+        show_success_alert();
+        input.remove();
+      }
+    },
+    is_rtl(lang = null) {
+      return ["ar", "he", "fa", "ps"].includes(lang || frappe.boot.lang);
+    },
+    bind_actions_with_object($el, object) {
+      $($el).off("click.class_actions");
+      $($el).on("click.class_actions", "[data-action]", (e2) => {
+        let $target = $(e2.currentTarget);
+        let action = $target.data("action");
+        let method = object[action];
+        method ? object[action](e2, $target) : null;
+      });
+      return $el;
+    },
+    eval(code, context = {}) {
+      let variable_names = Object.keys(context);
+      let variables = Object.values(context);
+      code = `let out = ${code}; return out`;
+      try {
+        let expression_function = new Function(...variable_names, code);
+        return expression_function(...variables);
+      } catch (error) {
+        console.log("Error evaluating the following expression:");
+        console.error(code);
+        throw error;
+      }
+    },
+    get_browser() {
+      let ua = navigator.userAgent;
+      let tem;
+      let M2 = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+      if (/trident/i.test(M2[1])) {
+        tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+        return { name: "IE", version: tem[1] || "" };
+      }
+      if (M2[1] === "Chrome") {
+        tem = ua.match(/\bOPR|Edge\/(\d+)/);
+        if (tem != null) {
+          return { name: "Opera", version: tem[1] };
+        }
+      }
+      M2 = M2[2] ? [M2[1], M2[2]] : [navigator.appName, navigator.appVersion, "-?"];
+      if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+        M2.splice(1, 1, tem[1]);
+      }
+      return {
+        name: M2[0],
+        version: M2[1]
+      };
+    },
+    get_formatted_duration(value2, duration_options = null) {
+      let duration = "";
+      if (!duration_options) {
+        duration_options = {
+          hide_days: 0,
+          hide_seconds: 0
+        };
+      }
+      if (value2) {
+        let total_duration = frappe.utils.seconds_to_duration(value2, duration_options);
+        if (total_duration.days) {
+          duration += total_duration.days + __("d", null, "Days (Field: Duration)");
+        }
+        if (total_duration.hours) {
+          duration += duration.length ? " " : "";
+          duration += total_duration.hours + __("h", null, "Hours (Field: Duration)");
+        }
+        if (total_duration.minutes) {
+          duration += duration.length ? " " : "";
+          duration += total_duration.minutes + __("m", null, "Minutes (Field: Duration)");
+        }
+        if (total_duration.seconds) {
+          duration += duration.length ? " " : "";
+          duration += total_duration.seconds + __("s", null, "Seconds (Field: Duration)");
+        }
+      }
+      return duration;
+    },
+    seconds_to_duration(seconds, duration_options) {
+      const round = seconds > 0 ? Math.floor : Math.ceil;
+      const total_duration = {
+        days: round(seconds / 86400),
+        hours: round(seconds % 86400 / 3600),
+        minutes: round(seconds % 3600 / 60),
+        seconds: round(seconds % 60)
+      };
+      if (duration_options && duration_options.hide_days) {
+        total_duration.hours = round(seconds / 3600);
+        total_duration.days = 0;
+      }
+      return total_duration;
+    },
+    duration_to_seconds(days = 0, hours = 0, minutes = 0, seconds = 0) {
+      let value2 = 0;
+      if (days) {
+        value2 += days * 24 * 60 * 60;
+      }
+      if (hours) {
+        value2 += hours * 60 * 60;
+      }
+      if (minutes) {
+        value2 += minutes * 60;
+      }
+      if (seconds) {
+        value2 += seconds;
+      }
+      return value2;
+    },
+    get_duration_options: function(docfield) {
+      return {
+        hide_days: docfield.hide_days,
+        hide_seconds: docfield.hide_seconds
+      };
+    },
+    get_number_system: function(country) {
+      if (["Bangladesh", "India", "Myanmar", "Pakistan"].includes(country)) {
+        return number_systems_default.indian;
+      } else if (country == "Nepal") {
+        return number_systems_default.nepalese;
+      } else {
+        return number_systems_default.default;
+      }
+    },
+    map_defaults: {
+      center: [19.08, 72.8961],
+      zoom: 13,
+      tiles: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+      options: {
+        attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      },
+      image_path: "/assets/frappe/images/leaflet/"
+    },
+    icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
+      let size_class = "";
+      let is_espresso = icon_name.startsWith("es-");
+      icon_name = is_espresso ? `${"#" + icon_name}` : `${"#icon-" + icon_name}`;
+      if (typeof size == "object") {
+        icon_style += ` width: ${size.width}; height: ${size.height}`;
+      } else {
+        size_class = `icon-${size}`;
+      }
+      return `<svg class="${is_espresso ? icon_name.startsWith("es-solid") ? "es-icon es-solid" : "es-icon es-line" : "icon"} ${svg_class} ${size_class}" style="${icon_style}">
+			<use class="${icon_class}" href="${icon_name}"></use>
+		</svg>`;
+    },
+    flag(country_code) {
+      return `<img
+		src="https://flagcdn.com/${country_code}.svg"
+		width="20" height="15">`;
+    },
+    make_chart(wrapper, custom_options = {}) {
+      let chart_args = {
+        type: "bar",
+        colors: ["light-blue"],
+        axisOptions: {
+          xIsSeries: 1,
+          shortenYAxisNumbers: 1,
+          xAxisMode: "tick",
+          numberFormatter: frappe.utils.format_chart_axis_number
+        }
+      };
+      for (let key in custom_options) {
+        if (typeof chart_args[key] === "object" && typeof custom_options[key] === "object") {
+          chart_args[key] = Object.assign(chart_args[key], custom_options[key]);
+        } else {
+          chart_args[key] = custom_options[key];
+        }
+      }
+      return new frappe.Chart(wrapper, chart_args);
+    },
+    format_chart_axis_number(label, country) {
+      const default_country = frappe.sys_defaults.country;
+      return frappe.utils.shorten_number(label, country || default_country, 3);
+    },
+    generate_route(item) {
+      const type = item.type.toLowerCase();
+      if (type === "doctype") {
+        item.doctype = item.name;
+      }
+      let route = "";
+      if (!item.route) {
+        if (item.link) {
+          route = strip(item.link, "#");
+        } else if (type === "doctype") {
+          let doctype_slug = frappe.router.slug(item.doctype);
+          if (frappe.model.is_single(item.doctype)) {
+            route = doctype_slug;
+          } else {
+            switch (item.doc_view) {
+              case "List":
+                if (item.filters) {
+                  frappe.route_options = item.filters;
+                }
+                route = `${doctype_slug}/view/list`;
+                break;
+              case "Tree":
+                route = `${doctype_slug}/view/tree`;
+                break;
+              case "Report Builder":
+                route = `${doctype_slug}/view/report`;
+                break;
+              case "Dashboard":
+                route = `${doctype_slug}/view/dashboard`;
+                break;
+              case "New":
+                route = `${doctype_slug}/new`;
+                break;
+              case "Calendar":
+                route = `${doctype_slug}/view/calendar/default`;
+                break;
+              case "Kanban":
+                route = `${doctype_slug}/view/kanban`;
+                if (item.kanban_board) {
+                  route += `/${item.kanban_board}`;
+                }
+                break;
+              default:
+                route = doctype_slug;
+            }
+          }
+        } else if (type === "report") {
+          if (item.is_query_report) {
+            route = "query-report/" + item.name;
+          } else if (!item.doctype) {
+            route = "/report/" + item.name;
+          } else {
+            route = frappe.router.slug(item.doctype) + "/view/report/" + item.name;
+          }
+        } else if (type === "page") {
+          route = item.name;
+        } else if (type === "dashboard") {
+          route = `dashboard-view/${item.name}`;
+        }
+      } else {
+        route = item.route;
+      }
+      if (item.route_options) {
+        route += "?" + $.map(item.route_options, function(value2, key) {
+          return encodeURIComponent(key) + "=" + encodeURIComponent(value2);
+        }).join("&");
+      }
+      return `/app/${route}`;
+    },
+    shorten_number: function(number, country, min_length = 4, max_no_of_decimals = 2) {
+      const len = String(number).match(/\d/g).length;
+      if (len < min_length)
+        return number.toString();
+      const number_system = this.get_number_system(country);
+      let x2 = Math.abs(Math.round(number));
+      for (const map of number_system) {
+        if (x2 >= map.divisor) {
+          let result = number / map.divisor;
+          const no_of_decimals = this.get_number_of_decimals(result);
+          result = no_of_decimals > max_no_of_decimals ? result.toFixed(max_no_of_decimals) : result;
+          return result + " " + map.symbol;
+        }
+      }
+      return number.toFixed(max_no_of_decimals);
+    },
+    get_number_of_decimals: function(number) {
+      if (Math.floor(number) === number)
+        return 0;
+      return number.toString().split(".")[1].length || 0;
+    },
+    build_summary_item(summary) {
+      if (summary.type == "separator") {
+        return $(`<div class="summary-separator">
+				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${summary.value}</div>
+			</div>`);
+      }
+      let df = { fieldtype: summary.datatype };
+      let doc = null;
+      if (summary.datatype == "Currency") {
+        df.options = "currency";
+        doc = { currency: summary.currency };
+      }
+      let value2 = frappe.format(summary.value, df, { only_value: true }, doc);
+      let color = summary.indicator ? summary.indicator.toLowerCase() : summary.color ? summary.color.toLowerCase() : "";
+      return $(`<div class="summary-item">
+			<span class="summary-label">${__(summary.label)}</span>
+			<div class="summary-value ${color}">${value2}</div>
+		</div>`);
+    },
+    print(doctype, docname, print_format, letterhead, lang_code) {
+      let w2 = window.open(
+        frappe.urllib.get_full_url(
+          "/printview?doctype=" + encodeURIComponent(doctype) + "&name=" + encodeURIComponent(docname) + "&trigger_print=1&format=" + encodeURIComponent(print_format) + "&no_letterhead=" + (letterhead ? "0" : "1") + "&letterhead=" + encodeURIComponent(letterhead) + (lang_code ? "&_lang=" + lang_code : "")
+        )
+      );
+      if (!w2) {
+        frappe.msgprint(__("Please enable pop-ups"));
+        return;
+      }
+    },
+    get_clipboard_data(clipboard_paste_event) {
+      let e2 = clipboard_paste_event;
+      let clipboard_data = e2.clipboardData || window.clipboardData || e2.originalEvent.clipboardData;
+      return clipboard_data.getData("Text");
+    },
+    add_custom_button(html, action, class_name = "", title = "", btn_type, wrapper, prepend) {
+      if (!btn_type)
+        btn_type = "btn-secondary";
+      let button = $(
+        `<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`
+      );
+      button.click((event) => {
+        event.stopPropagation();
+        action && action(event);
+      });
+      !prepend && button.appendTo(wrapper);
+      prepend && wrapper.prepend(button);
+    },
+    add_select_group_button(wrapper, actions, btn_type, icon = "", prepend) {
+      let selected_action = actions[0];
+      let $select_group_button = $(`
+			<div class="btn-group select-group-btn">
+				<button type="button" class="btn ${btn_type} btn-sm selected-button">
+					<span class="left-icon">${icon && frappe.utils.icon(icon, "xs")}</span>
+					<span class="label">${selected_action.label}</span>
+				</button>
+
+				<button type="button" class="btn ${btn_type} btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
+					${frappe.utils.icon("down", "xs")}
+				</button>
+
+				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+			</div>
+		`);
+      actions.forEach((action) => {
+        $(`<li>
+				<a class="dropdown-item flex">
+					<div class="tick-icon mr-2">${frappe.utils.icon("check", "xs")}</div>
+					<div>
+						<div class="item-label">${action.label}</div>
+						<div class="item-description text-muted small">${action.description || ""}</div>
+					</div>
+				</a>
+			</li>`).appendTo($select_group_button.find(".dropdown-menu")).click((e2) => {
+          selected_action = action;
+          $select_group_button.find(".selected-button .label").text(action.label);
+          $(e2.currentTarget).find(".tick-icon").addClass("selected");
+          $(e2.currentTarget).siblings().find(".tick-icon").removeClass("selected");
+        });
+      });
+      $select_group_button.find(".dropdown-menu li:first-child .tick-icon").addClass("selected");
+      $select_group_button.find(".selected-button").click((event) => {
+        event.stopPropagation();
+        selected_action.action && selected_action.action(event);
+      });
+      !prepend && $select_group_button.appendTo(wrapper);
+      prepend && wrapper.prepend($select_group_button);
+      return $select_group_button;
+    },
+    sleep(time) {
+      return new Promise((resolve) => setTimeout(resolve, time));
+    },
+    parse_array(array) {
+      if (array && array.length !== 0) {
+        return array;
+      }
+      return void 0;
+    },
+    range(start, end) {
+      if (!end) {
+        end = start;
+        start = 0;
+      }
+      let arr = [];
+      for (let i2 = start; i2 < end; i2++) {
+        arr.push(i2);
+      }
+      return arr;
+    },
+    get_link_title(doctype, name2) {
+      if (!doctype || !name2 || !frappe._link_titles) {
+        return;
+      }
+      return frappe._link_titles[doctype + "::" + name2];
+    },
+    add_link_title(doctype, name2, value2) {
+      if (!doctype || !name2) {
+        return;
+      }
+      if (!frappe._link_titles) {
+        frappe._link_titles = {};
+      }
+      frappe._link_titles[doctype + "::" + name2] = value2;
+    },
+    fetch_link_title(doctype, name2) {
+      if (!doctype || !name2) {
+        return;
+      }
+      try {
+        return frappe.xcall("frappe.desk.search.get_link_title", {
+          doctype,
+          docname: name2
+        }).then((title) => {
+          frappe.utils.add_link_title(doctype, name2, title);
+          return title;
+        });
+      } catch (error) {
+        console.log("Error while fetching link title.");
+        console.log(error);
+        return Promise.resolve(name2);
+      }
+    },
+    only_allow_num_decimal(input) {
+      input.on("input", (e2) => {
+        let self2 = $(e2.target);
+        self2.val(self2.val().replace(/[^0-9.]/g, ""));
+        if ((e2.which != 46 || self2.val().indexOf(".") != -1) && (e2.which < 48 || e2.which > 57)) {
+          e2.preventDefault();
+        }
+      });
+    },
+    string_to_boolean(string) {
+      switch (string.toLowerCase().trim()) {
+        case "t":
+        case "true":
+        case "y":
+        case "yes":
+        case "1":
+          return true;
+        case "f":
+        case "false":
+        case "n":
+        case "no":
+        case "0":
+        case null:
+          return false;
+        default:
+          return string;
+      }
+    },
+    get_filter_as_json(filters) {
+      let filter = null;
+      if (filters.length) {
+        filter = {};
+        filters.forEach((arr) => {
+          filter[arr[1]] = [arr[2], arr[3]];
+        });
+        filter = JSON.stringify(filter);
+      }
+      return filter;
+    },
+    process_filter_expression(filter) {
+      return new Function(`return ${filter}`)();
+    },
+    get_filter_from_json(filter_json, doctype) {
+      if (filter_json) {
+        if (!filter_json.length) {
+          return [];
+        }
+        const filters_json = this.process_filter_expression(filter_json);
+        if (!doctype) {
+          if (Array.isArray(filters_json)) {
+            let filter = {};
+            filters_json.forEach((arr) => {
+              filter[arr[1]] = [arr[2], arr[3]];
+            });
+            return filter || [];
+          }
+          return filters_json || [];
+        }
+        if (Array.isArray(filters_json)) {
+          return filters_json;
+        }
+        return Object.keys(filters_json).map((filter) => {
+          let val = filters_json[filter];
+          return [doctype, filter, val[0], val[1], false];
+        });
+      }
+    },
+    load_video_player() {
+      return frappe.require("video_player.bundle.js");
+    },
+    is_current_user(user) {
+      return user === frappe.session.user;
+    },
+    debug: {
+      watch_property(obj, prop, callback = console.trace) {
+        if (!frappe.boot.developer_mode) {
+          return;
+        }
+        console.warn("Adding property watcher, make sure to remove it after debugging.");
+        const private_prop = "$_" + prop + "_$";
+        obj[private_prop] = obj[prop];
+        Object.defineProperty(obj, prop, {
+          get: function() {
+            return obj[private_prop];
+          },
+          set: function(value2) {
+            callback();
+            obj[private_prop] = value2;
+          }
+        });
+      }
+    },
+    generate_tracking_url() {
+      frappe.prompt(
+        [
+          {
+            fieldname: "url",
+            label: __("Web Page URL"),
+            fieldtype: "Data",
+            options: "URL",
+            reqd: 1,
+            default: localStorage.getItem("tracker_url:url")
+          },
+          {
+            fieldname: "source",
+            label: __("Source"),
+            fieldtype: "Data",
+            default: localStorage.getItem("tracker_url:source")
+          },
+          {
+            fieldname: "campaign",
+            label: __("Campaign"),
+            fieldtype: "Link",
+            ignore_link_validation: 1,
+            options: "Marketing Campaign",
+            default: localStorage.getItem("tracker_url:campaign")
+          },
+          {
+            fieldname: "medium",
+            label: __("Medium"),
+            fieldtype: "Data",
+            default: localStorage.getItem("tracker_url:medium")
+          }
+        ],
+        function(data) {
+          let url = data.url;
+          localStorage.setItem("tracker_url:url", data.url);
+          if (data.source) {
+            url += "?source=" + data.source;
+            localStorage.setItem("tracker_url:source", data.source);
+          }
+          if (data.campaign) {
+            url += "&campaign=" + data.campaign;
+            localStorage.setItem("tracker_url:campaign", data.campaign);
+          }
+          if (data.medium) {
+            url += "&medium=" + data.medium.toLowerCase();
+            localStorage.setItem("tracker_url:medium", data.medium);
+          }
+          frappe.utils.copy_to_clipboard(url);
+          frappe.msgprint(
+            __("Tracking URL generated and copied to clipboard") + `: <br><a href="${url}">${url.bold()}</a>`,
+            __("Here's your tracking URL")
+          );
+        },
+        __("Generate Tracking URL")
+      );
+    }
+  });
 })();
 /*!
     localForage -- Offline Storage, Improved
@@ -39593,4 +42926,4 @@ class Tooltip {
 * @license  MIT
 */
 /*! https://mths.be/punycode v1.4.1 by @mathias */
-//# sourceMappingURL=website.bundle.GTW7RITL.js.map
+//# sourceMappingURL=website.bundle.GQH3AOTA.js.map

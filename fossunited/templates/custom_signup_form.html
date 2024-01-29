@@ -1,0 +1,196 @@
+<form class="signup-form" role="form">
+    <div class="form-group my-3">
+        <label class="form-label" for="foss_username">Username</label>
+        <input class="form-control" type="text" id="foss_username" name="foss_username" placeholder="Username" required>
+        <div id="username-status" class="mt-2" style="font-size: var(--text-sm);">
+            Start typing to check availability.
+        </div>
+    </div>
+    <div class="form-group my-3">
+        <label clasvar(--text-sm)s="form-label" for="password">Password</label>
+        <input class="form-control" type="password" id="password" name="password" placeholder="Password" required>
+        <input type="password" class="form-control mt-2" id="confirm_password" name="confirm_password"
+            placeholder="Confirm Password" required>
+        <div id="password-status" class="mt-2" style="font-size: var(--text-sm);"></div>
+    </div>
+    <hr class="my-5">
+    <div class="form-group my-3">
+        <label class="form-label" for="full_name">Full Name</label>
+        <input class="form-control" type="text" id="full_name" name="full_name" placeholder="Full Name" required>
+    </div>
+    <div class="form-group my-3">
+        {% set genders = frappe.db.get_all('Gender', pluck='name') %}
+        <label class="form-label" for="gender">Gender</label>
+        <select name="gender" id="gender" class="form-control">
+            {% for gender in genders %}
+            <option value="{{gender}}" class="form-control">{{gender}}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group my-3">
+        <label class="form-label " for="email">Email</label>
+        <input class="form-control" type="email" id="email" name="email" placeholder="Email" required>
+    </div>
+
+    <div class="form-group mt-5">
+        <div class="checkbox">
+            <label>
+                <span class="input-area">
+                <input type="checkbox" autocomplete="off" class="input-with-feedback"
+                    data-fieldtype="Check" data-fieldname="terms" id="signup-terms" required>
+                </span>
+                <span class="label-area">
+                {{ _("I have read and agree to your {0}").format(get_signup_optin_checks()) }}
+                </span>
+            </label>
+        </div>
+    </div>
+
+    <div class="page-card-actions">
+        <button class="btn btn-sm btn-primary btn-block btn-signup"
+            type="submit">{{ _("Sign up") }}</button>
+
+        <p class="text-center sign-up-message">
+            {{ _("Already have an account?") }}
+            <a href="#login" class="blue">{{ _("Login") }}</a>
+        </p>
+    </div>
+</form>
+
+<style>
+    label {
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+</style>
+
+<script>
+    frappe.ready(function() {
+        showUsernameStatus();
+        $('#foss_username').on('input', ()=>{
+            showUsernameStatus();
+        })
+        $('.signup-form').on('submit', (e) =>{
+            signup(e);
+        });
+
+        if($('#password').val().length == 0 && $('#confirm_password').val().length == 0){
+            $('#password-status').html("Choose a strong password.");
+        }
+
+        $('#password, #confirm_password').on('input', ()=>{
+            validate_passwords();
+        })
+    });
+
+    function signup(e){
+        e.preventDefault();
+        const email = frappe.utils.xss_sanitise(($("#email").val() || "").trim());
+        const full_name = frappe.utils.xss_sanitise(($("#full_name").val() || "").trim());
+        const username = ($("#foss_username").val() || "").trim();
+        const gender = ($("#gender").val() || "").trim();
+        const new_password = ($("#password").val() || "").trim();
+        let username_status = showUsernameStatus();
+
+        if(!username_status[0]){
+            login.set_status('{{_("Invalid Username")}}', 'red');
+            return false;
+        }
+        if(!validate_passwords()) {
+            login.set_status('{{ _("Passwords do not match") }}', 'red');
+            return false;
+        }
+        if (!email || !validate_email(email) || !full_name) {
+            login.set_status('{{ _("Valid email and name required") }}', 'red');
+            return false;
+        }
+
+        frappe.call({
+            method: "fossunited.overrides.signup.sign_up",
+            args: {
+                "username": username,
+                "email": email,
+                "full_name": full_name,
+                "gender": gender,
+                "new_password": new_password,
+            },
+            callback: (r) => {
+                /*var args = {}
+                args.cmd = "api/method/login";
+                args.usr = email,
+                args.pwd = new_password;
+                args.redirect_to = "/";
+                login.call(args);*/
+                window.location.hash = "#login";
+                console.log("In CALLBACK")
+                console.log(r.message)
+            },
+            error: (e) => {
+                //login.set_status(r.message, 'red');
+                frappe.log(r.message);
+            },
+            statusCode: login.login_handlers
+        })
+        setTimeout(() => {
+            window.location = "/login?login_email=" + encodeURIComponent(email) + "&redirect-to=/" + username;
+        }, 3000);
+        return false;
+    }
+
+    function validate_passwords() {
+        const password = $("#password").val();
+        const confirm_password = $("#confirm_password").val();
+        if (password !== confirm_password) {
+            $('#password-status').html("Passwords do not match").css("color", "red");
+            return false;
+        }
+        $('#password-status').html("Passwords match").css("color", "green");
+        return true;
+    }
+
+    function showUsernameStatus(){
+        let username = $('#foss_username').val();
+        let messages = [
+            "Username must be at least 3 characters long.",
+            "Username can only contain letters, numbers, underscores and dots.",
+            "Username is available.",
+            "Username is not available.",
+            "Start typing to check availability."
+        ]
+        if(username.length > 0){
+            if (username.length < 3) {
+                $('#username-status').html(messages[0]);
+                $('#username-status').css("color", "red");
+                return [false, messages[0]];
+            }
+            if(!/^[a-zA-Z0-9_\.]+$/.test(username)){
+                $('#username-status').html(messages[1]);
+                $('#username-status').css("color", "red");
+                return [false, messages[1]];
+            }
+            frappe.call({
+                method: "fossunited.fossunited.utils.check_username_availability",
+                args: {
+                    username: username
+                },
+                callback: function(r) {
+                    if(!r.message){
+                        $('#username-status').html(messages[2]);
+                        $('#username-status').css("color", "green");
+                        return [true, messages[2]];
+                    }else{
+                        $('#username-status').html(messages[3]);
+                        $('#username-status').css("color", "red");
+                        return [false, messages[3]];
+                    }
+                }
+            });
+            return [true, messages[2]];
+        }
+        else{
+            $('#username-status').html(messages[4]);
+            $('#username-status').css("color", "inherit");
+            return [false, messages[4]];
+        }
+    }
+</script>

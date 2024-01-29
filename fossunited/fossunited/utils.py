@@ -431,3 +431,57 @@ def get_user_socials(foss_user):
 @frappe.whitelist()
 def get_meta(doctype):
     return frappe.get_meta(doctype).as_dict()
+
+
+def get_signup_optin_checks():
+    mapper = frappe._dict(
+        {
+            "terms_of_use": {
+                "page_name": "terms_page",
+                "title": "Terms of Use",
+            },
+            "privacy_policy": {
+                "page_name": "privacy_policy_page",
+                "title": "Privacy Policy",
+            },
+            "cookie_policy": {
+                "page_name": "cookie_policy_page",
+                "title": "Cookie Policy",
+            },
+            "code_of_conduct": {
+                "page_name": "code_of_conduct_page",
+                "title": "Code of Conduct",
+            },
+        }
+    )
+    checks = [
+        "terms_of_use",
+        "privacy_policy",
+        "cookie_policy",
+        "code_of_conduct",
+    ]
+    links = []
+
+    for check in checks:
+        if frappe.db.get_single_value("FOSSU Settings", check):
+            page = frappe.db.get_single_value(
+                "FOSSU Settings", mapper[check].get("page_name")
+            )
+            route = frappe.db.get_value("Web Page", page, "route")
+            links.append(
+                "<a target='_blank' href='/"
+                + route
+                + "'>"
+                + mapper[check].get("title")
+                + "</a>"
+            )
+
+    return (", ").join(links)
+
+
+@frappe.whitelist(allow_guest=True)
+def check_username_availability(username):
+    exists = frappe.db.exists(
+        "FOSS User Profile", {"username": username}
+    )
+    return exists

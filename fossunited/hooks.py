@@ -55,7 +55,7 @@ web_include_js = ["website.bundle.js"]
 # Jinja
 # ----------
 
-# Add all simple route rules here
+# Add all simple route bench rules here
 website_route_rules = [
     {
         "from_route": "/events/<event>/cfp/new",
@@ -77,8 +77,11 @@ website_route_rules = [
         "from_route": "/<foss_user>/edit-profile",
         "to_route": "/foss_profile/edit",
     },
+    {
+        "from_route": "/me",
+        "to_route": "/redirect_to_foss_profile",
+    },
 ]
-
 
 # add methods and filters to jinja environment
 jinja = {
@@ -100,12 +103,16 @@ jinja = {
         "fossunited.fossunited.utils.get_form_fields",
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
+        "fossunited.fossunited.utils.get_signup_optin_checks",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",
         "fossunited.fossunited.utils.make_badge",
     ],
 }
+
+
+signup_form_template = "fossunited.plugins.show_custom_signup"
 
 # Installation
 # ------------
