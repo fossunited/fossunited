@@ -120,17 +120,17 @@
                 <div class="experience-item" data-docname="{{value.name}}">
                     <h5>{{ value.title }}</h5>
                     <span>{{ value.start_date.strftime("%B %Y") }} - {% if value.end_date != None %}{{ value.end_date.strftime("%B %Y") }}{% else %}{{_("Present")}}{% endif %}</span>
-                    <div class="d-flex align-items-center ">
+                    <div class="experience-item--company-location">
                         {# if values | len < 2 #}
                         <span style="color: hsl(var(--clr-foss-mint-500))">
                             <a href="https://www.{{value.company_website}}" target="_blank">{{ value.company }}</a>
                         </span>
                         <div class="seperator-circle"></div>
-                            {% if value.is_remote %}
-                            <span>{{_("Remote")}}</span>
-                            {% else %}
-                            <span>{{ value.city }}, {{ value.country }}</span>
-                            {% endif %}
+                        {% if value.is_remote %}
+                        <span>{{_("Remote")}}</span>
+                        {% else %}
+                        <span>{{ value.city }}, {{ value.country }}</span>
+                        {% endif %}
                         {# endif #}
                     </div>
                     <div>
@@ -197,8 +197,8 @@
                 {% else %}
                 <img class="header-profile-image" src="https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b2e9c8,5acf89" alt="profile-image">
                 {% endif %}
-                <div class="header-content-section">
-                    <div class="pl-4 d-flex flex-column" style="height: min-content">
+                <div class="header-content-edit-section">
+                    <div class="header--content-section">
                         <div class="d-flex mb-1">
                             <h4 class="mr-1">{{doc.full_name}}</h4>
                             {% for company in doc.experience %}
@@ -214,14 +214,16 @@
                             {% if doc.current_city %}
                             <div class="seperator-circle"></div>
                             <div>
-                                {% include 'fossunited/public/icons/ff-rr-marker.svg' %}
+                                <i class="ti ti-map-pin" style="font-size:larger"></i>
                                 {{ doc.current_city }}
                             </div>
                             {% endif %}
                             {% if doc.website %}
                             <div class="seperator-circle"></div>
-                            {% include 'fossunited/public/icons/ff-rr-link.svg' %}
-                            <a class="ml-1" style="font-weight: var(--fw-medium);" href="{{doc.website}}">{{doc.website | truncate(30, True) }}</a>
+                            <div class="d-flex align-content-center justify-content-center ">
+                                <i class="ti ti-link" style="font-size:larger"></i>
+                                <a class="ml-1" style="font-weight: var(--fw-medium);" href="{{doc.website}}">{{doc.website | truncate(30, True) }}</a>
+                            </div>
                             {% endif %}
                         </div>
                     </div>
@@ -258,7 +260,9 @@
         setNavbarControl();console.log
         validateEditOption()
 
-        $('.edit-modal-button').hide();
+        if ( window.innerWidth > 768 ) {
+            $('.edit-modal-button').hide();
+        }
 
         $('.edit-hover').hover((e) => {
             $(e.currentTarget).find('.edit-modal-button').show();
@@ -301,9 +305,19 @@
 
     function validateEditOption(){
         if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
-            $('.header-content-section').append(`
-                <button style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
-            `);
+            // check if the width of the screen is less than 768px
+            if (window.innerWidth < 768) {
+                // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
+                $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
+                $('.header-profile-image').parent().append(`
+                <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+                `);
+            }
+            else{
+                $('.header-content-edit-section').append(`
+                    <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+                `);
+            }
         }
     }
 

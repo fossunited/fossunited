@@ -1133,11 +1133,18 @@ h6{
     border-radius: 0.625rem;
 }
 
-.header-content-section{
+.header-content-edit-section{
     height: min-content;
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+
+.header--content-section{
+    padding-left: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    height: min-content;
 }
 
 .header--username-location{
@@ -1283,6 +1290,12 @@ h6{
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+
+.experience-item--company-location{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 .education-detail-item{
@@ -1449,6 +1462,90 @@ h6{
     }
     .rsvp-form-container{
         min-width: 75%;
+    }
+
+    /* Profile Section */
+    .header-cover-image{
+        height: 6rem;
+    }
+
+    .profile-detail-section{
+        display: flex;
+        flex-direction: column;
+        padding: 0.8rem 1.5rem;
+    }
+
+    .header-profile-image{
+        height: 7rem;
+        width: 7rem;
+        top: -2.5rem;
+        margin-bottom: -2.5rem;
+    }
+
+    .header--content-section{
+        padding: 0.5rem;
+    }
+
+    .header--username-location{
+        padding-top: 0.5rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .header--username-location .seperator-circle{
+        display: none;
+    }
+
+    .header-section--bio{
+        font-size: var(--text-sm);
+    }
+
+    .header-section--skills{
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .skill-container{
+        font-size: var(--text-xs);
+    }
+    .skill-container > img {
+        height: 0.8rem;
+    }
+
+    .horizontal-navbar{
+        padding: 0.5rem 1.5rem 0 1.5rem ;
+        overflow: scroll;
+    }
+
+    .header-with-button{
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem
+    }
+
+    .experience-card{
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .experience-details{
+        padding: 0;
+    }
+
+    .experience-item--company-location{
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .experience-item--company-location .seperator-circle{
+        display: none;
+    }
+
+    .projects-grid{
+        display: grid;
+        grid-template-columns: repeat(1, minmax(300px, 1fr));
+        gap: 1rem;
     }
 }
 @media screen and (max-width: 425px){
