@@ -10,14 +10,6 @@ from frappe.integrations.utils import (
 
 # getting conference name data
 def get_context(context):
-    context.events = frappe.get_all(
-        "FOSS Chapter Events",
-        filters={
-            "status": "approved",
-            "event_type": "CityFOSS Conference",
-        },
-        fields=["event_name", "event_type"],
-    )
     context.event = frappe.get_doc(
         "FOSS Chapter Events", frappe.form_dict.event
     ).as_dict()
@@ -171,7 +163,7 @@ def capture_payment(doctype, ticket_id):
             ):
                 frappe.throw(f"Invalid Amount, payment not captured")
 
-        tickets_booked = int(
+        tickets_sold = int(
             frappe.db.get_value(
                 "FOSS Chapter Events", doc.event, "tickets_sold"
             )
@@ -183,7 +175,7 @@ def capture_payment(doctype, ticket_id):
             "tickets_sold",
             int(doc.student_tickets)
             + int(doc.general_tickets)
-            + int(tickets_booked),
+            + int(tickets_sold),
         )
 
     doc.save(ignore_permissions=True)
