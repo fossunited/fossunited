@@ -159,12 +159,23 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-25 18:52:08.764846",
+ "modified": "2024-01-29 17:38:34.222561",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "Conference Tickets",
  "owner": "Administrator",
  "permissions": [
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  },
   {
    "create": 1,
    "delete": 1,

@@ -30,6 +30,7 @@
   "event_location",
   "map_link",
   "tickets_section",
+  "paid_event",
   "general_ticket_price",
   "student_ticket_price",
   "column_break_udae",
@@ -321,7 +322,7 @@
    "label": "Student Ticket Price"
   },
   {
-   "default": "0",
+   "default": "\n",
    "fieldname": "tickets_sold",
    "fieldtype": "Int",
    "label": "Tickets Sold"
@@ -331,6 +332,12 @@
    "fieldname": "max_tickets",
    "fieldtype": "Int",
    "label": "Maximum Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid_event",
+   "fieldtype": "Check",
+   "label": "Paid Event "
   }
  ],
  "has_web_view": 1,
@@ -348,7 +355,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-01-29 00:29:19.313019",
+ "modified": "2024-01-29 13:55:13.653570",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
