@@ -1413,6 +1413,17 @@ h6{
     aspect-ratio: 1;
 }
 
+.profile-edit--pfp{
+    display: flex;
+}
+
+.profile-edit--pfp-input{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 1rem 0.5rem;
+}
+
 @media screen and (max-width: 1200px){
     .events-grid{
         grid-template-columns: repeat(3, minmax(300px, 1fr));
@@ -1546,6 +1557,19 @@ h6{
         display: grid;
         grid-template-columns: repeat(1, minmax(300px, 1fr));
         gap: 1rem;
+    }
+    /* ------  */
+
+    /* FOSS Profile Edit */
+    .profile-edit--pfp{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .profile-edit--pfp-input{
+        margin: 0;
+        gap: 4px;
     }
 }
 @media screen and (max-width: 425px){

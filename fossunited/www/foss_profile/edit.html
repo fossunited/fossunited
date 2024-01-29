@@ -27,9 +27,9 @@
     </div>
     <div class="form-col-2">
         <div class="d-flex flex-column ">
-            <div class="d-flex">
+            <div class="profile-edit--pfp">
                 <img src="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" data-original="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" alt="Profile Image" class="profile-image-lg" style="width: 120px; height: 120px;" id="preview-profile-image">
-                <div class="d-flex flex-column mx-4 my-2">
+                <div class="profile-edit--pfp-input">
                     <div class="field-title">
                         Profile Photo
                     </div>
@@ -166,6 +166,10 @@
         makeQuill('#about', [[],['bold', 'italic', 'underline', 'strike'],['blockquote', 'code-block'],[{ 'script': 'sub'}, { 'script': 'super' }],['clean']]);
 
         let originalFieldValues = getOriginalValues();
+
+        if (window.innerWidth < 768){
+            $('.form-col-2').removeClass('form-col-2');
+        }
 
         $("input, textarea, .ql-editor").on('change keyup paste', (e) => {
             if (e.target.className.includes('ql-editor')){
