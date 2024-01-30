@@ -229,15 +229,20 @@
                     </div>
                 </div>
         </div>
+        {% if doc.bio %}
         <div class="header-section--bio">
             {{doc.bio}}
         </div>
+        {% endif %}
+        {% set user_socials = get_user_socials(doc.name) %}
+        {% if user_socials %}
         <div class="header-section--socials">
-            {% set user_socials = get_user_socials(doc.name) %}
             {% for (key,value) in user_socials.items() %}
                 <a href="{{value}}"><img src="https://cdn.simpleicons.org/{{key}}" alt="{{key}}"/></a>
             {% endfor %}
         </div>
+        {% endif %}
+        {% if doc.skills | len > 0 %}
         <div class="header-section--skills">
             {% for skill in doc.skills %}
             <div class="skill-container">
@@ -246,6 +251,7 @@
             </div>
             {% endfor %}
         </div>
+        {% endif %}
     </div>
 </div>
 {% endmacro %}
