@@ -190,7 +190,7 @@
 {% macro profile_header() %}
 <div class="container">
     <div class="header-section">
-        <img class="header-cover-image" src="{{ doc.cover_image }}" alt="cover-image">
+        <img class="header-cover-image" src="{{ doc.cover_image or 'assets/fossunited/images/defaults/user_profile_banner.png' }}" alt="cover-image">
         <div class="profile-detail-section">
                 {% if doc.profile_photo %}
                 <img class="header-profile-image" src="{{ doc.profile_photo }}" alt="profile-image">
