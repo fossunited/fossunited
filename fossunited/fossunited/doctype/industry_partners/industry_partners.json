@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:company",
  "creation": "2024-01-30 20:02:51.807365",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -11,7 +12,8 @@
   "logo",
   "column_break_yudq",
   "joining_date",
-  "is_current"
+  "is_current",
+  "tier"
  ],
  "fields": [
   {
@@ -22,7 +24,8 @@
   {
    "fieldname": "company",
    "fieldtype": "Data",
-   "label": "Company"
+   "label": "Company",
+   "unique": 1
   },
   {
    "fieldname": "website",
@@ -49,14 +52,21 @@
    "fieldname": "is_current",
    "fieldtype": "Check",
    "label": "Currently active"
+  },
+  {
+   "fieldname": "tier",
+   "fieldtype": "Select",
+   "label": "Tier",
+   "options": "Patron\nPlatinum\nGold\nSilver\nBronze"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 20:07:51.182631",
+ "modified": "2024-01-30 21:26:50.935330",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Industry Partners",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
