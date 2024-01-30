@@ -8,6 +8,7 @@
   "user_details_section",
   "foss_user_profile",
   "org_role",
+  "is_active",
   "user_individual_details_section",
   "full_name",
   "headshot",
@@ -32,7 +33,7 @@
    "fieldname": "org_role",
    "fieldtype": "Select",
    "label": "Org Role",
-   "options": "Board\nFull-Time\nIntern\nFellow\nVolunteer"
+   "options": "Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
   },
   {
    "fieldname": "user_individual_details_section",
@@ -71,11 +72,17 @@
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Name "
+  },
+  {
+   "default": "0",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Active"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-28 13:38:58.584933",
+ "modified": "2024-01-30 15:28:19.634138",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS United Team",

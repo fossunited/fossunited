@@ -1,0 +1,133 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
+<style>
+    .team-section{
+        display: flex;
+        padding: 0rem 14rem 0rem 14rem;
+        justify-content: center;
+        align-items: center;
+        margin-top: 7rem;
+        margin-bottom: 7rem;
+    }
+
+
+    .team-container{
+        display: inline-flex;
+        max-width: 58.75rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.875rem;
+        flex-shrink: 0;
+    }
+
+    .team-section-header{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 0.78rem;
+    }
+
+    .team-section-header h2{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .team-section-header a{
+        margin:0;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        letter-spacing: -0.045rem;
+    }
+    .team-section-header a:hover{
+        text-decoration: none;
+    }
+    .team-block{
+        display: flex;
+        justify-content: space-between;
+        gap: 1.25rem;
+        flex-direction: row;
+    }
+
+    .team-card{
+        padding: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+
+    .team-card-image > img{
+        max-width: 5rem;
+        border-radius: 5rem;
+        border: 1.333px solid var(--Gray-300, #D0D5DD);
+    }
+
+    .team-card-details{
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .team-card-details h3{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .team-card-details p{
+        margin:0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 0.875rem */
+        letter-spacing: -0.0175rem;
+    }
+
+
+</style>
+
+<div class="team-section">
+
+    <div class="team-container">
+            <div class="team-section-header">
+                <h2>The Team</h2>
+                <a href="">Meet the Workforce ↗</a>
+
+            </div>
+
+            <div class="team-block">
+                {% set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot", "designation", "username", "is_active"], filters={"org_role": ["in", ["Full-Time", "Part-Time", "Intern"]]}, order_by ='org_role') %}
+                {% for employee in team %}
+                    {% if employee.is_active == 1 %}
+                        <div class="team-card">
+                            <div class="team-card-image">
+                                <img src="{{employee.headshot}}" alt="Team Member">
+                            </div>
+                            <div class="team-card-details">
+                                <h3>{{employee.full_name}}</h3>
+                                <p>{{employee.designation}}</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+    </div>
+
+
+    </div>
+
+
+</div>
