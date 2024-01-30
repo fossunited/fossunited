@@ -7,7 +7,7 @@
  "field_order": [
   "id_section",
   "order_id",
-  "payment_id",
+  "razorpay_payment_id",
   "event",
   "event_name",
   "details_section",
@@ -40,11 +40,6 @@
    "fieldname": "order_id",
    "fieldtype": "Data",
    "label": "Order ID"
-  },
-  {
-   "fieldname": "payment_id",
-   "fieldtype": "Data",
-   "label": "Payment ID"
   },
   {
    "fieldname": "details_section",
@@ -155,11 +150,16 @@
    "fieldtype": "Link",
    "label": "Event",
    "options": "FOSS Chapter Events"
+  },
+  {
+   "fieldname": "razorpay_payment_id",
+   "fieldtype": "Data",
+   "label": "Payment ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-29 17:38:34.222561",
+ "modified": "2024-01-30 17:27:29.175422",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "Conference Tickets",
