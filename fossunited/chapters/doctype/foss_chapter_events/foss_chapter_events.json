@@ -29,6 +29,13 @@
   "event_banner_image",
   "event_location",
   "map_link",
+  "tickets_section",
+  "paid_event",
+  "general_ticket_price",
+  "student_ticket_price",
+  "column_break_udae",
+  "max_tickets",
+  "tickets_sold",
   "cta_section_section",
   "primary_button_label",
   "primary_button_url",
@@ -292,6 +299,45 @@
    "fieldname": "show_photos",
    "fieldtype": "Check",
    "label": "Show Photos"
+  },
+  {
+   "fieldname": "tickets_section",
+   "fieldtype": "Section Break",
+   "label": "Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "general_ticket_price",
+   "fieldtype": "Currency",
+   "label": "General Ticket Price"
+  },
+  {
+   "fieldname": "column_break_udae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "student_ticket_price",
+   "fieldtype": "Currency",
+   "label": "Student Ticket Price"
+  },
+  {
+   "default": "\n",
+   "fieldname": "tickets_sold",
+   "fieldtype": "Int",
+   "label": "Tickets Sold"
+  },
+  {
+   "default": "0",
+   "fieldname": "max_tickets",
+   "fieldtype": "Int",
+   "label": "Maximum Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid_event",
+   "fieldtype": "Check",
+   "label": "Paid Event "
   }
  ],
  "has_web_view": 1,
@@ -309,7 +355,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2023-09-30 16:52:13.995033",
+ "modified": "2024-01-29 13:55:13.653570",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
