@@ -1,27 +1,35 @@
 
 <style>
     .hero-section{
-       display: flex;
-        flex-direction: column;
+        display: flex;
+        padding: 0rem 14rem 0rem 14rem;
+        justify-content: center;
+        align-items: center;
         background: linear-gradient(355deg, #eaecf0 0%, #ffffff 90.79%);
-        padding: 5rem 10rem 5rem;
+        flex-direction: column;
+        margin-top: 5rem;
     }
 
+    .hero-container{
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 5rem;
+
+    }
     .hero-image{
         display: flex;
+        gap: 28.27rem;
         justify-content: space-between;
-        vertical-align: middle;
-        flex-shrink: 0;
     }
 
     #image-centre{
-        width:18rem;
-        min-width:10rem;
+        width: 16rem;
+        min-width: 16rem;
     }
 
     #image-end{
-        width: 2rem;
-        min-width: 0.75rem;
+        width: 2.47763rem;
+        min-width: 2.47763rem;
     }
 
     .hero-heading{
@@ -207,6 +215,8 @@
 </style>
 
 <div class="hero-section">
+    <div class="hero-container">
+
         <div class="hero-image">
 
             <div>
@@ -236,6 +246,8 @@
                     <a href="{{secondary_cta_url}}">{{secondary_cta}}</a>
                 </button>
         </div>
+
+    </div>
 
 </div>
 
