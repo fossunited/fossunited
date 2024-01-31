@@ -192,11 +192,7 @@
     <div class="header-section">
         <img class="header-cover-image" src="{{ doc.cover_image or 'assets/fossunited/images/defaults/user_profile_banner.png' }}" alt="cover-image">
         <div class="profile-detail-section">
-                {% if doc.profile_photo %}
-                <img class="header-profile-image" src="{{ doc.profile_photo }}" alt="profile-image">
-                {% else %}
-                <img class="header-profile-image" src="https://api.dicebear.com/7.x/thumbs/svg?backgroundColor=b2e9c8,5acf89" alt="profile-image">
-                {% endif %}
+                <img class="header-profile-image" src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="profile-image">
                 <div class="header-content-edit-section">
                     <div class="header--content-section">
                         <div class="d-flex mb-1">

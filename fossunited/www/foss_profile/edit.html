@@ -19,7 +19,7 @@
         <div class="field-title">
             Cover Image
         </div>
-        <img src="{{ foss_user.cover_image or '/assets/fossunited/images/default_profile_cover_image.png'}}" data-original="{{ foss_user.cover_image or '/assets/fossunited/images/default_profile_cover_image.png'}}" alt="Profile Cover Image" class="cover-image my-4" id="preview-cover-image">
+        <img src="{{ foss_user.cover_image or '/assets/fossunited/images/defaults/user_profile_banner.png'}}" data-original="{{ foss_user.cover_image or '/assets/fossunited/images/default_profile_cover_image.png'}}" alt="Profile Cover Image" class="cover-image my-4" id="preview-cover-image">
         <button style="font-size: var(--text-sm);" onclick="uploadImage(this)" id="upload_cover_image">
             <i class="ti ti-upload"></i>
             <span>Upload Cover Image</span>
@@ -28,7 +28,7 @@
     <div class="form-col-2">
         <div class="d-flex flex-column ">
             <div class="profile-edit--pfp">
-                <img src="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" data-original="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" alt="Profile Image" class="profile-image-lg" style="width: 120px; height: 120px;" id="preview-profile-image">
+                <img src="{{ foss_user.profile_photo or '/assets/fossunited/images/default_profile_image.png' }}" data-original="{{ foss_user.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}" alt="Profile Image" class="profile-image-lg" style="width: 120px; height: 120px;" id="preview-profile-image">
                 <div class="profile-edit--pfp-input">
                     <div class="field-title">
                         Profile Photo
