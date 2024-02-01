@@ -74,6 +74,11 @@
         letter-spacing: -0.045rem;
     }
 
+    .button-category{
+        display: flex;
+        gap: 2rem;
+    }
+
     .btn-primary{
         background: #08B74F;
         border-radius: 0.5rem;
@@ -253,6 +258,12 @@
             gap: 1.5rem;
         }
 
+        .button-category{
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
         .about-section{
             display: flex;
             justify-content: center;
@@ -299,6 +310,8 @@
         </div>
 
         <div class="button-container">
+
+            <div class="button-category">
                 <button class="btn-primary">
                     <a href="{{priamry_cta_url}}">{{primary_cta}}</a>
                 </button>
@@ -306,6 +319,8 @@
                 <button class="btn-secondary">
                     <a href="{{secondary_cta_url}}">{{secondary_cta}}</a>
                 </button>
+            </div>
+
         </div>
 
     </div>

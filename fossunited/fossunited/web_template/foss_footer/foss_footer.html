@@ -29,7 +29,7 @@
     }
 
     .footer-element-logo > img{
-        height: 2rem;
+        max-height: 2rem;
     }
 
     .footer-element-items{
@@ -61,6 +61,40 @@
 
     .address-element p{
         text-align:right;
+    }
+
+    @media screen and (max-width: 768px) {
+
+        .footer-section{
+            padding: 0rem 2rem 0rem 2rem;
+
+        }
+
+        .footer-container{
+            max-width: 21.9375rem;
+            flex-direction: column;
+        }
+
+        .footer-element-items{
+            grid-template-columns: 1fr;
+            gap: 1.25rem
+        }
+
+        .footer-element-logo > img{
+            max-height: 2rem;
+        }
+
+        .address-element p{
+            text-align:left;
+        }
+
+        .footer-container p{
+            font-size: 0.75rem;
+        }
+
+        .footer-container a{
+            font-size: 0.75rem;
+        }
     }
 
 </style>
