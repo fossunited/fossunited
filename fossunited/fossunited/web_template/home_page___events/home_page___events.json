@@ -1,12 +1,21 @@
 {
- "__islocal": true,
  "__unsaved": 1,
  "creation": "2024-01-29 19:08:50.069159",
  "docstatus": 0,
  "doctype": "Web Template",
- "fields": [],
- "idx": 0,
- "modified": "2024-01-29 19:08:50.069159",
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "events_page_link",
+   "fieldtype": "Data",
+   "label": "Events Page Link",
+   "options": "URL",
+   "reqd": 0
+  }
+ ],
+ "idx": 2,
+ "modified": "2024-02-01 14:12:11.932320",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Events",
