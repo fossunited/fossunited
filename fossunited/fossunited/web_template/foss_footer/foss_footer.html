@@ -1,0 +1,113 @@
+<style>
+
+    .footer-section{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+    }
+
+    .footer-container{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 2.75rem 0;
+
+    }
+
+    .footer-container p{
+        color: var(--libre-white-600, #e8e8e8);
+    }
+
+    .footer-container a{
+        color: var(--libre-white-600, #e8e8e8);
+    }
+
+    .footer-container a:hover{
+        color: var(--foss-min-500, #08B74F);
+        text-decoration: none;
+    }
+
+    .footer-element-logo > img{
+        height: 2rem;
+    }
+
+    .footer-element-items{
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+
+    .footer-link-category{
+        display:flex;
+        gap: 2rem;
+    }
+
+    .footer_parent_label{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .footer_parent_label p{
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .footer-category-items{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .address-element p{
+        text-align:right;
+    }
+
+</style>
+
+<footer>
+
+    <div class="footer-section">
+        <div class="footer-container">
+
+            <div class="footer-element-logo">
+                <img src="assets/fossunited/icons/fossunited-white.svg" alt="FOSS United Logo" />
+            </div>
+
+            <div class="source-code-link">
+                <a href="https://github.com/fossunited/fossunited">View Source Code</a>
+            </div>
+
+            <div class="footer-element-items">
+                <div class="footer-link-category">
+
+                    {% for item in footer_items %}
+                        {% if not item.parent_label %}
+                            <div class="footer_parent_label">
+                                <p>{{item.label}}</p>
+                                <div class="footer-category-items">
+                                    {% for child_item in footer_items %}
+                                        {% if child_item.parent_label == item.label %}
+                                            <a href="{{child_item.url}}" class="footer-link">{{child_item.label}}</a>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                </div>
+
+                            </div>
+                        {% endif %}
+                     {% endfor %}
+
+                </div>
+
+                <div class="address-element">
+                    {% set website_settings = frappe.get_doc("Website Settings")%}
+                    <p>{{website_settings.copyright}}</p>
+                    <p>{{website_settings.address}}</p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</footer>
