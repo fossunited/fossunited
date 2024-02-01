@@ -97,6 +97,49 @@
 
     }
 
+    .horizontal-separator{
+        width: 100%;
+        background-color: var(--Gray-500, #667085);
+    }
+
+    .mobile-only{
+        display: none;
+    }
+
+    @media screen and (max-width: 768px) {
+
+
+        .contact-section{
+            padding: 0rem 2rem 0rem 2rem;
+
+        }
+
+        .contact-container{
+            max-width: 21.9375rem;
+            width: 100%;
+            flex-direction: column;
+            gap: 1.88rem;
+
+        }
+
+        .newsletter-block{
+            width: 100%;
+        }
+
+        .contacts-block {
+            width: 100%;
+        }
+
+        .vertical-separator{
+            display: none;
+
+        }
+
+        .mobile-only{
+            display: block;
+        }
+    }
+
 
 </style>
 
@@ -118,9 +161,11 @@
 
         </div>
 
-        <div class="line-separator">
+        <div class="vertical-separator">
                 <img src="" alt="">
         </div>
+
+        <hr class="horizontal-separator mobile-only">
 
         <div class="contacts-block">
 

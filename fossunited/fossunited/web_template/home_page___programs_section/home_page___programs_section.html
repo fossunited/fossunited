@@ -1,10 +1,10 @@
 <style>
     .programs-section{
         display: flex;
-        padding: 0rem 14rem 0rem 14rem;
-        justify-content: center;
+        padding: 0 14rem 0 14rem;
         align-items: center;
-        margin-bottom:7rem;
+        margin-bottom: 7rem;
+        justify-content: center;
     }
 
     .programs-container{
@@ -75,6 +75,31 @@
         line-height: 120%;
         letter-spacing: -0.02rem;
         margin: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+
+        .programs-section{
+            padding: 0rem 2rem 0rem 2rem;
+
+        }
+
+        .programs-container{
+            max-width: 21.9375rem;
+        }
+
+        .programs-card-block{
+            grid-template-columns: 1fr;
+
+        }
+
+        .program-card{
+            padding:1.25rem;
+            border-radius: 0.5rem;
+            border: 0.5px solid var(--Gray-200, #EAECF0);
+        }
+
+
     }
 
 </style>

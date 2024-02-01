@@ -228,6 +228,58 @@
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
     }
 
+    .events-button{
+
+        border-radius: 0.5rem;
+        background: var(--green-200, #DAF0E1);
+        border: none;
+        padding: 0.8rem 1.5rem;
+        color: var(--green-800, #16794C);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 115%; /* 1.15rem */
+        letter-spacing: -0.02rem;
+    }
+
+    .mobile-only{
+        display: none;
+    }
+
+    @media screen and (max-width: 768px) {
+
+        .events-section{
+            padding: 0rem 2rem 0rem 2rem;
+
+        }
+
+
+        .events-container{
+            max-width: 21.9375rem;
+            gap: 7rem;
+        }
+
+        .events-block{
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            width: 100%
+        }
+
+        .flagship-event-card{
+            border-radius: 0.5rem;
+            border: 0.5px solid var(--Gray-200, #EAECF0)
+                }
+
+        .view-events-link{
+            display: none;
+        }
+
+        .mobile-only{
+            display: block;
+        }
+
+    }
+
 
 
 </style>
@@ -309,8 +361,12 @@
                     </div>
                 </div>
             {% endfor %}
-        </div>
 
+            <button class="events-button mobile-only">
+                View all Events
+            </button>
+
+        </div>
 
 
 
