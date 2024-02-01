@@ -1,6 +1,6 @@
 <script>
-    let session_user = '{{ frappe.session.user }}'
-    let route = '{{ frappe.db.get_value("FOSS User Profile", {"user": frappe.session.user}, "route") }}';
+    let session_user = frappe.session.user;
+    let route = frappe.db.get_value('FOSS User Profile', {'email': session_user}, 'route');
     if (session_user == 'Administrator'){
         window.location.href = '/app';
     }
