@@ -13,18 +13,18 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/fossunited/css/fossunited.css"
-# app_include_js = "/assets/fossunited/js/fossunited.js"
+# app_include_js = ["website.bundle.js", "dialog.bundle.js", "form.bundle.js"]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/fossunited/css/fossunited.css"
-# web_include_js = "/assets/fossunited/js/fossunited.js"
+# web_include_css = ["website.bundle.less"]
+web_include_js = ["website.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "fossunited/public/scss/website"
 
 # include js, css files in header of web form
 # webform_include_js = {"doctype": "public/js/doctype.js"}
-# webform_include_css = {"doctype": "public/css/doctype.css"}
+# webform_include_css = {"doctype": "public/css/doctype.css"}tele
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
@@ -55,7 +55,7 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 # Jinja
 # ----------
 
-# Add all simple route rules here
+# Add all simple route bench rules here
 website_route_rules = [
     {
         "from_route": "/events/<event>/cfp/new",
@@ -73,8 +73,15 @@ website_route_rules = [
         "from_route": "/events/<event>/rsvp/<rsvp>/edit",
         "to_route": "/rsvp/submission/edit",
     },
+    {
+        "from_route": "/<foss_user>/edit-profile",
+        "to_route": "/foss_profile/edit",
+    },
+    {
+        "from_route": "/me",
+        "to_route": "/redirect_to_foss_profile",
+    },
 ]
-
 
 # add methods and filters to jinja environment
 jinja = {
@@ -94,12 +101,18 @@ jinja = {
         "fossunited.fossunited.utils.get_reviewers",
         "fossunited.fossunited.utils.user_already_reviewed",
         "fossunited.fossunited.utils.get_form_fields",
+        "fossunited.fossunited.utils.get_user_socials",
+        "fossunited.fossunited.utils.get_user_editable_doctype_fields",
+        "fossunited.fossunited.utils.get_signup_optin_checks",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",
         "fossunited.fossunited.utils.make_badge",
     ],
 }
+
+
+signup_form_template = "fossunited.plugins.show_custom_signup"
 
 # Installation
 # ------------

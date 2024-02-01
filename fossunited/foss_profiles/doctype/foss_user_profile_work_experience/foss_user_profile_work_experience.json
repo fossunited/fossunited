@@ -1,0 +1,151 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2023-07-06 13:35:30.061006",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "details_section",
+  "title",
+  "company",
+  "company_website",
+  "column_break_dmvv",
+  "employment_type",
+  "primary_role",
+  "location_section",
+  "city",
+  "column_break_yxop",
+  "country",
+  "is_remote",
+  "duration_section",
+  "start_date",
+  "column_break_yywf",
+  "end_date",
+  "is_working_here",
+  "about_role_section",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Employment Type",
+   "options": "\nFull-time\nPart-time\nInternship\nFreelance\nSelf-employed\nTrainee",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_working_here",
+   "fieldtype": "Check",
+   "label": "Currently Working Here?"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.is_working_here === 0",
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "About your role"
+  },
+  {
+   "description": "Only enter the domain, without https or www",
+   "fieldname": "company_website",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Company Website",
+   "reqd": 1
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Data",
+   "label": "City"
+  },
+  {
+   "fetch_from": "city.country",
+   "fieldname": "country",
+   "fieldtype": "Data",
+   "label": "Country"
+  },
+  {
+   "fieldname": "column_break_dmvv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "duration_section",
+   "fieldtype": "Section Break",
+   "label": "Duration"
+  },
+  {
+   "fieldname": "column_break_yywf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "about_role_section",
+   "fieldtype": "Section Break",
+   "label": "About Role"
+  },
+  {
+   "fieldname": "details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "primary_role",
+   "fieldtype": "Data",
+   "label": "Primary Role"
+  },
+  {
+   "fieldname": "location_section",
+   "fieldtype": "Section Break",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_yxop",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_remote",
+   "fieldtype": "Check",
+   "label": "Remote"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-23 16:06:41.530320",
+ "modified_by": "Administrator",
+ "module": "FOSS Profiles",
+ "name": "FOSS User Profile Work Experience",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

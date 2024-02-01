@@ -1,0 +1,431 @@
+{% extends "templates/foss_base.html" %}
+
+{% block page_content %}
+<div class="profile-container">
+    {{ profile_header() }}
+
+    <div class="container">
+        <div class="profile-content-section">
+            <div class="horizontal-navbar">
+                {% set nav_items = ['work', 'about', 'resume', 'projects'] %}
+                {% for item in nav_items %}
+                    <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
+                        {{ item | capitalize }}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="content-div" id="work">
+                <div class="profile-content-div">
+                    {{ render_section_header("work") }}
+                    <div class="coming-soon-container">
+                        Integrations Coming Soon!
+                    </div>
+                </div>
+            </div>
+            <div class="content-div" id="about">
+                <div class="profile-content-div">
+                    {{ render_section_header("about") }}
+                    <div class="about">
+                        {{ doc.about or "Nothing in about."}}
+                    </div>
+                </div>
+            </div>
+            <div class="content-div" id="resume">
+                {{ render_experience() }}
+                {{ render_education() }}
+            </div>
+            <div class="content-div" id="projects">
+                {{ render_projects() }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% macro render_section_header(section, add=False, edit=False) %}
+<div id="{{section}}-section">
+    <div class="header-with-button">
+        <h5>{{section | capitalize}}</h5>
+        {% if frappe.session.user == doc.user %}
+        <div style="display: flex; gap: 0.5rem;">
+            {% if edit %}
+            <button class="edit-modal-button" name="edit-{{section}}">
+                <i class="ti ti-edit"></i>
+                    Edit {{section | capitalize}}
+            </button>
+            {% endif %}
+            {% if add %}
+            <button class="add-modal-button" name="add-{{section}}">
+                <i class="ti ti-plus"></i>
+                    Add {{section | capitalize}}
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_projects() %}
+<div class="profile-content-div">
+    {{ render_section_header("projects", add=True) }}
+    {% if doc.projects | len > 0 %}
+    <div class="projects-grid">
+        {% for project in doc.projects %}
+        <div class="project-container edit-hover" data-docname="{{project.name}}">
+            <img src="{{project.cover_image}}" alt="{{project.project_name}}" class="project-banner">
+            {% if frappe.session.user == doc.user %}
+            <button class="edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
+            {% endif %}
+            <div class="project-title">{{project.project_name}}</div>
+            <div class="project-description">
+                {{project.tagline or "" | truncate(100)}}
+            </div>
+            <div class="d-flex align-items-bottom justify-content-between mb-3 p-0">
+                <div class="collaborators-list">
+                    <div class="collaborators-container"></div>
+                </div>
+                <a href="{{project.project_link}}" style="color: hsl(var(--clr-foss-mint-500))" class="project-link" target="_blank">
+                    View Project
+                    <i class="ti ti-external-link"></i>
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div>
+        No projects to showcase.
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_experience() %}
+<div class="profile-content-div" id="experience">
+    {{ render_section_header("experience", add=True) }}
+    {% if experiences_dict %}
+    {% for (key, values) in experiences_dict.items() %}
+    <div class="experience-card">
+        <img src="https://logo.clearbit.com/{{values[0].company_website}}" alt="{{key}}" class="experience-card-logo">
+        <div class="experience-details">
+            {# if values | len > 1 #}
+            <!-- <div>
+                <h5>{{key}}</h5>
+                <div class="mt-1">{{ values[0].city }}, {{ values[0].country }}</div>
+            </div> -->
+            {# endif #}
+            {% for value in values %}
+            <div class="d-flex justify-content-between align-items-baseline edit-hover">
+                <div class="experience-item" data-docname="{{value.name}}">
+                    <h5>{{ value.title }}</h5>
+                    <span>{{ value.start_date.strftime("%B %Y") }} - {% if value.end_date != None %}{{ value.end_date.strftime("%B %Y") }}{% else %}{{_("Present")}}{% endif %}</span>
+                    <div class="experience-item--company-location">
+                        {# if values | len < 2 #}
+                        <span style="color: hsl(var(--clr-foss-mint-500))">
+                            <a href="https://www.{{value.company_website}}" target="_blank">{{ value.company }}</a>
+                        </span>
+                        <div class="seperator-circle"></div>
+                        {% if value.is_remote %}
+                        <span>{{_("Remote")}}</span>
+                        {% else %}
+                        <span>{{ value.city }}, {{ value.country }}</span>
+                        {% endif %}
+                        {# endif #}
+                    </div>
+                    <div>
+                        {{ value.description or ""}}
+                    </div>
+                </div>
+                {% if frappe.session.user == doc.user %}
+                <button class="edit-modal-button" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
+                    <i class="ti ti-pencil"></i>
+                </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div>
+        No experience added.
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro render_education() %}
+<div class="profile-content-div" id="education">
+    {{ render_section_header("education", add=True) }}
+    {% if doc.education %}
+    {% for education in doc.education %}
+    <div class="d-flex justify-content-between edit-hover">
+        <div class="education-detail-item" data-docname="{{education.name}}">
+            <div>{{ education.start_year }} - {{ education.end_year }}</div>
+            <h5>
+                {{ education.institution }}
+            </h5>
+            <div class="d-flex align-items-center">
+                <span style="color:hsl(var(--clr-foss-mint-500))">
+                    {{ education.degree }}, {{ education.field_of_study }}
+                </span>
+            </div>
+        </div>
+        {% if frappe.session.user == doc.user %}
+        <button class="edit-modal-button" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
+            <i class="ti ti-pencil"></i>
+        </button>
+        {% endif %}
+    </div>
+    {% endfor %}
+    {% else %}
+    <div>
+        No education added.
+    </div>
+    {% endif %}
+</div>
+{% endmacro %}
+
+{% macro profile_header() %}
+<div class="container">
+    <div class="header-section">
+        <img class="header-cover-image" src="{{ doc.cover_image or 'assets/fossunited/images/defaults/user_profile_banner.png' }}" alt="cover-image">
+        <div class="profile-detail-section">
+                <img class="header-profile-image" src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="profile-image">
+                <div class="header-content-edit-section">
+                    <div class="header--content-section">
+                        <div class="d-flex mb-1">
+                            <h4 class="mr-1">{{doc.full_name}}</h4>
+                            {% for company in doc.experience %}
+                                {% if company.is_working_here %}
+                                    <img class="company-badge" src="https://logo.clearbit.com/{{company.company_website}}" alt="{{company.company}}">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="header--username-location" style="font-size: var(--text-sm);">
+                            <span style="color: hsl(var(--clr-foss-mint-500));">{{doc.username}}</span>
+                            <div class="seperator-circle"></div>
+                            <span>Joined {{doc.creation.strftime("%B %Y")}}</span>
+                            {% if doc.current_city %}
+                            <div class="seperator-circle"></div>
+                            <div>
+                                <i class="ti ti-map-pin" style="font-size:larger"></i>
+                                {{ doc.current_city }}
+                            </div>
+                            {% endif %}
+                            {% if doc.website %}
+                            <div class="seperator-circle"></div>
+                            <div class="d-flex align-content-center justify-content-center ">
+                                <i class="ti ti-link" style="font-size:larger"></i>
+                                <a class="ml-1" style="font-weight: var(--fw-medium);" href="{{doc.website}}">{{doc.website | truncate(30, True) }}</a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+        </div>
+        {% if doc.bio %}
+        <div class="header-section--bio">
+            {{doc.bio}}
+        </div>
+        {% endif %}
+        {% set user_socials = get_user_socials(doc.name) %}
+        {% if user_socials %}
+        <div class="header-section--socials">
+            {% for (key,value) in user_socials.items() %}
+                <a href="{{value}}"><img src="https://cdn.simpleicons.org/{{key}}" alt="{{key}}"/></a>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% if doc.skills | len > 0 %}
+        <div class="header-section--skills">
+            {% for skill in doc.skills %}
+            <div class="skill-container">
+                <img src="https://cdn.simpleicons.org/{{skill.skill}}" onError="removeElement(this);"/>
+                <span>{{ skill.skill }}</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endmacro %}
+
+
+{% block script %}
+{{ super() }}
+<script>
+    $('body').css('background', 'hsl(var(--clr-gray-100))');
+    $(document).ready(() => {
+        frappe.require('controls.bundle.js');
+        setNavbarControl();console.log
+        validateEditOption()
+
+        if ( window.innerWidth > 768 ) {
+            $('.edit-modal-button').hide();
+        }
+
+        $('.edit-hover').hover((e) => {
+            $(e.currentTarget).find('.edit-modal-button').show();
+        }, (e) => {
+            $(e.currentTarget).find('.edit-modal-button').hide();
+        })
+
+        $('.add-modal-button').click((e) => {
+            addModal(e);
+        })
+
+        $('.edit-modal-button').click((e) => {
+            editModal(e);
+        })
+    })
+
+    function setNavbarControl(){
+        let navItems = document.querySelectorAll('.horizontal-navbar--item');
+        let contentDivs = document.querySelectorAll('.content-div');
+        let activeNavItem = navItems[0];
+        let activeContentDiv = contentDivs[0];
+
+        contentDivs.forEach((contentDiv) => {
+            contentDiv.classList.add('hide');
+        });
+        activeContentDiv.classList.remove('hide');
+        activeNavItem.classList.add('active');
+
+        navItems.forEach((navItem) => {
+            navItem.addEventListener('click', () => {
+                activeNavItem.classList.remove('active');
+                activeContentDiv.classList.add('hide');
+                navItem.classList.add('active');
+                activeNavItem = navItem;
+                activeContentDiv = document.querySelector(`#${navItem.id.split('-')[0]}`);
+                activeContentDiv.classList.remove('hide');
+            });
+        });
+    }
+
+    function validateEditOption(){
+        if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
+            // check if the width of the screen is less than 768px
+            if (window.innerWidth < 768) {
+                // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
+                $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
+                $('.header-profile-image').parent().append(`
+                <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+                `);
+            }
+            else{
+                $('.header-content-edit-section').append(`
+                    <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+                `);
+            }
+        }
+    }
+
+    function removeElement(element) {
+        element.parentNode.removeChild(element);
+    }
+
+    let child_docs = {
+        "projects": "FOSS User Projects",
+        "experience": "FOSS User Profile Work Experience",
+        "education": "FOSS User Profile Education"
+    }
+
+    function addModal(e){
+        let id = e.target.name.split('-')[1];
+        let table = child_docs[id];
+        frappe.call({
+            method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
+            args: {
+                'doctype': table,
+            },
+            callback: (r) => {
+                d = new frappe.ui.Dialog({
+                    title: `Add ${id}`,
+                    fields: r.message,
+                    size: 'large',
+                    primary_action_label: 'Add',
+                    primary_action: (v) => {
+                        frappe.call({
+                            method: 'fossunited.fossunited.utils.insert_foss_profile_child_doc',
+                            args: {
+                                'parent': '{{doc.name}}',
+                                'parenttype': 'FOSS User Profile',
+                                'parentfield': id,
+                                'doctype': table,
+                                'fields': v,
+                            },
+                            callback: () => {
+                                d.hide();
+                                $(`#${id}`).load(location.href + " #"+id + ">*", "");
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    }
+                });
+                d.show();
+            }
+        })
+    }
+
+    function editModal(e){
+        let doctype = $(e.currentTarget).data('doctype');
+        let docname = $(e.currentTarget).data('docname');
+        frappe.call({
+            method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
+            args: {
+                'doctype': doctype,
+                'docname': docname,
+            },
+            callback: (r) => {
+                d = new frappe.ui.Dialog({
+                    title: `Edit ${$(e.currentTarget).data('doctype')}`,
+                    fields: r.message,
+                    size: 'large',
+                    primary_action_label: 'Update',
+                    primary_action: (v) => {
+                        v = JSON.stringify(v)
+                        frappe.call({
+                            method: 'frappe.client.set_value',
+                            args: {
+                                'doctype': doctype,
+                                'name': docname,
+                                'fieldname': v,
+                            },
+                            callback: () => {
+                                d.hide();
+                                location.reload();
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    },
+                    secondary_action_label: 'Delete',
+                    secondary_action: (v) => {
+                        frappe.call({
+                            method: 'frappe.client.delete',
+                            args: {
+                                'doctype': doctype,
+                                'name': docname,
+                            },
+                            callback: () => {
+                                d.hide();
+                                location.reload();
+                            },
+                            error: (e) => {
+                                frappe.throw(e.message);
+                            }
+                        })
+                    }
+                });
+                d.show();
+            }
+        })
+    }
+</script>
+{% endblock %}

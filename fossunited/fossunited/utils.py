@@ -312,6 +312,48 @@ def filter_field_values(key):
     return False
 
 
+@frappe.whitelist()
+def get_user_editable_doctype_fields(doctype, docname=None):
+    meta = frappe.get_meta(doctype).as_dict()
+    NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
+    for field in meta["fields"]:
+        if field["fieldname"] in NOT_EDITABLE_FIELDS:
+            meta["fields"].remove(field)
+
+    meta["fields"] = [
+        {k: v for k, v in field.items() if filter_field_values(k)}
+        for field in meta["fields"]
+    ]
+
+    if docname is not None:
+        doc = frappe.get_doc(doctype, docname).as_dict()
+        for field in meta["fields"]:
+            if field["fieldname"] in doc:
+                field["default"] = doc[field["fieldname"]]
+
+    return meta["fields"]
+
+
+@frappe.whitelist()
+def insert_foss_profile_child_doc(
+    parent, parenttype, parentfield, doctype, fields
+):
+    fields = json.loads(fields)
+    doc = frappe.get_doc(
+        {
+            "doctype": doctype,
+        }
+    )
+    for field in fields:
+        doc.set(field, fields[field])
+    doc.parent = parent
+    doc.parenttype = parenttype
+    doc.insert(ignore_permissions=True)
+    parentdoc = frappe.get_doc(parenttype, parent)
+    parentdoc.append(parentfield, doc)
+    parentdoc.save(ignore_permissions=True)
+
+
 def get_form_fields(doctype):
     meta = frappe.get_meta(doctype).as_dict()
     fields = {}
@@ -363,3 +405,83 @@ def get_form_fields(doctype):
             )
 
     return fields
+
+
+def get_user_socials(foss_user):
+    user = frappe.get_doc("FOSS User Profile", foss_user).as_dict()
+    SOCIAL_LINK_FIELDNAMES = [
+        "github",
+        "gitlab",
+        "x",
+        "linkedin",
+        "instagram",
+        "mastodon",
+        "youtube",
+        "medium",
+    ]
+
+    links = {}
+    for field in user:
+        if field in SOCIAL_LINK_FIELDNAMES and user[field]:
+            links[field] = user[field]
+
+    return links
+
+
+@frappe.whitelist()
+def get_meta(doctype):
+    return frappe.get_meta(doctype).as_dict()
+
+
+def get_signup_optin_checks():
+    mapper = frappe._dict(
+        {
+            "terms_of_use": {
+                "page_name": "terms_page",
+                "title": "Terms of Use",
+            },
+            "privacy_policy": {
+                "page_name": "privacy_policy_page",
+                "title": "Privacy Policy",
+            },
+            "cookie_policy": {
+                "page_name": "cookie_policy_page",
+                "title": "Cookie Policy",
+            },
+            "code_of_conduct": {
+                "page_name": "code_of_conduct_page",
+                "title": "Code of Conduct",
+            },
+        }
+    )
+    checks = [
+        "terms_of_use",
+        "privacy_policy",
+        "cookie_policy",
+        "code_of_conduct",
+    ]
+    links = []
+
+    for check in checks:
+        if frappe.db.get_single_value("FOSSU Settings", check):
+            page = frappe.db.get_single_value(
+                "FOSSU Settings", mapper[check].get("page_name")
+            )
+            route = frappe.db.get_value("Web Page", page, "route")
+            links.append(
+                "<a target='_blank' href='/"
+                + route
+                + "'>"
+                + mapper[check].get("title")
+                + "</a>"
+            )
+
+    return (", ").join(links)
+
+
+@frappe.whitelist(allow_guest=True)
+def check_username_availability(username):
+    exists = frappe.db.exists(
+        "FOSS User Profile", {"username": username}
+    )
+    return exists

@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-01-27 15:34:46.162713",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "signup_settings_section",
+  "terms_of_use",
+  "terms_page",
+  "code_of_conduct",
+  "code_of_conduct_page",
+  "column_break_kcgj",
+  "privacy_policy",
+  "privacy_policy_page",
+  "column_break_xioj",
+  "cookie_policy",
+  "cookie_policy_page"
+ ],
+ "fields": [
+  {
+   "fieldname": "signup_settings_section",
+   "fieldtype": "Section Break",
+   "label": "Signup Settings"
+  },
+  {
+   "depends_on": "eval: doc.privacy_policy==1",
+   "fieldname": "privacy_policy_page",
+   "fieldtype": "Link",
+   "label": "Privacy Policy Page",
+   "mandatory_depends_on": "eval: doc.privacy_policy==1",
+   "options": "Web Page"
+  },
+  {
+   "depends_on": "eval: doc.terms_of_use==1",
+   "fieldname": "terms_page",
+   "fieldtype": "Link",
+   "label": "Terms Page",
+   "mandatory_depends_on": "eval: doc.terms_of_use==1",
+   "options": "Web Page"
+  },
+  {
+   "depends_on": "eval: doc.cookie_policy==1",
+   "fieldname": "cookie_policy_page",
+   "fieldtype": "Link",
+   "label": "Cookie Policy Page",
+   "mandatory_depends_on": "eval: doc.cookie_policy==1",
+   "options": "Web Page"
+  },
+  {
+   "default": "0",
+   "fieldname": "terms_of_use",
+   "fieldtype": "Check",
+   "label": "Show Terms of Use on Signup"
+  },
+  {
+   "fieldname": "column_break_kcgj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xioj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "privacy_policy",
+   "fieldtype": "Check",
+   "label": "Show Privacy Policy on Signup"
+  },
+  {
+   "default": "0",
+   "fieldname": "cookie_policy",
+   "fieldtype": "Check",
+   "label": "Show Cookie Policy on Signup"
+  },
+  {
+   "default": "0",
+   "fieldname": "code_of_conduct",
+   "fieldtype": "Check",
+   "label": "Show Code of Conduct on Signup"
+  },
+  {
+   "depends_on": "eval: doc.code_of_conduct==1",
+   "fieldname": "code_of_conduct_page",
+   "fieldtype": "Link",
+   "label": "Code of Conduct Page",
+   "mandatory_depends_on": "eval: doc.code_of_conduct==1",
+   "options": "Web Page"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-01-27 23:22:01.740133",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "FOSSU Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

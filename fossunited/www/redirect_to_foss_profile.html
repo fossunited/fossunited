@@ -1,0 +1,13 @@
+<script>
+    let session_user = '{{ frappe.session.user }}'
+    let route = '{{ frappe.db.get_value("FOSS User Profile", {"user": frappe.session.user}, "route") }}';
+    if (session_user == 'Administrator'){
+        window.location.href = '/app';
+    }
+    else if (route != 'None'){
+        window.location.href = '/' + route;
+    }
+    else{
+        window.location.href = '/';
+    }
+</script>

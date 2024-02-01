@@ -1,5 +1,10 @@
 {% extends "templates/base.html" %}
 
+{% block head_include %}
+	{{ super() }}<script src=" https://cdn.jsdelivr.net/npm/simple-icons@11.0.0/index.min.js "></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+{% endblock %}
+
 <!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
 {% block style %}
     {{ super() }}
