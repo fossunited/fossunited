@@ -49,21 +49,25 @@
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "First Name"
   },
   {
    "fieldname": "last_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Last name"
   },
   {
    "fieldname": "email",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Email"
   },
   {
    "fieldname": "phone",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Phone"
   },
   {
@@ -159,7 +163,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 17:27:29.175422",
+ "modified": "2024-02-02 01:41:08.055685",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "Conference Tickets",
