@@ -1,16 +1,11 @@
 import frappe
 
 
-def get_context(self, context):
-    print("Entering get_context function")
-    context.website_settings = frappe.get_doc(
-        "Website Settings"
-    ).as_dict()
+def get_context(context):
+    website_settings = frappe.get_doc("Website Settings").as_dict()
 
-    print(context.website_settings)
-    context.footer_items = context.website_settings.get(
-        "footer_items"
-    )
-    context.org_address = context.website_settings.get("address")
+    context.website_settings = website_settings
 
-    context.copyright = context.website_settings.get("copyright")
+    context.footer_items = website_settings.get("footer_items")
+
+    context.copyright = website_settings.get("copyright")

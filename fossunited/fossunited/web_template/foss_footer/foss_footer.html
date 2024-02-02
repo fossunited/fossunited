@@ -64,8 +64,8 @@
         gap: 0.5rem;
     }
 
-    .address-element{
-        text-align:right;
+    .address-element p{
+        text-align: right;
         color: #e8e8e8
     }
 
@@ -147,8 +147,11 @@
                 </div>
 
                 <div class="address-element">
+
+                    {% set address = frappe.db.get_single_value("Website Settings", "address") %}
+
                     <p>{{copyright}}</p>
-                    <p>{{org_address}}</p>
+                    {{address}}
                 </div>
 
             </div>
