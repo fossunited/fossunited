@@ -124,10 +124,11 @@
     <div class="programs-container container">
         <h1 class="programs-section-heading">Programs</h1>
         <div class="programs-card-block">
-            {% for index in range(1, 7) %}
+            {% for index in range(1, 10) %}
                 {% set logo = values['program_' + index|string + '_logo'] %}
                 {% set name = values['program_' + index|string + '_name'] %}
                 {% set description = values['program_' + index|string + '_desc'] %}
+                {% set url = values['program_' + index|string + '_url'] %}
                 {% if logo %}
                         <a class="program-card" href="">
                                 <div class="program-card-image">

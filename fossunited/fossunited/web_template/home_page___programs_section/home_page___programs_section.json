@@ -23,56 +23,68 @@
    "reqd": 0
   },
   {
-   "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "program_1_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
    "fieldname": "program_2_name",
    "fieldtype": "Data",
    "label": "Program 2 Name",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "program_2_logo",
    "fieldtype": "Attach Image",
    "label": "Logo",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "program_2_desc",
    "fieldtype": "Data",
    "label": "Description",
    "reqd": 0
   },
   {
-   "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "program_2_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
    "fieldname": "program_3_name",
    "fieldtype": "Data",
    "label": "Program 3 Name",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "program_3_logo",
    "fieldtype": "Attach Image",
    "label": "Logo",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "program_3_desc",
    "fieldtype": "Data",
    "label": "Description",
    "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "program_3_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
   }
  ],
- "idx": 0,
- "modified": "2024-01-28 13:57:19.272967",
+ "idx": 8,
+ "modified": "2024-02-03 00:06:22.862936",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Programs Section",

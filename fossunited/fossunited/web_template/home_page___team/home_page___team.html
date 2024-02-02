@@ -71,13 +71,13 @@
     .team-card-details{
         display: flex;
         flex-direction: column;
-        gap: 0.25rem;
+        gap: 0.35rem;
     }
 
     .team-card-details h2{
         margin:0;
         color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.5rem;
+        font-size: 1.25rem;
         font-style: normal;
         font-weight: 600;
         line-height: 100%; /* 1.5rem */
@@ -136,9 +136,8 @@
             </div>
 
             <div class="team-block">
-                {% set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot", "designation", "username", "is_active"], filters={"org_role": ["in", ["Full-Time", "Part-Time", "Intern"]]}, order_by ='org_role') %}
+                {% set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot", "designation", "username"], filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time", "Intern"]]}, order_by ='org_role') %}
                 {% for employee in team %}
-                    {% if employee.is_active == 1 %}
                         <div class="team-card">
                             <div class="team-card-image">
                                 <img src="{{employee.headshot}}" alt="Team Member">
@@ -148,7 +147,6 @@
                                 <p>{{employee.designation}}</p>
                             </div>
                         </div>
-                    {% endif %}
                 {% endfor %}
             </div>
 
