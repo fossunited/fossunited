@@ -2,25 +2,24 @@
 <style>
     .hero-section{
         display: flex;
-        padding: 0rem 14rem 0rem 14rem;
         justify-content: center;
         align-items: center;
         background: linear-gradient(355deg, #eaecf0 0%, #ffffff 90.79%);
         flex-direction: column;
-        margin-top: 5rem;
+        margin-top: 3.75rem;
 
     }
 
     .hero-container{
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
+        gap: 3rem;
         margin-bottom: 5rem;
+        text-align: center;
 
     }
     .hero-image{
         display: flex;
-        gap: 28.27rem;
         justify-content: space-between;
     }
 
@@ -34,39 +33,30 @@
         min-width: 2.47763rem;
     }
 
-    .hero-heading{
-        text-align: center;
-    }
-
     .hero-heading h1{
         margin: 0;
+        font-size: 2.5rem;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 110%;
+        letter-spacing: -0.1rem;
     }
 
     .hero-heading-a{
         color: #1A1A1A;
-        text-align: center;
-        font-family: Inter;
-        font-size: 2.5rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 110%;
-        letter-spacing: -0.1rem;
+
+
     }
 
     .hero-heading-b{
         color: #08B74F;
-        font-size: 2.5rem;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 110%;
-        letter-spacing: -0.1rem;
     }
 
     .button-container{
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 2rem;
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 500;
@@ -97,8 +87,6 @@
         text-decoration: none;
     }
 
-
-
     .btn-secondary{
         padding: 0.8rem 1.5rem;
         border-radius: 0.5rem;
@@ -107,7 +95,7 @@
     }
 
     .btn-secondary:active, .btn-secondary:hover{
-        border: 2px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border: 1.5px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
         background-color: var(--neutral-white, #FFF) !important;
     }
 
@@ -121,15 +109,24 @@
         justify-content: center;
         align-items: center;
         margin-bottom:7rem;
+
+    }
+
+    .about-container{
+        display: inline-flex;
+        padding: 0 10.625rem;
+        align-items: stretch;
+        flex-shrink: 0;
+
     }
 
     .about-section-innerblock{
-        margin-top: -2.4rem;
+        margin-top: -2.5rem;
         display: flex;
-        max-width: 58.75rem;
         padding: 2.84275rem;
+        max-width: 58.75rem;
+        min-width: 21.9375rem;
         flex-direction: column;
-        align-items: flex-start;
         flex-shrink: 0;
         border-radius: 0.5rem;
         border: 0.379px solid var(--Gray-300, #D0D5DD);
@@ -158,7 +155,7 @@
         align-self: stretch;
         color: var(--Gray-500, #667085);
         font-family: Inter;
-        font-size: 0.875rem;
+        font-size: 1rem;
         font-style: normal;
         font-weight: 400;
         line-height: 140%; /* 1.225rem */
@@ -217,22 +214,17 @@
 
     @media screen and (max-width: 768px){
 
-        .hero-section{
-            padding: 0rem 2rem 0rem 2rem
-        }
-
-        .hero-image{
-
-            gap: 0rem;
+        .hero-container{
+            gap: 2rem;
         }
 
         #image-centre{
-            width: 10rem;
+            width: 40vw;
             min-width: 8rem;
         }
 
         #image-end{
-            width: 1.47763rem;
+            width: 8vw;
             min-width: 1.2rem;
         }
 
@@ -263,15 +255,13 @@
             gap: 1.5rem;
         }
 
-        .about-section{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom:7rem;
-        }
-
         .about_headtext{
             font-size: 1.2rem
+        }
+
+        .about-container{
+            padding: 0 5.625rem;
+            justify-content: center;
         }
         .about-section-innerblock{
             max-width: 21.9375rem;
@@ -289,7 +279,7 @@
 </style>
 
 <div class="hero-section">
-    <div class="hero-container">
+    <div class="hero-container container">
 
         <div class="hero-image">
 
@@ -331,59 +321,61 @@
 
 <div class="about-section">
 
-    <div class="about-section-innerblock">
+    <div class="about-container container">
 
-        <div class="about-section-tag">
-            <p>ABOUT</p>
-        </div>
+        <div class="about-section-innerblock">
 
-        <div>
-
-            <p class="about_headtext">{{about_headtext}}</p>
-            <p class="about_subtext">{{about_subtext}}</p>
-
-        </div>
-
-
-        <div class="goals-section">
-
-            <div class="goals-card">
-                <div class="goals-card-header">
-                    <p class="goals-card-tag">GOALS</p>
-                    <p class="goals-card-number">01</p>
-                </div>
-
-                <p class="goal-text">{{goal_text_1}}</p>
-
-                <img src="assets/fossunited/images/illustrations/goal_icon1.svg" alt="">
+            <div class="about-section-tag">
+                <p>ABOUT</p>
             </div>
 
-            <div class="goals-card">
-                <div class="goals-card-header">
-                    <p class="goals-card-tag">GOALS</p>
-                    <p class="goals-card-number">02</p>
-                </div>
+            <div>
 
-                <p class="goal-text">{{goal_text_2}}</p>
+                <p class="about_headtext">{{about_headtext}}</p>
+                <p class="about_subtext">{{about_subtext}}</p>
 
-                <img src="assets/fossunited/images/illustrations/goal_icon2.svg" alt="">
-            </div>
-
-            <div class="goals-card">
-                <div class="goals-card-header">
-                    <p class="goals-card-tag">GOALS</p>
-                    <p class="goals-card-number">03</p>
-                </div>
-
-                <p class="goal-text">{{goal_text_3}}</p>
-
-                <img src="assets/fossunited/images/illustrations/goal_icon3.svg" alt="">
             </div>
 
 
+            <div class="goals-section">
+
+                <div class="goals-card">
+                    <div class="goals-card-header">
+                        <p class="goals-card-tag">GOALS</p>
+                        <p class="goals-card-number">01</p>
+                    </div>
+
+                    <p class="goal-text">{{goal_text_1}}</p>
+
+                    <img src="assets/fossunited/images/illustrations/goal_icon1.svg" alt="">
+                </div>
+
+                <div class="goals-card">
+                    <div class="goals-card-header">
+                        <p class="goals-card-tag">GOALS</p>
+                        <p class="goals-card-number">02</p>
+                    </div>
+
+                    <p class="goal-text">{{goal_text_2}}</p>
+
+                    <img src="assets/fossunited/images/illustrations/goal_icon2.svg" alt="">
+                </div>
+
+                <div class="goals-card">
+                    <div class="goals-card-header">
+                        <p class="goals-card-tag">GOALS</p>
+                        <p class="goals-card-number">03</p>
+                    </div>
+
+                    <p class="goal-text">{{goal_text_3}}</p>
+
+                    <img src="assets/fossunited/images/illustrations/goal_icon3.svg" alt="">
+                </div>
+
+
+            </div>
+
         </div>
-
-
     </div>
 
 </div>

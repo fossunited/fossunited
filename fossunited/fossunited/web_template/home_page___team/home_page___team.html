@@ -1,23 +1,21 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
 
 <style>
+
     .team-section{
         display: flex;
-        padding: 0rem 14rem 0rem 14rem;
-        justify-content: center;
         align-items: center;
         margin-top: 7rem;
         margin-bottom: 7rem;
+        justify-content: center;
     }
 
-
     .team-container{
-        display: inline-flex;
-        max-width: 58.75rem;
-        flex-direction: column;
+        display: flex;
+        padding: 0 10.625rem;
         align-items: flex-start;
-        gap: 1.875rem;
-        flex-shrink: 0;
+        gap: 1.5rem;
+        flex-direction: column;
     }
 
     .team-section-header{
@@ -28,7 +26,7 @@
         gap: 0.78rem;
     }
 
-    .team-section-header h2{
+    .team-section-header h1{
         margin:0;
         color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
         font-size: 1.75rem;
@@ -41,9 +39,9 @@
     .team-section-header a{
         margin:0;
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-style: normal;
-        font-weight: 500;
+        font-weight: 550;
         line-height: normal;
         letter-spacing: -0.045rem;
     }
@@ -76,7 +74,7 @@
         gap: 0.25rem;
     }
 
-    .team-card-details h3{
+    .team-card-details h2{
         margin:0;
         color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
         font-size: 1.5rem;
@@ -98,17 +96,12 @@
 
     @media screen and (max-width: 768px) {
 
-
-        .team-section{
-            padding: 0rem 2rem 0rem 2rem;
-
-        }
-
         .team-container{
-            max-width: 21.9375rem;
-            width: 100%;
+            padding: 0 6rem;
 
         }
+
+
 
         .team-block{
             display: flex;
@@ -121,14 +114,23 @@
             padding: 0rem;
         }
 
+        .team-section-header h1{
+            font-size: 1.5rem;
+        }
+
+        .team-card-details h2{
+            font-size: 1.2rem;
+        }
+
+
     }
 </style>
 
 <div class="team-section">
 
-    <div class="team-container">
+    <div class="team-container container">
             <div class="team-section-header">
-                <h2>The Team</h2>
+                <h1>The Team</h1>
                 <a href="{{team_page_link}}">Meet the Workforce ↗</a>
 
             </div>
@@ -142,7 +144,7 @@
                                 <img src="{{employee.headshot}}" alt="Team Member">
                             </div>
                             <div class="team-card-details">
-                                <h3>{{employee.full_name}}</h3>
+                                <h2>{{employee.full_name}}</h2>
                                 <p>{{employee.designation}}</p>
                             </div>
                         </div>

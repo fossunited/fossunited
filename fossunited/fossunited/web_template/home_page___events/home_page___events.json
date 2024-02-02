@@ -5,17 +5,33 @@
  "doctype": "Web Template",
  "fields": [
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "events_page_link",
    "fieldtype": "Data",
    "label": "Events Page Link",
    "options": "URL",
    "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "indiafoss_link",
+   "fieldtype": "Data",
+   "label": "IndiaFOSS Link",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "fosshack_link",
+   "fieldtype": "Data",
+   "label": "FOSS Hack Link",
+   "options": "URL",
+   "reqd": 0
   }
  ],
- "idx": 2,
- "modified": "2024-02-01 14:12:11.932320",
+ "idx": 3,
+ "modified": "2024-02-02 21:34:38.670718",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Events",
