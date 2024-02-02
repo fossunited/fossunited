@@ -3,16 +3,14 @@
 <style>
     .ip-section{
         display: flex;
-        padding: 0rem 14rem 0rem 14rem;
         justify-content: center;
         align-items: center;
         margin-bottom: 7rem;
     }
 
-
     .ip-container{
         display: inline-flex;
-        max-width: 58.75rem;
+        padding: 0 10.625rem;
         align-items: stretch;
         flex-shrink: 0;
     }
@@ -76,23 +74,20 @@
         border-radius: 0.5875rem;
         box-shadow: 0px 11.75px 35.25px 0px rgba(0, 0, 0, 0.15);
         display: flex;
-        align-items: center;
+        justify-content: center;
+        align-items:center;
     }
 
     .feature-partners img{
-        width: 11.01563rem;
+        max-width: 11rem;
     }
 
     @media screen and (max-width: 768px) {
 
-        .ip-section{
-            padding: 0rem 2rem 0rem 2rem;
-
-        }
 
         .ip-container{
-            max-width: 21.9375rem;
             flex-direction: column-reverse;
+            padding: 0 5.625rem;
         }
 
         .ip-content-block{
@@ -108,7 +103,8 @@
         }
 
         .feature-partners img{
-            width: 6rem;
+
+            width: 50%;
             max-width: 100%;
             display: block;
             height: 100%;
@@ -119,7 +115,7 @@
 
 
 <div class="ip-section">
-    <div class="ip-container">
+    <div class="ip-container container">
 
         <div class="ip-content-block">
 
