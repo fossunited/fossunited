@@ -12,7 +12,7 @@
   "logo",
   "column_break_yudq",
   "joining_date",
-  "is_current",
+  "is_current_partner",
   "tier"
  ],
  "fields": [
@@ -24,19 +24,24 @@
   {
    "fieldname": "company",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Company",
+   "reqd": 1,
    "unique": 1
   },
   {
    "fieldname": "website",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Website",
-   "options": "URL"
+   "options": "URL",
+   "reqd": 1
   },
   {
    "fieldname": "logo",
    "fieldtype": "Attach Image",
-   "label": "Logo"
+   "label": "Logo",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_yudq",
@@ -48,21 +53,23 @@
    "label": "Joining Date"
   },
   {
-   "default": "0",
-   "fieldname": "is_current",
-   "fieldtype": "Check",
-   "label": "Currently active"
-  },
-  {
    "fieldname": "tier",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Tier",
-   "options": "Patron\nPlatinum\nGold\nSilver\nBronze"
+   "options": "Patron\nPlatinum\nGold\nSilver\nBronze",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_current_partner",
+   "fieldtype": "Check",
+   "label": "Currently active"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 21:26:50.935330",
+ "modified": "2024-02-02 12:42:28.690741",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Industry Partners",
@@ -80,6 +87,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "sort_field": "modified",

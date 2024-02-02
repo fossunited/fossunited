@@ -33,7 +33,8 @@
    "fieldname": "org_role",
    "fieldtype": "Select",
    "label": "Org Role",
-   "options": "Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
+   "options": "Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer",
+   "reqd": 1
   },
   {
    "fieldname": "user_individual_details_section",
@@ -41,48 +42,55 @@
    "label": "User Individual Details"
   },
   {
-   "fetch_from": ".profile_photo",
+   "fetch_from": "foss_user_profile.profile_photo",
    "fieldname": "headshot",
    "fieldtype": "Attach Image",
-   "label": "Headshot"
+   "label": "Headshot",
+   "reqd": 1
   },
   {
    "fieldname": "designation",
    "fieldtype": "Data",
-   "label": "Designation"
+   "in_list_view": 1,
+   "label": "Designation",
+   "reqd": 1
   },
   {
    "fetch_from": "foss_user_profile.username",
    "fieldname": "username",
    "fieldtype": "Data",
-   "label": "Username"
+   "in_list_view": 1,
+   "label": "Username",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_yaoh",
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": ".bio",
-   "fieldname": "user_bio",
-   "fieldtype": "Small Text",
-   "label": "User Bio"
-  },
-  {
-   "fetch_from": ".full_name",
+   "fetch_from": "foss_user_profile.full_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Name "
+   "in_list_view": 1,
+   "label": "Name ",
+   "reqd": 1
   },
   {
    "default": "0",
    "fieldname": "is_active",
    "fieldtype": "Check",
    "label": "Active"
+  },
+  {
+   "fieldname": "user_bio",
+   "fieldtype": "Small Text",
+   "label": "User Bio",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 15:28:19.634138",
+ "modified": "2024-02-02 12:38:25.080308",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS United Team",
@@ -99,6 +107,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "sort_field": "modified",
