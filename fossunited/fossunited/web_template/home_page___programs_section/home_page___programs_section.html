@@ -130,7 +130,7 @@
                 {% set description = values['program_' + index|string + '_desc'] %}
                 {% set url = values['program_' + index|string + '_url'] %}
                 {% if logo %}
-                        <a class="program-card" href="">
+                        <a class="program-card" href="{{url}}">
                                 <div class="program-card-image">
                                     <img src="{{ logo }}" alt="{{ name }}">
                                 </div>

@@ -292,7 +292,7 @@
 
                 </a>
 
-                <a class="flagship-event-card" href="">
+                <a class="flagship-event-card" href="{{fosshack_link}}">
 
                     <img class="flagship-card-image" src="assets/fossunited/icons/fosshack-icon.svg" alt="IndiaFOSS">
                     <h2 class="flagship-card-heading">FOSS Hack</h2>
@@ -319,7 +319,7 @@
         </div>
 
         <div class="events-block">
-            {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "must_attend", "event_location", "map_link", "event_start_date"], filters={"status": "Approved"}, page_length=3, order_by='event_start_date') %}
+            {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "route", "must_attend", "event_location", "map_link", "event_start_date"], filters={"status": "Approved"}, page_length=3, order_by='event_start_date') %}
             {% for event in events %}
 
                 <div class="upcoming-event-card">
@@ -344,7 +344,7 @@
                             <i class="ti ti-map-pin"></i>{{ event.event_location }}
                         </a>
 
-                        <a href="" class="event-details">
+                        <a href="/events/{{route}}" class="event-details">
                             View Details
                             <i class="ti ti-chevron-right"></i>
                         </a>

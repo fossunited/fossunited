@@ -1,13 +1,10 @@
 {
- "__islocal": true,
  "__unsaved": 1,
  "creation": "2024-01-31 20:19:11.765611",
  "docstatus": 0,
  "doctype": "Web Template",
  "fields": [
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "newsletter_subscribe_link",
    "fieldtype": "Data",
    "label": "Newsletter Subscription",
@@ -15,24 +12,29 @@
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "email_1",
    "fieldtype": "Data",
    "label": "Contact email 1",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "email_2",
    "fieldtype": "Data",
    "label": "Contact email 2",
    "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "contact_url",
+   "fieldtype": "Data",
+   "label": "Contact URL",
+   "options": "URL",
+   "reqd": 0
   }
  ],
  "idx": 0,
- "modified": "2024-01-31 20:19:11.765611",
+ "modified": "2024-02-03 16:05:17.399252",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Contact",
