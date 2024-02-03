@@ -1,0 +1,152 @@
+<style>
+    .programs-section{
+        display: flex;
+        align-items: center;
+        margin-bottom: 7rem;
+        justify-content: center;
+    }
+
+    .programs-container{
+        display: flex;
+        padding: 0 10.625rem;
+        align-items: flex-start;
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+
+    .programs-section-heading{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .programs-card-block{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        justify-content: space-between;
+        gap: 1.25rem;
+    }
+
+    .program-card{
+        padding:1.25rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .program-card:hover{
+        text-decoration: none;
+        border-radius: 0.5rem;
+        background: #FFF;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
+    }
+    .program-card:hover > .program-card-cta{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+    }
+
+
+    .program-card-name > h2{
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 1.35rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.06rem;
+        margin-top: 1.2rem
+    }
+
+    .program-card-description > p{
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 120%;
+        letter-spacing: -0.02rem;
+    }
+
+    .program-card-cta{
+        display: flex;
+        align-items: flex-end;
+        color: var(--Foundation-Code-Night-code-night-500 , #1E1E1E);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%;
+        letter-spacing: -0.02rem;
+        margin: 0;
+    }
+
+    @media screen and (max-width: 768px) {
+
+        .programs-container{
+            padding: 0 6rem;
+        }
+
+        .programs-card-block{
+            grid-template-columns: 1fr;
+
+        }
+
+        .programs-section-heading{
+            font-size: 1.5rem;
+        }
+
+        .program-card{
+            padding:1.25rem;
+            border-radius: 0.5rem;
+            border: 0.5px solid var(--Gray-200, #EAECF0);
+        }
+
+        .program-card h2{
+            font-size: 1.2rem;
+        }
+
+        .program-card-description p{
+            font-size: 1rem;
+        }
+
+        .program-card-cta {
+            font-size: 0.875rem;
+        }
+
+
+    }
+
+</style>
+
+
+
+<div class="programs-section">
+    <div class="programs-container container">
+        <h1 class="programs-section-heading">Programs</h1>
+        <div class="programs-card-block">
+            {% for index in range(1, 10) %}
+                {% set logo = values['program_' + index|string + '_logo'] %}
+                {% set name = values['program_' + index|string + '_name'] %}
+                {% set description = values['program_' + index|string + '_desc'] %}
+                {% set url = values['program_' + index|string + '_url'] %}
+                {% if logo %}
+                        <a class="program-card" href="{{url}}">
+                                <div class="program-card-image">
+                                    <img src="{{ logo }}" alt="{{ name }}">
+                                </div>
+                                <div class="program-card-name">
+                                    <h2>{{name}}</h2>
+                                </div>
+                                <div class="program-card-description">
+                                    <p>{{description}}</p>
+                                </div>
+                                <div class="program-card-cta">
+                                    View More
+                                    <i class="ti ti-chevron-right"></i>
+                                </div>
+                        </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
