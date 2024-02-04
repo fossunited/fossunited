@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2023-07-01 23:55:20.934607",
@@ -8,9 +9,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "route",
-  "column_break_yozf",
+  "meta_info_section",
   "is_published",
+  "column_break_yozf",
+  "route",
   "navbar_controls_section",
   "show_speakers",
   "show_rsvp",
@@ -20,13 +22,14 @@
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
+  "chapter_name",
   "event_infomation_section",
   "must_attend",
   "event_name",
   "status",
   "event_type",
   "column_break_pua4",
-  "event_banner_image",
+  "banner_image",
   "event_location",
   "map_link",
   "tickets_section",
@@ -58,6 +61,7 @@
   "event_members_section",
   "event_members",
   "schedule_tab",
+  "schedule_section",
   "event_schedule"
  ],
  "fields": [
@@ -163,11 +167,6 @@
   {
    "fieldname": "column_break_tzza",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "event_banner_image",
-   "fieldtype": "Attach Image",
-   "label": "Event Banner Image"
   },
   {
    "fieldname": "event_information_section",
@@ -301,6 +300,27 @@
    "label": "Show Photos"
   },
   {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Event Banner Image"
+  },
+  {
+   "fieldname": "schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fetch_from": "chapter.chapter_name",
+   "fieldname": "chapter_name",
+   "fieldtype": "Data",
+   "label": "Chapter Name"
+  },
+  {
    "fieldname": "tickets_section",
    "fieldtype": "Section Break",
    "label": "Tickets"
@@ -355,7 +375,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-01-29 13:55:13.653570",
+ "modified": "2024-02-02 17:58:32.433444",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -373,6 +393,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "route": "events",

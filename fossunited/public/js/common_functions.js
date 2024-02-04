@@ -15,6 +15,11 @@ $(document).ready(function () {
 	frappe.render_user();
 
 	$(document).trigger("page-change");
+
+	// Onclick event for Event Cards
+	$(".event-card").click(function () {
+		window.location.pathname = "/events/" + $(this).data("docname");
+	});
 });
 
 

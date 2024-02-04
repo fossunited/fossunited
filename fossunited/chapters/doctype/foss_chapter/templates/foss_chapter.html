@@ -1,176 +1,96 @@
 {% extends "templates/foss_base.html" %}
 
 {% block page_content %}
-{% if chapter_type == 'City Chapter' %}
-<div class="hero-icon-container">
-    <div class="hero-page-icon">
-        {% include "public/icons/city_chapter_icon.svg" %}
-    </div>
-</div>
-{% else %}
-<div class="hero-icon-container">
-    <div class="hero-page-icon">
-        {% include "public/icons/foss_club_icon.svg" %}
-    </div>
-</div>
-{% endif %}
-<h1 class="page-title">
-    {{ doc.chapter_name }}
-</h1>
+    {{ header() }}
+    {{ render_about() }}
 
-<!-- Location and Social Media Links -->
-<div class="container-center">
-    <div class="location-social-flex">
-        <div class="location-container">
-            <div class="icon-regular">
-                {% include "public/icons/location-marker.svg" %}
-            </div>
-            <a class="text-md-rg" href="{{ doc.google_map_link }}" target="_blank">
-                {{ doc.city }}, {{ doc.country }}
-            </a>
-        </div>
-        {% if doc.email or doc.twitter or doc.facebook or doc.instagram or doc.linkedin or doc.mastodon %}
-        <div class="social-container">
-            {% if doc.email %}
-            <a href="mailto:{{ doc.email }}" target="_blank" class="social-icon">
-                    {% include "public/icons/email.svg" %}
-            </a>
-            {% endif %}
-            {% if doc.twitterx %}
-            <a href="{{ doc.twitterx }}" target="_blank" class="social-icon">
-                    {% include "public/icons/x.svg" %}
-            </a>
-            {% endif %}
-            {% if doc.facebook %}
-            <a href="{{ doc.facebook }}" target="_blank" class="social-icon">
-                    {% include "public/icons/facebook.svg" %}
-            </a>
-            {% endif %}
-            {% if doc.instagram %}
-            <a href="{{ doc.instagram }}" target="_blank" class="social-icon">
-                    {% include "public/icons/instagram.svg" %}
-            </a>
-            {% endif %}
-            {% if doc.linkedin %}
-            <a href="{{ doc.linkedin }}" target="_blank" class="social-icon">
-                    {% include "public/icons/linkedin.svg" %}
-            </a>
-            {% endif %}
-            {% if doc.mastodon %}
-            <a href="{{ doc.mastodon }}" target="_blank" class="social-icon">
-                    {% include "public/icons/mastodon.svg" %}
-            </a>
-            {% endif %}
-        </div>
-        {% endif %}
-    </div>
-</div>
+    {% if upcoming_events %}
+    {{ render_upcoming_events() }}
+    {% endif %}
 
-<!-- ToDo: Add options to edit/follow and become team member -->
+    {% if past_events %}
+    {{ render_past_events() }}
+    {% endif %}
 
-<!-- About Section -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("About") }}
-        </h3>
-        <p class="about-section">
-            {% if doc.about_chapter %}
-            {{ doc.about_chapter }}
-            {% else %}
-            {{ _("No information available") }}
-            {% endif %}
-        </p>
-    </div>
-</div>
+    {{ render_members() }}
+    <div class="my-5 py-5"></div>
+{% endblock %}
 
-<!-- Upcoming Events -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Upcoming Events") }}
-        </h3>
-        <div class="events-grid">
-            {% set upcoming_events = frappe.get_all("FOSS Chapter Events", fields=[ "event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter":doc.name, "status":["!=", "Cancelled"], "status":["!=", "Concluded"], "is_published": 1}) %}
-            {% if upcoming_events %}
-            {% for event in upcoming_events %}
-                {% if status=='Approved' or 'In Progress' %}
-                <a href="{{frappe.get_url()}}/{{event.route }}" class="event-container upcoming-event">
-                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail">
-                    <div class="event-container-info">
-                        <div class=" event-container-title">{{ event.event_name }}</div>
-                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
-                        <div class="event-container-date-location">
-                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
-                        </div>
-                    </div>
-                </a>
-                {% endif %}
-            {% endfor %}
-            {% endif %}
-        </div>
-        {% if not upcoming_events %}
-        <div class="no-events">
-            {{ _("No upcoming events") }}
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Past Events -->
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Past Events") }}
-        </h3>
-        <div class="events-grid">
-            {% set past_events = frappe.get_all("FOSS Chapter Events", fields=["event_banner_image", "event_name", "event_bio", "event_type", "status", "must_attend", "event_start_date", "event_end_date", "event_location", "route"], filters={"chapter":doc.name, "status":["=", "Concluded"]}) %}
-            {% if past_events %}
-            {% for event in past_events %}
-                <a href="{{frappe.get_url()}}/{{event.route }}" class="event-container past-event gray">
-                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail grayscale-image">
-                    <div class="event-container-info">
-                        <div class=" event-container-title">{{ event.event_name }}</div>
-                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
-                        <div class="event-container-date-location">
-                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
-                        </div>
-                    </div>
-                </a>
-            {% endfor %}
-            {% endif %}
-        </div>
-        {% if not past_events %}
-        <div class="no-events">
-            {{ _("No past events") }}
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Team -->
-{% if doc.chapter_members %}
-<div class="container-center">
-    <div class="base-container">
-        <h3 class="subtitle">
-            {{ _("Team") }}
-        </h3>
-        <div class="team-grid">
-            {% for member in doc.chapter_members %}
-                <div class="person-container">
-                    {{ member.email | get_avatar }}
-                    <div class="flex-column align-items-baseline   text-base semi-bold" style="color: #000">
-                        {{ member.full_name }}
-                        <span class="text-sm">
-                            {{ member.role  }}
-                        </span>
-                    </div>
+{% macro header() %}
+    <div class="container header-section-parent">
+        <div class="header-section">
+            <img class="foss-banner-image header--banner" src="{{ doc.banner_image or default_banner}}" alt="Banner Image">
+            <div class="header--img-title-cta-section">
+                <div class="header--img-title">
+                    <img src="{{ profile_img_src }}" alt="{{ doc.chapter_type }} Logo" class="header-profile-image ml-lg-6">
+                    <h1 class="pt-2 header--title {% if doc.chapter_type == 'City Community' %} city-chapter-heading {% else %} chapter-heading {% endif %}">{{ doc.chapter_name }}</h1>
                 </div>
+                <!-- <div class="header--cta-section">
+                    <button class="primary-button">
+                        <i class="ti ti-user-plus"></i> Follow
+                    </button>
+                </div> -->
+            </div>
+        </div>
+        <div class="header-section--socials">
+            {% for (k,v) in social_links.items() %}
+                <a href="{{v}}"><img src="https://cdn.simpleicons.org/{{k}}" alt="{{v}}"/></a>
             {% endfor %}
         </div>
     </div>
-</div>
-{% endif %}
+{% endmacro %}
 
+{% macro render_about() %}
+    <div class="container my-5">
+        <h3 class="subtitle">About</h3>
+        <div class="description-block">
+            {{ doc.about_chapter or 'Nothing in Description'}}
+        </div>
+    </div>
+{% endmacro %}
 
+{% macro render_upcoming_events() %}
+    {% from 'fossunited/templates/macros/event_card.html' import event_card %}
+    <div class="container my-5">
+        <h3 class="subtitle">Upcoming Events</h3>
+        <div class="events-grid-4">
+            {% for event in upcoming_events %}
+                {{ event_card(event) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_past_events() %}
+    {% from 'fossunited/templates/macros/event_card.html' import event_card %}
+    <div class="container my-5">
+        <h3 class="subtitle">Past Events</h3>
+        <div class="events-grid-4">
+            {% for event in past_events %}
+                {{ event_card(event) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_members() %}
+    {% from 'fossunited/templates/macros/member_card.html' import member_card %}
+    <div class="container my-5">
+        <h3 class="subtitle">Organisers</h3>
+        <div class="members-grid-6">
+            {% for member in members %}
+                {{ member_card(member) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% block page_script %}
+    <script>
+        $(document).ready(function(){
+            if(window.innerWidth < 425 && '{{ doc.chapter_type }}' == 'City Community'){
+                $('.header--banner').css('object-position', 'right');
+            }
+        });
+    </script>
 {% endblock %}

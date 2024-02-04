@@ -1,0 +1,27 @@
+{% macro event_card(event) %}
+<div class="event-card" data-docname="{{ event.name }}">
+    <img class="event-card--banner" src="{{ event.banner_image }}" alt="Event Banner"/>
+    <div class="event-card-contents">
+        <div class="event-card--date-section">
+            <div class="event-card--date">
+                {{ event.event_start_date.strftime("%d %b %Y") }}
+            </div>
+            {% if event.must_attend %}
+                <div class="event-card--must-attend">
+                    <i class="ti ti-star-filled"></i>
+                    {{ _("Must Attend") }}
+                </div>
+            {% endif %}
+        </div>
+        <div class="event-card--title">
+            {{ event.event_name }}
+        </div>
+        <div class="event-card--location-section">
+            <div class="event-card--location">
+                <i class="ti ti-map-pin"></i>
+                <span>{{ event.event_location or "To be Announced" }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
