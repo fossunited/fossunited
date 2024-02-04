@@ -1,0 +1,172 @@
+<style>
+    .contact-section{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: var(--Gray-200, #EAECF0);
+    }
+
+    .contact-container{
+        display: flex;
+        padding:3.75rem 15.625rem;
+        gap: 6.25rem;
+    }
+
+    .newsletter-block{
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.25rem;
+        width: 50%;
+    }
+
+    .contacts-block {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.94rem;
+        width: 50%;
+    }
+
+    .newsletter-details{
+        display: flex;
+        gap: 0.94rem;
+        flex-direction: column;
+    }
+
+    .contact-container h3{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.09rem;
+    }
+
+    .contact-container p{
+        margin:0;
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.4rem */
+        letter-spacing: -0.02rem;
+
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.6rem 1.5rem;
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+    }
+
+    .btn-primary a{
+        color: #FFF;
+        text-decoration: none;
+    }
+
+    .contacts-block a{
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.4rem */
+        letter-spacing: -0.02rem;
+        text-decoration: underline;
+    }
+    .contacts-block a:hover{
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    .vertical-separator{
+        border-left: 0.07rem solid var(--Gray-500, #667085);
+        height: 11.25rem;
+
+    }
+
+    .horizontal-separator{
+        width: 100%;
+        background-color: var(--Gray-500, #667085);
+        display: none;
+    }
+
+
+    @media screen and (max-width: 768px) {
+
+
+        .contact-container{
+            width: 100%;
+            padding: 3.75rem 2.5rem;
+            flex-direction: column;
+            gap: 1.88rem;
+
+        }
+
+        .newsletter-block{
+            width: 100%;
+        }
+
+        .contacts-block {
+            width: 100%;
+        }
+
+        .vertical-separator{
+            display: none;
+
+        }
+        .horizontal-separator{
+            display: block;
+        }
+    }
+
+
+</style>
+
+<div class="contact-section">
+
+    <!-- <div class = "container"> -->
+    <div class="contact-container container">
+
+        <div class="newsletter-block">
+            <div class="newsletter-details">
+                <h3>Newsletter</h3>
+                <p>Monthly digest of the latest news and updates about FOSS grants, events and mon school.
+                    Subscribe to stay updated and get news from us directly in your inbox.
+                </p>
+            </div>
+
+            <button class="btn-primary">
+                <a href="{{newsletter_subscribe_link}}">Subscribe</a>
+            </button>
+
+        </div>
+
+        <div class="vertical-separator"></div>
+
+        <hr class="horizontal-separator">
+
+        <div class="contacts-block">
+
+            <h3>Get in Touch</h3>
+            <p>
+                Write to us at <a href="mailto:{{email_1}}">{{email_1}}</a> or send us a message on the forum.<br/><br/>
+
+                For event sponsorship, write to us at <a href="mailto:{{email_2}}">{{email_2}}</a>. <br/><br/>
+
+                Join our <a href="{{contact_url}}">Telegram Community</a>. <br/><br/>
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>

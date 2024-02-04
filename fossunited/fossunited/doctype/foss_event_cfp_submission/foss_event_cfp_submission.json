@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_guest_to_view": 1,
  "allow_rename": 1,
  "creation": "2023-09-17 14:21:01.848016",
  "default_view": "List",
@@ -16,6 +15,7 @@
   "linked_cfp",
   "event",
   "event_name",
+  "event_date",
   "submitted_by",
   "personal_information_section",
   "full_name",
@@ -62,8 +62,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Submitted By",
-   "options": "User",
-   "reqd": 1
+   "options": "User"
   },
   {
    "fetch_from": "linked_cfp.event_name",
@@ -80,7 +79,6 @@
   },
   {
    "fetch_from": "submitted_by.email",
-   "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email"
@@ -188,8 +186,7 @@
   },
   {
    "fieldname": "section_break_ilij",
-   "fieldtype": "Section Break",
-   "label": "Custom Answers"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "custom_answers",
@@ -241,13 +238,19 @@
    "fieldname": "meta_info_section",
    "fieldtype": "Section Break",
    "label": "Meta Info"
+  },
+  {
+   "fetch_from": "linked_cfp.event_date",
+   "fieldname": "event_date",
+   "fieldtype": "Date",
+   "label": "Event Date"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-18 16:46:22.680718",
+ "modified": "2024-01-03 15:03:04.726911",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -271,7 +274,7 @@
  "states": [
   {
    "color": "Light Blue",
-   "title": "Open"
+   "title": "Review Pending"
   },
   {
    "color": "Red",
@@ -279,7 +282,7 @@
   },
   {
    "color": "Green",
-   "title": "Confirmed"
+   "title": "Approved"
   }
  ],
  "track_changes": 1,

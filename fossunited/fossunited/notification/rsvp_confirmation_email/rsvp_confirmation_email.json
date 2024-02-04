@@ -10,8 +10,9 @@
  "event": "New",
  "idx": 0,
  "is_standard": 1,
- "message": "<h2>Thank you for RSVPing!!</h2>\n\n<p>\nWe have recieved your RSVP for {{ doc.event_name }}!<br>\nStay tuned for updates regarding it.\n</p>\n\n<p>\nRegards,<br>\nTeam {{ doc.chapter }}\n</p>",
- "modified": "2023-09-17 12:38:11.523043",
+ "message": "<html>\n\n<body>\n\n    <img src=\"/assets/fossunited/images/email-headers/rsvp.png\" alt=\"FOSS RSVP Header\" style=\"height: 160px;\">\n\n    <div>\n        <h3 style=\"font-size:1.5rem;\">Greetings!</h3>\n\n        <p>Your RSVP to attend {{ doc.event_name }} is confirmed</b>.<br/> <br/>\n\n            Join FOSS United\n            <a href=\"https://forum.fossunited.org/\" style=\"color: #39C572;\">Forum</a>\n            and our <a href=\"https://t.me/fossunited\" style=\"color: #39C572;\">Telegram group</a> for discussions.<br/> <br/>\n\n            Do reply to this email in case of any queries.<br/> <br/>\n\n            Regards,<br/> <br/>\n            Team {{ doc.event_name }}\n        </p>\n    </div>\n\n</body>\n\n<style>\n    body{\n        font-family: 'Inter', sans-serif;\n        width:650px;\n        margin:0 auto;\n        text-align: justify;\n    }\n\n    div{\n        padding: 1rem 3.5rem 0rem;\n    }\n\n    p{\n        font-size: 1rem;\n        font-style: normal;\n        color: #1a1a1a;\n        line-height: 135%;\n    }\n\n    a{\n        text-decoration: none;\n    }\n</style>\n\n</html>\n",
+ "message_type": "HTML",
+ "modified": "2024-01-03 14:51:16.828576",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "RSVP Confirmation Email",
@@ -23,5 +24,5 @@
  ],
  "send_system_notification": 0,
  "send_to_all_assignees": 0,
- "subject": "Thank you for confirming you attendance! See you at {{doc.event_name}}"
+ "subject": "Welcome to {{doc.event_name}}"
 }

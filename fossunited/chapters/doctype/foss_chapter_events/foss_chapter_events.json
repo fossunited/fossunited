@@ -32,6 +32,13 @@
   "banner_image",
   "event_location",
   "map_link",
+  "tickets_section",
+  "paid_event",
+  "general_ticket_price",
+  "student_ticket_price",
+  "column_break_udae",
+  "max_tickets",
+  "tickets_sold",
   "cta_section_section",
   "primary_button_label",
   "primary_button_url",
@@ -293,6 +300,7 @@
    "label": "Show Photos"
   },
   {
+]
    "fieldname": "meta_info_section",
    "fieldtype": "Section Break",
    "label": "Meta Info"
@@ -312,6 +320,45 @@
    "fieldname": "chapter_name",
    "fieldtype": "Data",
    "label": "Chapter Name"
+  },
+  {
+   "fieldname": "tickets_section",
+   "fieldtype": "Section Break",
+   "label": "Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "general_ticket_price",
+   "fieldtype": "Currency",
+   "label": "General Ticket Price"
+  },
+  {
+   "fieldname": "column_break_udae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "student_ticket_price",
+   "fieldtype": "Currency",
+   "label": "Student Ticket Price"
+  },
+  {
+   "default": "\n",
+   "fieldname": "tickets_sold",
+   "fieldtype": "Int",
+   "label": "Tickets Sold"
+  },
+  {
+   "default": "0",
+   "fieldname": "max_tickets",
+   "fieldtype": "Int",
+   "label": "Maximum Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid_event",
+   "fieldtype": "Check",
+   "label": "Paid Event "
   }
  ],
  "has_web_view": 1,

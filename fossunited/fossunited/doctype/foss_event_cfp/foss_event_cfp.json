@@ -1,148 +1,148 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "hash",
- "creation": "2023-07-10 01:05:08.149329",
- "default_view": "List",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "route",
-  "column_break_puww",
-  "is_published",
-  "allow_cfp_edit",
-  "anonymise_proposals",
-  "event_information_section",
-  "event",
-  "event_name",
-  "column_break_je1w",
-  "chapter",
-  "cfp_form_description_section",
-  "cfp_form_description",
-  "custom_questions_section",
-  "cfp_custom_questions",
-  "cfp_reviewers_tab",
-  "cfp_reviewers"
- ],
- "fields": [
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route"
-  },
-  {
-   "fieldname": "column_break_puww",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_published",
-   "fieldtype": "Check",
-   "label": "Is Published?"
-  },
-  {
-   "default": "0",
-   "fieldname": "allow_cfp_edit",
-   "fieldtype": "Check",
-   "label": "Allow CFP Edit?"
-  },
-  {
-   "fieldname": "event_information_section",
-   "fieldtype": "Section Break",
-   "label": "Event Information"
-  },
-  {
-   "fieldname": "event",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Event",
-   "options": "FOSS Chapter Events",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "event.event_name",
-   "fieldname": "event_name",
-   "fieldtype": "Data",
-   "label": "Event Name"
-  },
-  {
-   "fieldname": "column_break_je1w",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "event.chapter",
-   "fieldname": "chapter",
-   "fieldtype": "Data",
-   "label": "Chapter"
-  },
-  {
-   "fieldname": "cfp_form_description_section",
-   "fieldtype": "Section Break",
-   "label": "CFP Form Description"
-  },
-  {
-   "fieldname": "cfp_form_description",
-   "fieldtype": "Text Editor",
-   "label": "CFP Form Description"
-  },
-  {
-   "fieldname": "custom_questions_section",
-   "fieldtype": "Section Break",
-   "label": "Custom Questions"
-  },
-  {
-   "fieldname": "cfp_custom_questions",
-   "fieldtype": "Table",
-   "label": "CFP Custom Questions",
-   "options": "FOSS Custom Questions"
-  },
-  {
-   "fieldname": "cfp_reviewers_tab",
-   "fieldtype": "Tab Break",
-   "label": "CFP Reviewers"
-  },
-  {
-   "fieldname": "cfp_reviewers",
-   "fieldtype": "Table",
-   "label": "CFP Reviewers",
-   "options": "FOSS Event CFP Reviewer List"
-  },
-  {
-   "default": "1",
-   "description": "The CFPs will not show the name of the proposer.",
-   "fieldname": "anonymise_proposals",
-   "fieldtype": "Check",
-   "label": "Anonymise Proposals?"
-  }
- ],
- "has_web_view": 1,
- "index_web_pages_for_search": 1,
- "is_published_field": "is_published",
- "links": [],
- "modified": "2023-12-18 16:47:49.896212",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "FOSS Event CFP",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "route": "cfp/new",
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "track_changes": 1
-}
+    "actions": [],
+    "allow_rename": 1,
+    "autoname": "hash",
+    "creation": "2023-07-10 01:05:08.149329",
+    "default_view": "List",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+     "route",
+     "column_break_puww",
+     "is_published",
+     "allow_cfp_edit",
+     "anonymise_proposals",
+     "event_information_section",
+     "event",
+     "event_name",
+     "column_break_je1w",
+     "chapter",
+     "cfp_form_description_section",
+     "cfp_form_description",
+     "custom_questions_section",
+     "cfp_custom_questions",
+     "cfp_reviewers_tab",
+     "cfp_reviewers"
+    ],
+    "fields": [
+     {
+      "fieldname": "route",
+      "fieldtype": "Data",
+      "label": "Route"
+     },
+     {
+      "fieldname": "column_break_puww",
+      "fieldtype": "Column Break"
+     },
+     {
+      "default": "0",
+      "fieldname": "is_published",
+      "fieldtype": "Check",
+      "label": "Is Published?"
+     },
+     {
+      "default": "0",
+      "fieldname": "allow_cfp_edit",
+      "fieldtype": "Check",
+      "label": "Allow CFP Edit?"
+     },
+     {
+      "fieldname": "event_information_section",
+      "fieldtype": "Section Break",
+      "label": "Event Information"
+     },
+     {
+      "fieldname": "event",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Event",
+      "options": "FOSS Chapter Events",
+      "reqd": 1
+     },
+     {
+      "fetch_from": "event.event_name",
+      "fieldname": "event_name",
+      "fieldtype": "Data",
+      "label": "Event Name"
+     },
+     {
+      "fieldname": "column_break_je1w",
+      "fieldtype": "Column Break"
+     },
+     {
+      "fetch_from": "event.chapter",
+      "fieldname": "chapter",
+      "fieldtype": "Data",
+      "label": "Chapter"
+     },
+     {
+      "fieldname": "cfp_form_description_section",
+      "fieldtype": "Section Break",
+      "label": "CFP Form Description"
+     },
+     {
+      "fieldname": "cfp_form_description",
+      "fieldtype": "Text Editor",
+      "label": "CFP Form Description"
+     },
+     {
+      "fieldname": "custom_questions_section",
+      "fieldtype": "Section Break",
+      "label": "Custom Questions"
+     },
+     {
+      "fieldname": "cfp_custom_questions",
+      "fieldtype": "Table",
+      "label": "CFP Custom Questions",
+      "options": "FOSS Custom Questions"
+     },
+     {
+      "fieldname": "cfp_reviewers_tab",
+      "fieldtype": "Tab Break",
+      "label": "CFP Reviewers"
+     },
+     {
+      "fieldname": "cfp_reviewers",
+      "fieldtype": "Table",
+      "label": "CFP Reviewers",
+      "options": "FOSS Event CFP Reviewer List"
+     },
+     {
+      "default": "1",
+      "description": "The CFPs will not show the name of the proposer.",
+      "fieldname": "anonymise_proposals",
+      "fieldtype": "Check",
+      "label": "Anonymise Proposals?"
+     }
+    ],
+    "has_web_view": 1,
+    "index_web_pages_for_search": 1,
+    "is_published_field": "is_published",
+    "links": [],
+    "modified": "2023-12-18 16:47:49.896212",
+    "modified_by": "Administrator",
+    "module": "FOSSUnited",
+    "name": "FOSS Event CFP",
+    "naming_rule": "Random",
+    "owner": "Administrator",
+    "permissions": [
+     {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+     }
+    ],
+    "route": "cfp/new",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": [],
+    "track_changes": 1
+   }

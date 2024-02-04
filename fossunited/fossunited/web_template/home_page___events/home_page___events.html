@@ -1,0 +1,360 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
+<style>
+    .events-section{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .events-container{
+        display: flex;
+        padding: 0 10.625rem;
+        align-items: flex-start;
+        gap: 7rem;
+        flex-direction: column;
+    }
+
+    .events-subsection{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 1.875rem;
+        width: 100%;
+    }
+
+    .events-container h1{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .events-block{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        justify-content: space-around;
+        gap: 2.5rem;
+    }
+
+    .flagship-event-card{
+        padding: 1.25rem;
+        display: grid;
+        align-items: flex-start;
+    }
+
+    .flagship-event-card:hover{
+        text-decoration: none;
+        border-radius: 0.5rem;
+        background: #FFF;
+        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
+    }
+    .flagship-event-card:hover > .flagship-card-cta{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+    }
+
+    .flagship-card-image{
+        height: 1.75rem;
+    }
+
+    .flagship-card-heading{
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.06rem;
+        margin-top: 1.56rem;
+    }
+
+    .flagship-card-desc{
+
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 140%; /* 1.4rem */
+        letter-spacing: -0.02rem;
+    }
+
+    .flagship-card-cta{
+        color: #1A1A1A;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.045rem;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+
+    }
+
+    .upcoming-events-header{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+    }
+
+    .view-events-link{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 550;
+        line-height: 100%; /* 0.875rem */
+        letter-spacing: -0.035rem;
+    }
+
+    .view-events-link:hover{
+        text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+    }
+
+    .upcoming-event-card{
+        padding: 1rem;
+        display: grid;
+        align-items: flex-start;
+        border-radius: 0.5rem;
+        border: 0.5px solid var(--Foundation-Open-Gray-open-gray-100, #B9B9B9);
+        background: #FFF;
+        gap: 0.94rem;
+    }
+
+    .upcoming-event-card > h2{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 1.25rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.125rem */
+        letter-spacing: -0.045rem;
+        padding-bottom: 1.5rem;
+    }
+
+    .upcoming-event-tags-block{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .event-date{
+        display: flex;
+        padding: 0.25rem 0.5rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+        border-radius: 0.5rem;
+        background: #F3F3F3;
+    }
+
+    .event-date > p{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.035rem;
+    }
+
+    .is-must-attend{
+        display: flex;
+        padding: 0.25rem 0.5rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.31rem;
+        border-radius: 0.5rem;
+        background: var(--Foundation-FOSS-Mint-foss-mint-100, #B2E9C8);
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    .is-must-attend > p{
+        margin: 0;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.035rem;
+    }
+
+    .upcoming-event-card-footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .event-location{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.31rem;
+        color: var(--Foundation-Open-Gray-open-gray-200, #989898);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 115%; /* 1.00625rem */
+        letter-spacing: -0.035rem;
+    }
+
+    .event-location:hover{
+        text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+
+    }
+
+    .event-details{
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray-800, #383838);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 115%; /* 1.00625rem */
+        letter-spacing: -0.035rem;
+    }
+
+    .event-details:hover{
+        text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+    }
+
+
+    @media screen and (max-width: 768px) {
+
+        .events-container{
+            padding: 0 6rem;
+        }
+
+        .events-card-block{
+            grid-template-columns: 1fr;
+
+        }
+
+        .events-block{
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            width: 100%
+        }
+        .events-subsection h1{
+            font-size: 1.5rem;
+        }
+
+        .events-block h2{
+            font-size: 1.2rem;
+        }
+
+        .flagship-event-card{
+            border-radius: 0.5rem;
+            border: 0.5px solid var(--Gray-200, #EAECF0)
+        }
+
+        .flagship-card-cta{
+            font-size: 0.875rem;
+        }
+    }
+
+
+
+</style>
+
+
+
+<div class="events-section">
+    <div class="events-container container">
+
+        <!-- Flagship Events Section -->
+        <div class="events-subsection">
+            <h1>Flagship Events</h1>
+
+            <div class="events-block">
+
+                <a class="flagship-event-card" href="{{indiafoss_link}}">
+                    <img class="flagship-card-image" src="assets/fossunited/icons/indiafoss-icon.svg" alt="IndiaFOSS">
+                    <h2 class="flagship-card-heading">IndiaFOSS</h2>
+                    <p class="flagship-card-desc">IndiaFOSS is an annual FOSS conference,
+                        organised with passion and commitment by the FOSS United community. </p>
+
+                    <p class="flagship-card-cta">
+                        View More
+                        <i class="ti ti-chevron-right"></i>
+                    </p>
+
+                </a>
+
+                <a class="flagship-event-card" href="{{fosshack_link}}">
+
+                    <img class="flagship-card-image" src="assets/fossunited/icons/fosshack-icon.svg" alt="IndiaFOSS">
+                    <h2 class="flagship-card-heading">FOSS Hack</h2>
+                    <p class="flagship-card-desc">FOSS Hack is our flagship hackathon to promote FOSS by bringing enthusiasts
+                        together to build or extend FOSS projects.</p>
+
+                        <p class="flagship-card-cta" href="">
+                            View More
+                            <i class="ti ti-chevron-right"></i>
+                        </p>
+
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Upcoming Events Section -->
+
+        <div class="events-subsection">
+
+            <div class="upcoming-events-header">
+                <h1>Upcoming Events</h1>
+                <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
+        </div>
+
+        <div class="events-block">
+            {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "route", "must_attend", "event_location", "map_link", "event_start_date"], filters={"status": "Approved"}, page_length=3, order_by='event_start_date') %}
+            {% for event in events %}
+
+                <div class="upcoming-event-card">
+                    <div class="upcoming-event-tags-block">
+                        <div class="event-date">
+                            <p>{{ event.event_start_date.strftime("%d %b %Y") }}</p>
+                        </div>
+
+                        {% if event.must_attend == 1 %}
+                            <div class="is-must-attend">
+                                <i class="ti ti-star-filled"></i>
+                                <p>Must Attend</p>
+                            </div>
+                        {% endif %}
+
+                    </div>
+
+                    <h2>{{ event.event_name }}</h2>
+
+                    <div class="upcoming-event-card-footer">
+                        <a href="{{event.map_link}}" class="event-location">
+                            <i class="ti ti-map-pin"></i>{{ event.event_location }}
+                        </a>
+
+                        <a href="/{{event.route}}" class="event-details">
+                            View Details
+                            <i class="ti ti-chevron-right"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+
+        </div>
+
+
+
+    </div>
+</div>

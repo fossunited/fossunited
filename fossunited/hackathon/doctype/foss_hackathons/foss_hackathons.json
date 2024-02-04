@@ -41,7 +41,11 @@
   "discord",
   "hackathon_sponsors_section",
   "sponsor_list",
-  "community_partners"
+  "community_partners",
+  "team_set_up_tab",
+  "team_setup_details_section",
+  "is_team_mandatory",
+  "max_team_members"
  ],
  "fields": [
   {
@@ -249,6 +253,30 @@
    "fieldtype": "Time",
    "label": "Hackathon End Time",
    "reqd": 1
+  },
+  {
+   "fieldname": "team_set_up_tab",
+   "fieldtype": "Tab Break",
+   "label": "Team Set Up"
+  },
+  {
+   "fieldname": "team_setup_details_section",
+   "fieldtype": "Section Break",
+   "label": "Team Setup Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_team_mandatory",
+   "fieldtype": "Check",
+   "label": "Is Team Mandatory"
+  },
+  {
+   "default": "2",
+   "depends_on": "eval:doc.is_team_mandatory == 1;",
+   "fieldname": "max_team_members",
+   "fieldtype": "Int",
+   "label": "Max Team Members",
+   "mandatory_depends_on": "eval:doc.is_team_mandatory == 1;"
   }
  ],
  "has_web_view": 1,
@@ -257,18 +285,18 @@
  "links": [
   {
    "link_doctype": "FOSS Hackathon Participant",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   },
   {
    "link_doctype": "FOSS Hackathon Teams",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   },
   {
    "link_doctype": "FOSS Hackathon Project",
-   "link_fieldname": "team_name"
+   "link_fieldname": "hackathon_name"
   }
  ],
- "modified": "2023-12-13 23:19:56.655155",
+ "modified": "2023-12-18 18:14:40.023299",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",

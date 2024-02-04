@@ -8,7 +8,6 @@
   "participant_details_section",
   "hackathon_name",
   "foss_username",
-  "status",
   "participant_name",
   "participant_email",
   "team_name",
@@ -35,14 +34,6 @@
    "options": "FOSS User Profile"
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Pending\nAccepted\nRejected",
-   "reqd": 1
-  },
-  {
    "fetch_from": "foss_username.full_name",
    "fieldname": "participant_name",
    "fieldtype": "Data",
@@ -58,7 +49,7 @@
   {
    "fieldname": "team_name",
    "fieldtype": "Link",
-   "label": "Team Name",
+   "label": "Hackathon Team",
    "options": "FOSS Hackathon Teams"
   },
   {
@@ -70,7 +61,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-13 19:13:09.437094",
+ "modified": "2023-12-18 18:29:39.523963",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Participant",

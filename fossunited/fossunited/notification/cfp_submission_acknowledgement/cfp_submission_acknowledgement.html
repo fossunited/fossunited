@@ -1,0 +1,67 @@
+<html>
+
+<body>
+
+<img src="/assets/fossunited/images/email-headers/cfp.png" alt="FOSS Meetup Header" style="height: 160px;">
+
+<div>
+<h3 style="font-size:1.5rem;">Greetings!</h3>
+
+<p>Your proposal for {{ doc.event_name }} has been successfully submitted. </p>
+
+<p class="cfpmail-p2">Summary of Proposal</p>
+<p class="cfpmail-p3">{{ doc.talk_title }}</p>
+<a href="{{ doc.talk_reference }}" style="font-size: 1.1rem; font-weight: 550; color:#1a1a1a;">Reference Link↗</a>
+<p class="cfpmail-p3" style="font-size: 1.1rem; color:#1a1a1a">Abstract</p>
+
+<p>
+    {{ doc.talk_description | truncate(250, False, '...', 0) }} <a href="#" style="color: #39C572;">Read More</a>. <br/> <br/>
+    You will know the status of your proposal via an update, a few days after the Call for Proposals close.<br/> <br/>
+    Do reply to this email in case of any queries.<br/><br/>
+
+    Regards,<br/> <br/>
+    Team {{ doc.event_name }}
+</p>
+</div>
+
+</body>
+
+<style>
+    body{
+        font-family: 'Inter', sans-serif;
+        width:650px;
+        margin:0 auto;
+        text-align: justify;
+    }
+
+    div{
+        padding: 1rem 3.5rem 0rem;
+    }
+
+    p{
+        font-size: 1rem;
+        font-style: normal;
+        color: #1a1a1a;
+        line-height: 135%;
+    }
+
+    a{
+        text-decoration: none;
+    }
+
+    .cfpmail-p2{
+        font-size: 1.2rem;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+    .cfpmail-p3{
+        font-size: 1.15rem;
+        font-style: normal;
+        font-weight: bold;
+        color: #39C572;
+
+    }
+</style>
+
+</html>
