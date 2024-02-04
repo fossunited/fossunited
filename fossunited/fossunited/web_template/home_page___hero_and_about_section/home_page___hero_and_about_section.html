@@ -65,15 +65,17 @@
     }
 
     .button-category{
-        display: flex;
+        display: grid;
         gap: 2rem;
+        grid-template-columns: 1fr 1fr;
     }
 
     .btn-primary{
         background: #08B74F;
         border-radius: 0.5rem;
         border: none;
-        padding: 0.8rem 1.5rem
+        padding: 0.8rem 1.2rem;
+        font-weight: 450;
 
     }
 
@@ -88,10 +90,11 @@
     }
 
     .btn-secondary{
-        padding: 0.8rem 1.5rem;
+        padding: 0.8rem 1.2rem;
         border-radius: 0.5rem;
         border: 1px solid var(--green-400, #B6DEC5);
         background: var(--neutral-white, #FFF);
+        font-weight: 450;
     }
 
     .btn-secondary:active, .btn-secondary:hover{
@@ -127,7 +130,6 @@
         max-width: 58.75rem;
         min-width: 21.9375rem;
         flex-direction: column;
-        flex-shrink: 0;
         border-radius: 0.5rem;
         border: 0.379px solid var(--Gray-300, #D0D5DD);
         background: #FFF;
@@ -244,8 +246,7 @@
         }
 
         .button-category{
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 1fr;
             gap: 1.5rem;
         }
 
@@ -299,7 +300,7 @@
 
             <div class="button-category">
                 <button class="btn-primary">
-                    <a href="{{priamry_cta_url}}">{{primary_cta}}</a>
+                    <a href="{{primary_cta_url}}">{{primary_cta}}</a>
                 </button>
 
                 <button class="btn-secondary">
