@@ -43,8 +43,8 @@
     }
 
     .footer-link-category{
-        display:flex;
-        gap: 2rem;
+        display: flex;
+        gap: 2.5rem
     }
 
     .footer_parent_label{
@@ -67,8 +67,12 @@
 
     .footer-category-items{
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         gap: 0.75rem;
+    }
+
+    .footer-category-items a{
+        color: #98a2b3;
     }
 
     .address-element p{
@@ -90,7 +94,13 @@
 
         .footer-element-items{
             grid-template-columns: 1fr;
-            gap: 1.25rem
+            gap: 2rem
+        }
+
+        .footer-link-category{
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
         }
 
         .footer-element-logo > img{
@@ -101,6 +111,7 @@
             grid-template-columns: 1fr;
             gap: 0.75rem;
         }
+
 
         .address-element p{
             text-align:left;
@@ -127,7 +138,7 @@
                 <div class="footer-link-category">
 
                     {% for item in footer_items %}
-                        {% if not item.parent_label %}
+                        {% if not item.parent_label and item.label != "Social Media"%}
                             <div class="footer_parent_label">
 
                                 {% if item.url%}
