@@ -27,7 +27,7 @@
   "google_map_link",
   "socials_section",
   "email",
-  "twitterx",
+  "x",
   "linkedin",
   "column_break_fifp",
   "facebook",
@@ -171,12 +171,6 @@
    "options": "URL"
   },
   {
-   "fieldname": "twitterx",
-   "fieldtype": "Data",
-   "label": "X",
-   "options": "URL"
-  },
-  {
    "fieldname": "mastodon",
    "fieldtype": "Data",
    "label": "Mastodon",
@@ -206,6 +200,12 @@
    "fieldname": "about_chapter_section",
    "fieldtype": "Section Break",
    "label": "About Chapter"
+  },
+  {
+   "fieldname": "x",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
@@ -217,7 +217,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-01-31 16:25:13.542065",
+ "modified": "2024-02-03 16:45:46.007051",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
