@@ -300,7 +300,6 @@
    "label": "Show Photos"
   },
   {
-]
    "fieldname": "meta_info_section",
    "fieldtype": "Section Break",
    "label": "Meta Info"
