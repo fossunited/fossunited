@@ -1,24 +1,32 @@
 {
  "__islocal": true,
  "__unsaved": 1,
- "creation": "2023-08-11 22:27:16.194594",
+ "creation": "2024-02-05 05:26:51.904584",
  "docstatus": 0,
  "doctype": "Web Template",
  "fields": [
   {
    "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "heading",
+   "fieldtype": "Data",
+   "label": "Heading",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
    "fieldname": "title_1",
    "fieldtype": "Data",
-   "label": "title 1",
+   "label": "Title 1",
    "reqd": 0
   },
   {
    "__islocal": 1,
    "__unsaved": 1,
    "fieldname": "text_1",
-   "fieldtype": "Text",
-   "label": "text 1",
+   "fieldtype": "Data",
+   "label": "Text 1",
    "reqd": 0
   },
   {
@@ -26,15 +34,15 @@
    "__unsaved": 1,
    "fieldname": "title_2",
    "fieldtype": "Data",
-   "label": "title 2",
+   "label": "Title 2",
    "reqd": 0
   },
   {
    "__islocal": 1,
    "__unsaved": 1,
    "fieldname": "text_2",
-   "fieldtype": "Text",
-   "label": "text 2",
+   "fieldtype": "Data",
+   "label": "Text 2",
    "reqd": 0
   },
   {
@@ -42,15 +50,15 @@
    "__unsaved": 1,
    "fieldname": "title_3",
    "fieldtype": "Data",
-   "label": "title 3",
+   "label": "Title 3",
    "reqd": 0
   },
   {
    "__islocal": 1,
    "__unsaved": 1,
    "fieldname": "text_3",
-   "fieldtype": "Text",
-   "label": "text 3",
+   "fieldtype": "Data",
+   "label": "Text 3",
    "reqd": 0
   },
   {
@@ -58,55 +66,23 @@
    "__unsaved": 1,
    "fieldname": "title_4",
    "fieldtype": "Data",
-   "label": "title 4",
+   "label": "Title 4",
    "reqd": 0
   },
   {
    "__islocal": 1,
    "__unsaved": 1,
    "fieldname": "text_4",
-   "fieldtype": "Text",
-   "label": "text 4",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "title_5",
    "fieldtype": "Data",
-   "label": "title 5",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "text_5",
-   "fieldtype": "Text",
-   "label": "text 5",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "title_6",
-   "fieldtype": "Data",
-   "label": "title 6",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "text_6",
-   "fieldtype": "Text",
-   "label": "text 6",
+   "label": "Text 4",
    "reqd": 0
   }
  ],
  "idx": 0,
- "modified": "2023-08-11 22:27:16.194594",
+ "modified": "2024-02-05 05:26:51.904584",
  "modified_by": "Administrator",
  "module": "Chapters",
- "name": "FOSS Club - Benefits for Lead",
+ "name": "FOSS Community - Programs",
  "owner": "Administrator",
  "standard": 1,
  "template": "",
