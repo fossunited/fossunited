@@ -5,9 +5,15 @@
  "doctype": "Web Template",
  "fields": [
   {
-   "fieldname": "sub_text",
+   "fieldname": "subtext",
    "fieldtype": "Small Text",
    "label": "Subtext",
+   "reqd": 0
+  },
+  {
+   "fieldname": "subheading",
+   "fieldtype": "Data",
+   "label": "Subheading",
    "reqd": 0
   },
   {
@@ -31,7 +37,7 @@
   }
  ],
  "idx": 0,
- "modified": "2024-02-05 05:07:08.090667",
+ "modified": "2024-02-05 20:29:14.975113",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Clubs Home Page",

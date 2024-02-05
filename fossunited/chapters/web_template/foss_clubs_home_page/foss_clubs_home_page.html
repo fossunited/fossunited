@@ -1,0 +1,175 @@
+<style>
+
+    section{
+            background-image: url(assets/fossunited/images/chapter/fossclub_asset.png);
+            background-repeat: no-repeat;
+            background-size: 150%;
+            background-position-x: 20%;
+            background-position-y: 10%;
+    }
+
+    .club-hero-section{
+
+        display: flex;
+        font-family: Inter;
+    }
+
+    .hero-container{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        padding: 0 10rem;
+
+
+    }
+
+    .hero-header{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        max-width:50%;
+
+    }
+
+    .hero-header-heading{
+        display: flex;
+        gap: 1rem;
+    }
+
+    h1{
+        margin:0;
+        color: #1A1A1A;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 100%;
+        letter-spacing: -0.18rem;
+    }
+
+    h1 > span{
+        color: #08B74F;;
+    }
+
+    h5{
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 115%; /* 1.725rem */
+        letter-spacing: -0.06rem;
+    }
+
+    p{
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 140%;
+        letter-spacing: -0.04rem;
+    }
+
+    .hero-cta{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        color: #FFF;
+        text-decoration: none;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 115%;
+        letter-spacing: -0.045rem;
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+    }
+
+    .hero-image > img{
+        transform: rotate(-2deg) scale(1.8);
+        transform-origin: top;
+    }
+
+    @media (max-width: 768px){
+        .community-hero-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            margin:1rem;
+        }
+
+        .hero-container{
+            padding: 0 0.5rem;
+            gap: 2rem;
+        }
+
+        .hero-header{
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1{
+            font-size: 2rem;
+            letter-spacing: -0.12rem;
+        }
+
+        .hero-image{
+            height: 10rem;
+            overflow: hidden;
+        }
+        .hero-image > img{
+            transform: rotate(26deg) scale(1.45);
+            transform-origin: 50% 42%;
+        }
+
+        .btn-primary{
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="club-hero-section">
+
+    <div class="hero-container container">
+
+        <div class="hero-header">
+
+            <div class="hero-header-heading">
+                <img src="assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
+
+                <h1>FOSS <span>Clubs</span></h1>
+            </div>
+
+            <p>{{subtext}}</p>
+
+        </div>
+
+        <div class = "hero-cta">
+
+            <div class="cta_text">
+
+                <h5>{{subheading}}</h5>
+
+            </div>
+
+            <div class="button-container">
+
+                    <button class="btn-primary" href="{{cta_link}}">{{cta_text}}
+                    </button>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
