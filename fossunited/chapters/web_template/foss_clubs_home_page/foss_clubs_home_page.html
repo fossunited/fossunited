@@ -3,12 +3,15 @@
     .club-hero-section{
         display: flex;
         font-family: Inter;
+        overflow: hidden;
     }
 
     .hero-container{
         display: flex;
         flex-direction: column;
         gap: 3rem;
+        padding: 0 10rem;
+
 
     }
 
@@ -16,7 +19,6 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 1rem;
-        max-width:50%;
 
     }
 
@@ -82,17 +84,13 @@
     }
 
     .hero-image > img{
-        display: none;
+        transform: rotate(-2deg) scale(1.8);
+        transform-origin: top;
     }
 
     @media (max-width: 768px){
-
-        #hero{
-            background-image: none;
-        }
-
         .club-hero-section{
-            flex-direction: column-reverse;
+            flex-direction: column;
             gap: 2.5rem;
             margin:1rem;
         }
@@ -108,6 +106,10 @@
             flex-direction: column;
         }
 
+        .hero-header-heading{
+            align-items: center;
+        }
+
         h1{
             font-size: 2rem;
             letter-spacing: -0.12rem;
@@ -118,7 +120,8 @@
             overflow: hidden;
         }
         .hero-image > img{
-            display: block;
+            transform: rotate(26deg) scale(1.45);
+            transform-origin: 50% 42%;
         }
 
         .btn-primary{
@@ -126,7 +129,6 @@
         }
 
     }
-
 </style>
 
 
@@ -138,7 +140,6 @@
 
             <div class="hero-header-heading">
                 <img src="assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
-
                 <h1>FOSS <span>Clubs</span></h1>
             </div>
 
@@ -151,6 +152,10 @@
             <div class="cta_text">
 
                 <h5>{{subheading}}</h5>
+
+                <div>
+
+                </div>
 
             </div>
 
@@ -165,7 +170,7 @@
     </div>
 
     <div class="hero-image">
-        <img src="assets/fossunited/images/chapter/fossclub_asset.png" alt="">
+        <img src="assets/fossunited/images/illustrations/city-communities.svg" alt="">
     </div>
 
 </div>
