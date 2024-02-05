@@ -25,6 +25,7 @@
   "chapter_name",
   "event_infomation_section",
   "must_attend",
+  "event_permalink",
   "event_name",
   "status",
   "event_type",
@@ -358,6 +359,16 @@
    "fieldname": "paid_event",
    "fieldtype": "Check",
    "label": "Paid Event "
+  },
+  {
+   "description": "Permanent URL for the event",
+   "fieldname": "event_permalink",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Event Permalink",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "has_web_view": 1,
@@ -375,7 +386,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-02 17:58:32.433444",
+ "modified": "2024-02-06 00:17:36.067465",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -406,8 +417,10 @@
   }
  ],
  "route": "events",
- "search_fields": "event_name, chapter",
+ "search_fields": "event_permalink, chapter",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "event_name"
 }
