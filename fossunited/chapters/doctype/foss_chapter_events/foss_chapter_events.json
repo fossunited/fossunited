@@ -195,7 +195,7 @@
    "fieldname": "community_partners",
    "fieldtype": "Table",
    "label": "Community Partners",
-   "options": "FOSS Event Sponsors"
+   "options": "FOSS Event Community Partners"
   },
   {
    "fieldname": "deck_link",
@@ -393,7 +393,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-06 16:43:55.527820",
+ "modified": "2024-02-06 20:18:19.151822",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
