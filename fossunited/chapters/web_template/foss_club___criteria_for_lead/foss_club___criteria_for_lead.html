@@ -3,13 +3,13 @@
     .criteria-section{
         display: flex;
         font-family: Inter;
-        align-items: center;
     }
 
     .criteria-container{
         display: flex;
-        padding: 4rem 0rem 0rem 10rem;
-
+        padding: 4rem 10rem;
+        align-items: center;
+        justify-content: center;
 
     }
     .criteria-content{
@@ -67,9 +67,7 @@
     .criteria-image{
         width: 50%;
     }
-    .criteria-image img{
-        max-width: 45rem;
-    }
+
 
 
 
@@ -78,14 +76,14 @@
         .criteria-section{
 
             margin: 1rem;
-            flex-direction: column-reverse;
-            gap: 2.5rem;
             padding:1rem;
         }
 
         .criteria-container{
-            padding: 0rem 0.5rem;
-            gap: 3rem;
+            flex-direction: column-reverse;
+
+            padding: 0rem 0.5rem 2rem 0.5rem;
+            gap: 2.5rem;
         }
 
         .criteria-category-container{
@@ -134,12 +132,16 @@
                 {% endfor %}
 
             </div>
+
         </div>
+
+        <div class="criteria-image">
+
+            <img src="assets/fossunited/images/illustrations/criteria_board.svg" alt="">
+
+        </div>
+
     </div>
 
-    <div class="criteria-image">
 
-        <img src="assets/fossunited/images/illustrations/criteria_board.svg" alt="">
-
-    </div>
 </div>
