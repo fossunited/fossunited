@@ -16,6 +16,7 @@
   "navbar_controls_section",
   "show_speakers",
   "show_rsvp",
+  "show_schedule",
   "column_break_moaa",
   "show_cfp",
   "show_photos",
@@ -369,6 +370,12 @@
    "label": "Event Permalink",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule",
+   "fieldtype": "Check",
+   "label": "Show Schedule"
   }
  ],
  "has_web_view": 1,
@@ -386,7 +393,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-06 00:17:36.067465",
+ "modified": "2024-02-06 16:43:55.527820",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
