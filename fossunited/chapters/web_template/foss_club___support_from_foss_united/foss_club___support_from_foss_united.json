@@ -6,13 +6,18 @@
  "fields": [
   {
    "__unsaved": 1,
+   "fieldname": "icon_1",
+   "fieldtype": "Attach Image",
+   "label": "Icon 1",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_1",
    "fieldtype": "Data",
    "label": "Title 1",
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "text_1",
    "fieldtype": "Data",
    "label": "Text 1",
@@ -20,13 +25,18 @@
   },
   {
    "__unsaved": 1,
+   "fieldname": "icon_2",
+   "fieldtype": "Attach Image",
+   "label": "Icon 2",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_2",
    "fieldtype": "Data",
    "label": "Title 2",
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "text_2",
    "fieldtype": "Data",
    "label": "Text 2",
@@ -34,13 +44,18 @@
   },
   {
    "__unsaved": 1,
+   "fieldname": "icon_3",
+   "fieldtype": "Attach Image",
+   "label": "Icon 3",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_3",
    "fieldtype": "Data",
    "label": "Title 3",
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "text_3",
    "fieldtype": "Data",
    "label": "Text 3",
@@ -48,21 +63,26 @@
   },
   {
    "__unsaved": 1,
+   "fieldname": "icon_4",
+   "fieldtype": "Attach Image",
+   "label": "Icon 4",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_4",
    "fieldtype": "Data",
    "label": "Title 4",
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "text_4",
    "fieldtype": "Data",
    "label": "Text 4",
    "reqd": 0
   }
  ],
- "idx": 0,
- "modified": "2024-02-05 05:07:42.527813",
+ "idx": 15,
+ "modified": "2024-02-06 19:48:43.811725",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Club - Support from FOSS United",
