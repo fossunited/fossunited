@@ -1,85 +1,94 @@
 {
- "__islocal": true,
  "__unsaved": 1,
  "creation": "2024-02-05 05:26:51.904584",
  "docstatus": 0,
  "doctype": "Web Template",
  "fields": [
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "heading",
    "fieldtype": "Data",
    "label": "Heading",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "title_1",
    "fieldtype": "Data",
    "label": "Title 1",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "text_1",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Text 1",
    "reqd": 0
   },
   {
-   "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "icon_1",
+   "fieldtype": "Attach Image",
+   "label": "Icon 1",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_2",
    "fieldtype": "Data",
    "label": "Title 2",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "text_2",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Text 2",
    "reqd": 0
   },
   {
-   "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "icon_2",
+   "fieldtype": "Attach Image",
+   "label": "Icon 2",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_3",
    "fieldtype": "Data",
    "label": "Title 3",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "text_3",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Text 3",
    "reqd": 0
   },
   {
-   "__islocal": 1,
    "__unsaved": 1,
+   "fieldname": "icon_3",
+   "fieldtype": "Attach Image",
+   "label": "Icon 3",
+   "reqd": 0
+  },
+  {
    "fieldname": "title_4",
    "fieldtype": "Data",
    "label": "Title 4",
    "reqd": 0
   },
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "text_4",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Text 4",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "fieldname": "icon_4",
+   "fieldtype": "Attach Image",
+   "label": "Icon 4",
    "reqd": 0
   }
  ],
  "idx": 0,
- "modified": "2024-02-05 05:26:51.904584",
+ "modified": "2024-02-07 02:09:40.719472",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Community - Programs",

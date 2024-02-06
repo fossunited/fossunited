@@ -1,12 +1,20 @@
 {
- "__islocal": true,
  "__unsaved": 1,
  "creation": "2024-02-05 05:27:48.763440",
  "docstatus": 0,
  "doctype": "Web Template",
- "fields": [],
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "map_image",
+   "fieldtype": "Attach Image",
+   "label": "Map Image",
+   "reqd": 0
+  }
+ ],
  "idx": 0,
- "modified": "2024-02-05 05:27:48.763440",
+ "modified": "2024-02-07 02:11:00.768774",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Communities - List",
