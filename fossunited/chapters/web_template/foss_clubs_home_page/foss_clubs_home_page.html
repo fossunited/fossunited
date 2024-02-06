@@ -27,6 +27,11 @@
         gap: 1rem;
     }
 
+    .hero-header img{
+        height: 4rem;
+        width: auto;
+    }
+
     h1{
         margin:0;
         color: #1A1A1A;
@@ -61,6 +66,12 @@
         display: flex;
         flex-direction: column;
         gap: 2rem;
+    }
+
+    .hero-search{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
     }
 
     .hero-club-search{
@@ -108,6 +119,25 @@
         transform-origin: top;
     }
 
+    .autocomp {
+        background: #f8f8f8;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid #ccc;
+        border-top: 0;
+        box-shadow: 2px 2px 2px #eee;
+        text-align: left;
+    }
+    .autocomp-item {
+        padding-bottom: 5px;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .autocomp-item:hover,
+    .autocomp-sel {
+        background: #f1f1f1;
+        font-weight: bold;
+    }
+
     @media (max-width: 768px){
         .club-hero-section{
             flex-direction: column;
@@ -117,7 +147,7 @@
 
         .hero-container{
             padding: 0 0.5rem;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         .hero-header{
@@ -144,28 +174,13 @@
             transform-origin: 50% 42%;
         }
 
+        #search-club::placeholder{
+            font-size: 1rem;
+        }
+
         .btn-primary{
             width: 100%;
         }
-
-        .autocomp {
-			background: #f8f8f8;
-			border-radius: 0 0 5px 5px;
-			border: 1px solid #ccc;
-			border-top: 0;
-			box-shadow: 2px 2px 2px #eee;
-			text-align: left;
-		}
-		.autocomp-item {
-			padding-bottom: 5px;
-			padding: 10px;
-			cursor: pointer;
-		}
-		.autocomp-item:hover,
-		.autocomp-sel {
-			background: #f1f1f1;
-			font-weight: bold;
-		}
 
     }
 </style>
@@ -186,19 +201,20 @@
 
         </div>
 
-        <div class = "hero-cta">
 
-            <div class="cta_text">
+        <div class="hero-search">
 
                 <h5>{{subheading}}</h5>
-
                 <div class="hero-club-search">
 
                     <input type="text" id="search-club" placeholder="Search by name of club or city">
 
                 </div>
 
-            </div>
+
+        </div>
+
+        <div class = "hero-cta">
 
             <div class="button-container">
 
