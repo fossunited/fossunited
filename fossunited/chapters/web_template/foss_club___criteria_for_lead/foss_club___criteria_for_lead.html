@@ -1,0 +1,145 @@
+<style>
+
+    .criteria-section{
+        display: flex;
+        font-family: Inter;
+        align-items: center;
+    }
+
+    .criteria-container{
+        display: flex;
+        padding: 4rem 0rem 0rem 10rem;
+
+
+    }
+    .criteria-content{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .criteria-heading{
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    h2{
+        margin: 0;
+        color: #000;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .criteria-category-container{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .criteria-item{
+        display: flex;
+        gap: 0.5rem;
+        flex-direction: column;
+
+    }
+
+    .criteria-item h5{
+        margin: 0;
+        color: #08B74F;
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 105%;
+        letter-spacing: -0.07rem;
+    }
+
+    .criteria-item p{
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 120%; /* 1.05rem */
+        letter-spacing: -0.0175rem;
+    }
+
+    .criteria-image{
+        width: 50%;
+    }
+    .criteria-image img{
+        max-width: 45rem;
+    }
+
+
+
+    @media (max-width: 768px){
+
+        .criteria-section{
+
+            margin: 1rem;
+            flex-direction: column-reverse;
+            gap: 2.5rem;
+            padding:1rem;
+        }
+
+        .criteria-container{
+            padding: 0rem 0.5rem 4rem 0.5rem;
+            gap: 3rem;
+        }
+
+        .criteria-category-container{
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .criteria-item h5{
+            font-size: 1rem;
+        }
+
+        .criteria-image img{
+            width:100%;
+        }
+
+
+    }
+</style>
+
+
+<div class="criteria-section">
+
+    <div class="criteria-container container">
+
+        <div class="criteria-content">
+
+            <div class="criteria-heading">
+                <img src="assets/fossunited/icons/trophy.svg" alt="">
+                <h2>Criteria for a Lead</h2>
+            </div>
+
+
+            <div class="criteria-category-container">
+
+                {% for index in range(1, 7) %}
+                    {% set criteria_title = values['title_' + index|string ] %}
+                    {% set criteria_text = values['text_' + index|string ] %}
+                    {% if criteria_title %}
+
+                    <div class="criteria-item">
+                            <h5>{{ criteria_title }}</h5>
+                            <p>{{criteria_text}}</p>
+                    </div>
+
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+    <div class="criteria-image">
+
+        <img src="assets/fossunited/images/illustrations/criteria_board.svg" alt="">
+
+    </div>
+</div>
