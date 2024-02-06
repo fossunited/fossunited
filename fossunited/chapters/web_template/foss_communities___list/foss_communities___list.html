@@ -1,0 +1,172 @@
+<style>
+
+    .community-list-section{
+        display: flex;
+        font-family: Inter;
+
+    }
+
+    .community-list-container{
+        display: flex;
+        gap: 3rem;
+        flex-direction: column;
+        padding: 6rem 10rem 6rem 10rem;
+    }
+
+    .city-card-section{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    h2{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .city-card-container {
+        display: grid;
+        gap: 2rem;
+        align-items: start;
+        justify-content: center;
+        grid-template-rows: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
+        width: 50%;
+    }
+
+    .city-card{
+        display: flex;
+        flex-direction: column;
+        border-radius: 0.5rem;
+        background: #F5F5F5;
+    }
+
+    .city-card :hover{
+        color: #08B74F;
+    }
+
+    a:hover{
+        text-decoration: none;
+    }
+
+    .city-card h5{
+        padding: 1.5rem;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.125rem;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.045rem;
+        text-decoration: none;
+    }
+
+    .city-card img{
+        width: 100%;
+        border-radius: 0.5rem;
+    }
+
+    .city-list-image{
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .city-list-image img{
+        width: 80%;
+    }
+
+    @media screen and (max-width: 768px){
+
+        .community-list-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            padding: 1rem;
+        }
+
+        .community-list-container{
+            padding: 4rem 0.5rem 0rem 0.5rem;
+            gap: 3rem;
+        }
+
+        h2{
+            font-size: 1.5rem;
+        }
+
+        .city-list-image{
+            display: none;
+        }
+
+        .city-card-container {
+            display: grid;
+            gap: 2rem;
+            align-items: start;
+            grid-template-columns: 1fr;
+            width: 100%;
+        }
+
+        .city-card{
+            display: flex;
+            flex-direction: row-reverse;
+            border-radius: 0.5rem;
+            background: #F5F5F5;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 1rem;
+            gap: 1rem;
+        }
+
+        .city-card h5{
+            padding: 0;
+        }
+
+        .city-image{
+            max-width: 2rem;
+            max-height: 2rem;
+            background-color: #1A1A1A;
+        }
+
+        .city-card img{
+            height: 2rem;
+        }
+
+
+    }
+
+
+</style>
+
+<div class="community-list-section">
+
+    <div class="community-list-container container">
+
+        <h2>FOSS Communities near you</h2>
+
+        <div class="city-card-section">
+
+            <div class="city-card-container">
+
+                {% set communities = frappe.get_all("FOSS Chapter", fields=["city", "represent_image","route"], filters={"is_published": 1, "chapter_type": "City Community"}, order_by="city") %}
+                {% for community in communities %}
+
+                    <a class="city-card" href="{{community.route}}">
+
+                        <h5>{{community.city}}</h5>
+
+                        <div class="city-image">
+                            <img src="{{community.represent_image}}" alt="{{community.city}}">
+                        </div>
+
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="city-list-image">
+
+                <img src="{{map_image}}" alt="India map with city communities">
+
+            </div>
+        </div>
+    </div>
+
+</div>
