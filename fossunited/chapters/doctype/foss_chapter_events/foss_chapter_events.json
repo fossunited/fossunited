@@ -100,7 +100,8 @@
    "in_list_view": 1,
    "label": "Chapter",
    "options": "FOSS Chapter",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "default": "0",
@@ -305,6 +306,7 @@
    "label": "Meta Info"
   },
   {
+   "default": "/files/event_banner.png",
    "fieldname": "banner_image",
    "fieldtype": "Attach Image",
    "label": "Event Banner Image"
@@ -375,7 +377,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-02 17:58:32.433444",
+ "modified": "2024-02-07 14:28:35.742165",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",

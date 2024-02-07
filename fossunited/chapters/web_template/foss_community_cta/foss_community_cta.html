@@ -13,6 +13,7 @@
         display: flex;
         gap: 3rem;
         padding: 5rem 10rem 0rem 10rem;
+        justify-content: center;
     }
 
     .cta-content{
@@ -45,13 +46,13 @@
         letter-spacing: -0.105rem;
     }
 
-    #cta-button{
+    .button-container{
         width: 50%;
     }
-
     .cta-image{
         display: flex;
         align-items: flex-end;
+        justify-content: center;
     }
 
     @media screen and (max-width: 768px){
@@ -63,37 +64,22 @@
         }
 
         .cta-container{
-            padding: 4rem 0.5rem 0rem 0.5rem;
-            gap: 0;
+            display: flex;
             flex-direction: column;
+            gap: 3rem;
+            padding-top: 0;
+            justify-content: center;
+        }
         }
 
         .cta-text h2{
             font-size: 1.5rem;
         }
 
-        .cta-text p{
-
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5rem;
-            letter-spacing: -0.02rem;
-        }
-        #cta-button{
+        .button-container{
             width: 100%;
         }
 
-
-        .cta-image{
-            justify-content: center;
-        }
-
-        .cta-image img{
-            width: 80%;
-        }
-
-
-    }
 
 </style>
 
@@ -110,15 +96,20 @@
 
             </div>
 
-
             <div class="button-container">
-                <a href="{{cta_link}}" class="btn-primary"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
+
+                <button class="btn-primary" id="cta-button">
+
+                    <a href="{{cta_link}}"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
+                </button>
+
             </div>
+
 
 
         </div>
 
-        <div class="cta-image" id="cta-button">
+        <div class="cta-image">
             <img src="{{cta_image}}" alt="Community CTA image">
         </div>
 
