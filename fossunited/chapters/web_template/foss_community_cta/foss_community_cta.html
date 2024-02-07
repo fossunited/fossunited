@@ -73,6 +73,7 @@
         }
 
         .cta-text p{
+
             font-size: 1rem;
             font-weight: 400;
             line-height: 1.5rem;
@@ -109,15 +110,15 @@
 
             </div>
 
-            <button class="btn-primary" id="cta-button">
 
-                <a href="{{cta_link}}"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
-            </button>
+            <div class="button-container">
+                <a href="{{cta_link}}" class="btn-primary"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
+            </div>
 
 
         </div>
 
-        <div class="cta-image">
+        <div class="cta-image" id="cta-button">
             <img src="{{cta_image}}" alt="Community CTA image">
         </div>
 

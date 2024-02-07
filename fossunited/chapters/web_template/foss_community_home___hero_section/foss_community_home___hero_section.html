@@ -57,24 +57,23 @@
         gap: 2rem;
     }
 
-    .btn-primary{
+    .btn-primary {
         background: #08B74F;
         border-radius: 0.5rem;
         border: none;
-        padding: 0.8rem 1.5rem
-
-    }
-
-    .btn-primary:active, .btn-primary:hover{
-        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
-        border:none !important;
-    }
-
-    .btn-primary a{
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        font-size: 1.15rem;
         color: #FFF;
         text-decoration: none;
-        font-weight: 500;
     }
+
+    .btn-primary:active, .btn-primary:hover, .btn-primary:focus{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+        box-shadow: none !important;
+    }
+
 
     .hero-image > img{
         transform: rotate(-2deg) scale(1.8);
@@ -144,9 +143,7 @@
 
             <div class="button-container">
 
-                <button class="btn-primary">
-                    <a href="{{cta_1_link}}">{{cta_1}}</a>
-                </button>
+            <a href="{{cta_1_link}}" class="btn-primary">{{cta_1}}</a>
 
             </div>
 
