@@ -61,20 +61,19 @@
         background: #08B74F;
         border-radius: 0.5rem;
         border: none;
-        padding: 0.8rem 1.5rem;
-        color: #FFF;
-        text-decoration: none;
-        font-size: 1.125rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 115%;
-        letter-spacing: -0.045rem;
+        padding: 0.8rem 1.5rem
 
     }
 
     .btn-primary:active, .btn-primary:hover{
         background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
         border:none !important;
+    }
+
+    .btn-primary a{
+        color: #FFF;
+        text-decoration: none;
+        font-weight: 500;
     }
 
     .hero-image > img{
@@ -145,8 +144,9 @@
 
             <div class="button-container">
 
-                    <button class="btn-primary" href="{{cta_1_link}}">{{cta_1}}
-                    </button>
+                <button class="btn-primary">
+                    <a href="{{cta_1_link}}">{{cta_1}}</a>
+                </button>
 
             </div>
 
