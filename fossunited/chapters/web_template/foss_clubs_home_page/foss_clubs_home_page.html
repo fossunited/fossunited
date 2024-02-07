@@ -78,6 +78,7 @@
         padding: 0.5rem;
         border-radius: 0.5rem;
         border: 1px solid var(--Gray-200, #EAECF0);
+        max-width: 70%;
     }
 
     #search-club{
@@ -119,11 +120,11 @@
     }
 
     .autocomp {
-        background: #f8f8f8;
+        background: #ffffff;
         border-radius: 0 0 5px 5px;
-        border: 1px solid #ccc;
+        border: 1px solid #EAECF0;
         border-top: 0;
-        box-shadow: 2px 2px 2px #eee;
+        box-shadow: 2px 2px 2px #f8f8f8;
         text-align: left;
     }
     .autocomp-item {
@@ -133,8 +134,9 @@
     }
     .autocomp-item:hover,
     .autocomp-sel {
-        background: #f1f1f1;
+        background: #f8f8f8;
         font-weight: bold;
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
     }
 
     @media (max-width: 768px){
@@ -171,6 +173,10 @@
         .hero-image > img{
             transform: rotate(26deg) scale(1.45);
             transform-origin: 50% 42%;
+        }
+
+        .hero-club-search{
+            max-width: 100%;
         }
 
         #search-club::placeholder{
@@ -239,10 +245,9 @@
             const opt = { ...defaults, ...options };
             let box, cur = opt.autoSelect ? 0 : -1, items = [], val, req;
 
-            // Disable browser's default autocomplete behaviour on the input.
+
             el.autocomplete = "off";
 
-            // Attach all the events required for the interactions in one go.
             ["input", "keydown", "blur"].forEach(k => el.addEventListener(k, handleEvent));
 
             function handleEvent(e) {
@@ -267,8 +272,6 @@
 
                 val = e.target.value;
 
-                // Clear (debounce) any existing pending requests and queue
-                // the next search request.
                 clearTimeout(req);
                 req = setTimeout(query, opt.debounce);
             }
@@ -279,8 +282,8 @@
                 }
 
                 switch (e.keyCode) {
-                    case 38: return navigate(-1, e); // Up arrow.
-                    case 40: return navigate(1, e); // Down arrow
+                    case 38: return navigate(-1, e);
+                    case 40: return navigate(1, e);
                     case 9: // Tab
                         e.preventDefault();
                         select(cur);
