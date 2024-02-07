@@ -16,7 +16,6 @@
   "linked_cfp",
   "event",
   "event_name",
-  "event_date",
   "submitted_by",
   "personal_information_section",
   "full_name",
@@ -241,12 +240,6 @@
    "label": "Meta Info"
   },
   {
-   "fetch_from": "linked_cfp.event_date",
-   "fieldname": "event_date",
-   "fieldtype": "Date",
-   "label": "Event Date"
-  },
-  {
    "default": "0",
    "fieldname": "attendance_confirmed",
    "fieldtype": "Check",
@@ -257,7 +250,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-02-07 14:49:35.497637",
+ "modified": "2024-02-07 15:45:11.426679",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
