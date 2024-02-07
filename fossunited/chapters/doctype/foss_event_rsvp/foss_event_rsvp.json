@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2023-09-04 18:31:59.413740",
@@ -125,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2023-12-17 02:20:23.561222",
+ "modified": "2024-02-08 02:46:57.872551",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",
@@ -143,6 +144,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "route": "events/rsvp",
