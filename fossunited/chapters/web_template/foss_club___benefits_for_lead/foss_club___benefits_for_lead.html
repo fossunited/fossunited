@@ -1,0 +1,114 @@
+<style>
+
+    .benefits-section{
+        display: flex;
+        font-family: Inter;
+        background: #F5F5F5;
+
+    }
+
+    .benefits-container{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        padding: 4rem 10rem 2rem 10rem;
+
+
+    }
+
+    h2{
+        margin: 0;
+        color: #000;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .benefit-category-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 4rem;
+    }
+
+    .benefit-element{
+        display: flex;
+        border-radius: 0.5rem;
+        flex-direction: column;
+
+    }
+
+    .benefit-element h5{
+        color: #1A1A1A;
+        font-size: 1.2rem;
+        font-weight: 700;
+        line-height: 105%;
+        letter-spacing: -0.07rem;
+    }
+
+    .benefit-element p{
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 120%; /* 1.05rem */
+        letter-spacing: -0.0175rem;
+    }
+
+
+
+    @media (max-width: 768px){
+
+        .benefits-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            padding:1rem;
+        }
+
+        .benefits-container{
+            padding: 4rem 0.5rem 0rem 0.5rem;
+            gap: 3rem;
+        }
+
+        .benefit-category-container{
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .benefit-element h5{
+            font-size: 1.2rem;
+        }
+
+
+    }
+</style>
+
+
+<div class="benefits-section">
+
+    <div class="benefits-container container">
+
+        <h2>Benefits for the Lead</h2>
+
+
+
+        <div class="benefit-category-container">
+
+            {% for index in range(1, 7) %}
+            {% set benefit_title = values['title_' + index|string ] %}
+            {% set benefit_text = values['text_' + index|string ] %}
+            {% if benefit_title %}
+
+                <div class="benefit-element">
+
+                        <h5>{{benefit_title}}</h5>
+                        <p>{{benefit_text}}</p>
+
+                </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>
