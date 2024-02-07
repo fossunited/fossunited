@@ -1,0 +1,160 @@
+<style>
+
+    .events-hero-section{
+            display: flex;
+            font-family: Inter;
+            overflow: hidden;
+            padding: 0rem;
+            display: flex;
+            justify-content: space-between;
+    }
+
+    .events-container {
+        display: flex;
+        flex-direction: column;
+        gap: 6rem;
+        width: 50%;
+    }
+
+    .hero-header{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    h1{
+        margin:0;
+        color: #08B74F;;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 100%;
+        letter-spacing: -0.18rem;
+    }
+
+
+    h5{
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 115%; /* 1.725rem */
+        letter-spacing: -0.06rem;
+    }
+
+    p{
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 140%;
+        letter-spacing: -0.04rem;
+    }
+
+    .hero-cta{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.8rem 1.5rem
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+    }
+
+    .btn-primary a{
+        color: #FFF;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .hero-image{
+        width: 50%;
+        display: flex;
+        justify-content: center;
+    }
+
+
+    @media (max-width: 768px){
+        .events-hero-section{
+            flex-direction: column-reverse;
+            gap: 2.5rem;
+        }
+
+        .events-container{
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            width: 100%;
+            gap: 2rem;
+        }
+
+        .hero-header{
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1{
+            font-size: 2rem;
+            letter-spacing: -0.12rem;
+        }
+
+        .hero-image{
+            height: 10rem;
+            overflow: hidden;
+        }
+
+        .btn-primary{
+            width: 100%;
+        }
+
+        .hero-image{
+            width: 100%;
+        }
+
+        .hero-image img{
+            position: relative;
+            max-width: 20rem;
+        }
+
+    }
+
+</style>
+
+
+<div class="events-hero-section container">
+
+    <div class="events-container container">
+
+        <div class="hero-header">
+
+            <h1>Events</h1>
+
+            <p>{{subtext}}</p>
+
+        </div>
+
+        <div class = "hero-cta">
+
+            <div class="button-container">
+
+                <button class="btn-primary">
+                    <a href="{{cta_link}}">{{cta_text}}</a>
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img src="assets/fossunited/images/illustrations/events-hero.svg" alt="">
+    </div>
+
+</div>
