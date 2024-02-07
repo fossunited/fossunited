@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
 <style>
 
     .footer-section{
@@ -11,7 +13,7 @@
         display: flex;
         flex-direction: column;
         gap: 1rem;
-        padding: 2.5rem;
+        padding: 3rem 6rem;
         font-size: 0.75rem;
     }
 
@@ -26,6 +28,10 @@
         font-size: 0.75rem;
         font-weight: 500;
 
+    }
+
+    .source-code-link a{
+        font-size: 0.875rem;
     }
 
     .footer-container a:hover{
@@ -75,10 +81,28 @@
         color: #98a2b3;
     }
 
+    .address-element{
+        display: flex;
+        flex-direction: column;
+    }
+
     .address-element p{
         text-align: right;
         color: #e8e8e8;
 
+    }
+
+    .social-media-credits{
+
+        padding-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .social-category-items{
+        display: flex;
+        justify-content: flex-end;
     }
 
     @media screen and (max-width: 768px) {
@@ -90,6 +114,8 @@
 
         .footer-container{
             flex-direction: column;
+            padding: 2rem 0rem;
+            font-size: 0.75rem;
         }
 
         .footer-element-items{
@@ -117,6 +143,10 @@
             text-align:left;
         }
 
+        .social-category-items{
+            justify-content: flex-start;
+        }
+
     }
 
 </style>
@@ -131,7 +161,10 @@
             </div>
 
             <div class="source-code-link">
-                <a href="https://github.com/fossunited/fossunited">View Source Code</a>
+                <a href="https://github.com/fossunited/fossunited">
+                    <i class="ti ti-brand-github"></i>
+                    View Source Code
+                </a>
             </div>
 
             <div class="footer-element-items">
@@ -168,9 +201,31 @@
 
                     <p>{{copyright}}</p>
                     {{address}}
-                </div>
 
+                    <div class="social-media-credits">
+
+                        <div class="social-category-items">
+                            {% for child_item in footer_items %}
+                                {% if child_item.parent_label == "Social Media" %}
+                                    <a href="{{child_item.url}}" class="footer-link">
+                                        <img src="{{child_item.icon}}" alt="">
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
+
+                        </div>
+
+                        <div class="powered-by">
+
+                            <p> Built with <a href="https://frappe.io">Frappe</a></p>
+
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
+
         </div>
     </div>
 
