@@ -72,3 +72,47 @@ function setNavbarControl(){
 		});
 	});
 }
+
+function publish_form(e) {
+	let doctype = $(e).data("doctype");
+	let docname = $(e).data("docname");
+	let parent = $(e).data("parent");
+	frappe.call({
+		method: "frappe.client.set_value",
+		args: {
+			doctype: `${doctype}`,
+			name: `${docname}`,
+			fieldname: "is_published",
+			value: 1,
+		},
+		callback: (r) =>{
+			$(`#${parent}`).load(window.location.href + ` #${parent}` );
+		},
+		error: (e) =>{
+			console.log(e)
+			frappe.msgprint(e.message)
+		},
+	});
+}
+
+function unpublish_form(e){
+	let doctype = $(e).data("doctype");
+	let docname = $(e).data("docname");
+	let parent = $(e).data("parent");
+	frappe.call({
+		method: "frappe.client.set_value",
+		args: {
+			doctype: `${doctype}`,
+			name: `${docname}`,
+			fieldname: "is_published",
+			value: 0,
+		},
+		callback: (r) =>{
+			$(`#${parent}`).load(window.location.href + ` #${parent}` );
+		},
+		error: (e) =>{
+			console.log(e)
+			frappe.msgprint(e.message)
+		},
+	});
+}
