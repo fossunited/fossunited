@@ -33,7 +33,7 @@
    "fieldname": "org_role",
    "fieldtype": "Select",
    "label": "Org Role",
-   "options": "Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer",
+   "options": "\nBoard\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer",
    "reqd": 1
   },
   {
@@ -52,8 +52,7 @@
    "fieldname": "designation",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Designation",
-   "reqd": 1
+   "label": "Designation"
   },
   {
    "fetch_from": "foss_user_profile.username",
@@ -84,13 +83,12 @@
   {
    "fieldname": "user_bio",
    "fieldtype": "Small Text",
-   "label": "User Bio",
-   "reqd": 1
+   "label": "User Bio"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-02 12:38:25.080308",
+ "modified": "2024-02-08 15:09:39.223689",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS United Team",
