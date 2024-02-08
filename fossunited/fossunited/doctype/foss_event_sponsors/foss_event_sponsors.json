@@ -6,28 +6,47 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "organization",
-  "redirect_link"
+  "sponsorship_tier",
+  "sponsor_name",
+  "sponsor_link",
+  "sponsor_image"
  ],
  "fields": [
   {
-   "fieldname": "organization",
-   "fieldtype": "Link",
+   "fieldname": "sponsorship_tier",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Organization",
-   "options": "Organization"
+   "label": "Sponsorship Tier",
+   "options": "\nPlatinum\nGold\nSilver\nBronze",
+   "reqd": 1
   },
   {
-   "fieldname": "redirect_link",
+   "fieldname": "sponsor_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Redirect Link"
+   "label": "Sponsor Name",
+   "options": "Organization",
+   "reqd": 1
+  },
+  {
+   "description": "Company Website Link",
+   "fieldname": "sponsor_link",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Sponsor Link",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sponsor_image",
+   "fieldtype": "Attach Image",
+   "label": "Sponsor Image",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-08-21 22:53:19.660179",
+ "modified": "2024-02-06 23:14:54.615822",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Sponsors",

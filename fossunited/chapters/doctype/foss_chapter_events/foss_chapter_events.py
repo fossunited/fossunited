@@ -4,6 +4,286 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.fossunited.utils import is_user_team_member
+
 
 class FOSSChapterEvents(WebsiteGenerator):
-    pass
+    def before_save(self):
+        self.set_route()
+
+    def get_context(self, context):
+        context.nav_items = self.get_navbar_items()
+        context.sponsors_dict = self.get_sponsors()
+        context.volunteers = self.get_volunteers()
+        context.speakers = self.get_speakers()
+        context.rsvp_status_block = self.get_rsvp_status_block()
+        context.cfp_status_block = self.get_cfp_status_block()
+        context.user_cfp_submissions = self.get_user_cfp_submissions()
+        context.recent_cfp_submissions = (
+            self.get_recent_cfp_submissions()
+        )
+
+    def set_route(self):
+        self.route = f"events/{self.event_permalink}"
+
+    def get_navbar_items(self):
+        navbar_items = [
+            "event_information",
+            "speakers",
+            "rsvp",
+            "cfp",
+            "schedule",
+        ]
+
+        if is_user_team_member(self.chapter, frappe.session.user):
+            return navbar_items
+
+        if not self.show_speakers:
+            navbar_items.remove("speakers")
+        if not self.show_rsvp:
+            navbar_items.remove("rsvp")
+        if not self.show_cfp:
+            navbar_items.remove("cfp")
+        if not self.show_schedule:
+            navbar_items.remove("schedule")
+
+        return navbar_items
+
+    def get_sponsors(self):
+        sponsors_dict = {}
+        for sponsor in self.sponsor_list:
+            if sponsor.sponsorship_tier not in sponsors_dict:
+                sponsors_dict[sponsor.sponsorship_tier] = []
+            sponsors_dict[sponsor.sponsorship_tier].append(sponsor)
+        return sponsors_dict
+
+    def get_volunteers(self):
+        members = []
+        for member in self.event_members:
+            profile = frappe.get_doc(
+                "FOSS User Profile", member.member
+            ).as_dict()
+            members.append(
+                {
+                    "full_name": member.full_name,
+                    "role": member.role or "Volunteer",
+                    "profile_picture": profile.profile_photo
+                    if profile.profile_photo
+                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "route": profile.route,
+                }
+            )
+        return members
+
+    def get_speakers(self):
+        speaker_cfps = frappe.get_all(
+            "FOSS Event CFP Submission",
+            filters={
+                "event": self.name,
+                "status": "Approved",
+                "attendance_confirmed": 1,
+            },
+            fields=["talk_title", "category", "submitted_by"],
+        )
+        speakers = []
+        for cfp in speaker_cfps:
+            user = frappe.get_doc(
+                "FOSS User Profile", {"email": cfp.submitted_by}
+            )
+            speakers.append(
+                {
+                    "full_name": user.full_name,
+                    "talk_title": cfp.talk_title,
+                    "talk_category": cfp.category,
+                    "profile_picture": user.profile_photo
+                    if user.profile_photo
+                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "route": user.route,
+                }
+            )
+
+        return speakers
+
+    def get_rsvp_status_block(self):
+        rsvp_status_block = {}
+        rsvp_status_block["doctype"] = "FOSS Event RSVP"
+        rsvp_status_block["block_for"] = "rsvp"
+
+        if frappe.db.exists("FOSS Event RSVP", {"event": self.name}):
+            rsvp_form = frappe.get_doc(
+                "FOSS Event RSVP", {"event": self.name}
+            )
+            rsvp_status_block |= {
+                "has_doc": True,
+                "block_heading": "RSVP Form is Live!",
+                "docname": rsvp_form.name,
+                "is_published": rsvp_form.is_published,
+                "is_unpublished": not rsvp_form.is_published,
+            }
+            if is_user_team_member(self.chapter, frappe.session.user):
+                rsvp_status_block |= {
+                    "is_team_member": True,
+                    "form_edit": True,
+                    "is_published": rsvp_form.is_published,
+                    "is_unpublished": not rsvp_form.is_published,
+                }
+            else:
+                rsvp_status_block["is_team_member"] = False
+                if frappe.db.exists(
+                    "FOSS Event RSVP Submission",
+                    {
+                        "linked_cfp": rsvp_form.name,
+                        "submitted_by": frappe.session.user,
+                    },
+                ):
+                    submission = frappe.get_doc(
+                        "FOSS Event RSVP Submission",
+                        {
+                            "linked_cfp": rsvp_form.name,
+                            "submitted_by": frappe.session.user,
+                        },
+                    )
+                    rsvp_status_block |= {
+                        "has_submitted": True,
+                        "block_heading": "You have RSVP'd",
+                        "submission": submission.name,
+                        "edit_submission": True,
+                    }
+                else:
+                    rsvp_status_block["primary_cta"] = True
+
+            if not rsvp_form.is_published:
+                rsvp_status_block[
+                    "block_heading"
+                ] = "RSVP Form is Unpublished!"
+        else:
+            rsvp_status_block["has_doc"] = False
+            rsvp_status_block[
+                "block_heading"
+            ] = "RSVP Form is not live yet!"
+            if is_user_team_member(self.chapter, frappe.session.user):
+                rsvp_status_block[
+                    "block_heading"
+                ] = "Create RSVP for the event"
+                rsvp_status_block["is_team_member"] = True
+                rsvp_status_block["create_form"] = True
+            else:
+                rsvp_status_block["is_team_member"] = False
+                rsvp_status_block["primary_cta"] = False
+        return rsvp_status_block
+
+    def get_cfp_status_block(self):
+        cfp_status_block = {}
+        cfp_status_block["doctype"] = "FOSS Event CFP"
+        cfp_status_block["block_for"] = "cfp"
+
+        if frappe.db.exists("FOSS Event CFP", {"event": self.name}):
+            cfp_form = frappe.get_doc(
+                "FOSS Event CFP", {"event": self.name}
+            )
+            cfp_status_block |= {
+                "has_doc": True,
+                "block_heading": "CFP Form is Live!",
+                "docname": cfp_form.name,
+                "is_published": cfp_form.is_published,
+                "is_unpublished": not cfp_form.is_published,
+            }
+            if is_user_team_member(self.chapter, frappe.session.user):
+                cfp_status_block |= {
+                    "is_team_member": True,
+                    "form_edit": True,
+                    "is_published": cfp_form.is_published,
+                    "is_unpublished": not cfp_form.is_published,
+                }
+            else:
+                cfp_status_block["is_team_member"] = False
+                if frappe.db.exists(
+                    "FOSS Event CFP Submission",
+                    {
+                        "linked_cfp": cfp_form.name,
+                        "submitted_by": frappe.session.user,
+                    },
+                ):
+                    submission = frappe.get_doc(
+                        "FOSS Event CFP Submission",
+                        {
+                            "linked_cfp": cfp_form.name,
+                            "submitted_by": frappe.session.user,
+                        },
+                    )
+                    cfp_status_block |= {
+                        "has_submitted": True,
+                        "block_heading": "You have submitted a talk",
+                        "submission": submission.name,
+                    }
+
+                cfp_status_block["primary_cta"] = True
+
+            if not cfp_form.is_published:
+                cfp_status_block[
+                    "block_heading"
+                ] = "CFP Form is Unpublished!"
+        else:
+            cfp_status_block["has_doc"] = False
+            cfp_status_block[
+                "block_heading"
+            ] = "CFP Form is not live yet!"
+            if is_user_team_member(self.chapter, frappe.session.user):
+                cfp_status_block[
+                    "block_heading"
+                ] = "Create CFP for the event"
+                cfp_status_block["is_team_member"] = True
+                cfp_status_block["create_form"] = True
+            else:
+                cfp_status_block["is_team_member"] = False
+                cfp_status_block["primary_cta"] = False
+        return cfp_status_block
+
+    def get_user_cfp_submissions(self):
+        submissions = frappe.get_all(
+            "FOSS Event CFP Submission",
+            filters={
+                "event": self.name,
+                "submitted_by": frappe.session.user,
+            },
+            fields=[
+                "name",
+                "route",
+                "talk_title",
+                "category",
+                "status",
+                "talk_duration",
+            ],
+        )
+        return submissions or []
+
+    def get_recent_cfp_submissions(self):
+        submissions = frappe.get_all(
+            "FOSS Event CFP Submission",
+            filters={"event": self.name},
+            fields=[
+                "name",
+                "route",
+                "talk_title",
+                "category",
+                "submitted_by",
+                "status",
+                "talk_duration",
+            ],
+            order_by="creation desc",
+            limit=6,
+        )
+        for submission in submissions:
+            if submission.status == "Approved":
+                user = frappe.get_doc(
+                    "FOSS User Profile",
+                    {"email": submission.submitted_by},
+                )
+                submission["user_route"] = user.route
+                submission["full_name"] = user.full_name
+                submission["profile_picture"] = (
+                    user.profile_photo
+                    if user.profile_photo
+                    else "/assets/fossunited/images/defaults/user_profile_image.png"
+                )
+        return submissions or []

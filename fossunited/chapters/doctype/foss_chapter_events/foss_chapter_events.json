@@ -16,6 +16,7 @@
   "navbar_controls_section",
   "show_speakers",
   "show_rsvp",
+  "show_schedule",
   "column_break_moaa",
   "show_cfp",
   "show_photos",
@@ -25,6 +26,7 @@
   "chapter_name",
   "event_infomation_section",
   "must_attend",
+  "event_permalink",
   "event_name",
   "status",
   "event_type",
@@ -194,7 +196,7 @@
    "fieldname": "community_partners",
    "fieldtype": "Table",
    "label": "Community Partners",
-   "options": "FOSS Event Sponsors"
+   "options": "FOSS Event Community Partners"
   },
   {
    "fieldname": "deck_link",
@@ -360,6 +362,22 @@
    "fieldname": "paid_event",
    "fieldtype": "Check",
    "label": "Paid Event "
+  },
+  {
+   "description": "Permanent URL for the event",
+   "fieldname": "event_permalink",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Event Permalink",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule",
+   "fieldtype": "Check",
+   "label": "Show Schedule"
   }
  ],
  "has_web_view": 1,
@@ -408,8 +426,10 @@
   }
  ],
  "route": "events",
- "search_fields": "event_name, chapter",
+ "search_fields": "event_permalink, chapter",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "event_name"
 }

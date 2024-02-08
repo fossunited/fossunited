@@ -1,0 +1,8 @@
+{% macro tag(text="Tags", font_size = '', color= '', background='', icon=None) %}
+    <span class="foss-tag" style="font-size: {{font_size}}; color: {{color}}; background: {{background}} ">
+        {% if icon %}
+        <i class="ti ti-{{icon}}"></i>
+        {% endif %}
+        {{text}}
+    </span>
+{% endmacro %}

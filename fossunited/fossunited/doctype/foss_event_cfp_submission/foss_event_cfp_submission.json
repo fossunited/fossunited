@@ -11,11 +11,11 @@
   "is_published",
   "route",
   "status",
+  "attendance_confirmed",
   "column_break_vctq",
   "linked_cfp",
   "event",
   "event_name",
-  "event_date",
   "submitted_by",
   "personal_information_section",
   "full_name",
@@ -240,17 +240,17 @@
    "label": "Meta Info"
   },
   {
-   "fetch_from": "linked_cfp.event_date",
-   "fieldname": "event_date",
-   "fieldtype": "Date",
-   "label": "Event Date"
+   "default": "0",
+   "fieldname": "attendance_confirmed",
+   "fieldtype": "Check",
+   "label": "Attendance Confirmed"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-01-03 15:03:04.726911",
+ "modified": "2024-02-07 15:45:11.426679",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
