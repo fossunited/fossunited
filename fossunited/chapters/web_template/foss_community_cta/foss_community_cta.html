@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
+<style>
+
+    .cta-section{
+        display: flex;
+        font-family: Inter;
+        background: #F5F5F5;
+
+    }
+
+    .cta-container{
+        display: flex;
+        gap: 3rem;
+        padding: 5rem 10rem 0rem 10rem;
+        justify-content: center;
+    }
+
+    .cta-content{
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 5rem;
+        gap: 2rem;
+    }
+
+    .cta-text{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .cta-text h2{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .cta-text p{
+        color: var(--Gray-500, #667085);
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 1.75rem;
+        letter-spacing: -0.105rem;
+    }
+
+    .button-container{
+        width: 50%;
+    }
+    .cta-image{
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 768px){
+
+        .cta-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            padding:1rem 1rem 0rem 1rem;
+        }
+
+        .cta-container{
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+            padding-top: 0;
+            justify-content: center;
+        }
+        }
+
+        .cta-text h2{
+            font-size: 1.5rem;
+        }
+
+        .button-container{
+            width: 100%;
+        }
+
+
+</style>
+
+<div class="cta-section">
+
+    <div class="cta-container container">
+
+        <div class="cta-content">
+
+            <div class="cta-text">
+
+                <h2>{{heading}}</h2>
+                <p>{{subtext}}</p>
+
+            </div>
+
+            <div class="button-container">
+
+                <button class="btn-primary" id="cta-button">
+
+                    <a href="{{cta_link}}"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
+                </button>
+
+            </div>
+
+
+
+        </div>
+
+        <div class="cta-image">
+            <img src="{{cta_image}}" alt="Community CTA image">
+        </div>
+
+    </div>
+
+</div>

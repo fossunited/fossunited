@@ -1,0 +1,409 @@
+<style>
+
+    .club-hero-section{
+        display: flex;
+        font-family: Inter;
+        overflow: hidden;
+        padding: 0rem;
+    }
+
+    .hero-container{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+
+    }
+
+    .hero-header{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+
+    }
+
+    .hero-header-heading{
+        display: flex;
+        gap: 1rem;
+    }
+
+    .hero-header img{
+        height: 4rem;
+        width: auto;
+    }
+
+    h1{
+        margin:0;
+        color: #1A1A1A;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 100%;
+        letter-spacing: -0.18rem;
+    }
+
+    h1 > span{
+        color: #08B74F;;
+    }
+
+    h5{
+    color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+    font-size: 1.15rem;
+    font-weight: 600;
+    line-height: 115%;
+    letter-spacing: -0.06rem;
+    }
+
+    p{
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 140%;
+        letter-spacing: -0.04rem;
+    }
+
+    .hero-cta{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .hero-search{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .hero-club-search{
+
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--Gray-200, #EAECF0);
+        max-width: 70%;
+    }
+
+    #search-club{
+        border-color: transparent;
+        width: 100%
+    }
+
+    #search-club::placeholder{
+        color: var(--Gray-500, #667085);
+    }
+
+    #search-club:focus{
+        outline: none;
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.8rem 1.5rem;
+        color: #FFF;
+        text-decoration: none;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 115%;
+        letter-spacing: -0.045rem;
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+    }
+
+    .hero-image > img{
+        transform: rotate(-2deg) scale(1.8);
+        transform-origin: top;
+    }
+
+    .autocomp {
+        background: #ffffff;
+        border-radius: 0 0 5px 5px;
+        border: 1px solid #EAECF0;
+        border-top: 0;
+        box-shadow: 2px 2px 2px #f8f8f8;
+        text-align: left;
+    }
+    .autocomp-item {
+        padding-bottom: 5px;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .autocomp-item:hover,
+    .autocomp-sel {
+        background: #f8f8f8;
+        font-weight: bold;
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    @media (max-width: 768px){
+        .club-hero-section{
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .hero-container{
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+            gap: 3rem;
+        }
+
+        .hero-header{
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-header-heading{
+            align-items: center;
+        }
+
+        h1{
+            font-size: 2rem;
+            letter-spacing: -0.12rem;
+        }
+
+        .hero-image{
+            height: 10rem;
+            overflow: hidden;
+        }
+        .hero-image > img{
+            transform: rotate(26deg) scale(1.45);
+            transform-origin: 50% 42%;
+        }
+
+        .hero-club-search{
+            max-width: 100%;
+        }
+
+        #search-club::placeholder{
+            font-size: 1rem;
+        }
+
+        .btn-primary{
+            width: 100%;
+        }
+
+    }
+</style>
+
+
+<div class="club-hero-section container">
+
+    <div class="hero-container container">
+
+        <div class="hero-header">
+
+            <div class="hero-header-heading">
+                <img src="assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
+                <h1>FOSS <span>Clubs</span></h1>
+            </div>
+
+            <p>{{subtext}}</p>
+
+        </div>
+
+
+        <div class="hero-search">
+
+                <h5>{{subheading}}</h5>
+                <div class="hero-club-search">
+
+                    <input type="text" id="search-club" placeholder="Search by name of club or city">
+
+                </div>
+
+
+        </div>
+
+        <div class = "hero-cta">
+
+            <div class="button-container">
+
+                    <button class="btn-primary" href="{{cta_link}}">{{cta_text}}
+                    </button>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img src="assets/fossunited/images/illustrations/city-communities.svg" alt="">
+    </div>
+
+    <script>
+
+        function autocomp(el, options = {}) {
+            const defaults = {
+                onQuery: null, onNavigate: null, onSelect: null, onRender: null, debounce: 100, autoSelect: true
+            };
+
+            const opt = { ...defaults, ...options };
+            let box, cur = opt.autoSelect ? 0 : -1, items = [], val, req;
+
+
+            el.autocomplete = "off";
+
+            ["input", "keydown", "blur"].forEach(k => el.addEventListener(k, handleEvent));
+
+            function handleEvent(e) {
+                if (e.type === "keydown" && !handleKeydown(e)) {
+                    return;
+                };
+
+                if (e.type === "blur") {
+                    destroy();
+                    return;
+                }
+
+                if (e.target.value === "") {
+                    destroy();
+                    val = null;
+                    return;
+                }
+
+                if (e.target.value === val && box) {
+                    return;
+                };
+
+                val = e.target.value;
+
+                clearTimeout(req);
+                req = setTimeout(query, opt.debounce);
+            }
+
+            function handleKeydown(e) {
+                if (!box) {
+                    return (e.keyCode === 38 || e.keyCode === 40) ? true : false;
+                }
+
+                switch (e.keyCode) {
+                    case 38: return navigate(-1, e);
+                    case 40: return navigate(1, e);
+                    case 9: // Tab
+                        e.preventDefault();
+                        select(cur);
+                        destroy();
+                        return;
+                    case 13: // Enter
+                        select(cur);
+                        destroy();
+                        return;
+                    case 27: // Escape.
+                        destroy();
+                        return;
+                }
+            }
+
+            async function query() {
+                if (!val) {
+                    return;
+                }
+
+                items = await opt.onQuery(val);
+                if (!items.length) {
+                    destroy();
+                    return;
+                }
+
+                if (!box) {
+                    createBox();
+                }
+
+                renderResults();
+            }
+
+            function createBox() {
+                box = document.createElement("div");
+                Object.assign(box.style, {
+                    width: window.getComputedStyle(el).width,
+                    position: "absolute",
+                    left: `${el.offsetLeft}px`,
+                    top: `${el.offsetTop + el.offsetHeight}px`
+                });
+
+                box.classList.add("autocomp");
+                el.parentNode.insertBefore(box, el.nextSibling);
+            }
+
+            function renderResults() {
+                box.innerHTML = "";
+
+                items.forEach((item, idx) => {
+                    const div = document.createElement("div");
+                    div.classList.add("autocomp-item");
+
+                    // If there's a custom renderer callback, use it, else, simply insert the value/text as-is.
+                    opt.onRender ? div.appendChild(opt.onRender(item)) : div.innerText = item;
+                    if (idx === cur) {
+                        div.classList.add("autocomp-sel");
+                    }
+
+                    div.addEventListener("mousedown", () => select(idx));
+                    box.appendChild(div);
+                });
+            }
+
+            function navigate(direction, e) {
+                e.preventDefault();
+
+                // Remove the previous item's highlight;
+                const prev = box.querySelector(`:nth-child(${cur + 1})`);
+                prev && prev.classList.remove("autocomp-sel");
+
+                // Increment the cursor and highlight the next item, cycled between [0, n].
+                cur = (cur + direction + items.length) % items.length;
+                box.querySelector(`:nth-child(${cur + 1})`).classList.add("autocomp-sel");
+            }
+
+            function select(idx) {
+                if (!opt.onSelect) {
+                    return;
+                }
+
+                val = opt.onSelect(items[idx]);
+                el.value = val || items[idx];
+            }
+
+            function destroy() {
+                items = [];
+                cur = opt.autoSelect ? 0 : -1;
+                if (box) {
+                    box.remove();
+                    box = null;
+                }
+            }
+        }
+
+        autocomp(document.getElementById("search-club"), {
+            onQuery: async (val) => {
+
+                return await frappe.db.get_list( "FOSS Chapter", {
+                    fields: ["chapter_name", "route", "city"],
+                    filters: {
+                        chapter_type: "FOSS Club",
+                    },
+                    or_filters:[[ "city", "like", "%" + val + "%"], ["chapter_name", "like", "%" + val + "%"]]
+                })
+
+            },
+            onSelect: (result) => {
+                window.location.href = "/" + result.route;
+                return result.chapter_name;
+            },
+            onRender: (result) => {
+                const div = document.createElement("div");
+                div.innerHTML = result.chapter_name;
+                return div;
+            }
+        });
+
+
+
+    </script>
+
+</div>
