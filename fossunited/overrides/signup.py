@@ -62,12 +62,4 @@ def sign_up(username, email, full_name, gender, new_password):
     )
     if default_role:
         user.add_roles(default_role)
-
-        # send verification email
-    if user.flags.email_sent:
-        return 1, "Please check your email for verification"
-    else:
-        return (
-            2,
-            "Please ask your administrator to verify your sign-up",
-        )
+    return 1, "Account Created Successfully"
