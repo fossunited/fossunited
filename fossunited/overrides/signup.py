@@ -41,6 +41,7 @@ def sign_up(username, email, full_name, gender, new_password):
     )
     user.flags.ignore_permissions = True
     user.flags.ignore_password_policy = True
+    user.send_welcome_email = 0
     user.flags.no_welcome_email = True
     user.insert()
 
