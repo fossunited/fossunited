@@ -105,6 +105,8 @@
             return false;
         }
 
+        login.set_status('{{ _("Creating your account...") }}', 'blue');
+
         frappe.call({
             method: "fossunited.overrides.signup.sign_up",
             args: {
