@@ -41,6 +41,7 @@ def sign_up(username, email, full_name, gender, new_password):
     )
     user.flags.ignore_permissions = True
     user.flags.ignore_password_policy = True
+    user.flags.no_welcome_email = True
     user.insert()
 
     # create FOSS User Profile
@@ -54,7 +55,10 @@ def sign_up(username, email, full_name, gender, new_password):
     )
     foss_profile.flags.ignore_permissions = True
     foss_profile.insert()
-    user.flags.redirect_to = "/" + foss_profile.route
+
+    frappe.cache.hset(
+        "redirect_after_login", user.name, f"/{foss_profile.route}"
+    )
 
     # set default signup role as per Portal Settings
     default_role = frappe.db.get_value(
