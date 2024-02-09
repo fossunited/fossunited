@@ -127,12 +127,14 @@
                 //login.set_status(r.message, 'red');
                 frappe.log(r.message);
             },
+            async: true,
             statusCode: login.login_handlers
         })
         setTimeout(() => {
-            window.location = "/login?login_email=" + encodeURIComponent(email) + "&redirect-to=/" + username;
-        }, 3000);
-        return false;
+            window.location.href = "/login";
+        }, 5000);
+
+        return true;
     }
 
     function validate_passwords() {
