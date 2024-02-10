@@ -133,8 +133,8 @@
             statusCode: login.login_handlers
         })
         setTimeout(() => {
-            window.location.href = "/login";
-        }, 5000);
+            window.location.href = "/login?redirect-to=" + encodeURIComponent(`/${username}`);
+        }, 2000);
 
         return true;
     }
