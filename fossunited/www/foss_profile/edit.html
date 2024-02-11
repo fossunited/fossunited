@@ -1,6 +1,6 @@
 {% extends "templates/foss_base.html" %}
 
-{% block content %}
+{% block page_content %}
 <div class="dashboard-container">
     <div class="container">
         {% from 'fossunited/templates/macros/title_with_button.html' import title_with_button %}
@@ -43,17 +43,17 @@
             <div>
                 <div class="mt-2 mb-4">
                     <label for="full_name" class="field-title">Full Name</label>
-                    <input type="text" name="full_name" value="{{ foss_user.full_name }}" class="form-control" id="full_name">
+                    <input type="text" name="full_name" value="{{ foss_user.full_name or '' }}" class="form-control" id="full_name">
                 </div>
                 <div class="my-4">
                     <label for="email" class="field-title">Email</label>
-                    <input type="email" name="email" value="{{ foss_user.email }}" class="form-control" id="email">
+                    <input type="email" name="email" value="{{ foss_user.email or '' }}" class="form-control" id="email">
                 </div>
                 <div class="my-4">
                     <div class="d-flex flex-column">
                         <label for="bio" class="field-title">Tagline</label>
                         <small>A short tagline that appears on your profile cards</small>
-                        <textarea name="bio" id="bio" cols="30" rows="10" class="form-control mt-2" style="height: 64px;">{{ foss_user.bio }}</textarea>
+                        <textarea name="bio" id="bio" cols="30" rows="10" class="form-control mt-2" style="height: 64px;">{{ foss_user.bio or ''}}</textarea>
                     </div>
                 </div>
             </div>
@@ -64,7 +64,7 @@
             </label>
             <small class="mb-1">Tell more about yourself here.</small>
             <div id="about" name="about" style="height: auto;">
-                {{ foss_user.about }}
+                {{ foss_user.about or '' }}
             </div>
         </div>
     </div>
@@ -82,35 +82,35 @@
                         <i class="ti ti-world"></i>
                         <span>Website</span>
                     </label>
-                    <input type="text" name="facebook" value="{{ foss_user.website }}" class="form-control" id="website">
+                    <input type="text" name="facebook" value="{{ foss_user.website or '' }}" class="form-control" id="website">
                 </div>
                 <div class="mb-4">
                     <label for="github" class="field-title">
                         <i class="ti ti-brand-github"></i>
                         <span>Github</span>
                     </label>
-                    <input type="text" name="github" value="{{ foss_user.github }}" class="form-control" id="github">
+                    <input type="text" name="github" value="{{ foss_user.github or '' }}" class="form-control" id="github">
                 </div>
                 <div class="my-4">
                     <label for="linkedin" class="field-title">
                         <i class="ti ti-brand-linkedin"></i>
                         <span>LinkedIn</span>
                     </label>
-                    <input type="text" name="linkedin" value="{{ foss_user.linkedin }}" class="form-control" id="linkedin">
+                    <input type="text" name="linkedin" value="{{ foss_user.linkedin or '' }}" class="form-control" id="linkedin">
                 </div>
                 <div class="my-4">
                     <label for="twitter" class="field-title">
                         <i class="ti ti-brand-twitter"></i>
                         <span>Twitter</span>
                     </label>
-                    <input type="text" name="twitter" value="{{ foss_user.x }}" class="form-control" id="x">
+                    <input type="text" name="twitter" value="{{ foss_user.x or '' }}" class="form-control" id="x">
                 </div>
                 <div class="my-4">
                     <label for="devto" class="field-title">
                         <i class="ti ti-brand-devto"></i>
                         <span>Dev.to</span>
                     </label>
-                    <input type="text" name="devto" value="{{ foss_user.devto }}" class="form-control" id="devto">
+                    <input type="text" name="devto" value="{{ foss_user.devto or '' }}" class="form-control" id="devto">
                 </div>
             </div>
             <div>
@@ -119,35 +119,35 @@
                         <i class="ti ti-brand-gitlab"></i>
                         <span>Gitlab</span>
                     </label>
-                    <input type="text" name="gitlab" value="{{ foss_user.gitlab }}" class="form-control" id="gitlab">
+                    <input type="text" name="gitlab" value="{{ foss_user.gitlab or '' }}" class="form-control" id="gitlab">
                 </div>
                 <div class="my-4">
                     <label for="instagram" class="field-title">
                         <i class="ti ti-brand-instagram"></i>
                         <span>Instagram</span>
                     </label>
-                    <input type="text" name="instagram" value="{{ foss_user.instagram }}" class="form-control" id="instagram">
+                    <input type="text" name="instagram" value="{{ foss_user.instagram or '' }}" class="form-control" id="instagram">
                 </div>
                 <div class="my-4">
                     <label for="mastodon" class="field-title">
                         <i class="ti ti-brand-mastodon"></i>
                         <span>Mastodon</span>
                     </label>
-                    <input type="text" name="mastodon" value="{{ foss_user.mastodon }}" class="form-control" id="mastodon">
+                    <input type="text" name="mastodon" value="{{ foss_user.mastodon or '' }}" class="form-control" id="mastodon">
                 </div>
                 <div class="my-4">
                     <label for="youtube" class="field-title">
                         <i class="ti ti-brand-youtube"></i>
                         <span>Youtube</span>
                     </label>
-                    <input type="text" name="youtube" value="{{ foss_user.youtube }}" class="form-control" id="youtube">
+                    <input type="text" name="youtube" value="{{ foss_user.youtube or '' }}" class="form-control" id="youtube">
                 </div>
                 <div class="my-4">
                     <label for="medium" class="field-title">
                         <i class="ti ti-brand-medium"></i>
                         <span>Medium</span>
                     </label>
-                    <input type="text" name="medium" value="{{ foss_user.medium }}" class="form-control" id="medium">
+                    <input type="text" name="medium" value="{{ foss_user.medium or '' }}" class="form-control" id="medium">
                 </div>
             </div>
         </div>
