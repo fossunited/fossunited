@@ -45,14 +45,13 @@ def sign_up(username, email, full_name, gender, new_password):
     user.flags.no_welcome_email = True
 
     # set default signup role as per Portal Settings
-    default_role = frappe.db.get_value(
-        "Portal Settings", None, "default_role"
-    )
-    if default_role:
-        user.add_roles(default_role)
+    # default_role = frappe.db.get_value(
+    #     "Portal Settings", None, "default_role"
+    # )
+    # if default_role:
+    #     user.add_roles(default_role)
 
-    # No need to do user.insert() as it is done by user.add_roles
-    # user.insert()
+    user.insert()
 
     # create FOSS User Profile
     foss_profile = frappe.get_doc(
