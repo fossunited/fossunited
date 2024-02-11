@@ -16,7 +16,7 @@
             </div>
             <div class="content-div" id="work">
                 <div class="profile-content-div">
-                    {{ render_section_header("work") }}
+                    <h5>Work</h5>
                     <div class="coming-soon-container">
                         Integrations Coming Soon!
                     </div>
@@ -24,7 +24,7 @@
             </div>
             <div class="content-div" id="about">
                 <div class="profile-content-div">
-                    {{ render_section_header("about") }}
+                    <h5>About</h5>
                     <div class="about">
                         {{ doc.about or "Nothing in about."}}
                     </div>
@@ -42,26 +42,10 @@
 </div>
 {% endblock %}
 
-{% macro render_section_header(section, add=False, edit=False) %}
+{% macro render_section_header(section, add=False) %}
 <div id="{{section}}-section">
     <div class="header-with-button">
         <h5>{{section | capitalize}}</h5>
-        {% if frappe.session.user == doc.user %}
-        <div style="display: flex; gap: 0.5rem;">
-            {% if edit %}
-            <button class="edit-modal-button" name="edit-{{section}}">
-                <i class="ti ti-edit"></i>
-                    Edit {{section | capitalize}}
-            </button>
-            {% endif %}
-            {% if add %}
-            <button class="add-modal-button" name="add-{{section}}">
-                <i class="ti ti-plus"></i>
-                    Add {{section | capitalize}}
-            </button>
-            {% endif %}
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endmacro %}
@@ -74,9 +58,7 @@
         {% for project in doc.projects %}
         <div class="project-container edit-hover" data-docname="{{project.name}}">
             <img src="{{project.cover_image}}" alt="{{project.project_name}}" class="project-banner">
-            {% if frappe.session.user == doc.user %}
-            <button class="edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
-            {% endif %}
+            <button class="hide edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
             <div class="project-title">{{project.project_name}}</div>
             <div class="project-description">
                 {{project.tagline or "" | truncate(100)}}
@@ -137,11 +119,9 @@
                         {{ value.description or ""}}
                     </div>
                 </div>
-                {% if frappe.session.user == doc.user %}
-                <button class="edit-modal-button" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
+                <button class="edit-modal-button hide" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
                     <i class="ti ti-pencil"></i>
                 </button>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -172,11 +152,9 @@
                 </span>
             </div>
         </div>
-        {% if frappe.session.user == doc.user %}
-        <button class="edit-modal-button" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
+        <button class="edit-modal-button hide" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
             <i class="ti ti-pencil"></i>
         </button>
-        {% endif %}
     </div>
     {% endfor %}
     {% else %}
@@ -261,7 +239,9 @@
     $(document).ready(() => {
         frappe.require('controls.bundle.js');
         setNavbarControl();
-        validateEditOption()
+        validateProfileEditOption();
+        validateAddModal();
+        validateEditModal();
 
         if ( window.innerWidth > 768 ) {
             $('.edit-modal-button').hide();
@@ -306,8 +286,30 @@
         });
     }
 
-    function validateEditOption(){
-        if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
+    function validateAddModal(){
+        if ( frappe.session.user === '{{ doc.user }}') {
+            //for each header-with-button, find the section from its parent
+            $('.header-with-button').each((index, element) => {
+                let section = $(element).parent().attr('id').split('-')[0];
+                $(element).append(`
+                    <button class="add-modal-button" name="add-${section}">
+                        <i class="ti ti-plus"></i>
+                       Add ${section}
+                    </button>
+                `);
+            });
+        }
+    }
+
+    function validateEditModal(){
+        if (frappe.session.user == '{{ doc.user }}') {
+            $('.edit-modal-button').removeClass('hide');
+        }
+    }
+
+    function validateProfileEditOption(){
+        if ( frappe.session.user === '{{ doc.user }}') {
+
             // check if the width of the screen is less than 768px
             if (window.innerWidth < 768) {
                 // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
