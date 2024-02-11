@@ -43,7 +43,16 @@ def sign_up(username, email, full_name, gender, new_password):
     user.flags.ignore_password_policy = True
     user.send_welcome_email = 0
     user.flags.no_welcome_email = True
-    user.insert()
+
+    # set default signup role as per Portal Settings
+    default_role = frappe.db.get_value(
+        "Portal Settings", None, "default_role"
+    )
+    if default_role:
+        user.add_roles(default_role)
+
+    # No need to do user.insert() as it is done by user.add_roles
+    # user.insert()
 
     # create FOSS User Profile
     foss_profile = frappe.get_doc(
@@ -61,10 +70,4 @@ def sign_up(username, email, full_name, gender, new_password):
         "redirect_after_login", user.name, f"/{foss_profile.route}"
     )
 
-    # set default signup role as per Portal Settings
-    default_role = frappe.db.get_value(
-        "Portal Settings", None, "default_role"
-    )
-    if default_role:
-        user.add_roles(default_role)
     return 1, "Account Created Successfully"
