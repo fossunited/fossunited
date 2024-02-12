@@ -70,7 +70,7 @@
     }
 
     #patrons img {
-        max-width: 20rem;
+        max-width: 15rem;
     }
 
     #gold-partners img {
@@ -129,7 +129,7 @@
                     {%for partner in partners %}
                         <div class="ip-member">
                             <a class="partner" href="{{partner.website}}" id="patrons">
-                                <img src="{{ partner.logo }}" alt="{{ partner.full_name }}">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
                             </a>
                         </div>
                     {% endfor %}
@@ -147,7 +147,7 @@
                     {%for partner in partners %}
                         <div class="ip-member">
                             <a class="partner" href="{{partner.website}}" id="gold-partners">
-                                <img src="{{ partner.logo }}" alt="{{ partner.full_name }}">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
                             </a>
 
                         </div>
@@ -165,7 +165,7 @@
                     {%for partner in partners %}
                         <div class="ip-member">
                             <a class="partner" href="{{partner.website}}" id="silver-partners">
-                                <img src="{{ partner.logo }}" alt="{{ partner.full_name }}">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
                             </a>
                         </div>
                     {% endfor %}
@@ -184,7 +184,7 @@
                     {%for partner in partners %}
                         <div class="ip-member">
                             <a class="partner" href="{{partner.website}}" id="bronze-partners">
-                                <img src="{{ partner.logo }}" alt="{{ partner.full_name }}">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
                             </a>
                         </div>
                     {% endfor %}
@@ -200,7 +200,7 @@
                         {%for partner in partners %}
                             <div class="ip-member">
                                 <a class="partner" href="{{partner.website}}" id="other-partners">
-                                    <img src="{{ partner.logo }}" alt="{{ partner.full_name }}">
+                                    <img src="{{ partner.logo }}" alt="{{ partner.company }}">
                                     <div class="spl-tier-name">
                                         <p>{{partner.special_category}}</p>
                                     </div>
