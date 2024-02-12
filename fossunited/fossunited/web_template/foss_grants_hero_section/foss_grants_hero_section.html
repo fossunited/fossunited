@@ -4,7 +4,6 @@
         display: flex;
         font-family: Inter;
         overflow: hidden;
-        padding: 0rem;
         justify-content: space-between;
     }
 
@@ -30,10 +29,10 @@
 
     .grants-hero-image{
 
-        padding: 5rem 5rem 5rem 5rem;
+        padding: 5rem 0rem 5rem 0rem;
         width: 50%;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
     }
 
     .grants-hero-image img{
@@ -99,9 +98,6 @@
     }
 
 
-
-
-
     @media (max-width: 768px){
         .grants-section{
             flex-direction: column-reverse;
@@ -121,6 +117,7 @@
         .grants-hero-image{
             width: 100%;
             padding: 3rem 2rem;
+            justify-content: center;
         }
 
         .grants-hero-image img {
@@ -130,8 +127,6 @@
         .button-container{
             flex-direction: column;
         }
-
-
     }
 
 </style>
