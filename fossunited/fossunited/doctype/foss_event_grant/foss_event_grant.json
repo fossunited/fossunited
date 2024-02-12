@@ -176,7 +176,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-10 00:15:35.537484",
+ "modified": "2024-02-12 13:46:47.021623",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Grant",
@@ -193,6 +193,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "sort_field": "modified",
