@@ -13,7 +13,8 @@
   "column_break_yudq",
   "joining_date",
   "is_current_partner",
-  "tier"
+  "tier",
+  "special_category"
  ],
  "fields": [
   {
@@ -57,7 +58,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Tier",
-   "options": "Patron\nPlatinum\nGold\nSilver\nBronze",
+   "options": "Patron\nPlatinum\nGold\nSilver\nBronze\nSpecial",
    "reqd": 1
   },
   {
@@ -65,11 +66,16 @@
    "fieldname": "is_current_partner",
    "fieldtype": "Check",
    "label": "Currently active"
+  },
+  {
+   "fieldname": "special_category",
+   "fieldtype": "Data",
+   "label": "Special Category"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-02 12:42:28.690741",
+ "modified": "2024-02-12 19:23:51.083720",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Industry Partners",

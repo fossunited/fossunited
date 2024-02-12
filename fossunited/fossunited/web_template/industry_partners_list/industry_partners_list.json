@@ -1,0 +1,25 @@
+{
+ "__unsaved": 1,
+ "creation": "2024-02-12 19:12:01.465302",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "heading",
+   "fieldtype": "Data",
+   "label": "Heading",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2024-02-12 19:12:40.358562",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Industry Partners List",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}
