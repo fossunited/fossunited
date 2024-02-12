@@ -1,18 +1,16 @@
 <style>
 
     .events-hero-section{
-            display: flex;
-            font-family: Inter;
-            overflow: hidden;
-            padding: 0rem;
-            display: flex;
-            justify-content: space-between;
+        font-family: Inter;
+        padding: 5rem 0rem;
+        display: flex;
+        justify-content: space-between;
     }
 
     .events-container {
         display: flex;
         flex-direction: column;
-        gap: 6rem;
+        gap: 3rem;
         width: 50%;
     }
 
@@ -22,7 +20,7 @@
         gap: 1rem;
     }
 
-    h1{
+    .events-container h1{
         margin:0;
         color: #08B74F;;
         font-size: 4rem;
@@ -32,7 +30,7 @@
     }
 
 
-    h5{
+    .h5{
         color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
         font-size: 1.2rem;
         font-weight: 600;
@@ -40,9 +38,9 @@
         letter-spacing: -0.06rem;
     }
 
-    p{
+    .events-container p{
         color: var(--Gray-500, #667085);
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-style: normal;
         font-weight: 500;
         line-height: 140%;
@@ -72,6 +70,7 @@
         color: #FFF;
         text-decoration: none;
         font-weight: 500;
+        font-size: 1.125rem;
     }
 
     .hero-image{
@@ -85,6 +84,7 @@
         .events-hero-section{
             flex-direction: column-reverse;
             gap: 2.5rem;
+            padding: 2rem 0rem;
         }
 
         .events-container{
@@ -92,6 +92,10 @@
             padding-right: 0.5rem;
             width: 100%;
             gap: 2rem;
+        }
+
+        .events-container h1{
+            font-size: 2.5rem;
         }
 
         .hero-header{

@@ -30,14 +30,16 @@
    "reqd": 0
   },
   {
-   "fieldname": "club_search",
-   "fieldtype": "Link",
-   "label": "FOSS Club Search",
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "hero_image",
+   "fieldtype": "Attach Image",
+   "label": "Hero Image",
    "reqd": 0
   }
  ],
- "idx": 0,
- "modified": "2024-02-05 20:29:14.975113",
+ "idx": 31,
+ "modified": "2024-02-12 15:36:41.454923",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Clubs Home Page",
