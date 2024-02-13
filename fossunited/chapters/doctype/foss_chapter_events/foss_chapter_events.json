@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_guest_to_view": 1,
- "allow_import": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2023-07-01 23:55:20.934607",
@@ -378,7 +377,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-13 12:03:47.525900",
+ "modified": "2024-02-13 14:30:35.935653",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",

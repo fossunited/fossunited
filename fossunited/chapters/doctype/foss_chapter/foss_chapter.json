@@ -1,7 +1,6 @@
 {
  "actions": [],
  "allow_guest_to_view": 1,
- "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:{chapter_name}-{chapter_type}",
  "creation": "2023-06-30 01:25:06.245665",
@@ -225,7 +224,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-13 12:03:20.972886",
+ "modified": "2024-02-13 14:30:52.252095",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
