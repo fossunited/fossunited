@@ -110,33 +110,33 @@
         frappe.call({
             method: "fossunited.overrides.signup.sign_up",
             args: {
-                "username": username,
-                "email": email,
-                "full_name": full_name,
-                "gender": gender,
-                "new_password": new_password,
-            },
-            callback: (r) => {
-                /*var args = {}
-                args.cmd = "api/method/login";
-                args.usr = email,
-                args.pwd = new_password;
-                args.redirect_to = "/";
-                login.call(args);*/
-                window.location.hash = "#login";
-            },
-            error: (e) => {
-                //login.set_status(r.message, 'red');
-                frappe.log(r.message);
+                username: username,
+                email: email,
+                full_name: full_name,
+                gender: gender,
+                new_password: new_password,
             },
             async: true,
-            statusCode: login.login_handlers
+            freeze: true,
+            freeze_message: "Creating your account...",
+        }).then((r) => {
+            if(r.message[0] == 0){
+                frappe.msgprint(r.message[1]);
+                login.set_status(r.message[1], 'red');
+                return false;
+            }
+            else if (r.message[0] == 1) {
+                login.set_status('{{ _("Success! Redirecting...") }}', 'green');
+                frappe.msgprint(r.message[1]);
+                setTimeout(() => {
+                    window.location.href = "/login?redirect-to=" + encodeURIComponent(`/${username}`);
+                }, 1000);
+                return true;
+            }
+        }).catch((e) => {
+            console.log("Error");
+            frappe.msgprint(e);
         })
-        setTimeout(() => {
-            window.location.href = "/login?redirect-to=" + encodeURIComponent(`/${username}`);
-        }, 2000);
-
-        return true;
     }
 
     function validate_passwords() {
