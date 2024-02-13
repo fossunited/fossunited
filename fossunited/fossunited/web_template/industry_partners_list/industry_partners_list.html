@@ -1,0 +1,220 @@
+<style>
+
+    .ip-list-section {
+        display: flex;
+        font-family: Inter;
+    }
+
+    .ip-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 5rem;
+        padding: 6rem 10rem 6rem 10rem;
+    }
+
+    .ip-list-block {
+        display: flex;
+        gap: 4.5rem;
+        flex-direction: column;
+    }
+
+    .ip-list-container h2 {
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 2.5rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.08rem;
+    }
+
+    .partner-section h3 {
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.07rem;
+    }
+
+    .partner-section {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .partner-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 3rem;
+        justify-items: center;
+    }
+
+    .ip-member {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .partner {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        font-weight: 450;
+        font-size: 1rem;
+        padding: 0;
+    }
+
+    .partner:hover{
+        text-decoration: none
+    }
+
+    #patrons img {
+        max-width: 15rem;
+    }
+
+    #gold-partners img {
+        max-width: 15rem;
+    }
+
+    #silver-partners img {
+        max-width: 15rem;
+    }
+
+    #bronze-partners img {
+        max-width: 10rem;
+    }
+
+    #other-partners img {
+        max-width: 10rem;
+    }
+
+
+
+    @media (max-width: 768px){
+
+        .partner-container{
+            grid-template-columns: 1fr;
+
+        }
+
+        .ip-list-container h2{
+            font-size: 1.5rem;
+        }
+
+        .partner-section h3 {
+            font-size: 1.35rem;
+        }
+
+    }
+
+</style>
+
+
+<div class="ip-list-section">
+
+    <div class="ip-list-container container">
+
+        <h2>{{heading}}</h2>
+
+        <div class="ip-list-block">
+
+            <div class="partner-section">
+
+                <h3>Patrons</h3>
+
+                {% set partners = frappe.get_all("Industry Partners", fields=["company", "logo", "website"], filters={"tier": "Patron", "is_current_partner": 1}, order_by="company")%}
+                <div class="partner-container">
+
+                    {%for partner in partners %}
+                        <div class="ip-member">
+                            <a class="partner" href="{{partner.website}}" id="patrons">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="partner-section">
+
+                <h3>Gold Partners</h3>
+
+                {% set partners = frappe.get_all("Industry Partners", fields=["company", "logo", "website"], filters={"tier": "Gold", "is_current_partner": 1}, order_by="company")%}
+
+                <div class="partner-container">
+                    {%for partner in partners %}
+                        <div class="ip-member">
+                            <a class="partner" href="{{partner.website}}" id="gold-partners">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
+                            </a>
+
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="partner-section">
+
+                <h3>Silver Partners</h3>
+
+                {% set partners = frappe.get_all("Industry Partners", fields=["company", "logo", "website"], filters={"tier": "Silver", "is_current_partner": 1}, order_by="company") %}
+                <div class="partner-container">
+                    {%for partner in partners %}
+                        <div class="ip-member">
+                            <a class="partner" href="{{partner.website}}" id="silver-partners">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="partner-section">
+
+                <h3>Bronze Partners</h3>
+
+                {% set partners = frappe.get_all("Industry Partners", fields=["company", "logo", "website"], filters={"tier": "Bronze", "is_current_partner": 1}, order_by="company")%}
+
+
+                <div class="partner-container">
+                    {%for partner in partners %}
+                        <div class="ip-member">
+                            <a class="partner" href="{{partner.website}}" id="bronze-partners">
+                                <img src="{{ partner.logo }}" alt="{{ partner.company }}">
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="partner-section">
+
+                <h3>Other Partners</h3>
+                    {% set partners = frappe.get_all("Industry Partners", fields=["company", "logo", "website", "special_category"], filters={"tier": "Special", "is_current_partner": 1}, order_by="company")%}
+                    <div class="partner-container">
+                        {%for partner in partners %}
+                            <div class="ip-member">
+                                <a class="partner" href="{{partner.website}}" id="other-partners">
+                                    <img src="{{ partner.logo }}" alt="{{ partner.company }}">
+                                    <div class="spl-tier-name">
+                                        <p>{{partner.special_category}}</p>
+                                    </div>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

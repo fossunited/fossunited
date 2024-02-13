@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_guest_to_view": 1,
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:hackathon_permalink_name",
  "creation": "2023-12-12 18:15:08.888693",
@@ -296,7 +297,7 @@
    "link_fieldname": "hackathon_name"
   }
  ],
- "modified": "2023-12-18 18:14:40.023299",
+ "modified": "2024-02-13 12:05:07.294672",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathons",
