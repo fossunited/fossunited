@@ -1,0 +1,154 @@
+<style>
+
+    .grants-section {
+        display: flex;
+        font-family: Inter;
+        overflow: hidden;
+        justify-content: space-between;
+        padding: 2rem 0rem;
+    }
+
+    .grants-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 40%;
+        justify-content: center;
+        padding-left: 0;
+        padding-right: 0;
+        margin: 0;
+    }
+
+    .grants-container h1 {
+        margin:0;
+        color: #08B74F;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 100%;
+        letter-spacing: -0.18rem;
+    }
+
+    .grants-hero-image{
+
+        padding: 5rem 0rem 5rem 0rem;
+        width: 50%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .grants-hero-image img{
+        max-width: 25rem;
+    }
+
+    .button-container{
+        display: flex;
+        gap: 2rem;
+    }
+
+    .button-category{
+        display: flex;
+        align-items: center;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 115%;
+        letter-spacing: -0.045rem;
+        gap: 1.5rem;
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        font-weight: 450;
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+        color: #FFF;
+        text-decoration: none;
+    }
+
+    .btn-secondary{
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1.2rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--green-400, #B6DEC5);
+        background: var(--neutral-white, #FFF);
+        font-weight: 450;
+        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    .btn-secondary:active, .btn-secondary:hover{
+        border: 1.5px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        background-color: var(--neutral-white, #FFF) !important;
+        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+        text-decoration: none;
+    }
+
+    .grants-container p{
+        color: var(--Gray-500, #667085);
+        font-size: 1.125rem;
+        font-weight: 400;
+        line-height: 140%; /* 1.575rem */
+        letter-spacing: -0.0225rem;
+    }
+
+
+    @media (max-width: 768px){
+        .grants-section{
+            flex-direction: column-reverse;
+        }
+
+        .grants-container {
+            margin: 0;
+            width: 100%;
+            padding: 3rem 2rem;
+        }
+
+        .grants-container h1 {
+            font-size: 3rem;
+            letter-spacing: -0.15rem;
+        }
+
+        .grants-hero-image{
+            width: 100%;
+            padding: 3rem 2rem;
+            justify-content: center;
+        }
+
+        .grants-hero-image img {
+            max-width: 15rem;
+        }
+
+        .button-container{
+            flex-direction: column;
+        }
+    }
+
+</style>
+
+
+<div class="grants-section container">
+    <div class="grants-container container">
+        <h1>{{heading}}</h1>
+        <p>{{subtext}}</p>
+
+        <div class="button-category">
+
+            <div class="button-container">
+                <a href="{{primary_cta_link}}" class="btn-primary">{{primary_cta_text}}</a>
+                <a href="{{secondary_cta_link}}" class="btn-secondary">{{secondary_cta_text}}</a>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="grants-hero-image">
+        <img src="{{hero_image}}" alt="Grants Icon">
+    </div>
+</div>

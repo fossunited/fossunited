@@ -1,0 +1,181 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
+<style>
+    .recent-eventgrants-section {
+        display: flex;
+        font-family: Inter;
+        flex-direction: column;
+        padding: 0rem;
+    }
+
+    .recent-eventgrants-container {
+        display: flex;
+        padding: 5rem 10rem 4rem 10rem;
+        flex-direction: column;
+        gap: 2.5rem;
+    }
+
+    .recent-eventgrants-container h2{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.07rem;
+    }
+
+    .event-grant-category {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 2rem;
+    }
+
+    .grant-card{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: var(--Gray-50, #F9FAFB);
+        gap: 1rem;
+    }
+
+    .grant-card h5{
+        margin: 0;
+        overflow: hidden;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        text-overflow: ellipsis;
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 110%;
+        letter-spacing: -0.06rem;
+    }
+
+    .event-detail{
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+    }
+
+    .grant-card p{
+        margin:0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.75rem;
+        font-weight: 400;
+        line-height: 100%; /* 0.75rem */
+        letter-spacing: -0.015rem;
+    }
+
+    .grant-card h6{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.035rem;
+    }
+
+    .grant-card-footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+
+    .grant-card-footer a{
+        display: flex;
+        color: var(--gray-800, #383838);
+        font-size: 0.75rem;
+        font-weight: 500;
+        line-height: 115%;
+        letter-spacing: -0.0175rem;
+        text-decoration: none;
+        align-items: flex-end;
+    }
+
+    .grant-card-footer a:hover{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        text-decoration: none;
+    }
+
+    #grant-amount h6{
+        margin: 0;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.06rem;
+    }
+
+    @media (max-width: 768px) {
+        .recent-eventgrants-container {
+            padding: 5rem 2rem 4rem 2rem;
+        }
+
+        .event-grant-category {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .grant-card h5{
+            font-size: 1.2rem;
+        }
+
+        .grant-card-footer{
+            gap: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        #grant-amount h6{
+            font-size: 1.125rem;
+        }
+
+        .grant-card-footer a{
+            font-size: 0.75rem;
+        }
+    }
+
+
+</style>
+
+<div class="recent-eventgrants-section">
+
+    <div class="recent-eventgrants-container container">
+
+        <h2>Recent Event Grants</h2>
+
+        <div class="event-grant-category">
+            {% set approved_event_grants = frappe.get_all("FOSS Event Grant", fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount"], page_length=20, filters={"grant_status": "Approved"}) %}
+            {% for grant in approved_event_grants %}
+
+                <div class="grant-card">
+                    <h5>{{grant.event_name}}</h5>
+
+                    <div class="event-detail" id="event-date">
+                        <p>Date</p>
+                        <h6>{{grant.event_start_date.strftime("%d %b %Y")}}</h6>
+                    </div>
+
+                    <div class="event-detail" id="event-location">
+                        <p>Location</p>
+                        <h6>{{grant.event_location}}</h6>
+                    </div>
+
+                    <div class="grant-card-footer">
+
+                        <div class="event-detail" id="grant-amount">
+                            <p>Grant Amount</p>
+                            <h6>{{grant.grant_amount}}</h6>
+                        </div>
+
+                        <a href="{{grant.event_website}}">
+                            View Details
+                            <i class="ti ti-chevron-right"></i>
+                        </a>
+
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</div>

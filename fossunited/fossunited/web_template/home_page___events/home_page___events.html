@@ -262,6 +262,12 @@
         .flagship-card-cta{
             font-size: 0.875rem;
         }
+
+        .flagship-event-card:hover{
+            text-decoration: none;
+            background: #FFF;
+            box-shadow: none;
+        }
     }
 
 
@@ -341,7 +347,7 @@
 
                     <div class="upcoming-event-card-footer">
                         <a href="{{event.map_link}}" class="event-location">
-                            <i class="ti ti-map-pin"></i>{{ event.event_location }}
+                            <i class="ti ti-map-pin"></i>{{ event.event_location | truncate(15, False, '...', 0) }}
                         </a>
 
                         <a href="/{{event.route}}" class="event-details">

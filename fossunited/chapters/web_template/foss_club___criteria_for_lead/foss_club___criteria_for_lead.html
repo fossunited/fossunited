@@ -68,6 +68,10 @@
         width: 50%;
     }
 
+    .criteria-image img{
+        max-width: 150%;
+    }
+
 
 
 
@@ -81,9 +85,8 @@
 
         .criteria-container{
             flex-direction: column-reverse;
-
             padding: 0rem 0.5rem 2rem 0.5rem;
-            gap: 2.5rem;
+            gap: 0;
         }
 
         .criteria-category-container{
@@ -95,9 +98,16 @@
             font-size: 1rem;
         }
 
-        .criteria-image img{
-            width:100%;
+        .criteria-image{
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
+
+        .criteria-image img{
+            max-width: 120%;
+        }
+
 
 
     }

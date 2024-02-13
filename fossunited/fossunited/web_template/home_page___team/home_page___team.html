@@ -49,10 +49,10 @@
         text-decoration: none;
     }
     .team-block{
-        display: flex;
+        display: grid;
         justify-content: space-between;
         gap: 1.25rem;
-        flex-direction: row;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 
     .team-card{
@@ -62,12 +62,17 @@
         gap: 1.5rem;
     }
 
-    .team-card-image > img{
+    .team-card-image{
+        display: flex;
+        justify-content: center;
         max-width: 5rem;
-        border-radius: 5rem;
-        border: 1.333px solid var(--Gray-300, #D0D5DD);
     }
 
+    .team-card-image > img{
+        max-width: 4rem;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+    }
     .team-card-details{
         display: flex;
         flex-direction: column;
@@ -75,22 +80,22 @@
     }
 
     .team-card-details h2{
-        margin:0;
+        margin: 0;
         color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.25rem;
+        font-size: 1.125rem;
         font-style: normal;
         font-weight: 600;
-        line-height: 100%; /* 1.5rem */
+        line-height: 100%;
         letter-spacing: -0.06rem;
     }
 
     .team-card-details p{
-        margin:0;
+        margin: 0;
         color: var(--Gray-500, #667085);
         font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
-        line-height: 100%; /* 0.875rem */
+        line-height: 110%;
         letter-spacing: -0.0175rem;
     }
 
@@ -101,13 +106,10 @@
 
         }
 
-
-
         .team-block{
-            display: flex;
             justify-content: space-between;
-            gap: 1.25rem;
-            flex-direction: column;
+            gap: 2rem;
+            grid-template-columns: 1fr;
         }
 
         .team-card{
@@ -136,7 +138,7 @@
             </div>
 
             <div class="team-block">
-                {% set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot", "designation", "username"], filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time", "Intern"]]}, order_by ='org_role') %}
+                {% set team = frappe.get_all("FOSS United Team", fields=["full_name", "headshot", "designation", "username"], filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time", "Intern"]]}, order_by ='full_name') %}
                 {% for employee in team %}
                         <div class="team-card">
                             <div class="team-card-image">

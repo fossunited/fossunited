@@ -11,6 +11,7 @@
         display: flex;
         flex-direction: column;
         gap: 3rem;
+        width: 50%;
 
     }
 
@@ -114,11 +115,6 @@
         border:none !important;
     }
 
-    .hero-image > img{
-        transform: rotate(-2deg) scale(1.8);
-        transform-origin: top;
-    }
-
     .autocomp {
         background: #ffffff;
         border-radius: 0 0 5px 5px;
@@ -142,13 +138,14 @@
     @media (max-width: 768px){
         .club-hero-section{
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 5rem;
         }
 
         .hero-container{
             padding-left: 0.5rem;
             padding-right: 0.5rem;
             gap: 3rem;
+            width: 100%
         }
 
         .hero-header{
@@ -166,14 +163,6 @@
             letter-spacing: -0.12rem;
         }
 
-        .hero-image{
-            height: 10rem;
-            overflow: hidden;
-        }
-        .hero-image > img{
-            transform: rotate(26deg) scale(1.45);
-            transform-origin: 50% 42%;
-        }
 
         .hero-club-search{
             max-width: 100%;
@@ -232,7 +221,7 @@
     </div>
 
     <div class="hero-image">
-        <img src="assets/fossunited/images/illustrations/city-communities.svg" alt="">
+        <img src="{{hero_image}}" alt="">
     </div>
 
     <script>
