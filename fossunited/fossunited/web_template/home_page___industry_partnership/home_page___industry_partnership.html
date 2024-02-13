@@ -1,16 +1,14 @@
 <style>
     .ip-section{
         display: flex;
-        justify-content: center;
-        align-items: center;
         margin-bottom: 7rem;
     }
 
     .ip-container{
-        display: inline-flex;
-        padding: 0 10.625rem;
+        display: flex;
+        justify-content: space-around;
         align-items: stretch;
-        flex-shrink: 0;
+        overflow: hidden;
     }
 
     .ip-content-block{
@@ -19,8 +17,7 @@
         padding: 1.87rem;
         flex-direction: column;
         align-items: flex-start;
-        gap: 1.25rem;
-        width: 50%;
+        gap: 2.5rem;
     }
 
     .ip-content-block img{
@@ -62,9 +59,10 @@
 
     .ip-partners-block{
         background: url("assets/fossunited/icons/ip_block_pattern.svg") no-repeat;
-        padding: 5.51rem 3.67rem;
+        padding: 6rem 4rem;
         display: flex;
         justify-content: center;
+        background-size: cover;
     }
 
     .feature-partners{
@@ -85,7 +83,6 @@
 
         .ip-container{
             flex-direction: column-reverse;
-            padding: 0 5.625rem;
         }
 
         .ip-content-block{
@@ -102,23 +99,21 @@
         }
 
         .feature-partners{
-            padding: 2.5rem 0.7rem;
+            padding: 2.5rem 0rem;
+            flex-direction: column;
         }
 
         .feature-partners img{
-
-            width: 50%;
-            max-width: 100%;
+            max-width: 85%;
             display: block;
-            height: 100%;
         }
 
     }
 </style>
 
 
-<div class="ip-section">
-    <div class="ip-container container">
+<div class="ip-section container">
+    <div class="ip-container">
 
         <div class="ip-content-block">
 
