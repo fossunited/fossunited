@@ -131,10 +131,11 @@
                 setTimeout(() => {
                     window.location.href = "/login?redirect-to=" + encodeURIComponent(`/${username}`);
                 }, 1000);
+                return true;
             }
         }).catch((e) => {
-            console.log("Error")
-            console.log(e)
+            console.log("Error");
+            frappe.msgprint(e);
         })
     }
 
