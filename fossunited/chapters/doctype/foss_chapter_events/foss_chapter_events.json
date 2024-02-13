@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_guest_to_view": 1,
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2023-07-01 23:55:20.934607",
@@ -16,7 +17,6 @@
   "navbar_controls_section",
   "show_speakers",
   "show_rsvp",
-  "show_schedule",
   "column_break_moaa",
   "show_cfp",
   "show_photos",
@@ -26,7 +26,6 @@
   "chapter_name",
   "event_infomation_section",
   "must_attend",
-  "event_permalink",
   "event_name",
   "status",
   "event_type",
@@ -196,7 +195,7 @@
    "fieldname": "community_partners",
    "fieldtype": "Table",
    "label": "Community Partners",
-   "options": "FOSS Event Community Partners"
+   "options": "FOSS Event Sponsors"
   },
   {
    "fieldname": "deck_link",
@@ -362,22 +361,6 @@
    "fieldname": "paid_event",
    "fieldtype": "Check",
    "label": "Paid Event "
-  },
-  {
-   "description": "Permanent URL for the event",
-   "fieldname": "event_permalink",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_preview": 1,
-   "label": "Event Permalink",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "show_schedule",
-   "fieldtype": "Check",
-   "label": "Show Schedule"
   }
  ],
  "has_web_view": 1,
@@ -395,7 +378,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-07 14:28:35.742165",
+ "modified": "2024-02-13 12:03:47.525900",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -426,10 +409,8 @@
   }
  ],
  "route": "events",
- "search_fields": "event_permalink, chapter",
- "show_title_field_in_link": 1,
+ "search_fields": "event_name, chapter",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "event_name"
+ "states": []
 }
