@@ -26,8 +26,8 @@
   "chapter_name",
   "event_infomation_section",
   "must_attend",
-  "event_permalink",
   "event_name",
+  "event_permalink",
   "status",
   "event_type",
   "column_break_pua4",
@@ -364,7 +364,7 @@
    "label": "Paid Event "
   },
   {
-   "description": "Permanent URL for the event",
+   "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
    "fieldname": "event_permalink",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -395,7 +395,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-07 14:28:35.742165",
+ "modified": "2024-02-14 23:52:01.178452",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Events",
@@ -425,7 +425,6 @@
    "share": 1
   }
  ],
- "route": "events",
  "search_fields": "event_permalink, chapter",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
