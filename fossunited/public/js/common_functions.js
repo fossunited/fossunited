@@ -18,7 +18,7 @@ $(document).ready(function () {
 
 	// Onclick event for Event Cards
 	$(".event-card").click(function () {
-		window.location.pathname = "/events/" + $(this).data("docname");
+		window.location.pathname = "/" + $(this).data("route");
 	});
 
 	// Horizontal Navbar Controls for Profile & Event Pages
