@@ -155,7 +155,7 @@
                 <img src="{{ speaker.profile_picture }}" alt="{{ speaker.full_name }}" class="speaker--image">
                 <div class="speaker--details">
                     <div class="speaker--name">{{ speaker.full_name }}</div>
-                    <div class="speaker--talk-title">{{ speaker.talk_title }}</div>
+                    <div class="speaker--talk-title">{{ speaker.talk_title | truncate(12, True) }}</div>
                 </div>
                 <div class="speaker--talk-category">
                     {{ tag(speaker.talk_category, font_size="var(--text-sm)", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))') }}

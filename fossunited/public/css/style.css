@@ -1505,7 +1505,7 @@ h6{
 
 .member-card--image{
     width: 100%;
-    height: 9.375rem;
+    aspect-ratio: 1;
     object-fit: cover;
     border-radius: 0.75rem;
     filter: grayscale(100%);
@@ -1581,6 +1581,10 @@ h6{
 .time-location-parent{
     display: flex;
     gap: 1.88rem;
+}
+
+.time-location--child-container i {
+    color: hsl(var(--clr-code-night-500))
 }
 
 .time-location--child-container{
@@ -2057,14 +2061,114 @@ h6{
     }
 
     .members-grid-6{
+        padding: 2rem 0;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         place-items: center;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
+    .member-card--name{
+        font-size: var(--text-base);
+    }
+
+    .member-card--image{
+        width: 7rem;
+        border-radius: 0.5rem;
+    }
     /* ------- */
+
+    /* FOSS Event Pages */
+    .header--title-cta-parent{
+        padding: 0 1.25rem;
+    }
+
+    .header--tags{
+        padding: 0 1.25rem;
+    }
+
+    .header--short-desc{
+        padding: 0 1.25rem;
+    }
+
+    .time-location-parent{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.5rem 0;
+    }
+
+    .time-location--child-container{
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .time-location--child-container .child-container--heading{
+        font-size: var(--text-lg);
+    }
+
+    .horizontal-navbar-parent{
+        margin: 1rem 0;
+    }
+
+    .speakers-grid{
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 1.25rem;
+        padding: 1.88rem 0;
+    }
+
+    .speaker-card{
+        padding: 1.5rem;
+    }
+    .speaker-card:focus{
+        box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-100));
+    }
+
+    .speaker--talk-category{
+        font-size: var(--text-sm);
+    }
+
+    .status--icon-text-container{
+        gap: 0.5rem;
+    }
+
+    .status--icon-text-container .status-text{
+        font-size: var(--text-xl);
+    }
+
+    .status--buttons-section{
+        flex-direction: column;
+    }
+
+    .recent-submissions-section{
+        margin: 2rem 0;
+    }
+
+    .cfp-submission-card .cfp-submission--title-status{
+        flex-direction: column-reverse;
+        align-items: baseline;
+        gap: 0.5rem;
+    }
+
+    .recent-proposals-grid{
+        display: grid;
+        grid-template-columns: repeat(1, minmax(22rem, 1fr));
+        gap: 1.25rem;
+        padding: 1rem 0;
+    }
+
+    .recent-proposal-card{
+        padding: 1.5rem;
+    }
+
+    /* -------------------- */
 }
 @media screen and (max-width: 425px){
+    button {
+        font-size: var(--text-sm);
+        font-weight: 600;
+    }
+
     .events-grid{
         grid-template-columns: repeat(1, minmax(280px, 1fr));
         row-gap: 24px;
