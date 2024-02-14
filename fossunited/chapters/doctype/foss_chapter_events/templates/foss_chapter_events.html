@@ -37,9 +37,11 @@
             {{ tag("Must Attend", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))', icon='star-filled') }}
             {% endif %}
         </div>
+        {% if doc.event_bio %}
         <div class="header--short-desc">
             {{ doc.event_bio }}
         </div>
+        {% endif %}
     </div>
 </div>
 {% endmacro %}
