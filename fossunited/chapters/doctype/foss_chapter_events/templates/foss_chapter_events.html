@@ -32,7 +32,7 @@
         </div>
         <div class="header--tags">
             {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
-            {{ tag("Hackathon") }}
+            {{ tag(doc.event_type) }}
             {% if doc.must_attend %}
             {{ tag("Must Attend", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))', icon='star-filled') }}
             {% endif %}
