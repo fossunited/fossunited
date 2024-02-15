@@ -1,283 +1,480 @@
-{% extends "templates/foss_base.html" %}
-{% block page_content %}
-<section id="header" class="h-100">
-  <div class="container">
-    <div id="hero" class="mt-5 d-flex flex-column justify-content-center ">
-      <div class="news-icon d-flex justify-content-center">
-        <img height="150px" width="150px" src="/assets/fossunited/icons/newsletter.svg" />
+{% extends "templates/foss_base.html" %} {% block page_content %}
+<section id="newsletter-home-page">
+  <div id="homepage" class="d-inline-flex flex-column position-relative">
+    <div id="newsletter-body" class="d-flex justify-content-center align-items-center flex-column">
+      <div class="header-text">
+        <h1>FOSS United Newsletter</h1>
+        <p>Monthly digest of the latest news and updates about FOSS grants, events and mon school. Subscribe to stay updated and get news from us directly in your inbox.</p>
       </div>
-      <div id="hero" class="text-center">
-        <h1 class="press2p">
-          The FOSS United Newsletter
-        </h1>
-        <p>
-        Monthly digest of the latest news and updates about FOSS grants, events and mon school. Subscribe to stay updated and get news from us directly in your inbox.
-        </p>
-      </div>
-    </div>
-    <div id="subscribe-section">
-      <div class="container-center my-5 d-flex flex-column flex-md-row flex-lg-row">
-        <div class="mr-2 py-3 ">
-          <label for="email"></label>
-          <input id="email" type="email" placeholder="johndoe@example.com" name="email_address" />
-        </div>
-          <button id="subscribe">
-            Subscribe
-          </button>
+      <div class="subscribe d-flex justify-content-center "
+           id="subscribe-section"
+           class="container-center my-5 d-flex flex-column flex-md-row flex-lg-row"
+           >
+           <input
+               id="email"
+               type="email"
+               placeholder="Enter your E-mail Address"
+               name="email_address"
+               />
+           <button id="subscribe-button">Subscribe</button>
       </div>
     </div>
-  </div>
-</section>
-<section id="newsletters-list">
-  <div class="base-container container" style="max-width: 1000px">
-    <h4 class="text-center">Past Newsletters</h4>
-    <div>
-      <ul class="m-auto py-8 list-unstyled gap-2 text-left row justify-content-center">
-        {% for newsletter in newsletters %}
-        <a id="news"  href="{{ frappe.get_url() }}/{{ newsletter.route }}" class="py-4 text-center col-md-3 position-relative">
-          {{ newsletter.subject }}
-        </a>
-        {% endfor %}
-      </ul>
+    <div class="icon-div">
+      <img class="news-icon" src="/assets/fossunited/icons/newsletter.svg"/>
     </div>
   </div>
 </section>
 
-<section id="footer-cta">
-  <div id="cta-container" class="base-container container-center h-full">
-    <div id="cta">
-      <div class="text-center">
-        <h4>Connect with us</h4>
-        <p>Drop a message in our telegram group.</p>
-        <div>
-          <button type="submit" id="telegram-channel">
-            <a href="https://t.me/fossunited" alt="@fossunited telegram">Get in touch</a>
-          </button>
-        </div>
+<section id="past-news">
+  <div>
+      <div class="newsletter-list">
+    <h4 class="text-left ">Past Newsletters</h4>
+    <ul class="news m-auto list-unstyled row">
+      {% for newsletter in newsletters %} {% if newsletter.email_sent_at !=
+      "None" %}
+      <div id="news-details">
+        <p>{{ newsletter.email_sent_at }}</p>
+        <h6 class="">{{ newsletter.subject }}</h6>
+        <a href="{{ frappe.get_url() }}/{{ newsletter.route }}">View Edition</a>
       </div>
+      {% endif %} {% endfor %}
+    </ul>
+  </div>
+  </div>
+ </section>
+
+<section id="footer">
+  <div class="base-container container-center m-auto">
+    <div id="cta-container" class="text-center">
+      <h4>Get in Touch</h4>
+      <p>
+        Write to us at foundation@fossunited.org or send us a message on the
+        forum. <br />For event sponsorship, write to us at
+        grants@fossunited.org. <br />Join our
+        <a href="https://t.me/fossunited" alt="@fossunited telegram">
+          Telegram Community</a
+        >.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- Subject to display Change -->
 <section id="subscribed-page">
   <div id="success d-flex">
     <div id="success-wrapper">
       <div id="success-icon-div">
-        <svg class="success-icon container-center icon"><use href="#icon-solid-success"></use></svg>
+        <svg class="success-icon container-center icon">
+          <use href="#icon-solid-success"></use>
+        </svg>
       </div>
-      <div class="text-center ">
+      <div class="text-center">
         <p>
-        You are subscribed to our newsletter! You will be receiving updates every month about FOSS and FOSS United.
+          You are subscribed to our newsletter! You will be receiving updates
+          every month about FOSS and FOSS United.
         </p>
       </div>
     </div>
   </div>
 </section>
 
+<script src="/newsletter/index.js" type="text/javascript"></script>
 <style>
-#hero h1 {
-  font-size: 40px;
-}
-
-.news-icon img {
-  margin-bottom: -40px !important;
-}
-
-#hero p {
-  margin: auto;
-  width: auto;
-  max-width: 900px;
-  font-size: 20px;
-}
-
-.newsletter-icon img {
-  margin-bottom: -50px !important;
-}
-
-#newsletters-list {
-  margin: auto;
-}
-#email {
-  border: 1px solid black;
-  border-radius: 8px;
-  width: 360px;
-  height: 48px;
-  padding-left: 10px;
-}
-#news {
+#newsletter-home-page {
+  height: 100vh !Important;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  padding: 24px 48px;
-  background: var(--gray-50, #F9FAFB);
-  color: #08b74f;
-  margin: 15px;
+  margin: auto;
 }
 
-    #news a {
-      color: #08b74f;
-      max-width: 500px;
-    }
+#newsletter-body {
+  gap: 5rem;
+}
 
-    p {
-      padding: 0px 20px 0px 20px;
-    }
-    #subscribe {
-      padding: 12px;
-      color: white;
-      font-style: bold;
-      border-radius: 8px;
-      border: 1px solid var(--primary-500, #03B051);
-      background: var(--primary-500, #03B051);
-      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-    }
+.header-text {
+  text-align: center;
+  max-width: 800px;
+}
+.header-text h1 {
+  font-size: 2.0rem;
+  margin: 0rem 0rem 0.5rem 0rem;
+}
+.subscribe {
+  gap: 0.875rem; 
+}
+#email {
+  display: flex;
+  width: 25rem;
+  height: 2.5rem;
+  padding: 0.6875rem 0.75rem;
+  align-items: center;
+  border-radius: 0.5rem;
+  border: 1px solid var(--gray-300, #E2E2E2);
+  background: var(--neutral-white, #FFF);
+} 
 
-    #cta-container {
-      border-radius: 16px;
-      margin: 20px;
-      background: var(--gray-50, #F9FAFB);
-    }
+  #subscribe-button:hover {
+    background-color: #08b74f;
+  }
 
-    #telegram-channel {
-      border-radius: 8px;
-      border: 1px solid var(--primary-500, #03B051);
-      background: var(--primary-500, #03B051);
-      box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
-      padding: 12px;
-    }
+  #subscribe-button {
+    display: flex;
+    width: 9.125rem;
+    height: 2.5rem;
+    padding: 0.625rem 0.75rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    border-radius: 0.5rem;
+    background: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+  }
+  .icon-div {
+    height: 
+  }
 
-    #telegram-channel a {
-      font-family: Inter;
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 24px;
-      /* 150% */
-      color: white;
-      padding: 12px;
-    }
+  #past-news {
+    margin: auto;
+    width: auto;
+  }
+  .newsletter-list {
+    display: inline-flex;
+    padding: 2.5rem 6.25rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.875rem;
+    width: 100%;
+    padding: 40px 100px;
+    margin: auto;
+  }
+  .newsletter-list h4 {
+    width: 100%;
+  }
+  .news {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  #news-details {
+    width: 280px;
+    height: 120px;
+    padding: 15px;
+    gap: 12px;
+    padding: 12px 24px;
+    margin: 15px;
+    border-radius: 8px;
+    flex-wrap: wrap;
+    border: 0.5px solid var(--Gray-300, #d0d5dd);
+  }
+  #news-details h6 {
+    height: 45px;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 100%; /* 21.6px */
+  }
+  #news-details a {
+    color: #08b74f;
+    font-size: 12px !important;
+    line-height: 12px;
+    margin-bottom: 2rem;
+  }
+  .news-icon {
+    display: flex;
+    margin: auto;
+  }
 
-    #success {
-      margin: auto;
-      width: 500px;
-    }
-    #success-icon-div {
-      height: 200px;
-      width: 500px;
-    }
-    .success-icon {
-      margin-bottom: -60px !important;
-      width: 100px !important;
-      height: 250px !important;
-    }
-    div#success-wrapper {
+  #success {
+    margin: auto;
+    width: 500px;
+  }
+  #success-icon-div {
+    height: 200px;
+    width: 500px;
+  }
+  .success-icon {
+    margin-bottom: -60px !important;
+    width: 100px !important;
+    height: 250px !important;
+  }
+  div#success-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 500px;
+    margin: auto;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+  }
+  #subscribed-page {
+    display: none;
+  }
+
+  .subscribed-page-show {
+    display: block;
+  }
+
+  #footer {
+    background: var(--Gray-200, #eaecf0);
+    padding: 1.5rem 1.5rem;
+  }
+
+  #cta-f h4 {
+    display: flex;
+    flex-direction: column;
+    font-family: Inter;
+    font-size: 40px;
+    font-style: normal;
+    padding: 20px 20px;
+    gap: 30px;
+    font-weight: 600;
+    line-height: 100%; /* 40px */
+  }
+  #cta-container {
+    align-self: stretch;
+    font-size: 1.125rem;
+  }
+
+  @media (min-width: 320px) and (max-width: 375px) {
+    #newsletter-home-page {
+      max-width: 400px; 
+      padding: 0px;
       display: flex;
-      height: 100vh;
-      width: 500px;
-      margin: auto;
       justify-content: center;
-      flex-direction: column;
+      align-items: flex-end
+    }
+    .header-text h1 { 
+      font-size: 1.25rem;
+    }
+    .header-text p {
+      max-width: 300px !important;
+      font-size: 0.25rem;
+    }
+    #newsletter-body {
+      gap: 2rem;
+    }
+    #subscribe-section {
+      max-width: 400px; 
+      margin: auto; 
+      flex-direction :column;
       align-items: center;
     }
-     #subscribed-page {
-      display: none;
+    #email {
+      width: 12rem; 
+      font-size: 0.25px;
     }
-
-    .subscribed-page-show {
-      display: block;
+    .subscribe-button {
+      width: 8rem;
+      height: 2rem;
+      font-size: 0.5rem;
     }
-
-    /* media queries */
-    /* Header - Page 1
-    @media (min-width: 320px) and (max-width: 425px) {
-      .newsletter-icon img {
-        height: 100px;
-            width: 100px;
-        }
-
-        #hero h1 {
-            font-size: 25px;
-        }
-
-        #hero p {
-            font-size: 15px;
-        }
-
-        #email {
-            height: 35px;
-            width: 200px !important;
-        }
-
-        #email {
-            font-size: 12px;
-            padding-left: 8px;
-        }
-
-        #subscribe {
-            font-size: 12px;
-            padding: 8px;
-        }
+    #past-news h4 {
+      font-size: 1rem;
+      padding: 0.595rem;
     }
-
-    @media (min-width: 426px) and(max-width: 576px) {
-        .newsletter-icon img {
-            height: 100px;
-            width: 100px;
-        }
-
-        #hero h1 {
-            font-size: 30px;
-        }
-
-        #hero p {
-            font-size: 18px;
-        }
-
-        #email {
-            width: 230px !important;
-        }
-
-        #subscribe {
-            font-size: 15px;
-        }
+    .newsletter-list {
+      max-width: 400px;
+      padding: 0.25rem;
+      margin-top: 0.5rem;
+      gap: 0;
     }
-
-    @media (min-width: 577px) and(max-width: 768px) {
-        #email {
-            width: 280px;
-        }
+    .news {
+      display: flex;
+      justify-content: center;
     }
+    .news-icon {
+      height: 12rem;
+      width: auto;
+    }
+    #cta-container h4 {
+      font-size: 1rem;
+    }
+    #cta-container p {
+      font-size: 0.855rem;
+    }
+  }
 
-    /* Middle Section - Past Newsletters */
-    @media (min-width: 320px) and(max-width: 425px) {
-        #news {
-            padding: 24px;
-            width: 300px;
-            font-size: 14px;
-        }
+  @media (min-width: 376px) and (max-width: 475px) {
+    #newsletter-home-page {
+      max-width: 600px; 
+      display: flex;
+      justify-content: center;
+      align-items: flex-end
+    }
+    .header-text h1 { 
+      font-size: 1.25rem;
+    }
+    .header-text p {
+      max-width: 300px !important;
+      font-size: 0.25rem;
+    }
+    #newsletter-body {
+      gap: 2rem;
+    }
+    #subscribe-section {
+      max-width: 400px; 
+      margin: auto; 
+      flex-direction :column;
+      align-items: center;
+    }
+    #email {
+      width: 15rem; 
+      font-size: 0.25rem;
+    }
+    #subscribe-button {
+      width: 9rem;
+      height: 2rem;
+      font-size: 0.800rem;
+    }
+    #subscribe-button:hover {
+      background-color: #08b74f;
+    }
+    #past-news h4 {
+      font-size: 1.5rem;
+      padding: 0.595rem;
+    }
+    .newsletter-list {
+      margin: auto;
+      width: auto;
+      padding: 0.25rem;
+      gap: 0;
+    }
+   .news {
+      display: flex;
+      justify-content: center !important;
+      align-items: center;
+    }    
+   .news-details {
+      width: 20rem;
+    }
+    .news-icon {
+      height: 12rem;
+      width: auto;
+    }
+    #cta-container h4 {
+      font-size: 1.2rem;
+    }
+    #cta-container p {
+      font-size: 0.900rem;
+    }
+  }
+
+  @media (min-width: 475px) and (max-width: 576px) {
+    #newsletter-home-page { 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-text h1 { 
+      font-size: 1.5rem;
+    }
+    .header-text p {
+      max-width: 450px !important;
+      margin: auto;
+      font-size: 0.8rem;
+    }
+    #newsletter-body {
+      gap: 2rem;
+    }
+    #subscribe-section {
+      max-width: 400px; 
+      margin: auto; 
+      flex-direction :column;
+      align-items: center;
+    }
+    #email {
+      width: 20rem;
+    }
+    #subscribe-button {
+      width: 10rem;
+      height: 2.5rem;
+    }
+    #past-news h4 {
+      font-size: 1.5rem;
+      padding: 0.595rem;
+    }
+    .newsletter-list {
+      margin: auto;
+      max-width: 400px;
+      padding: 0.25rem;
+      padding-top: 0.5rem;
+      gap: 0;
+    }
+    .news {
+      display: flex;
+      justify-content: center;
+      margin: auto;
+    }
+    #news-details {
+        width: 18rem;
+    }
+    .news-icon {
+      height: 12rem;
+      width: auto;
+    }
+    #cta-container h4 {
+      font-size: 1rem;
+    }
+    #cta-container p {
+      font-size: 0.855rem;
+    }
+  }
+
+  @media (min-width: 576px) and (max-width: 768px) {
+    #newsletter-home-page { 
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .header-text h1 { 
+      font-size: 2rem;
+    }
+    .header-text p {
+      max-width: 600px !important;
+      font-size: 0.890rem;
+    }
+    #newsletter-body {
+      gap: 2rem;
+    }
+    #subscribe-section {
+      max-width: 400px; 
+      margin: auto; 
+      flex-direction :column;
+      align-items: center;
+    }
+    #email {
+      width: 20rem;
+    }
+    #subscribe-button {
+      width: 10rem;
+      height: 2.5rem;
+    }
+    #past-news h4 {
+      font-size: 1.5rem;
+      padding: 0.595rem;
+    }
+    .newsletter-list {
+      margin: auto;
+      max-width: 400px;
+      padding: 0.25rem;
+      padding-top: 0.5rem;
+      gap: 0;
+    }
+    .news {
+      display: flex;
+      justify-content: center;
+      margin: auto;
+    }
+    #news-details {
+            width: 18rem;
 
     }
-
-    @media (min-width: 426px) and(max-width: 768px) {
-        #news {
-            padding: 24px 36px;
-            width: 350px;
-        }
+    .news-icon {
+      height: 12rem;
+      width: auto;
     }
-
-    /* Footer Section - CTA */
-    @media (min-width: 320px) and (max-width: 425px) {
-        #telegram-channel {
-            padding: 10px;
-        }
-
-        #telegram-channel a {
-            font-size: 15px;
-        }
-    }
+  }
 </style>
-
-<script src="/newsletter/index.js" type="text/javascript"></script>
 
 {% endblock %}

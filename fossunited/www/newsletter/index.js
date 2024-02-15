@@ -18,11 +18,11 @@ function subscribeHandler(event) {
   });
   event.stopPropagation();
   document
-    .getElementById("subscribe")
+    .getElementById("subscribe-button")
     .removeEventListener("click", subscribeHandler);
 }
 document
-  .getElementById("subscribe")
+  .getElementById("subscribe-button")
   .addEventListener("click", subscribeHandler);
 
 function showSuccessMsg() {
@@ -35,6 +35,6 @@ function showSuccessMsg() {
   }
 }
 
-document.getElementById('subscribe').addEventListener('click', function () {
+document.getElementById('subscribe-button').addEventListener('click', function () {
   showSuccessMsg();
 });
