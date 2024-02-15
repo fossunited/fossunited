@@ -1405,12 +1405,11 @@ h6{
 .events-grid-4{
     padding: 1rem 0;
     display: grid;
-    grid-template-columns: repeat(4, minmax(17.5rem, 1fr));
+    grid-template-columns: repeat(4, minmax(16rem, 1fr));
     gap: 1.5rem;
 }
 
 .event-card{
-    min-width: 17.5rem;
     display: flex;
     flex-direction: column;
     border-radius: 0.5rem;
@@ -1850,7 +1849,7 @@ h6{
 /* ---- */
 
 @media screen and (max-width: 1200px){
-    .events-grid{
+    .events-grid-4{
         grid-template-columns: repeat(3, minmax(300px, 1fr));
         row-gap: 24px;
     }
