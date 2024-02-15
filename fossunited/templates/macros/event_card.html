@@ -1,5 +1,5 @@
 {% macro event_card(event) %}
-<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}">
+<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}" onclick="window.location.pathname='/{{event.route}}'">
     <img class="event-card--banner" src="{{ event.banner_image }}" alt="Event Banner"/>
     <div class="event-card-contents">
         <div class="event-card--date-section">
