@@ -30,7 +30,6 @@
   "category",
   "talk_duration",
   "talk_reference",
-  "speakers",
   "column_break_mhza",
   "talk_description",
   "section_break_ilij",
@@ -215,19 +214,13 @@
    "fieldname": "attendance_confirmed",
    "fieldtype": "Check",
    "label": "Attendance Confirmed"
-  },
-  {
-   "description": "Enter the FOSS Profile Username of any co-speaker with you. Separate multiple usernames with a commas(,)",
-   "fieldname": "speakers",
-   "fieldtype": "Data",
-   "label": "Speakers"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-02-16 16:48:08.434046",
+ "modified": "2024-02-18 02:46:29.924170",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
