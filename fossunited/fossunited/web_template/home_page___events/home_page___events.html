@@ -322,40 +322,12 @@
                 <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
         </div>
 
-        <div class="events-block">
-            {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "route", "must_attend", "event_location", "map_link", "event_start_date"], filters={"status": "Approved"}, page_length=3, order_by='event_start_date') %}
+        {% from "fossunited/templates/macros/event_card.html" import event_card %}
+        {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "banner_image", "route", "must_attend", "event_location", "map_link", "event_start_date"], filters={"status": "Approved", "event_start_date": ['>=', frappe.utils.now()]}, page_length=6, order_by='event_start_date') %}
+        <div class="events-grid-4">
             {% for event in events %}
-
-                <div class="upcoming-event-card">
-                    <div class="upcoming-event-tags-block">
-                        <div class="event-date">
-                            <p>{{ event.event_start_date.strftime("%d %b %Y") }}</p>
-                        </div>
-
-                        {% if event.must_attend == 1 %}
-                            <div class="is-must-attend">
-                                <i class="ti ti-star-filled"></i>
-                                <p>Must Attend</p>
-                            </div>
-                        {% endif %}
-
-                    </div>
-
-                    <h2>{{ event.event_name }}</h2>
-
-                    <div class="upcoming-event-card-footer">
-                        <a href="{{event.map_link}}" class="event-location">
-                            <i class="ti ti-map-pin"></i>{{ event.event_location | truncate(15, False, '...', 0) }}
-                        </a>
-
-                        <a href="/{{event.route}}" class="event-details">
-                            View Details
-                            <i class="ti ti-chevron-right"></i>
-                        </a>
-                    </div>
-                </div>
+                {{ event_card(event) }}
             {% endfor %}
-
         </div>
 
 

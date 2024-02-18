@@ -16,10 +16,10 @@ $(document).ready(function () {
 
 	$(document).trigger("page-change");
 
-	// Onclick event for Event Cards
-	$(".event-card").click(function () {
-		window.location.pathname = "/events/" + $(this).data("docname");
-	});
+	// Onclick event for Event Cards (not needed anymore)
+	// $(".event-card").click(function () {
+	// 	window.location.pathname = "/" + $(this).data("route");
+	// });
 
 	// Horizontal Navbar Controls for Profile & Event Pages
 	setNavbarControl();

@@ -10,9 +10,12 @@ def sign_up(username, email, full_name, gender, new_password):
     user = frappe.db.get("User", {"email": email})
     if user:
         if user.enabled:
-            return 0, "Already Registered"
+            return 0, "User with this email already registered!"
         else:
-            return 0, "Registered but disabled"
+            return (
+                0,
+                "User registered but disabled. Please contact Administrator!",
+            )
     else:
         if frappe.db.get_creation_count("User", 60) > 300:
             frappe.respond_as_web_page(
