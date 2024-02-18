@@ -55,6 +55,8 @@ function setNavbarControl(){
 	let activeNavItem = navItems[0];
 	let activeContentDiv = contentDivs[0];
 
+	if (navItems.length === 0 || contentDivs.length === 0 ) return;
+
 	contentDivs.forEach((contentDiv) => {
 		contentDiv.classList.add('hide');
 	});
