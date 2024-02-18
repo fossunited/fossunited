@@ -12,10 +12,10 @@
 
     .team-container{
         display: flex;
-        padding: 0 10.625rem;
         align-items: flex-start;
         gap: 1.5rem;
         flex-direction: column;
+        width: 100%;
     }
 
     .team-section-header{
@@ -23,7 +23,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
-        gap: 0.78rem;
+        gap: 1rem;
     }
 
     .team-section-header h1{
@@ -51,8 +51,8 @@
     .team-block{
         display: grid;
         justify-content: space-between;
-        gap: 1.25rem;
         grid-template-columns: 1fr 1fr 1fr;
+        width: 100%;
     }
 
     .team-card{
@@ -85,8 +85,8 @@
         font-size: 1.125rem;
         font-style: normal;
         font-weight: 600;
-        line-height: 100%;
-        letter-spacing: -0.06rem;
+        line-height: 110%;
+        letter-spacing: -0.025rem;
     }
 
     .team-card-details p{
@@ -101,10 +101,6 @@
 
     @media screen and (max-width: 768px) {
 
-        .team-container{
-            padding: 0 6rem;
-
-        }
 
         .team-block{
             justify-content: space-between;
@@ -128,9 +124,9 @@
     }
 </style>
 
-<div class="team-section">
+<div class="team-section container">
 
-    <div class="team-container container">
+    <div class="team-container">
             <div class="team-section-header">
                 <h1>The Team</h1>
                 <a href="{{team_page_link}}">Meet the Workforce ↗</a>

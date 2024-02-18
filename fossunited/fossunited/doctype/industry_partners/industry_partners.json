@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
  "autoname": "field:company",
  "creation": "2024-01-30 20:02:51.807365",
@@ -75,7 +76,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-12 19:23:51.083720",
+ "modified": "2024-02-13 17:07:04.204042",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Industry Partners",
