@@ -14,7 +14,7 @@
 
     .story-section{
         display: flex;
-        gap: 2rem;
+        gap: 7rem;
         align-items: center;
     }
 
@@ -39,8 +39,8 @@
         margin: 0;
         color: var(--Gray-500, #667085);
         font-size: 1rem;
-        font-weight: 400;
-        line-height: 160%; /* 1.6rem */
+        font-weight: 450;
+        line-height: 170%; /* 1.6rem */
         letter-spacing: -0.02rem;
 
     }
@@ -53,12 +53,16 @@
 
         .team-story-section{
             flex-direction: column;
+            gap: 3rem
         }
 
         .story-section{
             flex-direction: column-reverse;
         }
 
+        .team-story-container h2{
+            font-size: 1.5rem;
+        }
         .story-section-content{
             width: 100%;
         }
@@ -74,7 +78,7 @@
 
 <div class="team-story-section container">
 
-    <div class = "team-story-container container ">
+    <div class = "team-story-container">
 
         <h2>{{heading}}</h2>
 
