@@ -44,7 +44,8 @@
   },
   {
    "columns": 1,
-   "fetch_from": ".",
+   "fetch_from": "linked_cfp.submitted_by",
+   "fetch_if_empty": 1,
    "fieldname": "speaker",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -76,7 +77,7 @@
   },
   {
    "columns": 2,
-   "fetch_from": "cfp.talk_title",
+   "fetch_from": "linked_cfp.talk_title",
    "fetch_if_empty": 1,
    "fieldname": "talk_title",
    "fieldtype": "Data",
@@ -91,7 +92,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-16 16:51:11.570425",
+ "modified": "2024-02-18 02:48:23.920329",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Schedule",
