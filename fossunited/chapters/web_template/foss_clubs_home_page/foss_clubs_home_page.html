@@ -4,7 +4,9 @@
         display: flex;
         font-family: Inter;
         overflow: hidden;
-        padding: 0rem;
+        padding: 0;
+        padding-top: 8rem;
+        padding-bottom: 8rem;
     }
 
     .hero-container{
@@ -32,7 +34,7 @@
         width: auto;
     }
 
-    h1{
+    .hero-container h1{
         margin:0;
         color: #1A1A1A;
         font-size: 4rem;
@@ -41,11 +43,11 @@
         letter-spacing: -0.18rem;
     }
 
-    h1 > span{
+    .hero-container h1 > span{
         color: #08B74F;;
     }
 
-    h5{
+    .hero-container h5{
     color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
     font-size: 1.15rem;
     font-weight: 600;
@@ -53,7 +55,7 @@
     letter-spacing: -0.06rem;
     }
 
-    p{
+    .hero-container p{
         color: var(--Gray-500, #667085);
         font-size: 1rem;
         font-style: normal;
@@ -135,15 +137,19 @@
         color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
     }
 
+    .hero-image img{
+        width: 90%;
+    }
+
     @media (max-width: 768px){
         .club-hero-section{
             flex-direction: column;
+            padding-top: 3rem;
+            padding-bottom: 0rem;
             gap: 5rem;
         }
 
         .hero-container{
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
             gap: 3rem;
             width: 100%
         }
@@ -152,14 +158,15 @@
             max-width: 100%;
             display: flex;
             flex-direction: column;
+            gap: 2.5rem;
         }
 
         .hero-header-heading{
             align-items: center;
         }
 
-        h1{
-            font-size: 2rem;
+        .hero-container h1{
+            font-size: 2.5rem;
             letter-spacing: -0.12rem;
         }
 
@@ -175,6 +182,11 @@
         .btn-primary{
             width: 100%;
         }
+
+
+    .hero-image img{
+        width: 100%;
+    }
 
     }
 </style>
