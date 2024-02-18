@@ -6,11 +6,11 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "cfp",
-  "title",
-  "schedule_description",
-  "column_break_apus",
-  "type",
+  "linked_cfp_section",
+  "linked_cfp",
+  "section_break_ojro",
+  "talk_title",
+  "column_break_hwcb",
   "speaker",
   "section_break_cmsn",
   "scheduled_date",
@@ -20,30 +20,12 @@
  ],
  "fields": [
   {
-   "fieldname": "cfp",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "CFP",
-   "options": "FOSS Event CFP Submission"
-  },
-  {
-   "fetch_from": "cfp.category",
-   "fieldname": "type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Type",
-   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nBreak\nClosing Ceremony\nOther",
-   "sort_options": 1
-  },
-  {
-   "fieldname": "column_break_apus",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "section_break_cmsn",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Timings"
   },
   {
+   "columns": 1,
    "fieldname": "start_time",
    "fieldtype": "Time",
    "in_list_view": 1,
@@ -54,43 +36,63 @@
    "fieldtype": "Column Break"
   },
   {
+   "columns": 1,
    "fieldname": "end_time",
    "fieldtype": "Time",
    "in_list_view": 1,
    "label": "End Time"
   },
   {
-   "fetch_from": "cfp.submitted_by",
+   "columns": 1,
+   "fetch_from": "linked_cfp.submitted_by",
+   "fetch_if_empty": 1,
    "fieldname": "speaker",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Speaker"
   },
   {
+   "columns": 2,
    "fieldname": "scheduled_date",
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Scheduled Date"
   },
   {
-   "fetch_from": "cfp.talk_title",
-   "fetch_if_empty": 1,
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title"
+   "fieldname": "linked_cfp_section",
+   "fieldtype": "Section Break",
+   "label": "Linked CFP"
   },
   {
-   "fetch_from": ".",
-   "fieldname": "schedule_description",
-   "fieldtype": "Small Text",
-   "label": "Schedule Description"
+   "columns": 1,
+   "fieldname": "linked_cfp",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Linked CFP",
+   "options": "FOSS Event CFP Submission"
+  },
+  {
+   "fieldname": "section_break_ojro",
+   "fieldtype": "Section Break"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "linked_cfp.talk_title",
+   "fetch_if_empty": 1,
+   "fieldname": "talk_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Talk Title"
+  },
+  {
+   "fieldname": "column_break_hwcb",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-05 19:49:51.553711",
+ "modified": "2024-02-18 02:48:23.920329",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Schedule",
