@@ -1,5 +1,5 @@
 {% macro event_card(event) %}
-<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}">
+<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}" onclick="window.location.pathname='/{{event.route}}'">
     <img class="event-card--banner" src="{{ event.banner_image }}" alt="Event Banner"/>
     <div class="event-card-contents">
         <div class="event-card--date-section">
@@ -14,12 +14,12 @@
             {% endif %}
         </div>
         <div class="event-card--title">
-            {{ event.event_name }}
+            {{ event.event_name | truncate(26, True) }}
         </div>
         <div class="event-card--location-section">
             <div class="event-card--location">
                 <i class="ti ti-map-pin"></i>
-                <span>{{ event.event_location or "To be Announced" }}</span>
+                <span>{{ event.event_location or "To be Announced" | truncate(22, True)}}</span>
             </div>
         </div>
     </div>

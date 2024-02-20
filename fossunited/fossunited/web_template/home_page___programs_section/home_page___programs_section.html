@@ -8,10 +8,10 @@
 
     .programs-container{
         display: flex;
-        padding: 0 10.625rem;
         align-items: flex-start;
-        gap: 1.5rem;
+        gap: 3rem;
         flex-direction: column;
+        width: 100%;
     }
 
     .programs-section-heading{
@@ -82,14 +82,11 @@
 
     @media screen and (max-width: 768px) {
 
-        .programs-container{
-            padding: 0 6rem;
-        }
-
         .programs-card-block{
             grid-template-columns: 1fr;
-
+            gap: 2.5rem;
         }
+
 
         .programs-section-heading{
             font-size: 1.5rem;
@@ -125,8 +122,8 @@
 
 
 
-<div class="programs-section">
-    <div class="programs-container container">
+<div class="programs-section container">
+    <div class="programs-container">
         <h1 class="programs-section-heading">Programs</h1>
         <div class="programs-card-block">
             {% for index in range(1, 10) %}

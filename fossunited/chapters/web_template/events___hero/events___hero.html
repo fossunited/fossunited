@@ -2,9 +2,10 @@
 
     .events-hero-section{
         font-family: Inter;
-        padding: 5rem 0rem;
+        padding-top: 7rem;
         display: flex;
-        justify-content: space-between;
+        padding-bottom: 7rem;
+        align-items: center;
     }
 
     .events-container {
@@ -29,16 +30,8 @@
         letter-spacing: -0.18rem;
     }
 
-
-    .h5{
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.2rem;
-        font-weight: 600;
-        line-height: 115%; /* 1.725rem */
-        letter-spacing: -0.06rem;
-    }
-
     .events-container p{
+        margin: 0;
         color: var(--Gray-500, #667085);
         font-size: 1.2rem;
         font-style: normal;
@@ -76,22 +69,21 @@
     .hero-image{
         width: 50%;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
     }
 
 
     @media (max-width: 768px){
         .events-hero-section{
             flex-direction: column-reverse;
-            gap: 2.5rem;
-            padding: 2rem 0rem;
+            gap: 6rem;
+            padding-top: 5rem;
+            padding-bottom: 5rem;
         }
 
         .events-container{
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
             width: 100%;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         .events-container h1{
@@ -104,10 +96,6 @@
             flex-direction: column;
         }
 
-        h1{
-            font-size: 2rem;
-            letter-spacing: -0.12rem;
-        }
 
         .hero-image{
             height: 10rem;
@@ -120,6 +108,7 @@
 
         .hero-image{
             width: 100%;
+            justify-content: center;
         }
 
         .hero-image img{
@@ -134,7 +123,7 @@
 
 <div class="events-hero-section container">
 
-    <div class="events-container container">
+    <div class="events-container">
 
         <div class="hero-header">
 

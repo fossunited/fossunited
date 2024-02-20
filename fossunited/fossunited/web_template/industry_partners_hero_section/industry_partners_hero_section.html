@@ -4,8 +4,9 @@
         display: flex;
         font-family: Inter;
         overflow: hidden;
-        padding: 0rem;
         justify-content: space-between;
+        padding-top: 7rem;
+        padding-bottom: 7rem;
     }
 
     .ip-container {
@@ -29,15 +30,13 @@
     }
 
     .ip-hero-image{
-
-        padding: 5rem 5rem 5rem 5rem;
         width: 50%;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
     }
 
     .ip-hero-image img{
-        max-width: 25rem;
+        width: 50%;
     }
 
     .button-container{
@@ -92,8 +91,8 @@
 
     .ip-container p{
         color: var(--Gray-500, #667085);
-        font-size: 1.125rem;
-        font-weight: 400;
+        font-size: 1.2rem;
+        font-weight: 450;
         line-height: 140%; /* 1.575rem */
         letter-spacing: -0.0225rem;
     }
@@ -105,12 +104,11 @@
     @media (max-width: 768px){
         .ip-section{
             flex-direction: column-reverse;
+            gap: 3rem;
         }
 
         .ip-container {
-            margin: 0;
             width: 100%;
-            padding: 3rem 2rem;
         }
 
         .ip-container h1 {
@@ -120,7 +118,7 @@
 
         .ip-hero-image{
             width: 100%;
-            padding: 3rem 2rem;
+            justify-content: center;
         }
 
         .ip-hero-image img {

@@ -16,10 +16,10 @@ $(document).ready(function () {
 
 	$(document).trigger("page-change");
 
-	// Onclick event for Event Cards
-	$(".event-card").click(function () {
-		window.location.pathname = "/" + $(this).data("route");
-	});
+	// Onclick event for Event Cards (not needed anymore)
+	// $(".event-card").click(function () {
+	// 	window.location.pathname = "/" + $(this).data("route");
+	// });
 
 	// Horizontal Navbar Controls for Profile & Event Pages
 	setNavbarControl();
@@ -54,6 +54,8 @@ function setNavbarControl(){
 	let contentDivs = document.querySelectorAll('.content-div');
 	let activeNavItem = navItems[0];
 	let activeContentDiv = contentDivs[0];
+
+	if (navItems.length === 0 || contentDivs.length === 0 ) return;
 
 	contentDivs.forEach((contentDiv) => {
 		contentDiv.classList.add('hide');

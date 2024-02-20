@@ -5,11 +5,12 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        padding-bottom: 7rem;
+        padding-top: 7rem;
     }
 
     .events-list-container{
         display: flex;
-        padding: 0 10.625rem;
         align-items: flex-start;
         gap: 7rem;
         flex-direction: column;
@@ -36,7 +37,7 @@
 
     .events-block{
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
         justify-content: space-around;
         gap: 2.5rem;
     }
@@ -71,18 +72,17 @@
     }
 
     .upcoming-event-card img{
-        border-radius: 0.5rem;
+        border-radius: 0.5rem 0.5rem 0 0;
     }
 
-    .upcoming-event-card > h5{
+    .upcoming-event-card h5{
         margin: 0;
         color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
         font-size: 1.25rem;
         font-style: normal;
         font-weight: 600;
-        line-height: 100%; /* 1.125rem */
+        line-height: 120%;
         letter-spacing: -0.045rem;
-        padding-bottom: 1.5rem;
     }
 
     .upcoming-event-tags-block{
@@ -186,13 +186,22 @@
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
     }
 
+    @media screen and (max-width: 1300px){
+
+        .events-block{
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+    }
 
     @media screen and (max-width: 768px) {
 
-        .events-list-container{
-            padding-left: 2rem;
-            padding-right: 2rem;
+        .events-list-section{
+            padding-bottom: 4rem;
+
         }
+
         .events-card-block{
             grid-template-columns: 1fr;
 
@@ -218,8 +227,8 @@
 
 
 
-<div class="events-section">
-    <div class="events-list-container container">
+<div class="events-list-section container">
+    <div class="events-list-container">
 
         <div class="events-subsection">
 
@@ -228,45 +237,12 @@
                 <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
         </div>
 
-        <div class="events-block">
-            {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "route", "must_attend", "event_location", "map_link", "event_start_date", "banner_image"], filters={"status": "Approved"}, page_length=6, order_by='event_start_date') %}
+        {% from "fossunited/templates/macros/event_card.html" import event_card %}
+        {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "banner_image", "route", "must_attend", "event_location", "map_link", "event_start_date", "banner_image"], filters={"status": "Approved", "event_start_date": ['>=', frappe.utils.now()]}, page_length=6, order_by='event_start_date') %}
+        <div class="events-grid-4">
             {% for event in events %}
-
-                <div class="upcoming-event-card">
-
-                    <img src="{{event.banner_image}}" alt="">
-                    <div class="event-card-content">
-                        <div class="upcoming-event-tags-block">
-                            <div class="event-date">
-                                <p>{{ event.event_start_date.strftime("%d %b %Y") }}</p>
-                            </div>
-
-                            {% if event.must_attend == 1 %}
-                                <div class="is-must-attend">
-                                    <i class="ti ti-star-filled"></i>
-                                    <p>Must Attend</p>
-                                </div>
-                            {% endif %}
-
-                        </div>
-
-                        <h5>{{ event.event_name }}</h5>
-
-                        <div class="upcoming-event-card-footer">
-                            <a href="{{event.map_link}}" class="event-location">
-                                <i class="ti ti-map-pin"></i>{{ event.event_location | truncate(15, False, '...', 0) }}
-                            </a>
-
-                            <a href="/{{event.route}}" class="event-details">
-                                View Details
-                                <i class="ti ti-chevron-right"></i>
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
+                {{ event_card(event) }}
             {% endfor %}
-
         </div>
 
 

@@ -5,15 +5,14 @@
     .cta-section{
         display: flex;
         font-family: Inter;
-        background: #F5F5F5;
 
     }
 
     .cta-container{
+        width: 100%;
         display: flex;
-        gap: 3rem;
-        padding: 5rem 10rem 0rem 10rem;
-        justify-content: center;
+        padding: 5rem 0rem 0rem 0rem;
+        justify-content: space-between;
     }
 
     .cta-content{
@@ -40,10 +39,10 @@
 
     .cta-text p{
         color: var(--Gray-500, #667085);
-        font-size: 1.125rem;
-        font-weight: 400;
+        font-size: 1.2rem;
+        font-weight: 450;
         line-height: 1.75rem;
-        letter-spacing: -0.07rem;
+        letter-spacing: -0.05rem;
     }
 
     .button-container{
@@ -53,7 +52,7 @@
     .cta-image{
         display: flex;
         align-items: flex-end;
-        justify-content: center;
+        justify-content: flex-end;
     }
 
     .cta-image img{
@@ -78,25 +77,42 @@
             display: flex;
             flex-direction: column;
             gap: 3rem;
-            padding-top: 0;
+            padding-top: 2rem;
             justify-content: center;
-        }
         }
 
         .cta-text h2{
             font-size: 1.5rem;
         }
 
+        .cta-content{
+            padding-bottom: 2rem;
+        }
+
+        cta-text{
+            gap: 0.75rem;
+        }
+
         .button-container{
             width: 100%;
         }
 
+        .cta-image{
+            justify-content: center;
+        }
+
+        .cta-image img{
+            max-width: 60%;
+            height: auto;
+        }
+}
+
 
 </style>
 
-<div class="cta-section">
+<div class="cta-section container">
 
-    <div class="cta-container container">
+    <div class="cta-container">
 
         <div class="cta-content">
 

@@ -5,12 +5,11 @@
         display: flex;
         font-family: Inter;
         flex-direction: column;
-        padding: 0rem;
     }
 
     .project-grants-container {
         display: flex;
-        padding: 5rem 10rem 4rem 10rem;
+        padding: 5rem 0rem 4rem 0rem;
         flex-direction: column;
         gap: 2.5rem;
     }
@@ -152,9 +151,9 @@
 
 </style>
 
-<div class="project-grants-section">
+<div class="project-grants-section container">
 
-    <div class="project-grants-container container">
+    <div class="project-grants-container">
 
         <h2>{{heading}}</h2>
 
@@ -167,7 +166,7 @@
 
                         <h6>{{grant.project_name}}</h6>
                         <p>{{grant.about_project}}</p>
-                        <a href="">
+                        <a href="{{grant.project_website}}">
                             View Details
                             <i class="ti ti-chevron-right"></i>
                         </a>
