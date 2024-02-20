@@ -6,7 +6,7 @@ function subscribeHandler(event) {
       doc: {
         doctype: "Email Group Member",
         email: emailInput,
-        email_group: "FOSSU Newsletter",
+        email_group: "FOSS United Newsletter",
       },
     },
     callback: (r) => {

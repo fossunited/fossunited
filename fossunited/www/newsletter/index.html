@@ -1,38 +1,30 @@
 {% extends "templates/foss_base.html" %} {% block page_content %}
-<section id="newsletter-home-page">
-  <div id="homepage" class="d-inline-flex flex-column position-relative">
-    <div
-      id="newsletter-body"
-      class="d-flex justify-content-center align-items-center flex-column"
-    >
-      <div class="header-text">
-        <h1>FOSS United Newsletter</h1>
-        <p>
-          Monthly digest of the latest news and updates about FOSS grants,
-          events and mon school. Subscribe to stay updated and get news from us
-          directly in your inbox.
-        </p>
-      </div>
-      <div
-        class="subscribe d-flex justify-content-center"
-        id="subscribe-section"
-        class="container-center my-5 d-flex flex-column flex-md-row flex-lg-row"
-      >
-        <input
-          id="email"
-          type="email"
-          placeholder="Enter your E-mail Address"
-          name="email_address"
-        />
-        <button id="subscribe-button">Subscribe</button>
-      </div>
+
+<section>
+  <div class="newsletter-home-page">
+    <div class="text-content">
+      <h1>FOSS United Newsletter</h1>
+      <p>
+        Monthly digest of the latest news and updates about FOSS grants, events
+        and mon school. Monthly digest of the latest news and updates about FOSS
+        grants, events and mon school. Subscribe to stay updated and get news
+        from us directly in your inbox.
+      </p>
     </div>
-    <div class="icon-div">
-      <img class="news-icon" src="/assets/fossunited/icons/newsletter.svg" />
+    <div class="subscribe-section">
+      <input
+        id="email"
+        type="email"
+        placeholder="Enter your E-mail Address"
+        name="email_address"
+      />
+      <button id="subscribe-button">Subscribe</button>
+    </div>
+    <div class="news-icon">
+      <img src="/assets/fossunited/icons/newsletter.svg" />
     </div>
   </div>
 </section>
-
 <section id="past-news">
   <div>
     <div class="newsletter-list">
@@ -60,7 +52,8 @@
       <p>
         Write to us at foundation@fossunited.org or send us a message on the
         forum. <br />For event sponsorship, write to us at
-        grants@fossunited.org. <br />Join our
+        <a href="mailto:grants@fossunited.org">grants@fossunited.org</a>.
+        <br />Join our
         <a href="https://t.me/fossunited" alt="@fossunited telegram">
           Telegram Community</a
         >.
@@ -89,26 +82,36 @@
 
 <script src="/newsletter/index.js" type="text/javascript"></script>
 <style>
-  #newsletter-home-page {
-    height: 100vh !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .newsletter-home-page {
+    display: inline-flex;
+    padding: 6.6875rem 20rem 0rem 20rem;
+    flex-direction: column;
+    justify-content: flex-end;
     margin: auto;
+    align-items: center;
+    gap: 2.5rem;
+    height: auto;
+    background: #f5f5f5;
   }
-  #newsletter-body {
-    gap: 5rem;
-  }
-  .header-text {
+
+  .text-content {
     text-align: center;
-    max-width: 800px;
   }
-  .header-text h1 {
-    font-size: 2rem;
-    margin: 0rem 0rem 0.5rem 0rem;
+
+  .text-content h1 {
+    color: var(--Gray-900, #101828);
+    text-align: center;
+    font-family: Inter;
+    font-size: 2.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 2.75rem; /* 110% */
+    letter-spacing: -0.1rem;
   }
-  .subscribe {
-    gap: 0.875rem;
+  .subscribe-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
   }
   #email {
     display: flex;
@@ -116,15 +119,11 @@
     height: 2.5rem;
     padding: 0.6875rem 0.75rem;
     align-items: center;
+    gap: 0.875rem;
     border-radius: 0.5rem;
     border: 1px solid var(--gray-300, #e2e2e2);
     background: var(--neutral-white, #fff);
   }
-
-  #subscribe-button:hover {
-    background-color: #08b74f;
-  }
-
   #subscribe-button {
     display: flex;
     width: 9.125rem;
@@ -132,79 +131,95 @@
     padding: 0.625rem 0.75rem;
     justify-content: center;
     align-items: center;
-    gap: 0.5rem;
     color: white;
+    gap: 0.5rem;
     border-radius: 0.5rem;
     background: var(--Foundation-FOSS-Mint-foss-mint-500, #08b74f);
   }
-  .icon-div {
-    height: ;
-  }
+  .news-icon img {
+    display: flex;
+    width: 28rem;
+    height: 22rem;
 
+    justify-content: center;
+    align-items: center;
+  }
   #past-news {
     margin: auto;
     width: auto;
   }
+
   .newsletter-list {
     display: inline-flex;
     padding: 2.5rem 6.25rem;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 1.875rem;
     width: 100%;
     padding: 40px 100px;
     margin: auto;
   }
+
   .newsletter-list h4 {
     width: 100%;
   }
+
   .news {
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
   }
+
   #news-details {
     width: 280px;
-    height: 120px;
-    padding: 15px;
+    height: auto;
     gap: 12px;
-    padding: 12px 24px;
+    padding: 1rem 1rem;
     margin: 15px;
     border-radius: 8px;
     flex-wrap: wrap;
     border: 0.5px solid var(--Gray-300, #d0d5dd);
   }
+
   #news-details h6 {
     height: 45px;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
-    line-height: 100%; /* 21.6px */
+    line-height: 100%;
+    /* 21.6px */
   }
+
   #news-details a {
     color: #08b74f;
     font-size: 12px !important;
     line-height: 12px;
     margin-bottom: 2rem;
   }
+
   .news-icon {
     display: flex;
     margin: auto;
   }
+
   #success {
     margin: auto;
     width: 500px;
   }
+
   #success-icon-div {
     height: 200px;
     width: 500px;
   }
+
   .success-icon {
     margin-bottom: -60px !important;
     width: 100px !important;
     height: 250px !important;
   }
+
   div#success-wrapper {
     display: flex;
     height: 100vh;
@@ -214,12 +229,15 @@
     flex-direction: column;
     align-items: center;
   }
+
   #subscribed-page {
     display: none;
   }
+
   .subscribed-page-show {
     display: block;
   }
+
   #footer {
     background: var(--Gray-200, #eaecf0);
     padding: 1.5rem 1.5rem;
@@ -234,171 +252,172 @@
     padding: 20px 20px;
     gap: 30px;
     font-weight: 600;
-    line-height: 100%; /* 40px */
+    line-height: 100%;
+    /* 40px */
   }
+
   #cta-container {
     align-self: stretch;
     font-size: 1.125rem;
   }
 
   @media (min-width: 320px) and (max-width: 375px) {
-    #newsletter-home-page {
-      max-width: 400px;
-      padding: 0px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
-    .header-text h1 {
-      font-size: 1.25rem;
-    }
-    .header-text p {
-      max-width: 300px !important;
-      font-size: 0.25rem;
-    }
-    #newsletter-body {
+    .newsletter-home-page {
+      padding: 6.6875rem 0.5rem 0rem 0.5rem;
       gap: 2rem;
     }
-    #subscribe-section {
-      max-width: 400px;
-      margin: auto;
+    .text-content h1 {
+      font-size: 1.5rem;
+    }
+    .text-content p {
+      font-size: 0.8rem;
+      padding: 0.5rem;
+    }
+    .news-icon img {
+      position: relative;
+      bottom: 0;
+      height: 10rem;
+      width: auto;
+
+    }
+    .subscribe-section {
       flex-direction: column;
-      align-items: center;
     }
     #email {
       width: 12rem;
-      font-size: 0.25px;
-    }
-    .subscribe-button {
-      width: 8rem;
-      height: 2rem;
       font-size: 0.5rem;
+    }
+    #subscribe-button {
+      width: 5.125rem;
+      height: 2rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.7rem;
     }
     #past-news h4 {
       font-size: 1rem;
       padding: 0.595rem;
     }
+
     .newsletter-list {
       max-width: 400px;
       padding: 0.25rem;
       margin-top: 0.5rem;
       gap: 0;
     }
+
     .news {
       display: flex;
       justify-content: center;
     }
-    .news-icon {
-      height: 12rem;
-      width: auto;
-    }
+
     #cta-container h4 {
       font-size: 1rem;
     }
+
     #cta-container p {
       font-size: 0.855rem;
     }
   }
 
   @media (min-width: 376px) and (max-width: 475px) {
-    #newsletter-home-page {
-      max-width: 600px;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-    }
-    .header-text h1 {
-      font-size: 1.25rem;
-    }
-    .header-text p {
-      max-width: 300px !important;
-      font-size: 0.25rem;
-    }
-    #newsletter-body {
+    .newsletter-home-page {
+      padding: 6.6875rem 0.5rem 0rem 0.5rem;
       gap: 2rem;
     }
-    #subscribe-section {
-      max-width: 400px;
-      margin: auto;
+    .text-content h1 {
+      font-size: 1.8rem;
+    }
+    .text-content p {
+      font-size: 0.8rem;
+      padding: 0.5rem;
+    }
+    .news-icon img {
+      height: 12rem;
+      width: auto;
+    }
+    .subscribe-section {
       flex-direction: column;
-      align-items: center;
     }
     #email {
       width: 15rem;
-      font-size: 0.25rem;
+      font-size: 0.5rem;
     }
     #subscribe-button {
-      width: 9rem;
+      width: 5.125rem;
       height: 2rem;
-      font-size: 0.8rem;
-    }
-    #subscribe-button:hover {
-      background-color: #08b74f;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.7rem;
     }
     #past-news h4 {
       font-size: 1.5rem;
       padding: 0.595rem;
     }
+
     .newsletter-list {
       margin: auto;
       width: auto;
       padding: 0.25rem;
       gap: 0;
     }
+
     .news {
       display: flex;
       justify-content: center !important;
       align-items: center;
     }
+
     .news-details {
       width: 20rem;
     }
+
     .news-icon {
       height: 12rem;
       width: auto;
     }
+
     #cta-container h4 {
       font-size: 1.2rem;
     }
+
     #cta-container p {
       font-size: 0.9rem;
     }
   }
 
   @media (min-width: 475px) and (max-width: 576px) {
-    #newsletter-home-page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .header-text h1 {
-      font-size: 1.5rem;
-    }
-    .header-text p {
-      max-width: 450px !important;
-      margin: auto;
-      font-size: 0.8rem;
-    }
-    #newsletter-body {
+    .newsletter-home-page {
+      padding: 6.6875rem 0.5rem 0rem 0.5rem;
       gap: 2rem;
     }
-    #subscribe-section {
-      max-width: 400px;
-      margin: auto;
+    .text-content h1 {
+      font-size: 2rem;
+    }
+    .text-content p {
+      font-size: 0.8rem;
+      padding: 0.5rem;
+    }
+    .news-icon img {
+      height: 12rem;
+      width: auto;
+    }
+    .subscribe-section {
       flex-direction: column;
-      align-items: center;
     }
     #email {
-      width: 20rem;
+      width: 17rem;
+      font-size: 0.5rem;
     }
     #subscribe-button {
-      width: 10rem;
-      height: 2.5rem;
+      width: 5.125rem;
+      height: 2rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.7rem;
     }
     #past-news h4 {
       font-size: 1.5rem;
       padding: 0.595rem;
     }
+
     .newsletter-list {
       margin: auto;
       max-width: 400px;
@@ -406,59 +425,66 @@
       padding-top: 0.5rem;
       gap: 0;
     }
+
     .news {
       display: flex;
       justify-content: center;
       margin: auto;
     }
+
     #news-details {
       width: 18rem;
     }
+
     .news-icon {
       height: 12rem;
       width: auto;
     }
+
     #cta-container h4 {
       font-size: 1rem;
     }
+
     #cta-container p {
       font-size: 0.855rem;
     }
   }
 
   @media (min-width: 576px) and (max-width: 768px) {
-    #newsletter-home-page {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .header-text h1 {
-      font-size: 2rem;
-    }
-    .header-text p {
-      max-width: 600px !important;
-      font-size: 0.89rem;
-    }
-    #newsletter-body {
+    .newsletter-home-page {
+      padding: 6.6875rem 0.5rem 0rem 0.5rem;
       gap: 2rem;
     }
-    #subscribe-section {
-      max-width: 400px;
-      margin: auto;
+    .text-content h1 {
+      font-size: 2.6rem;
+    }
+    .text-content p {
+      font-size: 1rem;
+      padding: 0.5rem;
+    }
+    .news-icon img {
+      height: 12rem;
+      width: auto;
+
+    }
+    .subscribe-section {
       flex-direction: column;
-      align-items: center;
     }
     #email {
-      width: 20rem;
+      width: 18;
+      font-size: 0.5rem;
     }
     #subscribe-button {
-      width: 10rem;
+      width: 6.850rem;
       height: 2.5rem;
+      padding: 0.625rem 0.75rem;
+      font-size: 0.7rem;
     }
     #past-news h4 {
       font-size: 1.5rem;
       padding: 0.595rem;
     }
+
     .newsletter-list {
       margin: auto;
       max-width: 400px;
@@ -466,14 +492,17 @@
       padding-top: 0.5rem;
       gap: 0;
     }
+
     .news {
       display: flex;
       justify-content: center;
       margin: auto;
     }
+
     #news-details {
       width: 18rem;
     }
+
     .news-icon {
       height: 12rem;
       width: auto;
