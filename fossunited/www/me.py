@@ -14,7 +14,6 @@ def get_context(context):
             {"email": frappe.session.user},
             "route",
         )
-        print(f"Redirect Route: {redirect_route}")
         if redirect_route not in [None, ""]:
             frappe.local.flags.redirect_location = redirect_route
         else:
