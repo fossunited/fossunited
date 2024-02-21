@@ -1857,12 +1857,14 @@ h6{
 
 @media screen and (max-width: 1200px){
     .events-grid-4{
+        width: 100%;
         grid-template-columns: repeat(3, minmax(300px, 1fr));
         row-gap: 24px;
     }
 }
 @media screen and (max-width: 1000px){
     .events-grid{
+        width: 100%;
         grid-template-columns: repeat(2, minmax(300px, 1fr));
         row-gap: 24px;
     }
@@ -1874,9 +1876,10 @@ h6{
     }
 
     .events-grid-4{
+        width: 100%;
         grid-template-columns: repeat(2, minmax(20rem, 1fr));
         place-items: center;
-        gap: 1.5rem;
+        gap: 2.5rem;
     }
 
 
