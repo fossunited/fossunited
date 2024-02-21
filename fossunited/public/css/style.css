@@ -345,13 +345,15 @@ h6{
     align-items: center;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    border: 0.5px solid hsl(var(--clr-gray-300));
+    box-shadow: inset 0px 0px 0px 1px hsl(var(--clr-foss-mint-500));
+    transition: box-shadow 0.2s ease-in-out;
     background: var(--neutral-white, #FFF);
-    color: hsl(var(--clr-code-night-600));
+    color: hsl(var(--clr-foss-mint-500));
 }
 
 .secondary-button:hover{
-    background: hsl(var(--clr-gray-100));
+    box-shadow: inset 0px 0px 0px 1.5px hsl(var(--clr-foss-mint-500));
+    background: var(--neutral-white, #FFF);
     cursor: pointer;
 }
 

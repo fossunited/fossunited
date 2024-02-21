@@ -101,6 +101,7 @@
         border: 1px solid var(--green-400, #B6DEC5);
         background: var(--neutral-white, #FFF);
         font-weight: 450;
+        justify-content: center;
     }
 
     .btn-secondary:active, .btn-secondary:hover{
@@ -129,7 +130,13 @@
         border-radius: 0.5rem;
         border: 0.379px solid var(--Gray-300, #D0D5DD);
         background: #FFF;
+        gap: 1rem;
+    }
 
+    .about-section-main{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .about-section-tag{
@@ -138,6 +145,12 @@
         font-weight: 600;
         line-height: 140%; /* 1.19394rem */
         letter-spacing: -0.03413rem;
+    }
+
+    .about-section-text{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     .about_headtext{
@@ -169,10 +182,12 @@
     }
 
     .goals-card{
+        display: flex;
         padding: 1rem;
         border-radius: 0.5rem;
         border: 0.379px solid var(--Gray-300, #D0D5DD);
-        background: #FFF;
+        flex-direction: column;
+        gap: 0.75rem;
     }
 
     .goals-card-header{
@@ -183,7 +198,7 @@
 
     .goals-card-tag{
         color: var(--Gray-500, #667085);
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         font-style: normal;
         font-weight: 400;
         line-height: 100%; /* 0.56856rem */
@@ -193,7 +208,7 @@
     .goals-card-number{
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
         text-align: right;
-        font-size: 0.6rem;
+        font-size: 0.75rem;
         font-style: normal;
         font-weight: 600;
         line-height: 100%; /* 0.56856rem */
@@ -207,7 +222,10 @@
         font-weight: 600;
         line-height: 100%; /* 1rem */
         letter-spacing: -0.04rem;
-        margin-bottom: 0.75rem;
+    }
+
+    .goal-icon{
+        max-width: 2rem;
     }
 
     @media screen and (max-width: 768px){
@@ -295,12 +313,12 @@
         <div class="button-container">
 
             <div class="button-category">
-                <button class="btn-primary">
-                    <a href="{{primary_cta_url}}">{{primary_cta}}</a>
+                <button class="primary-button" onclick="window.location.href='{{primary_cta_url}}'">
+                    {{primary_cta}}
                 </button>
 
-                <button class="btn-secondary">
-                    <a href="{{secondary_cta_url}}">{{secondary_cta}}</a>
+                <button class="secondary-button" onclick="window.location.href='{{secondary_cta_url}}'">
+                    {{secondary_cta}}
                 </button>
             </div>
 
@@ -314,54 +332,34 @@
 
         <div class="about-section-innerblock">
 
-            <div class="about-section-tag">
-                <p>ABOUT</p>
+            <div class="about-section-main">
+                <p class="about-section-tag">ABOUT</p>
+
+                <div class="about-section-text">
+
+                    <p class="about_headtext">{{about_headtext}}</p>
+                    <p class="about_subtext">{{about_subtext}}</p>
+
+                </div>
             </div>
-
-            <div>
-
-                <p class="about_headtext">{{about_headtext}}</p>
-                <p class="about_subtext">{{about_subtext}}</p>
-
-            </div>
-
 
             <div class="goals-section">
+                {% for index in range(1, 10) %}
+                    {% set goal_text = values['goal_text_' + index|string] %}
+                    {% set goal_icon = values['goal_icon_' + index|string] %}
+                    {% if goal_text %}
+                        <div class="goals-card">
+                            <div class="goals-card-header">
+                                <p class="goals-card-tag">GOALS</p>
+                                <p class="goals-card-number">0{{index}}</p>
+                            </div>
 
-                <div class="goals-card">
-                    <div class="goals-card-header">
-                        <p class="goals-card-tag">GOALS</p>
-                        <p class="goals-card-number">01</p>
-                    </div>
+                            <p class="goal-text">{{goal_text_1}}</p>
 
-                    <p class="goal-text">{{goal_text_1}}</p>
-
-                    <img src="assets/fossunited/images/illustrations/goal_icon1.svg" alt="">
-                </div>
-
-                <div class="goals-card">
-                    <div class="goals-card-header">
-                        <p class="goals-card-tag">GOALS</p>
-                        <p class="goals-card-number">02</p>
-                    </div>
-
-                    <p class="goal-text">{{goal_text_2}}</p>
-
-                    <img src="assets/fossunited/images/illustrations/goal_icon2.svg" alt="">
-                </div>
-
-                <div class="goals-card">
-                    <div class="goals-card-header">
-                        <p class="goals-card-tag">GOALS</p>
-                        <p class="goals-card-number">03</p>
-                    </div>
-
-                    <p class="goal-text">{{goal_text_3}}</p>
-
-                    <img src="assets/fossunited/images/illustrations/goal_icon3.svg" alt="">
-                </div>
-
-
+                            <img class="goal-icon"src="{{goal_icon}}" alt="Goal Icon">
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
 
         </div>
