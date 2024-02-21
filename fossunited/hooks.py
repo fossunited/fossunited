@@ -77,6 +77,10 @@ website_route_rules = [
         "from_route": "/<foss_user>/edit-profile",
         "to_route": "/foss_profile/edit",
     },
+    {
+        "from_route": "/create-foss-profile",
+        "to_route": "/foss_profile/create",
+    },
 ]
 
 # add methods and filters to jinja environment
