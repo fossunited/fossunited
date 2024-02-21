@@ -4,14 +4,14 @@
         display: flex;
         font-family: Inter;
         overflow: hidden;
-        padding-top: 6rem;
     }
 
     .hero-container{
         display: flex;
         flex-direction: column;
-        gap: 3rem;
+        gap: 2.5rem;
         padding-left: 0;
+        justify-content: center;
 
     }
 
@@ -19,33 +19,25 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 1rem;
-        max-width: 50%;
+        max-width: 75%;
     }
 
-    h1{
+    .hero-header h1{
         margin:0;
         color: #1A1A1A;
         font-size: 4rem;
         font-weight: 700;
-        line-height: 100%;
+        line-height: 105%;
         letter-spacing: -0.18rem;
     }
 
-    h1 > span{
+    .hero-header h1 > span{
         color: #08B74F;;
     }
 
-    h5{
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.2rem;
-        font-weight: 600;
-        line-height: 115%; /* 1.725rem */
-        letter-spacing: -0.06rem;
-    }
-
-    p{
+    .hero-header p{
         color: var(--Gray-500, #667085);
-        font-size: 1rem;
+        font-size: 1.2rem;
         font-style: normal;
         font-weight: 500;
         line-height: 140%;
@@ -58,23 +50,6 @@
         gap: 2rem;
     }
 
-    .btn-primary {
-        background: #08B74F;
-        border-radius: 0.5rem;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        font-weight: 500;
-        font-size: 1.15rem;
-        color: #FFF;
-        text-decoration: none;
-    }
-
-    .btn-primary:active, .btn-primary:hover, .btn-primary:focus{
-        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
-        border:none !important;
-        box-shadow: none !important;
-    }
-
 
     .hero-image > img{
         transform: rotate(-2deg) scale(1.8);
@@ -84,12 +59,11 @@
     @media (max-width: 768px){
         .community-hero-section{
             flex-direction: column;
-            gap: 2.5rem;
+            gap: 4rem;
         }
 
         .hero-container{
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+            padding-top: 6rem;
             gap: 3rem;
         }
 
@@ -99,7 +73,7 @@
             flex-direction: column;
         }
 
-        h1{
+        .hero-header h1{
             font-size: 2rem;
             letter-spacing: -0.12rem;
         }
@@ -111,10 +85,6 @@
         .hero-image > img{
             transform: rotate(26deg) scale(1.45);
             transform-origin: 50% 42%;
-        }
-
-        .btn-primary{
-            width: 100%;
         }
 
     }
@@ -136,17 +106,12 @@
 
         <div class = "hero-cta">
 
-            <div class="cta_text">
-
-                <h5>{{subtext_2}}</h5>
-
-            </div>
-
             <div class="button-container">
+            <button class="primary-button" onclick="window.location.href='{{cta_1_link}}'">
+                {{cta_1}}
+            </button>
 
-            <a href="{{cta_1_link}}" class="btn-primary">{{cta_1}}</a>
-
-            </div>
+        </div>
 
         </div>
     </div>

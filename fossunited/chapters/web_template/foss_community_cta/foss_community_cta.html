@@ -25,7 +25,7 @@
     .cta-text{
         display: flex;
         flex-direction: column;
-        gap: 0.5rem;
+        gap: 2.5rem;
     }
 
     .cta-text h2{
@@ -125,9 +125,8 @@
 
             <div class="button-container">
 
-                <button class="btn-primary" id="cta-button">
-
-                    <a href="{{cta_link}}"><i class="ti ti-map-pin-plus"></i> {{cta}}</a>
+                <button class="primary-button" onclick="window.location.href='{{cta_link}}'">
+                    <i class="ti ti-map-pin-plus"></i> {{cta}}
                 </button>
 
             </div>
