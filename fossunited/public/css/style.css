@@ -244,6 +244,12 @@ button:hover{
     background: hsl(var(--clr-open-gray-50));
 }
 
+button:disabled{
+    cursor: not-allowed;
+    background: hsl(var(--clr-gray-100));
+    color: hsl(var(--clr-gray-400));
+}
+
 button.sm{
     font-size: var(--text-sm);
 }
@@ -387,6 +393,9 @@ h6{
     cursor: pointer;
 }
 
+.fff-forward{
+    font-family: 'FFF Forward', sans-serif;
+}
 /* ------------------------------------------------------------- */
 .base-placeholder{
     min-height: 80vh;
@@ -1852,6 +1861,43 @@ h6{
 }
 
 /* ---- */
+
+/* FORM STYLES */
+.foss-form-wrapper{
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    align-items: center;
+}
+
+.form-heading-section{
+    margin-top: 6rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.form-page-icon{
+    width: 7rem;
+    border-radius: 1rem;
+}
+
+.form-page-heading{
+    font-size: var(--text-2xl);
+    font-weight: var(--fw-bold);
+    color: hsl(var(--clr-code-night-800));
+}
+
+.form-container{
+    padding: 1rem 2rem;
+    width: 75%;
+    border-radius: 1rem;
+    border: 2px solid hsl(var(--clr-gray-100));
+}
+/* ----------- */
 
 @media screen and (max-width: 1200px){
     .events-grid-4{
