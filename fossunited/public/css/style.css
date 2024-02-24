@@ -1291,10 +1291,10 @@ h6{
 }
 
 .buttons-group{
-    display: grid;
+    display: flex;
     gap: 0.5rem;
     padding: 0.5rem 0;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    flex-wrap: wrap;
 }
 
 
@@ -2211,6 +2211,20 @@ h6{
     .recent-proposal-card{
         padding: 1.5rem;
     }
+
+    .schedule-grid{
+        display: grid;
+        grid-template: none;
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .schedule--title-time-section{
+        flex-direction: column;
+        justify-items: flex-start;
+        gap: 1rem;
+    }
+
 
     /* -------------------- */
 }
