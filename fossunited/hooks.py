@@ -17,7 +17,7 @@ fixtures = ["State", "City", "FOSS Event Type"]
 
 # include js, css files in header of web template
 web_include_css = ["/assets/fossunited/css/style.css"]
-web_include_js = ["website.bundle.js"]
+web_include_js = ["website.bundle.js", "autocomp.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "fossunited/public/scss/website"
