@@ -15,10 +15,9 @@ function redirect_to_event_page(){
             name: frappe.web_form.doc.event,
         },
         callback: (r)=>{
-            console.log(r)
             setTimeout(() => {
                 window.location.href = "/" + r.message.route;
-            }, 3000);
+            }, 2000);
         },
     })
 }
