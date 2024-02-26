@@ -331,7 +331,7 @@ h6{
     border-radius: 0.5rem;
     background: hsl(var(--clr-foss-mint-500, #08B74F));
     color: #FFF;
-    font-size: 1.12rem;
+    font-size: var(--text-lg);
     font-weight: 450;
 }
 
@@ -347,11 +347,11 @@ h6{
     align-items: center;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    box-shadow: inset 0px 0px 0px 1px hsl(var(--clr-foss-mint-500));
+    box-shadow: inset 0px 0px 0px 0.5px hsl(var(--clr-foss-mint-500));
     transition: box-shadow 0.2s ease-in-out;
     background: var(--neutral-white, #FFF);
     color: hsl(var(--clr-foss-mint-500));
-    font-size: 1.12rem;
+    font-size: var(--text-lg);
     font-weight: 450;
 }
 
