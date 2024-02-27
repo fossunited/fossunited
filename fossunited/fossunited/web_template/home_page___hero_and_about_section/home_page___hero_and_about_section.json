@@ -62,22 +62,44 @@
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "goal_text_2",
    "fieldtype": "Data",
    "label": "Goal Text 2",
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "goal_text_3",
    "fieldtype": "Data",
    "label": "Goal Text 3",
    "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "goal_icon_1",
+   "fieldtype": "Attach Image",
+   "label": "Goal Icon 1",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "goal_icon_2",
+   "fieldtype": "Attach Image",
+   "label": "Goal Icon 2",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "goal_icon_3",
+   "fieldtype": "Attach Image",
+   "label": "Goal Icon 3",
+   "reqd": 0
   }
  ],
- "idx": 2,
- "modified": "2024-01-27 14:58:38.623545",
+ "idx": 21,
+ "modified": "2024-02-21 11:49:41.329659",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Hero and About Section",
