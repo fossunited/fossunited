@@ -514,3 +514,9 @@ def create_foss_profile(user, username, fields):
         frappe.throw(str(e))
 
     return foss_profile
+
+
+@frappe.whitelist(allow_guest=True)
+def check_if_profile_owner(username):
+    profile_user = frappe.get_doc("FOSS User Profile", username)
+    return profile_user.user == frappe.session.user
