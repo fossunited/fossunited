@@ -6,6 +6,9 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSChapter(WebsiteGenerator):
+    def validate(self):
+        self.make_city_name_upper()
+
     def before_save(self):
         self.set_chapter_lead()
         self.set_route()
@@ -38,6 +41,11 @@ class FOSSChapter(WebsiteGenerator):
         context.past_events = self.get_past_events()
         context.members = self.get_members()
         context.social_links = self.get_social_links()
+
+    # make the chapter name upper case if it is a city community
+    def make_city_name_upper(self):
+        if self.chapter_type == "City Community":
+            self.chapter_name = self.city.upper()
 
     def get_upcoming_events(self):
         return frappe.get_all(
