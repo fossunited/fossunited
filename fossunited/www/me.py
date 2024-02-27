@@ -14,6 +14,11 @@ def get_context(context):
             {"email": frappe.session.user},
             "route",
         )
-        frappe.local.flags.redirect_location = redirect_route
+        if redirect_route not in [None, ""]:
+            frappe.local.flags.redirect_location = redirect_route
+        else:
+            frappe.local.flags.redirect_location = (
+                "/create-foss-profile"
+            )
 
     raise frappe.Redirect

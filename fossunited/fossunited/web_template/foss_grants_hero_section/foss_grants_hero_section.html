@@ -29,14 +29,14 @@
 
     .grants-hero-image{
 
-        padding: 5rem 0rem 5rem 0rem;
+        padding: 8rem 0rem 8rem 0rem;
         width: 50%;
         display: flex;
         justify-content: flex-end;
     }
 
     .grants-hero-image img{
-        max-width: 25rem;
+        max-width: 20rem;
     }
 
     .button-container{
@@ -101,6 +101,7 @@
     @media (max-width: 768px){
         .grants-section{
             flex-direction: column-reverse;
+            padding: 3rem 0;
         }
 
         .grants-container {
@@ -120,7 +121,7 @@
         }
 
         .grants-hero-image img {
-            max-width: 15rem;
+            max-width: 12rem;
         }
 
         .button-container{
@@ -139,8 +140,13 @@
         <div class="button-category">
 
             <div class="button-container">
+
+                {% if primary_cta_link %}
                 <a href="{{primary_cta_link}}" class="btn-primary">{{primary_cta_text}}</a>
+                {% endif %}
+                {% if secondary_cta_link %}
                 <a href="{{secondary_cta_link}}" class="btn-secondary">{{secondary_cta_text}}</a>
+                {% endif %}
 
             </div>
         </div>

@@ -493,3 +493,22 @@ def check_username_availability(username):
         "FOSS User Profile", {"username": username}
     )
     return exists
+
+
+@frappe.whitelist()
+def create_foss_profile(user, username, fields):
+    fields = json.loads(fields)
+    args = {}
+    args["doctype"] = "FOSS User Profile"
+    args["user"] = user
+    args["username"] = username
+    args["is_published"] = 1
+    args.update(fields)
+
+    try:
+        foss_profile = frappe.get_doc(args)
+        foss_profile.insert(ignore_permissions=True)
+    except Exception as e:
+        frappe.throw(str(e))
+
+    return foss_profile

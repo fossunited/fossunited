@@ -4,7 +4,7 @@
         <div class="status-icon">
             {% if status_block_content.create_form %}
             <i class="ti ti-file-plus"></i>
-            {% elif status_block_content.is_unpublished %}
+            {% elif status_block_content.is_unpublished or not status_block_content.has_doc %}
             <i class="ti ti-file"></i>
             {% else %}
             <lottie-player src="/assets/fossunited/animation/live-animation-blob.json" background="transparent"  speed="1" loop autoplay></lottie-player>
