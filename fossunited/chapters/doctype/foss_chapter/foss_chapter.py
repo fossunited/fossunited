@@ -7,10 +7,22 @@ from frappe.website.website_generator import WebsiteGenerator
 
 class FOSSChapter(WebsiteGenerator):
     def before_save(self):
+        self.set_chapter_lead()
+        self.set_route()
+
+    def set_chapter_lead(self):
         for member in self.chapter_members:
             if member.role == "Lead":
                 self.chapter_lead = member.chapter_member
                 break
+
+    def set_route(self):
+        if self.chapter_type == "City Community":
+            self.route = f"{self.city.lower().replace(' ', '-')}"
+        else:
+            self.route = (
+                f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
+            )
 
     def get_context(self, context):
         if self.chapter_type == "City Community":
