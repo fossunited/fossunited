@@ -7,26 +7,26 @@
     <div class="container">
         <div class="profile-content-section">
             <div class="horizontal-navbar">
-                {% set nav_items = ['work', 'about', 'resume', 'projects'] %}
+                {% set nav_items = ['about', 'work', 'resume', 'projects'] %}
                 {% for item in nav_items %}
                     <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
                         {{ item | capitalize }}
                     </div>
                 {% endfor %}
             </div>
-            <div class="content-div" id="work">
-                <div class="profile-content-div">
-                    <h5>Work</h5>
-                    <div class="coming-soon-container">
-                        Integrations Coming Soon!
-                    </div>
-                </div>
-            </div>
             <div class="content-div" id="about">
                 <div class="profile-content-div">
                     <h5>About</h5>
                     <div class="about">
                         {{ doc.about or "Nothing in about."}}
+                    </div>
+                </div>
+            </div>
+            <div class="content-div" id="work">
+                <div class="profile-content-div">
+                    <h5>Work</h5>
+                    <div class="coming-soon-container">
+                        Integrations Coming Soon!
                     </div>
                 </div>
             </div>
