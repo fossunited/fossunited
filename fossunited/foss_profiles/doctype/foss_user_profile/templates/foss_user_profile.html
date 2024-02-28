@@ -237,8 +237,8 @@
 <script>
     $('body').css('background', 'hsl(var(--clr-gray-100))');
     $(document).ready(() => {
+        frappe.require('controls.bundle.js');
         setNavbarControl();
-
         frappe.call({
             method: 'fossunited.fossunited.utils.check_if_profile_owner',
             args: {
@@ -264,10 +264,6 @@
             $(e.currentTarget).find('.edit-modal-button').show();
         }, (e) => {
             $(e.currentTarget).find('.edit-modal-button').hide();
-        })
-
-        $('.add-modal-button').click((e) => {
-            addModal(e);
         })
 
         $('.edit-modal-button').click((e) => {
@@ -326,7 +322,7 @@
         $('.header-with-button').each((index, element) => {
             let section = $(element).parent().attr('id').split('-')[0];
             $(element).append(`
-                <button class="add-modal-button" name="add-${section}">
+                <button class="add-modal-button" name="add-${section}" onClick="addModal(this)">
                     <i class="ti ti-plus"></i>
                     Add ${section}
                 </button>
@@ -365,7 +361,7 @@
     }
 
     function addModal(e){
-        let id = e.target.name.split('-')[1];
+        let id = $(e).attr('name').split('-')[1];
         let table = child_docs[id];
         frappe.call({
             method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
