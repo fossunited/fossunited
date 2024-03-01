@@ -26,7 +26,7 @@
             <button class="danger-button" onclick="unpublish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ status_block_content.block_for }}">Unpublish Form</button>
             {% endif %}
             {% if status_block_content.create_form %}
-            <button class="primary-button" onClick="window.location.href='{{ status_block_content.block_for }}/create/new?event={{ event_name }}'">Create {{ status_block_content.block_for | upper }} Form</button>
+            <button class="primary-button" onClick="window.location.href='/{{ status_block_content.block_for }}/create/new?event={{ event_name }}'">Create {{ status_block_content.block_for | upper }} Form</button>
             {% endif %}
         {% endif %}
         {% if status_block_content.edit_submission %}
