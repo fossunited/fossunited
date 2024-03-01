@@ -489,10 +489,12 @@ def get_signup_optin_checks():
 
 @frappe.whitelist(allow_guest=True)
 def check_username_availability(username):
-    exists = frappe.db.exists(
+    username_exists = frappe.db.exists(
         "FOSS User Profile", {"username": username}
     )
-    return exists
+
+    is_cityname = frappe.db.exists("City", {"name": username})
+    return username_exists or is_cityname
 
 
 @frappe.whitelist()
@@ -512,3 +514,9 @@ def create_foss_profile(user, username, fields):
         frappe.throw(str(e))
 
     return foss_profile
+
+
+@frappe.whitelist(allow_guest=True)
+def check_if_profile_owner(username):
+    profile_user = frappe.get_doc("FOSS User Profile", username)
+    return profile_user.user == frappe.session.user

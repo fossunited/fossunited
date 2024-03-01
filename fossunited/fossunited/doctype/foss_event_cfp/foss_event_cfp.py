@@ -11,7 +11,10 @@ class FOSSEventCFP(WebsiteGenerator):
         self.enable_cfp_tab()
 
     def set_route(self):
-        self.route = f"events/{self.event}/cfp"
+        event_route = frappe.db.get_value(
+            "FOSS Chapter Events", self.event, "route"
+        )
+        self.route = f"{event_route}/cfp"
 
     def enable_cfp_tab(self):
         frappe.db.set_value(

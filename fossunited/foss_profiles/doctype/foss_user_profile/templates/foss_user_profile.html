@@ -7,26 +7,26 @@
     <div class="container">
         <div class="profile-content-section">
             <div class="horizontal-navbar">
-                {% set nav_items = ['work', 'about', 'resume', 'projects'] %}
+                {% set nav_items = ['about', 'work', 'resume', 'projects'] %}
                 {% for item in nav_items %}
                     <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
                         {{ item | capitalize }}
                     </div>
                 {% endfor %}
             </div>
-            <div class="content-div" id="work">
-                <div class="profile-content-div">
-                    <h5>Work</h5>
-                    <div class="coming-soon-container">
-                        Integrations Coming Soon!
-                    </div>
-                </div>
-            </div>
             <div class="content-div" id="about">
                 <div class="profile-content-div">
                     <h5>About</h5>
                     <div class="about">
                         {{ doc.about or "Nothing in about."}}
+                    </div>
+                </div>
+            </div>
+            <div class="content-div" id="work">
+                <div class="profile-content-div">
+                    <h5>Work</h5>
+                    <div class="coming-soon-container">
+                        Integrations Coming Soon!
                     </div>
                 </div>
             </div>
@@ -239,9 +239,22 @@
     $(document).ready(() => {
         frappe.require('controls.bundle.js');
         setNavbarControl();
-        validateProfileEditOption();
-        validateAddModal();
-        validateEditModal();
+        frappe.call({
+            method: 'fossunited.fossunited.utils.check_if_profile_owner',
+            args: {
+                username: '{{ doc.username }}'
+            },
+            callback: (r) => {
+                if(r.message){
+                    validateProfileEditOption();
+                    validateAddModal();
+                    validateEditModal();
+                }
+            },
+            error: (e) => {
+                console.log(e.message)
+            }
+        })
 
         if ( window.innerWidth > 768 ) {
             $('.edit-modal-button').hide();
@@ -251,10 +264,6 @@
             $(e.currentTarget).find('.edit-modal-button').show();
         }, (e) => {
             $(e.currentTarget).find('.edit-modal-button').hide();
-        })
-
-        $('.add-modal-button').click((e) => {
-            addModal(e);
         })
 
         $('.edit-modal-button').click((e) => {
@@ -309,42 +318,35 @@
     }
 
     function validateAddModal(){
-        if ( frappe.session.user === '{{ doc.user }}') {
-            //for each header-with-button, find the section from its parent
-            $('.header-with-button').each((index, element) => {
-                let section = $(element).parent().attr('id').split('-')[0];
-                $(element).append(`
-                    <button class="add-modal-button" name="add-${section}">
-                        <i class="ti ti-plus"></i>
-                       Add ${section}
-                    </button>
-                `);
-            });
-        }
+        //for each header-with-button, find the section from its parent
+        $('.header-with-button').each((index, element) => {
+            let section = $(element).parent().attr('id').split('-')[0];
+            $(element).append(`
+                <button class="add-modal-button" name="add-${section}" onClick="addModal(this)">
+                    <i class="ti ti-plus"></i>
+                    Add ${section}
+                </button>
+            `);
+        });
     }
 
     function validateEditModal(){
-        if (frappe.session.user == '{{ doc.user }}') {
-            $('.edit-modal-button').removeClass('hide');
-        }
+        $('.edit-modal-button').removeClass('hide');
     }
 
     function validateProfileEditOption(){
-        if ( frappe.session.user === '{{ doc.user }}') {
-
-            // check if the width of the screen is less than 768px
-            if (window.innerWidth < 768) {
-                // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
-                $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
-                $('.header-profile-image').parent().append(`
+        // check if the width of the screen is less than 768px
+        if (window.innerWidth < 768) {
+            // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
+            $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
+            $('.header-profile-image').parent().append(`
+            <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+            `);
+        }
+        else{
+            $('.header-content-edit-section').append(`
                 <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
-                `);
-            }
-            else{
-                $('.header-content-edit-section').append(`
-                    <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
-                `);
-            }
+            `);
         }
     }
 
@@ -359,7 +361,7 @@
     }
 
     function addModal(e){
-        let id = e.target.name.split('-')[1];
+        let id = $(e).attr('name').split('-')[1];
         let table = child_docs[id];
         frappe.call({
             method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',
