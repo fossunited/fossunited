@@ -1,5 +1,6 @@
-import frappe
 import datetime
+
+import frappe
 
 
 def get_context(context):
@@ -12,8 +13,9 @@ def get_context(context):
 
     for newsletter in newsletters:
         if newsletter["email_sent_at"]:
-            newsletter["email_sent_at"] = newsletter["email_sent_at"].strftime("%d %B, %Y")            
+            newsletter["email_sent_at"] = newsletter[
+                "email_sent_at"
+            ].strftime("%d %B, %Y")
             print(newsletter["email_sent_at"])
-            
-    context.newsletters = newsletters
 
+    context.newsletters = newsletters

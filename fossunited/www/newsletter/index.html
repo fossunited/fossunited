@@ -4,8 +4,7 @@
     <div class="text-content">
       <h1>FOSS United Newsletter</h1>
       <p>
-        Monthly digest of the latest news and updates about FOSS grants, events
-        and mon school. Monthly digest of the latest news and updates about FOSS
+        Monthly digest of the latest news and updates about FOSS
         grants, events and mon school. Subscribe to stay updated and get news
         from us directly in your inbox.
       </p>
@@ -99,7 +98,7 @@
     color: hsl(var(--clr-code-night-900));
     text-align: center;
     font-family: Inter;
-    font-size: 2.5rem;
+    font-size: var(--text-4xl);
     font-style: normal;
     font-weight: 700;
     line-height: 2.75rem;
@@ -121,8 +120,8 @@
     align-items: center;
     gap: 0.875rem;
     border-radius: 0.5rem;
-    border: hsl(var(--clr-gray-500));
-    background: var(--neutral-white, #fff);
+    border: hsl(var(--clr-gray-900));
+    background: hsl(var(--clr-gray-50));
   }
 
   #subscribe-button {
@@ -154,13 +153,12 @@
 
   .newsletter-list {
     display: inline-flex;
-    padding: 2.5rem 6.25rem;
+    padding: 2.5rem;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    gap: 1.875rem;
+    gap: 2.5rem;
     width: 100%;
-    padding: 40px 100px;
     margin: auto;
   }
 
@@ -172,11 +170,11 @@
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
-    flex-wrap: wrap;
+    width: auto;
   }
 
   #news-details {
-    width: 280px;
+    width: 320px;
     height: auto;
     gap: 12px;
     padding: 1rem 1rem;
@@ -188,7 +186,7 @@
 
   #news-details h6 {
     height: 45px;
-    font-size: 18px;
+    font-size: var(--text-lg);
     font-style: normal;
     font-weight: 600;
     line-height: 100%;
@@ -197,7 +195,7 @@
 
   #news-details a {
     color: hsl(var(--clr-foss-mint-500));
-    font-size: 12px !important;
+    font-size: var(--text-sm);
     line-height: 12px;
     margin-bottom: 2rem;
   }
@@ -250,7 +248,7 @@
     display: flex;
     flex-direction: column;
     font-family: Inter;
-    font-size: 40px;
+    font-size: var(--text-3xl);
     font-style: normal;
     padding: 20px 20px;
     gap: 30px;
@@ -261,7 +259,7 @@
 
   #cta-container {
     align-self: stretch;
-    font-size: 1.125rem;
+    font-size: var(--text-lg);
   }
 
   @media (min-width: 320px) and (max-width: 375px) {
@@ -284,7 +282,7 @@
     }
 
     .header-text h1 {
-      font-size: 2rem;
+      font-size: var(--text-3xl);
       margin: 0rem 0rem 0.5rem 0rem;
     }
 
@@ -293,14 +291,8 @@
     }
 
     #email {
-      display: flex;
       width: 25rem;
       height: 2.5rem;
-      padding: 0.6875rem 0.75rem;
-      align-items: center;
-      border-radius: 0.5rem;
-      border: 1px solid hsl(var(--clr-gray-300));
-      background: hsl(var(--clr-libre-white-200));
     }
 
     .subscribe-button:hover {
@@ -308,11 +300,11 @@
     }
 
     .text-content h1 {
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
     }
 
     .text-content p {
-      font-size: 0.8rem;
+      font-size: var(--text-sm);
       padding: 0.5rem;
     }
 
@@ -329,18 +321,18 @@
 
     #email {
       width: 12rem;
-      font-size: 0.5rem;
+      font-size: var(--text-xs);
     }
 
     #subscribe-button {
       width: 5.125rem;
       height: 2rem;
       padding: 0.625rem 0.75rem;
-      font-size: 0.7rem;
+      font-size: var(--text-xs);
     }
 
     #past-news h4 {
-      font-size: 1.2rem;
+      font-size: var(--text-lg);
       padding: 0.595rem;
     }
 
@@ -357,11 +349,11 @@
     }
 
     #cta-container h4 {
-      font-size: 1rem;
+      font-size: var(--text-base);
     }
 
     #cta-container p {
-      font-size: 0.855rem;
+      font-size: var(--text-sm);
     }
   }
 
@@ -372,11 +364,11 @@
     }
 
     .text-content h1 {
-      font-size: 1.8rem;
+      font-size: var(--text-2xl);
     }
 
     .text-content p {
-      font-size: 0.8rem;
+      font-size: var(--text-sm);
       padding: 0.5rem;
     }
 
@@ -391,18 +383,18 @@
 
     #email {
       width: 15rem;
-      font-size: 0.5rem;
+      font-size: var(--text-xs);
     }
 
     #subscribe-button {
       width: 5.125rem;
       height: 2rem;
       padding: 0.625rem 0.75rem;
-      font-size: 0.7rem;
+      font-size: var(--text-xs);
     }
 
     #past-news h4 {
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
       padding: 0.595rem;
     }
 
@@ -429,11 +421,11 @@
     }
 
     #cta-container h4 {
-      font-size: 1.2rem;
+      font-size: var(--text-lg);
     }
 
     #cta-container p {
-      font-size: 0.9rem;
+      font-size: var(--text-base);
     }
   }
 
@@ -444,11 +436,11 @@
     }
 
     .text-content h1 {
-      font-size: 2rem;
+      font-size: var(--text-3xl);
     }
 
     .text-content p {
-      font-size: 0.8rem;
+      font-size: var(--text-sm);
       padding: 0.5rem;
     }
 
@@ -463,18 +455,18 @@
 
     #email {
       width: 17rem;
-      font-size: 0.5rem;
+      font-size: var(--text-xs);
     }
 
     #subscribe-button {
       width: 5.125rem;
       height: 2rem;
       padding: 0.625rem 0.75rem;
-      font-size: 0.7rem;
+      font-size: var(--text-xs);
     }
 
     #past-news h4 {
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
       padding: 0.595rem;
     }
 
@@ -529,7 +521,7 @@
 
     #news-details h6 {
       height: 45px;
-      font-size: 18px;
+      font-size: var(--text-xl);
       font-style: normal;
       font-weight: 600;
       line-height: 100%;
@@ -537,7 +529,7 @@
 
     #news-details a {
       color: hsl(var(--clr-foss-mint-500));
-      font-size: 12px !important;
+      font-size: var(--text-sm);
       line-height: 12px;
       margin-bottom: 2rem;
     }
@@ -590,18 +582,17 @@
       display: flex;
       flex-direction: column;
       font-family: Inter;
-      font-size: 40px;
+      font-size: var(--text-3xl);
       font-style: normal;
       padding: 20px 20px;
       gap: 30px;
       font-weight: 600;
       line-height: 100%;
-      /* 40px */
     }
 
     #cta-container {
       align-self: stretch;
-      font-size: 1.125rem;
+      font-size: var(--text-lg);
     }
   }
 
@@ -612,11 +603,11 @@
     }
 
     .text-content h1 {
-      font-size: 2rem;
+      font-size: var(--text-3xl);
     }
 
     .text-content p {
-      font-size: 0.8rem;
+      font-size: var(--text-sm);
       padding: 0.5rem;
     }
 
@@ -631,18 +622,18 @@
 
     #email {
       width: 17rem;
-      font-size: 0.5rem;
+      font-size: var(--text-xs);
     }
 
     #subscribe-button {
       width: 5.125rem;
       height: 2rem;
       padding: 0.625rem 0.75rem;
-      font-size: 0.7rem;
+      font-size: var(--text-xs);
     }
 
     #past-news h4 {
-      font-size: 1.5rem;
+      font-size: var(--text-2xl);
       padding: 0.595rem;
     }
 
@@ -697,7 +688,7 @@
 
     #news-details h6 {
       height: 45px;
-      font-size: 18px;
+      font-size: var(--text-xl);
       font-style: normal;
       font-weight: 600;
       line-height: 100%;
@@ -705,7 +696,7 @@
 
     #news-details a {
       color: hsl(var(--clr-foss-mint-500));
-      font-size: 12px !important;
+      font-size: var(--text-sm);
       line-height: 12px;
       margin-bottom: 2rem;
     }
@@ -757,12 +748,12 @@
     #cta-container h4 {
       display: flex;
       flex-direction: column;
-      font-size: 40px;
+      font-size: var(--text-3xl);
     }
 
     #cta-container {
       align-self: stretch;
-      font-size: 1.125rem;
+      font-size: var(--text-base);
     }
   }
 </style>
