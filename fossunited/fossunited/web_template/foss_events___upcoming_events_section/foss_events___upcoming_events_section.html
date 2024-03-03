@@ -1,173 +1,251 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
 <style>
-    .container-center {
+    .events-list-section{
         display: flex;
-        flex-direction: column;
-        justify-content: center;
         align-items: center;
-    }
-
-    .base-container {
-        max-width: 1200px;
-        width: 100%;
-        padding: 16px;
-        margin-bottom: 16px;
-    }
-
-    .title-subtitle{
-        width: auto;
-    }
-
-    .month-divider{
-        border-bottom: 2px dotted #4BA306;
-        width: 25%;
-    }
-
-    .month{
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        margin-bottom: 24px;
-    }
-
-    .event-container{
-        max-width: 320px;
-        width: 100%;
-        border-radius: 32px;
-        box-shadow: inset 0px 0px 0px 1px #000;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
         justify-content: center;
-        align-items: center;
-        position: relative;
-        padding-bottom: 8px;
+        padding-bottom: 7rem;
+        padding-top: 7rem;
     }
 
-    .event-container:hover{
+    .events-list-container{
+        display: flex;
+        align-items: flex-start;
+        gap: 7rem;
+        flex-direction: column;
+    }
+
+    .events-subsection{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 5rem;
+        width: 100%;
+    }
+
+    .events-list-container h2{
+        margin:0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .events-block{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        justify-content: space-around;
+        gap: 2.5rem;
+    }
+
+    .upcoming-events-header{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+
+    }
+
+    .view-events-link{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 550;
+        line-height: 100%; /* 0.875rem */
+        letter-spacing: -0.035rem;
+    }
+
+    .view-events-link:hover{
         text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
     }
 
-    .event-thumbnail{
-        width: 100% !important;
-        border-radius: 32px 32px 0 0;
-        height: 158px !important;
-        object-fit: cover;
-        z-index: -10;
+    .upcoming-event-card{
+        display: grid;
+        align-items: flex-start;
+        border-radius: 0.5rem;
+        border: 0.5px solid var(--Foundation-Open-Gray-open-gray-100, #B9B9B9);
+        background: #FFF;
     }
 
-    .event-container-info{
+    .upcoming-event-card img{
+        border-radius: 0.5rem 0.5rem 0 0;
+    }
+
+    .upcoming-event-card h5{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 1.25rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%;
+        letter-spacing: -0.045rem;
+    }
+
+    .upcoming-event-tags-block{
         display: flex;
-        padding: 8px;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        gap: 0.5rem;
+    }
+
+    .event-card-content{
+        display: flex;
         flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .event-date{
+        display: flex;
+        padding: 0.25rem 0.5rem;
         justify-content: center;
         align-items: center;
-        gap: 8px;
-        align-self: stretch;
+        gap: 0.625rem;
+        border-radius: 0.5rem;
+        background: #F3F3F3;
     }
 
-    .event-container-title{
-        color: #000;
-        text-align: center;
-        font-size: 18px;
+    .event-date > p{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
+        font-size: 0.875rem;
         font-style: normal;
         font-weight: 600;
         line-height: normal;
+        letter-spacing: -0.035rem;
     }
 
-    .event-container-bio{
-        color: #000;
-        text-align: center;
-        font-size: 14px;
+    .is-must-attend{
+        display: flex;
+        padding: 0.25rem 0.5rem;
+        justify-content: center;
+        align-items: center;
+        gap: 0.31rem;
+        border-radius: 0.5rem;
+        background: var(--Foundation-FOSS-Mint-foss-mint-100, #B2E9C8);
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    .is-must-attend > p{
+        margin: 0;
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: normal;
+        letter-spacing: -0.035rem;
+        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+    }
+
+    .upcoming-event-card-footer{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .event-location{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.31rem;
+        color: var(--Foundation-Open-Gray-open-gray-200, #989898);
+        font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 115%; /* 1.00625rem */
+        letter-spacing: -0.035rem;
     }
 
-    .event-container-date-location{
-        color: #5B5B5B;
-        text-align: center;
-        font-family: Inter;
-        font-size: 14px;
+    .event-location:hover{
+        text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+
+    }
+
+    .event-details{
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray-800, #383838);
+        font-size: 0.875rem;
         font-style: normal;
         font-weight: 400;
-        line-height: normal;
+        line-height: 115%; /* 1.00625rem */
+        letter-spacing: -0.035rem;
     }
 
-    .upcoming-event{
-        box-shadow: inset 0px 0px 0px 1px #4BA306;
-        transition: box-shadow 0.2s ease-in-out;
+    .event-details:hover{
+        text-decoration: none;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
     }
 
-    .upcoming-event:hover{
-        box-shadow: inset 0px 0px 0px 3px #4BA306;
+    @media screen and (max-width: 1300px){
+
+        .events-block{
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
     }
 
-    .events-grid{
-        margin-top: 24px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(320px, 1fr));
-        row-gap: 24px;
-        justify-items: center;
+    @media screen and (max-width: 768px) {
+
+        .events-list-section{
+            padding-bottom: 4rem;
+
+        }
+
+        .events-card-block{
+            grid-template-columns: 1fr;
+
+        }
+
+        .events-block{
+            grid-template-columns: 1fr;
+            gap: 2.5rem;
+            width: 100%
+        }
+
+        .events-list-container h2{
+            font-size: 1.5rem;
+        }
+
+        .events-subsection{
+            gap: 3rem;
+        }
+
     }
 
 </style>
-<div class="container-center">
-    <div class="base-container">
 
-        <!-- Heading and Description -->
-        <div class="container-center">
-            <h3>
-                {{ heading }}
-            </h3>
-            <p>
-                {{ description }}
-            </p>
+
+
+<div class="events-list-section container">
+    <div class="events-list-container">
+
+        <div class="events-subsection">
+
+            <div class="upcoming-events-header">
+                <h2>Upcoming Events</h2>
+                <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
         </div>
 
-        <!-- Events by Date -->
-        {% set all_events = frappe.get_all("FOSS Chapter Events", fields=['event_banner_image', 'event_name',
-        'event_location', 'event_start_date', 'event_bio', 'must_attend', 'route'], filters={'is_published': 1,
-        'status': ['not in', ['Concluded', 'Cancelled']]}, order_by='event_start_date') %}
-
-        {% set events_by_month = {} %}
-
-        <!-- ToDo: Filter by Event Type -->
-
-        {% if all_events %}
-        {% for event in all_events %}
-        {% set event_month = get_month(event.event_start_date, "%B") %}
-        {% if event_month not in events_by_month %}
-        {% set _ = events_by_month.update({event_month: []}) %}
-        {% endif %}
-        {% set _ = events_by_month[event_month].append(event) %}
-        {% endfor %}
-        <div class="event-by-month">
-            {% for month, events in events_by_month.items() %}
-            <div class="month">
-                <h4>{{ month }}</h4>
-                <div class="month-divider">
-                </div>
-            </div>
-            <div class="events-grid">
-                {% for event in events %}
-                <a href="{{ event.route }}" class="event-container upcoming-event">
-                    <img src="{{ event.event_banner_image }}" alt="Event-Banner-Image" class="event-thumbnail">
-                    <div class="event-container-info">
-                        <div class=" event-container-title">{{ event.event_name }}</div>
-                        <div class=" event-container-bio" >{{ event.event_bio }}</div>
-                        <div class="event-container-date-location">
-                            {{ frappe.format_date(event.event_start_date) }} | {{event.event_location}}
-                        </div>
-                    </div>
-                </a>
-                {% endfor %}
-            </div>
+        {% from "fossunited/templates/macros/event_card.html" import event_card %}
+        {% set events = frappe.get_all("FOSS Chapter Events", fields=["event_name", "banner_image", "route", "must_attend", "event_location", "map_link", "event_start_date", "banner_image"], filters={"status": "Approved", "event_start_date": ['>=', frappe.utils.now()]}, page_length=6, order_by='event_start_date') %}
+        <div class="events-grid-4">
+            {% for event in events %}
+                {{ event_card(event) }}
             {% endfor %}
         </div>
-        {% else %}
-        <div class="container-center mt-4 mb-4">
-            <p>No events yet. Coming Soon 🚀</p>
-        </div>
-        {% endif %}
+
+
+
     </div>
 </div>

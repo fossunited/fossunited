@@ -1,0 +1,80 @@
+<style>
+
+    .team-hero-section {
+        font-family: Inter;
+        overflow: hidden;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+    }
+
+    .team-container {
+        display: flex;
+        width: 70%;
+        padding: 12rem 5rem 12rem 0rem;
+    }
+
+    .team-container h2 {
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-family: Inter;
+        font-size: 2rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 130%;
+        letter-spacing: -0.07rem;
+
+    }
+
+    .team-hero-image{
+
+        padding: 5rem 5rem 5rem 5rem;
+        width: 50%;
+        display: flex;
+        justify-content: center;
+        background-image: url("assets/fossunited/images/illustrations/team-hero-cover.svg");
+    }
+
+    .team-hero-image img{
+        width: 60%;
+        height: auto;
+    }
+
+
+    @media (max-width: 768px){
+        .team-hero-section{
+            flex-direction: column-reverse;
+            gap: 2rem;
+        }
+
+        .team-container {
+            margin: 0;
+            width: 100%;
+            padding: 0rem 2rem 5rem 2rem;
+        }
+
+        .team-container h2 {
+            font-size: 1.35rem;
+        }
+
+        .team-hero-image{
+            margin: 2.5rem 0;
+            width: 100%;
+            padding: 3rem 2rem;
+        }
+
+
+    }
+
+</style>
+
+
+<div class="team-hero-section container">
+    <div class="team-container">
+        <h2>{{hero_text}}</h2>
+    </div>
+
+    <div class="team-hero-image">
+        <img src="{{hero_image}}" alt="Team Icon">
+    </div>
+</div>

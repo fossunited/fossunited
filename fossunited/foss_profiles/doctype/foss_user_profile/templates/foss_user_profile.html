@@ -7,26 +7,26 @@
     <div class="container">
         <div class="profile-content-section">
             <div class="horizontal-navbar">
-                {% set nav_items = ['work', 'about', 'resume', 'projects'] %}
+                {% set nav_items = ['about', 'work', 'resume', 'projects'] %}
                 {% for item in nav_items %}
                     <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
                         {{ item | capitalize }}
                     </div>
                 {% endfor %}
             </div>
-            <div class="content-div" id="work">
+            <div class="content-div" id="about">
                 <div class="profile-content-div">
-                    {{ render_section_header("work") }}
-                    <div class="coming-soon-container">
-                        Integrations Coming Soon!
+                    <h5>About</h5>
+                    <div class="about">
+                        {{ doc.about or "Nothing in about."}}
                     </div>
                 </div>
             </div>
-            <div class="content-div" id="about">
+            <div class="content-div" id="work">
                 <div class="profile-content-div">
-                    {{ render_section_header("about") }}
-                    <div class="about">
-                        {{ doc.about or "Nothing in about."}}
+                    <h5>Work</h5>
+                    <div class="coming-soon-container">
+                        Integrations Coming Soon!
                     </div>
                 </div>
             </div>
@@ -42,26 +42,10 @@
 </div>
 {% endblock %}
 
-{% macro render_section_header(section, add=False, edit=False) %}
+{% macro render_section_header(section, add=False) %}
 <div id="{{section}}-section">
     <div class="header-with-button">
         <h5>{{section | capitalize}}</h5>
-        {% if frappe.session.user == doc.user %}
-        <div style="display: flex; gap: 0.5rem;">
-            {% if edit %}
-            <button class="edit-modal-button" name="edit-{{section}}">
-                <i class="ti ti-edit"></i>
-                    Edit {{section | capitalize}}
-            </button>
-            {% endif %}
-            {% if add %}
-            <button class="add-modal-button" name="add-{{section}}">
-                <i class="ti ti-plus"></i>
-                    Add {{section | capitalize}}
-            </button>
-            {% endif %}
-        </div>
-        {% endif %}
     </div>
 </div>
 {% endmacro %}
@@ -74,9 +58,7 @@
         {% for project in doc.projects %}
         <div class="project-container edit-hover" data-docname="{{project.name}}">
             <img src="{{project.cover_image}}" alt="{{project.project_name}}" class="project-banner">
-            {% if frappe.session.user == doc.user %}
-            <button class="edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
-            {% endif %}
+            <button class="hide edit-modal-button project-edit-button" style="align-self: flex-end;" data-docname="{{project.name}}" data-doctype="{{project.doctype}}"><i class="ti ti-pencil"></i></button>
             <div class="project-title">{{project.project_name}}</div>
             <div class="project-description">
                 {{project.tagline or "" | truncate(100)}}
@@ -137,11 +119,9 @@
                         {{ value.description or ""}}
                     </div>
                 </div>
-                {% if frappe.session.user == doc.user %}
-                <button class="edit-modal-button" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
+                <button class="edit-modal-button hide" style="font-size: var(--text-lg);" data-docname="{{ value.name }}" data-doctype="{{ value.doctype }}">
                     <i class="ti ti-pencil"></i>
                 </button>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -172,11 +152,9 @@
                 </span>
             </div>
         </div>
-        {% if frappe.session.user == doc.user %}
-        <button class="edit-modal-button" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
+        <button class="edit-modal-button hide" style="font-size: var(--text-lg);" data-doctype="{{ education.doctype }}" data-docname="{{ education.name }}">
             <i class="ti ti-pencil"></i>
         </button>
-        {% endif %}
     </div>
     {% endfor %}
     {% else %}
@@ -255,12 +233,28 @@
 
 {% block script %}
 {{ super() }}
+<script src=" https://cdn.jsdelivr.net/npm/simple-icons@11.0.0/index.min.js "></script>
 <script>
     $('body').css('background', 'hsl(var(--clr-gray-100))');
     $(document).ready(() => {
         frappe.require('controls.bundle.js');
-        setNavbarControl();console.log
-        validateEditOption()
+        setNavbarControl();
+        frappe.call({
+            method: 'fossunited.fossunited.utils.check_if_profile_owner',
+            args: {
+                username: '{{ doc.username }}'
+            },
+            callback: (r) => {
+                if(r.message){
+                    validateProfileEditOption();
+                    validateAddModal();
+                    validateEditModal();
+                }
+            },
+            error: (e) => {
+                console.log(e.message)
+            }
+        })
 
         if ( window.innerWidth > 768 ) {
             $('.edit-modal-button').hide();
@@ -272,14 +266,32 @@
             $(e.currentTarget).find('.edit-modal-button').hide();
         })
 
-        $('.add-modal-button').click((e) => {
-            addModal(e);
-        })
-
         $('.edit-modal-button').click((e) => {
             editModal(e);
         })
     })
+
+    // Hide Private Option in File Preview Modal
+    $(document).on('DOMNodeInserted', (event) => {
+        if ($(event.target).hasClass('file-preview')) {
+            $(event.target).find('label:contains("Private")').each((index, labelElement) => {
+                // Hide the label
+                $(labelElement).hide();
+            });
+        }
+        if ($(event.target).hasClass('btn-secondary') && $(event.target).text().trim() === 'Set all public') {
+            // Handle "Set all Public" buttons
+            $(event.target).click(); // Simulate button click
+            $(event.target).hide(); // Hide the button
+        }
+        if ($(event.target).hasClass('modal')) {
+            // Handle "Set all private" buttons within modals
+            const setAllPrivateButton = $(event.target).find('button.btn-secondary:contains("Set all private")');
+            if (setAllPrivateButton.length > 0) {
+                setAllPrivateButton.hide();
+            }
+        }
+    });
 
     function setNavbarControl(){
         let navItems = document.querySelectorAll('.horizontal-navbar--item');
@@ -305,21 +317,36 @@
         });
     }
 
-    function validateEditOption(){
-        if ('{{ frappe.session.user }}' === '{{ doc.user }}') {
-            // check if the width of the screen is less than 768px
-            if (window.innerWidth < 768) {
-                // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
-                $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
-                $('.header-profile-image').parent().append(`
+    function validateAddModal(){
+        //for each header-with-button, find the section from its parent
+        $('.header-with-button').each((index, element) => {
+            let section = $(element).parent().attr('id').split('-')[0];
+            $(element).append(`
+                <button class="add-modal-button" name="add-${section}" onClick="addModal(this)">
+                    <i class="ti ti-plus"></i>
+                    Add ${section}
+                </button>
+            `);
+        });
+    }
+
+    function validateEditModal(){
+        $('.edit-modal-button').removeClass('hide');
+    }
+
+    function validateProfileEditOption(){
+        // check if the width of the screen is less than 768px
+        if (window.innerWidth < 768) {
+            // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
+            $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
+            $('.header-profile-image').parent().append(`
+            <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+            `);
+        }
+        else{
+            $('.header-content-edit-section').append(`
                 <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
-                `);
-            }
-            else{
-                $('.header-content-edit-section').append(`
-                    <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
-                `);
-            }
+            `);
         }
     }
 
@@ -334,7 +361,7 @@
     }
 
     function addModal(e){
-        let id = e.target.name.split('-')[1];
+        let id = $(e).attr('name').split('-')[1];
         let table = child_docs[id];
         frappe.call({
             method: 'fossunited.fossunited.utils.get_user_editable_doctype_fields',

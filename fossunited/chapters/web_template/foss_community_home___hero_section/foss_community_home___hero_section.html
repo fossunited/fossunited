@@ -1,0 +1,123 @@
+<style>
+
+    .community-hero-section{
+        display: flex;
+        font-family: Inter;
+        overflow: hidden;
+    }
+
+    .hero-container{
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        padding-left: 0;
+        justify-content: center;
+
+    }
+
+    .hero-header{
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        max-width: 75%;
+    }
+
+    .hero-header h1{
+        margin:0;
+        color: #1A1A1A;
+        font-size: 4rem;
+        font-weight: 700;
+        line-height: 105%;
+        letter-spacing: -0.18rem;
+    }
+
+    .hero-header h1 > span{
+        color: #08B74F;;
+    }
+
+    .hero-header p{
+        color: var(--Gray-500, #667085);
+        font-size: 1.2rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 140%;
+        letter-spacing: -0.04rem;
+    }
+
+    .hero-cta{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+
+    .hero-image > img{
+        transform: rotate(-2deg) scale(1.8);
+        transform-origin: top;
+    }
+
+    @media (max-width: 768px){
+        .community-hero-section{
+            flex-direction: column;
+            gap: 4rem;
+        }
+
+        .hero-container{
+            padding-top: 6rem;
+            gap: 3rem;
+        }
+
+        .hero-header{
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-header h1{
+            font-size: 2rem;
+            letter-spacing: -0.12rem;
+        }
+
+        .hero-image{
+            height: 10rem;
+            overflow: hidden;
+        }
+        .hero-image > img{
+            transform: rotate(26deg) scale(1.45);
+            transform-origin: 50% 42%;
+        }
+
+    }
+
+</style>
+
+
+<div class="community-hero-section container">
+
+    <div class="hero-container container">
+
+        <div class="hero-header">
+
+            <h1>FOSS City <span>Communities</span></h1>
+
+            <p>{{subtext_1}}</p>
+
+        </div>
+
+        <div class = "hero-cta">
+
+            <div class="button-container">
+            <button class="primary-button" onclick="window.location.href='{{cta_1_link}}'">
+                {{cta_1}}
+            </button>
+
+        </div>
+
+        </div>
+    </div>
+
+    <div class="hero-image">
+        <img src="assets/fossunited/images/illustrations/city-communities.svg" alt="">
+    </div>
+
+</div>

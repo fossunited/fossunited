@@ -6,7 +6,7 @@ app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 # required_apps = []
 
-fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
+fixtures = ["State", "City", "FOSS Event Type"]
 
 # Includes in <head>
 # ------------------
@@ -16,8 +16,8 @@ fixtures = ["Web Page", "State", "City", "FOSS Event Type"]
 # app_include_js = ["website.bundle.js", "dialog.bundle.js", "form.bundle.js"]
 
 # include js, css files in header of web template
-# web_include_css = ["website.bundle.less"]
-web_include_js = ["website.bundle.js"]
+web_include_css = ["/assets/fossunited/css/style.css"]
+web_include_js = ["website.bundle.js", "autocomp.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "fossunited/public/scss/website"
@@ -78,8 +78,8 @@ website_route_rules = [
         "to_route": "/foss_profile/edit",
     },
     {
-        "from_route": "/me",
-        "to_route": "/redirect_to_foss_profile",
+        "from_route": "/create-foss-profile",
+        "to_route": "/foss_profile/create",
     },
 ]
 

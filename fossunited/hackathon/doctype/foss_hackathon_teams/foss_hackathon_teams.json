@@ -55,7 +55,8 @@
    "fieldname": "hackathon_name",
    "fieldtype": "Link",
    "label": "Hackathon Name",
-   "options": "FOSS Hackathons"
+   "options": "FOSS Hackathons",
+   "search_index": 1
   },
   {
    "fieldname": "column_break_idir",
@@ -83,13 +84,9 @@
   {
    "link_doctype": "FOSS Hackathon Participant",
    "link_fieldname": "team_name"
-  },
-  {
-   "link_doctype": "FOSS Hackathon Project",
-   "link_fieldname": "team_name"
   }
  ],
- "modified": "2023-12-18 17:57:02.368530",
+ "modified": "2024-02-12 16:53:04.635742",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Teams",
@@ -108,7 +105,6 @@
    "write": 1
   }
  ],
- "route": "team",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

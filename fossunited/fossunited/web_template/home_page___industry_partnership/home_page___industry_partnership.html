@@ -1,0 +1,142 @@
+<style>
+    .ip-section{
+        display: flex;
+        margin-bottom: 7rem;
+    }
+
+    .ip-container{
+        display: flex;
+        justify-content: space-around;
+        align-items: stretch;
+        overflow: hidden;
+    }
+
+    .ip-content-block{
+        background: #F5F5F5;
+        display: flex;
+        padding: 1.87rem;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+    .ip-content-block img{
+        height: 3.75rem;
+    }
+
+    .ip-content-block h1{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1.75rem */
+        letter-spacing: -0.105rem;
+    }
+
+    .ip-content-block p{
+        margin: 0.5rem 0 0 0;
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.4rem */
+        letter-spacing: -0.02rem;
+    }
+
+    .ip-content-block a{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 550;
+        line-height: normal;
+        letter-spacing: -0.05288rem;
+    }
+
+    .ip-content-block a:hover{
+        text-decoration: none;
+    }
+
+    .ip-partners-block{
+        background: url("assets/fossunited/icons/ip_block_pattern.svg") no-repeat;
+        padding: 6rem 4rem;
+        display: flex;
+        justify-content: center;
+        background-size: contain;
+    }
+
+    .feature-partners{
+        background-color: #fff;
+        border-radius: 0.5875rem;
+        box-shadow: 0px 11.75px 35.25px 0px rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: center;
+        align-items:center;
+    }
+
+    .feature-partners img{
+        max-width: 9rem;
+    }
+
+    @media screen and (max-width: 768px) {
+
+
+        .ip-container{
+            flex-direction: column-reverse;
+        }
+
+        .ip-content-block{
+            width: 100%;
+        }
+
+        .ip-content-block h1{
+            font-size: 1.5rem;
+        }
+
+        .ip-partners-block{
+            background-size: cover;
+            padding: 4rem 1.75rem;
+        }
+
+        .feature-partners{
+            padding: 1rem;
+            flex-direction: column;
+        }
+
+        .feature-partners img{
+            max-width: 60%;
+            display: block;
+        }
+
+    }
+</style>
+
+
+<div class="ip-section container">
+    <div class="ip-container">
+
+        <div class="ip-content-block">
+
+            <img src="assets/fossunited/icons/handshake.svg" alt="ip-handshake">
+
+            <div>
+                <h1>Industry Partnership</h1>
+                <p>{{section_desc}}</p>
+            </div>
+
+            <a href="{{current_partners_Link}}">View Current Partners ↗</a>
+        </div>
+
+        <div class="ip-partners-block">
+
+            <div class="feature-partners">
+
+                <img src="assets/fossunited/images/partners/frappe-logo.png" alt="Frappe">
+                <img src="assets/fossunited/images/partners/zerodha-logo.png" alt="Zerodha">
+
+            </div>
+
+        </div>
+
+    </div>
+</div>

@@ -1,26 +1,34 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "format:{chapter_name}-{chapter_type}",
  "creation": "2023-06-30 01:25:06.245665",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "meta_info_section",
+  "is_published",
+  "column_break_pmbj",
+  "route",
+  "represent_image",
   "basic_information_section",
+  "banner_image",
+  "column_break_3gye",
   "chapter_type",
   "chapter_name",
-  "column_break_3gye",
   "institution_name",
+  "about_chapter_section",
   "about_chapter",
   "location_section",
-  "country",
   "city",
-  "column_break_uljz",
   "state",
+  "column_break_uljz",
+  "country",
   "google_map_link",
   "socials_section",
   "email",
-  "twitterx",
+  "x",
   "linkedin",
   "column_break_fifp",
   "facebook",
@@ -28,9 +36,7 @@
   "mastodon",
   "chapter_members_section",
   "chapter_members",
-  "chapter_lead",
-  "route",
-  "is_published"
+  "chapter_lead"
  ],
  "fields": [
   {
@@ -45,7 +51,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Chapter Type",
-   "options": "City Chapter\nCollege Chapter",
+   "options": "City Community\nFOSS Club",
    "reqd": 1
   },
   {
@@ -102,7 +108,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "depends_on": "eval: doc.chapter_type==='College Chapter'",
+   "depends_on": "eval: doc.chapter_type==='FOSS Club'",
    "fieldname": "institution_name",
    "fieldtype": "Link",
    "label": "Institution Name",
@@ -110,7 +116,7 @@
   },
   {
    "fieldname": "about_chapter",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text Editor",
    "label": "About Chapter"
   },
   {
@@ -166,12 +172,6 @@
    "options": "URL"
   },
   {
-   "fieldname": "twitterx",
-   "fieldtype": "Data",
-   "label": "X",
-   "options": "URL"
-  },
-  {
    "fieldname": "mastodon",
    "fieldtype": "Data",
    "label": "Mastodon",
@@ -182,6 +182,37 @@
    "fieldtype": "Table",
    "label": "Chapter Members",
    "options": "FOSS Chapter Lead Team Members"
+  },
+  {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "fieldname": "column_break_pmbj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Banner Image"
+  },
+  {
+   "fieldname": "about_chapter_section",
+   "fieldtype": "Section Break",
+   "label": "About Chapter"
+  },
+  {
+   "fieldname": "x",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
+  },
+  {
+   "default": "/files/City_Illustration.svg",
+   "fieldname": "represent_image",
+   "fieldtype": "Attach Image",
+   "label": "Representing Image"
   }
  ],
  "has_web_view": 1,
@@ -193,7 +224,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-01-29 21:14:15.399574",
+ "modified": "2024-02-26 14:10:54.579243",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",

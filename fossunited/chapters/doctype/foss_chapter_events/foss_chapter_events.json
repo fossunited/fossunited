@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_guest_to_view": 1,
  "allow_rename": 1,
  "autoname": "hash",
  "creation": "2023-07-01 23:55:20.934607",
@@ -8,25 +9,29 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "route",
-  "column_break_yozf",
+  "meta_info_section",
   "is_published",
+  "column_break_yozf",
+  "route",
   "navbar_controls_section",
   "show_speakers",
   "show_rsvp",
+  "show_schedule",
   "column_break_moaa",
   "show_cfp",
   "show_photos",
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
+  "chapter_name",
   "event_infomation_section",
   "must_attend",
   "event_name",
+  "event_permalink",
   "status",
   "event_type",
   "column_break_pua4",
-  "event_banner_image",
+  "banner_image",
   "event_location",
   "map_link",
   "tickets_section",
@@ -58,6 +63,7 @@
   "event_members_section",
   "event_members",
   "schedule_tab",
+  "schedule_section",
   "event_schedule"
  ],
  "fields": [
@@ -96,7 +102,8 @@
    "in_list_view": 1,
    "label": "Chapter",
    "options": "FOSS Chapter",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "default": "0",
@@ -165,11 +172,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "event_banner_image",
-   "fieldtype": "Attach Image",
-   "label": "Event Banner Image"
-  },
-  {
    "fieldname": "event_information_section",
    "fieldtype": "Section Break",
    "label": "Event Information"
@@ -194,7 +196,7 @@
    "fieldname": "community_partners",
    "fieldtype": "Table",
    "label": "Community Partners",
-   "options": "FOSS Event Sponsors"
+   "options": "FOSS Event Community Partners"
   },
   {
    "fieldname": "deck_link",
@@ -301,6 +303,28 @@
    "label": "Show Photos"
   },
   {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "default": "/files/event_banner.png",
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Event Banner Image"
+  },
+  {
+   "fieldname": "schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fetch_from": "chapter.chapter_name",
+   "fieldname": "chapter_name",
+   "fieldtype": "Data",
+   "label": "Chapter Name"
+  },
+  {
    "fieldname": "tickets_section",
    "fieldtype": "Section Break",
    "label": "Tickets"
@@ -338,6 +362,22 @@
    "fieldname": "paid_event",
    "fieldtype": "Check",
    "label": "Paid Event "
+  },
+  {
+   "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
+   "fieldname": "event_permalink",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Event Permalink",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule",
+   "fieldtype": "Check",
+   "label": "Show Schedule"
   }
  ],
  "has_web_view": 1,
@@ -355,7 +395,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-01-29 13:55:13.653570",
+ "modified": "2024-02-16 15:07:41.050748",
  "modified": "2024-01-29 00:29:19.313019",
  "modified_by": "Administrator",
  "module": "Chapters",
@@ -374,11 +414,22 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
- "route": "events",
- "search_fields": "event_name, chapter",
+ "search_fields": "event_permalink, chapter",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "event_name"
 }

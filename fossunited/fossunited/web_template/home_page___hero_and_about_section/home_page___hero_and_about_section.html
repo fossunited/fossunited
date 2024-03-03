@@ -1,0 +1,367 @@
+
+<style>
+
+    .container{
+        padding-left: 5rem;
+        padding-right: 5rem;
+    }
+
+    .hero-section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(360deg, #eaecf0 0%, #ffffff 90.79%);
+        flex-direction: column;
+        padding-top: 3.75rem;
+    }
+
+    .hero-container{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        text-align: center;
+        margin-bottom: 5rem;
+    }
+
+    .hero-image{
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    #image-centre{
+        width: 16rem;
+        min-width: 16rem;
+    }
+
+    #image-end{
+        width: 2.47763rem;
+        min-width: 2.47763rem;
+    }
+
+    .hero-heading h1{
+        margin: 0;
+        font-size: 2.5rem;
+        font-family: Inter;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 110%;
+        letter-spacing: -0.1rem;
+    }
+
+    .hero-heading-a{
+        color: #1A1A1A;
+
+
+    }
+
+    .hero-heading-b{
+        color: #08B74F;
+    }
+
+    .button-container{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.125rem;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 115%;
+        letter-spacing: -0.045rem;
+    }
+
+    .button-category{
+        display: grid;
+        gap: 2rem;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .btn-primary{
+        background: #08B74F;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.8rem 1.2rem;
+        font-weight: 450;
+
+    }
+
+    .btn-primary:active, .btn-primary:hover{
+        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        border:none !important;
+    }
+
+    .btn-primary a{
+        color: #FFF;
+        text-decoration: none;
+    }
+
+    .btn-secondary{
+        padding: 0.8rem 1.2rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--green-400, #B6DEC5);
+        background: var(--neutral-white, #FFF);
+        font-weight: 450;
+        justify-content: center;
+    }
+
+    .btn-secondary:active, .btn-secondary:hover{
+        border: 1.5px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
+        background-color: var(--neutral-white, #FFF) !important;
+    }
+
+    .btn-secondary a{
+        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
+        text-decoration: none;
+    }
+
+    .about-section{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom:7rem;
+
+    }
+
+    .about-section-innerblock{
+        margin-top: -3.5rem;
+        display: flex;
+        padding: 3rem;
+        flex-direction: column;
+        border-radius: 0.5rem;
+        border: 0.379px solid var(--Gray-300, #D0D5DD);
+        background: #FFF;
+        gap: 1rem;
+    }
+
+    .about-section-main{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .about-section-tag{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 140%; /* 1.19394rem */
+        letter-spacing: -0.03413rem;
+    }
+
+    .about-section-text{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .about_headtext{
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 120%; /* 1.8rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .about_subtext{
+        align-self: stretch;
+        color: var(--Gray-500, #667085);
+        font-family: Inter;
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.225rem */
+        letter-spacing: -0.0175rem;
+    }
+
+    .goals-section{
+
+        margin-top: 0.75rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1.2rem;
+    }
+
+    .goals-card{
+        display: flex;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 0.379px solid var(--Gray-300, #D0D5DD);
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .goals-card-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .goals-card-tag{
+        color: var(--Gray-500, #667085);
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 100%; /* 0.56856rem */
+        letter-spacing: -0.01138rem;
+    }
+
+    .goals-card-number{
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        text-align: right;
+        font-size: 0.75rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 0.56856rem */
+        letter-spacing: -0.02275rem;
+    }
+
+    .goal-text{
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1rem;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 100%; /* 1rem */
+        letter-spacing: -0.04rem;
+    }
+
+    .goal-icon{
+        max-width: 2rem;
+    }
+
+    @media screen and (max-width: 768px){
+
+
+        .hero-section{
+            padding-top: 3rem;
+        }
+        .hero-container{
+            gap: 2rem;
+        }
+
+        #image-centre{
+            width: 40vw;
+            min-width: 8rem;
+        }
+
+        #image-end{
+            width: 8vw;
+            min-width: 1.2rem;
+        }
+
+        .hero-heading{
+            text-align: center;
+        }
+
+        .hero-heading > h1{
+
+            font-size: 2rem;
+            line-height: 2.5re
+        }
+
+        .button-container{
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .button-category{
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .about_headtext{
+            font-size: 1.2rem
+        }
+
+        .about-section-innerblock{
+            margin-top: -3rem;
+            padding: 2rem;
+
+        }
+
+        .goals-section{
+
+        grid-template-columns: 1fr;
+
+        }
+    }
+
+</style>
+
+<div class="hero-section">
+    <div class="hero-container container">
+
+        <div class="hero-image">
+
+            <div>
+                <img id="image-end" src="assets/fossunited/images/illustrations/hero-block-right.png" alt="Hero Image" class="hero-image">
+            </div>
+
+            <div>
+                <img id="image-centre" src="assets/fossunited/images/illustrations/hero-globe.png" alt="Hero Image" class="hero-image">
+            </div>
+
+            <div>
+                <img id="image-end" src="assets/fossunited/images/illustrations/hero-block-left.png" alt="Hero Image" class="hero-image">
+            </div>
+
+        </div>
+
+        <div class="hero-heading">
+            <h1><span class="hero-heading-a">{{heading_a}} </span><span class="hero-heading-b">{{heading_b}}</span></h1>
+        </div>
+
+        <div class="button-container">
+
+            <div class="button-category">
+                <button class="primary-button" onclick="window.location.href='{{primary_cta_url}}'">
+                    {{primary_cta}}
+                </button>
+
+                <button class="secondary-button" onclick="window.location.href='{{secondary_cta_url}}'">
+                    {{secondary_cta}}
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="about-section container">
+
+        <div class="about-section-innerblock">
+
+            <div class="about-section-main">
+                <p class="about-section-tag">ABOUT</p>
+
+                <div class="about-section-text">
+
+                    <p class="about_headtext">{{about_headtext}}</p>
+                    <p class="about_subtext">{{about_subtext}}</p>
+
+                </div>
+            </div>
+
+            <div class="goals-section">
+                {% for index in range(1, 10) %}
+                    {% set goal_text = values['goal_text_' + index|string] %}
+                    {% set goal_icon = values['goal_icon_' + index|string] %}
+                    {% if goal_text %}
+                        <div class="goals-card">
+                            <div class="goals-card-header">
+                                <p class="goals-card-tag">GOALS</p>
+                                <p class="goals-card-number">0{{index}}</p>
+                            </div>
+
+                            <p class="goal-text">{{goal_text_1}}</p>
+
+                            <img class="goal-icon"src="{{goal_icon}}" alt="Goal Icon">
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+        </div>
+
+</div>

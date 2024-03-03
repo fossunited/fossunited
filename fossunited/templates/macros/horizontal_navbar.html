@@ -1,0 +1,13 @@
+{% macro horizontal_navbar(nav_items) %}
+    <div class="horizontal-navbar">
+        {% for item in nav_items %}
+            <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
+                {% if item in ['rsvp', 'cfp'] %}
+                    {{ item | replace('_', ' ') | upper }}
+                {% else %}
+                    {{ item | replace('_', ' ') | title }}
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endmacro %}

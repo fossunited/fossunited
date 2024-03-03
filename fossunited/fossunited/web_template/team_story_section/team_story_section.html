@@ -1,0 +1,104 @@
+<style>
+
+    .team-story-section{
+        display: flex;
+        font-family: Inter;
+    }
+
+    .team-story-container {
+        padding-top: 5rem;
+        display: flex;
+        gap: 3rem;
+        flex-direction: column;
+    }
+
+    .story-section{
+        display: flex;
+        gap: 7rem;
+        align-items: center;
+    }
+
+    .story-section-content{
+        display: flex;
+        width: 50%;
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+
+    .team-story-container h2{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.1rem;
+    }
+
+    .story-section p{
+
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-weight: 450;
+        line-height: 170%; /* 1.6rem */
+        letter-spacing: -0.02rem;
+
+    }
+
+    .story-section-image{
+        width: 50%
+    }
+
+    @media (max-width: 768px) {
+
+        .team-story-section{
+            flex-direction: column;
+            gap: 3rem
+        }
+
+        .story-section{
+            flex-direction: column-reverse;
+        }
+
+        .team-story-container h2{
+            font-size: 1.5rem;
+        }
+        .story-section-content{
+            width: 100%;
+        }
+
+        .story-section-image{
+            width: 100%;
+        }
+
+    }
+
+</style>
+
+
+<div class="team-story-section container">
+
+    <div class = "team-story-container">
+
+        <h2>{{heading}}</h2>
+
+        <div class="story-section">
+
+            <div class="story-section-content">
+                <p>{{sub_text_1}}</p>
+
+                <p>{{sub_text_2}}</p>
+            </div>
+
+            <div class="story-section-image">
+                <img src="{{image}}" alt="Team Pic">
+            </div>
+
+        </div>
+
+
+
+
+    </div>
+
+</div>

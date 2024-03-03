@@ -1,0 +1,130 @@
+<style>
+
+    .grants-program-section {
+        display: flex;
+        font-family: Inter;
+        flex-direction: column;
+    }
+
+    .grants-program-container {
+        display: flex;
+        padding: 5rem 0rem 4rem 0rem;
+    }
+
+    .grant-program{
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+
+    }
+    .grant-program h2{
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.75rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.07rem;
+    }
+
+    .about-grant-program{
+        display: flex;
+        gap: 3rem;
+    }
+
+    .about-grant-program p{
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 150%;
+        letter-spacing: -0.0225rem;
+
+    }
+
+    .grant-detail-category{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .grant-type-card{
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        background: var(--Gray-50, #F9FAFB);
+        justify-content: center;
+        text-align: center;
+    }
+
+    .grant-type-card h3{
+        margin: 0;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 140%;
+        letter-spacing: -0.08rem;
+    }
+
+    .grant-type-card p{
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%; /* 1.05rem */
+        letter-spacing: -0.015rem;
+    }
+
+        @media (max-width: 768px) {
+
+            .about-grant-program{
+                flex-direction: column;
+                gap: 2rem;
+
+            }
+
+            .grant-detail-category{
+                grid-template-columns: 1fr;
+            }
+
+
+}
+
+</style>
+
+<div class="grants-program-section container">
+
+    <div class="grants-program-container">
+
+        <div class="grant-program">
+
+            <h2>{{heading}}</h2>
+
+            <div class="about-grant-program">
+                <p>{{subtext}}</p>
+
+                <div class="grant-detail-category">
+                    {% for index in range(1, 4) %}
+                        {% set grant_category = values['grant_category_' + index|string ] %}
+                        {% set grant_amount = values['grant_amount_' + index|string ] %}
+                        {% if grant_category %}
+
+                            <div class="grant-type-card">
+
+                                <h3>{{grant_amount}}</h3>
+                                <p>{{grant_category}}</p>
+
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>

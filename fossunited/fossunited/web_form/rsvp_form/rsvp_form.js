@@ -3,11 +3,24 @@ frappe.ready(function() {
 	handle_rsvp_edit()
 
 	frappe.web_form.after_save = () => {
-		setTimeout(() => {
-			window.location.href = "/events/" + frappe.web_form.doc.event;
-		}, 3000);
+        redirect_to_event_page()
 	}
 })
+
+function redirect_to_event_page(){
+    frappe.call({
+        method: "frappe.client.get",
+        args: {
+            doctype: "FOSS Chapter Events",
+            name: frappe.web_form.doc.event,
+        },
+        callback: (r)=>{
+            setTimeout(() => {
+                window.location.href = "/" + r.message.route;
+            }, 2000);
+        },
+    })
+}
 
 function replace_breadcrumb_link(){
     /*

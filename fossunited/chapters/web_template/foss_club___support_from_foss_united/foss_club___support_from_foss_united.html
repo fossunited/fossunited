@@ -1,0 +1,124 @@
+<style>
+
+    .support-section{
+        display: flex;
+        font-family: Inter;
+        background: #F5F5F5;
+    }
+
+    .support-container{
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        padding: 4rem 0rem 8rem 0rem;
+
+
+    }
+
+    h2{
+        margin: 0;
+        color: #000;
+        font-size: 1.5rem;
+        font-weight: 700;
+        line-height: 100%; /* 1.5rem */
+        letter-spacing: -0.06rem;
+    }
+
+    .support-category-container{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .support-card{
+        display: flex;
+        border-radius: 0.5rem;
+        padding: 1.25rem;
+        border: 1px dashed #08B74F;
+        background: rgba(8, 183, 79, 0.15);
+        text-align: center;
+        gap: 0.5rem;
+        flex-direction: column;
+
+    }
+
+    .support-card img{
+        max-height: 1.75rem;
+    }
+
+    .support-card h5{
+        margin: 0;
+        color: #08B74F;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 105%;
+        letter-spacing: -0.07rem;
+    }
+
+    .support-card p{
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-weight: 450;
+        line-height: 120%; /* 1.05rem */
+        letter-spacing: -0.0175rem;
+    }
+
+
+
+    @media (max-width: 768px){
+
+        .support-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            padding:1rem;
+        }
+
+        .support-container{
+            padding: 4rem 0rem;
+            gap: 3rem;
+        }
+
+        .support-category-container{
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .support-card h5{
+            font-size: 1rem;
+        }
+
+
+    }
+</style>
+
+
+<div class="support-section container">
+
+    <div class="support-container">
+
+        <h2>Support from FOSS United</h2>
+
+        <div class="support-category-container">
+
+            {% for index in range(1, 7) %}
+                {% set support_icon = values['icon_' + index|string ] %}
+                {% set support_title = values['title_' + index|string ] %}
+                {% set support_text = values['text_' + index|string ] %}
+                {% if support_title %}
+
+                <div class="support-card">
+
+                        <img src="{{support_icon}}" alt="">
+                        <h5>{{ support_title }}</h5>
+                        <p>{{support_text}}</p>
+
+                </div>
+
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+    </div>
+</div>

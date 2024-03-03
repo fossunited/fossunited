@@ -45,6 +45,7 @@ def update_rsvp_count(rsvp):
     frappe.db.set_value("FOSS Event RSVP", rsvp, "rsvp_count", count)
 
 
+# To Remove
 def is_session_user_team_member(chapter):
     members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
 
@@ -54,6 +55,7 @@ def is_session_user_team_member(chapter):
         return member.chapter_member == user.username
 
 
+# To Remove
 def get_event_navbar_items(
     chapter, show_speakers, show_rsvp, show_cfp, event_schedule
 ):
@@ -75,6 +77,12 @@ def get_event_navbar_items(
         navbar_items["Schedule"] = "schedule"
 
     return navbar_items
+
+
+def is_user_team_member(chapter, user):
+    members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
+    for member in members:
+        return member.email == user
 
 
 def hide_email(email):
@@ -129,11 +137,11 @@ def get_initials(name):
 def make_badge(text="Default", size="sm"):
     # stored in the form of (background-color, text-color)
     colors = {
-        "Approved": ("#30A66D", "#FFFFFF"),
-        "Open": ("#DB7706", "#FFFFFF"),
-        "Review Pending": ("#DB7706", "#FFFFFF"),
-        "Rejected": ("#E74C3C", "#FFFFFF"),
-        "Cancelled": ("#E74C3C", "#FFFFFF"),
+        "Approved": ("#B2E9C8", "#07A748"),
+        "Open": ("#FEF0C7", "#F79009"),
+        "Review Pending": ("#FEF0C7", "#F79009"),
+        "Rejected": ("#FEE4E2", "#F04438"),
+        "Cancelled": ("#FEE4E2", "#F04438"),
         "Default": ("#171717", "#FFFFFF"),
     }
     bg_color, text_color = colors.get(text, colors["Default"])
@@ -481,7 +489,34 @@ def get_signup_optin_checks():
 
 @frappe.whitelist(allow_guest=True)
 def check_username_availability(username):
-    exists = frappe.db.exists(
+    username_exists = frappe.db.exists(
         "FOSS User Profile", {"username": username}
     )
-    return exists
+
+    is_cityname = frappe.db.exists("City", {"name": username})
+    return username_exists or is_cityname
+
+
+@frappe.whitelist()
+def create_foss_profile(user, username, fields):
+    fields = json.loads(fields)
+    args = {}
+    args["doctype"] = "FOSS User Profile"
+    args["user"] = user
+    args["username"] = username
+    args["is_published"] = 1
+    args.update(fields)
+
+    try:
+        foss_profile = frappe.get_doc(args)
+        foss_profile.insert(ignore_permissions=True)
+    except Exception as e:
+        frappe.throw(str(e))
+
+    return foss_profile
+
+
+@frappe.whitelist(allow_guest=True)
+def check_if_profile_owner(username):
+    profile_user = frappe.get_doc("FOSS User Profile", username)
+    return profile_user.user == frappe.session.user

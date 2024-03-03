@@ -11,29 +11,24 @@
   "is_published",
   "route",
   "status",
+  "attendance_confirmed",
   "column_break_vctq",
   "linked_cfp",
   "event",
   "event_name",
-  "event_date",
   "submitted_by",
   "personal_information_section",
   "full_name",
   "email",
-  "phone",
-  "github",
-  "linkedin",
-  "twitter",
-  "picture_url",
-  "organization",
   "designation",
+  "organization",
   "column_break_dcfl",
   "bio",
   "about_talk_section",
+  "is_first_talk",
   "talk_title",
   "category",
   "talk_duration",
-  "is_first_talk",
   "talk_reference",
   "column_break_mhza",
   "talk_description",
@@ -79,32 +74,11 @@
   },
   {
    "fetch_from": "submitted_by.email",
+   "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "Email"
-  },
-  {
-   "fieldname": "phone",
-   "fieldtype": "Data",
-   "label": "Phone"
-  },
-  {
-   "fieldname": "github",
-   "fieldtype": "Data",
-   "label": "Github",
-   "options": "URL"
-  },
-  {
-   "fieldname": "linkedin",
-   "fieldtype": "Data",
-   "label": "LinkedIn",
-   "options": "URL"
-  },
-  {
-   "fieldname": "twitter",
-   "fieldtype": "Data",
-   "label": "Twitter",
-   "options": "URL"
+   "label": "Email",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_dcfl",
@@ -124,7 +98,8 @@
   {
    "fieldname": "designation",
    "fieldtype": "Data",
-   "label": "Designation"
+   "label": "Designation",
+   "reqd": 1
   },
   {
    "fieldname": "about_talk_section",
@@ -150,12 +125,6 @@
    "options": "5 min\n10 min\n15 min\n20 min\n25 min\n30 min\n> 30 min"
   },
   {
-   "fieldname": "picture_url",
-   "fieldtype": "Data",
-   "label": "Picture (URL)",
-   "options": "URL"
-  },
-  {
    "fieldname": "talk_description",
    "fieldtype": "Text Editor",
    "label": "Talk Description",
@@ -179,6 +148,7 @@
    "reqd": 1
   },
   {
+   "description": "Link relevant references for your talk.",
    "fieldname": "talk_reference",
    "fieldtype": "Data",
    "label": "Talk Reference",
@@ -240,17 +210,17 @@
    "label": "Meta Info"
   },
   {
-   "fetch_from": "linked_cfp.event_date",
-   "fieldname": "event_date",
-   "fieldtype": "Date",
-   "label": "Event Date"
+   "default": "0",
+   "fieldname": "attendance_confirmed",
+   "fieldtype": "Check",
+   "label": "Attendance Confirmed"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-01-03 15:03:04.726911",
+ "modified": "2024-02-18 02:46:29.924170",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

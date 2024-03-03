@@ -1,0 +1,114 @@
+<style>
+
+    .cres-section{
+        display: flex;
+        font-family: Inter;
+        background: #F5F5F5;
+    }
+
+    .cres-container{
+        display: flex;
+        gap: 10rem;
+        padding: 5rem 0rem 4rem 0rem;
+
+
+   }
+
+    .conduct-section{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        width: 50%
+    }
+
+    .resp-section{
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        width: 50%
+    }
+
+    .cres-container h2{
+        font-size: 1.5rem;
+    }
+
+    .cres-container ul{
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .cres-container li{
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.875rem;
+        font-weight: 450;
+        line-height: 120%; /* 1.05rem */
+        letter-spacing: -0.0175rem;
+    }
+
+
+
+    @media (max-width: 768px){
+
+        .cres-section{
+            flex-direction: column;
+            gap: 2.5rem;
+            padding:1rem;
+        }
+
+        .cres-container{
+            flex-direction: column;
+            padding: 4rem 0rem;
+            gap: 3rem;
+        }
+
+        .cres-container h2{
+            font-size: 1.2rem;
+        }
+
+        .conduct-section, .resp-section{
+            width: 100%
+        }
+
+    }
+</style>
+
+
+<div class="cres-section container">
+
+    <div class="cres-container">
+
+        <div class="conduct-section">
+            <h2>Lead's Commitment & Conduct</h2>
+
+            <ul>
+                {% for index in range(1, 7) %}
+                {% set conduct_text = values['conduct_point_' + index|string ] %}
+                    {% if conduct_text %}
+                        <li>{{ conduct_text }}</li>
+                    {% endif %}
+                {% endfor %}
+
+            </ul>
+        </div>
+
+        <div class="resp-section">
+            <h2>Responsibilities of the Lead</h2>
+
+            <ul>
+                {% for index in range(1, 5) %}
+                {% set responsibility_text = values['responsibility_' + index|string ] %}
+                    {% if responsibility_text %}
+                        <li>{{ responsibility_text }}</li>
+                    {% endif %}
+                {% endfor %}
+
+            </ul>
+        </div>
+
+
+
+
+    </div>
+</div>

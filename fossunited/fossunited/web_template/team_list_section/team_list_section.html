@@ -1,0 +1,234 @@
+<style>
+
+    .team-list-section {
+        display: flex;
+        font-family: Inter;
+    }
+
+    .team-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        padding: 6rem 0rem 6rem 0rem;
+    }
+
+    .team-section {
+        display: flex;
+        gap: 5rem;
+        flex-direction: column;
+    }
+
+    .team-list-container h2 {
+        margin: 0;
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 1.7rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.08rem;
+    }
+
+    .member-section h3 {
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.5rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.07rem;
+    }
+
+    .member-section {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .teams-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        row-gap: 3rem;
+        column-gap: 5rem;
+    }
+
+    .team-member {
+        display: flex;
+        gap: 3rem;
+
+        align-items: center;
+    }
+
+    .team-member-image {
+        display: flex;
+        justify-content: center;
+        max-width: 5rem;
+    }
+
+    .team-member-image img {
+        max-width: 4rem;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+    }
+
+    .team-member-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+
+    .team-member-details h4 {
+        margin: 0;
+        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+        font-size: 1.2rem;
+        font-weight: 600;
+        line-height: 100%;
+        letter-spacing: -0.07rem;
+    }
+
+    .team-member-details a {
+        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+        font-size: 0.875rem;
+        font-weight: 500;
+        line-height: 100%;
+        letter-spacing: -0.001rem;
+    }
+
+
+
+    .team-member-details p {
+        margin: 0;
+        color: var(--Gray-500, #667085);
+        font-size: 0.9rem;
+        font-weight: 450;
+        line-height: 140%;
+        letter-spacing: -0.0175rem;
+    }
+
+    .designation{
+        color: var(--Gray-500, #1a1a1a);
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px){
+
+        .teams-container{
+            grid-template-columns: 1fr;
+
+        }
+
+        .team-list-container h2{
+            font-size: 1.5rem;
+        }
+
+        .member-section h3 {
+            font-size: 1.35rem;
+        }
+
+    }
+
+</style>
+
+
+<div class="team-list-section container">
+
+    <div class="team-list-container">
+
+        <h2>Meet the Workforce</h2>
+
+        <div class="team-section">
+
+            <div class="member-section">
+
+                <h3>Board</h3>
+
+                {% set members = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1}, order_by="full_name")%}
+
+                <div class="teams-container">
+                    {%for member in members %}
+                        <div class="team-member">
+                            <div class="team-member-image">
+                                <img src="{{ member.headshot }}" alt="{{ member.full_name }}">
+                            </div>
+                            <div class="team-member-details">
+                                <h4>{{ member.full_name }}</h4>
+                                <a href="/{{ member.username}}">@{{ member.username }}</a>
+                                <p class="designation">{{member.designation}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="member-section">
+
+                <h3>Full-time and Part-time Staff</h3>
+
+                {% set members = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time"]]}, order_by ='full_name') %}
+
+                <div class="teams-container">
+                    {%for member in members %}
+                        <div class="team-member">
+                            <div class="team-member-image">
+                                <img src="{{ member.headshot }}" alt="{{ member.full_name }}">
+                            </div>
+                            <div class="team-member-details">
+                                <h4>{{ member.full_name }}</h4>
+                                <a href="/{{ member.username}}">@{{ member.username }}</a>
+                                <p class="designation">{{member.designation}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="member-section">
+
+                <h3>Fellows and Interns</h3>
+
+                {% set members = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role": ["in", ["Fellow", "Intern"]]}, order_by ='full_name')%}
+
+                <div class="teams-container">
+                    {%for member in members %}
+                        <div class="team-member">
+                            <div class="team-member-image">
+                                <img src="{{ member.headshot }}" alt="{{ member.full_name }}">
+                            </div>
+                            <div class="team-member-details">
+                                <h4>{{ member.full_name }}</h4>
+                                <a href="/{{ member.username}}">@{{ member.username }}</a>
+                                <p class="designation">{{member.designation}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+            <div class="member-section">
+
+                <h3>Active and Part-time Volunteers</h3>
+
+                {% set members = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role": "Volunteer"}, order_by ='full_name')%}
+
+                <div class="teams-container">
+                    {%for member in members %}
+                        <div class="team-member">
+                            <div class="team-member-image">
+                                <img src="{{ member.headshot }}" alt="{{ member.full_name }}">
+                            </div>
+                            <div class="team-member-details">
+                                <h4>{{ member.full_name }}</h4>
+                                <a href="/{{ member.username}}">@{{ member.username }}</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>
