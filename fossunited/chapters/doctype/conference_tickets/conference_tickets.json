@@ -49,6 +49,7 @@
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "First Name"
   },
   {
@@ -159,7 +160,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-01-30 17:27:29.175422",
+ "modified": "2024-03-03 16:33:05.728510",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "Conference Tickets",

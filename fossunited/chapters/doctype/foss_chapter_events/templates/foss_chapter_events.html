@@ -29,6 +29,10 @@
                 <h3 class="header--city-name">{{ doc.chapter_name }}</h3>
                 <h1 class="header--event-title">{{ doc.event_name }}</h1>
             </div>
+
+            <div>
+                <button class="primary-button tickets-button" onClick="window.location.href='/book-conference-ticket?event={{ doc.name }}'">Book your Seats</button>
+            </div>
         </div>
         <div class="header--tags">
             {% from 'fossunited/templates/macros/foss_tags.html' import tag %}

@@ -2236,6 +2236,12 @@ h6{
 
 
     /* -------------------- */
+    /* FOSS Chapter Events */
+    .tickets-button {
+        height: 2.5rem;
+        font-size: var(--text-base)
+      }
+
 }
 @media screen and (max-width: 425px){
     button {
@@ -2265,4 +2271,8 @@ h6{
         gap: 20px;
         padding: 16px 24px;
     }
+    .tickets-button {
+        height: 2.5rem;
+        font-size: var(--text-xs)
+      }
 }
