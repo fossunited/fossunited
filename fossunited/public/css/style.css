@@ -1307,6 +1307,12 @@ h6{
     color: hsl(var(--clr-open-gray-200));
 }
 
+.backlink > *{
+    font-size: var(--text-sm);
+    font-weight: var(--fw-semibold);
+    color: hsl(var(--clr-code-night-500));
+}
+
 /* ------- */
 
 /* CHAPTERS PAGES */
@@ -1896,6 +1902,45 @@ h6{
     width: 75%;
     border-radius: 1rem;
     border: 2px solid hsl(var(--clr-gray-100));
+}
+
+.foss-form-container{
+    padding: 2rem;
+    width: 75%;
+    border-radius: 1rem;
+    border: 2px solid hsl(var(--clr-foss-mint-500));
+}
+
+
+.foss-form-heading-3xl{
+    font-size: var(--text-3xl);
+    font-weight: var(--fw-bold);
+    color: hsl(var(--clr-code-night-800));
+    margin: 0.5rem 0;
+}
+
+.foss-form-question{
+    font-size: var(--text-base);
+    font-weight: var(--fw-medium);
+    color: hsl(var(--clr-code-night-600));
+}
+
+.foss-form-buttons{
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.submitted-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.submitted-container > button {
+    margin: 1rem 0;
+    width: max-content;
 }
 /* ----------- */
 

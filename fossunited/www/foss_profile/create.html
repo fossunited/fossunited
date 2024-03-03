@@ -109,7 +109,7 @@
                 callback: (r)=>{
                     frappe.msgprint("Your FOSS Profile has been created successfully! Redirecting to your profile.", "Success!", indicator = "green");
                     setTimeout(() => {
-                        window.location.href = "/me";
+                        window.location.reload()
                     }, 2000);
                 },
                 error: (e)=>{

@@ -9,6 +9,8 @@
  "field_order": [
   "question",
   "type",
+  "is_mandatory",
+  "description",
   "column_break_alox",
   "options"
  ],
@@ -24,7 +26,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Type",
-   "options": "Text\nParagraph\nSelect"
+   "options": "Data\nSelect\nLong Text\nText Editor\nCheck"
   },
   {
    "fieldname": "column_break_alox",
@@ -36,12 +38,25 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Options"
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "default": "0",
+   "fieldname": "is_mandatory",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Is Mandatory"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-01 21:08:25.765348",
+ "modified": "2024-03-03 00:53:09.621757",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Custom Questions",
