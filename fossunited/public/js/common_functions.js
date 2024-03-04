@@ -101,3 +101,76 @@ function unpublish_form(e){
 		},
 	});
 }
+
+function validate_mandatory_fields(){
+	// get all the input tags which have an attribute of required, and see if they are filled or not
+	let inputs = document.querySelectorAll('input[required]');
+	let selects = document.querySelectorAll('select[required]');
+	let textareas = document.querySelectorAll('textarea[required]');
+
+	// for all input, selects and textareas, check if they are filled or not. If they are not filled or selected then return false with message to fill that field
+	let messages = [];
+
+	for (let input of inputs){
+		if (input.value === ""){
+			let label = document.querySelector(`label[for="${input.id}"]`);
+			let labelText = label ? label.innerText : input.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	for (let select of selects){
+		if (select.value === ""){
+			let label = document.querySelector(`label[for="${select.id}"]`);
+			let labelText = label ? label.innerText : select.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	for (let textarea of textareas){
+		if (textarea.value === ""){
+			let label = document.querySelector(`label[for="${textarea.id}"]`);
+			let labelText = label ? label.innerText : textarea.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	if (messages.length > 0) {
+		frappe.msgprint(messages.join('\n'));
+		return false;
+	}
+
+	return true;
+}
+
+function check_if_logged_in(){
+	if (frappe.session.user == 'Guest') {
+		frappe.msgprint({
+			message:__('You need to be logged in to edit this form.'),
+			indicator:'red'
+		}, 2);
+		setTimeout(() => {
+			window.location.href = `/login?redirect-to=${window.location.pathname}`;
+		}, 2000);
+		return false;
+	}
+	return true;
+}
+
+function check_if_profile_complete(){
+	frappe.call({
+		method: "fossunited.fossunited.utils.validate_profile_completion",
+	}).then(r => {
+		if (!r.message){
+			frappe.msgprint({
+				message:__('You need to complete your profile to edit this form.'),
+				indicator:'red'
+			}, 2);
+			setTimeout(() => {
+				window.location.href = `/create-foss-profile?redirect-to=${window.location.pathname}`;
+			}, 2000);
+			return false;
+		}
+		return true;
+	})
+}

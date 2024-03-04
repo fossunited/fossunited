@@ -1,14 +1,16 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_save(self):
         self.set_route()
-        self.is_published = 1
 
     def set_route(self):
-        self.route = f"events/{self.event}/cfp/{self.name}"
+        event_route = frappe.db.get_value(
+            "FOSS Chapter Events", self.event, "route"
+        )
+        self.route = f"{event_route}/cfp/{self.name}"

@@ -126,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-02-08 02:46:57.872551",
+ "modified": "2024-03-01 13:54:48.858070",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",
@@ -157,11 +157,9 @@
   }
  ],
  "route": "events/rsvp",
- "search_fields": "chapter",
- "show_title_field_in_link": 1,
+ "search_fields": "event_name, event, chapter",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "event",
  "track_changes": 1
 }

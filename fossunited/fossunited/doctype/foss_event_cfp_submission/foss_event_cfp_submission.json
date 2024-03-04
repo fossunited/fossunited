@@ -35,6 +35,7 @@
   "section_break_ilij",
   "custom_answers",
   "reviews_tab",
+  "cfp_reviews_section",
   "reviews"
  ],
  "fields": [
@@ -156,7 +157,8 @@
   },
   {
    "fieldname": "section_break_ilij",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Custom Answers"
   },
   {
    "fieldname": "custom_answers",
@@ -193,7 +195,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?"
@@ -214,13 +216,18 @@
    "fieldname": "attendance_confirmed",
    "fieldtype": "Check",
    "label": "Attendance Confirmed"
+  },
+  {
+   "fieldname": "cfp_reviews_section",
+   "fieldtype": "Section Break",
+   "label": "CFP Reviews"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-02-18 02:46:29.924170",
+ "modified": "2024-03-05 04:02:59.306825",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -235,6 +242,29 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
    "share": 1,
    "write": 1
   }

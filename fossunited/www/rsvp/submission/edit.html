@@ -3,111 +3,150 @@
 {% block title %}Edit RSVP Submission{% endblock %}
 
 {% block page_content %}
-    <div class="container">
-        <div class="page-content">
-            <div>
-                {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
-                {{ breadcrumb('events/' + event.name + '/RSVP Submission/edit') }}
-            </div>
-            <div class="header-container">
-                <div class="d-flex justify-content-between align-items-center ">
-                    <h3 class="my-2 ">Edit RSVP Submission</h3>
-                    <div class="button primary-button text-sm" id="update-btn" onClick="updateRsvpForm()">
-                        Update
-                    </div>
-                </div>
-                <div class="mt-2">
-                    Edit your RSVP Submission for the event.
-                    <div class="d-flex flex-column my-3">
-                        <div class="my-1">
-                            Chapter: {{ event.chapter }}
-                        </div>
-                        <div>
-                            Event: {{ submission.event_name }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="submission-form-container">
-                {% set fields = get_form_fields('FOSS Event RSVP Submission') %}
-                {% for k,v in fields.items() %}
-                    <div id="rsvp-{{ k | replace(' ', '-') | lower }}">
-                        <h5>
-                            {{ k }}
-                        </h5>
-                        {% for field in v %}
-                            {% from "fossunited/templates/macros/renderfield.html" import renderfield %}
-                            <div class="my-4">
-                                {{ renderfield(field, submission) }}
-                            </div>
-                        {% endfor %}
-                    </div>
+<div class="container">
+    <div class="backlink mt-5">
+        <a href="/{{event.route}}">
+            <i class="ti ti-arrow-left"></i>
+            {{ _("Back to Event Page") }}
+        </a>
+    </div>
+    <div class="foss-form-wrapper">
+        <div class="form-container">
+            {{ render_form_header() }}
+            <form class="foss-form-body">
+                {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+                {% for field in form_fields %}
+                {{ renderfield(field, submission) }}
                 {% endfor %}
+            </form>
+            <div class="foss-form-buttons">
+                <button class="primary-button" type="submit" id="update-rsvp" disabled="">
+                    {{ _("Update RSVP Form") }}
+                </button>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
 
-{% block script %}
-    {{ super() }}
-    <script>
+{% macro render_form_header() %}
+<div class="foss-form-header">
+    <h3 class="foss-form-heading-3xl">{{ _("Edit RSVP Form") }}</h3>
+    <div class="event-details my-2">
+        <div class="event-title my-1">
+            <span><strong>Event:</strong></span>
+            {{ event.event_name }}
+        </div>
+        <div class="event-date my-1">
+            <span><strong>Date:</strong></span>
+            {{ event.event_start_date.strftime("%B %d, %Y") }}
+        </div>
+    </div>
+    <div class="foss-form-description my-4">
+        Edit your RSVP form for the event.
+    </div>
+</div>
+{% endmacro %}
 
-        function updateRsvpForm() {
-            let formFields = document.querySelectorAll('.form-control:not(.custom-question), [type="text-editor"]');
-            let submission = {};
-            formFields.forEach((field) => {
-                if(field.className.includes('ql-container')){
-                    submission[field.id] = field.innerText
-                }
-                else if(field.type == 'checkbox'){
-                    submission[field.id] = field.checked
-                }
-                else{
-                    submission[field.id] = field.value;
-                }
+
+{% block page_script %}
+<script>
+    $(document).ready(function() {
+        check_if_submitter();
+        enable_update_button();
+        $("#update-rsvp").on("click", (e) => {
+            update_rsvp();
+        });
+    });
+
+    function enable_update_button() {
+        let formFields = document.querySelectorAll('.form-control:not(.custom-question), [type="text-editor"]');
+        formFields.forEach((field) => {
+            field.addEventListener('input', () => {
+                let button = document.getElementById('update-rsvp');
+                button.disabled = false;
             });
+        });
+    }
 
-            let customAnswers = []
-            customFields = document.querySelectorAll('.custom-question')
-            customFields.forEach((field) => {
-                let question = field.getAttribute('data-question')
-                let response;
-                if (field.type === "text" || field.tagName === "TEXTAREA") {
-                    response = field.value;
-                } else if (field.tagName == "SELECT") {
-                    response = field.options[field.selectedIndex].value;
-                }
-                customAnswers.push({
-                    question: question,
-                    response: response,
-                })
-            })
-
-            // removing empty string keys
-            submission = Object.fromEntries(Object.entries(submission).filter(([k,v]) => k !== ''))
-
-            frappe.call({
-                method: 'fossunited.fossunited.utils.update_submission',
-                args: {
-                    'doctype': 'FOSS Event RSVP Submission',
-                    'submission': '{{ frappe.form_dict["rsvp"] }}',
-                    'fields': submission,
-                    'custom': customAnswers
-                },
-                callback: (r) =>{
-                    frappe.show_alert({
-                        message:__('Submission updated successfully!'),
-                        indicator:'green'
-                    }, 5);
+    function check_if_submitter() {
+        if (!check_if_logged_in()){
+            return;
+        };
+        frappe.call({
+            method: 'fossunited.fossunited.forms.check_if_submitter',
+            args: {
+                doctype: '{{ frappe.form_dict.doctype }}',
+                docname: '{{ frappe.form_dict.submission }}'
+            },
+            callback: (r) => {
+                if (!r.message) {
+                    frappe.msgprint({
+                        message:__('You are not authorized to edit this form.'),
+                        indicator:'red'
+                    }, 2);
                     setTimeout(() => {
-                        window.location.href = '/events/{{ event.name }}';
+                        window.location.href = '/{{event.route}}';
                     }, 2000);
-                },
-                error: (e) => {
-                    frappe.throw(e.message)
                 }
-            })
+            }
+        })
+    }
+
+    function update_rsvp(){
+        let formFields = document.querySelectorAll('.form-control:not(.custom-question), [type="text-editor"]');
+        let submission = {};
+        formFields.forEach((field) => {
+            if(field.className.includes('ql-container')){
+                submission[field.id] = $(field).find('.ql-editor').html();
+            }
+            else if(field.type == 'checkbox'){
+                submission[field.id] = field.checked
+            }
+            else{
+                submission[field.id] = field.value;
+            }
+        });
+
+        let custom_answers = []
+        // for each value in submission, if the key has custom_question in it, then add it to custom answers as {question: field.data('label'), response: value}
+        for (const key in submission) {
+            if (key.includes('custom_question')) {
+                const label = $(`[name="${key}"]`).data('label');
+                const type = $(`[name="${key}"]`).data('type');
+                custom_answers.push({ question: label, response: submission[key], type: type});
+                delete submission[key];
+            }
         }
 
-    </script>
+        // removing empty string keys
+        submission = Object.fromEntries(Object.entries(submission).filter(([k,v]) => k !== ''))
+
+        frappe.call({
+            method: "fossunited.fossunited.forms.update_submission",
+            args: {
+                doctype: 'FOSS Event RSVP Submission',
+                submission: '{{ frappe.form_dict.submission }}',
+                fields: JSON.stringify(submission),
+                custom: custom_answers
+            },
+            callback: (r) => {
+                frappe.show_alert({
+                    message:__('Submission updated successfully!'),
+                    indicator:'green'
+                }, 3);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            },
+            error: (e) => {
+                frappe.throw({
+                    message: __("Failed to update RSVP Form. Please try again."),
+                    indicator: 'red'
+                });
+            }
+        });
+
+    }
+</script>
 {% endblock %}
