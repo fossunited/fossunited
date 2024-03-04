@@ -17,8 +17,6 @@ class FOSSEventRSVP(WebsiteGenerator):
     def on_update(self):
         if self.rsvp_count >= self.max_rsvp_count:
             self.is_published = 0
-        else:
-            self.is_published = 1
 
     def get_context(self, context):
         frappe.cache().set_value("linked_rsvp", self.name)
