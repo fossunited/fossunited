@@ -4,6 +4,8 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.fossunited.forms import create_submission
+
 
 class FOSSEventCFP(WebsiteGenerator):
     def before_save(self):
@@ -20,3 +22,142 @@ class FOSSEventCFP(WebsiteGenerator):
         frappe.db.set_value(
             "FOSS Chapter Events", self.event, "show_cfp", 1
         )
+
+    def get_context(self, context):
+        frappe.cache().set_value("linked_cfp", self.name)
+        context.submissions = get_cfp_submissions()
+        context.event = frappe.get_doc(
+            "FOSS Chapter Events", self.event
+        )
+        context.event_name = self.event_name
+        context.event_date = frappe.db.get_value(
+            "FOSS Chapter Events", self.event, "event_start_date"
+        ).strftime("%B %d, %Y")
+        context.submission_doctype = "FOSS Event CFP Submission"
+        context.already_submitted = (
+            True if self.check_if_already_submitted() else False
+        )
+
+        context.form_fields = self.get_form_fields()
+
+    def get_form_fields(self):
+        try:
+            last_doc = frappe.get_last_doc(
+                "FOSS Event CFP Submission",
+                filters={"submitted_by": frappe.session.user},
+            )
+        except frappe.exceptions.DoesNotExistError:
+            last_doc = {}
+
+        meta = frappe.get_meta("FOSS Event CFP Submission").as_dict()
+        current_section = None
+
+        form_fields = [
+            {
+                "fieldname": "full_name",
+                "fieldtype": "Data",
+                "label": "Full Name",
+                "reqd": 1,
+                "value": frappe.get_value(
+                    "User", frappe.session.user, "full_name"
+                ),
+            },
+            {
+                "fieldname": "email",
+                "fieldtype": "Data",
+                "label": "Email",
+                "reqd": 1,
+                "value": frappe.get_value(
+                    "User", frappe.session.user, "email"
+                ),
+            },
+            {
+                "fieldname": "designation",
+                "fieldtype": "Data",
+                "label": "Designation",
+                "reqd": 1,
+                "value": last_doc.get("designation") or "",
+            },
+            {
+                "fieldname": "organization",
+                "fieldtype": "Data",
+                "label": "Organization",
+                "value": last_doc.get("organization") or "",
+            },
+            {
+                "fieldname": "bio",
+                "fieldtype": "Text Editor",
+                "label": "Speaker Bio",
+                "reqd": 1,
+                "value": last_doc.get("bio") or "",
+            },
+        ]
+        for field in meta["fields"]:
+            if field["fieldtype"] == "Column Break":
+                continue
+            if field["fieldtype"] == "Section Break":
+                current_section = field["label"]
+                continue
+            if current_section in [
+                "Meta Info",
+                "Personal Information",
+                "Custom Answers",
+                "CFP Reviews",
+            ]:
+                continue
+            form_fields.append({k: v for k, v in field.items()})
+
+        form_fields.extend(self.get_custom_questions())
+
+        return form_fields
+
+    def get_custom_questions(self):
+        custom_questions = []
+        for index, question in enumerate(
+            self.cfp_custom_questions, start=1
+        ):
+            custom_questions.append(
+                {
+                    "fieldname": "custom_question_" + str(index),
+                    "fieldtype": question.type,
+                    "label": question.question,
+                    "options": question.options,
+                    "reqd": question.is_mandatory or 0,
+                    "description": question.description,
+                }
+            )
+        return custom_questions
+
+    def check_if_already_submitted(self):
+        return frappe.db.exists(
+            "FOSS Event CFP Submission",
+            {
+                "linked_cfp": self.name,
+                "submitted_by": frappe.session.user,
+            },
+        )
+
+
+@frappe.whitelist()
+def create_cfp_submission(fields):
+    fields_dict = {
+        "doctype": "FOSS Event CFP Submission",
+        "linked_cfp": frappe.cache().get_value("linked_cfp"),
+        "submitted_by": frappe.session.user,
+    }
+    fields_dict.update(frappe.parse_json(fields))
+    return create_submission(fields_dict)
+
+
+@frappe.whitelist()
+def get_cfp_submissions():
+    submissions = frappe.get_all(
+        "FOSS Event CFP Submission",
+        fields=["*"],
+        filters={
+            "submitted_by": frappe.session.user,
+            "linked_cfp": frappe.cache().get_value("linked_cfp"),
+        },
+    )
+    frappe.form_dict["submissions"] = submissions
+    return submissions
