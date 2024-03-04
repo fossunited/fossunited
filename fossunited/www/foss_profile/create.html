@@ -64,6 +64,11 @@
         $(document).ready(()=>{
             $('#create-foss-profile').attr('disabled', true).removeClass('primary-button');
             showUsernameStatus();
+
+            if (window.innerWidth < 768){
+                $('.form-col-2').removeClass('form-col-2');
+            }
+
             $('#username').on('input', () => {
                 let status = showUsernameStatus();
                 if (status[0]){

@@ -395,6 +395,7 @@ h6{
 
 .fff-forward{
     font-family: 'FFF Forward', sans-serif;
+    line-height: 1.5;
 }
 /* ------------------------------------------------------------- */
 .base-placeholder{
@@ -1895,6 +1896,7 @@ h6{
     font-size: var(--text-2xl);
     font-weight: var(--fw-bold);
     color: hsl(var(--clr-code-night-800));
+    text-align: center;
 }
 
 .form-container{
