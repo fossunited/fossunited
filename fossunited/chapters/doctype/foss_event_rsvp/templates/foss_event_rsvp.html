@@ -4,6 +4,12 @@
 
 {% block page_content %}
 <div class="container">
+    <div class="backlink mt-5">
+        <a href="/{{event.route}}">
+            <i class="ti ti-arrow-left"></i>
+            {{ _("Go to this event page") }}
+        </a>
+    </div>
     <div class="foss-form-wrapper">
         {% if already_rsvp %}
             {{ render_complete_section() }}

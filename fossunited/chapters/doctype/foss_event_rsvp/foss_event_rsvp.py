@@ -23,10 +23,13 @@ class FOSSEventRSVP(WebsiteGenerator):
     def get_context(self, context):
         frappe.cache().set_value("linked_rsvp", self.name)
 
+        context.event = frappe.get_doc(
+            "FOSS Chapter Events", self.event
+        )
         context.event_name = self.event_name
-        context.event_date = frappe.db.get_value(
-            "FOSS Chapter Events", self.event, "event_start_date"
-        ).strftime("%B %d, %Y")
+        context.event_date = context.event.event_start_date.strftime(
+            "%B %d, %Y"
+        )
 
         form_fields = [
             {
