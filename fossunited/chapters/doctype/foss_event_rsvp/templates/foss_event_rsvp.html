@@ -14,7 +14,7 @@
         {% if already_rsvp %}
             {{ render_complete_section() }}
         {% else %}
-        <div class="foss-form-container">
+        <div class="form-container">
             {{ form_header() }}
             <hr>
             <form class="foss-form-body">
@@ -41,7 +41,7 @@
 {% endblock %}
 
 {% macro render_complete_section() %}
-    <div class="foss-form-container my-5">
+    <div class="form-container my-5">
         <div class="foss-form-header submitted-container">
             <h3 class="foss-form-heading-3xl">{{ _("You have successfully RSVP'd for this event!") }} <i class="ti ti-rocket"></i></h3>
             <div class="foss-form-description">

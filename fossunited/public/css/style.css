@@ -1900,8 +1900,8 @@ h6{
 .form-container{
     padding: 1rem 2rem;
     width: 75%;
-    border-radius: 1rem;
-    border: 2px solid hsl(var(--clr-gray-100));
+    border-radius: 0.5rem;
+    border: 2px solid hsl(var(--clr-gray-200));
 }
 
 .foss-form-container{
@@ -2297,6 +2297,14 @@ h6{
 
 
     /* -------------------- */
+
+
+    /* FORM Elements */
+    .form-container{
+        width: 100%;
+        padding: 1rem;
+    }
+    /* ------ */
 }
 @media screen and (max-width: 425px){
     button {

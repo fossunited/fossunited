@@ -14,7 +14,7 @@
         {% if already_submitted %}
             {{ render_complete_section() }}
         {% endif %}
-        <div class="foss-form-container" id="cfp-form">
+        <div class="form-container" id="cfp-form">
             {{ form_header() }}
             <hr>
             <form class="foss-form-body">
@@ -34,7 +34,7 @@
 {% endblock %}
 
 {% macro render_complete_section() %}
-    <div class="foss-form-container my-5">
+    <div class="form-container my-5">
         <div class="foss-form-header submitted-container">
             <h3 class="foss-form-heading-3xl">{{ _("You have submitted talk proposal for this event!") }} <i class="ti ti-speakerphone"></i></h3>
             <div class="foss-form-description">
