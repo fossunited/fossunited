@@ -1,21 +1,4 @@
 $(document).ready(function () {
-	window.full_name = frappe.get_cookie("full_name");
-	var logged_in = frappe.is_user_logged_in();
-	$("#website-login").toggleClass("hide", logged_in ? true : false);
-	$("#website-post-login").toggleClass("hide", logged_in ? false : true);
-	$(".logged-in").toggleClass("hide", logged_in ? false : true);
-
-	frappe.bind_navbar_search();
-
-	// switch to app link
-	if (frappe.get_cookie("system_user") === "yes" && logged_in) {
-		frappe.add_switch_to_desk();
-	}
-
-	frappe.render_user();
-
-	$(document).trigger("page-change");
-
 	// Onclick event for Event Cards (not needed anymore)
 	// $(".event-card").click(function () {
 	// 	window.location.pathname = "/" + $(this).data("route");
@@ -54,6 +37,8 @@ function setNavbarControl(){
 	let contentDivs = document.querySelectorAll('.content-div');
 	let activeNavItem = navItems[0];
 	let activeContentDiv = contentDivs[0];
+
+	if (navItems.length === 0 || contentDivs.length === 0 ) return;
 
 	contentDivs.forEach((contentDiv) => {
 		contentDiv.classList.add('hide');
@@ -115,4 +100,77 @@ function unpublish_form(e){
 			frappe.msgprint(e.message)
 		},
 	});
+}
+
+function validate_mandatory_fields(){
+	// get all the input tags which have an attribute of required, and see if they are filled or not
+	let inputs = document.querySelectorAll('input[required]');
+	let selects = document.querySelectorAll('select[required]');
+	let textareas = document.querySelectorAll('textarea[required]');
+
+	// for all input, selects and textareas, check if they are filled or not. If they are not filled or selected then return false with message to fill that field
+	let messages = [];
+
+	for (let input of inputs){
+		if (input.value === ""){
+			let label = document.querySelector(`label[for="${input.id}"]`);
+			let labelText = label ? label.innerText : input.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	for (let select of selects){
+		if (select.value === ""){
+			let label = document.querySelector(`label[for="${select.id}"]`);
+			let labelText = label ? label.innerText : select.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	for (let textarea of textareas){
+		if (textarea.value === ""){
+			let label = document.querySelector(`label[for="${textarea.id}"]`);
+			let labelText = label ? label.innerText : textarea.name;
+			messages.push(`<strong>${labelText}</strong> is a required field.<br>`);
+		}
+	}
+
+	if (messages.length > 0) {
+		frappe.msgprint(messages.join('\n'));
+		return false;
+	}
+
+	return true;
+}
+
+function check_if_logged_in(){
+	if (frappe.session.user == 'Guest') {
+		frappe.msgprint({
+			message:__('You need to be logged in to edit this form.'),
+			indicator:'red'
+		}, 2);
+		setTimeout(() => {
+			window.location.href = `/login?redirect-to=${window.location.pathname}`;
+		}, 2000);
+		return false;
+	}
+	return true;
+}
+
+function check_if_profile_complete(){
+	frappe.call({
+		method: "fossunited.fossunited.utils.validate_profile_completion",
+	}).then(r => {
+		if (!r.message){
+			frappe.msgprint({
+				message:__('You need to complete your profile to edit this form.'),
+				indicator:'red'
+			}, 2);
+			setTimeout(() => {
+				window.location.href = `/create-foss-profile?redirect-to=${window.location.pathname}`;
+			}, 2000);
+			return false;
+		}
+		return true;
+	})
 }

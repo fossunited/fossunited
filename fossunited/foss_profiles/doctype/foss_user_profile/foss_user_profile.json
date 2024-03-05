@@ -20,6 +20,7 @@
   "basic_information_section",
   "user",
   "username",
+  "gender",
   "bio",
   "column_break_yqk3",
   "full_name",
@@ -256,6 +257,13 @@
    "fieldtype": "Table",
    "label": "Projects",
    "options": "FOSS User Projects"
+  },
+  {
+   "fetch_from": "user.gender",
+   "fieldname": "gender",
+   "fieldtype": "Data",
+   "label": "Gender",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
@@ -263,7 +271,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-01-25 15:24:11.453451",
+ "modified": "2024-02-21 17:29:41.084017",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",

@@ -244,6 +244,12 @@ button:hover{
     background: hsl(var(--clr-open-gray-50));
 }
 
+button:disabled{
+    cursor: not-allowed;
+    background: hsl(var(--clr-gray-100));
+    color: hsl(var(--clr-gray-400));
+}
+
 button.sm{
     font-size: var(--text-sm);
 }
@@ -393,6 +399,10 @@ h6{
     cursor: pointer;
 }
 
+.fff-forward{
+    font-family: 'FFF Forward', sans-serif;
+    line-height: 1.5;
+}
 /* ------------------------------------------------------------- */
 .base-placeholder{
     min-height: 80vh;
@@ -1288,10 +1298,10 @@ h6{
 }
 
 .buttons-group{
-    display: grid;
+    display: flex;
     gap: 0.5rem;
     padding: 0.5rem 0;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+    flex-wrap: wrap;
 }
 
 
@@ -1302,6 +1312,12 @@ h6{
 
 .description-block > *{
     color: hsl(var(--clr-open-gray-200));
+}
+
+.backlink > *{
+    font-size: var(--text-sm);
+    font-weight: var(--fw-semibold);
+    color: hsl(var(--clr-code-night-500));
 }
 
 /* ------- */
@@ -1859,6 +1875,108 @@ h6{
 
 /* ---- */
 
+/* FORM STYLES */
+.foss-form-wrapper{
+    min-height: 800px;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 0;
+    align-items: center;
+}
+
+.form-heading-section{
+    margin-top: 6rem;
+    margin-bottom: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
+}
+
+.form-page-icon{
+    width: 7rem;
+    border-radius: 1rem;
+}
+
+.form-page-heading{
+    font-size: var(--text-2xl);
+    font-weight: var(--fw-bold);
+    color: hsl(var(--clr-code-night-800));
+    text-align: center;
+}
+
+.form-container{
+    padding: 1rem 2rem;
+    width: 75%;
+    border-radius: 0.5rem;
+    border: 2px solid hsl(var(--clr-gray-200));
+}
+
+.foss-form-container{
+    padding: 2rem;
+    width: 75%;
+    border-radius: 1rem;
+    border: 2px solid hsl(var(--clr-foss-mint-500));
+}
+
+
+.foss-form-heading-3xl{
+    font-size: var(--text-3xl);
+    font-weight: var(--fw-bold);
+    color: hsl(var(--clr-code-night-800));
+    margin: 0.5rem 0;
+}
+
+.foss-form-question{
+    font-size: var(--text-base);
+    font-weight: var(--fw-medium);
+    color: hsl(var(--clr-code-night-600));
+}
+
+.foss-form-buttons{
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.submitted-container{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.submitted-container > button {
+    margin: 1rem 0;
+    width: max-content;
+}
+
+.foss-form--cfp-list-container{
+    margin: 2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.foss-form--cfp-card{
+    display: flex;
+    justify-content:space-between;
+    align-items: baseline;
+}
+
+.foss-form--cfp-card--heading-status{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-right: 1rem;
+}
+
+.foss-form--cfp-card--heading{
+    font-weight: var(--fw-semibold);
+}
+
+/* ----------- */
+
 @media screen and (max-width: 1200px){
     .events-grid-4{
         width: 100%;
@@ -2175,7 +2293,29 @@ h6{
         padding: 1.5rem;
     }
 
+    .schedule-grid{
+        display: grid;
+        grid-template: none;
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    .schedule--title-time-section{
+        flex-direction: column;
+        justify-items: flex-start;
+        gap: 1rem;
+    }
+
+
     /* -------------------- */
+
+
+    /* FORM Elements */
+    .form-container{
+        width: 100%;
+        padding: 1rem;
+    }
+    /* ------ */
 }
 @media screen and (max-width: 425px){
     button {

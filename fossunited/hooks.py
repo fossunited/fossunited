@@ -66,11 +66,11 @@ website_route_rules = [
         "to_route": "/rsvp/create/new",
     },
     {
-        "from_route": "/events/<event>/cfp/<cfp>/edit",
+        "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },
     {
-        "from_route": "/events/<event>/rsvp/<rsvp>/edit",
+        "from_route": "/events/<event_permalink>/rsvp/edit/<submission>",
         "to_route": "/rsvp/submission/edit",
     },
     {
@@ -78,8 +78,8 @@ website_route_rules = [
         "to_route": "/foss_profile/edit",
     },
     {
-        "from_route": "/me",
-        "to_route": "/redirect_to_foss_profile",
+        "from_route": "/create-foss-profile",
+        "to_route": "/foss_profile/create",
     },
 ]
 

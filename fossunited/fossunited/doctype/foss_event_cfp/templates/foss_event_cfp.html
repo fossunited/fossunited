@@ -1,312 +1,130 @@
 {% extends "templates/foss_base.html" %}
 
-{% set user = frappe.get_doc("User", frappe.session.user) %}
-
-{% set event = frappe.get_doc("FOSS Chapter Events", doc.event) %}
-
-{% block title %}
-    {{ _("CFP - ") }} {{ event.event_name }}
-{% endblock %}
-
+{% block title %}{{ _("CFP Form Submission") }}{% endblock %}
 
 {% block page_content %}
-<!-- If Already Filled Form -->
-{% if frappe.db.exists({"doctype": "FOSS Event CFP Submission", "linked_cfp":doc.name, "submitted_by": frappe.session.user}) %}
-<div class="container-center d-flex flex-column vh-100">
-    <div class="hero-page-icon hero-icon-container">
-        {% include "/public/icons/rocket-8bit.svg" %}
+<div class="container">
+    <div class="backlink mt-5">
+        <a href="/{{event.route}}">
+            <i class="ti ti-arrow-left"></i>
+            {{ _("Go to this event page") }}
+        </a>
     </div>
-    <div class="press2p p-3 ">CFP Submitted Successfully!</div>
-    <p class=" text-center ">
-        You have successfully submitted the CFP for this event!<br>
-        Keep an eye on your mailbox for updates 👀
-    </p>
-    <a href="/events/{{doc.event}}" class="button w-25"><strong>Go to event</strong></a>
-</div>
-{% else %}
-<div class="bg-pattern">
-    <div style="height: 2vh;">
-    </div>
-    <div class="hero-icon-container">
-        <div class="hero-page-icon">
-            {% include "public/icons/cfp-8bit.svg" %}
-        </div>
-    </div>
-
-
-    <h1 class="page-title">
-        CFP - {{ event.event_name }}
-    </h1>
-
-    <div class="container-center pb-4 px-4">
-        <p>
-            {{ doc.cfp_form_description }}
-        </p>
-    </div>
-</div>
-
-
-<div class="container-center pb-4 ">
-    <div class="rsvp-form-container mb-5">
-        <form>
-            <div class="text-lg semi-bold mb-3">
-                Personal Information
+    <div class="foss-form-wrapper">
+        {% if already_submitted %}
+            {{ render_complete_section() }}
+        {% endif %}
+        <div class="form-container" id="cfp-form">
+            {{ form_header() }}
+            <hr>
+            <form class="foss-form-body">
+                {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+                {% for field in form_fields %}
+                {{ renderfield(field) }}
+                {% endfor %}
+            </form>
+            <div class="foss-form-buttons">
+                <button class="primary-button" type="submit" id="submit-rsvp">
+                    {{ _("Submit your proposal") }}
+                </button>
             </div>
-            <div class="container-fluid p-0">
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="name" class="form-label text-sm">Name</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="name" value="{{user.full_name}}">
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="email" class="form-label text-sm">Email</label>
-                        <input type="email" class="form-control text-sm rounded-input" id="email" value="{{ user.email }}">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="phone" class="form-label text-sm">Phone</label>
-                        <input type="tel" class="form-control text-sm rounded-input" id="phone">
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="github" class="form-label text-sm">Github</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="github">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="linkedin" class="form-label text-sm">LinkedIn</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="linkedin">
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="twitter" class="form-label text-sm">Twitter</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="twitter">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="picture" class="form-label text-sm">Picture (URL)</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="picture_url">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-12 h-auto ">
-                        <label for="bio" class="form-label text-sm">Speaker Bio</label>
-                        <div id="bio" style="height: 300px; background-color: #f4f5f6"></div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="organization" class="form-label text-sm">Organization</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="organization">
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="designation" class="form-label text-sm">Designation</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="designation">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-divider mb-3"></div>
-
-            <div class="text-lg semi-bold mb-3">
-                Talk Details
-            </div>
-            <div class="container-fluid p-0">
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="title" class="form-label text-sm">Talk Title</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="talk-title">
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="category" class="form-label text-sm">Talk Category</label>
-                        {% set cfp_sub_meta = frappe.get_meta("FOSS Event CFP Submission") %}
-                        {% set categories = cfp_sub_meta.get_field('category').options.splitlines() %}
-                        <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1" id="category">
-                            {% for category in categories %}
-                                <option value="{{category}}">{{category}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-12">
-                        <label for="talk-description" class="form-label text-sm">Talk Description</label>
-                        <div id="talk-description" style="height: 300px; background-color: #f4f5f6"></div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="talk-duration" class="form-label text-sm">Talk Duration</label>
-                        {% set durations = cfp_sub_meta.get_field('talk_duration').options.splitlines() %}
-                        <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1" id="talk-duration">
-                            {% for duration in durations %}
-                                <option value="{{duration}}">{{duration}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-4 py-1 col-sm-6">
-                        <label for="talk-reference" class="form-label text-sm">Talk Reference</label>
-                        <input type="text" class="form-control text-sm rounded-input" id="talk-reference">
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="mb-4 py-1 col-sm-6 d-flex align-items-center ">
-                        <input type="checkbox" name="first-talk" id="first-talk">
-                        <label for="first-talk" class="form-label text-sm mx-1 my-1 medium">This is my first talk!</label>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-divider"></div>
-            <!-- Custom Questions -->
-            {% for question in doc.cfp_custom_questions %}
-                {{ CustomQuestion(question) }}
-            {% endfor %}
-        </form>
-        <div class="pt-4 d-flex flex-lg-row-reverse ">
-            <button type="button" class="btn btn-primary w-50 text-sm" onClick="submit_cfp()">Submit CFP</button>
         </div>
     </div>
 </div>
-{% endif %}
-
 {% endblock %}
 
-{% macro CustomQuestion(question) %}
-    <div class="mb-4 mt-4 py-1">
-        <label for="{{question.question}}" class="form-label text-sm" >{{question.question}}</label>
-        {% if question.type == "Text" %}
-            <input type="text" class="form-control text-sm rounded-input custom-question" data-question="{{question.question}}" id="{{question.question}}">
-        {% elif question.type == "Paragraph" %}
-            <textarea class="form-control text-sm rounded-input custom-question" id="{{question.question}}" data-question="{{question.question}}" rows="3"></textarea>
-        {% elif question.type == "Select" %}
-            <div>
-                <select class="form-select custom-select text-sm rounded-input w-100 px-3 py-1 custom-question" id="{{question}}" data-question="{{question.question}}">
-                    {% for option in question.options.splitlines() %}
-                        <option value="{{option}}">{{option}}</option>
-                    {% endfor %}
-                </select>
+{% macro render_complete_section() %}
+    <div class="form-container my-5">
+        <div class="foss-form-header submitted-container">
+            <h3 class="foss-form-heading-3xl">{{ _("You have submitted talk proposal for this event!") }} <i class="ti ti-speakerphone"></i></h3>
+            <div class="foss-form-description">
+                {{ _("You have successfully submitted the following talk proposals for this event. If you need to make any changes, you can edit the form, or you can submit a new proposal below!") }}
             </div>
-        {% endif %}
+        </div>
+        <div class="d-flex flex-column foss-form--cfp-list-container">
+            {% set all_submissions = submissions or frappe.form_dict['submissions'] %}
+            {% for submission in all_submissions %}
+            <div class="foss-form--cfp-card">
+                <div class="foss-form--cfp-card--heading-status ">
+                    <i class="ti ti-point"></i>
+                    <div class="foss-form--cfp-card--heading">{{ submission.talk_title }}</div>
+                    <div>{{ make_badge(submission.status) }}</div>
+                </div>
+                <button class="text-sm" onclick="window.location.pathname='/{{submission.route}}/edit'">Edit</button>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 {% endmacro %}
 
-{% block script %}
-    {{super()}}
-    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        if ('{{ frappe.session.user }}' == 'Guest') {
-            frappe.msgprint({
-                title: "Login Required",
-                message: "You need to login to RSVP for this event.",
-                primary_action: {
-                    'label': 'Log in',
-                    action(){
-                        window.location.href = "/login";
-                    }
-                }
+{% macro form_header() %}
+<div class="foss-form-header">
+    <h3 class="foss-form-heading-3xl">{{ _("Call for Proposal!") }}</h3>
+    <div class="event-details my-2">
+        <div class="event-title my-1">
+            <span><strong>Event:</strong></span>
+            {{ event_name }}
+        </div>
+        <div class="event-date my-1">
+            <span><strong>Date:</strong></span>
+            {{ event_date }}
+        </div>
+    </div>
+    <div class="foss-form-description">
+        {{ doc.cfp_form_description }}
+    </div>
+</div>
+{% endmacro %}
+
+
+{% block page_script %}
+<script>
+    $(document).ready(() => {
+        check_if_logged_in();
+        check_if_profile_complete();
+
+        $('#submit-rsvp').on('click', (e) => {
+            e.preventDefault()
+            if (!validate_mandatory_fields()){
+                return
+            }
+
+            const formData = $('.foss-form-body').serializeArray()
+            const data = {}
+
+            formData.forEach((field) => {
+                data[field.name] = field.value
             })
-            setTimeout(() => {
-                window.location.href = "/login";
-            }, 2000)
-        }
+            $('.ql-editor-custom').each((idx, element) => {
+                data[element.id] = $(element).find('.ql-editor').html()
+            })
 
-        let submitButton = document.getElementById("submitRSVP");
-
-
-        var toolbarOptions = [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'align': [] }],
-        ['clean']
-        ];
-
-        var quill = new Quill('#bio', {
-            modules: {
-                toolbar: toolbarOptions
-            },
-            placeholder: 'Tell us about yourself...',
-            theme: 'snow'
-        });
-
-        var quill2 = new Quill('#talk-description', {
-            modules: {
-                toolbar: toolbarOptions
-            },
-            placeholder: 'Tell us about your talk...',
-            theme: 'snow'
-        });
-
-        function submit_cfp() {
-
-            let custom_responses = [];
-
-            // Loop through custom questions and gather their responses
-            document.querySelectorAll('.custom-question').forEach(function (customQuestionElement) {
-                let question = customQuestionElement.getAttribute("data-question");
-                let response;
-                if (customQuestionElement.type === "text" || customQuestionElement.tagName === "TEXTAREA") {
-                    response = customQuestionElement.value;
-                } else if (customQuestionElement.tagName === "SELECT") {
-                    response = customQuestionElement.options[customQuestionElement.selectedIndex].value;
+            const custom_answers = []
+            for (const key in data) {
+                if (key.includes('custom_question')) {
+                    const label = $(`[name="${key}"]`).attr('data-label')
+                    const type = $(`[name="${key}"]`).data('type')
+                    custom_answers.push({ question: label, response: data[key], type: type})
+                    delete data[key]
                 }
-
-                // Add the question-response pair to the custom_responses list
-                custom_responses.push({
-                    question: question,
-                    response: response,
-                });
-            });
-
-
-            let formData = {
-                doctype: "FOSS Event CFP Submission",
-                linked_cfp: "{{ doc.name }}",
-                submitted_by: "{{ frappe.session.user }}",
-                name: document.getElementById("name").value,
-                email: document.getElementById("email"),
-                phone: document.getElementById("phone").value,
-                github: document.getElementById("github").value,
-                linkedin: document.getElementById("linkedin").value,
-                twitter: document.getElementById("twitter").value,
-                picture_url: document.getElementById("picture_url").value,
-                bio: quill.root.innerHTML,
-                organization: document.getElementById("organization").value,
-                designation: document.getElementById("designation").value,
-                talk_title: document.getElementById("talk-title").value,
-                category: document.getElementById("category").value,
-                talk_description: quill2.root.innerHTML,
-                talk_duration: document.getElementById("talk-duration").value,
-                talk_reference: document.getElementById("talk-reference").value,
-                is_first_talk: document.getElementById("first-talk").checked,
-                custom_answers: custom_responses,
-            };
-
+            }
+            data['custom_answers'] = custom_answers
             frappe.call({
-                method: 'fossunited.fossunited.utils.create_submission',
+                method: 'fossunited.fossunited.doctype.foss_event_cfp.foss_event_cfp.create_cfp_submission',
                 args: {
-                    'fields': formData,
-                },
-                callback: (r) =>{
-                    location.reload();
-                },
-                error: (r) => {
-                    frappe.msgprint({
-                        title: "Error",
-                        message: "There was an error submitting your RSVP. Please try again later." + r.message,
-                        indicator: "red",
-                    })
-                },
+                    fields: JSON.stringify(data),
+                }
+            }).then((response) => {
+                if (response.message) {
+                    frappe.msgprint("You have successfully submitted your talk proposal!", "Success!")
+                    setTimeout(() => {
+                        window.location.reload()
+                    }, 2000)
+                } else {
+                    frappe.throw("Failed to submit proposal. Please try again.")
+                }
             })
-        };
-
-    </script>
-
+        })
+    })
+</script>
 {% endblock %}
