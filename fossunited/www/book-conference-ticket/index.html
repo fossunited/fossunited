@@ -206,12 +206,12 @@ Tickets") }}{% endblock %} {% block page_content %}
         <h6 id="displayTotalAmount">₹ 0</h6>
       </div>
     </div>
-    <div id="buy-btn" class="float-right my-5">
+    <div id="buy-btn" class="float-right">
       <button
         id="buy-ticket"
         onclick="addInputsToDoc()"
         type="submit"
-        class="buy-btn"
+        class="primary-button my-5"
       >
         Buy Tickets
       </button>
@@ -347,7 +347,7 @@ Tickets") }}{% endblock %} {% block page_content %}
 {% endblock %}
 <style>
   body {
-    background-color: #f5f5f5;
+    background-color: hsl(var(--clr-gray-50));
   }
   .ticket-form {
     margin: auto;
@@ -383,14 +383,7 @@ Tickets") }}{% endblock %} {% block page_content %}
     padding: 0rem 0.625rem 0rem 0.625rem !important;
   }
   .buy-btn {
-    background-color: #08b74f !important;
-    color: white;
-    padding: 0.625rem 0.625rem;
-    display: flex;
-    float: right;
-    padding: 0.625rem;
-    border-radius: 0.3125rem;
-    margin: 0.625rem 0rem 1.25rem 0rem;
+    margin: 0.625rem -10rem 0.625rem 0rem;
   }
 
   @media (min-width: 320px) and (max-width: 375px) {
@@ -402,7 +395,7 @@ Tickets") }}{% endblock %} {% block page_content %}
     .ticket-form p {
       width: auto;
       padding: 0.625rem;
-      font-size: var;
+      font-size: var(--text-xs);
     }
     .ticket-form h3 {
       font-size: var(--text-base) !important;
@@ -415,9 +408,7 @@ Tickets") }}{% endblock %} {% block page_content %}
       max-width: auto;
       height: 5rem;
     }
-    label {
-      font-size: var(--text-xs2) !important;
-    }
+    label,
     input,
     select {
       font-size: var(--text-xs) !important;
@@ -446,13 +437,10 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: 15rem;
       top: -5%;
     }
-    label {
-      font-size: var(--text-sm);
-    }
+    label,
     input,
     select {
       font-size: var(--text-sm) !important;
-      padding: 0.3125rem 0px 0.3125rem 0px;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
@@ -477,20 +465,13 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: 18rem !important;
       top: -5%;
     }
-
-    #total-amount {
-      padding: 0.625rem 0px 0.625rem 0px;
-    }
-  }
-
-  @media screen and (max-width: 768px) {
-    label {
-      font-size: var(--text-sm) !important;
-    }
+    label,
     input,
     select {
       font-size: var(--text-sm) !important;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    }
+    #total-amount {
+      padding: 0.625rem 0px 0.625rem 0px;
     }
   }
   @media (min-width: 577px) and (max-width: 768px) {
@@ -511,12 +492,10 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: 25rem;
       top: -5%;
     }
-    label {
-      font-size: 1.125rem;
-    }
-    input {
-      font-size: 0.9375rem;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    label,
+    input,
+    select {
+      font-size: var(--text-sm) !important;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
