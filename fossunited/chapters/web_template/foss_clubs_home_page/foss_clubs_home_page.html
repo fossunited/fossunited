@@ -213,7 +213,7 @@
         </div>
 
 
-        <!-- <div class="hero-search">
+        <div class="hero-search">
 
                 <h5>{{subheading}}</h5>
                 <div class="hero-club-search">
@@ -222,8 +222,7 @@
 
                 </div>
 
-
-        </div> -->
+        </div>
 
         <div class = "hero-cta">
 
@@ -242,19 +241,21 @@
     </div>
 
     <script>
-
+            function getClubs(query) {
+                return new Promise((resolve, reject) => {
+                    frappe.call({
+                        method: "fossunited.chapters.web_template.foss_clubs_home_page.foss_clubs_home_page.search_foss_club",
+                        args: { query },
+                        callback: (r) => {
+                            resolve(r.message);
+                        }
+                    })
+                })
+            }
 
             autocomp(document.getElementById("search-club"), {
                 onQuery: async (val) => {
-
-                    return await frappe.db.get_list( "FOSS Chapter", {
-                        fields: ["chapter_name", "route", "city"],
-                        filters: {
-                            chapter_type: "FOSS Club",
-                        },
-                        or_filters:[[ "city", "like", "%" + val + "%"], ["chapter_name", "like", "%" + val + "%"]]
-                    })
-
+                    return await getClubs(val);
                 },
                 onSelect: (result) => {
                     window.location.href = "/" + result.route;
