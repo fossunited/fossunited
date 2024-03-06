@@ -174,3 +174,17 @@ function check_if_profile_complete(){
 		return true;
 	})
 }
+
+
+function set_mandatory_asterisk(){
+	// for every required input, textarea and select, add a red asterisk after their label. Wrap the label in a span to do this
+	$('input[required], textarea[required], select[required], .ql-editor-custom[required]').each((idx, element) => {
+		let label = $(element).prev('label');
+		if($(element).hasClass('ql-editor-custom')){
+			label = $(element).prev('div').prev('div');
+		}
+
+		label.html(`<span>${label.html()}</span>`);
+		label.find('span').append('<span class="text-danger">*</span>');
+	});
+}

@@ -76,6 +76,7 @@
     $(document).ready(() => {
         check_if_logged_in();
         check_if_profile_complete();
+        set_mandatory_asterisk();
 
         $('#submit-rsvp').on('click', (e) => {
             e.preventDefault()
