@@ -54,6 +54,8 @@
     $(document).ready(function() {
         check_if_submitter();
         enable_update_button();
+        set_mandatory_asterisk();
+
         $("#update-rsvp").on("click", (e) => {
             update_rsvp();
         });

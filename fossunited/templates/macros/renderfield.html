@@ -32,7 +32,7 @@
             <div class="foss-form-question text-sm mb-2">
                 {{ field.label }}
             </div>
-            <div data-label="{{ field.label }}" data-type="Text Editor" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="ql-editor-custom" type="text-editor">
+            <div data-label="{{ field.label }}" data-type="Text Editor" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="ql-editor-custom" type="text-editor" {% if field.reqd %} required {% endif%}>
                 {{ submission[field.fieldname] or field.value or '' }}
             </div>
     {% elif field.fieldtype == 'Text' %}
