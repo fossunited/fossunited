@@ -108,6 +108,7 @@ jinja = {
     "filters": [
         "fossunited.fossunited.utils.get_avatar",
         "fossunited.fossunited.utils.make_badge",
+        "fossunited.fossunited.utils.get_profile_image",
     ],
 }
 
