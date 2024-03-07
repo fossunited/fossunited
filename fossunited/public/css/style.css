@@ -339,6 +339,7 @@ h6{
     color: #FFF;
     font-size: var(--text-lg);
     font-weight: 450;
+    height: max-content;
 }
 
 .primary-button:hover{
@@ -1977,6 +1978,10 @@ h6{
 
 /* ----------- */
 
+.ticket-button {
+    max-height: 5rem !important;
+}
+
 @media screen and (max-width: 1200px){
     .events-grid-4{
         width: 100%;
@@ -2306,7 +2311,9 @@ h6{
         gap: 1rem;
     }
 
-
+    .ticket-button {
+        font-size: var(--text-base);
+    }
     /* -------------------- */
 
 
@@ -2344,5 +2351,12 @@ h6{
         flex-direction: column;
         gap: 20px;
         padding: 16px 24px;
+    }
+    .ticket-button {
+        font-size: var(--text-sm);
+        margin-top: 1.2rem;
+    }
+    .header--title-cta-parent {
+        flex-direction: column;
     }
 }
