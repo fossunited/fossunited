@@ -190,6 +190,29 @@
         })
     });
 
+    // Hide Private Option in File Preview Modal
+    $(document).on('DOMNodeInserted', (event) => {
+        console.log(event.target);
+        if ($(event.target).hasClass('file-preview-container')) {
+            $(event.target).find('label:contains("Private")').each((index, labelElement) => {
+                // Hide the label
+                $(labelElement).hide();
+            });
+        }
+        if ($(event.target).hasClass('btn-secondary') && $(event.target).text().trim() === 'Set all public') {
+            // Handle "Set all Public" buttons
+            $(event.target).click(); // Simulate button click
+            $(event.target).hide(); // Hide the button
+        }
+        if ($(event.target).hasClass('modal')) {
+            // Handle "Set all private" buttons within modals
+            const setAllPrivateButton = $(event.target).find('button.btn-secondary:contains("Set all private")');
+            if (setAllPrivateButton.length > 0) {
+                setAllPrivateButton.hide();
+            }
+        }
+    });
+
     function getOriginalValues (){
         let originalFieldValues = $("input, textarea, .ql-container").serializeArray().reduce(function(obj, item) {
             obj[item.name] = item.value;
