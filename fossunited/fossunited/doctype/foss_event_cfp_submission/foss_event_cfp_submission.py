@@ -69,7 +69,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if (
             not context.is_reviewer
             and frappe.session.user
-            not in [volunteer["email"] for volunteer in volunteers]
+            not in [volunteer.email for volunteer in volunteers]
             and not frappe.session.user == self.submitted_by
         ):
             nav_items.remove("proposal_reviews")
