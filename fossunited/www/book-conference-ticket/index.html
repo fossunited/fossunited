@@ -1,224 +1,141 @@
-{% extends "templates/foss_base.html" %} {% block title %} {{ _("Book Conference
-Tickets") }}{% endblock %} {% block page_content %}
-<section class="ticket-form">
-  <div class="thumbnail-image">
-    <img src="/assets/fossunited/images/ticket_cover.png" />
-  </div>
-  <div class="container ticket-details form py-4 px-4 mt-5">
-    <div class="about">
-      <div class="header">
-        <h3>Book Conference Ticket for {{ event.event_name }}</h3>
-      </div>
-      <p class="my-5">
-        <b>Terms & Conditions:</b> Once bought, no monetary refunds will be
-        given. You can only transfer the ticket to another person. You must
-        inform the recipient of details to the organizing team by writing an
-        email to the organizing team.
-        <br />
-        <br />
-        You agree to share the information entered on this page with FOSS United
-        Foundation and Razorpay, adhering to applicable laws.
-        <br />
-      </p>
+{% extends "templates/foss_base.html" %}
+
+{% block title %} {{ _("Book Conference Tickets") }} {% endblock %}
+{% block page_content %}
+<div class="container">
+  <section class="ticket-form">
+    <div class="thumbnail-image">
+      <img src="/assets/fossunited/images/ticket_cover.png" />
     </div>
-    <hr />
-    <input
-      type="text"
-      class="hidden"
-      name="csrf_token"
-      value="{{ frappe.session.csrf_token }}"
-    />
-    <div class="form-row">
-      <div class="form-group col-md-12">
-        <label for="event_name">Event name</label>
-        <input
-          type="text"
-          class="form-control"
-          id="event_name"
-          name="event_name"
-          value="{{event.event_name}}"
-          required
-          disabled
-        />
+    <div class="form-container ticket-detail-container">
+      <div class="about">
+        <div class="header">
+          <h3>Book Conference Ticket for {{ event.event_name }}</h3>
+        </div>
+        <p class="my-5">
+          <b>Terms & Conditions:</b> Once bought, no monetary refunds will be
+          given. You can only transfer the ticket to another person. You must
+          inform the recipient of details to the organizing team by writing an
+          email to the organizing team.
+          <br />
+          <br />
+          You agree to share the information entered on this page with FOSS United
+          Foundation and Razorpay, adhering to applicable laws.
+          <br />
+        </p>
       </div>
-    </div>
-
-    <input
-      type="text"
-      class="form-control"
-      id="event"
-      name="event"
-      required
-      disabled
-      hidden
-    />
-
-    <div class="form-padding form-group">
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="first_name">First Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="first_name"
-            name="first_name"
-            required
-          />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="last_name">Last Name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="last_name"
-            name="last_name"
-            required
-          />
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-6">
-          <label for="email">Email</label>
-          <input
-            type="email"
-            class="form-control"
-            id="email"
-            name="email"
-            required
-          />
-        </div>
-        <div class="form-group col-md-6">
-          <label for="mobile">Phone</label>
-          <input
-            type="text"
-            class="form-control"
-            id="phone"
-            name="mobile"
-            required
-          />
-        </div>
-      </div>
-
+      <hr />
+      <input type="text" class="hidden" name="csrf_token" value="{{ frappe.session.csrf_token }}" />
       <div class="form-row">
         <div class="form-group col-md-12">
-          <label for="organization">Organization or college name</label>
-          <input
-            type="text"
-            class="form-control"
-            id="organization"
-            name="organization"
-            required
-          />
+          <label for="event_name">Event name</label>
+          <input type="text" class="form-control" id="event_name" name="event_name" value="{{event.event_name}}" required
+            disabled />
         </div>
       </div>
-      <div class="form-row mb-5">
-        <div class="form-group col-md-6">
-          <label for="pin_code">PIN Code</label>
-          <input
-            type="text"
-            class="form-control"
-            id="pin_code"
-            name="pin_code"
-            required
-          />
+
+      <input type="text" class="form-control" id="event" name="event" required disabled hidden />
+
+      <div class="form-padding form-group">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="first_name">First Name</label>
+            <input type="text" class="form-control" id="first_name" name="first_name" required />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="last_name">Last Name</label>
+            <input type="text" class="form-control" id="last_name" name="last_name" required />
+          </div>
         </div>
 
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required />
+          </div>
+          <div class="form-group col-md-6">
+            <label for="mobile">Phone</label>
+            <input type="text" class="form-control" id="phone" name="mobile" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-md-12">
+            <label for="organization">Organization or college name</label>
+            <input type="text" class="form-control" id="organization" name="organization" required />
+          </div>
+        </div>
+        <div class="form-row mb-5">
+          <div class="form-group col-md-6">
+            <label for="pin_code">PIN Code</label>
+            <input type="text" class="form-control" id="pin_code" name="pin_code" required />
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="state">State</label>
+            <select id="state" name="State" class="form-control custom-select form-select" required>
+              <option selected>Select State</option>
+              {% for state in frappe.db.get_all('State', pluck='name') %}
+              <option value=" {{ state }}">{{ state }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row tickets">
+          <div class="form-group col-md-6">
+            <label for="general_ticket_price">General Ticket Price</label>
+            <input type="text" class="form-control" id="general_ticket_price" value="{{ event.general_ticket_price }}"
+              name="general_ticket_price" disabled />
+          </div>
+
+          <div class="form-group col-md-6">
+            <label for="student_ticket_price">Student Ticket Price</label>
+            <input type="text" class="form-control" id="student_ticket_price" value="{{ event.student_ticket_price }}"
+              name="student_ticket_price" disabled />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
         <div class="form-group col-md-6">
-          <label for="state">State</label>
-          <select
-            id="state"
-            name="State"
-            class="form-control custom-select form-select"
-            required
-          >
-            <option selected>Select State</option>
-            {% for state in frappe.db.get_list('State', pluck='name') %}
-            <option value=" {{ state }}">{{ state }}</option>
+          <label>General tickets</label>
+          <select class="form-control custom-select form-select form-select-sm" name="general_tickets"
+            id="general_tickets" style="width: 64px">
+            {% for i in range(11) %}
+            <option value="{{ i }}" {% if loop.first %}selected{% endif %}>
+              {{ i }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Student tickets</label>
+          <select class="custom-select custom-select-sm" name="student_tickets" id="student_tickets" style="width: 64px">
+            {% for i in range(11) %}
+            <option value="{{ i }}" {% if loop.first %}selected{% endif %}>
+              {{ i }}
+            </option>
             {% endfor %}
           </select>
         </div>
       </div>
 
-      <div class="form-row tickets">
-        <div class="form-group col-md-6">
-          <label for="general_ticket_price">General Ticket Price</label>
-          <input
-            type="text"
-            class="form-control"
-            id="general_ticket_price"
-            value="{{ event.general_ticket_price }}"
-            name="general_ticket_price"
-            disabled
-          />
-        </div>
-
-        <div class="form-group col-md-6">
-          <label for="student_ticket_price">Student Ticket Price</label>
-          <input
-            type="text"
-            class="form-control"
-            id="student_ticket_price"
-            value="{{ event.student_ticket_price }}"
-            name="student_ticket_price"
-            disabled
-          />
+      <div class="form-row">
+        <div id="total-amount" class="col-md-12 flex justify-content-between">
+          <h6>Total Amount</h6>
+          <h6 id="displayTotalAmount">₹ 0</h6>
         </div>
       </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-        <label>General tickets</label>
-        <select
-          class="form-control custom-select form-select form-select-sm"
-          name="general_tickets"
-          id="general_tickets"
-          style="width: 64px"
-        >
-          {% for i in range(11) %}
-          <option value="{{ i }}" {% if loop.first %}selected{% endif %}>
-            {{ i }}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-      <div class="form-group col-md-6">
-        <label>Student tickets</label>
-        <select
-          class="custom-select custom-select-sm"
-          name="student_tickets"
-          id="student_tickets"
-          style="width: 64px"
-        >
-          {% for i in range(11) %}
-          <option value="{{ i }}" {% if loop.first %}selected{% endif %}>
-            {{ i }}
-          </option>
-          {% endfor %}
-        </select>
+      <div id="buy-btn" class="float-right">
+        <button id="buy-ticket" onclick="addInputsToDoc()" type="submit" class="primary-button my-5">
+          Buy Tickets
+        </button>
       </div>
     </div>
-
-    <div class="form-row">
-      <div id="total-amount" class="col-md-12 flex justify-content-between">
-        <h6>Total Amount</h6>
-        <h6 id="displayTotalAmount">₹ 0</h6>
-      </div>
-    </div>
-    <div id="buy-btn" class="float-right">
-      <button
-        id="buy-ticket"
-        onclick="addInputsToDoc()"
-        type="submit"
-        class="primary-button my-5"
-      >
-        Buy Tickets
-      </button>
-    </div>
-  </div>
-</section>
-
+  </section>
+</div>
+{% endblock %}
 {% block page_script %}
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -345,21 +262,32 @@ Tickets") }}{% endblock %} {% block page_content %}
   }
 </script>
 {% endblock %}
+{% block page_style %}
 <style>
   body {
     background-color: hsl(var(--clr-gray-50));
   }
+
   .ticket-form {
-    margin: auto;
-    position: relative;
-    width: 50rem;
-    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 2rem;
   }
+
   .thumbnail-image img {
     width: auto;
     height: auto;
     z-index: 0;
     border-radius: none;
+  }
+
+  .ticket-detail-container{
+    background: #FFF;
+    margin-top: -4rem;
+    align-self: center;
+    position: relative;
+    z-index: 1;
   }
   .about p {
     width: auto;
@@ -368,9 +296,11 @@ Tickets") }}{% endblock %} {% block page_content %}
   input {
     height: 2.1875rem;
   }
+
   #event_name {
     padding: 0.71875rem 0.875rem;
   }
+
   .ticket-details {
     padding: 2.5rem;
     border-radius: 0.5rem;
@@ -379,9 +309,11 @@ Tickets") }}{% endblock %} {% block page_content %}
     position: relative;
     top: -10%;
   }
+
   .total-amount {
     padding: 0rem 0.625rem 0rem 0.625rem !important;
   }
+
   .buy-btn {
     margin: 0.625rem -10rem 0.625rem 0rem;
   }
@@ -392,28 +324,34 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: auto;
       padding: 0.25rem;
     }
+
     .ticket-form p {
       width: auto;
       padding: 0.625rem;
       font-size: var(--text-xs);
     }
+
     .ticket-form h3 {
       font-size: var(--text-base) !important;
     }
+
     .ticket-details {
       max-width: 12rem;
       top: -5%;
     }
+
     .thumbnail-image img {
       max-width: auto;
       height: 5rem;
     }
+
     label,
     input,
     select {
       font-size: var(--text-xs) !important;
       padding: 0.5rem;
     }
+
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
     }
@@ -425,23 +363,28 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: auto;
       padding: 0.25rem;
     }
+
     .ticket-form p {
       width: auto;
       padding: 0.5rem;
       font-size: var(--text-sm);
     }
+
     .ticket-form h3 {
       font-size: var(--text-base) !important;
     }
+
     .ticket-details {
       width: 15rem;
       top: -5%;
     }
+
     label,
     input,
     select {
       font-size: var(--text-sm) !important;
     }
+
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
     }
@@ -453,50 +396,61 @@ Tickets") }}{% endblock %} {% block page_content %}
       width: auto;
       padding: 0.25rem;
     }
+
     .ticket-form p {
       width: auto;
       padding: 0.5rem;
       font-size: 0.9375rem;
     }
+
     .ticket-form h3 {
       font-size: 1.5625rem !important;
     }
+
     .ticket-details {
       width: 18rem !important;
       top: -5%;
     }
+
     label,
     input,
     select {
       font-size: var(--text-sm) !important;
     }
+
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
     }
   }
+
   @media (min-width: 577px) and (max-width: 768px) {
     .ticket-form {
       margin: 1.875rem;
       width: auto;
       padding: 0.2rem;
     }
+
     .ticket-form p {
       width: auto;
       padding: 0.5rem;
       font-size: 1.125rem;
     }
+
     .ticket-form h3 {
       font-size: 1.875rem !important;
     }
+
     .ticket-details {
       width: 25rem;
       top: -5%;
     }
+
     label,
     input,
     select {
       font-size: var(--text-sm) !important;
     }
+
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
     }
