@@ -47,7 +47,7 @@ class FOSSChapterEvents(WebsiteGenerator):
 
         if not self.show_speakers:
             navbar_items.remove("speakers")
-        if not self.show_rsvp:
+        if not self.show_rsvp or self.paid_event:
             navbar_items.remove("rsvp")
         if not self.show_cfp:
             navbar_items.remove("cfp")

@@ -7,5 +7,6 @@ def get_context(context):
     context.website_settings = website_settings
 
     context.footer_items = website_settings.get("footer_items")
+    context.footer_logo = website_settings.get("footer_logo")
 
     context.copyright = website_settings.get("copyright")

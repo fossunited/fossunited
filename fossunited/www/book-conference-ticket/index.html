@@ -1,38 +1,33 @@
 {% extends "templates/foss_base.html" %} {% block title %} {{ _("Book Conference
 Tickets") }}{% endblock %} {% block page_content %}
 <section class="ticket-form">
-  <div class="about">
-    <div class="header px-5 py-2 mt-20">
-      <h3>Book Conference Ticket for {{ event.event_name }}</h3>
-    </div>
-    <p class="px-5 py-2">
-      Free and Open Source Software conference by the FOSS community.
-      <br />
-      <br />
-      About FOSS United FOSS United is a non-profit foundation that aims at
-      promoting and strengthening the Free and Open Source Software (FOSS)
-      ecosystem in India.
-      <br />
-      <br />
-      Terms & Conditions: Once bought, no monetary refunds will be given. You
-      can only transfer the ticket to another person. You must inform the
-      recipient of details to the organizing team by writing an email to the
-      organizing team.
-      <br />
-      <br />
-      You agree to share the information entered on this page with FOSS United
-      Foundation and Razorpay, adhering to applicable laws.
-    </p>
+  <div class="thumbnail-image">
+    <img src="/assets/fossunited/images/ticket_cover.png" />
   </div>
-
-  <div class="form py-2 px-2 mt-5">
+  <div class="container ticket-details form py-4 px-4 mt-5">
+    <div class="about">
+      <div class="header">
+        <h3>Book Conference Ticket for {{ event.event_name }}</h3>
+      </div>
+      <p class="my-5">
+        <b>Terms & Conditions:</b> Once bought, no monetary refunds will be
+        given. You can only transfer the ticket to another person. You must
+        inform the recipient of details to the organizing team by writing an
+        email to the organizing team.
+        <br />
+        <br />
+        You agree to share the information entered on this page with FOSS United
+        Foundation and Razorpay, adhering to applicable laws.
+        <br />
+      </p>
+    </div>
+    <hr />
     <input
       type="text"
       class="hidden"
       name="csrf_token"
       value="{{ frappe.session.csrf_token }}"
     />
-
     <div class="form-row">
       <div class="form-group col-md-12">
         <label for="event_name">Event name</label>
@@ -211,25 +206,23 @@ Tickets") }}{% endblock %} {% block page_content %}
         <h6 id="displayTotalAmount">₹ 0</h6>
       </div>
     </div>
-    <div>
-      <div id="buy-btn">
-        <button
-          id="buy-ticket"
-          onclick="addInputsToDoc()"
-          type="submit"
-          class="buy-btn"
-        >
-          Buy Tickets
-        </button>
-      </div>
+    <div id="buy-btn" class="float-right">
+      <button
+        id="buy-ticket"
+        onclick="addInputsToDoc()"
+        type="submit"
+        class="primary-button my-5"
+      >
+        Buy Tickets
+      </button>
     </div>
   </div>
 </section>
 
 {% block page_script %}
-
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
   /* function and jquery event listener to update the total_amount and also to pass this ahead in the tickets variable which adds data to document */
   $(document).ready(function () {
@@ -271,7 +264,7 @@ Tickets") }}{% endblock %} {% block page_content %}
     frappe.call({
       method: "fossunited.www.book-conference-ticket.index.add_ticket_to_doc",
       args: {
-        'ticketsData': ticketsData,
+        ticketsData: ticketsData,
       },
       callback: function (r) {
         let data = r.message;
@@ -324,8 +317,8 @@ Tickets") }}{% endblock %} {% block page_content %}
             method:
               "fossunited.www.book-conference-ticket.index.capture_payment",
             args: {
-              'doctype': 'Conference Tickets',
-              'ticket_id': ticket_id
+              doctype: "Conference Tickets",
+              ticket_id: ticket_id,
             },
             callback: (r) => {
               window.location.href = "/payment-success?event={{event.name}}";
@@ -353,20 +346,21 @@ Tickets") }}{% endblock %} {% block page_content %}
 </script>
 {% endblock %}
 <style>
+  body {
+    background-color: hsl(var(--clr-gray-50));
+  }
   .ticket-form {
-    margin-top: 1.25rem;
     margin: auto;
-    width: 43.75rem;
+    position: relative;
+    width: 50rem;
+    border-radius: 0.5rem;
   }
-
-  .header h3 {
-    margin-top: 0.0125rem !important;
+  .thumbnail-image img {
+    width: auto;
+    height: auto;
+    z-index: 0;
+    border-radius: none;
   }
-
-  .about {
-    background-color: #f4faee;
-  }
-
   .about p {
     width: auto;
   }
@@ -374,22 +368,22 @@ Tickets") }}{% endblock %} {% block page_content %}
   input {
     height: 2.1875rem;
   }
-
+  #event_name {
+    padding: 0.71875rem 0.875rem;
+  }
+  .ticket-details {
+    padding: 2.5rem;
+    border-radius: 0.5rem;
+    background-color: #fff;
+    width: 40rem;
+    position: relative;
+    top: -10%;
+  }
   .total-amount {
     padding: 0rem 0.625rem 0rem 0.625rem !important;
   }
-
   .buy-btn {
-    background-color: #08b74f !important;
-    color: white;
-    padding: 0.625rem 0.625rem;
-    display: flex;
-    justify-content: flex-end;
-    float: right;
-    padding: 0.625rem;
-    border-radius: 0.3125rem;
-    border: 0px none;
-    margin: 0.625rem 0rem 1.25rem 0rem;
+    margin: 0.625rem -10rem 0.625rem 0rem;
   }
 
   @media (min-width: 320px) and (max-width: 375px) {
@@ -401,17 +395,24 @@ Tickets") }}{% endblock %} {% block page_content %}
     .ticket-form p {
       width: auto;
       padding: 0.625rem;
-      font-size: 0.8125rem;
+      font-size: var(--text-xs);
     }
     .ticket-form h3 {
-      font-size: 1.25rem !important;
+      font-size: var(--text-base) !important;
     }
-    label {
-      font-size: 0.9375rem;
+    .ticket-details {
+      max-width: 12rem;
+      top: -5%;
     }
-    input {
-      font-size: 0.9375rem;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    .thumbnail-image img {
+      max-width: auto;
+      height: 5rem;
+    }
+    label,
+    input,
+    select {
+      font-size: var(--text-xs) !important;
+      padding: 0.5rem;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
@@ -427,17 +428,19 @@ Tickets") }}{% endblock %} {% block page_content %}
     .ticket-form p {
       width: auto;
       padding: 0.5rem;
-      font-size: 0.9375rem;
+      font-size: var(--text-sm);
     }
     .ticket-form h3 {
-      font-size: 1.5625rem !important;
+      font-size: var(--text-base) !important;
     }
-    label {
-      font-size: 1.0625rem;
+    .ticket-details {
+      width: 15rem;
+      top: -5%;
     }
-    input {
-      font-size: 0.9375rem;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    label,
+    input,
+    select {
+      font-size: var(--text-sm) !important;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
@@ -458,19 +461,20 @@ Tickets") }}{% endblock %} {% block page_content %}
     .ticket-form h3 {
       font-size: 1.5625rem !important;
     }
-    label {
-      font-size: 1.125rem;
+    .ticket-details {
+      width: 18rem !important;
+      top: -5%;
     }
-    input {
-      font-size: 0.9375rem;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    label,
+    input,
+    select {
+      font-size: var(--text-sm) !important;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;
     }
   }
-
-  @media (min-width: 576px) and (max-width: 768px) {
+  @media (min-width: 577px) and (max-width: 768px) {
     .ticket-form {
       margin: 1.875rem;
       width: auto;
@@ -484,12 +488,14 @@ Tickets") }}{% endblock %} {% block page_content %}
     .ticket-form h3 {
       font-size: 1.875rem !important;
     }
-    label {
-      font-size: 1.125rem;
+    .ticket-details {
+      width: 25rem;
+      top: -5%;
     }
-    input {
-      font-size: 0.9375rem;
-      padding: 0.3125rem 0px 0.3125rem 0px;
+    label,
+    input,
+    select {
+      font-size: var(--text-sm) !important;
     }
     #total-amount {
       padding: 0.625rem 0px 0.625rem 0px;

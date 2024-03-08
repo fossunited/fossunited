@@ -17,33 +17,30 @@
         flex-direction: column;
         gap: 1.5rem;
         padding: 4rem 0rem;
-        font-size: 0.75rem;
         width: 100%
     }
     .footer-container p{
-        color: var(--libre-white-600, #e8e8e8);
+        color: hsl(var(--clr-libre-white-600));
 
     }
 
     .footer-container a{
-        color: var(--libre-white-600, #e8e8e8);
-        font-size: 0.8rem;
+        color: hsl(var(--clr-libre-white-600));
         font-weight: 500;
 
     }
 
     .source-code-link a{
-        font-size: 0.875rem;
-        font-weight: 450;
+        font-weight: var(--fw-normal);
     }
 
     .footer-container a:hover{
-        color: var(--foss-min-500, #08B74F);
+        color: hsl(var(--clr-foss-mint-500));
         text-decoration: none;
     }
 
     .footer-element-logo > img{
-        max-height: 2rem;
+        max-height: 2.5rem;
     }
 
     .footer-element-items{
@@ -60,17 +57,16 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
     }
 
     .footer_parent_label p{
         margin: 0;
-        font-size: 0.875rem;
-        color: #EBEBEB;
+        color: hsl(var(--clr-libre-white-600));
     }
 
     .footer_parent_label > a{
-        font-weight: 600;
+        font-weight: var(--fw-medium);
         margin: 0;
 
     }
@@ -78,11 +74,12 @@
     .footer-category-items{
         display: grid;
         grid-template-columns: 1fr;
-        gap: 0.4rem;
+        gap: 0.5rem;
     }
 
     .footer-category-items a{
-        color: #98a2b3;
+        font-size: var(--text-sm);
+        color: hsl(var(--clr-open-gray-200));
     }
 
     .address-element{
@@ -92,13 +89,12 @@
 
     .address-element p{
         text-align: right;
-        font-size: 0.875rem;
-        color: #EBEBEB;
+        font-size: var(--text-sm);
     }
 
     .address-element a{
-        font-size: 0.875rem;
-        color: #EBEBEB;
+        font-size: var(--text-sm);
+        color: hsl(var(--clr-libre-white-600));
     }
 
     .social-media-credits{
@@ -124,7 +120,7 @@
         .footer-container{
             flex-direction: column;
             padding: 2rem 0rem;
-            font-size: 0.75rem;
+            font-size: var(--text-xs);
         }
 
         .footer-element-items{
@@ -160,7 +156,7 @@
         <div class="footer-container">
 
             <div class="footer-element-logo">
-                <img src="assets/fossunited/icons/fossunited-white.svg" alt="FOSS United Logo" />
+                <img src="{{footer_logo}}" alt="FOSS United Logo" />
             </div>
 
             <div class="source-code-link">
