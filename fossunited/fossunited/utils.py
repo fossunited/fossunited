@@ -37,6 +37,22 @@ def get_foss_profile(email):
     return profile
 
 
+# Jinja Filter
+def get_profile_image(email):
+    profile = get_foss_profile(email)
+    return (
+        profile.profile_photo
+        or "/assets/fossunited/images/defaults/user_profile_image.png"
+    )
+
+
+def get_event_volunteers(event):
+    volunteers = frappe.get_doc(
+        "FOSS Chapter Events", event
+    ).event_members
+    return volunteers
+
+
 @frappe.whitelist()
 def update_rsvp_count(rsvp):
     count = frappe.db.count(
@@ -260,23 +276,6 @@ def user_already_reviewed(cfp_submission):
             return True
 
     return False
-
-
-@frappe.whitelist()
-def post_review(submission, reviewer, to_approve, remarks):
-    submission_doc = frappe.get_doc(
-        "FOSS Event CFP Submission", submission
-    )
-    submission_doc.append(
-        "reviews",
-        {
-            "reviewer": reviewer,
-            "email": frappe.session.user,
-            "to_approve": to_approve,
-            "remarks": remarks,
-        },
-    )
-    submission_doc.save(ignore_permissions=True)
 
 
 def filter_field_values(key):

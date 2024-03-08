@@ -50,3 +50,31 @@ def check_if_submitter(doctype, docname):
         frappe.db.get_value(doctype, docname, "submitted_by")
         == frappe.session.user
     )
+
+
+@frappe.whitelist()
+def post_review(submission, to_approve, remarks):
+    """
+    Post a review for a particular CFP Submission
+
+    :params submission: CFP Submission docname
+    :params to_approve: Reviewer's decision
+    :params remarks: Reviewer's remarks
+    """
+    reviewer = frappe.get_doc(
+        "FOSS User Profile", {"email": frappe.session.user}
+    )
+
+    submission_doc = frappe.get_doc(
+        "FOSS Event CFP Submission", submission
+    )
+    submission_doc.append(
+        "reviews",
+        {
+            "reviewer": reviewer.username,
+            "email": frappe.session.user,
+            "to_approve": to_approve,
+            "remarks": remarks,
+        },
+    )
+    submission_doc.save(ignore_permissions=True)

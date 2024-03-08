@@ -34,14 +34,14 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "To Approve?",
-   "options": "\nMaybe\nYes\nNo",
+   "options": "\nYes\nNo\nMaybe",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-10-22 17:17:38.334376",
+ "modified": "2024-03-08 00:23:40.587456",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Reviews",
