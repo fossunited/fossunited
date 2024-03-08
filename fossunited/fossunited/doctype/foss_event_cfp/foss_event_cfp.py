@@ -103,6 +103,7 @@ class FOSSEventCFP(WebsiteGenerator):
                 "Personal Information",
                 "Custom Answers",
                 "CFP Reviews",
+                "Review Scores",
             ]:
                 continue
             form_fields.append({k: v for k, v in field.items()})
