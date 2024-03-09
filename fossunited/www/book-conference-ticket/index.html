@@ -245,10 +245,10 @@
               ticket_id: ticket_id,
             },
             callback: (r) => {
-              window.location.href = "/payment-success?event={{event.name}}";
+              window.location.href = "/payment-success?redirect-to={{event.route}}";
             },
             error: (r) => {
-              window.location.href = "/payment-failed?event={{event.name}}";
+              window.location.href = "/payment-failed?redirect-to={{event.route}}";
             },
           });
       },
