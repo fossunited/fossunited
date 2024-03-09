@@ -192,7 +192,6 @@
 
     // Hide Private Option in File Preview Modal
     $(document).on('DOMNodeInserted', (event) => {
-        console.log(event.target);
         if ($(event.target).hasClass('file-preview-container')) {
             $(event.target).find('label:contains("Private")').each((index, labelElement) => {
                 // Hide the label
@@ -302,6 +301,19 @@
 
                 parentDiv.find('img').attr("src", file_doc.file_url);
                 parentDiv.find('img').attr("data-original", file_doc.file_url);
+
+                // Update image in the User Doctype
+                if ($(e).attr('id').includes('profile_photo')){
+                    frappe.call({
+                        method: 'frappe.client.set_value',
+                        args: {
+                            doctype: 'User',
+                            name: frappe.session.user,
+                            fieldname: 'user_image',
+                            value: file_doc.file_url,
+                        }
+                    })
+                }
 
                 frappe.call({
                     method: 'frappe.client.set_value',

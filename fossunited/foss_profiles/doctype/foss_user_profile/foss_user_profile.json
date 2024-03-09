@@ -82,12 +82,13 @@
   },
   {
    "fetch_from": "user.full_name",
-   "fetch_if_empty": 1,
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name"
   },
   {
+   "fetch_from": "user.user_image",
+   "fetch_if_empty": 1,
    "fieldname": "profile_photo",
    "fieldtype": "Attach Image",
    "label": "Profile Photo"
@@ -271,7 +272,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-02-21 17:29:41.084017",
+ "modified": "2024-03-10 01:19:17.489470",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
