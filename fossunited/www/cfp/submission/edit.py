@@ -32,6 +32,7 @@ def get_form_fields(doctype, submission):
             "Meta Info",
             "Custom Answers",
             "CFP Reviews",
+            "Review Scores",
         ]:
             continue
         form_fields.append(
