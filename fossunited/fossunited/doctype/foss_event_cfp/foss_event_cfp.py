@@ -39,6 +39,7 @@ class FOSSEventCFP(WebsiteGenerator):
         )
 
         context.form_fields = self.get_form_fields()
+        context.no_cache = 1
 
     def get_form_fields(self):
         try:
