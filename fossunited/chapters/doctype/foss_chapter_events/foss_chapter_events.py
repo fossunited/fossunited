@@ -29,6 +29,7 @@ class FOSSChapterEvents(WebsiteGenerator):
             self.get_recent_cfp_submissions()
         )
         context.schedule_dict = self.get_schedule_dict()
+        context.no_cache = 1
 
     def set_route(self):
         self.route = f"events/{self.event_permalink}"
