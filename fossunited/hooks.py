@@ -81,6 +81,10 @@ website_route_rules = [
         "from_route": "/create-foss-profile",
         "to_route": "/foss_profile/create",
     },
+    {
+        "from_route": "/events/<event_permalink>/book-conference-ticket",
+        "to_route": "/book-conference-ticket",
+    },
 ]
 
 # add methods and filters to jinja environment

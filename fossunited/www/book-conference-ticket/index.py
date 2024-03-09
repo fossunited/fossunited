@@ -11,7 +11,8 @@ from frappe.integrations.utils import (
 # getting conference name data
 def get_context(context):
     context.event = frappe.get_doc(
-        "FOSS Chapter Events", frappe.form_dict.event
+        "FOSS Chapter Events",
+        {"event_permalink": frappe.form_dict.event_permalink},
     ).as_dict()
 
 

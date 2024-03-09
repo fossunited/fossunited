@@ -142,7 +142,9 @@
 
 <script>
   /* function and jquery event listener to update the total_amount and also to pass this ahead in the tickets variable which adds data to document */
-  $(document).ready(function () {
+  $(document).ready(function (){
+    frappe.require('controls.bundle.js');
+    set_mandatory_asterisk();
     $("#general_tickets, #student_tickets").change(function () {
       getTotalAmount();
     });
@@ -162,7 +164,12 @@
 
     return total_amount;
   }
+
   function addInputsToDoc() {
+    if (!validate_mandatory_fields()){
+      return
+    }
+
     let ticketsData = {
       doctype: "Conference Tickets",
       event: "{{ event.name }}",
@@ -238,10 +245,10 @@
               ticket_id: ticket_id,
             },
             callback: (r) => {
-              window.location.href = "/payment-success?event={{event.name}}";
+              window.location.href = "/payment-success?redirect-to={{event.route}}";
             },
             error: (r) => {
-              window.location.href = "/payment-failed?event={{event.name}}";
+              window.location.href = "/payment-failed?redirect-to={{event.route}}";
             },
           });
       },
