@@ -15,6 +15,7 @@ def get_context(context):
     context.form_fields = get_form_fields(
         context.submission.doctype, context.submission
     )
+    context.no_cache = 1
 
 
 def get_form_fields(doctype, submission):

@@ -65,6 +65,8 @@ class FOSSEventRSVP(WebsiteGenerator):
             )
             frappe.cache().set_value("submission", context.submission)
 
+        context.no_cache = 1
+
     def set_route(self):
         event_route = frappe.db.get_value(
             "FOSS Chapter Events", self.event, "route"
