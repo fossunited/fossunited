@@ -1,5 +1,6 @@
-{% extends "templates/foss_base.html" %} {% block title %} {{ _("Your Payment
-Was Successful!") }}{% endblock %} {% block page_content %}
+{% extends "templates/foss_base.html" %}
+{% block title %} {{ _("Your Payment Was Successful!") }}{% endblock %}
+{% block page_content %}
 <div id="payment-success-page">
   <div class="payment-success">
     <div id="success-icon-div">
@@ -8,8 +9,10 @@ Was Successful!") }}{% endblock %} {% block page_content %}
       </svg>
     </div>
     <div class="text-center">
-      <p>
-        Your Payment was successful!!
+      <h5>
+        {{ _("Your Payment Was Successful!") }}
+      </h5>
+      <div class="mb-2">
         <br />
         You will receive a copy of your ticket on your email.
         <br />
@@ -21,15 +24,21 @@ Was Successful!") }}{% endblock %} {% block page_content %}
             <i>"May the FOSS be with you!!"</i>
           </b>
         </span>
-      </p>
+      </div>
     </div>
   </div>
 </div>
+{% endblock %}
+{% block page_script %}
 <script>
-  setTimeout(function() {
-    window.location.href = '/{{frappe.form_dict.redirect_to}}'
-  }, 3000);
+  $(document).ready(() => {
+    setTimeout(() => {
+      window.location.href = '/{{frappe.form_dict["redirect-to"]}}'
+    }, 3000);
+  });
 </script>
+{% endblock %}
+{% block page_style %}
 <style>
   #payment-success-page {
     width: auto;
