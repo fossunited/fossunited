@@ -192,7 +192,6 @@
 
     // Hide Private Option in File Preview Modal
     $(document).on('DOMNodeInserted', (event) => {
-        console.log(event.target);
         if ($(event.target).hasClass('file-preview-container')) {
             $(event.target).find('label:contains("Private")').each((index, labelElement) => {
                 // Hide the label
