@@ -16,7 +16,7 @@
                     <div class="form-col-2">
                         <div class="form-group">
                             <label class="form-label field-title" for="signup_fullname">Full Name<sup><i class="ti ti-asterisk" style="color:red;"></i></sup></label>
-                            <input type="text" id="fullname" class="form-control" value="{{ full_name }}" readonly>
+                            <input type="text" id="fullname" class="form-control" value="{{ full_name }}">
                         </div>
                         <div class="form-group">
                             <label class="form-label field-title" for="signup_email">Email<sup><i class="ti ti-asterisk" style="color:red;"></i></sup></label>
@@ -86,6 +86,8 @@
         });
 
         function createFossProfile(){
+            let first_name = $('#fullname').val().split(' ')[0];
+            let last_name = $('#fullname').val().split(' ').slice(1).join(' ');
             let username = $('#username').val();
             let gender = $('#gender').val();
             let bio = $('#bio').val();
@@ -96,31 +98,35 @@
                 args: {
                     doctype: 'User',
                     name: frappe.session.user,
-                    fieldname: 'gender',
-                    value: gender,
+                    fieldname: {
+                        'first_name': first_name,
+                        'last_name': last_name,
+                        'gender': gender,
+                    },
                 }
+            }).then((res) => {
+                // Create FOSS Profile
+                frappe.call({
+                    method: 'fossunited.fossunited.utils.create_foss_profile',
+                    args: {
+                        'user': frappe.session.user,
+                        'username': username,
+                        'fields': {
+                            "bio": bio,
+                        }
+                    },
+                    callback: (r)=>{
+                        frappe.msgprint("Your FOSS Profile has been created successfully! Redirecting to your profile.", "Success!", indicator = "green");
+                        setTimeout(() => {
+                            window.location.reload()
+                        }, 2000);
+                    },
+                    error: (e)=>{
+                        frappe.msgprint("An error occurred while creating your FOSS Profile. Please try again later." + e.message, "Error");
+                    }
+                })
             })
 
-            // Create FOSS Profile
-            frappe.call({
-                method: 'fossunited.fossunited.utils.create_foss_profile',
-                args: {
-                    'user': frappe.session.user,
-                    'username': username,
-                    'fields': {
-                        "bio": bio,
-                    }
-                },
-                callback: (r)=>{
-                    frappe.msgprint("Your FOSS Profile has been created successfully! Redirecting to your profile.", "Success!", indicator = "green");
-                    setTimeout(() => {
-                        window.location.reload()
-                    }, 2000);
-                },
-                error: (e)=>{
-                    frappe.msgprint("An error occurred while creating your FOSS Profile. Please try again later." + e.message, "Error");
-                }
-            })
         }
 
         function showUsernameStatus(){
