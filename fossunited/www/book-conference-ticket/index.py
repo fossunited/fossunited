@@ -14,6 +14,10 @@ def get_context(context):
         "FOSS Chapter Events",
         {"event_permalink": frappe.form_dict.event_permalink},
     ).as_dict()
+    context.session_user = frappe.get_doc(
+        "User", frappe.session.user
+    ).as_dict()
+    context.no_cache = 1
 
 
 # Script Script for creating order ID
