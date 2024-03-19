@@ -89,7 +89,7 @@
     {% if experiences_dict %}
     {% for (key, values) in experiences_dict.items() %}
     <div class="experience-card">
-        <img src="https://logo.clearbit.com/{{values[0].company_website}}" alt="{{key}}" class="experience-card-logo">
+        <img src="https://logo.clearbit.com/{{values[0].company_website}}" onerror="renderCompanyImage(this)" alt="{{key}}" class="experience-card-logo">
         <div class="experience-details">
             {# if values | len > 1 #}
             <!-- <div>
@@ -105,7 +105,7 @@
                     <div class="experience-item--company-location">
                         {# if values | len < 2 #}
                         <span style="color: hsl(var(--clr-foss-mint-500))">
-                            <a href="https://www.{{value.company_website}}" target="_blank">{{ value.company }}</a>
+                            <a href="{{value.company_website}}" target="_blank">{{ value.company }}</a>
                         </span>
                         <div class="seperator-circle"></div>
                         {% if value.is_remote %}
@@ -177,7 +177,7 @@
                             <h4 class="mr-1">{{doc.full_name}}</h4>
                             {% for company in doc.experience %}
                                 {% if company.is_working_here %}
-                                    <img class="company-badge" src="https://logo.clearbit.com/{{company.company_website}}" alt="{{company.company}}">
+                                    <img class="company-badge" src="https://logo.clearbit.com/{{company.company_website}}" alt="">
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -291,6 +291,10 @@
             }
         }
     });
+
+    function renderCompanyImage(e){
+        $(e).attr('src', '/assets/fossunited/images/defaults/company_icon.png');
+    }
 
     function setNavbarControl(){
         let navItems = document.querySelectorAll('.horizontal-navbar--item');

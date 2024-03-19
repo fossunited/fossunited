@@ -73,11 +73,11 @@
    "label": "About your role"
   },
   {
-   "description": "Only enter the domain, without https or www",
    "fieldname": "company_website",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Company Website",
+   "options": "URL",
    "reqd": 1
   },
   {
@@ -133,7 +133,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-19 12:28:39.189507",
+ "modified": "2024-03-19 12:48:41.207612",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile Work Experience",
