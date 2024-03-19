@@ -272,7 +272,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-10 01:19:17.489470",
+ "modified": "2024-03-19 12:27:02.852726",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
@@ -305,12 +305,12 @@
   }
  ],
  "quick_entry": 1,
- "search_fields": "username",
+ "search_fields": "username, full_name",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "username",
+ "title_field": "full_name",
  "track_changes": 1,
  "track_views": 1
 }
