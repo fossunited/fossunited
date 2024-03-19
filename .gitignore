@@ -6,3 +6,4 @@ tags
 node_modules
 __pycache__
 fossunited/public/dist
+/fossunited/public/css/styles.css
