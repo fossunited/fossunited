@@ -33,7 +33,7 @@ def update_submission(doctype, submission, fields, custom):
     doc = frappe.get_doc(doctype, submission).as_dict()
     for field in doc.custom_answers:
         frappe.db.set_value(
-            "FOSS Custom Answers",
+            "FOSS Custom Answer",
             field.name,
             "response",
             custom[field.idx - 1]["response"],
