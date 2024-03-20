@@ -48,7 +48,7 @@ def get_profile_image(email):
 
 def get_event_volunteers(event):
     volunteers = frappe.get_doc(
-        "FOSS Chapter Events", event
+        "FOSS Chapter Event", event
     ).event_members
     return volunteers
 

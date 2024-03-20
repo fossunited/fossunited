@@ -14,24 +14,24 @@ class FOSSEventCFP(WebsiteGenerator):
 
     def set_route(self):
         event_route = frappe.db.get_value(
-            "FOSS Chapter Events", self.event, "route"
+            "FOSS Chapter Event", self.event, "route"
         )
         self.route = f"{event_route}/cfp"
 
     def enable_cfp_tab(self):
         frappe.db.set_value(
-            "FOSS Chapter Events", self.event, "show_cfp", 1
+            "FOSS Chapter Event", self.event, "show_cfp", 1
         )
 
     def get_context(self, context):
         frappe.cache().set_value("linked_cfp", self.name)
         context.submissions = get_cfp_submissions()
         context.event = frappe.get_doc(
-            "FOSS Chapter Events", self.event
+            "FOSS Chapter Event", self.event
         )
         context.event_name = self.event_name
         context.event_date = frappe.db.get_value(
-            "FOSS Chapter Events", self.event, "event_start_date"
+            "FOSS Chapter Event", self.event, "event_start_date"
         ).strftime("%B %d, %Y")
         context.submission_doctype = "FOSS Event CFP Submission"
         context.already_submitted = (

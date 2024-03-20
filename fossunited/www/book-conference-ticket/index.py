@@ -11,7 +11,7 @@ from frappe.integrations.utils import (
 # getting conference name data
 def get_context(context):
     context.event = frappe.get_doc(
-        "FOSS Chapter Events",
+        "FOSS Chapter Event",
         {"event_permalink": frappe.form_dict.event_permalink},
     ).as_dict()
     context.session_user = frappe.get_doc(
@@ -26,10 +26,10 @@ def add_ticket_to_doc(ticketsData):
     values = json.loads(ticketsData)
 
     student_ticket_price = frappe.db.get_value(
-        "FOSS Chapter Events", values["event"], "student_ticket_price"
+        "FOSS Chapter Event", values["event"], "student_ticket_price"
     )
     general_ticket_price = frappe.db.get_value(
-        "FOSS Chapter Events", values["event"], "general_ticket_price"
+        "FOSS Chapter Event", values["event"], "general_ticket_price"
     )
 
     student_tickets = values["student_tickets"]
@@ -40,10 +40,10 @@ def add_ticket_to_doc(ticketsData):
     )
 
     max_tickets_allowed = frappe.db.get_value(
-        "FOSS Chapter Events", values["event"], "max_tickets"
+        "FOSS Chapter Event", values["event"], "max_tickets"
     )
     tickets_sold = frappe.db.get_value(
-        "FOSS Chapter Events", values["event"], "tickets_sold"
+        "FOSS Chapter Event", values["event"], "tickets_sold"
     )
 
     tickets_remaining = max(max_tickets_allowed - tickets_sold, 0)
@@ -54,7 +54,7 @@ def add_ticket_to_doc(ticketsData):
 
     ticket = frappe.get_doc(
         {
-            "doctype": "Conference Tickets",
+            "doctype": "Conference Ticket",
             "event": values["event"],
             "event_name": values["event_name"],
             "first_name": values.get("first_name"),
@@ -143,7 +143,7 @@ def createBase():
 # Function to update captured payment state
 @frappe.whitelist()
 def capture_payment(doctype, ticket_id):
-    doc = frappe.get_doc("Conference Tickets", ticket_id)
+    doc = frappe.get_doc("Conference Ticket", ticket_id)
 
     basic_auth = f"Basic {createBase()}"
 
@@ -170,12 +170,12 @@ def capture_payment(doctype, ticket_id):
 
         tickets_sold = int(
             frappe.db.get_value(
-                "FOSS Chapter Events", doc.event, "tickets_sold"
+                "FOSS Chapter Event", doc.event, "tickets_sold"
             )
         )
 
         frappe.db.set_value(
-            "FOSS Chapter Events",
+            "FOSS Chapter Event",
             doc.event,
             "tickets_sold",
             int(doc.student_tickets)

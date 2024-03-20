@@ -49,7 +49,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_upcoming_events(self):
         return frappe.get_all(
-            "FOSS Chapter Events",
+            "FOSS Chapter Event",
             filters={
                 "chapter": self.name,
                 "event_end_date": (">=", frappe.utils.now()),
@@ -70,7 +70,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_past_events(self):
         return frappe.get_all(
-            "FOSS Chapter Events",
+            "FOSS Chapter Event",
             filters={
                 "chapter": self.name,
                 "event_end_date": ("<", frappe.utils.now()),

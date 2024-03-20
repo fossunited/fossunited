@@ -1,6 +1,6 @@
 {% macro breadcrumb(route) %}
     {% set route = route.split('/') %}
-    {% set event = frappe.db.get_value("FOSS Chapter Events", route[1], "event_name") %}
+    {% set event = frappe.db.get_value("FOSS Chapter Event", route[1], "event_name") %}
     <div class="breadcrumb mt-3">
         {% for crumb in route %}
             {% if crumb == 'events' %}

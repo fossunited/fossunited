@@ -1,6 +1,6 @@
 {% extends "templates/foss_base.html" %}
 
-{% block title %} {{ _("Book Conference Tickets") }} {% endblock %}
+{% block title %} {{ _("Book Conference Ticket") }} {% endblock %}
 {% block page_content %}
 <div class="container">
   <section class="ticket-form">
@@ -170,7 +170,7 @@
     }
 
     let ticketsData = {
-      doctype: "Conference Tickets",
+      doctype: "Conference Ticket",
       event: "{{ event.name }}",
       event_name: "{{ event.event_name }}",
       first_name: $("#first_name").val(),
@@ -240,7 +240,7 @@
             method:
               "fossunited.www.book-conference-ticket.index.capture_payment",
             args: {
-              doctype: "Conference Tickets",
+              doctype: "Conference Ticket",
               ticket_id: ticket_id,
             },
             callback: (r) => {

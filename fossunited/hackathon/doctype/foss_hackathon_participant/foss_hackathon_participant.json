@@ -24,7 +24,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hackathon Name",
-   "options": "FOSS Hackathons",
+   "options": "FOSS Hackathon",
    "reqd": 1
   },
   {
@@ -50,7 +50,7 @@
    "fieldname": "team_name",
    "fieldtype": "Link",
    "label": "Hackathon Team",
-   "options": "FOSS Hackathon Teams"
+   "options": "FOSS Hackathon Team"
   },
   {
    "default": "0",
@@ -61,7 +61,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-18 18:29:39.523963",
+ "modified": "2024-03-19 17:01:43.511532",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Participant",

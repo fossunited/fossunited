@@ -14,14 +14,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Skill",
-   "options": "FOSS User Skills",
+   "options": "FOSS User Skill",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-12-27 17:50:09.885718",
+ "modified": "2024-03-19 17:01:14.731979",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Skill Multiselect",

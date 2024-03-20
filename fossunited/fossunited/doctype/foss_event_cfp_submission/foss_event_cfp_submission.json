@@ -171,7 +171,7 @@
    "fieldname": "custom_answers",
    "fieldtype": "Table",
    "label": "Custom Answers",
-   "options": "FOSS Custom Answers"
+   "options": "FOSS Custom Answer"
   },
   {
    "fetch_from": "submitted_by.full_name",
@@ -190,7 +190,7 @@
    "fieldname": "reviews",
    "fieldtype": "Table",
    "label": "Reviews",
-   "options": "FOSS Event CFP Reviews"
+   "options": "FOSS Event CFP Review"
   },
   {
    "fieldname": "route",
@@ -263,7 +263,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-08 02:33:46.874779",
+ "modified": "2024-03-19 16:57:44.290297",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

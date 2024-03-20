@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-03-07 23:38:10.218042",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "reviews_list"
+ ],
+ "fields": [
+  {
+   "fieldname": "reviews_list",
+   "fieldtype": "Table",
+   "label": "Reviews List",
+   "options": "CFP Review Template Reason"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-03-19 16:58:17.262386",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "CFP Review Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

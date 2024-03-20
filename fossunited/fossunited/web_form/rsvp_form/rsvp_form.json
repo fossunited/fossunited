@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-12-17 02:24:02.869483",
+ "modified": "2024-03-20 14:05:23.486730",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "rsvp-form",
@@ -205,7 +205,7 @@
    "label": "",
    "max_length": 0,
    "max_value": 0,
-   "options": "FOSS Custom Questions",
+   "options": "FOSS Custom Question",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0

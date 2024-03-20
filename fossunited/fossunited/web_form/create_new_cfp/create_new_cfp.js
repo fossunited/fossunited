@@ -11,7 +11,7 @@ function redirect_to_event_page(){
     frappe.call({
         method: "frappe.client.get",
         args: {
-            doctype: "FOSS Chapter Events",
+            doctype: "FOSS Chapter Event",
             name: frappe.web_form.doc.event,
         },
         callback: (r)=>{

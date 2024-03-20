@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2023-12-17 02:24:23.710361",
+ "modified": "2024-03-20 14:04:38.591230",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "create-new-cfp",
@@ -194,7 +194,7 @@
    "label": "",
    "max_length": 0,
    "max_value": 0,
-   "options": "FOSS Custom Questions",
+   "options": "FOSS Custom Question",
    "read_only": 0,
    "reqd": 0,
    "show_in_filter": 0

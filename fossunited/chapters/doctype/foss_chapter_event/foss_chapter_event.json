@@ -1,0 +1,434 @@
+{
+ "actions": [],
+ "allow_guest_to_view": 1,
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-07-01 23:55:20.934607",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "meta_info_section",
+  "is_published",
+  "column_break_yozf",
+  "route",
+  "navbar_controls_section",
+  "show_speakers",
+  "show_rsvp",
+  "show_schedule",
+  "column_break_moaa",
+  "show_cfp",
+  "show_photos",
+  "chapter_information_section",
+  "chapter",
+  "column_break_tzza",
+  "chapter_name",
+  "event_infomation_section",
+  "must_attend",
+  "event_name",
+  "event_permalink",
+  "status",
+  "event_type",
+  "column_break_pua4",
+  "banner_image",
+  "event_location",
+  "map_link",
+  "tickets_section",
+  "paid_event",
+  "general_ticket_price",
+  "student_ticket_price",
+  "column_break_udae",
+  "max_tickets",
+  "tickets_sold",
+  "cta_section_section",
+  "primary_button_label",
+  "primary_button_url",
+  "column_break_hrox",
+  "secondary_button_label",
+  "secondary_button_url",
+  "event_timeline_section",
+  "event_start_date",
+  "column_break_ae9v",
+  "event_end_date",
+  "event_information_section",
+  "event_bio",
+  "event_description",
+  "event_sponsors_section",
+  "sponsor_list",
+  "deck_link",
+  "community_partners_section",
+  "community_partners",
+  "volunteers_tab",
+  "event_members_section",
+  "event_members",
+  "schedule_tab",
+  "schedule_section",
+  "event_schedule"
+ ],
+ "fields": [
+  {
+   "fieldname": "event_infomation_section",
+   "fieldtype": "Section Break",
+   "label": "Basic Information"
+  },
+  {
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Event Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pua4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Event Type",
+   "options": "FOSS Event Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chapter_information_section",
+   "fieldtype": "Section Break",
+   "label": "Organizing Chapter"
+  },
+  {
+   "fieldname": "chapter",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Chapter",
+   "options": "FOSS Chapter",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "must_attend",
+   "fieldtype": "Check",
+   "label": "Must Attend"
+  },
+  {
+   "fieldname": "map_link",
+   "fieldtype": "Data",
+   "label": "Map Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "event_timeline_section",
+   "fieldtype": "Section Break",
+   "label": "Event Timeline"
+  },
+  {
+   "fieldname": "event_start_date",
+   "fieldtype": "Datetime",
+   "label": "Event Start Date & Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_end_date",
+   "fieldtype": "Datetime",
+   "label": "Event End Date & Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ae9v",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "event_description",
+   "fieldtype": "Text Editor",
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nBeing Reviewed\nApproved\nIn Progress\nConcluded\nCancelled",
+   "reqd": 1
+  },
+  {
+   "fieldname": "event_members_section",
+   "fieldtype": "Section Break",
+   "label": "Event Volunteers"
+  },
+  {
+   "fieldname": "event_members",
+   "fieldtype": "Table",
+   "label": "Event Team Members",
+   "options": "FOSS Chapter Event Member"
+  },
+  {
+   "fieldname": "column_break_tzza",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_information_section",
+   "fieldtype": "Section Break",
+   "label": "Event Information"
+  },
+  {
+   "fieldname": "event_sponsors_section",
+   "fieldtype": "Section Break",
+   "label": "Event Sponsors"
+  },
+  {
+   "fieldname": "sponsor_list",
+   "fieldtype": "Table",
+   "label": "Sponsors",
+   "options": "FOSS Event Sponsor"
+  },
+  {
+   "fieldname": "community_partners_section",
+   "fieldtype": "Section Break",
+   "label": "Community Partners"
+  },
+  {
+   "fieldname": "community_partners",
+   "fieldtype": "Table",
+   "label": "Community Partners",
+   "options": "FOSS Event Community Partner"
+  },
+  {
+   "fieldname": "deck_link",
+   "fieldtype": "Data",
+   "label": "Deck Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "cta_section_section",
+   "fieldtype": "Section Break",
+   "label": "CTA Section"
+  },
+  {
+   "fieldname": "primary_button_label",
+   "fieldtype": "Data",
+   "label": "Primary Button Label"
+  },
+  {
+   "fieldname": "primary_button_url",
+   "fieldtype": "Data",
+   "label": "Primary Button URL"
+  },
+  {
+   "fieldname": "column_break_hrox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "secondary_button_label",
+   "fieldtype": "Data",
+   "label": "Secondary Button Label"
+  },
+  {
+   "fieldname": "secondary_button_url",
+   "fieldtype": "Data",
+   "label": "Secondary Button URL"
+  },
+  {
+   "fieldname": "volunteers_tab",
+   "fieldtype": "Tab Break",
+   "label": "Volunteers"
+  },
+  {
+   "fieldname": "schedule_tab",
+   "fieldtype": "Tab Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "event_schedule",
+   "fieldtype": "Table",
+   "label": "Event Schedule",
+   "options": "FOSS Event Schedule"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "column_break_yozf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published?"
+  },
+  {
+   "fieldname": "event_bio",
+   "fieldtype": "Data",
+   "label": "Short Event Bio"
+  },
+  {
+   "fieldname": "navbar_controls_section",
+   "fieldtype": "Section Break",
+   "label": "Navbar Controls"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_speakers",
+   "fieldtype": "Check",
+   "label": "Show Speakers"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_rsvp",
+   "fieldtype": "Check",
+   "label": "Show RSVP"
+  },
+  {
+   "fieldname": "column_break_moaa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_cfp",
+   "fieldtype": "Check",
+   "label": "Show CFP"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_photos",
+   "fieldtype": "Check",
+   "label": "Show Photos"
+  },
+  {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "default": "/files/event_banner.png",
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Event Banner Image"
+  },
+  {
+   "fieldname": "schedule_section",
+   "fieldtype": "Section Break",
+   "label": "Schedule"
+  },
+  {
+   "fetch_from": "chapter.chapter_name",
+   "fieldname": "chapter_name",
+   "fieldtype": "Data",
+   "label": "Chapter Name"
+  },
+  {
+   "fieldname": "tickets_section",
+   "fieldtype": "Section Break",
+   "label": "Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "general_ticket_price",
+   "fieldtype": "Currency",
+   "label": "General Ticket Price"
+  },
+  {
+   "fieldname": "column_break_udae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "student_ticket_price",
+   "fieldtype": "Currency",
+   "label": "Student Ticket Price"
+  },
+  {
+   "default": "\n",
+   "fieldname": "tickets_sold",
+   "fieldtype": "Int",
+   "label": "Tickets Sold"
+  },
+  {
+   "default": "0",
+   "fieldname": "max_tickets",
+   "fieldtype": "Int",
+   "label": "Maximum Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "paid_event",
+   "fieldtype": "Check",
+   "label": "Paid Event "
+  },
+  {
+   "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
+   "fieldname": "event_permalink",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_preview": 1,
+   "label": "Event Permalink",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule",
+   "fieldtype": "Check",
+   "label": "Show Schedule"
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
+ "links": [
+  {
+   "group": "Participants",
+   "link_doctype": "FOSS Chapter Event Participant",
+   "link_fieldname": "event_name"
+  },
+  {
+   "group": "RSVP",
+   "link_doctype": "FOSS Event RSVP Submission",
+   "link_fieldname": "chapter"
+  }
+ ],
+ "modified": "2024-03-19 17:00:39.542087",
+ "modified_by": "Administrator",
+ "module": "Chapters",
+ "name": "FOSS Chapter Event",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
+  }
+ ],
+ "search_fields": "event_permalink, chapter",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "event_name"
+}
