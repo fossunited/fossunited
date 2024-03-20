@@ -149,20 +149,20 @@
    "fieldname": "linked_team",
    "fieldtype": "Link",
    "label": "Linked Team",
-   "options": "FOSS Hackathon Teams"
+   "options": "FOSS Hackathon Team"
   },
   {
    "fieldname": "hackathon_name",
    "fieldtype": "Link",
    "label": "Hackathon ",
-   "options": "FOSS Hackathons",
+   "options": "FOSS Hackathon",
    "reqd": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-12-18 18:14:35.884070",
+ "modified": "2024-03-19 17:01:43.633713",
  "modified_by": "Administrator",
  "module": "Hackathon",
  "name": "FOSS Hackathon Project",

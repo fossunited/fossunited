@@ -22,7 +22,7 @@ class FOSSEventRSVP(WebsiteGenerator):
         frappe.cache().set_value("linked_rsvp", self.name)
 
         context.event = frappe.get_doc(
-            "FOSS Chapter Events", self.event
+            "FOSS Chapter Event", self.event
         )
         context.event_name = self.event_name
         context.event_date = context.event.event_start_date.strftime(
@@ -69,13 +69,13 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def set_route(self):
         event_route = frappe.db.get_value(
-            "FOSS Chapter Events", self.event, "route"
+            "FOSS Chapter Event", self.event, "route"
         )
         self.route = f"{event_route}/rsvp"
 
     def enable_rsvp_tab(self):
         frappe.db.set_value(
-            "FOSS Chapter Events", self.event, "show_rsvp", 1
+            "FOSS Chapter Event", self.event, "show_rsvp", 1
         )
 
     def get_custom_questions(self):

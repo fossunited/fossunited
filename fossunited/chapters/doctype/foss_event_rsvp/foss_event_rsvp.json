@@ -38,7 +38,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Event",
-   "options": "FOSS Chapter Events"
+   "options": "FOSS Chapter Event"
   },
   {
    "fieldname": "column_break_yrzh",
@@ -86,7 +86,7 @@
    "fieldname": "custom_questions",
    "fieldtype": "Table",
    "label": "Custom Questions",
-   "options": "FOSS Custom Questions"
+   "options": "FOSS Custom Question"
   },
   {
    "fieldname": "section_break_ioxz",
@@ -126,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-01 13:54:48.858070",
+ "modified": "2024-03-19 16:59:34.459362",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",

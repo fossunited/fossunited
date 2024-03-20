@@ -58,7 +58,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Event",
-   "options": "FOSS Chapter Events",
+   "options": "FOSS Chapter Event",
    "reqd": 1
   },
   {
@@ -96,7 +96,7 @@
    "fieldname": "cfp_custom_questions",
    "fieldtype": "Table",
    "label": "CFP Custom Questions",
-   "options": "FOSS Custom Questions"
+   "options": "FOSS Custom Question"
   },
   {
    "fieldname": "cfp_reviewers_tab",
@@ -107,7 +107,7 @@
    "fieldname": "cfp_reviewers",
    "fieldtype": "Table",
    "label": "CFP Reviewers",
-   "options": "FOSS Event CFP Reviewer List"
+   "options": "FOSS Event CFP Reviewer"
   },
   {
    "default": "1",
@@ -121,7 +121,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-04 16:46:19.719941",
+ "modified": "2024-03-19 16:59:34.626337",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",

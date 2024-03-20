@@ -181,7 +181,7 @@
    "fieldname": "chapter_members",
    "fieldtype": "Table",
    "label": "Chapter Members",
-   "options": "FOSS Chapter Lead Team Members"
+   "options": "FOSS Chapter Lead Team Member"
   },
   {
    "fieldname": "meta_info_section",
@@ -220,11 +220,11 @@
  "is_published_field": "is_published",
  "links": [
   {
-   "link_doctype": "FOSS Chapter Events",
+   "link_doctype": "FOSS Chapter Event",
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-02-26 14:10:54.579243",
+ "modified": "2024-03-19 17:00:14.600825",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
