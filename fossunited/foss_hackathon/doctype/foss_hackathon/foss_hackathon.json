@@ -211,9 +211,14 @@
    "group": "Projects",
    "link_doctype": "FOSS Hackathon Project",
    "link_fieldname": "hackathon"
+  },
+  {
+   "group": "Teams",
+   "link_doctype": "FOSS Hackathon Mentor",
+   "link_fieldname": "hackathon"
   }
  ],
- "modified": "2024-03-26 14:36:22.051288",
+ "modified": "2024-03-26 15:38:05.453388",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
