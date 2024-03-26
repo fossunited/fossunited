@@ -21,6 +21,14 @@ module.exports = {
         DEFAULT: '#08b74f',
       }
     },
+    fontFamily: {
+      sans: ['Inter', 'sans-serif'],
+      body: ['Inter', 'sans-serif'],
+      mono: ['"Fira Code"', 'monospace'],
+      serif: 'serif',
+      code: ['"Fira Code"', 'monospace'],
+      fff: ['"FFF Forward"', 'sans-serif'],
+    },
   },
   plugins: [],
 }
