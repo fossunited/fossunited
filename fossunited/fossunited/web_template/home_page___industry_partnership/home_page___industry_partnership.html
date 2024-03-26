@@ -24,33 +24,16 @@
         height: 3.75rem;
     }
 
-    .ip-content-block h1{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.105rem;
-    }
 
     .ip-content-block p{
         margin: 0.5rem 0 0 0;
-        color: var(--Gray-500, #667085);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 140%; /* 1.4rem */
-        letter-spacing: -0.02rem;
+        color: hsl(var(--clr-gray-500));
     }
 
     .ip-content-block a{
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 550;
-        line-height: normal;
-        letter-spacing: -0.05288rem;
+        color: hsl(var(--clr-foss-mint-500));
+        font-weight: var(--fw-medium);
+        letter-spacing: -0.05rem;
     }
 
     .ip-content-block a:hover{
@@ -58,11 +41,11 @@
     }
 
     .ip-partners-block{
-        background: url("assets/fossunited/icons/ip_block_pattern.svg") no-repeat;
-        padding: 6rem 4rem;
+        background: url('assets/fossunited/icons/ip_block_pattern.svg') no-repeat;
+        padding: 5rem;
         display: flex;
         justify-content: center;
-        background-size: contain;
+        background-size: cover;
     }
 
     .feature-partners{
@@ -87,10 +70,6 @@
 
         .ip-content-block{
             width: 100%;
-        }
-
-        .ip-content-block h1{
-            font-size: 1.5rem;
         }
 
         .ip-partners-block{
@@ -120,7 +99,7 @@
             <img src="assets/fossunited/icons/handshake.svg" alt="ip-handshake">
 
             <div>
-                <h1>Industry Partnership</h1>
+                <h5>Industry Partnership</h5>
                 <p>{{section_desc}}</p>
             </div>
 

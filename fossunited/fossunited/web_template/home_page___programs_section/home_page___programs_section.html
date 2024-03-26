@@ -14,16 +14,6 @@
         width: 100%;
     }
 
-    .programs-section-heading{
-            margin: 0;
-            color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-            font-size: 1.75rem;
-            font-style: normal;
-            font-weight: 600;
-            line-height: 100%;
-            letter-spacing: -0.08rem;
-    }
-
     .programs-card-block{
         display: grid;
         grid-template-columns: 1fr 1fr 1fr;
@@ -35,7 +25,7 @@
         padding: 1.25rem;
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        gap: .875rem;
     }
 
     .program-card:hover{
@@ -48,40 +38,27 @@
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
     }
 
-
-    .program-card-name > h2{
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 1.35rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%;
-        letter-spacing: -0.06rem;
-        margin-top: 1.2rem
+    .program-card h6{
+        font-size: var(--text-xl);
     }
+
 
     .program-card-description > p{
         color: var(--Gray-500, #667085);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 120%;
-        letter-spacing: -0.02rem;
+        font-weight: var(--fw-medium);
+        line-height: 1.5;
+
     }
 
     .program-card-cta{
         display: flex;
-        align-items: flex-end;
-        color: var(--Foundation-Code-Night-code-night-500 , #1E1E1E);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 120%;
-        letter-spacing: -0.02rem;
-        margin: 0;
+        align-items: center;
+        font-size: var(--text-sm);
+        font-weight: var(--fw-semibold);
     }
 
     .program-card-image img{
-        max-height: 2.875rem;
+        max-height: 2.5rem;
     }
 
     @media screen and (max-width: 768px) {
@@ -91,28 +68,12 @@
             gap: 2.5rem;
         }
 
-
-        .programs-section-heading{
-            font-size: 1.5rem;
-        }
-
         .program-card{
             padding:1.25rem;
             border-radius: 0.5rem;
             border: 0.5px solid var(--Gray-200, #EAECF0);
         }
 
-        .program-card h2{
-            font-size: 1.2rem;
-        }
-
-        .program-card-description p{
-            font-size: 1rem;
-        }
-
-        .program-card-cta {
-            font-size: 0.875rem;
-        }
 
         .program-card:hover{
             text-decoration: none;
@@ -128,7 +89,7 @@
 
 <div class="programs-section container">
     <div class="programs-container">
-        <h1 class="programs-section-heading">Programs</h1>
+        <h5 class="programs-section-heading">Programs</h5>
         <div class="programs-card-block">
             {% for index in range(1, 10) %}
                 {% set logo = values['program_' + index|string + '_logo'] %}
@@ -140,8 +101,8 @@
                                 <div class="program-card-image">
                                     <img src="{{ logo }}" alt="{{ name }}">
                                 </div>
-                                <div class="program-card-name">
-                                    <h2>{{name}}</h2>
+                                <div>
+                                    <h6>{{name}}</h6>
                                 </div>
                                 <div class="program-card-description">
                                     <p>{{description}}</p>

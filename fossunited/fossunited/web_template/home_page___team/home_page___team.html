@@ -59,7 +59,7 @@
         padding: 1.25rem;
         display: flex;
         align-items: center;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .team-card-image{
@@ -79,24 +79,11 @@
         gap: 0.35rem;
     }
 
-    .team-card-details h2{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.125rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 110%;
-        letter-spacing: -0.025rem;
-    }
 
     .team-card-details p{
-        margin: 0;
         color: var(--Gray-500, #667085);
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 110%;
-        letter-spacing: -0.0175rem;
+        font-size: var(--text-sm);
+        line-height: 1.3;
     }
 
     @media screen and (max-width: 768px) {
@@ -112,15 +99,6 @@
             padding: 0rem;
         }
 
-        .team-section-header h1{
-            font-size: 1.5rem;
-        }
-
-        .team-card-details h2{
-            font-size: 1.2rem;
-        }
-
-
     }
 </style>
 
@@ -128,7 +106,7 @@
 
     <div class="team-container">
             <div class="team-section-header">
-                <h1>The Team</h1>
+                <h5>The Team</h5>
                 <a href="{{team_page_link}}">Meet the Workforce ↗</a>
 
             </div>
@@ -141,7 +119,7 @@
                                 <img src="{{employee.headshot}}" alt="Team Member">
                             </div>
                             <div class="team-card-details">
-                                <h2>{{employee.full_name}}</h2>
+                                <h6>{{employee.full_name}}</h6>
                                 <p>{{employee.designation}}</p>
                             </div>
                         </div>
