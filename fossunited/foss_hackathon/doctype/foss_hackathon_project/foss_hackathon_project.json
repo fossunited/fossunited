@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_guest_to_view": 1,
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-12-13 14:51:40.966943",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project_details_tab",
+  "status_checks_section",
+  "route",
+  "column_break_ekbb",
+  "is_published",
+  "project_details_section",
+  "title",
+  "repo_link",
+  "demo_link",
+  "description",
+  "column_break_xfpp",
+  "hackathon",
+  "team"
+ ],
+ "fields": [
+  {
+   "fieldname": "project_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Project Details"
+  },
+  {
+   "fieldname": "status_checks_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "column_break_ekbb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Is Published"
+  },
+  {
+   "fieldname": "project_details_section",
+   "fieldtype": "Section Break",
+   "label": "Project Details "
+  },
+  {
+   "fieldname": "column_break_xfpp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hackathon",
+   "fieldtype": "Link",
+   "label": "Hackathon ",
+   "options": "FOSS Hackathon",
+   "reqd": 1
+  },
+  {
+   "fieldname": "team",
+   "fieldtype": "Link",
+   "label": "Team",
+   "options": "FOSS Hackathon Team",
+   "reqd": 1
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "repo_link",
+   "fieldtype": "Data",
+   "label": "Repo Link",
+   "options": "URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "demo_link",
+   "fieldtype": "Data",
+   "label": "Demo Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Text Editor",
+   "label": "Description",
+   "reqd": 1
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
+ "links": [],
+ "modified": "2024-03-26 14:37:25.623563",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "FOSS Hackathon Project",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
+  }
+ ],
+ "search_fields": "hackathon",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "title",
+ "track_changes": 1,
+ "track_views": 1
+}

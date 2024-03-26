@@ -1,0 +1,92 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2023-12-13 15:39:49.517553",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "team_details_section",
+  "team_name",
+  "hackathon",
+  "members"
+ ],
+ "fields": [
+  {
+   "fieldname": "team_details_section",
+   "fieldtype": "Section Break",
+   "label": "Team Details"
+  },
+  {
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Team Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hackathon",
+   "fieldtype": "Link",
+   "label": "Hackathon",
+   "options": "FOSS Hackathon",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "members",
+   "fieldtype": "Table",
+   "label": "Members",
+   "options": "FOSS Hackathon Team Member"
+  }
+ ],
+ "links": [],
+ "modified": "2024-03-26 15:00:12.095573",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "FOSS Hackathon Team",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
+  }
+ ],
+ "search_fields": "hackathon",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "team_name"
+}
