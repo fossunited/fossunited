@@ -63,12 +63,10 @@ function publish_form(e) {
 	let docname = $(e).data("docname");
 	let parent = $(e).data("parent");
 	frappe.call({
-		method: "frappe.client.set_value",
+		method: "fossunited.fossunited.forms.publish_form",
 		args: {
-			doctype: `${doctype}`,
-			name: `${docname}`,
-			fieldname: "is_published",
-			value: 1,
+			doctype: doctype,
+			docname: docname,
 		},
 		callback: (r) =>{
 			$(`#${parent}`).load(window.location.href + ` #${parent}` );
@@ -85,12 +83,10 @@ function unpublish_form(e){
 	let docname = $(e).data("docname");
 	let parent = $(e).data("parent");
 	frappe.call({
-		method: "frappe.client.set_value",
+		method: "fossunited.fossunited.forms.unpublish_form",
 		args: {
-			doctype: `${doctype}`,
-			name: `${docname}`,
-			fieldname: "is_published",
-			value: 0,
+			doctype: doctype,
+			docname: docname,
 		},
 		callback: (r) =>{
 			$(`#${parent}`).load(window.location.href + ` #${parent}` );
