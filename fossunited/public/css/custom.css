@@ -2566,4 +2566,32 @@ h6{
     .header--title-cta-parent {
         flex-direction: column;
     }
+
+    /* PROFILES */
+    .header-section{
+        border-radius: 0;
+    }
+
+    .profile-container .container{
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-detail-section{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1.5rem 0 1.5rem;
+    }
+
+    .header-section--bio{
+        padding: 0.5rem 2rem;
+    }
+
+    .header-section--socials{
+        padding: 0.5rem 2rem;
+    }
+
+    .profile-content-section{
+        border-radius: 0;
+    }
 }
