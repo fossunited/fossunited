@@ -184,3 +184,13 @@ function set_mandatory_asterisk(){
 		label.find('span').append('<span class="text-danger">*</span>');
 	});
 }
+
+function copyLinkToClipboard(e){
+	let link = window.location.origin + '/' + $(e).data('url');
+	navigator.clipboard.writeText(link);
+	$('.tooltip-text').text('Link Copied!');
+}
+
+function resetTooltip(){
+	$('.tooltip-text').html('Copy Link');
+}
