@@ -18,15 +18,6 @@
         gap: 1rem;
     }
 
-    .programs-section-header h2{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.105rem;
-    }
-
 
     .program-card-container{
         display: grid;
@@ -55,22 +46,11 @@
         gap: 0.5rem;
     }
 
-    .program-card-body h5{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 1rem;
-        font-weight: 600;
-        line-height: 100%; /* 1rem */
-        letter-spacing: -0.04rem;
-    }
-
     .program-card-body p{
-        margin: 0;
-        color: var(--Gray-500, #667085);
-        font-size: 0.92rem;
-        font-weight: 500;
-        line-height: 140%;
-        letter-spacing: -0.03rem;
+        color: hsl(var(--clr-gray-500));
+        font-size: var(--text-sm);
+        font-weight: var(--fw-medium);
+        line-height: 1.4;
     }
 
     @media screen and (max-width: 768px){
@@ -81,10 +61,6 @@
             padding:1rem;
         }
 
-        .programs-section-header h2{
-            font-size: 1.5rem;
-        }
-
         .programs-section-header img{
             display: none;
         }
@@ -92,10 +68,6 @@
         .program-card-container{
             grid-template-columns: 1fr;
             gap: 2rem;
-        }
-
-        .program-card-head h5{
-            font-size: 1.2rem;
         }
 
 
@@ -110,7 +82,7 @@
 
         <div class="programs-section-header">
 
-            <h2>{{heading}}</h2>
+            <h5>{{heading}}</h5>
 
             <p>{{subtext}}</p>
 
@@ -131,7 +103,7 @@
                     </div>
 
                     <div class="program-card-body">
-                        <h5>{{program_title}}</h5>
+                        <h6>{{program_title}}</h6>
                         <p>{{program_text}}</p>
                     </div>
 
