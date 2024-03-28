@@ -70,7 +70,7 @@ website_route_rules = [
         "to_route": "/cfp/submission/edit",
     },
     {
-        "from_route": "/events/<event_permalink>/rsvp/edit/<submission>",
+        "from_route": "/events/<event_permalink>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
     },
     {

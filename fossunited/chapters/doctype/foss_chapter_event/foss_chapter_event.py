@@ -140,14 +140,14 @@ class FOSSChapterEvent(WebsiteGenerator):
                 if frappe.db.exists(
                     "FOSS Event RSVP Submission",
                     {
-                        "linked_cfp": rsvp_form.name,
+                        "linked_rsvp": rsvp_form.name,
                         "submitted_by": frappe.session.user,
                     },
                 ):
                     submission = frappe.get_doc(
                         "FOSS Event RSVP Submission",
                         {
-                            "linked_cfp": rsvp_form.name,
+                            "linked_rsvp": rsvp_form.name,
                             "submitted_by": frappe.session.user,
                         },
                     )

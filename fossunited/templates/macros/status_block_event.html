@@ -30,7 +30,7 @@
             {% endif %}
         {% endif %}
         {% if status_block_content.edit_submission %}
-        <button class="secondary-button" onClick="window.location.href='/rsvp/create/{{ status_block_content.submission }}/edit'">Edit {{ status_block_content.block_for | upper }} Submission</button>
+        <button class="secondary-button" onClick="window.location.pathname+='/{{ status_block_content.block_for }}/{{ status_block_content.submission }}/edit'">Edit {{ status_block_content.block_for | upper }} Submission</button>
         {% endif %}
         {% if status_block_content.primary_cta and status_block_content.is_published %}
         <button class="primary-button" onClick="window.location.pathname+='/{{ status_block_content.block_for }}'">{{ status_block_content.block_for | upper }}</button>
