@@ -186,9 +186,9 @@
 {% endmacro %}
 
 {% macro render_cfp() %}
-<div class="event-content-div content-div" id="cfp">
+<div class="event-content-div content-div" id="talk_proposal">
     <div class="cfp-section my-3">
-        <h5>CFP</h5>
+        <h5>Talk Proposal</h5>
         {% from 'fossunited/templates/macros/status_block_event.html' import status_block %}
         {{ status_block(cfp_status_block, doc.name) }}
         {% if user_cfp_submissions %}

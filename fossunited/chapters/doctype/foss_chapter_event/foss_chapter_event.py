@@ -39,7 +39,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "event_information",
             "speakers",
             "rsvp",
-            "cfp",
+            "talk_proposal",
             "schedule",
         ]
 
@@ -158,7 +158,10 @@ class FOSSChapterEvent(WebsiteGenerator):
                         "edit_submission": True,
                     }
                 else:
-                    rsvp_status_block["primary_cta"] = True
+                    rsvp_status_block["show_primary_cta"] = True
+                    rsvp_status_block[
+                        "primary_cta"
+                    ] = "RSVP for the event"
 
             if not rsvp_form.is_published:
                 rsvp_status_block[
@@ -177,7 +180,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 rsvp_status_block["create_form"] = True
             else:
                 rsvp_status_block["is_team_member"] = False
-                rsvp_status_block["primary_cta"] = False
+                rsvp_status_block["show_primary_cta"] = False
         return rsvp_status_block
 
     def get_cfp_status_block(self):
@@ -191,7 +194,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
             cfp_status_block |= {
                 "has_doc": True,
-                "block_heading": "CFP Form is Live!",
+                "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
@@ -225,26 +228,29 @@ class FOSSChapterEvent(WebsiteGenerator):
                         "submission": submission.name,
                     }
 
-                cfp_status_block["primary_cta"] = True
+                cfp_status_block["show_primary_cta"] = True
+                cfp_status_block[
+                    "primary_cta"
+                ] = "Submit a talk proposal"
 
             if not cfp_form.is_published:
                 cfp_status_block[
                     "block_heading"
-                ] = "CFP Form is Unpublished!"
+                ] = "Talk Proposal Form is Unpublished!"
         else:
             cfp_status_block["has_doc"] = False
             cfp_status_block[
                 "block_heading"
-            ] = "CFP Form is not live yet!"
+            ] = "Talk Proposal Form is not live yet!"
             if is_user_team_member(self.chapter, frappe.session.user):
                 cfp_status_block[
                     "block_heading"
-                ] = "Create CFP for the event"
+                ] = "Create Call for Proposal (CFP) for the event"
                 cfp_status_block["is_team_member"] = True
                 cfp_status_block["create_form"] = True
             else:
                 cfp_status_block["is_team_member"] = False
-                cfp_status_block["primary_cta"] = False
+                cfp_status_block["show_primary_cta"] = False
         return cfp_status_block
 
     def get_user_cfp_submissions(self):
