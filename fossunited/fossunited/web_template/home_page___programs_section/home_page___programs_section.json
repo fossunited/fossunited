@@ -23,7 +23,6 @@
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "program_1_url",
    "fieldtype": "Data",
    "label": "URL",
@@ -49,7 +48,6 @@
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "program_2_url",
    "fieldtype": "Data",
    "label": "URL",
@@ -75,16 +73,92 @@
    "reqd": 0
   },
   {
-   "__unsaved": 1,
    "fieldname": "program_3_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_4_logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_4_name",
+   "fieldtype": "Data",
+   "label": "Program 4 Name",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_4_desc",
+   "fieldtype": "Data",
+   "label": "Description",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_4_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_5_logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_5_name",
+   "fieldtype": "Data",
+   "label": "Program 5 Name",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_5_desc",
+   "fieldtype": "Data",
+   "label": "Description",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_5_url",
+   "fieldtype": "Data",
+   "label": "URL",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_6_logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_6_name",
+   "fieldtype": "Data",
+   "label": "Program 6 Name",
+   "reqd": 0
+  },
+  {
+   "fieldname": "program_6_desc",
+   "fieldtype": "Data",
+   "label": "Description",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "program_6_url",
    "fieldtype": "Data",
    "label": "URL",
    "options": "URL",
    "reqd": 0
   }
  ],
- "idx": 8,
- "modified": "2024-02-03 00:06:22.862936",
+ "idx": 11,
+ "modified": "2024-03-26 20:00:40.088686",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Home Page - Programs Section",

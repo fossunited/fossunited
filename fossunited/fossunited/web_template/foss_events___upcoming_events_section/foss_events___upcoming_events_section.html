@@ -14,25 +14,7 @@
         align-items: flex-start;
         gap: 7rem;
         flex-direction: column;
-    }
-
-    .events-subsection{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 5rem;
         width: 100%;
-    }
-
-    .events-list-container h2{
-        margin:0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.105rem;
     }
 
     .events-block{
@@ -50,9 +32,7 @@
     }
 
     .view-events-link{
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-        font-size: 1rem;
-        font-style: normal;
+        color: hsl(var(--clr-foss-mint-500));
         font-weight: 550;
         line-height: 100%; /* 0.875rem */
         letter-spacing: -0.035rem;
@@ -60,139 +40,7 @@
 
     .view-events-link:hover{
         text-decoration: none;
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-    }
-
-    .upcoming-event-card{
-        display: grid;
-        align-items: flex-start;
-        border-radius: 0.5rem;
-        border: 0.5px solid var(--Foundation-Open-Gray-open-gray-100, #B9B9B9);
-        background: #FFF;
-    }
-
-    .upcoming-event-card img{
-        border-radius: 0.5rem 0.5rem 0 0;
-    }
-
-    .upcoming-event-card h5{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 1.25rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 120%;
-        letter-spacing: -0.045rem;
-    }
-
-    .upcoming-event-tags-block{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        gap: 0.5rem;
-    }
-
-    .event-card-content{
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        gap: 1rem;
-    }
-
-    .event-date{
-        display: flex;
-        padding: 0.25rem 0.5rem;
-        justify-content: center;
-        align-items: center;
-        gap: 0.625rem;
-        border-radius: 0.5rem;
-        background: #F3F3F3;
-    }
-
-    .event-date > p{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: -0.035rem;
-    }
-
-    .is-must-attend{
-        display: flex;
-        padding: 0.25rem 0.5rem;
-        justify-content: center;
-        align-items: center;
-        gap: 0.31rem;
-        border-radius: 0.5rem;
-        background: var(--Foundation-FOSS-Mint-foss-mint-100, #B2E9C8);
-        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-    }
-
-    .is-must-attend > p{
-        margin: 0;
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        letter-spacing: -0.035rem;
-        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-    }
-
-    .upcoming-event-card-footer{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-    }
-
-    .event-location{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.31rem;
-        color: var(--Foundation-Open-Gray-open-gray-200, #989898);
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 115%; /* 1.00625rem */
-        letter-spacing: -0.035rem;
-    }
-
-    .event-location:hover{
-        text-decoration: none;
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-
-    }
-
-    .event-details{
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        color: var(--gray-800, #383838);
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 115%; /* 1.00625rem */
-        letter-spacing: -0.035rem;
-    }
-
-    .event-details:hover{
-        text-decoration: none;
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-    }
-
-    @media screen and (max-width: 1300px){
-
-        .events-block{
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 2rem;
-        }
-
+        color: hsl(var(--clr-foss-mint-500));
     }
 
     @media screen and (max-width: 768px) {
@@ -202,25 +50,6 @@
 
         }
 
-        .events-card-block{
-            grid-template-columns: 1fr;
-
-        }
-
-        .events-block{
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-            width: 100%
-        }
-
-        .events-list-container h2{
-            font-size: 1.5rem;
-        }
-
-        .events-subsection{
-            gap: 3rem;
-        }
-
     }
 
 </style>
@@ -228,13 +57,12 @@
 
 
 <div class="events-list-section container">
+
     <div class="events-list-container">
 
-        <div class="events-subsection">
-
-            <div class="upcoming-events-header">
-                <h2>Upcoming Events</h2>
-                <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
+        <div class="upcoming-events-header">
+            <h5>Upcoming Events</h5>
+            <a class="view-events-link" href="{{events_page_link}}">View all Events ↗</a>
         </div>
 
         {% from "fossunited/templates/macros/event_card.html" import event_card %}
@@ -244,8 +72,6 @@
                 {{ event_card(event) }}
             {% endfor %}
         </div>
-
-
 
     </div>
 </div>

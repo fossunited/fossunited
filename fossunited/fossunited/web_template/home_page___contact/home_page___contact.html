@@ -34,24 +34,10 @@
         flex-direction: column;
     }
 
-    .contact-container h3{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.5rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%; /* 1.5rem */
-        letter-spacing: -0.09rem;
-    }
 
     .contact-container p{
-        margin:0;
-        color: var(--Gray-500, #667085);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 140%; /* 1.4rem */
-        letter-spacing: -0.02rem;
+        color: hsl(var(--clr-gray-500));
+        line-height: 1.5;
 
     }
 
@@ -71,14 +57,14 @@
     }
 
     .vertical-separator{
-        border-left: 0.07rem solid var(--Gray-500, #667085);
+        border-left: 0.07rem solid hsl(var(--clr-gray-500));
         height: 11.25rem;
 
     }
 
     .horizontal-separator{
         width: 100%;
-        background-color: var(--Gray-500, #667085);
+        background-color: hsl(var(--clr-gray-500));
         display: none;
     }
 
@@ -120,13 +106,13 @@
 
         <div class="newsletter-block">
             <div class="newsletter-details">
-                <h3>Newsletter</h3>
+                <h5>Newsletter</h5>
                 <p>Monthly digest of the latest news and updates about FOSS grants, events and mon school.
                     Subscribe to stay updated and get news from us directly in your inbox.
                 </p>
             </div>
 
-            <button class="btn-primary">
+            <button class="primary-button">
                 <a href="{{newsletter_subscribe_link}}">Subscribe</a>
             </button>
 
@@ -138,7 +124,7 @@
 
         <div class="contacts-block">
 
-            <h3>Get in Touch</h3>
+            <h5>Get in Touch</h5>
             <p>
                 Write to us at <a href="mailto:{{email_1}}">{{email_1}}</a> or post a message on the <a href="https://forum.fossunited.org">forum</a>.<br/><br/>
 
