@@ -66,7 +66,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?"
@@ -126,7 +126,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-27 15:35:00.416757",
+ "modified": "2024-03-28 15:38:03.136622",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP",
