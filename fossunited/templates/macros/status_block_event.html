@@ -10,8 +10,19 @@
             <lottie-player src="/assets/fossunited/animation/live-animation-blob.json" background="transparent"  speed="1" loop autoplay></lottie-player>
             {% endif %}
         </div>
-        <div class="status-text" style="{% if status_block_content.is_published or status_block_content.has_submission %} color: hsl(var(--clr-foss-mint-500));{% endif %}">
-            {{ status_block_content.block_heading }}
+        <div class="d-flex flex-column">
+            <div class="status-text" style="{% if status_block_content.is_published or status_block_content.has_submission %} color: hsl(var(--clr-foss-mint-500));{% endif %}">
+                {{ status_block_content.block_heading }}
+            </div>
+            {% if status_block_content.is_published %}
+                <div class="d-flex align-items-center copy-url-clipboard">
+                    Share this form with the community!
+                    <button class="copy-to-clipboard" data-url="{{ status_block_content.form_route }}" onclick="copyLinkToClipboard(this)" onmouseout="resetTooltip()">
+                        <span class="tooltip-text">Copy Link</span>
+                        <i class="ti ti-copy"></i>
+                    </button>
+                </div>
+            {% endif %}
         </div>
     </div>
     <div class="status--buttons-section">

@@ -122,6 +122,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "FOSS Event RSVP", {"event": self.name}
             )
             rsvp_status_block |= {
+                "form_route": rsvp_form.route,
                 "has_doc": True,
                 "block_heading": "RSVP Form is Live!",
                 "docname": rsvp_form.name,
@@ -193,6 +194,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "FOSS Event CFP", {"event": self.name}
             )
             cfp_status_block |= {
+                "form_route": cfp_form.route,
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
