@@ -2473,6 +2473,7 @@ h6{
 
     .status--buttons-section{
         flex-direction: column;
+        gap: 0.5rem;
     }
 
     .recent-submissions-section{
@@ -2564,6 +2565,12 @@ h6{
     }
     .header--title-cta-parent {
         flex-direction: column;
+    }
+
+    .submission-status-block{
+        flex-direction: column;
+        gap: 1rem;
+        align-items: initial;
     }
 
     /* PROFILES */
