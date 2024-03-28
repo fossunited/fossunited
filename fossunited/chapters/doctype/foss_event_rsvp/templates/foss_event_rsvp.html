@@ -74,7 +74,9 @@
 {% block page_script %}
 <script>
     $(document).ready(() => {
-        check_if_logged_in();
+        if (!check_if_logged_in(message="You need to be logged in and have a FOSS Profile to RSVP for the event. Please login or create an account.")){
+            return
+        }
         check_if_profile_complete();
         set_mandatory_asterisk();
 

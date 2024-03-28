@@ -72,7 +72,7 @@
     }
 
     function check_if_submitter() {
-        if (!check_if_logged_in()){
+        if (!check_if_logged_in(message="You are not authorized to edit this form. Please login or create an account.")){
             return;
         };
         frappe.call({
