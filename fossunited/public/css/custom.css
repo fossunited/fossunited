@@ -354,18 +354,17 @@ h6{
     align-items: center;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    box-shadow: inset 0px 0px 0px 0.5px hsl(var(--clr-foss-mint-500));
+    box-shadow: inset 0px 0px 0px 1px hsl(var(--clr-foss-mint-500));
     transition: box-shadow 0.2s ease-in-out;
-    background: var(--neutral-white, #FFF);
+    background: white;
     color: hsl(var(--clr-foss-mint-500));
     font-size: var(--text-lg);
     font-weight: 450;
 }
 
 .secondary-button:hover{
-    box-shadow: inset 0px 0px 0px 1.5px hsl(var(--clr-foss-mint-500));
-    background: var(--neutral-white, #FFF);
     cursor: pointer;
+    box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
 }
 
 .danger-button{
@@ -2474,6 +2473,7 @@ h6{
 
     .status--buttons-section{
         flex-direction: column;
+        gap: 0.5rem;
     }
 
     .recent-submissions-section{
@@ -2565,5 +2565,39 @@ h6{
     }
     .header--title-cta-parent {
         flex-direction: column;
+    }
+
+    .submission-status-block{
+        flex-direction: column;
+        gap: 1rem;
+        align-items: initial;
+    }
+
+    /* PROFILES */
+    .header-section{
+        border-radius: 0;
+    }
+
+    .profile-container .container{
+        margin: 0;
+        padding: 0;
+    }
+
+    .profile-detail-section{
+        display: flex;
+        flex-direction: column;
+        padding: 1rem 1.5rem 0 1.5rem;
+    }
+
+    .header-section--bio{
+        padding: 0.5rem 2rem;
+    }
+
+    .header-section--socials{
+        padding: 0.5rem 2rem;
+    }
+
+    .profile-content-section{
+        border-radius: 0;
     }
 }

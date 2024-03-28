@@ -78,3 +78,27 @@ def post_review(submission, to_approve, remarks):
         },
     )
     submission_doc.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def publish_form(doctype, docname):
+    """
+    Used to Publish RSVP and CFP forms by the user.
+    This bypasses the permissions required to publish the form.
+    """
+    doc = frappe.get_doc(doctype, docname)
+    doc.is_published = 1
+    doc.save(ignore_permissions=True)
+    return doc
+
+
+@frappe.whitelist()
+def unpublish_form(doctype, docname):
+    """
+    Used to Unpublish RSVP and CFP forms by the user.
+    This bypasses the permissions required to unpublish the form.
+    """
+    doc = frappe.get_doc(doctype, docname)
+    doc.is_published = 0
+    doc.save(ignore_permissions=True)
+    return doc

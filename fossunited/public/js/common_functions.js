@@ -63,12 +63,10 @@ function publish_form(e) {
 	let docname = $(e).data("docname");
 	let parent = $(e).data("parent");
 	frappe.call({
-		method: "frappe.client.set_value",
+		method: "fossunited.fossunited.forms.publish_form",
 		args: {
-			doctype: `${doctype}`,
-			name: `${docname}`,
-			fieldname: "is_published",
-			value: 1,
+			doctype: doctype,
+			docname: docname,
 		},
 		callback: (r) =>{
 			$(`#${parent}`).load(window.location.href + ` #${parent}` );
@@ -85,12 +83,10 @@ function unpublish_form(e){
 	let docname = $(e).data("docname");
 	let parent = $(e).data("parent");
 	frappe.call({
-		method: "frappe.client.set_value",
+		method: "fossunited.fossunited.forms.unpublish_form",
 		args: {
-			doctype: `${doctype}`,
-			name: `${docname}`,
-			fieldname: "is_published",
-			value: 0,
+			doctype: doctype,
+			docname: docname,
 		},
 		callback: (r) =>{
 			$(`#${parent}`).load(window.location.href + ` #${parent}` );
@@ -143,15 +139,21 @@ function validate_mandatory_fields(){
 	return true;
 }
 
-function check_if_logged_in(){
+function check_if_logged_in(message="You need to be logged in to perform this action."){
 	if (frappe.session.user == 'Guest') {
 		frappe.msgprint({
-			message:__('You need to be logged in to edit this form.'),
-			indicator:'red'
-		}, 2);
+			title: __('Login Required'),
+			message: message + '<hr> Redirecting to login page in 7 seconds.',
+			primary_action:{
+				action: () => {
+					window.location.href = `/login?redirect-to=${window.location.pathname}`;
+				},
+				label: __('Go to Login')
+			},
+		});
 		setTimeout(() => {
 			window.location.href = `/login?redirect-to=${window.location.pathname}`;
-		}, 2000);
+		}, 7000);
 		return false;
 	}
 	return true;
@@ -163,12 +165,18 @@ function check_if_profile_complete(){
 	}).then(r => {
 		if (!r.message){
 			frappe.msgprint({
-				message:__('You need to complete your profile to edit this form.'),
-				indicator:'red'
-			}, 2);
+				title:__('FOSS Profile Required!'),
+				message:__('You need to complete your profile to access this form. <br> Redirecting in 7 seconds.'),
+				primary_action:{
+					action: () => {
+						window.location.href = `/create-foss-profile?redirect-to=${window.location.pathname}`;
+					},
+					label: __('Complete your profile ->')
+				},
+			});
 			setTimeout(() => {
 				window.location.href = `/create-foss-profile?redirect-to=${window.location.pathname}`;
-			}, 2000);
+			}, 7000);
 			return false;
 		}
 		return true;
