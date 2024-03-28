@@ -354,18 +354,17 @@ h6{
     align-items: center;
     gap: 0.5rem;
     border-radius: 0.5rem;
-    box-shadow: inset 0px 0px 0px 0.5px hsl(var(--clr-foss-mint-500));
+    box-shadow: inset 0px 0px 0px 1px hsl(var(--clr-foss-mint-500));
     transition: box-shadow 0.2s ease-in-out;
-    background: var(--neutral-white, #FFF);
+    background: white;
     color: hsl(var(--clr-foss-mint-500));
     font-size: var(--text-lg);
     font-weight: 450;
 }
 
 .secondary-button:hover{
-    box-shadow: inset 0px 0px 0px 1.5px hsl(var(--clr-foss-mint-500));
-    background: var(--neutral-white, #FFF);
     cursor: pointer;
+    box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
 }
 
 .danger-button{
