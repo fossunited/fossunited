@@ -28,9 +28,9 @@
   "about_talk_section",
   "is_first_talk",
   "talk_title",
-  "category",
-  "talk_duration",
   "talk_reference",
+  "talk_duration",
+  "category",
   "column_break_mhza",
   "talk_description",
   "section_break_ilij",
@@ -130,7 +130,7 @@
    "fieldname": "talk_duration",
    "fieldtype": "Select",
    "label": "Talk Duration",
-   "options": "5 min\n10 min\n15 min\n20 min\n25 min\n30 min\n> 30 min"
+   "options": "10 min\n20 min\n30 min\n> 30 min"
   },
   {
    "fieldname": "talk_description",
@@ -151,16 +151,16 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Category",
-   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther",
-   "reqd": 1
+   "label": "Talk Category",
+   "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther"
   },
   {
    "description": "Link relevant references for your talk.",
    "fieldname": "talk_reference",
    "fieldtype": "Data",
    "label": "Talk Reference",
-   "options": "URL"
+   "options": "URL",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ilij",
@@ -209,9 +209,10 @@
   },
   {
    "default": "0",
+   "description": "This helps us to curate our agenda better.",
    "fieldname": "is_first_talk",
    "fieldtype": "Check",
-   "label": "Is First Talk?"
+   "label": "Is this your first talk?"
   },
   {
    "fieldname": "meta_info_section",
@@ -263,7 +264,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-19 16:57:44.290297",
+ "modified": "2024-03-29 16:27:15.421131",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
