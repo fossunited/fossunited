@@ -98,7 +98,10 @@ def get_event_navbar_items(
 def is_user_team_member(chapter, user):
     members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
     for member in members:
-        return member.email == user
+        if member.email == user:
+            return True
+
+    return False
 
 
 def hide_email(email):
