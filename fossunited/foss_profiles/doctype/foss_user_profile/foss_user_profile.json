@@ -2,7 +2,7 @@
  "actions": [],
  "allow_guest_to_view": 1,
  "allow_rename": 1,
- "autoname": "field:username",
+ "autoname": "hash",
  "creation": "2023-07-03 02:44:46.631269",
  "default_view": "List",
  "doctype": "DocType",
@@ -272,11 +272,11 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-30 12:13:59.842790",
+ "modified": "2024-03-30 23:56:40.140463",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
- "naming_rule": "By fieldname",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
