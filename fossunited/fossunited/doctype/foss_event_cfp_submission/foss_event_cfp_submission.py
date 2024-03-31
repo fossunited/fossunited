@@ -50,7 +50,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.already_reviewed = self.check_if_already_reviewed(
             context
         )
-        context.review_templates = self.get_review_templates()
+        context.no_cache = 1
 
     def get_navbar_items(self, context):
         nav_items = [

@@ -160,9 +160,11 @@
                     <div class="speaker--name">{{ speaker.full_name }}</div>
                     <div class="speaker--talk-title">{{ speaker.talk_title | truncate(12, True) }}</div>
                 </div>
+                {% if speaker.talk_category %}
                 <div class="speaker--talk-category">
                     {{ tag(speaker.talk_category, font_size="var(--text-sm)", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))') }}
                 </div>
+                {% endif %}
             </a>
             {% endfor %}
         </div>
@@ -196,19 +198,21 @@
             <h5>Submitted Proposals</h5>
             <div class="submitted-proposals-list">
                 {% for proposal in user_cfp_submissions %}
-                <div onClick="window.location.href='/{{proposal.route}}'" class="cfp-submission-card">
+                <div class="cfp-submission-card">
                     <div class="cfp-submission-left">
                         <div class="cfp-submission--title-status">
                             <div class="submission--title">{{ proposal.talk_title }}</div>
                             <div class="submission--status">{{ proposal.status | make_badge }}</div>
                         </div>
                         <div class="submission--category-time">
+                            {% if proposal.category %}
                             <div class="submission--category">
                                 <i class="ti ti-hash"></i>
                                 <span>
                                     {{ proposal.category }}
                                 </span>
                             </div>
+                            {% endif %}
                             <div class="submission--time">
                                 <i class="ti ti-hourglass-low"></i>
                                 <span>
@@ -217,7 +221,10 @@
                             </div>
                         </div>
                     </div>
-                    <button class="dark-button" onClick="event.stopPropagation(); window.location.href='/{{proposal.route}}/edit'">Edit CFP</button>
+                    <div class="d-flex button-group">
+                        <button class="mr-2 w-full" onclick="window.location.href='/{{proposal.route}}'">View Proposal</button>
+                        <button class="dark-button w-full" onClick="event.stopPropagation(); window.location.href='/{{proposal.route}}/edit'">Edit CFP</button>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
@@ -239,12 +246,14 @@
                         </div>
                     </div>
                     <div class="submission--category-time">
+                        {% if proposal.category %}
                         <div class="submission--category">
                             <i class="ti ti-hash"></i>
                             <span>
                                 {{ proposal.category }}
                             </span>
                         </div>
+                        {% endif %}
                         <div class="submission--time">
                             <i class="ti ti-hourglass-low"></i>
                             <span>
