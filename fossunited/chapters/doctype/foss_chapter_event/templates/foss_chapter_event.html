@@ -160,9 +160,11 @@
                     <div class="speaker--name">{{ speaker.full_name }}</div>
                     <div class="speaker--talk-title">{{ speaker.talk_title | truncate(12, True) }}</div>
                 </div>
+                {% if speaker.talk_category %}
                 <div class="speaker--talk-category">
                     {{ tag(speaker.talk_category, font_size="var(--text-sm)", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))') }}
                 </div>
+                {% endif %}
             </a>
             {% endfor %}
         </div>
@@ -203,12 +205,14 @@
                             <div class="submission--status">{{ proposal.status | make_badge }}</div>
                         </div>
                         <div class="submission--category-time">
+                            {% if proposal.category %}
                             <div class="submission--category">
                                 <i class="ti ti-hash"></i>
                                 <span>
                                     {{ proposal.category }}
                                 </span>
                             </div>
+                            {% endif %}
                             <div class="submission--time">
                                 <i class="ti ti-hourglass-low"></i>
                                 <span>
@@ -242,12 +246,14 @@
                         </div>
                     </div>
                     <div class="submission--category-time">
+                        {% if proposal.category %}
                         <div class="submission--category">
                             <i class="ti ti-hash"></i>
                             <span>
                                 {{ proposal.category }}
                             </span>
                         </div>
+                        {% endif %}
                         <div class="submission--time">
                             <i class="ti ti-hourglass-low"></i>
                             <span>

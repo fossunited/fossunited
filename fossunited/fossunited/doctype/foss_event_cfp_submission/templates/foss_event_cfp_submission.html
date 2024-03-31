@@ -27,11 +27,13 @@
 {% macro render_cfp_header() %}
     <div class="cfp-header-container">
         <div class="submission--category-time">
+            {% if doc.category %}
             <div class="cfp-header--category">
                 <i class="ti ti-hash"></i>
                 <span>{{ doc.category }}</span>
             </div>
             <i class="ti ti-minus-vertical"></i>
+            {% endif %}
             <div class="cfp-header--duration">
                 <i class="ti ti-hourglass-low"></i>
                 <span>{{ doc.talk_duration }}</span>
