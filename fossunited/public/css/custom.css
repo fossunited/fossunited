@@ -358,7 +358,6 @@ h6{
     transition: box-shadow 0.2s ease-in-out;
     background: white;
     color: hsl(var(--clr-foss-mint-500));
-    font-size: var(--text-lg);
     font-weight: 450;
 }
 
@@ -1715,10 +1714,7 @@ h6{
     transition: box-shadow 0.2s ease-in-out;
 }
 
-.cfp-submission-card:hover{
-    box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-100));
-    text-decoration: none;
-}
+
 
 .cfp-submission-left{
     display: flex;
@@ -2587,6 +2583,7 @@ h6{
 
     .status--buttons-section{
         flex-direction: row;
+        justify-content: center;
     }
 
     .events-grid{
@@ -2625,6 +2622,37 @@ h6{
         align-items: initial;
     }
 
+    .cfp-submission-card{
+        flex-direction: column;
+        align-items: baseline;
+        gap: 1rem;
+    }
+
+    .cfp-submission-card .button-group{
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+
+    .cfp-submission-card .button-group > *{
+        width: 100%;
+    }
+
+
+    /* CFP */
+
+    .cfp-header--speaker-status-like{
+        flex-direction: column;
+        align-items: baseline;
+        gap: 1rem;
+    }
+
+    .cfp-header--like-edit-container{
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+    }
     /* PROFILES */
     .header-section{
         border-radius: 0;

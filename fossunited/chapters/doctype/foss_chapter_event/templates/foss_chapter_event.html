@@ -196,7 +196,7 @@
             <h5>Submitted Proposals</h5>
             <div class="submitted-proposals-list">
                 {% for proposal in user_cfp_submissions %}
-                <div onClick="window.location.href='/{{proposal.route}}'" class="cfp-submission-card">
+                <div class="cfp-submission-card">
                     <div class="cfp-submission-left">
                         <div class="cfp-submission--title-status">
                             <div class="submission--title">{{ proposal.talk_title }}</div>
@@ -217,7 +217,10 @@
                             </div>
                         </div>
                     </div>
-                    <button class="dark-button" onClick="event.stopPropagation(); window.location.href='/{{proposal.route}}/edit'">Edit CFP</button>
+                    <div class="d-flex button-group">
+                        <button class="mr-2 w-full" onclick="window.location.href='/{{proposal.route}}'">View Proposal</button>
+                        <button class="dark-button w-full" onClick="event.stopPropagation(); window.location.href='/{{proposal.route}}/edit'">Edit CFP</button>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
