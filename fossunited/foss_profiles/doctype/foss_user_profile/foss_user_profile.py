@@ -6,6 +6,16 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSUserProfile(WebsiteGenerator):
+    def validate(self):
+        self.validate_username()
+        self.set_route()
+
+    def validate_username(self):
+        self.username = self.username.lower().replace("-", "_")
+
+    def set_route(self):
+        self.route = self.username.lower().replace("-", "_")
+
     def get_context(self, context):
         experiences_dict = {}
         for experience in self.experience:
@@ -15,6 +25,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 experience.as_dict()
             )
         context.experiences_dict = experiences_dict
+        context.no_cache = 1
 
     def on_trash(self):
         frappe.delete_doc("User", self.user, force=True)

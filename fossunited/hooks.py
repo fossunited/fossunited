@@ -177,13 +177,14 @@ signup_form_template = "fossunited.plugins.show_custom_signup"
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-# 	"*": {
-# 		"on_update": "method",
-# 		"on_cancel": "method",
-# 		"on_trash": "method"
-# 	}
-# }
+doc_events = {
+    "User": {
+        "after_insert": [
+            "fossunited.fossunited.user_utils.set_unique_username",
+            "fossunited.fossunited.user_utils.create_profile_on_user_create",
+        ],
+    }
+}
 
 # Scheduled Tasks
 # ---------------

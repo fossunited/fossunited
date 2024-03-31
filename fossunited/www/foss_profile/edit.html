@@ -3,8 +3,18 @@
 {% block page_content %}
 <div class="dashboard-container">
     <div class="container">
-        {% from 'fossunited/templates/macros/title_with_button.html' import title_with_button %}
-        {{ title_with_button('Edit Profile', button={'text': 'Update', 'method': 'updateProfile', 'icon':'ti ti-edit', 'id': 'update-foss-profile'},) }}
+        <div class="header-with-back d-flex align-items-center justify-content-between">
+            <div class="d-flex">
+                <button style="border: 0;" onclick="window.location.pathname=`/${$('#username').val()}`">
+                    <i class="ti ti-arrow-left" style="font-size: 24px;"></i>
+                </button>
+                <h4 class="ml-2">Edit Profile</h4>
+            </div>
+            <button style="font-size: var(--text-sm);" id="update-foss-profile">
+                <i class="ti ti-device-floppy"></i>
+                <span>Update Profile</span>
+            </button>
+        </div>
         {{ render_profile_details() }}
     </div>
 </div>
@@ -44,6 +54,13 @@
                 <div class="mt-2 mb-4">
                     <label for="full_name" class="field-title">Full Name</label>
                     <input type="text" name="full_name" value="{{ foss_user.full_name or '' }}" class="form-control" id="full_name">
+                </div>
+                <div class="form-group d-flex flex-column ">
+                    <label class="form-label field-title" for="username">Username</label>
+                    <input class="form-control" type="text" name="username" id="username" value="{{ foss_user.username or '' }}" required>
+                    <div id="username-status" class="mt-2" style="font-size: var(--text-sm);">
+
+                    </div>
                 </div>
                 <div class="my-4">
                     <label for="email" class="field-title">Email</label>
@@ -185,6 +202,14 @@
             })
         });
 
+        $('#username').on('input', () => {
+            if($('#username').val() == originalFieldValues['username']){
+                $('#username-status').html('');
+                return
+            }
+            showUsernameStatus();
+        });
+
         $("#update-foss-profile").click((e) => {
             updateProfile(e)
         })
@@ -211,6 +236,53 @@
             }
         }
     });
+
+    function showUsernameStatus(){
+        let username = $('#username').val();
+        let messages = [
+            "Username must be at least 3 characters long.",
+            "Username can only contain letters, numbers, underscores and dots.",
+            "Username is available.",
+            "Username is not available.",
+            "Start typing to check availability."
+        ]
+        if(username.length > 0){
+            if (username.length < 3) {
+                $('#username-status').html(messages[0]);
+                $('#username-status').css("color", "red");
+                return [false, messages[0]];
+            }
+            if(!/^[a-zA-Z0-9_\.]+$/.test(username)){
+                $('#username-status').html(messages[1]);
+                $('#username-status').css("color", "red");
+                return [false, messages[1]];
+            }
+            frappe.call({
+                method: "fossunited.fossunited.utils.check_username_availability",
+                args: {
+                    username: username,
+                },
+                callback: function(r) {
+                    if(!r.message){
+                        $('#username-status').html(messages[2]);
+                        $('#username-status').css("color", "green");
+                        return [true, messages[2]];
+                    }else{
+                        $('#username-status').html(messages[3]);
+                        $('#username-status').css("color", "red");
+                        return [false, messages[3]];
+                    }
+                }
+            });
+            return [true, messages[2]];
+        }
+        else{
+            $('#username-status').html(messages[4]);
+            $('#username-status').css("color", "inherit");
+            return [false, messages[4]];
+        }
+    }
+
 
     function getOriginalValues (){
         let originalFieldValues = $("input, textarea, .ql-container").serializeArray().reduce(function(obj, item) {
@@ -249,7 +321,7 @@
                     indicator:'green'
                 }, 5);
                 setTimeout(() => {
-                    window.location.reload();
+                    window.location.pathname = `${$('#username').val()}/edit-profile`;
                 }, 2000);
             }
         })
