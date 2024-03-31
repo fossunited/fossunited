@@ -20,7 +20,7 @@
  "list_columns": [],
  "login_required": 1,
  "max_attachment_size": 0,
- "modified": "2024-03-29 16:19:51.773330",
+ "modified": "2024-04-01 00:02:58.629104",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "create-new-cfp",
@@ -197,34 +197,6 @@
    "options": "FOSS Custom Question",
    "read_only": 0,
    "reqd": 0,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 0,
-   "description": "Add a list of reviewers for CFP forms.",
-   "fieldname": "",
-   "fieldtype": "Section Break",
-   "hidden": 0,
-   "label": "CFP Reviewers",
-   "max_length": 0,
-   "max_value": 0,
-   "options": "",
-   "read_only": 0,
-   "reqd": 0,
-   "show_in_filter": 0
-  },
-  {
-   "allow_read_on_all_link_options": 0,
-   "description": "Find reviewers by their username.",
-   "fieldname": "cfp_reviewers",
-   "fieldtype": "Table",
-   "hidden": 0,
-   "label": "",
-   "max_length": 0,
-   "max_value": 0,
-   "options": "FOSS Event CFP Reviewer",
-   "read_only": 0,
-   "reqd": 1,
    "show_in_filter": 0
   }
  ]
