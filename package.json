@@ -7,6 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
+    "postinstall": "cd dashboard && yarn install",
+    "dev": "cd dashboard && yarn dev",
     "build": "npx tailwindcss -i ./fossunited/templates/base.css -o ./fossunited/public/css/styles.css",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
