@@ -8,6 +8,25 @@ from fossunited.fossunited.forms import create_submission
 
 
 class FOSSEventCFP(WebsiteGenerator):
+    def before_insert(self):
+        self.assign_reviewers()
+
+    def assign_reviewers(self):
+        reviewers = frappe.get_single(
+            "FOSS Global CFP Review Settings"
+        ).members
+        print(reviewers)
+
+        for reviewer in reviewers:
+            self.append(
+                "cfp_reviewers",
+                {
+                    "reviewer": reviewer.profile,
+                    "email": reviewer.email,
+                    "full_name": reviewer.full_name,
+                },
+            )
+
     def before_save(self):
         self.set_route()
         self.enable_cfp_tab()

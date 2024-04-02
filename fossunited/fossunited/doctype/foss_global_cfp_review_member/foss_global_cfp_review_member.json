@@ -1,0 +1,64 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-02 13:34:16.725140",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "profile",
+  "user",
+  "column_break_pwxv",
+  "full_name",
+  "email"
+ ],
+ "fields": [
+  {
+   "fieldname": "profile",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Profile",
+   "options": "FOSS User Profile",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "profile.user",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_pwxv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "profile.email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "profile.full_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-04-02 13:37:34.609404",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "FOSS Global CFP Review Member",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
