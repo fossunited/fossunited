@@ -58,6 +58,10 @@ web_include_js = ["website.bundle.js", "autocomp.bundle.js"]
 # Add all simple route bench rules here
 website_route_rules = [
     {
+        "from_route": "/dashboard/<path:app_path>",
+        "to_route": "dashboard",
+    },
+    {
         "from_route": "/events/<event>/cfp/new",
         "to_route": "/cfp/create/new",
     },
@@ -275,10 +279,3 @@ doc_events = {
 # auth_hooks = [
 # 	"fossunited.auth.validate"
 # ]
-
-website_route_rules = [
-    {
-        "from_route": "/dashboard/<path:app_path>",
-        "to_route": "dashboard",
-    },
-]
