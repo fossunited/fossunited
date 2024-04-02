@@ -14,6 +14,26 @@ BASE_DATE = datetime.now().replace(
 
 
 class FOSSChapterEvent(WebsiteGenerator):
+    def before_insert(self):
+        self.copy_team_members()
+
+    def copy_team_members(self):
+        if not self.chapter:
+            return
+
+        chapter_team_members = frappe.get_doc(
+            "FOSS Chapter", self.chapter
+        ).chapter_members
+
+        for member in chapter_team_members:
+            self.append(
+                "event_members",
+                {
+                    "member": member.chapter_member,
+                    "role": member.role,
+                },
+            )
+
     def before_save(self):
         self.set_route()
 

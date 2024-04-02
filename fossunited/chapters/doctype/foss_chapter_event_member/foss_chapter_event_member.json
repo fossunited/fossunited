@@ -40,13 +40,13 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Role",
-   "options": "Volunteer\nChapter Lead\nCore Team Member"
+   "options": "Volunteer\nCore Team Member\nLead\nGraphic Designer\nContent Writer\nMarketing"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-07 02:15:03.680970",
+ "modified": "2024-04-02 01:52:32.092120",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event Member",
