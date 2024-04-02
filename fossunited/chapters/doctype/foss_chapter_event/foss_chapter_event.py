@@ -30,7 +30,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event_members",
                 {
                     "member": member.chapter_member,
+                    "full_name": member.full_name,
                     "role": member.role,
+                    "email": member.email,
                 },
             )
 
