@@ -7,3 +7,6 @@ node_modules
 __pycache__
 fossunited/public/dist
 /fossunited/public/css/styles.css
+/fossunited/public/dashboard
+/fossunited/public/frontend
+/fossunited/www/dashboard.html

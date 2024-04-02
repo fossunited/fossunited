@@ -9,7 +9,9 @@
   "scripts": {
     "postinstall": "cd dashboard && yarn install",
     "dev": "cd dashboard && yarn dev",
-    "build": "npx tailwindcss -i ./fossunited/templates/base.css -o ./fossunited/public/css/styles.css",
+    "build": "yarn build-tailwind && yarn build-dashboard",
+    "build-tailwind": "npx tailwindcss -i ./fossunited/templates/base.css -o ./fossunited/public/css/styles.css",
+    "build-dashboard": "cd dashboard && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
