@@ -203,6 +203,14 @@
                     </div>
                 </div>
         </div>
+        {% if doc.is_anonymous %}
+            <div class="header-section--anonymous">
+                <i class="ti ti-eye-off"></i>
+                <span>
+                    Your profile is anonymous
+                </span>
+            </div>
+        {% endif %}
         {% if doc.bio %}
         <div class="header-section--bio">
             {{doc.bio}}

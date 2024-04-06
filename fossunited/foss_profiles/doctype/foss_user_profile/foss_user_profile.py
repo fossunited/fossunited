@@ -17,6 +17,13 @@ class FOSSUserProfile(WebsiteGenerator):
         self.route = self.username.lower().replace("-", "_")
 
     def get_context(self, context):
+        if self.is_anonymous and frappe.session.user not in [
+            "Administrator",
+            self.user,
+        ]:
+            frappe.redirect("/404")
+            return
+
         experiences_dict = {}
         for experience in self.experience:
             if experience.company not in experiences_dict:
