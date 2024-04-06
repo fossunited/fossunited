@@ -27,9 +27,9 @@
     </h6>
     <div class="anonymous-profile-section">
         <div class="d-flex">
-            <input class="form-control" role="switch" type="checkbox" name="is_anonymous" id="is_anonymous" {% if foss_user.is_anonymous %} checked {% endif %}>
+            <input class="form-control" role="switch" type="checkbox" name="is_private" id="is_private" {% if foss_user.is_private %} checked {% endif %}>
             <div>
-                <label class="form-check-label field-title" for="is_anonymous">Make my profile anonymous</label>
+                <label class="form-check-label field-title" for="is_private">Make My Profile Private</label>
                 <div>
                     <small>Checking this field will make your profile unavailable to others. You can still do the tasks that require profile creation.</small>
                 </div>
@@ -206,8 +206,8 @@
             if (e.target.className.includes('ql-editor')){
                 changedFields[$(e.target).parent().attr('id')] = e.target.innerHTML;
             }
-            else if(e.target.id == 'is_anonymous'){
-                changedFields['is_anonymous'] = e.target.checked ? 1 : 0;
+            else if(e.target.id == 'is_private'){
+                changedFields['is_private'] = e.target.checked ? 1 : 0;
             }
             else{
                 changedFields[e.target.id] = e.target.value;

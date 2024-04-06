@@ -11,7 +11,7 @@
  "field_order": [
   "meta_info_section",
   "is_published",
-  "is_anonymous",
+  "is_private",
   "column_break_jkxk",
   "route",
   "header_section",
@@ -269,9 +269,9 @@
   },
   {
    "default": "0",
-   "fieldname": "is_anonymous",
+   "fieldname": "is_private",
    "fieldtype": "Check",
-   "label": "Is Anonymous?"
+   "label": "Is Private?"
   }
  ],
  "has_web_view": 1,
@@ -279,7 +279,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-04-06 16:35:55.136354",
+ "modified": "2024-04-06 22:18:47.314419",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
