@@ -17,10 +17,10 @@ class FOSSUserProfile(WebsiteGenerator):
         self.route = self.username.lower().replace("-", "_")
 
     def get_context(self, context):
-        if self.is_private and frappe.session.user not in [
+        if self.is_private and frappe.session.user not in (
             "Administrator",
             self.user,
-        ]:
+        ):
             frappe.throw(
                 _("Profile Not Found"), frappe.DoesNotExistError
             )
