@@ -15,6 +15,7 @@
   "attendance_confirmed",
   "column_break_vctq",
   "linked_cfp",
+  "chapter",
   "event",
   "event_name",
   "submitted_by",
@@ -62,17 +63,15 @@
   {
    "fieldname": "submitted_by",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Submitted By",
    "options": "User"
   },
   {
+   "columns": 2,
    "fetch_from": "linked_cfp.event_name",
    "fieldname": "event_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Event Name"
   },
   {
@@ -115,6 +114,7 @@
    "label": "About Talk"
   },
   {
+   "columns": 3,
    "fieldname": "talk_title",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -139,6 +139,7 @@
    "reqd": 1
   },
   {
+   "columns": 2,
    "fieldname": "status",
    "fieldtype": "Select",
    "in_list_view": 1,
@@ -149,8 +150,6 @@
   {
    "fieldname": "category",
    "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
    "label": "Talk Category",
    "options": "\nFOSS\nHardware\nPolicy\nEducation\nCommunity\nSponsor\nPanel Discussion\nDiscussion\nDesign\nFOSS / GIS\nGov. / GIS\nGov.\nFOSS / Policy\nHardware / FOSS / Community\nFOSS project showcase\nOpening Note\nOther"
   },
@@ -258,13 +257,22 @@
    "fieldname": "approvability",
    "fieldtype": "Data",
    "label": "Approvability  %"
+  },
+  {
+   "columns": 2,
+   "fetch_from": "linked_cfp.chapter",
+   "fieldname": "chapter",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Chapter"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-29 16:27:15.421131",
+ "modified": "2024-04-08 15:11:27.572131",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -306,6 +314,8 @@
    "write": 1
   }
  ],
+ "search_fields": "submitted_by, event, event_name, chapter",
+ "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [
@@ -322,6 +332,7 @@
    "title": "Approved"
   }
  ],
+ "title_field": "talk_title",
  "track_changes": 1,
  "track_seen": 1
 }
