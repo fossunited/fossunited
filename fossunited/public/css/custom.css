@@ -1296,11 +1296,17 @@ h6{
     color: white;
     width: fit-content;
     border-radius: 0.3rem;
+    font-size: var(--text-sm);
 }
 
 .club-brand{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
     background: hsl(var(--clr-gray-100));
     color: hsl(var(--clr-code-night-800));
+    font-size: var(--text-base);
+    font-weight: var(--fw-semibold);
 }
 
 .club-brand > img {

@@ -40,6 +40,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         self.set_route()
 
     def get_context(self, context):
+        context.chapter = frappe.get_doc("FOSS Chapter", self.chapter)
         context.nav_items = self.get_navbar_items()
         context.sponsors_dict = self.get_sponsors()
         context.volunteers = self.get_volunteers()
