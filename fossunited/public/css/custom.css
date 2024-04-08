@@ -1303,6 +1303,32 @@ h6{
 }
 
 /* Common */
+.chapter-brand-block{
+    display: block;
+    padding: 0.5rem;
+    background: hsl(var(--clr-code-night-900));
+    color: white;
+    width: fit-content;
+    border-radius: 0.3rem;
+    font-size: var(--text-sm);
+}
+
+.club-brand{
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    background: hsl(var(--clr-gray-100));
+    color: hsl(var(--clr-code-night-800));
+    font-size: var(--text-base);
+    font-weight: var(--fw-semibold);
+}
+
+.club-brand > img {
+    height: 1.5rem;
+    width: auto;
+    aspect-ratio: 1;
+}
+
 .foss-banner-image{
     width: 100%;
     height: 18.75rem;
@@ -1523,7 +1549,7 @@ h6{
 }
 
 .header--event-title{
-    padding-top: 0.5rem;
+    padding-top: 1rem;
     font-size: var(--text-3xl);
     font-weight: var(--fw-bold);
     color: hsl(var(--clr-code-night-800));

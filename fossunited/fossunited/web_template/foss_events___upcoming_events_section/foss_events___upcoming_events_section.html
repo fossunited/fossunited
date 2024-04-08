@@ -12,7 +12,7 @@
     .events-list-container{
         display: flex;
         align-items: flex-start;
-        gap: 7rem;
+        gap: 2rem;
         flex-direction: column;
         width: 100%;
     }
@@ -66,7 +66,7 @@
         </div>
 
         {% from "fossunited/templates/macros/event_card.html" import event_card %}
-        {% set events = frappe.get_all("FOSS Chapter Event", fields=["event_name", "banner_image", "route", "must_attend", "event_location", "map_link", "event_start_date", "banner_image"], filters={"status": "Approved", "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=6, order_by='event_start_date') %}
+        {% set events = frappe.get_all("FOSS Chapter Event", fields=["event_name", "chapter", "banner_image", "route", "must_attend", "event_location", "map_link", "event_start_date", "banner_image"], filters={"status": "Approved", "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=6, order_by='event_start_date') %}
         <div class="events-grid-4">
             {% for event in events %}
                 {{ event_card(event) }}

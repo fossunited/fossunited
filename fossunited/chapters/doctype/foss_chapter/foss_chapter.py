@@ -58,6 +58,7 @@ class FOSSChapter(WebsiteGenerator):
             fields=[
                 "name",
                 "route",
+                "chapter",
                 "event_start_date",
                 "event_name",
                 "banner_image",
@@ -79,6 +80,7 @@ class FOSSChapter(WebsiteGenerator):
             fields=[
                 "name",
                 "route",
+                "chapter",
                 "event_start_date",
                 "event_name",
                 "banner_image",
