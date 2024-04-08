@@ -95,6 +95,7 @@
             const formData = $('.foss-form-body').serializeArray()
             const data = {}
 
+            data["linked_cfp"] = "{{ doc.name }}"
             formData.forEach((field) => {
                 data[field.name] = field.value
             })

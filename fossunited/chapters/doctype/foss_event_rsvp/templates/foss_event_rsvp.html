@@ -47,7 +47,7 @@
             <div class="foss-form-description">
                 {{ _("You have successfully RSVP'd for this event. If you need to make any changes, you can edit the rsvp form.") }}
             </div>
-            <button onclick="window.location.pathname+='/edit/{{submission}}'">Edit RSVP Response</button>
+            <button onclick="window.location.pathname+='/{{submission}}/edit'">Edit RSVP Response</button>
         </div>
     </div>
 {% endmacro %}
@@ -90,6 +90,7 @@
             const formData = $('.foss-form-body').serializeArray()
             const data = {}
 
+            data['linked_rsvp'] = '{{ doc.name }}'
             formData.forEach((field) => {
                 data[field.name] = field.value
             })

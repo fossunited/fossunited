@@ -19,8 +19,6 @@ class FOSSEventRSVP(WebsiteGenerator):
             self.is_published = 0
 
     def get_context(self, context):
-        frappe.cache().set_value("linked_rsvp", self.name)
-
         context.event = frappe.get_doc(
             "FOSS Chapter Event", self.event
         )
@@ -63,7 +61,6 @@ class FOSSEventRSVP(WebsiteGenerator):
                     "submitted_by": frappe.session.user,
                 },
             )
-            frappe.cache().set_value("submission", context.submission)
 
         context.no_cache = 1
 
@@ -109,7 +106,6 @@ class FOSSEventRSVP(WebsiteGenerator):
 def create_rsvp(fields):
     fields_dict = {
         "doctype": "FOSS Event RSVP Submission",
-        "linked_rsvp": frappe.cache().get_value("linked_rsvp"),
         "submitted_by": frappe.session.user,
     }
     fields_dict.update(json.loads(fields))
