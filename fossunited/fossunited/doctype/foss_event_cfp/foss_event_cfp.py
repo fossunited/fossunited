@@ -43,8 +43,7 @@ class FOSSEventCFP(WebsiteGenerator):
         )
 
     def get_context(self, context):
-        frappe.cache().set_value("linked_cfp", self.name)
-        context.submissions = get_cfp_submissions()
+        context.submissions = get_cfp_submissions(self.name)
         context.event = frappe.get_doc(
             "FOSS Chapter Event", self.event
         )
@@ -163,7 +162,6 @@ class FOSSEventCFP(WebsiteGenerator):
 def create_cfp_submission(fields):
     fields_dict = {
         "doctype": "FOSS Event CFP Submission",
-        "linked_cfp": frappe.cache().get_value("linked_cfp"),
         "submitted_by": frappe.session.user,
     }
     fields_dict.update(frappe.parse_json(fields))
@@ -171,13 +169,13 @@ def create_cfp_submission(fields):
 
 
 @frappe.whitelist()
-def get_cfp_submissions():
+def get_cfp_submissions(linked_cfp):
     submissions = frappe.get_all(
         "FOSS Event CFP Submission",
         fields=["*"],
         filters={
             "submitted_by": frappe.session.user,
-            "linked_cfp": frappe.cache().get_value("linked_cfp"),
+            "linked_cfp": linked_cfp,
         },
     )
     frappe.form_dict["submissions"] = submissions

@@ -34,6 +34,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "columns": 2,
    "fieldname": "submitted_by",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -56,11 +57,11 @@
    "fetch_from": "linked_rsvp.event",
    "fieldname": "event",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Event"
   },
   {
+   "columns": 3,
    "fetch_from": "linked_rsvp.chapter",
    "fieldname": "chapter",
    "fieldtype": "Data",
@@ -97,6 +98,7 @@
    "label": "Meta Info"
   },
   {
+   "columns": 3,
    "fetch_from": "linked_rsvp.event_name",
    "fieldname": "event_name",
    "fieldtype": "Data",
@@ -114,7 +116,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-19 16:57:43.974430",
+ "modified": "2024-04-08 14:57:50.796337",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
