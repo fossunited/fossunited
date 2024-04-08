@@ -1296,7 +1296,7 @@ h6{
     color: white;
     width: fit-content;
     border-radius: 0.3rem;
-    font-size: var(--text-sm);
+    font-size: var(--text-xs);
 }
 
 .club-brand{
