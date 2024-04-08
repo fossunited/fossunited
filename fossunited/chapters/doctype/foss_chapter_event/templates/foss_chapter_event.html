@@ -23,7 +23,7 @@
 {% macro header() %}
 <div class="container header-section-parent">
     <div class="header-section event-header">
-        <img src="{{ doc.banner_image or default_banner}}" alt="Cover Image" class="foss-banner-image header--banner">
+        <img src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png'}}" alt="Cover Image" class="foss-banner-image header--banner">
         <div class="header--title-cta-parent">
             <div>
                 {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
