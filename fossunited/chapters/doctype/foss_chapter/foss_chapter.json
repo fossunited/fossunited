@@ -30,6 +30,7 @@
   "email",
   "x",
   "linkedin",
+  "public_chat_group_url",
   "column_break_fifp",
   "facebook",
   "instagram",
@@ -213,6 +214,12 @@
    "fieldname": "represent_image",
    "fieldtype": "Attach Image",
    "label": "Representing Image"
+  },
+  {
+   "fieldname": "public_chat_group_url",
+   "fieldtype": "Data",
+   "label": "Public Chat Group URL",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
@@ -224,7 +231,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-03-19 17:00:14.600825",
+ "modified": "2024-04-08 15:38:44.262272",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
