@@ -1535,7 +1535,7 @@ h6{
 }
 
 .header--event-title{
-    padding-top: 0.5rem;
+    padding-top: 1rem;
     font-size: var(--text-3xl);
     font-weight: var(--fw-bold);
     color: hsl(var(--clr-code-night-800));
