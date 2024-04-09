@@ -20,11 +20,13 @@ class FOSSChapter(WebsiteGenerator):
                 break
 
     def set_route(self):
-        if self.chapter_type == "City Community":
-            self.route = f"{self.city.lower().replace(' ', '-')}"
-        else:
+        if self.chapter_type == "FOSS Club":
             self.route = (
                 f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
+            )
+        else:
+            self.route = (
+                f"{self.chapter_name.lower().replace(' ', '-')}"
             )
 
     def get_context(self, context):
