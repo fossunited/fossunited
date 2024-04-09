@@ -26,10 +26,12 @@
         <img src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png'}}" alt="Cover Image" class="foss-banner-image header--banner">
         <div class="header--title-cta-parent">
             <div>
+                {% if doc.chapter %}
                 {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
                 <a href="/{{chapter.route}}">
                     {{ chapter_branding_block(doc.chapter) }}
                 </a>
+                {% endif %}
                 <h1 class="header--event-title">{{ doc.event_name }}</h1>
             </div>
             {% if doc.paid_event %}

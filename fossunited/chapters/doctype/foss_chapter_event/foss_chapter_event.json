@@ -102,7 +102,6 @@
    "in_list_view": 1,
    "label": "Chapter",
    "options": "FOSS Chapter",
-   "reqd": 1,
    "search_index": 1
   },
   {
@@ -394,7 +393,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-04-09 01:01:23.465860",
+ "modified": "2024-04-09 14:09:56.324379",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
