@@ -51,22 +51,21 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Chapter Type",
-   "options": "City Community\nFOSS Club",
+   "options": "City Community\nFOSS Club\nConference",
    "reqd": 1
   },
   {
    "fieldname": "city",
    "fieldtype": "Link",
    "label": "City",
-   "options": "City",
-   "reqd": 1
+   "options": "City"
   },
   {
    "fieldname": "state",
    "fieldtype": "Link",
    "label": "State",
-   "options": "State",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.chapter_type!='Conference'",
+   "options": "State"
   },
   {
    "default": "India",
@@ -74,8 +73,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Country",
-   "options": "Country",
-   "reqd": 1
+   "options": "Country"
   },
   {
    "fieldname": "chapter_lead",
@@ -90,6 +88,7 @@
    "label": "Basic Information"
   },
   {
+   "depends_on": "eval:doc.chapter_type!='Conference' ",
    "fieldname": "location_section",
    "fieldtype": "Section Break",
    "label": "Location"
@@ -224,7 +223,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2024-03-19 17:00:14.600825",
+ "modified": "2024-04-09 14:51:49.487872",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
