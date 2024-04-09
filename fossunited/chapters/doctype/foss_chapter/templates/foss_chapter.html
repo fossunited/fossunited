@@ -22,7 +22,9 @@
             <img class="foss-banner-image header--banner" src="{{ doc.banner_image or default_banner}}" alt="Banner Image">
             <div class="header--img-title-cta-section">
                 <div class="header--img-title">
+                    {% if profile_img_src %}
                     <img src="{{ profile_img_src }}" alt="{{ doc.chapter_type }} Logo" class="header-profile-image ml-lg-6">
+                    {% endif %}
                     <h1 class="pt-2 header--title {% if doc.chapter_type == 'City Community' %} city-chapter-heading {% else %} chapter-heading {% endif %}">{{ doc.chapter_name }}</h1>
                 </div>
                 <!-- <div class="header--cta-section">
