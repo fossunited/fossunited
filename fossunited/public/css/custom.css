@@ -1032,6 +1032,20 @@ h6{
     margin: 0 0.5rem;
 }
 
+.header-section--anonymous{
+    display: flex;
+    align-items: center;
+    justify-items: center;
+    width: fit-content;
+    gap: 0.5rem;
+    border-radius: 1rem;
+    background-color: hsl(var(--clr-gray-200));
+    font-size: var(--text-sm);
+    padding: 0.5rem 1rem;
+    margin: 0rem 0.5rem 0.5rem 2.5rem;
+    font-weight: var(--fw-medium);
+}
+
 .header-section--bio{
     padding: 0.5rem 2.5rem;
 }
