@@ -35,9 +35,11 @@ class FOSSChapter(WebsiteGenerator):
                 "/assets/fossunited/images/chapter/city_profile.svg"
             )
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
-        else:
+        elif self.chapter_type == "FOSS Club":
             context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
+        else:
+            context.profile_img_src = None
 
         context.upcoming_events = self.get_upcoming_events()
         context.past_events = self.get_past_events()

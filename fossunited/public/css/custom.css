@@ -1378,10 +1378,9 @@ h6{
 
 .chapter-heading{
     padding: 1rem;
-    font-size: 1.5rem;
-    font-weight: 600;
+    font-size: var(--text-3xl);
+    font-weight: var(--fw-bold);
     line-height: 150%;
-    letter-spacing: -1px;
 }
 
 .events-grid-4{
