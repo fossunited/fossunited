@@ -114,7 +114,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "status": "Approved",
                 "attendance_confirmed": 1,
             },
-            fields=["talk_title", "category", "submitted_by"],
+            fields=["talk_title", "submitted_by"],
         )
         speakers = []
         for cfp in speaker_cfps:
@@ -125,7 +125,6 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": user.full_name,
                     "talk_title": cfp.talk_title,
-                    "talk_category": cfp.category,
                     "profile_picture": user.profile_photo
                     if user.profile_photo
                     else "/assets/fossunited/images/defaults/user_profile_image.png",
@@ -289,9 +288,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "name",
                 "route",
                 "talk_title",
-                "category",
                 "status",
-                "talk_duration",
             ],
         )
         return submissions or []
@@ -304,10 +301,8 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "name",
                 "route",
                 "talk_title",
-                "category",
                 "submitted_by",
                 "status",
-                "talk_duration",
             ],
             order_by="creation desc",
             limit=6,
