@@ -13,6 +13,33 @@ const routes = [
     path: '/account/login',
     component: () => import('@/pages/Login.vue'),
   },
+  {
+    name: 'Event',
+    path: '/event/:id',
+    component: () => import('@/pages/Event.vue'),
+  },
+  {
+    name: 'Chapter',
+    path: '/chapter/:id',
+    component: () => import('@/pages/Chapter.vue'),
+    children: [
+      {
+        path: '',
+        name: 'ChapterDetails',
+        component: () => import('@/pages/ChapterDetails.vue'),
+      },
+      {
+        path: 'events',
+        name: 'ChapterEvents',
+        component: () => import('@/pages/ChapterEvents.vue'),
+      },
+      {
+        path: 'members',
+        name: 'ChapterMembers',
+        component: () => import('@/pages/ChapterMembers.vue'),
+      },
+    ]
+  }
 ]
 
 let router = createRouter({

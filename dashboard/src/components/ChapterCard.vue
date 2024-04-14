@@ -11,6 +11,7 @@
                 :size="'sm'"
                 label="Manage"
                 iconRight="chevron-right"
+                @click="() => $router.push(`/chapter/${encodeURI(props.chapter.name)}`)"
             >
             </Button>
         </div>
