@@ -217,7 +217,15 @@
 
         {% if recent_cfp_submissions %}
         <div class="recent-submissions-section">
-            <h5>Recent Proposals</h5>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <h5>Recent Proposals</h5>
+                <a href="/{{doc.route}}/cfp/all">
+                    <span>
+                        View all Proposals
+                    </span>
+                    <i class="ti ti-arrow-right"></i>
+                </a>
+            </div>
             <div class="recent-proposals-grid">
                 {% for proposal in recent_cfp_submissions %}
                 <div onClick="window.location.href='/{{proposal.route}}'" class="recent-proposal-card">
