@@ -5,7 +5,7 @@
     </div>
     <div class="my-4">
         <router-link to="/" class=" p-2 flex font-medium gap-2 text-base rounded-sm text-gray-800 hover:underline hover:text-gray-900">
-            <FeatherIcon name="arrow-left" strokeWidth="2" class="h-4" />
+            <FeatherIcon name="arrow-left" class="h-4" />
             <span>
                 Go to Home
             </span>
