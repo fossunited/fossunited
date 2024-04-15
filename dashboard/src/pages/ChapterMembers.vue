@@ -84,19 +84,6 @@ const chapter = createDocumentResource({
     name: `${decodeURI(route.params.id)}`,
     fields: ['*'],
     auto: true,
-    transform(doc){
-        doc.chapter_members = doc.chapter_members.map(member => {
-            return {
-                idx: member.idx,
-                member: member.chapter_member,
-                full_name: member.full_name,
-                email: member.email,
-                role: member.role,
-                profile: getProfile(member.email)
-            }
-        })
-        return doc
-    }
 })
 
 const getProfile = (email) => {
@@ -127,10 +114,13 @@ const handleRemoveModal = (member) => {
 }
 
 const removeMember = (member) => {
-    // To Fix: Remove member from chapter.doc.chapter_members
+    const updatedMembers = chapter.doc.chapter_members.filter(m => m.idx !== member.idx);
+    updatedMembers.forEach((m, idx) => {
+        m.idx = idx + 1;
+    });
     chapter.setValue.submit({
-        chapter_members: chapter.doc.chapter_members.filter(m => m.idx !== member.idx)
-    })
+        chapter_members: updatedMembers
+    });
 }
 
 </script>
