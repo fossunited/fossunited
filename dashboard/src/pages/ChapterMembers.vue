@@ -16,7 +16,7 @@
             label="Add New Member"
             icon-left="plus"
             size="md"
-            @click="addNewMember"
+            @click="showAddmodal= true"
         />
     </div>
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -68,14 +68,48 @@
         >
         </Dialog>
     </div>
+    <div v-if="showAddmodal">
+        <Dialog
+            v-model="showAddmodal"
+            :options="{
+                title: 'Add New Member',
+            }"
+        >
+        <template #body-content>
+            <div class="flex flex-col gap-2">
+                <div class="text-p-base text-gray-700">Enter the email of the new member you want to add to the team.</div>
+                <Autocomplete
+                    :options="allUsers.data"
+                    v-model="newMembers"
+                    placeholder="Search for a user"
+                    :multiple="true"
+                />
+            </div>
+        </template>
+        <template #actions>
+            <div class="flex gap-3">
+                <Button
+                    label="Add"
+                    theme="green"
+                    @click="addNewMember"
+                />
+                <Button
+                    label="Cancel"
+                    theme="gray"
+                    @click="showAddmodal = false"
+                />
+            </div>
+        </template>
+        </Dialog>
+    </div>
 </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { createDocumentResource, Avatar, Badge, createResource, Dialog } from 'frappe-ui'
+import { createDocumentResource, Avatar, Select, Badge, createResource, Dialog, Autocomplete, createListResource } from 'frappe-ui'
 import CityCommunityBranding from '@/components/CityCommunityBranding.vue'
 import FossClubBranding from '@/components/FossClubBranding.vue'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { session } from '@/data/session.js'
 const route = useRoute();
 
@@ -100,19 +134,56 @@ const getProfile = (email) => {
     return profile.data
 }
 
-const addNewMember = () => {
-    console.log('Add new member')
-}
+const allUsers = createListResource({
+    doctype: 'FOSS User Profile',
+    fields: ['*'],
+    auto: true,
+    realtime: true,
+    pageLength: 99999,
+    transform(data){
+        return data.map(user => {
+            return {
+                value: user.name,
+                label: user.full_name,
+                description: user.email,
+                avatar: user.profile_photo ? user.profile_photo : '/assets/fossunited/images/defaults/user_profile_image.png',
+            }
+        })
 
+    }
+})
+watch(() => chapter.doc && chapter.doc.chapter_members, (newMembers, oldMembers) => {
+    if (newMembers && newMembers !== oldMembers) {
+        allUsers.update({
+            filters: [['email', 'not in', newMembers.map(m => m.email).join(',')]]
+        })
+        allUsers.fetch()
+    }
+});
+
+let showAddmodal = ref(false)
+let newMembers = ref([])
+const addNewMember = () => {
+    const updatedMembers = chapter.doc.chapter_members.concat(newMembers.value.map((value, idx) => {
+        return {
+            idx: chapter.doc.chapter_members.length + idx + 1,
+            chapter_member: value.value,
+            role: 'Core Team Member',
+        }
+    }));
+    chapter.setValue.submit({
+        chapter_members: updatedMembers
+    });
+    showAddmodal.value = false
+    newMembers.value = []
+}
 
 let showRemoveModal = ref(false)
 let selectedMember = ref(null)
-
 const handleRemoveModal = (member) => {
     showRemoveModal.value = true
     selectedMember.value = member
 }
-
 const removeMember = (member) => {
     const updatedMembers = chapter.doc.chapter_members.filter(m => m.idx !== member.idx);
     updatedMembers.forEach((m, idx) => {
