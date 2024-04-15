@@ -1,0 +1,71 @@
+{% from "fossunited/templates/macros/event_card.html" import event_card %}
+
+<style>
+
+    .events-timeline{
+        padding-top: 7rem;
+        padding-bottom: 7rem;
+        display:flex;
+        flex-direction: column;
+        gap: 4rem;
+    }
+    .events-search{
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border: 1px solid var(--Gray-200, #EAECF0);
+        background-color: white;
+        max-width: 70%;
+    }
+
+    #events-search{
+        border-color: transparent;
+        width: 100%
+    }
+
+    #events-search::placeholder{
+        color: var(--Gray-500, #667085);
+    }
+
+    #events-search:focus{
+        outline: none;
+    }
+
+    .upcoming-events{
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+
+</style>
+
+
+<div class="container events-timeline">
+
+    <div class="search-filter-section">
+        <div class="events-search">
+
+            <input type="text" id="events-search" placeholder="Search by event, date, city">
+
+        </div>
+    </div>
+
+    <!--Upcoming Events-->
+
+    <div class="upcoming-events">
+        <h5>Upcoming Events</h5>
+        <div class="events-grid-4">
+            {% for event in events %}
+                {% if frappe.utils.getdate(event.event_start_date) >= current_date %}
+                    {{ event_card(event) }}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+    </div>
+
+
+
+    <!--Past Events-->
+
+</div>
