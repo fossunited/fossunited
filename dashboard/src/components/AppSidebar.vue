@@ -3,7 +3,15 @@
     <div class="font-fff text-sm leading-relaxed">
         {{ props.title }}
     </div>
-    <div class="mt-4 flex flex-col gap-2">
+    <div class="my-4">
+        <router-link to="/" class=" p-2 flex font-medium gap-2 text-base rounded-sm text-gray-800 hover:underline hover:text-gray-900">
+            <FeatherIcon name="arrow-left" strokeWidth="2" class="h-4" />
+            <span>
+                Go to Home
+            </span>
+        </router-link>
+    </div>
+    <div class=" flex flex-col gap-2">
         <router-link v-for="(menuItem, index) in props.menuItems" :key="index" :to="menuItem.route" :class=" isMenuItemActive(menuItem.route) ? 'font-semibold text-gray-900 bg-gray-100' : ''" class="block p-2 text-base rounded-sm text-gray-800 hover:bg-gray-200 hover:text-gray-900">
         {{ menuItem.label }}
       </router-link>
@@ -14,6 +22,7 @@
 <script setup>
 import { defineProps } from 'vue'
 import { useRoute } from 'vue-router'
+import { FeatherIcon } from 'frappe-ui';
 
 const route = useRoute()
 const props = defineProps({

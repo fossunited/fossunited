@@ -67,15 +67,6 @@ let scheduled_events = createListResource({
   filters: {
     status: ['in', ['', 'Being Reviewed', 'Approved']],
   },
-  // transform the event start date to be 'Date Month' only
-  transform: (data) => {
-    return data.map(d => {
-      return {
-        ...d,
-        event_start_date: new Date(d.event_start_date).toLocaleDateString('en-IN', { day: 'numeric', month:'long', year: 'numeric'})
-      }
-    })
-  },
   auto: true,
 })
 

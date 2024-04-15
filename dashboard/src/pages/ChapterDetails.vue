@@ -17,7 +17,7 @@
             <div class="text-3xl font-semibold">{{ chapter.doc.chapter_name }}</div>
         </div>
         <Button
-            size="lg"
+            size="md"
             label="Update Details"
             icon-left="edit"
             @click="updateDetails()"
@@ -51,7 +51,7 @@
                     @click="() => setBannerImage({ file_url: '' })"
                 />
             </div>
-            <div class="text-sm text-gray-500">The ideal dimensions for a banner image are: 1240 x 300 (WxH)</div>
+            <div class="text-sm text-gray-600">The ideal dimensions for a banner image are: 1240 x 300 (WxH)</div>
         </div>
     </div>
     <div class="flex flex-col my-6">
@@ -113,7 +113,7 @@
             />
         </div>
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Socials</div>
-        <p class=" mt-2 text-base text-gray-500 leading-normal">Add your social media links to help people connect with you.
+        <p class=" mt-2 text-base text-gray-600 leading-normal">Add your social media links to help people connect with you.
             <br>Please enter the whole url of your social media profile. <i>Eg: https://twitter.com/fossunited</i>
         </p>
         <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">

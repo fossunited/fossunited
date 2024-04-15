@@ -6,17 +6,25 @@
         </div>
         <Badge
             :variant="'subtle'"
-            :theme="event.status == 'Being Reviewed' ? 'orange' : 'green'"
+            :theme="badgeColors[event.status]"
             :label="event.status"
         ></Badge>
         </div>
         <div class="text-sm font-medium">
-        {{ event.event_start_date }}
+        {{ new Date(event.event_start_date).toLocaleDateString('en-IN', { day: 'numeric', month:'long', year: 'numeric'}) }}
         </div>
     </Card>
 </template>
 <script setup>
 import { Card, Badge } from 'frappe-ui'
+
+const badgeColors = {
+    'Being Reviewed': 'orange',
+    'Approved': 'green',
+    'In Progress': 'blue',
+    'Concluded': 'gray',
+    'Cancelled': 'red',
+}
 defineProps({
     event: Object
 })
