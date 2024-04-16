@@ -62,6 +62,7 @@ function publish_form(e) {
 	let doctype = $(e).data("doctype");
 	let docname = $(e).data("docname");
 	let parent = $(e).data("parent");
+	console.log(parent)
 	frappe.call({
 		method: "fossunited.fossunited.forms.publish_form",
 		args: {

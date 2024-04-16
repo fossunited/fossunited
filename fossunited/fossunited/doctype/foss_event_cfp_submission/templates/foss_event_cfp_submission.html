@@ -4,6 +4,12 @@
 
 {% block page_content %}
 <div class="container">
+    <div class="backlink mt-5">
+        <a href="/{{event.route}}">
+            <i class="ti ti-arrow-left"></i>
+            {{ _("Back to Event Page") }}
+        </a>
+    </div>
     {{ render_cfp_header() }}
 </div>
 
@@ -139,19 +145,26 @@
     <div class="review-comments-section">
         {% for review in reviews %}
         <div class="review-comment-container">
-            <img class="user-img-sm rounded" src="{{ review.email | get_profile_image }}" alt="">
-            <div class="review-comment-username-remarks">
-                <div class="review-comment-remarks">
-                    {{ review.remarks }}
-                </div>
-                <div class="d-flex">
-                    <a href="/{{review.reviewer}}" class="review-comment-username">{{ review.reviewer }}</a>
-                    <span class="mr-1">,</span>
-                    <span class="text-sm">
-                        {{ frappe.utils.pretty_date(review.modified) }}
-                    </span>
+            <div class="d-flex">
+                <img class="user-img-sm rounded" src="{{ review.email | get_profile_image }}" alt="">
+                <div class="review-comment-username-remarks ml-3">
+                    <div class="review-comment-remarks" data-name="{{ review.name }}">
+                        {{ review.remarks }}
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                        <span class="text-sm mr-1">{{ remark_val[review.to_approve] }}</span>
+                        <span class="mx-1">•</span>
+                        <a href="/{{review.reviewer}}" class="review-comment-username">{{ review.reviewer }}</a>
+                        <span class="mx-1">•</span>
+                        <span class="text-sm">
+                            {{ frappe.utils.pretty_date(review.modified) }}
+                        </span>
+                    </div>
                 </div>
             </div>
+            <button class="text-sm" data-name="{{ review.name }}" onClick="handleCommentEdit(this)">
+                Edit
+            </button>
         </div>
         {% endfor %}
     </div>
@@ -205,6 +218,23 @@
                 console.log("ERROR" + r)
             }
         })
+    }
+
+    function handleCommentEdit(e){
+        let docname = $(e).data('name')
+        let commentElement = $('.review-comment-remarks[data-name="' + docname + '"]');
+
+        frappe.call({
+            method: 'frappe.client.delete',
+            args: {
+                doctype: 'FOSS Event CFP Review',
+                name: docname
+            }
+        }).then((result) => {
+            location.reload()
+        }).catch((err) => {
+           frappe.msgprint(err)
+        });
     }
 </script>
 {% endblock %}
