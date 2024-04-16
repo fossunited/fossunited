@@ -159,8 +159,7 @@
             }
             data['custom_answers'] = custom_answers
 
-            console.log(data)
-/*            frappe.call({
+            frappe.call({
                 method: 'fossunited.fossunited.doctype.foss_event_cfp.foss_event_cfp.create_cfp_submission',
                 args: {
                     fields: JSON.stringify(data),
@@ -174,7 +173,7 @@
                 } else {
                     frappe.throw("Failed to submit proposal. Please try again.")
                 }
-            })*/
+            })
         })
     })
 </script>
