@@ -112,6 +112,7 @@ jinja = {
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
+        "fossunited.fossunited.utils.get_grouped_events",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",
