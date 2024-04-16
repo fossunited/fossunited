@@ -2235,6 +2235,7 @@ h6{
 .review-comment-container{
     display: flex;
     gap: 1rem;
+    justify-content: space-between;
 }
 
 .review-comment-username-remarks{

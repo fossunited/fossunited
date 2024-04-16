@@ -32,6 +32,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.cfp = frappe.get_doc(
             "FOSS Event CFP", self.linked_cfp
         )
+        context.event = frappe.get_doc(
+            "FOSS Chapter Event", self.event
+        )
         context.speaker = frappe.get_doc(
             "FOSS User Profile", {"user": self.submitted_by}
         )
@@ -50,6 +53,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.already_reviewed = self.check_if_already_reviewed(
             context
         )
+
+        context.remark_val = {
+            "Yes": "Approved",
+            "No": "Rejected",
+            "Maybe": "Not Sure",
+        }
         context.no_cache = 1
 
     def get_navbar_items(self, context):
