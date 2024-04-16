@@ -5,6 +5,12 @@ module.exports = {
     './src/**/*.{vue,js,ts,jsx,tsx}',
     './node_modules/frappe-ui/src/components/**/*.{vue,js,ts,jsx,tsx}',
   ],
-  theme: {},
+  theme: {
+    extend: {
+      fontFamily: {
+        fff: ['"FFF Forward"', 'sans-serif'],
+      },
+    },
+  },
   plugins: [],
 }
