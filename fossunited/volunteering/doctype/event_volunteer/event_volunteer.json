@@ -8,12 +8,14 @@
   "status_info_section",
   "event_linked_field",
   "event_name",
-  "status",
+  "volunteer_status",
   "volunteer_details_section",
   "volunteer_name",
   "email",
+  "phone_number",
   "identification",
   "volunteer_as",
+  "other_volunteering_options",
   "city",
   "column_break_uknn",
   "bio",
@@ -38,7 +40,7 @@
    "fieldname": "volunteer_as",
    "fieldtype": "Select",
    "label": "Volunteer for",
-   "options": "\nMarketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nCommunity Outreach\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager"
+   "options": "\nMarketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nCommunity Outreach\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager\nOther"
   },
   {
    "fieldname": "column_break_uknn",
@@ -74,12 +76,6 @@
    "label": "Status Info"
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "\nSelected\nWaitlisted\nRejected"
-  },
-  {
    "fieldname": "volunteer_details_section",
    "fieldtype": "Section Break",
    "label": "Volunteer Details"
@@ -106,11 +102,28 @@
    "fieldname": "event_name",
    "fieldtype": "Data",
    "label": "Event Name"
+  },
+  {
+   "fieldname": "volunteer_status",
+   "fieldtype": "Select",
+   "label": "Volunteer Status",
+   "options": "\nSelected\nWaitlisted\nRejected"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "depends_on": "eval: doc.volunteer_as == \"Other\";",
+   "fieldname": "other_volunteering_options",
+   "fieldtype": "Data",
+   "label": "Other volunteering options"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-16 13:30:00.471812",
+ "modified": "2024-04-16 14:18:10.604951",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",
