@@ -115,7 +115,7 @@ const route = useRoute();
 
 const chapter = createDocumentResource({
     doctype: 'FOSS Chapter',
-    name: `${decodeURI(route.params.id)}`,
+    name: route.params.id,
     fields: ['*'],
     auto: true,
 })

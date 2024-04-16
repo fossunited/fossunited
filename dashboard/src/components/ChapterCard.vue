@@ -1,6 +1,6 @@
 <template>
     <Card>
-        <template  #actions-left>
+        <template #actions-left>
             <FossClubLogo v-if="props.chapter.chapter_type == 'FOSS Club'" class="w-7 h-7 "></FossClubLogo>
             <div v-else class="w-fit font-fff text-xs bg-gray-900 text-white p-2 rounded-sm flex text-center">{{ props.chapter.chapter_type.toUpperCase() }}</div>
         </template>
@@ -11,7 +11,7 @@
                 :size="'sm'"
                 label="Manage"
                 iconRight="chevron-right"
-                @click="() => $router.push(`/chapter/${encodeURI(props.chapter.name)}`)"
+                :route="'/chapter/' + props.chapter.name"
             >
             </Button>
         </div>

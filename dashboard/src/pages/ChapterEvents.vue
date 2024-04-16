@@ -50,7 +50,7 @@ const route = useRoute();
 
 const chapter = createDocumentResource({
     doctype: 'FOSS Chapter',
-    name: `${decodeURI(route.params.id)}`,
+    name: route.params.id,
     fields: ['*'],
     auto: true,
 })
@@ -58,14 +58,14 @@ const chapter = createDocumentResource({
 const upcoming_events = createListResource({
     doctype: 'FOSS Chapter Event',
     fields: ['*'],
-    filters: [['chapter', '=', `${decodeURI(route.params.id)}`], ['event_start_date', '>', new Date()], ['status', 'in', ['Approved', 'Being Reviewed', 'In Progress']]],
+    filters: [['chapter', '=', route.params.id], ['event_start_date', '>', new Date()], ['status', 'in', ['Approved', 'Being Reviewed', 'In Progress']]],
     auto: true,
 })
 
 const past_events = createListResource({
     doctype: 'FOSS Chapter Event',
     fields: ['*'],
-    filters: [['chapter', '=', `${decodeURI(route.params.id)}`], ['event_start_date', '<', new Date()], ['status', 'in', ['Concluded', 'Cancelled']]],
+    filters: [['chapter', '=', route.params.id], ['event_start_date', '<', new Date()], ['status', 'in', ['Concluded', 'Cancelled']]],
     auto: true,
 })
 </script>
