@@ -31,10 +31,10 @@
             <button class="secondary-button" onClick="window.location.href='/{{status_block_content.block_for}}/create/{{status_block_content.docname}}/edit'">Edit Form</button>
             {% endif %}
             {% if status_block_content.is_unpublished %}
-            <button class="primary-button" onclick="publish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ status_block_content.block_for }}">Publish Form</button>
+            <button class="primary-button" onclick="publish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}">Publish Form</button>
             {% endif %}
             {% if status_block_content.is_published %}
-            <button class="danger-button" onclick="unpublish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ status_block_content.block_for }}">Unpublish Form</button>
+            <button class="danger-button" onclick="unpublish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}">Unpublish Form</button>
             {% endif %}
             {% if status_block_content.create_form %}
             <button class="primary-button" onClick="window.location.href='/{{ status_block_content.block_for }}/create/new?event={{ event_name }}'">Create {{ status_block_content.block_for | upper }} Form</button>
