@@ -107,7 +107,7 @@
    "fieldname": "volunteer_status",
    "fieldtype": "Select",
    "label": "Volunteer Status",
-   "options": "\nSelected\nWaitlisted\nRejected"
+   "options": "\nAccepted\nWaitlisted\nRejected"
   },
   {
    "fieldname": "phone_number",
@@ -123,7 +123,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-16 14:18:10.604951",
+ "modified": "2024-04-16 14:49:52.541158",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",
