@@ -30,6 +30,7 @@
   "email",
   "x",
   "linkedin",
+  "public_chat_group_url",
   "column_break_fifp",
   "facebook",
   "instagram",
@@ -212,6 +213,12 @@
    "fieldname": "represent_image",
    "fieldtype": "Attach Image",
    "label": "Representing Image"
+  },
+  {
+   "fieldname": "public_chat_group_url",
+   "fieldtype": "Data",
+   "label": "Public Chat Group URL",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,

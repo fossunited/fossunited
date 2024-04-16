@@ -33,6 +33,10 @@
 <div class="foss-form-header">
     <h3 class="foss-form-heading-3xl">{{ _("Edit Talk Proposal") }}</h3>
     <div class="event-details my-2">
+        {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+        <div class="py-2">
+            {{ chapter_branding_block(event.chapter) }}
+        </div>
         <div class="event-title my-1">
             <span><strong>Event:</strong></span>
             {{ event.event_name }}

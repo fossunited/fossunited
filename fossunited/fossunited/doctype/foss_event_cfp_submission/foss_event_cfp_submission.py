@@ -103,7 +103,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             score[review.to_approve] += 1
 
         score["approvability"] = (
-            score["Yes"] / (reviews_len - score["Maybe"])
+            score["Yes"] / (reviews_len - score["Maybe"] or 1)
         ) * 100
 
         statistics = [

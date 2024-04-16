@@ -1,5 +1,29 @@
 {% extends "templates/foss_base.html" %}
 
+{% block meta_block %}
+<meta name="title" content="{{ event.event_name }}">
+{% if doc.is_published %}
+    {% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
+    <meta property="og:title" content="🔴 CFP is live! - {{ event.event_name }}, {{ event.chapter_name | title }}">
+    {% else %}
+    <meta property="og:title" content="🔴 CFP is live! - {{ event.event_name }}">
+    {% endif %}
+{% else %}
+<meta property="og:title" content="CFP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}">
+{% endif %}
+
+{% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
+<meta property="og:description" content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B')}} - {{ event.chapter_name | title }}">
+{% else %}
+<meta property="og:description" content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B')}}">
+{% endif %}
+
+<meta property="og:image" content="https://platform.fossunited.org/files/og-image.png">
+<meta property=”og:image:width” content=”1200″/>
+<meta property=”og:image:height” content=”630″/>
+{% endblock %}
+
+
 {% block title %}{{ _("CFP Form Submission") }}{% endblock %}
 
 {% block page_content %}
@@ -61,6 +85,10 @@
 <div class="foss-form-header">
     <h3 class="foss-form-heading-3xl">{{ _("Call for Proposal!") }}</h3>
     <div class="event-details my-2">
+        {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+        <div class="py-2">
+            {{ chapter_branding_block(event.chapter) }}
+        </div>
         <div class="event-title my-1">
             <span><strong>Event:</strong></span>
             {{ event_name }}
@@ -95,6 +123,7 @@
             const formData = $('.foss-form-body').serializeArray()
             const data = {}
 
+            data["linked_cfp"] = "{{ doc.name }}"
             formData.forEach((field) => {
                 data[field.name] = field.value
             })

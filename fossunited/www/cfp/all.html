@@ -1,0 +1,47 @@
+{% extends 'templates/foss_base.html' %}
+
+{% block title %}Call for Proposals{% endblock %}
+
+{% block page_content %}
+<div class="container d-flex flex-column h-100">
+    <div class="backlink mt-5">
+        <a href="/{{event.route}}">
+            <i class="ti ti-arrow-left"></i>
+            {{ _("Back to Event Page") }}
+        </a>
+    </div>
+    <div class="header--title-cta-parent mt-6 p-0">
+        <div>
+            {% if event.chapter %}
+            {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+            {{ chapter_branding_block(event.chapter) }}
+            {% endif %}
+            <h1 class="header--event-title pt-2">{{ event.event_name }}</h1>
+        </div>
+    </div>
+    <h5 class="mt-6">All Talk Proposals</h5>
+    <div class="recent-proposals-grid mb-8">
+        {% for proposal in cfp_submissions %}
+        <div onClick="window.location.href='/{{proposal.route}}'" class="recent-proposal-card">
+            <div class="d-flex flex-column w-100 ">
+                <div class="recent-proposal--status">
+                    {{ proposal.status | make_badge }}
+                </div>
+                <div class="recent-proposal--title">
+                    {{ proposal.talk_title }}
+                </div>
+            </div>
+            {% if proposal.status == 'Approved' %}
+            <a href="/{{proposal.user_route}}" class="speaker-card p-0">
+                <img src="{{ proposal.profile_picture }}" alt="{{ proposal.full_name }}" class="speaker--image">
+                <div class="speaker--details">
+                    <div class="speaker--name">{{ proposal.full_name }}</div>
+                    <div class="speaker--talk-title">{{ proposal.talk_title }}</div>
+                </div>
+            </a>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -23,6 +23,20 @@
 {% macro render_profile_details() %}
 <div class="submission-form-container" style="background: #fff;">
     <h6 class="d-flex align-items-center ">
+        {{ _("Private Profile") }}
+    </h6>
+    <div class="anonymous-profile-section">
+        <div class="d-flex">
+            <input class="form-control" role="switch" type="checkbox" name="is_private" id="is_private" {% if foss_user.is_private %} checked {% endif %}>
+            <div>
+                <label class="form-check-label field-title" for="is_private">Make My Profile Private</label>
+                <div>
+                    <small>Checking this field will make your profile unavailable to others. You can still do the tasks that require profile creation.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h6 class="d-flex align-items-center ">
         {{ _("Profile Details") }}
     </h6>
     <div class="banner-section">
@@ -191,6 +205,9 @@
         $("input, textarea, .ql-editor").on('change keyup paste', (e) => {
             if (e.target.className.includes('ql-editor')){
                 changedFields[$(e.target).parent().attr('id')] = e.target.innerHTML;
+            }
+            else if(e.target.id == 'is_private'){
+                changedFields['is_private'] = e.target.checked ? 1 : 0;
             }
             else{
                 changedFields[e.target.id] = e.target.value;

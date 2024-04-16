@@ -20,11 +20,13 @@ class FOSSChapter(WebsiteGenerator):
                 break
 
     def set_route(self):
-        if self.chapter_type == "City Community":
-            self.route = f"{self.city.lower().replace(' ', '-')}"
-        else:
+        if self.chapter_type == "FOSS Club":
             self.route = (
                 f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
+            )
+        else:
+            self.route = (
+                f"{self.chapter_name.lower().replace(' ', '-')}"
             )
 
     def get_context(self, context):
@@ -33,9 +35,11 @@ class FOSSChapter(WebsiteGenerator):
                 "/assets/fossunited/images/chapter/city_profile.svg"
             )
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
-        else:
+        elif self.chapter_type == "FOSS Club":
             context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
+        else:
+            context.profile_img_src = None
 
         context.upcoming_events = self.get_upcoming_events()
         context.past_events = self.get_past_events()
@@ -58,6 +62,7 @@ class FOSSChapter(WebsiteGenerator):
             fields=[
                 "name",
                 "route",
+                "chapter",
                 "event_start_date",
                 "event_name",
                 "banner_image",
@@ -79,6 +84,7 @@ class FOSSChapter(WebsiteGenerator):
             fields=[
                 "name",
                 "route",
+                "chapter",
                 "event_start_date",
                 "event_name",
                 "banner_image",

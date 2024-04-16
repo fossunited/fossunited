@@ -89,6 +89,10 @@ website_route_rules = [
         "from_route": "/events/<event_permalink>/book-conference-ticket",
         "to_route": "/book-conference-ticket",
     },
+    {
+        "from_route": "/events/<event_permalink>/cfp/all",
+        "to_route": "/cfp/all",
+    },
 ]
 
 # add methods and filters to jinja environment
