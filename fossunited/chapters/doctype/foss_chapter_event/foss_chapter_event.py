@@ -112,7 +112,6 @@ class FOSSChapterEvent(WebsiteGenerator):
             filters={
                 "event": self.name,
                 "status": "Approved",
-                "attendance_confirmed": 1,
             },
             fields=["talk_title", "submitted_by"],
         )
