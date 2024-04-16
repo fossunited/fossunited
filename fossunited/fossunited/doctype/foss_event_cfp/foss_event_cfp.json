@@ -14,6 +14,7 @@
   "is_published",
   "allow_cfp_edit",
   "anonymise_proposals",
+  "only_workshops",
   "event_information_section",
   "event",
   "event_name",
@@ -115,13 +116,20 @@
    "fieldname": "anonymise_proposals",
    "fieldtype": "Check",
    "label": "Anonymise Proposals?"
+  },
+  {
+   "default": "0",
+   "description": "Only accept workshop proposals.",
+   "fieldname": "only_workshops",
+   "fieldtype": "Check",
+   "label": "Only Workshops"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-28 15:38:28.508438",
+ "modified": "2024-04-16 17:37:09.526303",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
