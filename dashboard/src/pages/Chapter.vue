@@ -16,15 +16,15 @@ const route = useRoute()
 const sidebarMenuItems = [
     {
         label: 'Details',
-        route: `/chapter/${encodeURI(route.params.id)}`
+        route: `/chapter/${route.params.id}`
     },
     {
         label: 'Events',
-        route: `/chapter/${encodeURI(route.params.id)}/events`
+        route: `/chapter/${route.params.id}/events`
     },
     {
         label: 'Members',
-        route: `/chapter/${encodeURI(route.params.id)}/members`
+        route: `/chapter/${route.params.id}/members`
     },
 ]
 </script>
