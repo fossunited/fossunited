@@ -16,7 +16,24 @@
             <form class="foss-form-body">
                 {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
                 {% for field in form_fields %}
-                {{ renderfield(field, submission) }}
+                {% if field.fieldname == 'session_type' and cfp.only_workshops %}
+                    <div class="d-flex flex-column hide">
+                        <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
+                        <select data-label="{{ field.label }}" data-type="Select" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1" {% if field.reqd %} required {% endif%}>
+                                <option value="Workshop" selected>Workshop</option>
+                        </select>
+                    </div>
+                    {% elif field.fieldname == 'session_type' and cfp.only_talk_proposals %}
+                    <div class="d-flex flex-column">
+                        <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
+                        <select data-label="{{ field.label }}" data-type="Select" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1" {% if field.reqd %} required {% endif%}>
+                                <option value="Talk" selected>Talk</option>
+                                <option value="Lightning Talk">Lightning Talk</option>
+                        </select>
+                    </div>
+                    {% else %}
+                    {{ renderfield(field, submission) }}
+                    {% endif %}
                 {% endfor %}
             </form>
             <div class="foss-form-buttons">

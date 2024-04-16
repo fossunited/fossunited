@@ -7,6 +7,9 @@ def get_context(context):
     context.submission = frappe.get_doc(
         "FOSS Event CFP Submission", frappe.form_dict["submission"]
     )
+    context.cfp = frappe.get_doc(
+        "FOSS Event CFP", context.submission.linked_cfp
+    )
     context.event = frappe.get_doc(
         "FOSS Chapter Event", context.submission.event
     )
