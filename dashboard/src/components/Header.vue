@@ -1,7 +1,7 @@
 <template>
 
     <header
-    class="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-5 py-2.5"
+    class="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-5 py-2.5"
     >
     <div class="flex gap-1">
     <FossUnitedLogo class="w-auto h-8" fill="black"></FossUnitedLogo>

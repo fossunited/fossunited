@@ -1,6 +1,6 @@
 <template>
-<div v-if="chapter.doc" class="p-8 w-full min-h-screen">
-    <div class="flex justify-between">
+<div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
+    <div class="flex justify-between mt-4">
         <div class="flex flex-col gap-3">
             <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{ chapter.doc.chapter_type }}</FossClubBranding>
             <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>

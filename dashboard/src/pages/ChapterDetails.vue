@@ -1,5 +1,5 @@
 <template>
-<div v-if="chapter.doc" class="p-8 w-full">
+<div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0">
     <div v-if="showToast" class="z-10 absolute">
         <Toast
             :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
@@ -10,13 +10,14 @@
             position="bottom-right"
         ></Toast>
     </div>
-    <div class="flex justify-between">
+    <div class="flex flex-col md:flex-row my-4 gap-4 md:justify-between">
         <div class="flex flex-col gap-3">
             <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{ chapter.doc.chapter_type }}</FossClubBranding>
             <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>
             <div class="text-3xl font-semibold">{{ chapter.doc.chapter_name }}</div>
         </div>
         <Button
+            class="w-fit"
             size="md"
             label="Update Details"
             icon-left="edit"
@@ -56,7 +57,7 @@
     </div>
     <div class="flex flex-col my-6">
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
-        <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-4">
             <FormControl
                 :type="'text'"
                 size="md"

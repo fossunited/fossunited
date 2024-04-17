@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
   <div class=" bg-gray-50 justify-center align-middle flex">
-    <div class="flex container py-8 h-screen">
+    <div class="flex container py-8 px-4 h-screen">
       <main class="w-full">
         <div class="greet-user">
           <div class="text-3xl font-semibold my-2">
