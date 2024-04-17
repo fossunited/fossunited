@@ -1,15 +1,15 @@
 <template>
 <div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0">
-    <div v-if="showToast" class="z-10 absolute">
         <Toast
+            v-if="showToast"
+            class="z-10 absolute"
             :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
             :icon="toastTitle == 'Success' ? 'check-circle' : 'x'"
             icon-classes="stroke-2"
             :title="toastTitle"
             :text="toastMessage"
             position="bottom-right"
-        ></Toast>
-    </div>
+        />
     <div class="flex flex-col md:flex-row my-4 gap-4 md:justify-between">
         <div class="flex flex-col gap-3">
             <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{ chapter.doc.chapter_type }}</FossClubBranding>
