@@ -113,10 +113,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event": self.name,
                 "status": "Approved",
             },
-            fields=["talk_title", "submitted_by"],
+            fields=["talk_title", "submitted_by", "picture_url"],
         )
         speakers = []
         for cfp in speaker_cfps:
+            print(cfp)
             user = frappe.get_doc(
                 "FOSS User Profile", {"email": cfp.submitted_by}
             )
@@ -124,9 +125,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": user.full_name,
                     "talk_title": cfp.talk_title,
-                    "profile_picture": user.profile_photo
-                    if user.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": cfp.picture_url
+                    or user.profile_photo
+                    or "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": user.route,
                 }
             )
@@ -301,6 +302,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "route",
                 "talk_title",
                 "submitted_by",
+                "picture_url",
                 "status",
             ],
             order_by="creation desc",
@@ -315,9 +317,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 submission["user_route"] = user.route
                 submission["full_name"] = user.full_name
                 submission["profile_picture"] = (
-                    user.profile_photo
-                    if user.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png"
+                    submission.picture_url
+                    or user.profile_photo
+                    or "/assets/fossunited/images/defaults/user_profile_image.png"
                 )
         return submissions or []
 
