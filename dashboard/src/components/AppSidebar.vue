@@ -5,8 +5,8 @@
         icon="menu"
         theme="subtle"
     />
-        <div class="hidden w-80 z-30 absolute md:relative md:flex px-4 py-6 h-full md:w-1/5 bg-white border-r flex-col transition-all duration-300 ease-in-out" id="sidebar" :class="smallScreen? 'hidden w-80 z-30 absolute' :'' ">
-            <div class="font-fff text-sm leading-relaxed" :class="smallScreen ? 'mt-5': ''">
+        <div class="hidden w-80 z-30 absolute md:relative md:flex px-4 py-6 h-screen md:w-1/5 bg-white border-r flex-col transition-all duration-300 ease-in-out" id="sidebar" :class="smallScreen? 'hidden w-80 z-30 absolute' :'' ">
+            <div class="font-fff text-sm leading-relaxed mt-5 md:mt-0">
                 {{ props.title }}
             </div>
             <div class="my-4">

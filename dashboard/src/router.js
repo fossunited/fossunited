@@ -17,6 +17,13 @@ const routes = [
     name: 'Event',
     path: '/event/:id',
     component: () => import('@/pages/Event.vue'),
+    children: [
+      {
+        path: '',
+        name: 'EventDetails',
+        component: () => import('@/pages/EventDetails.vue'),
+      },
+    ]
   },
   {
     name: 'Chapter',
