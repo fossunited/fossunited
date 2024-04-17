@@ -150,3 +150,17 @@
   src: url('Inter-BlackItalic.woff2?v=3.12') format('woff2'),
     url('Inter-BlackItalic.woff?v=3.12') format('woff');
 }
+
+@layer base{
+  @font-face {
+      font-family: 'FFF Forward';
+      font-weight: normal;
+      font-style: normal;
+      src: url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.eot');
+      src: url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.eot?#iefix') format('embedded-opentype'),
+           url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff2') format('woff2'),
+           url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff') format('woff'),
+           url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.ttf') format('truetype'),
+           url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.svg#fff_forwardregular') format('svg');
+  }
+}
