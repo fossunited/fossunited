@@ -6,9 +6,14 @@
 <div class="container">
     <div class="backlink mt-5">
         <a href="/{{event.route}}">
-            <i class="ti ti-arrow-left"></i>
-            {{ _("Back to Event Page") }}
+            <span>{{ event.event_name }}</span>
         </a>
+        <i class="ti ti-chevron-right"></i>
+        <a href="/{{event.route}}/cfp/all">
+            <span>All Proposals</span>
+        </a>
+        <i class="ti ti-chevron-right"></i>
+        <span style="font-weight: var(--fw-normal)">{{ doc.talk_title }}</span>
     </div>
     {{ render_cfp_header() }}
 </div>
