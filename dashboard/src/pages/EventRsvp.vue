@@ -44,6 +44,10 @@ const replaceCreateOption = () => {
         label: 'Edit Form',
         route: `/event/${route.params.id}/rsvp/edit`
     })
+    tabs.options.push({
+        label: 'Insights',
+        route: `/event/${route.params.id}/rsvp/insights`
+    })
 }
 
 let rsvp_exists = ref(false)

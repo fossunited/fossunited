@@ -42,7 +42,12 @@ const routes = [
             path: 'edit',
             name: 'EventRsvpEdit',
             component: () => import('@/pages/EventRsvpEdit.vue'),
-          }
+          },
+          {
+            path: 'insights',
+            name: 'EventRsvpInsights',
+            component: () => import('@/pages/EventRsvpInsights.vue'),
+          },
         ]
       },
       {
