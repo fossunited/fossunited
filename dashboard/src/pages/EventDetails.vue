@@ -109,7 +109,7 @@
                     label="Mark as Must Attend"
                     v-model="event.doc.must_attend"
                 />
-                <span class="text-sm text-gray-500">Mark this event as a must-attend for the audience.</span>
+                <span class="text-sm text-gray-600">Mark this event as a must-attend for the audience.</span>
             </div>
             <FormControl
                :type="'text'"

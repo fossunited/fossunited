@@ -23,6 +23,33 @@ const routes = [
         name: 'EventDetails',
         component: () => import('@/pages/EventDetails.vue'),
       },
+      {
+        path: 'rsvp',
+        name: 'EventRsvp',
+        component: () => import('@/pages/EventRsvp.vue'),
+        children: [
+          {
+            path: '',
+            name: 'EventRsvpManage',
+            component: () => import('@/pages/EventRsvpManage.vue'),
+          },
+          {
+            path: 'create',
+            name: 'EventRsvpCreate',
+            component: () => import('@/pages/EventRsvpCreate.vue'),
+          },
+          {
+            path: 'edit',
+            name: 'EventRsvpEdit',
+            component: () => import('@/pages/EventRsvpEdit.vue'),
+          }
+        ]
+      },
+      {
+        path: 'cfp',
+        name: 'EventCfp',
+        component: () => import('@/pages/EventCfp.vue')
+      }
     ]
   },
   {
