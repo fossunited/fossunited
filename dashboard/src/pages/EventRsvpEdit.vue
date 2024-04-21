@@ -110,6 +110,10 @@
             :rows="rsvp.doc.custom_questions"
             :row-key="name"
             :options="{
+                emptyState:{
+                    title: 'No Custom Questions Added.',
+                    description: 'You can add custom questions to this form.'
+                },
                 showTooltip: false,
                 onRowClick: (row) => handleCustomRowEdit(row),
             }"

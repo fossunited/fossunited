@@ -59,12 +59,11 @@ watch(event, (newEvent) => {
         params: {
             doctype: 'FOSS Event RSVP',
             filters: {
-                event: newEvent.doc.event
+                event: newEvent.doc.name
             }
         },
         auto: true,
         onError(error){
-            console.log(error)
             if (error.response.status === 404) {
                 rsvp_exists.value = false
             }
