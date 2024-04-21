@@ -95,7 +95,8 @@ class FOSSEventCFP(WebsiteGenerator):
                 "fieldtype": "Data",
                 "label": "Picture (URL)",
                 "value": last_doc.get("picture_url") or "",
-                "description": "Paste a URL for your publicly hosted photo. If left empty, your profile picture would be used.",
+                "description": "Paste a URL for your publicly hosted photo. Keep it in a 1:1 ratio.",
+                "reqd": 1,
             },
             {
                 "fieldname": "designation",
