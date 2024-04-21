@@ -34,7 +34,7 @@
                         <Button
                             :variant="'subtle'"
                             :size="'md'"
-                            :label="uploading ? `Uploading ${progress}` : chapter.doc.banner_image ? 'Change Banner Image' : 'Upload Banner Image'"
+                            :label="uploading ? `Uploading ${progress}` : chapter.doc.banner_image ? 'Change Image' : 'Upload Image'"
                             @click="openFileSelector"
                         />
                     </template>
@@ -44,7 +44,7 @@
                     :variant="'subtle'"
                     theme="red"
                     :size="'md'"
-                    :label="'Remove Banner Image'"
+                    :label="'Remove Image'"
                     @click="() => setBannerImage({ file_url: '' })"
                 />
             </div>
@@ -180,7 +180,7 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { createDocumentResource, FormControl, FileUploader, Toast, toast } from 'frappe-ui'
+import { createDocumentResource, FormControl, FileUploader, Toast } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue';
 import { ref } from 'vue'
 const route = useRoute()
