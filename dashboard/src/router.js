@@ -73,6 +73,11 @@ const routes = [
         component: () => import('@/pages/ChapterEvents.vue'),
       },
       {
+        path: 'events/create',
+        name: 'ChapterEventsCreate',
+        component: () => import('@/pages/CreateEventForm.vue'),
+      },
+      {
         path: 'members',
         name: 'ChapterMembers',
         component: () => import('@/pages/ChapterMembers.vue'),

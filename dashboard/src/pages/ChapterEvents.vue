@@ -12,6 +12,7 @@
             label="Create New Event"
             icon-left="plus"
             size="md"
+            route="events/create"
         />
     </div>
     <div class="flex flex-col gap-8 my-6">
