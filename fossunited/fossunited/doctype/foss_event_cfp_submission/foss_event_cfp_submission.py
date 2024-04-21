@@ -12,8 +12,13 @@ from fossunited.fossunited.utils import (
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_save(self):
+        self.set_name()
         self.set_route()
         self.set_scores()
+
+    def set_name(self):
+        self.first_name = self.full_name.split(" ")[0]
+        self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
         event_route = frappe.db.get_value(
