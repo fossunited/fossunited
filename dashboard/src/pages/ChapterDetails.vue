@@ -11,11 +11,7 @@
         position="bottom-right"
     />
     <div class="flex flex-col md:flex-row my-4 gap-4 md:justify-between">
-        <div class="flex flex-col gap-3">
-            <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{ chapter.doc.chapter_type }}</FossClubBranding>
-            <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>
-            <div class="text-3xl font-semibold">{{ chapter.doc.chapter_name }}</div>
-        </div>
+        <ChapterHeader :chapter="chapter"/>
         <Button
             class="w-fit"
             size="md"
@@ -185,8 +181,7 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { createDocumentResource, FormControl, FileUploader, Toast, toast } from 'frappe-ui'
-import CityCommunityBranding from '@/components/CityCommunityBranding.vue'
-import FossClubBranding from '@/components/FossClubBranding.vue'
+import ChapterHeader from '@/components/ChapterHeader.vue';
 import { ref } from 'vue'
 const route = useRoute()
 
