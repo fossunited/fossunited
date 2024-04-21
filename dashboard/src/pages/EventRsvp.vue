@@ -24,18 +24,18 @@ const event = createDocumentResource({
 let tabs = reactive({
     options: [
         {
-            label: 'Manage RSVP',
+            label: 'Status',
             route: `/event/${route.params.id}/rsvp`
         },
         {
-            label: 'Create RSVP',
+            label: 'Create',
             route: `/event/${route.params.id}/rsvp/create`
         },
     ]
 })
 
 const replaceCreateOption = () => {
-    tabs.options = tabs.options.filter((d) => d.label !== 'Create RSVP')
+    tabs.options = tabs.options.filter((d) => d.label !== 'Create')
 
     if (tabs.options.find((d) => d.label === 'Edit Form')){
         return

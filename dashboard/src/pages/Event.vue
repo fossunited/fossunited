@@ -23,11 +23,11 @@ const sidebarMenuItems = [
         route: `/event/${route.params.id}`
     },
     {
-        label: 'Manage RSVP',
+        label: 'RSVP',
         route: `/event/${route.params.id}/rsvp`
     },
     {
-        label: 'Manage CFP',
+        label: 'CFP',
         route: `/event/${route.params.id}/cfp`
     },
 ]

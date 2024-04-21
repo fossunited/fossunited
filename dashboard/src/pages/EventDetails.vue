@@ -36,7 +36,7 @@
                         <Button
                             :variant="'subtle'"
                             :size="'md'"
-                            :label="uploading ? `Uploading ${progress}` : event.doc.banner_image ? 'Change Banner Image' : 'Upload Banner Image'"
+                            :label="uploading ? `Uploading ${progress}` : event.doc.banner_image ? 'Change Image' : 'Upload Image'"
                             @click="openFileSelector"
                         />
                     </template>
@@ -46,7 +46,7 @@
                     :variant="'subtle'"
                     theme="red"
                     :size="'md'"
-                    :label="'Remove Banner Image'"
+                    :label="'Remove Image'"
                     @click="() => setBannerImage({ file_url: '' })"
                 />
             </div>
