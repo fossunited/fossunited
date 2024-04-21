@@ -14,6 +14,8 @@
   "route",
   "status",
   "attendance_confirmed",
+  "first_name",
+  "last_name",
   "column_break_vctq",
   "linked_cfp",
   "chapter",
@@ -195,11 +197,13 @@
    "label": "Is Published?"
   },
   {
-   "default": "0",
+   "default": "No",
    "description": "This helps us to curate our agenda better.",
    "fieldname": "is_first_talk",
-   "fieldtype": "Check",
-   "label": "Is this your first talk?"
+   "fieldtype": "Select",
+   "label": "Is this your first talk?",
+   "options": "Yes\nNo",
+   "reqd": 1
   },
   {
    "fieldname": "meta_info_section",
@@ -259,22 +263,33 @@
    "fieldname": "session_type",
    "fieldtype": "Select",
    "label": "Session Type",
-   "options": "Talk\nLightning Talk\nWorkshop"
+   "options": "Talk\nLightning Talk\nWorkshop",
+   "reqd": 1
   },
   {
-   "description": "Paste a URL for your publicly hosted photo. \nIf left empty, your profile picture would be used.",
+   "description": "Paste a URL for your publicly hosted photo. ",
    "fieldname": "picture_url",
    "fieldtype": "Data",
    "label": "Picture (URL)",
    "length": 512,
    "options": "URL"
+  },
+  {
+   "fieldname": "first_name",
+   "fieldtype": "Data",
+   "label": "First Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-04-21 10:57:14.951712",
+ "modified": "2024-04-21 11:05:15.092243",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
