@@ -16,10 +16,11 @@
             label="Create New Event"
             icon-left="plus"
             size="md"
+            route="/event/create"
         />
     </div>
     <div class="flex flex-col gap-8 my-6">
-        <div class="flex flex-col gap-3">
+        <div v-if="upcoming_events.data" class="flex flex-col gap-3">
             <div class="text-2xl font-semibold">Scheduled Events</div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <EventCardDashboard v-for="event in upcoming_events.data" :key="event.name" :event="event" />
@@ -28,7 +29,7 @@
                 <div class="text-base text-gray-600">No events scheduled yet.</div>
             </div>
         </div>
-        <div class="flex flex-col gap-3">
+        <div v-if="upcoming_events.data" class="flex flex-col gap-3">
             <div class="text-2xl font-semibold">Concluded Events</div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <EventCardDashboard v-for="event in past_events.data" :key="event.name" :event="event" />
