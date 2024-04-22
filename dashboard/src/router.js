@@ -53,7 +53,29 @@ const routes = [
       {
         path: 'cfp',
         name: 'EventCfp',
-        component: () => import('@/pages/EventCfp.vue')
+        component: () => import('@/pages/EventCfp.vue'),
+        children: [
+          {
+            path: '',
+            name: 'EventCfpManage',
+            component: () => import('@/pages/EventCfpManage.vue'),
+          },
+          {
+            path: 'create',
+            name: 'EventCfpCreate',
+            component: () => import('@/pages/EventCfpCreate.vue'),
+          },
+          {
+            path: 'edit',
+            name: 'EventCfpEdit',
+            component: () => import('@/pages/EventCfpEdit.vue'),
+          },
+          {
+            path: 'insights',
+            name: 'EventCfpInsights',
+            component: () => import('@/pages/EventCfpInsights.vue'),
+          },
+        ]
       }
     ]
   },
