@@ -1,15 +1,5 @@
 <template>
 <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
-    <Toast
-        v-if="showToast"
-        class="z-10 absolute"
-        :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
-        :icon="toastTitle == 'Success' ? 'check-circle' : 'x'"
-        icon-classes="stroke-2"
-        :title="toastTitle"
-        :text="toastMessage"
-        position="bottom-right"
-    />
     <div class="flex flex-col md:flex-row gap-2 justify-between">
         <EventHeader
             :event="event"
@@ -166,9 +156,9 @@
 </template>
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
-import { createDocumentResource, createListResource, FileUploader, FormControl, Toast } from 'frappe-ui'
+import { createDocumentResource, createListResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { ref } from 'vue'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const event = createDocumentResource({
@@ -196,6 +186,11 @@ const setBannerImage = (file) => {
     event.setValue.submit({
         banner_image: file.file_url
     })
+    if (file.file_url) {
+        toast.success('Banner image uploaded successfully')
+    } else {
+        toast.info('Banner image removed successfully')
+    }
 }
 
 const eventTypeOptions = createListResource({
@@ -209,25 +204,13 @@ const eventTypeOptions = createListResource({
     }
 })
 
-let showToast = ref(false)
-let toastTitle = ref('')
-let toastMessage = ref('')
-
 const updateDetails = () => {
     event.save.submit().then(() => {
-        showToastMessage('Success', 'Chapter details updated successfully')
+        toast.success('Event details updated successfully')
     }).catch((error) => {
-        showToastMessage('Error', error.message)
+        toast.error('Failed to update event details', {
+            description: error.message
+        })
     })
 }
-
-const showToastMessage = (title, message) => {
-    toastTitle.value = title
-    toastMessage.value = message
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 5000)
-}
-
 </script>

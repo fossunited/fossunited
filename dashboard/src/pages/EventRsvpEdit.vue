@@ -1,15 +1,5 @@
 <template>
 <div v-if="rsvp_form.data && rsvp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <Toast
-        v-if="showToast"
-        class="z-10 absolute"
-        :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
-        :icon="toastTitle == 'Success' ? 'check-circle' : 'x'"
-        icon-classes="stroke-2"
-        :title="toastTitle"
-        :text="toastMessage"
-        position="bottom-right"
-    />
     <div class="flex flex-col md:flex-row justify-between gap-2">
         <div class="text-xl font-medium">Update RSVP Form</div>
         <Button
@@ -210,9 +200,10 @@
 </div>
 </template>
 <script setup>
-import { createDocumentResource, createResource, FormControl, ListView, Dialog, Toast } from 'frappe-ui';
+import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui';
 import { reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { toast } from 'vue-sonner';
 import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue';
 
 const route = useRoute()
@@ -270,6 +261,11 @@ const togglePublishForm = () => {
     rsvp.setValue.submit({
         is_published: !rsvp.doc.is_published
     })
+    if (rsvp.doc.is_published) {
+        toast.success('RSVP Form Published Successfully')
+    } else {
+        toast.warning('RSVP Form Unpublished')
+    }
 }
 
 
@@ -311,25 +307,13 @@ const updateCustomField = () => {
     }
 }
 
-let showToast = ref(false)
-let toastTitle = ref('')
-let toastMessage = ref('')
-
-const showToastMessage = (title, message) => {
-    toastTitle.value = title
-    toastMessage.value = message
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 5000)
-}
-
-
 const updateRsvpForm = () => {
     rsvp.save.submit().then(() => {
-        showToastMessage('Success', 'RSVP Form Updated Successfully')
+        toast.success('RSVP Form Updated Successfully')
     }).catch((error) => {
-        showToastMessage('Error', error.message)
+        toast.error('Failed to update RSVP Form', {
+            description: error.message
+        })
     })
 }
 

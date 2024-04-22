@@ -1,15 +1,5 @@
 <template>
 <div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0">
-    <Toast
-        v-if="showToast"
-        class="z-10 absolute"
-        :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
-        :icon="toastTitle == 'Success' ? 'check-circle' : 'x'"
-        icon-classes="stroke-2"
-        :title="toastTitle"
-        :text="toastMessage"
-        position="bottom-right"
-    />
     <div class="flex flex-col md:flex-row my-4 gap-4 md:justify-between">
         <ChapterHeader :chapter="chapter"/>
         <Button
@@ -23,7 +13,7 @@
     <div class="flex flex-col my-6">
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
         <div class="p-2 my-1">
-            <img :src="getBannerImage()" alt="Banner Image" class="object-cover rounded-lg aspect-[4.96/1]">
+            <img :src="getBannerImage()" alt="Banner Image" class="object-cover rounded-lg w-full aspect-[4.96/1]">
             <div class="flex my-2 gap-2">
                 <FileUploader
                     :fileTypes="'image/*'"
@@ -180,9 +170,10 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { createDocumentResource, FormControl, FileUploader, Toast } from 'frappe-ui'
+import { createDocumentResource, FormControl, FileUploader } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue';
-import { ref } from 'vue'
+import { toast } from 'vue-sonner'
+
 const route = useRoute()
 
 const chapter = createDocumentResource({
@@ -212,27 +203,22 @@ const setBannerImage = (file) => {
     chapter.setValue.submit({
         banner_image: file.file_url
     })
+    if (file.file_url){
+        toast.success('Banner Image updated successfully')
+    }
+    else{
+        toast.info('Banner Image removed successfully')
+    }
 }
-
-let showToast = ref(false)
-let toastTitle = ref('')
-let toastMessage = ref('')
 
 const updateDetails = () => {
     chapter.save.submit().then(() => {
-        showToastMessage('Success', 'Chapter details updated successfully')
+        toast.success('Chapter details updated successfully')
     }).catch((error) => {
-        showToastMessage('Error', error.message)
+        toast.error('Failed to update chapter details', {
+            description: error.message
+        })
     })
-}
-
-const showToastMessage = (title, message) => {
-    toastTitle.value = title
-    toastMessage.value = message
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 5000)
 }
 
 </script>

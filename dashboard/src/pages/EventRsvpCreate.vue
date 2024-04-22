@@ -1,15 +1,5 @@
 <template>
 <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <Toast
-        v-if="showToast"
-        class="z-10 absolute"
-        :class="toastTitle == 'Success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'"
-        :icon="toastTitle == 'Success' ? 'check-circle' : 'x'"
-        icon-classes="stroke-2"
-        :title="toastTitle"
-        :text="toastMessage"
-        position="bottom-right"
-    />
     <div class="flex flex-col md:flex-row justify-between gap-2">
         <div class="text-xl font-medium">Create RSVP Form</div>
         <Button
@@ -177,6 +167,7 @@
 import { createDocumentResource, FormControl, ListView, Dialog, createResource, Toast } from 'frappe-ui';
 import { reactive, ref, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
+import { toast } from 'vue-sonner';
 
 const route = useRoute()
 const emit = defineEmits(['rsvpCreated'])
@@ -254,11 +245,6 @@ const updateCustomField = () => {
     }
 }
 
-let showToast = ref(false)
-let toastTitle = ref('')
-let toastMessage = ref('')
-
-
 const createRsvpForm = () => {
     let rsvp = createResource({
         url: 'frappe.client.insert',
@@ -270,19 +256,13 @@ const createRsvpForm = () => {
         }
     })
     rsvp.submit().then((result) => {
-        showToastMessage('Success', 'RSVP Form Created Successfully')
+        toast.success('RSVP Form created successfully')
         emit('rsvpCreated')
     }).catch((err) => {
-        showToastMessage('Error', err.message)
+        toast.error('Failed to create RSVP Form', {
+            description: err.message
+        })
     });
 }
 
-const showToastMessage = (title, message) => {
-    toastTitle.value = title
-    toastMessage.value = message
-    showToast.value = true
-    setTimeout(() => {
-        showToast.value = false
-    }, 5000)
-}
 </script>

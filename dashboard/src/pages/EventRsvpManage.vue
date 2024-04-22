@@ -49,6 +49,7 @@
 import { createDocumentResource, createResource, FormControl, Switch, Tabs } from 'frappe-ui';
 import { reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { toast } from 'vue-sonner';
 
 const route = useRoute()
 const event = createDocumentResource({
@@ -86,5 +87,10 @@ const toggleRSVPSection = () => {
     event.setValue.submit({
         show_rsvp: event.doc.show_rsvp
     })
+    if (event.doc.show_rsvp) {
+        toast.success('RSVP section visible on event page.')
+    } else {
+        toast.info('RSVP section hidden on the event page.')
+    }
 }
 </script>
