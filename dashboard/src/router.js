@@ -17,6 +17,45 @@ const routes = [
     name: 'Event',
     path: '/event/:id',
     component: () => import('@/pages/Event.vue'),
+    children: [
+      {
+        path: '',
+        name: 'EventDetails',
+        component: () => import('@/pages/EventDetails.vue'),
+      },
+      {
+        path: 'rsvp',
+        name: 'EventRsvp',
+        component: () => import('@/pages/EventRsvp.vue'),
+        children: [
+          {
+            path: '',
+            name: 'EventRsvpManage',
+            component: () => import('@/pages/EventRsvpManage.vue'),
+          },
+          {
+            path: 'create',
+            name: 'EventRsvpCreate',
+            component: () => import('@/pages/EventRsvpCreate.vue'),
+          },
+          {
+            path: 'edit',
+            name: 'EventRsvpEdit',
+            component: () => import('@/pages/EventRsvpEdit.vue'),
+          },
+          {
+            path: 'insights',
+            name: 'EventRsvpInsights',
+            component: () => import('@/pages/EventRsvpInsights.vue'),
+          },
+        ]
+      },
+      {
+        path: 'cfp',
+        name: 'EventCfp',
+        component: () => import('@/pages/EventCfp.vue')
+      }
+    ]
   },
   {
     name: 'Chapter',
@@ -32,6 +71,11 @@ const routes = [
         path: 'events',
         name: 'ChapterEvents',
         component: () => import('@/pages/ChapterEvents.vue'),
+      },
+      {
+        path: 'events/create',
+        name: 'ChapterEventsCreate',
+        component: () => import('@/pages/CreateEventForm.vue'),
       },
       {
         path: 'members',

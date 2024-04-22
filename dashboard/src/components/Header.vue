@@ -12,16 +12,12 @@
         {
           label: 'My Profile',
           icon: 'user',
-          onClick: () => {
-            $router.push('/me')
-          },
+          onClick: redirectToProfile,
         },
         {
           label: 'Go to website',
           icon: 'globe',
-          onClick: () => {
-            $router.push('/')
-          },
+          onClick: goToPublicSite,
         },
         {
           label: 'Logout',
@@ -60,4 +56,12 @@ let user_profile = createResource({
   auto: true,
   cache: 'user',
 })
+
+const redirectToProfile = () => {
+  window.location.pathname = '/me'
+}
+
+const goToPublicSite = () => {
+  window.location.pathname = ''
+}
 </script>

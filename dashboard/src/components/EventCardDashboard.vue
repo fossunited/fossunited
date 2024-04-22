@@ -1,5 +1,9 @@
 <template>
-    <Card :title="event.event_name" class="hover:border-2 hover:border-gray-500 transition-all hover:cursor-pointer">
+    <Card
+    :title="event.event_name"
+    class="hover:border-2 hover:border-gray-500 transition-all hover:cursor-pointer"
+    @click="() => $router.replace(`/event/${event.name}`)"
+    >
         <div class="flex justify-between">
         <div class="text-sm font-medium">
             {{ event.chapter_name }}

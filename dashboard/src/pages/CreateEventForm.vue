@@ -1,0 +1,176 @@
+<template>
+<div class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
+    <div v-if="chapter.doc" class="flex justify-between mt-4">
+        <ChapterHeader :chapter="chapter" />
+    </div>
+    <div class="flex flex-col md:flex-row gap-2 justify-between mt-6 pb-2 border-b">
+        <div class="text-xl font-semibold">
+            Create Event
+        </div>
+        <Button
+            label="Create Event"
+            :variant="'solid'"
+            size="md"
+            icon-left="plus"
+            @click="createEvent"
+        />
+    </div>
+    <div v-if="eventTypeOptions.data">
+      <div class="flex flex-col gap-3 my-6">
+          <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Details</div>
+          <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+              <FormControl
+                  :type="'text'"
+                  size="md"
+                  v-model="temp_event.event_name"
+                  label="Event Name"
+              />
+              <FormControl
+                  :type="'text'"
+                  size="md"
+                  v-model="temp_event.event_permalink"
+                  label="Event Permalink"
+                  description="Only enter the event endpoint. Events will be rendered at event/<event_permalink>"
+              />
+              <FormControl
+                  :type="'select'"
+                  :options="[
+                      {
+                          label: 'Being Reviewed',
+                          value: 'Being Reviewed'
+                      },
+                      {
+                          label: 'Approved',
+                          value: 'Approved'
+                      },{
+                          label: 'In Progress',
+                          value: 'In Progress'
+                      },{
+                          label: 'Concluded',
+                          value: 'Concluded'
+                      },{
+                          label: 'Cancelled',
+                          value: 'Cancelled'
+                      },
+                  ]"
+                  size="md"
+                  v-model="temp_event.status"
+                  label="Event Status"
+                  description="Current status of the event."
+              />
+              <FormControl
+                  :type="'select'"
+                  :options="eventTypeOptions.data"
+                  size="md"
+                  v-model="temp_event.event_type"
+                  label="Event Type"
+              />
+              <FormControl
+                  class="col-span-2"
+                  :type="'textarea'"
+                  size="md"
+                  v-model="temp_event.event_description"
+                  label="Event Description"
+              />
+          </div>
+          <div class="font-semibold text-gray-800 border-b-2 pb-2">Location Details</div>
+          <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+              <FormControl
+                  :type="'text'"
+                  size="md"
+                  v-model="temp_event.location"
+                  label="Location"
+              />
+              <FormControl
+                  :type="'url'"
+                  label="Map Link"
+                  v-model="temp_event.map_link"
+                  side="md"
+              />
+          </div>
+          <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Timeline</div>
+          <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+              <FormControl
+                  :type="'datetime-local'"
+                  size="md"
+                  v-model="temp_event.event_start_date"
+                  label="Event Start Date"
+              />
+              <FormControl
+                  :type="'datetime-local'"
+                  size="md"
+                  v-model="temp_event.event_end_date"
+                  label="Event End Date"
+              />
+          </div>
+      </div>
+  </div>
+</div>
+</template>
+<script setup>
+import { usePageMeta, createDocumentResource, FormControl, createListResource, createResource } from 'frappe-ui'
+import { reactive } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
+import ChapterHeader from '@/components/ChapterHeader.vue'
+
+const route = useRoute()
+const router = useRouter()
+
+let temp_event = reactive({
+    doctype: 'FOSS Chapter Event',
+    chapter: route.params.id,
+    event_name: '',
+    event_permalink: '',
+    status: '',
+    event_type: '',
+    event_description: '',
+    location: '',
+    map_link: '',
+    event_start_date: '',
+    event_end_date: '',
+})
+
+const chapter = createDocumentResource({
+    doctype: 'FOSS Chapter',
+    name: route.params.id
+})
+
+const eventTypeOptions = createListResource({
+    doctype: 'FOSS Event Type',
+    fields: ['name'],
+    auto: true,
+    transform(data){
+        return data.map(d => {
+            return { 'label': d.name, 'value': d.name}
+        })
+    }
+})
+
+const createEvent = () => {
+    let event = createResource({
+        url: 'frappe.client.insert',
+        params: {
+            doc: temp_event,
+        },
+    })
+    event.submit().then(() => {
+        toast.success("Event Created Successfully", {
+            description: "Redirecting to the event dashboard page."
+        })
+        setTimeout(() => {
+            router.push(`/event/${event.data.name}`)
+        }, 2000)
+    }).catch((error) => {
+        toast.error("Failed to create event", {
+            description: error
+        })
+    })
+}
+
+usePageMeta(() => {
+  return {
+    title: 'Create Event',
+  }
+})
+</script>

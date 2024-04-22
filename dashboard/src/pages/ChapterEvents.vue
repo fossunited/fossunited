@@ -1,11 +1,7 @@
 <template>
 <div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
     <div class="flex justify-between mt-4">
-        <div class="flex flex-col gap-3">
-            <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{ chapter.doc.chapter_type }}</FossClubBranding>
-            <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>
-            <div class="text-3xl font-semibold">{{ chapter.doc.chapter_name }}</div>
-        </div>
+        <ChapterHeader :chapter="chapter" />
     </div>
     <div class="flex flex-col mt-4 gap-3 w-fit">
         <div class="text-base text-gray-600">
@@ -16,10 +12,11 @@
             label="Create New Event"
             icon-left="plus"
             size="md"
+            route="events/create"
         />
     </div>
     <div class="flex flex-col gap-8 my-6">
-        <div class="flex flex-col gap-3">
+        <div v-if="upcoming_events.data" class="flex flex-col gap-3">
             <div class="text-2xl font-semibold">Scheduled Events</div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <EventCardDashboard v-for="event in upcoming_events.data" :key="event.name" :event="event" />
@@ -28,7 +25,7 @@
                 <div class="text-base text-gray-600">No events scheduled yet.</div>
             </div>
         </div>
-        <div class="flex flex-col gap-3">
+        <div v-if="upcoming_events.data" class="flex flex-col gap-3">
             <div class="text-2xl font-semibold">Concluded Events</div>
             <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 <EventCardDashboard v-for="event in past_events.data" :key="event.name" :event="event" />
@@ -43,9 +40,8 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { createDocumentResource, createListResource } from 'frappe-ui'
-import CityCommunityBranding from '@/components/CityCommunityBranding.vue'
-import FossClubBranding from '@/components/FossClubBranding.vue'
 import EventCardDashboard from '@/components/EventCardDashboard.vue'
+import ChapterHeader from '@/components/ChapterHeader.vue'
 const route = useRoute();
 
 const chapter = createDocumentResource({
