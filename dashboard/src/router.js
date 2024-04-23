@@ -76,6 +76,11 @@ const routes = [
             component: () => import('@/pages/EventCfpInsights.vue'),
           },
         ]
+      },
+      {
+        path: 'volunteers',
+        name: 'EventVolunteers',
+        component: () => import('@/pages/EventVolunteers.vue'),
       }
     ]
   },

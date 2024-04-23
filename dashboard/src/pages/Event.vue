@@ -30,6 +30,10 @@ const sidebarMenuItems = [
         label: 'CFP',
         route: `/event/${route.params.id}/cfp`
     },
+    {
+        label: 'Volunteers',
+        route: `/event/${route.params.id}/volunteers`
+    }
 ]
 
 usePageMeta(() => {
