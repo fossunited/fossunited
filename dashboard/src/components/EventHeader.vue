@@ -25,7 +25,7 @@
             </div>
             </Badge>
             <Badge
-                v-if="!form_exists"
+                v-if="!form_exists && form"
                 :theme="'gray'"
                 size='md'
             >
