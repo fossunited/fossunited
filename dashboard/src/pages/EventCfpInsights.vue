@@ -4,17 +4,16 @@
         <div class="text-xl font-medium">Insights</div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <Card
-                :title="`Total Proposals: ${submissions.data.length}`"
+                :title="`Total Submissions: ${submissions.data.length}`"
             />
         </div>
     </div>
     <div class="flex flex-col gap-4">
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Proposal List</div>
         <div class="flex flex-col gap-2">
             <Button
                 class="w-fit"
                 size="md"
-                label="Download Proposal List"
+                label="Download"
                 icon-left="download"
                 @click="downloadProposalList"
             />
@@ -35,7 +34,7 @@
             :options="{
                 selectable: false,
                 emptyState: {
-                    title: 'No CFP Submissions Yet',
+                    title: 'No Submissions Yet',
                     description: 'There are no CFP submissions for this event yet.'
                 },
                 resizeColumn: true,

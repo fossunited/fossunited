@@ -1,13 +1,15 @@
 <template>
 <div v-if="event.doc" class=" w-full z-0 min-h-screen">
-    <EventHeader class="px-4 py-8 md:p-8" :event="event"/>
+    <div class="flex gap-3 items-end px-4 py-8 md:p-8">
+        <EventHeader class="" :event="event" :form_exists="cfp_exists" :form="event_cfp"/>
+    </div>
     <TabsWithRoute :tabs="tabs.options" />
     <RouterView @cfp-created="cfpCreated" :event_cfp="event_cfp"/>
 </div>
 </template>
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
-import { createDocumentResource, createResource } from 'frappe-ui';
+import { createDocumentResource, createResource, Badge } from 'frappe-ui';
 import { useRoute, useRouter } from 'vue-router';
 import TabsWithRoute from '@/components/TabsWithRoute.vue';
 import { reactive, ref, watch } from 'vue';
@@ -37,11 +39,11 @@ let tabs = reactive({
 const replaceCreateOption = () => {
     tabs.options = tabs.options.filter((d) => d.label !== 'Create')
 
-    if (tabs.options.find((d) => d.label === 'Edit Form')){
+    if (tabs.options.find((d) => d.label === 'Edit')){
         return
     }
     tabs.options.push({
-        label: 'Edit Form',
+        label: 'Edit',
         route: `/event/${route.params.id}/cfp/edit`
     })
     tabs.options.push({
