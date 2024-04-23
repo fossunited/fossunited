@@ -1,6 +1,6 @@
 <template>
 <div v-if="event.doc" class=" w-full z-0 min-h-screen">
-    <EventHeader class="px-4 py-8 md:p-8" :event="event"/>
+    <EventHeader class="px-4 py-8 md:p-8" :event="event" :form_exists="rsvp_exists" :form="event_rsvp"/>
     <TabsWithRoute :tabs="tabs.options" />
     <RouterView @rsvp-created="rsvpCreated" :event_rsvp="event_rsvp"/>
 </div>

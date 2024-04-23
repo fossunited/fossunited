@@ -1,36 +1,37 @@
 <template>
-<div v-if="!rsvp_exists">
+<div v-if="!cfp_exists">
     <div class="px-4 py-8 md:p-8">
     <Card
-        title="RSVP form not created."
-        subtitle="No RSVP form has been created for this event."
+        title="CFP form not created."
+        subtitle="No CFP form has been created for this event."
     >
     <template #actions>
         <Button
             size="md"
             icon-left="file-plus"
-            label="Create RSVP Form"
-            @click="() => $router.push(`/event/${event.doc.name}/rsvp/create`)"
+            label="Create Form"
+            @click="() => $router.push(`/event/${event.doc.name}/cfp/create`)"
         />
     </template>
     </Card>
     </div>
 </div>
-<div v-if="rsvp_exists && event_rsvp.data">
+<div v-if="cfp_exists && event_cfp.data">
     <div class="px-4 py-8 md:p-8">
-        <div class="text-xl font-medium">Manage RSVP</div>
+        <div class="text-xl font-medium">Manage</div>
         <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <Switch
                 class="mt-3"
                 size="md"
-                label="Show RSVP Tab"
-                v-model="event.doc.show_rsvp"
-                description="Show RSVP section on the event page."
-                @click="toggleRSVPSection()"
+                label="Show CFP Tab"
+                v-model="event.doc.show_cfp"
+                description="Show CFP section on the event page."
+                @click="toggleCFPSection()"
             />
         </div>
     </div>
 </div>
+
 </template>
 <script setup>
 import { createDocumentResource, createResource, FormControl, Switch, Tabs } from 'frappe-ui';
@@ -46,14 +47,14 @@ const event = createDocumentResource({
     auto: true,
 })
 
-let rsvp_exists = ref(false)
-let event_rsvp = reactive({})
+let cfp_exists = ref(false)
+let event_cfp = reactive({})
 
 watch(event, (newEvent) => {
-    event_rsvp = createResource({
+    event_cfp = createResource({
         url: 'frappe.client.get',
         params: {
-            doctype: 'FOSS Event RSVP',
+            doctype: 'FOSS Event CFP',
             filters: {
                 event: newEvent.doc.name
             }
@@ -61,23 +62,23 @@ watch(event, (newEvent) => {
         auto: true,
         onError(error){
             if (error.response.status === 404) {
-                rsvp_exists.value = false
+                cfp_exists.value = false
             }
         },
         onSuccess(response){
-            rsvp_exists.value = true
+            cfp_exists.value = true
         }
     })
 })
 
-const toggleRSVPSection = () => {
+const toggleCFPSection = () => {
     event.setValue.submit({
-        show_rsvp: event.doc.show_rsvp
+        show_cfp: event.doc.show_cfp
     })
-    if (event.doc.show_rsvp) {
-        toast.success('RSVP section visible on event page.')
+    if (event.doc.show_cfp) {
+        toast.success('CFP section visible on event page.')
     } else {
-        toast.info('RSVP section hidden on the event page.')
+        toast.info('CFP section hidden on the event page.')
     }
 }
 </script>

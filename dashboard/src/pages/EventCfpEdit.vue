@@ -1,34 +1,26 @@
 <template>
-<div v-if="rsvp_form.data && rsvp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
+<div v-if="cfp_form.data && cfp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
+    <div class="flex flex-row justify-end gap-2">
+        <Button
+            class="w-fit"
+            size="md"
+            :theme="cfp.doc.is_published ? 'red' : 'green'"
+            :icon-left="cfp.doc.is_published ? 'slash' : 'upload'"
+            :label="cfp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
+            @click="togglePublishForm"
+        />
+
         <Button
             size="md"
             variant="solid"
-            label="Update Form"
-            @click="updateRsvpForm"
+            label="Save Changes"
+            @click="updateCfpForm"
         />
     </div>
     <div>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div class="flex flex-col gap-4">
-                <div class="text-lg font-semibold">
-                    <span>RSVP Form is </span>
-                    <span v-if="rsvp.doc.is_published" class="text-green-500">Live</span>
-                    <span v-else class="text-red-500">Unpublished</span>
-                </div>
-                <Button
-                    class="w-fit"
-                    size="md"
-                    :theme="rsvp.doc.is_published ? 'red' : 'green'"
-                    :icon-left="rsvp.doc.is_published ? 'slash' : 'upload'"
-                    :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
-                    @click="togglePublishForm"
-                />
-                <span v-if="rsvp.doc.is_published" class="text-sm text-gray-600">Unpublishing the form will make it unaccessible to users.</span>
-                <span v-else class="text-sm text-gray-600">Publish this form to make it accessible to public.</span>
-            </div>
             <div class="flex flex-col gap-2 text-base">
-                    <span>Route of the RSPV form</span>
+                    <span>Route of the CFP form</span>
                     <CopyToClipboardComponent :route="whole_route" />
             </div>
         </div>
@@ -39,27 +31,48 @@
             <div class="flex flex-col gap-2">
                 <FormControl
                     type="checkbox"
-                    label="Allow RSVP Edit"
-                    description=""
+                    label="Allow Proposal Edit"
                     size="md"
-                    v-model="rsvp.doc.allow_edit"
+                    v-model="cfp.doc.allow_cfp_edit"
                 />
-                <span class="text-sm text-gray-600">Allow users to edit their RSVP after submission.</span>
+                <span class="text-sm text-gray-600">Allow users to edit their CFP after submission.</span>
             </div>
-            <FormControl
-                size="md"
-                type="number"
-                label="Max RSVP Count"
-                description="Maximum RSVP Count for the event. Default is 100."
-                v-model="rsvp.doc.max_rsvp_count"
-            />
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    size="md"
+                    type="checkbox"
+                    label="Anonymise Proposals?"
+                    v-model="cfp.doc.anonymise_proposals"
+                />
+                <span class="text-sm text-gray-600">The proposals will not show the details of the submitter to the public & reviewers until it is approved.</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    type="checkbox"
+                    label="Only Workshops"
+                    size="md"
+                    v-model="cfp.doc.only_workshops"
+                    @change="validateOnlyOneType"
+                />
+                <span class="text-sm text-gray-600">Only accept workshop proposals.</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    type="checkbox"
+                    label="Only Talk Proposals"
+                    size="md"
+                    v-model="cfp.doc.only_talk_proposals"
+                    @change="validateOnlyOneType"
+                />
+                <span class="text-sm text-gray-600">Only accept talk proposals.</span>
+            </div>
             <FormControl
                 size="md"
                 class="col-span-2 h-32"
                 type="textarea"
-                label="RSVP Form Description"
-                description="This description will be shown on the RSVP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
-                v-model="rsvp.doc.rsvp_description"
+                label="CFP Form Description"
+                description="This description will be shown on the CFP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
+                v-model="cfp.doc.cfp_form_description"
             />
         </div>
     </div>
@@ -96,7 +109,7 @@
                 label: 'Type',
                 key: 'type'
             }]"
-            :rows="rsvp.doc.custom_questions"
+            :rows="cfp.doc.cfp_custom_questions"
             :row-key="name"
             :options="{
                 emptyState:{
@@ -104,6 +117,7 @@
                     description: 'You can add custom questions to this form.'
                 },
                 showTooltip: false,
+                selectable: false,
                 onRowClick: (row) => handleCustomRowEdit(row),
             }"
         />
@@ -200,17 +214,17 @@
 </template>
 <script setup>
 import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui';
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { toast } from 'vue-sonner';
-import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue';
+import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue';
 
 const route = useRoute()
 
-const rsvp_form = createResource({
+const cfp_form = createResource({
     url: 'frappe.client.get',
     params: {
-        doctype: 'FOSS Event RSVP',
+        doctype: 'FOSS Event CFP',
         filters: {
             event: route.params.id
         }
@@ -225,14 +239,67 @@ const standard_fields= [
         type: 'text',
     },
     {
-        label: "I'm a",
-        description: 'Current Profession of the attendee',
+        label: 'Email',
+        description: 'Email of the attendee',
         type: 'select',
+    },
+    {
+        label: 'Picture (URL)',
+        description: 'URL for a publicly hosted photo',
+        type: 'url',
+    },
+    {
+        label: 'Designation',
+        description: 'Designation of the attendee',
+        type: 'text',
+    },
+    {
+        label: 'Organization',
+        description: 'Organization of the attendee',
+        type: 'text',
+    },
+    {
+        label: 'Speaker Bio',
+        description: 'Short bio of the speaker',
+        type: 'textarea',
+    },
+    {
+        label: 'Is this your first talk?',
+        type: 'select',
+    },
+    {
+        label: 'Session Type',
+        description: 'Type of session attendee is proposing',
+        type: 'select',
+    },
+    {
+        label: 'Session Title',
+        description: 'Title of the session',
+        type: 'text',
+    },
+    {
+        label: 'Session Reference',
+        description: 'Link relevant references for the talk.',
+        type: 'url',
+    },
+    {
+        label: 'Session Description',
+        description: 'Description of the session',
+        type: 'textarea',
     }
 ]
 
+const validateOnlyOneType = () => {
+    if (cfp.doc.only_workshops && cfp.doc.only_talk_proposals) {
+        toast.error('Invalid Selection.', {
+            description: 'If you wish to accept all type of proposals, uncheck both options.',
+        })
+        cfp.doc.only_workshops = 0
+        cfp.doc.only_talk_proposals = 0
+    }
+}
 
-let rsvp = reactive({})
+let cfp = reactive({})
 let whole_route = ref('')
 
 let custom_field = reactive({
@@ -243,27 +310,29 @@ let custom_field = reactive({
     description: '',
 })
 
-watch(rsvp_form, (newForm) => {
-    rsvp = createDocumentResource({
-        doctype: 'FOSS Event RSVP',
+watch(cfp_form, (newForm) => {
+    cfp = createDocumentResource({
+        doctype: 'FOSS Event CFP',
         name: newForm.data.name,
         fields: ['*'],
         auto: true,
         onSuccess: (doc) => {
-            whole_route = `${window.location.origin}/${doc.route}`
-            custom_field.idx = doc.custom_questions.length + 1
+            whole_route.value = `${window.location.origin}/${doc.route}`
+            custom_field.idx = doc.cfp_custom_questions.length + 1
         }
     })
 })
 
+const emit = defineEmits(['reloadDoc'])
 const togglePublishForm = () => {
-    rsvp.setValue.submit({
-        is_published: !rsvp.doc.is_published
+    cfp.setValue.submit({
+        is_published: !cfp.doc.is_published
     })
-    if (rsvp.doc.is_published) {
-        toast.success('RSVP Form Published Successfully')
+    if (cfp.doc.is_published) {
+        toast.success('CFP Form Published Successfully')
+        emit('reloadDoc')
     } else {
-        toast.warning('RSVP Form Unpublished')
+        toast.warning('CFP Form Unpublished')
     }
 }
 
@@ -271,7 +340,7 @@ const togglePublishForm = () => {
 let show_dialog = ref(false)
 
 const addCustomField = () => {
-    rsvp.doc.custom_questions.push(custom_field)
+    cfp.doc.cfp_custom_questions.push(custom_field)
     custom_field = {
         idx: custom_field.idx + 1,
         question: '',
@@ -292,8 +361,8 @@ const handleCustomRowEdit = (row) => {
 }
 
 const updateCustomField = () => {
-    const index = rsvp.doc.custom_questions.findIndex((field) => field.idx === custom_field.idx)
-    rsvp.doc.custom_questions[index] = custom_field
+    const index = cfp.doc.cfp_custom_questions.findIndex((field) => field.idx === custom_field.idx)
+    cfp.doc.cfp_custom_questions[index] = custom_field
     show_dialog.value = false
     inCustomEdit.value = false
     custom_field = {
@@ -306,18 +375,18 @@ const updateCustomField = () => {
     }
 }
 
-const updateRsvpForm = () => {
-    rsvp.save.submit().then(() => {
-        toast.success('RSVP Form Updated Successfully')
+const updateCfpForm = () => {
+    cfp.save.submit().then(() => {
+        toast.success('CFP Form Updated Successfully')
     }).catch((error) => {
-        toast.error('Failed to update RSVP Form', {
+        toast.error('Failed to update CFP Form', {
             description: error.message
         })
     })
 }
 
 const deleteCustomQuestion = () => {
-    rsvp.doc.custom_questions = rsvp.doc.custom_questions.filter((field) => field.idx !== custom_field.idx)
+    cfp.doc.cfp_custom_questions = cfp.doc.cfp_custom_questions.filter((field) => field.idx !== custom_field.idx)
     show_dialog.value = false
     inCustomEdit.value = false
     custom_field = {
@@ -329,4 +398,5 @@ const deleteCustomQuestion = () => {
         description: '',
     }
 }
+
 </script>

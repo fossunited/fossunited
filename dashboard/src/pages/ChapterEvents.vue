@@ -61,7 +61,7 @@ const upcoming_events = createListResource({
 const past_events = createListResource({
     doctype: 'FOSS Chapter Event',
     fields: ['*'],
-    filters: [['chapter', '=', route.params.id], ['event_start_date', '<', new Date()], ['status', 'in', ['Concluded', 'Cancelled']]],
+    filters: [['chapter', '=', route.params.id], ['event_start_date', '<', new Date()], ['status', 'in', ['Concluded', 'Cancelled', 'Approved']]],
     auto: true,
 })
 </script>

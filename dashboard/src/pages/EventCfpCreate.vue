@@ -1,12 +1,11 @@
 <template>
 <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col md:flex-row justify-between gap-2">
-        <div class="text-xl font-medium">Create RSVP Form</div>
+    <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
         <Button
             size="md"
             icon-left="plus"
             label="Create Form"
-            @click="createRsvpForm"
+            @click="createCfpForm"
         />
     </div>
     <div>
@@ -14,27 +13,52 @@
             <div class="flex flex-col gap-2">
                 <FormControl
                     type="checkbox"
-                    label="Allow RSVP Edit"
+                    label="Allow Proposal Edit"
                     description=""
                     size="md"
-                    v-model="rsvp_doc.allow_edit"
+                    v-model="cfp_doc.allow_edit"
                 />
-                <span class="text-sm text-gray-600">Allow users to edit their RSVP after submission.</span>
+                <span class="text-sm text-gray-600">Allow users to edit their proposals after submission.</span>
             </div>
-            <FormControl
-                size="md"
-                type="number"
-                label="Max RSVP Count"
-                description="Maximum RSVP Count for the event. Default is 100."
-                v-model="rsvp_doc.max_rsvp_count"
-            />
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    type="checkbox"
+                    label="Anonymise Proposals?"
+                    description=""
+                    size="md"
+                    v-model="cfp_doc.anonymise_proposals"
+                />
+                <span class="text-sm text-gray-600">The proposals will not show the name of the proposer.</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    type="checkbox"
+                    label="Only Workshops"
+                    description=""
+                    size="md"
+                    v-model="cfp_doc.only_workshops"
+                    @change="validateOnlyOneType"
+                />
+                <span class="text-sm text-gray-600">Only accept workshop proposals.</span>
+            </div>
+            <div class="flex flex-col gap-2">
+                <FormControl
+                    type="checkbox"
+                    label="Only Talk Proposals"
+                    description=""
+                    size="md"
+                    v-model="cfp_doc.only_talk_proposals"
+                    @change="validateOnlyOneType"
+                />
+                <span class="text-sm text-gray-600">Only accept talk proposals.</span>
+            </div>
             <FormControl
                 size="md"
                 class="col-span-2 h-32"
                 type="textarea"
-                label="RSVP Form Description"
-                description="This description will be shown on the RSVP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
-                v-model="rsvp_doc.rsvp_description"
+                label="CFP Form Description"
+                description="This description will be shown on the CFP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
+                v-model="cfp_doc.cfp_form_description"
             />
         </div>
     </div>
@@ -67,16 +91,17 @@
                 { label: 'Question', key: 'question'},
                 { label: 'Type', key: 'type' },
             ]"
-            :rows="rsvp_doc.custom_questions"
+            :rows="cfp_doc.cfp_custom_questions"
             row-key="idx"
             :options="{
+                selectable: false,
                 emptyState: {
                     title: 'No Custom Fields',
                     description: 'No custom fields have been added yet.'
                 },
                 onRowClick: (row) => handleCustomRowEdit(row),
             }"
-        ></ListView>
+        />
     </div>
     <Dialog
         v-model="show_dialog"
@@ -186,20 +211,76 @@ const standard_fields= [
         type: 'text',
     },
     {
-        label: "I'm a",
-        description: 'Current Profession of the attendee',
+        label: 'Email',
+        description: 'Email of the attendee',
         type: 'select',
+    },
+    {
+        label: 'Picture (URL)',
+        description: 'URL for a publicly hosted photo',
+        type: 'url',
+    },
+    {
+        label: 'Designation',
+        description: 'Designation of the attendee',
+        type: 'text',
+    },
+    {
+        label: 'Organization',
+        description: 'Organization of the attendee',
+        type: 'text',
+    },
+    {
+        label: 'Speaker Bio',
+        description: 'Short bio of the speaker',
+        type: 'textarea',
+    },
+    {
+        label: 'Is this your first talk?',
+        type: 'select',
+    },
+    {
+        label: 'Session Type',
+        description: 'Type of session attendee is proposing',
+        type: 'select',
+    },
+    {
+        label: 'Session Title',
+        description: 'Title of the session',
+        type: 'text',
+    },
+    {
+        label: 'Session Reference',
+        description: 'Link relevant references for the talk.',
+        type: 'url',
+    },
+    {
+        label: 'Session Description',
+        description: 'Description of the session',
+        type: 'textarea',
     }
 ]
 
-let rsvp_doc = reactive({
-    doctype: 'FOSS Event RSVP',
+let cfp_doc = reactive({
+    doctype: 'FOSS Event CFP',
     event: route.params.id,
-    allow_edit: 0,
-    max_rsvp_count: 100,
-    rsvp_description: '',
-    custom_questions: [],
+    anonymise_proposals: 1,
+    allow_cfp_edit: 0,
+    only_workshops: 0,
+    only_talk_proposals: 0,
+    cfp_form_description: '',
+    cfp_custom_questions: [],
 })
+
+const validateOnlyOneType = () => {
+    if (cfp_doc.only_workshops && cfp_doc.only_talk_proposals) {
+        toast.error('Invalid Selection.', {
+            description: 'If you wish to accept all type of proposals, uncheck both options.',
+        })
+        cfp_doc.only_workshops = 0
+        cfp_doc.only_talk_proposals = 0
+    }
+}
 
 let custom_field = reactive({
     idx: 1,
@@ -212,7 +293,7 @@ let custom_field = reactive({
 let show_dialog = ref(false)
 
 const addCustomField = () => {
-    rsvp_doc.custom_questions.push(custom_field)
+    cfp_doc.cfp_custom_questions.push(custom_field)
     custom_field = {
         idx: custom_field.idx + 1,
         question: '',
@@ -231,8 +312,8 @@ const handleCustomRowEdit = (row) => {
     show_dialog.value = true
 }
 const updateCustomField = () => {
-    const index = rsvp_doc.custom_questions.findIndex((field) => field.idx === custom_field.idx)
-    rsvp_doc.custom_questions[index] = custom_field
+    const index = cfp_doc.cfp_custom_questions.findIndex((field) => field.idx === custom_field.idx)
+    cfp_doc.cfp_custom_questions[index] = custom_field
     show_dialog.value = false
     inCustomEdit.value = false
     custom_field = {
@@ -245,24 +326,22 @@ const updateCustomField = () => {
     }
 }
 
-const createRsvpForm = () => {
-    let rsvp = createResource({
+const createCfpForm = () => {
+    let cfp = createResource({
         url: 'frappe.client.insert',
         params: {
-            doc: rsvp_doc
+            doc: cfp_doc
         },
-        onError(error){
-            console.log(error)
-        }
     })
-    rsvp.submit().then((result) => {
-        toast.success('RSVP Form created successfully')
-        emit('rsvpCreated')
-    }).catch((err) => {
-        toast.error('Failed to create RSVP Form', {
-            description: err.message
+    cfp.submit().then((result) => {
+        toast.success('CFP Form Created Successfully.')
+        emit('cfpCreated')
+    }).catch((error) => {
+        toast.error('Error creating CFP Form.', {
+            description: error.message
         })
-    });
+        console.log(error)
+    })
 }
 
 </script>

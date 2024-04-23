@@ -1,22 +1,20 @@
 <template>
-<div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
-    <div class="flex justify-between mt-4">
-        <ChapterHeader :chapter="chapter" />
-    </div>
+<div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
+    <EventHeader :event="event" />
     <div class="flex flex-col mt-4 gap-3 w-fit">
         <div class="text-base text-gray-600">
-            Manage team members of your chapter.
+            Manage volunteers of the event.
         </div>
         <Button
             class="w-fit"
-            label="Add New Member"
+            label="Add Volunteer"
             icon-left="plus"
             size="md"
             @click="showAddmodal= true"
         />
     </div>
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        <Card v-for="member in chapter.doc.chapter_members" :title="member.full_name">
+        <Card v-for="member in event.doc.event_members" :title="member.full_name">
             <template v-if="member.email != session.user" #actions>
                 <Button
                     theme="red"
@@ -101,15 +99,16 @@
 </div>
 </template>
 <script setup>
-import { useRoute } from 'vue-router'
+import EventHeader from '@/components/EventHeader.vue'
 import { createDocumentResource, Avatar, Select, Badge, createResource, Dialog, Autocomplete, createListResource } from 'frappe-ui'
-import ChapterHeader from '@/components/ChapterHeader.vue'
-import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router';
+import { watch, ref } from 'vue';
 import { session } from '@/data/session.js'
-const route = useRoute();
 
-const chapter = createDocumentResource({
-    doctype: 'FOSS Chapter',
+const route = useRoute()
+
+const event = createDocumentResource({
+    doctype: 'FOSS Chapter Event',
     name: route.params.id,
     fields: ['*'],
     auto: true,
@@ -147,7 +146,8 @@ const allUsers = createListResource({
 
     }
 })
-watch(() => chapter.doc && chapter.doc.chapter_members, (newMembers, oldMembers) => {
+
+watch(() => event.doc && event.doc.event_members, (newMembers, oldMembers) => {
     if (newMembers && newMembers !== oldMembers) {
         allUsers.update({
             filters: [['email', 'not in', newMembers.map(m => m.email).join(',')]]
@@ -159,15 +159,15 @@ watch(() => chapter.doc && chapter.doc.chapter_members, (newMembers, oldMembers)
 let showAddmodal = ref(false)
 let newMembers = ref([])
 const addNewMember = () => {
-    const updatedMembers = chapter.doc.chapter_members.concat(newMembers.value.map((value, idx) => {
+    const updatedMembers = event.doc.event_members.concat(newMembers.value.map((value, idx) => {
         return {
-            idx: chapter.doc.chapter_members.length + idx + 1,
-            chapter_member: value.value,
-            role: 'Core Team Member',
+            idx: event.doc.event_members.length + idx + 1,
+            member: value.value,
+            role: 'Volunteer',
         }
     }));
-    chapter.setValue.submit({
-        chapter_members: updatedMembers
+    event.setValue.submit({
+        event_members: updatedMembers
     });
     showAddmodal.value = false
     newMembers.value = []
@@ -180,13 +180,14 @@ const handleRemoveModal = (member) => {
     selectedMember.value = member
 }
 const removeMember = (member) => {
-    const updatedMembers = chapter.doc.chapter_members.filter(m => m.idx !== member.idx);
+    const updatedMembers = event.doc.event_members.filter(m => m.idx !== member.idx);
     updatedMembers.forEach((m, idx) => {
         m.idx = idx + 1;
     });
-    chapter.setValue.submit({
-        chapter_members: updatedMembers
+    event.setValue.submit({
+        event_members: updatedMembers
     });
 }
+
 
 </script>
