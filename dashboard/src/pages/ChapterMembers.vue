@@ -140,7 +140,7 @@ const allUsers = createListResource({
             return {
                 value: user.name,
                 label: user.full_name,
-                description: user.email,
+                description: user.username,
                 avatar: user.profile_photo ? user.profile_photo : '/assets/fossunited/images/defaults/user_profile_image.png',
             }
         })
