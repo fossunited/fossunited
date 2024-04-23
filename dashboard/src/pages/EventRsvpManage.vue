@@ -20,19 +20,6 @@
     <div class="px-4 py-8 md:p-8">
         <div class="text-xl font-medium">Manage RSVP</div>
         <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div>
-                <Card
-                    :class="event_rsvp.data.is_published ? 'text-green-600' : '' "
-                    :title="event_rsvp.data.is_published ? 'Form Status: Live!' : 'Form Status: Unpublished'"
-                >
-                <template v-if="event_rsvp.data.is_published" #actions-left>
-                    <span class="relative flex h-3 w-3 mr-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                    </span>
-                </template>
-                </Card>
-            </div>
             <Switch
                 class="mt-3"
                 size="md"

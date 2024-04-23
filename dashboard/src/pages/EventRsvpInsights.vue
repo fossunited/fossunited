@@ -4,7 +4,7 @@
         <div class="text-xl font-medium">RSVP Insights</div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
             <Card
-                :title="`Total RSVP: ${submissions.data.length}`"
+                :title="`Total Submissions: ${submissions.data.length}`"
                 :subtitle="`out of ${rsvp_form.data.max_rsvp_count}`"
             />
         </div>
@@ -15,7 +15,7 @@
             <Button
                 class="w-fit"
                 size="md"
-                label="Download Attendee List"
+                label="Download List"
                 icon-left="download"
                 @click="downloadAttendeeList"
             />
@@ -34,7 +34,7 @@
             :options="{
                 selectable: false,
                 emptyState: {
-                    title: 'No RSVP Submissions Yet',
+                    title: 'No Submissions Yet',
                     description: 'No one has RSVPed for the event yet.'
                 }
             }"
