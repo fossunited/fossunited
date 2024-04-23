@@ -37,11 +37,11 @@ let tabs = reactive({
 const replaceCreateOption = () => {
     tabs.options = tabs.options.filter((d) => d.label !== 'Create')
 
-    if (tabs.options.find((d) => d.label === 'Edit')){
+    if (tabs.options.find((d) => d.label === 'Edit Form')){
         return
     }
     tabs.options.push({
-        label: 'Edit',
+        label: 'Edit Form',
         route: `/event/${route.params.id}/rsvp/edit`
     })
     tabs.options.push({

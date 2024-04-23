@@ -1,32 +1,24 @@
 <template>
 <div v-if="cfp_form.data && cfp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
+    <div class="flex flex-row justify-end gap-2">
+        <Button
+            class="w-fit"
+            size="md"
+            :theme="cfp.doc.is_published ? 'red' : 'green'"
+            :icon-left="cfp.doc.is_published ? 'slash' : 'upload'"
+            :label="cfp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
+            @click="togglePublishForm"
+        />
+
         <Button
             size="md"
             variant="solid"
-            label="Update Form"
+            label="Save Changes"
             @click="updateCfpForm"
         />
     </div>
     <div>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <div class="flex flex-col gap-4">
-                <div class="text-lg font-semibold">
-                    <span>CFP Form is </span>
-                    <span v-if="cfp.doc.is_published" class="text-green-500">Live</span>
-                    <span v-else class="text-red-500">Unpublished</span>
-                </div>
-                <Button
-                    class="w-fit"
-                    size="md"
-                    :theme="cfp.doc.is_published ? 'red' : 'green'"
-                    :icon-left="cfp.doc.is_published ? 'slash' : 'upload'"
-                    :label="cfp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
-                    @click="togglePublishForm"
-                />
-                <span v-if="cfp.doc.is_published" class="text-sm text-gray-600">Unpublishing the form will make it unaccessible to users.</span>
-                <span v-else class="text-sm text-gray-600">Publish this form to make it accessible to public.</span>
-            </div>
             <div class="flex flex-col gap-2 text-base">
                     <span>Route of the CFP form</span>
                     <CopyToClipboardComponent :route="whole_route" />
@@ -222,7 +214,7 @@
 </template>
 <script setup>
 import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui';
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, defineEmits } from 'vue';
 import { useRoute } from 'vue-router';
 import { toast } from 'vue-sonner';
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue';
@@ -325,18 +317,20 @@ watch(cfp_form, (newForm) => {
         fields: ['*'],
         auto: true,
         onSuccess: (doc) => {
-            whole_route = `${window.location.origin}/${doc.route}`
+            whole_route.value = `${window.location.origin}/${doc.route}`
             custom_field.idx = doc.cfp_custom_questions.length + 1
         }
     })
 })
 
+const emit = defineEmits(['reloadDoc'])
 const togglePublishForm = () => {
     cfp.setValue.submit({
         is_published: !cfp.doc.is_published
     })
     if (cfp.doc.is_published) {
         toast.success('CFP Form Published Successfully')
+        emit('reloadDoc')
     } else {
         toast.warning('CFP Form Unpublished')
     }
