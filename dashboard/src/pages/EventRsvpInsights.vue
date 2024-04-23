@@ -66,7 +66,7 @@ const submissions = createListResource({
     filters: {
         event: route.params.id
     },
-    page_length: 99999,
+    pageLength: 99999,
     auto: true,
     transform(data){
         data.forEach(submission => {
