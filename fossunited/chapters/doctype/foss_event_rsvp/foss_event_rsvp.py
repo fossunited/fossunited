@@ -15,7 +15,7 @@ class FOSSEventRSVP(WebsiteGenerator):
         self.enable_rsvp_tab()
 
     def on_update(self):
-        if self.rsvp_count >= self.max_rsvp_count:
+        if int(self.rsvp_count) >= int(self.max_rsvp_count):
             self.is_published = 0
 
     def get_context(self, context):
