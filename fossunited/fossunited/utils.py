@@ -538,8 +538,11 @@ def get_grouped_events():
 
 
 def get_month_grouped_events(events):
-    grouped_events = {"upcoming": [], "past": []}
-    month_grouped_events = {"upcoming": {}, "past": {}}
+    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
+    month_grouped_events = {
+        "Upcoming FOSS Events": {},
+        "Past Events": {},
+    }
     now = now_datetime()
 
     for event in events:
@@ -548,9 +551,9 @@ def get_month_grouped_events(events):
         )
         event.month_year = event_month_year
         if event.event_start_date > now:
-            grouped_events["upcoming"].append(event)
+            grouped_events["Upcoming FOSS Events"].append(event)
         else:
-            grouped_events["past"].append(event)
+            grouped_events["Past Events"].append(event)
 
     for key, values in grouped_events.items():
         for month_year, month_year_events in itertools.groupby(

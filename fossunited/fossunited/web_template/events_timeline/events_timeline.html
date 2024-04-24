@@ -1,71 +1,68 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 
 <style>
+  .events-timeline {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
+  }
+  .events-search {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--Gray-200, #eaecf0);
+    background-color: white;
+    max-width: 70%;
+  }
 
-    .events-timeline{
-        padding-top: 7rem;
-        padding-bottom: 7rem;
-        display:flex;
-        flex-direction: column;
-        gap: 4rem;
-    }
-    .events-search{
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--Gray-200, #EAECF0);
-        background-color: white;
-        max-width: 70%;
-    }
+  #events-search {
+    border-color: transparent;
+    width: 100%;
+  }
 
-    #events-search{
-        border-color: transparent;
-        width: 100%
-    }
+  #events-search::placeholder {
+    color: var(--Gray-500, #667085);
+  }
 
-    #events-search::placeholder{
-        color: var(--Gray-500, #667085);
-    }
+  #events-search:focus {
+    outline: none;
+  }
 
-    #events-search:focus{
-        outline: none;
-    }
-
-    .upcoming-events{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-
+  .event- {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
 </style>
 
-
 <div class="container events-timeline">
-
-    <div class="search-filter-section">
-        <div class="events-search">
-
-            <input type="text" id="events-search" placeholder="Search by event, date, city">
-
-        </div>
+  <div class="search-filter-section">
+    <div class="events-search">
+      <input
+        type="text"
+        id="events-search"
+        placeholder="Search by event, date, city"
+      />
     </div>
+  </div>
 
-    <!--Upcoming Events-->
+  {% set grouped_events = get_grouped_events() %} {% for group, events in
+  grouped_events.items() %}
 
-    <div class="upcoming-events">
-        <h5>Upcoming Events</h5>
-        <div class="events-grid-4">
-            {% for event in events %}
-                {% if frappe.utils.getdate(event.event_start_date) >= current_date %}
-                    {{ event_card(event) }}
-                {% endif %}
-            {% endfor %}
+  <div class="event-group">
+    <h4>{{ group }}</h4>
+    {% for month, month_events in events.items() %}
+    <h5>{{ month }}</h5>
+    <div class="events-grid-4">
+      {% for event in month_events %}
+      <div class="event-card show">{{event_card(event)}}</div>
 
-        </div>
+      {% endfor %}
     </div>
+    {% endfor %}
+  </div>
+  {% endfor %}
 
-
-
-    <!--Past Events-->
-
+  <!--Past Events-->
 </div>
