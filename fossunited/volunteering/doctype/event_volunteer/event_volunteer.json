@@ -57,6 +57,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Email",
+   "options": "Email",
    "reqd": 1
   },
   {
@@ -123,7 +124,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-16 14:49:52.541158",
+ "modified": "2024-04-24 13:31:01.108708",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",
