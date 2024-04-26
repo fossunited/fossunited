@@ -17,8 +17,7 @@
     </div>
 </div>
 <div v-if="rsvp_exists && event_rsvp.data">
-    <div class="px-4 py-8 md:p-8">
-        <div class="text-xl font-medium">Manage RSVP</div>
+    <div class="p-4 md:p-8">
         <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <Switch
                 class="mt-3"
@@ -33,7 +32,7 @@
 </div>
 </template>
 <script setup>
-import { createDocumentResource, createResource, FormControl, Switch, Tabs } from 'frappe-ui';
+import { createDocumentResource, createResource, Switch } from 'frappe-ui';
 import { reactive, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { toast } from 'vue-sonner';

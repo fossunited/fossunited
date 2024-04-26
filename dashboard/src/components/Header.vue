@@ -28,21 +28,21 @@
         },
       ]"
     >
-        <div class="flex items-center gap-1">
-          <img
+          <Avatar
             v-if="user_profile.data"
-            class="w-8 h-8 rounded-full text-xs"
-            :src="user_profile.data.profile_photo || '/assets/fossunited/images/defaults/user_profile_image.png'"
-            :alt="user_profile.data.full_name"
+            :shape="'circle'"
+            class="cursor-pointer"
+            :image="user_profile.data.profile_photo || '/assets/fossunited/images/defaults/user_profile_image.png'"
+            :label="user_profile.data.full_name[0].toUpperCase()"
+            size="xl"
           />
-        </div>
     </Dropdown>
     </div>
     </header>
 </template>
 <script setup>
 import { session } from '@/data/session.js'
-import { Dropdown, createResource } from 'frappe-ui';
+import { Avatar, Dropdown, createResource } from 'frappe-ui';
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 let user_profile = createResource({

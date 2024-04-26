@@ -28,26 +28,29 @@ let tabs = reactive({
             route: `/event/${route.params.id}/rsvp`
         },
         {
-            label: 'Create',
+            label: 'Web Form',
             route: `/event/${route.params.id}/rsvp/create`
         },
     ]
 })
 
 const replaceCreateOption = () => {
-    tabs.options = tabs.options.filter((d) => d.label !== 'Create')
+    // TODO: simplify this
+    tabs.options = tabs.options.filter((d) => d.label !== 'Web Form')
 
-    if (tabs.options.find((d) => d.label === 'Edit Form')){
-        return
+    if (!tabs.options.find((d) => d.label === 'Web Form')){
+        tabs.options.push({
+            label: 'Web Form',
+            route: `/event/${route.params.id}/rsvp/edit`
+        })
     }
-    tabs.options.push({
-        label: 'Edit Form',
-        route: `/event/${route.params.id}/rsvp/edit`
-    })
-    tabs.options.push({
-        label: 'Insights',
-        route: `/event/${route.params.id}/rsvp/insights`
-    })
+
+    if (!tabs.options.find((d) => d.label === 'Insights')){
+        tabs.options.push({
+            label: 'Insights',
+            route: `/event/${route.params.id}/rsvp/insights`
+        })
+    }
 }
 
 let rsvp_exists = ref(false)

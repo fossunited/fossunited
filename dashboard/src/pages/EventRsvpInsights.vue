@@ -1,27 +1,16 @@
 <template>
 <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col gap-4 my-2">
-        <div class="text-xl font-medium">RSVP Insights</div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <Card
-                :title="`Total Submissions: ${submissions.data.length}`"
-                :subtitle="`out of ${rsvp_form.data.max_rsvp_count}`"
-            />
-        </div>
-    </div>
-    <div class="flex flex-col gap-4">
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Attendee List</div>
-        <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-4 mt-5">
+        <div class="flex items-center justify-between">
+            <div class="font-semibold text-gray-800">Attendees
+
+                <span class="text-gray-700 text-base font-normal">({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})</span>
+            </div>
             <Button
-                class="w-fit"
                 size="md"
-                label="Download List"
                 icon-left="download"
                 @click="downloadAttendeeList"
-            />
-            <span class="text-sm text-gray-500">
-                Download the list of attendees who have RSVPed for the event.
-            </span>
+            >Download</Button>
         </div>
         <ListView
             :columns="[
@@ -34,17 +23,16 @@
             :options="{
                 selectable: false,
                 emptyState: {
-                    title: 'No Submissions Yet',
                     description: 'No one has RSVPed for the event yet.'
-                }
+                },
             }"
         />
     </div>
 </div>
 </template>
 <script setup>
-import { createListResource, createResource, ListView } from 'frappe-ui';
 import { useRoute } from 'vue-router';
+import { createListResource, createResource, ListView, Button } from 'frappe-ui';
 
 const route = useRoute()
 

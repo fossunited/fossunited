@@ -30,20 +30,20 @@ let tabs = reactive({
             route: `/event/${route.params.id}/cfp`
         },
         {
-            label: 'Create',
+            label: 'Web Form',
             route: `/event/${route.params.id}/cfp/create`
         },
     ]
 })
 
 const replaceCreateOption = () => {
-    tabs.options = tabs.options.filter((d) => d.label !== 'Create')
+    tabs.options = tabs.options.filter((d) => d.label !== 'Web Form')
 
-    if (tabs.options.find((d) => d.label === 'Edit Form')){
+    if (tabs.options.find((d) => d.label === 'Web Form')){
         return
     }
     tabs.options.push({
-        label: 'Edit Form',
+        label: 'Web Form',
         route: `/event/${route.params.id}/cfp/edit`
     })
     tabs.options.push({
