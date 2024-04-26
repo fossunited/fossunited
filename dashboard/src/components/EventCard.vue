@@ -1,7 +1,7 @@
 <template>
     <Card
     :title="event.event_name"
-    class="hover:border-2 hover:border-gray-500 transition-all hover:cursor-pointer"
+    class="border-2 border-transparent hover:border-gray-500 transition-colors hover:cursor-pointer"
     @click="() => $router.replace(`/event/${event.name}`)"
     >
         <div class="flex justify-between">
