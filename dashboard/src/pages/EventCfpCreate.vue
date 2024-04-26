@@ -4,7 +4,7 @@
         <Button
             size="md"
             icon-left="plus"
-            label="Create Form"
+            label="Save"
             @click="createCfpForm"
         />
     </div>
