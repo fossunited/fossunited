@@ -24,7 +24,7 @@ const event = createDocumentResource({
 let tabs = reactive({
     options: [
         {
-            label: 'Status',
+            label: 'Overview',
             route: `/event/${route.params.id}/rsvp`
         },
         {
