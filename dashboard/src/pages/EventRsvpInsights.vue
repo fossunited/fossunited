@@ -1,16 +1,11 @@
 <template>
 <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col gap-4 my-2">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-            <Card
-                :title="`Total Submissions: ${submissions.data.length}`"
-                :subtitle="`out of ${rsvp_form.data.max_rsvp_count}`"
-            />
-        </div>
-    </div>
     <div class="flex flex-col gap-4 mt-5">
         <div class="flex items-center justify-between">
-            <div class="font-semibold text-gray-800">Attendees</div>
+            <div class="font-semibold text-gray-800">Attendees
+
+                <span class="text-gray-700 text-base font-normal">({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})</span>
+            </div>
             <Button
                 size="md"
                 icon-left="download"
