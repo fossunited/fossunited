@@ -1,6 +1,4 @@
-<template>
-  <div></div>
-</template>
+<template></template>
 
 <script setup>
 import { onMounted } from 'vue'
