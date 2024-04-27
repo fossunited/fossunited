@@ -9,9 +9,16 @@ const routes = [
     component: () => import('@/pages/Home.vue'),
   },
   {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import("@/pages/Checkout.vue"),
+    meta: { isPublicPage: true }
+  },
+  {
     name: 'Login',
     path: '/account/login',
     component: () => import('@/pages/Login.vue'),
+    meta: { isPublicPage: true }
   },
   {
     name: 'Event',
@@ -128,7 +135,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.name === 'Login' && isLoggedIn) {
     next({ name: 'Home' })
-  } else if (to.name !== 'Login' && !isLoggedIn) {
+  } else if (to.name !== 'Login' && !isLoggedIn && !to.meta.isPublicPage) {
     next({ name: 'Login' })
   } else {
     next()
