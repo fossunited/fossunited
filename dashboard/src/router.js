@@ -11,20 +11,20 @@ const routes = [
   {
     path: '/checkout',
     name: 'checkout',
-    component: () => import("@/pages/Checkout.vue"),
-    meta: { isPublicPage: true }
+    component: () => import('@/pages/Checkout.vue'),
+    meta: { isPublicPage: true },
   },
   {
     path: '/payment-success',
     name: 'success',
-    component: () => import("@/pages/PaymentSuccess.vue"),
-    meta: { isPublicPage: true }
+    component: () => import('@/pages/PaymentSuccess.vue'),
+    meta: { isPublicPage: true },
   },
   {
     name: 'Login',
     path: '/account/login',
     component: () => import('@/pages/Login.vue'),
-    meta: { isPublicPage: true }
+    meta: { isPublicPage: true },
   },
   {
     name: 'Event',
@@ -61,7 +61,7 @@ const routes = [
             name: 'EventRsvpInsights',
             component: () => import('@/pages/EventRsvpInsights.vue'),
           },
-        ]
+        ],
       },
       {
         path: 'cfp',
@@ -88,14 +88,14 @@ const routes = [
             name: 'EventCfpInsights',
             component: () => import('@/pages/EventCfpInsights.vue'),
           },
-        ]
+        ],
       },
       {
         path: 'volunteers',
         name: 'EventVolunteers',
         component: () => import('@/pages/EventVolunteers.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     name: 'Chapter',
@@ -122,8 +122,8 @@ const routes = [
         name: 'ChapterMembers',
         component: () => import('@/pages/ChapterMembers.vue'),
       },
-    ]
-  }
+    ],
+  },
 ]
 
 let router = createRouter({
