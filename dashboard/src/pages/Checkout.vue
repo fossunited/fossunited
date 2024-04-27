@@ -1,4 +1,6 @@
 <template>
+  <RazorpayCheckout ref="rzpCheckout" />
+
   <div>
     <h1>Checkout with Razorpay</h1>
 
@@ -102,8 +104,7 @@
     <h3>Total Amount: {{ totalAmount }}</h3>
 
     <Button
-      :disabled="createRazorpayOrder.loading"
-      :loading="createRazorpayOrder.loading"
+      :loading="rzpCheckout?.resource.loading"
       @click="createOrder"
       variant="solid"
       >Pay Now</Button
@@ -112,7 +113,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted, watch } from 'vue'
 import { createResource, FeatherIcon, FormControl, Button } from 'frappe-ui'
 import {
   RadioGroup,
@@ -120,9 +121,8 @@ import {
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
+import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
@@ -132,6 +132,8 @@ const checkoutInfo = reactive({
   attendees: [],
   event: eventName.value,
 })
+
+const rzpCheckout = ref(null)
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event',
@@ -148,74 +150,8 @@ const event = createResource({
   },
 })
 
-const createRazorpayOrder = createResource({
-  url: 'fossunited.api.dashboard.create_razorpay_order',
-  makeParams() {
-    return {
-      checkout_info: {
-        amount: totalAmount.value,
-        email: checkoutInfo.email,
-      },
-    }
-  },
-  onSuccess(data) {
-    // show razorpay checkout window
-    const orderId = data.order_id
-    const razorpayKey = data.key_id
-
-    const options = {
-      key: razorpayKey,
-      name: 'FOSS United',
-      description: 'FOSS United Event',
-      order_id: orderId,
-      handler: function (response) {
-        createResource({
-          url: 'fossunited.api.dashboard.handle_payment_success',
-          auto: true,
-          makeParams() {
-            return {
-              order_id: response.razorpay_order_id,
-              payment_id: response.razorpay_payment_id,
-              signature: response.razorpay_signature,
-            }
-          },
-          onSuccess() {
-            router.replace({ name: 'success' })
-          },
-        })
-      },
-      prefill: {
-        email: checkoutInfo.email,
-      },
-      notes: {
-        address: 'FOSS United Office',
-      },
-      theme: {
-        color: '#3399cc',
-      },
-    }
-
-    const rzp = new Razorpay(options)
-    rzp.on('payment.failed', function (response) {
-      console.log(response)
-      // payment failed
-      alert('Payment Failed!')
-      createResource({
-        url: 'fossunited.api.dashboard.handle_payment_failed',
-        auto: true,
-        makeParams() {
-          return {
-            order_id: response.error.metadata.order_id,
-          }
-        },
-      })
-    })
-    rzp.open()
-  },
-})
-
 function createOrder() {
-  createRazorpayOrder.fetch()
+  rzpCheckout.value.createOrder(totalAmount.value, checkoutInfo.email)
 }
 
 onMounted(() => {
@@ -224,14 +160,6 @@ onMounted(() => {
     eventName.value = params.get('event')
     event.fetch()
   }
-
-  // todo: check if razorpay script is already loaded
-  let razorpayScript = document.createElement('script')
-  razorpayScript.setAttribute(
-    'src',
-    'https://checkout.razorpay.com/v1/checkout.js',
-  )
-  document.head.appendChild(razorpayScript)
 })
 
 const totalAmount = computed(() => {
