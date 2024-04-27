@@ -21,6 +21,7 @@
    "in_list_view": 1,
    "label": "Amount",
    "options": "currency",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -32,25 +33,32 @@
    "fieldname": "currency",
    "fieldtype": "Select",
    "label": "Currency",
-   "options": "INR"
+   "options": "INR",
+   "read_only": 1
   },
   {
    "default": "Pending",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
-   "options": "Captured\nFailed\nPending"
+   "options": "Captured\nFailed\nPending",
+   "read_only": 1
   },
   {
    "fieldname": "order_id",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Order ID",
+   "read_only": 1,
    "unique": 1
   },
   {
    "fieldname": "payment_id",
    "fieldtype": "Data",
-   "label": "Payment ID"
+   "label": "Payment ID",
+   "read_only": 1
   },
   {
    "fieldname": "customer_section",
@@ -60,7 +68,9 @@
   {
    "fieldname": "email",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Email",
+   "read_only": 1,
    "reqd": 1
   }
  ],
@@ -71,7 +81,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-04-27 13:07:35.351274",
+ "modified": "2024-04-27 18:51:03.113120",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",
@@ -92,6 +102,19 @@
  ],
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Pending"
+  },
+  {
+   "color": "Red",
+   "title": "Failed"
+  },
+  {
+   "color": "Green",
+   "title": "Captured"
+  }
+ ],
  "title_field": "order_id"
 }

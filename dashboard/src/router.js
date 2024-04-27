@@ -10,8 +10,14 @@ const routes = [
   },
   {
     path: '/checkout',
-    name: 'Checkout',
+    name: 'checkout',
     component: () => import("@/pages/Checkout.vue"),
+    meta: { isPublicPage: true }
+  },
+  {
+    path: '/payment-success',
+    name: 'success',
+    component: () => import("@/pages/PaymentSuccess.vue"),
     meta: { isPublicPage: true }
   },
   {
