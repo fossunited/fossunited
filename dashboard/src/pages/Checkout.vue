@@ -113,7 +113,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted, watch } from 'vue'
+import { computed, reactive, ref, onMounted } from 'vue'
 import { createResource, FeatherIcon, FormControl, Button } from 'frappe-ui'
 import {
   RadioGroup,
