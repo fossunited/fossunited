@@ -1,8 +1,9 @@
 import './index.css'
 
-import { createApp } from 'vue'
+import { createApp, provide } from 'vue'
 import router from './router'
 import App from './App.vue'
+import { session } from './data/session'
 
 import {
   Button,
@@ -20,6 +21,7 @@ setConfig('resourceFetcher', frappeRequest)
 app.use(router)
 app.use(resourcesPlugin)
 
+app.provide('$session', session)
 app.component('Button', Button)
 app.component('Card', Card)
 app.component('Input', Input)

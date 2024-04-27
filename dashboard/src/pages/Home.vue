@@ -40,12 +40,12 @@
 </template>
 
 <script setup>
-import { watch } from 'vue'
-import { session } from '@/data/session.js'
+import { inject, watch } from 'vue'
 import Header from '@/components/Header.vue'
 import EventCard from '@/components/EventCard.vue'
 import ChapterCard from '@/components/ChapterCard.vue'
 import { createResource, createListResource, usePageMeta } from 'frappe-ui'
+let session = inject('$session')
 
 let chapter = createListResource({
   doctype: 'FOSS Chapter',
