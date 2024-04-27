@@ -1,7 +1,6 @@
-import { inject } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import { userResource } from '@/data/user'
-let session = inject('$session')
+import { sessionUser } from './data/session'
 
 const routes = [
   {
@@ -120,7 +119,7 @@ let router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
-  let isLoggedIn = session.isLoggedIn
+  let isLoggedIn = Boolean(sessionUser())
   try {
     await userResource.promise
   } catch (error) {
