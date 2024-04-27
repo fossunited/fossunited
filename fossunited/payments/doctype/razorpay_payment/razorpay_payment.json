@@ -65,8 +65,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-04-27 12:35:51.485806",
+ "links": [
+  {
+   "link_doctype": "FOSS Event Ticket",
+   "link_fieldname": "razorpay_payment"
+  }
+ ],
+ "modified": "2024-04-27 13:07:35.351274",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",

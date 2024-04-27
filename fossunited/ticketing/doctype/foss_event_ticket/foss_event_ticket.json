@@ -8,6 +8,7 @@
   "event",
   "full_name",
   "column_break_dnhv",
+  "tier",
   "email",
   "payment_details_section",
   "razorpay_payment",
@@ -60,11 +61,17 @@
    "label": "Event",
    "options": "FOSS Chapter Event",
    "reqd": 1
+  },
+  {
+   "fieldname": "tier",
+   "fieldtype": "Data",
+   "label": "Tier",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-27 12:43:12.009726",
+ "modified": "2024-04-27 12:55:27.220586",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
