@@ -1,6 +1,7 @@
+import { inject } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import { session } from './data/session'
 import { userResource } from '@/data/user'
+let session = inject('$session')
 
 const routes = [
   {

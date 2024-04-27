@@ -102,8 +102,8 @@
 import EventHeader from '@/components/EventHeader.vue'
 import { createDocumentResource, Avatar, Select, Badge, createResource, Dialog, Autocomplete, createListResource } from 'frappe-ui'
 import { useRoute } from 'vue-router';
-import { watch, ref } from 'vue';
-import { session } from '@/data/session.js'
+import { inject, watch, ref } from 'vue';
+let session = inject('$session')
 
 const route = useRoute()
 
