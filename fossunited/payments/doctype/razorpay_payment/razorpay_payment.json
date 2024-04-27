@@ -12,7 +12,9 @@
   "order_id",
   "payment_id",
   "customer_section",
-  "email"
+  "email",
+  "section_break_hwhl",
+  "meta_data"
  ],
  "fields": [
   {
@@ -72,6 +74,18 @@
    "label": "Email",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hwhl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "{}",
+   "fieldname": "meta_data",
+   "fieldtype": "Code",
+   "label": "Meta Data",
+   "options": "JSON",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -81,7 +95,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-04-27 18:51:03.113120",
+ "modified": "2024-04-27 23:15:48.790816",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",

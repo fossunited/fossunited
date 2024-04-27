@@ -151,7 +151,12 @@ const event = createResource({
 })
 
 function createOrder() {
-  rzpCheckout.value.createOrder(totalAmount.value, checkoutInfo.email)
+  rzpCheckout.value.createOrder(totalAmount.value, checkoutInfo.email, {
+    event: checkoutInfo.event,
+    tier: checkoutInfo.tier,
+    num_seats: checkoutInfo.numSeats,
+    attendees: checkoutInfo.attendees,
+  })
 }
 
 onMounted(() => {
