@@ -1,37 +1,37 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2023-12-28 19:50:14.692521",
+ "creation": "2024-04-27 12:21:59.161018",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "key_id",
-  "column_break_hgtt",
+  "column_break_afgo",
   "key_secret"
  ],
  "fields": [
-  {
-   "fieldname": "key_secret",
-   "fieldtype": "Password",
-   "label": "Key Secret"
-  },
   {
    "fieldname": "key_id",
    "fieldtype": "Data",
    "label": "Key ID"
   },
   {
-   "fieldname": "column_break_hgtt",
+   "fieldname": "column_break_afgo",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "key_secret",
+   "fieldtype": "Password",
+   "label": "Key Secret"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-27 12:07:20.481100",
+ "modified": "2024-04-27 12:22:29.263992",
  "modified_by": "Administrator",
- "module": "Razorpay",
- "name": "Razorpay Keys",
+ "module": "Payments",
+ "name": "Razorpay Settings",
  "owner": "Administrator",
  "permissions": [
   {
@@ -45,7 +45,7 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }

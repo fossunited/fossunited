@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestRazorpayKeys(FrappeTestCase):
+class TestRazorpaySettings(FrappeTestCase):
     pass
