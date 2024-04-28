@@ -4,7 +4,6 @@
   <div>
     <h1>Checkout with Razorpay</h1>
 
-
     <h2 class="text-xl font-bold">Select a tier</h2>
 
     <RadioGroup v-model="checkoutInfo.tier">
@@ -130,7 +129,16 @@ const checkoutInfo = reactive({
   tier: null,
   numSeats: 1,
   email: '',
-  attendees: [],
+  attendees: [
+    {
+      full_name: 'Hussain Nagaria',
+      email: 'hussain@bwh.live',
+    },
+    {
+      full_name: 'Harsh Tandya',
+      email: 'harsh@fossunited.org'
+    }
+  ],
 })
 
 const rzpCheckout = ref(null)

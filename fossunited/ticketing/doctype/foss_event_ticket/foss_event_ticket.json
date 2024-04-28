@@ -43,7 +43,8 @@
    "fieldname": "razorpay_payment",
    "fieldtype": "Link",
    "label": "Razorpay Payment",
-   "options": "Razorpay Payment"
+   "options": "Razorpay Payment",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_uihi",
@@ -65,13 +66,12 @@
   {
    "fieldname": "tier",
    "fieldtype": "Data",
-   "label": "Tier",
-   "read_only": 1
+   "label": "Tier"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-27 12:55:27.220586",
+ "modified": "2024-04-28 06:34:15.220384",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

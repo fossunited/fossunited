@@ -6,6 +6,8 @@ app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 # required_apps = []
 
+export_python_type_annotations = True
+
 fixtures = ["State", "City", "FOSS Event Type"]
 
 # Includes in <head>
@@ -191,7 +193,12 @@ doc_events = {
             "fossunited.fossunited.user_utils.set_unique_username",
             "fossunited.fossunited.user_utils.create_profile_on_user_create",
         ],
-    }
+    },
+    "Razorpay Payment": {
+        "on_update": [
+            "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.handle_payment_on_update"
+        ]
+    },
 }
 
 # Scheduled Tasks
