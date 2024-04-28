@@ -21,8 +21,8 @@
         >
           <div
             :class="[
-              active
-                ? 'border-indigo-600 ring-2 ring-indigo-600'
+              checked
+                ? 'border-gray-600 ring-2 ring-gray-600'
                 : 'border-gray-300',
               'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
             ]"
@@ -48,7 +48,7 @@
             </span>
             <FeatherIcon
               name="check-circle"
-              :class="[!checked ? 'invisible' : '', 'h-5 w-5 text-indigo-600']"
+              :class="[!checked ? 'invisible' : '', 'h-5 w-5 text-gray-700']"
               aria-hidden="true"
             />
             <span
