@@ -19,7 +19,12 @@ def get_event(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
-def create_razorpay_order(checkout_info: dict, meta_data=dict()):
+def create_razorpay_order(
+    checkout_info: dict,
+    meta_data=dict(),
+    ref_doctype=None,
+    ref_docname=None,
+):
     client = get_razorpay_client()
     order = client.order.create(
         data={
@@ -35,6 +40,8 @@ def create_razorpay_order(checkout_info: dict, meta_data=dict()):
             "status": "Pending",
             "email": checkout_info["email"],
             "order_id": order["id"],
+            "document_type": ref_doctype,
+            "document_name": ref_docname,
             "meta_data": frappe.as_json(meta_data, indent=2),
         }
     ).insert(ignore_permissions=True)

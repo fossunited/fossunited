@@ -85,14 +85,21 @@ function loadRazorpayCheckoutJS() {
   document.head.appendChild(razorpayScript)
 }
 
-const createRazorpayOrder = (amount, customerEmail, metaData={}) => {
-  console.log(amount, customerEmail)
+const createRazorpayOrder = (
+  amount,
+  customerEmail,
+  metaData = {},
+  refDocType = null,
+  refDocName = null,
+) => {
   createRazorpayOrderResource.fetch({
     checkout_info: {
       amount,
       email: customerEmail,
     },
-    meta_data: metaData
+    meta_data: metaData,
+    ref_doctype: refDocType,
+    ref_docname: refDocName,
   })
 }
 

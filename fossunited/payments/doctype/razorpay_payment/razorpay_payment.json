@@ -13,6 +13,10 @@
   "payment_id",
   "customer_section",
   "email",
+  "references_section",
+  "document_type",
+  "column_break_tdxc",
+  "document_name",
   "section_break_hwhl",
   "meta_data"
  ],
@@ -86,6 +90,29 @@
    "label": "Meta Data",
    "options": "JSON",
    "read_only": 1
+  },
+  {
+   "fieldname": "references_section",
+   "fieldtype": "Section Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "document_type",
+   "fieldtype": "Link",
+   "label": "Document Type",
+   "options": "DocType",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_tdxc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "document_name",
+   "fieldtype": "Dynamic Link",
+   "label": "Document Name",
+   "options": "document_type",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -95,7 +122,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-04-27 23:15:48.790816",
+ "modified": "2024-04-28 05:57:09.738852",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",

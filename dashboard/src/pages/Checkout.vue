@@ -4,6 +4,7 @@
   <div>
     <h1>Checkout with Razorpay</h1>
 
+
     <h2 class="text-xl font-bold">Select a tier</h2>
 
     <RadioGroup v-model="checkoutInfo.tier">
@@ -151,12 +152,18 @@ const event = createResource({
 })
 
 function createOrder() {
-  rzpCheckout.value.createOrder(totalAmount.value, checkoutInfo.email, {
-    event: checkoutInfo.event,
-    tier: checkoutInfo.tier,
-    num_seats: checkoutInfo.numSeats,
-    attendees: checkoutInfo.attendees,
-  })
+  rzpCheckout.value.createOrder(
+    totalAmount.value,
+    checkoutInfo.email,
+    {
+      event: checkoutInfo.event,
+      tier: checkoutInfo.tier,
+      num_seats: checkoutInfo.numSeats,
+      attendees: checkoutInfo.attendees,
+    },
+    event.data.doctype,
+    event.data.name,
+  )
 }
 
 onMounted(() => {
