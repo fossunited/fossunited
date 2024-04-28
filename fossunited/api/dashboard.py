@@ -1,16 +1,9 @@
 import frappe
-import razorpay
 
-
-def get_razorpay_client():
-    razorpay_settings = frappe.get_cached_doc("Razorpay Settings")
-    key_id = razorpay_settings.key_id
-    key_secret = razorpay_settings.get_password("key_secret")
-    return razorpay.Client(auth=(key_id, key_secret))
-
-
-def get_in_razorpay_money(amount):
-    return amount * 100
+from fossunited.utils.payments import (
+    get_in_razorpay_money,
+    get_razorpay_client,
+)
 
 
 @frappe.whitelist(allow_guest=True)
