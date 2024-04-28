@@ -32,6 +32,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Email",
+   "options": "Email",
    "reqd": 1
   },
   {
@@ -61,7 +62,8 @@
    "fieldtype": "Link",
    "label": "Event",
    "options": "FOSS Chapter Event",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "tier",
@@ -71,7 +73,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-28 06:34:15.220384",
+ "modified": "2024-04-28 07:00:28.477641",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
