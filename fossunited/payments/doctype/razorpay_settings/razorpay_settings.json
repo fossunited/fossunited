@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "key_id",
+  "webhook_secret",
   "column_break_afgo",
   "key_secret"
  ],
@@ -23,12 +24,17 @@
    "fieldname": "key_secret",
    "fieldtype": "Password",
    "label": "Key Secret"
+  },
+  {
+   "fieldname": "webhook_secret",
+   "fieldtype": "Password",
+   "label": "Webhook Secret"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-04-27 19:23:55.402083",
+ "modified": "2024-04-28 13:03:38.512731",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Settings",

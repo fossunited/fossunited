@@ -31,8 +31,7 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Email",
-   "options": "Email",
+   "label": "Email",   "options": "Email",
    "reqd": 1
   },
   {

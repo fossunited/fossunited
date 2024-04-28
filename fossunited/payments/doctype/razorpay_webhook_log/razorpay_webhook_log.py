@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class RazorpaySettings(Document):
+class RazorpayWebhookLog(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
@@ -14,9 +14,12 @@ class RazorpaySettings(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        key_id: DF.Data | None
-        key_secret: DF.Password | None
-        webhook_secret: DF.Password | None
+        amended_from: DF.Link | None
+        event: DF.Data | None
+        name: DF.Int | None
+        order_id: DF.Data | None
+        payload: DF.Code | None
+        payment_id: DF.Data | None
     # end: auto-generated types
 
     pass
