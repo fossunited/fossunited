@@ -92,6 +92,7 @@
 </template>
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
+
 import {
   createDocumentResource,
   Avatar,
@@ -103,8 +104,9 @@ import {
   createListResource,
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { watch, ref } from 'vue'
+import { watch, ref, inject } from 'vue'
 import { session } from '@/data/session.js'
+let session = inject('$session')
 
 const route = useRoute()
 

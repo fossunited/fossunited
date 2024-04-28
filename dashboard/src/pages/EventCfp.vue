@@ -44,17 +44,19 @@ let tabs = reactive({
 const replaceCreateOption = () => {
   tabs.options = tabs.options.filter((d) => d.label !== 'Web Form')
 
-  if (tabs.options.find((d) => d.label === 'Web Form')) {
-    return
-  }
-  tabs.options.push({
-    label: 'Web Form',
-    route: `/event/${route.params.id}/cfp/edit`,
-  })
-  tabs.options.push({
-    label: 'Insights',
-    route: `/event/${route.params.id}/cfp/insights`,
-  })
+    if (!tabs.options.find((d) => d.label === 'Web Form')){
+        tabs.options.push({
+            label: 'Web Form',
+            route: `/event/${route.params.id}/cfp/edit`
+        })
+    }
+
+    if (!tabs.options.find((d) => d.label === 'Insights')){
+        tabs.options.push({
+            label: 'Insights',
+            route: `/event/${route.params.id}/cfp/insights`
+        })
+    }
 }
 
 let cfp_exists = ref(false)

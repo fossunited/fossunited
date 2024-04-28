@@ -110,9 +110,10 @@ import {
   createListResource,
 } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue'
-import { ref, watch } from 'vue'
-import { session } from '@/data/session.js'
-const route = useRoute()
+import { ref, watch, inject } from 'vue'
+let session = inject('$session')
+
+const route = useRoute();
 
 const chapter = createDocumentResource({
   doctype: 'FOSS Chapter',

@@ -43,9 +43,11 @@
   </header>
 </template>
 <script setup>
-import { session } from '@/data/session.js'
-import { Avatar, Dropdown, createResource } from 'frappe-ui'
+import { inject } from 'vue'
+import { Avatar, Dropdown, createResource } from 'frappe-ui';
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
+
+let session = inject('$session')
 
 let user_profile = createResource({
   url: 'frappe.client.get',
