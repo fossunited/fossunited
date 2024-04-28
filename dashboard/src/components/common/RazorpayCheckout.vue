@@ -27,7 +27,13 @@ function handlePaymentSuccess(response) {
       }
     },
     onSuccess() {
-      router.replace({ name: 'success' })
+      router.push({
+        name: 'success',
+        query: {
+          order_id: response.razorpay_order_id,
+          payment_id: response.razorpay_payment_id,
+        },
+      })
     },
   })
 }
