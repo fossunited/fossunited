@@ -76,6 +76,7 @@
    "fieldtype": "Data",
    "in_standard_filter": 1,
    "label": "Email",
+   "options": "Email",
    "read_only": 1,
    "reqd": 1
   },
@@ -123,7 +124,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-04-28 06:34:52.922158",
+ "modified": "2024-04-28 07:00:44.985961",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",
