@@ -42,7 +42,7 @@
                 <RadioGroupDescription
                   as="span"
                   class="mt-6 text-sm font-medium text-gray-900"
-                  >{{ tier.price }}</RadioGroupDescription
+                  >₹{{ tier.price }}</RadioGroupDescription
                 >
               </span>
             </span>
@@ -64,23 +64,11 @@
       </div>
     </RadioGroup>
 
+    <!-- Form -->
     <div class="max-w-lg m-2 flex flex-col gap-2">
       <FormControl
         type="select"
-        :options="[
-          {
-            label: '1',
-            value: 1,
-          },
-          {
-            label: '2',
-            value: 2,
-          },
-          {
-            label: '3',
-            value: 3,
-          },
-        ]"
+        :options="seatOptions"
         size="sm"
         variant="subtle"
         :disabled="false"
@@ -98,11 +86,44 @@
         v-model="checkoutInfo.email"
       />
 
+      <h2 class="text-base font-semibold text-gray-800 mt-4">Attendees</h2>
+      <div>
+        <div v-for="(attendee, index) in checkoutInfo.attendees" :key="index">
+          <p class="text-base text-gray-600 font-medium mt-3 mb-1">
+            #{{ index + 1 }}
+          </p>
+          <div class="flex gap-2">
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              placeholder="John Doe"
+              label="Full Name"
+              v-model="attendee.full_name"
+            />
+
+            <FormControl
+              type="email"
+              size="sm"
+              variant="subtle"
+              v-model="attendee.email"
+              label="Email"
+            />
+          </div>
+        </div>
+      </div>
+
       <h2 class="text-base font-semibold text-gray-800 mt-4">
         Payment Summary
       </h2>
-      <p>Total Amount: ₹{{ totalAmount }} ({{ checkoutInfo.numSeats }} x ₹{{ checkoutInfo.tier.price }})</p>
+      <p>
+        Total Amount: ₹{{ totalAmount }} ({{ checkoutInfo.numSeats }} x ₹{{
+          checkoutInfo.tier.price
+        }})
+      </p>
     </div>
+
+    <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
     <Button
       class="m-2"
@@ -127,13 +148,14 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted } from 'vue'
+import { computed, reactive, ref, onMounted, watch } from 'vue'
 import {
   createResource,
   FeatherIcon,
   FormControl,
   Button,
-  Card
+  Card,
+  ErrorMessage,
 } from 'frappe-ui'
 import {
   RadioGroup,
@@ -144,22 +166,42 @@ import {
 
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 
+const MAX_SEATS_PER_BOOKING = 10
+
 const eventName = ref(null)
 const checkoutInfo = reactive({
   tier: null,
   numSeats: 1,
   email: '',
-  attendees: [
-    {
-      full_name: 'Hussain Nagaria',
-      email: 'hussain@bwh.live',
-    },
-    {
-      full_name: 'Harsh Tandya',
-      email: 'harsh@fossunited.org',
-    },
-  ],
+  attendees: [],
 })
+const errorMessage = ref(null)
+
+watch(
+  () => checkoutInfo.numSeats,
+  () => {
+    if (checkoutInfo.attendees.length < checkoutInfo.numSeats) {
+      // fill empty attendees for the seats
+      for (
+        let i = checkoutInfo.attendees.length;
+        i < checkoutInfo.numSeats;
+        i++
+      ) {
+        checkoutInfo.attendees.push({
+          full_name: '',
+          email: '',
+        })
+      }
+    } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
+      // remove extra attendees
+      checkoutInfo.attendees = checkoutInfo.attendees.slice(
+        0,
+        checkoutInfo.numSeats,
+      )
+    }
+  },
+  { immediate: true },
+)
 
 const rzpCheckout = ref(null)
 
@@ -179,14 +221,22 @@ const event = createResource({
 })
 
 function createOrder() {
+  if (checkoutFormErrors.value.length > 0) {
+    errorMessage.value = checkoutFormErrors.value.join(', ')
+    return
+  } else {
+    errorMessage.value = null
+  }
+
+  // start checkout
   rzpCheckout.value.createOrder(
     totalAmount.value,
     checkoutInfo.email,
     {
       event: eventName.value,
       tier: checkoutInfo.tier,
-      num_seats: checkoutInfo.numSeats,
       attendees: checkoutInfo.attendees,
+      num_seats: checkoutInfo.numSeats,
     },
     event.data.doctype,
     event.data.name,
@@ -207,5 +257,25 @@ const totalAmount = computed(() => {
 
 const ticketTiers = computed(() => {
   return event.data?.tiers || []
+})
+
+const seatOptions = computed(() => {
+  return Array.from({ length: MAX_SEATS_PER_BOOKING }, (_, i) => i + 1).map(
+    (i) => ({
+      label: i.toString(),
+      value: i,
+    }),
+  )
+})
+
+const checkoutFormErrors = computed(() => {
+  const errors = []
+  if (!checkoutInfo.email) {
+    errors.push('Please enter your email')
+  }
+  if (checkoutInfo.attendees.some((a) => !a.full_name || !a.email)) {
+    errors.push('Please fill in all attendee details')
+  }
+  return errors
 })
 </script>
