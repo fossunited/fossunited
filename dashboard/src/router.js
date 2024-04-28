@@ -9,9 +9,9 @@ const routes = [
     component: () => import('@/pages/Home.vue'),
   },
   {
-    path: '/checkout',
+    path: '/buy-tickets',
     name: 'checkout',
-    component: () => import('@/pages/Checkout.vue'),
+    component: () => import('@/pages/BuyTickets.vue'),
     meta: { isPublicPage: true },
   },
   {

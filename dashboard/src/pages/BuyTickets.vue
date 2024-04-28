@@ -1,12 +1,12 @@
 <template>
   <RazorpayCheckout ref="rzpCheckout" />
 
-  <div>
-    <h1>Checkout with Razorpay</h1>
-
-    <h2 class="text-xl font-bold">Select a tier</h2>
-
-    <RadioGroup v-model="checkoutInfo.tier">
+  <Card
+    v-if="event.data"
+    :title="`Buy Tickets for ${event.data.event_name}`"
+    class="m-4"
+  >
+    <RadioGroup class="p-2" v-model="checkoutInfo.tier">
       <RadioGroupLabel class="text-base font-semibold leading-6 text-gray-900"
         >Select a tier</RadioGroupLabel
       >
@@ -64,7 +64,7 @@
       </div>
     </RadioGroup>
 
-    <div class="max-w-lg m-2">
+    <div class="max-w-lg m-2 flex flex-col gap-2">
       <FormControl
         type="select"
         :options="[
@@ -83,14 +83,13 @@
         ]"
         size="sm"
         variant="subtle"
-        placeholder="Placeholder"
         :disabled="false"
-        label="Label"
+        label="Number of seats"
         v-model="checkoutInfo.numSeats"
       />
 
       <FormControl
-        :type="'email'"
+        type="email"
         size="sm"
         variant="subtle"
         placeholder="john@fossunited.org"
@@ -98,23 +97,44 @@
         label="Email"
         v-model="checkoutInfo.email"
       />
+
+      <h2 class="text-base font-semibold text-gray-800 mt-4">
+        Payment Summary
+      </h2>
+      <p>Total Amount: ₹{{ totalAmount }} ({{ checkoutInfo.numSeats }} x ₹{{ checkoutInfo.tier.price }})</p>
     </div>
 
-    <h2>Payment Summary</h2>
-    <h3>Total Amount: {{ totalAmount }}</h3>
-
     <Button
+      class="m-2"
       :loading="rzpCheckout?.resource.loading"
       @click="createOrder"
       variant="solid"
       >Pay Now</Button
     >
+  </Card>
+
+  <div class="m-4">
+    <Button
+      v-if="Boolean(event.loading)"
+      :loading="true"
+      loading-text="Loading"
+    />
+    <p v-else-if="!eventName" class="text-gray-800 font-medium">
+      Event not found
+    </p>
+    <p v-else-if="event.error">Error loading event</p>
   </div>
 </template>
 
 <script setup>
 import { computed, reactive, ref, onMounted } from 'vue'
-import { createResource, FeatherIcon, FormControl, Button } from 'frappe-ui'
+import {
+  createResource,
+  FeatherIcon,
+  FormControl,
+  Button,
+  Card
+} from 'frappe-ui'
 import {
   RadioGroup,
   RadioGroupDescription,
@@ -136,8 +156,8 @@ const checkoutInfo = reactive({
     },
     {
       full_name: 'Harsh Tandya',
-      email: 'harsh@fossunited.org'
-    }
+      email: 'harsh@fossunited.org',
+    },
   ],
 })
 
