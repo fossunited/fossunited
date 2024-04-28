@@ -9,9 +9,22 @@ const routes = [
     component: () => import('@/pages/Home.vue'),
   },
   {
+    path: '/buy-tickets',
+    name: 'checkout',
+    component: () => import('@/pages/BuyTickets.vue'),
+    meta: { isPublicPage: true },
+  },
+  {
+    path: '/payment-success',
+    name: 'success',
+    component: () => import('@/pages/PaymentSuccess.vue'),
+    meta: { isPublicPage: true },
+  },
+  {
     name: 'Login',
     path: '/account/login',
     component: () => import('@/pages/Login.vue'),
+    meta: { isPublicPage: true },
   },
   {
     name: 'Event',
@@ -48,7 +61,7 @@ const routes = [
             name: 'EventRsvpInsights',
             component: () => import('@/pages/EventRsvpInsights.vue'),
           },
-        ]
+        ],
       },
       {
         path: 'cfp',
@@ -75,14 +88,14 @@ const routes = [
             name: 'EventCfpInsights',
             component: () => import('@/pages/EventCfpInsights.vue'),
           },
-        ]
+        ],
       },
       {
         path: 'volunteers',
         name: 'EventVolunteers',
         component: () => import('@/pages/EventVolunteers.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     name: 'Chapter',
@@ -109,8 +122,8 @@ const routes = [
         name: 'ChapterMembers',
         component: () => import('@/pages/ChapterMembers.vue'),
       },
-    ]
-  }
+    ],
+  },
 ]
 
 let router = createRouter({
@@ -128,7 +141,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (to.name === 'Login' && isLoggedIn) {
     next({ name: 'Home' })
-  } else if (to.name !== 'Login' && !isLoggedIn) {
+  } else if (to.name !== 'Login' && !isLoggedIn && !to.meta.isPublicPage) {
     next({ name: 'Login' })
   } else {
     next()

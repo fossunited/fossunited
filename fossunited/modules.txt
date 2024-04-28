@@ -2,5 +2,6 @@ FOSSUnited
 Chapters
 Volunteering
 FOSS Profiles
-Razorpay
 FOSS Hackathon
+Payments
+Ticketing
