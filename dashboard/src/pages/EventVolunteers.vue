@@ -105,7 +105,6 @@ import {
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { watch, ref, inject } from 'vue'
-import { session } from '@/data/session.js'
 let session = inject('$session')
 
 const route = useRoute()
