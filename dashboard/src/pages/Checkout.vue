@@ -131,7 +131,6 @@ const checkoutInfo = reactive({
   numSeats: 1,
   email: '',
   attendees: [],
-  event: eventName.value,
 })
 
 const rzpCheckout = ref(null)
@@ -156,7 +155,7 @@ function createOrder() {
     totalAmount.value,
     checkoutInfo.email,
     {
-      event: checkoutInfo.event,
+      event: eventName.value,
       tier: checkoutInfo.tier,
       num_seats: checkoutInfo.numSeats,
       attendees: checkoutInfo.attendees,
