@@ -18,7 +18,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@knadh/autocomp": "^1.1.0"
+    "@knadh/autocomp": "^1.1.0",
+    "petite-vue": "^0.4.1"
   },
   "devDependencies": {
     "tailwindcss": "^3.4.1"

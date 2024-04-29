@@ -9,11 +9,13 @@
     gap: 4rem;
   }
   .events-search {
+    display: flex;
     padding: 0.5rem;
     border-radius: 0.5rem;
     border: 1px solid var(--Gray-200, #eaecf0);
     background-color: white;
-    max-width: 70%;
+    min-width: 50%;
+    align-items: center;
   }
 
   #events-search {
@@ -29,40 +31,141 @@
     outline: none;
   }
 
-  .event- {
+  .must-attend-checkbox {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    flex-direction: row-reverse;
+    border-radius: 8px;
+    background: #FFF;
+    padding: 1rem;
+    gap:0.5rem;
+  }
+
+  .must-attend-checkbox label{
+    margin: 0;
+  }
+
+  .search-filter-controlpanel {
+    display: flex;
     gap: 1rem;
   }
+
+  .event-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
 </style>
 
-<div class="container events-timeline">
-  <div class="search-filter-section">
-    <div class="events-search">
-      <input
-        type="text"
-        id="events-search"
-        placeholder="Search by event, date, city"
-      />
+<div v-scope>
+  <div class="container events-timeline">
+
+    <!--Search filter panel-->
+    <div class="search-filter-controlpanel">
+        <div class="events-search">
+          <input
+            v-model="searchText"
+            type="text"
+            id="events-search"
+            placeholder="Search by event name and date"
+          />
+        </div>
+
+        <div class="must-attend-checkbox">
+          <input
+            type="checkbox"
+            v-model="mustAttendOnly"
+            id="must-attend-checkbox"
+          />
+          <label for="must-attend-checkbox">Must Attend</label>
+        </div>
+
     </div>
-  </div>
 
-  {% set grouped_events = get_grouped_events() %} {% for group, events in
-  grouped_events.items() %}
+    <!--Primary Event cards listing-->
+    {% set grouped_events = get_grouped_events() %} {% for group, events in
+    grouped_events.items() %}
 
-  <div class="event-group">
-    <h4>{{ group }}</h4>
-    {% for month, month_events in events.items() %}
-    <h5>{{ month }}</h5>
+      <div class="event-group" v-if="searchText.length == 0">
+        <h4>{{ group }}</h4>
+          {% for month, month_events in events.items() %}
+            <h5 class="event-month">{{ month }}</h5>
+            <div class="events-grid-4">
+              {% for event in month_events %}
+                {{event_card(event)}}
+
+              {% endfor %}
+            </div>
+          {% endfor %}
+      </div>
+    {% endfor %}
+
+
+  <!--Searched and Filtered event cards listing-->
+  <div v-if="searchText.length > 0">
     <div class="events-grid-4">
-      {% for event in month_events %}
-      <div class="event-card show">{{event_card(event)}}</div>
-
+      {% for group, events in grouped_events.items() %}
+      {% for month, month_events in events.items() %}
+        {% for event in month_events %}
+          {% set event_date_text = event.event_start_date.strftime("%d %b %Y") %}
+          <div class="event-card show"
+            v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+            data-docname="{{ event.name }}"
+            data-route="{{ event.route }}"
+            onclick="window.location.pathname='/{{event.route}}'"
+          >
+            <div class="event-card-contents">
+                {% set chapter = frappe.get_doc("FOSS Chapter", event.chapter) %}
+                <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}">
+                    {% if chapter.chapter_type == 'FOSS Club' %}
+                    <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
+                    <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+                    {% else %}
+                    <span class="fff-forward">{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+                    {% endif %}
+                </div>
+                <div class="event-card--date-section">
+                    <div class="event-card--date">
+                        {{ event.event_start_date.strftime("%d %b %Y") }}
+                    </div>
+                    {% if event.must_attend %}
+                        <div class="event-card--must-attend">
+                            <i class="ti ti-star-filled"></i>
+                            {{ _("Must Attend") }}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="event-card--title">
+                    {{ event.event_name | truncate(26, True) }}
+                </div>
+                <div class="event-card--location-section">
+                    <div class="event-card--location">
+                        <i class="ti ti-map-pin"></i>
+                        <span>{{ event.event_location or "To be Announced" | truncate(22, True)}}</span>
+                    </div>
+                </div>
+            </div>
+          </div>
+        {% endfor %}
       {% endfor %}
-    </div>
     {% endfor %}
   </div>
-  {% endfor %}
 
-  <!--Past Events-->
+  </div>
 </div>
+
+<script>
+  PetiteVue.createApp({
+    searchText: '',
+    mustAttendOnly: false,
+    canShow(eventName, eventDate, eventMustAttend) {
+      if (this.mustAttendOnly && !eventMustAttend) {
+        return false
+      }
+
+      return eventName.toLowerCase().includes(this.searchText) ||
+        eventDate.toLowerCase().includes(this.searchText);
+    }
+  }).mount()
+</script>

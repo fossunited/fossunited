@@ -9,3 +9,7 @@ import "../../../../frappe/frappe/public/js/frappe/db.js";
 import "../../../../frappe/frappe/public/js/frappe/model/meta.js";
 import "../../../../frappe/frappe/public/js/frappe/form/controls/dynamic_link.js";
 import "../../../../frappe/frappe/public/js/frappe/utils/utils.js";
+import * as  PetiteVue from "petite-vue";
+window.PetiteVue = PetiteVue;
+import { autocomp } from "@knadh/autocomp";
+window.autocomp = autocomp;
