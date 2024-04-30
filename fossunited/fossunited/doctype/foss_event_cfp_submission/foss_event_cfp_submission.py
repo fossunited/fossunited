@@ -12,8 +12,13 @@ from fossunited.fossunited.utils import (
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_save(self):
+        self.set_name()
         self.set_route()
         self.set_scores()
+
+    def set_name(self):
+        self.first_name = self.full_name.split(" ")[0]
+        self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
         event_route = frappe.db.get_value(
@@ -31,6 +36,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def get_context(self, context):
         context.cfp = frappe.get_doc(
             "FOSS Event CFP", self.linked_cfp
+        )
+        context.event = frappe.get_doc(
+            "FOSS Chapter Event", self.event
         )
         context.speaker = frappe.get_doc(
             "FOSS User Profile", {"user": self.submitted_by}
@@ -50,6 +58,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.already_reviewed = self.check_if_already_reviewed(
             context
         )
+
+        context.remark_val = {
+            "Yes": "Approved",
+            "No": "Rejected",
+            "Maybe": "Not Sure",
+        }
         context.no_cache = 1
 
     def get_navbar_items(self, context):
@@ -103,7 +117,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             score[review.to_approve] += 1
 
         score["approvability"] = (
-            score["Yes"] / (reviews_len - score["Maybe"])
+            score["Yes"] / (reviews_len - score["Maybe"] or 1)
         ) * 100
 
         statistics = [

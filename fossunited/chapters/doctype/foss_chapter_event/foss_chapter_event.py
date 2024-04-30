@@ -14,6 +14,71 @@ BASE_DATE = datetime.now().replace(
 
 
 class FOSSChapterEvent(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (
+            FOSSChapterEventMember,
+        )
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
+            FOSSEventCommunityPartner,
+        )
+        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
+            FOSSEventSchedule,
+        )
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+            FOSSEventSponsor,
+        )
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
+            FOSSTicketTier,
+        )
+
+        banner_image: DF.AttachImage | None
+        chapter: DF.Link | None
+        chapter_name: DF.Data | None
+        community_partners: DF.Table[FOSSEventCommunityPartner]
+        deck_link: DF.Data | None
+        event_bio: DF.Data | None
+        event_description: DF.TextEditor
+        event_end_date: DF.Datetime
+        event_location: DF.Data | None
+        event_members: DF.Table[FOSSChapterEventMember]
+        event_name: DF.Data
+        event_permalink: DF.Data
+        event_schedule: DF.Table[FOSSEventSchedule]
+        event_start_date: DF.Datetime
+        event_type: DF.Link
+        is_paid_event: DF.Check
+        is_published: DF.Check
+        map_link: DF.Data | None
+        must_attend: DF.Check
+        primary_button_label: DF.Data | None
+        primary_button_url: DF.Data | None
+        route: DF.Data | None
+        secondary_button_label: DF.Data | None
+        secondary_button_url: DF.Data | None
+        show_cfp: DF.Check
+        show_photos: DF.Check
+        show_rsvp: DF.Check
+        show_schedule: DF.Check
+        show_speakers: DF.Check
+        sponsor_list: DF.Table[FOSSEventSponsor]
+        status: DF.Literal[
+            "",
+            "Being Reviewed",
+            "Approved",
+            "In Progress",
+            "Concluded",
+            "Cancelled",
+        ]
+        tiers: DF.Table[FOSSTicketTier]
+    # end: auto-generated types
+
     def before_insert(self):
         self.copy_team_members()
 
@@ -112,12 +177,12 @@ class FOSSChapterEvent(WebsiteGenerator):
             filters={
                 "event": self.name,
                 "status": "Approved",
-                "attendance_confirmed": 1,
             },
-            fields=["talk_title", "category", "submitted_by"],
+            fields=["talk_title", "submitted_by", "picture_url"],
         )
         speakers = []
         for cfp in speaker_cfps:
+            print(cfp)
             user = frappe.get_doc(
                 "FOSS User Profile", {"email": cfp.submitted_by}
             )
@@ -125,10 +190,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": user.full_name,
                     "talk_title": cfp.talk_title,
-                    "talk_category": cfp.category,
-                    "profile_picture": user.profile_photo
-                    if user.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": cfp.picture_url
+                    or user.profile_photo
+                    or "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": user.route,
                 }
             )
@@ -289,9 +353,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "name",
                 "route",
                 "talk_title",
-                "category",
                 "status",
-                "talk_duration",
             ],
         )
         return submissions or []
@@ -304,10 +366,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "name",
                 "route",
                 "talk_title",
-                "category",
                 "submitted_by",
+                "picture_url",
                 "status",
-                "talk_duration",
             ],
             order_by="creation desc",
             limit=6,
@@ -321,9 +382,9 @@ class FOSSChapterEvent(WebsiteGenerator):
                 submission["user_route"] = user.route
                 submission["full_name"] = user.full_name
                 submission["profile_picture"] = (
-                    user.profile_photo
-                    if user.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png"
+                    submission.picture_url
+                    or user.profile_photo
+                    or "/assets/fossunited/images/defaults/user_profile_image.png"
                 )
         return submissions or []
 

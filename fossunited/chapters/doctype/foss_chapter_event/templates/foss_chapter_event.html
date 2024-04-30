@@ -6,7 +6,7 @@
 
     {% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
     <div class="horizontal-navbar-parent">
-        <div class="container p-0">
+        <div class="container">
             {{ horizontal_navbar(nav_items) }}
         </div>
     </div>
@@ -165,11 +165,6 @@
                     <div class="speaker--name">{{ speaker.full_name }}</div>
                     <div class="speaker--talk-title">{{ speaker.talk_title | truncate(12, True) }}</div>
                 </div>
-                {% if speaker.talk_category %}
-                <div class="speaker--talk-category">
-                    {{ tag(speaker.talk_category, font_size="var(--text-sm)", color='hsl(var(--clr-foss-mint-600))', background='hsl(var(--clr-foss-mint-100))') }}
-                </div>
-                {% endif %}
             </a>
             {% endfor %}
         </div>
@@ -209,22 +204,6 @@
                             <div class="submission--title">{{ proposal.talk_title }}</div>
                             <div class="submission--status">{{ proposal.status | make_badge }}</div>
                         </div>
-                        <div class="submission--category-time">
-                            {% if proposal.category %}
-                            <div class="submission--category">
-                                <i class="ti ti-hash"></i>
-                                <span>
-                                    {{ proposal.category }}
-                                </span>
-                            </div>
-                            {% endif %}
-                            <div class="submission--time">
-                                <i class="ti ti-hourglass-low"></i>
-                                <span>
-                                    {{ proposal.talk_duration }}
-                                </span>
-                            </div>
-                        </div>
                     </div>
                     <div class="d-flex button-group">
                         <button class="mr-2 w-full" onclick="window.location.href='/{{proposal.route}}'">View Proposal</button>
@@ -238,7 +217,15 @@
 
         {% if recent_cfp_submissions %}
         <div class="recent-submissions-section">
-            <h5>Recent Proposals</h5>
+            <div class="d-flex justify-content-between align-items-baseline">
+                <h5>Recent Proposals</h5>
+                <a href="/{{doc.route}}/cfp/all">
+                    <span>
+                        View all Proposals
+                    </span>
+                    <i class="ti ti-arrow-right"></i>
+                </a>
+            </div>
             <div class="recent-proposals-grid">
                 {% for proposal in recent_cfp_submissions %}
                 <div onClick="window.location.href='/{{proposal.route}}'" class="recent-proposal-card">
@@ -248,22 +235,6 @@
                         </div>
                         <div class="recent-proposal--title">
                             {{ proposal.talk_title }}
-                        </div>
-                    </div>
-                    <div class="submission--category-time">
-                        {% if proposal.category %}
-                        <div class="submission--category">
-                            <i class="ti ti-hash"></i>
-                            <span>
-                                {{ proposal.category }}
-                            </span>
-                        </div>
-                        {% endif %}
-                        <div class="submission--time">
-                            <i class="ti ti-hourglass-low"></i>
-                            <span>
-                                {{ proposal.talk_duration }}
-                            </span>
                         </div>
                     </div>
                     {% if proposal.status == 'Approved' %}

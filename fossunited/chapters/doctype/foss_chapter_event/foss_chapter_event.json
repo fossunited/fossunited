@@ -34,13 +34,6 @@
   "banner_image",
   "event_location",
   "map_link",
-  "tickets_section",
-  "paid_event",
-  "general_ticket_price",
-  "student_ticket_price",
-  "column_break_udae",
-  "max_tickets",
-  "tickets_sold",
   "cta_section_section",
   "primary_button_label",
   "primary_button_url",
@@ -64,7 +57,10 @@
   "event_members",
   "schedule_tab",
   "schedule_section",
-  "event_schedule"
+  "event_schedule",
+  "tickets_tab",
+  "is_paid_event",
+  "tiers"
  ],
  "fields": [
   {
@@ -323,45 +319,6 @@
    "label": "Chapter Name"
   },
   {
-   "fieldname": "tickets_section",
-   "fieldtype": "Section Break",
-   "label": "Tickets"
-  },
-  {
-   "default": "0",
-   "fieldname": "general_ticket_price",
-   "fieldtype": "Currency",
-   "label": "General Ticket Price"
-  },
-  {
-   "fieldname": "column_break_udae",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "student_ticket_price",
-   "fieldtype": "Currency",
-   "label": "Student Ticket Price"
-  },
-  {
-   "default": "\n",
-   "fieldname": "tickets_sold",
-   "fieldtype": "Int",
-   "label": "Tickets Sold"
-  },
-  {
-   "default": "0",
-   "fieldname": "max_tickets",
-   "fieldtype": "Int",
-   "label": "Maximum Tickets"
-  },
-  {
-   "default": "0",
-   "fieldname": "paid_event",
-   "fieldtype": "Check",
-   "label": "Paid Event "
-  },
-  {
    "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
    "fieldname": "event_permalink",
    "fieldtype": "Data",
@@ -376,6 +333,24 @@
    "fieldname": "show_schedule",
    "fieldtype": "Check",
    "label": "Show Schedule"
+  },
+  {
+   "fieldname": "tickets_tab",
+   "fieldtype": "Tab Break",
+   "label": "Tickets"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_paid_event",
+   "fieldtype": "Check",
+   "label": "Is paid event?"
+  },
+  {
+   "depends_on": "eval:doc.is_paid_event==1",
+   "fieldname": "tiers",
+   "fieldtype": "Table",
+   "label": "Tiers",
+   "options": "FOSS Ticket Tier"
   }
  ],
  "has_web_view": 1,
@@ -391,9 +366,13 @@
    "group": "RSVP",
    "link_doctype": "FOSS Event RSVP Submission",
    "link_fieldname": "chapter"
+  },
+  {
+   "link_doctype": "FOSS Event Ticket",
+   "link_fieldname": "event"
   }
  ],
- "modified": "2024-04-09 14:09:56.324379",
+ "modified": "2024-04-28 06:35:41.739928",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -419,6 +398,16 @@
    "read": 1,
    "report": 1,
    "role": "All",
+   "select": 1,
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Guest",
    "select": 1,
    "share": 1
   }

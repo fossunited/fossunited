@@ -5,14 +5,23 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "status_info_section",
+  "event_linked_field",
+  "event_name",
+  "volunteer_status",
+  "volunteer_details_section",
   "volunteer_name",
+  "email",
+  "phone_number",
   "identification",
-  "photo",
   "volunteer_as",
+  "other_volunteering_options",
   "city",
   "column_break_uknn",
   "bio",
-  "email"
+  "photo",
+  "affirmation_for_commitment",
+  "past_experience"
  ],
  "fields": [
   {
@@ -25,51 +34,97 @@
   {
    "fieldname": "photo",
    "fieldtype": "Attach Image",
-   "label": "Profile Photo",
-   "reqd": 1
+   "label": "Profile Photo"
   },
   {
-   "default": "Logistics",
    "fieldname": "volunteer_as",
    "fieldtype": "Select",
    "label": "Volunteer for",
-   "options": "Logistics\nOutreach\nDesigner\nWebsite Management\nCFP Management"
+   "options": "\nMarketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nCommunity Outreach\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager\nOther"
   },
   {
    "fieldname": "column_break_uknn",
-   "fieldtype": "Column Break",
-   "label": "About "
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "bio",
-   "fieldtype": "Small Text",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Short Bio",
-   "reqd": 1
+   "label": "Short Bio"
   },
   {
    "fieldname": "email",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Email",
+   "options": "Email",
    "reqd": 1
   },
   {
    "fieldname": "city",
    "fieldtype": "Link",
    "label": "City",
-   "options": "City",
-   "reqd": 1
+   "options": "City"
   },
   {
    "fieldname": "identification",
    "fieldtype": "Data",
    "label": "I am"
+  },
+  {
+   "fieldname": "status_info_section",
+   "fieldtype": "Section Break",
+   "label": "Status Info"
+  },
+  {
+   "fieldname": "volunteer_details_section",
+   "fieldtype": "Section Break",
+   "label": "Volunteer Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "affirmation_for_commitment",
+   "fieldtype": "Check",
+   "label": "Affirmation for commitment"
+  },
+  {
+   "fieldname": "past_experience",
+   "fieldtype": "Small Text",
+   "label": "Past Experience"
+  },
+  {
+   "fieldname": "event_linked_field",
+   "fieldtype": "Link",
+   "label": "Event Link",
+   "options": "FOSS Chapter Event"
+  },
+  {
+   "fetch_from": "event_linked_field.event_name",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "label": "Event Name"
+  },
+  {
+   "fieldname": "volunteer_status",
+   "fieldtype": "Select",
+   "label": "Volunteer Status",
+   "options": "\nAccepted\nWaitlisted\nRejected"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "depends_on": "eval: doc.volunteer_as == \"Other\";",
+   "fieldname": "other_volunteering_options",
+   "fieldtype": "Data",
+   "label": "Other volunteering options"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-07-19 20:42:58.943315",
+ "modified": "2024-04-24 13:31:01.108708",
  "modified_by": "Administrator",
  "module": "Volunteering",
  "name": "Event Volunteer",

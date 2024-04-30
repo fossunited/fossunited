@@ -16,16 +16,15 @@
           placeholder="••••••"
           label="Password"
         />
-        <Button :loading="session.login.loading" variant="solid"
-          >Login</Button
-        >
+        <Button :loading="session.login.loading" variant="solid">Login</Button>
       </form>
     </Card>
   </div>
 </template>
 
-<script lang="ts" setup>
-import { session } from '../data/session'
+<script setup>
+import { inject } from 'vue'
+let session = inject('$session')
 
 function submit(e) {
   let formData = new FormData(e.target)

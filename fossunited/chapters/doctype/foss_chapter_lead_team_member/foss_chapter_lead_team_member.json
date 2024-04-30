@@ -24,7 +24,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Role",
-   "options": "Core Team Member\nLead\nGraphic Designer\nContent Writer\nMarketing"
+   "options": "Lead\nCore Team Member\nVolunteer\nGraphic Designer\nContent Writer\nMarketing"
   },
   {
    "fetch_from": "chapter_member.full_name",
@@ -43,7 +43,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-04-02 01:51:58.206523",
+ "modified": "2024-04-24 13:33:03.028303",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Lead Team Member",

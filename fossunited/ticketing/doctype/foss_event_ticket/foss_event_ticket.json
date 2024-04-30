@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-04-27 12:37:58.593416",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "event",
+  "full_name",
+  "column_break_dnhv",
+  "tier",
+  "email",
+  "payment_details_section",
+  "razorpay_payment",
+  "column_break_uihi",
+  "customer"
+ ],
+ "fields": [
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_dnhv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "payment_details_section",
+   "fieldtype": "Section Break",
+   "label": "Payment Details"
+  },
+  {
+   "fieldname": "razorpay_payment",
+   "fieldtype": "Link",
+   "label": "Razorpay Payment",
+   "options": "Razorpay Payment",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_uihi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "razorpay_payment.email",
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer"
+  },
+  {
+   "fieldname": "event",
+   "fieldtype": "Link",
+   "label": "Event",
+   "options": "FOSS Chapter Event",
+   "reqd": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "tier",
+   "fieldtype": "Data",
+   "label": "Tier"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-28 07:00:28.477641",
+ "modified_by": "Administrator",
+ "module": "Ticketing",
+ "name": "FOSS Event Ticket",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "full_name"
+}
