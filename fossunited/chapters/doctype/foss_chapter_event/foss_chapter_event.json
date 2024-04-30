@@ -64,7 +64,9 @@
   "section_break_idyt",
   "paid_tshirts_available",
   "column_break_cntx",
-  "t_shirt_price"
+  "t_shirt_price",
+  "section_break_hjyr",
+  "custom_fields"
  ],
  "fields": [
   {
@@ -378,6 +380,18 @@
    "fieldtype": "Currency",
    "label": "T Shirt Price",
    "mandatory_depends_on": "eval:doc.paid_tshirts_available==1"
+  },
+  {
+   "fieldname": "section_break_hjyr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.is_paid_event==1",
+   "description": "Any custom fields you want to collect while ticket booking",
+   "fieldname": "custom_fields",
+   "fieldtype": "Table",
+   "label": "Custom Fields",
+   "options": "FOSS Event Field"
   }
  ],
  "has_web_view": 1,
@@ -399,7 +413,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-04-30 17:58:02.552495",
+ "modified": "2024-05-01 00:11:21.698599",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

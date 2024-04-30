@@ -17,7 +17,9 @@
   "additional_details_section",
   "wants_tshirt",
   "column_break_qbfj",
-  "tshirt_size"
+  "tshirt_size",
+  "section_break_tzsu",
+  "custom_fields"
  ],
  "fields": [
   {
@@ -96,11 +98,21 @@
    "fieldtype": "Data",
    "label": "T Shirt Size",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_tzsu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "custom_fields",
+   "fieldtype": "Table",
+   "label": "Custom Fields",
+   "options": "FOSS Ticket Custom Field"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-30 18:32:59.187251",
+ "modified": "2024-05-01 00:50:01.148442",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
