@@ -76,7 +76,6 @@
           <input
             type="checkbox"
             v-model="mustAttendOnly"
-            id="must-attend-checkbox"
           />
           <label for="must-attend-checkbox">Must Attend</label>
         </div>
@@ -90,11 +89,12 @@
       <div class="event-group" v-if="searchText.length == 0">
         <h4>{{ group }}</h4>
           {% for month, month_events in events.items() %}
-            <h5 class="event-month">{{ month }}</h5>
-            <div class="events-grid-4">
+            <h5 class="event-month" v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'">{{ month }}</h5>
+            <div class="events-grid-4" v-effect="updateTicker()" v-show="ticker > 0 && $el?.children.length > 0">
               {% for event in month_events %}
+              <div v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})">
                 {{event_card(event)}}
-
+              </div>
               {% endfor %}
             </div>
           {% endfor %}
@@ -158,14 +158,28 @@
 <script>
   PetiteVue.createApp({
     searchText: '',
+    ticker: 1,
     mustAttendOnly: false,
     canShow(eventName, eventDate, eventMustAttend) {
       if (this.mustAttendOnly && !eventMustAttend) {
         return false
       }
 
+      if (this.searchText.length == 0) {
+        return true
+      }
+
       return eventName.toLowerCase().includes(this.searchText) ||
         eventDate.toLowerCase().includes(this.searchText);
+    },
+    updateTicker(){
+      this.mustAttendOnly;
+      PetiteVue.nextTick(() => {
+        this.ticker++;
+        PetiteVue.nextTick(() => {
+          this.ticker++;
+        });
+      });
     }
   }).mount()
 </script>
