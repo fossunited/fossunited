@@ -28,6 +28,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
             FOSSEventCommunityPartner,
         )
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
+            FOSSEventField,
+        )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
@@ -42,6 +45,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         chapter: DF.Link | None
         chapter_name: DF.Data | None
         community_partners: DF.Table[FOSSEventCommunityPartner]
+        custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
         event_description: DF.TextEditor

@@ -21,6 +21,11 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
+            FOSSTicketCustomField,
+        )
+
+        custom_fields: DF.Table[FOSSTicketCustomField]
         customer: DF.Data | None
         email: DF.Data
         event: DF.Link
@@ -36,7 +41,7 @@ class FOSSEventTicket(Document):
         payment_meta_data: dict = frappe.parse_json(payment.meta_data)
         attendees = payment_meta_data.get("attendees", [])
         for attendee in attendees:
-            frappe.get_doc(
+            ticket_doc = frappe.get_doc(
                 {
                     "doctype": "FOSS Event Ticket",
                     "razorpay_payment": payment.name,
@@ -50,6 +55,14 @@ class FOSSEventTicket(Document):
                     ),
                 }
             ).insert()
+
+            # add custom fields
+            custom_fields = payment_meta_data.get("custom_fields", {})
+            for k, v in custom_fields.items():
+                ticket_doc.append(
+                    "custom_fields", {"field_name": k, "data": str(v)}
+                )
+            ticket_doc.save()
 
 
 def handle_payment_on_update(doc: "RazorpayPayment", event: str):

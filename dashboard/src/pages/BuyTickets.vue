@@ -113,6 +113,22 @@
         />
       </div>
 
+      <div v-if="event.data.custom_fields.length > 0">
+        <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
+
+        <div class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0">
+          <FormControl
+            v-for="field in event.data.custom_fields"
+            :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
+            :label="field.label"
+            :options="field.options"
+            size="sm"
+            variant="subtle"
+            v-model="customFields[field.field_name]"
+           />
+        </div>
+      </div>
+
       <h2 class="text-base font-semibold text-gray-800 mt-4">Attendees</h2>
       <div>
         <div v-for="(attendee, index) in checkoutInfo.attendees" :key="index">
@@ -248,6 +264,11 @@ const dayjs = inject('$dayjs')
 
 const MAX_SEATS_PER_BOOKING = 10
 const T_SHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
+const FIELD_TYPE_FORM_CONTROL_MAP = {
+  "Data": "text",
+  "Int": "number",
+  "Select": "select"
+}
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
@@ -258,6 +279,7 @@ const checkoutInfo = reactive({
   gstn: '',
   billing_address: '',
 })
+const customFields = reactive({});
 const errorMessage = ref(null)
 
 const fullNamePlaceholders = ['Jenny Smith', 'Jacob Doe', 'Jim Brown']
@@ -311,8 +333,19 @@ const event = createResource({
     if (tiers.length > 0) {
       checkoutInfo.tier = tiers[0]
     }
+
+    resetCustomFields();
   },
 })
+
+function resetCustomFields() {
+  for (let field of event.data?.custom_fields) {
+    customFields[field.field_name] = "";
+    if (field.field_type == "Select") {
+      field.options = field.options.split("\n");
+    }
+  }
+}
 
 function createOrder() {
   if (checkoutFormErrors.value.length > 0) {
@@ -331,6 +364,7 @@ function createOrder() {
       tier: checkoutInfo.tier,
       attendees: checkoutInfo.attendees,
       num_seats: checkoutInfo.numSeats,
+      custom_fields: customFields
     },
     event.data.doctype,
     event.data.name,
@@ -399,6 +433,14 @@ const checkoutFormErrors = computed(() => {
   if (checkoutInfo.attendees.some((a) => !a.full_name || !a.email)) {
     errors.push('Please fill in all attendee details')
   }
+
+  // check mandatory custom fields
+  for (let field of event.data?.custom_fields || []) {
+    if (field.mandatory && !customFields[field.field_name]) {
+      errors.push(`Please fill in ${field.label}`)
+    }
+  }
+
   return errors
 })
 </script>
