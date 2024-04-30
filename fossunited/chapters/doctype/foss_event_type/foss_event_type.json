@@ -20,7 +20,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-11-18 14:08:09.170505",
+ "modified": "2024-04-30 12:04:52.625269",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event Type",
@@ -38,6 +38,16 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
   }
  ],
  "quick_entry": 1,
