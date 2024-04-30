@@ -4,14 +4,16 @@
   <Card
     v-if="event.data"
     :title="`Buy Tickets for ${event.data.event_name}`"
-    class="m-4"
+    class="m-4 mx-auto w-full sm:w-fit"
   >
     <RadioGroup class="p-2" v-model="checkoutInfo.tier">
       <RadioGroupLabel class="text-base font-semibold leading-6 text-gray-900"
         >Select a tier</RadioGroupLabel
       >
 
-      <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 max-w-3xl">
+      <div
+        class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]"
+      >
         <RadioGroupOption
           as="template"
           v-for="tier in ticketTiers"
@@ -24,7 +26,7 @@
               checked
                 ? 'border-gray-600 ring-2 ring-gray-600'
                 : 'border-gray-300',
-              'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
+              'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none min-w-36',
             ]"
           >
             <span class="flex flex-1">
@@ -65,26 +67,28 @@
     </RadioGroup>
 
     <!-- Form -->
-    <div class="max-w-lg m-2 flex flex-col gap-2">
-      <FormControl
-        type="select"
-        :options="seatOptions"
-        size="sm"
-        variant="subtle"
-        :disabled="false"
-        label="Number of seats"
-        v-model="checkoutInfo.numSeats"
-      />
+    <div class="max-w-lg m-2 mt-4 flex flex-col gap-2">
+      <div class="grid sm:grid-cols-2 gap-2">
+        <FormControl
+          type="select"
+          :options="seatOptions"
+          size="sm"
+          variant="subtle"
+          :disabled="false"
+          label="Number of seats"
+          v-model="checkoutInfo.numSeats"
+        />
 
-      <FormControl
-        type="email"
-        size="sm"
-        variant="subtle"
-        placeholder="john@fossunited.org"
-        :disabled="false"
-        label="Email"
-        v-model="checkoutInfo.email"
-      />
+        <FormControl
+          type="email"
+          size="sm"
+          variant="subtle"
+          placeholder="john@fossunited.org"
+          :disabled="false"
+          label="Email"
+          v-model="checkoutInfo.email"
+        />
+      </div>
 
       <h2 class="text-base font-semibold text-gray-800 mt-4">Attendees</h2>
       <div>
@@ -92,7 +96,7 @@
           <p class="text-base text-gray-600 font-medium mt-3 mb-1">
             #{{ index + 1 }}
           </p>
-          <div class="flex gap-2">
+          <div class="sm:flex gap-2 space-y-2 sm:space-y-0">
             <FormControl
               type="text"
               size="sm"
@@ -123,7 +127,7 @@
       </p>
     </div>
 
-    <ErrorMessage v-if="errorMessage" :message="errorMessage" />
+    <ErrorMessage class="m-2 mt-5" v-if="errorMessage" :message="errorMessage" />
 
     <Button
       class="m-2"
