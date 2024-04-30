@@ -127,7 +127,11 @@
       </p>
     </div>
 
-    <ErrorMessage class="m-2 mt-5" v-if="errorMessage" :message="errorMessage" />
+    <ErrorMessage
+      class="m-2 mt-5"
+      v-if="errorMessage"
+      :message="errorMessage"
+    />
 
     <Button
       class="m-2"
@@ -152,7 +156,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted, watch } from 'vue'
+import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
   createResource,
   FeatherIcon,
@@ -169,6 +173,8 @@ import {
 } from '@headlessui/vue'
 
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
+
+const dayjs = inject('$dayjs')
 
 const MAX_SEATS_PER_BOOKING = 10
 
@@ -269,7 +275,14 @@ const totalAmount = computed(() => {
 })
 
 const ticketTiers = computed(() => {
-  return event.data?.tiers || []
+  let tiers = event.data?.tiers || []
+  tiers = tiers.filter((tier) => {
+    const isEnabled = Boolean(tier.enabled)
+    const deadlinePassed =
+      tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+    return isEnabled && !deadlinePassed
+  })
+  return tiers
 })
 
 const seatOptions = computed(() => {
