@@ -15,10 +15,12 @@ class RazorpayPayment(Document):
         from frappe.types import DF
 
         amount: DF.Currency
+        billing_address: DF.SmallText | None
         currency: DF.Literal["INR"]
         document_name: DF.DynamicLink | None
         document_type: DF.Link | None
         email: DF.Data
+        gstn: DF.Data | None
         meta_data: DF.Code | None
         order_id: DF.Data | None
         payment_id: DF.Data | None

@@ -47,7 +47,11 @@
                   >₹{{ tier.price }}</RadioGroupDescription
                 >
 
-                <Badge class="w-fit mt-4" variant="outline" theme="green" v-if="tier.valid_till"
+                <Badge
+                  class="w-fit mt-4"
+                  variant="outline"
+                  theme="green"
+                  v-if="tier.valid_till"
                   >Available till
                   {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
                 >
@@ -92,6 +96,22 @@
           :disabled="false"
           label="Email"
           v-model="checkoutInfo.email"
+        />
+
+        <FormControl
+          type="text"
+          size="sm"
+          variant="subtle"
+          label="GSTN (optional)"
+          v-model="checkoutInfo.gstn"
+        />
+
+        <FormControl
+          type="textarea"
+          size="sm"
+          variant="subtle"
+          label="Billing Address"
+          v-model="checkoutInfo.billing_address"
         />
       </div>
 
@@ -190,6 +210,8 @@ const checkoutInfo = reactive({
   numSeats: 1,
   email: '',
   attendees: [],
+  gstn: '',
+  billing_address: '',
 })
 const errorMessage = ref(null)
 
@@ -265,6 +287,10 @@ function createOrder() {
     },
     event.data.doctype,
     event.data.name,
+    {
+      gstn: checkoutInfo.gstn,
+      billing_address: checkoutInfo.billing_address,
+    },
   )
 }
 

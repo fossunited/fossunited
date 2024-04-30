@@ -30,8 +30,12 @@ def create_razorpay_order(
         {
             "doctype": "Razorpay Payment",
             "amount": checkout_info["amount"],
-            "status": "Pending",
             "email": checkout_info["email"],
+            "gstn": checkout_info.get("tax_details", {}).get("gstn"),
+            "billing_address": checkout_info.get(
+                "tax_details", {}
+            ).get("billing_address"),
+            "status": "Pending",
             "order_id": order["id"],
             "document_type": ref_doctype,
             "document_name": ref_docname,
