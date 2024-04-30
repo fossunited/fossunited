@@ -57,6 +57,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         is_published: DF.Check
         map_link: DF.Data | None
         must_attend: DF.Check
+        paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
         route: DF.Data | None
@@ -76,6 +77,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "Concluded",
             "Cancelled",
         ]
+        t_shirt_price: DF.Currency
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 

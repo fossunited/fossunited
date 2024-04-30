@@ -27,6 +27,8 @@ class FOSSEventTicket(Document):
         full_name: DF.Data
         razorpay_payment: DF.Link | None
         tier: DF.Data | None
+        tshirt_size: DF.Data | None
+        wants_tshirt: DF.Check
     # end: auto-generated types
 
     @staticmethod
@@ -41,6 +43,8 @@ class FOSSEventTicket(Document):
                     "event": payment.document_name,
                     "full_name": attendee.get("full_name"),
                     "email": attendee.get("email"),
+                    "wants_tshirt": attendee.get("wants_tshirt", 0),
+                    "tshirt_size": attendee.get("tshirt_size"),
                     "tier": payment_meta_data.get("tier", {}).get(
                         "title"
                     ),

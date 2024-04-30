@@ -76,14 +76,13 @@
     </RadioGroup>
 
     <!-- Form -->
-    <div class="max-w-lg m-2 mt-4 flex flex-col gap-2">
+    <div class="m-2 mt-4 flex flex-col gap-2">
       <div class="grid sm:grid-cols-2 gap-2">
         <FormControl
           type="select"
           :options="seatOptions"
           size="sm"
           variant="subtle"
-          :disabled="false"
           label="Number of seats"
           v-model="checkoutInfo.numSeats"
         />
@@ -93,7 +92,6 @@
           size="sm"
           variant="subtle"
           placeholder="john@fossunited.org"
-          :disabled="false"
           label="Email"
           v-model="checkoutInfo.email"
         />
@@ -139,17 +137,63 @@
               label="Email"
             />
           </div>
+          <div
+            v-if="event.data.paid_tshirts_available"
+            class="sm:flex gap-2 space-x-2 sm:space-y-0 mt-3"
+          >
+            <FormControl
+              type="checkbox"
+              size="sm"
+              variant="subtle"
+              label="Add a T-shirt?"
+              v-model="attendee.wants_tshirt"
+            />
+
+            <FormControl
+              v-if="attendee.wants_tshirt"
+              type="select"
+              :options="T_SHIRT_SIZES"
+              size="sm"
+              class="min-w-[100px]"
+              variant="subtle"
+              label="Size"
+              v-model="attendee.tshirt_size"
+            />
+          </div>
         </div>
       </div>
 
       <h2 class="text-base font-semibold text-gray-800 mt-4">
         Payment Summary
       </h2>
-      <p>
-        Total Amount: ₹{{ totalAmount }} ({{ checkoutInfo.numSeats }} x ₹{{
-          checkoutInfo.tier.price
-        }})
-      </p>
+
+      <div class="w-full mt-2 space-y-1">
+        <div class="flex items-center justify-between">
+          <p>Tickets</p>
+          <p>₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}</p>
+          <p>₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
+        </div>
+
+        <div
+          v-if="event.data.paid_tshirts_available && numTShirtAdded > 0"
+          class="flex items-center justify-between"
+        >
+          <p>T-Shirts</p>
+          <p>
+            ₹{{ event.data.t_shirt_price }} x
+            {{ numTShirtAdded }}
+          </p>
+          <p>₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="flex items-center justify-between font-semibold">
+        <p>Total</p>
+        <p></p>
+        <p>₹{{ totalAmount }}</p>
+      </div>
     </div>
 
     <ErrorMessage
@@ -203,6 +247,7 @@ import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 const dayjs = inject('$dayjs')
 
 const MAX_SEATS_PER_BOOKING = 10
+const T_SHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
@@ -237,6 +282,8 @@ watch(
           full_name: '',
           email: '',
           placeholder: randomPlaceholder,
+          wants_tshirt: false,
+          tshirt_size: 'M',
         })
       }
     } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
@@ -303,7 +350,25 @@ onMounted(() => {
 })
 
 const totalAmount = computed(() => {
-  return checkoutInfo.tier?.price * checkoutInfo.numSeats
+  let total = checkoutInfo.tier?.price * checkoutInfo.numSeats
+
+  if (event.data.paid_tshirts_available) {
+    total += numTShirtAdded.value * event.data.t_shirt_price
+  }
+
+  return total
+})
+
+const numTShirtAdded = computed(() => {
+  let tShirts = 0
+
+  for (let attendee of checkoutInfo.attendees) {
+    if (attendee.wants_tshirt) {
+      tShirts += 1
+    }
+  }
+
+  return tShirts
 })
 
 const ticketTiers = computed(() => {
