@@ -11,7 +11,7 @@
         >Select a tier</RadioGroupLabel
       >
 
-      <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4">
+      <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 max-w-3xl">
         <RadioGroupOption
           as="template"
           v-for="tier in ticketTiers"
@@ -97,7 +97,7 @@
               type="text"
               size="sm"
               variant="subtle"
-              placeholder="John Doe"
+              :placeholder="attendee.placeholder"
               label="Full Name"
               v-model="attendee.full_name"
             />
@@ -177,19 +177,28 @@ const checkoutInfo = reactive({
 })
 const errorMessage = ref(null)
 
+const fullNamePlaceholders = ['Jenny Smith', 'Jacob Doe', 'Jim Brown']
+
 watch(
   () => checkoutInfo.numSeats,
   () => {
     if (checkoutInfo.attendees.length < checkoutInfo.numSeats) {
       // fill empty attendees for the seats
+
       for (
         let i = checkoutInfo.attendees.length;
         i < checkoutInfo.numSeats;
         i++
       ) {
+        const randomPlaceholder =
+          fullNamePlaceholders[
+            Math.floor(Math.random() * fullNamePlaceholders.length)
+          ]
+
         checkoutInfo.attendees.push({
           full_name: '',
           email: '',
+          placeholder: randomPlaceholder,
         })
       }
     } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
