@@ -46,6 +46,11 @@
                   class="mt-6 text-sm font-medium text-gray-900"
                   >₹{{ tier.price }}</RadioGroupDescription
                 >
+
+                <Badge class="w-fit mt-4" variant="outline" theme="green" v-if="tier.valid_till"
+                  >Available till
+                  {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                >
               </span>
             </span>
             <FeatherIcon
@@ -164,6 +169,7 @@ import {
   Button,
   Card,
   ErrorMessage,
+  Badge,
 } from 'frappe-ui'
 import {
   RadioGroup,
