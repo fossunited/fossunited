@@ -60,7 +60,11 @@
   "event_schedule",
   "tickets_tab",
   "is_paid_event",
-  "tiers"
+  "tiers",
+  "section_break_idyt",
+  "paid_tshirts_available",
+  "column_break_cntx",
+  "t_shirt_price"
  ],
  "fields": [
   {
@@ -351,6 +355,29 @@
    "fieldtype": "Table",
    "label": "Tiers",
    "options": "FOSS Ticket Tier"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_paid_event==1",
+   "fieldname": "paid_tshirts_available",
+   "fieldtype": "Check",
+   "label": "Paid T Shirts available?"
+  },
+  {
+   "fieldname": "section_break_idyt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_cntx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.paid_tshirts_available==1",
+   "description": "INR",
+   "fieldname": "t_shirt_price",
+   "fieldtype": "Currency",
+   "label": "T Shirt Price",
+   "mandatory_depends_on": "eval:doc.paid_tshirts_available==1"
   }
  ],
  "has_web_view": 1,
@@ -372,7 +399,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-04-28 06:35:41.739928",
+ "modified": "2024-04-30 17:58:02.552495",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

@@ -4,14 +4,16 @@
   <Card
     v-if="event.data"
     :title="`Buy Tickets for ${event.data.event_name}`"
-    class="m-4"
+    class="m-4 mx-auto w-full sm:w-fit"
   >
     <RadioGroup class="p-2" v-model="checkoutInfo.tier">
       <RadioGroupLabel class="text-base font-semibold leading-6 text-gray-900"
         >Select a tier</RadioGroupLabel
       >
 
-      <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 max-w-3xl">
+      <div
+        class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]"
+      >
         <RadioGroupOption
           as="template"
           v-for="tier in ticketTiers"
@@ -24,7 +26,7 @@
               checked
                 ? 'border-gray-600 ring-2 ring-gray-600'
                 : 'border-gray-300',
-              'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none',
+              'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none min-w-36',
             ]"
           >
             <span class="flex flex-1">
@@ -43,6 +45,15 @@
                   as="span"
                   class="mt-6 text-sm font-medium text-gray-900"
                   >₹{{ tier.price }}</RadioGroupDescription
+                >
+
+                <Badge
+                  class="w-fit mt-4"
+                  variant="outline"
+                  theme="green"
+                  v-if="tier.valid_till"
+                  >Available till
+                  {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
                 >
               </span>
             </span>
@@ -65,26 +76,42 @@
     </RadioGroup>
 
     <!-- Form -->
-    <div class="max-w-lg m-2 flex flex-col gap-2">
-      <FormControl
-        type="select"
-        :options="seatOptions"
-        size="sm"
-        variant="subtle"
-        :disabled="false"
-        label="Number of seats"
-        v-model="checkoutInfo.numSeats"
-      />
+    <div class="m-2 mt-4 flex flex-col gap-2">
+      <div class="grid sm:grid-cols-2 gap-2">
+        <FormControl
+          type="select"
+          :options="seatOptions"
+          size="sm"
+          variant="subtle"
+          label="Number of seats"
+          v-model="checkoutInfo.numSeats"
+        />
 
-      <FormControl
-        type="email"
-        size="sm"
-        variant="subtle"
-        placeholder="john@fossunited.org"
-        :disabled="false"
-        label="Email"
-        v-model="checkoutInfo.email"
-      />
+        <FormControl
+          type="email"
+          size="sm"
+          variant="subtle"
+          placeholder="john@fossunited.org"
+          label="Email"
+          v-model="checkoutInfo.email"
+        />
+
+        <FormControl
+          type="text"
+          size="sm"
+          variant="subtle"
+          label="GSTN (optional)"
+          v-model="checkoutInfo.gstn"
+        />
+
+        <FormControl
+          type="textarea"
+          size="sm"
+          variant="subtle"
+          label="Billing Address"
+          v-model="checkoutInfo.billing_address"
+        />
+      </div>
 
       <h2 class="text-base font-semibold text-gray-800 mt-4">Attendees</h2>
       <div>
@@ -92,7 +119,7 @@
           <p class="text-base text-gray-600 font-medium mt-3 mb-1">
             #{{ index + 1 }}
           </p>
-          <div class="flex gap-2">
+          <div class="sm:flex gap-2 space-y-2 sm:space-y-0">
             <FormControl
               type="text"
               size="sm"
@@ -110,20 +137,70 @@
               label="Email"
             />
           </div>
+          <div
+            v-if="event.data.paid_tshirts_available"
+            class="sm:flex gap-2 space-x-2 sm:space-y-0 mt-3"
+          >
+            <FormControl
+              type="checkbox"
+              size="sm"
+              variant="subtle"
+              label="Add a T-shirt?"
+              v-model="attendee.wants_tshirt"
+            />
+
+            <FormControl
+              v-if="attendee.wants_tshirt"
+              type="select"
+              :options="T_SHIRT_SIZES"
+              size="sm"
+              class="min-w-[100px]"
+              variant="subtle"
+              label="Size"
+              v-model="attendee.tshirt_size"
+            />
+          </div>
         </div>
       </div>
 
       <h2 class="text-base font-semibold text-gray-800 mt-4">
         Payment Summary
       </h2>
-      <p>
-        Total Amount: ₹{{ totalAmount }} ({{ checkoutInfo.numSeats }} x ₹{{
-          checkoutInfo.tier.price
-        }})
-      </p>
+
+      <div class="w-full mt-2 space-y-1">
+        <div class="flex items-center justify-between">
+          <p>Tickets</p>
+          <p>₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}</p>
+          <p>₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
+        </div>
+
+        <div
+          v-if="event.data.paid_tshirts_available && numTShirtAdded > 0"
+          class="flex items-center justify-between"
+        >
+          <p>T-Shirts</p>
+          <p>
+            ₹{{ event.data.t_shirt_price }} x
+            {{ numTShirtAdded }}
+          </p>
+          <p>₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="flex items-center justify-between font-semibold">
+        <p>Total</p>
+        <p></p>
+        <p>₹{{ totalAmount }}</p>
+      </div>
     </div>
 
-    <ErrorMessage v-if="errorMessage" :message="errorMessage" />
+    <ErrorMessage
+      class="m-2 mt-5"
+      v-if="errorMessage"
+      :message="errorMessage"
+    />
 
     <Button
       class="m-2"
@@ -148,7 +225,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted, watch } from 'vue'
+import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
   createResource,
   FeatherIcon,
@@ -156,6 +233,7 @@ import {
   Button,
   Card,
   ErrorMessage,
+  Badge,
 } from 'frappe-ui'
 import {
   RadioGroup,
@@ -166,7 +244,10 @@ import {
 
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 
+const dayjs = inject('$dayjs')
+
 const MAX_SEATS_PER_BOOKING = 10
+const T_SHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
@@ -174,6 +255,8 @@ const checkoutInfo = reactive({
   numSeats: 1,
   email: '',
   attendees: [],
+  gstn: '',
+  billing_address: '',
 })
 const errorMessage = ref(null)
 
@@ -199,6 +282,8 @@ watch(
           full_name: '',
           email: '',
           placeholder: randomPlaceholder,
+          wants_tshirt: false,
+          tshirt_size: 'M',
         })
       }
     } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
@@ -249,6 +334,10 @@ function createOrder() {
     },
     event.data.doctype,
     event.data.name,
+    {
+      gstn: checkoutInfo.gstn,
+      billing_address: checkoutInfo.billing_address,
+    },
   )
 }
 
@@ -261,11 +350,36 @@ onMounted(() => {
 })
 
 const totalAmount = computed(() => {
-  return checkoutInfo.tier?.price * checkoutInfo.numSeats
+  let total = checkoutInfo.tier?.price * checkoutInfo.numSeats
+
+  if (event.data.paid_tshirts_available) {
+    total += numTShirtAdded.value * event.data.t_shirt_price
+  }
+
+  return total
+})
+
+const numTShirtAdded = computed(() => {
+  let tShirts = 0
+
+  for (let attendee of checkoutInfo.attendees) {
+    if (attendee.wants_tshirt) {
+      tShirts += 1
+    }
+  }
+
+  return tShirts
 })
 
 const ticketTiers = computed(() => {
-  return event.data?.tiers || []
+  let tiers = event.data?.tiers || []
+  tiers = tiers.filter((tier) => {
+    const isEnabled = Boolean(tier.enabled)
+    const deadlinePassed =
+      tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+    return isEnabled && !deadlinePassed
+  })
+  return tiers
 })
 
 const seatOptions = computed(() => {
