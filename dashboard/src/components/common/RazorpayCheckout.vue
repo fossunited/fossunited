@@ -63,7 +63,7 @@ const createRazorpayOrderResource = createResource({
       order_id: orderId,
       handler: handlePaymentSuccess,
       theme: {
-        color: '#3399cc',
+        color: '#1e1e1e',
       },
     }
 

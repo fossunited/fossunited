@@ -61,6 +61,7 @@
   "tickets_tab",
   "is_paid_event",
   "tiers",
+  "ticket_form_description",
   "section_break_idyt",
   "paid_tshirts_available",
   "column_break_cntx",
@@ -392,6 +393,11 @@
    "fieldtype": "Table",
    "label": "Custom Fields",
    "options": "FOSS Event Field"
+  },
+  {
+   "fieldname": "ticket_form_description",
+   "fieldtype": "Markdown Editor",
+   "label": "Ticket Form Description"
   }
  ],
  "has_web_view": 1,
@@ -413,7 +419,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-05-01 00:11:21.698599",
+ "modified": "2024-05-01 13:40:18.492260",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

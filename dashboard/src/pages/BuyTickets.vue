@@ -1,16 +1,23 @@
 <template>
-  <RazorpayCheckout ref="rzpCheckout" />
-
-  <Card
-    v-if="event.data"
-    :title="`Buy Tickets for ${event.data.event_name}`"
-    class="m-4 mx-auto w-full sm:w-fit"
+<RazorpayCheckout ref="rzpCheckout" />
+<Header/>
+<div
+  v-if="event.data"
+  class="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-6"
+>
+  <div
+    class="px-4 sm:px-6 lg:px-8 py-8 border border-gray-300 rounded-md bg-white w-3/4"
   >
-    <RadioGroup class="p-2" v-model="checkoutInfo.tier">
-      <RadioGroupLabel class="text-base font-semibold leading-6 text-gray-900"
-        >Select a tier</RadioGroupLabel
+    <h1 class="text-[2rem] font-bold">
+      Book Conference Tickets for {{ event.data.event_name }}
+    </h1>
+    <div class="my-2 text-gray-700 " v-html="markdown.render(event.data.ticket_form_description)" />
+    <RadioGroup class="py-4" v-model="checkoutInfo.tier">
+      <RadioGroupLabel
+        class="text-lg font-semibold leading-6 text-gray-800"
       >
-
+        Select a tier
+      </RadioGroupLabel>
       <div
         class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]"
       >
@@ -24,48 +31,53 @@
           <div
             :class="[
               checked
-                ? 'border-gray-600 ring-2 ring-gray-600'
+                ? 'border-gray-800 ring-1 ring-gray-800'
                 : 'border-gray-300',
               'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none min-w-36',
             ]"
           >
             <span class="flex flex-1">
-              <span class="flex flex-col">
-                <RadioGroupLabel
-                  as="span"
-                  class="block text-sm font-medium text-gray-900"
-                  >{{ tier.title }}</RadioGroupLabel
-                >
-                <RadioGroupDescription
-                  as="span"
-                  class="mt-1 flex items-center text-sm text-gray-500"
-                  >{{ tier.description }}</RadioGroupDescription
-                >
-                <RadioGroupDescription
-                  as="span"
-                  class="mt-6 text-sm font-medium text-gray-900"
-                  >₹{{ tier.price }}</RadioGroupDescription
-                >
-
-                <Badge
-                  class="w-fit mt-4"
-                  variant="outline"
-                  theme="green"
-                  v-if="tier.valid_till"
-                  >Available till
-                  {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
-                >
+              <span class="flex flex-col justify-between">
+                <span class="flex flex-col gap-2">
+                  <RadioGroupLabel
+                    as="span"
+                    class="block text-xl font-bold text-gray-900"
+                    >{{ tier.title }}</RadioGroupLabel
+                  >
+                  <RadioGroupDescription
+                    as="span"
+                    class="mt-2 text-sm text-gray-500"
+                    v-html="markdown.render(tier.description)"
+                  >
+                  </RadioGroupDescription>
+                </span>
+                <span class="flex flex-col gap-4 mt-4">
+                  <Badge
+                    class="w-fit"
+                    variant="outline"
+                    theme="green"
+                    v-if="tier.valid_till"
+                    >Available till
+                    {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                  >
+                  <RadioGroupDescription
+                    as="span"
+                    class="text-xl font-medium text-gray-900"
+                    >₹{{ tier.price }}</RadioGroupDescription
+                  >
+                </span>
               </span>
             </span>
-            <FeatherIcon
-              name="check-circle"
-              :class="[!checked ? 'invisible' : '', 'h-5 w-5 text-gray-700']"
-              aria-hidden="true"
-            />
+            <svg
+            :class="[!checked ? 'invisible' : '', 'h-6 w-6 text-gray-800']"
+            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+            >
+              <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+            </svg>
             <span
               :class="[
                 active ? 'border' : 'border-2',
-                checked ? 'border-indigo-600' : 'border-transparent',
+                checked ? 'border-gray-800' : 'border-transparent',
                 'pointer-events-none absolute -inset-px rounded-lg',
               ]"
               aria-hidden="true"
@@ -75,47 +87,75 @@
       </div>
     </RadioGroup>
 
-    <!-- Form -->
-    <div class="m-2 mt-4 flex flex-col gap-2">
-      <div class="grid sm:grid-cols-2 gap-2">
+    <div>
+      <div class="flex flex-col gap-1">
+        <span class="text-lg font-semibold leading-6 text-gray-800">No. of Tickets</span>
         <FormControl
+          class="w-1/4"
           type="select"
           :options="seatOptions"
-          size="sm"
+          size="md"
           variant="subtle"
-          label="Number of seats"
           v-model="checkoutInfo.numSeats"
         />
-
-        <FormControl
-          type="email"
-          size="sm"
-          variant="subtle"
-          placeholder="john@fossunited.org"
-          label="Email"
-          v-model="checkoutInfo.email"
-        />
-
-        <FormControl
+      </div>
+      <div class="border rounded-md p-5 my-4 flex flex-col gap-4">
+        <h4 class="text-base font-semibold">Billing Details</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <!-- <FormControl
           type="text"
           size="sm"
           variant="subtle"
-          label="GSTN (optional)"
-          v-model="checkoutInfo.gstn"
-        />
-
-        <FormControl
-          type="textarea"
-          size="sm"
-          variant="subtle"
-          label="Billing Address"
-          v-model="checkoutInfo.billing_address"
-        />
+          placeholder="John Doe"
+          label="Name"
+          v-model="checkoutInfo.buyer_name"
+          /> -->
+          <FormControl
+            type="email"
+            size="sm"
+            variant="subtle"
+            placeholder="john@fossunited.org"
+            label="Email"
+            v-model="checkoutInfo.email"
+          />
+        </div>
+        <div class="my-2">
+          <Switch
+            class="w-fit"
+            label="Enter GST Details"
+            description="Invoice will be generated with GST details."
+            v-model="checkoutInfo.hasGST"
+          />
+        </div>
+        <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div class="flex flex-col gap-2">
+            <!-- <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              label="Company Name"
+              v-model="checkoutInfo.company_name"
+            /> -->
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              label="GSTN (optional)"
+              v-model="checkoutInfo.gstn"
+            />
+          </div>
+          <FormControl
+            type="textarea"
+            size="sm"
+            variant="subtle"
+            label="Billing Address"
+            v-model="checkoutInfo.billing_address"
+          />
+        </div>
       </div>
 
       <div v-if="event.data.custom_fields.length > 0">
         <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
-
         <div class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0">
           <FormControl
             v-for="field in event.data.custom_fields"
@@ -129,13 +169,14 @@
         </div>
       </div>
 
-      <h2 class="text-base font-semibold text-gray-800 mt-4">Attendees</h2>
+      <!-- ATTENDEE DETAILS -->
+      <h2 class="text-lg font-semibold leading-6 text-gray-800 mt-4">Attendees</h2>
       <div>
-        <div v-for="(attendee, index) in checkoutInfo.attendees" :key="index">
-          <p class="text-base text-gray-600 font-medium mt-3 mb-1">
+        <div v-for="(attendee, index) in checkoutInfo.attendees" :key="index" class="px-4 py-4 my-4 border rounded-sm">
+          <p class="text-base text-gray-600 font-medium mb-1">
             #{{ index + 1 }}
           </p>
-          <div class="sm:flex gap-2 space-y-2 sm:space-y-0">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
             <FormControl
               type="text"
               size="sm"
@@ -144,7 +185,6 @@
               label="Full Name"
               v-model="attendee.full_name"
             />
-
             <FormControl
               type="email"
               size="sm"
@@ -155,7 +195,7 @@
           </div>
           <div
             v-if="event.data.paid_tshirts_available"
-            class="sm:flex gap-2 space-x-2 sm:space-y-0 mt-3"
+            class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2"
           >
             <FormControl
               type="checkbox"
@@ -164,9 +204,8 @@
               label="Add a T-shirt?"
               v-model="attendee.wants_tshirt"
             />
-
             <FormControl
-              v-if="attendee.wants_tshirt"
+              :class="attendee.wants_tshirt ? '' : ' invisible'"
               type="select"
               :options="T_SHIRT_SIZES"
               size="sm"
@@ -179,37 +218,37 @@
         </div>
       </div>
 
-      <h2 class="text-base font-semibold text-gray-800 mt-4">
-        Payment Summary
-      </h2>
+    </div>
+  </div>
 
-      <div class="w-full mt-2 space-y-1">
-        <div class="flex items-center justify-between">
-          <p>Tickets</p>
-          <p>₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}</p>
-          <p>₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
+  <Card
+    class="w-1/4 h-fit sticky top-20"
+    title="Ticket Summary"
+  >
+    <div class="w-full mt-2 space-y-1">
+        <div class="grid grid-cols-3 gap-2">
+          <p>{{ checkoutInfo.tier.title }} Ticket</p>
+          <p class="justify-self-center">₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}</p>
+          <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
         </div>
 
         <div
           v-if="event.data.paid_tshirts_available && numTShirtAdded > 0"
-          class="flex items-center justify-between"
+          class="grid grid-cols-3"
         >
           <p>T-Shirts</p>
-          <p>
+          <p class="justify-self-center">
             ₹{{ event.data.t_shirt_price }} x
             {{ numTShirtAdded }}
           </p>
-          <p>₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
+          <p class="justify-self-end">₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
         </div>
-      </div>
-
-      <hr>
-
-      <div class="flex items-center justify-between font-semibold">
-        <p>Total</p>
-        <p></p>
-        <p>₹{{ totalAmount }}</p>
-      </div>
+    </div>
+    <hr class="my-2">
+    <div class="grid grid-cols-3 gap-2 font-semibold">
+      <p>Total</p>
+      <p class="justify-self-center"></p>
+      <p class="justify-self-end">₹{{ totalAmount }}</p>
     </div>
 
     <ErrorMessage
@@ -217,37 +256,43 @@
       v-if="errorMessage"
       :message="errorMessage"
     />
-
     <Button
-      class="m-2"
+      class="mt-4 w-full"
+      size="md"
       :loading="rzpCheckout?.resource.loading"
       @click="createOrder"
       variant="solid"
-      >Pay Now</Button
     >
+    Pay Now
+    </Button>
   </Card>
-
-  <div class="m-4">
-    <Button
-      v-if="Boolean(event.loading)"
-      :loading="true"
-      loading-text="Loading"
-    />
-    <p v-else-if="!eventName" class="text-gray-800 font-medium">
-      Event not found
-    </p>
-    <p v-else-if="event.error">Error loading event</p>
-  </div>
+</div>
+<div class="m-4">
+  <Button
+    v-if="Boolean(event.loading)"
+    :loading="true"
+    loading-text="Loading"
+  />
+  <p v-else-if="!eventName" class="text-gray-800 font-medium">
+    Event not found
+  </p>
+  <p v-else-if="event.error">Error loading event</p>
+</div>
 </template>
 
 <script setup>
+import MarkdownIt from "markdown-it";
+import Header from '@/components/Header.vue'
 import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
   createResource,
+  createDocumentResource,
   FeatherIcon,
   FormControl,
+  Switch,
   Button,
   Card,
+  usePageMeta,
   ErrorMessage,
   Badge,
 } from 'frappe-ui'
@@ -270,12 +315,21 @@ const FIELD_TYPE_FORM_CONTROL_MAP = {
   "Select": "select"
 }
 
+usePageMeta(() => {
+  return {
+    title: 'Book Tickets',
+  }
+})
+
+const markdown = new MarkdownIt()
+
 const eventName = ref(null)
 const checkoutInfo = reactive({
   tier: null,
   numSeats: 1,
   email: '',
   attendees: [],
+  hasGST: false,
   gstn: '',
   billing_address: '',
 })
@@ -333,7 +387,6 @@ const event = createResource({
     if (tiers.length > 0) {
       checkoutInfo.tier = tiers[0]
     }
-
     resetCustomFields();
   },
 })
