@@ -35,7 +35,7 @@
                 <h1 class="header--event-title">{{ doc.event_name }}</h1>
             </div>
             {% if doc.is_paid_event %}
-            <button class="primary-button ticket-button" onClick="window.location.pathname='/dashboard/buy-tickets?event={{doc.name}}'">Buy Ticket</button>
+            <button class="primary-button ticket-button" onClick="window.location.href='/dashboard/buy-tickets?event={{doc.name}}'">Buy Ticket</button>
             {% endif %}
         </div>
         <div class="header--tags">
