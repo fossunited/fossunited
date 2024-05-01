@@ -27,9 +27,11 @@ class FOSSEventTicket(Document):
 
         custom_fields: DF.Table[FOSSTicketCustomField]
         customer: DF.Data | None
+        designation: DF.Data | None
         email: DF.Data
         event: DF.Link
         full_name: DF.Data
+        organization: DF.Data | None
         razorpay_payment: DF.Link | None
         tier: DF.Data | None
         tshirt_size: DF.Data | None
@@ -49,6 +51,8 @@ class FOSSEventTicket(Document):
                     "event": payment.document_name,
                     "full_name": attendee.get("full_name"),
                     "email": attendee.get("email"),
+                    "organization": attendee.get("organization"),
+                    "designation": attendee.get("designation"),
                     "wants_tshirt": attendee.get("wants_tshirt", 0),
                     "tshirt_size": attendee.get("tshirt_size"),
                     "tier": payment_meta_data.get("tier", {}).get(

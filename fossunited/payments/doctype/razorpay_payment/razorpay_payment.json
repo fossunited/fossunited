@@ -12,10 +12,12 @@
   "order_id",
   "payment_id",
   "customer_section",
+  "buyer_name",
   "email",
-  "billing_address",
   "column_break_enpj",
+  "company_name",
   "gstn",
+  "billing_address",
   "references_section",
   "document_type",
   "column_break_tdxc",
@@ -132,6 +134,19 @@
    "fieldname": "gstn",
    "fieldtype": "Data",
    "label": "GSTN"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "label": "Company Name"
+  },
+  {
+   "fieldname": "buyer_name",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Name",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -141,7 +156,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-04-30 17:33:00.934081",
+ "modified": "2024-05-02 01:41:08.063074",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",

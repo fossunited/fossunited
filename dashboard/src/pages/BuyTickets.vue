@@ -102,14 +102,14 @@
       <div class="border rounded-md p-5 my-4 flex flex-col gap-4">
         <h4 class="text-base font-semibold">Billing Details</h4>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <!-- <FormControl
+          <FormControl
           type="text"
           size="sm"
           variant="subtle"
           placeholder="John Doe"
           label="Name"
           v-model="checkoutInfo.buyer_name"
-          /> -->
+          />
           <FormControl
             type="email"
             size="sm"
@@ -129,13 +129,13 @@
         </div>
         <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
           <div class="flex flex-col gap-2">
-            <!-- <FormControl
+            <FormControl
               type="text"
               size="sm"
               variant="subtle"
               label="Company Name"
               v-model="checkoutInfo.company_name"
-            /> -->
+            />
             <FormControl
               type="text"
               size="sm"
@@ -191,6 +191,20 @@
               variant="subtle"
               v-model="attendee.email"
               label="Email"
+            />
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              v-model="attendee.organization"
+              label="Organization / College"
+            />
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              v-model="attendee.designation"
+              label="Designation"
             />
           </div>
           <div
@@ -338,8 +352,6 @@ import Header from '@/components/Header.vue'
 import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
   createResource,
-  createDocumentResource,
-  FeatherIcon,
   FormControl,
   Switch,
   Button,
@@ -383,6 +395,8 @@ const checkoutInfo = reactive({
   email: '',
   attendees: [],
   hasGST: false,
+  company_name: '',
+  buyer_name: '',
   gstn: '',
   billing_address: '',
 })
@@ -411,6 +425,8 @@ watch(
           full_name: '',
           email: '',
           placeholder: randomPlaceholder,
+          designation: '',
+          organization: '',
           wants_tshirt: false,
           tshirt_size: 'M',
         })
@@ -475,6 +491,8 @@ function createOrder() {
     event.data.doctype,
     event.data.name,
     {
+      buyer_name: checkoutInfo.buyer_name,
+      company_name: checkoutInfo.company_name,
       gstn: checkoutInfo.gstn,
       billing_address: checkoutInfo.billing_address,
     },

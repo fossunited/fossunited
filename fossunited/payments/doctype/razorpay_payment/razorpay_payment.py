@@ -16,6 +16,8 @@ class RazorpayPayment(Document):
 
         amount: DF.Currency
         billing_address: DF.SmallText | None
+        buyer_name: DF.Data
+        company_name: DF.Data | None
         currency: DF.Literal["INR"]
         document_name: DF.DynamicLink | None
         document_type: DF.Link | None
