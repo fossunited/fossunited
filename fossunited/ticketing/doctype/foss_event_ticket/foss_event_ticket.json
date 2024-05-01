@@ -7,9 +7,11 @@
  "field_order": [
   "event",
   "full_name",
+  "designation",
   "column_break_dnhv",
   "tier",
   "email",
+  "organization",
   "payment_details_section",
   "razorpay_payment",
   "column_break_uihi",
@@ -108,11 +110,21 @@
    "fieldtype": "Table",
    "label": "Custom Fields",
    "options": "FOSS Ticket Custom Field"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Data",
+   "label": "Organization / College"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-01 00:50:01.148442",
+ "modified": "2024-05-02 01:53:55.048157",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

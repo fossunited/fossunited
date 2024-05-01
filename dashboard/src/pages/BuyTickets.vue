@@ -192,6 +192,20 @@
               v-model="attendee.email"
               label="Email"
             />
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              v-model="attendee.organization"
+              label="Organization / College"
+            />
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              v-model="attendee.designation"
+              label="Designation"
+            />
           </div>
           <div
             v-if="event.data.paid_tshirts_available"
@@ -411,6 +425,8 @@ watch(
           full_name: '',
           email: '',
           placeholder: randomPlaceholder,
+          designation: '',
+          organization: '',
           wants_tshirt: false,
           tshirt_size: 'M',
         })
