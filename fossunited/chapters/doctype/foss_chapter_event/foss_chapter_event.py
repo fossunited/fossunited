@@ -82,6 +82,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "Cancelled",
         ]
         t_shirt_price: DF.Currency
+        ticket_form_description: DF.MarkdownEditor | None
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 
