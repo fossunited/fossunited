@@ -73,13 +73,14 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
         return
 
     if doc.status == "Captured":
+        current_user = frappe.session.user
+        frappe.set_user("Administrator")
         try:
-            current_user = frappe.session.user
-            frappe.set_user("Administrator")
             FOSSEventTicket.create_tickets_for_payment(doc)
-            frappe.set_user(current_user)
         except:
             frappe.log_error("Ticket Creation Failed!")
+        finally:
+            frappe.set_user(current_user)
 
 
 def is_foss_event(doc: "RazorpayPayment"):
