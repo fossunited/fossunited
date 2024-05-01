@@ -54,15 +54,18 @@ class FOSSEventTicket(Document):
                     "tier": payment_meta_data.get("tier", {}).get(
                         "title"
                     ),
+                    "custom_fields": [],
                 }
-            ).insert(ignore_permissions=True)
+            )
 
             # add custom fields
             custom_fields = payment_meta_data.get("custom_fields", {})
             for k, v in custom_fields.items():
-                ticket_doc.append(
-                    "custom_fields", {"field_name": k, "data": str(v)}
-                )
+                if k and v:
+                    ticket_doc.append(
+                        "custom_fields",
+                        {"field_name": k, "data": str(v)},
+                    )
             ticket_doc.save(ignore_permissions=True)
 
 
