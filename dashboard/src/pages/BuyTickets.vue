@@ -430,6 +430,17 @@ const checkoutFormErrors = computed(() => {
   if (!checkoutInfo.email) {
     errors.push('Please enter your email')
   }
+
+  // validate email address
+  if (
+    checkoutInfo.email &&
+    !checkoutInfo.email.match(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    )
+  ) {
+    errors.push('Please enter a valid email address')
+  }
+
   if (checkoutInfo.attendees.some((a) => !a.full_name || !a.email)) {
     errors.push('Please fill in all attendee details')
   }
@@ -438,6 +449,12 @@ const checkoutFormErrors = computed(() => {
   for (let field of event.data?.custom_fields || []) {
     if (field.mandatory && !customFields[field.field_name]) {
       errors.push(`Please fill in ${field.label}`)
+    }
+  }
+
+  for (let attendee of checkoutInfo.attendees) {
+    if (attendee.email && !attendee.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      errors.push('Please enter a valid email address for all attendees')
     }
   }
 
