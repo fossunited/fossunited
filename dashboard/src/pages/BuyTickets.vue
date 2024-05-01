@@ -6,7 +6,7 @@
   class="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8 py-8 flex gap-6"
 >
   <div
-    class="px-4 sm:px-6 lg:px-8 py-8 border border-gray-300 rounded-md bg-white w-3/4"
+    class="p-4 lg:px-8 md:py-8 border border-gray-300 rounded-md bg-white md:w-3/4"
   >
     <h1 class="text-[2rem] font-bold">
       Book Conference Tickets for {{ event.data.event_name }}
@@ -222,7 +222,7 @@
   </div>
 
   <Card
-    class="w-1/4 h-fit sticky top-20"
+    class="w-1/4 h-fit sticky top-20 hidden md:block"
     title="Ticket Summary"
   >
     <div class="w-full mt-2 space-y-1">
@@ -266,8 +266,10 @@
     Pay Now
     </Button>
   </Card>
+
+
 </div>
-<div class="m-4">
+<div class="p-5">
   <Button
     v-if="Boolean(event.loading)"
     :loading="true"
@@ -278,6 +280,56 @@
   </p>
   <p v-else-if="event.error">Error loading event</p>
 </div>
+<div v-if="event.data" class="md:hidden sticky bottom-0 z-50 pb-8 h-fit bg-white rounded-t-lg border-gray-800 px-5 py-3 border">
+  <div class="mb-4 flex justify-between items-center">
+    <h3 class="text-lg font-medium ">Ticket Summary</h3>
+    <Button
+      size="sm"
+      variant="ghost"
+      @click="showAdditionalDetails = !showAdditionalDetails"
+      label="Show Details"
+    />
+  </div>
+  <div v-if="showAdditionalDetails" class="w-full mt-2 space-y-1">
+    <div class="grid grid-cols-3 gap-2">
+      <p>{{ checkoutInfo.tier.title }} Ticket</p>
+      <p class="justify-self-center">₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}</p>
+      <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
+    </div>
+    <div
+      v-if="event.data.paid_tshirts_available && numTShirtAdded > 0"
+      class="grid grid-cols-3"
+    >
+      <p>T-Shirts</p>
+      <p class="justify-self-center">
+        ₹{{ event.data.t_shirt_price }} x
+        {{ numTShirtAdded }}
+      </p>
+      <p class="justify-self-end">₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
+    </div>
+    <hr class="my-2">
+  </div>
+  <ErrorMessage
+      class="m-2 mt-5"
+      v-if="errorMessage"
+      :message="errorMessage"
+    />
+  <div class="grid grid-cols-3 gap-2 mt-2 font-semibold">
+      <p>Total</p>
+      <p class="justify-self-center"></p>
+      <p class="justify-self-end">₹{{ totalAmount }}</p>
+  </div>
+  <Button
+      class="mt-4 w-full"
+      size="md"
+      :loading="rzpCheckout?.resource.loading"
+      @click="createOrder"
+      variant="solid"
+    >
+    Pay Now
+  </Button>
+</div>
+
 </template>
 
 <script setup>
@@ -321,6 +373,7 @@ usePageMeta(() => {
   }
 })
 
+const showAdditionalDetails = ref(false)
 const markdown = new MarkdownIt()
 
 const eventName = ref(null)
