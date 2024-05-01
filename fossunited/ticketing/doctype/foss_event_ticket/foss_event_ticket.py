@@ -40,6 +40,7 @@ class FOSSEventTicket(Document):
     def create_tickets_for_payment(payment: "RazorpayPayment"):
         payment_meta_data: dict = frappe.parse_json(payment.meta_data)
         attendees = payment_meta_data.get("attendees", [])
+
         for attendee in attendees:
             ticket_doc = frappe.get_doc(
                 {
@@ -54,7 +55,7 @@ class FOSSEventTicket(Document):
                         "title"
                     ),
                 }
-            ).insert()
+            ).insert(ignore_permissions=True)
 
             # add custom fields
             custom_fields = payment_meta_data.get("custom_fields", {})
@@ -62,7 +63,7 @@ class FOSSEventTicket(Document):
                 ticket_doc.append(
                     "custom_fields", {"field_name": k, "data": str(v)}
                 )
-            ticket_doc.save()
+            ticket_doc.save(ignore_permissions=True)
 
 
 def handle_payment_on_update(doc: "RazorpayPayment", event: str):
@@ -73,14 +74,10 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
         return
 
     if doc.status == "Captured":
-        current_user = frappe.session.user
-        frappe.set_user("Administrator")
         try:
             FOSSEventTicket.create_tickets_for_payment(doc)
         except:
             frappe.log_error("Ticket Creation Failed!")
-        finally:
-            frappe.set_user(current_user)
 
 
 def is_foss_event(doc: "RazorpayPayment"):
