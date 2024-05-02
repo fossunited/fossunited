@@ -1,8 +1,13 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
+
+from fossunited.utils.payments import (
+    get_in_razorpay_money,
+    get_razorpay_client,
+)
 
 
 class RazorpayPayment(Document):
@@ -16,7 +21,7 @@ class RazorpayPayment(Document):
 
         amount: DF.Currency
         billing_address: DF.SmallText | None
-        buyer_name: DF.Data
+        buyer_name: DF.Data | None
         company_name: DF.Data | None
         currency: DF.Literal["INR"]
         document_name: DF.DynamicLink | None
@@ -26,7 +31,39 @@ class RazorpayPayment(Document):
         meta_data: DF.Code | None
         order_id: DF.Data | None
         payment_id: DF.Data | None
-        status: DF.Literal["Captured", "Failed", "Pending"]
+        refund_id: DF.Data | None
+        status: DF.Literal[
+            "Captured",
+            "Failed",
+            "Pending",
+            "Refund Pending",
+            "Refunded",
+        ]
     # end: auto-generated types
 
-    pass
+    @frappe.whitelist()
+    def refund(self):
+        frappe.only_for("System Manager")
+
+        if not self.is_paid:
+            frappe.throw(
+                "Refunds Can be Made Only on Captured Payments!"
+            )
+
+        client = get_razorpay_client()
+        refund_amount = int(get_in_razorpay_money(self.amount))
+        refund = client.payment.refund(self.payment_id, refund_amount)
+
+        self.refund_id = refund["id"]
+        if refund["status"] == "processed":
+            self.status = "Refunded"
+        elif refund["status"] == "pending":
+            self.status = "Refund Pending"
+
+        self.save()
+
+        return refund["status"]
+
+    @property
+    def is_paid(self):
+        return self.status == "Captured"
