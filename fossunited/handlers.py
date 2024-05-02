@@ -41,11 +41,20 @@ def handle_razorpay_webhook():
     payment_doc = frappe.get_doc(
         "Razorpay Payment", {"order_id": razorpay_order_id}
     )
+
     if (
         event == "payment.captured"
         and not payment_doc.status != "Captured"
     ):
         payment_doc.status = "Captured"
+        payment_doc.save()
+    elif (
+        event == "refund.processed"
+        and not payment_doc.status == "Refunded"
+    ):
+        refund_entity = form_dict["payload"]["refund"]["entity"]
+        payment_doc.status = "Refunded"
+        payment_doc.refund_id = refund_entity["id"]
         payment_doc.save()
 
     frappe.set_user(current_user)
