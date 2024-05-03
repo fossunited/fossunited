@@ -15,6 +15,7 @@
   "customer_section",
   "buyer_name",
   "email",
+  "state",
   "column_break_enpj",
   "company_name",
   "gstn",
@@ -124,8 +125,9 @@
   },
   {
    "fieldname": "billing_address",
-   "fieldtype": "Small Text",
-   "label": "Billing Address"
+   "fieldtype": "Text",
+   "label": "Billing Address",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_enpj",
@@ -134,12 +136,14 @@
   {
    "fieldname": "gstn",
    "fieldtype": "Data",
-   "label": "GSTN"
+   "label": "GSTN",
+   "read_only": 1
   },
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
-   "label": "Company Name"
+   "label": "Company Name",
+   "read_only": 1
   },
   {
    "fieldname": "buyer_name",
@@ -154,6 +158,12 @@
    "fieldtype": "Data",
    "label": "Refund ID",
    "read_only": 1
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Data",
+   "label": "State",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -163,7 +173,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-05-02 12:31:58.909037",
+ "modified": "2024-05-03 13:58:10.155141",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",

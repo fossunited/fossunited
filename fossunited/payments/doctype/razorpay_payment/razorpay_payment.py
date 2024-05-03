@@ -20,7 +20,7 @@ class RazorpayPayment(Document):
         from frappe.types import DF
 
         amount: DF.Currency
-        billing_address: DF.SmallText | None
+        billing_address: DF.Text | None
         buyer_name: DF.Data | None
         company_name: DF.Data | None
         currency: DF.Literal["INR"]
@@ -32,6 +32,7 @@ class RazorpayPayment(Document):
         order_id: DF.Data | None
         payment_id: DF.Data | None
         refund_id: DF.Data | None
+        state: DF.Data | None
         status: DF.Literal[
             "Captured",
             "Failed",

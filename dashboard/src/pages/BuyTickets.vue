@@ -99,60 +99,6 @@
           v-model="checkoutInfo.numSeats"
         />
       </div>
-      <div class="border rounded-md p-5 my-4 flex flex-col gap-4">
-        <h4 class="text-base font-semibold">Billing Details</h4>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <FormControl
-          type="text"
-          size="sm"
-          variant="subtle"
-          placeholder="John Doe"
-          label="Name"
-          v-model="checkoutInfo.buyer_name"
-          />
-          <FormControl
-            type="email"
-            size="sm"
-            variant="subtle"
-            placeholder="john@fossunited.org"
-            label="Email"
-            v-model="checkoutInfo.email"
-          />
-        </div>
-        <div class="my-2">
-          <Switch
-            class="w-fit"
-            label="Enter GST Details"
-            description="Invoice will be generated with GST details."
-            v-model="checkoutInfo.hasGST"
-          />
-        </div>
-        <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <div class="flex flex-col gap-2">
-            <FormControl
-              type="text"
-              size="sm"
-              variant="subtle"
-              label="Company Name"
-              v-model="checkoutInfo.company_name"
-            />
-            <FormControl
-              type="text"
-              size="sm"
-              variant="subtle"
-              label="GSTN (optional)"
-              v-model="checkoutInfo.gstn"
-            />
-          </div>
-          <FormControl
-            type="textarea"
-            size="sm"
-            variant="subtle"
-            label="Billing Address"
-            v-model="checkoutInfo.billing_address"
-          />
-        </div>
-      </div>
 
       <div v-if="event.data.custom_fields.length > 0">
         <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
@@ -232,6 +178,70 @@
         </div>
       </div>
 
+      <div class="border rounded-md p-5 my-4 flex flex-col gap-4">
+        <h4 class="text-base font-semibold">Billing Details</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <FormControl
+          type="text"
+          size="sm"
+          variant="subtle"
+          placeholder="John Doe"
+          label="Name"
+          v-model="checkoutInfo.buyer_name"
+          />
+          <FormControl
+            type="email"
+            size="sm"
+            variant="subtle"
+            placeholder="john@fossunited.org"
+            label="Email"
+            v-model="checkoutInfo.email"
+          />
+        </div>
+        <div class="my-2">
+          <Switch
+            class="w-fit"
+            label="Enter GST Details"
+            description="Invoice will be generated with GST details."
+            v-model="checkoutInfo.hasGST"
+          />
+        </div>
+        <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div class="flex flex-col gap-2">
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              label="Company Name"
+              v-model="checkoutInfo.company_name"
+            />
+            <FormControl
+              type="text"
+              size="sm"
+              variant="subtle"
+              label="GSTN (optional)"
+              v-model="checkoutInfo.gstn"
+            />
+            <FormControl
+              type="select"
+              size="sm"
+              variant="subtle"
+              label="State"
+              :options="stateOptions.data"
+              v-model="checkoutInfo.state"
+              :placeholder="stateOptions.data[0]?.label"
+            />
+          </div>
+          <FormControl
+            type="textarea"
+            size="sm"
+            variant="subtle"
+            label="Billing Address"
+            v-model="checkoutInfo.billing_address"
+          />
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -283,7 +293,7 @@
 
 
 </div>
-<div class="p-5">
+<div class="p-5 bg-gray-50">
   <Button
     v-if="Boolean(event.loading)"
     :loading="true"
@@ -397,6 +407,7 @@ const checkoutInfo = reactive({
   hasGST: false,
   company_name: '',
   buyer_name: '',
+  state: '',
   gstn: '',
   billing_address: '',
 })
@@ -404,6 +415,14 @@ const customFields = reactive({});
 const errorMessage = ref(null)
 
 const fullNamePlaceholders = ['Jenny Smith', 'Jacob Doe', 'Jim Brown']
+
+const stateOptions = createResource({
+  url: 'fossunited.api.dashboard.get_states',
+  transform(data){
+    return data.map(state => ({ label: state.name, value: state.name }))
+  },
+  auto: true,
+})
 
 watch(
   () => checkoutInfo.numSeats,
@@ -494,6 +513,7 @@ function createOrder() {
       buyer_name: checkoutInfo.buyer_name,
       company_name: checkoutInfo.company_name,
       gstn: checkoutInfo.gstn,
+      state: checkoutInfo.state,
       billing_address: checkoutInfo.billing_address,
     },
   )
