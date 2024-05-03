@@ -419,7 +419,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-05-01 13:40:18.492260",
+ "modified": "2024-05-03 22:57:45.566439",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -435,6 +435,18 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
    "share": 1,
    "write": 1
   },
