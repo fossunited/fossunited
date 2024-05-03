@@ -12,6 +12,13 @@ def get_event(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
+def get_states():
+    return frappe.get_all(
+        "State", fields=["name"], page_length=1000, order_by="name"
+    )
+
+
+@frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
     checkout_info: dict,
     meta_data=dict(),
@@ -36,6 +43,9 @@ def create_razorpay_order(
             ),
             "company_name": checkout_info.get("tax_details", {}).get(
                 "company_name"
+            ),
+            "state": checkout_info.get("tax_details", {}).get(
+                "state"
             ),
             "gstn": checkout_info.get("tax_details", {}).get("gstn"),
             "billing_address": checkout_info.get(
