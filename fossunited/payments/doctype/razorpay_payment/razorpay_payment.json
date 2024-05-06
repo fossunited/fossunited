@@ -162,8 +162,7 @@
   {
    "fieldname": "state",
    "fieldtype": "Data",
-   "label": "State",
-   "read_only": 1
+   "label": "State"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -173,7 +172,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-05-03 13:58:10.155141",
+ "modified": "2024-05-06 17:22:56.775128",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",
