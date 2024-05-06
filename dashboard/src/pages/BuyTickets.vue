@@ -197,6 +197,15 @@
             label="Email"
             v-model="checkoutInfo.email"
           />
+          <FormControl
+              type="select"
+              size="sm"
+              variant="subtle"
+              label="State"
+              :options="stateOptions.data"
+              v-model="checkoutInfo.state"
+              :placeholder="stateOptions.data[0]?.label"
+          />
         </div>
         <div class="my-2">
           <Switch
@@ -221,15 +230,6 @@
               variant="subtle"
               label="GSTN (optional)"
               v-model="checkoutInfo.gstn"
-            />
-            <FormControl
-              type="select"
-              size="sm"
-              variant="subtle"
-              label="State"
-              :options="stateOptions.data"
-              v-model="checkoutInfo.state"
-              :placeholder="stateOptions.data[0]?.label"
             />
           </div>
           <FormControl
@@ -600,6 +600,14 @@ const checkoutFormErrors = computed(() => {
     if (attendee.email && !attendee.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
       errors.push('Please enter a valid email address for all attendees')
     }
+  }
+
+  if (!checkoutInfo.state) {
+    errors.push('Please select a state in Billing Details')
+  }
+
+  if(!checkoutInfo.buyer_name) {
+    errors.push('Please enter name in Billing Details')
   }
 
   return errors
