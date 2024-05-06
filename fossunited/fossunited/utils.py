@@ -1,7 +1,9 @@
+import itertools
 import json
 
 import frappe
 from frappe.utils import format_datetime, format_time
+from frappe.utils.data import now_datetime
 
 
 def get_month(date_string, format_string):
@@ -513,3 +515,52 @@ def validate_profile_completion():
         "FOSS User Profile",
         {"email": frappe.session.user},
     )
+
+
+def get_grouped_events():
+    events = frappe.get_all(
+        "FOSS Chapter Event",
+        fields=[
+            "event_name",
+            "chapter",
+            "banner_image",
+            "route",
+            "must_attend",
+            "event_location",
+            "map_link",
+            "event_start_date",
+            "banner_image",
+        ],
+        filters={"status": "Approved", "is_published": 1},
+        order_by="event_start_date",
+    )
+    return get_month_grouped_events(events)
+
+
+def get_month_grouped_events(events):
+    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
+    month_grouped_events = {
+        "Upcoming FOSS Events": {},
+        "Past Events": {},
+    }
+    now = now_datetime()
+
+    for event in events:
+        event_month_year = frappe.utils.formatdate(
+            event.event_start_date, "MMMM yyyy"
+        )
+        event.month_year = event_month_year
+        if event.event_start_date > now:
+            grouped_events["Upcoming FOSS Events"].append(event)
+        else:
+            grouped_events["Past Events"].append(event)
+
+    for key, values in grouped_events.items():
+        for month_year, month_year_events in itertools.groupby(
+            values, lambda x: x.month_year
+        ):
+            month_grouped_events[key][month_year] = list(
+                month_year_events
+            )
+
+    return month_grouped_events
