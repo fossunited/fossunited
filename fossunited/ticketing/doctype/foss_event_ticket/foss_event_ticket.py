@@ -72,6 +72,26 @@ class FOSSEventTicket(Document):
                     )
             ticket_doc.save(ignore_permissions=True)
 
+    def after_insert(self):
+        self.check_max_tickets()
+
+    def check_max_tickets(self):
+        event = frappe.get_doc("FOSS Chapter Event", self.event)
+        tickets_count = frappe.db.count(
+            "FOSS Event Ticket",
+            {"event": self.event, "tier": self.tier},
+        )
+
+        for tier in event.tiers:
+            if (
+                tier.title == self.tier
+                and tier.maximum_tickets
+                and (tickets_count >= tier.maximum_tickets)
+            ):
+                event.tiers[tier.idx - 1].enabled = 0
+                event.save(ignore_permissions=True)
+                return
+
 
 def handle_payment_on_update(doc: "RazorpayPayment", event: str):
     if not is_foss_event(doc):
