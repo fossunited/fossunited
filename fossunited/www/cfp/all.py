@@ -13,5 +13,5 @@ def get_context(context):
         "FOSS Event CFP Submission",
         {"event": context.event.name},
         ["*"],
-        page_length=150,
+        page_length=9999,
     )
