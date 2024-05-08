@@ -310,6 +310,8 @@
    "label": "Meta Info"
   },
   {
+   "fetch_from": "chapter.banner_image",
+   "fetch_if_empty": 1,
    "fieldname": "banner_image",
    "fieldtype": "Attach Image",
    "label": "Event Banner Image"
@@ -419,7 +421,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-05-03 22:57:45.566439",
+ "modified": "2024-05-08 21:50:02.177279",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
