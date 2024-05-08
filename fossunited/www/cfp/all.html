@@ -33,7 +33,7 @@
             </div>
             {% if proposal.status == 'Approved' %}
             <a href="/{{proposal.user_route}}" class="speaker-card p-0">
-                <img src="{{ proposal.profile_picture }}" alt="{{ proposal.full_name }}" class="speaker--image">
+                <img src="{{ proposal.picture_url }}" alt="{{ proposal.full_name }}" class="speaker--image">
                 <div class="speaker--details">
                     <div class="speaker--name">{{ proposal.full_name }}</div>
                     <div class="speaker--talk-title">{{ proposal.talk_title }}</div>
