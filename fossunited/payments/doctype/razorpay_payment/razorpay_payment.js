@@ -15,5 +15,12 @@ frappe.ui.form.on("Razorpay Payment", {
                 })
             })
         }
+
+        const btn = frm.add_custom_button("Sync Status", () => {
+            frm.call({method: "sync_status", btn, doc: frm.doc}).then(() => {
+                frappe.show_alert("Latest status synced")
+                frm.refresh()
+            })
+        })
 	},
 });

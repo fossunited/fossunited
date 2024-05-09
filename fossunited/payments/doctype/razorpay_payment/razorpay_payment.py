@@ -65,6 +65,27 @@ class RazorpayPayment(Document):
 
         return refund["status"]
 
+    @frappe.whitelist()
+    def sync_status(self):
+        client = get_razorpay_client()
+        order = client.order.fetch(self.order_id)
+        payments = client.order.payments(self.order_id).get(
+            "items", []
+        )
+
+        if order["status"] == "paid":
+            frappe.errprint(payments)
+            if (
+                payments[0]["status"] == "captured"
+                and self.status != "Captured"
+            ):
+                self.status = "Captured"
+                self.payment_id = payments[0]["id"]
+                self.save()
+            elif payments[0]["status"] == "refunded":
+                self.status = "Refunded"
+                self.save()
+
     @property
     def is_paid(self):
         return self.status == "Captured"
