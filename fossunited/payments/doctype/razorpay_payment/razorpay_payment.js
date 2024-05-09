@@ -5,11 +5,13 @@ frappe.ui.form.on("Razorpay Payment", {
 	refresh(frm) {
         if (frm.doc.status === "Captured") {
             frm.add_custom_button("Refund", () => {
-                frm.call("refund").then(({message}) => {
-                    if (message != "failed") {
-                        frappe.show_alert("Refund Processed")
-                        frm.refresh()
-                    }
+                frappe.confirm("Are you sure you want to refund in full?", () => {
+                    frm.call("refund").then(({message}) => {
+                        if (message != "failed") {
+                            frappe.show_alert("Refund Processed")
+                            frm.refresh()
+                        }
+                    })
                 })
             })
         }
