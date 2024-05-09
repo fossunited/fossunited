@@ -44,7 +44,7 @@ def handle_razorpay_webhook():
 
     if (
         event == "payment.captured"
-        and not payment_doc.status != "Captured"
+        and payment_doc.status != "Captured"
     ):
         payment_doc.status = "Captured"
         payment_doc.save()
