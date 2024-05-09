@@ -19,7 +19,7 @@ fixtures = ["State", "City", "FOSS Event Type"]
 
 # include js, css files in header of web template
 web_include_css = ["/assets/fossunited/css/custom.css"]
-web_include_js = ["website.bundle.js", "autocomp.bundle.js"]
+web_include_js = ["website.bundle.js"]
 
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "fossunited/public/scss/website"
@@ -118,6 +118,7 @@ jinja = {
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
+        "fossunited.fossunited.utils.get_grouped_events",
     ],
     "filters": [
         "fossunited.fossunited.utils.get_avatar",

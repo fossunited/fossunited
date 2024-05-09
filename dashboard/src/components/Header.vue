@@ -5,7 +5,7 @@
     <div class="flex gap-1">
       <FossUnitedLogo class="w-auto h-8" fill="black"></FossUnitedLogo>
     </div>
-    <div class="flex items-center">
+    <div v-if="session.isLoggedIn" class="flex items-center">
       <Dropdown
         :options="[
           {
@@ -43,22 +43,28 @@
   </header>
 </template>
 <script setup>
-import { inject } from 'vue'
+import { inject, computed } from 'vue'
 import { Avatar, Dropdown, createResource } from 'frappe-ui';
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 let session = inject('$session')
 
-let user_profile = createResource({
-  url: 'frappe.client.get',
-  params: {
-    doctype: 'FOSS User Profile',
-    filters: {
-      email: session.user,
-    },
-  },
-  auto: true,
-  cache: 'user',
+let user_profile = computed(() => {
+  if (session.isLoggedIn) {
+    return createResource({
+      url: 'frappe.client.get',
+      params: {
+        doctype: 'FOSS User Profile',
+        filters: {
+          email: session.user,
+        },
+      },
+      auto: true,
+      cache: 'user',
+    })
+  }
+
+  return null
 })
 
 const redirectToProfile = () => {

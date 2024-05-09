@@ -7,13 +7,21 @@
  "field_order": [
   "event",
   "full_name",
+  "designation",
   "column_break_dnhv",
   "tier",
   "email",
+  "organization",
   "payment_details_section",
   "razorpay_payment",
   "column_break_uihi",
-  "customer"
+  "customer",
+  "additional_details_section",
+  "wants_tshirt",
+  "column_break_qbfj",
+  "tshirt_size",
+  "section_break_tzsu",
+  "custom_fields"
  ],
  "fields": [
   {
@@ -31,7 +39,8 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Email",   "options": "Email",
+   "label": "Email",
+   "options": "Email",
    "reqd": 1
   },
   {
@@ -68,11 +77,54 @@
    "fieldname": "tier",
    "fieldtype": "Data",
    "label": "Tier"
+  },
+  {
+   "fieldname": "additional_details_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Details"
+  },
+  {
+   "fieldname": "column_break_qbfj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "wants_tshirt",
+   "fieldtype": "Check",
+   "label": "Wants T Shirt?",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.wants_tshirt==1",
+   "fieldname": "tshirt_size",
+   "fieldtype": "Data",
+   "label": "T Shirt Size",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_tzsu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "custom_fields",
+   "fieldtype": "Table",
+   "label": "Custom Fields",
+   "options": "FOSS Ticket Custom Field"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Data",
+   "label": "Organization / College"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-28 07:00:28.477641",
+ "modified": "2024-05-02 01:53:55.048157",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

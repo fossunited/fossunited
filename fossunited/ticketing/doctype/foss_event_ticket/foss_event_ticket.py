@@ -21,31 +21,76 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
+            FOSSTicketCustomField,
+        )
+
+        custom_fields: DF.Table[FOSSTicketCustomField]
         customer: DF.Data | None
+        designation: DF.Data | None
         email: DF.Data
         event: DF.Link
         full_name: DF.Data
+        organization: DF.Data | None
         razorpay_payment: DF.Link | None
         tier: DF.Data | None
+        tshirt_size: DF.Data | None
+        wants_tshirt: DF.Check
     # end: auto-generated types
 
     @staticmethod
     def create_tickets_for_payment(payment: "RazorpayPayment"):
         payment_meta_data: dict = frappe.parse_json(payment.meta_data)
         attendees = payment_meta_data.get("attendees", [])
+
         for attendee in attendees:
-            frappe.get_doc(
+            ticket_doc = frappe.get_doc(
                 {
                     "doctype": "FOSS Event Ticket",
                     "razorpay_payment": payment.name,
                     "event": payment.document_name,
                     "full_name": attendee.get("full_name"),
                     "email": attendee.get("email"),
+                    "organization": attendee.get("organization"),
+                    "designation": attendee.get("designation"),
+                    "wants_tshirt": attendee.get("wants_tshirt", 0),
+                    "tshirt_size": attendee.get("tshirt_size"),
                     "tier": payment_meta_data.get("tier", {}).get(
                         "title"
                     ),
+                    "custom_fields": [],
                 }
-            ).insert()
+            )
+
+            # add custom fields
+            custom_fields = payment_meta_data.get("custom_fields", {})
+            for k, v in custom_fields.items():
+                if k and v:
+                    ticket_doc.append(
+                        "custom_fields",
+                        {"field_name": k, "data": str(v)},
+                    )
+            ticket_doc.save(ignore_permissions=True)
+
+    def after_insert(self):
+        self.check_max_tickets()
+
+    def check_max_tickets(self):
+        event = frappe.get_doc("FOSS Chapter Event", self.event)
+        tickets_count = frappe.db.count(
+            "FOSS Event Ticket",
+            {"event": self.event, "tier": self.tier},
+        )
+
+        for tier in event.tiers:
+            if (
+                tier.title == self.tier
+                and tier.maximum_tickets
+                and (tickets_count >= tier.maximum_tickets)
+            ):
+                event.tiers[tier.idx - 1].enabled = 0
+                event.save(ignore_permissions=True)
+                return
 
 
 def handle_payment_on_update(doc: "RazorpayPayment", event: str):
@@ -57,10 +102,7 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
 
     if doc.status == "Captured":
         try:
-            current_user = frappe.session.user
-            frappe.set_user("Administrator")
             FOSSEventTicket.create_tickets_for_payment(doc)
-            frappe.set_user(current_user)
         except:
             frappe.log_error("Ticket Creation Failed!")
 

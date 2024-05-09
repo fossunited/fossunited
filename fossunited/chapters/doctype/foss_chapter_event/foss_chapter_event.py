@@ -28,6 +28,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
             FOSSEventCommunityPartner,
         )
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
+            FOSSEventField,
+        )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
@@ -42,6 +45,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         chapter: DF.Link | None
         chapter_name: DF.Data | None
         community_partners: DF.Table[FOSSEventCommunityPartner]
+        custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
         event_description: DF.TextEditor
@@ -57,6 +61,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         is_published: DF.Check
         map_link: DF.Data | None
         must_attend: DF.Check
+        paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
         route: DF.Data | None
@@ -76,6 +81,8 @@ class FOSSChapterEvent(WebsiteGenerator):
             "Concluded",
             "Cancelled",
         ]
+        t_shirt_price: DF.Currency
+        ticket_form_description: DF.MarkdownEditor | None
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 

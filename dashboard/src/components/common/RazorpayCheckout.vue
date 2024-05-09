@@ -63,7 +63,7 @@ const createRazorpayOrderResource = createResource({
       order_id: orderId,
       handler: handlePaymentSuccess,
       theme: {
-        color: '#3399cc',
+        color: '#1e1e1e',
       },
     }
 
@@ -97,11 +97,13 @@ const createRazorpayOrder = (
   metaData = {},
   refDocType = null,
   refDocName = null,
+  taxDetails = {}
 ) => {
   createRazorpayOrderResource.fetch({
     checkout_info: {
       amount,
       email: customerEmail,
+      tax_details: taxDetails
     },
     meta_data: metaData,
     ref_doctype: refDocType,

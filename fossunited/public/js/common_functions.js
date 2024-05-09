@@ -6,6 +6,7 @@ $(document).ready(function () {
 
 	// Horizontal Navbar Controls for Profile & Event Pages
 	setNavbarControl();
+	tab_navigation();
 });
 
 
@@ -77,6 +78,18 @@ function publish_form(e) {
 			frappe.msgprint(e.message)
 		},
 	});
+}
+
+function tab_navigation(){
+	let url = new URL(window.location.href);
+	let tab = url.searchParams.get('tab');
+	if (!tab) return;  // if no tab is specified, no action
+	let tabControl = document.getElementById(`${tab}-nav-item`);
+
+	if (tabControl){
+		tabControl.click();
+	}
+
 }
 
 function unpublish_form(e){

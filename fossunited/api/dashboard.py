@@ -12,6 +12,13 @@ def get_event(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
+def get_states():
+    return frappe.get_all(
+        "State", fields=["name"], page_length=1000, order_by="name"
+    )
+
+
+@frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
     checkout_info: dict,
     meta_data=dict(),
@@ -30,8 +37,21 @@ def create_razorpay_order(
         {
             "doctype": "Razorpay Payment",
             "amount": checkout_info["amount"],
-            "status": "Pending",
             "email": checkout_info["email"],
+            "buyer_name": checkout_info.get("tax_details", {}).get(
+                "buyer_name"
+            ),
+            "company_name": checkout_info.get("tax_details", {}).get(
+                "company_name"
+            ),
+            "state": checkout_info.get("tax_details", {}).get(
+                "state"
+            ),
+            "gstn": checkout_info.get("tax_details", {}).get("gstn"),
+            "billing_address": checkout_info.get(
+                "tax_details", {}
+            ).get("billing_address"),
+            "status": "Pending",
             "order_id": order["id"],
             "document_type": ref_doctype,
             "document_name": ref_docname,

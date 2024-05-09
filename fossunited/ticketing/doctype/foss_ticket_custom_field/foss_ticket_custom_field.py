@@ -1,11 +1,11 @@
-# Copyright (c) 2023, Frappe x FOSSUnited and contributors
+# Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
 # import frappe
 from frappe.model.document import Document
 
 
-class FOSSEventType(Document):
+class FOSSTicketCustomField(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
@@ -14,6 +14,11 @@ class FOSSEventType(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        event_type: DF.Data | None
+        data: DF.SmallText
+        field_name: DF.Data
+        parent: DF.Data
+        parentfield: DF.Data
+        parenttype: DF.Data
     # end: auto-generated types
+
     pass
