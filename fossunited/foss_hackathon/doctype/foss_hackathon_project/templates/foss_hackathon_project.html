@@ -1,7 +1,100 @@
-{% extends "templates/web.html" %}
+{% extends "templates/foss_base.html" %}
 
 {% block page_content %}
-<h1>{{ title }}</h1>
+<div class="container">
+    <div class="backlink d-flex align-items-end mt-6 mb-6">
+        <a href="/{{hackathon.route}}">
+            {{ hackathon.hackathon_name }}
+        </a>
+        <span class="mx-2">></span>
+        <a href="/{{hackathon.route}}/projects/all">
+            {{ _("All Projects") }}
+        </a>
+        <span class="mx-2">></span>
+        <span style="font-weight: var(--fw-normal)">{{ doc.title }}</span>
+    </div>
+
+    <div class="my-2">
+        <h1 class="header--event-title">
+            {{ doc.title}}
+        </h1>
+        {% if doc.short_description %}
+        <div class="mt-4">
+            {{ doc.short_description }}
+        </div>
+        {% endif %}
+        <div class="d-flex mt-4">
+            <a class="button" style="text-decoration:none;" href="{{ doc.repo_link }}" target="_blank">
+                <i class="ti ti-brand-github"></i>
+                <span>Repository</span>
+            </a>
+            {% if not frappe.session.user == 'Guest' %}
+            <div class="cfp-header--like-container ml-4" id="likes-container">
+                <button id="project-like-button" data-liked="{{liked_by_user}}" onclick="toggle_like()">
+                    <i class="ti {% if liked_by_user %} ti-heart-filled {% else %} ti-heart {% endif %}" style="{% if liked_by_user %} color: red; {% endif %}"></i>
+                    <span >{{ likes | length }} Likes </span>
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
+<div class="horizontal-navbar-parent">
+    <div class="container">
+        {{ horizontal_navbar(nav_items) }}
+    </div>
+</div>
+
+<div class="container">
+    {{ render_description() }}
+    {{ render_team() }}
+</div>
+
 {% endblock %}
 
-<!-- this is a sample default web page template -->
+{% macro render_description() %}
+<div class="event-content-div content-div" id="description">
+    {{ doc.description or 'No description added.'}}
+</div>
+{% endmacro %}
+
+{% macro render_team() %}
+<div class="event-content-div content-div" id="team_members">
+    <div class="team-member-grid">
+        {% for member in team_members %}
+        <div class="team-member-card">
+            <img class="team-member--img" src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="{{ member.full_name }}">
+            <div class="d-flex flex-column">
+                <div class="team-member--name">{{ member.full_name }}</div>
+                <div class="team-member--username">{{ member.username }}</div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endmacro %}
+
+{% block page_script %}
+<script>
+    function toggle_like(e){
+        let liked = $('#project-like-button').data('liked');
+        liked = liked === 'True' ? 'False' : 'Yes';
+        frappe.call({
+            method: 'frappe.desk.like.toggle_like',
+            args: {
+                doctype: 'FOSS Hackathon Project',
+                name: '{{ doc.name }}',
+                add: liked,
+            },
+            callback: (r)=>{
+                $('#likes-container').load(document.URL +  ' #likes-container');
+            },
+            error: (r)=>{
+                console.log("ERROR" + r)
+            }
+        })
+    }
+</script>
+{% endblock %}

@@ -2297,6 +2297,43 @@ h6{
     font-weight: var(--fw-medium);
 }
 
+.team-member-grid{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.team-member-card{
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid hsl(var(--clr-open-gray-100));
+    align-items: center;
+}
+
+.team-member-card:hover{
+    cursor: pointer;
+}
+
+.team-member--img{
+    width: 3rem;
+    height: 3rem;
+    aspect-ratio: 1;
+    border-radius: 100%;
+}
+
+.team-member--name{
+    font-size: var(--text-base);
+    font-weight: var(--fw-semibold);
+    color: hsl(var(--clr-code-night-600));
+}
+
+.team-member--username{
+    font-size: var(--text-sm);
+    color: hsl(var(--clr-open-gray-200));
+}
+
 @media screen and (max-width: 1200px){
     .events-grid-4{
         width: 100%;
@@ -2655,6 +2692,12 @@ h6{
         grid-template-columns: repeat(2, minmax(300px, 1fr));
         gap: 1rem;
     }
+
+    .team-member-grid{
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
 }
 @media screen and (max-width: 425px){
     button {
@@ -2770,6 +2813,12 @@ h6{
     .projects-grid{
         display: grid;
         grid-template-columns: repeat(1, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .team-member-grid{
+        display: grid;
+        grid-template-columns: repeat(1, minmax(0, 1fr));
         gap: 1rem;
     }
 }
