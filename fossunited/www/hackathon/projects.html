@@ -1,0 +1,42 @@
+{% extends "templates/foss_base.html" %}
+
+{% block page_content %}
+<div class="container" >
+    <div class="backlink d-flex align-items-end mt-5">
+        <a href="/{{hackathon.route}}" class="fw-bolder">
+            {{ hackathon.hackathon_name }}
+        </a>
+        <span class="mx-2">/</span>
+        <span style="font-weight: var(--fw-normal)">All Projects</span>
+    </div>
+    <div class="header--title-cta-parent mt-6 p-0">
+        <div>
+            {% if hackathon.organizing_chapter and not hackathon.hackathon_logo %}
+            {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+            {{ chapter_branding_block(hackathon.organizing_chapter) }}
+            {% endif %}
+            <div class="d-flex align-items-end my-2">
+                {% if hackathon.hackathon_logo %}
+                    <img src="{{ hackathon.hackathon_logo }}" alt="Hackathon Logo" style="height: 4rem; width: auto;" class="mr-4">
+                {% endif %}
+                <h1 class="header--event-title pt-2">{{ hackathon.hackathon_name }}</h1>
+            </div>
+        </div>
+    </div>
+    <h5 class="mt-6">All Projects</h5>
+    {% if not projects %}
+        <div class="text-center mt-5">
+            <h3>No projects found</h3>
+        </div>
+    {% endif %}
+    <div class="projects-grid">
+        {% for project in projects %}
+            <div class="project-card" onClick="window.location.href='/{{ project.route }}'">
+                <div class="project-card--title">{{ project.title }}</div>
+                <div class="project-card--short-bio">{{ project.short_description }}</div>
+                <div class="project-card--team">{{ project.team }}</div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
