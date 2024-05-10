@@ -16,10 +16,11 @@
   "title",
   "repo_link",
   "demo_link",
-  "description",
+  "short_description",
   "column_break_xfpp",
   "hackathon",
-  "team"
+  "team",
+  "description"
  ],
  "fields": [
   {
@@ -95,13 +96,19 @@
    "fieldtype": "Text Editor",
    "label": "Description",
    "reqd": 1
+  },
+  {
+   "fieldname": "short_description",
+   "fieldtype": "Small Text",
+   "label": "Short description",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-03-26 14:37:25.623563",
+ "modified": "2024-05-10 15:59:09.589371",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",

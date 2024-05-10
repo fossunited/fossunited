@@ -17,9 +17,7 @@
   "hackathon_name",
   "hackathon_type",
   "start_date",
-  "start_time",
   "end_date",
-  "end_time",
   "column_break_jepp",
   "hackathon_description",
   "hackathon_details_section",
@@ -35,7 +33,9 @@
   "team_setup_details_section",
   "is_team_mandatory",
   "column_break_yeth",
-  "max_team_members"
+  "max_team_members",
+  "schedule_tab",
+  "schedule"
  ],
  "fields": [
   {
@@ -78,27 +78,15 @@
   },
   {
    "fieldname": "start_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Hackathon Start Date",
    "reqd": 1
   },
   {
-   "fieldname": "start_time",
-   "fieldtype": "Time",
-   "label": "Hackathon Start Time",
-   "reqd": 1
-  },
-  {
    "fieldname": "end_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "label": "Hackathon End Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "end_time",
-   "fieldtype": "Time",
-   "label": "Hackathon End Time",
    "reqd": 1
   },
   {
@@ -196,6 +184,17 @@
    "fieldtype": "Link",
    "label": "Organizing Chapter",
    "options": "FOSS Chapter"
+  },
+  {
+   "fieldname": "schedule_tab",
+   "fieldtype": "Tab Break",
+   "label": "Schedule"
+  },
+  {
+   "fieldname": "schedule",
+   "fieldtype": "Table",
+   "label": "Schedule",
+   "options": "FOSS Event Schedule"
   }
  ],
  "has_web_view": 1,
@@ -218,7 +217,7 @@
    "link_fieldname": "hackathon"
   }
  ],
- "modified": "2024-03-26 15:38:05.453388",
+ "modified": "2024-05-10 01:34:54.004964",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
