@@ -19,7 +19,7 @@
       <h1 class="text-[2rem] font-bold">
         Book Conference Tickets for {{ event.data.event_name }}
       </h1>
-      <div class="my-2 text-gray-700 " v-html="markdown.render(event.data.ticket_form_description)" />
+      <div class="my-2 text-gray-700 " v-html="markdown.render(event.data.ticket_form_description || '')" />
       <RadioGroup class="py-4" v-model="checkoutInfo.tier">
         <RadioGroupLabel
           class="text-lg font-semibold leading-6 text-gray-800"
