@@ -42,6 +42,7 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_type: DF.Literal[
             "", "Remote", "In-person", "Hybrid"
         ]
+        has_localhosts: DF.Check
         is_published: DF.Check
         is_team_mandatory: DF.Check
         max_team_members: DF.Int

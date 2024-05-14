@@ -6,4 +6,25 @@ from frappe.model.document import Document
 
 
 class FOSSHackathonTeam(Document):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.foss_hackathon.doctype.foss_hackathon_team_member.foss_hackathon_team_member import (
+            FOSSHackathonTeamMember,
+        )
+
+        hackathon: DF.Link
+        localhost: DF.Link | None
+        localhost_request_status: DF.Literal[
+            "Pending", "Accepted", "Rejected"
+        ]
+        members: DF.Table[FOSSHackathonTeamMember]
+        team_name: DF.Data
+        wants_to_attend_locally: DF.Check
+    # end: auto-generated types
     pass
