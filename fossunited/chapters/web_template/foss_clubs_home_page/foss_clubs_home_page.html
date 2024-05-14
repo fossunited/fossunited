@@ -1,273 +1,238 @@
 <style>
+  .club-hero-section {
+    display: flex;
+    font-family: Inter;
+    overflow: hidden;
+    padding: 0;
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+  }
 
-    .club-hero-section{
-        display: flex;
-        font-family: Inter;
-        overflow: hidden;
-        padding: 0;
-        padding-top: 8rem;
-        padding-bottom: 8rem;
-    }
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 50%;
+  }
 
-    .hero-container{
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        width: 50%;
+  .hero-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
 
-    }
+  .hero-header-heading {
+    display: flex;
+    gap: 1rem;
+  }
 
-    .hero-header{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
+  .hero-header img {
+    height: 4rem;
+    width: auto;
+  }
 
-    }
+  .hero-container h1 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: -0.18rem;
+  }
 
-    .hero-header-heading{
-        display: flex;
-        gap: 1rem;
-    }
+  .hero-container h1 > span {
+    color: #08b74f;
+  }
 
-    .hero-header img{
-        height: 4rem;
-        width: auto;
-    }
-
-    .hero-container h1{
-        margin:0;
-        color: #1A1A1A;
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 100%;
-        letter-spacing: -0.18rem;
-    }
-
-    .hero-container h1 > span{
-        color: #08B74F;;
-    }
-
-    .hero-container h5{
-    color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
+  .hero-container h5 {
+    color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
     font-size: 1.15rem;
     font-weight: 600;
     line-height: 115%;
     letter-spacing: -0.06rem;
+  }
+
+  .hero-container p {
+    color: var(--Gray-500, #667085);
+    font-size: 1.2rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: -0.04rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width:fit-content;
+  }
+
+  .hero-search {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .hero-club-search {
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--Gray-200, #eaecf0);
+    max-width: 70%;
+  }
+
+  #search-club {
+    border-color: transparent;
+    width: 100%;
+  }
+
+  #search-club::placeholder {
+    color: var(--Gray-500, #667085);
+  }
+
+  #search-club:focus {
+    outline: none;
+  }
+
+
+  .autocomp {
+    background: #ffffff;
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #eaecf0;
+    border-top: 0;
+    box-shadow: 2px 2px 2px #f8f8f8;
+    text-align: left;
+  }
+  .autocomp-item {
+    padding-bottom: 5px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  .autocomp-item:hover,
+  .autocomp-sel {
+    background: #f8f8f8;
+    font-weight: bold;
+    color: var(--Foundation-FOSS-Mint-foss-mint-600, #07a748);
+  }
+
+  .hero-image {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .hero-image img {
+    width: 90%;
+  }
+
+  @media (max-width: 768px) {
+    .club-hero-section {
+      flex-direction: column;
+      padding-top: 3rem;
+      padding-bottom: 0rem;
+      gap: 5rem;
     }
 
-    .hero-container p{
-        color: var(--Gray-500, #667085);
-        font-size: 1.2rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 140%;
-        letter-spacing: -0.04rem;
+    .hero-container {
+      gap: 3rem;
+      width: 100%;
     }
 
-    .hero-cta{
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+    .hero-header {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
     }
 
-    .hero-search{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+    .hero-header-heading {
+      align-items: center;
     }
 
-    .hero-club-search{
-
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--Gray-200, #EAECF0);
-        max-width: 70%;
+    .hero-container h1 {
+      font-size: 2.5rem;
+      letter-spacing: -0.12rem;
     }
 
-    #search-club{
-        border-color: transparent;
-        width: 100%
+    .hero-club-search {
+      max-width: 100%;
     }
 
-    #search-club::placeholder{
-        color: var(--Gray-500, #667085);
+    #search-club::placeholder {
+      font-size: 1rem;
     }
 
-    #search-club:focus{
-        outline: none;
+    .btn-primary {
+      width: 100%;
     }
 
-    .btn-primary{
-        background: #08B74F;
-        border-radius: 0.5rem;
-        border: none;
-        padding: 0.8rem 1.5rem;
-        color: #FFF;
-        text-decoration: none;
-        font-size: 1.125rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 115%;
-        letter-spacing: -0.045rem;
-
+    .hero-image img {
+      width: 100%;
     }
-
-    .btn-primary:active, .btn-primary:hover{
-        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
-        border:none !important;
-    }
-
-    .autocomp {
-        background: #ffffff;
-        border-radius: 0 0 5px 5px;
-        border: 1px solid #EAECF0;
-        border-top: 0;
-        box-shadow: 2px 2px 2px #f8f8f8;
-        text-align: left;
-    }
-    .autocomp-item {
-        padding-bottom: 5px;
-        padding: 10px;
-        cursor: pointer;
-    }
-    .autocomp-item:hover,
-    .autocomp-sel {
-        background: #f8f8f8;
-        font-weight: bold;
-        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-    }
-
-    .hero-image{
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .hero-image img{
-        width: 90%;
-    }
-
-    @media (max-width: 768px){
-        .club-hero-section{
-            flex-direction: column;
-            padding-top: 3rem;
-            padding-bottom: 0rem;
-            gap: 5rem;
-        }
-
-        .hero-container{
-            gap: 3rem;
-            width: 100%
-        }
-
-        .hero-header{
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        .hero-header-heading{
-            align-items: center;
-        }
-
-        .hero-container h1{
-            font-size: 2.5rem;
-            letter-spacing: -0.12rem;
-        }
-
-
-        .hero-club-search{
-            max-width: 100%;
-        }
-
-        #search-club::placeholder{
-            font-size: 1rem;
-        }
-
-        .btn-primary{
-            width: 100%;
-        }
-
-
-    .hero-image img{
-        width: 100%;
-    }
-
-    }
+  }
 </style>
 
-
 <div class="club-hero-section container">
+  <div class="hero-container container">
+    <div class="hero-header">
+      <div class="hero-header-heading">
+        <img src="assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
+        <h1>FOSS <span>Clubs</span></h1>
+      </div>
 
-    <div class="hero-container container">
-
-        <div class="hero-header">
-
-            <div class="hero-header-heading">
-                <img src="assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
-                <h1>FOSS <span>Clubs</span></h1>
-            </div>
-
-            <p>{{subtext}}</p>
-
-        </div>
-
-
-        <div class="hero-search">
-
-                <h5>{{subheading}}</h5>
-                <div class="hero-club-search">
-
-                    <input type="text" id="search-club" placeholder="Search by name of club or city">
-
-                </div>
-
-        </div>
-
-        <div class = "hero-cta">
-
-            <div class="button-container">
-
-                    <button class="primary-button" href="{{cta_link}}">{{cta_text}}
-                    </button>
-
-            </div>
-
-        </div>
+      <p>{{subtext}}</p>
     </div>
 
-    <div class="hero-image">
-        <img src="{{hero_image}}" alt="">
+    <div class="hero-search">
+      <h5>{{subheading}}</h5>
+      <div class="hero-club-search">
+        <input
+          type="text"
+          id="search-club"
+          placeholder="Search by name of club or city"
+        />
+      </div>
     </div>
 
-    <script>
-            function getClubs(query) {
-                return new Promise((resolve, reject) => {
-                    frappe.call({
-                        method: "fossunited.chapters.web_template.foss_clubs_home_page.foss_clubs_home_page.search_foss_club",
-                        args: { query },
-                        callback: (r) => {
-                            resolve(r.message);
-                        }
-                    })
-                })
-            }
+    <div class="hero-cta">
 
-            autocomp(document.getElementById("search-club"), {
-                onQuery: async (val) => {
-                    return await getClubs(val);
-                },
-                onSelect: (result) => {
-                    window.location.href = "/" + result.route;
-                    return result.chapter_name;
-                },
-                onRender: (result) => {
-                    const div = document.createElement("div");
-                    div.innerHTML = result.chapter_name;
-                    return div;
-                }
-            });
+        {% if cta_link %}
+        <a class="primary-button" href="{{cta_link}}">{{cta_text}} </a>
+        {% endif %}
 
-    </script>
+    </div>
+  </div>
 
+  <div class="hero-image">
+    <img src="{{hero_image}}" alt="FOSS Club Hero" />
+  </div>
+
+  <script>
+    function getClubs(query) {
+      return new Promise((resolve, reject) => {
+        frappe.call({
+          method:
+            "fossunited.chapters.web_template.foss_clubs_home_page.foss_clubs_home_page.search_foss_club",
+          args: { query },
+          callback: (r) => {
+            resolve(r.message);
+          },
+        });
+      });
+    }
+
+    autocomp(document.getElementById("search-club"), {
+      onQuery: async (val) => {
+        return await getClubs(val);
+      },
+      onSelect: (result) => {
+        window.location.href = "/" + result.route;
+        return result.chapter_name;
+      },
+      onRender: (result) => {
+        const div = document.createElement("div");
+        div.innerHTML = result.chapter_name;
+        return div;
+      },
+    });
+  </script>
 </div>
