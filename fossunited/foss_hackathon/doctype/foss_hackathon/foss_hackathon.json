@@ -29,6 +29,8 @@
   "hackathon_sponsors_section",
   "sponsor_list",
   "community_partners",
+  "localhost_tab",
+  "has_localhosts",
   "team_set_up_tab",
   "team_setup_details_section",
   "is_team_mandatory",
@@ -195,6 +197,17 @@
    "fieldtype": "Table",
    "label": "Schedule",
    "options": "FOSS Event Schedule"
+  },
+  {
+   "fieldname": "localhost_tab",
+   "fieldtype": "Tab Break",
+   "label": "LocalHost"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_localhosts",
+   "fieldtype": "Check",
+   "label": "Has LocalHosts?"
   }
  ],
  "has_web_view": 1,
@@ -215,9 +228,14 @@
    "group": "Teams",
    "link_doctype": "FOSS Hackathon Mentor",
    "link_fieldname": "hackathon"
+  },
+  {
+   "group": "LocalHost",
+   "link_doctype": "FOSS Hackathon LocalHost",
+   "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-05-10 01:34:54.004964",
+ "modified": "2024-05-14 23:29:48.505918",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
