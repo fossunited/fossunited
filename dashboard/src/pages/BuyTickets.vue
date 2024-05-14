@@ -55,7 +55,7 @@
                     <RadioGroupDescription
                       as="span"
                       class="mt-2 text-sm text-gray-500"
-                      v-html="markdown.render(tier.description)"
+                      v-html="markdown.render(tier.description || '')"
                     >
                     </RadioGroupDescription>
                   </span>
