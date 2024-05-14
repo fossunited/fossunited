@@ -14,15 +14,15 @@ class FOSSHackathonLocalHost(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.foss_hack_localhost_organizer.foss_hack_localhost_organizer import (
-            FOSSHackLocalHostOrganizer,
+        from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (
+            FOSSHackathonLocalHostOrganizer,
         )
 
         city: DF.Link | None
         localhost_name: DF.Data
         location: DF.Data | None
         map_link: DF.Data | None
-        organizers: DF.Table[FOSSHackLocalHostOrganizer]
+        organizers: DF.Table[FOSSHackathonLocalHostOrganizer]
         parent_hackathon: DF.Link
         state: DF.Link | None
     # end: auto-generated types
