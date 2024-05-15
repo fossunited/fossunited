@@ -155,7 +155,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nBeing Reviewed\nApproved\nIn Progress\nConcluded\nCancelled",
+   "options": "\nDraft\nLive\nApproved\nConcluded\nCancelled",
    "reqd": 1
   },
   {
@@ -421,7 +421,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-05-08 21:50:02.177279",
+ "modified": "2024-05-16 00:13:49.545806",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

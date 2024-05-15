@@ -57,7 +57,7 @@ class FOSSChapter(WebsiteGenerator):
             filters={
                 "chapter": self.name,
                 "event_end_date": (">=", frappe.utils.now()),
-                "status": ["in", ["Approved", "In Progress"]],
+                "status": ["in", ["Approved", "Live"]],
             },
             fields=[
                 "name",

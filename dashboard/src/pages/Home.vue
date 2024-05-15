@@ -65,7 +65,7 @@ let scheduled_events = createListResource({
     'event_start_date',
   ],
   filters: {
-    status: ['in', ['', 'Being Reviewed', 'Approved']],
+    status: ['in', ['', 'Draft', 'Approved', 'Live']],
   },
   auto: true,
 })

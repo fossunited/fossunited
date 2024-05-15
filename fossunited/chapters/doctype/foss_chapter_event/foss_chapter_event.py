@@ -74,12 +74,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
         status: DF.Literal[
-            "",
-            "Being Reviewed",
-            "Approved",
-            "In Progress",
-            "Concluded",
-            "Cancelled",
+            "", "Draft", "Live", "Approved", "Concluded", "Cancelled"
         ]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
