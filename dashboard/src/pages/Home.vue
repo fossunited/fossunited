@@ -67,7 +67,7 @@ let scheduled_events = createListResource({
   filters: {
     status: ['in', ['', 'Draft', 'Approved', 'Live']],
   },
-  auto: true,
+  orderBy: 'event_start_date',
 })
 
 watch(chapter, (newChapter) => {
