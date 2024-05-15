@@ -104,7 +104,29 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
 
     def before_save(self):
+        if self.has_value_changed("status"):
+            self.update_published_status()
         self.set_route()
+
+    def update_published_status(self):
+        if self.status == "Draft" or self.status == "Cancelled":
+            self.is_published = 0
+            return
+
+        if self.status == "Live" or self.status == "Approved":
+            self.is_published = 1
+            return
+
+        if self.status == "Concluded":
+            self.is_published = 1
+            self.handle_concluded_event()
+
+    def handle_concluded_event(self):
+        event_permalink = self.event_permalink
+        self.event_permalink = f"{event_permalink}-archive-{frappe.generate_hash(length=8)}"
+
+    def set_route(self):
+        self.route = f"events/{self.event_permalink}"
 
     def get_context(self, context):
         context.chapter = frappe.get_doc("FOSS Chapter", self.chapter)
@@ -120,9 +142,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
-
-    def set_route(self):
-        self.route = f"events/{self.event_permalink}"
 
     def get_navbar_items(self):
         navbar_items = [
