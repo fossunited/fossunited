@@ -37,7 +37,7 @@
           >
         </div>
         <div class="flex flex-col gap-2 text-base">
-          <span>Route of the RSPV form</span>
+          <span>Route of the RSVP form</span>
           <CopyToClipboardComponent :route="whole_route" />
         </div>
       </div>
