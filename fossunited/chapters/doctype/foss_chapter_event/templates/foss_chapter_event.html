@@ -163,7 +163,7 @@
                 <img src="{{ speaker.profile_picture }}" alt="{{ speaker.full_name }}" class="speaker--image">
                 <div class="speaker--details">
                     <div class="speaker--name">{{ speaker.full_name }}</div>
-                    <div class="speaker--talk-title">{{ speaker.talk_title | truncate(12, True) }}</div>
+                    <div class="speaker--talk-title">{{ speaker.talk_title }}</div>
                 </div>
             </a>
             {% endfor %}

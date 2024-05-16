@@ -1660,7 +1660,7 @@ h6{
     gap: 1rem;
     justify-items: center;
     align-items: center;
-    padding: 1.88rem;
+    padding: 1rem;
     border-radius: 0.5rem;
     background: hsl(var(--clr-gray-100));
     transition: box-shadow 0.2s ease-in-out;
