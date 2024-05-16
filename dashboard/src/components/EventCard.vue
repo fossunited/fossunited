@@ -29,11 +29,11 @@
 import { Card, Badge } from 'frappe-ui'
 
 const badgeColors = {
-  'Being Reviewed': 'orange',
-  Approved: 'green',
-  'In Progress': 'blue',
-  Concluded: 'gray',
-  Cancelled: 'red',
+  'Draft': 'orange',
+  'Approved': 'green',
+  'Live': 'green',
+  'Concluded': 'gray',
+  'Cancelled': 'red',
 }
 defineProps({
   event: Object,
