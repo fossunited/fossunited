@@ -488,7 +488,7 @@ const event = createResource({
 
 const redirectToEvent = computed(() => {
   if(event.data){
-    return `${window.location.origin}/event/${eventName.value}`
+    return `${window.location.origin}/${event.data.route}`
   }
 })
 
