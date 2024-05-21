@@ -100,7 +100,7 @@
       order_by ='full_name') %} {% for employee in team %}
       <div class="team-card">
         <div class="team-card-image">
-          <img src="{{employee.headshot}}" alt="Team Member" />
+          <img src="{{ employee.headshot if employee.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}" alt="Team Member" />
         </div>
         <div class="team-card-details">
           <h6>{{employee.full_name}}</h6>
