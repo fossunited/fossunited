@@ -1,0 +1,138 @@
+<style>
+
+    .founder-list-section {
+        display: flex;
+        font-family: Inter;
+    }
+
+    .founder-list-container {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        padding: 6rem 0rem 6rem 0rem;
+    }
+
+    .member-section {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .member-section h4 {
+        font-weight: var(--fw-semibold);
+    }
+
+    .founders-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        row-gap: 3rem;
+        column-gap: 8rem;
+    }
+
+    .founder-member {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .founder-member-image {
+        display: flex;
+        justify-content: center;
+        max-width: 5rem;
+    }
+
+    .founder-member-image img {
+        max-width: 7rem;
+        border-radius: 50%;
+        aspect-ratio: 1/1;
+    }
+
+    .founder-member-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        align-items: center;
+    }
+
+    .founder-member-details h6 {
+        font-size: var(--text-xl);
+        font-weight: var(--fw-semibold);
+    }
+
+    .founder-member-details a {
+        color: hsl(var(--clr-foss-mint-500));
+        font-size: var(--text-sm);
+        font-weight: var(--fw-medium);
+    }
+
+    .founder-member-details a:hover {
+        text-decoration: none;
+    }
+
+    .founder-member-details p{
+        color: hsl(var(--clr-gray-500));
+        font-weight: 500;
+        text-align: center;
+    }
+
+    @media (max-width: 768px){
+
+        .founders-container{
+            grid-template-columns: 1fr;
+
+        }
+
+        .member-section{
+            gap: 4rem;
+        }
+
+        .founder-member-details p{
+            color: hsl(var(--clr-gray-500));
+            font-size: var(--text-sm);
+            font-weight: 500;
+        }
+
+        .founder-member-image img {
+            max-width: 5rem;
+        }
+
+    }
+
+</style>
+
+
+<div class="founder-list-section container">
+
+    <div class="founder-list-container">
+
+            {% set founders = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation", "portfolio_url"], filters={"org_role": "Founder", "is_active": 1}, order_by="full_name")%}
+            {% if founders %}
+            <div class="member-section">
+                <h4>Founders</h4>
+                <div class="founders-container">
+                    {%for member in founders %}
+                        <div class="founder-member">
+                            <div class="founder-member-image">
+                                <img src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}" alt="{{ member.full_name }}">
+                            </div>
+                            <div class="founder-member-details">
+
+                                <a href="{{ '/' + member.username if member.username else member.portfolio_url }}">
+                                    <h6>{{ member.full_name }}
+                                        <i class="ti ti-arrow-up-right"></i>
+                                    </h6>
+                                </a>
+
+
+                                <p>{{member.user_bio}}</p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+    </div>
+
+
+</div>
