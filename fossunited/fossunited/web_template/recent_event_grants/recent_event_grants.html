@@ -14,13 +14,8 @@
         gap: 2.5rem;
     }
 
-    .recent-eventgrants-container h2{
-        margin:0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.07rem;
+    .recent-eventgrants-container h4{
+        font-weight: var(--fw-semibold);
     }
 
     .event-grant-category {
@@ -38,16 +33,7 @@
         gap: 1rem;
     }
 
-    .grant-card h5{
-        margin: 0;
-        overflow: hidden;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        text-overflow: ellipsis;
-        font-size: 1.2rem;
-        font-weight: 600;
-        line-height: 110%;
-        letter-spacing: -0.06rem;
-    }
+
 
     .event-detail{
         display: flex;
@@ -55,23 +41,18 @@
         gap: 0.4rem;
     }
 
-    .grant-card p{
-        margin:0;
-        color: var(--Gray-500, #667085);
-        font-size: 0.75rem;
-        font-weight: 400;
+    .event-detail p{
+        color: hsl(var(--clr-gray-500));
+        font-size: var(--text-xs);
         line-height: 100%; /* 0.75rem */
         letter-spacing: -0.015rem;
     }
 
-    .grant-card h6{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 0.875rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%;
-        letter-spacing: -0.035rem;
+    .event-detail > .grant-card-value{
+        color: hsl(var(--clr-code-night-500));
+        font-size: var(--text-sm);
+        font-weight: var(--fw-semibold);
+        line-height: 120%;
     }
 
     .grant-card-footer{
@@ -83,11 +64,8 @@
     .grant-card-footer a{
         display: flex;
         color: var(--gray-800, #383838);
-        font-size: 0.75rem;
-        font-weight: 500;
-        line-height: 115%;
-        letter-spacing: -0.0175rem;
-        text-decoration: none;
+        font-size: var(--text-xs);
+        font-weight: var(--fw-medium);
         align-items: flex-end;
     }
 
@@ -96,13 +74,21 @@
         text-decoration: none;
     }
 
-    #grant-amount h6{
-        margin: 0;
+
+    #grant-amount{
         color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-        font-size: 1.2rem;
-        font-weight: 600;
-        line-height: 100%;
-        letter-spacing: -0.06rem;
+    }
+
+    .grant-view-button{
+        border: none;
+        background: none;
+        font-weight: var(--fw-semibold);
+
+    }
+
+    .grant-view-button:hover{
+        background: none !important;
+        color: hsl(var(--clr-foss-mint-800))
     }
 
     @media (max-width: 768px) {
@@ -111,7 +97,7 @@
         }
 
         .event-grant-category {
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
         }
 
         .grant-card h5{
@@ -139,30 +125,30 @@
 
     <div class="recent-eventgrants-container">
 
-        <h2>Recent Event Grants</h2>
+        <h4>Recent Event Grants</h4>
 
-        <div class="event-grant-category">
-            {% set approved_event_grants = frappe.get_all("FOSS Event Grant", fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount"], page_length=20, filters={"grant_status": "Approved"}) %}
+        <div class="event-grant-category" id="event-grant-category">
+            {% set approved_event_grants = frappe.get_all("FOSS Event Grant", fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount", "custom_amount"], page_length=8, filters={"grant_status": "Approved"}, order_by="event_start_date desc") %}
             {% for grant in approved_event_grants %}
 
                 <div class="grant-card">
-                    <h5>{{grant.event_name}}</h5>
+                    <h6>{{grant.event_name}}</h6>
 
                     <div class="event-detail" id="event-date">
                         <p>Date</p>
-                        <h6>{{grant.event_start_date.strftime("%d %b %Y")}}</h6>
+                        <p class="grant-card-value">{{grant.event_start_date.strftime("%d %b %Y") if grant.event_start_date else "TBA"}}</p>
                     </div>
 
                     <div class="event-detail" id="event-location">
                         <p>Location</p>
-                        <h6>{{grant.event_location}}</h6>
+                        <p class="grant-card-value">{{grant.event_location if grant.event_location else "TBA"}}</p>
                     </div>
 
                     <div class="grant-card-footer">
 
-                        <div class="event-detail" id="grant-amount">
+                        <div class="event-detail">
                             <p>Grant Amount</p>
-                            <h6>{{grant.grant_amount}}</h6>
+                            <p class="grant-card-value" id="grant-amount">{{ grant.grant_amount if grant.grant_amount != "Custom" else grant.custom_amount }}</p>
                         </div>
 
                         <a href="{{grant.event_website}}">
@@ -175,6 +161,97 @@
                 </div>
             {% endfor %}
         </div>
+
+        <div>
+            <button class="grant-view-button" id="view-more" onclick="loadMoreGrants()">View More</button>
+            <button class="grant-view-button" id="view-less" onclick="viewLessGrants()" style="display:none;">View Less</button>
+        </div>
     </div>
 
 </div>
+
+<script>
+    let currentCount = 8; // Starting with 8 already displayed
+    let limit = 30; // Number of grants to load each time
+
+    function loadMoreGrants() {
+        frappe.call({
+            method: "fossunited.api.pages.get_more_grants",
+            args: {
+                start: currentCount,
+                limit: limit
+            },
+            callback: function(r) {
+                if (!r.exc) { // Check for any exceptions
+                    if (r.message && r.message.grants) {
+                        const data = r.message;
+                        const container = document.getElementById('event-grant-category');
+                        data.grants.forEach(grant => {
+                            const grantElement = document.createElement('div');
+                            grantElement.className = 'grant-card';
+                            grantElement.innerHTML = formatGrantHTML(grant);
+                            container.appendChild(grantElement);
+                        });
+                        currentCount += data.grants.length; // Update count
+                        if (data.grants.length < limit) {
+                            document.getElementById('view-more').style.display = 'none'; // Hide button if no more grants
+                            document.getElementById('view-less').style.display = 'block';
+                        }
+
+                    } else {
+                        console.error("No grants data found in response");
+                    }
+
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading more grants:', status, error);
+            }
+        });
+    }
+
+    function viewLessGrants() {
+        // Remove all grant cards
+        const container = document.getElementById('event-grant-category');
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+
+        // Reset currentCount and load the first 8 grants again
+        currentCount = 0;
+        limit = 8;
+        loadMoreGrants();
+
+        // Hide the view less button and ensure view more is visible
+        document.getElementById('view-less').style.display = 'none';
+        document.getElementById('view-more').style.display = 'block';
+    }
+
+    function formatGrantHTML(grant) {
+        return `
+            <h6>${grant.event_name}</h6>
+
+            <div class="event-detail" id="event-date">
+                <p>Date</p>
+                <p class="grant-card-value">${grant.event_start_date ? new Date(grant.event_start_date).toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' }) : "TBA"}</p>
+            </div>
+
+            <div class="event-detail" id="event-location">
+                <p>Location</p>
+                <p class="grant-card-value">${grant.event_location || "TBA"}</p>
+            </div>
+
+            <div class="grant-card-footer">
+                <div class="event-detail">
+                    <p>Grant Amount</p>
+                    <p class="grant-card-value" id="grant-amount">${grant.grant_amount !== "Custom" ? grant.grant_amount : grant.custom_amount}</p>
+                </div>
+
+                <a href="${grant.event_website}">
+                    View Details
+                    <i class="ti ti-chevron-right"></i>
+                </a>
+            </div>
+        `;
+    }
+    </script>

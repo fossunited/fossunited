@@ -6,10 +6,17 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "tab_break_d38t",
   "team_details_section",
   "team_name",
   "hackathon",
-  "members"
+  "members",
+  "localhost_tab",
+  "wants_to_attend_locally",
+  "section_break_pzcd",
+  "localhost",
+  "column_break_cqml",
+  "localhost_request_status"
  ],
  "fields": [
   {
@@ -37,10 +44,47 @@
    "fieldtype": "Table",
    "label": "Members",
    "options": "FOSS Hackathon Team Member"
+  },
+  {
+   "fieldname": "tab_break_d38t",
+   "fieldtype": "Tab Break",
+   "label": "Team Details"
+  },
+  {
+   "fieldname": "localhost_tab",
+   "fieldtype": "Tab Break",
+   "label": "LocalHost"
+  },
+  {
+   "default": "0",
+   "fieldname": "wants_to_attend_locally",
+   "fieldtype": "Check",
+   "label": "Wants to attend locally?"
+  },
+  {
+   "depends_on": "eval:doc.wants_to_attend_locally==1",
+   "fieldname": "section_break_pzcd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "localhost",
+   "fieldtype": "Link",
+   "label": "LocalHost",
+   "options": "FOSS Hackathon LocalHost"
+  },
+  {
+   "fieldname": "column_break_cqml",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "localhost_request_status",
+   "fieldtype": "Select",
+   "label": "Localhost Request Status",
+   "options": "Pending\nAccepted\nRejected"
   }
  ],
  "links": [],
- "modified": "2024-03-26 15:00:12.095573",
+ "modified": "2024-05-15 00:00:04.515168",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team",

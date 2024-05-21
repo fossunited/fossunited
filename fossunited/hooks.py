@@ -202,7 +202,10 @@ doc_events = {
     "Razorpay Payment": {
         "on_update": [
             "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.handle_payment_on_update"
-        ]
+        ],
+        "before_insert": [
+            "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.validate_payment_before_insert"
+        ],
     },
 }
 

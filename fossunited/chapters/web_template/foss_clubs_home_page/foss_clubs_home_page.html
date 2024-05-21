@@ -206,19 +206,18 @@
     <img src="{{hero_image}}" alt="FOSS Club Hero" />
   </div>
 
-  <script>
-    function getClubs(query) {
-      return new Promise((resolve, reject) => {
-        frappe.call({
-          method:
-            "fossunited.chapters.web_template.foss_clubs_home_page.foss_clubs_home_page.search_foss_club",
-          args: { query },
-          callback: (r) => {
-            resolve(r.message);
-          },
-        });
-      });
-    }
+    <script>
+            function getClubs(query) {
+                return new Promise((resolve, reject) => {
+                    frappe.call({
+                        method: "fossunited.api.pages.search_foss_club",
+                        args: { query },
+                        callback: (r) => {
+                            resolve(r.message);
+                        }
+                    })
+                })
+            }
 
     autocomp(document.getElementById("search-club"), {
       onQuery: async (val) => {

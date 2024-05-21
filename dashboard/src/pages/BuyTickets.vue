@@ -19,7 +19,7 @@
       <h1 class="text-[2rem] font-bold">
         Book Conference Tickets for {{ event.data.event_name }}
       </h1>
-      <div class="my-2 text-gray-700 " v-html="markdown.render(event.data.ticket_form_description)" />
+      <div class="my-2 text-gray-700 " v-html="markdown.render(event.data.ticket_form_description || '')" />
       <RadioGroup class="py-4" v-model="checkoutInfo.tier">
         <RadioGroupLabel
           class="text-lg font-semibold leading-6 text-gray-800"
@@ -55,7 +55,7 @@
                     <RadioGroupDescription
                       as="span"
                       class="mt-2 text-sm text-gray-500"
-                      v-html="markdown.render(tier.description)"
+                      v-html="markdown.render(tier.description || '')"
                     >
                     </RadioGroupDescription>
                   </span>
@@ -488,7 +488,7 @@ const event = createResource({
 
 const redirectToEvent = computed(() => {
   if(event.data){
-    return `${window.location.origin}/event/${eventName.value}`
+    return `${window.location.origin}/${event.data.route}`
   }
 })
 

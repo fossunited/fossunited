@@ -1,7 +1,16 @@
 <template>
   <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
     <div class="flex flex-col md:flex-row gap-2 justify-between">
-      <EventHeader :event="event" />
+      <EventHeader
+        :event="event"
+        :form_exists="true"
+        :form="{
+          data : {
+            is_published: event.doc.is_published,
+            doctype: 'Event'
+          }
+        }"
+      />
       <Button
         class="w-fit"
         size="md"
@@ -79,16 +88,16 @@
           :type="'select'"
           :options="[
             {
-              label: 'Being Reviewed',
-              value: 'Being Reviewed',
+              label: 'Draft',
+              value: 'Draft',
             },
             {
               label: 'Approved',
               value: 'Approved',
             },
             {
-              label: 'In Progress',
-              value: 'In Progress',
+              label: 'Live',
+              value: 'Live',
             },
             {
               label: 'Concluded',

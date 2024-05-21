@@ -40,6 +40,9 @@
         />
       </Dropdown>
     </div>
+    <div v-else>
+      <a href="/login" class="text-black font-medium text-base hover:text-gray-800">Login</a>
+    </div>
   </header>
 </template>
 <script setup>
@@ -49,23 +52,19 @@ import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 let session = inject('$session')
 
-let user_profile = computed(() => {
-  if (session.isLoggedIn) {
-    return createResource({
-      url: 'frappe.client.get',
-      params: {
-        doctype: 'FOSS User Profile',
-        filters: {
-          email: session.user,
-        },
-      },
-      auto: true,
-      cache: 'user',
-    })
-  }
-
-  return null
+let user_profile = createResource({
+  url: 'frappe.client.get',
+  params: {
+    doctype: 'FOSS User Profile',
+    filters: {
+      email: session.user,
+    },
+  },
 })
+
+if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
+  user_profile.fetch()
+}
 
 const redirectToProfile = () => {
   window.location.pathname = '/me'

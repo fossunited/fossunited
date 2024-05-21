@@ -40,16 +40,12 @@
             :type="'select'"
             :options="[
               {
-                label: 'Being Reviewed',
-                value: 'Being Reviewed',
+                label: 'Draft',
+                value: 'Draft',
               },
               {
-                label: 'Approved',
-                value: 'Approved',
-              },
-              {
-                label: 'In Progress',
-                value: 'In Progress',
+                label: 'Live',
+                value: 'Live',
               },
               {
                 label: 'Concluded',

@@ -345,6 +345,7 @@ h6{
 .primary-button:hover{
     background: hsl(var(--clr-foss-mint-600));
     cursor: pointer;
+    color: #FFF;
     text-decoration: none;
 }
 
@@ -364,6 +365,7 @@ h6{
 
 .secondary-button:hover{
     cursor: pointer;
+    color: hsl(var(--clr-foss-mint-500));
     box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
     text-decoration: none;
     background: white;
@@ -1661,7 +1663,7 @@ h6{
     gap: 1rem;
     justify-items: center;
     align-items: center;
-    padding: 1.88rem;
+    padding: 1rem;
     border-radius: 0.5rem;
     background: hsl(var(--clr-gray-100));
     transition: box-shadow 0.2s ease-in-out;

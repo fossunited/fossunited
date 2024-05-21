@@ -21,12 +21,6 @@ const routes = [
     meta: { isPublicPage: true },
   },
   {
-    name: 'Login',
-    path: '/account/login',
-    component: () => import('@/pages/Login.vue'),
-    meta: { isPublicPage: true },
-  },
-  {
     name: 'Event',
     path: '/event/:id',
     component: () => import('@/pages/Event.vue'),
@@ -142,7 +136,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.name === 'Login' && isLoggedIn) {
     next({ name: 'Home' })
   } else if (to.name !== 'Login' && !isLoggedIn && !to.meta.isPublicPage) {
-    next({ name: 'Login' })
+    window.location.href = `/login?redirect-to=/dashboard${to.path}`
   } else {
     next()
   }

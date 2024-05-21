@@ -28,6 +28,7 @@
    "fieldname": "grant_status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Grant Status",
    "options": "Open\nApproved\nUnder Review\nRejected",
    "reqd": 1
@@ -47,7 +48,6 @@
   {
    "fieldname": "about_project",
    "fieldtype": "Small Text",
-   "in_list_view": 1,
    "label": "About project",
    "reqd": 1
   },
@@ -65,6 +65,7 @@
   {
    "fieldname": "grant_amount",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Grant amount"
   },
   {
@@ -80,7 +81,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-13 17:06:16.855760",
+ "modified": "2024-05-13 23:42:23.441000",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",
@@ -111,5 +112,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "project_name"
 }
