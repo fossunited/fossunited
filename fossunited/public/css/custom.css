@@ -345,6 +345,7 @@ h6{
 .primary-button:hover{
     background: hsl(var(--clr-foss-mint-600));
     cursor: pointer;
+    text-decoration: none;
 }
 
 .secondary-button{
@@ -364,6 +365,8 @@ h6{
 .secondary-button:hover{
     cursor: pointer;
     box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
+    text-decoration: none;
+    background: white;
 }
 
 .danger-button{
