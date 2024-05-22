@@ -14,6 +14,7 @@ class FOSSHackathonPartnerProject(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        about: DF.SmallText | None
         hackathon: DF.Link | None
         logo: DF.AttachImage | None
         poc_email: DF.Data | None
