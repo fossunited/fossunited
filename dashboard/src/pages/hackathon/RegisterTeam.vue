@@ -291,6 +291,7 @@
               type="text"
               label="Short Description"
               description="A one-line description of your project."
+              v-model="project.short_description"
             />
             <div class="flex flex-col gap-2">
               <h5 class="text-sm text-gray-600">Detailed Description</h5>
