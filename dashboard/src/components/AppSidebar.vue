@@ -28,7 +28,7 @@
         :key="index"
         :to="menuItem.route"
         :class="
-          isMenuItemActive(menuItem.route)
+          isMenuItemActive(menuItem.route, index)
             ? 'font-semibold text-gray-900 bg-gray-100'
             : ''
         "
@@ -57,8 +57,11 @@ const props = defineProps({
   },
 })
 
-const isMenuItemActive = (menuRoute) => {
-  return menuRoute === route.path
+const isMenuItemActive = (menuRoute, index) => {
+  if (index == 0 && menuRoute != route.path) {
+    return false
+  }
+  return menuRoute === route.path || menuRoute === ('/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/'))
 }
 
 let smallScreen = ref(false)
