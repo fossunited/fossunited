@@ -346,6 +346,7 @@ h6{
     background: hsl(var(--clr-foss-mint-600));
     cursor: pointer;
     color: #FFF;
+    text-decoration: none;
 }
 
 .secondary-button{
@@ -366,6 +367,8 @@ h6{
     cursor: pointer;
     color: hsl(var(--clr-foss-mint-500));
     box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
+    text-decoration: none;
+    background: white;
 }
 
 .danger-button{
