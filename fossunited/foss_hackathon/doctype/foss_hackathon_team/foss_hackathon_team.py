@@ -24,7 +24,13 @@ class FOSSHackathonTeam(Document):
             "Pending", "Accepted", "Rejected"
         ]
         members: DF.Table[FOSSHackathonTeamMember]
+        partner_project: DF.Link | None
+        partner_project_status: DF.Literal[
+            "", "Pending", "Accepted", "Rejected"
+        ]
+        project: DF.Link | None
         team_name: DF.Data
         wants_to_attend_locally: DF.Check
+        working_on_partner_project: DF.Check
     # end: auto-generated types
     pass

@@ -118,6 +118,16 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/register-for-hackathon',
+    name: 'HackathonRegister',
+    component: () => import('@/pages/hackathon/RegisterTeam.vue'),
+  },
+  {
+    path: '/my-hackathons',
+    name: 'MyHackathons',
+    component: () => import('@/pages/hackathon/MyHackathons.vue'),
+  },
 ]
 
 let router = createRouter({

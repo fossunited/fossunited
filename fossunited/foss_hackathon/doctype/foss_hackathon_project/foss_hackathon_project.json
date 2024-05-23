@@ -82,8 +82,7 @@
    "fieldname": "repo_link",
    "fieldtype": "Data",
    "label": "Repo Link",
-   "options": "URL",
-   "reqd": 1
+   "options": "URL"
   },
   {
    "fieldname": "demo_link",
@@ -108,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-05-10 15:59:09.589371",
+ "modified": "2024-05-19 01:31:02.285682",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",

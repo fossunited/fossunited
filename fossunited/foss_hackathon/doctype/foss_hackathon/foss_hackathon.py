@@ -43,11 +43,13 @@ class FOSSHackathon(WebsiteGenerator):
             "", "Remote", "In-person", "Hybrid"
         ]
         has_localhosts: DF.Check
+        has_partner_projects: DF.Check
         is_published: DF.Check
         is_team_mandatory: DF.Check
         max_team_members: DF.Int
         organizing_chapter: DF.Link | None
         permalink: DF.Data | None
+        registration_description: DF.TextEditor | None
         route: DF.Data | None
         schedule: DF.Table[FOSSEventSchedule]
         sponsor_list: DF.Table[FOSSEventSponsor]

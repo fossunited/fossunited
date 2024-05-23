@@ -11,6 +11,12 @@
   "team_name",
   "hackathon",
   "members",
+  "project_details_section",
+  "working_on_partner_project",
+  "project",
+  "column_break_zgva",
+  "partner_project",
+  "partner_project_status",
   "localhost_tab",
   "wants_to_attend_locally",
   "section_break_pzcd",
@@ -77,14 +83,54 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Pending",
    "fieldname": "localhost_request_status",
    "fieldtype": "Select",
    "label": "Localhost Request Status",
    "options": "Pending\nAccepted\nRejected"
+  },
+  {
+   "depends_on": "eval:doc.working_on_partner_project != 1",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "FOSS Hackathon Project",
+   "search_index": 1
+  },
+  {
+   "fieldname": "project_details_section",
+   "fieldtype": "Section Break",
+   "label": "Project Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "working_on_partner_project",
+   "fieldtype": "Check",
+   "label": "Working on Partner Project?"
+  },
+  {
+   "fieldname": "column_break_zgva",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.working_on_partner_project == 1",
+   "fieldname": "partner_project",
+   "fieldtype": "Link",
+   "label": "Partner Project",
+   "options": "FOSS Hackathon Partner Project",
+   "search_index": 1
+  },
+  {
+   "default": "Pending",
+   "depends_on": "eval:doc.working_on_partner_project == 1",
+   "fieldname": "partner_project_status",
+   "fieldtype": "Select",
+   "label": "Partner Project Status",
+   "options": "\nPending\nAccepted\nRejected"
   }
  ],
  "links": [],
- "modified": "2024-05-15 00:00:04.515168",
+ "modified": "2024-05-23 00:18:33.252393",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team",
