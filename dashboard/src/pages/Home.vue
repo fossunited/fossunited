@@ -27,7 +27,11 @@
         <div>
           <div class="text-lg font-semibold my-2">Scheduled Events</div>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div v-for="event in scheduled_events.data" :key="event.name">
+            <div
+              v-for="event in scheduled_events.data"
+              :key="event.name"
+              class="py-2"
+            >
               <EventCard :event="event" />
             </div>
           </div>
@@ -74,6 +78,7 @@ watch(chapter, (newChapter) => {
   if (newChapter.data) {
     scheduled_events.update({
       filters: {
+        ...scheduled_events.filters,
         chapter: ['in', newChapter.data.map((d) => d.name)],
       },
     })
