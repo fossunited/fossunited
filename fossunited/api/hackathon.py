@@ -19,39 +19,39 @@ def get_hackathon(name: str) -> dict:
     return frappe.get_doc("FOSS Hackathon", name)
 
 
-@frappe.whitelist()
-def register_for_hackathon(hackathon, team, project):
+@frappe.whitelist(allow_guest=True)
+def create_participant(hackathon, participant):
     """
-    This method is used for registering a team for a hackathon.
-    It creates a team and project document and links them together.
+    This method is used to create a participant for a hackathon.
 
-    Args:
-        hackathon (dict): Hackathon details
-        team (dict): Team details
-        project (dict): Project details
+    args:
+        hackathon(dict): hackathon details
+        participant(dict): participant details dict
 
-    Returns:
-        dict: Returns a dictionary with team_doc and project_doc
+    return:
+        dict: participant doc object
     """
 
-    team_doc = create_team(hackathon, team)
+    participant_doc = frappe.get_doc(
+        {
+            "doctype": "FOSS Hackathon Participant",
+            "hackathon": hackathon.get("data").get("name"),
+            "user_profile": participant.get("user_profile"),
+            "full_name": participant.get("full_name"),
+            "email": participant.get("email"),
+            "is_student": participant.get("is_student"),
+            "organization": participant.get("organization"),
+            "github": participant.get("github"),
+            "gitlab": participant.get("gitlab"),
+            "wants_to_attend_locally": participant.get(
+                "wants_to_attend_locally"
+            ),
+            "localhost": participant.get("localhost"),
+        }
+    )
+    participant_doc.insert(ignore_permissions=True)
 
-    # If team is working on a partner project, then no need to create a project
-    if (
-        team_doc.working_on_partner_project
-        and team_doc.partner_project != ""
-    ):
-        return {"team_doc": team_doc, "project_doc": None}
-
-    # If team is not working on a partner project, then create a project
-    if not team_doc.working_on_partner_project:
-        project_doc = create_project(hackathon, team_doc, project)
-        print(project_doc)
-        team_doc.reload()
-        team_doc.project = project_doc.name
-        team_doc.save(ignore_permissions=True)
-
-    return {"team_doc": team_doc, "project_doc": project_doc}
+    return participant_doc
 
 
 def create_team(hackathon, team):
