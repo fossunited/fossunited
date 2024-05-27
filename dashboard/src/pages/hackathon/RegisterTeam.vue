@@ -231,6 +231,36 @@
               "
             />
           </div>
+
+          <div
+            class="flex flex-col items-center sm:flex-row gap-3 bg-yellow-50 w-full p-4 text-sm rounded-sm my-4 text-yellow-700 outline-2 outline-dashed"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="w-7 shrink-0 stroke-yellow-700 icon icon-tabler icons-tabler-outline icon-tabler-alert-circle"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+              <path d="M12 8v4" />
+              <path d="M12 16h.01" />
+            </svg>
+            <p class="leading-normal text-center sm:text-left">
+              Please note that attendance at offline venues is limited by seat
+              availability. Our team will review your application to attend the
+              hackathon.<br />
+              If there are not enough seats available, your application to
+              attend in person may be <b>declined</b>, and you may need to
+              participate remotely.
+            </p>
+          </div>
         </div>
       </div>
       <ErrorMessage
