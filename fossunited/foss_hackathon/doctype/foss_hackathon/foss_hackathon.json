@@ -36,8 +36,12 @@
   "is_team_mandatory",
   "column_break_yeth",
   "max_team_members",
+  "registration_page_setup_section",
+  "registration_description",
   "schedule_tab",
-  "schedule"
+  "schedule",
+  "partner_projects_tab",
+  "has_partner_projects"
  ],
  "fields": [
   {
@@ -150,12 +154,12 @@
   {
    "fieldname": "team_set_up_tab",
    "fieldtype": "Tab Break",
-   "label": "Team Set Up"
+   "label": "Registration"
   },
   {
    "fieldname": "team_setup_details_section",
    "fieldtype": "Section Break",
-   "label": "Team Setup Details"
+   "label": "Team Setup"
   },
   {
    "default": "0",
@@ -208,6 +212,27 @@
    "fieldname": "has_localhosts",
    "fieldtype": "Check",
    "label": "Has LocalHosts?"
+  },
+  {
+   "fieldname": "registration_page_setup_section",
+   "fieldtype": "Section Break",
+   "label": "Registration Page Setup"
+  },
+  {
+   "fieldname": "registration_description",
+   "fieldtype": "Text Editor",
+   "label": "Registration Description"
+  },
+  {
+   "fieldname": "partner_projects_tab",
+   "fieldtype": "Tab Break",
+   "label": "Partner Projects"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_partner_projects",
+   "fieldtype": "Check",
+   "label": "Has Partner Projects?"
   }
  ],
  "has_web_view": 1,
@@ -235,7 +260,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-05-14 23:29:48.505918",
+ "modified": "2024-05-22 15:51:53.138828",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",

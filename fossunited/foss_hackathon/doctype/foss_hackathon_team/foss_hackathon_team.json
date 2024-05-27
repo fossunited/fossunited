@@ -11,12 +11,12 @@
   "team_name",
   "hackathon",
   "members",
-  "localhost_tab",
-  "wants_to_attend_locally",
-  "section_break_pzcd",
-  "localhost",
-  "column_break_cqml",
-  "localhost_request_status"
+  "project_details_section",
+  "working_on_partner_project",
+  "project",
+  "column_break_zgva",
+  "partner_project",
+  "partner_project_status"
  ],
  "fields": [
   {
@@ -51,40 +51,47 @@
    "label": "Team Details"
   },
   {
-   "fieldname": "localhost_tab",
-   "fieldtype": "Tab Break",
-   "label": "LocalHost"
+   "depends_on": "eval:doc.working_on_partner_project != 1",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "FOSS Hackathon Project",
+   "search_index": 1
+  },
+  {
+   "fieldname": "project_details_section",
+   "fieldtype": "Section Break",
+   "label": "Project Details"
   },
   {
    "default": "0",
-   "fieldname": "wants_to_attend_locally",
+   "fieldname": "working_on_partner_project",
    "fieldtype": "Check",
-   "label": "Wants to attend locally?"
+   "label": "Working on Partner Project?"
   },
   {
-   "depends_on": "eval:doc.wants_to_attend_locally==1",
-   "fieldname": "section_break_pzcd",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "localhost",
-   "fieldtype": "Link",
-   "label": "LocalHost",
-   "options": "FOSS Hackathon LocalHost"
-  },
-  {
-   "fieldname": "column_break_cqml",
+   "fieldname": "column_break_zgva",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "localhost_request_status",
+   "depends_on": "eval:doc.working_on_partner_project == 1",
+   "fieldname": "partner_project",
+   "fieldtype": "Link",
+   "label": "Partner Project",
+   "options": "FOSS Hackathon Partner Project",
+   "search_index": 1
+  },
+  {
+   "default": "Pending",
+   "depends_on": "eval:doc.working_on_partner_project == 1",
+   "fieldname": "partner_project_status",
    "fieldtype": "Select",
-   "label": "Localhost Request Status",
-   "options": "Pending\nAccepted\nRejected"
+   "label": "Partner Project Status",
+   "options": "\nPending\nAccepted\nRejected"
   }
  ],
  "links": [],
- "modified": "2024-05-15 00:00:04.515168",
+ "modified": "2024-05-24 22:15:31.971375",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team",

@@ -1,0 +1,111 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2024-05-22 16:34:29.481357",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "meta_info_section",
+  "hackathon",
+  "project_details_section",
+  "logo",
+  "project_name",
+  "about",
+  "column_break_qabl",
+  "poc_email",
+  "repo_link"
+ ],
+ "fields": [
+  {
+   "fieldname": "meta_info_section",
+   "fieldtype": "Section Break",
+   "label": "Meta Info"
+  },
+  {
+   "fieldname": "hackathon",
+   "fieldtype": "Link",
+   "label": "Hackathon",
+   "options": "FOSS Hackathon"
+  },
+  {
+   "fieldname": "project_details_section",
+   "fieldtype": "Section Break",
+   "label": "Project Details"
+  },
+  {
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "project_name",
+   "fieldtype": "Data",
+   "label": "Project Name"
+  },
+  {
+   "fieldname": "column_break_qabl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "poc_email",
+   "fieldtype": "Data",
+   "label": "POC Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "repo_link",
+   "fieldtype": "Data",
+   "label": "Repo Link",
+   "options": "URL"
+  },
+  {
+   "fieldname": "about",
+   "fieldtype": "Small Text",
+   "label": "About"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "link_doctype": "FOSS Hackathon Team",
+   "link_fieldname": "partner_project"
+  }
+ ],
+ "modified": "2024-05-22 18:00:22.066294",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "FOSS Hackathon Partner Project",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "repo_link",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "project_name"
+}

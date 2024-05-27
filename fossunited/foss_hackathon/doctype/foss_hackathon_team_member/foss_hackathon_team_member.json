@@ -14,14 +14,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Member",
-   "options": "User",
+   "options": "FOSS Hackathon Participant",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-03-26 12:35:35.833748",
+ "modified": "2024-05-25 00:39:09.969554",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team Member",

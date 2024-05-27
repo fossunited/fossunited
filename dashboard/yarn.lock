@@ -547,6 +547,11 @@
   resolved "https://registry.yarnpkg.com/@tiptap/extension-typography/-/extension-typography-2.1.10.tgz#bb5605cf76992a0e8e78e7e755ac07e761c24190"
   integrity sha512-UHAa6xRBxzTP4rLYBrHz5qYHySIO5ASf4CzZVmJ+QNEarsKQKYz3M0dTgqF1KK4FexB0x1UKWLM8lq1TfzmQgg==
 
+"@tiptap/extension-underline@^2.4.0":
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/@tiptap/extension-underline/-/extension-underline-2.4.0.tgz#fb554333aed8a9ac1400b94f362a774c650f5a90"
+  integrity sha512-guWojb7JxUwLz4OKzwNExJwOkhZjgw/ttkXCMBT0PVe55k998MMYe1nvN0m2SeTW9IxurEPtScH4kYJ0XuSm8Q==
+
 "@tiptap/pm@^2.0.3":
   version "2.1.10"
   resolved "https://registry.yarnpkg.com/@tiptap/pm/-/pm-2.1.10.tgz#84d5ae574568dca00ee62698559523d77e980620"
