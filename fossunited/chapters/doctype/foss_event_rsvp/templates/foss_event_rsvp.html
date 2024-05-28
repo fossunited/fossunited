@@ -102,14 +102,17 @@
 {% block page_script %}
 <script>
     $(document).ready(() => {
-        if (!check_if_logged_in(message="You need to be logged in and have a FOSS Profile to RSVP for the event. Please login or create an account.")){
-            return
-        }
-        check_if_profile_complete();
         set_mandatory_asterisk();
 
         $('#submit-rsvp').on('click', (e) => {
             e.preventDefault()
+            let email_field = $('[data-label="Email"]').val();
+
+            function isValidEmail(email) {
+                let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
             if (!validate_mandatory_fields() || !$('#confirm_attendance').is(':checked')){
                 frappe.msgprint("Please confirm your attendance for the event!")
                 return
@@ -146,7 +149,7 @@
                     frappe.msgprint("You have successfully RSVP'd for the event!", "Success!")
                     setTimeout(() => {
                         window.location.reload()
-                    }, 2000)
+                    }, 5000)
                 } else {
                     frappe.throw("Failed to submit RSVP. Please try again.")
                 }

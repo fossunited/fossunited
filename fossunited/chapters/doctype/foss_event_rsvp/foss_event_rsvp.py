@@ -38,6 +38,15 @@ class FOSSEventRSVP(WebsiteGenerator):
                 ),
             },
             {
+                "fieldname": "email",
+                "fieldtype": "Data",
+                "label": "Email",
+                "reqd": 1,
+                "value": frappe.get_value(
+                    "User", frappe.session.user, "email"
+                ),
+            },
+            {
                 "fieldname": "im_a",
                 "fieldtype": "Select",
                 "label": "I'm a",
@@ -102,11 +111,14 @@ class FOSSEventRSVP(WebsiteGenerator):
         )
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_rsvp(fields):
     fields_dict = {
         "doctype": "FOSS Event RSVP Submission",
-        "submitted_by": frappe.session.user,
+        "submitted_by": "",
     }
+    if frappe.session.user not in ["Guest", "Admin"]:
+        fields_dict["submitted_by"] = frappe.session.user
+
     fields_dict.update(json.loads(fields))
     return create_submission(fields_dict)
