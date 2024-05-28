@@ -117,7 +117,7 @@ def create_rsvp(fields):
         "doctype": "FOSS Event RSVP Submission",
         "submitted_by": "",
     }
-    if frappe.session.user not in ["Guest", "Admin"]:
+    if frappe.session.user not in ["Guest", "Administrator"]:
         fields_dict["submitted_by"] = frappe.session.user
 
     fields_dict.update(json.loads(fields))
