@@ -121,12 +121,28 @@ const routes = [
   {
     path: '/register-for-hackathon',
     name: 'HackathonRegister',
-    component: () => import('@/pages/hackathon/RegisterTeam.vue'),
+    component: () => import('@/pages/hackathon/Register.vue'),
   },
   {
     path: '/my-hackathons',
     name: 'MyHackathons',
     component: () => import('@/pages/hackathon/MyHackathons.vue'),
+  },
+  {
+    path: '/hack/:permalink',
+    name: 'HackathonHome',
+    children:[
+      {
+        path: '',
+        name: 'InitialRegister',
+        component: () => import('@/pages/hackathon/InitRegister.vue')
+      },
+      {
+        path: 'create-team',
+        name: 'CreateHackathonTeam',
+        component: () => import('@/pages/hackathon/CreateTeam.vue'),
+      }
+    ]
   },
 ]
 
