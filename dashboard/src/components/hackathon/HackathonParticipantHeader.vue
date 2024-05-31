@@ -1,6 +1,6 @@
 <template>
   <img
-    v-if="hackathon.data.hackathon_banner"
+    v-if="hackathon.data.hackathon_banner && showBanner"
     :src="hackathon.data.hackathon_banner"
     alt=""
     class="w-full h-32 md:h-full md:max-h-72 object-cover rounded-sm"
@@ -82,7 +82,11 @@ defineProps({
     hackathon: {
         type: Object,
         default: {}
-    }
+    },
+    showBanner: {
+        type: Boolean,
+        default: true
+    },
 })
 
 const formatDate = (date) => {

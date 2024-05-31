@@ -71,7 +71,7 @@
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
-import HackathonHeader from '@/components/hackathon/HackathonParitipantHeader.vue'
+import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import { createResource, FormControl, ErrorMessage } from 'frappe-ui'
 import { reactive, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
