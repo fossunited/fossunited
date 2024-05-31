@@ -130,7 +130,6 @@ const routes = [
   },
   {
     path: '/hack/:permalink',
-    name: 'HackathonHome',
     children:[
       {
         path: '',
@@ -141,6 +140,11 @@ const routes = [
         path: 'create-team',
         name: 'CreateHackathonTeam',
         component: () => import('@/pages/hackathon/CreateTeam.vue'),
+      },
+      {
+        path: 'my-team',
+        name: 'MyHackathonTeam',
+        component: () => import('@/pages/hackathon/MyTeam.vue'),
       }
     ]
   },

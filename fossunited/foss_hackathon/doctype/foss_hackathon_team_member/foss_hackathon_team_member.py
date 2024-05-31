@@ -14,6 +14,8 @@ class FOSSHackathonTeamMember(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        email: DF.Data | None
+        full_name: DF.Data | None
         member: DF.Link
         parent: DF.Data
         parentfield: DF.Data

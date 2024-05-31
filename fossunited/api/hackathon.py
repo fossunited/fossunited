@@ -112,6 +112,40 @@ def create_team(hackathon: str, team: dict) -> dict:
     return team_doc
 
 
+@frappe.whitelist()
+def get_team_by_member_email(hackathon: str, email: str) -> dict:
+    """
+    Get team details
+
+    Args:
+        hackathon (str): Hackathon ID
+        email (str): Email of the team lead
+
+    Returns:
+        dict: Team document as a dictionary
+    """
+    participant = get_participant(hackathon, email)
+
+    try:
+        team = frappe.get_doc(
+            "FOSS Hackathon Team",
+            [
+                [
+                    "FOSS Hackathon Team Member",
+                    "member",
+                    "=",
+                    participant.get("name"),
+                ],
+                ["hackathon", "=", hackathon],
+            ],
+        )
+        return team
+    except frappe.exceptions.DoesNotExistError:
+        frappe.msgprint("Team not found")
+
+    return None
+
+
 def create_project(hackathon, team, project):
     """
     Create a project document
@@ -138,3 +172,20 @@ def create_project(hackathon, team, project):
     )
     project_doc.insert(ignore_permissions=True)
     return project_doc
+
+
+def get_project_by_team(hackathon: str, team: str) -> dict:
+    """
+    Get project details
+
+    Args:
+        hackathon (str): Hackathon ID
+        team (str): Team ID
+
+    Returns:
+        dict: Project document as a dictionary
+    """
+    return frappe.get_doc(
+        "FOSS Hackathon Project",
+        {"hackathon": hackathon, "team": team},
+    )
