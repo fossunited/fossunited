@@ -43,7 +43,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published"
@@ -107,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-05-19 01:31:02.285682",
+ "modified": "2024-06-01 23:28:11.468595",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",

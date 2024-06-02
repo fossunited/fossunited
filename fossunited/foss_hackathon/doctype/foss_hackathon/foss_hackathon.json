@@ -29,9 +29,9 @@
   "hackathon_sponsors_section",
   "sponsor_list",
   "community_partners",
-  "localhost_tab",
-  "has_localhosts",
   "team_set_up_tab",
+  "projects_setup_section",
+  "enable_oss_contributon_projects",
   "team_setup_details_section",
   "is_team_mandatory",
   "column_break_yeth",
@@ -40,6 +40,8 @@
   "registration_description",
   "schedule_tab",
   "schedule",
+  "localhost_tab",
+  "has_localhosts",
   "partner_projects_tab",
   "has_partner_projects"
  ],
@@ -233,6 +235,18 @@
    "fieldname": "has_partner_projects",
    "fieldtype": "Check",
    "label": "Has Partner Projects?"
+  },
+  {
+   "fieldname": "projects_setup_section",
+   "fieldtype": "Section Break",
+   "label": "Projects Setup"
+  },
+  {
+   "default": "0",
+   "description": "Allow participants to submit their contributions to other open-source projects as valid hackathon entries.",
+   "fieldname": "enable_oss_contributon_projects",
+   "fieldtype": "Check",
+   "label": "Enable OSS Contributon Projects"
   }
  ],
  "has_web_view": 1,
@@ -260,7 +274,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-05-22 15:51:53.138828",
+ "modified": "2024-06-01 22:44:10.061352",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",

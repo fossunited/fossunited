@@ -146,28 +146,29 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
     return None
 
 
-def create_project(hackathon, team, project):
+@frappe.whitelist(allow_guest=True)
+def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document
 
     Args:
-        hackathon (dict): Hackathon details
-        team (dict): Team details
+        hackathon (str): Hackathon ID
+        team (str): Team ID
         project (dict): Project details
 
     Returns:
-        FOSS Hackathon Project: Returns the created project document
+        dict: Project document as a dictionary
     """
-
     project_doc = frappe.get_doc(
         {
             "doctype": "FOSS Hackathon Project",
+            "hackathon": hackathon,
+            "team": team,
             "title": project.get("title"),
-            "team": team.get("name"),
-            "hackathon": hackathon.get("data").get("name"),
+            "short_description": project.get("short_description"),
             "description": project.get("description"),
             "repo_link": project.get("repo_link"),
-            "short_description": project.get("short_description"),
+            "demo_link": project.get("demo_link"),
         }
     )
     project_doc.insert(ignore_permissions=True)

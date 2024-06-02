@@ -89,7 +89,7 @@
               class="w-fit"
               size="sm"
               @click="
-                $router.push(`/hack/${hackathon.data.permalink}/create-project`)
+                $router.push(`/hack/${hackathon.data.permalink}/create-project?team=${team.data.name}`)
               "
               label="Create"
             />

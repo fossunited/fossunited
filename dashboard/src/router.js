@@ -142,9 +142,19 @@ const routes = [
         component: () => import('@/pages/hackathon/CreateTeam.vue'),
       },
       {
+        path: 'create-project',
+        name: 'CreateHackathonProject',
+        component: () => import('@/pages/hackathon/CreateProject.vue'),
+      },
+      {
         path: 'my-team',
         name: 'MyHackathonTeam',
         component: () => import('@/pages/hackathon/MyTeam.vue'),
+      },
+      {
+        path: 'project',
+        name: 'MyHackathonProject',
+        component: () => import('@/pages/hackathon/MyProject.vue'),
       }
     ]
   },

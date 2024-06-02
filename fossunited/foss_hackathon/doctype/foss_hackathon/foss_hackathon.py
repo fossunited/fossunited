@@ -32,6 +32,7 @@ class FOSSHackathon(WebsiteGenerator):
         )
 
         community_partners: DF.Table[FOSSEventCommunityPartner]
+        enable_oss_contributon_projects: DF.Check
         end_date: DF.Datetime
         hackathon_banner: DF.AttachImage | None
         hackathon_description: DF.TextEditor
