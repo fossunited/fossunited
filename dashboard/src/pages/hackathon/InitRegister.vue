@@ -60,7 +60,7 @@
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
-import HackathonHeader from '@/components/hackathon/HackathonParitipantHeader.vue'
+import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import { createResource } from 'frappe-ui'
 import { inject } from 'vue'
 import { useRoute } from 'vue-router'
