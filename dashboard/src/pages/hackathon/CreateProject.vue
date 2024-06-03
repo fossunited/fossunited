@@ -5,6 +5,15 @@
     class="flex w-full p-4 items-center justify-center"
   >
     <div class="w-full max-w-screen-xl">
+      <Button
+        variant="ghost"
+        icon-left="arrow-left"
+        label="Go Back"
+        @click="router.push({
+          name:'MyHackathonTeam'
+        })"
+        class="mt-4 mb-2"
+      />
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
       <hr class="my-6" />
       <div
