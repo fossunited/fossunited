@@ -32,6 +32,8 @@ class FOSSHackathon(WebsiteGenerator):
         )
 
         community_partners: DF.Table[FOSSEventCommunityPartner]
+        contribution_project_guidelines: DF.MarkdownEditor | None
+        enable_oss_contributon_projects: DF.Check
         end_date: DF.Datetime
         hackathon_banner: DF.AttachImage | None
         hackathon_description: DF.TextEditor
@@ -48,6 +50,7 @@ class FOSSHackathon(WebsiteGenerator):
         is_team_mandatory: DF.Check
         max_team_members: DF.Int
         organizing_chapter: DF.Link | None
+        partner_project_guidelines: DF.MarkdownEditor | None
         permalink: DF.Data | None
         registration_description: DF.TextEditor | None
         route: DF.Data | None

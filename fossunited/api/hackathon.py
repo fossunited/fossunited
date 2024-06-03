@@ -20,6 +20,20 @@ def get_hackathon(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
+def get_hackathon_from_permalink(permalink: str) -> dict:
+    """
+    Get hackathon details
+
+    Args:
+        permalink (str): Permalink of the hackathon
+
+    Returns:
+        dict: Hackathon document as a dictionary
+    """
+    return frappe.get_doc("FOSS Hackathon", {"permalink": permalink})
+
+
+@frappe.whitelist(allow_guest=True)
 def create_participant(hackathon, participant):
     """
     This method is used to create a participant for a hackathon.
@@ -36,6 +50,7 @@ def create_participant(hackathon, participant):
         {
             "doctype": "FOSS Hackathon Participant",
             "hackathon": hackathon.get("data").get("name"),
+            "user": participant.get("user"),
             "user_profile": participant.get("user_profile"),
             "full_name": participant.get("full_name"),
             "email": participant.get("email"),
@@ -54,60 +69,129 @@ def create_participant(hackathon, participant):
     return participant_doc
 
 
-def create_team(hackathon, team):
+@frappe.whitelist(allow_guest=True)
+def get_participant(hackathon: str, user: str) -> dict:
+    """
+    Get participant details
+
+    Args:
+        hackathon (str): Hackathon ID
+        user (str): User email
+
+    Returns:
+        dict: Participant document as a dictionary
+    """
+    return frappe.get_doc(
+        "FOSS Hackathon Participant",
+        {"hackathon": hackathon, "user": user},
+    )
+
+
+@frappe.whitelist()
+def create_team(hackathon: str, team: dict) -> dict:
     """
     Create a team document
 
     Args:
-        hackathon (dict): Hackathon details
+        hackathon (str): Hackathon ID
         team (dict): Team details
 
     Returns:
-        FOSS Hackathon Team: Returns the created team document
+        dict: Team document as a dictionary
     """
-
     team_doc = frappe.get_doc(
         {
             "doctype": "FOSS Hackathon Team",
             "team_name": team.get("team_name"),
-            "hackathon": hackathon.get("data").get("name"),
-            "working_on_partner_project": team.get(
-                "working_on_partner_project"
-            ),
-            "partner_project": team.get("partner_project"),
-            "wants_to_attend_locally": team.get(
-                "wants_to_attend_locally"
-            ),
-            "localhost": team.get("localhost"),
+            "hackathon": hackathon,
+            "team_lead": team.get("team_lead"),
+            "members": team.get("members"),
         }
     )
     team_doc.insert(ignore_permissions=True)
     return team_doc
 
 
-def create_project(hackathon, team, project):
+@frappe.whitelist()
+def get_team_by_member_email(hackathon: str, email: str) -> dict:
+    """
+    Get team details
+
+    Args:
+        hackathon (str): Hackathon ID
+        email (str): Email of the team lead
+
+    Returns:
+        dict: Team document as a dictionary
+    """
+    participant = get_participant(hackathon, email)
+
+    try:
+        team = frappe.get_doc(
+            "FOSS Hackathon Team",
+            [
+                [
+                    "FOSS Hackathon Team Member",
+                    "member",
+                    "=",
+                    participant.get("name"),
+                ],
+                ["hackathon", "=", hackathon],
+            ],
+        )
+        return team
+    except frappe.exceptions.DoesNotExistError:
+        frappe.msgprint("Team not found")
+
+    return None
+
+
+@frappe.whitelist(allow_guest=True)
+def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document
 
     Args:
-        hackathon (dict): Hackathon details
-        team (dict): Team details
+        hackathon (str): Hackathon ID
+        team (str): Team ID
         project (dict): Project details
 
     Returns:
-        FOSS Hackathon Project: Returns the created project document
+        dict: Project document as a dictionary
     """
-
     project_doc = frappe.get_doc(
         {
             "doctype": "FOSS Hackathon Project",
+            "hackathon": hackathon,
+            "team": team,
             "title": project.get("title"),
-            "team": team.get("name"),
-            "hackathon": hackathon.get("data").get("name"),
+            "short_description": project.get("short_description"),
             "description": project.get("description"),
             "repo_link": project.get("repo_link"),
-            "short_description": project.get("short_description"),
+            "demo_link": project.get("demo_link"),
+            "is_contribution_project": project.get(
+                "is_contribution_project"
+            ),
+            "is_partner_project": project.get("is_partner_project"),
+            "partner_project": project.get("partner_project"),
         }
     )
     project_doc.insert(ignore_permissions=True)
     return project_doc
+
+
+def get_project_by_team(hackathon: str, team: str) -> dict:
+    """
+    Get project details
+
+    Args:
+        hackathon (str): Hackathon ID
+        team (str): Team ID
+
+    Returns:
+        dict: Project document as a dictionary
+    """
+    return frappe.get_doc(
+        "FOSS Hackathon Project",
+        {"hackathon": hackathon, "team": team},
+    )

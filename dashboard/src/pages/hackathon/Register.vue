@@ -328,6 +328,7 @@ let participant = reactive({
   user_profile: '',
   full_name: '',
   email: '',
+  user: '',
   github: '',
   gitlab: '',
   is_student: 0,
@@ -402,6 +403,7 @@ onMounted(() => {
     hackathon.fetch()
   }
   if(session.user != 'Administrator' && session.user != 'Guest'){
+    participant.user = session.user
     user_profile.update({
       params:{
         email: session.user

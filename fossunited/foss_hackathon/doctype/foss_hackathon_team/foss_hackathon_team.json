@@ -10,6 +10,7 @@
   "team_details_section",
   "team_name",
   "hackathon",
+  "looking_for_members",
   "members",
   "project_details_section",
   "working_on_partner_project",
@@ -88,10 +89,16 @@
    "fieldtype": "Select",
    "label": "Partner Project Status",
    "options": "\nPending\nAccepted\nRejected"
+  },
+  {
+   "default": "0",
+   "fieldname": "looking_for_members",
+   "fieldtype": "Check",
+   "label": "Looking For Members?"
   }
  ],
  "links": [],
- "modified": "2024-05-24 22:15:31.971375",
+ "modified": "2024-05-30 11:23:19.378240",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team",

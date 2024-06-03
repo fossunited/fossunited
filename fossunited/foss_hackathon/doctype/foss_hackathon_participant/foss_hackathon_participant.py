@@ -25,6 +25,7 @@ class FOSSHackathonParticipant(Document):
             "Pending", "Accepted", "Rejected"
         ]
         organization: DF.Data | None
+        user: DF.Link | None
         user_profile: DF.Link | None
         wants_to_attend_locally: DF.Check
     # end: auto-generated types

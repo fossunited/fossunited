@@ -12,6 +12,11 @@
   "route",
   "column_break_ekbb",
   "is_published",
+  "section_break_xhxb",
+  "is_contribution_project",
+  "column_break_mwcp",
+  "is_partner_project",
+  "partner_project",
   "project_details_section",
   "title",
   "repo_link",
@@ -43,7 +48,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published"
@@ -101,13 +106,40 @@
    "fieldtype": "Small Text",
    "label": "Short description",
    "options": "URL"
+  },
+  {
+   "fieldname": "section_break_xhxb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_contribution_project",
+   "fieldtype": "Check",
+   "label": "Is Contribution Project?"
+  },
+  {
+   "fieldname": "column_break_mwcp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_partner_project",
+   "fieldtype": "Check",
+   "label": "Is Partner Project?"
+  },
+  {
+   "depends_on": "eval:doc.is_partner_project==1",
+   "fieldname": "partner_project",
+   "fieldtype": "Link",
+   "label": "Partner Project",
+   "options": "FOSS Hackathon Partner Project"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-05-19 01:31:02.285682",
+ "modified": "2024-06-03 00:58:21.936746",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",

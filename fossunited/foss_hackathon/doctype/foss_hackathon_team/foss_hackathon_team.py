@@ -19,6 +19,7 @@ class FOSSHackathonTeam(Document):
         )
 
         hackathon: DF.Link
+        looking_for_members: DF.Check
         members: DF.Table[FOSSHackathonTeamMember]
         partner_project: DF.Link | None
         partner_project_status: DF.Literal[
