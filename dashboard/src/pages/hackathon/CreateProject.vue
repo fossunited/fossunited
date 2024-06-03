@@ -145,7 +145,7 @@
             <div class="text-base mt-4">Select Partner Project</div>
             <RadioGroup
               v-model="project.partner_project"
-              class="grid grid-cols-1 md:grid-cols-3 gap-2 my-2"
+              class="grid grid-cols-2 md:grid-cols-3 gap-2 my-2"
             >
               <RadioGroupOption
                 as="template"
@@ -212,9 +212,10 @@
 
       <!-- CREAT PROJECT FORM -->
       <div v-if="inCreateProject || inContribute">
-        <div class="grid my-4 gap-4 grid-cols-1 md:grid-cols-2">
-          <FormControl label="Title" v-model="project.title" />
+        <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4">
+          <FormControl label="Title" type="text" v-model="project.title" />
           <FormControl
+            type="text"
             label="Short Description"
             v-model="project.short_description"
             description="One line description of this project."
@@ -258,15 +259,15 @@
             />
           </div>
         </div>
-        <ErrorMessage :message="errorMessage" />
-        <div class="grid grid-cols-1 md:grid-cols-2 place-items-end">
+        <ErrorMessage :message="errorMessage" class="my-4"/>
+        <div class="grid grid-cols-1 md:grid-cols-2 place-items-end mb-8">
           <div></div>
           <Button
             @click="handleCreateProject"
             label="Create Project"
             theme="green"
             variant="solid"
-            class="md:w-2/3"
+            class="w-full md:w-2/3"
             size="md"
             :loading="createProject.loading"
           />
