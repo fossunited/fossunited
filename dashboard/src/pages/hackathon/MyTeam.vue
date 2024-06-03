@@ -39,7 +39,7 @@
       </div>
     </template>
     <template v-else #body-content>
-        <!-- TODO: Invitation Workflow -->
+      <!-- TODO: Invitation Workflow -->
     </template>
   </Dialog>
   <Header />
@@ -89,13 +89,15 @@
               class="w-fit"
               size="sm"
               @click="
-                $router.push(`/hack/${hackathon.data.permalink}/create-project?team=${team.data.name}`)
+                $router.push(
+                  `/hack/${hackathon.data.permalink}/create-project?team=${team.data.name}`,
+                )
               "
               label="Create"
             />
           </div>
         </div>
-        <div class="rounded border  flex flex-col justify-between p-5 gap-8">
+        <div class="rounded border flex flex-col justify-between p-5 gap-8">
           <div class="text-base font-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
             <div class="font-medium text-lg uppercase">
@@ -108,6 +110,32 @@
               label="Manage"
             />
           </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
+        <div
+          class="w-full bg-gray-50 text-gray-800 rounded p-4"
+          v-if="hackathon.data.hackathon_rules"
+        >
+          <h3 class="text-md font-semibold">Hackathon Rules</h3>
+          <div
+            class="prose leading-normal"
+            v-html="
+              hackathon.data.hackathon_rules
+            "
+          ></div>
+        </div>
+        <div
+          class="w-full bg-gray-50 text-gray-800 rounded p-4"
+          v-if="hackathon.data.hackathon_faq"
+        >
+          <h3 class="text-md font-semibold">Hackathon FAQs</h3>
+          <div
+            class="prose leading-normal"
+            v-html="
+              hackathon.data.hackathon_faq
+            "
+          ></div>
         </div>
       </div>
     </div>
@@ -207,21 +235,21 @@ const updateTeamName = () => {
 }
 
 const removeMember = (member) => {
-    createResource({
-        url: 'frappe.client.set_value',
-        params: {
-            doctype: 'FOSS Hackathon Team',
-            name: team.data.name,
-            fieldname: 'members',
-            value: team.data.members.filter((m) => m.email != member.email),
-        },
-        auto: true,
-        onSuccess: () => {
-            team.fetch()
-        },
-        onError: (error) => {
-            console.log(error)
-        },
-    })
+  createResource({
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Hackathon Team',
+      name: team.data.name,
+      fieldname: 'members',
+      value: team.data.members.filter((m) => m.email != member.email),
+    },
+    auto: true,
+    onSuccess: () => {
+      team.fetch()
+    },
+    onError: (error) => {
+      console.log(error)
+    },
+  })
 }
 </script>
