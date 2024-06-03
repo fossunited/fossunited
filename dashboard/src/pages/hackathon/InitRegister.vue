@@ -2,9 +2,9 @@
   <Header />
   <div
     class="w-full p-4 flex justify-center items-center"
-    v-if="hackathon.data"
+    v-if="hackathon.data && !team.loading"
   >
-  <div class="w-full max-w-screen-xl">
+    <div class="w-full max-w-screen-xl">
       <div class="flex gap-2 my-6 items-center text-base uppercase">
         <span class="font-semibold">My Hackathons</span>
         <svg
@@ -23,7 +23,7 @@
         </svg>
         <span>{{ hackathon.data.hackathon_name }}</span>
       </div>
-      <HackathonHeader :hackathon="hackathon"/>
+      <HackathonHeader :hackathon="hackathon" />
       <hr class="my-6" />
       <div class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0">
         <div
@@ -32,7 +32,7 @@
           <div
             class="px-4 py-2 w-3/4 text-center uppercase border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
             @click="$router.push(`/hack/${hackathonPermalink}/create-team`)"
-            >
+          >
             Create team
           </div>
           <p class="text-base text-center leading-normal">
@@ -54,19 +54,23 @@
           </p>
         </div>
       </div>
-      <RouterView/>
+      <RouterView />
     </div>
+  </div>
+  <div v-else class="w-full h-screen flex justify-center align-middle">
+    <LoadingIndicator class="w-8" />
   </div>
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
-import { createResource } from 'frappe-ui'
+import { createResource, LoadingIndicator } from 'frappe-ui'
 import { inject } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const session = inject('$session')
 const route = useRoute()
+const router = useRouter()
 
 const hackathonPermalink = route.params.permalink
 
@@ -76,14 +80,29 @@ const hackathon = createResource({
     permalink: hackathonPermalink,
   },
   auto: true,
-})
-
-const profile = createResource({
-  url: 'fossunited.fossunited.utils.get_foss_profile',
-  params: {
-    email: session.user,
+  onSuccess(data) {
+    team.update({
+      params: {
+        doctype: 'FOSS Hackathon Team',
+        filters: [
+          ['hackathon', '=', data.name],
+          ['FOSS Hackathon Team Member', 'email', '=', session.user],
+        ],
+      },
+    })
+    team.fetch()
   },
-  auto: true,
 })
 
+const team = createResource({
+  url: 'frappe.client.get_count',
+  onSuccess(data) {
+    if (data > 0) {
+      router.push({
+        name: 'MyHackathonTeam',
+      })
+    }
+  },
+  loading: true,
+})
 </script>

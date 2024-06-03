@@ -95,7 +95,7 @@
             />
           </div>
         </div>
-        <div class="rounded shadow flex flex-col justify-between p-5 gap-8">
+        <div class="rounded border  flex flex-col justify-between p-5 gap-8">
           <div class="text-base font-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
             <div class="font-medium text-lg uppercase">
