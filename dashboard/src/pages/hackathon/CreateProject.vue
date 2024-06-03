@@ -45,6 +45,13 @@
           class="w-full md:h-40 flex flex-col gap-4 items-center justify-center"
         >
           <div
+            @click="
+              () => {
+                inSelectProjectType = false
+                inContribute = true
+                project.is_contribution_project = 1
+              }
+            "
             class="px-4 py-2 uppercase w-3/4 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
           >
             Contribute
@@ -54,6 +61,8 @@
           </p>
         </div>
       </div>
+
+      <!-- FOR NEW PROJECTS -->
       <div v-if="inCreateProject">
         <Button
           variant="ghost"
@@ -69,14 +78,152 @@
         <div class="prose mt-5 mb-3">
           <h3>Create Project</h3>
         </div>
+      </div>
+
+      <!-- FOR CONTRIBUTION PROJECTS -->
+      <div v-if="inContribute">
+        <Button
+          variant="ghost"
+          label="Go Back"
+          icon-left="arrow-left"
+          @click="
+            () => {
+              inContribute = false
+              inSelectProjectType = true
+              project.is_contribution_project = 0
+              project.is_partner_project = false
+            }
+          "
+        />
+        <div
+          class="grid grid-cols-1 gap-4 my-4"
+          :class="
+            hackathon.data.has_partner_projects &&
+            hackathon.data.partner_project_guidelines
+              ? 'md:grid-cols-2'
+              : ''
+          "
+        >
+          <div
+            class="w-full bg-gray-50 text-gray-800 rounded p-4"
+            v-if="hackathon.data.contribution_project_guidelines"
+          >
+            <h3 class="text-md font-semibold">Contribution Guidelines</h3>
+            <div
+              class="prose leading-normal"
+              v-html="
+                markdown.render(
+                  hackathon.data.contribution_project_guidelines || '',
+                )
+              "
+            ></div>
+          </div>
+          <div
+            class="w-full bg-blue-50 text-blue-800 rounded p-4"
+            v-if="hackathon.data.partner_project_guidelines"
+          >
+            <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
+            <div
+              class="prose leading-normal text-blue-800"
+              v-html="
+                markdown.render(hackathon.data.partner_project_guidelines || '')
+              "
+            ></div>
+          </div>
+        </div>
+        <div v-if="hackathon.data.has_partner_projects">
+          <div class="prose my-2 flex flex-col gap-1">
+            <h4>Partner Project</h4>
+            <p></p>
+          </div>
+          <FormControl
+            type="checkbox"
+            label="Contributing to a partner project."
+            v-model="project.is_partner_project"
+          />
+          <div v-if="project.is_partner_project" class="flex flex-col gap-2">
+            <div class="text-base mt-4">Select Partner Project</div>
+            <RadioGroup
+              v-model="project.partner_project"
+              class="grid grid-cols-1 md:grid-cols-3 gap-2 my-2"
+            >
+              <RadioGroupOption
+                as="template"
+                v-for="partner_project in partner_projects.data"
+                :key="partner_project.id"
+                :value="partner_project.name"
+                v-slot="{ active, checked }"
+                @click="
+                  () => {
+                    project.repo_link = partner_project.repo_link
+                  }
+                "
+              >
+                <div
+                  :class="[
+                    checked ? 'bg-gray-50 border-gray-700' : 'bg-white ',
+                  ]"
+                  class="relative flex cursor-pointer rounded-sm p-4 border focus:outline-none transition-[border]"
+                >
+                  <div class="flex w-full items-center justify-between">
+                    <div class="flex flex-col gap-2 items-start">
+                      <img :src="partner_project.logo" class="h-8" />
+                      <RadioGroupLabel as="p" class="text-base font-medium">
+                        {{ partner_project.project_name }}
+                      </RadioGroupLabel>
+                      <div class="text-sm">
+                        {{ partner_project.about }}
+                      </div>
+                      <a
+                        :href="partner_project.repo_link"
+                        class="flex items-center gap-1 mt-3 text-xs text-gray-600 text-center hover:text-gray-800"
+                        target="_blank"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="w-4 icon icon-tabler icons-tabler-outline icon-tabler-brand-github"
+                        >
+                          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                          <path
+                            d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"
+                          />
+                        </svg>
+                        <span> Repo Link </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </RadioGroupOption>
+            </RadioGroup>
+          </div>
+          <div class="prose mt-5 mb-3">
+            <h4>Additional Details</h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- CREAT PROJECT FORM -->
+      <div v-if="inCreateProject || inContribute">
         <div class="grid my-4 gap-4 grid-cols-1 md:grid-cols-2">
           <FormControl label="Title" v-model="project.title" />
           <FormControl
             label="Short Description"
             v-model="project.short_description"
-            description="One line description for your project."
+            description="One line description of this project."
           />
-          <FormControl label="Repository Link" v-model="project.repo_link">
+          <FormControl
+            label="Repository Link"
+            v-model="project.repo_link"
+            :disabled="project.is_partner_project"
+          >
             <template #prefix>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +258,7 @@
             />
           </div>
         </div>
-        <ErrorMessage :message="errorMessage"/>
+        <ErrorMessage :message="errorMessage" />
         <div class="grid grid-cols-1 md:grid-cols-2 place-items-end">
           <div></div>
           <Button
@@ -127,32 +274,49 @@
       </div>
     </div>
   </div>
+  <pre>{{ project }}</pre>
 </template>
 <script setup>
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import TextEditor from '@/components/TextEditor.vue'
-import { createResource, FormControl, ErrorMessage } from 'frappe-ui'
+import Markdownit from 'markdown-it'
+import {
+  createResource,
+  FormControl,
+  ErrorMessage,
+  createListResource,
+} from 'frappe-ui'
+import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { useRoute, useRouter } from 'vue-router'
-import { inject, onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
 
-const session = inject('$session')
 const route = useRoute()
 const router = useRouter()
+const markdown = new Markdownit()
 
 const inSelectProjectType = ref(true)
 const inCreateProject = ref(false)
 const inContribute = ref(false)
 
 const project = reactive({
-    hackathon: '',
-    team: '',
-    title: '',
-    repo_link: '',
-    demo_link: '',
-    short_description: '',
-    description: '',
+  hackathon: '',
+  team: '',
+  title: '',
+  repo_link: '',
+  demo_link: '',
+  short_description: '',
+  description: '',
+  is_contribution_project: 0,
+  is_partner_project: false,
+  partner_project: '',
+})
+
+const partner_projects = createListResource({
+  doctype: 'FOSS Hackathon Partner Project',
+  pageLength: 999,
+  fields: ['*'],
 })
 
 const hackathon = createResource({
@@ -163,6 +327,12 @@ const hackathon = createResource({
   auto: true,
   onSuccess(data) {
     project.hackathon = data.name
+    partner_projects.update({
+      filters: {
+        hackathon: data.name,
+      },
+    })
+    partner_projects.fetch()
   },
 })
 
@@ -170,6 +340,16 @@ onMounted(() => {
   const params = new URLSearchParams(window.location.search)
   project.team = params.get('team')
 })
+
+watch(
+  () => project.is_partner_project,
+  (value) => {
+    if (!value) {
+      project.partner_project = ''
+      project.repo_link = ''
+    }
+  },
+)
 
 const errorMessage = ref('')
 
@@ -188,52 +368,51 @@ const validateCreateProject = () => {
   if (!project.repo_link) {
     errors.push('Repository link is required')
   }
-  if(project.repo_link && !project.repo_link.startsWith('https://')){
-    errors.push("Enter a valid repo link")
+  if (project.repo_link && !project.repo_link.startsWith('https://')) {
+    errors.push('Enter a valid repo link')
   }
   return errors
 }
 
-const createProject =   createResource({
-    url: 'fossunited.api.hackathon.create_project',
-    makeParams(){
-      return {
-        hackathon: project.hackathon,
-        team: project.team,
-        project: project,
-      }
-    },
-    onSuccess(data) {
-        // TODO: Redirect to project Manage Page
-        createResource({
-          url: 'frappe.client.set_value',
-          makeParams() {
-            return {
-              doctype: 'FOSS Hackathon Team',
-              name: route.query.team,
-              fieldname: 'project',
-              value: data.name,
-            }
-          },
-          auto: true,
-        })
-        router.push({
-            name: 'MyHackathonProject'
-        })
-    },
-    onError(error) {
-        console.log(error)
-        toast.error('Failed to create project')
-    },
-  })
+const createProject = createResource({
+  url: 'fossunited.api.hackathon.create_project',
+  makeParams() {
+    return {
+      hackathon: project.hackathon,
+      team: project.team,
+      project: project,
+    }
+  },
+  onSuccess(data) {
+    // TODO: Redirect to project Manage Page
+    createResource({
+      url: 'frappe.client.set_value',
+      makeParams() {
+        return {
+          doctype: 'FOSS Hackathon Team',
+          name: route.query.team,
+          fieldname: 'project',
+          value: data.name,
+        }
+      },
+      auto: true,
+    })
+    router.push({
+      name: 'MyHackathonProject',
+    })
+  },
+  onError(error) {
+    console.log(error)
+    toast.error('Failed to create project')
+  },
+})
 
 const handleCreateProject = () => {
   const errors = validateCreateProject()
   if (errors.length) {
     errorMessage.value = errors.join(', ')
     return
-  }
-  else{
+  } else {
     errorMessage.value = ''
   }
   createProject.fetch()

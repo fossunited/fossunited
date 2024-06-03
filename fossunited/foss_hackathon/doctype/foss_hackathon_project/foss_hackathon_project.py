@@ -19,7 +19,10 @@ class FOSSHackathonProject(WebsiteGenerator):
         demo_link: DF.Data | None
         description: DF.TextEditor
         hackathon: DF.Link
+        is_contribution_project: DF.Check
+        is_partner_project: DF.Check
         is_published: DF.Check
+        partner_project: DF.Link | None
         repo_link: DF.Data | None
         route: DF.Data | None
         short_description: DF.SmallText | None

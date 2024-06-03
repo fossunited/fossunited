@@ -169,6 +169,11 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
             "description": project.get("description"),
             "repo_link": project.get("repo_link"),
             "demo_link": project.get("demo_link"),
+            "is_contribution_project": project.get(
+                "is_contribution_project"
+            ),
+            "is_partner_project": project.get("is_partner_project"),
+            "partner_project": project.get("partner_project"),
         }
     )
     project_doc.insert(ignore_permissions=True)

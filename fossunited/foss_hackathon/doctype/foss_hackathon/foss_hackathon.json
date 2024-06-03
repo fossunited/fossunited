@@ -32,6 +32,7 @@
   "team_set_up_tab",
   "projects_setup_section",
   "enable_oss_contributon_projects",
+  "contribution_project_guidelines",
   "team_setup_details_section",
   "is_team_mandatory",
   "column_break_yeth",
@@ -43,7 +44,8 @@
   "localhost_tab",
   "has_localhosts",
   "partner_projects_tab",
-  "has_partner_projects"
+  "has_partner_projects",
+  "partner_project_guidelines"
  ],
  "fields": [
   {
@@ -247,6 +249,18 @@
    "fieldname": "enable_oss_contributon_projects",
    "fieldtype": "Check",
    "label": "Enable OSS Contributon Projects"
+  },
+  {
+   "fieldname": "contribution_project_guidelines",
+   "fieldtype": "Markdown Editor",
+   "label": "Contribution Project Guidelines"
+  },
+  {
+   "depends_on": "eval:doc.has_partner_projects==1",
+   "description": "Set of guides to be followed by participants. This will be shown in the public page & at the time of registration. ",
+   "fieldname": "partner_project_guidelines",
+   "fieldtype": "Markdown Editor",
+   "label": "Partner Project Guidelines"
   }
  ],
  "has_web_view": 1,
@@ -274,7 +288,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-06-01 22:44:10.061352",
+ "modified": "2024-06-02 20:52:14.428387",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
