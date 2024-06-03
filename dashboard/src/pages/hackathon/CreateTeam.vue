@@ -74,9 +74,10 @@ import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import { createResource, FormControl, ErrorMessage } from 'frappe-ui'
 import { reactive, inject, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 
 const session = inject('$session')
 
@@ -130,7 +131,9 @@ let errorMessage = ref('')
 const createTeam = createResource({
     url: 'fossunited.api.hackathon.create_team',
     onSuccess(data){
-        console.log(data)
+        router.push({
+          name: 'MyHackathonTeam'
+        })
     },
     onError(error){
         console.log(error)
