@@ -5,10 +5,10 @@
         :event="event"
         :form_exists="true"
         :form="{
-          data : {
+          data: {
             is_published: event.doc.is_published,
-            doctype: 'Event'
-          }
+            doctype: 'Event',
+          },
         }"
       />
       <Button
@@ -138,13 +138,13 @@
           label="Short Event Bio"
           description="This bio may be used in OG images and in event cards. Typically it is a one-liner."
         />
-        <FormControl
-          class="col-span-2"
-          :type="'textarea'"
-          size="md"
-          v-model="event.doc.event_description"
+        <TextEditor
           label="Event Description"
-          description="Detailed description of the event. You can use <bold>, <i>, <a> tags for bold, italic, anchor(link) etc respectively."
+          class="col-span-2"
+          :modelValue="event.doc.event_description"
+          @update:modelValue="
+            ($event) => (event.doc.event_description = $event)
+          "
         />
       </div>
     </div>
@@ -190,6 +190,7 @@
 </template>
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
+import TextEditor from '@/components/TextEditor.vue'
 import {
   createDocumentResource,
   createListResource,

@@ -81,12 +81,12 @@
           label="Chapter Type"
         />
         <div class="col-span-2">
-          <!-- ToDo: Use a TextEditor in place of a FormControl -->
-          <FormControl
-            :type="'textarea'"
-            size="md"
-            v-model="chapter.doc.about_chapter"
-            label="About chapter"
+          <TextEditor
+            placeholder="Write a description about the chapter"
+            :modelValue="chapter.doc.about_chapter"
+            @update:modelValue="
+              ($event) => (chapter.doc.about_chapter = $event)
+            "
           />
         </div>
       </div>
@@ -299,6 +299,7 @@ import { useRoute } from 'vue-router'
 import { createDocumentResource, FormControl, FileUploader } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue'
 import { toast } from 'vue-sonner'
+import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
 

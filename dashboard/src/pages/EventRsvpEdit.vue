@@ -4,31 +4,34 @@
     class="px-4 py-8 md:p-8 flex flex-col gap-4"
   >
     <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
-      <Button
-        size="md"
-        variant="solid"
-        label="Update Form"
-        @click="updateRsvpForm"
-      />
+      <div class="flex items-center gap-2">
+        <Button
+              class="w-fit"
+              size="md"
+              :theme="rsvp.doc.is_published ? 'red' : 'green'"
+              :icon-left="rsvp.doc.is_published ? 'slash' : 'upload'"
+              :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
+              @click="togglePublishForm"
+            />
+        <Button
+          size="md"
+          variant="solid"
+          label="Update Form"
+          @click="updateRsvpForm"
+        />
+      </div>
     </div>
     <div>
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-3">
           <div class="text-lg font-semibold">
             <span>RSVP Form is </span>
-            <span v-if="rsvp.doc.is_published" class="text-green-500"
+            <span v-if="rsvp.doc.is_published" class="text-green-600"
               >Live</span
             >
             <span v-else class="text-red-500">Unpublished</span>
           </div>
-          <Button
-            class="w-fit"
-            size="md"
-            :theme="rsvp.doc.is_published ? 'red' : 'green'"
-            :icon-left="rsvp.doc.is_published ? 'slash' : 'upload'"
-            :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
-            @click="togglePublishForm"
-          />
+
           <span v-if="rsvp.doc.is_published" class="text-sm text-gray-600"
             >Unpublishing the form will make it unaccessible to users.</span
           >
@@ -66,13 +69,12 @@
           description="Maximum RSVP Count for the event. Default is 100."
           v-model="rsvp.doc.max_rsvp_count"
         />
-        <FormControl
-          size="md"
-          class="col-span-2 h-32"
-          type="textarea"
+        <TextEditor
           label="RSVP Form Description"
-          description="This description will be shown on the RSVP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
-          v-model="rsvp.doc.rsvp_description"
+          class="col-span-2"
+          placeholder="This description will be shown on the RSVP form."
+          :modelValue="rsvp.doc.rsvp_description"
+          @update:modelValue="($event) => (rsvp.doc.rsvp_description = $event)"
         />
       </div>
     </div>
@@ -223,6 +225,7 @@ import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue'
+import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
 
