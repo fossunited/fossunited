@@ -78,13 +78,12 @@
           />
           <span class="text-sm text-gray-600">Only accept talk proposals.</span>
         </div>
-        <FormControl
-          size="md"
-          class="col-span-2 h-32"
-          type="textarea"
-          label="CFP Form Description"
-          description="This description will be shown on the CFP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
-          v-model="cfp.doc.cfp_form_description"
+        <TextEditor
+          class="col-span-2"
+          label="Form Description"
+          placeholder="This description will be shown on the CFP form."
+          :modelValue="cfp.doc.cfp_form_description"
+          @update:modelValue="($event) => (cfp.doc.cfp_form_description = $event)"
         />
       </div>
     </div>
@@ -236,6 +235,7 @@ import { reactive, ref, watch, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
+import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
 

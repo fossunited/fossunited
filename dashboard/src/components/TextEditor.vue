@@ -1,5 +1,6 @@
 <template>
-  <div v-if="editor" class="flex flex-col">
+  <div v-if="editor" class="flex flex-col gap-1">
+    <div class="text-base text-gray-600">{{ props.label }}</div>
     <section
       class="flex flex-wrap items-center gap-x-4 border-t border-l border-r border-gray-200 buttons font-mono p-2"
     >
@@ -452,6 +453,10 @@ const props = defineProps({
     */
     type: String,
   },
+  label: {
+    type: String,
+    default: '',
+  }
 })
 
 const editor = useEditor({
