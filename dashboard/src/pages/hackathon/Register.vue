@@ -74,9 +74,10 @@
           <h5 class="text-base font-medium text-gray-800">
             Select your platform
           </h5>
+          <div class="text-sm mt-2 text-gray-600">Link your <span class="font-semibold">{{ selected_platform.title }}</span> profile.</div>
           <RadioGroup
             v-model="selected_platform"
-            class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
+            class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-4"
           >
             <RadioGroupOption
               as="template"

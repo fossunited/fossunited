@@ -173,7 +173,6 @@
   },
   {
    "default": "2",
-   "depends_on": "eval:doc.is_team_mandatory == 1;",
    "fieldname": "max_team_members",
    "fieldtype": "Int",
    "label": "Max Team Members",
@@ -288,7 +287,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-06-02 20:52:14.428387",
+ "modified": "2024-06-04 14:28:14.125073",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
