@@ -139,7 +139,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-06-03 00:58:21.936746",
+ "modified": "2024-06-06 15:03:26.207747",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",
@@ -172,6 +172,7 @@
    "write": 1
   },
   {
+   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -179,7 +180,8 @@
    "report": 1,
    "role": "All",
    "select": 1,
-   "share": 1
+   "share": 1,
+   "write": 1
   }
  ],
  "search_fields": "hackathon",
