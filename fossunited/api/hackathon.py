@@ -11,7 +11,7 @@ def get_hackathon(name: str) -> dict:
     Get hackathon details
 
     Args:
-        name (str): Name of the hackathon
+        name (str): ID of the hackathon
 
     Returns:
         dict: Hackathon document as a dictionary
@@ -180,6 +180,7 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     return project_doc
 
 
+@frappe.whitelist(allow_guest=True)
 def get_project_by_team(hackathon: str, team: str) -> dict:
     """
     Get project details
@@ -195,3 +196,19 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
         "FOSS Hackathon Project",
         {"hackathon": hackathon, "team": team},
     )
+
+
+@frappe.whitelist(allow_guest=True)
+def get_project_by_email(hackathon: str, email: str):
+    """
+    Get project details by email
+
+    Args:
+        hackathon (str): Hackathon ID
+        email (str): Email of the person
+
+    Returns:
+        dict: Project document as a dictionary
+    """
+    team = get_team_by_member_email(hackathon, email)
+    return get_project_by_team(hackathon, team.get("name"))

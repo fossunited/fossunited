@@ -62,6 +62,31 @@
             />
           </div>
         </div>
+        <div
+          v-else
+          class="rounded bg-gray-50 border border-gray-400 flex flex-col justify-between p-5 gap-8"
+        >
+          <div class="text-base font-semibold uppercase">Project</div>
+          <div class="flex justify-between items-end">
+            <div class="flex flex-col gap-2">
+              <div class="font-medium text-lg uppercase">
+                {{ project.data?.title }}
+              </div>
+              <div class="text-sm">{{ project.data?.short_description }}</div>
+            </div>
+            <Button
+              variant="solid"
+              class="w-fit"
+              size="sm"
+              label="Manage"
+              @click="
+                $router.push({
+                  name: 'MyHackathonProject',
+                })
+              "
+            />
+          </div>
+        </div>
         <div class="rounded border flex flex-col justify-between p-5 gap-8">
           <div class="text-base font-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
@@ -85,9 +110,7 @@
           <h3 class="text-md font-semibold">Hackathon Rules</h3>
           <div
             class="prose leading-normal"
-            v-html="
-              hackathon.data.hackathon_rules
-            "
+            v-html="hackathon.data.hackathon_rules"
           ></div>
         </div>
         <div
@@ -97,9 +120,7 @@
           <h3 class="text-md font-semibold">Hackathon FAQs</h3>
           <div
             class="prose leading-normal"
-            v-html="
-              hackathon.data.hackathon_faq
-            "
+            v-html="hackathon.data.hackathon_faq"
           ></div>
         </div>
       </div>
@@ -125,8 +146,23 @@ usePageMeta(() => ({
   title: 'My Team',
 }))
 
+const project = createResource({
+  url: 'fossunited.api.hackathon.get_project_by_team',
+})
+
 const hasProject = createResource({
   url: 'frappe.client.get_count',
+  onSuccess(data) {
+    if (data > 0) {
+      project.update({
+        params: {
+          hackathon: hackathon.data.name,
+          team: team.data.name,
+        },
+      })
+      project.fetch()
+    }
+  },
 })
 
 const team = createResource({
