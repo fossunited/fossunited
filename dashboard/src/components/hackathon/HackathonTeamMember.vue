@@ -54,16 +54,24 @@
       </div>
     </div>
     <div v-else>
-      <div class="space-x-2 pt-4 px-2">
+      <div class="pt-2 px-2 flex flex-col gap-4">
         <div
           v-for="member in props.team.data.members"
-          class="flex items-center gap-2"
+          class="flex items-center w-full justify-between gap-2"
         >
-          <img :src="member.profile_photo" class="w-8 h-8 rounded-full" />
-          <div>
-            <div class="text-base font-medium">{{ member.full_name }}</div>
-            <div class="text-sm text-gray-600">{{ member.email }}</div>
-          </div>
+            <div class="flex gap-2 items-center">
+                <img :src="member.profile_photo" class="w-8 h-8 rounded-full" />
+                <div>
+                  <div class="text-base font-medium">{{ member.full_name }}</div>
+                  <div class="text-sm text-gray-600">{{ member.email }}</div>
+                </div>
+            </div>
+            <Button
+                v-if="member.email != props.team.data.owner"
+                :label="member.email == session.user ? 'Leave' : 'Remove'"
+                theme="red"
+                @click="removeTeamMember(member)"
+            />
         </div>
       </div>
     </div>
@@ -146,5 +154,30 @@ const createJoinRequest = () => {
     },
   })
   invite.fetch()
+}
+
+const removeTeamMember = (member) => {
+  const newMembers = props.team.data.members.filter(
+    (m) => m.email != member.email
+  )
+  const team = createResource({
+    url: 'frappe.client.set_value',
+    makeParams() {
+      return {
+        doctype: 'FOSS Hackathon Team',
+        name: props.team.data.name,
+        fieldname: 'members',
+        value: newMembers,
+      }
+    },
+    onSuccess() {
+      props.team.fetch()
+      toast.success('Member removed successfully')
+    },
+    onError(error) {
+      toast.error('Failed to remove member' + error)
+    },
+  })
+  team.fetch()
 }
 </script>

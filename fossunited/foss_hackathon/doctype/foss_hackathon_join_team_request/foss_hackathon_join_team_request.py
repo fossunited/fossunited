@@ -30,6 +30,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         if self.has_value_changed("status"):
             if self.status == "Accepted":
                 self.add_member_to_team()
+                self.reject_other_requests()
 
     def add_member_to_team(self):
         # get participant doc
@@ -48,3 +49,19 @@ class FOSSHackathonJoinTeamRequest(Document):
         team_doc = frappe.get_doc("FOSS Hackathon Team", self.team)
         team_doc.append("members", {"member": participant_doc.name})
         team_doc.save()
+
+    def reject_other_requests(self):
+        requests = frappe.get_all(
+            "FOSS Hackathon Join Team Request",
+            filters={
+                "team": self.team,
+                "status": "Pending",
+                "reciever_email": self.reciever_email,
+            },
+        )
+        for request in requests:
+            request_doc = frappe.get_doc(
+                "FOSS Hackathon Join Team Request", request.name
+            )
+            request_doc.status = "Rejected"
+            request_doc.save()
