@@ -469,7 +469,12 @@ const registerForHackathon = createResource({
     participant: participant,
   },
   onSuccess(data){
-    router.push(`/my-hackathons`)
+    router.push({
+      name: 'InitialRegister',
+      params: {
+        permalink: hackathon.data.permalink,
+      },
+    })
   },
   onError(error){
     console.error();
