@@ -1,6 +1,7 @@
 <template>
   <Header />
   <Dialog
+    class="z-50"
     v-model="show_dialog"
     :options="{
       title: dialog_content.title,
@@ -352,6 +353,25 @@ let selected_platform = ref(platform_options[0])
 
 const hackathonId = ref(null)
 
+const alreadyParticipant = createResource({
+  url: 'frappe.client.get_count',
+  onSuccess(data){
+    if (data > 0){
+      dialog_content.title = 'Already Registered'
+      dialog_content.message = 'You have already registered for this hackathon. Redirecting...'
+      show_dialog.value = true
+      setTimeout(() => {
+        router.push({
+          name: 'InitialRegister',
+          params: {
+            permalink: hackathon.data.permalink,
+          },
+        })
+      }, 3000)
+    }
+  }
+})
+
 const hackathon = createResource({
   url: 'fossunited.api.hackathon.get_hackathon',
   makeParams() {
@@ -359,6 +379,18 @@ const hackathon = createResource({
       name: hackathonId.value,
     }
   },
+  onSuccess(data){
+    alreadyParticipant.update({
+      params: {
+        doctype: 'FOSS Hackathon Participant',
+        filters: {
+          hackathon: data.name,
+          user: session.user,
+        }
+      }
+    })
+    alreadyParticipant.fetch()
+  }
 })
 
 const localhost = createListResource({
