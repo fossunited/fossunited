@@ -8,6 +8,7 @@
           v-model="teamCode"
           placeholder="Enter Team Code"
           class="grow"
+          description="Enter the team code shared by your team leader."
         />
         <Button variant="solid" label="Join" @click="joinThroughCode" />
       </div>
@@ -45,7 +46,6 @@
         </div>
       </div>
     </div>
-    <!-- <pre>{{ invitations.data }}</pre> -->
 </div>
 </template>
 <script setup>
@@ -104,7 +104,6 @@ const openNewTab = (route) => {
 const joinThroughCode = () => {}
 
 const acceptInvite = (inviteId) => {
-    console.log(inviteId, 'accept')
     createResource({
         url: 'frappe.client.set_value',
         params: {
@@ -124,7 +123,6 @@ const acceptInvite = (inviteId) => {
 }
 
 const rejectInvite = (inviteId) => {
-    console.log(inviteId, 'reject')
     createResource({
         url: 'frappe.client.set_value',
         params: {

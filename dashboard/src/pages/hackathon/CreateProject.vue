@@ -407,7 +407,7 @@ const createProject = createResource({
       auto: true,
     })
     router.push({
-      name: 'MyHackathonProject',
+      name: 'MyHackathonTeam',
     })
   },
   onError(error) {

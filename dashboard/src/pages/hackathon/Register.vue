@@ -1,6 +1,7 @@
 <template>
   <Header />
   <Dialog
+    class="z-50"
     v-model="show_dialog"
     :options="{
       title: dialog_content.title,
@@ -145,7 +146,7 @@
         </div>
         <div v-if="localhost.data" class="mt-6">
           <h5 class="text-base font-medium text-gray-800">
-            Where will you hack from?
+            How will you participate?
           </h5>
           <RadioGroup
             v-model="selected_attendance"
@@ -165,7 +166,7 @@
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
                     <svg
-                      v-if="option.title == 'Remote'"
+                      v-if="option.title == 'Virtually'"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
                       height="24"
@@ -221,7 +222,7 @@
           >
             <FormControl
               type="select"
-              label="Select LocalHost"
+              label="Select Location"
               v-model="participant.localhost"
               :placeholder="localhost.data[0].localhost_name"
               :options="
@@ -314,11 +315,11 @@ usePageMeta(() => {
 
 const attend_option = [
   {
-    title: 'Remote',
+    title: 'Virtually',
     value: 0,
   },
   {
-    title: 'LocalHost',
+    title: 'In-Person',
     value: 1,
   },
 ]
@@ -352,6 +353,25 @@ let selected_platform = ref(platform_options[0])
 
 const hackathonId = ref(null)
 
+const alreadyParticipant = createResource({
+  url: 'frappe.client.get_count',
+  onSuccess(data){
+    if (data > 0){
+      dialog_content.title = 'Already Registered'
+      dialog_content.message = 'You have already registered for this hackathon. Redirecting...'
+      show_dialog.value = true
+      setTimeout(() => {
+        router.push({
+          name: 'InitialRegister',
+          params: {
+            permalink: hackathon.data.permalink,
+          },
+        })
+      }, 3000)
+    }
+  }
+})
+
 const hackathon = createResource({
   url: 'fossunited.api.hackathon.get_hackathon',
   makeParams() {
@@ -359,6 +379,18 @@ const hackathon = createResource({
       name: hackathonId.value,
     }
   },
+  onSuccess(data){
+    alreadyParticipant.update({
+      params: {
+        doctype: 'FOSS Hackathon Participant',
+        filters: {
+          hackathon: data.name,
+          user: session.user,
+        }
+      }
+    })
+    alreadyParticipant.fetch()
+  }
 })
 
 const localhost = createListResource({
@@ -469,7 +501,12 @@ const registerForHackathon = createResource({
     participant: participant,
   },
   onSuccess(data){
-    router.push(`/my-hackathons`)
+    router.push({
+      name: 'InitialRegister',
+      params: {
+        permalink: hackathon.data.permalink,
+      },
+    })
   },
   onError(error){
     console.error();

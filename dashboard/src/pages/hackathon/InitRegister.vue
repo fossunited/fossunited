@@ -58,7 +58,7 @@
           >
             <span> Join team </span>
             <Badge
-              v-if="team_invitations.data.length > 0"
+              v-if="team_invitations.data?.length > 0"
               :label="team_invitations.data.length"
               theme="red"
               variant="solid"
@@ -66,7 +66,7 @@
               class="z-10 -mt-1"
             />
           </div>
-          <Badge size="lg" theme="orange" v-if="team_invitations.data.length > 0">
+          <Badge size="lg" theme="orange" v-if="team_invitations.data?.length > 0">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

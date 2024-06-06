@@ -83,7 +83,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-27 16:57:01.667955",
+ "modified": "2024-06-06 16:03:40.802621",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon LocalHost",
@@ -111,6 +111,19 @@
    "read": 1,
    "report": 1,
    "role": "FOSS Website User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
    "share": 1,
    "write": 1
   }
