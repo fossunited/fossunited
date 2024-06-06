@@ -8,6 +8,7 @@
           v-model="teamCode"
           placeholder="Enter Team Code"
           class="grow"
+          description="Enter the team code shared by your team leader."
         />
         <Button variant="solid" label="Join" @click="joinThroughCode" />
       </div>
@@ -45,7 +46,6 @@
         </div>
       </div>
     </div>
-    <!-- <pre>{{ invitations.data }}</pre> -->
 </div>
 </template>
 <script setup>

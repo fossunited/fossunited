@@ -146,7 +146,7 @@
         </div>
         <div v-if="localhost.data" class="mt-6">
           <h5 class="text-base font-medium text-gray-800">
-            Where will you hack from?
+            How will you participate?
           </h5>
           <RadioGroup
             v-model="selected_attendance"
@@ -166,7 +166,7 @@
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
                     <svg
-                      v-if="option.title == 'Remote'"
+                      v-if="option.title == 'Virtually'"
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
                       height="24"
@@ -222,7 +222,7 @@
           >
             <FormControl
               type="select"
-              label="Select LocalHost"
+              label="Select Location"
               v-model="participant.localhost"
               :placeholder="localhost.data[0].localhost_name"
               :options="
@@ -315,11 +315,11 @@ usePageMeta(() => {
 
 const attend_option = [
   {
-    title: 'Remote',
+    title: 'Virtually',
     value: 0,
   },
   {
-    title: 'LocalHost',
+    title: 'In-Person',
     value: 1,
   },
 ]
