@@ -104,7 +104,6 @@ const openNewTab = (route) => {
 const joinThroughCode = () => {}
 
 const acceptInvite = (inviteId) => {
-    console.log(inviteId, 'accept')
     createResource({
         url: 'frappe.client.set_value',
         params: {
@@ -124,7 +123,6 @@ const acceptInvite = (inviteId) => {
 }
 
 const rejectInvite = (inviteId) => {
-    console.log(inviteId, 'reject')
     createResource({
         url: 'frappe.client.set_value',
         params: {
