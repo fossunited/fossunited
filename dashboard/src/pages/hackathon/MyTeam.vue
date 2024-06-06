@@ -3,43 +3,8 @@
     <template #body-title>
       <h3 class="text-xl font-semibold">Manage Team</h3>
     </template>
-    <template v-if="!inAddMember" #body-content>
-      <div class="space-y-4">
-        <!-- <div class="flex items-center w-full flex-row-reverse justify-between">
-          <Button
-            icon-left="plus"
-            @click="inAddMember = true"
-            label="Add Member"
-          />
-        </div> -->
-        <div class="grid grid-cols-1 gap-4">
-          <div
-            v-for="member in team.data.members"
-            :key="member.email"
-            class="flex items-center justify-between gap-4"
-          >
-            <div class="flex items-center gap-4">
-              <img :src="member.profile_photo" class="w-12 h-12 rounded-full" />
-              <div class="flex flex-col gap-1">
-                <div class="font-semibold">{{ member.full_name }}</div>
-                <div class="text-sm">{{ member.email }}</div>
-              </div>
-            </div>
-            <Button
-              v-if="
-                team.data.owner != member.email &&
-                session.user == team.data.owner
-              "
-              theme="red"
-              label="Remove"
-              @click="removeMember(member)"
-            />
-          </div>
-        </div>
-      </div>
-    </template>
-    <template v-else #body-content>
-      <!-- TODO: Invitation Workflow -->
+    <template #body-content>
+      <HackathonTeamMember :team="team" />
     </template>
   </Dialog>
   <Header />
@@ -144,6 +109,7 @@
 <script setup>
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
+import HackathonTeamMember from '@/components/hackathon/HackathonTeamMember.vue'
 import { createResource, usePageMeta, Dialog } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
