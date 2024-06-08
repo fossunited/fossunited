@@ -56,8 +56,7 @@ def create_participant(hackathon, participant):
             "email": participant.get("email"),
             "is_student": participant.get("is_student"),
             "organization": participant.get("organization"),
-            "github": participant.get("github"),
-            "gitlab": participant.get("gitlab"),
+            "git_profile": participant.get("git_profile"),
             "wants_to_attend_locally": participant.get(
                 "wants_to_attend_locally"
             ),

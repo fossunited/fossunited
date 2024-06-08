@@ -17,8 +17,7 @@
   "is_student",
   "organization",
   "column_break_hkri",
-  "github",
-  "gitlab",
+  "git_profile",
   "localhost_tab",
   "wants_to_attend_locally",
   "section_break_pijd",
@@ -60,18 +59,6 @@
   {
    "fieldname": "column_break_hkri",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "github",
-   "fieldtype": "Data",
-   "label": "Github",
-   "options": "URL"
-  },
-  {
-   "fieldname": "gitlab",
-   "fieldtype": "Data",
-   "label": "Gitlab",
-   "options": "URL"
   },
   {
    "fieldname": "hackathon",
@@ -133,11 +120,17 @@
    "fieldtype": "Link",
    "label": "User",
    "options": "User"
+  },
+  {
+   "fieldname": "git_profile",
+   "fieldtype": "Data",
+   "label": "Git Profile",
+   "options": "URL"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-30 12:46:25.695254",
+ "modified": "2024-06-08 23:42:49.029663",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
