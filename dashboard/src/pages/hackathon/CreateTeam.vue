@@ -63,6 +63,7 @@
             size="md"
             label="Create"
             class="font-semibold"
+            :loading="createTeam.loading"
             @click="handleTeamCreation"
         />
       </div>

@@ -213,6 +213,7 @@
           theme="green"
           class="w-full md:w-2/3 font-medium"
           label="Register"
+          :loading="registerForHackathon.loading"
           @click="handleRegistration"
         />
       </div>
