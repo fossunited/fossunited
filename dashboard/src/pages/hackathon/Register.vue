@@ -50,13 +50,13 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
           <FormControl
             type="text"
-            label="Full Name"
+            label="Full Name &ast;"
             placeholder="John Doe"
             v-model="participant.full_name"
           />
           <FormControl
             type="email"
-            label="Email"
+            label="Email &ast;"
             placeholder="john@fossunited.org"
             v-model="participant.email"
           />
@@ -67,13 +67,13 @@
           />
           <FormControl
             type="text"
-            label="Organization / Institute"
+            label="Organization / Institute &ast;"
             v-model="participant.organization"
           />
         </div>
         <div class="mt-6">
           <h5 class="text-base font-medium text-gray-800">
-            Link your Git Profile
+            Link your Git Profile &ast;
           </h5>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
@@ -158,7 +158,7 @@
           >
             <FormControl
               type="select"
-              label="Select Location"
+              label="Select Location &ast;"
               v-model="participant.localhost"
               placeholder="-- Select In-Person Venue --"
               :options="

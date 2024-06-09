@@ -223,15 +223,15 @@
       <!-- CREAT PROJECT FORM -->
       <div v-if="inCreateProject || inContribute">
         <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4">
-          <FormControl label="Title" type="text" v-model="project.title" />
+          <FormControl label="Title &ast;" type="text" v-model="project.title" />
           <FormControl
             type="text"
-            label="Short Description"
+            label="Short Description &ast;"
             v-model="project.short_description"
             description="One line description of this project."
           />
           <FormControl
-            label="Repository Link"
+            label="Repository Link &ast;"
             v-model="project.repo_link"
             :disabled="project.is_partner_project"
           />
@@ -241,7 +241,7 @@
             description="Demo link for the project. Can be a URL to a video demo, hosted app/website link etc. This can be added later."
           />
           <div class="flex flex-col gap-2 col-span-2">
-            <div class="text-xs text-gray-600">Project Description</div>
+            <div class="text-xs text-gray-600">Project Description &ast;</div>
             <TextEditor
               :placeholder="'Write a detailed description of your project'"
               :modelValue="project.description"

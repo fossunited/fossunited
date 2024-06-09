@@ -45,7 +45,7 @@
             <h3>Create Team</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormControl type="text" label="Team Name" v-model="team.team_name" />
+          <FormControl type="text" label="Team Name &ast;" v-model="team.team_name" />
           <div></div>
           <FormControl type="checkbox" label="Looking for team members" v-model="team.looking_for_members" />
         </div>
