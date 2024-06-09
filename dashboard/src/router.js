@@ -176,7 +176,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.name === 'Login' && isLoggedIn) {
     next({ name: 'Home' })
   } else if (to.name !== 'Login' && !isLoggedIn && !to.meta.isPublicPage) {
-    window.location.href = `/login?redirect-to=/dashboard${to.path}`
+    window.location.href = `/login?redirect-to=/dashboard${to.fullPath}`
   } else {
     next()
   }

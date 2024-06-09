@@ -16,8 +16,7 @@ class FOSSHackathonParticipant(Document):
 
         email: DF.Data
         full_name: DF.Data
-        github: DF.Data | None
-        gitlab: DF.Data | None
+        git_profile: DF.Data | None
         hackathon: DF.Link | None
         is_student: DF.Check
         localhost: DF.Link | None
