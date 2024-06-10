@@ -14,10 +14,11 @@
                 {% endif %}
                 <h1 class="header--event-title">{{ doc.hackathon_name }}</h1>
             </div>
-            <button class="primary-button ticket-button" onClick="window.location.href='/dashboard/buy-tickets?event={{doc.name}}'">
-                <i class="ti ti-ticket"></i>
+            {% if doc.is_registration_live %}
+            <button class="primary-button ticket-button" onClick="window.location.href='/dashboard/register-for-hackathon?id={{doc.name}}'">
                 <span>Register</span>
             </button>
+            {% endif %}
         </div>
         <div class="header--tags">
             {% from 'fossunited/templates/macros/foss_tags.html' import tag %}

@@ -30,6 +30,9 @@
   "sponsor_list",
   "community_partners",
   "team_set_up_tab",
+  "is_registration_live",
+  "registration_page_setup_section",
+  "registration_description",
   "projects_setup_section",
   "enable_oss_contributon_projects",
   "contribution_project_guidelines",
@@ -39,8 +42,6 @@
   "is_team_mandatory",
   "column_break_yeth",
   "max_team_members",
-  "registration_page_setup_section",
-  "registration_description",
   "schedule_tab",
   "schedule",
   "localhost_tab",
@@ -273,6 +274,12 @@
    "fieldname": "contribution_coming_soon_description",
    "fieldtype": "Small Text",
    "label": "Contribution Coming Soon Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_registration_live",
+   "fieldtype": "Check",
+   "label": "Is Registration Live?"
   }
  ],
  "has_web_view": 1,
@@ -300,7 +307,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-06-10 11:04:42.494815",
+ "modified": "2024-06-10 13:02:28.163947",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
