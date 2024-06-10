@@ -9,9 +9,11 @@
         variant="ghost"
         icon-left="arrow-left"
         label="Go Back"
-        @click="router.push({
-          name:'MyHackathonTeam'
-        })"
+        @click="
+          router.push({
+            name: 'MyHackathonTeam',
+          })
+        "
         class="mt-4 mb-2"
       />
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
@@ -28,7 +30,7 @@
               : 'md:col-span-2'
           "
         >
-          <div
+          <button
             class="px-4 py-2 w-3/4 text-center uppercase border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
             @click="
               () => {
@@ -38,7 +40,7 @@
             "
           >
             Create Project
-          </div>
+          </button>
           <p class="text-base text-center leading-normal">
             Create and work on your own project.
           </p>
@@ -53,7 +55,13 @@
           v-if="hackathon.data.enable_oss_contributon_projects"
           class="w-full md:h-40 flex flex-col gap-4 items-center justify-center"
         >
-          <div
+          <Badge
+            v-if="hackathon.data.is_contribution_project_coming_soon"
+            label="Coming Soon!"
+            size="lg"
+            theme="gray"
+          />
+          <button
             @click="
               () => {
                 inSelectProjectType = false
@@ -62,11 +70,26 @@
               }
             "
             class="px-4 py-2 uppercase w-3/4 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            :class="
+              hackathon.data.is_contribution_project_coming_soon
+                ? 'text-gray-500 border-gray-500 hover:bg-white hover:text-gray-500 hover:cursor-not-allowed'
+                : ''
+            "
+            :disabled="hackathon.data.is_contribution_project_coming_soon"
           >
             Contribute
-          </div>
+          </button>
+          <p
+            class="text-sm text-center leading-normal"
+            v-if="
+              hackathon.data.is_contribution_project_coming_soon &&
+              hackathon.data.contribution_coming_soon_description
+            "
+          >
+            {{ hackathon.data.contribution_coming_soon_description }}
+          </p>
           <p class="text-base text-center leading-normal">
-            Contribute to open-source projects.<br/>
+            Contribute to open-source projects.<br />
             It can be any open-source projects or our partner projects.
           </p>
         </div>
@@ -130,7 +153,10 @@
           </div>
           <div
             class="w-full bg-blue-50 text-blue-800 rounded p-4"
-            v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
+            v-if="
+              hackathon.data.partner_project_guidelines &&
+              hackathon.data.has_partner_projects
+            "
           >
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
@@ -223,7 +249,11 @@
       <!-- CREAT PROJECT FORM -->
       <div v-if="inCreateProject || inContribute">
         <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4">
-          <FormControl label="Title &ast;" type="text" v-model="project.title" />
+          <FormControl
+            label="Title &ast;"
+            type="text"
+            v-model="project.title"
+          />
           <FormControl
             type="text"
             label="Short Description &ast;"
@@ -249,7 +279,7 @@
             />
           </div>
         </div>
-        <ErrorMessage :message="errorMessage" class="my-4"/>
+        <ErrorMessage :message="errorMessage" class="my-4" />
         <div class="grid grid-cols-1 md:grid-cols-2 place-items-end mb-8">
           <div></div>
           <Button
@@ -276,6 +306,7 @@ import {
   FormControl,
   ErrorMessage,
   createListResource,
+  Badge,
 } from 'frappe-ui'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { useRoute, useRouter } from 'vue-router'
