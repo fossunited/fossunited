@@ -49,6 +49,7 @@ class FOSSHackathon(WebsiteGenerator):
         has_partner_projects: DF.Check
         is_contribution_project_coming_soon: DF.Check
         is_published: DF.Check
+        is_registration_live: DF.Check
         is_team_mandatory: DF.Check
         max_team_members: DF.Int
         organizing_chapter: DF.Link | None
