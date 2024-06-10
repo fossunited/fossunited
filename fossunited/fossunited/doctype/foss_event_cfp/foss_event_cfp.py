@@ -8,6 +8,36 @@ from fossunited.fossunited.forms import create_submission
 
 
 class FOSSEventCFP(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import (
+            FOSSCustomQuestion,
+        )
+        from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import (
+            FOSSEventCFPReviewer,
+        )
+
+        allow_cfp_edit: DF.Check
+        anonymise_proposals: DF.Check
+        cfp_custom_questions: DF.Table[FOSSCustomQuestion]
+        cfp_form_description: DF.TextEditor | None
+        cfp_reviewers: DF.Table[FOSSEventCFPReviewer]
+        chapter: DF.Data | None
+        deadline: DF.Datetime | None
+        event: DF.Link
+        event_name: DF.Data | None
+        is_published: DF.Check
+        only_talk_proposals: DF.Check
+        only_workshops: DF.Check
+        route: DF.Data | None
+
+    # end: auto-generated types
     def before_insert(self):
         self.assign_reviewers()
 

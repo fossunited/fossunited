@@ -306,6 +306,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
+                "deadline": cfp_form.deadline.strftime(
+                    "%d %B, %Y  %I:%M %p"
+                )
+                if cfp_form.deadline
+                else None,
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
             }
