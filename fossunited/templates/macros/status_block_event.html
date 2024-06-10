@@ -11,6 +11,11 @@
             {% endif %}
         </div>
         <div class="d-flex flex-column">
+            {% if status_block_content.deadline %}
+            <div class="status-block-deadline">
+                Deadline: {{ status_block_content.deadline }}
+            </div>
+            {% endif %}
             <div class="status-text" style="{% if status_block_content.is_published or status_block_content.has_submission %} color: hsl(var(--clr-foss-mint-500));{% endif %}">
                 {{ status_block_content.block_heading }}
             </div>

@@ -1961,12 +1961,10 @@ h6{
 
 .copy-to-clipboard:hover .tooltip-text{
     display: block;
-    bottom: -6.2rem;
 }
 
 .copy-url-clipboard:focus .tooltip-text{
     display: block;
-    bottom: -6.2rem;
 }
 /* ---- */
 
@@ -2337,6 +2335,17 @@ h6{
 .team-member--username{
     font-size: var(--text-sm);
     color: hsl(var(--clr-open-gray-200));
+}
+
+.status-block-deadline{
+    font-size: var(--text-xs);
+    padding: 0.2rem 0.5rem;
+    background: hsl(var(--clr-error-100));
+    width: fit-content;
+    color: hsl(var(--clr-error-500));
+    border: 1px solid hsl(var(--clr-error-300));
+    border-radius: 1rem;
+    margin: 0.5rem 0rem;
 }
 
 @media screen and (max-width: 1200px){
@@ -2711,6 +2720,7 @@ h6{
     }
 
     .submission-status-block{
+        display: flex;
         flex-direction: column;
         gap: 1rem;
     }
@@ -2718,6 +2728,12 @@ h6{
     .status--buttons-section{
         flex-direction: row;
         justify-content: center;
+    }
+
+    .status--buttons-section button{
+        width: 100%;
+        font-size: var(--text-base);
+        padding: 0.5rem;
     }
 
     .events-grid{
