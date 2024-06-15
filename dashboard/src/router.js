@@ -158,6 +158,16 @@ const routes = [
       }
     ]
   },
+  {
+    path: '/localhost/:id',
+    children: [
+      {
+        path: '',
+        name: 'ManageLocalhost',
+        component: () => import('@/pages/localhost/ManageLocalhost.vue')
+      }
+    ]
+  }
 ]
 
 let router = createRouter({

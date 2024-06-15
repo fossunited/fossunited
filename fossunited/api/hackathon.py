@@ -138,9 +138,42 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
                 ["hackathon", "=", hackathon],
             ],
         )
+        print(team)
         return team
     except frappe.exceptions.DoesNotExistError:
-        frappe.msgprint("Team not found")
+        frappe.log("Team not found")
+
+    return None
+
+
+@frappe.whitelist(allow_guest=True)
+def get_team_from_participant_id(hackathon: str, id: str) -> dict:
+    """
+    Get team details
+
+    Args:
+        hackathon (str): Hackathon ID
+        id (str): Participant ID
+
+    Returns:
+        dict: Team document as a dictionary
+    """
+    try:
+        team = frappe.get_doc(
+            "FOSS Hackathon Team",
+            [
+                [
+                    "FOSS Hackathon Team Member",
+                    "member",
+                    "=",
+                    id,
+                ],
+                ["hackathon", "=", hackathon],
+            ],
+        )
+        return team
+    except frappe.exceptions.DoesNotExistError:
+        frappe.log("Team not found")
 
     return None
 
@@ -211,3 +244,72 @@ def get_project_by_email(hackathon: str, email: str):
     """
     team = get_team_by_member_email(hackathon, email)
     return get_project_by_team(hackathon, team.get("name"))
+
+
+@frappe.whitelist(allow_guest=True)
+def get_localhost_requests_by_team(
+    hackathon: str,
+    localhost: str,
+    status: list[str] = ["Pending", "Accepted", "Rejected"],
+):
+    """
+    Get requests for a particular localhost grouped by team.
+
+    params:
+        hackathon(str): hackathon name
+        localhost(str): localhost name
+        status(list): status of the request
+
+    return:
+        dict: requests grouped by team
+    """
+
+    requests = frappe.get_all(
+        doctype="FOSS Hackathon Participant",
+        filters={
+            "hackathon": hackathon,
+            "wants_to_attend_locally": 1,
+            "localhost": localhost,
+            "localhost_request_status": ["in", status],
+        },
+        fields=["*"],
+        page_length=99999,
+        order_by="creation",
+    )
+
+    for request in requests:
+        profile = frappe.get_doc(
+            "FOSS User Profile", request.user_profile
+        )
+        request["profile_route"] = profile.route
+        request["profile_photo"] = (
+            profile.profile_photo
+            if profile.profile_photo
+            else "/assets/fossunited/images/defaults/user_profile_image.png"
+        )
+        request["profile_username"] = profile.username
+
+    requests_by_team = {}
+
+    for request in requests:
+        team = get_team_from_participant_id(
+            hackathon, request.get("name")
+        )
+        if team:
+            project = get_project_by_team(hackathon, team.name)
+            if project:
+                request["project_title"] = project.title
+                request["project_route"] = project.route
+            if not team.name in requests_by_team:
+                requests_by_team[team.name] = []
+            request["team"] = team
+            requests_by_team[team.name].append(request)
+        else:
+            request["team"] = {"team_name": "Individual Participants"}
+            if not "Individual Participants" in requests_by_team:
+                requests_by_team["Individual Participants"] = []
+            requests_by_team["Individual Participants"].append(
+                request
+            )
+
+    return requests_by_team or None
