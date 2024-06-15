@@ -1,117 +1,179 @@
 <template>
+  <RequestDetailDialog
+  class="z-40 my-5"
+    :participant="selectedRequest"
+    :showDialog="showDialog"
+    @update:showDialog="showDialog = $event"
+    @acceptRequest="acceptRequest($event)"
+    @rejectRequest="rejectRequest($event)"
+  />
   <div class="prose">
     <h4>Requests</h4>
   </div>
-  <div class="flex gap-3 flex-wrap">
-    <Button
-      v-for="filter in filters"
-      :label="filter.label"
-      size="sm"
-      :variant="filter.isActive ? 'solid' : 'outline'"
-      @click="handleFilter(filter)"
-    />
+  <div class="flex gap-3 flex-wrap items-center">
+    <div class="flex gap-1">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-filter"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path
+          d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z"
+        />
+      </svg>
+      <span class="text-sm font-medium">Filter:</span>
+    </div>
+    <select
+      class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
+      :class="
+        selectedListFitler === 'Accepted Requests'
+          ? 'bg-green-100 text-green-700'
+          : selectedListFitler === 'Pending Requests'
+            ? 'bg-orange-100 text-orange-700'
+            : 'bg-gray-100'
+      "
+      v-model="selectedListFitler"
+    >
+      <option
+        v-for="(filter, index) in listFilter"
+        @click="filterListByStatus(filter)"
+      >
+        {{ filter.label }}
+      </option>
+    </select>
   </div>
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
-      <div
-        v-for="(members, team) in requestByGroup.data"
-        class="my-2 p-4 flex flex-col"
-        :class="members.length > 1 ? ' rounded border-2 ' : ''"
+      <ListView
+        class="max-h-svh"
+        :columns="[
+          {
+            label: 'Name',
+            key: 'full_name',
+          },
+          {
+            label: 'Status',
+            key: 'localhost_request_status',
+            width: 1 / 2,
+          },
+          {
+            label: 'Is Student',
+            key: 'is_student',
+            width: 1 / 2,
+          },
+          {
+            label: 'Organization / Institute',
+            key: 'organization',
+          },
+          {
+            label: 'Project',
+            key: 'project_title',
+          },
+          {
+            label: 'Git Profile',
+            key: 'git_profile',
+          },
+          {
+            label: 'Actions',
+            key: 'actions',
+          },
+        ]"
+        :rows="requestByGroup.data"
+        :options="{
+          selectable: false,
+          showTooltip: true,
+          resizeColumn: true,
+          onRowClick: (row) => {
+            selectedRequest = row
+            showDialog = true
+          },
+        }"
+        row-key="name"
       >
-        <div class="mb-1 flex items-center justify-between">
-          <span class="text-base font-medium" v-if="members[0].team">
-            {{ members[0].team.team_name }}
-          </span>
-          <span v-else class="text-base font-medium"> No Team Assigned </span>
-        </div>
-        <div class="divide-y-2">
-          <div
-            v-for="member in members"
-            class="p-2 flex justify-between w-full"
-            :class="members.length > 1 ? 'bg-white py-3' : ''"
-          >
-            <div class="text-base flex flex-col justify-center gap-2">
-              <div
-                class="hover:underline flex gap-2 hover:cursor-pointer"
-                @click="redirectToProfile(member.profile_route)"
+        <template #cell="{ item, row, column }">
+          <div v-if="column.label == 'Status'">
+            <Badge
+              :theme="
+                row[column.key] === 'Pending'
+                  ? 'orange'
+                  : row[column.key] === 'Accepted'
+                    ? 'green'
+                    : 'red'
+              "
+              :label="row[column.key]"
+            />
+          </div>
+          <div v-else-if="column.label == 'Git Profile'">
+            <a
+              v-if="row.git_profile"
+              :href="row.git_profile"
+              target="_blank"
+              class="text-sm flex font-semibold hover:underline"
+            >
+              <span>Open</span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
               >
-                {{ member.full_name }}
-              </div>
-              <div class="flex items-center gap-2 flex-wrap">
-                <Badge
-                  :label="member.localhost_request_status"
-                  size="sm"
-                  :theme="
-                    { Pending: 'orange', Accepted: 'green', Rejected: 'red' }[
-                      member.localhost_request_status
-                    ]
-                  "
-                />
-                <Badge v-if="member.is_student" label="Student">
-                  <template #prefix>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-school"
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M22 9l-10 -4l-10 4l10 4l10 -4v6" />
-                      <path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4" />
-                    </svg>
-                  </template>
-                </Badge>
-                <div>
-                  <a
-                    :href="member.git_profile"
-                    class="text-sm hover:underline hover:cursor-pointer flex items-center"
-                    target="_blank"
-                  >
-                    <span>Git Profile</span>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
-                    >
-                      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                      <path d="M17 7l-10 10" />
-                      <path d="M8 7l9 0l0 9" />
-                    </svg>
-                  </a>
-                </div>
-              </div>
-            </div>
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M17 7l-10 10" />
+                <path d="M8 7l9 0l0 9" />
+              </svg>
+            </a>
+            <div v-else class="text-sm">No Git Profile</div>
+          </div>
+          <div v-else-if="column.label == 'Is Student'" class="ml-4">
+            <span class="text-sm text-gray-600">{{
+              row.is_student ? 'Yes' : 'No'
+            }}</span>
+          </div>
+          <div v-else-if="column.label == 'Actions'">
             <div
-              class="flex gap-2 text-sm"
-              v-if="member.localhost_request_status == 'Pending'"
+              v-if="row.localhost_request_status == 'Pending'"
+              class="flex gap-2"
             >
               <Button
-                theme="green"
                 icon="check"
-                @click="acceptRequest(member)"
+                :label="'Accept'"
+                :theme="'green'"
+                @click="acceptRequest(row)"
               />
               <Button
-                theme="red"
                 icon="x"
-                @click="rejectRequest(member)"
+                :label="'Reject'"
+                :theme="'red'"
+                @click="rejectRequest(row)"
               />
             </div>
           </div>
-        </div>
-      </div>
+          <div v-else-if="column.label == 'Project'">
+            <Button
+              size="sm"
+              variant="ghost"
+              @click="redirectToProfile(row.project_route)"
+            >
+              <span class="text-sm font-medium">View project</span>
+            </Button>
+          </div>
+          <div v-else class="text-base">{{ item }}</div>
+        </template>
+      </ListView>
     </div>
     <div v-else class="text-sm font-medium text-gray-700 w-full my-5 uppercase">
       <p>No Requests</p>
@@ -124,8 +186,18 @@
 
 <script setup>
 import { defineProps } from 'vue'
-import { LoadingIndicator, createResource, Badge, Button } from 'frappe-ui'
+import {
+  LoadingIndicator,
+  createResource,
+  Badge,
+  Button,
+  ListView,
+} from 'frappe-ui'
 import { ref } from 'vue'
+import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
+
+const showDialog = ref(false)
+const selectedRequest = ref({})
 
 const props = defineProps({
   localhost: {
@@ -134,18 +206,25 @@ const props = defineProps({
   },
 })
 
-const filters = ref([
+const listFilter = ref([
   {
-    label: 'Show Pending Requests',
-    isActive: false,
-    value: 'Pending',
+    label: 'All Requests',
+    isActive: true,
+    value: ['Pending', 'Rejected', 'Accepted'],
   },
   {
-    label: 'Show Accepted Requests',
+    label: 'Pending Requests',
     isActive: false,
-    value: 'Accepted',
+    value: ['Pending'],
+  },
+  {
+    label: 'Accepted Requests',
+    isActive: false,
+    value: ['Accepted'],
   },
 ])
+
+const selectedListFitler = ref(listFilter.value[0].label)
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -154,6 +233,17 @@ const requestByGroup = createResource({
     localhost: props.localhost.doc.name,
   },
   auto: true,
+  transform(data) {
+    let rows = []
+    Object.entries(data).forEach((key) => {
+      rows.push({
+        group: key[1][0].team.team_name,
+        collapsed: false,
+        rows: key[1],
+      })
+    })
+    return rows
+  },
 })
 
 const redirectToProfile = (route) => {
@@ -183,36 +273,14 @@ const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-const handleFilter = (filter) => {
-    filter.isActive = !filter.isActive
-    if (filter.isActive){
-        toggleOtherFilters(filter)
-        requestByGroup.update({
-            params: {
-                hackathon: props.localhost.doc.parent_hackathon,
-                localhost: props.localhost.doc.name,
-                status: [filter.value]
-            }
-        })
-        requestByGroup.fetch()
-    }
-    else{
-        requestByGroup.update({
-            params: {
-                hackathon: props.localhost.doc.parent_hackathon,
-                localhost: props.localhost.doc.name,
-            }
-        })
-        requestByGroup.fetch()
-    }
+const filterListByStatus = (filter) => {
+  requestByGroup.update({
+    params: {
+      hackathon: props.localhost.doc.parent_hackathon,
+      localhost: props.localhost.doc.name,
+      status: filter.value,
+    },
+  })
+  requestByGroup.fetch()
 }
-
-const toggleOtherFilters = (filter) => {
-    filters.value.forEach(f => {
-        if (f.value !== filter.value){
-            f.isActive = false
-        }
-    })
-}
-
 </script>

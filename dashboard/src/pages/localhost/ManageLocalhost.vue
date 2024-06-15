@@ -30,7 +30,7 @@
         </div>
       </div>
       <div
-        class="grid grid-cols-1 md:grid-cols-3 mt-6 mb-4 gap-4"
+        class="grid grid-cols-1 sm:grid-cols-4 mt-6 mb-4 gap-4"
         v-if="requests.data"
       >
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
@@ -39,8 +39,6 @@
             {{ requests.originalData.length }}
           </div>
         </div>
-        <div class="hidden md:block"></div>
-        <div class="hidden md:block"></div>
         <div class="flex flex-col gap-2 w-full p-4 rounded border">
           <div class="text-base font-medium">Pending Requests</div>
           <div class="text-2xl text-orange-600">
@@ -60,7 +58,8 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-col gap-2">
+      <hr>
+      <div class="flex flex-col gap-2 py-4">
         <AttendeeRequestList :localhost="localhost"/>
       </div>
     </div>

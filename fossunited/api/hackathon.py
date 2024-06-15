@@ -278,9 +278,16 @@ def get_localhost_requests_by_team(
     )
 
     for request in requests:
-        request["profile_route"] = frappe.get_doc(
+        profile = frappe.get_doc(
             "FOSS User Profile", request.user_profile
-        ).route
+        )
+        request["profile_route"] = profile.route
+        request["profile_photo"] = (
+            profile.profile_photo
+            if profile.profile_photo
+            else "/assets/fossunited/images/defaults/user_profile_image.png"
+        )
+        request["profile_username"] = profile.username
 
     requests_by_team = {}
 
@@ -288,15 +295,21 @@ def get_localhost_requests_by_team(
         team = get_team_from_participant_id(
             hackathon, request.get("name")
         )
-        print(team)
         if team:
+            project = get_project_by_team(hackathon, team.name)
+            if project:
+                request["project_title"] = project.title
+                request["project_route"] = project.route
             if not team.name in requests_by_team:
                 requests_by_team[team.name] = []
             request["team"] = team
             requests_by_team[team.name].append(request)
         else:
-            if not "No Team Yet" in requests_by_team:
-                requests_by_team["No Team Yet"] = []
-            requests_by_team["No Team Yet"].append(request)
+            request["team"] = {"team_name": "Individual Participants"}
+            if not "Individual Participants" in requests_by_team:
+                requests_by_team["Individual Participants"] = []
+            requests_by_team["Individual Participants"].append(
+                request
+            )
 
     return requests_by_team or None
