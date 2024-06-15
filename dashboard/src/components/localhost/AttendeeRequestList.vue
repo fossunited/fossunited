@@ -1,6 +1,6 @@
 <template>
   <RequestDetailDialog
-  class="z-40 my-5"
+  class="z-50 my-5"
     :participant="selectedRequest"
     :showDialog="showDialog"
     @update:showDialog="showDialog = $event"
