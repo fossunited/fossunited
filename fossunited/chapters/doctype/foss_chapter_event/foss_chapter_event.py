@@ -48,15 +48,17 @@ class FOSSChapterEvent(WebsiteGenerator):
         custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
-        event_description: DF.TextEditor
-        event_end_date: DF.Datetime
+        event_description: DF.TextEditor | None
+        event_end_date: DF.Datetime | None
         event_location: DF.Data | None
         event_members: DF.Table[FOSSChapterEventMember]
         event_name: DF.Data
-        event_permalink: DF.Data
+        event_permalink: DF.Data | None
         event_schedule: DF.Table[FOSSEventSchedule]
-        event_start_date: DF.Datetime
-        event_type: DF.Link
+        event_start_date: DF.Datetime | None
+        event_type: DF.Link | None
+        external_event_url: DF.Data | None
+        is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
         map_link: DF.Data | None
@@ -126,6 +128,8 @@ class FOSSChapterEvent(WebsiteGenerator):
         self.event_permalink = f"{event_permalink}-archive-{frappe.generate_hash(length=8)}"
 
     def set_route(self):
+        if self.is_external_event:
+            return
         self.route = f"events/{self.event_permalink}"
 
     def get_context(self, context):

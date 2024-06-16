@@ -1,15 +1,19 @@
 {% macro event_card(event) %}
-<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}" onclick="window.location.pathname='/{{event.route}}'">
+<div class="event-card" data-docname="{{ event.name }}" data-route="{{ event.route }}" {% if event.is_external_event %} onclick="window.open('{{ event.external_event_url }}', '_blank')" {% else %} onclick="window.location.pathname='/{{event.route}}'" {% endif%}>
     <div class="event-card-contents">
-        {% set chapter = frappe.get_doc("FOSS Chapter", event.chapter) %}
-        <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}">
-            {% if chapter.chapter_type == 'FOSS Club' %}
-            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
-            <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
-            {% else %}
-            <span class="fff-forward">{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
-            {% endif %}
-        </div>
+        {% if not event.is_external_event %}
+            {% set chapter = frappe.get_doc("FOSS Chapter", event.chapter) %}
+            <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}">
+                {% if chapter.chapter_type == 'FOSS Club' %}
+                <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
+                <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+                {% else %}
+                <span class="fff-forward">{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+                {% endif %}
+            </div>
+        {% else %}
+        <div></div>
+        {% endif %}
         <div class="event-card--date-section">
             <div class="event-card--date">
                 {{ event.event_start_date.strftime("%d %b %Y") }}
