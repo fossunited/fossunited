@@ -1464,6 +1464,11 @@ h6{
     color: hsl(var(--clr-foss-mint-600));
 }
 
+.event-card--logo{
+    width: 10rem;
+    height: auto;
+}
+
 .event-card--title{
     width: 15.625rem;
     height: 3.125rem;

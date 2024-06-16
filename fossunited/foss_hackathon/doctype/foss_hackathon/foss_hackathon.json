@@ -12,6 +12,10 @@
   "permalink",
   "column_break_ysex",
   "is_published",
+  "section_break_doxc",
+  "has_external_website",
+  "column_break_gttz",
+  "external_website_url",
   "hackathon_basic_info_section",
   "organizing_chapter",
   "hackathon_name",
@@ -21,6 +25,7 @@
   "column_break_jepp",
   "hackathon_description",
   "hackathon_details_section",
+  "only_show_logo",
   "hackathon_logo",
   "hackathon_rules",
   "column_break_frpz",
@@ -280,6 +285,34 @@
    "fieldname": "is_registration_live",
    "fieldtype": "Check",
    "label": "Is Registration Live?"
+  },
+  {
+   "fieldname": "section_break_doxc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_external_website",
+   "fieldtype": "Check",
+   "label": "Has External Website?"
+  },
+  {
+   "fieldname": "column_break_gttz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.has_external_website == 1",
+   "fieldname": "external_website_url",
+   "fieldtype": "Data",
+   "label": "External Website URL",
+   "mandatory_depends_on": "eval: doc.has_external_website == 1"
+  },
+  {
+   "default": "0",
+   "description": "Only show logo on hackathon card.",
+   "fieldname": "only_show_logo",
+   "fieldtype": "Check",
+   "label": "Only Show Logo"
   }
  ],
  "has_web_view": 1,
@@ -307,7 +340,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-06-10 13:02:28.163947",
+ "modified": "2024-06-16 23:02:21.003311",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
