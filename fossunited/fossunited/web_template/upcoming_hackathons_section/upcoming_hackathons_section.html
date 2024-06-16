@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+
+<div class="events-list-section container">
+    <div class="events-list-container">
+        <div class="upcoming-events-header">
+            <h5>{{ title }}</h5>
+            {% if subtitle %}
+            <div>{{ subtitle }}</div>
+            {% endif %}
+        </div>
+        {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
+        {% set hackathons = frappe.get_all("FOSS Hackathon", fields=["*"], filters={"is_published": 1, "start_date": ['>=', frappe.utils.now()]}, page_length=8, order_by='start_date') %}
+        {% if not hackathons %}
+            <div class="no-events mb-6 pb-6">
+                <div>No upcoming hackathons</div>
+            </div>
+        {% else %}
+        <div class="events-grid-4">
+            {% for hackathon in hackathons %}
+                {{ hackathon_card(hackathon) }}
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    </div>
+</div>

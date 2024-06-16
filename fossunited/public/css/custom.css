@@ -1414,12 +1414,12 @@ h6{
     border-radius: 0.5rem;
     cursor: pointer;
     background: #FFF;
-    box-shadow: 0px 0px 0px 1px hsl(var(--clr-open-gray-100));
-    transition: box-shadow 0.1s ease-in-out;
+    border: 2px solid hsl(var(--clr-open-gray-100));
+    transition: border 0.2s ease-in-out;
 }
 
 .event-card:hover{
-    box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-200));
+    border: 2px solid hsl(var(--clr-code-night-300));
 }
 
 .event-card--banner{
@@ -1462,6 +1462,11 @@ h6{
     border-radius: 0.5rem;
     background: hsl(var(--clr-foss-mint-100));
     color: hsl(var(--clr-foss-mint-600));
+}
+
+.event-card--logo{
+    width: 10rem;
+    height: auto;
 }
 
 .event-card--title{

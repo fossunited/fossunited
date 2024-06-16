@@ -36,6 +36,7 @@ class FOSSHackathon(WebsiteGenerator):
         contribution_project_guidelines: DF.MarkdownEditor | None
         enable_oss_contributon_projects: DF.Check
         end_date: DF.Datetime
+        external_website_url: DF.Data | None
         hackathon_banner: DF.AttachImage | None
         hackathon_description: DF.TextEditor
         hackathon_faq: DF.TextEditor | None
@@ -45,6 +46,7 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_type: DF.Literal[
             "", "Remote", "In-person", "Hybrid"
         ]
+        has_external_website: DF.Check
         has_localhosts: DF.Check
         has_partner_projects: DF.Check
         is_contribution_project_coming_soon: DF.Check
@@ -52,6 +54,7 @@ class FOSSHackathon(WebsiteGenerator):
         is_registration_live: DF.Check
         is_team_mandatory: DF.Check
         max_team_members: DF.Int
+        only_show_logo: DF.Check
         organizing_chapter: DF.Link | None
         partner_project_guidelines: DF.MarkdownEditor | None
         permalink: DF.Data | None

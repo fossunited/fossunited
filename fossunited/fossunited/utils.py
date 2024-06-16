@@ -506,18 +506,11 @@ def validate_profile_completion():
 def get_grouped_events():
     events = frappe.get_all(
         "FOSS Chapter Event",
-        fields=[
-            "event_name",
-            "chapter",
-            "banner_image",
-            "route",
-            "must_attend",
-            "event_location",
-            "map_link",
-            "event_start_date",
-            "banner_image",
-        ],
-        filters={"status": "Approved", "is_published": 1},
+        fields=["*"],
+        filters={
+            "status": ["in", ["Approved", "Live", "Concluded"]],
+            "is_published": 1,
+        },
         order_by="event_start_date",
     )
     return get_month_grouped_events(events)
