@@ -23,7 +23,7 @@
           v-model="inviteEmail"
           placeholder="john.doe@fossunited.org"
         />
-        <Button label="Invite" @click="createJoinRequest" variant="solid" />
+        <Button label="Invite" @click="createJoinRequest" variant="solid" :disabled="!inviteEmail"/>
       </div>
       <div class="w-full text-sm font-medium uppercase my-3 text-center">
         Or
