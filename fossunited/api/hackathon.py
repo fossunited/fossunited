@@ -138,7 +138,6 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
                 ["hackathon", "=", hackathon],
             ],
         )
-        print(team)
         return team
     except frappe.exceptions.DoesNotExistError:
         frappe.log("Team not found")
@@ -313,3 +312,30 @@ def get_localhost_requests_by_team(
             )
 
     return requests_by_team or None
+
+
+@frappe.whitelist()
+def join_team_via_code(team_code: str, user: str):
+    """
+    Join a team using a team code
+
+    Args:
+        code (str): Team code
+        user (str): User email
+
+    Returns:
+        dict: Team document as a dictionary
+    """
+    try:
+        team = frappe.get_doc("FOSS Hackathon Team", team_code)
+    except frappe.exceptions.DoesNotExistError:
+        frappe.throw("Team not found")
+        return "Invalid Code. Team with this code does not exist."
+
+    participant = get_participant(team.hackathon, user)
+    if not participant:
+        frappe.throw("Participant not found")
+        return "Participant not found."
+
+    team.append("members", {"member": participant.name})
+    team.save()

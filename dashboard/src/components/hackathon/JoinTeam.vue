@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
       <div class="text-sm">Join a team using team code</div>
-      <div class="flex items-center gap-2">
+      <div class="flex items-start gap-2">
         <FormControl
           type="text"
           v-model="teamCode"
@@ -51,9 +51,11 @@
 <script setup>
 import { FormControl, createResource, Badge, createDocumentResource } from 'frappe-ui'
 import Button from 'frappe-ui/src/components/Button.vue'
-import { ref, defineProps, onMounted } from 'vue'
+import { ref, defineProps, onMounted, inject } from 'vue'
+import { toast } from 'vue-sonner'
 
 const teamCode = ref('')
+const session = inject('$session')
 
 const props = defineProps({
   hackathon: {
@@ -101,7 +103,22 @@ const openNewTab = (route) => {
   window.open(document.location.origin + '/' + route, '_blank')
 }
 
-const joinThroughCode = () => {}
+const joinThroughCode = () => {
+  createResource({
+    url: 'fossunited.api.hackathon.join_team_via_code',
+    params: {
+      team_code: teamCode.value,
+      user: session.user,
+    },
+    auto: true,
+    onSuccess(data){
+      window.location.reload()
+    },
+    onError(error) {
+      toast.error('Invalid Team Code.' + error.message)
+    },
+  })
+}
 
 const acceptInvite = (inviteId) => {
     createResource({
