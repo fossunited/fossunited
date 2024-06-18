@@ -152,7 +152,15 @@
                         <div class="schedule-card {% if not schedule.linked_cfp %} no-hover {% endif %}" {% if schedule.cfp_route %} onclick="window.location.href='/{{schedule.cfp_route}}'" {% endif %}>
                             <div class="schedule--title-time-section">
                                 <div class="schedule--title">{{ schedule.talk_title }}</div>
-                                <div class="schedule--time">{{ schedule.start_time.strftime('%I:%M %p') }} - {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% if schedule.end_time == None %}
+                                <div class="schedule--time">Starts at {{ schedule.start_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
+                                {% if schedule.start_time == None %}
+                                <div class="schedule--time">Ends at {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
+                                {% if schedule.start_time and schedule.end_time %}
+                                    <div class="schedule--time">{{ schedule.start_time.strftime('%I:%M %p') }} - {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
                             </div>
                             {% if not schedule.no_speaker %}
                             <div class="schedule--speakers-section">

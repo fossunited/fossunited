@@ -118,8 +118,10 @@ class FOSSHackathon(WebsiteGenerator):
             if date not in schedule_dict:
                 schedule_dict[date] = []
             get_speakers(schedule)
-            schedule.start_time = BASE_DATE + schedule.start_time
-            schedule.end_time = BASE_DATE + schedule.end_time
+            if schedule.start_time:
+                schedule.start_time = BASE_DATE + schedule.start_time
+            if schedule.end_time:
+                schedule.end_time = BASE_DATE + schedule.end_time
             schedule_dict[date].append(schedule)
 
         schedule_dict["days"] = list(schedule_dict.keys())
