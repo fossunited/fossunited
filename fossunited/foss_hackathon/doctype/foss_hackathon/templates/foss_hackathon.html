@@ -60,7 +60,7 @@
         {{ horizontal_navbar(nav_items) }}
     </div>
 </div>
-<div class="container">
+<div>
     {{ render_information() }}
     {{ render_schedule() }}
     {{ render_submissions()}}
@@ -69,7 +69,7 @@
 {% endblock %}
 
 {% macro render_information() %}
-<div class="event-content-div content-div" id="information">
+<div class="container event-content-div content-div" id="information">
     <div class="description-section my-3">
         <h5>Description</h5>
         <div class="event--description-block mt-2">
@@ -92,6 +92,7 @@
         <div class="event--description-block mt-2">
             {{ doc.hackathon_faq }}
         </div>
+    </div>
     {% endif %}
 
     {% if doc.sponsor_list %}
@@ -133,7 +134,7 @@
 {% endmacro %}
 
 {% macro render_schedule() %}
-<div class="event-content-div content-div" id="schedule">
+<div class="container event-content-div content-div" id="schedule">
     <div class="schedule-section my-3">
         <h5>Schedule</h5>
         <div class="my-3">
@@ -176,7 +177,7 @@
 {% endmacro %}
 
 {% macro render_submissions() %}
-<div class="event-content-div content-div" id="submissions">
+<div class="container event-content-div content-div" id="submissions">
     <div class="submissions-section my-3">
         <div class="d-flex align-items-center justify-content-between">
             <h5>Recent Submissions</h5>
