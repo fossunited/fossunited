@@ -27,6 +27,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         route: DF.Data | None
         short_description: DF.SmallText | None
         team: DF.Link
+        team_name: DF.Data | None
         title: DF.Data
 
     # end: auto-generated types

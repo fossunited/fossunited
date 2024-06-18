@@ -48,6 +48,7 @@
   "column_break_yeth",
   "max_team_members",
   "schedule_tab",
+  "show_schedule_tab",
   "schedule",
   "localhost_tab",
   "has_localhosts",
@@ -313,6 +314,12 @@
    "fieldname": "only_show_logo",
    "fieldtype": "Check",
    "label": "Only Show Logo"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule_tab",
+   "fieldtype": "Check",
+   "label": "Show Schedule Tab?"
   }
  ],
  "has_web_view": 1,
@@ -340,7 +347,7 @@
    "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-06-16 23:02:21.003311",
+ "modified": "2024-06-18 13:58:54.173769",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",
