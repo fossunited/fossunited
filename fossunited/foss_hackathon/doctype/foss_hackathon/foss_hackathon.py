@@ -61,6 +61,7 @@ class FOSSHackathon(WebsiteGenerator):
         registration_description: DF.TextEditor | None
         route: DF.Data | None
         schedule: DF.Table[FOSSEventSchedule]
+        show_schedule_tab: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
         start_date: DF.Datetime
 
@@ -80,7 +81,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "FOSS Chapter", self.organizing_chapter
             )
 
-        context.nav_items = ["information", "schedule", "submissions"]
+        context.nav_items = self.get_nav_items()
         context.sponsors_dict = self.get_sponsors()
         context.tag_icon = {
             "Remote": "world",
@@ -94,6 +95,13 @@ class FOSSHackathon(WebsiteGenerator):
             filters={"hackathon": self.name},
             fields=["*"],
         )
+
+    def get_nav_items(self):
+        nav_items = ["information", "submissions"]
+        if self.show_schedule_tab:
+            nav_items.append("schedule")
+
+        return nav_items
 
     def get_sponsors(self):
         sponsors_dict = {}
