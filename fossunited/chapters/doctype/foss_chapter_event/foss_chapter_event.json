@@ -240,13 +240,11 @@
    "label": "Secondary Button URL"
   },
   {
-   "depends_on": "eval:doc.is_external_event == 0",
    "fieldname": "volunteers_tab",
    "fieldtype": "Tab Break",
    "label": "Volunteers"
   },
   {
-   "depends_on": "eval:doc.is_external_event == 0",
    "fieldname": "schedule_tab",
    "fieldtype": "Tab Break",
    "label": "Schedule"
@@ -278,7 +276,6 @@
    "label": "Short Event Bio"
   },
   {
-   "depends_on": "eval:doc.is_external_event == 0",
    "fieldname": "navbar_controls_section",
    "fieldtype": "Section Break",
    "label": "Navbar Controls"
@@ -445,7 +442,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-06-16 18:24:26.849365",
+ "modified": "2024-06-18 15:13:11.424891",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
