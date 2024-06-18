@@ -24,12 +24,20 @@
         </div>
         {% endif %}
         <div class="d-flex mt-4">
-            <a class="button" style="text-decoration:none;" href="{{ doc.repo_link }}" target="_blank">
+            {% if doc.repo_link %}
+            <a class="button mr-4" style="text-decoration:none;" href="{{ doc.repo_link }}" target="_blank">
                 <i class="ti ti-brand-github"></i>
                 <span>Repository</span>
             </a>
+            {% endif %}
+            {% if doc.demo_link %}
+            <a class="button mr-4" style="text-decoration:none;" href="{{ doc.demo_link }}" target="_blank">
+                <i class="ti ti-link"></i>
+                <span>Demo</span>
+            </a>
+            {% endif %}
             {% if not frappe.session.user == 'Guest' %}
-            <div class="cfp-header--like-container ml-4" id="likes-container">
+            <div class="cfp-header--like-container" id="likes-container">
                 <button id="project-like-button" data-liked="{{liked_by_user}}" onclick="toggle_like()">
                     <i class="ti {% if liked_by_user %} ti-heart-filled {% else %} ti-heart {% endif %}" style="{% if liked_by_user %} color: red; {% endif %}"></i>
                     <span >{{ likes | length }} Likes </span>
