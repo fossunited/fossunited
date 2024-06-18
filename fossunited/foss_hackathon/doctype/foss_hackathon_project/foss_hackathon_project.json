@@ -25,6 +25,7 @@
   "column_break_xfpp",
   "hackathon",
   "team",
+  "team_name",
   "description"
  ],
  "fields": [
@@ -133,13 +134,20 @@
    "fieldtype": "Link",
    "label": "Partner Project",
    "options": "FOSS Hackathon Partner Project"
+  },
+  {
+   "fetch_from": "team.team_name",
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "label": "Team Name",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-06-06 15:03:26.207747",
+ "modified": "2024-06-18 14:13:38.820349",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",
