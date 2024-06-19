@@ -31,6 +31,7 @@ class FOSSEventTicket(Document):
         email: DF.Data
         event: DF.Link
         full_name: DF.Data
+        is_transfer_ticket: DF.Check
         organization: DF.Data | None
         razorpay_payment: DF.Link | None
         tier: DF.Data | None

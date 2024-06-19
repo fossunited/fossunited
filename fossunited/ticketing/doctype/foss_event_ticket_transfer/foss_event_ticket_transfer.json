@@ -1,0 +1,175 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2024-06-19 13:57:16.273808",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "status",
+  "ticket_detail_section",
+  "ticket",
+  "owner_email",
+  "column_break_hnfz",
+  "event",
+  "owner_name",
+  "reciever_details_section",
+  "reciever_name",
+  "reciever_email",
+  "column_break_hkqo",
+  "designation",
+  "organization"
+ ],
+ "fields": [
+  {
+   "fieldname": "ticket",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Ticket",
+   "options": "FOSS Event Ticket",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ticket_detail_section",
+   "fieldtype": "Section Break",
+   "label": "Ticket Detail"
+  },
+  {
+   "fetch_from": "ticket.email",
+   "fieldname": "owner_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Owner Email",
+   "options": "Email"
+  },
+  {
+   "fieldname": "column_break_hnfz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "ticket.event",
+   "fieldname": "event",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Event",
+   "options": "FOSS Chapter Event",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "ticket.full_name",
+   "fieldname": "owner_name",
+   "fieldtype": "Data",
+   "label": "Owner Name"
+  },
+  {
+   "fieldname": "reciever_details_section",
+   "fieldtype": "Section Break",
+   "label": "Reciever Details"
+  },
+  {
+   "fieldname": "reciever_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reciever Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reciever_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Reciever Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_hkqo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Data",
+   "label": "Organization / College"
+  },
+  {
+   "default": "Pending Approval",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Status",
+   "options": "Pending Approval\nCompleted\nCancelled"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-06-19 14:57:07.803398",
+ "modified_by": "Administrator",
+ "module": "Ticketing",
+ "name": "FOSS Event Ticket Transfer",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Guest",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Pending Approval"
+  },
+  {
+   "color": "Green",
+   "title": "Completed"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
+ "track_changes": 1
+}
