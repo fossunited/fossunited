@@ -21,6 +21,11 @@ const routes = [
     meta: { isPublicPage: true },
   },
   {
+    path: '/ticket-transfer',
+    name: 'TicketTransfer',
+    component: () => import('@/pages/TicketTransfer.vue'),
+  },
+  {
     name: 'Event',
     path: '/event/:id',
     component: () => import('@/pages/Event.vue'),
