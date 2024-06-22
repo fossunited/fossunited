@@ -67,7 +67,7 @@
                 <div class="collaborators-list">
                     <div class="collaborators-container"></div>
                 </div>
-                <a href="{{project.project_link}}" style="color: hsl(var(--clr-foss-mint-500))" class="project-link" target="_blank">
+                <a rel="nofollow" href="{{project.project_link}}" style="color: hsl(var(--clr-foss-mint-500))" class="project-link" target="_blank">
                     View Project
                     <i class="ti ti-external-link"></i>
                 </a>
@@ -105,7 +105,7 @@
                     <div class="experience-item--company-location">
                         {# if values | len < 2 #}
                         <span style="color: hsl(var(--clr-foss-mint-500))">
-                            <a href="{{value.company_website}}" target="_blank">{{ value.company }}</a>
+                            <a rel="nofollow" href="{{value.company_website}}" target="_blank">{{ value.company }}</a>
                         </span>
                         <div class="seperator-circle"></div>
                         {% if value.is_remote %}
@@ -196,7 +196,7 @@
                             <div class="seperator-circle"></div>
                             <div class="d-flex align-content-center justify-content-center ">
                                 <i class="ti ti-link" style="font-size:larger"></i>
-                                <a class="ml-1" style="font-weight: var(--fw-medium);" href="{{doc.website}}">{{doc.website | truncate(30, True) }}</a>
+                                <a class="ml-1" style="font-weight: var(--fw-medium);" rel="nofollow" href="{{doc.website}}">{{doc.website | truncate(30, True) }}</a>
                             </div>
                             {% endif %}
                         </div>
@@ -220,7 +220,7 @@
         {% if user_socials %}
         <div class="header-section--socials">
             {% for (key,value) in user_socials.items() %}
-                <a href="{{value}}"><img src="https://cdn.simpleicons.org/{{key}}" alt="{{key}}"/></a>
+                <a rel="me nofollow" href="{{value}}"><img src="https://cdn.simpleicons.org/{{key}}" alt="{{key}}"/></a>
             {% endfor %}
         </div>
         {% endif %}
