@@ -5,6 +5,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "section_break_pvar",
+  "is_transfer_ticket",
+  "section_break_ogof",
   "event",
   "full_name",
   "designation",
@@ -120,11 +123,25 @@
    "fieldname": "organization",
    "fieldtype": "Data",
    "label": "Organization / College"
+  },
+  {
+   "fieldname": "section_break_pvar",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_transfer_ticket",
+   "fieldtype": "Check",
+   "label": "Is Transfer Ticket?"
+  },
+  {
+   "fieldname": "section_break_ogof",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-02 01:53:55.048157",
+ "modified": "2024-06-19 15:29:51.972316",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
