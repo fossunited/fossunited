@@ -16,9 +16,11 @@
   "reciever_details_section",
   "receiver_name",
   "receiver_email",
+  "wants_tshirt",
   "column_break_hkqo",
   "designation",
-  "organization"
+  "organization",
+  "tshirt_size"
  ],
  "fields": [
   {
@@ -107,11 +109,24 @@
    "label": "Receiver Email",
    "options": "Email",
    "reqd": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "ticket.wants_tshirt",
+   "fieldname": "wants_tshirt",
+   "fieldtype": "Check",
+   "label": "Wants T Shirt?"
+  },
+  {
+   "depends_on": "eval:doc.wants_tshirt == 1",
+   "fieldname": "tshirt_size",
+   "fieldtype": "Data",
+   "label": "Tshirt Size"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-22 13:11:58.814333",
+ "modified": "2024-06-22 17:03:05.607811",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket Transfer",

@@ -88,6 +88,14 @@
             size="sm"
             placeholder="FOSS United"
           />
+          <FormControl
+            v-if="receiver.wants_tshirt"
+            v-model="receiver.tshirt_size"
+            label="T-Shirt Size"
+            type="select"
+            size="sm"
+            :options="['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']"
+          />
           <div class="col-span-2">
             <ErrorMessage :message="ticketErrors" />
           </div>
@@ -145,6 +153,8 @@ const receiver = reactive({
   receiver_name: '',
   designation: '',
   organization: '',
+  wants_tshirt: false,
+  tshirt_size: '',
 })
 
 const ticket = createResource({
@@ -157,6 +167,10 @@ const ticket = createResource({
   },
   onSuccess(data) {
     event.fetch()
+    receiver.wants_tshirt = data.wants_tshirt
+    if (data.tshirt_size){
+      receiver.tshirt_size = data.tshirt_size
+    }
   },
 })
 
@@ -231,6 +245,8 @@ const createTransferDoc = createResource({
         receiver_name: receiver.receiver_name,
         designation: receiver.designation,
         organization: receiver.organization,
+        wants_tshirt: receiver.wants_tshirt,
+        tshirt_size: receiver.tshirt_size,
       },
     }
   },

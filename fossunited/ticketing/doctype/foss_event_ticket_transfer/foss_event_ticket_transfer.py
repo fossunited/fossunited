@@ -25,6 +25,8 @@ class FOSSEventTicketTransfer(Document):
             "Pending Approval", "Completed", "Cancelled"
         ]
         ticket: DF.Link
+        tshirt_size: DF.Data | None
+        wants_tshirt: DF.Check
     # end: auto-generated types
     pass
 
@@ -44,5 +46,6 @@ class FOSSEventTicketTransfer(Document):
         ticket.email = self.receiver_email
         ticket.designation = self.designation
         ticket.organization = self.organization
+        ticket.tshirt_size = self.tshirt_size
         ticket.is_transfer_ticket = 1
         ticket.save()
