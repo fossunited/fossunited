@@ -19,8 +19,8 @@ class FOSSEventTicketTransfer(Document):
         organization: DF.Data | None
         owner_email: DF.Data | None
         owner_name: DF.Data | None
-        reciever_email: DF.Data
-        reciever_name: DF.Data
+        receiver_email: DF.Data
+        receiver_name: DF.Data
         status: DF.Literal[
             "Pending Approval", "Completed", "Cancelled"
         ]
@@ -40,8 +40,8 @@ class FOSSEventTicketTransfer(Document):
             frappe.throw("Ticket not found")
             return
 
-        ticket.full_name = self.reciever_name
-        ticket.email = self.reciever_email
+        ticket.full_name = self.receiver_name
+        ticket.email = self.receiver_email
         ticket.designation = self.designation
         ticket.organization = self.organization
         ticket.is_transfer_ticket = 1

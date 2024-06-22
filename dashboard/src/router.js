@@ -22,8 +22,19 @@ const routes = [
   },
   {
     path: '/ticket-transfer',
-    name: 'TicketTransfer',
-    component: () => import('@/pages/TicketTransfer.vue'),
+    children: [
+      {
+        path: '',
+        name: 'TicketTransfer',
+        component: () => import('@/pages/TicketTransfer.vue'),
+      },
+      {
+        path: 'process',
+        name: 'TicketTransferProcess',
+        component: () => import('@/pages/TicketTransferProcess.vue'),
+        props: true,
+      },
+    ]
   },
   {
     name: 'Event',

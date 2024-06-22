@@ -58,31 +58,31 @@
             <hr />
           </div>
           <div class="col-span-2 prose">
-            <h4>Reciever Details</h4>
+            <h4>Receiver Details</h4>
           </div>
           <FormControl
-            v-model="reciever.reciever_email"
-            label="Reciever Email &ast;"
+            v-model="receiver.receiver_email"
+            label="Receiver Email &ast;"
             type="email"
             size="sm"
             placeholder="john@fossunited.org"
           />
           <FormControl
-            v-model="reciever.reciever_name"
-            label="Reciever Name &ast;"
+            v-model="receiver.receiver_name"
+            label="Receiver Name &ast;"
             type="text"
             size="sm"
             placeholder="John Doe"
           />
           <FormControl
-            v-model="reciever.designation"
+            v-model="receiver.designation"
             label="Designation"
             type="text"
             size="sm"
             placeholder="SDE"
           />
           <FormControl
-            v-model="reciever.organization"
+            v-model="receiver.organization"
             label="Organization"
             type="text"
             size="sm"
@@ -100,6 +100,7 @@
               theme="green"
               size="md"
               @click="initiateTranfer"
+              :disabled="ticketValidateError != ''"
               :loading="createTransferDoc.loading"
             />
           </div>
@@ -139,9 +140,9 @@ const ticketValidateError = ref('')
 const ticketErrors = ref('')
 
 const ticketId = ref('')
-const reciever = reactive({
-  reciever_email: '',
-  reciever_name: '',
+const receiver = reactive({
+  receiver_email: '',
+  receiver_name: '',
   designation: '',
   organization: '',
 })
@@ -204,38 +205,34 @@ const isTicketValid = () => {
 const transferErrors = () => {
   const errors = []
 
-  if (!isTicketValid()) {
-    errors.push('Invalid Ticket ID')
-  }
-
   if (!ticketId.value) {
     ticketValidateError.value = 'Ticket ID is required'
     errors.push('Ticket ID is required')
   }
-  if (!reciever.reciever_email) {
-    ticketErrors.value = 'Reciever Email is required'
-    errors.push('Reciever Email is required')
+  if (!receiver.receiver_email) {
+    ticketErrors.value = 'Receiver Email is required'
+    errors.push('Receiver Email is required')
   }
-  if (!reciever.reciever_name) {
-    ticketErrors.value = 'Reciever Name is required'
-    errors.push('Reciever Name is required')
+  if (!receiver.receiver_name) {
+    ticketErrors.value = 'Receiver Name is required'
+    errors.push('Receiver Name is required')
   }
   return errors
 }
 
 const createTransferDoc = createResource({
   url: 'frappe.client.insert',
-  params: {
-    doc: {
-      doctype: 'FOSS Event Ticket Transfer',
-      fields: {
+  makeParams() {
+    return {
+      doc: {
+        doctype: 'FOSS Event Ticket Transfer',
         ticket: ticketId.value,
-        reciever_email: reciever.reciever_email,
-        reciever_name: reciever.reciever_name,
-        designation: reciever.designation,
-        organization: reciever.organization,
+        receiver_email: receiver.receiver_email,
+        receiver_name: receiver.receiver_name,
+        designation: receiver.designation,
+        organization: receiver.organization,
       },
-    },
+    }
   },
   onSuccess(data) {
     inSuccess.value = true

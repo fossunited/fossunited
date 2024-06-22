@@ -14,8 +14,8 @@
   "event",
   "owner_name",
   "reciever_details_section",
-  "reciever_name",
-  "reciever_email",
+  "receiver_name",
+  "receiver_email",
   "column_break_hkqo",
   "designation",
   "organization"
@@ -66,24 +66,7 @@
   {
    "fieldname": "reciever_details_section",
    "fieldtype": "Section Break",
-   "label": "Reciever Details"
-  },
-  {
-   "fieldname": "reciever_email",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Reciever Email",
-   "options": "Email",
-   "reqd": 1
-  },
-  {
-   "fieldname": "reciever_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Reciever Name",
-   "reqd": 1
+   "label": "Receiver Details"
   },
   {
    "fieldname": "column_break_hkqo",
@@ -107,11 +90,28 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Pending Approval\nCompleted\nCancelled"
+  },
+  {
+   "fieldname": "receiver_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Receiver Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "receiver_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Receiver Email",
+   "options": "Email",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-19 14:57:07.803398",
+ "modified": "2024-06-22 13:11:58.814333",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket Transfer",
