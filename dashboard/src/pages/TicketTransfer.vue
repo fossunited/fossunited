@@ -4,7 +4,7 @@
     <TransferSuccess v-if="inSuccess" />
     <div v-else class="max-w-screen-xl w-full p-5">
       <div class="mt-8">
-        <div class="prose">
+        <div class="prose min-w-full">
           <div class="text-base uppercase font-medium text-gray-600 mb-2">
             Portal
           </div>
