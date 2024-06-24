@@ -3,6 +3,7 @@
   <div class="w-full flex items-center justify-center">
     <TransferSuccess v-if="inSuccess" />
     <div v-else class="max-w-screen-xl w-full p-5">
+      <img v-if="transfer_settings.doc.banner_image" :src="transfer_settings.doc.banner_image" alt="" class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]">
       <div class="mt-8">
         <div class="prose min-w-full">
           <div class="text-base uppercase font-medium text-gray-600 mb-2">

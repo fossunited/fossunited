@@ -5,6 +5,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "banner_image",
   "web_page_description"
  ],
  "fields": [
@@ -13,12 +14,17 @@
    "fieldname": "web_page_description",
    "fieldtype": "Text Editor",
    "label": "Web Page Description"
+  },
+  {
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Banner Image"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-20 13:04:15.783185",
+ "modified": "2024-06-24 12:20:02.212090",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "Ticket Transfer Settings",

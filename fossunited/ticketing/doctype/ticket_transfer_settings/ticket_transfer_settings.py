@@ -14,6 +14,7 @@ class TicketTransferSettings(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        banner_image: DF.AttachImage | None
         web_page_description: DF.TextEditor | None
     # end: auto-generated types
     pass
