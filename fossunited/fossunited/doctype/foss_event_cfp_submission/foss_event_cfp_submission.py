@@ -11,6 +11,51 @@ from fossunited.fossunited.utils import (
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
+            FOSSCustomAnswer,
+        )
+        from fossunited.fossunited.doctype.foss_event_cfp_review.foss_event_cfp_review import (
+            FOSSEventCFPReview,
+        )
+
+        approvability: DF.Data | None
+        attendance_confirmed: DF.Check
+        bio: DF.TextEditor
+        chapter: DF.Data | None
+        custom_answers: DF.Table[FOSSCustomAnswer]
+        designation: DF.Data
+        email: DF.Data
+        event: DF.Data | None
+        event_name: DF.Data | None
+        first_name: DF.Data | None
+        full_name: DF.Data
+        is_first_talk: DF.Literal["Yes", "No"]
+        is_published: DF.Check
+        last_name: DF.Data | None
+        linked_cfp: DF.Link
+        negative_reviews: DF.Data | None
+        organization: DF.Data | None
+        picture_url: DF.Data | None
+        positive_reviews: DF.Data | None
+        reviews: DF.Table[FOSSEventCFPReview]
+        route: DF.Data | None
+        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]
+        status: DF.Literal["Review Pending", "Approved", "Rejected"]
+        submitted_by: DF.Link | None
+        talk_description: DF.TextEditor
+        talk_reference: DF.Data | None
+        talk_title: DF.Data
+        unsure_reviews: DF.Data | None
+
+    # end: auto-generated types
     def before_save(self):
         self.set_name()
         self.set_route()

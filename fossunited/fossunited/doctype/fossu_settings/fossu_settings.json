@@ -88,10 +88,9 @@
    "options": "Web Page"
   }
  ],
- "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-01-27 23:22:01.740133",
+ "modified": "2024-06-25 13:19:12.865125",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSSU Settings",
@@ -106,6 +105,13 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "share": 1
   }
  ],
  "sort_field": "modified",

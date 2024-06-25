@@ -286,10 +286,9 @@
   }
  ],
  "has_web_view": 1,
- "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-04-21 11:05:15.092243",
+ "modified": "2024-06-25 13:26:29.753016",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
