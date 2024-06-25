@@ -34,7 +34,8 @@ const routes = [
         component: () => import('@/pages/TicketTransferProcess.vue'),
         props: true,
       },
-    ]
+    ],
+    meta: { isPublicPage: true },
   },
   {
     name: 'Event',
