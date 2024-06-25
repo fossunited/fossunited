@@ -139,9 +139,8 @@
    "fieldtype": "Section Break"
   }
  ],
- "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-06-24 12:14:31.185729",
+ "modified": "2024-06-25 13:13:03.705290",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
