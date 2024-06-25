@@ -21,10 +21,9 @@
    "label": "Banner Image"
   }
  ],
- "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-06-24 12:20:02.212090",
+ "modified": "2024-06-25 13:05:54.357097",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "Ticket Transfer Settings",
@@ -39,6 +38,22 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Guest",
+   "select": 1,
+   "share": 1
   }
  ],
  "sort_field": "modified",
