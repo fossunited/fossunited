@@ -54,8 +54,23 @@ class FOSSUserProfile(WebsiteGenerator):
         website: DF.Data | None
         x: DF.Data | None
         youtube: DF.Data | None
-
     # end: auto-generated types
+
+    def before_save(self):
+        if self.has_value_changed("full_name"):
+            frappe.db.set_value(
+                "User",
+                self.user,
+                "first_name",
+                self.full_name.split()[0],
+            )
+            frappe.db.set_value(
+                "User",
+                self.user,
+                "last_name",
+                " ".join(self.full_name.split()[1:]),
+            )
+
     def validate(self):
         self.validate_username()
         self.set_route()
