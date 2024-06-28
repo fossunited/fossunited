@@ -1,17 +1,17 @@
 <template>
   <div class="flex">
-    <SideNavbar :class="showNav ? 'z-50 block mt-[55px] ' : 'hidden md:block'"/>
+    <SideNavbar :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"/>
     <div class="w-full md:ml-[220px]">
       <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
-      <div class="w-full p-4" v-if="profile.data">
-        <div class="prose">
+      <div class="w-full" v-if="profile.data">
+        <div class="prose p-4 pb-0">
           <h2 class="mb-1">My Profile</h2>
           <p class="text-sm mb-4">Edit your profile details</p>
         </div>
         <div class="flex flex-col my-2">
           <div class="relative">
             <img
-              class="w-full rounded aspect-[4.96/1]"
+              class="w-full aspect-[4.96/1]"
               :src="
                 profile.data.cover_image ||
                 '/assets/fossunited/images/defaults/user_profile_banner.png'
@@ -46,7 +46,7 @@
             />
             </div>
           </div>
-          <div class="z-40 w-fit relative -mt-12 mx-6">
+          <div class="z-10 w-fit relative -mt-12 mx-6">
             <img
               class="aspect-square border-4 border-white rounded w-28"
               :src="profile.data.profile_photo"
@@ -70,7 +70,7 @@
               </template>
             </FileUploader>
           </div>
-          <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-2">
+          <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
               size="sm"
               label="Make Profile Private"
