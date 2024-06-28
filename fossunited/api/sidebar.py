@@ -17,7 +17,7 @@ def get_sidebar_items():
             "parent_label": "Hackathons",
             "items": [
                 {
-                    "label": "Hackathons",
+                    "label": "My Hackathons",
                     "route": "/my-hackathons",
                 },
             ],
@@ -41,6 +41,14 @@ def get_sidebar_items():
             }
         )
 
+    if user_is_localhost_organizer():
+        sidebar_items[1]["items"].append(
+            {
+                "label": "Manage Localhost",
+                "route": "/localhost",
+            }
+        )
+
     return sidebar_items
 
 
@@ -52,7 +60,21 @@ def user_is_chapter_member(user: str = frappe.session.user):
                 "FOSS Chapter Lead Team Member",
                 "email",
                 "like",
-                frappe.session.user,
+                user,
+            ]
+        ],
+    )
+
+
+def user_is_localhost_organizer(user: str = frappe.session.user):
+    return frappe.db.exists(
+        "FOSS Hackathon LocalHost",
+        [
+            [
+                "FOSS Hackathon LocalHost Organizer",
+                "user",
+                "=",
+                user,
             ]
         ],
     )
