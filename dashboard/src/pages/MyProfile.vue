@@ -1,8 +1,6 @@
 <template>
   <div class="flex">
-    <SideNavbar :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"/>
-    <div class="w-full md:ml-[220px]">
-      <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
+    <div class="w-full">
       <div class="w-full" v-if="profile.data">
         <div class="prose p-4 pb-0">
           <h2 class="mb-1">My Profile</h2>
