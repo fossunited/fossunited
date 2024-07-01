@@ -35,7 +35,6 @@ const routes = [
         props: true,
       },
     ],
-    meta: { isPublicPage: true },
   },
   {
     name: 'Event',
