@@ -140,7 +140,7 @@
   }
  ],
  "links": [],
- "modified": "2024-06-25 13:13:03.705290",
+ "modified": "2024-07-01 11:30:38.262647",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -159,7 +159,6 @@
    "write": 1
   },
   {
-   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
