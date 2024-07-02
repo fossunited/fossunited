@@ -4,8 +4,7 @@
       <div class="prose pb-0">
         <h2 class="mb-1">My LocalHosts</h2>
         <p class="text-sm mb-4">
-          Keep track of your hackathon entries, view upcoming events, and manage
-          your participation details.
+            Keep a track of localhosts you organize.
         </p>
       </div>
     </div>
