@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="nav_items.data"
     class="relative block min-h-0 flex-shrink-0 overflow-hidden hover:overflow-auto"
   >
     <div

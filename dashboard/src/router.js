@@ -24,6 +24,11 @@ const routes = [
         name: 'MyLocalhosts',
         component: () => import('@/pages/localhost/MyLocalhosts.vue')
       },
+      {
+        path: '/chapter',
+        name: 'MyChapters',
+        component: () => import('@/pages/MyChapters.vue'),
+      },
     ]
   },
   {

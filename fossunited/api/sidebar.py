@@ -31,7 +31,7 @@ def get_sidebar_items():
                 "items": [
                     {
                         "label": "Manage Chapter",
-                        "route": "/chapters",
+                        "route": "/chapter",
                     },
                     {
                         "label": "Manage Events",
