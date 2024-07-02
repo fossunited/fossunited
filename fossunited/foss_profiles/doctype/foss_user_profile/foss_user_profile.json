@@ -99,7 +99,8 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "fieldname": "current_city",
@@ -278,7 +279,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-02 16:17:42.519778",
+ "modified": "2024-07-02 16:21:35.416189",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
