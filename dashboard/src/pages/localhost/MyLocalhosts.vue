@@ -12,7 +12,7 @@
         <Card
             v-for="localhost in localhosts.data"
             :title="localhost.localhost_name"
-            class="hover:cursor-pointer shadow-none rounded-[8px] hover:border-gray-400 transition-colors"
+            class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
             @click="$router.push('/localhost/' + localhost.name)"
         />
     </div>
