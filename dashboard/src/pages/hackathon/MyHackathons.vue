@@ -19,7 +19,7 @@
             v-for="hackathon in ongoing_hackathons"
             :title="hackathon.hackathon_name"
             @click="$router.push('/hack/' + hackathon.permalink)"
-            class="hover:cursor-pointer"
+            class="hover:cursor-pointer shadow-none rounded-[8px] hover:border-gray-400 transition-colors"
           />
         </div>
       </div>
@@ -32,7 +32,7 @@
             v-for="hackathon in upcoming_hackathons"
             :title="hackathon.hackathon_name"
             @click="$router.push('/hack/' + hackathon.permalink)"
-            class="hover:cursor-pointer"
+            class="hover:cursor-pointer shadow-none rounded-[8px] hover:border-gray-400 transition-colors"
           />
         </div>
       </div>
@@ -45,7 +45,7 @@
             v-for="hackathon in past_hackathons"
             :title="hackathon.hackathon_name"
             @click="$router.push('/hack/' + hackathon.permalink)"
-            class="hover:cursor-pointer"
+            class="hover:cursor-pointer shadow-none rounded-[8px] hover:border-gray-400 transition-colors"
           />
         </div>
       </div>

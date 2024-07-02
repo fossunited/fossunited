@@ -19,6 +19,11 @@ const routes = [
         name: 'MyHackathons',
         component: () => import('@/pages/hackathon/MyHackathons.vue'),
       },
+      {
+        path: '/localhost',
+        name: 'MyLocalhosts',
+        component: () => import('@/pages/localhost/MyLocalhosts.vue')
+      },
     ]
   },
   {

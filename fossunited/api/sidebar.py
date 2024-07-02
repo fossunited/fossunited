@@ -1,7 +1,7 @@
 import frappe
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_sidebar_items():
     sidebar_items = [
         {
