@@ -364,3 +364,32 @@ def get_user_hackathons(user: str = frappe.session.user):
         hackathons.append(get_hackathon(participant.get("hackathon")))
 
     return hackathons
+
+
+@frappe.whitelist()
+def get_user_localhosts(user: str = frappe.session.user):
+    """
+    Get localhosts managed by the user
+
+    Args:
+        user (str): User email
+
+    Returns:
+        list: List of localhosts
+    """
+
+    localhosts = frappe.get_all(
+        "FOSS Hackathon LocalHost",
+        filters=[
+            [
+                "FOSS Hackathon LocalHost Organizer",
+                "user",
+                "=",
+                user,
+            ]
+        ],
+        fields=["*"],
+        page_length=9999,
+    )
+
+    return localhosts
