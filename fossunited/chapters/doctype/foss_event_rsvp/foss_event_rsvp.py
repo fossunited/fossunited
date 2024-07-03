@@ -10,6 +10,30 @@ from fossunited.fossunited.forms import create_submission
 
 
 class FOSSEventRSVP(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import (
+            FOSSCustomQuestion,
+        )
+
+        allow_edit: DF.Check
+        chapter: DF.Data | None
+        custom_questions: DF.Table[FOSSCustomQuestion]
+        event: DF.Link | None
+        event_name: DF.Data | None
+        is_published: DF.Check
+        max_rsvp_count: DF.Int
+        route: DF.Data | None
+        rsvp_count: DF.Int
+        rsvp_description: DF.TextEditor | None
+
+    # end: auto-generated types
     def before_save(self):
         self.set_route()
         self.enable_rsvp_tab()
