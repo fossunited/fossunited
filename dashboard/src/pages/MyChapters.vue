@@ -9,12 +9,25 @@
     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
       <ChapterCard v-for="chapter in chapters.data" :chapter="chapter" />
     </div>
+    <div class="mt-4">
+      <div class="prose pt-4 mb-4">
+        <h3 class="mb-0">Scheduled Events</h3>
+        <p class="text-sm">Manage upcoming events.</p>
+      </div>
+      <div v-if="scheduled_events.data" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <EventCard v-for="event in scheduled_events.data" :event="event"/>
+      </div>
+      <div v-else class="text-base mt-6 text-gray-800">
+        <div>There are no scheduled events.</div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup>
 import { createListResource } from 'frappe-ui'
 import { inject } from 'vue'
 import ChapterCard from '@/components/ChapterCard.vue'
+import EventCard from '@/components/EventCard.vue'
 
 const session = inject('$session')
 
@@ -26,5 +39,32 @@ const chapters = createListResource({
   ],
   auto: true,
   pageLength: 999,
+  onSuccess(data){
+    scheduled_events.update({
+      filters: {
+        ...scheduled_events.filters,
+        chapter: ['in', data.map((d) => d.name)],
+      },
+    })
+    scheduled_events.fetch()
+  }
 })
+
+const scheduled_events = createListResource({
+  doctype: 'FOSS Chapter Event',
+  fields: [
+    'name',
+    'event_name',
+    'event_type',
+    'chapter_name',
+    'status',
+    'event_start_date',
+  ],
+  filters: {
+    status: ['in', ['', 'Draft', 'Approved', 'Live']],
+  },
+  orderBy: 'event_start_date',
+})
+
+
 </script>

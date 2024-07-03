@@ -33,10 +33,6 @@ def get_sidebar_items():
                         "label": "Manage Chapter",
                         "route": "/chapter",
                     },
-                    {
-                        "label": "Manage Events",
-                        "route": "/events",
-                    },
                 ],
             }
         )
