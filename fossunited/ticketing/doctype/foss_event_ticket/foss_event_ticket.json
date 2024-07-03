@@ -140,7 +140,7 @@
   }
  ],
  "links": [],
- "modified": "2024-07-01 11:30:38.262647",
+ "modified": "2024-07-03 14:45:28.719114",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -155,17 +155,6 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
    "share": 1,
    "write": 1
   }
