@@ -37,6 +37,10 @@ $ pre-commit install
 
 Want to contribute to the platform ? Checkout the [contribution guidelines](/docs/CONTRIBUTING.md).
 
+### Security Policy
+
+Please checkout [Security Policy](/docs/SECURITY.md) for information about reporting a Security Bug or Vulnerability.
+
 ## License
 
 The repository has been released under [AGPL-3.0](https://github.com/fossunited/fossunited/blob/develop/LICENSE).
