@@ -138,11 +138,12 @@ class FOSSEventRSVP(WebsiteGenerator):
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields):
     fields_dict = {
-        "doctype": "FOSS Event RSVP Submission",
         "submitted_by": "",
     }
     if frappe.session.user not in ["Guest", "Administrator"]:
         fields_dict["submitted_by"] = frappe.session.user
 
     fields_dict.update(json.loads(fields))
-    return create_submission(fields_dict)
+    return create_submission(
+        "FOSS Event RSVP Submission", fields_dict
+    )

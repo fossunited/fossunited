@@ -8,7 +8,7 @@ from fossunited.utils.payments import (
 
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str) -> dict:
-    return frappe.get_doc("FOSS Chapter Event", name)
+    return frappe.get_doc("FOSS Chapter Event", name).as_dict()
 
 
 @frappe.whitelist(allow_guest=True)

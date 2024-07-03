@@ -7,14 +7,32 @@ Some utils and APIs for forms such as RSVP, CFP etc.
 """
 
 
+def is_valid_doctype(doctype: str):
+    """
+    Validate the doctype to be either "FOSS Event CFP Submission" or "FOSS Event RSVP Submission"
+    """
+    if doctype not in [
+        "FOSS Event RSVP Submission",
+        "FOSS Event CFP Submission",
+    ]:
+        return False
+
+    return True
+
+
 @frappe.whitelist()
-def create_submission(fields):
+def create_submission(doctype: str, fields: dict):
     """
     Used for RSVP and CFPS
     Create a new submission for the given doctype with the given fields.
     Fields variable should have the doctype values as well
     """
-    doc = frappe.get_doc(fields)
+    if not is_valid_doctype(doctype):
+        frappe.log("Unauthorized usage of create submission")
+        frappe.msgprint("Not allowed")
+        return
+
+    doc = frappe.get_doc(doctype, fields)
     doc.insert(ignore_permissions=True)
 
     return doc
@@ -26,6 +44,11 @@ def update_submission(doctype, submission, fields, custom):
     Used for RSVP and CFPS
     Update the given submission with the given fields and custom answers
     """
+    if not is_valid_doctype(doctype):
+        frappe.log("Unauthorized usage of update_submission")
+        frappe.msgprint("Not allowed")
+        return
+
     fields = json.loads(fields)
     custom = json.loads(custom)
     frappe.db.set_value(doctype, submission, fields)
@@ -86,6 +109,11 @@ def publish_form(doctype, docname):
     Used to Publish RSVP and CFP forms by the user.
     This bypasses the permissions required to publish the form.
     """
+    if not is_valid_doctype(doctype):
+        frappe.log("Unauthorized usage of publish_form")
+        frappe.throw("Not allowed")
+        return
+
     doc = frappe.get_doc(doctype, docname)
     doc.is_published = 1
     doc.save(ignore_permissions=True)
@@ -98,6 +126,11 @@ def unpublish_form(doctype, docname):
     Used to Unpublish RSVP and CFP forms by the user.
     This bypasses the permissions required to unpublish the form.
     """
+    if not is_valid_doctype(doctype):
+        frappe.log("Unauthorized usage of unpublish_form")
+        frappe.throw("Not allowed")
+        return
+
     doc = frappe.get_doc(doctype, docname)
     doc.is_published = 0
     doc.save(ignore_permissions=True)

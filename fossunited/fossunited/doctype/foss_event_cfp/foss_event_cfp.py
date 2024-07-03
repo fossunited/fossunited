@@ -199,11 +199,10 @@ class FOSSEventCFP(WebsiteGenerator):
 @frappe.whitelist()
 def create_cfp_submission(fields):
     fields_dict = {
-        "doctype": "FOSS Event CFP Submission",
         "submitted_by": frappe.session.user,
     }
     fields_dict.update(frappe.parse_json(fields))
-    return create_submission(fields_dict)
+    return create_submission("FOSS Event CFP Submission", fields_dict)
 
 
 @frappe.whitelist()
