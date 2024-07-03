@@ -288,7 +288,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-06-25 13:26:29.753016",
+ "modified": "2024-07-03 10:38:03.852604",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -304,29 +304,6 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
    "share": 1,
    "write": 1
   }
