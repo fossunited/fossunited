@@ -57,7 +57,7 @@ const routes = [
         component: () => import('@/pages/TicketTransferProcess.vue'),
         props: true,
       },
-    ]
+    ],
   },
   {
     name: 'Event',

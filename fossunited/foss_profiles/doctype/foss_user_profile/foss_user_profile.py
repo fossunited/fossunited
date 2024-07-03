@@ -70,7 +70,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 "last_name",
                 " ".join(self.full_name.split()[1:]),
             )
-
+            
     def validate(self):
         self.validate_username()
         self.set_route()

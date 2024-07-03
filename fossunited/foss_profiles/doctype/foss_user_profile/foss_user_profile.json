@@ -99,7 +99,8 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "fieldname": "current_city",
@@ -278,7 +279,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-06-28 01:59:00.715902",
+ "modified": "2024-07-02 17:36:34.436149",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
@@ -293,21 +294,17 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "System Manager",
+   "role": "Administrator",
    "share": 1,
    "write": 1
   },
   {
-   "create": 1,
+   "delete": 1,
    "email": 1,
    "export": 1,
-   "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1,
-   "write": 1
+   "role": "System Manager"
   }
  ],
  "quick_entry": 1,
