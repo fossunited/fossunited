@@ -12,6 +12,11 @@
   "route",
   "column_break_ekbb",
   "is_published",
+  "section_break_xhxb",
+  "is_contribution_project",
+  "column_break_mwcp",
+  "is_partner_project",
+  "partner_project",
   "project_details_section",
   "title",
   "repo_link",
@@ -20,6 +25,7 @@
   "column_break_xfpp",
   "hackathon",
   "team",
+  "team_name",
   "description"
  ],
  "fields": [
@@ -43,7 +49,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published"
@@ -82,8 +88,7 @@
    "fieldname": "repo_link",
    "fieldtype": "Data",
    "label": "Repo Link",
-   "options": "URL",
-   "reqd": 1
+   "options": "URL"
   },
   {
    "fieldname": "demo_link",
@@ -102,13 +107,47 @@
    "fieldtype": "Small Text",
    "label": "Short description",
    "options": "URL"
+  },
+  {
+   "fieldname": "section_break_xhxb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_contribution_project",
+   "fieldtype": "Check",
+   "label": "Is Contribution Project?"
+  },
+  {
+   "fieldname": "column_break_mwcp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_partner_project",
+   "fieldtype": "Check",
+   "label": "Is Partner Project?"
+  },
+  {
+   "depends_on": "eval:doc.is_partner_project==1",
+   "fieldname": "partner_project",
+   "fieldtype": "Link",
+   "label": "Partner Project",
+   "options": "FOSS Hackathon Partner Project"
+  },
+  {
+   "fetch_from": "team.team_name",
+   "fieldname": "team_name",
+   "fieldtype": "Data",
+   "label": "Team Name",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-05-10 15:59:09.589371",
+ "modified": "2024-06-18 14:13:38.820349",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",
@@ -141,6 +180,7 @@
    "write": 1
   },
   {
+   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -148,7 +188,8 @@
    "report": 1,
    "role": "All",
    "select": 1,
-   "share": 1
+   "share": 1,
+   "write": 1
   }
  ],
  "search_fields": "hackathon",

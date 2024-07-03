@@ -145,7 +145,7 @@
                 <div class="font-semibold text-gray-800">
                   Session Description
                 </div>
-                <div>{{ selected_row_data.doc.talk_description }}</div>
+                <div v-html="selected_row_data.doc.talk_description"></div>
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Is a first talk?</div>
@@ -171,7 +171,8 @@
                 <div class="font-semibold text-gray-800">
                   {{ response.question }}
                 </div>
-                <div>{{ response.response }}</div>
+                <div v-if="response.type == 'Check'">{{ response.response == 1 ? 'Yes' : 'No' }}</div>
+                <div v-else v-html="response.response"></div>
               </div>
             </div>
             <div class="flex flex-col mb-4 gap-2">
@@ -215,7 +216,7 @@
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Bio</div>
-                <div>{{ selected_row_data.doc.bio }}</div>
+                <div v-html="selected_row_data.doc.bio"></div>
               </div>
             </div>
           </div>

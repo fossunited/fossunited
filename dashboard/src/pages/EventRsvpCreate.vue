@@ -2,7 +2,7 @@
   <div v-if="event.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col md:flex-row justify-between gap-2">
       <div class="text-xl font-medium">Create RSVP Form</div>
-      <Button size="md" icon-left="plus" label="Save" @click="createRsvpForm" />
+      <Button size="md" label="Create" variant="solid" @click="createRsvpForm" />
     </div>
     <div>
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
@@ -25,13 +25,12 @@
           description="Maximum RSVP Count for the event. Default is 100."
           v-model="rsvp_doc.max_rsvp_count"
         />
-        <FormControl
-          size="md"
-          class="col-span-2 h-32"
-          type="textarea"
+        <TextEditor
+          class="col-span-2"
           label="RSVP Form Description"
-          description="This description will be shown on the RSVP form. You can use elements like <strong>bold</strong>, <em>italic</em>, <a href='#'>links</a>, etc."
-          v-model="rsvp_doc.rsvp_description"
+          placeholder="Write a description to be shown in the RSVP Form"
+          :modelValue="rsvp_doc.rsvp_description"
+          @update:modelValue="($event) => (rsvp_doc.rsvp_description = $event)"
         />
       </div>
     </div>
@@ -177,6 +176,7 @@ import {
 import { reactive, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
 const emit = defineEmits(['rsvpCreated'])

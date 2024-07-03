@@ -18,6 +18,7 @@
   "name1",
   "im_a",
   "column_break_bkxf",
+  "email",
   "confirm_attendance",
   "section_break_vzwa",
   "custom_answers"
@@ -39,7 +40,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "Submitted By",
+   "label": "Submitted By (User)",
    "options": "User"
   },
   {
@@ -111,12 +112,19 @@
    "fetch_if_empty": 1,
    "fieldname": "name1",
    "fieldtype": "Data",
-   "label": "Name"
+   "label": "Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
   }
  ],
- "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-04-24 10:34:12.588168",
+ "modified": "2024-07-03 10:22:45.197158",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
@@ -131,29 +139,6 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
    "share": 1,
    "write": 1
   }

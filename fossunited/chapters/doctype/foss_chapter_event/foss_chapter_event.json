@@ -9,6 +9,9 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "is_external_event",
+  "column_break_okxh",
+  "external_event_url",
   "meta_info_section",
   "is_published",
   "column_break_yozf",
@@ -91,8 +94,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Event Type",
-   "options": "FOSS Event Type",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.is_external_event == 0",
+   "options": "FOSS Event Type"
   },
   {
    "fieldname": "chapter_information_section",
@@ -128,13 +131,13 @@
    "fieldname": "event_start_date",
    "fieldtype": "Datetime",
    "label": "Event Start Date & Time",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.is_external_event == 0"
   },
   {
    "fieldname": "event_end_date",
    "fieldtype": "Datetime",
    "label": "Event End Date & Time",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.is_external_event == 0"
   },
   {
    "fieldname": "column_break_ae9v",
@@ -146,16 +149,17 @@
    "label": "Location"
   },
   {
+   "depends_on": "eval:doc.is_external_event == 0",
    "fieldname": "event_description",
    "fieldtype": "Text Editor",
    "label": "Description",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.is_external_event == 0"
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nBeing Reviewed\nApproved\nIn Progress\nConcluded\nCancelled",
+   "options": "\nDraft\nLive\nApproved\nConcluded\nCancelled",
    "reqd": 1
   },
   {
@@ -305,6 +309,7 @@
    "label": "Show Photos"
   },
   {
+   "depends_on": "eval:doc.is_external_event == 0",
    "fieldname": "meta_info_section",
    "fieldtype": "Section Break",
    "label": "Meta Info"
@@ -328,13 +333,14 @@
    "label": "Chapter Name"
   },
   {
+   "depends_on": "eval:doc.is_external_event == 0",
    "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
    "fieldname": "event_permalink",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_preview": 1,
    "label": "Event Permalink",
-   "reqd": 1,
+   "mandatory_depends_on": "eval:doc.is_external_event == 0",
    "unique": 1
   },
   {
@@ -400,6 +406,21 @@
    "fieldname": "ticket_form_description",
    "fieldtype": "Markdown Editor",
    "label": "Ticket Form Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_external_event",
+   "fieldtype": "Check",
+   "label": "Is External Event?"
+  },
+  {
+   "fieldname": "column_break_okxh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "external_event_url",
+   "fieldtype": "Data",
+   "label": "External Event URL"
   }
  ],
  "has_web_view": 1,
@@ -421,7 +442,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-05-08 21:50:02.177279",
+ "modified": "2024-06-18 15:13:11.424891",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -477,6 +498,23 @@
  "show_title_field_in_link": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Draft"
+  },
+  {
+   "color": "Green",
+   "title": "Live"
+  },
+  {
+   "color": "Gray",
+   "title": "Concluded"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  }
+ ],
  "title_field": "event_name"
 }

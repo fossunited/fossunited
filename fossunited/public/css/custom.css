@@ -345,6 +345,8 @@ h6{
 .primary-button:hover{
     background: hsl(var(--clr-foss-mint-600));
     cursor: pointer;
+    color: #FFF;
+    text-decoration: none;
 }
 
 .secondary-button{
@@ -363,7 +365,10 @@ h6{
 
 .secondary-button:hover{
     cursor: pointer;
+    color: hsl(var(--clr-foss-mint-500));
     box-shadow: inset 0px 0px 0px 2px hsl(var(--clr-foss-mint-500));
+    text-decoration: none;
+    background: white;
 }
 
 .danger-button{
@@ -1409,12 +1414,12 @@ h6{
     border-radius: 0.5rem;
     cursor: pointer;
     background: #FFF;
-    box-shadow: 0px 0px 0px 1px hsl(var(--clr-open-gray-100));
-    transition: box-shadow 0.1s ease-in-out;
+    border: 2px solid hsl(var(--clr-open-gray-100));
+    transition: border 0.2s ease-in-out;
 }
 
 .event-card:hover{
-    box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-200));
+    border: 2px solid hsl(var(--clr-code-night-300));
 }
 
 .event-card--banner{
@@ -1457,6 +1462,11 @@ h6{
     border-radius: 0.5rem;
     background: hsl(var(--clr-foss-mint-100));
     color: hsl(var(--clr-foss-mint-600));
+}
+
+.event-card--logo{
+    width: 10rem;
+    height: auto;
 }
 
 .event-card--title{
@@ -1658,7 +1668,7 @@ h6{
     gap: 1rem;
     justify-items: center;
     align-items: center;
-    padding: 1.88rem;
+    padding: 1rem;
     border-radius: 0.5rem;
     background: hsl(var(--clr-gray-100));
     transition: box-shadow 0.2s ease-in-out;
@@ -1956,12 +1966,10 @@ h6{
 
 .copy-to-clipboard:hover .tooltip-text{
     display: block;
-    bottom: -6.2rem;
 }
 
 .copy-url-clipboard:focus .tooltip-text{
     display: block;
-    bottom: -6.2rem;
 }
 /* ---- */
 
@@ -2332,6 +2340,17 @@ h6{
 .team-member--username{
     font-size: var(--text-sm);
     color: hsl(var(--clr-open-gray-200));
+}
+
+.status-block-deadline{
+    font-size: var(--text-xs);
+    padding: 0.2rem 0.5rem;
+    background: hsl(var(--clr-error-100));
+    width: fit-content;
+    color: hsl(var(--clr-error-500));
+    border: 1px solid hsl(var(--clr-error-300));
+    border-radius: 1rem;
+    margin: 0.5rem 0rem;
 }
 
 @media screen and (max-width: 1200px){
@@ -2706,6 +2725,7 @@ h6{
     }
 
     .submission-status-block{
+        display: flex;
         flex-direction: column;
         gap: 1rem;
     }
@@ -2713,6 +2733,12 @@ h6{
     .status--buttons-section{
         flex-direction: row;
         justify-content: center;
+    }
+
+    .status--buttons-section button{
+        width: 100%;
+        font-size: var(--text-base);
+        padding: 0.5rem;
     }
 
     .events-grid{

@@ -32,7 +32,11 @@ class FOSSHackathon(WebsiteGenerator):
         )
 
         community_partners: DF.Table[FOSSEventCommunityPartner]
+        contribution_coming_soon_description: DF.SmallText | None
+        contribution_project_guidelines: DF.MarkdownEditor | None
+        enable_oss_contributon_projects: DF.Check
         end_date: DF.Datetime
+        external_website_url: DF.Data | None
         hackathon_banner: DF.AttachImage | None
         hackathon_description: DF.TextEditor
         hackathon_faq: DF.TextEditor | None
@@ -42,13 +46,22 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_type: DF.Literal[
             "", "Remote", "In-person", "Hybrid"
         ]
+        has_external_website: DF.Check
+        has_localhosts: DF.Check
+        has_partner_projects: DF.Check
+        is_contribution_project_coming_soon: DF.Check
         is_published: DF.Check
+        is_registration_live: DF.Check
         is_team_mandatory: DF.Check
         max_team_members: DF.Int
+        only_show_logo: DF.Check
         organizing_chapter: DF.Link | None
+        partner_project_guidelines: DF.MarkdownEditor | None
         permalink: DF.Data | None
+        registration_description: DF.TextEditor | None
         route: DF.Data | None
         schedule: DF.Table[FOSSEventSchedule]
+        show_schedule_tab: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
         start_date: DF.Datetime
 
@@ -68,7 +81,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "FOSS Chapter", self.organizing_chapter
             )
 
-        context.nav_items = ["information", "schedule", "submissions"]
+        context.nav_items = self.get_nav_items()
         context.sponsors_dict = self.get_sponsors()
         context.tag_icon = {
             "Remote": "world",
@@ -82,6 +95,13 @@ class FOSSHackathon(WebsiteGenerator):
             filters={"hackathon": self.name},
             fields=["*"],
         )
+
+    def get_nav_items(self):
+        nav_items = ["information", "submissions"]
+        if self.show_schedule_tab:
+            nav_items.append("schedule")
+
+        return nav_items
 
     def get_sponsors(self):
         sponsors_dict = {}
@@ -98,8 +118,10 @@ class FOSSHackathon(WebsiteGenerator):
             if date not in schedule_dict:
                 schedule_dict[date] = []
             get_speakers(schedule)
-            schedule.start_time = BASE_DATE + schedule.start_time
-            schedule.end_time = BASE_DATE + schedule.end_time
+            if schedule.start_time:
+                schedule.start_time = BASE_DATE + schedule.start_time
+            if schedule.end_time:
+                schedule.end_time = BASE_DATE + schedule.end_time
             schedule_dict[date].append(schedule)
 
         schedule_dict["days"] = list(schedule_dict.keys())

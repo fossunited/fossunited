@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2024-05-14 01:30:41.753208",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "parent_hackathon",
+  "localhost_name",
+  "column_break_bvzk",
+  "city",
+  "state",
+  "venue_details_section",
+  "location",
+  "column_break_sikv",
+  "map_link",
+  "organizer_details_section",
+  "organizers"
+ ],
+ "fields": [
+  {
+   "fieldname": "parent_hackathon",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Parent Hackathon",
+   "options": "FOSS Hackathon",
+   "reqd": 1
+  },
+  {
+   "fieldname": "localhost_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Localhost Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_bvzk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "city",
+   "fieldtype": "Link",
+   "label": "City",
+   "options": "City"
+  },
+  {
+   "fieldname": "state",
+   "fieldtype": "Link",
+   "label": "State",
+   "options": "State"
+  },
+  {
+   "fieldname": "venue_details_section",
+   "fieldtype": "Section Break",
+   "label": "Venue Details"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Data",
+   "label": "Location"
+  },
+  {
+   "fieldname": "column_break_sikv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "map_link",
+   "fieldtype": "Data",
+   "label": "Map Link"
+  },
+  {
+   "fieldname": "organizer_details_section",
+   "fieldtype": "Section Break",
+   "label": "Organizer Details"
+  },
+  {
+   "fieldname": "organizers",
+   "fieldtype": "Table",
+   "label": "Organizers",
+   "options": "FOSS Hackathon LocalHost Organizer"
+  }
+ ],
+ "links": [],
+ "modified": "2024-06-25 13:11:34.567860",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "FOSS Hackathon LocalHost",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "FOSS Website User",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "localhost_name"
+}

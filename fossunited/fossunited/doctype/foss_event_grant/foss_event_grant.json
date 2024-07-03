@@ -28,6 +28,7 @@
   "approvalrejection_stats_tab",
   "approval_stats_section",
   "grant_amount",
+  "custom_amount",
   "post_event_report_received",
   "post_event_report",
   "rejection_stats_section",
@@ -44,6 +45,7 @@
    "fieldname": "grant_status",
    "fieldtype": "Select",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Grant Status",
    "options": "Open\nApproved\nRejected\nUnder Review",
    "reqd": 1
@@ -51,6 +53,7 @@
   {
    "fieldname": "event_type",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Event Type",
    "options": "Hackathon\nMeetup\nConference",
    "reqd": 1
@@ -63,11 +66,13 @@
   {
    "fieldname": "event_name",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Event Name"
   },
   {
    "fieldname": "event_organiser",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Event Organiser"
   },
   {
@@ -149,8 +154,9 @@
   {
    "fieldname": "grant_amount",
    "fieldtype": "Select",
+   "in_standard_filter": 1,
    "label": "Grant amount",
-   "options": "\nRs. 10,000\nRs. 25,000\nRs. 50,000"
+   "options": "\nRs. 10,000\nRs. 25,000\nRs. 50,000\nCustom"
   },
   {
    "default": "0",
@@ -173,11 +179,17 @@
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
    "label": "Reason for rejection"
+  },
+  {
+   "depends_on": "eval: doc.grant_amount==\"Custom\"",
+   "fieldname": "custom_amount",
+   "fieldtype": "Data",
+   "label": "Custom Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-13 17:06:35.121942",
+ "modified": "2024-05-13 13:38:30.198431",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Grant",
@@ -208,5 +220,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "event_name"
 }

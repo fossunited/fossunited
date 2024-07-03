@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-06-20 13:03:10.000077",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "banner_image",
+  "web_page_description"
+ ],
+ "fields": [
+  {
+   "description": "This is shown in the ticket transfer page description.",
+   "fieldname": "web_page_description",
+   "fieldtype": "Text Editor",
+   "label": "Web Page Description"
+  },
+  {
+   "fieldname": "banner_image",
+   "fieldtype": "Attach Image",
+   "label": "Banner Image"
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-06-25 13:05:54.357097",
+ "modified_by": "Administrator",
+ "module": "Ticketing",
+ "name": "Ticket Transfer Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Guest",
+   "select": 1,
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

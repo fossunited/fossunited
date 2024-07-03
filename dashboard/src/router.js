@@ -21,10 +21,20 @@ const routes = [
     meta: { isPublicPage: true },
   },
   {
-    name: 'Login',
-    path: '/account/login',
-    component: () => import('@/pages/Login.vue'),
-    meta: { isPublicPage: true },
+    path: '/ticket-transfer',
+    children: [
+      {
+        path: '',
+        name: 'TicketTransfer',
+        component: () => import('@/pages/TicketTransfer.vue'),
+      },
+      {
+        path: 'process',
+        name: 'TicketTransferProcess',
+        component: () => import('@/pages/TicketTransferProcess.vue'),
+        props: true,
+      },
+    ],
   },
   {
     name: 'Event',
@@ -124,6 +134,56 @@ const routes = [
       },
     ],
   },
+  {
+    path: '/register-for-hackathon',
+    name: 'HackathonRegister',
+    component: () => import('@/pages/hackathon/Register.vue'),
+  },
+  {
+    path: '/my-hackathons',
+    name: 'MyHackathons',
+    component: () => import('@/pages/hackathon/MyHackathons.vue'),
+  },
+  {
+    path: '/hack/:permalink',
+    children:[
+      {
+        path: '',
+        name: 'InitialRegister',
+        component: () => import('@/pages/hackathon/InitRegister.vue')
+      },
+      {
+        path: 'create-team',
+        name: 'CreateHackathonTeam',
+        component: () => import('@/pages/hackathon/CreateTeam.vue'),
+      },
+      {
+        path: 'create-project',
+        name: 'CreateHackathonProject',
+        component: () => import('@/pages/hackathon/CreateProject.vue'),
+      },
+      {
+        path: 'my-team',
+        name: 'MyHackathonTeam',
+        component: () => import('@/pages/hackathon/MyTeam.vue'),
+      },
+      {
+        path: 'project',
+        name: 'MyHackathonProject',
+        component: () => import('@/pages/hackathon/MyProject.vue'),
+      }
+    ]
+  },
+  {
+    path: '/localhost/:id',
+    children: [
+      {
+        path: '',
+        name: 'ManageLocalhost',
+        component: () => import('@/pages/localhost/ManageLocalhost.vue')
+      }
+    ]
+  }
 ]
 
 let router = createRouter({
@@ -142,7 +202,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.name === 'Login' && isLoggedIn) {
     next({ name: 'Home' })
   } else if (to.name !== 'Login' && !isLoggedIn && !to.meta.isPublicPage) {
-    next({ name: 'Login' })
+    window.location.href = `/login?redirect-to=/dashboard${to.fullPath}`
   } else {
     next()
   }

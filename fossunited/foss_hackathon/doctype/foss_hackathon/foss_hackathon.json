@@ -12,6 +12,10 @@
   "permalink",
   "column_break_ysex",
   "is_published",
+  "section_break_doxc",
+  "has_external_website",
+  "column_break_gttz",
+  "external_website_url",
   "hackathon_basic_info_section",
   "organizing_chapter",
   "hackathon_name",
@@ -21,6 +25,7 @@
   "column_break_jepp",
   "hackathon_description",
   "hackathon_details_section",
+  "only_show_logo",
   "hackathon_logo",
   "hackathon_rules",
   "column_break_frpz",
@@ -30,12 +35,26 @@
   "sponsor_list",
   "community_partners",
   "team_set_up_tab",
+  "is_registration_live",
+  "registration_page_setup_section",
+  "registration_description",
+  "projects_setup_section",
+  "enable_oss_contributon_projects",
+  "contribution_project_guidelines",
+  "is_contribution_project_coming_soon",
+  "contribution_coming_soon_description",
   "team_setup_details_section",
   "is_team_mandatory",
   "column_break_yeth",
   "max_team_members",
   "schedule_tab",
-  "schedule"
+  "show_schedule_tab",
+  "schedule",
+  "localhost_tab",
+  "has_localhosts",
+  "partner_projects_tab",
+  "has_partner_projects",
+  "partner_project_guidelines"
  ],
  "fields": [
   {
@@ -148,12 +167,12 @@
   {
    "fieldname": "team_set_up_tab",
    "fieldtype": "Tab Break",
-   "label": "Team Set Up"
+   "label": "Registration"
   },
   {
    "fieldname": "team_setup_details_section",
    "fieldtype": "Section Break",
-   "label": "Team Setup Details"
+   "label": "Team Setup"
   },
   {
    "default": "0",
@@ -163,7 +182,6 @@
   },
   {
    "default": "2",
-   "depends_on": "eval:doc.is_team_mandatory == 1;",
    "fieldname": "max_team_members",
    "fieldtype": "Int",
    "label": "Max Team Members",
@@ -195,6 +213,113 @@
    "fieldtype": "Table",
    "label": "Schedule",
    "options": "FOSS Event Schedule"
+  },
+  {
+   "fieldname": "localhost_tab",
+   "fieldtype": "Tab Break",
+   "label": "LocalHost"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_localhosts",
+   "fieldtype": "Check",
+   "label": "Has LocalHosts?"
+  },
+  {
+   "fieldname": "registration_page_setup_section",
+   "fieldtype": "Section Break",
+   "label": "Registration Page Setup"
+  },
+  {
+   "fieldname": "registration_description",
+   "fieldtype": "Text Editor",
+   "label": "Registration Description"
+  },
+  {
+   "fieldname": "partner_projects_tab",
+   "fieldtype": "Tab Break",
+   "label": "Partner Projects"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_partner_projects",
+   "fieldtype": "Check",
+   "label": "Has Partner Projects?"
+  },
+  {
+   "fieldname": "projects_setup_section",
+   "fieldtype": "Section Break",
+   "label": "Projects Setup"
+  },
+  {
+   "default": "0",
+   "description": "Allow participants to submit their contributions to other open-source projects as valid hackathon entries.",
+   "fieldname": "enable_oss_contributon_projects",
+   "fieldtype": "Check",
+   "label": "Enable OSS Contributon Projects"
+  },
+  {
+   "fieldname": "contribution_project_guidelines",
+   "fieldtype": "Markdown Editor",
+   "label": "Contribution Project Guidelines"
+  },
+  {
+   "depends_on": "eval:doc.has_partner_projects==1",
+   "description": "Set of guides to be followed by participants. This will be shown in the public page & at the time of registration. ",
+   "fieldname": "partner_project_guidelines",
+   "fieldtype": "Markdown Editor",
+   "label": "Partner Project Guidelines"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_contribution_project_coming_soon",
+   "fieldtype": "Check",
+   "label": "Is Contribution Project Coming Soon?"
+  },
+  {
+   "fieldname": "contribution_coming_soon_description",
+   "fieldtype": "Small Text",
+   "label": "Contribution Coming Soon Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_registration_live",
+   "fieldtype": "Check",
+   "label": "Is Registration Live?"
+  },
+  {
+   "fieldname": "section_break_doxc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_external_website",
+   "fieldtype": "Check",
+   "label": "Has External Website?"
+  },
+  {
+   "fieldname": "column_break_gttz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval: doc.has_external_website == 1",
+   "fieldname": "external_website_url",
+   "fieldtype": "Data",
+   "label": "External Website URL",
+   "mandatory_depends_on": "eval: doc.has_external_website == 1"
+  },
+  {
+   "default": "0",
+   "description": "Only show logo on hackathon card.",
+   "fieldname": "only_show_logo",
+   "fieldtype": "Check",
+   "label": "Only Show Logo"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_schedule_tab",
+   "fieldtype": "Check",
+   "label": "Show Schedule Tab?"
   }
  ],
  "has_web_view": 1,
@@ -215,9 +340,14 @@
    "group": "Teams",
    "link_doctype": "FOSS Hackathon Mentor",
    "link_fieldname": "hackathon"
+  },
+  {
+   "group": "LocalHost",
+   "link_doctype": "FOSS Hackathon LocalHost",
+   "link_fieldname": "parent_hackathon"
   }
  ],
- "modified": "2024-05-10 01:34:54.004964",
+ "modified": "2024-06-18 13:58:54.173769",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon",

@@ -25,20 +25,6 @@ def format_date_time(time, format="h:mm a"):
     return format_datetime(time, format)
 
 
-def get_foss_profile(email):
-    if email == "admin@example.com":
-        return frappe.get_doc("User", {"email": email})
-
-    try:
-        profile = frappe.get_doc(
-            "FOSS User Profile", {"email": email}
-        )
-    except:
-        return frappe.get_doc("User", email)
-
-    return profile
-
-
 # Jinja Filter
 def get_profile_image(email):
     profile = get_foss_profile(email)
@@ -520,18 +506,11 @@ def validate_profile_completion():
 def get_grouped_events():
     events = frappe.get_all(
         "FOSS Chapter Event",
-        fields=[
-            "event_name",
-            "chapter",
-            "banner_image",
-            "route",
-            "must_attend",
-            "event_location",
-            "map_link",
-            "event_start_date",
-            "banner_image",
-        ],
-        filters={"status": "Approved", "is_published": 1},
+        fields=["*"],
+        filters={
+            "status": ["in", ["Approved", "Live", "Concluded"]],
+            "is_published": 1,
+        },
         order_by="event_start_date",
     )
     return get_month_grouped_events(events)
@@ -564,3 +543,16 @@ def get_month_grouped_events(events):
             )
 
     return month_grouped_events
+
+
+@frappe.whitelist(allow_guest=True)
+def get_foss_profile(email):
+    """
+    Return the FOSS User Profile doc linked to the parameter email.
+    """
+    if email in ["guest@example.com", "admin@example.com"]:
+        return None
+
+    return (
+        frappe.get_doc("FOSS User Profile", {"user": email}) or None
+    )

@@ -8,18 +8,15 @@
     >
       <div class="text-xl font-semibold">Create Event</div>
       <Button
-        label="Create Event"
+        label="Create"
         :variant="'solid'"
         size="md"
-        icon-left="plus"
         @click="createEvent"
       />
     </div>
     <div v-if="eventTypeOptions.data">
       <div class="flex flex-col gap-3 my-6">
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">
-          Event Details
-        </div>
+        <div class="font-semibold text-gray-800 border-b-2 pb-2">Details</div>
         <div
           class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
         >
@@ -40,16 +37,12 @@
             :type="'select'"
             :options="[
               {
-                label: 'Being Reviewed',
-                value: 'Being Reviewed',
+                label: 'Draft',
+                value: 'Draft',
               },
               {
-                label: 'Approved',
-                value: 'Approved',
-              },
-              {
-                label: 'In Progress',
-                value: 'In Progress',
+                label: 'Live',
+                value: 'Live',
               },
               {
                 label: 'Concluded',
@@ -72,17 +65,17 @@
             v-model="temp_event.event_type"
             label="Event Type"
           />
-          <FormControl
-            class="col-span-2"
-            :type="'textarea'"
-            size="md"
-            v-model="temp_event.event_description"
+          <TextEditor
             label="Event Description"
+            class="col-span-2"
+            placeholder="Write an event description"
+            :modelValue="temp_event.event_description"
+            @update:modelValue="
+              ($event) => (temp_event.event_description = $event)
+            "
           />
         </div>
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">
-          Location Details
-        </div>
+        <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
         <div
           class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
         >
@@ -99,9 +92,7 @@
             side="md"
           />
         </div>
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">
-          Event Timeline
-        </div>
+        <div class="font-semibold text-gray-800 border-b-2 pb-2">Timeline</div>
         <div
           class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
         >
@@ -134,6 +125,7 @@ import { reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import ChapterHeader from '@/components/ChapterHeader.vue'
+import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -146,7 +138,7 @@ let temp_event = reactive({
   status: '',
   event_type: '',
   event_description: '',
-  location: '',
+  location: 'TBD',
   map_link: '',
   event_start_date: '',
   event_end_date: '',

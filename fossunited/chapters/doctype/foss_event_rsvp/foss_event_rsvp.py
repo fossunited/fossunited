@@ -10,6 +10,30 @@ from fossunited.fossunited.forms import create_submission
 
 
 class FOSSEventRSVP(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import (
+            FOSSCustomQuestion,
+        )
+
+        allow_edit: DF.Check
+        chapter: DF.Data | None
+        custom_questions: DF.Table[FOSSCustomQuestion]
+        event: DF.Link | None
+        event_name: DF.Data | None
+        is_published: DF.Check
+        max_rsvp_count: DF.Int
+        route: DF.Data | None
+        rsvp_count: DF.Int
+        rsvp_description: DF.TextEditor | None
+
+    # end: auto-generated types
     def before_save(self):
         self.set_route()
         self.enable_rsvp_tab()
@@ -35,6 +59,15 @@ class FOSSEventRSVP(WebsiteGenerator):
                 "reqd": 1,
                 "value": frappe.get_value(
                     "User", frappe.session.user, "full_name"
+                ),
+            },
+            {
+                "fieldname": "email",
+                "fieldtype": "Data",
+                "label": "Email",
+                "reqd": 1,
+                "value": frappe.get_value(
+                    "User", frappe.session.user, "email"
                 ),
             },
             {
@@ -102,11 +135,14 @@ class FOSSEventRSVP(WebsiteGenerator):
         )
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_rsvp(fields):
     fields_dict = {
         "doctype": "FOSS Event RSVP Submission",
-        "submitted_by": frappe.session.user,
+        "submitted_by": "",
     }
+    if frappe.session.user not in ["Guest", "Administrator"]:
+        fields_dict["submitted_by"] = frappe.session.user
+
     fields_dict.update(json.loads(fields))
     return create_submission(fields_dict)

@@ -19,11 +19,15 @@ class FOSSHackathonProject(WebsiteGenerator):
         demo_link: DF.Data | None
         description: DF.TextEditor
         hackathon: DF.Link
+        is_contribution_project: DF.Check
+        is_partner_project: DF.Check
         is_published: DF.Check
-        repo_link: DF.Data
+        partner_project: DF.Link | None
+        repo_link: DF.Data | None
         route: DF.Data | None
         short_description: DF.SmallText | None
         team: DF.Link
+        team_name: DF.Data | None
         title: DF.Data
 
     # end: auto-generated types
@@ -52,8 +56,11 @@ class FOSSHackathonProject(WebsiteGenerator):
 def get_team_members(team):
     member_details = []
     for member in team.members:
+        user_email = frappe.get_value(
+            "FOSS Hackathon Participant", member.member, "user"
+        )
         user = frappe.get_doc(
-            "FOSS User Profile", {"user": member.member}, ["*"]
+            "FOSS User Profile", {"user": user_email}, ["*"]
         ).as_dict()
         member_details.append(user)
     return member_details

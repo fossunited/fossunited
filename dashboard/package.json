@@ -9,6 +9,7 @@
     "copy-html-entry": "cp ../fossunited/public/dashboard/index.html ../fossunited/www/dashboard.html"
   },
   "dependencies": {
+    "@tiptap/extension-underline": "^2.4.0",
     "dayjs": "^1.11.11",
     "feather-icons": "^4.28.0",
     "frappe-ui": "^0.1.50",

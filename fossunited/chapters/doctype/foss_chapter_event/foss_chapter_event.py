@@ -48,15 +48,17 @@ class FOSSChapterEvent(WebsiteGenerator):
         custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
-        event_description: DF.TextEditor
-        event_end_date: DF.Datetime
+        event_description: DF.TextEditor | None
+        event_end_date: DF.Datetime | None
         event_location: DF.Data | None
         event_members: DF.Table[FOSSChapterEventMember]
         event_name: DF.Data
-        event_permalink: DF.Data
+        event_permalink: DF.Data | None
         event_schedule: DF.Table[FOSSEventSchedule]
-        event_start_date: DF.Datetime
-        event_type: DF.Link
+        event_start_date: DF.Datetime | None
+        event_type: DF.Link | None
+        external_event_url: DF.Data | None
+        is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
         map_link: DF.Data | None
@@ -74,12 +76,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
         status: DF.Literal[
-            "",
-            "Being Reviewed",
-            "Approved",
-            "In Progress",
-            "Concluded",
-            "Cancelled",
+            "", "Draft", "Live", "Approved", "Concluded", "Cancelled"
         ]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
@@ -109,7 +106,31 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
 
     def before_save(self):
+        if self.has_value_changed("status"):
+            self.update_published_status()
         self.set_route()
+
+    def update_published_status(self):
+        if self.status == "Draft" or self.status == "Cancelled":
+            self.is_published = 0
+            return
+
+        if self.status == "Live" or self.status == "Approved":
+            self.is_published = 1
+            return
+
+        if self.status == "Concluded":
+            self.is_published = 1
+            self.handle_concluded_event()
+
+    def handle_concluded_event(self):
+        event_permalink = self.event_permalink
+        self.event_permalink = f"{event_permalink}-archive-{frappe.generate_hash(length=8)}"
+
+    def set_route(self):
+        if self.is_external_event:
+            return
+        self.route = f"events/{self.event_permalink}"
 
     def get_context(self, context):
         context.chapter = frappe.get_doc("FOSS Chapter", self.chapter)
@@ -125,9 +146,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
-
-    def set_route(self):
-        self.route = f"events/{self.event_permalink}"
 
     def get_navbar_items(self):
         navbar_items = [
@@ -292,6 +310,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
+                "deadline": cfp_form.deadline.strftime(
+                    "%d %B, %Y  %I:%M %p"
+                )
+                if cfp_form.deadline
+                else None,
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
             }

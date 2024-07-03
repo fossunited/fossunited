@@ -1,0 +1,171 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "creation": "2024-05-24 21:24:15.111949",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "meta_section",
+  "hackathon",
+  "column_break_pxgj",
+  "user",
+  "participant_details_section",
+  "user_profile",
+  "full_name",
+  "email",
+  "is_student",
+  "organization",
+  "column_break_hkri",
+  "git_profile",
+  "localhost_tab",
+  "wants_to_attend_locally",
+  "section_break_pijd",
+  "localhost",
+  "column_break_wclx",
+  "localhost_request_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "participant_details_section",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "user_profile",
+   "fieldtype": "Link",
+   "label": "User Profile",
+   "options": "FOSS User Profile"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_student",
+   "fieldtype": "Check",
+   "label": "Is Student?"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Data",
+   "label": "Organization / Institute"
+  },
+  {
+   "fieldname": "column_break_hkri",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "hackathon",
+   "fieldtype": "Link",
+   "label": "Hackathon",
+   "options": "FOSS Hackathon"
+  },
+  {
+   "fieldname": "meta_section",
+   "fieldtype": "Section Break",
+   "label": "Meta"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "localhost_tab",
+   "fieldtype": "Tab Break",
+   "label": "LocalHost"
+  },
+  {
+   "default": "0",
+   "fieldname": "wants_to_attend_locally",
+   "fieldtype": "Check",
+   "label": "Wants to attend locally?"
+  },
+  {
+   "depends_on": "eval:doc.wants_to_attend_locally == 1",
+   "fieldname": "section_break_pijd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "localhost",
+   "fieldtype": "Link",
+   "label": "LocalHost",
+   "options": "FOSS Hackathon LocalHost"
+  },
+  {
+   "fieldname": "column_break_wclx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "localhost_request_status",
+   "fieldtype": "Select",
+   "label": "LocalHost Request Status",
+   "options": "Pending\nAccepted\nRejected"
+  },
+  {
+   "fieldname": "column_break_pxgj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User"
+  },
+  {
+   "fieldname": "git_profile",
+   "fieldtype": "Data",
+   "label": "Git Profile",
+   "options": "URL"
+  }
+ ],
+ "links": [],
+ "modified": "2024-06-25 13:11:18.905930",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "FOSS Hackathon Participant",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "search_fields": "hackathon, email, user_profile",
+ "show_title_field_in_link": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "full_name",
+ "track_changes": 1
+}

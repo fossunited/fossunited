@@ -14,13 +14,8 @@
         gap: 2.5rem;
     }
 
-    .project-grants-container h2{
-        margin:0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.07rem;
+    .project-grants-container h4{
+        font-weight: var(--fw-semibold);
     }
 
     .project-grant-category {
@@ -32,27 +27,16 @@
     .project-card{
         display: flex;
         padding: 1rem;
-        justify-content: space-between;
-    }
+        justify-content: flex-start;
+        gap: 3rem;
+        padding-left: 0;
 
-    .project-card h6{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 1.2rem;
-        font-style: normal;
-        font-weight: 600;
-        line-height: 100%;
-        letter-spacing: -0.035rem;
     }
 
 
     .project-card p{
-        margin:0;
-        color: var(--Gray-500, #667085);
-        font-size: 0.75rem;
-        font-weight: 400;
-        line-height: 100%; /* 0.75rem */
-        letter-spacing: -0.015rem;
+        color: hsl(var(--clr-gray-500));
+        font-size: var(--text-xs);
     }
 
     .project-details{
@@ -65,25 +49,15 @@
     .project-details p{
         overflow: hidden;
         text-overflow: ellipsis;
-        font-size: 1rem;
-        font-weight: 400;
-        line-height: 140%;
-        letter-spacing: -0.02rem;
+        font-size: var(--text-base);
     }
 
-    .project-details a{
+    .project-name{
         display: flex;
-        color: var(--gray-800, #383838);
-        font-size: 0.875rem;
-        font-weight: 500;
-        line-height: 115%;
-        letter-spacing: -0.0175rem;
-        text-decoration: none;
         align-items: flex-end;
     }
 
-    .project-details a:hover{
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
+    .project-name:hover{
         text-decoration: none;
     }
 
@@ -98,15 +72,15 @@
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
-        padding: 0.2rem 0.5rem;
+        padding: 0.5rem 1rem;
         border-radius: 0.5rem;
-        background: var(--Gray-50, #F9FAFB);
+        background: hsl(var(--clr-gray-50));
         justify-content: center;
         text-align: center;
     }
 
     .grant-details h6{
-        font-size: 0.85rem;
+        font-size: var(--text-sm);
     }
 
     @media (max-width: 768px) {
@@ -156,34 +130,32 @@
 
     <div class="project-grants-container">
 
-        <h2>{{heading}}</h2>
+        <h4>{{heading}}</h4>
 
         <div class="project-grant-category">
-            {% set project_grants = frappe.get_all("FOSS Project Grant", fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor", "date_of_provision" ], filters={"grant_status": "Approved"}) %}
+            {% set project_grants = frappe.get_all("FOSS Project Grant", fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor", "date_of_provision" ], filters={"grant_status": "Approved"}, order_by="date_of_provision desc") %}
             {% for grant in project_grants %}
 
                 <div class="project-card">
                     <div class="project-details">
 
-                        <h6>{{grant.project_name}}</h6>
-                        <p>{{grant.about_project}}</p>
-                        <a href="{{grant.project_website}}">
-                            View Details
-                            <i class="ti ti-chevron-right"></i>
+                        <a class="project-name"href="{{grant.project_website}}">
+                            <h6>{{grant.project_name}}</h6>
+                            <i class="ti ti-arrow-up-right"></i>
                         </a>
-
+                        <p>{{grant.about_project}}</p>
                     </div>
 
                     <div class="grant-details">
 
                         <div class="grant-detail-card" id="grant-date">
-                            <p>Provided on</p>
-                            <h6>{{grant.date_of_provision.strftime("%b %Y")}}</h6>
+                            <p>Grant Year</p>
+                            <h6>{{grant.date_of_provision.strftime("%Y")}}</h6>
 
                         </div>
                         <div class="grant-detail-card" id="project-grant-amount">
                             <p>Grant Amt.</p>
-                            <h6> Rs. {{grant.grant_amount}}</h6>
+                            <h6>₹ {{grant.grant_amount}}</h6>
 
                         </div>
 

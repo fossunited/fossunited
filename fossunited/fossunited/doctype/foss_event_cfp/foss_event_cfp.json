@@ -21,6 +21,7 @@
   "event_name",
   "column_break_je1w",
   "chapter",
+  "deadline",
   "cfp_form_description_section",
   "cfp_form_description",
   "custom_questions_section",
@@ -131,13 +132,18 @@
    "fieldname": "only_talk_proposals",
    "fieldtype": "Check",
    "label": "Only Talk Proposals"
+  },
+  {
+   "fieldname": "deadline",
+   "fieldtype": "Datetime",
+   "label": "Deadline"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-04-16 18:27:45.941299",
+ "modified": "2024-07-03 10:38:14.041510",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
@@ -155,27 +161,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1
   }
  ],
  "route": "cfp/new",

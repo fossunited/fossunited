@@ -31,6 +31,7 @@ class FOSSEventTicket(Document):
         email: DF.Data
         event: DF.Link
         full_name: DF.Data
+        is_transfer_ticket: DF.Check
         organization: DF.Data | None
         razorpay_payment: DF.Link | None
         tier: DF.Data | None
@@ -105,6 +106,35 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
             FOSSEventTicket.create_tickets_for_payment(doc)
         except:
             frappe.log_error("Ticket Creation Failed!")
+
+
+def validate_payment_before_insert(
+    doc: "RazorpayPayment", event: str
+):
+    # calculate total amount
+    calculated_amount = 0
+    payment_meta_data: dict = frappe.parse_json(doc.meta_data)
+    attendees = payment_meta_data.get("attendees", [])
+    tier = payment_meta_data.get("tier", {}).get("name")
+    price, event_name = frappe.db.get_value(
+        "FOSS Ticket Tier", tier, ["price", "parent"]
+    )
+
+    tshirt_price = frappe.db.get_value(
+        "FOSS Chapter Event", event_name, "t_shirt_price"
+    )
+
+    for attendee in attendees:
+        wants_tshirt = attendee.get("wants_tshirt", 0)
+        calculated_amount += price
+
+        if wants_tshirt:
+            calculated_amount += tshirt_price
+
+    if calculated_amount != doc.amount:
+        frappe.throw(
+            "Looks like you did some funny stuff in the frontend and amounts don't match!"
+        )
 
 
 def is_foss_event(doc: "RazorpayPayment"):

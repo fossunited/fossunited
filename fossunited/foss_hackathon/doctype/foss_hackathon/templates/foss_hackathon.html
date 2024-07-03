@@ -14,10 +14,11 @@
                 {% endif %}
                 <h1 class="header--event-title">{{ doc.hackathon_name }}</h1>
             </div>
-            <button class="primary-button ticket-button" onClick="window.location.href='/dashboard/buy-tickets?event={{doc.name}}'">
-                <i class="ti ti-ticket"></i>
+            {% if doc.is_registration_live %}
+            <button class="primary-button ticket-button" onClick="window.location.href='/dashboard/register-for-hackathon?id={{doc.name}}'">
                 <span>Register</span>
             </button>
+            {% endif %}
         </div>
         <div class="header--tags">
             {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
@@ -59,7 +60,7 @@
         {{ horizontal_navbar(nav_items) }}
     </div>
 </div>
-<div class="container">
+<div>
     {{ render_information() }}
     {{ render_schedule() }}
     {{ render_submissions()}}
@@ -68,7 +69,7 @@
 {% endblock %}
 
 {% macro render_information() %}
-<div class="event-content-div content-div" id="information">
+<div class="container event-content-div content-div" id="information">
     <div class="description-section my-3">
         <h5>Description</h5>
         <div class="event--description-block mt-2">
@@ -91,6 +92,7 @@
         <div class="event--description-block mt-2">
             {{ doc.hackathon_faq }}
         </div>
+    </div>
     {% endif %}
 
     {% if doc.sponsor_list %}
@@ -132,7 +134,7 @@
 {% endmacro %}
 
 {% macro render_schedule() %}
-<div class="event-content-div content-div" id="schedule">
+<div class="container event-content-div content-div" id="schedule">
     <div class="schedule-section my-3">
         <h5>Schedule</h5>
         <div class="my-3">
@@ -150,7 +152,15 @@
                         <div class="schedule-card {% if not schedule.linked_cfp %} no-hover {% endif %}" {% if schedule.cfp_route %} onclick="window.location.href='/{{schedule.cfp_route}}'" {% endif %}>
                             <div class="schedule--title-time-section">
                                 <div class="schedule--title">{{ schedule.talk_title }}</div>
-                                <div class="schedule--time">{{ schedule.start_time.strftime('%I:%M %p') }} - {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% if schedule.end_time == None %}
+                                <div class="schedule--time">Starts at {{ schedule.start_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
+                                {% if schedule.start_time == None %}
+                                <div class="schedule--time">Ends at {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
+                                {% if schedule.start_time and schedule.end_time %}
+                                    <div class="schedule--time">{{ schedule.start_time.strftime('%I:%M %p') }} - {{ schedule.end_time.strftime('%I:%M %p') }}</div>
+                                {% endif %}
                             </div>
                             {% if not schedule.no_speaker %}
                             <div class="schedule--speakers-section">
@@ -175,7 +185,7 @@
 {% endmacro %}
 
 {% macro render_submissions() %}
-<div class="event-content-div content-div" id="submissions">
+<div class="container event-content-div content-div" id="submissions">
     <div class="submissions-section my-3">
         <div class="d-flex align-items-center justify-content-between">
             <h5>Recent Submissions</h5>
@@ -186,7 +196,7 @@
                 <div class="project-card" onClick="window.location.href='/{{ project.route }}'">
                     <div class="project-card--title">{{ project.title }}</div>
                     <div class="project-card--short-bio">{{ project.short_description }}</div>
-                    <div class="project-card--team">{{ project.team }}</div>
+                    <div class="project-card--team">{{ project.team_name }}</div>
                 </div>
             {% endfor %}
         </div>
