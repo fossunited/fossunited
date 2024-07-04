@@ -16,7 +16,7 @@ def get_hackathon(name: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc("FOSS Hackathon", name).as_dict()
+    return frappe.get_doc("FOSS Hackathon", name)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -30,9 +30,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc(
-        "FOSS Hackathon", {"permalink": permalink}
-    ).as_dict()
+    return frappe.get_doc("FOSS Hackathon", {"permalink": permalink})
 
 
 @frappe.whitelist(allow_guest=True)
@@ -85,7 +83,7 @@ def get_participant(hackathon: str, user: str) -> dict:
     return frappe.get_doc(
         "FOSS Hackathon Participant",
         {"hackathon": hackathon, "user": user},
-    ).as_dict()
+    )
 
 
 @frappe.whitelist()
@@ -140,7 +138,7 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
                 ["hackathon", "=", hackathon],
             ],
         )
-        return team.as_dict()
+        return team
     except frappe.exceptions.DoesNotExistError:
         frappe.log("Team not found")
 
@@ -227,7 +225,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
     return frappe.get_doc(
         "FOSS Hackathon Project",
         {"hackathon": hackathon, "team": team},
-    ).as_dict()
+    )
 
 
 @frappe.whitelist()
