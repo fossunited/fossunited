@@ -17,8 +17,8 @@ def get_context(context):
         if redirect_route not in [None, ""]:
             frappe.local.flags.redirect_location = redirect_route
         else:
-            frappe.local.flags.redirect_location = (
-                "/create-foss-profile"
+            frappe.msgprint(
+                "There's been an error in the creation of your FOSS Profile. Please contact administrator"
             )
 
     raise frappe.Redirect
