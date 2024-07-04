@@ -11,31 +11,10 @@ def is_valid_doctype(doctype: str):
     """
     Validate the doctype to be either "FOSS Event CFP Submission" or "FOSS Event RSVP Submission"
     """
-    if doctype not in [
+    return doctype in (
         "FOSS Event RSVP Submission",
         "FOSS Event CFP Submission",
-    ]:
-        return False
-
-    return True
-
-
-@frappe.whitelist()
-def create_submission(doctype: str, fields: dict):
-    """
-    Used for RSVP and CFPS
-    Create a new submission for the given doctype with the given fields.
-    Fields variable should have the doctype values as well
-    """
-    if not is_valid_doctype(doctype):
-        frappe.log("Unauthorized usage of create submission")
-        frappe.msgprint("Not allowed")
-        return
-
-    doc = frappe.get_doc(doctype, fields)
-    doc.insert(ignore_permissions=True)
-
-    return doc
+    )
 
 
 @frappe.whitelist()
@@ -46,8 +25,10 @@ def update_submission(doctype, submission, fields, custom):
     """
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of update_submission")
-        frappe.msgprint("Not allowed")
-        return
+        frappe.throw(
+            "You are not permitted to use this resource",
+            frappe.PermissionError,
+        )
 
     fields = json.loads(fields)
     custom = json.loads(custom)
@@ -111,8 +92,10 @@ def publish_form(doctype, docname):
     """
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of publish_form")
-        frappe.throw("Not allowed")
-        return
+        frappe.throw(
+            "You are not permitted to use this resource",
+            frappe.PermissionError,
+        )
 
     doc = frappe.get_doc(doctype, docname)
     doc.is_published = 1
@@ -128,8 +111,10 @@ def unpublish_form(doctype, docname):
     """
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of unpublish_form")
-        frappe.throw("Not allowed")
-        return
+        frappe.throw(
+            "You are not permitted to use this resource",
+            frappe.PermissionError,
+        )
 
     doc = frappe.get_doc(doctype, docname)
     doc.is_published = 0

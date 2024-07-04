@@ -5,8 +5,7 @@ import json
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-
-from fossunited.fossunited.forms import create_submission
+from pydantic import BaseModel, validator
 
 
 class FOSSEventRSVP(WebsiteGenerator):
@@ -135,15 +134,32 @@ class FOSSEventRSVP(WebsiteGenerator):
         )
 
 
+class Submission(BaseModel):
+    linked_rsvp: str
+    name1: str
+    email: str
+    im_a: str
+    confirm_attendance: int
+    custom_answers: list = []
+
+    @validator("linked_rsvp")
+    def validate_linked_rsvp(cls, value):
+        if not frappe.db.exists("FOSS Event RSVP", value):
+            raise frappe.ValidationError
+        return value
+
+
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields):
-    fields_dict = {
-        "submitted_by": "",
-    }
-    if frappe.session.user not in ["Guest", "Administrator"]:
-        fields_dict["submitted_by"] = frappe.session.user
-
-    fields_dict.update(json.loads(fields))
-    return create_submission(
-        "FOSS Event RSVP Submission", fields_dict
+    _fields = Submission(**json.loads(fields))
+    _fields.dict().update(
+        {
+            "submitted_by": frappe.session.user
+            if frappe.session.user not in ("Guest", "Administrator")
+            else ""
+        }
     )
+
+    doc = frappe.get_doc("FOSS Event RSVP Submission", _fields)
+    doc.insert(ignore_permissions=True)
+    return doc
