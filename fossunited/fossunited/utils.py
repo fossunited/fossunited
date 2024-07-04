@@ -252,7 +252,6 @@ def get_foss_profile(email):
     if email in ["guest@example.com", "admin@example.com"]:
         return None
 
-    return (
-        frappe.get_doc("FOSS User Profile", {"user": email}).as_dict()
-        or None
-    )
+    return frappe.get_doc(
+        "FOSS User Profile", {"user": email}
+    ).as_dict()
