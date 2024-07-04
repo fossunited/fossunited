@@ -101,27 +101,6 @@ def get_user_editable_doctype_fields(doctype, docname=None):
     return meta["fields"]
 
 
-# To remove
-# @frappe.whitelist()
-# def insert_foss_profile_child_doc(
-#     parent, parenttype, parentfield, doctype, fields
-# ):
-#     fields = json.loads(fields)
-#     doc = frappe.get_doc(
-#         {
-#             "doctype": doctype,
-#         }
-#     )
-#     for field in fields:
-#         doc.set(field, fields[field])
-#     doc.parent = parent
-#     doc.parenttype = parenttype
-#     doc.insert(ignore_permissions=True)
-#     parentdoc = frappe.get_doc(parenttype, parent)
-#     parentdoc.append(parentfield, doc)
-#     parentdoc.save(ignore_permissions=True)
-
-
 def get_user_socials(foss_user):
     user = frappe.get_doc("FOSS User Profile", foss_user).as_dict()
     SOCIAL_LINK_FIELDNAMES = [
