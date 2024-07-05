@@ -4,8 +4,6 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.fossunited.forms import create_submission
-
 
 class FOSSEventCFP(WebsiteGenerator):
     # begin: auto-generated types
@@ -198,12 +196,19 @@ class FOSSEventCFP(WebsiteGenerator):
 
 @frappe.whitelist()
 def create_cfp_submission(fields):
+    if not frappe.db.exists(
+        "FOSS Event CFP", frappe.parse_json(fields).get("linked_cfp")
+    ):
+        frappe.throw("Invalid CFP ID.", frappe.DoesNotExistError)
+
     fields_dict = {
         "doctype": "FOSS Event CFP Submission",
         "submitted_by": frappe.session.user,
     }
-    fields_dict.update(frappe.parse_json(fields))
-    return create_submission(fields_dict)
+    frappe.parse_json(fields).update(fields_dict)
+    doc = frappe.get_doc(fields_dict)
+    doc.insert(ignore_permissions=True)
+    return doc
 
 
 @frappe.whitelist()

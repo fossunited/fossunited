@@ -68,7 +68,7 @@ def create_participant(hackathon, participant):
     return participant_doc
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_participant(hackathon: str, user: str) -> dict:
     """
     Get participant details
@@ -145,7 +145,6 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
     return None
 
 
-@frappe.whitelist(allow_guest=True)
 def get_team_from_participant_id(hackathon: str, id: str) -> dict:
     """
     Get team details
@@ -177,7 +176,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
     return None
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document
@@ -211,7 +210,7 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     return project_doc
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_project_by_team(hackathon: str, team: str) -> dict:
     """
     Get project details
@@ -229,7 +228,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
     )
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_project_by_email(hackathon: str, email: str):
     """
     Get project details by email
@@ -245,7 +244,7 @@ def get_project_by_email(hackathon: str, email: str):
     return get_project_by_team(hackathon, team.get("name"))
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_localhost_requests_by_team(
     hackathon: str,
     localhost: str,

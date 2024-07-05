@@ -379,34 +379,6 @@
             args: {
                 'doctype': table,
             },
-            callback: (r) => {
-                d = new frappe.ui.Dialog({
-                    title: `Add ${id}`,
-                    fields: r.message,
-                    size: 'large',
-                    primary_action_label: 'Add',
-                    primary_action: (v) => {
-                        frappe.call({
-                            method: 'fossunited.fossunited.utils.insert_foss_profile_child_doc',
-                            args: {
-                                'parent': '{{doc.name}}',
-                                'parenttype': 'FOSS User Profile',
-                                'parentfield': id,
-                                'doctype': table,
-                                'fields': v,
-                            },
-                            callback: () => {
-                                d.hide();
-                                $(`#${id}`).load(location.href + " #"+id + ">*", "");
-                            },
-                            error: (e) => {
-                                frappe.throw(e.message);
-                            }
-                        })
-                    }
-                });
-                d.show();
-            }
         })
     }
 
