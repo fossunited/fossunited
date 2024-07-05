@@ -205,7 +205,7 @@ def create_cfp_submission(fields):
         "doctype": "FOSS Event CFP Submission",
         "submitted_by": frappe.session.user,
     }
-    fields_dict.update(frappe.parse_json(fields))
+    frappe.parse_json(fields).update(fields_dict)
     doc = frappe.get_doc(fields_dict)
     doc.insert(ignore_permissions=True)
     return doc
