@@ -5,7 +5,6 @@ import json
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from pydantic import BaseModel, validator
 
 
 class FOSSEventRSVP(WebsiteGenerator):
