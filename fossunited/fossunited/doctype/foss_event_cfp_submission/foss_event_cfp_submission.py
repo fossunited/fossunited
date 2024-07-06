@@ -33,7 +33,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         custom_answers: DF.Table[FOSSCustomAnswer]
         designation: DF.Data
         email: DF.Data
-        event: DF.Data | None
+        event: DF.Data
         event_name: DF.Data | None
         first_name: DF.Data | None
         full_name: DF.Data
@@ -54,8 +54,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         talk_reference: DF.Data | None
         talk_title: DF.Data
         unsure_reviews: DF.Data | None
-
     # end: auto-generated types
+
+    def before_insert(self):
+        self.check_status()
+        self.validate_linked_cfp()
+
     def before_save(self):
         self.set_name()
         self.set_route()
@@ -77,6 +81,16 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.negative_reviews = statistics[1]["percentage"]
         self.unsure_reviews = statistics[2]["percentage"]
         self.approvability = statistics[3]["percentage"]
+
+    def check_status(self):
+        if not self.status == "Review Pending":
+            frappe.throw(
+                "Illegal status change", frappe.ValidationError
+            )
+
+    def validate_linked_cfp(self):
+        if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
+            frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
         context.cfp = frappe.get_doc(

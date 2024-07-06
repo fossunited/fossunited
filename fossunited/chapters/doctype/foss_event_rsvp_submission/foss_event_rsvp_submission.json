@@ -28,7 +28,8 @@
    "fieldname": "linked_rsvp",
    "fieldtype": "Link",
    "label": "Linked RSVP",
-   "options": "FOSS Event RSVP"
+   "options": "FOSS Event RSVP",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_tpys",
@@ -59,7 +60,8 @@
    "fieldname": "event",
    "fieldtype": "Data",
    "in_standard_filter": 1,
-   "label": "Event"
+   "label": "Event",
+   "reqd": 1
   },
   {
    "columns": 3,
@@ -81,7 +83,7 @@
    "fieldname": "im_a",
    "fieldtype": "Select",
    "label": "I'm a",
-   "options": "\nStudent\nProfessional\nFOSS Enthusiast"
+   "options": "\nStudent\nProfessional\nFOSS Enthusiast\nOther"
   },
   {
    "fieldname": "column_break_bkxf",
@@ -124,7 +126,7 @@
   }
  ],
  "links": [],
- "modified": "2024-07-03 10:22:45.197158",
+ "modified": "2024-07-07 01:23:03.433237",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
