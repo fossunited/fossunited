@@ -6,4 +6,5 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestFOSSUserProfile(FrappeTestCase):
-    pass
+    def test_create_user_profile(self):
+        self.assertFalse(True)
