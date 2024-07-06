@@ -53,12 +53,9 @@ import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 let session = inject('$session')
 
 let user_profile = createResource({
-  url: 'frappe.client.get',
+  url: 'fossunited.fossunited.utils.get_foss_profile',
   params: {
-    doctype: 'FOSS User Profile',
-    filters: {
-      email: session.user,
-    },
+    email: session.user,
   },
 })
 
