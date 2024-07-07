@@ -1,7 +1,7 @@
 [project]
 name = "fossunited"
 authors = [
-    { name = "FOSSUnited", email = "developers@frappe.io"}
+    { name = "FOSSUnited", email = "developers@fossunited.org"}
 ]
 description = "Built on Frappe"
 requires-python = ">=3.10"
@@ -21,6 +21,6 @@ build-backend = "flit_core.buildapi"
 
 [tool.ruff]
 line-length = 70
-select = [
+lint.select = [
     "I"
 ]

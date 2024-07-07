@@ -272,23 +272,23 @@ class FOSSChapterEvent(WebsiteGenerator):
                     }
                 else:
                     rsvp_status_block["show_primary_cta"] = True
-                    rsvp_status_block[
-                        "primary_cta"
-                    ] = "RSVP for the event"
+                    rsvp_status_block["primary_cta"] = (
+                        "RSVP for the event"
+                    )
 
             if not rsvp_form.is_published:
-                rsvp_status_block[
-                    "block_heading"
-                ] = "RSVP Form is Unpublished!"
+                rsvp_status_block["block_heading"] = (
+                    "RSVP Form is Unpublished!"
+                )
         else:
             rsvp_status_block["has_doc"] = False
-            rsvp_status_block[
-                "block_heading"
-            ] = "RSVP Form is not live yet!"
+            rsvp_status_block["block_heading"] = (
+                "RSVP Form is not live yet!"
+            )
             if is_user_team_member(self.chapter, frappe.session.user):
-                rsvp_status_block[
-                    "block_heading"
-                ] = "Create RSVP for the event"
+                rsvp_status_block["block_heading"] = (
+                    "Create RSVP for the event"
+                )
                 rsvp_status_block["is_team_member"] = True
                 rsvp_status_block["create_form"] = True
             else:
@@ -348,23 +348,23 @@ class FOSSChapterEvent(WebsiteGenerator):
                     }
 
                 cfp_status_block["show_primary_cta"] = True
-                cfp_status_block[
-                    "primary_cta"
-                ] = "Submit a talk proposal"
+                cfp_status_block["primary_cta"] = (
+                    "Submit a talk proposal"
+                )
 
             if not cfp_form.is_published:
-                cfp_status_block[
-                    "block_heading"
-                ] = "Talk Proposal Form is Unpublished!"
+                cfp_status_block["block_heading"] = (
+                    "Talk Proposal Form is Unpublished!"
+                )
         else:
             cfp_status_block["has_doc"] = False
-            cfp_status_block[
-                "block_heading"
-            ] = "Talk Proposal Form is not live yet!"
+            cfp_status_block["block_heading"] = (
+                "Talk Proposal Form is not live yet!"
+            )
             if is_user_team_member(self.chapter, frappe.session.user):
-                cfp_status_block[
-                    "block_heading"
-                ] = "Create Call for Proposal (CFP) for the event"
+                cfp_status_block["block_heading"] = (
+                    "Create Call for Proposal (CFP) for the event"
+                )
                 cfp_status_block["is_team_member"] = True
                 cfp_status_block["create_form"] = True
             else:
