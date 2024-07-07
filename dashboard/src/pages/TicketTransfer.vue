@@ -159,11 +159,10 @@ const receiver = reactive({
 })
 
 const ticket = createResource({
-  url: 'frappe.client.get',
+  url: 'fossunited.api.tickets.get_ticket_details',
   makeParams() {
     return {
-      doctype: 'FOSS Event Ticket',
-      name: ticketId.value,
+      ticket_id: ticketId.value,
     }
   },
   onSuccess(data) {
@@ -194,16 +193,14 @@ const isTicketValid = () => {
   }
 
   createResource({
-    url: 'frappe.client.get_count',
+    url: 'fossunited.api.tickets.check_ticket_validity',
     params: {
-      doctype: 'FOSS Event Ticket',
-      filters: {
-        name: ticketId.value,
-      },
+      ticket_id: ticketId.value,
     },
     auto: true,
     onSuccess(data) {
       if (!data) {
+        ticket.data = null
         ticketValidateError.value = 'Invalid Ticket ID'
         return false
       }
@@ -236,19 +233,18 @@ const transferErrors = () => {
 }
 
 const createTransferDoc = createResource({
-  url: 'frappe.client.insert',
+  url: 'fossunited.api.tickets.create_transfer_request',
   makeParams() {
     return {
-      doc: {
-        doctype: 'FOSS Event Ticket Transfer',
         ticket: ticketId.value,
-        receiver_email: receiver.receiver_email,
-        receiver_name: receiver.receiver_name,
-        designation: receiver.designation,
-        organization: receiver.organization,
-        wants_tshirt: receiver.wants_tshirt,
-        tshirt_size: receiver.tshirt_size,
-      },
+        receiver_details: {
+          receiver_email: receiver.receiver_email,
+          receiver_name: receiver.receiver_name,
+          designation: receiver.designation,
+          organization: receiver.organization,
+          wants_tshirt: receiver.wants_tshirt,
+          tshirt_size: receiver.tshirt_size,
+        }
     }
   },
   onSuccess(data) {
