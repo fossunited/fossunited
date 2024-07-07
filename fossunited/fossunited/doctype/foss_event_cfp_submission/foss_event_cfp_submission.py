@@ -58,7 +58,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def before_insert(self):
         self.check_status()
-        self.validate_linked_cfp()
+        self.validate_linked_cfp_exists()
 
     def before_save(self):
         self.set_name()
@@ -83,12 +83,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.approvability = statistics[3]["percentage"]
 
     def check_status(self):
-        if not self.status == "Review Pending":
+        if self.status != "Review Pending":
             frappe.throw(
                 "Illegal status change", frappe.ValidationError
             )
 
-    def validate_linked_cfp(self):
+    def validate_linked_cfp_exists(self):
         if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 

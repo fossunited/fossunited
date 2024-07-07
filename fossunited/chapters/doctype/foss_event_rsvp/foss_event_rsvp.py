@@ -135,13 +135,15 @@ class FOSSEventRSVP(WebsiteGenerator):
 
 @frappe.whitelist(allow_guest=True)
 def create_rsvp(fields):
-    fields = json.loads(fields)
-    if not frappe.db.exists(
-        "FOSS Event RSVP", fields.get("linked_rsvp")
-    ):
+    _fields = json.loads(fields)
+
+    linked_rsvp_exists = frappe.db.exists(
+        "FOSS Event RSVP", _fields.get("linked_rsvp")
+    )
+    if not linked_rsvp_exists:
         frappe.throw("Invalid RSVP ID.", frappe.DoesNotExistError)
 
-    fields.update(
+    _fields.update(
         {
             "doctype": "FOSS Event RSVP Submission",
             "submitted_by": frappe.session.user
@@ -150,6 +152,6 @@ def create_rsvp(fields):
         }
     )
 
-    doc = frappe.get_doc(fields)
+    doc = frappe.get_doc(_fields)
     doc.insert(ignore_permissions=True)
     return doc

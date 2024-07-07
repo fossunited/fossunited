@@ -34,14 +34,16 @@ class FOSSEventRSVPSubmission(Document):
     pass
 
     def validate(self):
-        self.validate_linked_rsvp()
+        self.validate_linked_rsvp_exists()
 
-    def validate_linked_rsvp(self):
+    def validate_linked_rsvp_exists(self):
         if not frappe.db.exists("FOSS Event RSVP", self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
 
-        rsvp = frappe.get_doc("FOSS Event RSVP", self.linked_rsvp)
-        if not rsvp.is_published:
+        is_rsvp_published = frappe.db.get_value(
+            "FOSS Event RSVP", self.linked_rsvp, "is_published"
+        )
+        if not is_rsvp_published:
             frappe.throw(
                 "RSVP is not published", frappe.PermissionError
             )
