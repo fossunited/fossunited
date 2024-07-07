@@ -13,8 +13,7 @@ class TestFOSSUserProfile(FrappeTestCase):
         inserted_username = "wisharya"
         inserted_name = "wish arya"
         profile_exists = frappe.db.exists(
-            "FOSS User Profile",
-            {"username": inserted_username}
+            "FOSS User Profile", {"username": inserted_username}
         )
         self.assertFalse(profile_exists)
 
@@ -43,7 +42,6 @@ class TestFOSSUserProfile(FrappeTestCase):
 
         # Then verify that the Profile has been stored as expected
         profile_exists = frappe.db.exists(
-            "FOSS User Profile",
-            {"username": inserted_username}
+            "FOSS User Profile", {"username": inserted_username}
         )
         self.assertTrue(profile_exists)
