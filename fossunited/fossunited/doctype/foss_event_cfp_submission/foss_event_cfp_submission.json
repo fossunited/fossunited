@@ -61,7 +61,8 @@
    "fetch_from": "linked_cfp.event",
    "fieldname": "event",
    "fieldtype": "Data",
-   "label": "Event"
+   "label": "Event",
+   "reqd": 1
   },
   {
    "fieldname": "submitted_by",
@@ -288,7 +289,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-03 10:38:03.852604",
+ "modified": "2024-07-07 01:13:46.527023",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
