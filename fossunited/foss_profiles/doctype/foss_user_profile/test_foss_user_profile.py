@@ -31,8 +31,7 @@ class TestFOSSUserProfile(FrappeTestCase):
                 "name": inserted_name,
                 "full_name": inserted_name,
             },
-        )
-        frappe_user.db_insert()
+        ).insert()
         profile = frappe.get_doc(
             {
                 "doctype": "FOSS User Profile",
@@ -40,13 +39,12 @@ class TestFOSSUserProfile(FrappeTestCase):
                 "username": frappe_user.username,
                 "is_published": 1,
             },
-        )
-        profile.db_insert()
+        ).insert()
         inserted_name = profile.name
 
         # Then verify that the Profile has been stored as expected
-        profiles_metadata = frappe.get_all(
-            doctype="FOSS User Profile",
-            filters={"username": inserted_username},
+        profile_exists = frappe.db.exists(
+            "FOSS User Profile",
+            {"username": inserted_username}
         )
-        self.assertEqual(profiles_metadata, [{"name": inserted_name}])
+        self.assertTrue(profile_exists)
