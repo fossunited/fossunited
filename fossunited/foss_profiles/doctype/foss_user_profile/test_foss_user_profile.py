@@ -12,11 +12,11 @@ class TestFOSSUserProfile(FrappeTestCase):
         # Given a user that does not have a FOSSUnitedProfile
         inserted_username = "wisharya"
         inserted_name = "wish arya"
-        profiles_metadata = frappe.get_all(
-            doctype="FOSS User Profile",
-            filters={"username": inserted_username},
+        profile_exists = frappe.db.exists(
+            "FOSS User Profile",
+            {"username": inserted_username}
         )
-        self.assertEqual(profiles_metadata, [])
+        self.assertFalse(profile_exists)
 
         # When a FOSSUnitedProfile is created for the user
         # Note that a Frappe User needs to exist before a Profile can be created
@@ -40,7 +40,6 @@ class TestFOSSUserProfile(FrappeTestCase):
                 "is_published": 1,
             },
         ).insert()
-        inserted_name = profile.name
 
         # Then verify that the Profile has been stored as expected
         profile_exists = frappe.db.exists(
