@@ -40,6 +40,9 @@ class FOSSEventTicketTransfer(Document):
                 self.validate_ticket_exists()
                 self.transfer_ticket()
 
+    def validate(self):
+        self.validate_ticket_exists()
+
     def validate_ticket_exists(self):
         if not frappe.db.exists("FOSS Event Ticket", self.ticket):
             frappe.throw("Ticket not found", frappe.DoesNotExistError)
