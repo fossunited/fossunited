@@ -32,7 +32,7 @@ class FOSSEventTicketTransfer(Document):
 
     def before_insert(self):
         self.validate_ticket_exists()
-        self.check_status()
+        self.validate_status_is_pending()
 
     def before_save(self):
         if self.has_value_changed("status"):
@@ -44,7 +44,7 @@ class FOSSEventTicketTransfer(Document):
         if not frappe.db.exists("FOSS Event Ticket", self.ticket):
             frappe.throw("Ticket not found", frappe.DoesNotExistError)
 
-    def check_status(self):
+    def validate_status_is_pending(self):
         if self.status != "Pending Approval":
             frappe.throw(
                 "Invalid status change. Status should be 'Pending Approval'. Current status is {0}".format(

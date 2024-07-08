@@ -11,11 +11,8 @@ def check_ticket_validity(ticket_id: str):
     Check if the ticket is valid or not
     """
     is_ticket_valid = frappe.db.exists("FOSS Event Ticket", ticket_id)
-    print(is_ticket_valid)
-    if is_ticket_valid:
-        return True
 
-    return False
+    return bool(is_ticket_valid)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -56,21 +53,19 @@ def create_transfer_request(ticket: str, receiver_details: dict):
 
 
 @frappe.whitelist()
-def check_transfer_doc_validity(transfer_id: str):
+def get_transfer_doc_validity(transfer_id: str):
     """
     Check the validity of transfer doc/id
     """
     is_valid_id = frappe.db.exists(
         "FOSS Event Ticket Transfer", transfer_id
     )
-    if is_valid_id:
-        return True
 
-    return False
+    return bool(is_valid_id)
 
 
 @frappe.whitelist()
-def get_transfer_doc(id: str):
+def get_transfer_details(id: str):
     """
     Get the transfer doc
     """

@@ -85,7 +85,7 @@ const validateTicket = createResource({
 })
 
 const transferDoc = createResource({
-    url: 'fossunited.api.tickets.get_transfer_doc',
+    url: 'fossunited.api.tickets.get_transfer_details',
     makeParams() {
         return {
             id: transferID
@@ -151,7 +151,7 @@ const rejectTransfer = (data) => {
 }
 
 const validateTransferId = createResource({
-    url: 'fossunited.api.tickets.check_transfer_doc_validity',
+    url: 'fossunited.api.tickets.get_transfer_doc_validity',
     params: {
         transfer_id: transferID
     },
