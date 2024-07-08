@@ -43,11 +43,10 @@ const dialogTitle = ref('Error')
 const dialogMessage = ref('')
 
 const ticketDoc = createResource({
-    url: 'frappe.client.get',
+    url: 'fossunited.api.tickets.get_ticket_details',
     makeParams() {
         return {
-            doctype: 'FOSS Event Ticket',
-            name: ticket
+            ticket_id: ticket
         }
     },
 })
@@ -70,15 +69,12 @@ const isValidStatus = () => {
 }
 
 const validateTicket = createResource({
-    url: 'frappe.client.get_count',
+    url: 'fossunited.api.tickets.check_ticket_validity',
     params: {
-        doctype: 'FOSS Event Ticket',
-        filters: {
-            name: ticket
-        }
+        ticket_id: ticket
     },
     onSuccess(data) {
-        if (data === 0) {
+        if (!data) {
             showDialog.value = true
             dialogMessage.value += ' The ticket you are trying to transfer does not exist.'
         }
@@ -89,11 +85,10 @@ const validateTicket = createResource({
 })
 
 const transferDoc = createResource({
-    url: 'frappe.client.get',
+    url: 'fossunited.api.tickets.get_transfer_details',
     makeParams() {
         return {
-            doctype: 'FOSS Event Ticket Transfer',
-            name: transferID
+            id: transferID
         }
     },
     loading: true,
@@ -117,12 +112,12 @@ const transferDoc = createResource({
 
 const approveTransfer = (data) => {
     createResource({
-        url: 'frappe.client.set_value',
-        params: {
-            doctype: 'FOSS Event Ticket Transfer',
-            name: data.name,
-            fieldname: 'status',
-            value: 'Completed'
+        url: 'fossunited.api.tickets.change_transfer_status',
+        makeParams(){
+            return {
+                transfer_id: data.name,
+                status: 'Completed'
+            }
         },
         auto: true,
         onSuccess(data) {
@@ -138,12 +133,10 @@ const approveTransfer = (data) => {
 
 const rejectTransfer = (data) => {
     createResource({
-        url: 'frappe.client.set_value',
+        url: 'fossunited.api.tickets.change_transfer_status',
         params: {
-            doctype: 'FOSS Event Ticket Transfer',
-            name: data.name,
-            fieldname: 'status',
-            value: 'Cancelled'
+            transfer_id: data.name,
+            status: 'Cancelled'
         },
         auto: true,
         onSuccess(data) {
@@ -158,15 +151,12 @@ const rejectTransfer = (data) => {
 }
 
 const validateTransferId = createResource({
-    url: 'frappe.client.get_count',
+    url: 'fossunited.api.tickets.get_transfer_doc_validity',
     params: {
-        doctype: 'FOSS Event Ticket Transfer',
-        filters: {
-            name: transferID
-        }
+        transfer_id: transferID
     },
     onSuccess(data) {
-        if (data === 0) {
+        if (!data) {
             showDialog.value = true
             dialogMessage.value += ' The transfer request you are trying to approve does not exist. '
             return false
