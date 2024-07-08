@@ -6,6 +6,43 @@ from frappe.website.website_generator import WebsiteGenerator
 
 
 class FOSSChapter(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
+            FOSSChapterLeadTeamMember,
+        )
+
+        about_chapter: DF.TextEditor | None
+        banner_image: DF.AttachImage | None
+        chapter_lead: DF.Link | None
+        chapter_members: DF.Table[FOSSChapterLeadTeamMember]
+        chapter_name: DF.Data
+        chapter_type: DF.Literal[
+            "City Community", "FOSS Club", "Conference"
+        ]
+        city: DF.Link | None
+        country: DF.Link | None
+        email: DF.Data
+        facebook: DF.Data | None
+        google_map_link: DF.Data | None
+        instagram: DF.Data | None
+        institution_name: DF.Link | None
+        is_published: DF.Check
+        linkedin: DF.Data | None
+        mastodon: DF.Data | None
+        public_chat_group_url: DF.Data | None
+        represent_image: DF.AttachImage | None
+        route: DF.Data | None
+        state: DF.Link | None
+        x: DF.Data | None
+
+    # end: auto-generated types
     def validate(self):
         self.make_city_name_upper()
 
