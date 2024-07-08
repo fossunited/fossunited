@@ -126,7 +126,7 @@
   }
  ],
  "links": [],
- "modified": "2024-07-07 01:23:03.433237",
+ "modified": "2024-07-08 15:03:25.361976",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
@@ -142,6 +142,14 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Chapter Team Member",
+   "select": 1,
    "write": 1
   }
  ],
