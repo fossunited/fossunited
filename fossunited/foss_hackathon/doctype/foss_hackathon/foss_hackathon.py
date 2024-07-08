@@ -73,7 +73,7 @@ class FOSSHackathon(WebsiteGenerator):
         if self.permalink:
             self.route = f"hack/{self.permalink}"
         else:
-            self.route = f'hack/{self.hackathon_name.to_lower().replace(" ", "-")}'
+            self.route = f'hack/{self.hackathon_name.lower().replace(" ", "-")}'
 
     def get_context(self, context):
         if self.organizing_chapter:
