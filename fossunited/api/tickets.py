@@ -34,7 +34,6 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     """
     Create a transfer request for the ticket
     """
-    print(receiver_details)
     transfer_request = frappe.get_doc(
         {
             "doctype": "FOSS Event Ticket Transfer",
