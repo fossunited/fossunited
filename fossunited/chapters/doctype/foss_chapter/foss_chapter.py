@@ -43,12 +43,25 @@ class FOSSChapter(WebsiteGenerator):
         x: DF.Data | None
 
     # end: auto-generated types
+    def before_insert(self):
+        self.set_member_roles()
+
     def validate(self):
         self.make_city_name_upper()
 
     def before_save(self):
         self.set_chapter_lead()
         self.set_route()
+
+    def on_update(self):
+        self.set_member_roles()
+
+    def set_member_roles(self):
+        for member in self.chapter_members:
+            user = frappe.get_doc("User", member.email)
+            user.add_roles("Chapter Team Member")
+            if member.role == "Lead":
+                user.add_roles("Chapter Lead")
 
     def set_chapter_lead(self):
         for member in self.chapter_members:
