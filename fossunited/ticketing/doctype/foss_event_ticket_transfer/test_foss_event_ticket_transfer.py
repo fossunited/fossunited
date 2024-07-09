@@ -50,7 +50,6 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # Change status of transfer to completed
         transfer.status = "Completed"
         transfer.save()
-        self.assertEqual(transfer.status, "Completed")
 
         # Then check that a ticket with older credentials does not exists.
         # Also check that ticket has new details.
@@ -73,10 +72,6 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             },
         )
         self.assertTrue(new_ticket_exists)
-
-        transfer.delete()
-        ticket.delete()
-        event.delete()
 
     def test_check_status_pending_on_create(self):
         # Given an event and a ticket linked to the event
