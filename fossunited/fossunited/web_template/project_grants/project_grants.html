@@ -24,7 +24,7 @@
         gap: 2rem;
     }
 
-    .project-card{
+    .project-grant-card{
         display: flex;
         padding: 1rem;
         justify-content: flex-start;
@@ -34,7 +34,7 @@
     }
 
 
-    .project-card p{
+    .project-grant-card p{
         color: hsl(var(--clr-gray-500));
         font-size: var(--text-xs);
     }
@@ -86,7 +86,7 @@
     @media (max-width: 768px) {
 
 
-        .project-card{
+        .project-grant-card{
             padding: 0;
             flex-direction: column;
             gap: 1rem;
@@ -136,7 +136,7 @@
             {% set project_grants = frappe.get_all("FOSS Project Grant", fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor", "date_of_provision" ], filters={"grant_status": "Approved"}, order_by="date_of_provision desc") %}
             {% for grant in project_grants %}
 
-                <div class="project-card">
+                <div class="project-grant-card">
                     <div class="project-details">
 
                         <a class="project-name"href="{{grant.project_website}}">
