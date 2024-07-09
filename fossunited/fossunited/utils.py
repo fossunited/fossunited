@@ -1,8 +1,8 @@
 import itertools
 import json
+from datetime import datetime
 
 import frappe
-from frappe.utils import format_datetime, format_time
 from frappe.utils.data import now_datetime
 
 
@@ -203,6 +203,9 @@ def validate_profile_completion():
 
 
 def get_grouped_events():
+    """
+    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating upcoming and past events.
+    """
     events = frappe.get_all(
         "FOSS Chapter Event",
         fields=["*"],
@@ -212,34 +215,74 @@ def get_grouped_events():
         },
         order_by="event_start_date",
     )
-    return get_month_grouped_events(events)
+
+    hackathons = frappe.get_all(
+        "FOSS Hackathon",
+        fields=["*"],
+        filters={
+            "is_published": 1,
+        },
+        order_by="start_date",
+    )
+    return get_month_grouped_events(events, hackathons)
 
 
-def get_month_grouped_events(events):
-    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
-    month_grouped_events = {
-        "Upcoming FOSS Events": {},
-        "Past Events": {},
-    }
+def process_event(event, event_list):
+    """
+    Processes a single event or hackathon, adding it to the upcoming or past events list based on the current date.
+    """
     now = now_datetime()
+    event_date = (
+        event.event_start_date
+        if event.event_start_date
+        else event.start_date
+    )
+    event_month_year = frappe.utils.formatdate(
+        event_date, "MMMM yyyy"
+    )
+    event.month_year = event_month_year
+    if event_date > now:
+        event_list["Upcoming FOSS Events"].append(event)
+    else:
+        event_list["Past Events"].append(event)
+
+
+def get_month_grouped_events(events, hackathons):
+    """
+    Groups events and hackathons by month and year, ensuring they are sorted chronologically within each group.
+    """
+    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
 
     for event in events:
-        event_month_year = frappe.utils.formatdate(
-            event.event_start_date, "MMMM yyyy"
-        )
-        event.month_year = event_month_year
-        if event.event_start_date > now:
-            grouped_events["Upcoming FOSS Events"].append(event)
-        else:
-            grouped_events["Past Events"].append(event)
+        process_event(event, grouped_events)
+
+    for hackathon in hackathons:
+        process_event(hackathon, grouped_events)
+
+    month_grouped_events = {key: {} for key in grouped_events}
 
     for key, values in grouped_events.items():
+        values.sort(
+            key=lambda x: x.event_start_date
+            if x.event_start_date
+            else x.start_date
+        )
         for month_year, month_year_events in itertools.groupby(
-            values, lambda x: x.month_year
+            values, key=lambda x: x.month_year
         ):
             month_grouped_events[key][month_year] = list(
                 month_year_events
             )
+
+    for key in month_grouped_events:
+        sorted_month_years = sorted(
+            month_grouped_events[key].keys(),
+            key=lambda x: datetime.strptime(x, "%B %Y"),
+        )
+        month_grouped_events[key] = {
+            month: month_grouped_events[key][month]
+            for month in sorted_month_years
+        }
 
     return month_grouped_events
 

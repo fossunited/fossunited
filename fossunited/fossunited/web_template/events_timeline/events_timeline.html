@@ -1,5 +1,7 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 
+{% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
+
 <style>
   .events-timeline {
     padding-top: 7rem;
@@ -36,19 +38,18 @@
     align-items: center;
     flex-direction: row-reverse;
     border-radius: 8px;
-    background: #FFF;
+    background: #fff;
     padding: 1rem;
-    gap:0.5rem;
+    gap: 0.5rem;
   }
 
-  .must-attend-checkbox label{
+  .must-attend-checkbox label {
     margin: 0;
   }
 
   .search-filter-controlpanel {
     display: flex;
     gap: 1rem;
-
   }
 
   .event-group {
@@ -57,113 +58,128 @@
     gap: 1.5rem;
   }
 
-  @media (max-width: 768px){
-    .search-filter-controlpanel{
+  @media (max-width: 768px) {
+    .search-filter-controlpanel {
       flex-direction: column;
     }
 
-    .must-attend-checkbox{
+    .must-attend-checkbox {
       flex-direction: row;
-      width: fit-content
+      width: fit-content;
     }
 
-    .event-card-holder{
+    .event-card-holder {
       width: 90%;
     }
   }
-
 </style>
 
 <div v-scope>
   <div class="container events-timeline">
-
     <!--Search filter panel-->
     <div class="search-filter-controlpanel">
-        <div class="events-search">
-          <input
-            v-model="searchText"
-            type="text"
-            id="events-search"
-            placeholder="Search by event name and date"
-          />
-        </div>
+      <div class="events-search">
+        <input
+          v-model="searchText"
+          type="text"
+          id="events-search"
+          placeholder="Search by event name and date"
+        />
+      </div>
 
-        <div class="must-attend-checkbox">
-          <input
-            type="checkbox"
-            v-model="mustAttendOnly"
-          />
-          <label for="must-attend-checkbox">Must Attend</label>
-        </div>
-
+      <div class="must-attend-checkbox">
+        <input type="checkbox" v-model="mustAttendOnly" />
+        <label for="must-attend-checkbox">Must Attend</label>
+      </div>
     </div>
 
     <!--Primary Event cards listing-->
     {% set grouped_events = get_grouped_events() %} {% for group, events in
     grouped_events.items() %}
 
-      <div class="event-group" v-if="searchText.length == 0">
-        <h4>{{ group }}</h4>
-          {% for month, month_events in events.items() %}
-            <h5 class="event-month" v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'">{{ month }}</h5>
-            <div class="events-grid-4" v-effect="updateTicker()" v-show="ticker > 0 && $el?.children.length > 0">
-              {% for event in month_events %}
-              <div class="event-card-holder" v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})">
-                {{event_card(event)}}
-              </div>
-              {% endfor %}
-            </div>
-          {% endfor %}
-      </div>
-    {% endfor %}
-
-
-  <!--Searched and Filtered event cards listing-->
-  <div v-if="searchText.length > 0">
-    <div class="events-grid-4">
-      {% for group, events in grouped_events.items() %}
+    <div class="event-group" v-if="searchText.length == 0">
+      <h4>{{ group }}</h4>
       {% for month, month_events in events.items() %}
-        {% for event in month_events %}
-          {% set event_date_text = event.event_start_date.strftime("%d %b %Y") %}
-          <div class="event-card-holder"
+      <h5
+        class="event-month"
+        v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
+      >
+        {{ month }}
+      </h5>
+      <div
+        class="events-grid-4"
+        v-effect="updateTicker()"
+        v-show="ticker > 0 && $el?.children.length > 0"
+      >
+        {% for event in month_events %} {% if event.event_name %}
+        <div
+          class="event-card-holder"
           v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
-          >
-            {{ event_card(event)}}
-          </div>
+        >
+          {{event_card(event)}}
+        </div>
 
-        {% endfor %}
+        {% else %}
+        <div
+          class="event-card-holder"
+          v-if="canShow('{{ event.hackathon_name}}', '{{ event_date_text }}')"
+        >
+          {{hackathon_card(event)}}
+        </div>
+        {% endif %} {% endfor %}
+      </div>
       {% endfor %}
+    </div>
     {% endfor %}
+
+    <!--Searched and Filtered event cards listing-->
+    <div v-if="searchText.length > 0">
+      <div class="events-grid-4">
+        {% for group, events in grouped_events.items() %} {% for month,
+        month_events in events.items() %} {% for event in month_events %} {% set
+        event_date_text = event.event_start_date.strftime("%d %b %Y") if
+        event.event_start_date else event.start_date.strftime("%d %b %Y") %}
+        <div
+          class="event-card-holder"
+          v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+        >
+          {%if event.event_name %} {{ event_card(event)}} {% else %}
+          {{hackathon_card(event)}} {% endif %}
+        </div>
+
+        {% endfor %} {% endfor %} {% endfor %}
+      </div>
+    </div>
   </div>
 
-  </div>
-</div>
+  <script>
+    PetiteVue.createApp({
+      searchText: "",
+      ticker: 1,
+      mustAttendOnly: false,
+      canShow(eventName, eventDate, eventMustAttend) {
+        if (this.mustAttendOnly && !eventMustAttend) {
+          return false;
+        }
 
-<script>
-  PetiteVue.createApp({
-    searchText: '',
-    ticker: 1,
-    mustAttendOnly: false,
-    canShow(eventName, eventDate, eventMustAttend) {
-      if (this.mustAttendOnly && !eventMustAttend) {
-        return false
-      }
+        if (this.searchText.length == 0) {
+          return true;
+        }
 
-      if (this.searchText.length == 0) {
-        return true
-      }
-
-      return eventName.toLowerCase().includes(this.searchText) ||
-        eventDate.toLowerCase().includes(this.searchText);
-    },
-    updateTicker(){
-      this.mustAttendOnly;
-      PetiteVue.nextTick(() => {
-        this.ticker++;
+        return (
+          eventName.toLowerCase().includes(this.searchText) ||
+          eventDate.toLowerCase().includes(this.searchText)
+        );
+      },
+      updateTicker() {
+        this.mustAttendOnly;
         PetiteVue.nextTick(() => {
           this.ticker++;
+          PetiteVue.nextTick(() => {
+            this.ticker++;
+          });
         });
-      });
-    }
-  }).mount()
-</script>
+      },
+    }).mount();
+  </script>
+</div>
