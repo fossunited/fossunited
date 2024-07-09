@@ -55,6 +55,7 @@
         display: flex;
         justify-content: center;
         align-items:center;
+        padding-left: 1rem;
     }
 
     .feature-partners img{
@@ -80,6 +81,7 @@
         .feature-partners{
             padding: 1rem;
             flex-direction: column;
+            gap: 0.5rem;
         }
 
         .feature-partners img{
@@ -110,9 +112,13 @@
 
             <div class="feature-partners">
 
-                <img src="assets/fossunited/images/partners/frappe-logo.png" alt="Frappe">
-                <img src="assets/fossunited/images/partners/zerodha-logo.png" alt="Zerodha">
+                {% set featurePartners = frappe.get_all("Industry Partners", fields=['name', 'logo', 'website'], filters={'tier': ['in', ["Patron", "Platinum", "Gold"]], 'is_current_partner': 1}, order_by='tier') %}
 
+                {% for partner in featurePartners %}
+                    <a href="{{partner.website}}">
+                        <img src="{{ partner.logo }}" alt="{{ partner.name }}">
+                    </a>
+                {% endfor %}
             </div>
 
         </div>
