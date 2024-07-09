@@ -73,7 +73,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         )
         self.assertTrue(new_ticket_exists)
 
-    def test_check_status_pending_on_create(self):
+    def test_status_pending_on_create(self):
         # Given an event and a ticket linked to the event
         event = frappe.get_doc(
             {
