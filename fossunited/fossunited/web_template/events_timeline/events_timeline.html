@@ -48,12 +48,28 @@
   .search-filter-controlpanel {
     display: flex;
     gap: 1rem;
+
   }
 
   .event-group {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+  }
+
+  @media (max-width: 768px){
+    .search-filter-controlpanel{
+      flex-direction: column;
+    }
+
+    .must-attend-checkbox{
+      flex-direction: row;
+      width: fit-content
+    }
+
+    .event-card-holder{
+      width: 90%;
+    }
   }
 
 </style>
@@ -92,7 +108,7 @@
             <h5 class="event-month" v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'">{{ month }}</h5>
             <div class="events-grid-4" v-effect="updateTicker()" v-show="ticker > 0 && $el?.children.length > 0">
               {% for event in month_events %}
-              <div v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})">
+              <div class="event-card-holder" v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})">
                 {{event_card(event)}}
               </div>
               {% endfor %}
@@ -109,7 +125,7 @@
       {% for month, month_events in events.items() %}
         {% for event in month_events %}
           {% set event_date_text = event.event_start_date.strftime("%d %b %Y") %}
-          <div
+          <div class="event-card-holder"
           v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
           >
             {{ event_card(event)}}

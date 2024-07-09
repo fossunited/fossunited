@@ -15,13 +15,6 @@
         width: 100%;
     }
 
-    .events-block{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        justify-content: space-around;
-        gap: 2.5rem;
-    }
-
     .upcoming-events-header{
         display: flex;
         flex-direction: column;
@@ -64,7 +57,7 @@
         </div>
 
         {% from "fossunited/templates/macros/event_card.html" import event_card %}
-        {% set events = frappe.get_all("FOSS Chapter Event", fields=["*"], filters={"status": ["in", ["Approved", "Live"]], "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=9, order_by='event_start_date') %}
+        {% set events = frappe.get_all("FOSS Chapter Event", fields=["*"], filters={"status": ["in", ["Approved", "Live"]], "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=4, order_by='event_start_date') %}
         <div class="events-grid-4">
             {% for event in events %}
                 {{ event_card(event) }}
