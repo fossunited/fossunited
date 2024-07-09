@@ -82,7 +82,7 @@
   }
  ],
  "links": [],
- "modified": "2024-06-25 13:11:34.567860",
+ "modified": "2024-07-09 16:30:29.466486",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon LocalHost",
@@ -103,28 +103,15 @@
   },
   {
    "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
+   "role": "Localhost Organizer",
    "select": 1,
-   "share": 1,
    "write": 1
   },
   {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "All",
-   "select": 1,
-   "share": 1,
-   "write": 1
+   "select": 1
   }
  ],
  "show_title_field_in_link": 1,
