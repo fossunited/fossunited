@@ -84,13 +84,7 @@ const handleToggleSidebar = () => {
 }
 
 let user_profile = createResource({
-  url: 'frappe.client.get',
-  params: {
-    doctype: 'FOSS User Profile',
-    filters: {
-      email: session.user,
-    },
-  },
+  url: 'fossunited.api.dashboard.get_session_user_profile',
 })
 
 if (
