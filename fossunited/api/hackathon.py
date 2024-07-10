@@ -276,16 +276,20 @@ def get_localhost_requests_by_team(
     )
 
     for request in requests:
-        profile = frappe.get_doc(
-            "FOSS User Profile", request.user_profile
+        request["profile_route"] = frappe.db.get_value(
+            "FOSS User Profile", request.user_profile, "route"
         )
-        request["profile_route"] = profile.route
+        profile_photo = frappe.db.get_value(
+            "FOSS User Profile", request.user_profile, "profile_photo"
+        )
         request["profile_photo"] = (
-            profile.profile_photo
-            if profile.profile_photo
+            profile_photo
+            if profile_photo
             else "/assets/fossunited/images/defaults/user_profile_image.png"
         )
-        request["profile_username"] = profile.username
+        request["profile_username"] = frappe.db.get_value(
+            "FOSS User Profile", request.user_profile, "username"
+        )
 
     requests_by_team = {}
 
