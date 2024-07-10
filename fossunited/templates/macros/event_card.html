@@ -31,7 +31,7 @@
         <div class="event-card--location-section">
             <div class="event-card--location">
                 <i class="ti ti-map-pin"></i>
-                <span>{{ event.event_location | truncate(25, True) or "To be Announced"}}</span>
+                <span>{{ (event.event_location or 'To Be Announced') | truncate(30, True) }}</span>
             </div>
         </div>
     </div>
