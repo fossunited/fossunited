@@ -32,10 +32,10 @@ class FOSSHackathonLocalHost(Document):
         self.assign_localhost_organizer_role()
 
     def on_update(self):
-        self.assign_localhost_organizer_role()
+        self.check_if_member_removed()
 
     def before_save(self):
-        self.check_if_member_removed()
+        self.assign_localhost_organizer_role()
 
     def assign_localhost_organizer_role(self):
         for member in self.organizers:
