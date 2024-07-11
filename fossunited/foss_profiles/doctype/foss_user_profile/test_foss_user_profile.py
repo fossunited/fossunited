@@ -31,17 +31,10 @@ class TestFOSSUserProfile(FrappeTestCase):
                 "full_name": inserted_name,
             },
         ).insert()
-        profile = frappe.get_doc(
-            {
-                "doctype": "FOSS User Profile",
-                "user": frappe_user.name,
-                "username": frappe_user.username,
-                "is_published": 1,
-            },
-        ).insert()
 
         # Then verify that the Profile has been stored as expected
         profile_exists = frappe.db.exists(
-            "FOSS User Profile", {"username": inserted_username}
+            "FOSS User Profile", {"user": frappe_user.name}
         )
+
         self.assertTrue(profile_exists)
