@@ -21,7 +21,7 @@
       <ListView
         :columns="[
           { label: 'Name', key: 'name1' },
-          { label: 'Email', key: 'submitted_by' },
+          { label: 'Email', key: 'email' },
           { label: 'I am a', key: 'im_a' },
         ]"
         :rows="submissions.data"
@@ -64,7 +64,7 @@ const submissions = createListResource({
   auto: true,
   transform(data) {
     data.forEach((submission) => {
-      submission.submitted_by = submission.submitted_by.replace(
+      submission.email = submission.email.replace(
         /(?<=.{3}).(?=[^@]*?@)/g,
         '*',
       )
@@ -75,7 +75,7 @@ const submissions = createListResource({
 const downloadAttendeeList = () => {
   const csv = submissions.data
     .map((submission) => {
-      return [submission.name1, submission.submitted_by, submission.im_a].join(
+      return [submission.name1, submission.email, submission.im_a].join(
         ',',
       )
     })
