@@ -109,7 +109,8 @@
    "fieldname": "localhost_request_status",
    "fieldtype": "Select",
    "label": "LocalHost Request Status",
-   "options": "Pending\nAccepted\nRejected"
+   "options": "Pending\nAccepted\nRejected",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_pxgj",
@@ -129,7 +130,7 @@
   }
  ],
  "links": [],
- "modified": "2024-06-25 13:11:18.905930",
+ "modified": "2024-07-11 15:41:08.687831",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
@@ -150,13 +151,24 @@
   },
   {
    "create": 1,
-   "delete": 1,
+   "read": 1,
+   "role": "All",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Localhost Organizer",
+   "select": 1,
+   "write": 1
+  },
+  {
    "email": 1,
    "export": 1,
+   "permlevel": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All",
+   "role": "Localhost Organizer",
    "share": 1,
    "write": 1
   }
