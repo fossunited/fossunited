@@ -207,7 +207,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
         speakers = []
         for cfp in speaker_cfps:
-            print(cfp)
             user = frappe.get_doc(
                 "FOSS User Profile", {"email": cfp.submitted_by}
             )
