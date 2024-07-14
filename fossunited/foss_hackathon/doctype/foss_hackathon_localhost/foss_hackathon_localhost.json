@@ -6,6 +6,8 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "is_enabled",
+  "section_break_pnbh",
   "parent_hackathon",
   "localhost_name",
   "column_break_bvzk",
@@ -79,10 +81,20 @@
    "fieldtype": "Table",
    "label": "Organizers",
    "options": "FOSS Hackathon LocalHost Organizer"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_enabled",
+   "fieldtype": "Check",
+   "label": "Is Enabled?"
+  },
+  {
+   "fieldname": "section_break_pnbh",
+   "fieldtype": "Section Break"
   }
  ],
  "links": [],
- "modified": "2024-07-10 13:34:06.896205",
+ "modified": "2024-07-14 16:33:10.270262",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon LocalHost",
