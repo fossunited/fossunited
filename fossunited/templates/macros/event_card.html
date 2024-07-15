@@ -8,7 +8,7 @@
                 <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
                 <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
                 {% else %}
-                <span class="fff-forward">{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+                <span class="fff-forward">{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span>
                 {% endif %}
             </div>
         {% else %}
@@ -31,7 +31,7 @@
         <div class="event-card--location-section">
             <div class="event-card--location">
                 <i class="ti ti-map-pin"></i>
-                <span>{{ event.event_location or "To be Announced" | truncate(22, True)}}</span>
+                <span>{{ (event.event_location or 'To Be Announced') | truncate(30, True) }}</span>
             </div>
         </div>
     </div>

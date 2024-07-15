@@ -43,8 +43,6 @@ class FOSSEventCFP(WebsiteGenerator):
         reviewers = frappe.get_single(
             "FOSS Global CFP Review Settings"
         ).members
-        print(reviewers)
-
         for reviewer in reviewers:
             self.append(
                 "cfp_reviewers",
