@@ -30,7 +30,7 @@
         </div>
         <div class="flex flex-col gap-1">
             <div class="font-medium">Project</div>
-            <div v-if="participant.project_title" @click="redirectToRoute(participant.project_route)" class="hover:underline hover:cursor-pointer flex items-center gap-1">{{ participant.project_title }}<FeatherIcon name="external-link" class="w-4 h-4 inline-block"/></div>
+            <div v-if="participant.project_title" @click="redirectToRoute(participant.project_route)" class="hover:underline hover:cursor-pointer flex items-center gap-1">{{ truncateProjectTitle(participant.project_title, 20) }}<FeatherIcon name="external-link" class="w-4 h-4 inline-block"/></div>
             <div v-else>No Project Yet</div>
         </div>
         <div class="flex flex-col gap-1">
@@ -64,6 +64,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import { Dialog, FeatherIcon } from 'frappe-ui'
+import { truncateProjectTitle } from '../helpers/utils'
 const props = defineProps({
   participant: {
     type: Object,

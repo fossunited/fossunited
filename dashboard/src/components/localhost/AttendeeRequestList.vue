@@ -169,7 +169,7 @@
               target="_blank"
               class="text-sm flex font-semibold hover:underline"
             >
-              <span>{{ row.project_title }}</span
+              <span>{{ truncateProjectTitle(row.project_title, 20) }}</span
               ><svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -213,6 +213,7 @@ import {
 } from 'frappe-ui'
 import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
+import { truncateProjectTitle } from '../helpers/utils'
 
 const showDialog = ref(false)
 const selectedRequest = ref({})
@@ -301,6 +302,5 @@ const filterListByStatus = (filter) => {
   })
   requestByGroup.fetch()
 }
-
 
 </script>
