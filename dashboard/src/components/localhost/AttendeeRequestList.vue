@@ -162,14 +162,32 @@
               />
             </div>
           </div>
-          <div v-else-if="column.label == 'Project'">
-            <Button
-              size="sm"
-              variant="ghost"
-              @click="redirectToProfile(row.project_route)"
+          <div class="flex" v-else-if="column.label == 'Project'">
+            <a
+              v-if="row.project_route"
+              :href="row.project_route"
+              target="_blank"
+              class="text-sm flex font-semibold hover:underline"
             >
-              <span class="text-sm font-medium">View project</span>
-            </Button>
+              <span>{{ row.project_title }}</span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M17 7l-10 10" />
+                <path d="M8 7l9 0l0 9" />
+              </svg>
+            </a>
+            <div v-else class="text-sm">No Project Yet</div>
           </div>
           <div v-else class="text-base">{{ item }}</div>
         </template>
@@ -283,4 +301,6 @@ const filterListByStatus = (filter) => {
   })
   requestByGroup.fetch()
 }
+
+
 </script>
