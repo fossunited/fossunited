@@ -37,6 +37,9 @@
         <h2>{{ team.data.team_name }}</h2>
         <Button icon="edit-3" @click="inNameEdit = true" />
       </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 w-full mb-4">
+        <HackathonAttendanceMode :hackathon="hackathon" class="w-full" />
+      </div>
       <hr />
       <div class="py-4 my-4 gap-6 grid grid-cols-1 md:grid-cols-2">
         <div
@@ -131,6 +134,7 @@
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import HackathonTeamMember from '@/components/hackathon/HackathonTeamMember.vue'
+import HackathonAttendanceMode from '@/components/hackathon/HackathonAttendanceMode.vue'
 import { createResource, usePageMeta, Dialog } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute } from 'vue-router'

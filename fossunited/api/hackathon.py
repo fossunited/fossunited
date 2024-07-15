@@ -342,3 +342,35 @@ def join_team_via_code(team_code: str, user: str):
 
     team.append("members", {"member": participant.name})
     team.save()
+
+
+@frappe.whitelist()
+def get_session_participant(hackathon: str) -> dict:
+    """
+    Get participant details of the current session user
+
+    Args:
+        hackathon (str): Hackathon ID
+
+    Returns:
+        dict: Participant document as a dictionary
+    """
+    participant = frappe.db.get_value(
+        "FOSS Hackathon Participant",
+        {"hackathon": hackathon, "user": frappe.session.user},
+        [
+            "name",
+            "user_profile",
+            "full_name",
+            "email",
+            "is_student",
+            "git_profile",
+            "organization",
+            "hackathon",
+            "wants_to_attend_locally",
+            "localhost",
+            "localhost_request_status",
+        ],
+        as_dict=1,
+    )
+    return participant
