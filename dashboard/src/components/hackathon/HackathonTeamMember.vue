@@ -67,7 +67,7 @@
                 </div>
             </div>
             <Button
-                v-if="member.email != props.team.data.owner"
+                v-if="member.email != props.team.data.owner || session.user == props.team.data.owner"
                 :label="member.email == session.user ? 'Leave' : 'Remove'"
                 theme="red"
                 @click="removeTeamMember(member)"
@@ -85,6 +85,7 @@ import {
   Badge,
   createResource,
 } from 'frappe-ui'
+import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboard from '@/components/CopyToClipboardComponent.vue'
 
@@ -92,6 +93,7 @@ const inInvite = ref(0)
 const inviteEmail = ref('')
 const teamCode = ref('')
 const session = inject('$session')
+const router = useRouter()
 
 const sections = ref([
   {
@@ -106,6 +108,10 @@ const sections = ref([
 
 const props = defineProps({
   team: {
+    type: Object,
+    required: true,
+  },
+  hackathon: {
     type: Object,
     required: true,
   },
@@ -171,6 +177,11 @@ const removeTeamMember = (member) => {
       }
     },
     onSuccess() {
+      if (member.email == session.user){
+        router.push(`/hack/${props.hackathon.permalink}`)
+        toast.warn('You have left the team.')
+        return
+      }
       props.team.fetch()
       toast.success('Member removed successfully')
     },

@@ -4,7 +4,7 @@
       <h3 class="text-xl font-semibold">Manage Team</h3>
     </template>
     <template #body-content>
-      <HackathonTeamMember :team="team" />
+      <HackathonTeamMember :team="team" :hackathon="hackathon.data" />
     </template>
   </Dialog>
   <Header />
