@@ -37,7 +37,7 @@
         <h2>{{ team.data.team_name }}</h2>
         <Button icon="edit-3" @click="inNameEdit = true" />
       </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 w-full mb-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 w-full mb-4 gap-6">
         <HackathonAttendanceMode :hackathon="hackathon" class="w-full" />
       </div>
       <hr />

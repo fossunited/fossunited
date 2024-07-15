@@ -374,3 +374,30 @@ def get_session_participant(hackathon: str) -> dict:
         as_dict=1,
     )
     return participant
+
+
+@frappe.whitelist()
+def delete_project(hackathon: str, team: str):
+    """
+    Delete team project
+
+    Args:
+        hackathon (str): Hackathon ID
+        team (str): Team ID
+    """
+    team_doc = frappe.get_doc("FOSS Hackathon Team", team)
+    if frappe.session.user not in [
+        member.email for member in team_doc.members
+    ]:
+        frappe.throw("You are not authorized to delete this project")
+
+    project = get_project_by_team(hackathon, team)
+
+    try:
+        frappe.db.set_value(
+            "FOSS Hackathon Team", team, "project", None
+        )
+        frappe.db.delete("FOSS Hackathon Project", project.name)
+        return True
+    except Exception as e:
+        frappe.throw("Error deleting project")
