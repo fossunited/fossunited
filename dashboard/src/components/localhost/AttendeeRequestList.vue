@@ -165,8 +165,7 @@
           <div class="flex" v-else-if="column.label == 'Project'">
             <a
               v-if="row.project_route"
-              :href="row.project_route"
-              target="_blank"
+              @click="redirectRoute(row.project_route)"
               class="text-sm flex font-semibold hover:underline"
             >
               <span>{{ truncateStr(row.project_title, 20) }}</span
@@ -214,6 +213,7 @@ import {
 import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
+import { redirectRoute } from '@/helpers/utils'
 
 const showDialog = ref(false)
 const selectedRequest = ref({})
@@ -265,9 +265,6 @@ const requestByGroup = createResource({
   },
 })
 
-const redirectToProfile = (route) => {
-  window.open(document.location.origin + '/' + route, '_blank')
-}
 
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
