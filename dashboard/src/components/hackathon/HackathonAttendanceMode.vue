@@ -211,7 +211,7 @@ const localhosts = createListResource({
   doctype: 'FOSS Hackathon LocalHost',
   filters: {
     parent_hackathon: props.hackathon.data.name,
-    is_enabled: 1,
+    is_accepting_attendees: 1,
   },
   fields: ['localhost_name', 'name', 'city', 'state', 'location', 'map_link'],
   auto: true,

@@ -6,7 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "is_enabled",
+  "is_accepting_attendees",
   "section_break_pnbh",
   "parent_hackathon",
   "localhost_name",
@@ -83,18 +83,18 @@
    "options": "FOSS Hackathon LocalHost Organizer"
   },
   {
-   "default": "1",
-   "fieldname": "is_enabled",
-   "fieldtype": "Check",
-   "label": "Is Enabled?"
-  },
-  {
    "fieldname": "section_break_pnbh",
    "fieldtype": "Section Break"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_accepting_attendees",
+   "fieldtype": "Check",
+   "label": "Is Accepting Attendees?"
   }
  ],
  "links": [],
- "modified": "2024-07-14 16:33:10.270262",
+ "modified": "2024-07-16 16:32:35.592358",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon LocalHost",
