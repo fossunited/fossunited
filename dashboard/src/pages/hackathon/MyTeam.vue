@@ -72,7 +72,7 @@
           <div class="text-base font-semibold uppercase">Project</div>
           <div class="flex justify-between items-end">
             <div class="flex flex-col gap-2">
-              <div class="font-medium text-lg uppercase">
+              <div class="font-medium text-lg uppercase break-all">
                 {{ project.data?.title }}
               </div>
               <div class="text-sm">{{ project.data?.short_description }}</div>

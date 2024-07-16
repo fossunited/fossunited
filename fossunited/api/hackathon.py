@@ -220,12 +220,16 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
         team (str): Team ID
 
     Returns:
-        dict: Project document as a dictionary
+        dict: Project document as a dictionary or None if the team has no project created.
     """
-    return frappe.get_doc(
-        "FOSS Hackathon Project",
-        {"hackathon": hackathon, "team": team},
-    )
+
+    try:
+        return frappe.get_doc(
+            "FOSS Hackathon Project",
+            {"hackathon": hackathon, "team": team},
+        )
+    except frappe.DoesNotExistError:
+        return None
 
 
 @frappe.whitelist()

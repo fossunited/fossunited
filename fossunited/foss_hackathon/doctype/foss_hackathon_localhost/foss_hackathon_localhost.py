@@ -50,7 +50,10 @@ class FOSSHackathonLocalHost(Document):
 
     def check_if_member_removed(self):
         prev_doc = self.get_doc_before_save()
-        if not len(prev_doc.organizers) > len(self.organizers):
+        if not (
+            prev_doc
+            and len(prev_doc.organizers) > len(self.organizers)
+        ):
             return
 
         for member in prev_doc.organizers:
