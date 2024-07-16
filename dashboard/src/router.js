@@ -6,7 +6,15 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    redirect: { name: 'MyProfile'},
     component: () => import('@/pages/Home.vue'),
+    children: [
+      {
+        path: 'me',
+        name: 'MyProfile',
+        component: () => import('@/pages/MyProfile.vue'),
+      }
+    ]
   },
   {
     path: '/buy-tickets',
