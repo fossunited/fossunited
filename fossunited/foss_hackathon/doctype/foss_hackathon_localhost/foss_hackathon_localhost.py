@@ -19,6 +19,7 @@ class FOSSHackathonLocalHost(Document):
         )
 
         city: DF.Link | None
+        is_accepting_attendees: DF.Check
         localhost_name: DF.Data
         location: DF.Data | None
         map_link: DF.Data | None

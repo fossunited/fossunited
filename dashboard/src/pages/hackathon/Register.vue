@@ -329,6 +329,7 @@ watch(hackathon, () => {
       localhost.update({
         filters: {
           parent_hackathon: hackathon.data.name,
+          is_accepting_attendees: 1,
         },
       })
       localhost.fetch()
