@@ -41,18 +41,30 @@ def get_sidebar_items():
             }
         )
 
+    if user_is_localhost_organizer():
+        sidebar_items[1]["items"].append(
+            {
+                "label": "Manage Localhost",
+                "route": "/localhost",
+            }
+        )
+
     return sidebar_items
 
 
 def user_is_chapter_member(user: str = frappe.session.user):
-    return frappe.db.exists(
-        "FOSS Chapter",
-        [
-            [
-                "FOSS Chapter Lead Team Member",
-                "email",
-                "like",
-                frappe.session.user,
-            ]
-        ],
+    return bool(
+        frappe.db.exists(
+            "Has Role",
+            {"role": "Chapter Team Member", "parent": user},
+        )
+    )
+
+
+def user_is_localhost_organizer(user: str = frappe.session.user):
+    return bool(
+        frappe.db.exists(
+            "Has Role",
+            {"role": "Localhost Organizer", "parent": user},
+        )
     )
