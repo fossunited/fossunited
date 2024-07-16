@@ -6,7 +6,7 @@
       title: 'Change Mode of Attendance',
     }"
   >
-    <template #body-content>
+  <template #body-content>
       <div
         class="flex flex-col gap-2 items-center text-center p-3 rounded w-full bg-orange-50 text-orange-600 border-2 border-dashed border-orange-600 text-xs"
       >
@@ -42,19 +42,30 @@
         :options="attendanceModeOptions"
       />
       <FormControl
-        v-if="attendanceMode == 'local' || attendanceMode == 'local-pending'"
-        label="Select LocalHost"
-        :disabled="attendanceMode == 'local'"
-        v-model="selectedLocalhost"
-        type="select"
-        class="mt-4"
-        :options="
-          localhosts.data.map((localhost) => ({
-            label: `${localhost.localhost_name}`,
-            value: localhost.name,
-          }))
-        "
+          v-if="attendanceMode == 'local'"
+          label="Your Localhost"
+          :disabled="1"
+          v-model="participant_localhost.data.localhost_name"
+          class="mt-4"
       />
+      <div v-if="attendanceMode == 'local-pending'">
+        <FormControl
+          v-if="localhosts.data.length > 0"
+          label="Select LocalHost"
+          v-model="selectedLocalhost"
+          type="select"
+          class="mt-4"
+          :options="
+            localhosts.data.map((localhost) => ({
+              label: `${localhost.localhost_name}`,
+              value: localhost.name,
+            }))
+          "
+        />
+        <div v-else class="mt-2 text-sm text-red-500">
+          <span>No LocalHost slots available at this moment.</span>
+        </div>
+      </div>
       <ErrorMessage :message="errorMessage" class="mt-2" />
     </template>
     <template #actions>
@@ -137,6 +148,17 @@ const props = defineProps({
   },
 })
 
+const participant_localhost = createResource({
+  url: 'frappe.client.get_value',
+  makeParams(){
+    return {
+      doctype: 'FOSS Hackathon LocalHost',
+      name: participant.data.localhost,
+      fieldname: 'localhost_name'
+    }
+  },
+})
+
 const participant = createResource({
   url: 'fossunited.api.hackathon.get_session_participant',
   makeParams() {
@@ -147,6 +169,7 @@ const participant = createResource({
   auto: true,
   onSuccess(data) {
     setAttendanceMode(data)
+    participant_localhost.fetch()
   },
 })
 
@@ -162,7 +185,7 @@ const setAttendanceMode = (data) => {
         value: 'local',
       })
       attendanceModeOptions.push({
-        label: 'Request In-Person Attendance',
+        label: 'Change Localhost Venue',
         value: 'local-pending',
       })
       return
