@@ -179,7 +179,7 @@ const removeTeamMember = (member) => {
     onSuccess() {
       if (member.email == session.user){
         router.push(`/hack/${props.hackathon.permalink}`)
-        toast.warn('You have left the team.')
+        toast.warning('You have left the team.')
         return
       }
       props.team.fetch()
