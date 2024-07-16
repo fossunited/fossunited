@@ -213,7 +213,7 @@ import {
 } from 'frappe-ui'
 import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
-import { truncateStr } from '../helpers/utils'
+import { truncateStr } from '@/helpers/utils'
 
 const showDialog = ref(false)
 const selectedRequest = ref({})

@@ -64,7 +64,7 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import { Dialog, FeatherIcon } from 'frappe-ui'
-import { truncateStr } from '../helpers/utils'
+import { truncateStr } from '@/helpers/utils'
 const props = defineProps({
   participant: {
     type: Object,
