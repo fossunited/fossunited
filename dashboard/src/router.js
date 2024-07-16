@@ -13,7 +13,12 @@ const routes = [
         path: 'me',
         name: 'MyProfile',
         component: () => import('@/pages/MyProfile.vue'),
-      }
+      },
+      {
+        path: '/my-hackathons',
+        name: 'MyHackathons',
+        component: () => import('@/pages/hackathon/MyHackathons.vue'),
+      },
     ]
   },
   {
@@ -146,11 +151,6 @@ const routes = [
     path: '/register-for-hackathon',
     name: 'HackathonRegister',
     component: () => import('@/pages/hackathon/Register.vue'),
-  },
-  {
-    path: '/my-hackathons',
-    name: 'MyHackathons',
-    component: () => import('@/pages/hackathon/MyHackathons.vue'),
   },
   {
     path: '/hack/:permalink',
