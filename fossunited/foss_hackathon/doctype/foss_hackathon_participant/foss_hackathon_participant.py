@@ -42,4 +42,4 @@ class FOSSHackathonParticipant(Document):
             not self.has_value_changed("localhost")
             and self.localhost_request_status == "Rejected"
         ):
-            self.wants_to_attend_locally = 0
+            self.wants_to_attend_locally = False
