@@ -101,8 +101,8 @@
           attendanceMode == 'remote'
             ? 'Remote'
             : attendanceMode == 'local-pending'
-              ? 'On-Site (Pending Request)'
-              : 'On-site'
+              ? `${participant_localhost.data?.localhost_name} - On-Site (Pending Request)`
+              : `${participant_localhost.data?.localhost_name} - On-Site`
         }}
       </div>
       <Button
@@ -149,12 +149,11 @@ const props = defineProps({
 })
 
 const participant_localhost = createResource({
-  url: 'frappe.client.get_value',
+  url: 'frappe.client.get',
   makeParams(){
     return {
       doctype: 'FOSS Hackathon LocalHost',
       name: participant.data.localhost,
-      fieldname: 'localhost_name'
     }
   },
 })
@@ -175,7 +174,6 @@ const participant = createResource({
 
 const setAttendanceMode = (data) => {
   if (data.wants_to_attend_locally) {
-    selectedLocalhost.value = data.localhost
     if (data.localhost_request_status == 'Accepted') {
       attendanceMode.value = 'local'
       originalAttendanceMode.value = 'local'
@@ -190,6 +188,7 @@ const setAttendanceMode = (data) => {
       })
       return
     } else {
+      selectedLocalhost.value = data.localhost
       attendanceMode.value = 'local-pending'
       originalAttendanceMode.value = 'local-pending'
       originalLocalhost.value = data.localhost
@@ -246,6 +245,7 @@ const updateParticipantLocalhost = (localhost) => {
     },
     auto: true,
     onSuccess(data){
+      participant.fetch()
       showDialog.value = false
       errorMessage.value = ''
       toast.success('Attendance mode updated successfully!')
