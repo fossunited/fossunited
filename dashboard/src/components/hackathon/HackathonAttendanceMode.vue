@@ -187,7 +187,7 @@ const setAttendanceMode = (data) => {
 
 const localhosts = createListResource({
   doctype: 'FOSS Hackathon LocalHost',
-  filter: {
+  filters: {
     parent_hackathon: props.hackathon.data.name,
     is_enabled: 1,
   },
