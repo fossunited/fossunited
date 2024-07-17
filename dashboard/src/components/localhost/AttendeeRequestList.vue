@@ -17,7 +17,7 @@
       <span class="text-sm font-medium">Filter:</span>
     </div>
     <select class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="FILTERS[selectedListFitler].selectorClasses" v-model="selectedListFitler">
+      :class="FILTERS[selectedListFilter].selectorClasses" v-model="selectedListFilter">
       <option v-for="(_, label) in FILTERS">
         {{ label }}
       </option>
@@ -65,7 +65,7 @@
           showDialog = true
         },
         emptyState: {
-          title: FILTERS[selectedListFitler].emptyStateText
+          title: FILTERS[selectedListFilter].emptyStateText
         }
       }" row-key="name">
         <template #cell="{ item, row, column }">
@@ -176,7 +176,7 @@ const FILTERS = {
   }
 }
 
-const selectedListFitler = ref("All Requests")
+const selectedListFilter = ref("All Requests")
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -225,12 +225,12 @@ const rejectRequest = (member) => {
 }
 
 
-watch(selectedListFitler, (newFitler) => {
+watch(selectedListFilter, (newFilter) => {
   requestByGroup.update({
     params: {
       hackathon: props.localhost.doc.parent_hackathon,
       localhost: props.localhost.doc.name,
-      status: FILTERS[newFitler].filters,
+      status: FILTERS[newFilter].filters,
     },
   })
   requestByGroup.fetch()
