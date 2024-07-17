@@ -16,12 +16,8 @@
       </svg>
       <span class="text-sm font-medium">Filter:</span>
     </div>
-    <select class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2" :class="selectedListFitler === 'Accepted Requests'
-        ? 'bg-green-100 text-green-700'
-        : selectedListFitler === 'Pending Requests'
-          ? 'bg-orange-100 text-orange-700'
-          : 'bg-gray-100'
-      " v-model="selectedListFitler">
+    <select class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
+      :class="FILTERS[selectedListFitler].selectorClasses" v-model="selectedListFitler">
       <option v-for="(_, label) in FILTERS">
         {{ label }}
       </option>
@@ -61,21 +57,21 @@
           key: 'actions',
         },
       ]" :rows="requestByGroup.data" :options="{
-          selectable: false,
-          showTooltip: true,
-          resizeColumn: true,
-          onRowClick: (row) => {
-            selectedRequest = row
-            showDialog = true
-          },
-        }" row-key="name">
+        selectable: false,
+        showTooltip: true,
+        resizeColumn: true,
+        onRowClick: (row) => {
+          selectedRequest = row
+          showDialog = true
+        },
+      }" row-key="name">
         <template #cell="{ item, row, column }">
           <div v-if="column.label == 'Status'">
             <Badge :theme="row[column.key] === 'Pending'
-                ? 'orange'
-                : row[column.key] === 'Accepted'
-                  ? 'green'
-                  : 'red'
+              ? 'orange'
+              : row[column.key] === 'Accepted'
+                ? 'green'
+                : 'red'
               " :label="row[column.key]" />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
@@ -94,7 +90,7 @@
           <div v-else-if="column.label == 'Is Student'" class="ml-4">
             <span class="text-sm text-gray-600">{{
               row.is_student ? 'Yes' : 'No'
-              }}</span>
+            }}</span>
           </div>
           <div v-else-if="column.label == 'Actions'">
             <div v-if="row.localhost_request_status == 'Pending'" class="flex gap-2">
@@ -155,9 +151,18 @@ const props = defineProps({
 
 // Filters for status checks
 const FILTERS = {
-  'All Requests': ['Pending', 'Rejected', 'Accepted'],
-  'Pending Requests': ['Pending'],
-  'Accepted Requests': ['Accepted']
+  'All Requests': {
+    selectorClasses: 'bg-gray-100',
+    filters: ['Pending', 'Rejected', 'Accepted']
+  },
+  'Pending Requests': {
+    selectorClasses: 'bg-orange-100 text-orange-700',
+    filters: ['Pending']
+  },
+  'Accepted Requests': {
+    selectorClasses: 'bg-green-100 text-green-700',
+    filters: ['Accepted']
+  }
 }
 
 const selectedListFitler = ref("All Requests")
@@ -212,7 +217,7 @@ watch(selectedListFitler, (newFitler) => {
     params: {
       hackathon: props.localhost.doc.parent_hackathon,
       localhost: props.localhost.doc.name,
-      status: FILTERS[newFitler],
+      status: FILTERS[newFitler].filters,
     },
   })
   requestByGroup.fetch()
