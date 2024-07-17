@@ -1,6 +1,6 @@
 <template>
   <RequestDetailDialog
-  class="z-50 my-5"
+    class="z-50 my-5"
     :participant="selectedRequest"
     :showDialog="showDialog"
     @update:showDialog="showDialog = $event"
@@ -62,7 +62,7 @@
           {
             label: 'Status',
             key: 'localhost_request_status',
-            width: 1 / 2,
+            width: 1,
           },
           {
             label: 'Is Student',
@@ -106,9 +106,12 @@
                   ? 'orange'
                   : row[column.key] === 'Accepted'
                     ? 'green'
-                    : 'red'
+                    : row[column.key] === 'Pending Confirmation'
+                      ? 'blue'
+                      : 'red'
               "
               :label="row[column.key]"
+              size="lg"
             />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
@@ -241,6 +244,11 @@ const listFilter = ref([
     isActive: false,
     value: ['Accepted'],
   },
+  {
+    label: 'Pending Confirmation',
+    isActive: false,
+    value: ['Pending Confirmation'],
+  },
 ])
 
 const selectedListFitler = ref(listFilter.value[0].label)
@@ -265,7 +273,6 @@ const requestByGroup = createResource({
   },
 })
 
-
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
     url: 'frappe.client.set_value',
@@ -282,7 +289,7 @@ const changeLocalhostRequestStatus = (id, status) => {
 }
 
 const acceptRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Accepted').fetch()
+  changeLocalhostRequestStatus(member.name, 'Pending Confirmation').fetch()
 }
 
 const rejectRequest = (member) => {
@@ -299,5 +306,4 @@ const filterListByStatus = (filter) => {
   })
   requestByGroup.fetch()
 }
-
 </script>

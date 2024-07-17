@@ -9,7 +9,7 @@
   <template #body-content>
     <div class="grid grid-cols-2 gap-4 text-base">
         <div class="col-span-2 text-base font-medium">
-            <span>Status: </span><span :class="{'Pending': 'text-orange-600', 'Accepted': 'text-green-600', 'Rejected': 'text-red-600'}[participant.localhost_request_status]">{{ participant.localhost_request_status }}</span>
+            <span>Status: </span><span :class="{'Pending': 'text-orange-600', 'Accepted': 'text-green-600', 'Rejected': 'text-red-600', 'Pending Confirmation': 'text-blue-600'}[participant.localhost_request_status]">{{ participant.localhost_request_status }}</span>
         </div>
         <div class="flex gap-2">
             <img :src="participant.profile_photo" alt="" class=" rounded-full h-8 w-8">
@@ -43,15 +43,17 @@
         </div>
     </div>
   </template>
-  <template #actions v-if="participant.localhost_request_status == 'Pending'">
+  <template #actions v-if="participant.localhost_request_status == 'Pending' || participant.localhost_request_status == 'Pending Confirmation'">
     <div class="grid grid-cols-2 gap-4">
         <Button
+            :class="participant.localhost_request_status == 'Pending Confirmation' ? 'col-span-2' : ''"
             label="Reject"
             theme="red"
             size="sm"
             @click="rejectRequest(participant)"
         />
         <Button
+            v-if="participant.localhost_request_status != 'Pending Confirmation'"
             label="Approve"
             theme="green"
             size="sm"
