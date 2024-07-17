@@ -64,6 +64,9 @@
           selectedRequest = row
           showDialog = true
         },
+        emptyState: {
+          title: FILTERS[selectedListFitler].emptyStateText
+        }
       }" row-key="name">
         <template #cell="{ item, row, column }">
           <div v-if="column.label == 'Status'">
@@ -90,7 +93,7 @@
           <div v-else-if="column.label == 'Is Student'" class="ml-4">
             <span class="text-sm text-gray-600">{{
               row.is_student ? 'Yes' : 'No'
-            }}</span>
+              }}</span>
           </div>
           <div v-else-if="column.label == 'Actions'">
             <div v-if="row.localhost_request_status == 'Pending'" class="flex gap-2">
@@ -153,15 +156,23 @@ const props = defineProps({
 const FILTERS = {
   'All Requests': {
     selectorClasses: 'bg-gray-100',
+    emptyStateText: 'No requests found',
     filters: ['Pending', 'Rejected', 'Accepted']
   },
   'Pending Requests': {
     selectorClasses: 'bg-orange-100 text-orange-700',
+    emptyStateText: 'No pending requests',
     filters: ['Pending']
   },
   'Accepted Requests': {
     selectorClasses: 'bg-green-100 text-green-700',
+    emptyStateText: 'No accepted requests',
     filters: ['Accepted']
+  },
+  'Rejected Requests': {
+    selectorClasses: 'bg-red-100 text-red-700',
+    emptyStateText: 'No rejected requests',
+    filters: ['Rejected']
   }
 }
 
@@ -176,13 +187,15 @@ const requestByGroup = createResource({
   auto: true,
   transform(data) {
     let rows = []
-    Object.entries(data).forEach((key) => {
-      rows.push({
-        group: key[1][0].team.team_name,
-        collapsed: false,
-        rows: key[1],
+    if (data) {
+      Object.entries(data).forEach((key) => {
+        rows.push({
+          group: key[1][0].team.team_name,
+          collapsed: false,
+          rows: key[1],
+        })
       })
-    })
+    }
     return rows
   },
 })
