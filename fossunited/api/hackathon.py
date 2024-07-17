@@ -220,12 +220,16 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
         team (str): Team ID
 
     Returns:
-        dict: Project document as a dictionary
+        dict: Project document as a dictionary or None if the team has no project created.
     """
-    return frappe.get_doc(
-        "FOSS Hackathon Project",
-        {"hackathon": hackathon, "team": team},
-    )
+
+    try:
+        return frappe.get_doc(
+            "FOSS Hackathon Project",
+            {"hackathon": hackathon, "team": team},
+        )
+    except frappe.DoesNotExistError:
+        return None
 
 
 @frappe.whitelist()
@@ -396,3 +400,60 @@ def get_session_user_localhosts():
     )
 
     return localhosts
+
+def get_session_participant(hackathon: str) -> dict:
+    """
+    Get participant details of the current session user
+
+    Args:
+        hackathon (str): Hackathon ID
+
+    Returns:
+        dict: Participant document as a dictionary
+    """
+    participant = frappe.db.get_value(
+        "FOSS Hackathon Participant",
+        {"hackathon": hackathon, "user": frappe.session.user},
+        [
+            "name",
+            "user_profile",
+            "full_name",
+            "email",
+            "is_student",
+            "git_profile",
+            "organization",
+            "hackathon",
+            "wants_to_attend_locally",
+            "localhost",
+            "localhost_request_status",
+        ],
+        as_dict=1,
+    )
+    return participant
+
+
+@frappe.whitelist()
+def delete_project(hackathon: str, team: str):
+    """
+    Delete team project
+
+    Args:
+        hackathon (str): Hackathon ID
+        team (str): Team ID
+    """
+    team_doc = frappe.get_doc("FOSS Hackathon Team", team)
+    if frappe.session.user not in [
+        member.email for member in team_doc.members
+    ]:
+        frappe.throw("You are not authorized to delete this project")
+
+    project = get_project_by_team(hackathon, team)
+
+    try:
+        frappe.db.set_value(
+            "FOSS Hackathon Team", team, "project", None
+        )
+        frappe.db.delete("FOSS Hackathon Project", project.name)
+        return True
+    except Exception as e:
+        frappe.throw("Error deleting project")

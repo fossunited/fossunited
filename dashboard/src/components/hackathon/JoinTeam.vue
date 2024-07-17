@@ -33,11 +33,11 @@
           <div class="flex flex-col gap-1">
             <div
               class="text-lg font-medium hover:underline hover:cursor-pointer"
-              @click="openNewTab(invite.project_link.data.route)"
+              @click="redirectRoute(invite.project_link.data.route)"
             >
               {{ invite.team_name }}
             </div>
-            <div class="text-sm flex gap-1 items-end">Invited by <span @click="openNewTab(invite.sender_profile.data.route)" class="hover:underline hover:cursor-pointer">{{ invite.sender_name }}</span></div>
+            <div class="text-sm flex gap-1 items-end">Invited by <span @click="redirectRoute(invite.sender_profile.data.route)" class="hover:underline hover:cursor-pointer">{{ invite.sender_name }}</span></div>
           </div>
           <div class="flex gap-1">
             <Button icon="check" theme="green" @click="acceptInvite(invite.name)"/>
@@ -53,6 +53,7 @@ import { FormControl, createResource, Badge, createDocumentResource } from 'frap
 import Button from 'frappe-ui/src/components/Button.vue'
 import { ref, defineProps, onMounted, inject } from 'vue'
 import { toast } from 'vue-sonner'
+import { redirectRoute } from '@/helpers/utils'
 
 const teamCode = ref('')
 const session = inject('$session')
@@ -98,10 +99,6 @@ onMounted(() => {
     })
   }
 })
-
-const openNewTab = (route) => {
-  window.open(document.location.origin + '/' + route, '_blank')
-}
 
 const joinThroughCode = () => {
   createResource({
