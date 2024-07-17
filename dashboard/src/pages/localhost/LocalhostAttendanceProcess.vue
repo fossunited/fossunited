@@ -9,9 +9,15 @@
   />
   <Header />
   <div class="w-full h-screen flex justify-center">
-    <div v-if="transferStatus" class="max-w-screen-xl w-full flex justify-center">
-        <HackathonHeader v-if="hackathon_doc.data" :hackathon="hackathon_doc"/>
-        <LocalhostHeader v-if="localhost_doc.data" :localhost="localhost_doc.data"/>
+    <div v-if="transferStatus" class="max-w-screen-xl w-full flex flex-col items-start">
+        <div class="flex flex-col justify-between md:flex-row md:items-center w-full p-2">
+            <div>
+                <HackathonHeader v-if="hackathon_doc.data" :hackathon="hackathon_doc" :showBanner="false"/>
+            </div>
+            <div class="flex flex-col md:items-end">
+                <LocalhostHeader v-if="localhost_doc.data" :localhost="localhost_doc.data"/>
+            </div>
+        </div>
         <StatusMessage :status="transferStatus" />
     </div>
     <div v-else class="flex w-full justify-center items-center">
