@@ -3,32 +3,7 @@
   <div class="w-full p-4 flex items-center justify-center" v-if="localhost.doc">
     <div class="max-w-screen-xl w-full">
       <div class="text-base font-medium mt-4">Manage LocalHost</div>
-      <div class="prose mt-4">
-        <h2>{{ localhost.doc.localhost_name }}</h2>
-      </div>
-      <div class="flex gap-2 my-2 text-base font-medium items-center">
-        <div class="flex gap-1 items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="icon w-5 h-5 icon-tabler icons-tabler-outline icon-tabler-map-pin"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-            <path
-              d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"
-            />
-          </svg>
-          {{ localhost.doc.location }}
-        </div>
-      </div>
+      <LocalhostHeader :localhost="localhost.doc"/>
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="rounded-sm border-2 border-dashed border-gray-400 p-4 my-2">
           <div class="text-sm uppercase font-medium">Current Status</div>
@@ -92,6 +67,7 @@ import {
   createListResource,
 } from 'frappe-ui'
 import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue';
+import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
 import Header from '@/components/Header.vue'
 
 const route = useRoute()
