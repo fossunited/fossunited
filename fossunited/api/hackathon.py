@@ -270,7 +270,6 @@ def get_localhost_requests_by_team(
         doctype="FOSS Hackathon Participant",
         filters={
             "hackathon": hackathon,
-            "wants_to_attend_locally": 1,
             "localhost": localhost,
             "localhost_request_status": ["in", status],
         },

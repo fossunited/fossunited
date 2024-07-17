@@ -100,7 +100,6 @@ const requests = createListResource({
   doctype: 'FOSS Hackathon Participant',
   fields: ['*'],
   filters: {
-    wants_to_attend_locally: 1,
     localhost: route.params.id,
   },
   transform(data) {
