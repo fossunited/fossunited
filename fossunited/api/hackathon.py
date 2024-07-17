@@ -401,6 +401,7 @@ def get_session_user_localhosts():
 
     return localhosts
 
+
 def get_session_participant(hackathon: str) -> dict:
     """
     Get participant details of the current session user
