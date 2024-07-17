@@ -183,6 +183,12 @@ const routes = [
         component: () => import('@/pages/localhost/ManageLocalhost.vue')
       }
     ]
+  },
+  {
+    path: '/localhost-attendance-process',
+    name: 'LocalhostAttendanceProcess',
+    component: () => import('@/pages/localhost/LocalhostAttendanceProcess.vue'),
+    props: true
   }
 ]
 
