@@ -25,7 +25,7 @@
         </div>
       </div>
       <div
-        class="grid grid-cols-1 sm:grid-cols-4 mt-6 mb-4 gap-4"
+        class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4"
         v-if="requests.data"
       >
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
@@ -38,6 +38,12 @@
           <div class="text-base font-medium">Pending Requests</div>
           <div class="text-2xl text-orange-600">
             {{ requests.data['Pending'].length }}
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 w-full p-4 rounded border">
+          <div class="text-base font-medium">Pending Confirmation</div>
+          <div class="text-2xl text-blue-600">
+            {{ requests.data['Pending Confirmation'].length }}
           </div>
         </div>
         <div class="flex flex-col gap-2 w-full p-4 rounded border">
@@ -55,7 +61,7 @@
       </div>
       <hr>
       <div class="flex flex-col gap-2 py-4">
-        <AttendeeRequestList :localhost="localhost"/>
+        <AttendeeRequestList :localhost="localhost" @update-request="requests.reload()"/>
       </div>
     </div>
   </div>
@@ -65,6 +71,7 @@ import { useRoute } from 'vue-router'
 import {
   createDocumentResource,
   createListResource,
+  usePageMeta,
 } from 'frappe-ui'
 import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue';
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
@@ -72,11 +79,16 @@ import Header from '@/components/Header.vue'
 
 const route = useRoute()
 
+usePageMeta(() => {
+  return {
+    title: 'Manage Localhost',
+  }
+})
+
 const requests = createListResource({
   doctype: 'FOSS Hackathon Participant',
   fields: ['*'],
   filters: {
-    wants_to_attend_locally: 1,
     localhost: route.params.id,
   },
   transform(data) {
@@ -95,6 +107,9 @@ const requests = createListResource({
     }
     if (!data['Rejected']) {
       data['Rejected'] = []
+    }
+    if (!data['Pending Confirmation']) {
+      data['Pending Confirmation'] = []
     }
     return data
   },

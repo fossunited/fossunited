@@ -213,7 +213,7 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
@@ -227,6 +227,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const emit = defineEmits(['updateRequest'])
 
 const listFilter = ref([
   {
@@ -284,6 +286,7 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
+      emit('updateRequest')
     },
   })
 }
