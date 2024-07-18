@@ -1,6 +1,6 @@
 <template>
   <RequestDetailDialog
-  class="z-50 my-5"
+    class="z-50 my-5"
     :participant="selectedRequest"
     :showDialog="showDialog"
     @update:showDialog="showDialog = $event"
@@ -33,20 +33,10 @@
     </div>
     <select
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="
-        selectedListFitler === 'Accepted Requests'
-          ? 'bg-green-100 text-green-700'
-          : selectedListFitler === 'Pending Requests'
-            ? 'bg-orange-100 text-orange-700'
-            : 'bg-gray-100'
-      "
-      v-model="selectedListFitler"
+      v-model="selectedListFilter"
     >
-      <option
-        v-for="(filter, index) in listFilter"
-        @click="filterListByStatus(filter)"
-      >
-        {{ filter.label }}
+      <option v-for="(_, label) in FILTERS">
+        {{ label }}
       </option>
     </select>
   </div>
@@ -94,6 +84,9 @@
           onRowClick: (row) => {
             selectedRequest = row
             showDialog = true
+          },
+          emptyState: {
+            title: FILTERS[selectedListFilter].emptyStateText,
           },
         }"
         row-key="name"
@@ -202,7 +195,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -225,25 +218,27 @@ const props = defineProps({
   },
 })
 
-const listFilter = ref([
-  {
-    label: 'All Requests',
-    isActive: true,
-    value: ['Pending', 'Rejected', 'Accepted'],
+// Filters for status checks
+const FILTERS = {
+  'All Requests': {
+    emptyStateText: 'No requests found',
+    filters: ['Pending', 'Rejected', 'Accepted'],
   },
-  {
-    label: 'Pending Requests',
-    isActive: false,
-    value: ['Pending'],
+  'Pending Requests': {
+    emptyStateText: 'No pending requests',
+    filters: ['Pending'],
   },
-  {
-    label: 'Accepted Requests',
-    isActive: false,
-    value: ['Accepted'],
+  'Accepted Requests': {
+    emptyStateText: 'No accepted requests',
+    filters: ['Accepted'],
   },
-])
+  'Rejected Requests': {
+    emptyStateText: 'No rejected requests',
+    filters: ['Rejected'],
+  },
+}
 
-const selectedListFitler = ref(listFilter.value[0].label)
+const selectedListFilter = ref('All Requests')
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -254,17 +249,18 @@ const requestByGroup = createResource({
   auto: true,
   transform(data) {
     let rows = []
-    Object.entries(data).forEach((key) => {
-      rows.push({
-        group: key[1][0].team.team_name,
-        collapsed: false,
-        rows: key[1],
+    if (data) {
+      Object.entries(data).forEach((key) => {
+        rows.push({
+          group: key[1][0].team.team_name,
+          collapsed: false,
+          rows: key[1],
+        })
       })
-    })
+    }
     return rows
   },
 })
-
 
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
@@ -289,15 +285,14 @@ const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-const filterListByStatus = (filter) => {
+watch(selectedListFilter, (newFilter) => {
   requestByGroup.update({
     params: {
       hackathon: props.localhost.doc.parent_hackathon,
       localhost: props.localhost.doc.name,
-      status: filter.value,
+      status: FILTERS[newFilter].filters,
     },
   })
   requestByGroup.fetch()
-}
-
+})
 </script>

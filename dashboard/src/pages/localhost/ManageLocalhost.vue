@@ -33,17 +33,35 @@
         <div class="rounded-sm border-2 border-dashed border-gray-400 p-4 my-2">
           <div class="text-sm uppercase font-medium">Current Status</div>
           <div class="flex items-center justify-between w-full">
-            <div class="flex items-center gap-2 text-lg font-medium pt-4" :class="localhost.doc.is_accepting_attendees ? 'text-green-700': ''">
-              <span v-if="localhost.doc.is_accepting_attendees" class="relative flex h-3 w-3">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            <div
+              class="flex items-center gap-2 text-lg font-medium pt-4"
+              :class="
+                localhost.doc.is_accepting_attendees ? 'text-green-700' : ''
+              "
+            >
+              <span
+                v-if="localhost.doc.is_accepting_attendees"
+                class="relative flex h-3 w-3"
+              >
+                <span
+                  class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
+                ></span>
+                <span
+                  class="relative inline-flex rounded-full h-3 w-3 bg-green-500"
+                ></span>
               </span>
               <span>
-                {{  localhost.doc.is_accepting_attendees ? 'Accepting Participants' : 'Not Accepting Participants' }}
+                {{
+                  localhost.doc.is_accepting_attendees
+                    ? 'Accepting Participants'
+                    : 'Not Accepting Participants'
+                }}
               </span>
             </div>
             <Button
-              :label="localhost.doc.is_accepting_attendees ? 'Disable' : 'Enable'"
+              :label="
+                localhost.doc.is_accepting_attendees ? 'Disable' : 'Enable'
+              "
               @click="toggleAcceptingAttendees"
             />
           </div>
@@ -78,20 +96,17 @@
           </div>
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="flex flex-col gap-2 py-4">
-        <AttendeeRequestList :localhost="localhost"/>
+        <AttendeeRequestList :localhost="localhost" />
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import {
-  createDocumentResource,
-  createListResource,
-} from 'frappe-ui'
-import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue';
+import { createDocumentResource, createListResource } from 'frappe-ui'
+import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue'
 import Header from '@/components/Header.vue'
 
 const route = useRoute()
@@ -100,7 +115,6 @@ const requests = createListResource({
   doctype: 'FOSS Hackathon Participant',
   fields: ['*'],
   filters: {
-    wants_to_attend_locally: 1,
     localhost: route.params.id,
   },
   transform(data) {
@@ -137,5 +151,4 @@ const toggleAcceptingAttendees = () => {
     is_accepting_attendees: !localhost.doc.is_accepting_attendees,
   })
 }
-
 </script>
