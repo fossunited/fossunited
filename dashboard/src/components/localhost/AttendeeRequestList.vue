@@ -35,8 +35,11 @@
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
       v-model="selectedListFilter"
     >
-      <option v-for="(_, label) in FILTERS">
-        {{ label }}
+      <option
+        v-for="(filter, index) in listFilter"
+        @click="filterListByStatus(filter)"
+      >
+        {{ filter.label }}
       </option>
     </select>
   </div>
