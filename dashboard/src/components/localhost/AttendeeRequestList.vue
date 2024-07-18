@@ -33,7 +33,6 @@
     </div>
     <select
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="FILTERS[selectedListFilter].selectorClasses"
       v-model="selectedListFilter"
     >
       <option v-for="(_, label) in FILTERS">
@@ -222,22 +221,18 @@ const props = defineProps({
 // Filters for status checks
 const FILTERS = {
   'All Requests': {
-    selectorClasses: 'bg-gray-100',
     emptyStateText: 'No requests found',
     filters: ['Pending', 'Rejected', 'Accepted'],
   },
   'Pending Requests': {
-    selectorClasses: 'bg-orange-100 text-orange-700',
     emptyStateText: 'No pending requests',
     filters: ['Pending'],
   },
   'Accepted Requests': {
-    selectorClasses: 'bg-green-100 text-green-700',
     emptyStateText: 'No accepted requests',
     filters: ['Accepted'],
   },
   'Rejected Requests': {
-    selectorClasses: 'bg-red-100 text-red-700',
     emptyStateText: 'No rejected requests',
     filters: ['Rejected'],
   },
