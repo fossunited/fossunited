@@ -480,3 +480,34 @@ def validate_participant_for_localhost(participant_id: str):
         )
 
     return True
+
+
+@frappe.whitelist()
+def validate_user_as_localhost_member(localhost_id: str):
+    if not frappe.db.exists(
+        "Has Role",
+        {
+            "parent": frappe.session.user,
+            "role": "Localhost Organizer",
+        },
+    ):
+        frappe.throw(
+            "You are not a Localhost Organizer. You are not authorized to view this page"
+        )
+
+    if not frappe.db.exists(
+        "FOSS Hackathon LocalHost Organizer",
+        {
+            "parent": localhost_id,
+            "profile": frappe.db.get_value(
+                "FOSS User Profile",
+                {"user": frappe.session.user},
+                "name",
+            ),
+        },
+    ):
+        frappe.throw(
+            "You are not a member of this Localhost. You are not authorized to view this page"
+        )
+
+    return True

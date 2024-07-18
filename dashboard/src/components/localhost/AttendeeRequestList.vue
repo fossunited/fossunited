@@ -53,7 +53,7 @@
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
       <ListView
-        class="max-h-svh"
+        class="min-h-[440px]"
         :columns="[
           {
             label: 'Name',
@@ -94,6 +94,10 @@
           onRowClick: (row) => {
             selectedRequest = row
             showDialog = true
+          },
+          emptyState: {
+            title: 'No Requests',
+            description: 'No requests found',
           },
         }"
         row-key="name"
@@ -205,7 +209,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineSSRCustomElement } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -234,7 +238,7 @@ const listFilter = ref([
   {
     label: 'All Requests',
     isActive: true,
-    value: ['Pending', 'Rejected', 'Accepted'],
+    value: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
   },
   {
     label: 'Pending Requests',
@@ -258,11 +262,12 @@ const selectedListFitler = ref(listFilter.value[0].label)
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
   params: {
-    hackathon: props.localhost.doc.parent_hackathon,
-    localhost: props.localhost.doc.name,
+    hackathon: props.localhost.data.parent_hackathon,
+    localhost: props.localhost.data.name,
   },
   auto: true,
   transform(data) {
+    if (!data) return []
     let rows = []
     Object.entries(data).forEach((key) => {
       rows.push({
@@ -302,8 +307,8 @@ const rejectRequest = (member) => {
 const filterListByStatus = (filter) => {
   requestByGroup.update({
     params: {
-      hackathon: props.localhost.doc.parent_hackathon,
-      localhost: props.localhost.doc.name,
+      hackathon: props.localhost.data.parent_hackathon,
+      localhost: props.localhost.data.name,
       status: filter.value,
     },
   })
