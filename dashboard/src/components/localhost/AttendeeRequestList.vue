@@ -1,23 +1,41 @@
 <template>
-  <RequestDetailDialog class="z-50 my-5" :participant="selectedRequest" :showDialog="showDialog"
-    @update:showDialog="showDialog = $event" @acceptRequest="acceptRequest($event)"
-    @rejectRequest="rejectRequest($event)" />
+  <RequestDetailDialog
+    class="z-50 my-5"
+    :participant="selectedRequest"
+    :showDialog="showDialog"
+    @update:showDialog="showDialog = $event"
+    @acceptRequest="acceptRequest($event)"
+    @rejectRequest="rejectRequest($event)"
+  />
   <div class="prose">
     <h4>Requests</h4>
   </div>
   <div class="flex gap-3 flex-wrap items-center">
     <div class="flex gap-1">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-        stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"
-        class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-filter">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-filter"
+      >
         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
         <path
-          d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z" />
+          d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227z"
+        />
       </svg>
       <span class="text-sm font-medium">Filter:</span>
     </div>
-    <select class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="FILTERS[selectedListFilter].selectorClasses" v-model="selectedListFilter">
+    <select
+      class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
+      :class="FILTERS[selectedListFilter].selectorClasses"
+      v-model="selectedListFilter"
+    >
       <option v-for="(_, label) in FILTERS">
         {{ label }}
       </option>
@@ -25,64 +43,88 @@
   </div>
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
-      <ListView class="max-h-svh" :columns="[
-        {
-          label: 'Name',
-          key: 'full_name',
-        },
-        {
-          label: 'Status',
-          key: 'localhost_request_status',
-          width: 1 / 2,
-        },
-        {
-          label: 'Is Student',
-          key: 'is_student',
-          width: 1 / 2,
-        },
-        {
-          label: 'Organization / Institute',
-          key: 'organization',
-        },
-        {
-          label: 'Project',
-          key: 'project_title',
-        },
-        {
-          label: 'Git Profile',
-          key: 'git_profile',
-        },
-        {
-          label: 'Actions',
-          key: 'actions',
-        },
-      ]" :rows="requestByGroup.data" :options="{
-        selectable: false,
-        showTooltip: true,
-        resizeColumn: true,
-        onRowClick: (row) => {
-          selectedRequest = row
-          showDialog = true
-        },
-        emptyState: {
-          title: FILTERS[selectedListFilter].emptyStateText
-        }
-      }" row-key="name">
+      <ListView
+        class="max-h-svh"
+        :columns="[
+          {
+            label: 'Name',
+            key: 'full_name',
+          },
+          {
+            label: 'Status',
+            key: 'localhost_request_status',
+            width: 1 / 2,
+          },
+          {
+            label: 'Is Student',
+            key: 'is_student',
+            width: 1 / 2,
+          },
+          {
+            label: 'Organization / Institute',
+            key: 'organization',
+          },
+          {
+            label: 'Project',
+            key: 'project_title',
+          },
+          {
+            label: 'Git Profile',
+            key: 'git_profile',
+          },
+          {
+            label: 'Actions',
+            key: 'actions',
+          },
+        ]"
+        :rows="requestByGroup.data"
+        :options="{
+          selectable: false,
+          showTooltip: true,
+          resizeColumn: true,
+          onRowClick: (row) => {
+            selectedRequest = row
+            showDialog = true
+          },
+          emptyState: {
+            title: FILTERS[selectedListFilter].emptyStateText,
+          },
+        }"
+        row-key="name"
+      >
         <template #cell="{ item, row, column }">
           <div v-if="column.label == 'Status'">
-            <Badge :theme="row[column.key] === 'Pending'
-              ? 'orange'
-              : row[column.key] === 'Accepted'
-                ? 'green'
-                : 'red'
-              " :label="row[column.key]" />
+            <Badge
+              :theme="
+                row[column.key] === 'Pending'
+                  ? 'orange'
+                  : row[column.key] === 'Accepted'
+                    ? 'green'
+                    : 'red'
+              "
+              :label="row[column.key]"
+            />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
-            <a v-if="row.git_profile" :href="row.git_profile" target="_blank"
-              class="text-sm flex font-semibold hover:underline">
-              <span>Open</span><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
+            <a
+              v-if="row.git_profile"
+              :href="row.git_profile"
+              target="_blank"
+              class="text-sm flex font-semibold hover:underline"
+            >
+              <span>Open</span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
+              >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M17 7l-10 10" />
                 <path d="M8 7l9 0l0 9" />
@@ -93,21 +135,46 @@
           <div v-else-if="column.label == 'Is Student'" class="ml-4">
             <span class="text-sm text-gray-600">{{
               row.is_student ? 'Yes' : 'No'
-              }}</span>
+            }}</span>
           </div>
           <div v-else-if="column.label == 'Actions'">
-            <div v-if="row.localhost_request_status == 'Pending'" class="flex gap-2">
-              <Button icon="check" :label="'Accept'" :theme="'green'" @click="acceptRequest(row)" />
-              <Button icon="x" :label="'Reject'" :theme="'red'" @click="rejectRequest(row)" />
+            <div
+              v-if="row.localhost_request_status == 'Pending'"
+              class="flex gap-2"
+            >
+              <Button
+                icon="check"
+                :label="'Accept'"
+                :theme="'green'"
+                @click="acceptRequest(row)"
+              />
+              <Button
+                icon="x"
+                :label="'Reject'"
+                :theme="'red'"
+                @click="rejectRequest(row)"
+              />
             </div>
           </div>
           <div class="flex" v-else-if="column.label == 'Project'">
-            <a v-if="row.project_route" @click="redirectRoute(row.project_route)"
-              class="text-sm flex font-semibold hover:underline">
-              <span>{{ truncateStr(row.project_title, 20) }}</span><svg xmlns="http://www.w3.org/2000/svg" width="24"
-                height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round"
-                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right">
+            <a
+              v-if="row.project_route"
+              @click="redirectRoute(row.project_route)"
+              class="text-sm flex font-semibold hover:underline"
+            >
+              <span>{{ truncateStr(row.project_title, 20) }}</span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
+              >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M17 7l-10 10" />
                 <path d="M8 7l9 0l0 9" />
@@ -157,26 +224,26 @@ const FILTERS = {
   'All Requests': {
     selectorClasses: 'bg-gray-100',
     emptyStateText: 'No requests found',
-    filters: ['Pending', 'Rejected', 'Accepted']
+    filters: ['Pending', 'Rejected', 'Accepted'],
   },
   'Pending Requests': {
     selectorClasses: 'bg-orange-100 text-orange-700',
     emptyStateText: 'No pending requests',
-    filters: ['Pending']
+    filters: ['Pending'],
   },
   'Accepted Requests': {
     selectorClasses: 'bg-green-100 text-green-700',
     emptyStateText: 'No accepted requests',
-    filters: ['Accepted']
+    filters: ['Accepted'],
   },
   'Rejected Requests': {
     selectorClasses: 'bg-red-100 text-red-700',
     emptyStateText: 'No rejected requests',
-    filters: ['Rejected']
-  }
+    filters: ['Rejected'],
+  },
 }
 
-const selectedListFilter = ref("All Requests")
+const selectedListFilter = ref('All Requests')
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -199,7 +266,6 @@ const requestByGroup = createResource({
     return rows
   },
 })
-
 
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
@@ -224,7 +290,6 @@ const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-
 watch(selectedListFilter, (newFilter) => {
   requestByGroup.update({
     params: {
@@ -235,5 +300,4 @@ watch(selectedListFilter, (newFilter) => {
   })
   requestByGroup.fetch()
 })
-
 </script>
