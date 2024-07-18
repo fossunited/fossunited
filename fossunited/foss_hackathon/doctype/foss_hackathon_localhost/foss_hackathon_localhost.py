@@ -60,8 +60,12 @@ class FOSSHackathonLocalHost(Document):
         ):
             return
 
+        current_organizers = {
+            member.name for member in self.organizers
+        }
+
         for member in prev_doc.organizers:
-            if not member in self.organizers:
+            if member.name not in current_organizers:
                 self.remove_organizer_role(member)
 
     def remove_organizer_role(self, old_member):
