@@ -28,6 +28,7 @@ class FOSSHackathonParticipant(Document):
         user_profile: DF.Link | None
         wants_to_attend_locally: DF.Check
     # end: auto-generated types
+
     pass
 
     def before_save(self):

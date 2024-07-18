@@ -33,20 +33,10 @@
     </div>
     <select
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="
-        selectedListFitler === 'Accepted Requests'
-          ? 'bg-green-100 text-green-700'
-          : selectedListFitler === 'Pending Requests'
-            ? 'bg-orange-100 text-orange-700'
-            : 'bg-gray-100'
-      "
-      v-model="selectedListFitler"
+      v-model="selectedListFilter"
     >
-      <option
-        v-for="(filter, index) in listFilter"
-        @click="filterListByStatus(filter)"
-      >
-        {{ filter.label }}
+      <option v-for="(_, label) in FILTERS">
+        {{ label }}
       </option>
     </select>
   </div>
@@ -209,7 +199,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineSSRCustomElement } from 'vue'
+import { defineProps } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -251,13 +241,18 @@ const listFilter = ref([
     value: ['Accepted'],
   },
   {
+    label: 'Rejected Requests',
+    isActive: false,
+    value: ['Rejected'],
+  },
+  {
     label: 'Pending Confirmation',
     isActive: false,
     value: ['Pending Confirmation'],
   },
 ])
 
-const selectedListFitler = ref(listFilter.value[0].label)
+const selectedListFilter = ref('All Requests')
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -269,13 +264,15 @@ const requestByGroup = createResource({
   transform(data) {
     if (!data) return []
     let rows = []
-    Object.entries(data).forEach((key) => {
-      rows.push({
-        group: key[1][0].team.team_name,
-        collapsed: false,
-        rows: key[1],
+    if (data) {
+      Object.entries(data).forEach((key) => {
+        rows.push({
+          group: key[1][0].team.team_name,
+          collapsed: false,
+          rows: key[1],
+        })
       })
-    })
+    }
     return rows
   },
 })
