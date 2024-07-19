@@ -1,6 +1,6 @@
 <template>
   <Card
-    class="border-2 border-transparent hover:border-gray-500 transition-all hover:cursor-pointer"
+    class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
     @click="() => $router.push(`/chapter/${props.chapter.name}`)"
   >
     <template #actions-left>

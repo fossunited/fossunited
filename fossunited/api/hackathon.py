@@ -353,6 +353,59 @@ def join_team_via_code(team_code: str, user: str):
 
 
 @frappe.whitelist()
+def get_session_user_hackathons():
+    """
+    Get hackathons for a user
+    Args:
+        user (str): User email
+    Returns:
+        list: List of hackathons
+    """
+    participant_docs = frappe.db.get_all(
+        "FOSS Hackathon Participant",
+        filters={"user": frappe.session.user},
+        fields=["hackathon"],
+        page_length=9999,
+    )
+
+    hackathons = []
+    for participant in participant_docs:
+        hackathons.append(get_hackathon(participant.get("hackathon")))
+
+    return hackathons
+
+
+@frappe.whitelist()
+def get_session_user_localhosts():
+    """
+    Get localhosts managed by the user
+    Args:
+        user (str): User email
+    Returns:
+        list: List of localhosts
+    """
+
+    profile = frappe.db.get_value(
+        "FOSS User Profile", {"user": frappe.session.user}, "name"
+    )
+
+    localhosts = frappe.db.get_all(
+        "FOSS Hackathon LocalHost",
+        filters=[
+            [
+                "FOSS Hackathon LocalHost Organizer",
+                "profile",
+                "=",
+                profile,
+            ]
+        ],
+        fields=["*"],
+        page_length=9999,
+    )
+
+    return localhosts
+
+
 def get_session_participant(hackathon: str) -> dict:
     """
     Get participant details of the current session user
