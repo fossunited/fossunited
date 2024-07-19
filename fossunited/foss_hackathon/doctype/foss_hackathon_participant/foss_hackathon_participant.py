@@ -49,6 +49,10 @@ class FOSSHackathonParticipant(Document):
             self.wants_to_attend_locally = False
 
     def handle_localhost_request(self):
+        prev_doc = self.get_doc_before_save()
+        if not prev_doc:
+            return
+
         if (
             frappe.db.get_value(
                 "User", frappe.session.user, "user_type"
@@ -61,7 +65,7 @@ class FOSSHackathonParticipant(Document):
             return
 
         if (
-            self.localhost == self.get_doc_before_save().localhost
+            self.localhost == prev_doc.localhost
         ) and self.localhost_request_status == "Rejected":
             frappe.throw(
                 "You have already been rejected from this localhost."
