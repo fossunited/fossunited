@@ -252,7 +252,12 @@ def get_project_by_email(hackathon: str, email: str):
 def get_localhost_requests_by_team(
     hackathon: str,
     localhost: str,
-    status: list[str] = ["Pending", "Accepted", "Rejected"],
+    status: list[str] = [
+        "Pending",
+        "Accepted",
+        "Rejected",
+        "Pending Confirmation",
+    ],
 ):
     """
     Get requests for a particular localhost grouped by team.
@@ -270,7 +275,6 @@ def get_localhost_requests_by_team(
         doctype="FOSS Hackathon Participant",
         filters={
             "hackathon": hackathon,
-            "wants_to_attend_locally": 1,
             "localhost": localhost,
             "localhost_request_status": ["in", status],
         },
@@ -458,3 +462,105 @@ def delete_project(hackathon: str, team: str):
         return True
     except Exception as e:
         frappe.throw("Error deleting project")
+
+
+@frappe.whitelist()
+def is_valid_hackathon(hackathon_id: str):
+    """
+    Checks if the the hackathon is valid and exists in the db.
+
+    Returns:
+        Boolean True or False
+    """
+    return bool(frappe.db.exists("FOSS Hackathon", hackathon_id))
+
+
+@frappe.whitelist()
+def is_valid_localhost(localhost_id: str):
+    """
+    Checks if the localhost is valid and exists in the db.
+
+    Returns:
+        Boolean True or False
+    """
+
+    return bool(
+        frappe.db.exists("FOSS Hackathon LocalHost", localhost_id)
+    )
+
+
+@frappe.whitelist()
+def validate_participant_for_localhost(participant_id: str):
+    """
+    Validates if the participant is valid and exists in the db.
+    Also, validates that the participant is valid to make request for localhost.
+    """
+    if not frappe.db.exists(
+        "FOSS Hackathon Participant", participant_id
+    ):
+        frappe.throw("Participant does not exist")
+
+    participant = frappe.db.get(
+        "FOSS Hackathon Participant",
+        participant_id,
+        [
+            "user",
+            "wants_to_attend_locally",
+            "localhost",
+            "localhost_request_status",
+        ],
+    )
+    if participant.user != frappe.session.user:
+        frappe.throw("You are not authorized to perform this action")
+
+    if not participant.wants_to_attend_locally:
+        frappe.throw("Participant has not opted for local attendance")
+
+    if not participant.localhost:
+        frappe.throw("Participant has not selected a localhost")
+
+    if participant.localhost_request_status == "Accepted":
+        frappe.throw(
+            "Participant has already been accepted for local attendance"
+        )
+
+    if (
+        not participant.localhost_request_status
+        == "Pending Confirmation"
+    ):
+        frappe.throw(
+            "Participant has not been accepted for local attendance"
+        )
+
+    return True
+
+
+@frappe.whitelist()
+def validate_user_as_localhost_member(localhost_id: str):
+    if not frappe.db.exists(
+        "Has Role",
+        {
+            "parent": frappe.session.user,
+            "role": "Localhost Organizer",
+        },
+    ):
+        frappe.throw(
+            "You are not a Localhost Organizer. You are not authorized to view this page"
+        )
+
+    if not frappe.db.exists(
+        "FOSS Hackathon LocalHost Organizer",
+        {
+            "parent": localhost_id,
+            "profile": frappe.db.get_value(
+                "FOSS User Profile",
+                {"user": frappe.session.user},
+                "name",
+            ),
+        },
+    ):
+        frappe.throw(
+            "You are not a member of this Localhost. You are not authorized to view this page"
+        )
+
+    return True

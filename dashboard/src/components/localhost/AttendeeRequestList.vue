@@ -1,6 +1,6 @@
 <template>
   <RequestDetailDialog
-  class="z-50 my-5"
+    class="z-50 my-5"
     :participant="selectedRequest"
     :showDialog="showDialog"
     @update:showDialog="showDialog = $event"
@@ -33,14 +33,7 @@
     </div>
     <select
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="
-        selectedListFitler === 'Accepted Requests'
-          ? 'bg-green-100 text-green-700'
-          : selectedListFitler === 'Pending Requests'
-            ? 'bg-orange-100 text-orange-700'
-            : 'bg-gray-100'
-      "
-      v-model="selectedListFitler"
+      v-model="selectedListFilter"
     >
       <option
         v-for="(filter, index) in listFilter"
@@ -53,7 +46,7 @@
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
       <ListView
-        class="max-h-svh"
+        class="min-h-[440px]"
         :columns="[
           {
             label: 'Name',
@@ -62,7 +55,7 @@
           {
             label: 'Status',
             key: 'localhost_request_status',
-            width: 1 / 2,
+            width: 1,
           },
           {
             label: 'Is Student',
@@ -95,6 +88,10 @@
             selectedRequest = row
             showDialog = true
           },
+          emptyState: {
+            title: 'No Requests',
+            description: 'No requests found',
+          },
         }"
         row-key="name"
       >
@@ -106,9 +103,12 @@
                   ? 'orange'
                   : row[column.key] === 'Accepted'
                     ? 'green'
-                    : 'red'
+                    : row[column.key] === 'Pending Confirmation'
+                      ? 'blue'
+                      : 'red'
               "
               :label="row[column.key]"
+              size="lg"
             />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
@@ -210,7 +210,7 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
@@ -225,11 +225,13 @@ const props = defineProps({
   },
 })
 
+const emit = defineEmits(['updateRequest'])
+
 const listFilter = ref([
   {
     label: 'All Requests',
     isActive: true,
-    value: ['Pending', 'Rejected', 'Accepted'],
+    value: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
   },
   {
     label: 'Pending Requests',
@@ -241,30 +243,42 @@ const listFilter = ref([
     isActive: false,
     value: ['Accepted'],
   },
+  {
+    label: 'Rejected Requests',
+    isActive: false,
+    value: ['Rejected'],
+  },
+  {
+    label: 'Pending Confirmation',
+    isActive: false,
+    value: ['Pending Confirmation'],
+  },
 ])
 
-const selectedListFitler = ref(listFilter.value[0].label)
+const selectedListFilter = ref('All Requests')
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
   params: {
-    hackathon: props.localhost.doc.parent_hackathon,
-    localhost: props.localhost.doc.name,
+    hackathon: props.localhost.data.parent_hackathon,
+    localhost: props.localhost.data.name,
   },
   auto: true,
   transform(data) {
+    if (!data) return []
     let rows = []
-    Object.entries(data).forEach((key) => {
-      rows.push({
-        group: key[1][0].team.team_name,
-        collapsed: false,
-        rows: key[1],
+    if (data) {
+      Object.entries(data).forEach((key) => {
+        rows.push({
+          group: key[1][0].team.team_name,
+          collapsed: false,
+          rows: key[1],
+        })
       })
-    })
+    }
     return rows
   },
 })
-
 
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
@@ -277,12 +291,13 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
+      emit('updateRequest')
     },
   })
 }
 
 const acceptRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Accepted').fetch()
+  changeLocalhostRequestStatus(member.name, 'Pending Confirmation').fetch()
 }
 
 const rejectRequest = (member) => {
@@ -292,12 +307,11 @@ const rejectRequest = (member) => {
 const filterListByStatus = (filter) => {
   requestByGroup.update({
     params: {
-      hackathon: props.localhost.doc.parent_hackathon,
-      localhost: props.localhost.doc.name,
+      hackathon: props.localhost.data.parent_hackathon,
+      localhost: props.localhost.data.name,
       status: filter.value,
     },
   })
   requestByGroup.fetch()
 }
-
 </script>
