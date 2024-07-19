@@ -35,15 +35,18 @@
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
       v-model="selectedListFilter"
     >
-      <option v-for="(_, label) in FILTERS">
-        {{ label }}
+      <option
+        v-for="(filter, index) in listFilter"
+        @click="filterListByStatus(filter)"
+      >
+        {{ filter.label }}
       </option>
     </select>
   </div>
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
       <ListView
-        class="max-h-svh"
+        class="min-h-[440px]"
         :columns="[
           {
             label: 'Name',
@@ -52,7 +55,7 @@
           {
             label: 'Status',
             key: 'localhost_request_status',
-            width: 1 / 2,
+            width: 1,
           },
           {
             label: 'Is Student',
@@ -86,7 +89,8 @@
             showDialog = true
           },
           emptyState: {
-            title: FILTERS[selectedListFilter].emptyStateText,
+            title: 'No Requests',
+            description: 'No requests found',
           },
         }"
         row-key="name"
@@ -99,9 +103,12 @@
                   ? 'orange'
                   : row[column.key] === 'Accepted'
                     ? 'green'
-                    : 'red'
+                    : row[column.key] === 'Pending Confirmation'
+                      ? 'blue'
+                      : 'red'
               "
               :label="row[column.key]"
+              size="lg"
             />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
@@ -195,7 +202,7 @@
 </template>
 
 <script setup>
-import { defineProps, watch } from 'vue'
+import { defineProps } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -203,7 +210,7 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref } from 'vue'
+import { ref, defineEmits } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
@@ -218,36 +225,47 @@ const props = defineProps({
   },
 })
 
-// Filters for status checks
-const FILTERS = {
-  'All Requests': {
-    emptyStateText: 'No requests found',
-    filters: ['Pending', 'Rejected', 'Accepted'],
+const emit = defineEmits(['updateRequest'])
+
+const listFilter = ref([
+  {
+    label: 'All Requests',
+    isActive: true,
+    value: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
   },
-  'Pending Requests': {
-    emptyStateText: 'No pending requests',
-    filters: ['Pending'],
+  {
+    label: 'Pending Requests',
+    isActive: false,
+    value: ['Pending'],
   },
-  'Accepted Requests': {
-    emptyStateText: 'No accepted requests',
-    filters: ['Accepted'],
+  {
+    label: 'Accepted Requests',
+    isActive: false,
+    value: ['Accepted'],
   },
-  'Rejected Requests': {
-    emptyStateText: 'No rejected requests',
-    filters: ['Rejected'],
+  {
+    label: 'Rejected Requests',
+    isActive: false,
+    value: ['Rejected'],
   },
-}
+  {
+    label: 'Pending Confirmation',
+    isActive: false,
+    value: ['Pending Confirmation'],
+  },
+])
 
 const selectedListFilter = ref('All Requests')
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
   params: {
-    hackathon: props.localhost.doc.parent_hackathon,
-    localhost: props.localhost.doc.name,
+    hackathon: props.localhost.data.parent_hackathon,
+    localhost: props.localhost.data.name,
   },
   auto: true,
   transform(data) {
+    if (!data) return []
     let rows = []
     if (data) {
       Object.entries(data).forEach((key) => {
@@ -273,26 +291,27 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
+      emit('updateRequest')
     },
   })
 }
 
 const acceptRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Accepted').fetch()
+  changeLocalhostRequestStatus(member.name, 'Pending Confirmation').fetch()
 }
 
 const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-watch(selectedListFilter, (newFilter) => {
+const filterListByStatus = (filter) => {
   requestByGroup.update({
     params: {
-      hackathon: props.localhost.doc.parent_hackathon,
-      localhost: props.localhost.doc.name,
-      status: FILTERS[newFilter].filters,
+      hackathon: props.localhost.data.parent_hackathon,
+      localhost: props.localhost.data.name,
+      status: filter.value,
     },
   })
   requestByGroup.fetch()
-})
+}
 </script>

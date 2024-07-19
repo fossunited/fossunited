@@ -16,7 +16,7 @@
           <div class="text-lg font-semibold my-2">Your Chapters</div>
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div
-              v-for="chapter in chapter.data"
+              v-for="chapter in chapters.data"
               :key="chapter.name"
               class="py-2"
             >
@@ -47,18 +47,31 @@ import Header from '@/components/Header.vue'
 import EventCard from '@/components/EventCard.vue'
 import ChapterCard from '@/components/ChapterCard.vue'
 import { createResource, createListResource, usePageMeta } from 'frappe-ui'
-let session = inject('$session')
+const session = inject('$session')
 
-let chapter = createListResource({
+const chapters = createListResource({
   doctype: 'FOSS Chapter',
   fields: ['*'],
   filters: [
     ['FOSS Chapter Lead Team Member', 'email', 'like', `%${session.user}%`],
   ],
   auto: true,
+  pageLength: 999,
+  onSuccess(data) {
+    if (!data.length) {
+        return
+    }
+    profile.fetch()
+    scheduled_events.update({
+      filters: {
+        ...scheduled_events.filters,
+        chapter: ['in', data.map((d) => d.name)],
+      },
+    })
+    scheduled_events.fetch()
+  },
 })
-
-let scheduled_events = createListResource({
+const scheduled_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: [
     'name',
@@ -74,27 +87,8 @@ let scheduled_events = createListResource({
   orderBy: 'event_start_date',
 })
 
-watch(chapter, (newChapter) => {
-  if (newChapter.data) {
-    scheduled_events.update({
-      filters: {
-        ...scheduled_events.filters,
-        chapter: ['in', newChapter.data.map((d) => d.name)],
-      },
-    })
-    scheduled_events.fetch()
-  }
-})
-
-let profile = createResource({
-  url: 'frappe.client.get',
-  params: {
-    doctype: 'FOSS User Profile',
-    filters: {
-      email: session.user,
-    },
-  },
-  auto: true,
+const profile = createResource({
+  url: 'fossunited.api.dashboard.get_session_user_profile',
 })
 
 usePageMeta(() => {

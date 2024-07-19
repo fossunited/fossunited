@@ -1,34 +1,20 @@
 <template>
+  <Dialog
+    class="z-50"
+    v-model="showDialog"
+    :options="{
+      title: 'Error',
+      message: dialogMessage,
+    }"
+  />
   <Header />
-  <div class="w-full p-4 flex items-center justify-center" v-if="localhost.doc">
+  <div
+    class="w-full p-4 flex items-center justify-center"
+    v-if="localhost.data && requests.data"
+  >
     <div class="max-w-screen-xl w-full">
       <div class="text-base font-medium mt-4">Manage LocalHost</div>
-      <div class="prose mt-4">
-        <h2>{{ localhost.doc.localhost_name }}</h2>
-      </div>
-      <div class="flex gap-2 my-2 text-base font-medium items-center">
-        <div class="flex gap-1 items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="icon w-5 h-5 icon-tabler icons-tabler-outline icon-tabler-map-pin"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-            <path
-              d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"
-            />
-          </svg>
-          {{ localhost.doc.location }}
-        </div>
-      </div>
+      <LocalhostHeader :localhost="localhost.data" />
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="rounded-sm border-2 border-dashed border-gray-400 p-4 my-2">
           <div class="text-sm uppercase font-medium">Current Status</div>
@@ -36,11 +22,11 @@
             <div
               class="flex items-center gap-2 text-lg font-medium pt-4"
               :class="
-                localhost.doc.is_accepting_attendees ? 'text-green-700' : ''
+                localhost.data.is_accepting_attendees ? 'text-green-700' : ''
               "
             >
               <span
-                v-if="localhost.doc.is_accepting_attendees"
+                v-if="localhost.data.is_accepting_attendees"
                 class="relative flex h-3 w-3"
               >
                 <span
@@ -52,7 +38,7 @@
               </span>
               <span>
                 {{
-                  localhost.doc.is_accepting_attendees
+                  localhost.data.is_accepting_attendees
                     ? 'Accepting Participants'
                     : 'Not Accepting Participants'
                 }}
@@ -60,7 +46,7 @@
             </div>
             <Button
               :label="
-                localhost.doc.is_accepting_attendees ? 'Disable' : 'Enable'
+                localhost.data.is_accepting_attendees ? 'Disable' : 'Enable'
               "
               @click="toggleAcceptingAttendees"
             />
@@ -68,7 +54,7 @@
         </div>
       </div>
       <div
-        class="grid grid-cols-1 sm:grid-cols-4 mt-6 mb-4 gap-4"
+        class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4"
         v-if="requests.data"
       >
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
@@ -81,6 +67,12 @@
           <div class="text-base font-medium">Pending Requests</div>
           <div class="text-2xl text-orange-600">
             {{ requests.data['Pending'].length }}
+          </div>
+        </div>
+        <div class="flex flex-col gap-2 w-full p-4 rounded border">
+          <div class="text-base font-medium">Pending Confirmation</div>
+          <div class="text-2xl text-blue-600">
+            {{ requests.data['Pending Confirmation'].length }}
           </div>
         </div>
         <div class="flex flex-col gap-2 w-full p-4 rounded border">
@@ -98,18 +90,63 @@
       </div>
       <hr />
       <div class="flex flex-col gap-2 py-4">
-        <AttendeeRequestList :localhost="localhost" />
+        <AttendeeRequestList
+          :localhost="localhost"
+          @update-request="requests.reload()"
+        />
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import { createDocumentResource, createListResource } from 'frappe-ui'
+import {
+  createDocumentResource,
+  createListResource,
+  createResource,
+  usePageMeta,
+  Dialog,
+} from 'frappe-ui'
+import { onMounted, ref } from 'vue'
 import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue'
+import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
 import Header from '@/components/Header.vue'
 
 const route = useRoute()
+
+usePageMeta(() => {
+  return {
+    title: 'Manage Localhost',
+  }
+})
+
+onMounted(() => {
+  validateSessionUser()
+})
+
+const dialogMessage = ref('')
+const showDialog = ref(false)
+
+const validateSessionUser = () => {
+  createResource({
+    url: 'fossunited.api.hackathon.validate_user_as_localhost_member',
+    params: {
+      localhost_id: route.params.id,
+    },
+    auto: true,
+    onSuccess(data) {
+      localhost.fetch()
+      requests.fetch()
+    },
+    onError(error) {
+      dialogMessage.value = error.messages
+      showDialog.value = true
+      setTimeout(() => {
+        window.location.href = '/dashboard'
+      }, 2000)
+    },
+  })
+}
 
 const requests = createListResource({
   doctype: 'FOSS Hackathon Participant',
@@ -134,21 +171,38 @@ const requests = createListResource({
     if (!data['Rejected']) {
       data['Rejected'] = []
     }
+    if (!data['Pending Confirmation']) {
+      data['Pending Confirmation'] = []
+    }
     return data
   },
   pageLength: 99999,
-  auto: true,
 })
 
-const localhost = createDocumentResource({
-  doctype: 'FOSS Hackathon LocalHost',
-  name: route.params.id,
-  auto: true,
+const localhost = createResource({
+  url: 'frappe.client.get',
+  makeParams() {
+    return {
+      doctype: 'FOSS Hackathon LocalHost',
+      name: route.params.id,
+      fields: ['*'],
+    }
+  },
 })
 
 const toggleAcceptingAttendees = () => {
-  localhost.setValue.submit({
-    is_accepting_attendees: !localhost.doc.is_accepting_attendees,
+  createResource({
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Hackathon LocalHost',
+      name: route.params.id,
+      fieldname: 'is_accepting_attendees',
+      value: !localhost.data.is_accepting_attendees,
+    },
+    onSuccess() {
+      localhost.fetch()
+    },
+    auto: true,
   })
 }
 </script>

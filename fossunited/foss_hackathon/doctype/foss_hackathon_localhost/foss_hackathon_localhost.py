@@ -36,7 +36,11 @@ class FOSSHackathonLocalHost(Document):
         self.check_if_member_removed()
 
     def before_save(self):
-        self.assign_localhost_organizer_role()
+        if self.has_value_changed("organizers") and (
+            len(self.organizers)
+            > len(self.get_doc_before_save().organizers)
+        ):
+            self.assign_localhost_organizer_role()
 
     def assign_localhost_organizer_role(self):
         for member in self.organizers:
@@ -56,8 +60,12 @@ class FOSSHackathonLocalHost(Document):
         ):
             return
 
+        current_organizers = {
+            member.name for member in self.organizers
+        }
+
         for member in prev_doc.organizers:
-            if not member in self.organizers:
+            if member.name not in current_organizers:
                 self.remove_organizer_role(member)
 
     def remove_organizer_role(self, old_member):
