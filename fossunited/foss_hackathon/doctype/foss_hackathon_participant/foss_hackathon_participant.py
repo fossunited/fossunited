@@ -28,3 +28,18 @@ class FOSSHackathonParticipant(Document):
         wants_to_attend_locally: DF.Check
     # end: auto-generated types
     pass
+
+    def before_save(self):
+        self.handle_localhost_rejection()
+        if self.has_value_changed("localhost"):
+            self.update_request_status()
+
+    def update_request_status(self):
+        self.localhost_request_status = "Pending"
+
+    def handle_localhost_rejection(self):
+        if (
+            not self.has_value_changed("localhost")
+            and self.localhost_request_status == "Rejected"
+        ):
+            self.wants_to_attend_locally = False

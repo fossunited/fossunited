@@ -4,6 +4,8 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import FOSS_USER_PROFILE
+
 
 class FOSSUserProfile(WebsiteGenerator):
     # begin: auto-generated types

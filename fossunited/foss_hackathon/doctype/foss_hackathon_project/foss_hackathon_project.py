@@ -4,6 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import FOSS_USER_PROFILE
 from fossunited.fossunited.utils import get_doc_likes
 
 
@@ -60,7 +61,7 @@ def get_team_members(team):
             "FOSS Hackathon Participant", member.member, "user"
         )
         user = frappe.get_doc(
-            "FOSS User Profile", {"user": user_email}, ["*"]
+            FOSS_USER_PROFILE, {"user": user_email}, ["*"]
         ).as_dict()
         member_details.append(user)
     return member_details

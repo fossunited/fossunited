@@ -442,7 +442,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-06-18 15:13:11.424891",
+ "modified": "2024-07-08 14:42:21.932221",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -464,34 +464,20 @@
   {
    "create": 1,
    "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "share": 1,
+   "role": "Chapter Team Member",
+   "select": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "All",
-   "select": 1,
-   "share": 1
+   "select": 1
   },
   {
-   "email": 1,
-   "export": 1,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "Guest",
-   "select": 1,
-   "share": 1
+   "select": 1
   }
  ],
  "search_fields": "event_permalink, chapter",

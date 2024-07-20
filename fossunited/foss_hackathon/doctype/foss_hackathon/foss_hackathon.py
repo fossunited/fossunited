@@ -5,8 +5,9 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-no_cache = 1
+from fossunited.doctype_ids import FOSS_USER_PROFILE
 
+no_cache = 1
 BASE_DATE = datetime.now().replace(
     hour=0, minute=0, second=0, microsecond=0
 )
@@ -73,7 +74,7 @@ class FOSSHackathon(WebsiteGenerator):
         if self.permalink:
             self.route = f"hack/{self.permalink}"
         else:
-            self.route = f'hack/{self.hackathon_name.to_lower().replace(" ", "-")}'
+            self.route = f'hack/{self.hackathon_name.lower().replace(" ", "-")}'
 
     def get_context(self, context):
         if self.organizing_chapter:
@@ -137,7 +138,7 @@ def get_speakers(schedule):
         "FOSS Event CFP Submission", schedule.linked_cfp
     )
     user = frappe.get_doc(
-        "FOSS User Profile", {"email": cfp.submitted_by}
+        FOSS_USER_PROFILE, {"email": cfp.submitted_by}
     )
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route

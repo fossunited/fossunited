@@ -143,7 +143,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Review Pending\nApproved\nRejected"
+   "options": "Review Pending\nApproved\nRejected",
+   "permlevel": 2
   },
   {
    "description": "Link relevant references for your talk.",
@@ -180,7 +181,8 @@
    "fieldname": "reviews",
    "fieldtype": "Table",
    "label": "Reviews",
-   "options": "FOSS Event CFP Review"
+   "options": "FOSS Event CFP Review",
+   "permlevel": 1
   },
   {
    "fieldname": "route",
@@ -230,17 +232,20 @@
   {
    "fieldname": "positive_reviews",
    "fieldtype": "Data",
-   "label": "Positive Reviews %"
+   "label": "Positive Reviews %",
+   "permlevel": 1
   },
   {
    "fieldname": "negative_reviews",
    "fieldtype": "Data",
-   "label": "Negative Reviews  %"
+   "label": "Negative Reviews  %",
+   "permlevel": 1
   },
   {
    "fieldname": "unsure_reviews",
    "fieldtype": "Data",
-   "label": "Unsure Reviews  %"
+   "label": "Unsure Reviews  %",
+   "permlevel": 1
   },
   {
    "fieldname": "column_break_fnih",
@@ -249,7 +254,8 @@
   {
    "fieldname": "approvability",
    "fieldtype": "Data",
-   "label": "Approvability  %"
+   "label": "Approvability  %",
+   "permlevel": 1
   },
   {
    "columns": 2,
@@ -289,7 +295,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-07 01:13:46.527023",
+ "modified": "2024-07-11 12:21:24.738519",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -306,6 +312,38 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Chapter Team Member",
+   "select": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "Chapter Team Member",
+   "select": 1
+  },
+  {
+   "permlevel": 2,
+   "read": 1,
+   "role": "Chapter Team Member",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "CFP Reviewer",
+   "select": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "CFP Reviewer",
    "write": 1
   }
  ],

@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.doctype_ids import FOSS_USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -92,3 +93,28 @@ def handle_payment_failed(order_id):
     )
     payment.status = "Failed"
     payment.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def get_session_user_profile():
+    """
+    Used mainly for dashboard header.
+    Returns some basic information about the user profile.
+    """
+    user = frappe.db.get_value(
+        FOSS_USER_PROFILE,
+        {"user": frappe.session.user},
+        [
+            "full_name",
+            "username",
+            "profile_photo",
+            "cover_image",
+            "route",
+            "current_city",
+            "gender",
+            "website",
+        ],
+        as_dict=1,
+    )
+
+    return user
