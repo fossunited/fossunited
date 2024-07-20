@@ -90,7 +90,6 @@
    "label": "Wants to attend locally?"
   },
   {
-   "depends_on": "eval:doc.wants_to_attend_locally == 1",
    "fieldname": "section_break_pijd",
    "fieldtype": "Section Break"
   },
@@ -111,6 +110,7 @@
    "label": "LocalHost Request Status",
    "options": "Pending\nAccepted\nRejected",
    "permlevel": 1
+   "options": "Pending\nPending Confirmation\nAccepted\nRejected"
   },
   {
    "fieldname": "column_break_pxgj",

@@ -103,6 +103,7 @@ def get_session_user_profile():
     """
     user = frappe.db.get_value(
         FOSS_USER_PROFILE,
+        "FOSS User Profile",
         {"user": frappe.session.user},
         [
             "full_name",
@@ -113,6 +114,20 @@ def get_session_user_profile():
             "current_city",
             "gender",
             "website",
+            "about",
+            "bio",
+            "user",
+            "name",
+            "is_private",
+            "github",
+            "gitlab",
+            "linkedin",
+            "mastodon",
+            "mastodon",
+            "x",
+            "instagram",
+            "devto",
+            "youtube",
         ],
         as_dict=1,
     )
