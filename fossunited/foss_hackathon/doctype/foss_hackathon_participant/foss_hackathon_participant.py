@@ -34,7 +34,6 @@ class FOSSHackathonParticipant(Document):
     def before_save(self):
         if self.has_value_changed("wants_to_attend_locally"):
             self.handle_localhost_request()
-
         self.handle_localhost_rejection()
         if self.has_value_changed("localhost"):
             self.update_request_status()
