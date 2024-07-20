@@ -35,11 +35,8 @@
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
       v-model="selectedListFilter"
     >
-      <option
-        v-for="(filter, index) in listFilter"
-        @click="filterListByStatus(filter)"
-      >
-        {{ filter.label }}
+      <option v-for="(_, label) in FILTERS">
+        {{ label }}
       </option>
     </select>
   </div>
@@ -89,8 +86,7 @@
             showDialog = true
           },
           emptyState: {
-            title: 'No Requests',
-            description: 'No requests found',
+            title: FILTERS[selectedListFilter].emptyStateText,
           },
         }"
         row-key="name"
@@ -202,7 +198,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, watch } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -210,7 +206,7 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref, defineEmits } from 'vue'
+import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
@@ -225,35 +221,30 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['updateRequest'])
+// Filters for status checks
+const FILTERS = {
+  'All Requests': {
+    emptyStateText: 'No requests found',
+    filters: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
+  },
+  'Pending': {
+    emptyStateText: 'No pending requests',
+    filters: ['Pending'],
+  },
+  'Accepted': {
+    emptyStateText: 'No accepted requests',
+    filters: ['Accepted'],
+  },
+  'Rejected': {
+    emptyStateText: 'No rejected requests',
+    filters: ['Rejected'],
+  },
 
-const listFilter = ref([
-  {
-    label: 'All Requests',
-    isActive: true,
-    value: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
+  'Pending Confirmation': {
+    emptyStateText: 'No pending confirmations',
+    filters: ['Pending Confirmation'],
   },
-  {
-    label: 'Pending Requests',
-    isActive: false,
-    value: ['Pending'],
-  },
-  {
-    label: 'Accepted Requests',
-    isActive: false,
-    value: ['Accepted'],
-  },
-  {
-    label: 'Rejected Requests',
-    isActive: false,
-    value: ['Rejected'],
-  },
-  {
-    label: 'Pending Confirmation',
-    isActive: false,
-    value: ['Pending Confirmation'],
-  },
-])
+}
 
 const selectedListFilter = ref('All Requests')
 
@@ -291,7 +282,6 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
-      emit('updateRequest')
     },
   })
 }
@@ -304,14 +294,14 @@ const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-const filterListByStatus = (filter) => {
+watch(selectedListFilter, (newFilter) => {
   requestByGroup.update({
     params: {
       hackathon: props.localhost.data.parent_hackathon,
       localhost: props.localhost.data.name,
-      status: filter.value,
+      status: FILTERS[newFilter].filters,
     },
   })
   requestByGroup.fetch()
-}
+})
 </script>
