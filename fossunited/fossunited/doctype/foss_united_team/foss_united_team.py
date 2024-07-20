@@ -3,8 +3,6 @@
 
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
-
 
 class FOSSUnitedTeam(Document):
     # begin: auto-generated types
