@@ -198,7 +198,7 @@
 </template>
 
 <script setup>
-import { defineProps, watch } from 'vue'
+import { defineProps, watch, defineEmits } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -247,6 +247,7 @@ const FILTERS = {
 }
 
 const selectedListFilter = ref('All Requests')
+const emit = defineEmits(['updateRequest'])
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
@@ -282,6 +283,7 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
+      emit('updateRequest')
     },
   })
 }
@@ -303,5 +305,6 @@ watch(selectedListFilter, (newFilter) => {
     },
   })
   requestByGroup.fetch()
+  emit('updateRequest')
 })
 </script>
