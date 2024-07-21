@@ -148,13 +148,13 @@
                 icon="check"
                 :label="'Accept'"
                 :theme="'green'"
-                @click="acceptRequest(row)"
+                @click.stop="acceptRequest(row)"
               />
               <Button
                 icon="x"
                 :label="'Reject'"
                 :theme="'red'"
-                @click="rejectRequest(row)"
+                @click.stop="rejectRequest(row)"
               />
             </div>
           </div>
@@ -226,15 +226,15 @@ const FILTERS = {
     emptyStateText: 'No requests found',
     filters: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
   },
-  'Pending': {
+  Pending: {
     emptyStateText: 'No pending requests',
     filters: ['Pending'],
   },
-  'Accepted': {
+  Accepted: {
     emptyStateText: 'No accepted requests',
     filters: ['Accepted'],
   },
-  'Rejected': {
+  Rejected: {
     emptyStateText: 'No rejected requests',
     filters: ['Rejected'],
   },
