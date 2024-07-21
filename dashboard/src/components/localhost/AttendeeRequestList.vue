@@ -198,7 +198,7 @@
 </template>
 
 <script setup>
-import { defineProps, watch, defineEmits } from 'vue'
+import { defineProps, defineEmits, watch, ref } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -206,7 +206,6 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
