@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -151,7 +151,7 @@ class FOSSChapter(WebsiteGenerator):
         members = []
         for member in self.chapter_members:
             profile = frappe.get_doc(
-                FOSS_USER_PROFILE, member.chapter_member
+                USER_PROFILE, member.chapter_member
             ).as_dict()
             members.append(
                 {

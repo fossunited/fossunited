@@ -3,7 +3,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 
 class TestFOSSGlobalCFPReviewSettings(FrappeTestCase):
@@ -31,7 +31,7 @@ class TestFOSSGlobalCFPReviewSettings(FrappeTestCase):
         settings.insert()
 
         test_profile = frappe.get_doc(
-            FOSS_USER_PROFILE, {"user": "test1@example.com"}
+            USER_PROFILE, {"user": "test1@example.com"}
         )
 
         # When a member is added to the members field
@@ -58,7 +58,7 @@ class TestFOSSGlobalCFPReviewSettings(FrappeTestCase):
         settings.insert()
 
         test_profile = frappe.get_doc(
-            FOSS_USER_PROFILE, {"user": "test2@example.com"}
+            USER_PROFILE, {"user": "test2@example.com"}
         )
         settings.append("members", {"profile": test_profile.name})
         settings.save()

@@ -2,7 +2,7 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 """
 Some utils and APIs for forms such as RSVP, CFP etc.
@@ -68,7 +68,7 @@ def post_review(submission, to_approve, remarks):
     :params remarks: Reviewer's remarks
     """
     reviewer = frappe.get_doc(
-        FOSS_USER_PROFILE, {"email": frappe.session.user}
+        USER_PROFILE, {"email": frappe.session.user}
     )
 
     submission_doc = frappe.get_doc(

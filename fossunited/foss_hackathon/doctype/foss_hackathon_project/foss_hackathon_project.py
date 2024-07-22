@@ -3,7 +3,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 from fossunited.fossunited.utils import get_doc_likes
 
 

@@ -3,7 +3,7 @@ from frappe.client import set_value
 from pydantic import BaseModel
 
 from fossunited.api.dashboard import get_session_user_profile
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 
 @frappe.whitelist()
@@ -11,7 +11,7 @@ def set_profile_image(file_url):
     user_doc = get_session_user_profile()
     try:
         frappe.db.set_value(
-            FOSS_USER_PROFILE,
+            USER_PROFILE,
             user_doc.name,
             "profile_photo",
             file_url,
@@ -26,7 +26,7 @@ def set_cover_image(file_url):
     user_doc = get_session_user_profile()
     try:
         frappe.db.set_value(
-            FOSS_USER_PROFILE,
+            USER_PROFILE,
             user_doc.name,
             "cover_image",
             file_url,
@@ -41,7 +41,7 @@ def toggle_profile_privacy(value):
     user_doc = get_session_user_profile()
     try:
         frappe.db.set_value(
-            FOSS_USER_PROFILE, user_doc.name, "is_private", value
+            USER_PROFILE, user_doc.name, "is_private", value
         )
         return True
     except Exception as e:
@@ -59,7 +59,7 @@ def update_profile(fields_dict):
 
     try:
         frappe.db.set_value(
-            FOSS_USER_PROFILE,
+            USER_PROFILE,
             user_doc.name,
             {
                 "full_name": fields_dict.get("full_name"),
@@ -89,7 +89,7 @@ def is_unique_username(username, id):
     if (
         frappe.db.exists("FOSS Event Chapter", {"route": username})
         or frappe.db.exists(
-            FOSS_USER_PROFILE,
+            USER_PROFILE,
             {"route": username, "name": ["!=", id]},
         )
         or frappe.db.exists(

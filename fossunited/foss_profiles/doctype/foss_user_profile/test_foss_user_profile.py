@@ -5,7 +5,7 @@ import uuid
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 
 class TestFOSSUserProfile(FrappeTestCase):
@@ -14,7 +14,7 @@ class TestFOSSUserProfile(FrappeTestCase):
         inserted_username = "wisharya"
         inserted_name = "wish arya"
         profile_exists = frappe.db.exists(
-            FOSS_USER_PROFILE, {"username": inserted_username}
+            USER_PROFILE, {"username": inserted_username}
         )
         self.assertFalse(profile_exists)
 
@@ -35,7 +35,7 @@ class TestFOSSUserProfile(FrappeTestCase):
 
         # Then verify that the Profile has been stored as expected
         profile_exists = frappe.db.exists(
-            FOSS_USER_PROFILE, {"user": frappe_user.name}
+            USER_PROFILE, {"user": frappe_user.name}
         )
 
         self.assertTrue(profile_exists)

@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 
 
 def set_unique_username(doc, method):
@@ -15,12 +15,12 @@ def create_profile_on_user_create(doc, method):
     Automatically Create a FOSS User Profile on User Creation / Signup
     """
     if not frappe.db.exists(
-        FOSS_USER_PROFILE,
+        USER_PROFILE,
         {"email": doc.email},
     ):
         profile = frappe.get_doc(
             {
-                "doctype": FOSS_USER_PROFILE,
+                "doctype": USER_PROFILE,
                 "user": doc.name,
                 "full_name": doc.full_name,
                 "username": doc.username,
@@ -34,6 +34,6 @@ def generate_username(username, count=1):
     """
     Generate a Unique Username
     """
-    if frappe.db.exists(FOSS_USER_PROFILE, {"username": username}):
+    if frappe.db.exists(USER_PROFILE, {"username": username}):
         return generate_username(username + str(count), count + 1)
     return username

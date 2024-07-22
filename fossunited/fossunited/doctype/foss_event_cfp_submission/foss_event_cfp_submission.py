@@ -3,7 +3,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import FOSS_USER_PROFILE
+from fossunited.doctype_ids import USER_PROFILE
 from fossunited.fossunited.utils import (
     get_doc_likes,
     get_event_volunteers,
@@ -100,7 +100,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             "FOSS Chapter Event", self.event
         )
         context.speaker = frappe.get_doc(
-            FOSS_USER_PROFILE, {"user": self.submitted_by}
+            USER_PROFILE, {"user": self.submitted_by}
         )
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
@@ -110,7 +110,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         ]
         context.nav_items = self.get_navbar_items(context)
         context.submitter_foss_profile = frappe.get_doc(
-            FOSS_USER_PROFILE, {"user": self.submitted_by}
+            USER_PROFILE, {"user": self.submitted_by}
         )
         context.review_statistics = self.get_review_statistics()
         context.reviews = self.get_reviews()

@@ -2,8 +2,9 @@
 # For license information, please see license.txt
 
 import frappe
-from document.doctype_ids import FOSS_USER_PROFILE
 from frappe.model.document import Document
+
+from fossunited.doctype_ids import USER_PROFILE
 
 
 class FOSSGlobalCFPReviewSettings(Document):
@@ -18,7 +19,7 @@ class FOSSGlobalCFPReviewSettings(Document):
             user = frappe.get_doc(
                 "User",
                 frappe.db.get_value(
-                    FOSS_USER_PROFILE, member.profile, "user"
+                    USER_PROFILE, member.profile, "user"
                 ),
             )
             user.add_roles("CFP Reviewer")
@@ -33,7 +34,7 @@ class FOSSGlobalCFPReviewSettings(Document):
                 user = frappe.get_doc(
                     "User",
                     frappe.db.get_value(
-                        FOSS_USER_PROFILE,
+                        USER_PROFILE,
                         member.profile,
                         "user",
                     ),
