@@ -8,67 +8,30 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 
-def create_event(event_type: str = "FOSS Meetup"):
-    if frappe.flags.test_event_created:
-        return
-
-    event = frappe.get_doc(
-        {
-            "doctype": "FOSS Chapter Event",
-            "event_name": "_Test_Event",
-            "event_permalink": "test-event-1234",
-            "status": "Live",
-            "event_type": event_type,
-            "event_start_date": datetime.today(),
-            "event_end_date": datetime.today() + timedelta(1),
-            "event_description": "testing",
-        }
-    )
-    event.insert()
-
-    frappe.flags.test_event_created = True
-
-
 class TestFOSSEventRSVPSubmission(FrappeTestCase):
-    def setUp(self):
-        create_event
-        self.create_rsvp()
-
-    def tearDown(self):
-        frappe.set_user("Administrator")
-
-    def create_rsvp(self):
-        if frappe.flags.test_rsvp_created:
-            return
-
-        if not frappe.flags.test_event_created:
-            create_event()
-
-        event = frappe.db.get_value(
-            "FOSS Chapter Event",
-            {"event_name": "_Test_Event"},
-            "name",
-        )
-
-        rsvp = frappe.get_doc(
-            {
-                "doctype": "FOSS Event RSVP",
-                "event": event,
-                "max_rsvp_count": 5,
-            }
-        )
-        rsvp.insert()
-
-        self.test_rsvp_id = rsvp.name
-        frappe.flags.test_rsvp_created = True
-
     def test_submission_on_unpublished_rsvp(self):
         # Given an RSVP which is not published
+
+        event = frappe.get_doc(
+            {
+                "doctype": "FOSS Chapter Event",
+                "event_name": "_Test_Event",
+                "event_permalink": "test-event-1234",
+                "status": "Live",
+                "event_type": "FOSS Meetup",
+                "event_start_date": datetime.today(),
+                "event_end_date": datetime.today() + timedelta(1),
+                "event_description": "testing",
+            }
+        )
+        event.insert()
+
         rsvp = frappe.get_doc(
             {
                 "doctype": "FOSS Event RSVP",
                 "max_rsvp_count": 5,
                 "is_published": False,
+                "event": event.name,
             }
         )
         rsvp.insert()
@@ -88,3 +51,48 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
                 }
             )
             submission.insert()
+
+    def test_unpublish_on_max_count(self):
+        # Given an RSVP with max count of 5
+        event = frappe.get_doc(
+            {
+                "doctype": "FOSS Chapter Event",
+                "event_name": "_Test_Event",
+                "event_permalink": "test-event-12345",
+                "status": "Live",
+                "event_type": "FOSS Meetup",
+                "event_start_date": datetime.today(),
+                "event_end_date": datetime.today() + timedelta(1),
+                "event_description": "testing",
+            }
+        )
+        event.insert()
+
+        rsvp = frappe.get_doc(
+            {
+                "doctype": "FOSS Event RSVP",
+                "max_rsvp_count": 5,
+                "event": event.name,
+            }
+        )
+        rsvp.insert()
+
+        # When submission count reaches the max count
+        fake = Faker()
+        for i in range(5):
+            frappe.get_doc(
+                {
+                    "doctype": "FOSS Event RSVP Submission",
+                    "linked_rsvp": rsvp.name,
+                    "event": rsvp.event,
+                    "name1": fake.name(),
+                    "email": fake.email(),
+                    "im_a": "Student",
+                }
+            ).insert()
+
+        # Then the RSVP must be unpublished
+        is_published = frappe.db.get_value(
+            "FOSS Event RSVP", rsvp.name, "is_published"
+        )
+        self.assertFalse(is_published)
