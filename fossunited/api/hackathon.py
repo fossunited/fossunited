@@ -5,7 +5,7 @@ APIs used for Hackathon based operations
 import frappe
 
 from fossunited.integrations.github import GithubHelper
-
+from fossunited.doctype_ids import FOSS_USER_PROFILE
 
 @frappe.whitelist(allow_guest=True)
 def get_hackathon(name: str) -> dict:
@@ -298,10 +298,10 @@ def get_localhost_requests_by_team(
 
     for request in requests:
         request["profile_route"] = frappe.db.get_value(
-            "FOSS User Profile", request.user_profile, "route"
+            FOSS_USER_PROFILE, request.user_profile, "route"
         )
         profile_photo = frappe.db.get_value(
-            "FOSS User Profile", request.user_profile, "profile_photo"
+            FOSS_USER_PROFILE, request.user_profile, "profile_photo"
         )
         request["profile_photo"] = (
             profile_photo
@@ -309,7 +309,7 @@ def get_localhost_requests_by_team(
             else "/assets/fossunited/images/defaults/user_profile_image.png"
         )
         request["profile_username"] = frappe.db.get_value(
-            "FOSS User Profile", request.user_profile, "username"
+            FOSS_USER_PROFILE, request.user_profile, "username"
         )
 
     requests_by_team = {}
@@ -399,7 +399,7 @@ def get_session_user_localhosts():
     """
 
     profile = frappe.db.get_value(
-        "FOSS User Profile", {"user": frappe.session.user}, "name"
+        FOSS_USER_PROFILE, {"user": frappe.session.user}, "name"
     )
 
     localhosts = frappe.db.get_all(
@@ -567,7 +567,7 @@ def validate_user_as_localhost_member(localhost_id: str):
         {
             "parent": localhost_id,
             "profile": frappe.db.get_value(
-                "FOSS User Profile",
+                FOSS_USER_PROFILE,
                 {"user": frappe.session.user},
                 "name",
             ),
