@@ -33,9 +33,6 @@ class FOSSEventRSVPSubmission(Document):
     # end: auto-generated types
     pass
 
-    def before_insert(self):
-        self.validate_form_published()
-
     def validate(self):
         self.validate_linked_rsvp_exists()
 
@@ -62,16 +59,6 @@ class FOSSEventRSVPSubmission(Document):
             "FOSS Event RSVP", self.linked_rsvp, "max_rsvp_count"
         )
         return max_count
-
-    def validate_form_published(self):
-        is_published = frappe.db.get_value(
-            "FOSS Event RSVP", self.linked_rsvp, "is_published"
-        )
-
-        if not is_published:
-            frappe.throw(
-                "RSVP form is closed", frappe.ValidationError
-            )
 
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists("FOSS Event RSVP", self.linked_rsvp):
