@@ -125,7 +125,7 @@
   }
  ],
  "links": [],
- "modified": "2024-06-25 13:13:18.249849",
+ "modified": "2024-07-07 21:26:22.906297",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket Transfer",
@@ -146,26 +146,16 @@
   },
   {
    "create": 1,
-   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
-   "read": 1,
    "report": 1,
    "role": "All",
    "share": 1,
    "write": 1
   },
   {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
    "role": "Guest",
-   "share": 1,
    "write": 1
   }
  ],

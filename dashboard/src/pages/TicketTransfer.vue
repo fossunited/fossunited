@@ -3,7 +3,7 @@
   <div class="w-full flex items-center justify-center">
     <TransferSuccess v-if="inSuccess" />
     <div v-else class="max-w-screen-xl w-full p-5">
-      <img v-if="transfer_settings.doc.banner_image" :src="transfer_settings.doc.banner_image" alt="" class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]">
+      <img v-if="transfer_settings.doc?.banner_image" :src="transfer_settings.doc.banner_image" alt="" class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]">
       <div class="mt-8">
         <div class="prose min-w-full">
           <div class="text-base uppercase font-medium text-gray-600 mb-2">
@@ -159,11 +159,10 @@ const receiver = reactive({
 })
 
 const ticket = createResource({
-  url: 'frappe.client.get',
+  url: 'fossunited.api.tickets.get_ticket_details',
   makeParams() {
     return {
-      doctype: 'FOSS Event Ticket',
-      name: ticketId.value,
+      ticket_id: ticketId.value,
     }
   },
   onSuccess(data) {
@@ -194,16 +193,14 @@ const isTicketValid = () => {
   }
 
   createResource({
-    url: 'frappe.client.get_count',
+    url: 'fossunited.api.tickets.check_ticket_validity',
     params: {
-      doctype: 'FOSS Event Ticket',
-      filters: {
-        name: ticketId.value,
-      },
+      ticket_id: ticketId.value,
     },
     auto: true,
     onSuccess(data) {
       if (!data) {
+        ticket.data = null
         ticketValidateError.value = 'Invalid Ticket ID'
         return false
       }
@@ -236,19 +233,18 @@ const transferErrors = () => {
 }
 
 const createTransferDoc = createResource({
-  url: 'frappe.client.insert',
+  url: 'fossunited.api.tickets.create_transfer_request',
   makeParams() {
     return {
-      doc: {
-        doctype: 'FOSS Event Ticket Transfer',
         ticket: ticketId.value,
-        receiver_email: receiver.receiver_email,
-        receiver_name: receiver.receiver_name,
-        designation: receiver.designation,
-        organization: receiver.organization,
-        wants_tshirt: receiver.wants_tshirt,
-        tshirt_size: receiver.tshirt_size,
-      },
+        receiver_details: {
+          receiver_email: receiver.receiver_email,
+          receiver_name: receiver.receiver_name,
+          designation: receiver.designation,
+          organization: receiver.organization,
+          wants_tshirt: receiver.wants_tshirt,
+          tshirt_size: receiver.tshirt_size,
+        }
     }
   },
   onSuccess(data) {

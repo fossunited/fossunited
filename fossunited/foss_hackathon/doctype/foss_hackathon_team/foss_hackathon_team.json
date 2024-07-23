@@ -98,7 +98,7 @@
   }
  ],
  "links": [],
- "modified": "2024-06-06 13:42:55.866654",
+ "modified": "2024-07-10 12:25:54.595850",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Team",
@@ -114,19 +114,6 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "select": 1,
    "share": 1,
    "write": 1
   },

@@ -6,7 +6,30 @@ const routes = [
   {
     path: '/',
     name: 'Home',
+    redirect: { name: 'MyProfile'},
     component: () => import('@/pages/Home.vue'),
+    children: [
+      {
+        path: 'me',
+        name: 'MyProfile',
+        component: () => import('@/pages/MyProfile.vue'),
+      },
+      {
+        path: '/my-hackathons',
+        name: 'MyHackathons',
+        component: () => import('@/pages/hackathon/MyHackathons.vue'),
+      },
+      {
+        path: '/localhost',
+        name: 'MyLocalhosts',
+        component: () => import('@/pages/localhost/MyLocalhosts.vue')
+      },
+      {
+        path: '/chapter',
+        name: 'MyChapters',
+        component: () => import('@/pages/MyChapters.vue'),
+      },
+    ]
   },
   {
     path: '/buy-tickets',
@@ -140,11 +163,6 @@ const routes = [
     component: () => import('@/pages/hackathon/Register.vue'),
   },
   {
-    path: '/my-hackathons',
-    name: 'MyHackathons',
-    component: () => import('@/pages/hackathon/MyHackathons.vue'),
-  },
-  {
     path: '/hack/:permalink',
     children:[
       {
@@ -183,6 +201,12 @@ const routes = [
         component: () => import('@/pages/localhost/ManageLocalhost.vue')
       }
     ]
+  },
+  {
+    path: '/localhost-attendance-process',
+    name: 'LocalhostAttendanceProcess',
+    component: () => import('@/pages/localhost/LocalhostAttendanceProcess.vue'),
+    props: true
   }
 ]
 

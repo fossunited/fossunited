@@ -1,6 +1,6 @@
 <template>
   <RequestDetailDialog
-  class="z-50 my-5"
+    class="z-50 my-5"
     :participant="selectedRequest"
     :showDialog="showDialog"
     @update:showDialog="showDialog = $event"
@@ -33,27 +33,17 @@
     </div>
     <select
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-      :class="
-        selectedListFitler === 'Accepted Requests'
-          ? 'bg-green-100 text-green-700'
-          : selectedListFitler === 'Pending Requests'
-            ? 'bg-orange-100 text-orange-700'
-            : 'bg-gray-100'
-      "
-      v-model="selectedListFitler"
+      v-model="selectedListFilter"
     >
-      <option
-        v-for="(filter, index) in listFilter"
-        @click="filterListByStatus(filter)"
-      >
-        {{ filter.label }}
+      <option v-for="(_, label) in FILTERS">
+        {{ label }}
       </option>
     </select>
   </div>
   <div class="w-full place-items-center">
     <div class="my-2" v-if="requestByGroup.data">
       <ListView
-        class="max-h-svh"
+        class="min-h-[440px]"
         :columns="[
           {
             label: 'Name',
@@ -62,7 +52,7 @@
           {
             label: 'Status',
             key: 'localhost_request_status',
-            width: 1 / 2,
+            width: 1,
           },
           {
             label: 'Is Student',
@@ -95,6 +85,9 @@
             selectedRequest = row
             showDialog = true
           },
+          emptyState: {
+            title: FILTERS[selectedListFilter].emptyStateText,
+          },
         }"
         row-key="name"
       >
@@ -106,9 +99,12 @@
                   ? 'orange'
                   : row[column.key] === 'Accepted'
                     ? 'green'
-                    : 'red'
+                    : row[column.key] === 'Pending Confirmation'
+                      ? 'blue'
+                      : 'red'
               "
               :label="row[column.key]"
+              size="lg"
             />
           </div>
           <div v-else-if="column.label == 'Git Profile'">
@@ -152,24 +148,41 @@
                 icon="check"
                 :label="'Accept'"
                 :theme="'green'"
-                @click="acceptRequest(row)"
+                @click.stop="acceptRequest(row)"
               />
               <Button
                 icon="x"
                 :label="'Reject'"
                 :theme="'red'"
-                @click="rejectRequest(row)"
+                @click.stop="rejectRequest(row)"
               />
             </div>
           </div>
-          <div v-else-if="column.label == 'Project'">
-            <Button
-              size="sm"
-              variant="ghost"
-              @click="redirectToProfile(row.project_route)"
+          <div class="flex" v-else-if="column.label == 'Project'">
+            <a
+              v-if="row.project_route"
+              @click="redirectRoute(row.project_route)"
+              class="text-sm flex font-semibold hover:underline"
             >
-              <span class="text-sm font-medium">View project</span>
-            </Button>
+              <span>{{ truncateStr(row.project_title, 20) }}</span
+              ><svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M17 7l-10 10" />
+                <path d="M8 7l9 0l0 9" />
+              </svg>
+            </a>
+            <div v-else class="text-sm">No Project Yet</div>
           </div>
           <div v-else class="text-base">{{ item }}</div>
         </template>
@@ -185,7 +198,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, defineEmits, watch, ref } from 'vue'
 import {
   LoadingIndicator,
   createResource,
@@ -193,8 +206,9 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import { ref } from 'vue'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
+import { truncateStr } from '@/helpers/utils'
+import { redirectRoute } from '@/helpers/utils'
 
 const showDialog = ref(false)
 const selectedRequest = ref({})
@@ -206,49 +220,56 @@ const props = defineProps({
   },
 })
 
-const listFilter = ref([
-  {
-    label: 'All Requests',
-    isActive: true,
-    value: ['Pending', 'Rejected', 'Accepted'],
+// Filters for status checks
+const FILTERS = {
+  'All Requests': {
+    emptyStateText: 'No requests found',
+    filters: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
   },
-  {
-    label: 'Pending Requests',
-    isActive: false,
-    value: ['Pending'],
+  Pending: {
+    emptyStateText: 'No pending requests',
+    filters: ['Pending'],
   },
-  {
-    label: 'Accepted Requests',
-    isActive: false,
-    value: ['Accepted'],
+  Accepted: {
+    emptyStateText: 'No accepted requests',
+    filters: ['Accepted'],
   },
-])
+  Rejected: {
+    emptyStateText: 'No rejected requests',
+    filters: ['Rejected'],
+  },
 
-const selectedListFitler = ref(listFilter.value[0].label)
+  'Pending Confirmation': {
+    emptyStateText: 'No pending confirmations',
+    filters: ['Pending Confirmation'],
+  },
+}
+
+const selectedListFilter = ref('All Requests')
+const emit = defineEmits(['updateRequest'])
 
 const requestByGroup = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
   params: {
-    hackathon: props.localhost.doc.parent_hackathon,
-    localhost: props.localhost.doc.name,
+    hackathon: props.localhost.data.parent_hackathon,
+    localhost: props.localhost.data.name,
   },
   auto: true,
   transform(data) {
+    if (!data) return []
     let rows = []
-    Object.entries(data).forEach((key) => {
-      rows.push({
-        group: key[1][0].team.team_name,
-        collapsed: false,
-        rows: key[1],
+    if (data) {
+      Object.entries(data).forEach((key) => {
+        rows.push({
+          group: key[1][0].team.team_name,
+          collapsed: false,
+          rows: key[1],
+        })
       })
-    })
+    }
     return rows
   },
 })
-
-const redirectToProfile = (route) => {
-  window.open(document.location.origin + '/' + route, '_blank')
-}
 
 const changeLocalhostRequestStatus = (id, status) => {
   return createResource({
@@ -261,26 +282,28 @@ const changeLocalhostRequestStatus = (id, status) => {
     },
     onSuccess(data) {
       requestByGroup.fetch()
+      emit('updateRequest')
     },
   })
 }
 
 const acceptRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Accepted').fetch()
+  changeLocalhostRequestStatus(member.name, 'Pending Confirmation').fetch()
 }
 
 const rejectRequest = (member) => {
   changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
 }
 
-const filterListByStatus = (filter) => {
+watch(selectedListFilter, (newFilter) => {
   requestByGroup.update({
     params: {
-      hackathon: props.localhost.doc.parent_hackathon,
-      localhost: props.localhost.doc.name,
-      status: filter.value,
+      hackathon: props.localhost.data.parent_hackathon,
+      localhost: props.localhost.data.name,
+      status: FILTERS[newFilter].filters,
     },
   })
   requestByGroup.fetch()
-}
+  emit('updateRequest')
+})
 </script>

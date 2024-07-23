@@ -1,7 +1,7 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
 
 
@@ -17,6 +17,6 @@ class FOSSHackathonLocalHostOrganizer(Document):
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data
-        user: DF.Link | None
+        profile: DF.Link | None
     # end: auto-generated types
     pass

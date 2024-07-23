@@ -32,6 +32,9 @@
         <span>{{ hackathon.data.hackathon_name }}</span>
       </div>
       <HackathonHeader :hackathon="hackathon" />
+      <div class="grid grid-cols-1 md:grid-cols-2 w-full mt-2">
+        <HackathonAttendanceMode :hackathon="hackathon" class="w-full"/>
+      </div>
       <hr class="my-6" />
       <div class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0">
         <div
@@ -102,6 +105,7 @@
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import JoinTeam from '@/components/hackathon/JoinTeam.vue'
+import HackathonAttendanceMode from '@/components/hackathon/HackathonAttendanceMode.vue'
 import {
   createListResource,
   createResource,

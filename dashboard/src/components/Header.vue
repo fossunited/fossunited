@@ -50,16 +50,10 @@ import { inject, computed } from 'vue'
 import { Avatar, Dropdown, createResource } from 'frappe-ui';
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
-let session = inject('$session')
+const session = inject('$session')
 
-let user_profile = createResource({
-  url: 'frappe.client.get',
-  params: {
-    doctype: 'FOSS User Profile',
-    filters: {
-      email: session.user,
-    },
-  },
+const user_profile = createResource({
+  url: 'fossunited.api.dashboard.get_session_user_profile',
 })
 
 if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {

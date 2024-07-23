@@ -1,5 +1,30 @@
 <template>
   <Header />
+  <Dialog
+    v-model="showConfirmationDialog"
+    :options="{
+      title: 'Confirm Project Deletion',
+      message: 'Are you sure you want to delete this project?',
+      actions: [
+        {
+          label: 'Cancel',
+          theme: 'gray',
+          variant: 'subtle',
+          onClick: () => {
+            showConfirmationDialog = false
+          }
+        },
+        {
+          label: 'Delete',
+          theme: 'red',
+          variant: 'solid',
+          onClick: () => {
+            deleteProject.fetch()
+          }
+        }
+      ]
+    }"
+  />
   <div v-if="project.data" class="w-full p-4 flex items-center justify-center">
     <div class="max-w-screen-xl w-full">
       <Button
@@ -79,9 +104,21 @@
         <Button icon="edit-3" @click="inNameEdit = true" />
       </div>
       <hr />
-      <div class="grid grid-cols-1 md:grid-cols-2 my-4 gap-4 items-center">
-        <div class="flex py-2 flex-col gap-2">
-          <div class="text-base font-medium">Project's Public Page</div>
+      <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4 md:items-center">
+        <div class="hidden md:block"></div>
+        <div class="flex flex-col gap-2">
+          <div class="text-sm uppercase text-gray-600 font-medium">Delete Project</div>
+          <p class="text-sm">Delete this project and create something new.</p>
+          <Button
+            icon-left="trash"
+            label="Trash"
+            theme="red"
+            class="w-fit"
+            @click="showConfirmationDialog=true"
+          />
+        </div>
+        <div class="flex flex-col py-1">
+          <div class="text-xs text-gray-600">Project's Public Page</div>
           <CopyToClipboard :route="getRoute(project.data.route)" />
         </div>
         <FormControl
@@ -133,7 +170,7 @@
             theme="green"
             label="Save"
             size="md"
-            class="md:w-2/3"
+            class="w-full md:w-2/3"
           />
         </div>
       </div>
@@ -156,13 +193,16 @@ import {
   LoadingIndicator,
   FormControl,
   ErrorMessage,
+  Dialog,
 } from 'frappe-ui'
 import { inject, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 
 const route = useRoute()
+const router = useRouter()
 const session = inject('$session')
+const showConfirmationDialog = ref(false)
 
 const project = createResource({
   url: 'fossunited.api.hackathon.get_project_by_email',
@@ -195,6 +235,23 @@ const getRoute = (route) => {
 }
 
 const errorMessage = ref('')
+
+const deleteProject = createResource({
+  url: 'fossunited.api.hackathon.delete_project',
+  makeParams() {
+    return {
+      hackathon: hackathon.data.name,
+      team: project.data.team,
+    }
+  },
+  onSuccess(data) {
+    toast.success('Project deleted successfully')
+    router.replace(`/hack/${route.params.permalink}`)
+  },
+  onError(error) {
+    toast.error('Failed to delete project' + error.message)
+  }
+})
 
 const handleTitleUpdate = () => {
   if (!newProjectName.value) {
