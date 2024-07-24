@@ -565,3 +565,47 @@ def validate_user_as_localhost_member(localhost_id: str):
         )
 
     return True
+
+
+@frappe.whitelist()
+def add_pr_issue_to_project(project: str, details: dict) -> None:
+    """
+    Add a PR/Issue to a project
+
+    Args:
+        project (str): Project ID
+        details (dict): PR/Issue details
+    """
+    if not frappe.db.exists("FOSS Hackathon Project", project):
+        frappe.throw("Project does not exist")
+
+    issue_pr = frappe.get_doc(
+        {
+            "doctype": "Hackathon Project Issue PR",
+            "parent": project,
+            "parenttype": "FOSS Hackathon Project",
+            "parentfield": "issue_pr_table",
+            "title": details["title"],
+            "link": details["link"],
+            "type": details["type"],
+        }
+    )
+    issue_pr.insert()
+
+
+@frappe.whitelist()
+def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
+    """
+    Remove a PR/Issue from a project
+
+    Args:
+        project (str): Project ID
+        issue_pr (str): Issue/PR ID
+    """
+    if not frappe.db.exists("FOSS Hackathon Project", project):
+        frappe.throw("Project does not exist")
+
+    if not frappe.db.exists("Hackathon Project Issue PR", issue_pr):
+        frappe.throw("Issue/PR does not exist")
+
+    frappe.db.delete("Hackathon Project Issue PR", issue_pr)

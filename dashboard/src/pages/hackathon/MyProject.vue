@@ -141,7 +141,7 @@
             <HackathonProjectDetail :project="project" />
           </div>
           <div v-else-if="tab.value === 'issues'">
-            Issues content goes here.
+            <HackathonProjectIssue :project="project" @fetch-project="project.fetch()"/>
           </div>
           <div v-else-if="tab.value === 'manage'">
             <HackathonProjectManage @delete-project="showConfirmationDialog = true" />
@@ -162,6 +162,7 @@ import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import HackathonProjectDetail from '@/components/hackathon/HackathonProjectDetails.vue'
 import HackathonProjectManage from '@/components/hackathon/HackathonProjectManage.vue'
+import HackathonProjectIssue from '@/components/hackathon/HackathonProjectIssue.vue'
 
 import {
   createResource,
@@ -205,6 +206,41 @@ const project = createResource({
   url: 'fossunited.api.hackathon.get_project_by_email',
   onSuccess(data) {
     newProjectName.value = data.title
+  },
+  transform(data){
+    let issue_prs = [
+      {
+        group: 'Issues',
+        collapsed: false,
+        rows: [],
+      },
+      {
+        group: 'Pull Requests',
+        collapsed: false,
+        rows: [],
+      },
+      {
+        group: 'Discussions',
+        collapsed: false,
+        rows: [],
+      },
+    ]
+    data.issue_pr_table.forEach(element => {
+      if (element.type === 'Issue') {
+        issue_prs[0].rows.push(element)
+      } else if (element.type === 'Pull Request') {
+        issue_prs[1].rows.push(element)
+      } else {
+        issue_prs[2].rows.push(element)
+      }
+    });
+    issue_prs.forEach(element => {
+      if (element.rows.length === 0) {
+        issue_prs = issue_prs.filter((item) => item.group !== element.group)
+      }
+    });
+    data.issue_pr_table = issue_prs
+    return data
   },
 })
 
