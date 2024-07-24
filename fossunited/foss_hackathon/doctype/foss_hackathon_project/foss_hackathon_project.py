@@ -16,12 +16,17 @@ class FOSSHackathonProject(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.foss_hackathon.doctype.hackathon_project_issue_pr.hackathon_project_issue_pr import (
+            HackathonProjectIssuePR,
+        )
+
         demo_link: DF.Data | None
         description: DF.TextEditor
         hackathon: DF.Link
         is_contribution_project: DF.Check
         is_partner_project: DF.Check
         is_published: DF.Check
+        issue_pr_table: DF.Table[HackathonProjectIssuePR]
         partner_project: DF.Link | None
         repo_link: DF.Data | None
         route: DF.Data | None
