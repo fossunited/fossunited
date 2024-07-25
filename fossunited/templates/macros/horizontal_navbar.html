@@ -4,6 +4,8 @@
             <div class="horizontal-navbar--item" name="{{item}}-nav-item" id="{{item}}-nav-item">
                 {% if item in ['rsvp', 'cfp'] %}
                     {{ item | replace('_', ' ') | upper }}
+                {% elif item == 'issue_pr' %}
+                    {{ _("Issues / PRs") }}
                 {% else %}
                     {{ item | replace('_', ' ') | title }}
                 {% endif %}

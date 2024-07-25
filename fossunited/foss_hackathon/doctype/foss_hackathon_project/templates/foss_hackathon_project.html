@@ -57,6 +57,7 @@
 
 <div class="container">
     {{ render_description() }}
+    {{ render_issue_pr() }}
     {{ render_team() }}
 </div>
 
@@ -67,6 +68,11 @@
     <div>
         {{ doc.description or 'No description added.'}}
     </div>
+</div>
+{% endmacro %}
+
+{% macro render_issue_pr() %}
+<div class="event-content-div content-div" id="issue_pr">
     {% if doc.issue_pr_table | len > 0 %}
     <h6 class="mt-4 border-bottom pb-2">Issues, PRs and Discussions</h6>
     <div class="issue-pr-list">
@@ -89,6 +95,10 @@
             </div>
         </a>
         {% endfor %}
+    </div>
+    {% else %}
+    <div class="mt-4">
+        No Issues, PRs or Discussions added.
     </div>
     {% endif %}
 </div>

@@ -48,7 +48,11 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.hackathon = frappe.get_doc(
             "FOSS Hackathon", self.hackathon
         )
-        context.nav_items = ["description", "team_members"]
+        context.nav_items = [
+            "description",
+            "issue_pr",
+            "team_members",
+        ]
 
         context.team = frappe.get_doc(
             "FOSS Hackathon Team", self.team
