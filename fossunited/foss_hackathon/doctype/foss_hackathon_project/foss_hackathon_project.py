@@ -65,11 +65,16 @@ class FOSSHackathonProject(WebsiteGenerator):
 def get_team_members(team):
     member_details = []
     for member in team.members:
-        user_email = frappe.get_value(
-            "FOSS Hackathon Participant", member.member, "user"
+        profile_id = frappe.db.get_value(
+            "FOSS Hackathon Participant",
+            member.member,
+            "user_profile",
         )
-        user = frappe.get_doc(
-            "FOSS User Profile", {"user": user_email}, ["*"]
-        ).as_dict()
-        member_details.append(user)
+        profile = frappe.db.get_value(
+            "FOSS User Profile",
+            profile_id,
+            ["route", "full_name", "username", "profile_photo"],
+            as_dict=True,
+        )
+        member_details.append(profile)
     return member_details

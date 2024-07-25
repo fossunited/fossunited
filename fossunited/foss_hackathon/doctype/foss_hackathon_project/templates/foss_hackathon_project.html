@@ -108,7 +108,7 @@
 <div class="event-content-div content-div" id="team_members">
     <div class="team-member-grid">
         {% for member in team_members %}
-        <div class="team-member-card">
+        <div class="team-member-card" onClick="window.open('/{{member.route}}', '_blank').focus()">
             <img class="team-member--img" src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="{{ member.full_name }}">
             <div class="d-flex flex-column">
                 <div class="team-member--name">{{ member.full_name }}</div>
