@@ -9,7 +9,11 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-4">
-        <FormControl type="url" label="Link &ast;" v-model="newIssuePr.link" />
+        <FormControl type="url" label="Link &ast;" v-model="newIssuePr.link" @input="getPrIssueTitle.fetch()" />
+        <div v-if="getPrIssueTitle.loading" class="flex gap-1">
+            <LoadingIndicator  class="w-4 h-4" />
+            <small>Fetching details...</small>
+        </div>
         <FormControl label="Title &ast;" v-model="newIssuePr.title" />
         <FormControl
           type="select"
@@ -149,6 +153,7 @@ import {
   ListView,
   Dialog,
   createResource,
+  LoadingIndicator,
 } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 
@@ -185,6 +190,25 @@ const addIssuePrErrors = () => {
 
   return errors
 }
+
+const getPrIssueTitle = createResource({
+  url: 'fossunited.api.hackathon.get_issue_pr_title',
+  makeParams() {
+    return {
+      url: newIssuePr.link,
+    }
+  },
+  onSuccess(data) {
+    addIssueErrors.value = ''
+    newIssuePr.title = data.title
+    newIssuePr.type = data.type
+  },
+  onError(err) {
+    newIssuePr.title = ''
+    newIssuePr.type = ''
+    addIssueErrors.value = 'Failed to fetch title : \n' + err.message
+  },
+})
 
 const addIssuePr = createResource({
   url: 'fossunited.api.hackathon.add_pr_issue_to_project',

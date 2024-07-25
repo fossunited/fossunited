@@ -609,3 +609,37 @@ def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
         frappe.throw("Issue/PR does not exist")
 
     frappe.db.delete("Hackathon Project Issue PR", issue_pr)
+
+
+@frappe.whitelist()
+def get_issue_pr_title(url: str) -> dict:
+    """
+    Get title of the issue/PR/Discussion from the URL
+
+    Args:
+        url (str): URL of the issue/PR/Discussion
+
+    Returns:
+        dict: Issue/PR title
+    """
+    if not "https://github.com" in url:
+        frappe.throw("Invalid URL")
+
+    from fossunited.integrations.github import GithubHelper
+
+    gh = GithubHelper()
+
+    parts = url.split("/")
+    if len(parts) < 5:
+        frappe.throw("Invalid URL")
+
+    if parts[5] == "issues":
+        issue = gh.get_issue_info("/".join(parts[3:5]), parts[-1])
+        return {"title": issue.title, "type": "Issue"}
+    elif parts[5] == "pull":
+        pr = gh.get_pr_info("/".join(parts[3:5]), parts[-1])
+        return {"title": pr.title, "type": "Pull Request"}
+    elif parts[5] == "discussions":
+        return {"title": "", "type": "Discussion"}
+    else:
+        frappe.throw("Invalid URL")
