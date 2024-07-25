@@ -14,6 +14,9 @@
             <LoadingIndicator  class="w-4 h-4" />
             <small>Fetching details...</small>
         </div>
+        <div v-if="fetchTitleError">
+          <small class="text-gray-700">{{ fetchTitleError }}</small>
+        </div>
         <FormControl label="Title &ast;" v-model="newIssuePr.title" />
         <FormControl
           type="select"
@@ -191,6 +194,8 @@ const addIssuePrErrors = () => {
   return errors
 }
 
+const fetchTitleError = ref('')
+
 const getPrIssueTitle = createResource({
   url: 'fossunited.api.hackathon.get_issue_pr_title',
   makeParams() {
@@ -199,6 +204,7 @@ const getPrIssueTitle = createResource({
     }
   },
   onSuccess(data) {
+    fetchTitleError.value = ''
     addIssueErrors.value = ''
     newIssuePr.title = data.title
     newIssuePr.type = data.type
@@ -206,6 +212,10 @@ const getPrIssueTitle = createResource({
   onError(err) {
     newIssuePr.title = ''
     newIssuePr.type = ''
+    if (err.messages[0] == 'Not a Github URL.') {
+      fetchTitleError.value = 'Failed to fetch title :( \nPlease enter data manually.'
+      return
+    }
     addIssueErrors.value = 'Failed to fetch title : \n' + err.message
   },
 })

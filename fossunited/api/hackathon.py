@@ -623,7 +623,7 @@ def get_issue_pr_title(url: str) -> dict:
         dict: Issue/PR title
     """
     if not "https://github.com" in url:
-        frappe.throw("Invalid URL")
+        frappe.throw("Not a Github URL.")
 
     from fossunited.integrations.github import GithubHelper
 
