@@ -10,7 +10,6 @@
     stroke-linecap="round"
     stroke-linejoin="round"
     class="icon icon-tabler icons-tabler-outline icon-tabler-brand-github"
-    :class="classes"
   >
     <path stroke="none" d="M0 0h24v24H0z" fill="none" />
     <path
@@ -19,11 +18,5 @@
   </svg>
 </template>
 <script setup>
-import { defineProps } from 'vue'
 
-defineProps({
-  classes: {
-    type: String,
-  },
-})
 </script>

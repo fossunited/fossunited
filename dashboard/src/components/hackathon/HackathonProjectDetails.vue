@@ -15,7 +15,7 @@
       :disabled="project.data.is_partner_project"
     >
       <template #prefix>
-        <GithubIcon classes="w-4"/>
+        <GithubIcon class="w-4"/>
       </template>
     </FormControl>
     <FormControl label="Demo Link" v-model="project.data.demo_link" />

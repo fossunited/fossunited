@@ -215,7 +215,7 @@
                         class="flex items-center gap-1 mt-3 text-xs text-gray-600 text-center hover:text-gray-800"
                         target="_blank"
                       >
-                        <GithubIcon classes="w-4" />
+                        <GithubIcon class="w-4" />
                         <span> Repo Link </span>
                       </a>
                     </div>

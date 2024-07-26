@@ -115,7 +115,7 @@
           <span>
             {{ item }}
           </span>
-          <ArrowUpRight classes="w-4 h-4"/>
+          <ArrowUpRight class="w-4 h-4"/>
         </a>
       </div>
       <div v-else-if="column.key == 'actions'">

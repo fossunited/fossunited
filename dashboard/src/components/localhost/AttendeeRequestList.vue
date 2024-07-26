@@ -115,7 +115,7 @@
               class="text-sm flex font-semibold hover:underline"
             >
               <span>Open</span>
-              <ArrowUpRight classes="w-4 h-4"/>
+              <ArrowUpRight class="w-4 h-4"/>
             </a>
             <div v-else class="text-sm">No Git Profile</div>
           </div>
@@ -150,7 +150,7 @@
               class="text-sm flex font-semibold hover:underline"
             >
               <span>{{ truncateStr(row.project_title, 20) }}</span>
-              <ArrowUpRight classes="w-4 h-4"/>
+              <ArrowUpRight class="w-4 h-4"/>
             </a>
             <div v-else class="text-sm">No Project Yet</div>
           </div>
