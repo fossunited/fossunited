@@ -4,6 +4,8 @@ APIs used for Hackathon based operations
 
 import frappe
 
+from fossunited.integrations.github import GithubHelper
+
 
 @frappe.whitelist(allow_guest=True)
 def get_hackathon(name: str) -> dict:
@@ -624,8 +626,6 @@ def get_issue_pr_title(url: str) -> dict:
     """
     if not "https://github.com" in url:
         frappe.throw("Not a Github URL.")
-
-    from fossunited.integrations.github import GithubHelper
 
     gh = GithubHelper()
 
