@@ -206,12 +206,11 @@
         class="m-2 mt-5"
         :message="errorsMessage"
       />
-      <div class="grid grid-cols-1 md:grid-cols-2 place-items-end mt-6">
-        <div></div>
+      <div class="flex flex-row-reverse mt-6">
         <Button
           variant="solid"
           theme="green"
-          class="w-full md:w-2/3 font-medium"
+          class="w-full md:w-2/5 font-medium"
           label="Register"
           :loading="registerForHackathon.loading"
           @click="handleRegistration"

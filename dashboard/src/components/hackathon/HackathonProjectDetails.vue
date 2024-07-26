@@ -29,15 +29,14 @@
   </div>
   <div>
     <ErrorMessage :message="errorMessage" />
-    <div class="grid grid-cols-1 md:grid-cols-2 place-items-end">
-      <div></div>
+    <div class="flex flex-row-reverse">
       <Button
         @click="handleProjectUpdate"
         variant="solid"
         theme="green"
         label="Save"
         size="md"
-        class="w-full md:w-2/3"
+        class="w-full md:w-2/5"
       />
     </div>
   </div>

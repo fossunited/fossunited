@@ -264,14 +264,13 @@
           </div>
         </div>
         <ErrorMessage :message="errorMessage" class="my-4" />
-        <div class="grid grid-cols-1 md:grid-cols-2 place-items-end mb-8">
-          <div></div>
+        <div class="flex flex-row-reverse mb-8">
           <Button
             @click="handleCreateProject"
             label="Create Project"
             theme="green"
             variant="solid"
-            class="w-full md:w-2/3"
+            class="w-full md:w-2/5"
             size="md"
             :loading="createProject.loading"
           />
