@@ -16,12 +16,17 @@ class FOSSHackathonProject(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.foss_hackathon.doctype.hackathon_project_issue_pr.hackathon_project_issue_pr import (
+            HackathonProjectIssuePR,
+        )
+
         demo_link: DF.Data | None
         description: DF.TextEditor
         hackathon: DF.Link
         is_contribution_project: DF.Check
         is_partner_project: DF.Check
         is_published: DF.Check
+        issue_pr_table: DF.Table[HackathonProjectIssuePR]
         partner_project: DF.Link | None
         repo_link: DF.Data | None
         route: DF.Data | None
@@ -43,7 +48,11 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.hackathon = frappe.get_doc(
             "FOSS Hackathon", self.hackathon
         )
-        context.nav_items = ["description", "team_members"]
+        context.nav_items = [
+            "description",
+            "issue_pr",
+            "team_members",
+        ]
 
         context.team = frappe.get_doc(
             "FOSS Hackathon Team", self.team
@@ -56,11 +65,16 @@ class FOSSHackathonProject(WebsiteGenerator):
 def get_team_members(team):
     member_details = []
     for member in team.members:
-        user_email = frappe.get_value(
-            "FOSS Hackathon Participant", member.member, "user"
+        profile_id = frappe.db.get_value(
+            "FOSS Hackathon Participant",
+            member.member,
+            "user_profile",
         )
-        user = frappe.get_doc(
-            "FOSS User Profile", {"user": user_email}, ["*"]
-        ).as_dict()
-        member_details.append(user)
+        profile = frappe.db.get_value(
+            "FOSS User Profile",
+            profile_id,
+            ["route", "full_name", "username", "profile_photo"],
+            as_dict=True,
+        )
+        member_details.append(profile)
     return member_details

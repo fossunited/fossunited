@@ -57,6 +57,7 @@
 
 <div class="container">
     {{ render_description() }}
+    {{ render_issue_pr() }}
     {{ render_team() }}
 </div>
 
@@ -64,7 +65,42 @@
 
 {% macro render_description() %}
 <div class="event-content-div content-div" id="description">
-    {{ doc.description or 'No description added.'}}
+    <div>
+        {{ doc.description or 'No description added.'}}
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_issue_pr() %}
+<div class="event-content-div content-div" id="issue_pr">
+    {% if doc.issue_pr_table | len > 0 %}
+    <h6 class="mt-4 border-bottom pb-2">Issues, PRs and Discussions</h6>
+    <div class="issue-pr-list">
+        {% for item in doc.issue_pr_table %}
+        <a href="{{ item.link }}" target="_blank" class="issue-pr-card">
+            <div class="issue-pr-icon-type">
+                {% if item.type == 'Pull Request' %}
+                <i class="ti ti-git-pull-request"></i>
+                <span>Pull Request</span>
+                {% elif item.type == 'Issue' %}
+                <i class="ti ti-circle-dot"></i>
+                <span>Issue</span>
+                {% else %}
+                <i class="ti ti-messages"></i>
+                <span>Discussion</span>
+                {% endif %}
+            </div>
+            <div class="issue-pr-title">
+                {{ item.title }}
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="mt-4">
+        No Issues, PRs or Discussions added.
+    </div>
+    {% endif %}
 </div>
 {% endmacro %}
 
@@ -72,7 +108,7 @@
 <div class="event-content-div content-div" id="team_members">
     <div class="team-member-grid">
         {% for member in team_members %}
-        <div class="team-member-card">
+        <div class="team-member-card" onClick="window.open('/{{member.route}}', '_blank').focus()">
             <img class="team-member--img" src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="{{ member.full_name }}">
             <div class="d-flex flex-column">
                 <div class="team-member--name">{{ member.full_name }}</div>
@@ -105,4 +141,40 @@
         })
     }
 </script>
+{% endblock %}
+
+{% block page_style %}
+<style>
+    .issue-pr-list{
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+    }
+
+    .issue-pr-card{
+        display: flex;
+        flex-direction: column;
+        padding: 0.8rem;
+        border-radius: 0.5rem;
+        border: 1px solid hsl(var(--clr-gray-300));
+        transition: border 0.3s;
+    }
+    .issue-pr-card:hover{
+        text-decoration: none;
+        border: 1px solid hsl(var(--clr-gray-400));
+    }
+
+    .issue-pr-icon-type{
+        display: flex;
+        gap: 0.2rem;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    .issue-pr-title{
+        font-size: 1rem;
+        font-family: 'Courier New', Courier, monospace;
+    }
+</style>
 {% endblock %}

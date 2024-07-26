@@ -2,6 +2,7 @@
   <Header />
   <Dialog
     v-model="showConfirmationDialog"
+    class="z-50"
     :options="{
       title: 'Confirm Project Deletion',
       message: 'Are you sure you want to delete this project?',
@@ -12,7 +13,7 @@
           variant: 'subtle',
           onClick: () => {
             showConfirmationDialog = false
-          }
+          },
         },
         {
           label: 'Delete',
@@ -20,9 +21,9 @@
           variant: 'solid',
           onClick: () => {
             deleteProject.fetch()
-          }
-        }
-      ]
+          },
+        },
+      ],
     }"
   />
   <div v-if="project.data" class="w-full p-4 flex items-center justify-center">
@@ -38,7 +39,9 @@
         "
         class="mt-4 mb-2"
       />
-      <div class="flex gap-2 my-6 items-center text-base uppercase">
+
+      <!-- Breadcrumbs -->
+      <div class="flex gap-2 my-6 items-center text-base flex-wrap uppercase">
         <span class="font-semibold">My Hackathons</span>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -71,109 +74,80 @@
         </svg>
         <span>My Project</span>
       </div>
+
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
+
+      <!-- Project Name & Edit -->
       <div
         v-if="inNameEdit"
-        class="flex flex-col gap-4 md:flex-row w-full justify-between md:items-center mb-4"
+        class="flex flex-col gap-2 mb-4"
       >
-        <input
-          v-model="newProjectName"
-          type="text"
-          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-gray-900 active:outline-none focus:outline-none"
-        />
-        <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
-          <Button
-            @click="
-              () => {
-                inNameEdit = false
-                errorMessage.value = ''
-              }
-            "
-            label="Discard"
+        <div class="flex flex-col gap-4 md:flex-row w-full justify-between md:items-center">
+          <input
+            v-model="newProjectName"
+            type="text"
+            class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-gray-900 active:outline-none focus:outline-none"
           />
-          <Button
-            @click="handleTitleUpdate"
-            variant="solid"
-            theme="green"
-            label="Update"
-          />
+          <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
+            <Button
+              @click="
+                () => {
+                  newProjectName = project.data.title
+                  inNameEdit = false
+                  errorMessage = ''
+                }
+              "
+              label="Discard"
+            />
+            <Button
+              @click="handleTitleUpdate"
+              variant="solid"
+              theme="green"
+              label="Update"
+            />
+          </div>
         </div>
+        <ErrorMessage :message="errorMessage" />
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
         <h2>{{ project.data.title }}</h2>
         <Button icon="edit-3" @click="inNameEdit = true" />
       </div>
-      <hr />
-      <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4 md:items-center">
-        <div class="hidden md:block"></div>
-        <div class="flex flex-col gap-2">
-          <div class="text-sm uppercase text-gray-600 font-medium">Delete Project</div>
-          <p class="text-sm">Delete this project and create something new.</p>
-          <Button
-            icon-left="trash"
-            label="Trash"
-            theme="red"
-            class="w-fit"
-            @click="showConfirmationDialog=true"
-          />
-        </div>
-        <div class="flex flex-col py-1">
-          <div class="text-xs text-gray-600">Project's Public Page</div>
-          <CopyToClipboard :route="getRoute(project.data.route)" />
-        </div>
-        <FormControl
-          label="Short Description"
-          v-model="project.data.short_description"
-          placeholder="Enter a short description of the project"
-        />
-        <FormControl
-          label="Repository Link"
-          v-model="project.data.repo_link"
-          :disabled="project.data.is_partner_project"
-        >
-          <template #prefix>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="icon w-5 icon-tabler icons-tabler-outline icon-tabler-brand-github"
-            >
-              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path
-                d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"
-              />
-            </svg>
-          </template>
-        </FormControl>
-        <FormControl label="Demo Link" v-model="project.data.demo_link" />
-        <TextEditor
-          class="col-span-2 mt-2"
-          label="Project Description"
-          :modelValue="project.data.description"
-          placeholder="Enter a detailed description of the project"
-          @update:modelValue="($event) => (project.data.description = $event)"
-        />
-      </div>
-      <div>
-        <ErrorMessage :message="errorMessage" />
-        <div class="grid grid-cols-1 md:grid-cols-2 place-items-end">
-          <div></div>
-          <Button
-            @click="handleProjectUpdate"
-            variant="solid"
-            theme="green"
-            label="Save"
-            size="md"
-            class="w-full md:w-2/3"
-          />
-        </div>
-      </div>
+
+      <!-- Tabs -->
+      <TabsRoot :default-value="tabs[0].value" v-model="activeTab">
+        <TabsList class="relative shrink-0 flex border-b border-gray-300">
+          <TabsIndicator
+            class="absolute px-8 left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300"
+          >
+            <div class="bg-gray-900 w-full h-full" />
+          </TabsIndicator>
+          <TabsTrigger
+            v-for="tab in tabs"
+            :value="tab.value"
+            :key="tab.value"
+            class="px-4 pb-2 mx-2 leading-none bg-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
+            :class="{
+              'text-gray-800 border-b border-gray-800 font-medium':
+                activeTab === tab.value,
+              'text-gray-600 hover:text-gray-800 hover:border-b hover:border-gray-400':
+                activeTab !== tab.value,
+            }"
+            >{{ tab.label }}</TabsTrigger
+          >
+        </TabsList>
+        <TabsContent v-for="tab in tabs" :key="tab.value" :value="tab.value" class="p-4">
+          <div v-if="tab.value === 'details'">
+            <HackathonProjectDetail :project="project" />
+          </div>
+          <div v-else-if="tab.value === 'issues'">
+            <HackathonProjectIssue :project="project" @fetch-project="project.fetch()"/>
+          </div>
+          <div v-else-if="tab.value === 'manage'">
+            <HackathonProjectManage @delete-project="showConfirmationDialog = true" />
+          </div>
+        </TabsContent>
+      </TabsRoot>
     </div>
   </div>
   <div
@@ -186,28 +160,87 @@
 <script setup>
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
-import CopyToClipboard from '@/components/CopyToClipboardComponent.vue'
-import TextEditor from '@/components/TextEditor.vue'
+import HackathonProjectDetail from '@/components/hackathon/HackathonProjectDetails.vue'
+import HackathonProjectManage from '@/components/hackathon/HackathonProjectManage.vue'
+import HackathonProjectIssue from '@/components/hackathon/HackathonProjectIssue.vue'
+
 import {
   createResource,
   LoadingIndicator,
-  FormControl,
-  ErrorMessage,
   Dialog,
+  ErrorMessage,
 } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
+import {
+  TabsContent,
+  TabsIndicator,
+  TabsList,
+  TabsRoot,
+  TabsTrigger,
+} from 'radix-vue'
 
 const route = useRoute()
 const router = useRouter()
 const session = inject('$session')
 const showConfirmationDialog = ref(false)
 
+const tabs = [
+  {
+    label: 'Details',
+    value: 'details',
+  },
+  {
+    label: 'Issues & PRs',
+    value: 'issues',
+  },
+  {
+    label: 'Manage',
+    value: 'manage',
+  },
+]
+const activeTab = ref(tabs[0].value)
+
 const project = createResource({
   url: 'fossunited.api.hackathon.get_project_by_email',
   onSuccess(data) {
     newProjectName.value = data.title
+  },
+  transform(data){
+    let issue_prs = [
+      {
+        group: 'Issues',
+        collapsed: false,
+        rows: [],
+      },
+      {
+        group: 'Pull Requests',
+        collapsed: false,
+        rows: [],
+      },
+      {
+        group: 'Discussions',
+        collapsed: false,
+        rows: [],
+      },
+    ]
+    data.issue_pr_table.forEach(element => {
+      if (element.type === 'Issue') {
+        issue_prs[0].rows.push(element)
+      } else if (element.type === 'Pull Request') {
+        issue_prs[1].rows.push(element)
+      } else {
+        issue_prs[2].rows.push(element)
+      }
+    });
+    issue_prs.forEach(element => {
+      if (element.rows.length === 0) {
+        issue_prs = issue_prs.filter((item) => item.group !== element.group)
+      }
+    });
+    data.issue_pr_table = issue_prs
+    return data
   },
 })
 
@@ -230,9 +263,6 @@ const hackathon = createResource({
 
 const newProjectName = ref('')
 const inNameEdit = ref(false)
-const getRoute = (route) => {
-  return `${window.location.origin}/${route}`
-}
 
 const errorMessage = ref('')
 
@@ -250,7 +280,7 @@ const deleteProject = createResource({
   },
   onError(error) {
     toast.error('Failed to delete project' + error.message)
-  }
+  },
 })
 
 const handleTitleUpdate = () => {
@@ -282,62 +312,4 @@ const updateProjectName = createResource({
     toast.error('Failed to update project name' + error.message)
   },
 })
-
-const updateProjectErrors = () => {
-  const errors = []
-
-  if (!project.data.title) {
-    errors.push('Project name cannot be empty')
-  }
-  if (!project.data.short_description) {
-    errors.push('Short description cannot be empty')
-  }
-  if (!project.data.description) {
-    errors.push('Description cannot be empty')
-  }
-  if (!project.data.repo_link) {
-    errors.push('Repository link cannot be empty')
-  }
-  if (
-    project.data.repo_link &&
-    !project.data.repo_link.startsWith('https://')
-  ) {
-    errors.push('Enter a valid repo link')
-  }
-
-  return errors
-}
-
-const handleProjectUpdate = () => {
-  if (updateProjectErrors().length) {
-    errorMessage.value = updateProjectErrors().join(', ')
-    return
-  } else {
-    errorMessage.value = ''
-  }
-
-  createResource({
-    url: 'frappe.client.set_value',
-    makeParams() {
-      return {
-        doctype: 'FOSS Hackathon Project',
-        name: project.data.name,
-        fieldname: {
-          title: project.data.title,
-          short_description: project.data.short_description,
-          description: project.data.description,
-          repo_link: project.data.repo_link,
-          demo_link: project.data.demo_link,
-        },
-      }
-    },
-    auto: true,
-    onSuccess(data) {
-      toast.success('Project updated successfully')
-    },
-    onError(error) {
-      toast.error('Failed to update project' + error.message)
-    },
-  })
-}
 </script>

@@ -5,3 +5,4 @@ FOSS Profiles
 FOSS Hackathon
 Payments
 Ticketing
+Profile Integrations

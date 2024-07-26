@@ -4,6 +4,8 @@ APIs used for Hackathon based operations
 
 import frappe
 
+from fossunited.integrations.github import GithubHelper
+
 
 @frappe.whitelist(allow_guest=True)
 def get_hackathon(name: str) -> dict:
@@ -565,3 +567,79 @@ def validate_user_as_localhost_member(localhost_id: str):
         )
 
     return True
+
+
+@frappe.whitelist()
+def add_pr_issue_to_project(project: str, details: dict) -> None:
+    """
+    Add a PR/Issue to a project
+
+    Args:
+        project (str): Project ID
+        details (dict): PR/Issue details
+    """
+    if not frappe.db.exists("FOSS Hackathon Project", project):
+        frappe.throw("Project does not exist")
+
+    issue_pr = frappe.get_doc(
+        {
+            "doctype": "Hackathon Project Issue PR",
+            "parent": project,
+            "parenttype": "FOSS Hackathon Project",
+            "parentfield": "issue_pr_table",
+            "title": details["title"],
+            "link": details["link"],
+            "type": details["type"],
+        }
+    )
+    issue_pr.insert()
+
+
+@frappe.whitelist()
+def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
+    """
+    Remove a PR/Issue from a project
+
+    Args:
+        project (str): Project ID
+        issue_pr (str): Issue/PR ID
+    """
+    if not frappe.db.exists("FOSS Hackathon Project", project):
+        frappe.throw("Project does not exist")
+
+    if not frappe.db.exists("Hackathon Project Issue PR", issue_pr):
+        frappe.throw("Issue/PR does not exist")
+
+    frappe.db.delete("Hackathon Project Issue PR", issue_pr)
+
+
+@frappe.whitelist()
+def get_issue_pr_title(url: str) -> dict:
+    """
+    Get title of the issue/PR/Discussion from the URL
+
+    Args:
+        url (str): URL of the issue/PR/Discussion
+
+    Returns:
+        dict: Issue/PR title
+    """
+    if not "https://github.com" in url:
+        frappe.throw("Not a Github URL.")
+
+    gh = GithubHelper()
+
+    parts = url.split("/")
+    if len(parts) < 5:
+        frappe.throw("Invalid URL")
+
+    if parts[5] == "issues":
+        issue = gh.get_issue_info("/".join(parts[3:5]), parts[-1])
+        return {"title": issue.title, "type": "Issue"}
+    elif parts[5] == "pull":
+        pr = gh.get_pr_info("/".join(parts[3:5]), parts[-1])
+        return {"title": pr.title, "type": "Pull Request"}
+    elif parts[5] == "discussions":
+        return {"title": "", "type": "Discussion"}
+    else:
+        frappe.throw("Invalid URL")

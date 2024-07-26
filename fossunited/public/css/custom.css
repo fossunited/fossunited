@@ -2340,6 +2340,11 @@ h6{
 .team-member--username{
     font-size: var(--text-sm);
     color: hsl(var(--clr-open-gray-200));
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-wrap: wrap;
+    overflow-wrap: break-word;
+    word-break: break-all;
 }
 
 .status-block-deadline{

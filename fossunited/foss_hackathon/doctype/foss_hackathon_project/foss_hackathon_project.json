@@ -26,7 +26,9 @@
   "hackathon",
   "team",
   "team_name",
-  "description"
+  "description",
+  "issues__prs_section",
+  "issue_pr_table"
  ],
  "fields": [
   {
@@ -141,13 +143,24 @@
    "fieldtype": "Data",
    "label": "Team Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "issues__prs_section",
+   "fieldtype": "Section Break",
+   "label": "Issues / PRs"
+  },
+  {
+   "fieldname": "issue_pr_table",
+   "fieldtype": "Table",
+   "label": "Issue PR Table",
+   "options": "Hackathon Project Issue PR"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-15 17:44:19.295171",
+ "modified": "2024-07-23 12:39:23.852004",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Project",
