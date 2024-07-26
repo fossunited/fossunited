@@ -114,23 +114,8 @@
               target="_blank"
               class="text-sm flex font-semibold hover:underline"
             >
-              <span>Open</span
-              ><svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0l0 9" />
-              </svg>
+              <span>Open</span>
+              <ArrowUpRight classes="w-4 h-4"/>
             </a>
             <div v-else class="text-sm">No Git Profile</div>
           </div>
@@ -164,23 +149,8 @@
               @click="redirectRoute(row.project_route)"
               class="text-sm flex font-semibold hover:underline"
             >
-              <span>{{ truncateStr(row.project_title, 20) }}</span
-              ><svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon w-4 h-4 icon-tabler icons-tabler-outline icon-tabler-arrow-up-right"
-              >
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M17 7l-10 10" />
-                <path d="M8 7l9 0l0 9" />
-              </svg>
+              <span>{{ truncateStr(row.project_title, 20) }}</span>
+              <ArrowUpRight classes="w-4 h-4"/>
             </a>
             <div v-else class="text-sm">No Project Yet</div>
           </div>
@@ -206,9 +176,10 @@ import {
   Button,
   ListView,
 } from 'frappe-ui'
-import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
+import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
+import ArrowUpRight from '@/components/icons/ArrowUpRight.vue'
 
 const showDialog = ref(false)
 const selectedRequest = ref({})
