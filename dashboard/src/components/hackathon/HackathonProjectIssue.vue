@@ -9,10 +9,15 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-4">
-        <FormControl type="url" label="Link &ast;" v-model="newIssuePr.link" @input="getPrIssueTitle.fetch()" />
+        <FormControl
+          type="url"
+          label="Link &ast;"
+          v-model="newIssuePr.link"
+          @input="getPrIssueTitle.fetch()"
+        />
         <div v-if="getPrIssueTitle.loading" class="flex gap-1">
-            <LoadingIndicator  class="w-4 h-4" />
-            <small>Fetching details...</small>
+          <LoadingIndicator class="w-4 h-4" />
+          <small>Fetching details...</small>
         </div>
         <div v-if="fetchTitleError">
           <small class="text-gray-700">{{ fetchTitleError }}</small>
@@ -48,7 +53,18 @@
           :loading="addIssuePr.loading"
           @click="handleAddIssuePr"
         />
-        <Button label="Cancel" theme="gray" @click="showAddDialog = false" />
+        <Button
+          label="Cancel"
+          theme="gray"
+          @click="
+            () => {
+              newIssuePr.title = ''
+              newIssuePr.link = ''
+              newIssuePr.type = ''
+              showAddDialog = false
+            }
+          "
+        />
       </div>
     </template>
   </Dialog>
@@ -115,7 +131,7 @@
           <span>
             {{ item }}
           </span>
-          <ArrowUpRight class="w-4 h-4"/>
+          <ArrowUpRight class="w-4 h-4" />
         </a>
       </div>
       <div v-else-if="column.key == 'actions'">
@@ -199,7 +215,8 @@ const getPrIssueTitle = createResource({
     newIssuePr.title = ''
     newIssuePr.type = ''
     if (err.messages[0] == 'Not a Github URL.') {
-      fetchTitleError.value = 'Failed to fetch title :( \nPlease enter data manually.'
+      fetchTitleError.value =
+        'Failed to fetch title :( \nPlease enter data manually.'
       return
     }
     addIssueErrors.value = 'Failed to fetch title : \n' + err.message
