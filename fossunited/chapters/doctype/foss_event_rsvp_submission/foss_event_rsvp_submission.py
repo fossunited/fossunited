@@ -36,6 +36,30 @@ class FOSSEventRSVPSubmission(Document):
     def validate(self):
         self.validate_linked_rsvp_exists()
 
+    def after_insert(self):
+        self.close_rsvp_on_max_count()
+
+    def close_rsvp_on_max_count(self):
+        max_count = self.get_max_count()
+        submission_count = frappe.db.count(
+            "FOSS Event RSVP Submission",
+            {"linked_rsvp": self.linked_rsvp},
+        )
+
+        if submission_count >= max_count:
+            frappe.db.set_value(
+                "FOSS Event RSVP",
+                self.linked_rsvp,
+                "is_published",
+                False,
+            )
+
+    def get_max_count(self):
+        max_count = frappe.db.get_value(
+            "FOSS Event RSVP", self.linked_rsvp, "max_rsvp_count"
+        )
+        return max_count
+
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists("FOSS Event RSVP", self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
