@@ -131,3 +131,26 @@ def get_session_user_profile():
     )
 
     return user
+
+
+@frappe.whitelist()
+def get_profile_data(username: str = None, email: str = None) -> dict:
+    """
+    Returns the profile data of the given username.
+    """
+    if not username and not email:
+        frappe.throw("Username or email is required")
+
+    user = frappe.db.get_value(
+        "FOSS User Profile",
+        {"user": username, "email": email or ""},
+        [
+            "full_name",
+            "username",
+            "profile_photo",
+            "route",
+        ],
+        as_dict=1,
+    )
+
+    return user
