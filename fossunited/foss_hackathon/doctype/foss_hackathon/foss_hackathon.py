@@ -5,6 +5,8 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import USER_PROFILE
+
 no_cache = 1
 
 BASE_DATE = datetime.now().replace(
@@ -136,9 +138,7 @@ def get_speakers(schedule):
     cfp = frappe.get_doc(
         "FOSS Event CFP Submission", schedule.linked_cfp
     )
-    user = frappe.get_doc(
-        "FOSS User Profile", {"email": cfp.submitted_by}
-    )
+    user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route
     schedule.speaker_full_name = user.full_name

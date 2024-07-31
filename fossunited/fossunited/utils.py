@@ -5,6 +5,8 @@ from datetime import datetime
 import frappe
 from frappe.utils.data import now_datetime
 
+from fossunited.doctype_ids import USER_PROFILE
+
 
 # Jinja Filter
 def get_profile_image(email):
@@ -102,7 +104,7 @@ def get_user_editable_doctype_fields(doctype, docname=None):
 
 
 def get_user_socials(foss_user):
-    user = frappe.get_doc("FOSS User Profile", foss_user).as_dict()
+    user = frappe.get_doc(USER_PROFILE, foss_user).as_dict()
     SOCIAL_LINK_FIELDNAMES = [
         "github",
         "gitlab",
@@ -176,7 +178,7 @@ def get_signup_optin_checks():
 @frappe.whitelist(allow_guest=True)
 def check_username_availability(username):
     username_exists = frappe.db.exists(
-        "FOSS User Profile", {"username": username}
+        USER_PROFILE, {"username": username}
     )
 
     is_cityname = frappe.db.exists("City", {"name": username})
@@ -186,7 +188,7 @@ def check_username_availability(username):
 @frappe.whitelist(allow_guest=True)
 def check_if_profile_owner(username):
     profile_user = frappe.get_doc(
-        "FOSS User Profile", {"username": username}
+        USER_PROFILE, {"username": username}
     )
     return profile_user.user == frappe.session.user
 
@@ -197,7 +199,7 @@ def validate_profile_completion():
     Check if the user has completed their profile
     """
     return frappe.db.exists(
-        "FOSS User Profile",
+        USER_PROFILE,
         {"email": frappe.session.user},
     )
 
@@ -295,4 +297,4 @@ def get_foss_profile(email):
     if email in ["guest@example.com", "admin@example.com"]:
         return None
 
-    return frappe.get_doc("FOSS User Profile", {"user": email})
+    return frappe.get_doc(USER_PROFILE, {"user": email})

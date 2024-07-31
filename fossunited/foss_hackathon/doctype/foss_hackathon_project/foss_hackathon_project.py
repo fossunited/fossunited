@@ -1,9 +1,9 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
-
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import USER_PROFILE
 from fossunited.fossunited.utils import get_doc_likes
 
 
@@ -71,7 +71,7 @@ def get_team_members(team):
             "user_profile",
         )
         profile = frappe.db.get_value(
-            "FOSS User Profile",
+            USER_PROFILE,
             profile_id,
             ["route", "full_name", "username", "profile_photo"],
             as_dict=True,

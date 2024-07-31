@@ -1,8 +1,9 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
-
 import frappe
 from frappe.model.document import Document
+
+from fossunited.doctype_ids import USER_PROFILE
 
 
 class FOSSHackathonLocalHost(Document):
@@ -47,7 +48,7 @@ class FOSSHackathonLocalHost(Document):
             user = frappe.get_doc(
                 "User",
                 frappe.db.get_value(
-                    "FOSS User Profile", member.profile, "user"
+                    USER_PROFILE, member.profile, "user"
                 ),
             )
             user.add_roles("Localhost Organizer")
@@ -75,7 +76,7 @@ class FOSSHackathonLocalHost(Document):
         user = frappe.get_doc(
             "User",
             frappe.db.get_value(
-                "FOSS User Profile", old_member.profile, "user"
+                USER_PROFILE, old_member.profile, "user"
             ),
         )
         user.remove_roles("Localhost Organizer")

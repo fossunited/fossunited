@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.doctype_ids import USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -101,7 +102,7 @@ def get_session_user_profile():
     Returns some basic information about the user profile.
     """
     user = frappe.db.get_value(
-        "FOSS User Profile",
+        USER_PROFILE,
         {"user": frappe.session.user},
         [
             "full_name",

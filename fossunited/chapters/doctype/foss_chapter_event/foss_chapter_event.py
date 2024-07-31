@@ -6,6 +6,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import USER_PROFILE
 from fossunited.fossunited.utils import is_user_team_member
 
 BASE_DATE = datetime.now().replace(
@@ -182,7 +183,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         members = []
         for member in self.event_members:
             profile = frappe.get_doc(
-                "FOSS User Profile", member.member
+                USER_PROFILE, member.member
             ).as_dict()
             members.append(
                 {
@@ -208,7 +209,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         speakers = []
         for cfp in speaker_cfps:
             user = frappe.get_doc(
-                "FOSS User Profile", {"email": cfp.submitted_by}
+                USER_PROFILE, {"email": cfp.submitted_by}
             )
             speakers.append(
                 {
@@ -405,7 +406,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         for submission in submissions:
             if submission.status == "Approved":
                 user = frappe.get_doc(
-                    "FOSS User Profile",
+                    USER_PROFILE,
                     {"email": submission.submitted_by},
                 )
                 submission["user_route"] = user.route
@@ -440,9 +441,7 @@ def get_speakers(schedule):
     cfp = frappe.get_doc(
         "FOSS Event CFP Submission", schedule.linked_cfp
     )
-    user = frappe.get_doc(
-        "FOSS User Profile", {"email": cfp.submitted_by}
-    )
+    user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route
     schedule.speaker_full_name = user.full_name

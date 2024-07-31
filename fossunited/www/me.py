@@ -1,5 +1,7 @@
 import frappe
 
+from fossunited.doctype_ids import USER_PROFILE
+
 
 def get_context(context):
     if frappe.session.user == "Guest":
@@ -10,7 +12,7 @@ def get_context(context):
         frappe.local.flags.redirect_location = "/desk"
     else:
         redirect_route = frappe.db.get_value(
-            "FOSS User Profile",
+            USER_PROFILE,
             {"email": frappe.session.user},
             "route",
         )

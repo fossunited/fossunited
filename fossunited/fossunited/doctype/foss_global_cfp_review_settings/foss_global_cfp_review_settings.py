@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import USER_PROFILE
+
 
 class FOSSGlobalCFPReviewSettings(Document):
     def before_save(self):
@@ -17,7 +19,7 @@ class FOSSGlobalCFPReviewSettings(Document):
             user = frappe.get_doc(
                 "User",
                 frappe.db.get_value(
-                    "FOSS User Profile", member.profile, "user"
+                    USER_PROFILE, member.profile, "user"
                 ),
             )
             user.add_roles("CFP Reviewer")
@@ -32,7 +34,7 @@ class FOSSGlobalCFPReviewSettings(Document):
                 user = frappe.get_doc(
                     "User",
                     frappe.db.get_value(
-                        "FOSS User Profile",
+                        USER_PROFILE,
                         member.profile,
                         "user",
                     ),
