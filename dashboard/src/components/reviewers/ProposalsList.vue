@@ -60,14 +60,7 @@
         selectable: false,
         showTooltip: true,
         resizeColumn: true,
-        onRowClick: (row) => {
-          $router.push({
-            name: 'SubmissionPage',
-            params: {
-              talk_id: row.name,
-            },
-          })
-        },
+        onRowClick: (row) => (openSubmission(row)),
         emptyState: {
           title: 'No Submissions',
           description: 'No submissions found.',
@@ -76,7 +69,7 @@
     >
       <template #cell="{ item, row, column }">
         <div v-if="column.label == 'Status'">
-          <Badge :theme="item == 'Reviewed' ? 'green' : 'gray'" :label="item" />
+          <Badge :theme="item == 'Reviewed' ? 'blue' : 'gray'" :label="item" />
         </div>
         <div v-else-if="column.label == 'Review'">
           <Badge
@@ -109,6 +102,9 @@
 <script setup>
 import { defineProps, ref } from 'vue'
 import { createResource, ListView, Badge } from 'frappe-ui'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps({
   event: {
@@ -150,6 +146,16 @@ const toApproveFilter = [
     value: ['Maybe'],
   },
 ]
+
+const openSubmission = (row) => {
+  let routeData =  router.resolve({
+    name: 'SubmissionPage',
+    params: {
+      talk_id: row.name,
+    },
+  })
+  window.open(routeData.href, '_blank')
+}
 
 const selectedStatusFilter = ref(statusFilters[0].label)
 const selectedToApproveFilter = ref(toApproveFilter[0].label)
