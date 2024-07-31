@@ -53,7 +53,7 @@
         </div>
         <div class="flex flex-col gap-2">
           <div class="text-md font-semibold">Remarks</div>
-          <div>{{ reviewData.data.remarks }}</div>
+          <div>{{ reviewData.data.remarks || 'No remarks.'}}</div>
         </div>
         <Button label="Edit Review" @click="in_review_edit = true" class="w-fit" size="sm"/>
       </div>
