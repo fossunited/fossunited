@@ -118,6 +118,76 @@ def has_reviewer_role():
 
 
 @frappe.whitelist()
+def get_events_by_open_cfp() -> list:
+    """
+    Get all the upcoming events with open CFP
+
+    Returns:
+        list: List of events with open CFP
+    """
+    if not has_reviewer_role():
+        frappe.throw("Unauthorized Access")
+
+    cfps_to_review = []
+
+    events = frappe.db.get_list(
+        "FOSS Chapter Event",
+        filters={
+            "status": ["in", ["Approved", "Live"]],
+            "is_published": 1,
+            "event_start_date": [">=", frappe.utils.nowdate()],
+        },
+        fields=[
+            "name",
+            "event_name",
+            "event_start_date",
+            "event_end_date",
+            "chapter",
+        ],
+        page_length=20,
+        order_by="event_start_date",
+    )
+
+    for event in events:
+        cfp_exists = frappe.db.exists(
+            "FOSS Event CFP", {"event": event.name}
+        )
+        if not cfp_exists:
+            continue
+
+        cfp = frappe.db.get_value(
+            "FOSS Event CFP",
+            {"event": event.name},
+            ["name", "chapter"],
+            as_dict=1,
+        )
+        chapter = frappe.db.get_value(
+            "FOSS Chapter",
+            event.chapter,
+            ["name", "chapter_name", "chapter_type"],
+            as_dict=1,
+        )
+        submission_count = frappe.db.count(
+            "FOSS Event CFP Submission", {"linked_cfp": cfp.name}
+        )
+        cfps_to_review.append(
+            {
+                "event": event.name,
+                "event_name": event.event_name,
+                "start_date": event.event_start_date,
+                "end_date": event.event_end_date,
+                "cfp": cfp.name,
+                "submission_count": submission_count,
+                "chapter": chapter.name,
+                "chapter_name": chapter.chapter_name,
+                "chapter_type": chapter.chapter_type,
+            }
+        )
+
+    return cfps_to_review
+
+
+@frappe.whitelist()
 def has_cfp_review(
     submission_id: str, reviewer: str = frappe.session.user
 ) -> bool:
