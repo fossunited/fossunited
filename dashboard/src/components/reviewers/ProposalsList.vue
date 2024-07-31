@@ -2,35 +2,41 @@
   <div v-if="cfp_submissions.data">
     <div class="flex flex-col gap-2">
       <div class="text-base font-medium">Filters</div>
-      <div class="flex gap-4 mb-5">
-        <div class="flex gap-2 items-center">
-          <label class="text-sm">Status:</label>
-          <select
-            class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-            v-model="selectedStatusFilter"
-          >
-            <option
-              v-for="(filter, index) in statusFilters"
-              @click="filterByStatus(filter)"
+      <div class="flex justify-between">
+        <div class="flex gap-4 mb-5">
+          <div class="flex gap-2 items-center">
+            <label class="text-sm">Status:</label>
+            <select
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
+              v-model="selectedStatusFilter"
             >
-              {{ filter.label }}
-            </option>
-          </select>
-        </div>
-        <div v-if="selectedStatusFilter=='Reviewed'" class="flex gap-2 items-center">
-          <label class="text-sm">Review Filter:</label>
-          <select
-            class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-            v-model="selectedToApproveFilter"
-          >
-            <option
-              v-for="(filter, index) in toApproveFilter"
-              @click="filterByToApprove(filter)"
+              <option
+                v-for="(filter, index) in statusFilters"
+                @click="filterByStatus(filter)"
+              >
+                {{ filter.label }}
+              </option>
+            </select>
+          </div>
+          <div v-if="selectedStatusFilter=='Reviewed'" class="flex gap-2 items-center">
+            <label class="text-sm">Review Filter:</label>
+            <select
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
+              v-model="selectedToApproveFilter"
             >
-              {{ filter.label }}
-            </option>
-          </select>
+              <option
+                v-for="(filter, index) in toApproveFilter"
+                @click="filterByToApprove(filter)"
+              >
+                {{ filter.label }}
+              </option>
+            </select>
+          </div>
         </div>
+        <RefreshButton
+          @click="cfp_submissions.fetch"
+          :inSpin="cfp_submissions.loading"
+        />
       </div>
     </div>
     <ListView
@@ -103,6 +109,7 @@
 import { defineProps, ref } from 'vue'
 import { createResource, ListView, Badge } from 'frappe-ui'
 import { useRouter } from 'vue-router'
+import RefreshButton from '@/components/RefreshButton.vue'
 
 const router = useRouter()
 
