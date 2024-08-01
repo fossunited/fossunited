@@ -7,6 +7,7 @@ import frappe
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_LOCALHOST,
+    LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper

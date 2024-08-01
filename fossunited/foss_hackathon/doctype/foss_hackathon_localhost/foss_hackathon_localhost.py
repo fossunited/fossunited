@@ -3,7 +3,11 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import HACKATHON_LOCALHOST, USER_PROFILE
+from fossunited.doctype_ids import (
+    HACKATHON_LOCALHOST,
+    LOCALHOST_ORGANIZER,
+    USER_PROFILE,
+)
 
 
 class FOSSHackathonLocalHost(Document):
@@ -86,7 +90,7 @@ class FOSSHackathonLocalHost(Document):
             HACKATHON_LOCALHOST,
             [
                 [
-                    "FOSS Hackathon LocalHost Organizer",
+                    LOCALHOST_ORGANIZER,
                     "profile",
                     "=",
                     old_member.profile,
