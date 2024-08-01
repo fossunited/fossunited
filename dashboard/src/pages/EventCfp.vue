@@ -4,7 +4,7 @@
       <EventHeader
         class=""
         :event="event"
-        :form_exists="cfp_exists"
+        :form_exists="new Boolean(has_cfp.data)"
         :form="event_cfp"
       />
     </div>
@@ -28,66 +28,70 @@ const event = createDocumentResource({
   auto: true,
 })
 
-let tabs = reactive({
+const tabs = reactive({
   options: [
     {
       label: 'Overview',
       route: `/event/${route.params.id}/cfp`,
     },
-    {
-      label: 'Web Form',
-      route: `/event/${route.params.id}/cfp/create`,
-    },
   ],
 })
 
-const replaceCreateOption = () => {
-  tabs.options = tabs.options.filter((d) => d.label !== 'Web Form')
-
-    if (!tabs.options.find((d) => d.label === 'Web Form')){
-        tabs.options.push({
-            label: 'Web Form',
-            route: `/event/${route.params.id}/cfp/edit`
-        })
-    }
-
-    if (!tabs.options.find((d) => d.label === 'Insights')){
-        tabs.options.push({
-            label: 'Insights',
-            route: `/event/${route.params.id}/cfp/insights`
-        })
-    }
-}
-
-let cfp_exists = ref(false)
-let event_cfp = reactive({})
-
-watch(event, (newEvent) => {
-  event_cfp = createResource({
-    url: 'frappe.client.get',
-    params: {
+const has_cfp = createResource({
+  url: 'frappe.client.get_count',
+  makeParams() {
+    return {
       doctype: 'FOSS Event CFP',
       filters: {
-        event: newEvent.doc.name,
+        event: route.params.id,
       },
-    },
-    auto: true,
-    onError(error) {
-      if (error.response.status === 404) {
-        cfp_exists.value = false
-      }
-    },
-    onSuccess(response) {
-      cfp_exists.value = true
-    },
-  })
-  if (cfp_exists.value) {
-    replaceCreateOption()
-  }
+    }
+  },
+  auto: true,
+  onSuccess(data) {
+    resetTabs()
+    if (data > 0) {
+      event_cfp.fetch()
+      tabs.options.push(...[
+        {
+          label: 'Web Form',
+          route: `/event/${route.params.id}/cfp/edit`,
+        },
+        {
+          label: 'Insights',
+          route: `/event/${route.params.id}/cfp/insights`,
+        },
+      ])
+      return
+    }
+    tabs.options.push({
+      label: 'Web Form',
+      route: `/event/${route.params.id}/cfp/create`,
+    })
+  },
 })
 
+const event_cfp = createResource({
+  url: 'frappe.client.get',
+  params: {
+    doctype: 'FOSS Event CFP',
+    filters: {
+      event: route.params.id,
+    },
+  },
+})
+
+const resetTabs = () => {
+  tabs.options = [
+    {
+      label: 'Overview',
+      route: `/event/${route.params.id}/cfp`,
+    },
+  ]
+}
+
 const cfpCreated = () => {
-  replaceCreateOption()
-  router.replace(`/event/${route.params.id}/cfp/edit`)
+  has_cfp.fetch()
+  router.replace(`/event/${route.params.id}/cfp`)
 }
 </script>
