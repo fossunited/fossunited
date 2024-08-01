@@ -7,13 +7,19 @@ from fossunited.doctype_ids import USER_PROFILE
 
 
 @frappe.whitelist()
-def set_profile_image(file_url):
+def set_profile_image(file_url: str) -> bool:
     user_doc = get_session_user_profile()
     try:
         frappe.db.set_value(
             USER_PROFILE,
             user_doc.name,
             "profile_photo",
+            file_url,
+        )
+        frappe.db.set_value(
+            "User",
+            frappe.session.user,
+            "user_image",
             file_url,
         )
         return True
