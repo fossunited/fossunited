@@ -15,7 +15,7 @@
     </div>
     <div class="my-4">
       <router-link
-        to="/"
+        to="/chapter"
         class="p-2 flex font-medium gap-2 text-base rounded-sm text-gray-800 hover:underline hover:text-gray-900"
       >
         <FeatherIcon name="arrow-left" class="h-4" />
