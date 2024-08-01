@@ -40,14 +40,12 @@ class FOSSHackathonProject(WebsiteGenerator):
         self.set_route()
 
     def set_route(self):
-        hackathon = frappe.get_doc("FOSS Hackathon", self.hackathon)
+        hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         self.route = f"{hackathon.route}/p/{self.name}"
 
     def get_context(self, context):
         context.no_cache = 1
-        context.hackathon = frappe.get_doc(
-            "FOSS Hackathon", self.hackathon
-        )
+        context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         context.nav_items = [
             "description",
             "issue_pr",

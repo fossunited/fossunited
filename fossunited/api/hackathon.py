@@ -19,7 +19,7 @@ def get_hackathon(name: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc("FOSS Hackathon", name)
+    return frappe.get_doc(HACKATHON, name)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -33,7 +33,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc("FOSS Hackathon", {"permalink": permalink})
+    return frappe.get_doc(HACKATHON, {"permalink": permalink})
 
 
 @frappe.whitelist(allow_guest=True)
@@ -487,7 +487,7 @@ def is_valid_hackathon(hackathon_id: str):
     Returns:
         Boolean True or False
     """
-    return bool(frappe.db.exists("FOSS Hackathon", hackathon_id))
+    return bool(frappe.db.exists(HACKATHON, hackathon_id))
 
 
 @frappe.whitelist()

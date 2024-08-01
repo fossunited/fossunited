@@ -219,7 +219,7 @@ def get_grouped_events():
     )
 
     hackathons = frappe.get_all(
-        "FOSS Hackathon",
+        HACKATHON,
         fields=["*"],
         filters={
             "is_published": 1,
