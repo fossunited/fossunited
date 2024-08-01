@@ -8,6 +8,7 @@ from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
+    HACKATHON_PROJECT,
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
@@ -200,7 +201,7 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     project_doc = frappe.get_doc(
         {
-            "doctype": "FOSS Hackathon Project",
+            "doctype": HACKATHON_PROJECT,
             "hackathon": hackathon,
             "team": team,
             "title": project.get("title"),
@@ -234,7 +235,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
 
     try:
         return frappe.get_doc(
-            "FOSS Hackathon Project",
+            HACKATHON_PROJECT,
             {"hackathon": hackathon, "team": team},
         )
     except frappe.DoesNotExistError:
@@ -479,7 +480,7 @@ def delete_project(hackathon: str, team: str):
         frappe.db.set_value(
             "FOSS Hackathon Team", team, "project", None
         )
-        frappe.db.delete("FOSS Hackathon Project", project.name)
+        frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
     except Exception as e:
         frappe.throw("Error deleting project")
@@ -592,14 +593,14 @@ def add_pr_issue_to_project(project: str, details: dict) -> None:
         project (str): Project ID
         details (dict): PR/Issue details
     """
-    if not frappe.db.exists("FOSS Hackathon Project", project):
+    if not frappe.db.exists(HACKATHON_PROJECT, project):
         frappe.throw("Project does not exist")
 
     issue_pr = frappe.get_doc(
         {
             "doctype": "Hackathon Project Issue PR",
             "parent": project,
-            "parenttype": "FOSS Hackathon Project",
+            "parenttype": HACKATHON_PROJECT,
             "parentfield": "issue_pr_table",
             "title": details["title"],
             "link": details["link"],
@@ -618,7 +619,7 @@ def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
         project (str): Project ID
         issue_pr (str): Issue/PR ID
     """
-    if not frappe.db.exists("FOSS Hackathon Project", project):
+    if not frappe.db.exists(HACKATHON_PROJECT, project):
         frappe.throw("Project does not exist")
 
     if not frappe.db.exists("Hackathon Project Issue PR", issue_pr):
