@@ -2,8 +2,8 @@
   <div v-if="events.data" class="p-4">
     <div class="prose">
       <div class="prose pb-0">
-        <h2 class="mb-1">My LocalHosts</h2>
-        <p class="text-sm mb-4">Keep a track of localhosts you organize.</p>
+        <h2 class="mb-1">Review Talks</h2>
+        <p class="text-sm mb-4">List of all upcoming events with proposal forms.</p>
       </div>
     </div>
     <div
