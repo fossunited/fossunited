@@ -4,7 +4,11 @@ APIs used for Hackathon based operations
 
 import frappe
 
-from fossunited.doctype_ids import HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_LOCALHOST,
+    USER_PROFILE,
+)
 from fossunited.integrations.github import GithubHelper
 
 
@@ -404,7 +408,7 @@ def get_session_user_localhosts():
     )
 
     localhosts = frappe.db.get_all(
-        "FOSS Hackathon LocalHost",
+        HACKATHON_LOCALHOST,
         filters=[
             [
                 "FOSS Hackathon LocalHost Organizer",
@@ -499,9 +503,7 @@ def is_valid_localhost(localhost_id: str):
         Boolean True or False
     """
 
-    return bool(
-        frappe.db.exists("FOSS Hackathon LocalHost", localhost_id)
-    )
+    return bool(frappe.db.exists(HACKATHON_LOCALHOST, localhost_id))
 
 
 @frappe.whitelist()

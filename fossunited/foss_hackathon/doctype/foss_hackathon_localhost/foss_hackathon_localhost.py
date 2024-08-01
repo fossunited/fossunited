@@ -3,7 +3,7 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import HACKATHON_LOCALHOST, USER_PROFILE
 
 
 class FOSSHackathonLocalHost(Document):
@@ -83,7 +83,7 @@ class FOSSHackathonLocalHost(Document):
 
     def other_localhost_member(self, old_member):
         is_member = frappe.db.exists(
-            "FOSS Hackathon LocalHost",
+            HACKATHON_LOCALHOST,
             [
                 [
                     "FOSS Hackathon LocalHost Organizer",
