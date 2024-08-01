@@ -213,7 +213,7 @@ const breadcrumb_items = computed(() => {
   return [
     {
       label: 'CFP Review',
-      route: '/',
+      route: '/review',
     },
     {
       label: submission.data.event_name,
