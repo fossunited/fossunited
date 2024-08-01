@@ -28,7 +28,7 @@ const sidebarMenuItems = [
     items: [
       {
         icon: 'arrow-left',
-        label: 'Go to Dashboard',
+        label: 'Go Home',
         route: '/chapter'
       }
     ]
