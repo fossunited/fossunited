@@ -4,7 +4,10 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import JOIN_TEAM_REQUEST
+from fossunited.doctype_ids import (
+    HACKATHON_PARTICIPANT,
+    JOIN_TEAM_REQUEST,
+)
 
 
 class FOSSHackathonJoinTeamRequest(Document):
@@ -38,7 +41,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         # get participant doc
         try:
             participant_doc = frappe.get_doc(
-                "FOSS Hackathon Participant",
+                HACKATHON_PARTICIPANT,
                 {
                     "email": self.reciever_email,
                     "hackathon": self.hackathon,

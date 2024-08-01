@@ -3,7 +3,11 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_PARTICIPANT,
+    USER_PROFILE,
+)
 from fossunited.fossunited.utils import get_doc_likes
 
 
@@ -64,7 +68,7 @@ def get_team_members(team):
     member_details = []
     for member in team.members:
         profile_id = frappe.db.get_value(
-            "FOSS Hackathon Participant",
+            HACKATHON_PARTICIPANT,
             member.member,
             "user_profile",
         )

@@ -7,6 +7,7 @@ import frappe
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_LOCALHOST,
+    HACKATHON_PARTICIPANT,
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
@@ -56,7 +57,7 @@ def create_participant(hackathon, participant):
 
     participant_doc = frappe.get_doc(
         {
-            "doctype": "FOSS Hackathon Participant",
+            "doctype": HACKATHON_PARTICIPANT,
             "hackathon": hackathon.get("data").get("name"),
             "user": participant.get("user"),
             "user_profile": participant.get("user_profile"),
@@ -89,7 +90,7 @@ def get_participant(hackathon: str, user: str) -> dict:
         dict: Participant document as a dictionary
     """
     return frappe.get_doc(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": user},
     )
 
@@ -280,7 +281,7 @@ def get_localhost_requests_by_team(
     """
 
     requests = frappe.get_all(
-        doctype="FOSS Hackathon Participant",
+        doctype=HACKATHON_PARTICIPANT,
         filters={
             "hackathon": hackathon,
             "localhost": localhost,
@@ -381,7 +382,7 @@ def get_session_user_hackathons():
         list: List of hackathons
     """
     participant_docs = frappe.db.get_all(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         filters={"user": frappe.session.user},
         fields=["hackathon"],
         page_length=9999,
@@ -437,7 +438,7 @@ def get_session_participant(hackathon: str) -> dict:
         dict: Participant document as a dictionary
     """
     participant = frappe.db.get_value(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": frappe.session.user},
         [
             "name",
@@ -513,13 +514,11 @@ def validate_participant_for_localhost(participant_id: str):
     Validates if the participant is valid and exists in the db.
     Also, validates that the participant is valid to make request for localhost.
     """
-    if not frappe.db.exists(
-        "FOSS Hackathon Participant", participant_id
-    ):
+    if not frappe.db.exists(HACKATHON_PARTICIPANT, participant_id):
         frappe.throw("Participant does not exist")
 
     participant = frappe.db.get(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         participant_id,
         [
             "user",
