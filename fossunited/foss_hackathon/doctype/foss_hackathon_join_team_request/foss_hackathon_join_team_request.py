@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import JOIN_TEAM_REQUEST
+
 
 class FOSSHackathonJoinTeamRequest(Document):
     # begin: auto-generated types
@@ -52,7 +54,7 @@ class FOSSHackathonJoinTeamRequest(Document):
 
     def reject_other_requests(self):
         requests = frappe.get_all(
-            "FOSS Hackathon Join Team Request",
+            JOIN_TEAM_REQUEST,
             filters={
                 "team": self.team,
                 "status": "Pending",
@@ -61,7 +63,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         )
         for request in requests:
             request_doc = frappe.get_doc(
-                "FOSS Hackathon Join Team Request", request.name
+                JOIN_TEAM_REQUEST, request.name
             )
             request_doc.status = "Rejected"
             request_doc.save()
