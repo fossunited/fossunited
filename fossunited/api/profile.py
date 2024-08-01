@@ -91,7 +91,17 @@ def update_profile(fields_dict):
 
 
 @frappe.whitelist()
-def is_unique_username(username, id):
+def is_unique_username(username: str, id: str) -> bool:
+    """
+    Check if the username is unique
+
+    Args:
+        username: Username to check
+        id: ID of the user profile
+
+    Returns:
+        bool: True if username is unique
+    """
     if (
         frappe.db.exists("FOSS Event Chapter", {"route": username})
         or frappe.db.exists(
@@ -99,7 +109,11 @@ def is_unique_username(username, id):
             {"route": username, "name": ["!=", id]},
         )
         or frappe.db.exists(
-            "User", {"username": username, "name": ["!=", id]}
+            "User",
+            {
+                "username": username,
+                "name": ["!=", frappe.session.user],
+            },
         )
     ):
         return False
