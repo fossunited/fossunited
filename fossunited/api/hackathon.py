@@ -4,7 +4,7 @@ APIs used for Hackathon based operations
 
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import HACKATHON, USER_PROFILE
 from fossunited.integrations.github import GithubHelper
 
 

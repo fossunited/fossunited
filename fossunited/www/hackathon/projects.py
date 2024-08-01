@@ -1,5 +1,7 @@
 import frappe
 
+from fossunited.doctype_ids import HACKATHON
+
 
 def get_context(context):
     context.hackathon = frappe.get_doc(

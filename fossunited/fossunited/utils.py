@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.utils.data import now_datetime
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import HACKATHON, USER_PROFILE
 
 
 # Jinja Filter
