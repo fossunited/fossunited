@@ -7,6 +7,7 @@ from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTICIPANT,
     HACKATHON_PROJECT,
+    HACKATHON_TEAM,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_doc_likes
@@ -57,9 +58,7 @@ class FOSSHackathonProject(WebsiteGenerator):
             "team_members",
         ]
 
-        context.team = frappe.get_doc(
-            "FOSS Hackathon Team", self.team
-        )
+        context.team = frappe.get_doc(HACAKTHON_TEAM, self.team)
         context.team_members = get_team_members(context.team)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes

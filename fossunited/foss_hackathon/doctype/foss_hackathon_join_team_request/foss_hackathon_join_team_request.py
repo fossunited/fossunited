@@ -6,6 +6,7 @@ from frappe.model.document import Document
 
 from fossunited.doctype_ids import (
     HACKATHON_PARTICIPANT,
+    HACKATHON_TEAM,
     JOIN_TEAM_REQUEST,
 )
 
@@ -51,7 +52,7 @@ class FOSSHackathonJoinTeamRequest(Document):
             frappe.throw("Participant not found")
             return
 
-        team_doc = frappe.get_doc("FOSS Hackathon Team", self.team)
+        team_doc = frappe.get_doc(HACAKTHON_TEAM, self.team)
         team_doc.append("members", {"member": participant_doc.name})
         team_doc.save()
 
