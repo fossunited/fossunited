@@ -24,6 +24,16 @@ Repo for the website and open-source platform of FOSS United. The whole platform
 
 Checkout [Access site in your browser](https://frappeframework.com/docs/user/en/tutorial/create-a-site#access-site-in-your-browser) for adding hosts.
 
+### Steps to install and run the [FOSS United Dashboard](https://fossunited.org/dashboard)
+
+The FOSS United Dashboard is a centralised admin UI for all the users signed up on fossunited.org. The Dashboard provides volunteers with the feature to manage all of the activities happening in their FOSS Club or City Chapter. Here are the steps to install and get the dashboard going:
+
+- The code for dashboard is located under `fossunited/dashboard`.
+- Install and Build the dashboard with `yarn install`.
+- Run the dashboard in the root directory of the project with `yarn dev`.
+- Dashboard will now be accessible on `<sitename>:8080`.
+
+
 ## Pre-commit
 
 For automatic running of linters before you commit:
