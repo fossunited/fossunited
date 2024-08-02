@@ -10,6 +10,7 @@ from fossunited.doctype_ids import (
     HACKATHON_PARTICIPANT,
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
@@ -141,7 +142,7 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
             HACAKTHON_TEAM,
             [
                 [
-                    "FOSS Hackathon Team Member",
+                    HACKATHON_TEAM_MEMBER,
                     "member",
                     "=",
                     participant.get("name"),
@@ -172,7 +173,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
             HACAKTHON_TEAM,
             [
                 [
-                    "FOSS Hackathon Team Member",
+                    HACKATHON_TEAM_MEMBER,
                     "member",
                     "=",
                     id,
