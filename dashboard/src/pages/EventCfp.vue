@@ -4,12 +4,12 @@
       <EventHeader
         class=""
         :event="event"
-        :form_exists="new Boolean(has_cfp.data)"
-        :form="event_cfp"
+        :form_exists="Boolean(hasCfp.data)"
+        :form="eventCfp"
       />
     </div>
     <TabsWithRoute :tabs="tabs.options" />
-    <RouterView @cfp-created="cfpCreated" :event_cfp="event_cfp" />
+    <RouterView @cfp-created="cfpCreated" :eventCfp="eventCfp" />
   </div>
 </template>
 <script setup>
@@ -37,7 +37,7 @@ const tabs = reactive({
   ],
 })
 
-const has_cfp = createResource({
+const hasCfp = createResource({
   url: 'frappe.client.get_count',
   makeParams() {
     return {
@@ -51,7 +51,7 @@ const has_cfp = createResource({
   onSuccess(data) {
     resetTabs()
     if (data > 0) {
-      event_cfp.fetch()
+      eventCfp.fetch()
       tabs.options.push(...[
         {
           label: 'Web Form',
@@ -71,7 +71,7 @@ const has_cfp = createResource({
   },
 })
 
-const event_cfp = createResource({
+const eventCfp = createResource({
   url: 'frappe.client.get',
   params: {
     doctype: 'FOSS Event CFP',
@@ -91,7 +91,7 @@ const resetTabs = () => {
 }
 
 const cfpCreated = () => {
-  has_cfp.fetch()
+  hasCfp.fetch()
   router.replace(`/event/${route.params.id}/cfp`)
 }
 </script>
