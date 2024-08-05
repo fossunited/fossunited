@@ -2267,9 +2267,33 @@ h6{
 
 /* HACKATHON */
 
+.hackathon-name--header{
+    display: flex;
+}
+
+.search-box{
+    padding-top: 1rem;
+    margin-bottom: 0;
+    width: 50%;
+}
+
+.search-box input{
+
+    width: 100%;
+    border: none;
+}
+
+.search-box input::placeholder{
+    color: hsl(var(--clr-gray-500));
+}
+
+.search-box input:focus{
+    outline: none;
+}
+
 .projects-grid{
     display: grid;
-    grid-template-columns: repeat(3, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, minmax(200px, 1fr));
     gap: 1rem;
     margin: 1rem 0;
 }
@@ -2503,9 +2527,17 @@ h6{
         display: none;
     }
 
+    .hackathon-name--header{
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    .search-box{
+        margin-bottom: 1rem;
+        width: 100%;
+    }
     .projects-grid{
         display: grid;
-        grid-template-columns: repeat(1, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, minmax(300px, 1fr));
         gap: 1rem;
     }
     /* ------  */
@@ -2713,7 +2745,7 @@ h6{
     /* HACKATHON */
     .projects-grid{
         display: grid;
-        grid-template-columns: repeat(2, minmax(300px, 1fr));
+        grid-template-columns: repeat(2, minmax(200px, 1fr));
         gap: 1rem;
     }
 
@@ -2843,7 +2875,7 @@ h6{
 
     .projects-grid{
         display: grid;
-        grid-template-columns: repeat(1, minmax(300px, 1fr));
+        grid-template-columns: repeat(1, minmax(200px, 1fr));
         gap: 1rem;
     }
 
