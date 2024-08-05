@@ -49,7 +49,7 @@ def get_event_cfp_submissions(event: str) -> list:
 
     submissions = frappe.db.get_list(
         "FOSS Event CFP Submission",
-        filters={"event": event},
+        filters={"event": event, "status": "Review Pending"},
         fields=fields,
         order_by="creation desc",
     )

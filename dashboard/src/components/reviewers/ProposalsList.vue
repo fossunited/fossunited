@@ -1,5 +1,5 @@
 <template>
-  <div v-if="cfp_submissions.data">
+  <div v-if="cfpSubmissions.data">
     <div class="flex flex-col gap-2">
       <div class="text-base font-medium">Filters</div>
       <div class="flex justify-between">
@@ -34,8 +34,8 @@
           </div>
         </div>
         <RefreshButton
-          @click="cfp_submissions.fetch"
-          :inSpin="cfp_submissions.loading"
+          @click="cfpSubmissions.fetch"
+          :inSpin="cfpSubmissions.loading"
         />
       </div>
     </div>
@@ -60,7 +60,7 @@
           key: 'reviewer_remarks',
         },
       ]"
-      :rows="cfp_submissions.data"
+      :rows="cfpSubmissions.data"
       row-key="name"
       :options="{
         selectable: false,
@@ -167,7 +167,7 @@ const openSubmission = (row) => {
 const selectedStatusFilter = ref(statusFilters[0].label)
 const selectedToApproveFilter = ref(toApproveFilter[0].label)
 
-const cfp_submissions = createResource({
+const cfpSubmissions = createResource({
   url: 'fossunited.api.reviewer.get_cfp_submissions_by_reviewer_status',
   params: {
     event: props.event,
@@ -177,23 +177,23 @@ const cfp_submissions = createResource({
 
 const filterByStatus = (filter) => {
   selectedToApproveFilter.value = toApproveFilter[0].label
-  cfp_submissions.update({
+  cfpSubmissions.update({
     params: {
       event: props.event,
       status_filter: filter.value,
     }
   })
-  cfp_submissions.fetch()
+  cfpSubmissions.fetch()
 }
 
 const filterByToApprove = (filter) => {
-  cfp_submissions.update({
+  cfpSubmissions.update({
     params: {
       event: props.event,
       status_filter: ['Reviewed'],
       to_approve_filter: filter.value,
     }
   })
-  cfp_submissions.fetch()
+  cfpSubmissions.fetch()
 }
 </script>
