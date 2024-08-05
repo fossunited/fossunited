@@ -35,7 +35,7 @@
       <input
         type="text"
         id="searchInput"
-        placeholder="Search by project"
+        placeholder="Search by project or team name"
       />
     </div>
   </div>
@@ -67,8 +67,9 @@
       const projectName = card
         .querySelector(".project-card--title")
         .innerText.toLowerCase();
-      if (projectName.includes(searchTerm)) {
-        card.style.display = "block";
+      const teamName = card.querySelector(".project-card--team").innerText.toLowerCase();
+      if (projectName.includes(searchTerm) || teamName.includes(searchTerm)) {
+        card.style.display = "flex";
       } else {
         card.style.display = "none";
       }
