@@ -4,6 +4,12 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import (
+    HACKATHON_PARTICIPANT,
+    HACKATHON_TEAM,
+    JOIN_TEAM_REQUEST,
+)
+
 
 class FOSSHackathonJoinTeamRequest(Document):
     # begin: auto-generated types
@@ -36,7 +42,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         # get participant doc
         try:
             participant_doc = frappe.get_doc(
-                "FOSS Hackathon Participant",
+                HACKATHON_PARTICIPANT,
                 {
                     "email": self.reciever_email,
                     "hackathon": self.hackathon,
@@ -46,13 +52,13 @@ class FOSSHackathonJoinTeamRequest(Document):
             frappe.throw("Participant not found")
             return
 
-        team_doc = frappe.get_doc("FOSS Hackathon Team", self.team)
+        team_doc = frappe.get_doc(HACAKTHON_TEAM, self.team)
         team_doc.append("members", {"member": participant_doc.name})
         team_doc.save()
 
     def reject_other_requests(self):
         requests = frappe.get_all(
-            "FOSS Hackathon Join Team Request",
+            JOIN_TEAM_REQUEST,
             filters={
                 "team": self.team,
                 "status": "Pending",
@@ -61,7 +67,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         )
         for request in requests:
             request_doc = frappe.get_doc(
-                "FOSS Hackathon Join Team Request", request.name
+                JOIN_TEAM_REQUEST, request.name
             )
             request_doc.status = "Rejected"
             request_doc.save()

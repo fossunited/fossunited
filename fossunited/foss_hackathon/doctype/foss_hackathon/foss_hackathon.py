@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import HACKATHON_PROJECT, USER_PROFILE
 
 no_cache = 1
 
@@ -93,7 +93,7 @@ class FOSSHackathon(WebsiteGenerator):
 
         context.schedule_dict = self.get_schedule_dict()
         context.recent_projects = frappe.get_all(
-            "FOSS Hackathon Project",
+            HACKATHON_PROJECT,
             filters={"hackathon": self.name},
             fields=["*"],
         )

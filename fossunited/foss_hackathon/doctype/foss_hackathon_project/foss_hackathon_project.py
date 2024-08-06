@@ -3,7 +3,13 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_PARTICIPANT,
+    HACKATHON_PROJECT,
+    HACKATHON_TEAM,
+    USER_PROFILE,
+)
 from fossunited.fossunited.utils import get_doc_likes
 
 
@@ -40,23 +46,19 @@ class FOSSHackathonProject(WebsiteGenerator):
         self.set_route()
 
     def set_route(self):
-        hackathon = frappe.get_doc("FOSS Hackathon", self.hackathon)
+        hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         self.route = f"{hackathon.route}/p/{self.name}"
 
     def get_context(self, context):
         context.no_cache = 1
-        context.hackathon = frappe.get_doc(
-            "FOSS Hackathon", self.hackathon
-        )
+        context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         context.nav_items = [
             "description",
             "issue_pr",
             "team_members",
         ]
 
-        context.team = frappe.get_doc(
-            "FOSS Hackathon Team", self.team
-        )
+        context.team = frappe.get_doc(HACAKTHON_TEAM, self.team)
         context.team_members = get_team_members(context.team)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
@@ -66,7 +68,7 @@ def get_team_members(team):
     member_details = []
     for member in team.members:
         profile_id = frappe.db.get_value(
-            "FOSS Hackathon Participant",
+            HACKATHON_PARTICIPANT,
             member.member,
             "user_profile",
         )

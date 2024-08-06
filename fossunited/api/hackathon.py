@@ -4,7 +4,16 @@ APIs used for Hackathon based operations
 
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_LOCALHOST,
+    HACKATHON_PARTICIPANT,
+    HACKATHON_PROJECT,
+    HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
+    LOCALHOST_ORGANIZER,
+    USER_PROFILE,
+)
 from fossunited.integrations.github import GithubHelper
 
 
@@ -19,7 +28,7 @@ def get_hackathon(name: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc("FOSS Hackathon", name)
+    return frappe.get_doc(HACKATHON, name)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -33,7 +42,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     Returns:
         dict: Hackathon document as a dictionary
     """
-    return frappe.get_doc("FOSS Hackathon", {"permalink": permalink})
+    return frappe.get_doc(HACKATHON, {"permalink": permalink})
 
 
 @frappe.whitelist(allow_guest=True)
@@ -51,7 +60,7 @@ def create_participant(hackathon, participant):
 
     participant_doc = frappe.get_doc(
         {
-            "doctype": "FOSS Hackathon Participant",
+            "doctype": HACKATHON_PARTICIPANT,
             "hackathon": hackathon.get("data").get("name"),
             "user": participant.get("user"),
             "user_profile": participant.get("user_profile"),
@@ -84,7 +93,7 @@ def get_participant(hackathon: str, user: str) -> dict:
         dict: Participant document as a dictionary
     """
     return frappe.get_doc(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": user},
     )
 
@@ -103,7 +112,7 @@ def create_team(hackathon: str, team: dict) -> dict:
     """
     team_doc = frappe.get_doc(
         {
-            "doctype": "FOSS Hackathon Team",
+            "doctype": HACAKTHON_TEAM,
             "team_name": team.get("team_name"),
             "hackathon": hackathon,
             "team_lead": team.get("team_lead"),
@@ -130,10 +139,10 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
 
     try:
         team = frappe.get_doc(
-            "FOSS Hackathon Team",
+            HACAKTHON_TEAM,
             [
                 [
-                    "FOSS Hackathon Team Member",
+                    HACKATHON_TEAM_MEMBER,
                     "member",
                     "=",
                     participant.get("name"),
@@ -161,10 +170,10 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
     """
     try:
         team = frappe.get_doc(
-            "FOSS Hackathon Team",
+            HACAKTHON_TEAM,
             [
                 [
-                    "FOSS Hackathon Team Member",
+                    HACKATHON_TEAM_MEMBER,
                     "member",
                     "=",
                     id,
@@ -194,7 +203,7 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     project_doc = frappe.get_doc(
         {
-            "doctype": "FOSS Hackathon Project",
+            "doctype": HACKATHON_PROJECT,
             "hackathon": hackathon,
             "team": team,
             "title": project.get("title"),
@@ -228,7 +237,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
 
     try:
         return frappe.get_doc(
-            "FOSS Hackathon Project",
+            HACKATHON_PROJECT,
             {"hackathon": hackathon, "team": team},
         )
     except frappe.DoesNotExistError:
@@ -275,7 +284,7 @@ def get_localhost_requests_by_team(
     """
 
     requests = frappe.get_all(
-        doctype="FOSS Hackathon Participant",
+        doctype=HACKATHON_PARTICIPANT,
         filters={
             "hackathon": hackathon,
             "localhost": localhost,
@@ -352,7 +361,7 @@ def join_team_via_code(team_code: str, user: str):
         dict: Team document as a dictionary
     """
     try:
-        team = frappe.get_doc("FOSS Hackathon Team", team_code)
+        team = frappe.get_doc(HACAKTHON_TEAM, team_code)
     except frappe.exceptions.DoesNotExistError:
         frappe.throw("Team not found")
         return "Invalid Code. Team with this code does not exist."
@@ -376,7 +385,7 @@ def get_session_user_hackathons():
         list: List of hackathons
     """
     participant_docs = frappe.db.get_all(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         filters={"user": frappe.session.user},
         fields=["hackathon"],
         page_length=9999,
@@ -404,7 +413,7 @@ def get_session_user_localhosts():
     )
 
     localhosts = frappe.db.get_all(
-        "FOSS Hackathon LocalHost",
+        HACKATHON_LOCALHOST,
         filters=[
             [
                 "FOSS Hackathon LocalHost Organizer",
@@ -432,7 +441,7 @@ def get_session_participant(hackathon: str) -> dict:
         dict: Participant document as a dictionary
     """
     participant = frappe.db.get_value(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         {"hackathon": hackathon, "user": frappe.session.user},
         [
             "name",
@@ -461,7 +470,7 @@ def delete_project(hackathon: str, team: str):
         hackathon (str): Hackathon ID
         team (str): Team ID
     """
-    team_doc = frappe.get_doc("FOSS Hackathon Team", team)
+    team_doc = frappe.get_doc(HACAKTHON_TEAM, team)
     if frappe.session.user not in [
         member.email for member in team_doc.members
     ]:
@@ -470,10 +479,8 @@ def delete_project(hackathon: str, team: str):
     project = get_project_by_team(hackathon, team)
 
     try:
-        frappe.db.set_value(
-            "FOSS Hackathon Team", team, "project", None
-        )
-        frappe.db.delete("FOSS Hackathon Project", project.name)
+        frappe.db.set_value(HACAKTHON_TEAM, team, "project", None)
+        frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
     except Exception as e:
         frappe.throw("Error deleting project")
@@ -487,7 +494,7 @@ def is_valid_hackathon(hackathon_id: str):
     Returns:
         Boolean True or False
     """
-    return bool(frappe.db.exists("FOSS Hackathon", hackathon_id))
+    return bool(frappe.db.exists(HACKATHON, hackathon_id))
 
 
 @frappe.whitelist()
@@ -499,9 +506,7 @@ def is_valid_localhost(localhost_id: str):
         Boolean True or False
     """
 
-    return bool(
-        frappe.db.exists("FOSS Hackathon LocalHost", localhost_id)
-    )
+    return bool(frappe.db.exists(HACKATHON_LOCALHOST, localhost_id))
 
 
 @frappe.whitelist()
@@ -510,13 +515,11 @@ def validate_participant_for_localhost(participant_id: str):
     Validates if the participant is valid and exists in the db.
     Also, validates that the participant is valid to make request for localhost.
     """
-    if not frappe.db.exists(
-        "FOSS Hackathon Participant", participant_id
-    ):
+    if not frappe.db.exists(HACKATHON_PARTICIPANT, participant_id):
         frappe.throw("Participant does not exist")
 
     participant = frappe.db.get(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         participant_id,
         [
             "user",
@@ -590,14 +593,14 @@ def add_pr_issue_to_project(project: str, details: dict) -> None:
         project (str): Project ID
         details (dict): PR/Issue details
     """
-    if not frappe.db.exists("FOSS Hackathon Project", project):
+    if not frappe.db.exists(HACKATHON_PROJECT, project):
         frappe.throw("Project does not exist")
 
     issue_pr = frappe.get_doc(
         {
             "doctype": "Hackathon Project Issue PR",
             "parent": project,
-            "parenttype": "FOSS Hackathon Project",
+            "parenttype": HACKATHON_PROJECT,
             "parentfield": "issue_pr_table",
             "title": details["title"],
             "link": details["link"],
@@ -616,7 +619,7 @@ def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
         project (str): Project ID
         issue_pr (str): Issue/PR ID
     """
-    if not frappe.db.exists("FOSS Hackathon Project", project):
+    if not frappe.db.exists(HACKATHON_PROJECT, project):
         frappe.throw("Project does not exist")
 
     if not frappe.db.exists("Hackathon Project Issue PR", issue_pr):
