@@ -3,6 +3,8 @@ import frappe
 
 @frappe.whitelist(allow_guest=True)
 def get_sidebar_items():
+    is_reviewer = user_is_cfp_reviewer()
+
     sidebar_items = [
         {
             "parent_label": "Profile",
@@ -45,6 +47,19 @@ def get_sidebar_items():
             }
         )
 
+    if is_reviewer:
+        sidebar_items.append(
+            {
+                "parent_label": "CFP Reviewer",
+                "items": [
+                    {
+                        "label": "Review Proposals",
+                        "route": "/review",
+                    },
+                ],
+            }
+        )
+
     return sidebar_items
 
 
@@ -62,5 +77,14 @@ def user_is_localhost_organizer(user: str = frappe.session.user):
         frappe.db.exists(
             "Has Role",
             {"role": "Localhost Organizer", "parent": user},
+        )
+    )
+
+
+def user_is_cfp_reviewer(user: str = frappe.session.user):
+    return bool(
+        frappe.db.exists(
+            "Has Role",
+            {"role": "CFP Reviewer", "parent": user},
         )
     )

@@ -29,6 +29,11 @@ const routes = [
         name: 'MyChapters',
         component: () => import('@/pages/MyChapters.vue'),
       },
+      {
+        path: '/review',
+        name: 'MyReviews',
+        component: () => import('@/pages/reviewers/MyReviews.vue'),
+      },
     ]
   },
   {
@@ -58,6 +63,21 @@ const routes = [
         props: true,
       },
     ],
+  },
+  {
+    path: '/review/:id',
+    children: [
+      {
+        path: '',
+        name: 'ReviewPage',
+        component: () => import('@/pages/reviewers/ReviewPage.vue'),
+      },
+      {
+        path: 'talk/:talk_id',
+        name: 'SubmissionPage',
+        component: () => import('@/pages/reviewers/SubmissionPage.vue'),
+      }
+    ]
   },
   {
     name: 'Event',
