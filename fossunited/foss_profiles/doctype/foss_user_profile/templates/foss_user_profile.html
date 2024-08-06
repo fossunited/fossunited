@@ -351,12 +351,12 @@
             // wrap header-profile-image with a div with classes d-flex and justify-content-between and append edit-profile-button to it
             $('.header-profile-image').wrap(`<div class="d-flex justify-content-between"></div>`);
             $('.header-profile-image').parent().append(`
-            <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+            <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href='/dashboard/me'">Edit Profile</button>
             `);
         }
         else{
             $('.header-content-edit-section').append(`
-                <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href= window.location + '/edit-profile'">Edit Profile</button>
+                <button class="edit-profile-button" style="height: fit-content;" onClick="window.location.href='/dashboard/me'">Edit Profile</button>
             `);
         }
     }

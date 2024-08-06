@@ -332,9 +332,6 @@ const usernameErrors = () => {
   const messages = [
     'Username must be at least 3 characters long.',
     'Username can only contain letters, numbers, underscores and dots.',
-    'Username is available.',
-    'Username is not available.',
-    'Start typing to check availability.',
   ]
   if (!profile_dict.username) {
     _errors.push('Username is required')
@@ -355,7 +352,7 @@ const isUniqueUsername = createResource({
   makeParams() {
     return {
       username: profile_dict.username,
-      id: profile.data.user,
+      id: profile.data.name,
     }
   },
 })
@@ -393,11 +390,12 @@ const handleUpdateProfile = () => {
     usernameValidateErrors.value = ''
   }
 
-  isUniqueUsername.fetch()
-  if (!isUniqueUsername.data) {
-    usernameValidateErrors.value = 'Username is not available.'
-    return
-  }
+  isUniqueUsername.fetch().then(() => {
+    if (!isUniqueUsername.data) {
+      usernameValidateErrors.value = 'Username is not available.'
+      return
+    }
+  })
 
   updateProfile.fetch()
 }
