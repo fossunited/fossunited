@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.doctype_ids import EVENT_CFP
 from fossunited.fossunited.utils import filter_field_values
 
 
@@ -8,7 +9,7 @@ def get_context(context):
         "FOSS Event CFP Submission", frappe.form_dict["submission"]
     )
     context.cfp = frappe.get_doc(
-        "FOSS Event CFP", context.submission.linked_cfp
+        EVENT_CFP, context.submission.linked_cfp
     )
     context.event = frappe.get_doc(
         "FOSS Chapter Event", context.submission.event
@@ -43,7 +44,7 @@ def get_form_fields(doctype, submission):
             {k: v for k, v in field.items() if filter_field_values(k)}
         )
 
-    cfp_doc = frappe.get_doc("FOSS Event CFP", submission.linked_cfp)
+    cfp_doc = frappe.get_doc(EVENT_CFP, submission.linked_cfp)
     for question in submission.custom_answers:
         form_fields.append(
             {

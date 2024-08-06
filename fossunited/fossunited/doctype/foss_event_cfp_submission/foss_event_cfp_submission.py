@@ -3,7 +3,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT_CFP, USER_PROFILE
 from fossunited.fossunited.utils import (
     get_doc_likes,
     get_event_volunteers,
@@ -89,13 +89,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             )
 
     def validate_linked_cfp_exists(self):
-        if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
+        if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
-        context.cfp = frappe.get_doc(
-            "FOSS Event CFP", self.linked_cfp
-        )
+        context.cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
         context.event = frappe.get_doc(
             "FOSS Chapter Event", self.event
         )

@@ -6,7 +6,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT_CFP, USER_PROFILE
 from fossunited.fossunited.utils import is_user_team_member
 
 BASE_DATE = datetime.now().replace(
@@ -298,13 +298,11 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_cfp_status_block(self):
         cfp_status_block = {}
-        cfp_status_block["doctype"] = "FOSS Event CFP"
+        cfp_status_block["doctype"] = EVENT_CFP
         cfp_status_block["block_for"] = "cfp"
 
-        if frappe.db.exists("FOSS Event CFP", {"event": self.name}):
-            cfp_form = frappe.get_doc(
-                "FOSS Event CFP", {"event": self.name}
-            )
+        if frappe.db.exists(EVENT_CFP, {"event": self.name}):
+            cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
             cfp_status_block |= {
                 "form_route": cfp_form.route,
                 "has_doc": True,
