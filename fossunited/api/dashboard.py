@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import STATE, USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -15,7 +15,7 @@ def get_event(name: str) -> dict:
 @frappe.whitelist(allow_guest=True)
 def get_states():
     return frappe.get_all(
-        "State", fields=["name"], page_length=1000, order_by="name"
+        STATE, fields=["name"], page_length=1000, order_by="name"
     )
 
 

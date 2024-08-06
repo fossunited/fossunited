@@ -2,7 +2,7 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import CUSTOM_ANSWERS, USER_PROFILE
 
 """
 Some utils and APIs for forms such as RSVP, CFP etc.
@@ -39,7 +39,7 @@ def update_submission(doctype, submission, fields, custom):
     doc = frappe.get_doc(doctype, submission).as_dict()
     for field in doc.custom_answers:
         frappe.db.set_value(
-            "FOSS Custom Answer",
+            CUSTOM_ANSWER,
             field.name,
             "response",
             custom[field.idx - 1]["response"],
