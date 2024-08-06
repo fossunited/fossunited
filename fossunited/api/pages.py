@@ -1,5 +1,7 @@
 import frappe
 
+from fossunited.doctype_ids import EVENT_GRANT
+
 
 @frappe.whitelist(allow_guest=True)
 def search_foss_club(query):
@@ -25,7 +27,7 @@ def search_foss_club(query):
 @frappe.whitelist(allow_guest=True)
 def get_more_grants(start=0, limit=30):
     grants = frappe.get_all(
-        "FOSS Event Grant",
+        "EVENT_GRANT",
         fields=[
             "event_name",
             "event_start_date",
