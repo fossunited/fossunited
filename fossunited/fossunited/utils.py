@@ -5,7 +5,11 @@ from datetime import datetime
 import frappe
 from frappe.utils.data import now_datetime
 
-from fossunited.doctype_ids import HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import (
+    FOSSUNITED_SETTINGS,
+    HACKATHON,
+    USER_PROFILE,
+)
 
 
 # Jinja Filter
@@ -159,9 +163,9 @@ def get_signup_optin_checks():
     links = []
 
     for check in checks:
-        if frappe.db.get_single_value("FOSSU Settings", check):
+        if frappe.db.get_single_value(FOSSUNITED_SETTINGS, check):
             page = frappe.db.get_single_value(
-                "FOSSU Settings", mapper[check].get("page_name")
+                FOSSUNITED_SETTINGS, mapper[check].get("page_name")
             )
             route = frappe.db.get_value("Web Page", page, "route")
             links.append(
