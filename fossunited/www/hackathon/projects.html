@@ -52,7 +52,9 @@
       onClick="window.location.href='/{{ project.route }}'"
     >
       <div class="project-card--title">{{ project.title }}</div>
-      <div class="project-card--short-bio">{{ project.short_description | truncate(150, true) }}</div>
+      <div class="project-card--short-bio">
+        {{ project.short_description | truncate(150, true) }}
+      </div>
       <div class="project-card--team">{{ project.team_name }}</div>
     </div>
     {% endfor %}
@@ -62,18 +64,43 @@
 <script>
   document.getElementById("searchInput").addEventListener("input", (e) => {
     const searchTerm = e.target.value.toLowerCase();
+    let projectSearch = false;
 
     document.querySelectorAll(".project-card").forEach((card) => {
       const projectName = card
         .querySelector(".project-card--title")
         .innerText.toLowerCase();
-      const teamName = card.querySelector(".project-card--team").innerText.toLowerCase();
+      const teamName = card
+        .querySelector(".project-card--team")
+        .innerText.toLowerCase();
       if (projectName.includes(searchTerm) || teamName.includes(searchTerm)) {
         card.style.display = "flex";
+        projectSearch = true;
       } else {
         card.style.display = "none";
       }
     });
+
+    // Add empty state in project search
+
+    const searchInputBox = document.querySelector(".search-box");
+    let emptyState = document.querySelector(".no-project");
+    if (!projectSearch) {
+      if (!emptyState) {
+        emptyState = document.createElement("h6");
+        emptyState.classList.add("no-project");
+        emptyState.appendChild(document.createTextNode("No project or team found"));
+
+        // Styles for emptyState element
+        emptyState.style.marginTop = "1rem";
+        emptyState.style.paddingLeft = "0.5rem"
+        searchInputBox.insertAdjacentElement("afterend", emptyState);
+      }
+    } else {
+      if (emptyState) {
+        emptyState.remove();
+      }
+    }
   });
 </script>
 
