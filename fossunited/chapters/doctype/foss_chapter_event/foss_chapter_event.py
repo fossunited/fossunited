@@ -111,6 +111,25 @@ class FOSSChapterEvent(WebsiteGenerator):
             self.update_published_status()
         self.set_route()
 
+    def validate(self):
+        self.validate_permalink()
+
+    def validate_permalink(self):
+        if self.is_external_event:
+            return
+
+        if frappe.db.exists(
+            self.doctype, {"event_permalink": self.event_permalink}
+        ):
+            frappe.throw(
+                f"Event Permalink {self.event_permalink} already exists!"
+            )
+
+        if "/" in self.event_permalink:
+            frappe.throw(
+                "Event Permalink cannot contain / character. Please use a different permalink."
+            )
+
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
             self.is_published = 0
