@@ -52,7 +52,7 @@ class FOSSHackathonJoinTeamRequest(Document):
             frappe.throw("Participant not found")
             return
 
-        team_doc = frappe.get_doc(HACAKTHON_TEAM, self.team)
+        team_doc = frappe.get_doc(HACKATHON_TEAM, self.team)
         team_doc.append("members", {"member": participant_doc.name})
         team_doc.save()
 
