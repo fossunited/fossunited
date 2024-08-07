@@ -112,7 +112,7 @@ def create_team(hackathon: str, team: dict) -> dict:
     """
     team_doc = frappe.get_doc(
         {
-            "doctype": HACAKTHON_TEAM,
+            "doctype": HACKATHON_TEAM,
             "team_name": team.get("team_name"),
             "hackathon": hackathon,
             "team_lead": team.get("team_lead"),
@@ -139,7 +139,7 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
 
     try:
         team = frappe.get_doc(
-            HACAKTHON_TEAM,
+            HACKATHON_TEAM,
             [
                 [
                     HACKATHON_TEAM_MEMBER,
@@ -170,7 +170,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
     """
     try:
         team = frappe.get_doc(
-            HACAKTHON_TEAM,
+            HACKATHON_TEAM,
             [
                 [
                     HACKATHON_TEAM_MEMBER,
@@ -361,7 +361,7 @@ def join_team_via_code(team_code: str, user: str):
         dict: Team document as a dictionary
     """
     try:
-        team = frappe.get_doc(HACAKTHON_TEAM, team_code)
+        team = frappe.get_doc(HACKATHON_TEAM, team_code)
     except frappe.exceptions.DoesNotExistError:
         frappe.throw("Team not found")
         return "Invalid Code. Team with this code does not exist."
@@ -470,7 +470,7 @@ def delete_project(hackathon: str, team: str):
         hackathon (str): Hackathon ID
         team (str): Team ID
     """
-    team_doc = frappe.get_doc(HACAKTHON_TEAM, team)
+    team_doc = frappe.get_doc(HACKATHON_TEAM, team)
     if frappe.session.user not in [
         member.email for member in team_doc.members
     ]:
@@ -479,7 +479,7 @@ def delete_project(hackathon: str, team: str):
     project = get_project_by_team(hackathon, team)
 
     try:
-        frappe.db.set_value(HACAKTHON_TEAM, team, "project", None)
+        frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
         frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
     except Exception as e:
