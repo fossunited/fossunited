@@ -143,7 +143,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Review Pending\nApproved\nRejected",
+   "options": "Review Pending\nScreening\nApproved\nRejected",
    "permlevel": 2
   },
   {
@@ -181,8 +181,7 @@
    "fieldname": "reviews",
    "fieldtype": "Table",
    "label": "Reviews",
-   "options": "FOSS Event CFP Review",
-   "permlevel": 1
+   "options": "FOSS Event CFP Review"
   },
   {
    "fieldname": "route",
@@ -232,20 +231,17 @@
   {
    "fieldname": "positive_reviews",
    "fieldtype": "Data",
-   "label": "Positive Reviews %",
-   "permlevel": 1
+   "label": "Positive Reviews %"
   },
   {
    "fieldname": "negative_reviews",
    "fieldtype": "Data",
-   "label": "Negative Reviews  %",
-   "permlevel": 1
+   "label": "Negative Reviews  %"
   },
   {
    "fieldname": "unsure_reviews",
    "fieldtype": "Data",
-   "label": "Unsure Reviews  %",
-   "permlevel": 1
+   "label": "Unsure Reviews  %"
   },
   {
    "fieldname": "column_break_fnih",
@@ -254,8 +250,7 @@
   {
    "fieldname": "approvability",
    "fieldtype": "Data",
-   "label": "Approvability  %",
-   "permlevel": 1
+   "label": "Approvability  %"
   },
   {
    "columns": 2,
@@ -295,7 +290,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-11 12:21:24.738519",
+ "modified": "2024-08-07 11:58:39.087697",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -335,15 +330,10 @@
    "write": 1
   },
   {
+   "create": 1,
    "read": 1,
    "role": "CFP Reviewer",
    "select": 1,
-   "write": 1
-  },
-  {
-   "permlevel": 1,
-   "read": 1,
-   "role": "CFP Reviewer",
    "write": 1
   }
  ],

@@ -7,13 +7,19 @@ from fossunited.doctype_ids import USER_PROFILE
 
 
 @frappe.whitelist()
-def set_profile_image(file_url):
+def set_profile_image(file_url: str) -> bool:
     user_doc = get_session_user_profile()
     try:
         frappe.db.set_value(
             USER_PROFILE,
             user_doc.name,
             "profile_photo",
+            file_url,
+        )
+        frappe.db.set_value(
+            "User",
+            frappe.session.user,
+            "user_image",
             file_url,
         )
         return True
@@ -85,7 +91,17 @@ def update_profile(fields_dict):
 
 
 @frappe.whitelist()
-def is_unique_username(username, id):
+def is_unique_username(username: str, id: str) -> bool:
+    """
+    Check if the username is unique
+
+    Args:
+        username: Username to check
+        id: ID of the user profile
+
+    Returns:
+        bool: True if username is unique
+    """
     if (
         frappe.db.exists("FOSS Event Chapter", {"route": username})
         or frappe.db.exists(
@@ -93,7 +109,11 @@ def is_unique_username(username, id):
             {"route": username, "name": ["!=", id]},
         )
         or frappe.db.exists(
-            "User", {"username": username, "name": ["!=", id]}
+            "User",
+            {
+                "username": username,
+                "name": ["!=", frappe.session.user],
+            },
         )
     ):
         return False

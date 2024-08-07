@@ -1,6 +1,6 @@
 <template>
   <div class="flex">
-    <SideNavbar :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'" />
+    <SideNavbar v-if="navItems.data" :menuItems="navItems.data" :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'" />
     <div class="w-full md:ml-[220px]">
       <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
       <RouterView />
@@ -10,12 +10,17 @@
 
 <script setup>
 import { inject, watch, ref } from 'vue'
-import { usePageMeta } from 'frappe-ui'
+import { usePageMeta, createResource } from 'frappe-ui'
 import SideNavbar from '@/components/NewAppSidebar.vue'
 import HeaderWithNav from '@/components/HeaderWithNav.vue'
 
 const session = inject('$session')
 const showNav = ref(false)
+
+const navItems = createResource({
+  url: 'fossunited.api.sidebar.get_sidebar_items',
+  auto: true,
+})
 
 usePageMeta(() => {
   return {
