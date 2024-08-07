@@ -58,13 +58,7 @@ class FOSSEventTicketTransfer(Document):
 
     def transfer_ticket(self):
         self.validate_ticket_exists()
-
-        current_user = frappe.session.user
-        current_session_data = frappe.session.data
-
         try:
-            frappe.set_user("Administrator")
-
             ticket = frappe.get_doc("FOSS Event Ticket", self.ticket)
             ticket.full_name = self.receiver_name
             ticket.email = self.receiver_email
@@ -73,9 +67,6 @@ class FOSSEventTicketTransfer(Document):
             ticket.wants_tshirt = self.wants_tshirt
             ticket.tshirt_size = self.tshirt_size
             ticket.is_transfer_ticket = 1
-            ticket.save()
+            ticket.save(ignore_permissions=True)
         except Exception as e:
             frappe.throw(str(e), frappe.ValidationError)
-        finally:
-            frappe.set_user(current_user)
-            frappe.session.data = current_session_data
