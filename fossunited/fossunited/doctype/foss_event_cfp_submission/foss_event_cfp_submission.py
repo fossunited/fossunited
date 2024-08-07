@@ -48,7 +48,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
         session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]
-        status: DF.Literal["Review Pending", "Approved", "Rejected"]
+        status: DF.Literal[
+            "Review Pending", "Screening", "Approved", "Rejected"
+        ]
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None

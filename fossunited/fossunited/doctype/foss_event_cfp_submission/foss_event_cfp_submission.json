@@ -143,7 +143,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Review Pending\nApproved\nRejected",
+   "options": "Review Pending\nScreening\nApproved\nRejected",
    "permlevel": 2
   },
   {
@@ -290,7 +290,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-31 14:06:54.643071",
+ "modified": "2024-08-07 11:58:39.087697",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
