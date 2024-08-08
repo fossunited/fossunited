@@ -134,6 +134,12 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "Event Permalink cannot contain / character. Please use a different permalink."
             )
 
+        # ensure permalink is only alphanumeric with exception of -
+        if not self.event_permalink.replace("-", "").isalnum():
+            frappe.throw(
+                "Event Permalink can only contain alphabets, numbers and hyphens."
+            )
+
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
             self.is_published = 0
