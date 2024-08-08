@@ -40,11 +40,24 @@
 </template>
 <script setup>
 import { Dialog, Autocomplete, createResource, Avatar } from 'frappe-ui'
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
   chapter: Object,
+  event: Object,
 })
+
+const existingMembers = computed(() => {
+  if (props.chapter) {
+    return props.chapter.doc.chapter_members.map((member) => member.chapter_member).join(',')
+  }
+  else if (props.event) {
+    return props.event.doc.event_members.map((member) => member.member).join(',')
+  }
+
+  return []
+})
+
 
 const emits = defineEmits(['update:add-member', 'close-dialog'])
 
@@ -55,9 +68,7 @@ const memberOptions = createResource({
       filters: {
         name: [
           'not in',
-          props.chapter.doc.chapter_members
-            .map((member) => member.chapter_member)
-            .join(','),
+          existingMembers.value
         ],
       },
     }
