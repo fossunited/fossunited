@@ -59,18 +59,14 @@ class FOSSEventTicketTransfer(Document):
     def transfer_ticket(self):
         self.validate_ticket_exists()
         try:
-            frappe.db.set_value(
-                "FOSS Event Ticket",
-                self.ticket,
-                {
-                    "full_name": self.receiver_name,
-                    "email": self.receiver_email,
-                    "designation": self.designation,
-                    "organization": self.organization,
-                    "wants_tshirt": self.wants_tshirt,
-                    "tshirt_size": self.tshirt_size,
-                    "is_transfer_ticket": 1,
-                },
-            )
+            ticket = frappe.get_doc("FOSS Event Ticket", self.ticket)
+            ticket.full_name = self.receiver_name
+            ticket.email = self.receiver_email
+            ticket.designation = self.designation
+            ticket.organization = self.organization
+            ticket.wants_tshirt = self.wants_tshirt
+            ticket.tshirt_size = self.tshirt_size
+            ticket.is_transfer_ticket = 1
+            ticket.save(ignore_permissions=True)
         except Exception as e:
             frappe.throw(str(e), frappe.ValidationError)
