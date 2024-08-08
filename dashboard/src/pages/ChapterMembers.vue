@@ -1,5 +1,9 @@
 <template>
-  <div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
+  <div
+    v-if="chapter.doc"
+    class="px-4 py-8 md:p-8 w-full z-0 min-h-screen"
+    :class="chapter.get.loading ? 'animate-pulse' : ''"
+  >
     <div class="flex justify-between mt-4">
       <ChapterHeader :chapter="chapter" />
     </div>
@@ -20,7 +24,10 @@
         v-for="member in chapter.doc.chapter_members"
         :title="member.full_name"
       >
-        <template v-if="member.email != session.user" #actions>
+        <template
+          v-if="member.email != session.user && member.role != 'Lead'"
+          #actions
+        >
           <Button
             theme="red"
             label="Remove"
@@ -40,8 +47,11 @@
         </div>
       </Card>
     </div>
+
+    <!-- REMOVE A MEMBER -->
     <div v-if="selectedMember">
       <Dialog
+        class="z-50"
         v-model="showRemoveModal"
         :options="{
           title: 'Remove Team Member?',
@@ -67,53 +77,28 @@
       >
       </Dialog>
     </div>
+
+    <!-- ADD NEW MEMBER -->
     <div v-if="showAddmodal">
-      <Dialog
+      <AddMemberDialog
+        class="z-50"
         v-model="showAddmodal"
-        :options="{
-          title: 'Add New Member',
-        }"
-      >
-        <template #body-content>
-          <div class="flex flex-col gap-2">
-            <div class="text-p-base text-gray-700">
-              Enter the email of the new member you want to add to the team.
-            </div>
-            <Autocomplete
-              :options="allUsers.data"
-              v-model="newMembers"
-              placeholder="Search for a user"
-              :multiple="true"
-            />
-          </div>
-        </template>
-        <template #actions>
-          <div class="flex gap-3">
-            <Button label="Add" theme="green" @click="addNewMember" />
-            <Button label="Cancel" theme="gray" @click="showAddmodal = false" />
-          </div>
-        </template>
-      </Dialog>
+        :chapter="chapter"
+        @update:add-member="addNewMember"
+        @close-dialog="showAddmodal = false"
+      />
     </div>
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import {
-  createDocumentResource,
-  Avatar,
-  Select,
-  Badge,
-  createResource,
-  Dialog,
-  Autocomplete,
-  createListResource,
-} from 'frappe-ui'
+import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
+import { ref, inject } from 'vue'
+import AddMemberDialog from '@/components/chapter/AddMember.vue'
 import ChapterHeader from '@/components/ChapterHeader.vue'
-import { ref, watch, inject } from 'vue'
-let session = inject('$session')
 
-const route = useRoute();
+const session = inject('$session')
+const route = useRoute()
 
 const chapter = createDocumentResource({
   doctype: 'FOSS Chapter',
@@ -122,58 +107,12 @@ const chapter = createDocumentResource({
   auto: true,
 })
 
-const getProfile = (email) => {
-  const profile = createResource({
-    url: 'frappe.client.get',
-    params: {
-      doctype: 'FOSS User Profile',
-      filters: {
-        email: email,
-      },
-    },
-    auto: true,
-  })
-  return profile.data
-}
+const showAddmodal = ref(false)
 
-const allUsers = createListResource({
-  doctype: 'FOSS User Profile',
-  fields: ['*'],
-  auto: true,
-  realtime: true,
-  pageLength: 99999,
-  transform(data) {
-    return data.map((user) => {
-      return {
-        value: user.name,
-        label: user.full_name,
-        description: user.username,
-        avatar: user.profile_photo
-          ? user.profile_photo
-          : '/assets/fossunited/images/defaults/user_profile_image.png',
-      }
-    })
-  },
-})
-watch(
-  () => chapter.doc && chapter.doc.chapter_members,
-  (newMembers, oldMembers) => {
-    if (newMembers && newMembers !== oldMembers) {
-      allUsers.update({
-        filters: [
-          ['email', 'not in', newMembers.map((m) => m.email).join(',')],
-        ],
-      })
-      allUsers.fetch()
-    }
-  },
-)
-
-let showAddmodal = ref(false)
-let newMembers = ref([])
-const addNewMember = () => {
+const addNewMember = (newMembers) => {
+  showAddmodal.value = false
   const updatedMembers = chapter.doc.chapter_members.concat(
-    newMembers.value.map((value, idx) => {
+    newMembers.map((value, idx) => {
       return {
         idx: chapter.doc.chapter_members.length + idx + 1,
         chapter_member: value.value,
@@ -184,18 +123,18 @@ const addNewMember = () => {
   chapter.setValue.submit({
     chapter_members: updatedMembers,
   })
-  showAddmodal.value = false
-  newMembers.value = []
 }
 
-let showRemoveModal = ref(false)
-let selectedMember = ref(null)
+const showRemoveModal = ref(false)
+const selectedMember = ref(null)
+
 const handleRemoveModal = (member) => {
   showRemoveModal.value = true
   selectedMember.value = member
 }
+
 const removeMember = (member) => {
-  const updatedMembers = chapter.doc.chapter_members.filter(
+  let updatedMembers = chapter.doc.chapter_members.filter(
     (m) => m.idx !== member.idx,
   )
   updatedMembers.forEach((m, idx) => {

@@ -82,6 +82,7 @@
         />
         <div class="col-span-2">
           <TextEditor
+            label="About Chapter"
             placeholder="Write a description about the chapter"
             :modelValue="chapter.doc.about_chapter"
             @update:modelValue="
