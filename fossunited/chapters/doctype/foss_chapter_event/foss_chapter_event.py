@@ -119,7 +119,11 @@ class FOSSChapterEvent(WebsiteGenerator):
             return
 
         if frappe.db.exists(
-            self.doctype, {"event_permalink": self.event_permalink}
+            self.doctype,
+            {
+                "event_permalink": self.event_permalink,
+                "name": ("!=", self.name),
+            },
         ):
             frappe.throw(
                 f"Event Permalink {self.event_permalink} already exists!"
