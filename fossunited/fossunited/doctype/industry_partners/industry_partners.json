@@ -15,7 +15,14 @@
   "joining_date",
   "is_current_partner",
   "tier",
-  "special_category"
+  "special_category",
+  "flagship_event_sponsorship_section",
+  "indiafoss_sponsorship_column",
+  "is_indiafoss_sponsor",
+  "indiafoss_sponsor_tier",
+  "foss_hack_sponsorship_column",
+  "is_fosshack_sponsor",
+  "fosshack_sponsor_tier"
  ],
  "fields": [
   {
@@ -59,7 +66,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Tier",
-   "options": "Patron\nPlatinum\nGold\nSilver\nBronze\nSpecial",
+   "options": "Patron\nPlatinum\nGold\nSilver\nBronze\nSpecial\nFlagship Event Sponsor",
    "reqd": 1
   },
   {
@@ -72,11 +79,50 @@
    "fieldname": "special_category",
    "fieldtype": "Data",
    "label": "Special Category"
+  },
+  {
+   "fieldname": "flagship_event_sponsorship_section",
+   "fieldtype": "Section Break",
+   "label": "Flagship Event Sponsorship"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_indiafoss_sponsor",
+   "fieldtype": "Check",
+   "label": "IndiaFOSS Sponsor"
+  },
+  {
+   "fieldname": "indiafoss_sponsorship_column",
+   "fieldtype": "Column Break",
+   "label": "IndiaFOSS Sponsorship"
+  },
+  {
+   "fieldname": "indiafoss_sponsor_tier",
+   "fieldtype": "Select",
+   "label": "Sponsorship Tier",
+   "options": "Platinum\nGold\nSilver\nBronze"
+  },
+  {
+   "fieldname": "foss_hack_sponsorship_column",
+   "fieldtype": "Column Break",
+   "label": "FOSS Hack Sponsorship"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_fosshack_sponsor",
+   "fieldtype": "Check",
+   "label": "FOSS Hack Sponsor"
+  },
+  {
+   "fieldname": "fosshack_sponsor_tier",
+   "fieldtype": "Select",
+   "label": "Sponsorship Tier",
+   "options": "Platinum\nGold\nSilver\nBronze"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-13 17:07:04.204042",
+ "modified": "2024-08-08 14:59:08.857648",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Industry Partners",
