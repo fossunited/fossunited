@@ -22,15 +22,7 @@
                 :validateFile="validateFile"
                 @success="(file) => setBannerImage(file)"
               >
-                <template
-                  v-slot="{
-                    file,
-                    progress,
-                    error,
-                    uploading,
-                    openFileSelector,
-                  }"
-                >
+                <template v-slot="{ openFileSelector }">
                   <Button
                     :variant="'outline'"
                     :size="'sm'"
@@ -63,9 +55,7 @@
               :validateFile="validateFile"
               @success="(file) => setProfileImage(file)"
             >
-              <template
-                v-slot="{ file, progress, error, uploading, openFileSelector }"
-              >
+              <template v-slot="{ openFileSelector }">
                 <Button
                   :variant="'outline'"
                   :size="'sm'"
