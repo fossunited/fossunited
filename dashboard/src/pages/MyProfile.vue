@@ -103,6 +103,42 @@
                 v-model="profile_dict.username"
                 placeholder="Enter your username"
               />
+              <div class="mt-2 flex items-center">
+                <div v-if="isUniqueUsername.loading">
+                  <span class="text-sm text-gray-500 mr-2">
+                    Checking availability...
+                  </span>
+                  <span
+                    class="animate-spin h-4 w-4 border-2 border-gray-500 rounded-full border-t-transparent"
+                  ></span>
+                </div>
+                <div
+                  v-else-if="
+                    profile_dict.username &&
+                    !usernameValidateErrors &&
+                    profile_dict.username !== initialUsername
+                  "
+                  class="flex"
+                >
+                  <span class="text-sm text-green-500 mr-2">
+                    Username is available
+                  </span>
+                  <svg
+                    class="h-4 w-4 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
             <FormControl
@@ -205,12 +241,9 @@ import {
   FormControl,
   ErrorMessage,
 } from 'frappe-ui'
-import { inject, reactive, ref } from 'vue'
+
+import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
-
-const session = inject('$session')
-
-const showNav = ref(false)
 
 const profile_dict = reactive({
   full_name: '',
@@ -311,20 +344,13 @@ const updateErrors = ref('')
 
 const updateProfileErrors = () => {
   const errors = []
-
-  if (!profile_dict.full_name) {
-    errors.push('Full Name is required')
-  }
-  if (!profile_dict.username) {
-    errors.push('Username is required')
-  }
-  if (!profile_dict.user) {
-    errors.push('Email is required')
-  }
-
+  if (!profile_dict.full_name) errors.push('Full Name is required')
+  if (!profile_dict.username) errors.push('Username is required')
+  if (!profile_dict.user) errors.push('Email is required')
   return errors
 }
 
+const initialUsername = computed(() => profile.data?.username || '')
 const usernameValidateErrors = ref('')
 
 const usernameErrors = () => {
@@ -346,6 +372,44 @@ const usernameErrors = () => {
 
   return _errors
 }
+
+const validateUsername = () => {
+  const errors = usernameErrors()
+
+  if (errors.length) {
+    usernameValidateErrors.value = errors.join(', ')
+  } else if (profile_dict.username !== initialUsername.value) {
+    usernameValidateErrors.value = ''
+    isUniqueUsername
+      .fetch()
+      .then(() => {
+        if (!isUniqueUsername.data) {
+          usernameValidateErrors.value = 'Username is not available'
+        } else {
+          usernameValidateErrors.value = ''
+        }
+      })
+      .catch(() => {
+        usernameValidateErrors.value =
+          'Error checking username availability. Refresh and try again!'
+      })
+  } else {
+    usernameValidateErrors.value = ''
+  }
+}
+
+watch(
+  () => profile_dict.username,
+  (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+      usernameValidateErrors.value = ''
+      if (newValue.trim() !== '') {
+        validateUsername()
+      }
+    }
+  },
+  { immediate: false },
+)
 
 const isUniqueUsername = createResource({
   url: 'fossunited.api.profile.is_unique_username',
@@ -375,28 +439,14 @@ const updateProfile = createResource({
 
 const handleUpdateProfile = () => {
   const errors = updateProfileErrors()
-  const username_errors = usernameErrors()
   if (errors.length) {
     updateErrors.value = errors.join(', ')
     return
-  } else {
-    updateErrors.value = ''
   }
-
-  if (username_errors.length) {
-    usernameValidateErrors.value = username_errors.join(', ')
+  updateErrors.value = ''
+  if (usernameValidateErrors.value) {
     return
-  } else {
-    usernameValidateErrors.value = ''
   }
-
-  isUniqueUsername.fetch().then(() => {
-    if (!isUniqueUsername.data) {
-      usernameValidateErrors.value = 'Username is not available.'
-      return
-    }
-  })
-
   updateProfile.fetch()
 }
 </script>
