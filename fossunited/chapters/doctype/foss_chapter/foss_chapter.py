@@ -56,63 +56,62 @@ class FOSSChapter(WebsiteGenerator):
         self.set_route()
 
     def on_update(self):
-        self.set_member_roles()
+        self.handle_member_addition()
         self.handle_member_removal()
 
-    def set_member_roles(self):
-        current_user = frappe.session.user
-        current_session_data = frappe.session.data
-        frappe.set_user("Administrator")
+    def handle_member_addition(self):
+        # for each member, add roles of 'Chapter Team Member'
+        for member in self.chapter_members:
+            user = frappe.db.get_value(
+                USER_PROFILE, member.chapter_member, "user"
+            )
 
-        try:
-            for member in self.chapter_members:
-                user = frappe.db.get_value(
-                    USER_PROFILE, member.chapter_member, "user"
-                )
+            if frappe.db.exists(
+                "Has Role",
+                {"role": "Chapter Team Member", "parent": user},
+            ):
+                continue
 
-                if frappe.db.exists(
-                    "Has Role",
-                    {"role": "Chapter Team Member", "parent": user},
-                ):
-                    continue
-                user_doc = frappe.get_doc("User", user)
+            roles = ["Chapter Team Member"]
+            if member.role == "Lead":
+                roles.append("Chapter Lead")
 
-                user_doc.add_roles("Chapter Team Member")
-                if member.role == "Lead":
-                    user_doc.add_roles("Chapter Lead")
-
-        except Exception as e:
-            frappe.throw(f"Error: {e}")
-        finally:
-            frappe.set_user(current_user)
-            frappe.session.data = current_session_data
+            self.add_member_roles(user, *roles)
 
     def handle_member_removal(self):
         prev_doc = self.get_doc_before_save()
         if not prev_doc:
             return
+        for member in prev_doc.chapter_members:
+            if member not in self.chapter_members:
+                if self.member_of_other_chapter(member):
+                    continue
+                user = frappe.db.get_value(
+                    USER_PROFILE, member.chapter_member, "user"
+                )
 
-        current_user = frappe.session.user
-        current_session_data = frappe.session.data
-        frappe.set_user("Administrator")
+                roles = ["Chapter Team Member"]
+                if member.role == "Lead":
+                    roles.append("Chapter Lead")
 
-        try:
-            for member in prev_doc.chapter_members:
-                if member not in self.chapter_members:
-                    if self.member_of_other_chapter(member):
-                        continue
-                    user = frappe.db.get_value(
-                        USER_PROFILE, member.chapter_member, "user"
-                    )
-                    user_doc = frappe.get_doc("User", user)
-                    user_doc.remove_roles("Chapter Team Member")
-                    if member.role == "Lead":
-                        user_doc.remove_roles("Chapter Lead")
-        except Exception as e:
-            frappe.throw(f"Error: {e}")
-        finally:
-            frappe.set_user(current_user)
-            frappe.session.data = current_session_data
+                self.remove_member_roles(user, *roles)
+
+    def add_member_roles(self, user, *roles):
+        user = frappe.get_doc("User", user)
+        existing_roles = {d.role: d for d in user.get("roles")}
+        for role in roles:
+            if role not in existing_roles:
+                user.append("roles", {"role": role})
+        user.save(ignore_permissions=True)
+
+    def remove_member_roles(self, user, *roles):
+        user = frappe.get_doc("User", user)
+        existing_roles = {d.role: d for d in user.get("roles")}
+
+        for role in roles:
+            if role in existing_roles:
+                user.get("roles").remove(existing_roles[role])
+        user.save(ignore_permissions=True)
 
     def member_of_other_chapter(self, member):
         return bool(
