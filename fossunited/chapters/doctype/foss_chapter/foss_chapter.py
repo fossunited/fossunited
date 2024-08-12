@@ -56,14 +56,73 @@ class FOSSChapter(WebsiteGenerator):
         self.set_route()
 
     def on_update(self):
-        self.set_member_roles()
+        self.handle_member_addition()
+        self.handle_member_removal()
 
-    def set_member_roles(self):
+    def handle_member_addition(self):
+        # for each member, add roles of 'Chapter Team Member'
         for member in self.chapter_members:
-            user = frappe.get_doc("User", member.email)
-            user.add_roles("Chapter Team Member")
+            user = frappe.db.get_value(
+                USER_PROFILE, member.chapter_member, "user"
+            )
+
+            if frappe.db.exists(
+                "Has Role",
+                {"role": "Chapter Team Member", "parent": user},
+            ):
+                continue
+
+            roles = ["Chapter Team Member"]
             if member.role == "Lead":
-                user.add_roles("Chapter Lead")
+                roles.append("Chapter Lead")
+
+            self.add_member_roles(user, *roles)
+
+    def handle_member_removal(self):
+        prev_doc = self.get_doc_before_save()
+        if not prev_doc:
+            return
+        for member in prev_doc.chapter_members:
+            if member not in self.chapter_members:
+                if self.member_of_other_chapter(member):
+                    continue
+                user = frappe.db.get_value(
+                    USER_PROFILE, member.chapter_member, "user"
+                )
+
+                roles = ["Chapter Team Member"]
+                if member.role == "Lead":
+                    roles.append("Chapter Lead")
+
+                self.remove_member_roles(user, *roles)
+
+    def add_member_roles(self, user, *roles):
+        user = frappe.get_doc("User", user)
+        existing_roles = {d.role: d for d in user.get("roles")}
+        for role in roles:
+            if role not in existing_roles:
+                user.append("roles", {"role": role})
+        user.save(ignore_permissions=True)
+
+    def remove_member_roles(self, user, *roles):
+        user = frappe.get_doc("User", user)
+        existing_roles = {d.role: d for d in user.get("roles")}
+
+        for role in roles:
+            if role in existing_roles:
+                user.get("roles").remove(existing_roles[role])
+        user.save(ignore_permissions=True)
+
+    def member_of_other_chapter(self, member):
+        return bool(
+            frappe.db.exists(
+                "FOSS Chapter Lead Team Member",
+                {
+                    "chapter_member": member.chapter_member,
+                    "parent": ["!=", self.name],
+                },
+            )
+        )
 
     def set_chapter_lead(self):
         for member in self.chapter_members:

@@ -155,3 +155,27 @@ def get_profile_data(username: str = None, email: str = None) -> dict:
     )
 
     return user
+
+
+@frappe.whitelist()
+def get_user_profile_list(filters: dict = None) -> list:
+    """
+    Returns the list of user profiles based on the given filters.
+    """
+    if not filters:
+        filters = {}
+
+    profiles = frappe.db.get_all(
+        "FOSS User Profile",
+        filters=filters,
+        fields=[
+            "full_name",
+            "profile_photo",
+            "route",
+            "username",
+            "name",
+        ],
+        page_length=9999,
+    )
+
+    return profiles

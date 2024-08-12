@@ -1,5 +1,13 @@
 <template>
-  <div class="flex">
+  <Dialog
+    class="z-50"
+    v-model="showDialog"
+    :options="{
+      title: 'Error',
+      message: dialogMessage,
+    }"
+  />
+  <div class="flex" v-if="chapter.data">
     <SideNavbar
       title="Manage Chapter"
       :menuItems="sidebarMenuItems"
@@ -13,14 +21,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { usePageMeta } from 'frappe-ui'
-import { useRoute, RouterView } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { usePageMeta, createResource, createDocumentResource, Dialog } from 'frappe-ui'
+import { useRoute, useRouter, RouterView } from 'vue-router'
 import SideNavbar from '@/components/NewAppSidebar.vue'
 import HeaderWithNav from '@/components/HeaderWithNav.vue'
 
 const route = useRoute()
+const router = useRouter()
 const showNav = ref(false)
+
+const dialogMessage = ref('')
+const showDialog = ref(false)
+
+onMounted(() => {
+  isChapterMember.fetch()
+})
+
 
 const sidebarMenuItems = [
   {
@@ -49,6 +66,41 @@ const sidebarMenuItems = [
     ],
   },
 ]
+
+const isChapterMember = createResource({
+  url: 'fossunited.api.chapter.check_if_chapter_member',
+  makeParams() {
+    return {
+      chapter: route.params.id,
+    }
+  },
+  onSuccess(data) {
+    if (data) {
+      chapter.fetch()
+      return
+    }
+    dialogMessage.value = 'You are not a member of this chapter'
+    showDialog.value = true
+    setTimeout(() => {
+      router.push('/')
+    }, 2000)
+  },
+  onError(error) {
+    dialogMessage.value = error.messages
+    showDialog.value = true
+  }
+})
+
+const chapter = createResource({
+  url: 'frappe.client.get',
+  makeParams() {
+    return {
+      doctype: 'FOSS Chapter',
+      name: route.params.id,
+      fields: ['*'],
+    }
+  },
+})
 
 usePageMeta(() => {
   return {
