@@ -11,7 +11,6 @@ from fossunited.doctype_ids import HACKATHON, USER_PROFILE
 # Jinja Filter
 def get_profile_image(email):
     profile = get_foss_profile(email)
-    print(profile)
     return (
         profile.profile_photo
         or "/assets/fossunited/images/defaults/user_profile_image.png"
