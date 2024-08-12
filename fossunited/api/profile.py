@@ -130,17 +130,10 @@ def is_valid_username(username: str, id: str) -> bool:
         bool: True if username is unique and not a restricted username
     """
     if (
-        frappe.db.exists("FOSS Event Chapter", {"route": username})
+        frappe.db.exists("FOSS Chapter", {"route": username})
         or frappe.db.exists(
             USER_PROFILE,
             {"route": username, "name": ["!=", id]},
-        )
-        or frappe.db.exists(
-            "User",
-            {
-                "username": username,
-                "name": ["!=", frappe.session.user],
-            },
         )
         or frappe.db.exists(
             RESTRICTED_USERNAME,

@@ -34,6 +34,13 @@ def create_profile_on_user_create(doc, method):
         )
         profile.insert(ignore_permissions=True)
 
+    try:
+        frappe.db.set_value(
+            "User", profile.user, "username", profile.username
+        )
+    except Exception:
+        frappe.throw("Error updating username")
+
 
 def generate_username(username, count=1):
     """
@@ -47,9 +54,4 @@ def generate_username(username, count=1):
         return generate_username(
             username.lower() + str(count), count + 1
         )
-    mock_username = (
-        username if count == 0 else f"{username[:27]}{count}"
-    )
-    if frappe.db.exists(USER_PROFILE, {"username": mock_username}):
-        return generate_username(username, count + 1)
-    return mock_username
+    return username

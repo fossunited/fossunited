@@ -61,12 +61,7 @@ class FOSSUserProfile(WebsiteGenerator):
     # end: auto-generated types
 
     def validate(self):
-        prev_user_doc = self.get_doc_before_save()
-        if (
-            prev_user_doc is None
-            or self.username != prev_user_doc.username
-        ):
-            self.validate_username()
+        self.validate_username()
         self.set_route()
 
     def on_update(self):
