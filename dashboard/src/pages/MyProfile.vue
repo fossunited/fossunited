@@ -348,6 +348,7 @@ const usernameErrors = () => {
   const messages = [
     'Username must be at least 3 characters long.',
     'Username can only contain letters, numbers, underscores and dots.',
+    'Username cannot end with extensions like .txt, .html, etc.',
   ]
   if (!profile_dict.username) {
     _errors.push('Username is required')
@@ -359,7 +360,9 @@ const usernameErrors = () => {
   if (!/^[a-zA-Z0-9_\.]+$/.test(profile_dict.username)) {
     _errors.push(messages[1])
   }
-
+  if (/\.(txt|html|php|js|css|htm)$/i.test(profile_dict.username)) {
+    _errors.push(messages[2])
+  }
   return _errors
 }
 
