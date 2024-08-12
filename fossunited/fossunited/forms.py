@@ -78,7 +78,7 @@ def post_review(submission, to_approve, remarks):
         "reviews",
         {
             "reviewer": reviewer.username,
-            "email": frappe.session.user,
+            "reviewer_profile": reviewer.name,
             "to_approve": to_approve,
             "remarks": remarks,
         },

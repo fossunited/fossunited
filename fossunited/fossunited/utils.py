@@ -297,4 +297,20 @@ def get_foss_profile(email):
     if email in ["guest@example.com", "admin@example.com"]:
         return None
 
-    return frappe.get_doc(USER_PROFILE, {"user": email})
+    profile = frappe.db.get_value(
+        USER_PROFILE,
+        {"user": email},
+        [
+            "name",
+            "full_name",
+            "user",
+            "profile_photo",
+            "username",
+            "route",
+            "github",
+            "email",
+            "gitlab",
+        ],
+        as_dict=1,
+    )
+    return profile
