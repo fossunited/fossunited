@@ -1,8 +1,12 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
+import re
+
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
+
+from fossunited.api.profile import is_valid_username
 
 
 class FOSSUserProfile(WebsiteGenerator):
@@ -57,14 +61,55 @@ class FOSSUserProfile(WebsiteGenerator):
 
     # end: auto-generated types
     def validate(self):
-        self.validate_username()
-        self.set_route()
+        if self.username != self.get_doc_before_save().username:
+            self.validate_username()
+            self.set_route()
+
+    def on_update(self):
+        try:
+            if self.full_name != self.get_doc_before_save().full_name:
+                frappe.db.set_value(
+                    "User",
+                    {"email": self.email},
+                    "full_name",
+                    self.full_name,
+                )
+            if self.username != self.get_doc_before_save().username:
+                frappe.db.set_value(
+                    "User",
+                    {"email": self.email},
+                    "username",
+                    self.username,
+                )
+        except Exception as e:
+            frappe.log_error(f"Error updating user details: {str(e)}")
+            frappe.throw("Error updating user details")
 
     def validate_username(self):
-        self.username = self.username.lower().replace("-", "_")
+        if len(self.username) < 3:
+            frappe.throw(
+                "Username must be at least 3 characters long."
+            )
+
+        if not re.match(r"^[a-z0-9_\.]+$", self.username):
+            frappe.throw(
+                "Username can only contain lowercase letters, numbers, underscores and dots."
+            )
+
+        if re.search(
+            r"\.(txt|html|php|js|json|xml|css|htm)$",
+            self.username,
+            re.IGNORECASE,
+        ):
+            frappe.throw(
+                "Username cannot end with extensions like .txt, .html, etc."
+            )
+
+        if not is_valid_username(self.username, self.name):
+            frappe.throw("Username is already taken or restricted.")
 
     def set_route(self):
-        self.route = self.username.lower().replace("-", "_")
+        self.route = self.username
 
     def get_context(self, context):
         if self.is_private and frappe.session.user not in (

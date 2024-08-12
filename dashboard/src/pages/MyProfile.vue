@@ -334,16 +334,16 @@ const updateErrors = ref('')
 
 const updateProfileErrors = () => {
   const errors = []
-  if (!profile_dict.full_name) errors.push('Full Name is required')
-  if (!profile_dict.username) errors.push('Username is required')
-  if (!profile_dict.user) errors.push('Email is required')
+  if (!profile_dict.full_name.trim()) errors.push('Full Name is required')
+  if (!profile_dict.username.trim()) errors.push('Username is required')
+  if (!profile_dict.user.trim()) errors.push('Email is required')
   return errors
 }
 
-const initialUsername = computed(() => profile.data?.username || '')
+const initialUsername = computed(() => profile.data?.username ?? '')
 const usernameValidateErrors = ref('')
 
-const usernameErrors = () => {
+const getUsernameErrors = () => {
   const _errors = []
   const messages = [
     'Username must be at least 3 characters long.',
@@ -360,32 +360,31 @@ const usernameErrors = () => {
   if (!/^[a-zA-Z0-9_\.]+$/.test(profile_dict.username)) {
     _errors.push(messages[1])
   }
-  if (/\.(txt|html|php|js|css|htm)$/i.test(profile_dict.username)) {
+  if (/\.(txt|html|php|js|json|xml|css|htm)$/i.test(profile_dict.username)) {
     _errors.push(messages[2])
   }
   return _errors
 }
 
-const validateUsername = () => {
-  const errors = usernameErrors()
+const validateUsername = async () => {
+  const errors = getUsernameErrors()
 
-  if (errors.length) {
+  if (errors.length !== 0) {
     usernameValidateErrors.value = errors.join(', ')
   } else if (profile_dict.username !== initialUsername.value) {
     usernameValidateErrors.value = ''
-    isValidUsername
-      .fetch()
-      .then(() => {
-        if (!isValidUsername.data) {
-          usernameValidateErrors.value = 'Username is not available'
-        } else {
-          usernameValidateErrors.value = ''
-        }
-      })
-      .catch(() => {
-        usernameValidateErrors.value =
-          'Error checking username availability. Refresh and try again!'
-      })
+    try {
+      await isValidUsername.fetch()
+
+      if (!isValidUsername.data) {
+        usernameValidateErrors.value = 'Username is not available'
+      } else {
+        usernameValidateErrors.value = ''
+      }
+    } catch (_) {
+      usernameValidateErrors.value =
+        'Error checking username availability. Refresh and try again!'
+    }
   } else {
     usernameValidateErrors.value = ''
   }
@@ -393,15 +392,12 @@ const validateUsername = () => {
 
 watch(
   () => profile_dict.username,
-  (newValue, oldValue) => {
-    if (newValue !== oldValue) {
+  (newValue) => {
       usernameValidateErrors.value = ''
       if (newValue.trim() !== '') {
         validateUsername()
       }
-    }
-  },
-  { immediate: false },
+  }
 )
 
 const isValidUsername = createResource({
@@ -430,7 +426,7 @@ const updateProfile = createResource({
   },
 })
 
-const handleUpdateProfile = () => {
+const handleUpdateProfile = async () => {
   const errors = updateProfileErrors()
   if (errors.length) {
     updateErrors.value = errors.join(', ')

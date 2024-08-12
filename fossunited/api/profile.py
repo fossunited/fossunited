@@ -108,10 +108,10 @@ def update_profile(fields_dict):
 
     except Exception as e:
         frappe.log_error(
-            _("Error updating profile: {0}").format(str(e))
+            ("Error updating profile: {0}").format(str(e))
         )
         frappe.throw(
-            _(
+            (
                 "An error occurred while updating the profile. Please try again."
             )
         )
