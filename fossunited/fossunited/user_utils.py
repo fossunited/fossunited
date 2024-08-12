@@ -1,13 +1,18 @@
+import re
+
 import frappe
 
 from fossunited.doctype_ids import USER_PROFILE
 
 
 def set_unique_username(doc, method):
-    full_name = doc.full_name
+    full_name = doc.full_name.lower()
     doc.first_name = full_name.split(" ")[0]
     doc.last_name = " ".join(full_name.split(" ")[1:])
-    doc.username = generate_username(doc.full_name.replace(" ", "_"))
+    initial_username = re.sub(
+        r"[^a-z0-9_]", "", full_name.replace(" ", "_")
+    )
+    doc.username = generate_username(initial_username)
 
 
 def create_profile_on_user_create(doc, method):
@@ -32,8 +37,19 @@ def create_profile_on_user_create(doc, method):
 
 def generate_username(username, count=1):
     """
-    Generate a Unique Username
+    Generate a Unique Username between 3 and 30 characters
     """
+    if len(username) < 3:
+        username = username.ljust(3, "_")
+
+    username = username[:30]
     if frappe.db.exists(USER_PROFILE, {"username": username}):
-        return generate_username(username + str(count), count + 1)
-    return username
+        return generate_username(
+            username.lower() + str(count), count + 1
+        )
+    mock_username = (
+        username if count == 0 else f"{username[:27]}{count}"
+    )
+    if frappe.db.exists(USER_PROFILE, {"username": mock_username}):
+        return generate_username(username, count + 1)
+    return mock_username

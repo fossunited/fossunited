@@ -58,23 +58,36 @@ class FOSSUserProfile(WebsiteGenerator):
         website: DF.Data | None
         x: DF.Data | None
         youtube: DF.Data | None
-
     # end: auto-generated types
+
     def validate(self):
-        if self.username != self.get_doc_before_save().username:
+        prev_user_doc = self.get_doc_before_save()
+        if (
+            prev_user_doc is None
+            or self.username != prev_user_doc.username
+        ):
             self.validate_username()
-            self.set_route()
+        self.set_route()
 
     def on_update(self):
+        prev_user_doc = self.get_doc_before_save()
+        if prev_user_doc is None:
+            return
         try:
-            if self.full_name != self.get_doc_before_save().full_name:
+            if (
+                self.full_name
+                is not self.get_doc_before_save().full_name
+            ):
                 frappe.db.set_value(
                     "User",
                     {"email": self.email},
                     "full_name",
                     self.full_name,
                 )
-            if self.username != self.get_doc_before_save().username:
+            if (
+                self.username
+                is not self.get_doc_before_save().username
+            ):
                 frappe.db.set_value(
                     "User",
                     {"email": self.email},
@@ -86,14 +99,14 @@ class FOSSUserProfile(WebsiteGenerator):
             frappe.throw("Error updating user details")
 
     def validate_username(self):
-        if len(self.username) < 3:
+        if not (3 <= len(self.username) <= 30):
             frappe.throw(
-                "Username must be at least 3 characters long."
+                "Username must be between 3 and 30 characters"
             )
 
         if not re.match(r"^[a-z0-9_\.]+$", self.username):
             frappe.throw(
-                "Username can only contain lowercase letters, numbers, underscores and dots."
+                f"Username can only contain lowercase letters, numbers, underscores and dots."
             )
 
         if re.search(
