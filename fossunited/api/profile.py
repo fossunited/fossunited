@@ -56,32 +56,65 @@ def toggle_profile_privacy(value):
 
 @frappe.whitelist()
 def update_profile(fields_dict):
+    """
+    Updates User Profile data.
+    Combined with Full Name and Username updates in User doctype,
+    whenever these fields are updated.
+    """
     user_doc = get_session_user_profile()
     try:
+        updated_fields = {
+            "full_name": fields_dict.get("full_name"),
+            "username": fields_dict.get("username"),
+            "route": fields_dict.get("username"),
+            "bio": fields_dict.get("bio"),
+            "current_city": fields_dict.get("current_city"),
+            "about": fields_dict.get("about"),
+            "website": fields_dict.get("website"),
+            "x": fields_dict.get("x"),
+            "linkedin": fields_dict.get("linkedin"),
+            "github": fields_dict.get("github"),
+            "gitlab": fields_dict.get("gitlab"),
+            "instagram": fields_dict.get("instagram"),
+            "youtube": fields_dict.get("youtube"),
+            "devto": fields_dict.get("devto"),
+            "medium": fields_dict.get("medium"),
+            "mastodon": fields_dict.get("mastodon"),
+        }
+
         frappe.db.set_value(
-            USER_PROFILE,
-            user_doc.name,
-            {
-                "full_name": fields_dict.get("full_name"),
-                "username": fields_dict.get("username"),
-                "route": fields_dict.get("username"),
-                "bio": fields_dict.get("bio"),
-                "current_city": fields_dict.get("current_city"),
-                "about": fields_dict.get("about"),
-                "website": fields_dict.get("website"),
-                "x": fields_dict.get("x"),
-                "linkedin": fields_dict.get("linkedin"),
-                "github": fields_dict.get("github"),
-                "gitlab": fields_dict.get("gitlab"),
-                "instagram": fields_dict.get("instagram"),
-                "youtube": fields_dict.get("youtube"),
-                "devto": fields_dict.get("devto"),
-                "medium": fields_dict.get("medium"),
-                "mastodon": fields_dict.get("mastodon"),
-            },
+            USER_PROFILE, user_doc.name, updated_fields
         )
+
+        if (
+            fields_dict.get("full_name") != user_doc.full_name
+            or fields_dict.get("username") != user_doc.username
+        ):
+            user_updates = {}
+            if fields_dict.get("full_name") != user_doc.full_name:
+                user_updates["full_name"] = fields_dict.get(
+                    "full_name"
+                )
+
+            if fields_dict.get("username") != user_doc.username:
+                user_updates["username"] = fields_dict.get("username")
+
+            if user_updates:
+                frappe.db.set_value(
+                    "User", user_doc.user, user_updates
+                )
+
+        return True
+
     except Exception as e:
-        frappe.throw(str(e))
+        frappe.log_error(
+            _("Error updating profile: {0}").format(str(e))
+        )
+        frappe.throw(
+            _(
+                "An error occurred while updating the profile. Please try again."
+            )
+        )
 
 
 @frappe.whitelist()
