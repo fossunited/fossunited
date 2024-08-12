@@ -3,7 +3,7 @@ from frappe.client import set_value
 from pydantic import BaseModel
 
 from fossunited.api.dashboard import get_session_user_profile
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import RESTRICTED_USERNAME, USER_PROFILE
 
 
 @frappe.whitelist()
@@ -57,12 +57,6 @@ def toggle_profile_privacy(value):
 @frappe.whitelist()
 def update_profile(fields_dict):
     user_doc = get_session_user_profile()
-
-    if not is_unique_username(
-        fields_dict.get("username"), user_doc.name
-    ):
-        frappe.throw("Username already exists")
-
     try:
         frappe.db.set_value(
             USER_PROFILE,
@@ -91,16 +85,16 @@ def update_profile(fields_dict):
 
 
 @frappe.whitelist()
-def is_unique_username(username: str, id: str) -> bool:
+def is_valid_username(username: str, id: str) -> bool:
     """
-    Check if the username is unique
+    Check if the username is unique and not in restricted list
 
     Args:
         username: Username to check
         id: ID of the user profile
 
     Returns:
-        bool: True if username is unique
+        bool: True if username is unique and not a restricted username
     """
     if (
         frappe.db.exists("FOSS Event Chapter", {"route": username})
@@ -113,6 +107,12 @@ def is_unique_username(username: str, id: str) -> bool:
             {
                 "username": username,
                 "name": ["!=", frappe.session.user],
+            },
+        )
+        or frappe.db.exists(
+            RESTRICTED_USERNAME,
+            {
+                "username": username,
             },
         )
     ):

@@ -94,7 +94,7 @@
                 placeholder="Enter your username"
               />
               <div class="mt-2 flex items-center">
-                <div v-if="isUniqueUsername.loading">
+                <div v-if="isValidUsername.loading">
                   <span class="text-sm text-gray-500 mr-2">
                     Checking availability...
                   </span>
@@ -110,11 +110,11 @@
                   "
                   class="flex"
                 >
-                  <span class="text-sm text-green-500 mr-2">
+                  <span class="text-sm text-green-500 mr-2 font-semibold">
                     Username is available
                   </span>
                   <svg
-                    class="h-4 w-4 text-green-500"
+                    class="h-4 w-4 text-green-700"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -370,10 +370,10 @@ const validateUsername = () => {
     usernameValidateErrors.value = errors.join(', ')
   } else if (profile_dict.username !== initialUsername.value) {
     usernameValidateErrors.value = ''
-    isUniqueUsername
+    isValidUsername
       .fetch()
       .then(() => {
-        if (!isUniqueUsername.data) {
+        if (!isValidUsername.data) {
           usernameValidateErrors.value = 'Username is not available'
         } else {
           usernameValidateErrors.value = ''
@@ -401,8 +401,8 @@ watch(
   { immediate: false },
 )
 
-const isUniqueUsername = createResource({
-  url: 'fossunited.api.profile.is_unique_username',
+const isValidUsername = createResource({
+  url: 'fossunited.api.profile.is_valid_username',
   makeParams() {
     return {
       username: profile_dict.username,
