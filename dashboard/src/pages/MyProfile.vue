@@ -426,7 +426,7 @@ const updateProfile = createResource({
   },
 })
 
-const handleUpdateProfile = async () => {
+const handleUpdateProfile = () => {
   const errors = updateProfileErrors()
   if (errors.length) {
     updateErrors.value = errors.join(', ')
