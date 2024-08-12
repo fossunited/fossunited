@@ -346,7 +346,7 @@ const usernameValidateErrors = ref('')
 const getUsernameErrors = () => {
   const _errors = []
   const messages = [
-    'Username must be at least 3 characters long.',
+    'Username must be between 3 and 30 characters',
     'Username can only contain letters, numbers, underscores and dots.',
     'Username cannot end with extensions like .txt, .html, etc.',
   ]
@@ -354,7 +354,7 @@ const getUsernameErrors = () => {
     _errors.push('Username is required')
     return _errors
   }
-  if (profile_dict.username.length < 3) {
+  if (profile_dict.username.length < 3 || profile_dict.username.length > 30 ) {
     _errors.push(messages[0])
   }
   if (!/^[a-zA-Z0-9_\.]+$/.test(profile_dict.username)) {
