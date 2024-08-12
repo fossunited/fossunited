@@ -11,6 +11,7 @@ from fossunited.doctype_ids import HACKATHON, USER_PROFILE
 # Jinja Filter
 def get_profile_image(email):
     profile = get_foss_profile(email)
+    print(profile)
     return (
         profile.profile_photo
         or "/assets/fossunited/images/defaults/user_profile_image.png"
@@ -297,4 +298,20 @@ def get_foss_profile(email):
     if email in ["guest@example.com", "admin@example.com"]:
         return None
 
-    return frappe.get_doc(USER_PROFILE, {"user": email})
+    profile = frappe.db.get_value(
+        USER_PROFILE,
+        {"user": email},
+        [
+            "name",
+            "full_name",
+            "user",
+            "profile_photo",
+            "username",
+            "route",
+            "github",
+            "email",
+            "gitlab",
+        ],
+        as_dict=1,
+    )
+    return profile
