@@ -3,7 +3,7 @@
     <div class="flex gap-3 items-end px-4 py-8 md:p-8">
       <EventHeader
         class=""
-        :event="event"
+        :event="event.doc"
         :form_exists="Boolean(hasCfp.data)"
         :form="eventCfp"
       />

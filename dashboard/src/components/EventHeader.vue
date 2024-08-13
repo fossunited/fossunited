@@ -9,7 +9,7 @@
       }}</CityCommunityBranding>
     </div>
     <div class="flex gap-3">
-      <div class="text-3xl font-semibold">{{ event.doc.event_name }}</div>
+      <div class="text-3xl font-semibold">{{ event.event_name }}</div>
       <Badge
         v-if="form_exists && form.data"
         :theme="form.data.is_published ? 'green' : 'gray'"
@@ -40,7 +40,7 @@
     </div>
     <div class="flex gap-2 items-center text-base text-gray-700">
       <div>
-        {{ event.doc.event_type }}
+        {{ event.event_type }}
       </div>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -57,10 +57,10 @@
       </svg>
       <div>
         <span>
-          {{ getFormattedDate(event.doc.event_start_date) }}
+          {{ getFormattedDate(event.event_start_date) }}
         </span>
-        <span v-if="event.doc.event_start_date != event.doc.event_end_date">
-          - {{ getFormattedDate(event.doc.event_end_date) }}
+        <span v-if="event.event_start_date != event.event_end_date">
+          - {{ getFormattedDate(event.event_end_date) }}
         </span>
       </div>
     </div>
@@ -98,7 +98,7 @@ function getFormattedDate(date) {
 
 const chapter = createDocumentResource({
   doctype: 'FOSS Chapter',
-  name: props.event.doc.chapter,
+  name: props.event.chapter,
   fields: ['*'],
   auto: true,
 })
