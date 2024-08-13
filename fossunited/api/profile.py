@@ -86,23 +86,15 @@ def update_profile(fields_dict):
             USER_PROFILE, user_doc.name, updated_fields
         )
 
-        if (
-            fields_dict.get("full_name") != user_doc.full_name
-            or fields_dict.get("username") != user_doc.username
-        ):
-            user_updates = {}
-            if fields_dict.get("full_name") != user_doc.full_name:
-                user_updates["full_name"] = fields_dict.get(
-                    "full_name"
-                )
+        user_updates = {}
+        if fields_dict.get("full_name") != user_doc.full_name:
+            user_updates["full_name"] = fields_dict.get("full_name")
 
-            if fields_dict.get("username") != user_doc.username:
-                user_updates["username"] = fields_dict.get("username")
+        if fields_dict.get("username") != user_doc.username:
+            user_updates["username"] = fields_dict.get("username")
 
-            if user_updates:
-                frappe.db.set_value(
-                    "User", user_doc.user, user_updates
-                )
+        if user_updates:
+            frappe.db.set_value("User", user_doc.user, user_updates)
 
         return True
 
