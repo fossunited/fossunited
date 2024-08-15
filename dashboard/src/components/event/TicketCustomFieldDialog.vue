@@ -47,6 +47,13 @@
     </template>
     <template #actions>
       <div class="flex gap-2 items-center">
+        <Button
+            v-if="!inCreateMode"
+            class="w-fit px-2"
+            icon="trash"
+            theme="red"
+            @click="handleDelete"
+        />
         <Button class="w-full" label="Cancel" @click="showDialog = false" />
         <Button
           v-if="inCreateMode"
@@ -181,6 +188,24 @@ const updateCustomField = createResource({
     },
 })
 
+const deleteCustomField = createResource({
+  url: 'frappe.client.delete',
+  makeParams() {
+    return {
+      doctype: 'FOSS Event Field',
+      name: props.row.name,
+    }
+  },
+  onSuccess() {
+    props.event.fetch()
+    toast.info('Custom field deleted successfully')
+    showDialog.value = false
+  },
+  onError(error) {
+    errorMessages.value = error.message
+  },
+})
+
 const handleCreate = () => {
   const errors = validateFields()
   if (errors.length) {
@@ -199,5 +224,9 @@ const handleSave = () => {
   }
   errorMessages.value = ''
     updateCustomField.fetch()
+}
+
+const handleDelete = () => {
+  deleteCustomField.fetch()
 }
 </script>
