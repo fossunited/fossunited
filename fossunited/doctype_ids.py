@@ -1,6 +1,7 @@
 # Storing all the possible Doctype Identifiers in constants
 # FOSSUserProfile
 USER_PROFILE = "FOSS User Profile"
+RESTRICTED_USERNAME = "Restricted Username"
 
 # FOSS Hackathon
 HACKATHON = "FOSS Hackathon"

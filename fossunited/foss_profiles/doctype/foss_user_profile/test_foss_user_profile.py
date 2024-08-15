@@ -3,6 +3,7 @@
 import uuid
 
 import frappe
+from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import USER_PROFILE
@@ -11,8 +12,9 @@ from fossunited.doctype_ids import USER_PROFILE
 class TestFOSSUserProfile(FrappeTestCase):
     def test_add_profile(self):
         # Given a user that does not have a FOSSUnitedProfile
-        inserted_username = "wisharya"
-        inserted_name = "wish arya"
+        fake = Faker()
+        inserted_username = fake.user_name()
+        inserted_name = fake.name()
         profile_exists = frappe.db.exists(
             USER_PROFILE, {"username": inserted_username}
         )
@@ -24,10 +26,9 @@ class TestFOSSUserProfile(FrappeTestCase):
         frappe_user = frappe.get_doc(
             {
                 "doctype": "User",
-                "username": inserted_username,
                 # Create a unique email address as it is used as a database key
                 "email": str(uuid.uuid4()) + "@fossunited.org",
-                "first_name": "wish",
+                "first_name": inserted_name.split(" ")[0],
                 "name": inserted_name,
                 "full_name": inserted_name,
             },
