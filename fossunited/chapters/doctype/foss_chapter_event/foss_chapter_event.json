@@ -425,6 +425,7 @@
    "label": "External Event URL"
   },
   {
+   "default": "Live",
    "fieldname": "tickets_status",
    "fieldtype": "Select",
    "label": "Tickets Status",
@@ -450,7 +451,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-08-14 15:32:07.543451",
+ "modified": "2024-08-15 15:10:05.697637",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
