@@ -81,6 +81,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         ]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
+        tickets_status: DF.Literal["Live", "Closed"]
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 
