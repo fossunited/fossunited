@@ -8,8 +8,10 @@
         chapter.doc.chapter_name
       }}</CityCommunityBranding>
     </div>
-    <div class="flex gap-3">
-      <div class="text-3xl font-semibold">{{ event.event_name }}</div>
+    <div class="flex gap-3 items-center">
+      <div class="prose">
+        <h1>{{ event.event_name }}</h1>
+      </div>
       <Badge
         v-if="form_exists && form.data"
         :theme="form.data.is_published ? 'green' : 'gray'"
