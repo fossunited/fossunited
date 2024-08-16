@@ -4,6 +4,8 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import EVENT_CFP
+
 
 class FOSSEventCFP(WebsiteGenerator):
     # begin: auto-generated types
@@ -40,9 +42,7 @@ class FOSSEventCFP(WebsiteGenerator):
         self.assign_reviewers()
 
     def assign_reviewers(self):
-        reviewers = frappe.get_single(
-            "FOSS Global CFP Review Settings"
-        ).members
+        reviewers = frappe.get_single("FOSS Global CFP Review Settings").members
         for reviewer in reviewers:
             self.append(
                 "cfp_reviewers",
@@ -58,29 +58,21 @@ class FOSSEventCFP(WebsiteGenerator):
         self.enable_cfp_tab()
 
     def set_route(self):
-        event_route = frappe.db.get_value(
-            "FOSS Chapter Event", self.event, "route"
-        )
+        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
         self.route = f"{event_route}/cfp"
 
     def enable_cfp_tab(self):
-        frappe.db.set_value(
-            "FOSS Chapter Event", self.event, "show_cfp", 1
-        )
+        frappe.db.set_value("FOSS Chapter Event", self.event, "show_cfp", 1)
 
     def get_context(self, context):
         context.submissions = get_cfp_submissions(self.name)
-        context.event = frappe.get_doc(
-            "FOSS Chapter Event", self.event
-        )
+        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
         context.event_name = self.event_name
-        context.event_date = frappe.db.get_value(
-            "FOSS Chapter Event", self.event, "event_start_date"
-        ).strftime("%B %d, %Y")
-        context.submission_doctype = "FOSS Event CFP Submission"
-        context.already_submitted = (
-            True if self.check_if_already_submitted() else False
+        context.event_date = frappe.db.get_value("FOSS Chapter Event", self.event, "event_start_date").strftime(
+            "%B %d, %Y"
         )
+        context.submission_doctype = "FOSS Event CFP Submission"
+        context.already_submitted = True if self.check_if_already_submitted() else False
 
         context.form_fields = self.get_form_fields()
         context.no_cache = 1
@@ -103,18 +95,14 @@ class FOSSEventCFP(WebsiteGenerator):
                 "fieldtype": "Data",
                 "label": "Full Name",
                 "reqd": 1,
-                "value": frappe.get_value(
-                    "User", frappe.session.user, "full_name"
-                ),
+                "value": frappe.get_value("User", frappe.session.user, "full_name"),
             },
             {
                 "fieldname": "email",
                 "fieldtype": "Data",
                 "label": "Email",
                 "reqd": 1,
-                "value": frappe.get_value(
-                    "User", frappe.session.user, "email"
-                ),
+                "value": frappe.get_value("User", frappe.session.user, "email"),
             },
             {
                 "fieldname": "picture_url",
@@ -167,9 +155,7 @@ class FOSSEventCFP(WebsiteGenerator):
 
     def get_custom_questions(self):
         custom_questions = []
-        for index, question in enumerate(
-            self.cfp_custom_questions, start=1
-        ):
+        for index, question in enumerate(self.cfp_custom_questions, start=1):
             custom_questions.append(
                 {
                     "fieldname": "custom_question_" + str(index),
@@ -194,9 +180,7 @@ class FOSSEventCFP(WebsiteGenerator):
 
 @frappe.whitelist()
 def create_cfp_submission(fields):
-    if not frappe.db.exists(
-        "FOSS Event CFP", frappe.parse_json(fields).get("linked_cfp")
-    ):
+    if not frappe.db.exists(EVENT_CFP, frappe.parse_json(fields).get("linked_cfp")):
         frappe.throw("Invalid CFP ID.", frappe.DoesNotExistError)
 
     fields_dict = {

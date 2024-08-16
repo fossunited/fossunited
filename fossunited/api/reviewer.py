@@ -1,6 +1,7 @@
 import frappe
 
 from fossunited.api.dashboard import get_profile_data
+from fossunited.doctype_ids import EVENT_CFP
 
 
 def get_event_cfp_submissions(event: str) -> list:
@@ -34,9 +35,7 @@ def get_event_cfp_submissions(event: str) -> list:
         "approvability",
     ]
 
-    is_cfp_anonymous = frappe.db.get_value(
-        "FOSS Event CFP", {"event": event}, "anonymise_proposals"
-    )
+    is_cfp_anonymous = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
 
     if not is_cfp_anonymous:
         fields += [
@@ -70,9 +69,7 @@ def get_cfp_submissions_by_reviewer_status(
 
     submissions = get_event_cfp_submissions(event)
 
-    reviewer = frappe.db.get_value(
-        "FOSS User Profile", {"user": frappe.session.user}, "name"
-    )
+    reviewer = frappe.db.get_value("FOSS User Profile", {"user": frappe.session.user}, "name")
 
     for submission in submissions:
         if not frappe.db.exists(
@@ -149,14 +146,12 @@ def get_events_by_open_cfp() -> list:
     )
 
     for event in events:
-        cfp_exists = frappe.db.exists(
-            "FOSS Event CFP", {"event": event.name}
-        )
+        cfp_exists = frappe.db.exists(EVENT_CFP, {"event": event.name})
         if not cfp_exists:
             continue
 
         cfp = frappe.db.get_value(
-            "FOSS Event CFP",
+            EVENT_CFP,
             {"event": event.name},
             ["name", "chapter"],
             as_dict=1,
@@ -167,9 +162,7 @@ def get_events_by_open_cfp() -> list:
             ["name", "chapter_name", "chapter_type"],
             as_dict=1,
         )
-        submission_count = frappe.db.count(
-            "FOSS Event CFP Submission", {"linked_cfp": cfp.name}
-        )
+        submission_count = frappe.db.count("FOSS Event CFP Submission", {"linked_cfp": cfp.name})
         cfps_to_review.append(
             {
                 "event": event.name,
@@ -188,9 +181,7 @@ def get_events_by_open_cfp() -> list:
 
 
 @frappe.whitelist()
-def has_cfp_review(
-    submission_id: str, reviewer: str = frappe.session.user
-) -> bool:
+def has_cfp_review(submission_id: str, reviewer: str = frappe.session.user) -> bool:
     """
     Check if the reviewer has reviewed the submission
 
@@ -202,9 +193,7 @@ def has_cfp_review(
         bool: True if the reviewer has reviewed the submission, False otherwise
     """
 
-    reviewer_profile = frappe.db.get_value(
-        "FOSS User Profile", {"email": reviewer}, "name"
-    )
+    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
 
     return bool(
         frappe.db.exists(
@@ -219,9 +208,7 @@ def has_cfp_review(
 
 
 @frappe.whitelist()
-def get_review(
-    submission_id: str, reviewer: str = frappe.session.user
-) -> dict:
+def get_review(submission_id: str, reviewer: str = frappe.session.user) -> dict:
     """
     Get the review of the submission by the reviewer
 
@@ -235,9 +222,7 @@ def get_review(
     if not has_cfp_review(submission_id, reviewer):
         frappe.throw("No review found")
 
-    reviewer_profile = frappe.db.get_value(
-        "FOSS User Profile", {"email": reviewer}, "name"
-    )
+    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
 
     review = frappe.db.get_value(
         "FOSS Event CFP Review",
@@ -275,13 +260,9 @@ def submit_review(
     if has_cfp_review(submission_id, reviewer):
         frappe.throw("Review already exists")
 
-    reviewer_profile = frappe.db.get_value(
-        "FOSS User Profile", {"email": reviewer}, "name"
-    )
+    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
 
-    submission_doc = frappe.get_doc(
-        "FOSS Event CFP Submission", submission_id
-    )
+    submission_doc = frappe.get_doc("FOSS Event CFP Submission", submission_id)
 
     submission_doc.append(
         "reviews",
@@ -299,9 +280,7 @@ def get_submitter_profile(submission_id: str) -> dict:
     """
     Returns the profile of the submitter of the CFP submission.
     """
-    submitter_email = frappe.db.get_value(
-        "FOSS Event CFP Submission", submission_id, ["submitted_by"]
-    )
+    submitter_email = frappe.db.get_value("FOSS Event CFP Submission", submission_id, ["submitted_by"])
 
     if not submitter_email:
         frappe.throw("Submitter email not found")

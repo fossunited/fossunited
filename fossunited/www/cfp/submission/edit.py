@@ -1,24 +1,17 @@
 import frappe
 
+from fossunited.doctype_ids import EVENT_CFP
 from fossunited.fossunited.utils import filter_field_values
 
 
 def get_context(context):
-    context.submission = frappe.get_doc(
-        "FOSS Event CFP Submission", frappe.form_dict["submission"]
-    )
-    context.cfp = frappe.get_doc(
-        "FOSS Event CFP", context.submission.linked_cfp
-    )
-    context.event = frappe.get_doc(
-        "FOSS Chapter Event", context.submission.event
-    )
+    context.submission = frappe.get_doc("FOSS Event CFP Submission", frappe.form_dict["submission"])
+    context.cfp = frappe.get_doc(EVENT_CFP, context.submission.linked_cfp)
+    context.event = frappe.get_doc("FOSS Chapter Event", context.submission.event)
 
     frappe.form_dict["doctype"] = "FOSS Event CFP Submission"
     frappe.form_dict["cfp"] = frappe.form_dict.submission
-    context.form_fields = get_form_fields(
-        context.submission.doctype, context.submission
-    )
+    context.form_fields = get_form_fields(context.submission.doctype, context.submission)
     context.no_cache = 1
 
 
@@ -39,11 +32,9 @@ def get_form_fields(doctype, submission):
             "Review Scores",
         ]:
             continue
-        form_fields.append(
-            {k: v for k, v in field.items() if filter_field_values(k)}
-        )
+        form_fields.append({k: v for k, v in field.items() if filter_field_values(k)})
 
-    cfp_doc = frappe.get_doc("FOSS Event CFP", submission.linked_cfp)
+    cfp_doc = frappe.get_doc(EVENT_CFP, submission.linked_cfp)
     for question in submission.custom_answers:
         form_fields.append(
             {
@@ -51,16 +42,9 @@ def get_form_fields(doctype, submission):
                 "fieldtype": question.type,
                 "label": question.question,
                 "value": question.response,
-                "options": cfp_doc.cfp_custom_questions[
-                    question.idx - 1
-                ].options,
-                "reqd": cfp_doc.cfp_custom_questions[
-                    question.idx - 1
-                ].is_mandatory
-                or 0,
-                "description": cfp_doc.cfp_custom_questions[
-                    question.idx - 1
-                ].description,
+                "options": cfp_doc.cfp_custom_questions[question.idx - 1].options,
+                "reqd": cfp_doc.cfp_custom_questions[question.idx - 1].is_mandatory or 0,
+                "description": cfp_doc.cfp_custom_questions[question.idx - 1].description,
             }
         )
 
