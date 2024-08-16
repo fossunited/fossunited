@@ -21,7 +21,8 @@ build-backend = "flit_core.buildapi"
 # package_name = "~=1.1.0"
 
 [tool.ruff]
-line-length = 70
+line-length = 100
 lint.select = [
-    "I"
+    "I",
+    "E"
 ]
