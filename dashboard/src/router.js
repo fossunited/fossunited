@@ -126,6 +126,11 @@ const routes = [
             name: 'EventTicketsManage',
             component: () => import('@/pages/EventTicketManage.vue'),
           },
+          {
+            path: 'insights',
+            name: 'EventTicketsInsights',
+            component: () => import('@/pages/EventTicketInsights.vue'),
+          },
         ],
       },
       {
