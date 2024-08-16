@@ -9,9 +9,7 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.doctype_ids import USER_PROFILE
 from fossunited.fossunited.utils import is_user_team_member
 
-BASE_DATE = datetime.now().replace(
-    hour=0, minute=0, second=0, microsecond=0
-)
+BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -76,9 +74,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
-        status: DF.Literal[
-            "", "Draft", "Live", "Approved", "Concluded", "Cancelled"
-        ]
+        status: DF.Literal["", "Draft", "Live", "Approved", "Concluded", "Cancelled"]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
         tiers: DF.Table[FOSSTicketTier]
@@ -91,9 +87,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         if not self.chapter:
             return
 
-        chapter_team_members = frappe.get_doc(
-            "FOSS Chapter", self.chapter
-        ).chapter_members
+        chapter_team_members = frappe.get_doc("FOSS Chapter", self.chapter).chapter_members
 
         for member in chapter_team_members:
             self.append(
@@ -125,23 +119,13 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "name": ("!=", self.name),
             },
         ):
-            frappe.throw(
-                f"Event Permalink {self.event_permalink} already exists!"
-            )
+            frappe.throw(f"Event Permalink {self.event_permalink} already exists!")
 
         if "/" in self.event_permalink:
-            frappe.throw(
-                "Event Permalink cannot contain / character. Please use a different permalink."
-            )
+            frappe.throw("Event Permalink cannot contain / character. Please use a different permalink.")
 
-        if (
-            not self.event_permalink.replace("-", "")
-            .replace("_", "")
-            .isalnum()
-        ):
-            frappe.throw(
-                "Event Permalink can only contain alphabets, numbers, - and _ characters."
-            )
+        if not self.event_permalink.replace("-", "").replace("_", "").isalnum():
+            frappe.throw("Event Permalink can only contain alphabets, numbers, - and _ characters.")
 
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
@@ -174,9 +158,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
-        context.recent_cfp_submissions = (
-            self.get_recent_cfp_submissions()
-        )
+        context.recent_cfp_submissions = self.get_recent_cfp_submissions()
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
 
@@ -214,16 +196,12 @@ class FOSSChapterEvent(WebsiteGenerator):
     def get_volunteers(self):
         members = []
         for member in self.event_members:
-            profile = frappe.get_doc(
-                USER_PROFILE, member.member
-            ).as_dict()
+            profile = frappe.get_doc(USER_PROFILE, member.member).as_dict()
             members.append(
                 {
                     "full_name": member.full_name,
                     "role": member.role or "Volunteer",
-                    "profile_picture": profile.profile_photo
-                    if profile.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": profile.route,
                 }
             )
@@ -240,16 +218,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
         speakers = []
         for cfp in speaker_cfps:
-            user = frappe.get_doc(
-                USER_PROFILE, {"email": cfp.submitted_by}
-            )
+            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
             speakers.append(
                 {
                     "full_name": user.full_name,
                     "talk_title": cfp.talk_title,
-                    "profile_picture": cfp.picture_url
-                    or user.profile_photo
-                    or "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": cfp.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": user.route,
                 }
             )
@@ -262,9 +236,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         rsvp_status_block["block_for"] = "rsvp"
 
         if frappe.db.exists("FOSS Event RSVP", {"event": self.name}):
-            rsvp_form = frappe.get_doc(
-                "FOSS Event RSVP", {"event": self.name}
-            )
+            rsvp_form = frappe.get_doc("FOSS Event RSVP", {"event": self.name})
             rsvp_status_block |= {
                 "form_route": rsvp_form.route,
                 "has_doc": True,
@@ -304,23 +276,15 @@ class FOSSChapterEvent(WebsiteGenerator):
                     }
                 else:
                     rsvp_status_block["show_primary_cta"] = True
-                    rsvp_status_block["primary_cta"] = (
-                        "RSVP for the event"
-                    )
+                    rsvp_status_block["primary_cta"] = "RSVP for the event"
 
             if not rsvp_form.is_published:
-                rsvp_status_block["block_heading"] = (
-                    "RSVP Form is Unpublished!"
-                )
+                rsvp_status_block["block_heading"] = "RSVP Form is Unpublished!"
         else:
             rsvp_status_block["has_doc"] = False
-            rsvp_status_block["block_heading"] = (
-                "RSVP Form is not live yet!"
-            )
+            rsvp_status_block["block_heading"] = "RSVP Form is not live yet!"
             if is_user_team_member(self.chapter, frappe.session.user):
-                rsvp_status_block["block_heading"] = (
-                    "Create RSVP for the event"
-                )
+                rsvp_status_block["block_heading"] = "Create RSVP for the event"
                 rsvp_status_block["is_team_member"] = True
                 rsvp_status_block["create_form"] = True
             else:
@@ -334,19 +298,13 @@ class FOSSChapterEvent(WebsiteGenerator):
         cfp_status_block["block_for"] = "cfp"
 
         if frappe.db.exists("FOSS Event CFP", {"event": self.name}):
-            cfp_form = frappe.get_doc(
-                "FOSS Event CFP", {"event": self.name}
-            )
+            cfp_form = frappe.get_doc("FOSS Event CFP", {"event": self.name})
             cfp_status_block |= {
                 "form_route": cfp_form.route,
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
-                "deadline": cfp_form.deadline.strftime(
-                    "%d %B, %Y  %I:%M %p"
-                )
-                if cfp_form.deadline
-                else None,
+                "deadline": cfp_form.deadline.strftime("%d %B, %Y  %I:%M %p") if cfp_form.deadline else None,
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
             }
@@ -380,23 +338,15 @@ class FOSSChapterEvent(WebsiteGenerator):
                     }
 
                 cfp_status_block["show_primary_cta"] = True
-                cfp_status_block["primary_cta"] = (
-                    "Submit a talk proposal"
-                )
+                cfp_status_block["primary_cta"] = "Submit a talk proposal"
 
             if not cfp_form.is_published:
-                cfp_status_block["block_heading"] = (
-                    "Talk Proposal Form is Unpublished!"
-                )
+                cfp_status_block["block_heading"] = "Talk Proposal Form is Unpublished!"
         else:
             cfp_status_block["has_doc"] = False
-            cfp_status_block["block_heading"] = (
-                "Talk Proposal Form is not live yet!"
-            )
+            cfp_status_block["block_heading"] = "Talk Proposal Form is not live yet!"
             if is_user_team_member(self.chapter, frappe.session.user):
-                cfp_status_block["block_heading"] = (
-                    "Create Call for Proposal (CFP) for the event"
-                )
+                cfp_status_block["block_heading"] = "Create Call for Proposal (CFP) for the event"
                 cfp_status_block["is_team_member"] = True
                 cfp_status_block["create_form"] = True
             else:
@@ -443,11 +393,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 )
                 submission["user_route"] = user.route
                 submission["full_name"] = user.full_name
-                submission["profile_picture"] = (
-                    submission.picture_url
-                    or user.profile_photo
-                    or "/assets/fossunited/images/defaults/user_profile_image.png"
-                )
+                submission["profile_picture"] = submission.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
         return submissions or []
 
     def get_schedule_dict(self):
@@ -470,13 +416,9 @@ def get_speakers(schedule):
         schedule.no_speaker = True
         return
 
-    cfp = frappe.get_doc(
-        "FOSS Event CFP Submission", schedule.linked_cfp
-    )
+    cfp = frappe.get_doc("FOSS Event CFP Submission", schedule.linked_cfp)
     user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route
     schedule.speaker_full_name = user.full_name
-    schedule.speaker_designation_company = (
-        cfp.designation + " at " + cfp.organization
-    )
+    schedule.speaker_designation_company = cfp.designation + " at " + cfp.organization

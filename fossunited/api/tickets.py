@@ -56,9 +56,7 @@ def get_transfer_doc_validity(transfer_id: str):
     """
     Check the validity of transfer doc/id
     """
-    is_valid_id = frappe.db.exists(
-        "FOSS Event Ticket Transfer", transfer_id
-    )
+    is_valid_id = frappe.db.exists("FOSS Event Ticket Transfer", transfer_id)
 
     return bool(is_valid_id)
 

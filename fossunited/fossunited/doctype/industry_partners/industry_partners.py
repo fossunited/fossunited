@@ -14,12 +14,8 @@ class IndustryPartners(Document):
         from frappe.types import DF
 
         company: DF.Data
-        fosshack_sponsor_tier: DF.Literal[
-            "Platinum", "Gold", "Silver", "Bronze"
-        ]
-        indiafoss_sponsor_tier: DF.Literal[
-            "Platinum", "Gold", "Silver", "Bronze"
-        ]
+        fosshack_sponsor_tier: DF.Literal["Platinum", "Gold", "Silver", "Bronze"]
+        indiafoss_sponsor_tier: DF.Literal["Platinum", "Gold", "Silver", "Bronze"]
         is_current_partner: DF.Check
         is_fosshack_sponsor: DF.Check
         is_indiafoss_sponsor: DF.Check

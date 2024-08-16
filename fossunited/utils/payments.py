@@ -8,9 +8,7 @@ def get_razorpay_client():
     key_secret = razorpay_settings.get_password("key_secret")
 
     if not (key_id or key_secret):
-        frappe.throw(
-            f"Please set API keys in {frappe.bold('Razorpay Settings')} before trying to create a razorpay client!"
-        )
+        frappe.throw(f"Please set API keys in {frappe.bold('Razorpay Settings')} before trying to create a razorpay client!")
 
     return razorpay.Client(auth=(key_id, key_secret))
 

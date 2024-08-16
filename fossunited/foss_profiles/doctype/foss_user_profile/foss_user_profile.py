@@ -69,20 +69,14 @@ class FOSSUserProfile(WebsiteGenerator):
         if prev_user_doc is None:
             return
         try:
-            if (
-                self.full_name
-                is not self.get_doc_before_save().full_name
-            ):
+            if self.full_name is not self.get_doc_before_save().full_name:
                 frappe.db.set_value(
                     "User",
                     {"email": self.email},
                     "full_name",
                     self.full_name,
                 )
-            if (
-                self.username
-                is not self.get_doc_before_save().username
-            ):
+            if self.username is not self.get_doc_before_save().username:
                 frappe.db.set_value(
                     "User",
                     {"email": self.email},
@@ -95,23 +89,17 @@ class FOSSUserProfile(WebsiteGenerator):
 
     def validate_username(self):
         if not (3 <= len(self.username) <= 30):
-            frappe.throw(
-                "Username must be between 3 and 30 characters"
-            )
+            frappe.throw("Username must be between 3 and 30 characters")
 
         if not re.match(r"^[a-z0-9_\.]+$", self.username):
-            frappe.throw(
-                f"Username can only contain lowercase letters, numbers, underscores and dots."
-            )
+            frappe.throw(f"Username can only contain lowercase letters, numbers, underscores and dots.")
 
         if re.search(
             r"\.(txt|html|php|js|json|xml|css|htm)$",
             self.username,
             re.IGNORECASE,
         ):
-            frappe.throw(
-                "Username cannot end with extensions like .txt, .html, etc."
-            )
+            frappe.throw("Username cannot end with extensions like .txt, .html, etc.")
 
         if not is_valid_username(self.username, self.name):
             frappe.throw("Username is already taken or restricted.")
@@ -124,17 +112,13 @@ class FOSSUserProfile(WebsiteGenerator):
             "Administrator",
             self.user,
         ):
-            frappe.throw(
-                _("Profile Not Found"), frappe.DoesNotExistError
-            )
+            frappe.throw(_("Profile Not Found"), frappe.DoesNotExistError)
 
         experiences_dict = {}
         for experience in self.experience:
             if experience.company not in experiences_dict:
                 experiences_dict[experience.company] = []
-            experiences_dict[experience.company].append(
-                experience.as_dict()
-            )
+            experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
         context.no_cache = 1
 

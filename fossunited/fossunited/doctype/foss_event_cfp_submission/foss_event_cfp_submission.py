@@ -48,9 +48,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
         session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]
-        status: DF.Literal[
-            "Review Pending", "Screening", "Approved", "Rejected"
-        ]
+        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None
@@ -72,9 +70,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
-        event_route = frappe.db.get_value(
-            "FOSS Chapter Event", self.event, "route"
-        )
+        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
         self.route = f"{event_route}/cfp/{self.name}"
 
     def set_scores(self):
@@ -86,39 +82,25 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def check_status(self):
         if self.status != "Review Pending":
-            frappe.throw(
-                "Illegal status change", frappe.ValidationError
-            )
+            frappe.throw("Illegal status change", frappe.ValidationError)
 
     def validate_linked_cfp_exists(self):
         if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
-        context.cfp = frappe.get_doc(
-            "FOSS Event CFP", self.linked_cfp
-        )
-        context.event = frappe.get_doc(
-            "FOSS Chapter Event", self.event
-        )
-        context.speaker = frappe.get_doc(
-            USER_PROFILE, {"user": self.submitted_by}
-        )
+        context.cfp = frappe.get_doc("FOSS Event CFP", self.linked_cfp)
+        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
+        context.speaker = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
         context.reviewers = self.get_reviewers(context.cfp)
-        context.is_reviewer = frappe.session.user in [
-            reviewer["email"] for reviewer in context.reviewers
-        ]
+        context.is_reviewer = frappe.session.user in [reviewer["email"] for reviewer in context.reviewers]
         context.nav_items = self.get_navbar_items(context)
-        context.submitter_foss_profile = frappe.get_doc(
-            USER_PROFILE, {"user": self.submitted_by}
-        )
+        context.submitter_foss_profile = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
         context.review_statistics = self.get_review_statistics()
         context.reviews = self.get_reviews()
-        context.already_reviewed = self.check_if_already_reviewed(
-            context
-        )
+        context.already_reviewed = self.check_if_already_reviewed(context)
 
         context.remark_val = {
             "Yes": "Approved",
@@ -135,18 +117,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         ]
 
         volunteers = get_event_volunteers(self.event)
-        if (
-            context.cfp.anonymise_proposals
-            and not self.status == "Approved"
-        ):
+        if context.cfp.anonymise_proposals and not self.status == "Approved":
             nav_items.remove("about_speaker")
 
-        if (
-            not context.is_reviewer
-            and frappe.session.user
-            not in [volunteer.email for volunteer in volunteers]
-            and not frappe.session.user == self.submitted_by
-        ):
+        if not context.is_reviewer and frappe.session.user not in [volunteer.email for volunteer in volunteers] and not frappe.session.user == self.submitted_by:
             nav_items.remove("proposal_reviews")
 
         return nav_items
@@ -177,9 +151,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         for review in reviews:
             score[review.to_approve] += 1
 
-        score["approvability"] = (
-            score["Yes"] / (reviews_len - score["Maybe"] or 1)
-        ) * 100
+        score["approvability"] = (score["Yes"] / (reviews_len - score["Maybe"] or 1)) * 100
 
         statistics = [
             {
@@ -202,9 +174,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 "fieldname": "unsure_reviews",
                 "label": f'{score["Maybe"]} People Marked Unsure',
                 "value": score["Maybe"],
-                "percentage": int(
-                    (score["Maybe"] / reviews_len) * 100
-                ),
+                "percentage": int((score["Maybe"] / reviews_len) * 100),
                 "color": "var(--clr-warning-500)",
                 "background": "var(--clr-warning-50)",
             },

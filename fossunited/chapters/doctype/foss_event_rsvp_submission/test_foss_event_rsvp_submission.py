@@ -49,7 +49,5 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             ).insert()
 
         # Then the RSVP must be unpublished
-        is_published = frappe.db.get_value(
-            "FOSS Event RSVP", rsvp.name, "is_published"
-        )
+        is_published = frappe.db.get_value("FOSS Event RSVP", rsvp.name, "is_published")
         self.assertFalse(is_published)
