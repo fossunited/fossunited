@@ -235,7 +235,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
-def get_sold_tickets(event_id: str) -> list:
+def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
     """
     Get the list of all tickets sold for the event.
 
@@ -250,10 +250,10 @@ def get_sold_tickets(event_id: str) -> list:
         frappe.throw(
             "You are not authorized to view the tickets for this event"
         )
-
+    print("Filters: ", filters)
     tickets = frappe.db.get_all(
         "FOSS Event Ticket",
-        filters={"event": event_id},
+        filters={"event": event_id, **filters},
         fields=[
             "tier",
             "wants_tshirt",
@@ -263,10 +263,8 @@ def get_sold_tickets(event_id: str) -> list:
             "designation",
             "organization",
             "is_transfer_ticket",
-            "wants_tshirt",
-            "tshirt_size",
-            "custom_fields",
         ],
+        order_by="creation",
     )
     return tickets
 
@@ -303,3 +301,22 @@ def has_valid_permission(event_id: str) -> bool:
         return False
 
     return True
+
+
+@frappe.whitelist()
+def get_ticket_tiers(event_id: str) -> list:
+    """
+    Get the list of ticket tiers for the event
+
+    Args:
+        event_id (str): Event ID
+
+    Returns:
+        list: List of ticket tiers
+    """
+    tiers = frappe.db.get_all(
+        "FOSS Ticket Tier",
+        filters={"parent": event_id, "parentfield": "tiers"},
+        fields=["title", "maximum_tickets"],
+    )
+    return tiers

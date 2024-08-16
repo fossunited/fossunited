@@ -19,6 +19,9 @@
           :tier="tier"
         />
       </div>
+      <div class="flex flex-col gap-4">
+        <TicketList :event="event" />
+      </div>
     </div>
   </div>
   <div v-else class="w-full h-[220px] flex items-center justify-center">
@@ -27,10 +30,11 @@
 </template>
 <script setup>
 import { defineProps, reactive } from 'vue'
-import { createResource, LoadingIndicator } from 'frappe-ui'
+import { createResource, LoadingIndicator, ListView } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
 import TicketTshirtInsightCard from '@/components/event/TicketTshirtInsightCard.vue'
+import TicketList from '@/components/event/TicketList.vue'
 
 const props = defineProps({
   event: {
