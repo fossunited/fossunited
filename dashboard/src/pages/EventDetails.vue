@@ -2,7 +2,7 @@
   <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <EventHeader
-        :event="event"
+        :event="event.doc"
         :form_exists="true"
         :form="{
           data: {

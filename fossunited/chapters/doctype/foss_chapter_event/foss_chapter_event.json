@@ -63,6 +63,7 @@
   "event_schedule",
   "tickets_tab",
   "is_paid_event",
+  "tickets_status",
   "tiers",
   "ticket_form_description",
   "section_break_idyt",
@@ -388,7 +389,8 @@
    "fieldname": "t_shirt_price",
    "fieldtype": "Currency",
    "label": "T Shirt Price",
-   "mandatory_depends_on": "eval:doc.paid_tshirts_available==1"
+   "mandatory_depends_on": "eval:doc.paid_tshirts_available==1",
+   "non_negative": 1
   },
   {
    "fieldname": "section_break_hjyr",
@@ -421,6 +423,13 @@
    "fieldname": "external_event_url",
    "fieldtype": "Data",
    "label": "External Event URL"
+  },
+  {
+   "default": "Live",
+   "fieldname": "tickets_status",
+   "fieldtype": "Select",
+   "label": "Tickets Status",
+   "options": "Live\nClosed"
   }
  ],
  "has_web_view": 1,
@@ -442,7 +451,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-07-08 14:42:21.932221",
+ "modified": "2024-08-15 15:10:05.697637",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
