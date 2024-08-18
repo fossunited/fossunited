@@ -41,33 +41,23 @@ class FOSSHackathonLocalHost(Document):
         self.check_if_member_removed()
 
     def before_save(self):
-        if self.has_value_changed("organizers") and (
-            len(self.organizers)
-            > len(self.get_doc_before_save().organizers)
-        ):
+        if self.has_value_changed("organizers") and (len(self.organizers) > len(self.get_doc_before_save().organizers)):
             self.assign_localhost_organizer_role()
 
     def assign_localhost_organizer_role(self):
         for member in self.organizers:
             user = frappe.get_doc(
                 "User",
-                frappe.db.get_value(
-                    USER_PROFILE, member.profile, "user"
-                ),
+                frappe.db.get_value(USER_PROFILE, member.profile, "user"),
             )
             user.add_roles("Localhost Organizer")
 
     def check_if_member_removed(self):
         prev_doc = self.get_doc_before_save()
-        if not (
-            prev_doc
-            and len(prev_doc.organizers) > len(self.organizers)
-        ):
+        if not (prev_doc and len(prev_doc.organizers) > len(self.organizers)):
             return
 
-        current_organizers = {
-            member.name for member in self.organizers
-        }
+        current_organizers = {member.name for member in self.organizers}
 
         for member in prev_doc.organizers:
             if member.name not in current_organizers:
@@ -79,9 +69,7 @@ class FOSSHackathonLocalHost(Document):
 
         user = frappe.get_doc(
             "User",
-            frappe.db.get_value(
-                USER_PROFILE, old_member.profile, "user"
-            ),
+            frappe.db.get_value(USER_PROFILE, old_member.profile, "user"),
         )
         user.remove_roles("Localhost Organizer")
 

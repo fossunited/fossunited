@@ -47,9 +47,7 @@ class RazorpayPayment(Document):
         frappe.only_for("System Manager")
 
         if not self.is_paid:
-            frappe.throw(
-                "Refunds Can be Made Only on Captured Payments!"
-            )
+            frappe.throw("Refunds Can be Made Only on Captured Payments!")
 
         client = get_razorpay_client()
         refund_amount = int(get_in_razorpay_money(self.amount))
@@ -69,16 +67,11 @@ class RazorpayPayment(Document):
     def sync_status(self):
         client = get_razorpay_client()
         order = client.order.fetch(self.order_id)
-        payments = client.order.payments(self.order_id).get(
-            "items", []
-        )
+        payments = client.order.payments(self.order_id).get("items", [])
 
         if order["status"] == "paid":
             frappe.errprint(payments)
-            if (
-                payments[0]["status"] == "captured"
-                and self.status != "Captured"
-            ):
+            if payments[0]["status"] == "captured" and self.status != "Captured":
                 self.status = "Captured"
                 self.payment_id = payments[0]["id"]
                 self.save()

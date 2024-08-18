@@ -22,9 +22,7 @@ class FOSSHackathonTeam(Document):
         looking_for_members: DF.Check
         members: DF.Table[FOSSHackathonTeamMember]
         partner_project: DF.Link | None
-        partner_project_status: DF.Literal[
-            "", "Pending", "Accepted", "Rejected"
-        ]
+        partner_project_status: DF.Literal["", "Pending", "Accepted", "Rejected"]
         project: DF.Link | None
         team_name: DF.Data
         working_on_partner_project: DF.Check

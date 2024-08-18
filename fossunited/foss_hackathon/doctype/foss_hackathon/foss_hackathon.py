@@ -9,9 +9,7 @@ from fossunited.doctype_ids import HACKATHON_PROJECT, USER_PROFILE
 
 no_cache = 1
 
-BASE_DATE = datetime.now().replace(
-    hour=0, minute=0, second=0, microsecond=0
-)
+BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 class FOSSHackathon(WebsiteGenerator):
@@ -45,9 +43,7 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_logo: DF.AttachImage | None
         hackathon_name: DF.Data
         hackathon_rules: DF.TextEditor | None
-        hackathon_type: DF.Literal[
-            "", "Remote", "In-person", "Hybrid"
-        ]
+        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]
         has_external_website: DF.Check
         has_localhosts: DF.Check
         has_partner_projects: DF.Check
@@ -79,9 +75,7 @@ class FOSSHackathon(WebsiteGenerator):
 
     def get_context(self, context):
         if self.organizing_chapter:
-            context.chapter = frappe.get_doc(
-                "FOSS Chapter", self.organizing_chapter
-            )
+            context.chapter = frappe.get_doc("FOSS Chapter", self.organizing_chapter)
 
         context.nav_items = self.get_nav_items()
         context.sponsors_dict = self.get_sponsors()
@@ -135,13 +129,9 @@ def get_speakers(schedule):
         schedule.no_speaker = True
         return
 
-    cfp = frappe.get_doc(
-        "FOSS Event CFP Submission", schedule.linked_cfp
-    )
+    cfp = frappe.get_doc("FOSS Event CFP Submission", schedule.linked_cfp)
     user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route
     schedule.speaker_full_name = user.full_name
-    schedule.speaker_designation_company = (
-        cfp.designation + " at " + cfp.organization
-    )
+    schedule.speaker_designation_company = cfp.designation + " at " + cfp.organization

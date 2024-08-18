@@ -46,9 +46,7 @@ def set_cover_image(file_url):
 def toggle_profile_privacy(value):
     user_doc = get_session_user_profile()
     try:
-        frappe.db.set_value(
-            USER_PROFILE, user_doc.name, "is_private", value
-        )
+        frappe.db.set_value(USER_PROFILE, user_doc.name, "is_private", value)
         return True
     except Exception as e:
         frappe.throw(str(e))
@@ -82,9 +80,7 @@ def update_profile(fields_dict):
             "mastodon": fields_dict.get("mastodon"),
         }
 
-        frappe.db.set_value(
-            USER_PROFILE, user_doc.name, updated_fields
-        )
+        frappe.db.set_value(USER_PROFILE, user_doc.name, updated_fields)
 
         user_updates = {}
         if fields_dict.get("full_name") != user_doc.full_name:
@@ -99,14 +95,8 @@ def update_profile(fields_dict):
         return True
 
     except Exception as e:
-        frappe.log_error(
-            ("Error updating profile: {0}").format(str(e))
-        )
-        frappe.throw(
-            (
-                "An error occurred while updating the profile. Please try again."
-            )
-        )
+        frappe.log_error(("Error updating profile: {0}").format(str(e)))
+        frappe.throw(("An error occurred while updating the profile. Please try again."))
 
 
 @frappe.whitelist()

@@ -18,9 +18,7 @@ class FOSSGlobalCFPReviewSettings(Document):
         for member in self.members:
             user = frappe.get_doc(
                 "User",
-                frappe.db.get_value(
-                    USER_PROFILE, member.profile, "user"
-                ),
+                frappe.db.get_value(USER_PROFILE, member.profile, "user"),
             )
             user.add_roles("CFP Reviewer")
 

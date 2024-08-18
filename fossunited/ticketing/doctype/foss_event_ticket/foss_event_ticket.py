@@ -56,9 +56,7 @@ class FOSSEventTicket(Document):
                     "designation": attendee.get("designation"),
                     "wants_tshirt": attendee.get("wants_tshirt", 0),
                     "tshirt_size": attendee.get("tshirt_size"),
-                    "tier": payment_meta_data.get("tier", {}).get(
-                        "title"
-                    ),
+                    "tier": payment_meta_data.get("tier", {}).get("title"),
                     "custom_fields": [],
                 }
             )
@@ -84,11 +82,7 @@ class FOSSEventTicket(Document):
         )
 
         for tier in event.tiers:
-            if (
-                tier.title == self.tier
-                and tier.maximum_tickets
-                and (tickets_count >= tier.maximum_tickets)
-            ):
+            if tier.title == self.tier and tier.maximum_tickets and (tickets_count >= tier.maximum_tickets):
                 event.tiers[tier.idx - 1].enabled = 0
                 event.save(ignore_permissions=True)
                 return
@@ -106,23 +100,18 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
             FOSSEventTicket.create_tickets_for_payment(doc)
         except:
             frappe.log_error("Ticket Creation Failed!")
+            raise
 
 
-def validate_payment_before_insert(
-    doc: "RazorpayPayment", event: str
-):
+def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     # calculate total amount
     calculated_amount = 0
     payment_meta_data: dict = frappe.parse_json(doc.meta_data)
     attendees = payment_meta_data.get("attendees", [])
     tier = payment_meta_data.get("tier", {}).get("name")
-    price, event_name = frappe.db.get_value(
-        "FOSS Ticket Tier", tier, ["price", "parent"]
-    )
+    price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
 
-    tshirt_price = frappe.db.get_value(
-        "FOSS Chapter Event", event_name, "t_shirt_price"
-    )
+    tshirt_price = frappe.db.get_value("FOSS Chapter Event", event_name, "t_shirt_price")
 
     for attendee in attendees:
         wants_tshirt = attendee.get("wants_tshirt", 0)
@@ -132,9 +121,7 @@ def validate_payment_before_insert(
             calculated_amount += tshirt_price
 
     if calculated_amount != doc.amount:
-        frappe.throw(
-            "Looks like you did some funny stuff in the frontend and amounts don't match!"
-        )
+        frappe.throw("Looks like you did some funny stuff in the frontend and amounts don't match!")
 
 
 def is_foss_event(doc: "RazorpayPayment"):
@@ -142,6 +129,4 @@ def is_foss_event(doc: "RazorpayPayment"):
 
 
 def tickets_already_created(doc: "RazorpayPayment"):
-    return frappe.db.exists(
-        "FOSS Event Ticket", {"razorpay_payment": doc.name}
-    )
+    return frappe.db.exists("FOSS Event Ticket", {"razorpay_payment": doc.name})

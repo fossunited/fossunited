@@ -31,27 +31,17 @@ def handle_razorpay_webhook():
         }
     ).insert().submit()
 
-    order_exists = frappe.db.exists(
-        "Razorpay Payment", {"order_id": razorpay_order_id}
-    )
+    order_exists = frappe.db.exists("Razorpay Payment", {"order_id": razorpay_order_id})
 
     if not order_exists:
         return
 
-    payment_doc = frappe.get_doc(
-        "Razorpay Payment", {"order_id": razorpay_order_id}
-    )
+    payment_doc = frappe.get_doc("Razorpay Payment", {"order_id": razorpay_order_id})
 
-    if (
-        event == "payment.captured"
-        and payment_doc.status != "Captured"
-    ):
+    if event == "payment.captured" and payment_doc.status != "Captured":
         payment_doc.status = "Captured"
         payment_doc.save()
-    elif (
-        event == "refund.processed"
-        and not payment_doc.status == "Refunded"
-    ):
+    elif event == "refund.processed" and not payment_doc.status == "Refunded":
         refund_entity = form_dict["payload"]["refund"]["entity"]
         payment_doc.status = "Refunded"
         payment_doc.refund_id = refund_entity["id"]
@@ -62,11 +52,7 @@ def handle_razorpay_webhook():
 
 def verify_webhook_signature(payload):
     signature = frappe.get_request_header("X-Razorpay-Signature")
-    webhook_secret = get_decrypted_password(
-        "Razorpay Settings", "Razorpay Settings", "webhook_secret"
-    )
+    webhook_secret = get_decrypted_password("Razorpay Settings", "Razorpay Settings", "webhook_secret")
 
     client = get_razorpay_client()
-    client.utility.verify_webhook_signature(
-        payload.decode(), signature, webhook_secret
-    )
+    client.utility.verify_webhook_signature(payload.decode(), signature, webhook_secret)

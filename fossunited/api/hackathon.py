@@ -69,9 +69,7 @@ def create_participant(hackathon, participant):
             "is_student": participant.get("is_student"),
             "organization": participant.get("organization"),
             "git_profile": participant.get("git_profile"),
-            "wants_to_attend_locally": participant.get(
-                "wants_to_attend_locally"
-            ),
+            "wants_to_attend_locally": participant.get("wants_to_attend_locally"),
             "localhost": participant.get("localhost"),
         }
     )
@@ -211,9 +209,7 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
             "description": project.get("description"),
             "repo_link": project.get("repo_link"),
             "demo_link": project.get("demo_link"),
-            "is_contribution_project": project.get(
-                "is_contribution_project"
-            ),
+            "is_contribution_project": project.get("is_contribution_project"),
             "is_partner_project": project.get("is_partner_project"),
             "partner_project": project.get("partner_project"),
         }
@@ -307,43 +303,29 @@ def get_localhost_requests_by_team(
     )
 
     for request in requests:
-        request["profile_route"] = frappe.db.get_value(
-            USER_PROFILE, request.user_profile, "route"
-        )
-        profile_photo = frappe.db.get_value(
-            USER_PROFILE, request.user_profile, "profile_photo"
-        )
-        request["profile_photo"] = (
-            profile_photo
-            if profile_photo
-            else "/assets/fossunited/images/defaults/user_profile_image.png"
-        )
-        request["profile_username"] = frappe.db.get_value(
-            USER_PROFILE, request.user_profile, "username"
-        )
+        request["profile_route"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "route")
+        profile_photo = frappe.db.get_value(USER_PROFILE, request.user_profile, "profile_photo")
+        request["profile_photo"] = profile_photo if profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png"
+        request["profile_username"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "username")
 
     requests_by_team = {}
 
     for request in requests:
-        team = get_team_from_participant_id(
-            hackathon, request.get("name")
-        )
+        team = get_team_from_participant_id(hackathon, request.get("name"))
         if team:
             project = get_project_by_team(hackathon, team.name)
             if project:
                 request["project_title"] = project.title
                 request["project_route"] = project.route
-            if not team.name in requests_by_team:
+            if team.name not in requests_by_team:
                 requests_by_team[team.name] = []
             request["team"] = team
             requests_by_team[team.name].append(request)
         else:
             request["team"] = {"team_name": "Individual Participants"}
-            if not "Individual Participants" in requests_by_team:
+            if "Individual Participants" not in requests_by_team:
                 requests_by_team["Individual Participants"] = []
-            requests_by_team["Individual Participants"].append(
-                request
-            )
+            requests_by_team["Individual Participants"].append(request)
 
     return requests_by_team or None
 
@@ -408,9 +390,7 @@ def get_session_user_localhosts():
         list: List of localhosts
     """
 
-    profile = frappe.db.get_value(
-        USER_PROFILE, {"user": frappe.session.user}, "name"
-    )
+    profile = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, "name")
 
     localhosts = frappe.db.get_all(
         HACKATHON_LOCALHOST,
@@ -471,9 +451,7 @@ def delete_project(hackathon: str, team: str):
         team (str): Team ID
     """
     team_doc = frappe.get_doc(HACKATHON_TEAM, team)
-    if frappe.session.user not in [
-        member.email for member in team_doc.members
-    ]:
+    if frappe.session.user not in [member.email for member in team_doc.members]:
         frappe.throw("You are not authorized to delete this project")
 
     project = get_project_by_team(hackathon, team)
@@ -538,17 +516,10 @@ def validate_participant_for_localhost(participant_id: str):
         frappe.throw("Participant has not selected a localhost")
 
     if participant.localhost_request_status == "Accepted":
-        frappe.throw(
-            "Participant has already been accepted for local attendance"
-        )
+        frappe.throw("Participant has already been accepted for local attendance")
 
-    if (
-        not participant.localhost_request_status
-        == "Pending Confirmation"
-    ):
-        frappe.throw(
-            "Participant has not been accepted for local attendance"
-        )
+    if not participant.localhost_request_status == "Pending Confirmation":
+        frappe.throw("Participant has not been accepted for local attendance")
 
     return True
 
@@ -562,9 +533,7 @@ def validate_user_as_localhost_member(localhost_id: str):
             "role": "Localhost Organizer",
         },
     ):
-        frappe.throw(
-            "You are not a Localhost Organizer. You are not authorized to view this page"
-        )
+        frappe.throw("You are not a Localhost Organizer. You are not authorized to view this page")
 
     if not frappe.db.exists(
         "FOSS Hackathon LocalHost Organizer",
@@ -577,9 +546,7 @@ def validate_user_as_localhost_member(localhost_id: str):
             ),
         },
     ):
-        frappe.throw(
-            "You are not a member of this Localhost. You are not authorized to view this page"
-        )
+        frappe.throw("You are not a member of this Localhost. You are not authorized to view this page")
 
     return True
 
@@ -639,7 +606,7 @@ def get_issue_pr_title(url: str) -> dict:
     Returns:
         dict: Issue/PR title
     """
-    if not "https://github.com" in url:
+    if "https://github.com" not in url:
         frappe.throw("Not a Github URL.")
 
     gh = GithubHelper()

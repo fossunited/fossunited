@@ -11,16 +11,11 @@ from fossunited.doctype_ids import HACKATHON, USER_PROFILE
 # Jinja Filter
 def get_profile_image(email):
     profile = get_foss_profile(email)
-    return (
-        profile.profile_photo
-        or "/assets/fossunited/images/defaults/user_profile_image.png"
-    )
+    return profile.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
 
 
 def get_event_volunteers(event):
-    volunteers = frappe.get_doc(
-        "FOSS Chapter Event", event
-    ).event_members
+    volunteers = frappe.get_doc("FOSS Chapter Event", event).event_members
     return volunteers
 
 
@@ -89,10 +84,7 @@ def get_user_editable_doctype_fields(doctype, docname=None):
         if field["fieldname"] in NOT_EDITABLE_FIELDS:
             meta["fields"].remove(field)
 
-    meta["fields"] = [
-        {k: v for k, v in field.items() if filter_field_values(k)}
-        for field in meta["fields"]
-    ]
+    meta["fields"] = [{k: v for k, v in field.items() if filter_field_values(k)} for field in meta["fields"]]
 
     if docname is not None:
         doc = frappe.get_doc(doctype, docname).as_dict()
@@ -160,26 +152,16 @@ def get_signup_optin_checks():
 
     for check in checks:
         if frappe.db.get_single_value("FOSSU Settings", check):
-            page = frappe.db.get_single_value(
-                "FOSSU Settings", mapper[check].get("page_name")
-            )
+            page = frappe.db.get_single_value("FOSSU Settings", mapper[check].get("page_name"))
             route = frappe.db.get_value("Web Page", page, "route")
-            links.append(
-                "<a target='_blank' href='/"
-                + route
-                + "'>"
-                + mapper[check].get("title")
-                + "</a>"
-            )
+            links.append("<a target='_blank' href='/" + route + "'>" + mapper[check].get("title") + "</a>")
 
     return (", ").join(links)
 
 
 @frappe.whitelist(allow_guest=True)
 def check_username_availability(username):
-    username_exists = frappe.db.exists(
-        USER_PROFILE, {"username": username}
-    )
+    username_exists = frappe.db.exists(USER_PROFILE, {"username": username})
 
     is_cityname = frappe.db.exists("City", {"name": username})
     return username_exists or is_cityname
@@ -187,9 +169,7 @@ def check_username_availability(username):
 
 @frappe.whitelist(allow_guest=True)
 def check_if_profile_owner(username):
-    profile_user = frappe.get_doc(
-        USER_PROFILE, {"username": username}
-    )
+    profile_user = frappe.get_doc(USER_PROFILE, {"username": username})
     return profile_user.user == frappe.session.user
 
 
@@ -234,14 +214,8 @@ def process_event(event, event_list):
     Processes a single event or hackathon, adding it to the upcoming or past events list based on the current date.
     """
     now = now_datetime()
-    event_date = (
-        event.event_start_date
-        if event.event_start_date
-        else event.start_date
-    )
-    event_month_year = frappe.utils.formatdate(
-        event_date, "MMMM yyyy"
-    )
+    event_date = event.event_start_date if event.event_start_date else event.start_date
+    event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
     event.month_year = event_month_year
     if event_date > now:
         event_list["Upcoming FOSS Events"].append(event)
@@ -264,27 +238,16 @@ def get_month_grouped_events(events, hackathons):
     month_grouped_events = {key: {} for key in grouped_events}
 
     for key, values in grouped_events.items():
-        values.sort(
-            key=lambda x: x.event_start_date
-            if x.event_start_date
-            else x.start_date
-        )
-        for month_year, month_year_events in itertools.groupby(
-            values, key=lambda x: x.month_year
-        ):
-            month_grouped_events[key][month_year] = list(
-                month_year_events
-            )
+        values.sort(key=lambda x: x.event_start_date if x.event_start_date else x.start_date)
+        for month_year, month_year_events in itertools.groupby(values, key=lambda x: x.month_year):
+            month_grouped_events[key][month_year] = list(month_year_events)
 
     for key in month_grouped_events:
         sorted_month_years = sorted(
             month_grouped_events[key].keys(),
             key=lambda x: datetime.strptime(x, "%B %Y"),
         )
-        month_grouped_events[key] = {
-            month: month_grouped_events[key][month]
-            for month in sorted_month_years
-        }
+        month_grouped_events[key] = {month: month_grouped_events[key][month] for month in sorted_month_years}
 
     return month_grouped_events
 
