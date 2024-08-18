@@ -53,9 +53,14 @@
         </div>
         <div class="flex flex-col gap-2">
           <div class="text-md font-semibold">Remarks</div>
-          <div>{{ reviewData.data.remarks || 'No remarks.'}}</div>
+          <div>{{ reviewData.data.remarks || 'No remarks.' }}</div>
         </div>
-        <Button label="Edit Review" @click="in_review_edit = true" class="w-fit" size="sm"/>
+        <Button
+          label="Edit Review"
+          @click="in_review_edit = true"
+          class="w-fit"
+          size="sm"
+        />
       </div>
       <div v-else>
         <LoadingIndicator class="w-6 h-6" />
@@ -64,7 +69,12 @@
   </div>
 </template>
 <script setup>
-import { createResource, LoadingIndicator, FormControl, ErrorMessage } from 'frappe-ui'
+import {
+  createResource,
+  LoadingIndicator,
+  FormControl,
+  ErrorMessage,
+} from 'frappe-ui'
 import { defineProps, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
@@ -91,11 +101,12 @@ const hasReviewed = createResource({
   makeParams() {
     return {
       submission_id: route.params.talk_id,
+      reviewer: session.user,
     }
   },
   onSuccess(data) {
     if (!data) {
-        in_review_edit.value = true
+      in_review_edit.value = true
       return
     }
     reviewData.fetch()
@@ -108,6 +119,7 @@ const reviewData = createResource({
   makeParams() {
     return {
       submission_id: route.params.talk_id,
+      reviewer: session.user,
     }
   },
   onSuccess(data) {
@@ -119,58 +131,59 @@ const reviewData = createResource({
 })
 
 const handleReviewSubmit = () => {
-    if(!selectedReviewOption.value){
-        errors.value = 'Please select a review option'
-        return
-    }
+  if (!selectedReviewOption.value) {
+    errors.value = 'Please select a review option'
+    return
+  }
 
-    if (reviewData.data){
-        updateReview()
-        return
-    }
+  if (reviewData.data) {
+    updateReview()
+    return
+  }
 
-    submitReview()
+  submitReview()
 }
 
 const updateReview = () => {
-    createResource({
-        url: 'frappe.client.set_value',
-        makeParams() {
-            return {
-                doctype: 'FOSS Event CFP Review',
-                name: reviewData.data.name,
-                fieldname: {
-                    to_approve: selectedReviewOption.value.value,
-                    remarks: newRemarks.value,
-                },
-            }
+  createResource({
+    url: 'frappe.client.set_value',
+    makeParams() {
+      return {
+        doctype: 'FOSS Event CFP Review',
+        name: reviewData.data.name,
+        fieldname: {
+          to_approve: selectedReviewOption.value.value,
+          remarks: newRemarks.value,
         },
-        auto: true,
-        onSuccess() {
-            in_review_edit.value = false
-            reviewData.fetch()
-        },
-        onError(error) {
-            errors.value = 'Failed to update review'
-        },
-    })
+      }
+    },
+    auto: true,
+    onSuccess() {
+      in_review_edit.value = false
+      reviewData.fetch()
+    },
+    onError(error) {
+      errors.value = 'Failed to update review'
+    },
+  })
 }
 
 const submitReview = () => {
-    createResource({
-        url: 'fossunited.api.reviewer.submit_review',
-        makeParams(){
-            return {
-                submission_id: route.params.talk_id,
-                to_approve: selectedReviewOption.value.value,
-                remarks: newRemarks.value,
-            }
-        },
-        auto: true,
-        onSuccess() {
-            in_review_edit.value = false
-            hasReviewed.fetch()
-        },
-    })
+  createResource({
+    url: 'fossunited.api.reviewer.submit_review',
+    makeParams() {
+      return {
+        submission_id: route.params.talk_id,
+        to_approve: selectedReviewOption.value.value,
+        remarks: newRemarks.value,
+        reviewer: session.user,
+      }
+    },
+    auto: true,
+    onSuccess() {
+      in_review_edit.value = false
+      hasReviewed.fetch()
+    },
+  })
 }
 </script>
