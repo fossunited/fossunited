@@ -96,9 +96,7 @@ def get_tickets_insights(event_id: str) -> dict:
     Returns:
         dict: Insights of the tickets
     """
-    total_sold = frappe.db.count(
-        "FOSS Event Ticket", filters={"event": event_id}
-    )
+    total_sold = frappe.db.count("FOSS Event Ticket", filters={"event": event_id})
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
@@ -122,9 +120,7 @@ def get_tickets_insights(event_id: str) -> dict:
         },
     )
 
-    percentage_change = get_percentage_change(
-        float(tickets_sold_today), float(tickets_sold_yesterday)
-    )
+    percentage_change = get_percentage_change(float(tickets_sold_today), float(tickets_sold_yesterday))
 
     tier_data = {}
 
@@ -245,9 +241,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
     """
 
     if not has_valid_permission(event_id):
-        frappe.throw(
-            "You are not authorized to view the tickets for this event"
-        )
+        frappe.throw("You are not authorized to view the tickets for this event")
     print("Filters: ", filters)
     tickets = frappe.db.get_all(
         "FOSS Event Ticket",
@@ -292,9 +286,7 @@ def has_valid_permission(event_id: str) -> bool:
     ):
         return False
 
-    chapter_id = frappe.db.get_value(
-        "FOSS Chapter Event", event_id, ["chapter"]
-    )
+    chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, ["chapter"])
     if not check_if_chapter_member(chapter_id, session_user):
         return False
 
