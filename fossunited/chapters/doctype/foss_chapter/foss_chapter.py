@@ -25,7 +25,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # type: ignore
         city: DF.Link | None
         country: DF.Link | None
         email: DF.Data
@@ -79,7 +79,7 @@ class FOSSChapter(WebsiteGenerator):
         if not prev_doc:
             return
         for member in prev_doc.chapter_members:
-            if member not in self.chapter_members:
+            if member.chapter_member not in [d.chapter_member for d in self.chapter_members]:
                 if self.member_of_other_chapter(member):
                     continue
                 user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
