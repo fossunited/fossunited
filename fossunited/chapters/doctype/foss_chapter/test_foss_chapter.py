@@ -47,3 +47,18 @@ class TestFOSSChapter(FrappeTestCase):
         user = frappe.db.get_value("FOSS User Profile", chapter.chapter_members[0].chapter_member, "user")
         has_role = frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user})
         self.assertTrue(has_role)
+
+    def test_role_assignment_on_member_addition(self):
+        # Given a chapter: self.chapter
+        chapter = frappe.get_doc("FOSS Chapter", self.chapter.name)
+
+        # When a new member is added to the chapter
+        new_member = frappe.get_doc("FOSS User Profile", {"user": "test1@example.com"})
+
+        chapter.append("chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"})
+        chapter.save()
+
+        # Then the new member should have the role of 'Chapter Team Member'
+        user = frappe.db.get_value("FOSS User Profile", new_member.name, "user")
+        has_role = frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user})
+        self.assertTrue(has_role)
