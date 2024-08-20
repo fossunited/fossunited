@@ -33,9 +33,9 @@ def create_profile_on_user_create(doc, method):
         profile.insert(ignore_permissions=True)
 
     try:
-        frappe.db.set_value("User", profile.user, "username", profile.username)
-    except Exception:
-        frappe.throw("Error updating username")
+        frappe.db.set_value("User", profile.user, "username", profile.username, update_modified=False)
+    except Exception as e:
+        frappe.throw("Error updating username. Error: " + str(e))
 
 
 def generate_username(username, count=1):
