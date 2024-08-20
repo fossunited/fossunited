@@ -25,7 +25,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # type: ignore
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
         city: DF.Link | None
         country: DF.Link | None
         email: DF.Data
@@ -44,7 +44,7 @@ class FOSSChapter(WebsiteGenerator):
 
     # end: auto-generated types
     def before_insert(self):
-        self.set_member_roles()
+        self.handle_member_addition()
 
     def validate(self):
         self.make_city_name_upper()
