@@ -19,6 +19,11 @@ const showNav = ref(false)
 
 const navItems = createResource({
   url: 'fossunited.api.sidebar.get_sidebar_items',
+  makeParams(){
+    return {
+      user: session.user,
+    }
+  },
   auto: true,
 })
 
