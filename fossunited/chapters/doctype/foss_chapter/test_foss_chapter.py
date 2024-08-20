@@ -13,8 +13,8 @@ class TestFOSSChapter(FrappeTestCase):
         chapter = frappe.get_doc(
             {
                 "doctype": "FOSS Chapter",
-                "chapter_name": "Pune",
-                "chapter_type": "City Community",
+                "chapter_name": fake.text(max_nb_chars=40),
+                "chapter_type": "FOSS Club",
                 "city": "Pune",
                 "country": "India",
                 "email": fake.email(),
