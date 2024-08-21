@@ -21,24 +21,12 @@ class FOSSChapterEvent(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (
-            FOSSChapterEventMember,
-        )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
-            FOSSEventCommunityPartner,
-        )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
-            FOSSEventField,
-        )
-        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
-            FOSSEventSchedule,
-        )
-        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
-            FOSSEventSponsor,
-        )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
-            FOSSTicketTier,
-        )
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import FOSSChapterEventMember
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import FOSSEventCommunityPartner
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
+        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import FOSSEventSchedule
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import FOSSEventSponsor
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -57,6 +45,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_start_date: DF.Datetime | None
         event_type: DF.Link | None
         external_event_url: DF.Data | None
+        hall_options: DF.SmallText | None
         is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check

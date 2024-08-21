@@ -61,6 +61,9 @@
   "schedule_tab",
   "schedule_section",
   "event_schedule",
+  "section_break_vlwf",
+  "hall_options",
+  "column_break_wqtz",
   "tickets_tab",
   "is_paid_event",
   "tickets_status",
@@ -430,6 +433,19 @@
    "fieldtype": "Select",
    "label": "Tickets Status",
    "options": "Live\nClosed"
+  },
+  {
+   "fieldname": "section_break_vlwf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "hall_options",
+   "fieldtype": "Small Text",
+   "label": "Hall Options"
+  },
+  {
+   "fieldname": "column_break_wqtz",
+   "fieldtype": "Column Break"
   }
  ],
  "has_web_view": 1,
@@ -451,7 +467,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-08-15 15:10:05.697637",
+ "modified": "2024-08-21 16:05:02.945866",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
