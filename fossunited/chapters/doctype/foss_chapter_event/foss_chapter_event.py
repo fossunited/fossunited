@@ -215,17 +215,17 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event": self.name,
                 "status": "Approved",
             },
-            fields=["talk_title", "submitted_by", "picture_url"],
+            fields=["talk_title", "submitted_by", "picture_url", "full_name", "designation", "organization"],
         )
         speakers = []
         for cfp in speaker_cfps:
-            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
             speakers.append(
                 {
-                    "full_name": user.full_name,
+                    "full_name": cfp.full_name,
                     "talk_title": cfp.talk_title,
                     "profile_picture": cfp.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png",
-                    "route": user.route,
+                    "designation": cfp.designation,
+                    "organization": cfp.organization,
                 }
             )
 

@@ -167,13 +167,13 @@
         <div class="speakers-grid">
             {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
             {% for speaker in speakers %}
-            <a class="speaker-card" href="/{{ speaker.route }}">
+            <div class="speaker-card">
                 <img src="{{ speaker.profile_picture }}" alt="{{ speaker.full_name }}" class="speaker--image">
                 <div class="speaker--details">
                     <div class="speaker--name">{{ speaker.full_name }}</div>
-                    <div class="speaker--talk-title">{{ speaker.talk_title }}</div>
+                    <div class="speaker--talk-title">{{ speaker.designation }}, {{ speaker.organization }}</div>
                 </div>
-            </a>
+            </div>
             {% endfor %}
         </div>
         {% else %}
