@@ -44,8 +44,8 @@
             <div class="cfp-header--speaker-status-container">
                 {% if not cfp.anonymise_proposals or doc.status=='Approved' %}
                 <div class="cfp-header--speaker">
-                    <img class="user-img-sm rounded" src="{{ speaker.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="">
-                    <span class="cfp-header--speaker-name">{{ speaker.full_name }}</span>
+                    <img class="user-img-sm rounded" src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="">
+                    <span class="cfp-header--speaker-name">{{ doc.full_name }}</span>
                 </div>
                 {% endif %}
                 <div class="cfp-header--status">
@@ -90,10 +90,12 @@
 {% macro render_speaker_details() %}
 <div class="speaker-detail-container cfp-content-div content-div" id="about_speaker">
     <h5>{{ _("About the Speaker") }}</h5>
+    {% if submitter_foss_profile %}
     <a href="/{{submitter_foss_profile.route}}" class="green-link text-lg">
         <span>View Profile</span>
         <i class="ti ti-external-link"></i>
     </a>
+    {% endif %}
     <div class="cfp--speaker-description">
         {{ doc.bio }}
     </div>

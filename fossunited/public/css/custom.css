@@ -1674,11 +1674,6 @@ h6{
     transition: box-shadow 0.2s ease-in-out;
 }
 
-.speaker-card:hover{
-    box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-100));
-    text-decoration: none;
-}
-
 .speaker--image{
     width: 5rem;
     height: 5rem;
