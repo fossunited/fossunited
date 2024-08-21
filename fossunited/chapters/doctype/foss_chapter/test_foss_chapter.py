@@ -29,6 +29,11 @@ class TestFOSSChapter(FrappeTestCase):
         )
         chapter.insert()
 
+        if not frappe.db.exists("Role", "Chapter Team Member"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(ignore_permissions=True)
+        if not frappe.db.exists("Role", "Chapter Lead"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(ignore_permissions=True)
+
         lead_profile = frappe.get_doc("FOSS User Profile", {"user": "test@example.com"})
         chapter.append("chapter_members", {"chapter_member": lead_profile.name, "role": "Lead"})
         chapter.save()
