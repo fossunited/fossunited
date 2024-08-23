@@ -310,3 +310,19 @@ def get_ticket_tiers(event_id: str) -> list:
         fields=["title", "maximum_tickets"],
     )
     return tiers
+
+
+@frappe.whitelist(allow_guest=True)
+def is_ticket_live(event_id: str) -> bool:
+    """
+    Check if the ticketing for the event is live or not
+
+    Args:
+        event_id (str): Event ID
+
+    Returns:
+        bool: True if ticketing is live, False otherwise
+    """
+    ticket_status = frappe.db.get_value("FOSS Chapter Event", event_id, "tickets_status")
+
+    return ticket_status == "Live"
