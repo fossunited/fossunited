@@ -93,7 +93,9 @@ import {
   FormControl,
 } from 'frappe-ui'
 import { toast } from 'vue-sonner'
-import { defineProps, reactive, ref } from 'vue'
+import { defineProps, reactive, ref, inject } from 'vue'
+
+const session = inject('$session')
 
 const props = defineProps({
   event: {
@@ -144,6 +146,7 @@ const attendeesList = createResource({
         full_name : ['like', `%${filters.search_text}%`],
         tier: ['in', filters.tier],
       },
+      user: session.user,
     }
   },
   loading: true,
