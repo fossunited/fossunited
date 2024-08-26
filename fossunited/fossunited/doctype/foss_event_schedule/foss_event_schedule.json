@@ -12,6 +12,7 @@
   "title",
   "category",
   "other_category",
+  "hall",
   "speakers",
   "section_break_cmsn",
   "scheduled_date",
@@ -93,12 +94,17 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Title"
+  },
+  {
+   "fieldname": "hall",
+   "fieldtype": "Data",
+   "label": "Hall"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-08-21 16:03:51.922384",
+ "modified": "2024-08-26 11:27:57.300389",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Schedule",

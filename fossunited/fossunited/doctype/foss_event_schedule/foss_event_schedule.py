@@ -15,6 +15,7 @@ class FOSSEventSchedule(Document):
 
         category: DF.Literal["Talk", "Lightning Talk", "Workshop", "Panel Discussion", "Opening Note", "Break", "Other"]
         end_time: DF.Time | None
+        hall: DF.Data | None
         linked_cfp: DF.Link | None
         other_category: DF.Data | None
         parent: DF.Data
