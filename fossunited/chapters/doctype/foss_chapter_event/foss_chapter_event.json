@@ -34,6 +34,7 @@
   "status",
   "event_type",
   "column_break_pua4",
+  "event_logo",
   "banner_image",
   "event_location",
   "map_link",
@@ -446,6 +447,13 @@
   {
    "fieldname": "column_break_wqtz",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "chapter.banner_image",
+   "fetch_if_empty": 1,
+   "fieldname": "event_logo",
+   "fieldtype": "Attach Image",
+   "label": "Event logo"
   }
  ],
  "has_web_view": 1,
@@ -467,7 +475,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-08-21 16:05:02.945866",
+ "modified": "2024-08-26 14:01:38.573569",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

@@ -38,6 +38,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_description: DF.TextEditor | None
         event_end_date: DF.Datetime | None
         event_location: DF.Data | None
+        event_logo: DF.AttachImage | None
         event_members: DF.Table[FOSSChapterEventMember]
         event_name: DF.Data
         event_permalink: DF.Data | None
