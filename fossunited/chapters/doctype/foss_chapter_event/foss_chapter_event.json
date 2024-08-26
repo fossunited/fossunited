@@ -65,6 +65,7 @@
   "section_break_vlwf",
   "hall_options",
   "column_break_wqtz",
+  "schedule_page_description",
   "tickets_tab",
   "is_paid_event",
   "tickets_status",
@@ -454,6 +455,11 @@
    "fieldname": "event_logo",
    "fieldtype": "Attach Image",
    "label": "Event logo"
+  },
+  {
+   "fieldname": "schedule_page_description",
+   "fieldtype": "Long Text",
+   "label": "Schedule Page Description"
   }
  ],
  "has_web_view": 1,
@@ -475,7 +481,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-08-26 14:01:38.573569",
+ "modified": "2024-08-26 16:18:00.408048",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

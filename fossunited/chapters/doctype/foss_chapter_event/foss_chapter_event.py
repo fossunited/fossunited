@@ -56,6 +56,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
         route: DF.Data | None
+        schedule_page_description: DF.LongText | None
         secondary_button_label: DF.Data | None
         secondary_button_url: DF.Data | None
         show_cfp: DF.Check
