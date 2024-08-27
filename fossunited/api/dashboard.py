@@ -13,6 +13,11 @@ def get_event(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
+def get_event_from_permalink(permalink: str) -> dict:
+    return frappe.db.get_value("FOSS Chapter Event", {"event_permalink": permalink}, ["*"], as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
 def get_states():
     return frappe.get_all("State", fields=["name"], page_length=1000, order_by="name")
 
