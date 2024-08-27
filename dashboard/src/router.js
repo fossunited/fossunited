@@ -244,6 +244,17 @@ const routes = [
     name: 'LocalhostAttendanceProcess',
     component: () => import('@/pages/localhost/LocalhostAttendanceProcess.vue'),
     props: true
+  },
+  {
+    path: '/events/:permalink',
+    name: 'EventByPermalink',
+    children:[
+      {
+        path: 'cfp/all',
+        name: 'AllProposals',
+        component: () => import('@/pages/events/AllProposals.vue')
+      },
+    ]
   }
 ]
 
