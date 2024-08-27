@@ -68,9 +68,7 @@ class FOSSEventCFP(WebsiteGenerator):
         context.submissions = get_cfp_submissions(self.name)
         context.event = frappe.get_doc("FOSS Chapter Event", self.event)
         context.event_name = self.event_name
-        context.event_date = frappe.db.get_value("FOSS Chapter Event", self.event, "event_start_date").strftime(
-            "%B %d, %Y"
-        )
+        context.event_date = frappe.db.get_value("FOSS Chapter Event", self.event, "event_start_date").strftime("%B %d, %Y")
         context.submission_doctype = "FOSS Event CFP Submission"
         context.already_submitted = True if self.check_if_already_submitted() else False
 
