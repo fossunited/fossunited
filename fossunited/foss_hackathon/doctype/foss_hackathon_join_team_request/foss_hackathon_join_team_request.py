@@ -66,8 +66,6 @@ class FOSSHackathonJoinTeamRequest(Document):
             },
         )
         for request in requests:
-            request_doc = frappe.get_doc(
-                JOIN_TEAM_REQUEST, request.name
-            )
+            request_doc = frappe.get_doc(JOIN_TEAM_REQUEST, request.name)
             request_doc.status = "Rejected"
             request_doc.save()

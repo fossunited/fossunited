@@ -31,7 +31,7 @@
       </div>
       <hr class="mb-6" />
       <div class="my-6">
-        <EventHeader :event="event" />
+        <EventHeader :event="event.doc" />
         <a
           class="text-sm flex gap-1 my-4 hover:underline"
           target="_blank"

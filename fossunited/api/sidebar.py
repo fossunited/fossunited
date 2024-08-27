@@ -2,9 +2,7 @@ import frappe
 
 
 @frappe.whitelist(allow_guest=True)
-def get_sidebar_items():
-    is_reviewer = user_is_cfp_reviewer()
-
+def get_sidebar_items(user: str = frappe.session.user):
     sidebar_items = [
         {
             "parent_label": "Profile",
@@ -26,7 +24,7 @@ def get_sidebar_items():
         },
     ]
 
-    if user_is_chapter_member():
+    if user_is_chapter_member(user):
         sidebar_items.append(
             {
                 "parent_label": "Organizer Dashboard",
@@ -39,7 +37,7 @@ def get_sidebar_items():
             }
         )
 
-    if user_is_localhost_organizer():
+    if user_is_localhost_organizer(user):
         sidebar_items[1]["items"].append(
             {
                 "label": "Manage Localhost",
@@ -47,7 +45,7 @@ def get_sidebar_items():
             }
         )
 
-    if is_reviewer:
+    if user_is_cfp_reviewer(user):
         sidebar_items.append(
             {
                 "parent_label": "CFP Reviewer",

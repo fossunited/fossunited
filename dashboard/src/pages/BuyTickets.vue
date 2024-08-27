@@ -1,6 +1,14 @@
 <template>
 <RazorpayCheckout ref="rzpCheckout" />
 <Header/>
+<Dialog
+  v-model="showDialog"
+  class="z-50"
+  :options="{
+    title: 'Tickets are closed!',
+    message: dialogError,
+  }"
+></Dialog>
 <div
   v-if="event.data"
   class="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8 py-8"
@@ -376,6 +384,7 @@ import {
   usePageMeta,
   ErrorMessage,
   Badge,
+  Dialog,
 } from 'frappe-ui'
 import {
   RadioGroup,
@@ -532,11 +541,34 @@ function createOrder() {
   )
 }
 
+const showDialog = ref(false)
+const dialogError = ref('')
+
+const checkIfTicketsLive = createResource({
+  url: 'fossunited.api.tickets.is_ticket_live',
+  makeParams() {
+    return {
+      event_id: eventName.value,
+    }
+  },
+  onSuccess(data) {
+    if (!data) {
+      dialogError.value = 'Tickets are not live for this event'
+      showDialog.value = true
+      return
+    }
+    event.fetch()
+  },
+  onError() {
+    errorMessage.value = 'Error checking ticket status'
+  },
+})
+
 onMounted(() => {
   const params = new URLSearchParams(window.location.search)
   if (params.has('event')) {
     eventName.value = params.get('event')
-    event.fetch()
+    checkIfTicketsLive.fetch()
   }
 })
 

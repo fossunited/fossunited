@@ -1,6 +1,6 @@
 <template>
   <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
-    <EventHeader :event="event" />
+    <EventHeader :event="event.doc" />
 
     <div class="flex flex-col mt-4 gap-3 w-fit">
       <div class="text-base text-gray-600">Manage volunteers of the event.</div>

@@ -17,9 +17,7 @@ class FOSSProjectGrant(Document):
         co_sponsor: DF.Data | None
         date_of_provision: DF.Date | None
         grant_amount: DF.Data | None
-        grant_status: DF.Literal[
-            "Open", "Approved", "Under Review", "Rejected"
-        ]
+        grant_status: DF.Literal["Open", "Approved", "Under Review", "Rejected"]
         project_name: DF.Data
         project_website: DF.Data | None
     # end: auto-generated types

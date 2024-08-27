@@ -52,10 +52,7 @@ def check_if_submitter(doctype, docname):
     Check if the current user is the submitter of the given docname.
     Only used for RSVP and CFP
     """
-    return (
-        frappe.db.get_value(doctype, docname, "submitted_by")
-        == frappe.session.user
-    )
+    return frappe.db.get_value(doctype, docname, "submitted_by") == frappe.session.user
 
 
 @frappe.whitelist()
@@ -67,13 +64,9 @@ def post_review(submission, to_approve, remarks):
     :params to_approve: Reviewer's decision
     :params remarks: Reviewer's remarks
     """
-    reviewer = frappe.get_doc(
-        USER_PROFILE, {"email": frappe.session.user}
-    )
+    reviewer = frappe.get_doc(USER_PROFILE, {"email": frappe.session.user})
 
-    submission_doc = frappe.get_doc(
-        "FOSS Event CFP Submission", submission
-    )
+    submission_doc = frappe.get_doc("FOSS Event CFP Submission", submission)
     submission_doc.append(
         "reviews",
         {

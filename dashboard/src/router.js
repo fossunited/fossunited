@@ -117,6 +117,23 @@ const routes = [
         ],
       },
       {
+        path: 'tickets',
+        name: 'EventTickets',
+        component: () => import('@/pages/EventTickets.vue'),
+        children: [
+          {
+            path: '',
+            name: 'EventTicketsManage',
+            component: () => import('@/pages/EventTicketManage.vue'),
+          },
+          {
+            path: 'insights',
+            name: 'EventTicketsInsights',
+            component: () => import('@/pages/EventTicketInsights.vue'),
+          },
+        ],
+      },
+      {
         path: 'cfp',
         name: 'EventCfp',
         component: () => import('@/pages/EventCfp.vue'),

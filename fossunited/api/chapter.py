@@ -4,9 +4,7 @@ from fossunited.doctype_ids import USER_PROFILE
 
 
 @frappe.whitelist()
-def check_if_chapter_member(
-    chapter: str, user: str = frappe.session.user
-) -> bool:
+def check_if_chapter_member(chapter: str, user: str = frappe.session.user) -> bool:
     """
     Check if the user is a member of the chapter.
 
@@ -17,9 +15,7 @@ def check_if_chapter_member(
     Returns:
         bool: True if the user is a member of the chapter, False otherwise.
     """
-    profile = frappe.db.get_value(
-        USER_PROFILE, {"user": user}, ["name"]
-    )
+    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, ["name"])
 
     if not profile:
         return False

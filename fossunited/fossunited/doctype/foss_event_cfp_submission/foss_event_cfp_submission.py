@@ -91,13 +91,16 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def get_context(self, context):
         context.cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
         context.event = frappe.get_doc("FOSS Chapter Event", self.event)
-        context.speaker = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
         context.reviewers = self.get_reviewers(context.cfp)
         context.is_reviewer = frappe.session.user in [reviewer["email"] for reviewer in context.reviewers]
         context.nav_items = self.get_navbar_items(context)
-        context.submitter_foss_profile = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
+        context.submitter_foss_profile = None
+
+        if self.submitted_by:
+            context.submitter_foss_profile = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
+
         context.review_statistics = self.get_review_statistics()
         context.reviews = self.get_reviews()
         context.already_reviewed = self.check_if_already_reviewed(context)

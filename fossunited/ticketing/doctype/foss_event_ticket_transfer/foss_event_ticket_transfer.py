@@ -21,9 +21,7 @@ class FOSSEventTicketTransfer(Document):
         owner_name: DF.Data | None
         receiver_email: DF.Data
         receiver_name: DF.Data
-        status: DF.Literal[
-            "Pending Approval", "Completed", "Cancelled"
-        ]
+        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]
         ticket: DF.Link
         tshirt_size: DF.Data | None
         wants_tshirt: DF.Check
@@ -50,9 +48,7 @@ class FOSSEventTicketTransfer(Document):
     def validate_status_is_pending(self):
         if self.status != "Pending Approval":
             frappe.throw(
-                "Invalid status change. Status should be 'Pending Approval'. Current status is {0}".format(
-                    self.status
-                ),
+                "Invalid status change. Status should be 'Pending Approval'. Current status is {0}".format(self.status),
                 frappe.ValidationError,
             )
 

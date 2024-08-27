@@ -77,6 +77,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         status: DF.Literal["", "Draft", "Live", "Approved", "Concluded", "Cancelled"]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
+        tickets_status: DF.Literal["Live", "Closed"]
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 
@@ -201,9 +202,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": member.full_name,
                     "role": member.role or "Volunteer",
-                    "profile_picture": profile.profile_photo
-                    if profile.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": profile.route,
                 }
             )
@@ -216,19 +215,17 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event": self.name,
                 "status": "Approved",
             },
-            fields=["talk_title", "submitted_by", "picture_url"],
+            fields=["talk_title", "submitted_by", "picture_url", "full_name", "designation", "organization"],
         )
         speakers = []
         for cfp in speaker_cfps:
-            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
             speakers.append(
                 {
-                    "full_name": user.full_name,
+                    "full_name": cfp.full_name,
                     "talk_title": cfp.talk_title,
-                    "profile_picture": cfp.picture_url
-                    or user.profile_photo
-                    or "/assets/fossunited/images/defaults/user_profile_image.png",
-                    "route": user.route,
+                    "profile_picture": cfp.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "designation": cfp.designation,
+                    "organization": cfp.organization,
                 }
             )
 
@@ -397,11 +394,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                 )
                 submission["user_route"] = user.route
                 submission["full_name"] = user.full_name
-                submission["profile_picture"] = (
-                    submission.picture_url
-                    or user.profile_photo
-                    or "/assets/fossunited/images/defaults/user_profile_image.png"
-                )
+                submission["profile_picture"] = submission.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
         return submissions or []
 
     def get_schedule_dict(self):

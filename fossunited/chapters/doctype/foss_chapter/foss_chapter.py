@@ -25,9 +25,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal[
-            "City Community", "FOSS Club", "Conference"
-        ]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
         city: DF.Link | None
         country: DF.Link | None
         email: DF.Data
@@ -46,7 +44,7 @@ class FOSSChapter(WebsiteGenerator):
 
     # end: auto-generated types
     def before_insert(self):
-        self.set_member_roles()
+        self.handle_member_addition()
 
     def validate(self):
         self.make_city_name_upper()
@@ -62,9 +60,7 @@ class FOSSChapter(WebsiteGenerator):
     def handle_member_addition(self):
         # for each member, add roles of 'Chapter Team Member'
         for member in self.chapter_members:
-            user = frappe.db.get_value(
-                USER_PROFILE, member.chapter_member, "user"
-            )
+            user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
 
             if frappe.db.exists(
                 "Has Role",
@@ -83,12 +79,10 @@ class FOSSChapter(WebsiteGenerator):
         if not prev_doc:
             return
         for member in prev_doc.chapter_members:
-            if member not in self.chapter_members:
+            if member.chapter_member not in [d.chapter_member for d in self.chapter_members]:
                 if self.member_of_other_chapter(member):
                     continue
-                user = frappe.db.get_value(
-                    USER_PROFILE, member.chapter_member, "user"
-                )
+                user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
 
                 roles = ["Chapter Team Member"]
                 if member.role == "Lead":
@@ -132,19 +126,13 @@ class FOSSChapter(WebsiteGenerator):
 
     def set_route(self):
         if self.chapter_type == "FOSS Club":
-            self.route = (
-                f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
-            )
+            self.route = f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
         else:
-            self.route = (
-                f"{self.chapter_name.lower().replace(' ', '-')}"
-            )
+            self.route = f"{self.chapter_name.lower().replace(' ', '-')}"
 
     def get_context(self, context):
         if self.chapter_type == "City Community":
-            context.profile_img_src = (
-                "/assets/fossunited/images/chapter/city_profile.svg"
-            )
+            context.profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
         elif self.chapter_type == "FOSS Club":
             context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
@@ -209,16 +197,12 @@ class FOSSChapter(WebsiteGenerator):
     def get_members(self):
         members = []
         for member in self.chapter_members:
-            profile = frappe.get_doc(
-                USER_PROFILE, member.chapter_member
-            ).as_dict()
+            profile = frappe.get_doc(USER_PROFILE, member.chapter_member).as_dict()
             members.append(
                 {
                     "full_name": member.full_name,
                     "role": member.role,
-                    "profile_picture": profile.profile_photo
-                    if profile.profile_photo
-                    else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
                     "route": profile.route,
                 }
             )

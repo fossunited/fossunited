@@ -2,7 +2,7 @@
   <div v-if="event.doc" class="w-full z-0 min-h-screen">
     <EventHeader
       class="px-4 py-8 md:p-8"
-      :event="event"
+      :event="event.doc"
       :form_exists="Boolean(has_rsvp.data)"
       :form="event_rsvp"
     />

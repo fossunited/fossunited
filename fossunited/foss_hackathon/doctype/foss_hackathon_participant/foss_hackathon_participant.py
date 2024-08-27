@@ -20,9 +20,7 @@ class FOSSHackathonParticipant(Document):
         hackathon: DF.Link | None
         is_student: DF.Check
         localhost: DF.Link | None
-        localhost_request_status: DF.Literal[
-            "Pending", "Pending Confirmation", "Accepted", "Rejected"
-        ]
+        localhost_request_status: DF.Literal["Pending", "Pending Confirmation", "Accepted", "Rejected"]
         organization: DF.Data | None
         user: DF.Link | None
         user_profile: DF.Link | None
@@ -42,10 +40,7 @@ class FOSSHackathonParticipant(Document):
         self.localhost_request_status = "Pending"
 
     def handle_localhost_rejection(self):
-        if (
-            not self.has_value_changed("localhost")
-            and self.localhost_request_status == "Rejected"
-        ):
+        if not self.has_value_changed("localhost") and self.localhost_request_status == "Rejected":
             self.wants_to_attend_locally = False
 
     def handle_localhost_request(self):
@@ -53,22 +48,13 @@ class FOSSHackathonParticipant(Document):
         if not prev_doc:
             return
 
-        if (
-            frappe.db.get_value(
-                "User", frappe.session.user, "user_type"
-            )
-            == "System User"
-        ):
+        if frappe.db.get_value("User", frappe.session.user, "user_type") == "System User":
             return
 
         if not self.wants_to_attend_locally:
             return
 
-        if (
-            self.localhost == prev_doc.localhost
-        ) and self.localhost_request_status == "Rejected":
-            frappe.throw(
-                "You have already been rejected from this localhost."
-            )
+        if (self.localhost == prev_doc.localhost) and self.localhost_request_status == "Rejected":
+            frappe.throw("You have already been rejected from this localhost.")
 
         self.localhost_request_status = "Pending"

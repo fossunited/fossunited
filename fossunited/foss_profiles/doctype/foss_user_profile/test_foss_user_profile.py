@@ -15,9 +15,7 @@ class TestFOSSUserProfile(FrappeTestCase):
         fake = Faker()
         inserted_username = fake.user_name()
         inserted_name = fake.name()
-        profile_exists = frappe.db.exists(
-            USER_PROFILE, {"username": inserted_username}
-        )
+        profile_exists = frappe.db.exists(USER_PROFILE, {"username": inserted_username})
         self.assertFalse(profile_exists)
 
         # When a FOSSUnitedProfile is created for the user
@@ -35,8 +33,6 @@ class TestFOSSUserProfile(FrappeTestCase):
         ).insert()
 
         # Then verify that the Profile has been stored as expected
-        profile_exists = frappe.db.exists(
-            USER_PROFILE, {"user": frappe_user.name}
-        )
+        profile_exists = frappe.db.exists(USER_PROFILE, {"user": frappe_user.name})
 
         self.assertTrue(profile_exists)
