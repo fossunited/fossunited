@@ -16,3 +16,4 @@ HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 
 # FOSSUnited Module
 EVENT_CFP = "FOSS Event CFP"
+CUSTOM_ANSWER = "FOSS Cusotm Answer"
