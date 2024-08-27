@@ -2,7 +2,7 @@
 <div class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full">
     <div class="flex justify-between">
         <div class="flex gap-3 md:gap-4">
-            <div class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px]">{{ session.category }}</div>
+            <div class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px]">{{ session.category != 'Other' ? session.category : session.other_category }}</div>
             <div class="px-2 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-[2px]">{{ getDuration() }}</div>
         </div>
         <!-- add: 'Add to Calender' button -->
