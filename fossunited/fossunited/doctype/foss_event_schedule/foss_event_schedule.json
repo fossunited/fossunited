@@ -9,9 +9,11 @@
   "linked_cfp_section",
   "linked_cfp",
   "section_break_ojro",
-  "talk_title",
-  "column_break_hwcb",
-  "speaker",
+  "title",
+  "category",
+  "other_category",
+  "hall",
+  "speakers",
   "section_break_cmsn",
   "scheduled_date",
   "column_break_iitq",
@@ -43,15 +45,6 @@
    "label": "End Time"
   },
   {
-   "columns": 1,
-   "fetch_from": "linked_cfp.submitted_by",
-   "fetch_if_empty": 1,
-   "fieldname": "speaker",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Speaker"
-  },
-  {
    "columns": 2,
    "fieldname": "scheduled_date",
    "fieldtype": "Date",
@@ -67,7 +60,6 @@
    "columns": 1,
    "fieldname": "linked_cfp",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Linked CFP",
    "options": "FOSS Event CFP Submission"
   },
@@ -76,23 +68,43 @@
    "fieldtype": "Section Break"
   },
   {
+   "description": "Format \n<pre>{\n  \"speakers\": [\n    {\n        \"name\": \"Test Name\",\n        \"designation\": \"Software Engineer\",\n        \"organization\": \"FOSS United\",\n        \"profile\": \"\",\n        \"image\": \"\",\n    },\n  ]\n}\n</pre>\n",
+   "fieldname": "speakers",
+   "fieldtype": "JSON",
+   "label": "Speakers"
+  },
+  {
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Category",
+   "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nOpening Note\nBreak\nOther"
+  },
+  {
+   "depends_on": "eval:doc.category=='Other'",
+   "fieldname": "other_category",
+   "fieldtype": "Data",
+   "label": "Other Category"
+  },
+  {
    "columns": 2,
    "fetch_from": "linked_cfp.talk_title",
    "fetch_if_empty": 1,
-   "fieldname": "talk_title",
+   "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Talk Title"
+   "label": "Title"
   },
   {
-   "fieldname": "column_break_hwcb",
-   "fieldtype": "Column Break"
+   "fieldname": "hall",
+   "fieldtype": "Data",
+   "label": "Hall"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-02-18 02:48:23.920329",
+ "modified": "2024-08-26 11:27:57.300389",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event Schedule",
