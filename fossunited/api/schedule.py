@@ -66,14 +66,12 @@ def get_event_dates(schedule: list) -> list:
 
     dates = []
     for session in schedule:
-        date = session.get("scheduled_date").strftime("%d/%m/%Y")
+        date = session.get("scheduled_date")
         if date not in dates:
             dates.append(date)
 
-    # arrange dates in increasing order
-    dates.sort(key=lambda date: datetime.strptime(date, "%d/%m/%Y"))
-
-    return dates
+    dates.sort()
+    return [date.strftime("%d/%m/%Y") for date in dates]
 
 
 def get_schedule_by_hall(schedule: list) -> dict:
