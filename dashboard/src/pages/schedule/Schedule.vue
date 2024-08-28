@@ -31,7 +31,7 @@ import ScheduleHeader from '@/components/schedule/ScheduleHeader.vue'
 import ScheduleDateToggle from '@/components/schedule/ScheduleDateToggle.vue'
 import ScheduleVerticalView from '@/components/schedule/ScheduleVerticalView.vue'
 import { ref, computed, watch } from 'vue'
-import { createResource, LoadingText } from 'frappe-ui'
+import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
@@ -90,6 +90,12 @@ const breadcrumb_items = computed(() => {
       label: 'Schedule',
     },
   ]
+})
+
+usePageMeta(()=> {
+  return {
+    title: `${event.data.event_name} Schedule`,
+  }
 })
 
 function getRedirectRoute(route) {
