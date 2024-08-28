@@ -17,14 +17,14 @@ def get_event_schedule(event_id: str) -> dict:
 
     schedule = frappe.db.get_all("FOSS Event Schedule", {"parent": event_id, "parenttype": "FOSS Chapter Event"}, ["*"], order_by="start_time")
 
-    _schedule = {}
+    schedule_by_date = get_schedule_by_date(schedule)
 
-    _schedule = get_schedule_by_date(schedule)
+    schedule_by_date_and_hall = {}
 
-    for date, sessions in _schedule.items():
-        _schedule[date] = get_schedule_by_hall(sessions)
+    for date, sessions in schedule_by_date.items():
+        schedule_by_date_and_hall[date] = get_schedule_by_hall(sessions)
 
-    return _schedule
+    return schedule_by_date_and_hall
 
 
 def get_schedule_by_date(schedule: list) -> dict:
