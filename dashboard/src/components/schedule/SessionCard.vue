@@ -11,7 +11,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div v-for="speaker in getSpeakers().speakers" v-if="getSpeakers()">
             <div class="flex gap-2 items-start">
-                <img :src="speaker.image" :alt="speaker.name" class="w-13 h-13 rounded-[2px]">
+                <img :src="speaker.image" :alt="speaker.name" class="w-13 h-13 rounded-[2px] object-cover object-top">
                 <div class="flex flex-col gap-1">
                     <h4 class="text-base font-medium">{{ speaker.name }}</h4>
                     <p class="text-xs text-gray-600">{{ speaker.designation }} | {{ speaker.organization }}</p>
