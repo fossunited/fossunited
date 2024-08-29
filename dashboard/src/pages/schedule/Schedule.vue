@@ -11,8 +11,11 @@
         class="my-4 border-b border-gray-900 pb-4"
       />
       <ScheduleHeader :event="event.data" class="py-2" />
-      <ScheduleDateToggle :dates="eventDays" class="mt-4" v-model="selectedDay" />
-      <ScheduleVerticalView :schedule="selectedSchedule" class="my-6" />
+      <div class="flex justify-between items-end gap-4 flex-wrap">
+        <ScheduleDateToggle :dates="eventDays" class="mt-4" v-model="selectedDay" />
+        <ScheduleViewToggle v-model="selectedScheduleView" class="mt-4 hidden sm:block" />
+      </div>
+      <ScheduleView :view="selectedScheduleView" :schedule="selectedSchedule" class="my-6" />
     </div>
   </div>
   <div v-else>
@@ -29,7 +32,8 @@ import Breadcrumb from '@/components/Breadcrumb.vue'
 import EventHeader from '@/components/schedule/EventHeader.vue'
 import ScheduleHeader from '@/components/schedule/ScheduleHeader.vue'
 import ScheduleDateToggle from '@/components/schedule/ScheduleDateToggle.vue'
-import ScheduleVerticalView from '@/components/schedule/ScheduleVerticalView.vue'
+import ScheduleViewToggle from '@/components/schedule/ScheduleViewToggle.vue'
+import ScheduleView from '@/components/schedule/ScheduleView.vue'
 import { ref, computed, watch } from 'vue'
 import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
@@ -39,6 +43,7 @@ const route = useRoute()
 const eventDays = ref([])
 const selectedDay = ref(null)
 const selectedSchedule = ref(null)
+const selectedScheduleView = ref('vertical')
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event_from_permalink',
