@@ -450,8 +450,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "chapter.banner_image",
-   "fetch_if_empty": 1,
    "fieldname": "event_logo",
    "fieldtype": "Attach Image",
    "label": "Event logo"
@@ -481,7 +479,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2024-08-26 16:18:00.408048",
+ "modified": "2024-08-29 15:50:45.332914",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
