@@ -34,7 +34,7 @@ import ScheduleHeader from '@/components/schedule/ScheduleHeader.vue'
 import ScheduleDateToggle from '@/components/schedule/ScheduleDateToggle.vue'
 import ScheduleViewToggle from '@/components/schedule/ScheduleViewToggle.vue'
 import ScheduleView from '@/components/schedule/ScheduleView.vue'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, provide } from 'vue'
 import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 
@@ -62,6 +62,8 @@ const event = createResource({
     schedule.fetch()
   },
 })
+
+provide('event', event)
 
 const schedule = createResource({
   url: 'fossunited.api.schedule.get_event_schedule',

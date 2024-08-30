@@ -21,9 +21,9 @@
     <path d="M16 19h6" />
     <path d="M19 16v6" />
   </svg>
-  <!--
-    Icons from Tabler
-    Website: https://tabler.io/icons
-    Github: https://github.com/tabler/tabler?tab=MIT-1-ov-file
-   -->
 </template>
+<!--
+  Icons from Tabler
+  Website: https://tabler.io/icons
+  Github: https://github.com/tabler/tabler?tab=MIT-1-ov-file
+ -->

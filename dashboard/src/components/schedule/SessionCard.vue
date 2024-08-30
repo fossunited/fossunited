@@ -5,7 +5,7 @@
     <div class="flex justify-between">
       <div class="flex gap-3 md:gap-4">
         <div
-          class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px]"
+          class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px] flex items-center"
         >
           {{
             session.category != 'Other'
@@ -14,18 +14,18 @@
           }}
         </div>
         <div
-          class="px-2 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-[2px]"
+          class="px-2 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-[2px] flex items-center"
         >
           {{ getDuration() }}
         </div>
       </div>
-      <!-- add: 'Add to Calender' button -->
+
       <button
-        class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex gap-2 items-center"
-        @click="downloadSessionIcs.fetch()"
+        class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-2"
+        @click="downloadSessionIcs()"
       >
-        <CalenderAddIcon class="w-4 h-4" />
-        <span class="hidden md:block uppercase">Add to Calender</span>
+          <CalenderAddIcon class="h-4 w-4" />
+          <span class="hidden md:block uppercase">Add to Calender</span>
       </button>
     </div>
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
@@ -51,15 +51,16 @@
   </div>
 </template>
 <script setup>
-import { createResource } from 'frappe-ui'
-import { defineProps, reactive } from 'vue'
+import { createEvent } from 'ics'
+import { toast } from 'vue-sonner'
+import { defineProps, inject,  } from 'vue'
 import CalenderAddIcon from '@/components/icons/CalenderAddIcon.vue'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
 
 dayjs.extend(duration)
 
-const speakers = reactive({})
+const event = inject('event')
 
 const props = defineProps({
   session: {
@@ -68,23 +69,60 @@ const props = defineProps({
   },
 })
 
-const downloadSessionIcs = createResource({
-    url: 'fossunited.api.schedule.get_schedule_session_ics',
-    makeParams(){
-        return {
-            schedule: props.session
-        }
-    },
-    onSuccess(data){
-        const blob = new Blob([data], { type: 'text/calendar' })
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `${props.session.title}.ics`
-        a.click()
-        window.URL.revokeObjectURL(url)
+function formatTimeForIcs(time) {
+  let date_arr = props.session.scheduled_date.split('-').map(Number)
+  let time_arr = time.split(':').map(Number)
+  time_arr.pop()
+
+  const formattedTime = date_arr.concat(time_arr)
+  return formattedTime
+}
+
+function downloadSessionIcs() {
+  let icsEvent = {
+    title: `${props.session.title} - ${event.data.event_name}`,
+    start: formatTimeForIcs(props.session.start_time),
+    end: formatTimeForIcs(props.session.end_time),
+    location: `${props.session.hall}, ${event.data.event_location}`,
+    categories: [
+      props.session.category !== 'Other'
+        ? props.session.category
+        : props.session.other_category,
+    ],
+  }
+
+  let alarms = []
+
+  alarms.push({
+    action: 'display',
+    description: `Session Reminder: ${props.session.title} | ${event.data.event_name}`,
+    trigger: { minutes: 10, before: true },
+  })
+  alarms.push({
+    action: 'audio',
+    description: `Session Reminder: ${props.session.title} | ${event.data.event_name}`,
+    trigger: { minutes: 10, before: true },
+  })
+
+  icsEvent['alarms'] = alarms
+
+  createEvent(icsEvent, (error, value) => {
+    if (error) {
+      toast.error('Error downloading the .ics file' + error.message)
+      return
     }
-})
+
+    const blob = new Blob([value], { type: 'text/calendar' })
+    const url = window.URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `${props.session.title}.ics`
+    a.click()
+    window.URL.revokeObjectURL(url)
+  })
+
+  toast.info('.ics file downloaded.')
+}
 
 function getDuration() {
   const startTime = dayjs(`1970-01-01 ${props.session.start_time}`)
