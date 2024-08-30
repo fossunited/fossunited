@@ -96,30 +96,3 @@ def get_schedule_by_hall(schedule: list) -> dict:
         _schedule[hall].append(session)
 
     return _schedule
-
-
-@frappe.whitelist(allow_guest=True)
-def get_schedule_session_ics(schedule: dict):
-    """
-    Download the ics file for the schedule session
-
-    Args:
-        schedule (dict): Schedule session data
-    """
-
-    cal = Calendar()
-
-    timezone = pytz.timezone("Asia/Kolkata")
-
-    event_location = frappe.db.get_value("FOSS Chapter Event", schedule.get("parent"), "event_location")
-    event = Event()
-    event.name = schedule.get("title")
-    event.begin = timezone.localize(datetime.strptime(f'{schedule.get("scheduled_date")} {schedule.get("start_time")}', "%Y-%m-%d %H:%M:%S"))
-    event.end = timezone.localize(datetime.strptime(f'{schedule.get("scheduled_date")} {schedule.get("end_time")}', "%Y-%m-%d %H:%M:%S"))
-    event.location = f'{schedule.get("hall")} - {event_location}'
-
-    cal.events.add(event)
-
-    ics_content = cal.serialize()
-
-    return ics_content
