@@ -1,8 +1,6 @@
 from datetime import datetime
 
 import frappe
-import pytz
-from ics import Calendar, Event
 
 
 @frappe.whitelist(allow_guest=True)

@@ -26,4 +26,5 @@ class FOSSEventSchedule(Document):
         start_time: DF.Time | None
         title: DF.Data | None
     # end: auto-generated types
+
     pass
