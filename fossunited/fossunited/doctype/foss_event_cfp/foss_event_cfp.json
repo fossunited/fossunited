@@ -16,6 +16,8 @@
   "anonymise_proposals",
   "only_workshops",
   "only_talk_proposals",
+  "proposal_page_information_section",
+  "proposal_page_description",
   "event_information_section",
   "event",
   "event_name",
@@ -137,13 +139,23 @@
    "fieldname": "deadline",
    "fieldtype": "Datetime",
    "label": "Deadline"
+  },
+  {
+   "fieldname": "proposal_page_information_section",
+   "fieldtype": "Section Break",
+   "label": "Proposal Page Information"
+  },
+  {
+   "fieldname": "proposal_page_description",
+   "fieldtype": "Text",
+   "label": "Proposal Page Description"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2024-07-08 15:08:01.720031",
+ "modified": "2024-08-30 13:34:40.081374",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP",
