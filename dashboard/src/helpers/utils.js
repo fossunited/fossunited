@@ -5,3 +5,7 @@ export const truncateStr = (title, len) => {
 export const redirectRoute = (route) => {
   window.open(document.location.origin + '/' + route, '_blank')
 }
+
+export const redirectRouteToSameWindow = (route) => {
+  window.open(document.location.origin + '/' + route)
+}

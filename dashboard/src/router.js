@@ -246,11 +246,11 @@ const routes = [
     props: true
   },
   {
-    path: '/events/:permalink',
+    path:'/',
     name: 'EventByPermalink',
     children:[
       {
-        path: 'cfp/all',
+        path: 'cfp/:permalink',
         name: 'AllProposals',
         component: () => import('@/pages/events/AllProposals.vue')
       },
