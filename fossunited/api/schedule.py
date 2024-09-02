@@ -50,6 +50,8 @@ def get_schedule_by_date(schedule: list) -> dict:
 
         _schedule[date].append(session)
 
+    _schedule = dict(sorted(_schedule.items(), key=lambda x: datetime.strptime(x[0], "%d/%m/%Y")))
+
     return _schedule
 
 
