@@ -32,13 +32,25 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         frappe.delete_doc("FOSS Chapter Event", self.event.name, force=True)
 
     def test_ticket_transfer(self):
+        fake = Faker()
+
+        sender = {
+            "full_name": fake.name(),
+            "email": fake.email(),
+        }
+
+        recipient = {
+            "full_name": fake.name(),
+            "email": fake.email(),
+        }
+
         # Given for an event, a ticket is created. For that ticket, a transfer is generated.
         ticket = frappe.get_doc(
             {
                 "doctype": "FOSS Event Ticket",
                 "event": self.event.name,
-                "full_name": "Harsh Tandiya",
-                "email": "harsh@test.xyz",
+                "full_name": sender["full_name"],
+                "email": sender["email"],
             }
         )
         ticket.insert()
@@ -47,8 +59,8 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             {
                 "doctype": "FOSS Event Ticket Transfer",
                 "ticket": ticket.name,
-                "receiver_name": "Rahul",
-                "receiver_email": "rahul@test.xyz",
+                "receiver_name": recipient["full_name"],
+                "receiver_email": recipient["email"],
             }
         )
         transfer.insert()
@@ -65,8 +77,8 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         old_ticket_exists = frappe.db.exists(
             "FOSS Event Ticket",
             {
-                "email": "harsh@test.xyz",
-                "full_name": "Harsh Tandiya",
+                "email": sender["email"],
+                "full_name": sender["full_name"],
                 "event": self.event.name,
             },
         )
@@ -75,22 +87,23 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         new_ticket_exists = frappe.db.exists(
             "FOSS Event Ticket",
             {
-                "email": "rahul@test.xyz",
-                "full_name": "Rahul",
+                "email": recipient["email"],
+                "full_name": recipient["full_name"],
                 "event": self.event.name,
             },
         )
         self.assertTrue(new_ticket_exists)
 
     def test_status_pending_on_create(self):
+        fake = Faker()
         # Given an event and a ticket linked to the event
         # With a ticket created for a user, try to transfer this ticket to another user while passing "Completed" as the status
         ticket = frappe.get_doc(
             {
                 "doctype": "FOSS Event Ticket",
                 "event": self.event.name,
-                "full_name": "Harsh Tandiya",
-                "email": "harsh2@test.xyz",
+                "full_name": fake.name(),
+                "email": fake.email(),
             }
         )
         ticket.insert()
@@ -101,8 +114,8 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
                 {
                     "doctype": "FOSS Event Ticket Transfer",
                     "ticket": ticket.name,
-                    "receiver_name": "Rahul",
-                    "receiver_email": "rahul2@test.xyz",
+                    "receiver_name": fake.name(),
+                    "receiver_email": fake.email(),
                     "status": "Completed",
                 }
             )
