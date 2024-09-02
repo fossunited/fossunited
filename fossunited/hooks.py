@@ -72,6 +72,10 @@ website_route_rules = [
         "to_route": "/rsvp/create/new",
     },
     {
+        "from_route": "/events/<event_permalink>/schedule",
+        "to_route": "/schedule",
+    },
+    {
         "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },

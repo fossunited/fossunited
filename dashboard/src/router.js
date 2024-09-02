@@ -200,6 +200,12 @@ const routes = [
     component: () => import('@/pages/hackathon/Register.vue'),
   },
   {
+    name: 'SchedulePage',
+    path: '/schedule/:permalink',
+    component: () => import('@/pages/schedule/Schedule.vue'),
+    meta: { isPublicPage: true },
+  },
+  {
     path: '/hack/:permalink',
     children:[
       {

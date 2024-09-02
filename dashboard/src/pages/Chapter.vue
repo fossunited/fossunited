@@ -21,8 +21,8 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-import { usePageMeta, createResource, createDocumentResource, Dialog } from 'frappe-ui'
+import { ref, onMounted, inject } from 'vue'
+import { usePageMeta, createResource, Dialog } from 'frappe-ui'
 import { useRoute, useRouter, RouterView } from 'vue-router'
 import SideNavbar from '@/components/NewAppSidebar.vue'
 import HeaderWithNav from '@/components/HeaderWithNav.vue'
@@ -30,7 +30,7 @@ import HeaderWithNav from '@/components/HeaderWithNav.vue'
 const route = useRoute()
 const router = useRouter()
 const showNav = ref(false)
-
+const session = inject('$session')
 const dialogMessage = ref('')
 const showDialog = ref(false)
 
@@ -72,6 +72,7 @@ const isChapterMember = createResource({
   makeParams() {
     return {
       chapter: route.params.id,
+      user: session.user,
     }
   },
   onSuccess(data) {

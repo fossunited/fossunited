@@ -21,24 +21,12 @@ class FOSSChapterEvent(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (
-            FOSSChapterEventMember,
-        )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
-            FOSSEventCommunityPartner,
-        )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
-            FOSSEventField,
-        )
-        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
-            FOSSEventSchedule,
-        )
-        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
-            FOSSEventSponsor,
-        )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
-            FOSSTicketTier,
-        )
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import FOSSChapterEventMember
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import FOSSEventCommunityPartner
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
+        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import FOSSEventSchedule
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import FOSSEventSponsor
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -50,6 +38,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_description: DF.TextEditor | None
         event_end_date: DF.Datetime | None
         event_location: DF.Data | None
+        event_logo: DF.AttachImage | None
         event_members: DF.Table[FOSSChapterEventMember]
         event_name: DF.Data
         event_permalink: DF.Data | None
@@ -57,6 +46,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_start_date: DF.Datetime | None
         event_type: DF.Link | None
         external_event_url: DF.Data | None
+        hall_options: DF.SmallText | None
         is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
@@ -66,6 +56,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
         route: DF.Data | None
+        schedule_page_description: DF.LongText | None
         secondary_button_label: DF.Data | None
         secondary_button_url: DF.Data | None
         show_cfp: DF.Check
@@ -215,17 +206,17 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event": self.name,
                 "status": "Approved",
             },
-            fields=["talk_title", "submitted_by", "picture_url"],
+            fields=["talk_title", "submitted_by", "picture_url", "full_name", "designation", "organization"],
         )
         speakers = []
         for cfp in speaker_cfps:
-            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
             speakers.append(
                 {
-                    "full_name": user.full_name,
+                    "full_name": cfp.full_name,
                     "talk_title": cfp.talk_title,
                     "profile_picture": cfp.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png",
-                    "route": user.route,
+                    "designation": cfp.designation,
+                    "organization": cfp.organization,
                 }
             )
 

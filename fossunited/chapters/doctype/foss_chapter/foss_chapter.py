@@ -44,7 +44,7 @@ class FOSSChapter(WebsiteGenerator):
 
     # end: auto-generated types
     def before_insert(self):
-        self.set_member_roles()
+        self.handle_member_addition()
 
     def validate(self):
         self.make_city_name_upper()
@@ -79,7 +79,7 @@ class FOSSChapter(WebsiteGenerator):
         if not prev_doc:
             return
         for member in prev_doc.chapter_members:
-            if member not in self.chapter_members:
+            if member.chapter_member not in [d.chapter_member for d in self.chapter_members]:
                 if self.member_of_other_chapter(member):
                     continue
                 user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")

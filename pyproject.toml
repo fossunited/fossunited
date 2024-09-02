@@ -10,6 +10,7 @@ dynamic = ["version"]
 dependencies = [
     "razorpay~=1.4.2",
     "PyGithub~=2.3.0",
+    "Faker~=27.0.0",
 ]
 
 [build-system]

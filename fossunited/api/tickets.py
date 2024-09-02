@@ -229,7 +229,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
-def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
+def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.session.user) -> list:
     """
     Get the list of all tickets sold for the event.
 
@@ -240,7 +240,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
         list: List of tickets sold for the event
     """
 
-    if not has_valid_permission(event_id):
+    if not has_valid_permission(event_id, user):
         frappe.throw("You are not authorized to view the tickets for this event")
     print("Filters: ", filters)
     tickets = frappe.db.get_all(
@@ -261,7 +261,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
     return tickets
 
 
-def has_valid_permission(event_id: str) -> bool:
+def has_valid_permission(event_id: str, session_user: str = frappe.session.user) -> bool:
     """
     Check if the user has valid permission to view the tickets for the event
 
@@ -271,7 +271,6 @@ def has_valid_permission(event_id: str) -> bool:
     Returns:
         bool: True if the user has valid permission, False otherwise
     """
-    session_user = frappe.session.user
 
     if not (
         bool(
@@ -310,3 +309,19 @@ def get_ticket_tiers(event_id: str) -> list:
         fields=["title", "maximum_tickets"],
     )
     return tiers
+
+
+@frappe.whitelist(allow_guest=True)
+def is_ticket_live(event_id: str) -> bool:
+    """
+    Check if the ticketing for the event is live or not
+
+    Args:
+        event_id (str): Event ID
+
+    Returns:
+        bool: True if ticketing is live, False otherwise
+    """
+    ticket_status = frappe.db.get_value("FOSS Chapter Event", event_id, "tickets_status")
+
+    return ticket_status == "Live"
