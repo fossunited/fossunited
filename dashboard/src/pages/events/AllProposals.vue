@@ -56,60 +56,9 @@
           :key="index"
           class="border-b-2 py-4"
         >
-          <div class="flex justify-between items-start">
-            <div class="flex flex-col gap-y-3.5">
-              <h3 class="text-xl font-semibold">
-                <a
-                  @click.prevent="
-                    redirectRouteToSameWindow(`${proposal.route}`)
-                  "
-                  class="hover:text-green-500 transition-colors duration-300 cursor-pointer"
-                >
-                  {{ proposal.talk_title }}
-                </a>
-              </h3>
-              <div
-                class="flex flex-col gap-y-3.5 items-start mt-1 md:flex-row md:items-center"
-              >
-                <div class="flex items-center text-xs font-semibold">
-                  <span
-                    class="bg-gray-200 px-2 py-1 text-gray-600 rounded-sm mr-2"
-                    >{{ proposal.session_type.toUpperCase() }}</span
-                  >
-                  <div>
-                    <span
-                      class="px-2 py-1 rounded-sm md:hidden"
-                      :class="getStatusClass(proposal.status)"
-                      >{{ proposal.status.toUpperCase() }}</span
-                    >
-                  </div>
-                </div>
-                <div v-if="proposal.status == `Approved`" class="flex text-sm">
-                  <SpeakerIcon />
-                  <span>
-                    {{ proposal.full_name }}
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col gap-y-3.5 items-end">
-              <div
-                class="flex items-center gap-1 bg-gray-200 px-1.5 py-1 rounded-sm"
-              >
-                <LikesIcon />
-                <span class="text-xs font-semibold">{{
-                  proposalLikes.data[proposal.name]
-                }}</span>
-              </div>
-              <div class="mt-2">
-                <span
-                  class="px-2 py-1 rounded-sm text-xs font-semibold hidden md:block"
-                  :class="getStatusClass(proposal.status)"
-                  >{{ proposal.status.toUpperCase() }}</span
-                >
-              </div>
-            </div>
-          </div>
+          <ProposalBlock
+            :proposal="proposal"
+            :proposalLikes="proposalLikes.data[proposal.name]"/>
         </div>
       </div>
     </div>
@@ -123,9 +72,8 @@ import { createResource, createListResource, usePageMeta } from 'frappe-ui'
 import { redirectRouteToSameWindow } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
-import SpeakerIcon from '../../components/icons/SpeakerIcon.vue'
-import LikesIcon from '../../components/icons/LikesIcon.vue'
 import AllProposalsBanner from '../../components/proposals/AllProposalsBanner.vue'
+import ProposalBlock from '../../components/proposals/ProposalBlock.vue'
 import EventHeader from '../../components/schedule/EventHeader.vue'
 import ChevronDown from '../../components/icons/ChevronDown.vue'
 
@@ -210,18 +158,6 @@ const breadcrumb_items = computed(() => {
   ]
 })
 
-const getStatusClass = (status) => {
-  switch (status) {
-    case 'Approved':
-      return 'bg-green-100 text-green-800'
-    case 'Rejected':
-      return 'bg-red-100 text-red-800'
-    case 'Screening':
-      return 'bg-blue-100 text-blue-800'
-    default:
-      return 'bg-yellow-100 text-yellow-800'
-  }
-}
 
 const proposalLikes = createResource({
   url: 'fossunited.api.proposal.get_likes',
