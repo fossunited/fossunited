@@ -2,11 +2,7 @@
   <Header />
   <div class="container mx-auto px-4">
     <!-- Back button -->
-    <Breadcrumb
-      v-if="event.data"
-      class="flex gap-1 items-center mt-2"
-      :items="breadcrumb_items"
-    />
+    <Breadcrumb class="mt-2" :items="breadcrumb_items" />
 
     <!-- Banner -->
     <div class="flex items-center justify-between mb-6">
@@ -81,7 +77,12 @@
         <div class="flex justify-between items-start">
           <div class="flex flex-col gap-y-3.5">
             <h3 class="text-xl font-semibold">
-              {{ proposal.talk_title }}
+              <a
+                @click.prevent="redirectRouteToSameWindow(`${proposal.route}`)"
+                class="hover:text-green-500 transition-colors duration-300 cursor-pointer"
+              >
+                {{ proposal.talk_title }}
+              </a>
             </h3>
             <div
               class="flex flex-col gap-y-3.5 items-start mt-1 md:flex-row md:items-center"
@@ -136,7 +137,7 @@ import { useRoute } from 'vue-router'
 import { createResource, createListResource, usePageMeta } from 'frappe-ui'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
-import { redirectRouteToSameWindow } from '@/helpers/utils'
+import { redirectRouteToSameWindow, redirectRoute } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import AllProposalsBannerImage from '@/components/proposals/AllProposalsBannerImage.vue'
