@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div v-if="event.loading" class="mb-8">
-    <p>Loading event details...</p>
+    <LoadingText class="text-lg" text="Loading Proposals..." />
   </div>
   <div v-else class="container mx-auto px-4">
     <!-- Back button -->
@@ -18,47 +18,73 @@
       <div class="flex flex-col gap-y-3 justify-between mb-6 md:flex-row">
         <div class="md:w-1/2">
           <input
+            v-model="searchQuery"
             type="text"
-            placeholder="Search"
+            placeholder="Search by proposal title"
             class="w-full px-4 py-2 border rounded-sm bg-gray-300"
           />
         </div>
         <div class="flex gap-x-2 items-center">
-          <div
-            class="px-4 py-2 flex gap-x-1 items-center border rounded-sm bg-gray-800 text-white"
-          >
-            <p>Session Type</p>
-            <ChevronDown />
-
-            <!-- <select class="hidden">
-            <option>Session Type</option>
-            <option>Talk</option>
-          </select> -->
+          <div class="relative w-40">
+            <button
+              @click="toggleSessionTypeDropdown"
+              class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
+            >
+              <p>{{ selectedSessionType || 'Session Type' }}</p>
+              <ChevronDown />
+            </button>
+            <div
+              v-if="showSessionTypeDropdown"
+              class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+            >
+              <div
+                v-for="type in sessionTypes"
+                :key="type"
+                @click="selectSessionType(type)"
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                {{ type }}
+              </div>
+            </div>
           </div>
-
-          <div
-            class="px-4 py-2 flex gap-x-1 items-center border rounded-sm bg-gray-800 text-white"
-          >
-            <p>Status</p>
-            <ChevronDown />
-            <!-- <select>
-            <option>Session Type</option>
-            <option>Talk</option>
-          </select> -->
+          <div class="relative w-40">
+            <button
+              @click="toggleStatusDropdown"
+              class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
+            >
+              <p>{{ selectedStatus || 'Status' }}</p>
+              <ChevronDown />
+            </button>
+            <div
+              v-if="showStatusDropdown"
+              class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+            >
+              <div
+                v-for="status in statuses"
+                :key="status"
+                @click="selectStatus(status)"
+                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+              >
+                {{ status }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <!-- Talk proposals list -->
       <div class="space-y-4">
-        <div
-          v-for="(proposal, index) in proposals.data"
+        <div v-if="filteredProposals.length != 0"
+          v-for="(proposal, index) in filteredProposals"
           :key="index"
           class="border-b-2 py-4"
         >
           <ProposalBlock
             :proposal="proposal"
-            :proposalLikes="proposalLikes.data[proposal.name]"/>
+            :proposalLikes="proposalLikes.data[proposal.name]"
+          />
+        </div>
+        <div v-else>
+          <h3>No proposals</h3>
         </div>
       </div>
     </div>
@@ -66,9 +92,9 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { createResource, createListResource, usePageMeta } from 'frappe-ui'
+import { createResource, usePageMeta, LoadingText } from 'frappe-ui'
 import { redirectRouteToSameWindow } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
@@ -81,11 +107,10 @@ const route = useRoute()
 const eventPermalink = route.params.permalink
 
 const event = createResource({
-  url: 'frappe.client.get_value',
+  url: 'fossunited.api.dashboard.get_event_from_permalink',
   params: {
-    doctype: 'FOSS Chapter Event',
-    filters: { event_permalink: eventPermalink },
-    fieldname: [
+    permalink: eventPermalink,
+    fields: [
       'chapter',
       'chapter_name',
       'event_name',
@@ -107,33 +132,34 @@ const event = createResource({
 })
 
 const cfp = createResource({
-  url: 'frappe.client.get_value',
+  url: 'fossunited.api.dashboard.get_cfp_details_from_eventname',
   makeParams() {
     return {
-      doctype: 'FOSS Event CFP',
-      filters: { event_name: event.data.event_name },
-      fieldname: ['route', 'proposal_page_description'],
+      eventname: event.data.event_name,
+      fields: ['route', 'proposal_page_description'],
     }
   },
 })
 
-const proposals = createListResource({
-  doctype: 'FOSS Event CFP Submission',
-  makeFilters() {
+
+const proposals = createResource({
+  url: 'fossunited.api.dashboard.get_proposal_list_from_eventname',
+  makeParams() {
     return {
-      event_name: event.data.event_name,
+      eventname: event.data.event_name,
+      fields: [
+        'name',
+        'route',
+        'talk_title',
+        'session_type',
+        'full_name',
+        'status',
+      ],
     }
   },
-  fields: [
-    'name',
-    'route',
-    'talk_title',
-    'session_type',
-    'full_name',
-    'status',
-  ],
   auto: false,
-  onSuccess() {
+  onSuccess(data) {
+    console.log(data)
     proposalLikes.fetch()
   },
 })
@@ -159,7 +185,6 @@ const breadcrumb_items = computed(() => {
   ]
 })
 
-
 const proposalLikes = createResource({
   url: 'fossunited.api.proposal.get_likes',
   makeParams() {
@@ -168,5 +193,57 @@ const proposalLikes = createResource({
       proposals: proposalIDs,
     }
   },
+})
+
+const searchQuery = ref('')
+
+const selectedSessionType = ref('')
+const selectedStatus = ref('')
+const showSessionTypeDropdown = ref(false)
+const showStatusDropdown = ref(false)
+
+// Define session types and statuses
+// : TODO - this can be dynamic again - fetch session types from backend
+const sessionTypes = ['Talk', 'Lightning Talk', 'Workshop', 'Panel', 'All']
+const statuses = ['Approved', 'Rejected', 'Screening', 'All']
+
+// Toggle functions for dropdowns
+const toggleSessionTypeDropdown = () => {
+  showSessionTypeDropdown.value = !showSessionTypeDropdown.value
+  showStatusDropdown.value = false
+}
+
+const toggleStatusDropdown = () => {
+  showStatusDropdown.value = !showStatusDropdown.value
+  showSessionTypeDropdown.value = false
+}
+
+// Selection functions for dropdowns
+const selectSessionType = (type) => {
+  selectedSessionType.value = type === 'All' ? '' : type
+  showSessionTypeDropdown.value = false
+}
+
+const selectStatus = (status) => {
+  selectedStatus.value = status === 'All' ? '' : status
+  showStatusDropdown.value = false
+}
+
+// Computed function for monitoring search-filter
+const filteredProposals = computed(() => {
+  if (!proposals.data) return []
+
+  return proposals.data.filter((proposal) => {
+    const matchesSearch = proposal.talk_title
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
+    const matchesSessionType =
+      !selectedSessionType.value ||
+      proposal.session_type === selectedSessionType.value
+    const matchesStatus =
+      !selectedStatus.value || proposal.status === selectedStatus.value
+
+    return matchesSearch && matchesSessionType && matchesStatus
+  })
 })
 </script>

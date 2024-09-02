@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="proposal && proposalLikes"
+    v-if="proposal && proposalLikes != null"
     class="flex justify-between items-start"
   >
     <div class="flex flex-col gap-y-3.5">
