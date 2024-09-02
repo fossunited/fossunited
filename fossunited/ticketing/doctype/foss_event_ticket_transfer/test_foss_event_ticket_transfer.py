@@ -4,17 +4,19 @@
 from datetime import datetime, timedelta
 
 import frappe
+from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 
 class TestFOSSEventTicketTransfer(FrappeTestCase):
-    def test_ticket_transfer(self):
-        # Given for an event, a ticket is created. For that ticket, a transfer is generated.
+    def setUp(self):
+        fake = Faker()
+
         event = frappe.get_doc(
             {
                 "doctype": "FOSS Chapter Event",
-                "event_name": "Test Event",
-                "event_permalink": "test_perma",
+                "event_name": fake.text(max_nb_chars=20),
+                "event_permalink": fake.slug(3).replace("-", "_"),
                 "status": "Approved",
                 "event_type": "Conference",
                 "event_start_date": datetime.today(),
@@ -24,10 +26,17 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         )
         event.insert()
 
+        self.event = event
+
+    def tearDown(self):
+        frappe.delete_doc("FOSS Chapter Event", self.event.name, force=True)
+
+    def test_ticket_transfer(self):
+        # Given for an event, a ticket is created. For that ticket, a transfer is generated.
         ticket = frappe.get_doc(
             {
                 "doctype": "FOSS Event Ticket",
-                "event": event.name,
+                "event": self.event.name,
                 "full_name": "Harsh Tandiya",
                 "email": "harsh@test.xyz",
             }
@@ -58,7 +67,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             {
                 "email": "harsh@test.xyz",
                 "full_name": "Harsh Tandiya",
-                "event": event.name,
+                "event": self.event.name,
             },
         )
         self.assertFalse(old_ticket_exists)
@@ -68,32 +77,18 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             {
                 "email": "rahul@test.xyz",
                 "full_name": "Rahul",
-                "event": event.name,
+                "event": self.event.name,
             },
         )
         self.assertTrue(new_ticket_exists)
 
     def test_status_pending_on_create(self):
         # Given an event and a ticket linked to the event
-        event = frappe.get_doc(
-            {
-                "doctype": "FOSS Chapter Event",
-                "event_name": "Test Event",
-                "event_permalink": "test_perma_2",
-                "status": "Approved",
-                "event_type": "Conference",
-                "event_start_date": datetime.today(),
-                "event_end_date": datetime.today() + timedelta(1),
-                "event_description": "testing",
-            }
-        )
-        event.insert()
-
         # With a ticket created for a user, try to transfer this ticket to another user while passing "Completed" as the status
         ticket = frappe.get_doc(
             {
                 "doctype": "FOSS Event Ticket",
-                "event": event.name,
+                "event": self.event.name,
                 "full_name": "Harsh Tandiya",
                 "email": "harsh2@test.xyz",
             }
