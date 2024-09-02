@@ -120,3 +120,61 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
                 }
             )
             transfer.insert()
+
+    def test_transfer_already_transferred_ticket(self):
+        fake = Faker()
+        # Given a ticket, transfer it to another user
+        sender = {
+            "full_name": fake.name(),
+            "email": fake.email(),
+        }
+        recipient_1 = {
+            "full_name": fake.name(),
+            "email": fake.email(),
+        }
+        recipient_2 = {
+            "full_name": fake.name(),
+            "email": fake.email(),
+        }
+
+        ticket = frappe.get_doc(
+            {
+                "doctype": "FOSS Event Ticket",
+                "event": self.event.name,
+                "full_name": sender["full_name"],
+                "email": sender["email"],
+            }
+        )
+        ticket.insert(ignore_permissions=True)
+
+        # Transfer ticket to recipient_1
+        transfer_1 = frappe.get_doc(
+            {
+                "doctype": "FOSS Event Ticket Transfer",
+                "ticket": ticket.name,
+                "receiver_name": recipient_1["full_name"],
+                "receiver_email": recipient_1["email"],
+            }
+        )
+        transfer_1.insert()
+        transfer_1.status = "Completed"
+        transfer_1.save()
+        ticket.reload()
+        self.assertTrue(ticket.has_value_changed("is_transfer_ticket"))
+
+        # With the ticket transferred once, try to transfer it again to another user : recipient_2
+        transfer_2 = frappe.get_doc(
+            {
+                "doctype": "FOSS Event Ticket Transfer",
+                "ticket": ticket.name,
+                "receiver_name": recipient_2["full_name"],
+                "receiver_email": recipient_2["email"],
+            }
+        )
+        transfer_2.insert()
+        transfer_2.status = "Completed"
+        transfer_2.save()
+        ticket.reload()
+
+        # Then verify that the value for 'is_transfer_ticket' was changed to 1
+        self.assertTrue(ticket.has_value_changed("is_transfer_ticket"))
