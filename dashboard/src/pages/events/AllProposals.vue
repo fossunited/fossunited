@@ -1,6 +1,9 @@
 <template>
   <Header />
-  <div v-if="event.loading" class="mb-8">
+  <div
+    v-if="event.loading"
+    class="max-w-screen-lg mx-auto mt-8 flex items-center justify-center min-h-[320px]"
+  >
     <LoadingText class="text-lg" text="Loading Proposals..." />
   </div>
   <div v-else class="container mx-auto px-4">
@@ -12,10 +15,10 @@
     />
 
     <div v-if="cfp.data && proposals.data && proposalLikes.data">
-      <AllProposalsBanner :event="event.data" :cfp="cfp.data" />
+      <AllProposalsBanner :event="event.data" :cfp="cfp.data" class="py-2" />
 
       <!-- Search and filters -->
-      <div class="flex flex-col gap-y-3 justify-between mb-6 md:flex-row">
+      <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row">
         <div class="md:w-1/2">
           <input
             v-model="searchQuery"
@@ -72,8 +75,9 @@
         </div>
       </div>
       <!-- Talk proposals list -->
-      <div class="space-y-4">
-        <div v-if="filteredProposals.length != 0"
+      <div class="mb-12">
+        <div
+          v-if="filteredProposals.length != 0"
           v-for="(proposal, index) in filteredProposals"
           :key="index"
           class="border-b-2 py-4"
@@ -140,7 +144,6 @@ const cfp = createResource({
     }
   },
 })
-
 
 const proposals = createResource({
   url: 'fossunited.api.dashboard.get_proposal_list_from_eventname',

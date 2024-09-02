@@ -1,9 +1,6 @@
 <template>
-  <div
-    v-if="proposal && proposalLikes != null"
-    class="flex justify-between items-start"
-  >
-    <div class="flex flex-col gap-y-3.5">
+  <div v-if="proposal && proposalLikes != null" class="flex justify-between">
+    <div class="flex flex-col gap-3 justify-between">
       <h3 class="text-xl font-semibold">
         <a
           :href="redirectRouteToSameWindow(proposal.route)"
@@ -13,7 +10,7 @@
         </a>
       </h3>
       <div
-        class="flex flex-col gap-y-3.5 items-start mt-1 md:flex-row md:items-center"
+        class="flex flex-col gap-3 items-start mt-1 md:flex-row md:items-center"
       >
         <div class="flex items-center text-xs font-semibold">
           <span class="bg-gray-200 px-2 py-1 text-gray-600 rounded-sm mr-2">{{
@@ -35,7 +32,7 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col gap-y-3.5 items-end">
+    <div class="flex flex-col gap-3 items-end">
       <div class="flex items-center gap-1 bg-gray-200 px-1.5 py-1 rounded-sm">
         <LikesIcon />
         <span class="text-xs font-semibold">{{ proposalLikes }}</span>
