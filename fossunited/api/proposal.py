@@ -3,7 +3,7 @@ import frappe
 from fossunited.fossunited.utils import get_doc_likes
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_likes(proposals) -> dict:
     """
     Get proposal like count for a given list of proposals

@@ -13,8 +13,18 @@ def get_event(name: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
-def get_event_from_permalink(permalink: str) -> dict:
-    return frappe.db.get_value("FOSS Chapter Event", {"event_permalink": permalink}, ["*"], as_dict=1)
+def get_event_from_permalink(permalink: str, fields: list) -> dict:
+    return frappe.db.get_value("FOSS Chapter Event", {"event_permalink": permalink}, fields, as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_cfp_details_from_eventname(eventname: str, fields: list) -> dict:
+    return frappe.db.get_value("FOSS Event CFP", {"event_name": eventname}, fields, as_dict=1)
+
+
+@frappe.whitelist(allow_guest=True)
+def get_proposal_list_from_eventname(eventname: str, fields: list) -> dict:
+    return frappe.get_all("FOSS Event CFP Submission", filters={"event_name": eventname}, fields=fields, page_length=99999, order_by="talk_title")
 
 
 @frappe.whitelist(allow_guest=True)
