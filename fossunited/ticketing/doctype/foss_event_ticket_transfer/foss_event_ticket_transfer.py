@@ -53,9 +53,9 @@ class FOSSEventTicketTransfer(Document):
             )
 
     def transfer_ticket(self):
-        self.validate_ticket_exists()
         try:
             ticket = frappe.get_doc("FOSS Event Ticket", self.ticket)
+            self.handle_already_transferred_ticket(ticket)
             ticket.full_name = self.receiver_name
             ticket.email = self.receiver_email
             ticket.designation = self.designation
@@ -66,3 +66,17 @@ class FOSSEventTicketTransfer(Document):
             ticket.save(ignore_permissions=True)
         except Exception as e:
             frappe.throw(str(e), frappe.ValidationError)
+
+    def handle_already_transferred_ticket(self, ticket):
+        """
+        If the ticket that is to be transferred, is already a transferred ticket,
+        then set the `is_transfer_ticket` to 0 (unchecked).
+
+        This is done, so that any notification / doc events associated with change in `is_transfer_ticket` field
+        can be triggered again.
+        """
+        if not ticket.is_transfer_ticket:
+            return
+
+        ticket.is_transfer_ticket = 0
+        ticket.save(ignore_permissions=True)
