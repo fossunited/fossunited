@@ -252,16 +252,11 @@ const routes = [
     props: true
   },
   {
-    path:'/',
-    name: 'EventByPermalink',
-    children:[
-      {
-        path: 'cfp/:permalink',
-        name: 'AllProposals',
-        component: () => import('@/pages/events/AllProposals.vue')
-      },
-    ]
-  }
+    name: 'AllProposalsPage',
+    path: '/cfp/:permalink',
+    component: () => import('@/pages/events/AllProposals.vue'),
+    meta: { isPublicPage: true },
+  },
 ]
 
 let router = createRouter({

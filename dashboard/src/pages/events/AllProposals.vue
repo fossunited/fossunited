@@ -86,6 +86,7 @@ const event = createResource({
     doctype: 'FOSS Chapter Event',
     filters: { event_permalink: eventPermalink },
     fieldname: [
+      'chapter',
       'chapter_name',
       'event_name',
       'event_start_date',

@@ -6,7 +6,7 @@
     <div class="flex flex-col gap-y-3.5">
       <h3 class="text-xl font-semibold">
         <a
-          @click.prevent="redirectRouteToSameWindow(`${proposal.route}`)"
+          :href="redirectRouteToSameWindow(proposal.route)"
           class="hover:text-green-500 transition-colors duration-300 cursor-pointer"
         >
           {{ proposal.talk_title }}

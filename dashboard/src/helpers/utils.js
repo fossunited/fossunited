@@ -7,6 +7,5 @@ export const redirectRoute = (route) => {
 }
 
 export const redirectRouteToSameWindow = (route) => {
-  window.location.href = document.location.origin + '/' + route
-
+  return window.location.origin + '/' + route
 }
