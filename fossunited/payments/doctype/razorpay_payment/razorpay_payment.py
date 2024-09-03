@@ -33,13 +33,7 @@ class RazorpayPayment(Document):
         payment_id: DF.Data | None
         refund_id: DF.Data | None
         state: DF.Data | None
-        status: DF.Literal[
-            "Captured",
-            "Failed",
-            "Pending",
-            "Refund Pending",
-            "Refunded",
-        ]
+        status: DF.Literal["Captured", "Failed", "Pending", "Refund Pending", "Refunded"]
     # end: auto-generated types
 
     @frappe.whitelist()

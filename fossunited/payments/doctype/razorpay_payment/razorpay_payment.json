@@ -84,7 +84,7 @@
    "in_standard_filter": 1,
    "label": "Email",
    "options": "Email",
-   "read_only": 1,
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -137,20 +137,21 @@
    "fieldname": "gstn",
    "fieldtype": "Data",
    "label": "GSTN",
+   "permlevel": 1,
    "read_only": 1
   },
   {
    "fieldname": "company_name",
    "fieldtype": "Data",
    "label": "Company Name",
-   "read_only": 1
+   "permlevel": 1
   },
   {
    "fieldname": "buyer_name",
    "fieldtype": "Data",
    "in_standard_filter": 1,
    "label": "Customer Name",
-   "read_only": 1
+   "permlevel": 1
   },
   {
    "depends_on": "eval:doc.status==\"Refunded\"||doc.status==\"Refund Pending\"",
@@ -172,7 +173,7 @@
    "link_fieldname": "razorpay_payment"
   }
  ],
- "modified": "2024-05-09 21:04:56.576079",
+ "modified": "2024-09-03 18:10:29.980782",
  "modified_by": "Administrator",
  "module": "Payments",
  "name": "Razorpay Payment",
@@ -187,6 +188,39 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Administrator",
    "share": 1,
    "write": 1
   }
