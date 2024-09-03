@@ -242,7 +242,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.sessi
 
     if not has_valid_permission(event_id, user):
         frappe.throw("You are not authorized to view the tickets for this event")
-    print("Filters: ", filters)
+
     tickets = frappe.db.get_all(
         "FOSS Event Ticket",
         filters={"event": event_id, **filters},
@@ -278,6 +278,15 @@ def has_valid_permission(event_id: str, session_user: str = frappe.session.user)
                 "Has Role",
                 {
                     "role": "Chapter Lead",
+                    "parent": session_user,
+                },
+            )
+        )
+        or bool(
+            frappe.db.exists(
+                "Has Role",
+                {
+                    "role": "Chapter Team Member",
                     "parent": session_user,
                 },
             )
