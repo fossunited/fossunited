@@ -165,6 +165,11 @@ const routes = [
         name: 'EventVolunteers',
         component: () => import('@/pages/EventVolunteers.vue'),
       },
+      {
+        path: 'checkins',
+        name: 'EventCheckins',
+        component: () => import('@/pages/EventCheckins.vue'),
+      }
     ],
   },
   {
