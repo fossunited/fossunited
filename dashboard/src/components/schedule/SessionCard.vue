@@ -25,7 +25,7 @@
         @click="downloadSessionIcs()"
       >
           <CalenderAddIcon class="h-4 w-4" />
-          <span class="hidden md:block uppercase">Add to Calender</span>
+          <span class="hidden md:block uppercase">Add to Calendar</span>
       </button>
     </div>
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
