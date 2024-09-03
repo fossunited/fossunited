@@ -23,7 +23,7 @@ def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.use
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
     print(_filters)
 
-    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tshirt_size"])
+    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tshirt_assigned", "tshirt_size"])
 
     for ticket in tickets:
         ticket["checkin_data"] = get_checkin_data(ticket["name"])

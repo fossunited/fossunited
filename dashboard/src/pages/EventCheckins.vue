@@ -1,4 +1,59 @@
 <template>
+  <!-- Checkin Dialog -->
+  <Dialog
+    class="z-50"
+    v-model="showDialog"
+    :options="{
+      title: 'Confirm Attendee Check In?',
+    }"
+  >
+    <template #body-content v-if="selectedAttendee">
+      <div class="flex flex-col py-2">
+        <p class="text-base">
+          Are you sure you want to check in
+          <span class="font-semibold">{{ selectedAttendee.full_name }}</span
+          >?
+        </p>
+        <div class="bg-gray-50 text-sm p-2 my-2 rounded-sm font-mono">
+          <p class="leading-5">
+            Name: {{ selectedAttendee.full_name }}
+            <br />
+            Ticket ID: {{ selectedAttendee.name }}
+            <br />
+            Has Tshirt Add-on:
+            {{ selectedAttendee.wants_tshirt ? 'Yes' : 'No' }}
+            <br />
+            <span v-if="selectedAttendee.wants_tshirt"
+              >Tshirt Size: {{ selectedAttendee.tshirt_size }}</span
+            >
+          </p>
+        </div>
+      </div>
+    </template>
+    <template #actions>
+      <div class="grid grid-cols-2 gap-2">
+        <Button
+          label="Cancel"
+          @click="
+            () => {
+              showDialog = false
+              selectedAttendee = null
+            }
+          "
+        />
+        <Button
+          label="Check In"
+          variant="solid"
+          theme="green"
+          @click="checkinAttendee.fetch()"
+          :loading="checkinAttendee.loading"
+          loadingText="Checking in..."
+        />
+      </div>
+    </template>
+  </Dialog>
+
+  <!-- Main Section -->
   <div v-if="event.data" class="w-full">
     <EventHeader :event="event.data" class="p-4 md:p-8" />
     <hr />
@@ -9,13 +64,11 @@
       </div>
       <div class="flex flex-col my-4 justify-center">
         <div class="flex flex-col gap-2 mb-4 mt-2">
-          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center">
-            <FormControl
-              v-model="filters.name"
-              label="Ticket ID"
-              placeholder="Search by Ticket ID"
-              @input="attendees.fetch()"
-            />
+
+          <!-- Search Fields -->
+          <div
+            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center"
+          >
             <FormControl
               v-model="filters.full_name"
               label="Name"
@@ -30,6 +83,12 @@
               placeholder="Search by Email"
               @input="attendees.fetch()"
             />
+            <FormControl
+              v-model="filters.name"
+              label="Ticket ID"
+              placeholder="Search by Ticket ID"
+              @input="attendees.fetch()"
+            />
           </div>
           <Button
             class="w-fit"
@@ -40,13 +99,18 @@
             loadingText="Searching..."
           />
         </div>
+
+
+        <!-- Attendee List -->
         <div v-if="attendees.data">
           <ListView
             :columns="[
-              { label: 'Ticket ID', key: 'name', width: 1 / 5 },
-              { label: 'Name', key: 'full_name', width: 1 / 5 },
-              { label: 'Check-in Status', key: 'checkin_status', width: 2 / 5 },
-              { label: 'Actions', key: 'action', width: 1 / 5 },
+              { label: 'Name', key: 'full_name' },
+              { label: 'Ticket ID', key: 'name'},
+              { label: 'Has Tshirt?', key: 'wants_tshirt', width: '100px' },
+              { label: 'Tshirt Provided?', key: 'tshirt_assigned',  width: '150px' },
+              { label: 'Check-in Status', key: 'checkin_status', width: 1.5 },
+              { label: 'Actions', key: 'action'},
             ]"
             :rows="attendees.data"
             :options="{
@@ -66,28 +130,46 @@
                   class="w-fit"
                   label="Check-in"
                   variant="solid"
-                  @click="() => {
-                    selectedAttendee = row
-                    checkinAttendee.fetch()
-                  }"
-                  :loading="checkinAttendee.loading && selectedAttendee.name === row.name"
+                  @click="
+                    () => {
+                      selectedAttendee = row
+                      showDialog = true
+                    }
+                  "
+                  :loading="
+                    checkinAttendee.loading &&
+                    selectedAttendee.name === row.name
+                  "
                   loadingText="Checking in..."
                 />
                 <Button
                   v-else
                   class="w-fit"
                   label="Undo"
-                  @click="() => {
-                    selectedAttendee = row
-                    undoAttendeeCheckin.fetch()
-                  }"
+                  @click="
+                    () => {
+                      selectedAttendee = row
+                      undoAttendeeCheckin.fetch()
+                    }
+                  "
                 />
               </template>
-              <template v-else-if="column.key ==='name'">
-                <span class="font-mono text-sm font-semibold text-gray-800">{{ item }}</span>
+              <template v-else-if="column.key === 'wants_tshirt' || column.key === 'tshirt_assigned'">
+                <Checkbox
+                  :model-value="item"
+                  :disabled="true"
+                  class="w-4 h-4"
+                />
+              </template>
+              <template v-else-if="column.key === 'name'">
+                <span class="font-mono text-sm font-semibold text-gray-800">{{
+                  item
+                }}</span>
               </template>
               <template v-else-if="column.key === 'checkin_status'">
-                <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
+                <div
+                  class="flex items-center overflow-hidden overflow-x-visible flex-wrap"
+                >
                   <span
                     v-for="data in row.checkin_data"
                     class="flex items-center p-1 rounded-sm"
@@ -98,11 +180,20 @@
                       :hoverDelay="0.5"
                     >
                       <template #body>
-                        <span class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full">
+                        <span
+                          class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full"
+                        >
                           {{ getFormattedDateTime(data.check_in_time) }}
                         </span>
                       </template>
-                      <Badge :theme="getRelativeTime(data.check_in_time) == 'Today' ? 'green' : 'gray'" class="flex gap-1 items-center">
+                      <Badge
+                        :theme="
+                          getRelativeTime(data.check_in_time) == 'Today'
+                            ? 'green'
+                            : 'gray'
+                        "
+                        class="flex gap-1 items-center"
+                      >
                         <DoubleChecksIcon class="w-4 h-4" />
                         <span>{{ getRelativeTime(data.check_in_time) }}</span>
                       </Badge>
@@ -119,6 +210,7 @@
         <div v-else>
           <LoadingText />
         </div>
+
       </div>
     </div>
   </div>
@@ -134,6 +226,8 @@ import {
   ListView,
   Badge,
   Tooltip,
+  Dialog,
+  Checkbox,
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { inject, ref, reactive } from 'vue'
@@ -147,6 +241,8 @@ dayjs.extend(isToday)
 dayjs.extend(isYesterday)
 
 const session = inject('$session')
+
+const showDialog = ref(false)
 
 const route = useRoute()
 
@@ -200,6 +296,7 @@ const checkinAttendee = createResource({
   },
   onSuccess() {
     makeChangesToAttendeeDict(selectedAttendee.value)
+    showDialog.value = false
     selectedAttendee.value = null
   },
 })
@@ -214,7 +311,9 @@ const undoAttendeeCheckin = createResource({
     }
   },
   onSuccess() {
-    const index = attendees.data.findIndex((data) => data.name === selectedAttendee.value.name)
+    const index = attendees.data.findIndex(
+      (data) => data.name === selectedAttendee.value.name,
+    )
     attendees.data[index].checkin_data.shift()
     selectedAttendee.value = null
   },
@@ -228,7 +327,9 @@ const makeChangesToAttendeeDict = (attendee) => {
 }
 
 const isCheckedInToday = (attendee) => {
-  return attendee.checkin_data.some((data) => dayjs(data.check_in_time).isToday())
+  return attendee.checkin_data.some((data) =>
+    dayjs(data.check_in_time).isToday(),
+  )
 }
 
 const getFormattedDateTime = (datetime) => {
