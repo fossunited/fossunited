@@ -21,6 +21,7 @@
   "customer",
   "additional_details_section",
   "wants_tshirt",
+  "tshirt_assigned",
   "column_break_qbfj",
   "tshirt_size",
   "section_break_tzsu",
@@ -149,10 +150,16 @@
    "fieldtype": "Table",
    "label": "Check Ins",
    "options": "Event Check In"
+  },
+  {
+   "default": "0",
+   "fieldname": "tshirt_assigned",
+   "fieldtype": "Check",
+   "label": "Tshirt Assigned?"
   }
  ],
  "links": [],
- "modified": "2024-09-02 14:37:49.073913",
+ "modified": "2024-09-03 14:40:26.541234",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
