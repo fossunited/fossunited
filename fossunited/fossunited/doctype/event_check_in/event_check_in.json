@@ -12,13 +12,14 @@
   {
    "fieldname": "check_in_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Check In Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-02 12:08:37.894519",
+ "modified": "2024-09-02 14:38:02.294172",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Check In",

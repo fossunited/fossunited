@@ -24,7 +24,9 @@
   "column_break_qbfj",
   "tshirt_size",
   "section_break_tzsu",
-  "custom_fields"
+  "custom_fields",
+  "section_break_ueio",
+  "check_ins"
  ],
  "fields": [
   {
@@ -137,10 +139,20 @@
   {
    "fieldname": "section_break_ogof",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_ueio",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "check_ins",
+   "fieldtype": "Table",
+   "label": "Check Ins",
+   "options": "Event Check In"
   }
  ],
  "links": [],
- "modified": "2024-07-03 14:45:28.719114",
+ "modified": "2024-09-02 14:37:49.073913",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -157,6 +169,12 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "role": "Chapter Lead",
+   "select": 1
   }
  ],
  "sort_field": "creation",

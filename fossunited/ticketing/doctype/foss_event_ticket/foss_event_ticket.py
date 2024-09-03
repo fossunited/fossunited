@@ -21,10 +21,10 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
-            FOSSTicketCustomField,
-        )
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import FOSSTicketCustomField
 
+        check_ins: DF.Table[EventCheckIn]
         custom_fields: DF.Table[FOSSTicketCustomField]
         customer: DF.Data | None
         designation: DF.Data | None
