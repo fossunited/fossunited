@@ -95,6 +95,7 @@ const checkinAttendee = createResource({
   onSuccess() {
     makeChangesToAttendeeDict(props.selectedAttendee)
     props.selectedAttendee = null
+    assignTshirt.value = false
     showDialog.value = false
   },
 })

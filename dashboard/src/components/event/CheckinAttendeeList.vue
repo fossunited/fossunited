@@ -16,7 +16,7 @@
       :columns="[
         { label: 'Name', key: 'full_name' },
         { label: 'Ticket ID', key: 'name' },
-        { label: 'Has Tshirt?', key: 'wants_tshirt', width: '100px' },
+        { label: 'Bought Tshirt?', key: 'wants_tshirt', width: '150px' },
         { label: 'Tshirt Provided?', key: 'tshirt_assigned', width: '150px' },
         { label: 'Check-in Status', key: 'checkin_status', width: 1.5 },
         { label: 'Actions', key: 'action' },
