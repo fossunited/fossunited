@@ -13,3 +13,9 @@ HACKATHON_PARTNER_PROJECT = "FOSS Hackathon Partner Project"
 HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
+
+# Payments
+
+RAZORPAY_PAYMENT = "Razorpay Payment"
+RAZORPAY_SETTINGS = "Razorpay Settings"
+RAZORPAY_WEBHOOK_LOGS = "Razorpay Webhook Log"
