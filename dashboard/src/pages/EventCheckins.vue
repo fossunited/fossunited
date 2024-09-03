@@ -8,6 +8,38 @@
         <p class="text-sm">Check in attendees as they arrive at the event.</p>
       </div>
       <div class="flex flex-col my-4 justify-center">
+        <div class="flex flex-col gap-2 mb-4 mt-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center">
+            <FormControl
+              v-model="filters.name"
+              label="Ticket ID"
+              placeholder="Search by Ticket ID"
+              @input="attendees.fetch()"
+            />
+            <FormControl
+              v-model="filters.full_name"
+              label="Name"
+              type="text"
+              placeholder="Search by Name"
+              @input="attendees.fetch()"
+            />
+            <FormControl
+              v-model="filters.email"
+              label="Email"
+              type="text"
+              placeholder="Search by Email"
+              @input="attendees.fetch()"
+            />
+          </div>
+          <Button
+            class="w-fit"
+            label="Search"
+            variant="solid"
+            @click="attendees.fetch()"
+            :loading="attendees.loading"
+            loadingText="Searching..."
+          />
+        </div>
         <div v-if="attendees.data">
           <ListView
             :columns="[
@@ -55,7 +87,7 @@
                 <span class="font-mono text-sm font-semibold text-gray-800">{{ item }}</span>
               </template>
               <template v-else-if="column.key === 'checkin_status'">
-                <div class="flex items-center overflow-scroll flex-wrap">
+                <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
                   <span
                     v-for="data in row.checkin_data"
                     class="flex items-center p-1 rounded-sm"
@@ -95,6 +127,7 @@
 import DoubleChecksIcon from '@/components/icons/DoubleChecks.vue'
 import EventHeader from '@/components/EventHeader.vue'
 import {
+  FormControl,
   createResource,
   usePageMeta,
   LoadingText,
@@ -103,7 +136,7 @@ import {
   Tooltip,
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { inject, ref } from 'vue'
+import { inject, ref, reactive } from 'vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import isToday from 'dayjs/plugin/isToday'
@@ -135,15 +168,23 @@ usePageMeta(() => {
   }
 })
 
+const filters = reactive({
+  name: '',
+  full_name: '',
+  email: '',
+})
+
 const attendees = createResource({
   url: 'fossunited.api.checkins.get_attendee_with_checkin_data',
   makeParams() {
     return {
       event_id: route.params.id,
       user: session.user,
+      filters: filters,
     }
   },
   auto: true,
+  debounce: 500,
 })
 
 const selectedAttendee = ref(null)

@@ -4,7 +4,7 @@ from fossunited.api.tickets import has_valid_permission
 
 
 @frappe.whitelist()
-def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.user) -> dict:
+def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.user, filters: dict = {}) -> dict:
     """
     Get the attendees of the event with their checkin details
 
@@ -18,7 +18,12 @@ def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.use
     if not has_valid_permission(event_id, user):
         frappe.throw("You do not have permission to access this resource")
 
-    tickets = frappe.db.get_all("FOSS Event Ticket", {"event": event_id}, ["name", "full_name", "designation", "organization", "wants_tshirt", "tshirt_size"])
+    _filters = {"event": event_id}
+    # Map the items in filters to be like "key": ["like", value]
+    _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
+    print(_filters)
+
+    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tshirt_size"])
 
     for ticket in tickets:
         ticket["checkin_data"] = get_checkin_data(ticket["name"])
