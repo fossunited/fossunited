@@ -21,7 +21,6 @@ def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.use
     _filters = {"event": event_id}
     # Map the items in filters to be like "key": ["like", value]
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
-    print(_filters)
 
     tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tshirt_assigned", "tshirt_size"])
 
@@ -48,7 +47,7 @@ def get_checkin_data(attendee_id: str) -> dict:
 
 
 @frappe.whitelist()
-def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.user):
+def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.user, assign_tshirt: bool = False):
     """
     Check-in the attendee for the event.
 
@@ -61,6 +60,8 @@ def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.u
 
     ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
+    if assign_tshirt:
+        ticket.tshirt_assigned = True
     ticket.save(ignore_permissions=True)
 
 
@@ -78,4 +79,22 @@ def undo_attendee_checkin(event_id: str, attendee: dict, user: str = frappe.sess
 
     ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
     ticket.check_ins.pop()
+    ticket.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def assign_tshirt(event_id: str, attendee: dict, user: str = frappe.session.user):
+    """
+    Assign Tshirt to the attendee
+
+    Args:
+        event_id (str): The event id
+        attendee (dict): The attendee details / ticket details
+        user (str): The user who is assigning the Tshirt
+    """
+    if not has_valid_permission(event_id, user):
+        frappe.throw("You do not have permission to access this resource")
+
+    ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
+    ticket.tshirt_assigned = True
     ticket.save(ignore_permissions=True)
