@@ -55,6 +55,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
+        proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
         secondary_button_label: DF.Data | None

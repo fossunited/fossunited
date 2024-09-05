@@ -4,7 +4,7 @@
     v-if="event.loading"
     class="max-w-screen-lg mx-auto mt-8 flex items-center justify-center min-h-[320px]"
   >
-    <LoadingText class="text-lg" text="Loading Proposals..." />
+    <LoadingText class="text-lg" text="Loading event data" />
   </div>
   <div v-else class="container mx-auto px-4">
     <!-- Back button -->
@@ -14,66 +14,69 @@
       class="my-4 border-b border-gray-900 pb-4"
     />
 
-    <div v-if="cfp.data && proposals.data && proposalLikes.data">
-      <AllProposalsBanner :event="event.data" :cfp="cfp.data" class="py-2" />
-
-      <!-- Search and filters -->
-      <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row">
-        <div class="md:w-1/2">
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search by proposal title"
-            class="w-full px-4 py-2 border rounded-sm bg-gray-300"
-          />
-        </div>
-        <div class="flex gap-x-2 items-center">
-          <div class="relative w-40">
-            <button
-              @click="toggleSessionTypeDropdown"
-              class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
-            >
-              <p>{{ selectedSessionType || 'Session Type' }}</p>
-              <ChevronDown />
-            </button>
+    <AllProposalsBanner :event="event.data" class="py-2" />
+    <!-- Search and filters -->
+    <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row">
+      <div class="md:w-1/2">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search by proposal title"
+          class="w-full px-4 py-2 border rounded-sm bg-gray-300"
+        />
+      </div>
+      <div class="flex gap-x-2 items-center">
+        <div class="relative w-40">
+          <button
+            @click="toggleSessionTypeDropdown"
+            class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
+          >
+            <p>{{ selectedSessionType || 'Session Type' }}</p>
+            <ChevronDown />
+          </button>
+          <div
+            v-if="showSessionTypeDropdown"
+            class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+          >
             <div
-              v-if="showSessionTypeDropdown"
-              class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+              v-for="type in sessionTypes"
+              :key="type"
+              @click="selectSessionType(type)"
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              <div
-                v-for="type in sessionTypes"
-                :key="type"
-                @click="selectSessionType(type)"
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              >
-                {{ type }}
-              </div>
+              {{ type }}
             </div>
           </div>
-          <div class="relative w-40">
-            <button
-              @click="toggleStatusDropdown"
-              class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
-            >
-              <p>{{ selectedStatus || 'Status' }}</p>
-              <ChevronDown />
-            </button>
+        </div>
+        <div class="relative w-40">
+          <button
+            @click="toggleStatusDropdown"
+            class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
+          >
+            <p>{{ selectedStatus || 'Status' }}</p>
+            <ChevronDown />
+          </button>
+          <div
+            v-if="showStatusDropdown"
+            class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+          >
             <div
-              v-if="showStatusDropdown"
-              class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
+              v-for="status in statuses"
+              :key="status"
+              @click="selectStatus(status)"
+              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
-              <div
-                v-for="status in statuses"
-                :key="status"
-                @click="selectStatus(status)"
-                class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              >
-                {{ status }}
-              </div>
+              {{ status }}
             </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <div v-if="proposals.loading">
+      <LoadingText class="text-lg" text="Loading Proposals..." />
+    </div>
+    <div v-else-if="proposals.data">
       <!-- Talk proposals list -->
       <div class="mb-12">
         <div
@@ -82,15 +85,15 @@
           :key="index"
           class="border-b-2 py-4"
         >
-          <ProposalBlock
-            :proposal="proposal"
-            :proposalLikes="proposalLikes.data[proposal.name]"
-          />
+          <ProposalBlock :proposal="proposal" />
         </div>
         <div v-else>
           <h3>No proposals</h3>
         </div>
       </div>
+    </div>
+    <div v-else class="pt-3">
+      <h4 class="text-lg font-medium">No proposals</h4>
     </div>
   </div>
 </template>
@@ -115,6 +118,7 @@ const event = createResource({
   params: {
     permalink: eventPermalink,
     fields: [
+      'name',
       'chapter',
       'chapter_name',
       'event_name',
@@ -125,46 +129,24 @@ const event = createResource({
       'is_external_event',
       'external_event_url',
       'event_logo',
+      'proposal_page_description',
       'route',
     ],
   },
   auto: true,
-  onSuccess() {
-    cfp.fetch()
+  onSuccess(data) {
     proposals.fetch()
   },
 })
 
-const cfp = createResource({
-  url: 'fossunited.api.dashboard.get_cfp_details_from_eventname',
-  makeParams() {
-    return {
-      eventname: event.data.event_name,
-      fields: ['route', 'proposal_page_description'],
-    }
-  },
-})
-
 const proposals = createResource({
-  url: 'fossunited.api.dashboard.get_proposal_list_from_eventname',
+  url: 'fossunited.api.proposal.get_event_proposals',
   makeParams() {
     return {
-      eventname: event.data.event_name,
-      fields: [
-        'name',
-        'route',
-        'talk_title',
-        'session_type',
-        'full_name',
-        'status',
-      ],
+      event: event.data.name,
     }
   },
   auto: false,
-  onSuccess(data) {
-    console.log(data)
-    proposalLikes.fetch()
-  },
 })
 
 usePageMeta(() => ({
@@ -186,16 +168,6 @@ const breadcrumb_items = computed(() => {
       label: 'All Proposals',
     },
   ]
-})
-
-const proposalLikes = createResource({
-  url: 'fossunited.api.proposal.get_likes',
-  makeParams() {
-    const proposalIDs = proposals.data?.map((proposal) => proposal.name) || []
-    return {
-      proposals: proposalIDs,
-    }
-  },
 })
 
 const searchQuery = ref('')

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="proposal && proposalLikes != null" class="flex justify-between">
+  <div v-if="proposal" class="flex justify-between">
     <div class="flex flex-col gap-3 justify-between">
       <h3 class="text-xl font-semibold">
         <a
@@ -24,7 +24,7 @@
             >
           </div>
         </div>
-        <div v-if="proposal.status == `Approved`" class="flex text-sm">
+        <div v-if="proposal.full_name != '' " class="flex text-sm">
           <SpeakerIcon />
           <span>
             {{ proposal.full_name }}
@@ -35,7 +35,7 @@
     <div class="flex flex-col gap-3 items-end">
       <div class="flex items-center gap-1 bg-gray-200 px-1.5 py-1 rounded-sm">
         <LikesIcon />
-        <span class="text-xs font-semibold">{{ proposalLikes }}</span>
+        <span class="text-xs font-semibold">{{ proposal.likes }}</span>
       </div>
       <div class="mt-2">
         <span
@@ -49,7 +49,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
 import SpeakerIcon from '../../components/icons/SpeakerIcon.vue'
 import LikesIcon from '../../components/icons/LikesIcon.vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
@@ -59,11 +59,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  proposalLikes: {
-    type: Number,
-    required: true,
-  },
-})
+});
 
 const getStatusClass = (status) => {
   switch (status) {

@@ -29,7 +29,6 @@ class FOSSEventCFP(WebsiteGenerator):
         is_published: DF.Check
         only_talk_proposals: DF.Check
         only_workshops: DF.Check
-        proposal_page_description: DF.Text | None
         route: DF.Data | None
     # end: auto-generated types
 
