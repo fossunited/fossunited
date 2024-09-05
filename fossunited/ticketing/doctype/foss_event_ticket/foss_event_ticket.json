@@ -21,10 +21,13 @@
   "customer",
   "additional_details_section",
   "wants_tshirt",
+  "tshirt_delivered",
   "column_break_qbfj",
   "tshirt_size",
   "section_break_tzsu",
-  "custom_fields"
+  "custom_fields",
+  "section_break_ueio",
+  "check_ins"
  ],
  "fields": [
   {
@@ -137,10 +140,26 @@
   {
    "fieldname": "section_break_ogof",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_ueio",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "check_ins",
+   "fieldtype": "Table",
+   "label": "Check Ins",
+   "options": "Event Check In"
+  },
+  {
+   "default": "0",
+   "fieldname": "tshirt_delivered",
+   "fieldtype": "Check",
+   "label": "Tshirt Delivered?"
   }
  ],
  "links": [],
- "modified": "2024-07-03 14:45:28.719114",
+ "modified": "2024-09-05 16:13:42.830490",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
