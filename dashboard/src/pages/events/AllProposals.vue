@@ -7,7 +7,6 @@
     <LoadingText class="text-lg" text="Loading event data" />
   </div>
   <div v-else class="container mx-auto px-4">
-    <!-- Back button -->
     <Breadcrumb class="mt-2" :items="breadcrumb_items" />
     <EventHeader
       :event="event.data"
@@ -16,60 +15,28 @@
 
     <AllProposalsBanner :event="event.data" class="py-2" />
     <!-- Search and filters -->
-    <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row">
-      <div class="md:w-1/2">
-        <input
-          v-model="searchQuery"
+    <div
+      class="flex flex-col gap-y-3 justify-between my-7 md:flex-row md:items-center"
+    >
+      <div class="w-full md:w-1/2">
+        <TextInput
           type="text"
+          class="h-10"
+          v-model="searchQuery"
           placeholder="Search by proposal title"
-          class="w-full px-4 py-2 border rounded-sm bg-gray-300"
-        />
+          variant="subtle outline"
+        >
+          <template #suffix>
+            <FeatherIcon class="w-4" name="search" />
+          </template>
+        </TextInput>
       </div>
       <div class="flex gap-x-2 items-center">
-        <div class="relative w-40">
-          <button
-            @click="toggleSessionTypeDropdown"
-            class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
-          >
-            <p>{{ selectedSessionType || 'Session Type' }}</p>
-            <ChevronDown />
-          </button>
-          <div
-            v-if="showSessionTypeDropdown"
-            class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
-          >
-            <div
-              v-for="type in sessionTypes"
-              :key="type"
-              @click="selectSessionType(type)"
-              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            >
-              {{ type }}
-            </div>
-          </div>
-        </div>
-        <div class="relative w-40">
-          <button
-            @click="toggleStatusDropdown"
-            class="px-4 py-2 flex gap-x-1 justify-between items-center border rounded-sm bg-gray-800 text-white w-40"
-          >
-            <p>{{ selectedStatus || 'Status' }}</p>
-            <ChevronDown />
-          </button>
-          <div
-            v-if="showStatusDropdown"
-            class="absolute z-10 mt-1 w-full bg-white border rounded-sm shadow-lg"
-          >
-            <div
-              v-for="status in statuses"
-              :key="status"
-              @click="selectStatus(status)"
-              class="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-            >
-              {{ status }}
-            </div>
-          </div>
-        </div>
+        <ThemedSelectBlack
+          v-model="selectedSessionType"
+          :options="sessionTypes"
+        />
+        <ThemedSelectBlack v-model="selectedStatus" :options="statuses" />
       </div>
     </div>
 
@@ -101,14 +68,20 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { createResource, usePageMeta, LoadingText } from 'frappe-ui'
+import {
+  createResource,
+  usePageMeta,
+  LoadingText,
+  TextInput,
+  FeatherIcon,
+} from 'frappe-ui'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
-import AllProposalsBanner from '../../components/proposals/AllProposalsBanner.vue'
-import ProposalBlock from '../../components/proposals/ProposalBlock.vue'
-import EventHeader from '../../components/schedule/EventHeader.vue'
-import ChevronDown from '../../components/icons/ChevronDown.vue'
+import AllProposalsBanner from '@/components/proposals/AllProposalsBanner.vue'
+import ProposalBlock from '@/components/proposals/ProposalBlock.vue'
+import EventHeader from '@/components/schedule/EventHeader.vue'
+import ThemedSelectBlack from '@/components/common/ThemedSelectBlack.vue'
 
 const route = useRoute()
 const eventPermalink = route.params.permalink
@@ -174,35 +147,21 @@ const searchQuery = ref('')
 
 const selectedSessionType = ref('')
 const selectedStatus = ref('')
-const showSessionTypeDropdown = ref(false)
-const showStatusDropdown = ref(false)
 
-// Define session types and statuses
-// : TODO - this can be dynamic again - fetch session types from backend
-const sessionTypes = ['Talk', 'Lightning Talk', 'Workshop', 'Panel', 'All']
-const statuses = ['Approved', 'Rejected', 'Screening', 'All']
+const sessionTypes = ref([
+  { label: 'All Session Types', value: '' },
+  { label: 'Talk', value: 'Talk' },
+  { label: 'Lightning Talk', value: 'Lightning Talk' },
+  { label: 'Workshop', value: 'Workshop' },
+  { label: 'Panel', value: 'Panel' },
+])
 
-// Toggle functions for dropdowns
-const toggleSessionTypeDropdown = () => {
-  showSessionTypeDropdown.value = !showSessionTypeDropdown.value
-  showStatusDropdown.value = false
-}
-
-const toggleStatusDropdown = () => {
-  showStatusDropdown.value = !showStatusDropdown.value
-  showSessionTypeDropdown.value = false
-}
-
-// Selection functions for dropdowns
-const selectSessionType = (type) => {
-  selectedSessionType.value = type === 'All' ? '' : type
-  showSessionTypeDropdown.value = false
-}
-
-const selectStatus = (status) => {
-  selectedStatus.value = status === 'All' ? '' : status
-  showStatusDropdown.value = false
-}
+const statuses = ref([
+  { label: 'All Status', value: '' },
+  { label: 'Approved', value: 'Approved' },
+  { label: 'Rejected', value: 'Rejected' },
+  { label: 'Screening', value: 'Screening' },
+])
 
 // Computed function for monitoring search-filter
 const filteredProposals = computed(() => {
@@ -213,10 +172,10 @@ const filteredProposals = computed(() => {
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase())
     const matchesSessionType =
-      !selectedSessionType.value ||
+      selectedSessionType.value === '' ||
       proposal.session_type === selectedSessionType.value
     const matchesStatus =
-      !selectedStatus.value || proposal.status === selectedStatus.value
+      selectedStatus.value === '' || proposal.status === selectedStatus.value
 
     return matchesSearch && matchesSessionType && matchesStatus
   })

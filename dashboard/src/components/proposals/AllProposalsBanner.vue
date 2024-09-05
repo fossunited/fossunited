@@ -4,7 +4,7 @@
     <div class="flex flex-col gap-y-4 lg:w-3/4">
       <div class="flex flex-col gap-y-2">
         <h1 class="text-3xl font-semibold">Talk Proposals</h1>
-        <p class="text-gray-700 font-medium md:font-semibold">
+        <p class="text-gray-700 font-medium">
           <span v-if="event.proposal_page_description">
             {{ event.proposal_page_description }}
           </span>
