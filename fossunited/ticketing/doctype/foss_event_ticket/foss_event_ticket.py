@@ -35,7 +35,7 @@ class FOSSEventTicket(Document):
         organization: DF.Data | None
         razorpay_payment: DF.Link | None
         tier: DF.Data | None
-        tshirt_assigned: DF.Check
+        tshirt_delivered: DF.Check
         tshirt_size: DF.Data | None
         wants_tshirt: DF.Check
     # end: auto-generated types

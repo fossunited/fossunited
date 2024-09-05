@@ -22,7 +22,7 @@ def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.use
     # Map the items in filters to be like "key": ["like", value]
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
 
-    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tier", "tshirt_assigned", "tshirt_size"])
+    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tier", "tshirt_delivered", "tshirt_size"])
 
     for ticket in tickets:
         ticket["checkin_data"] = get_checkin_data(ticket["name"])
@@ -61,7 +61,7 @@ def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.u
     ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
     if assign_tshirt:
-        ticket.tshirt_assigned = True
+        ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)
 
 
@@ -96,5 +96,5 @@ def assign_tshirt(event_id: str, attendee: dict, user: str = frappe.session.user
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
-    ticket.tshirt_assigned = True
+    ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)

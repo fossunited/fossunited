@@ -21,7 +21,7 @@
   "customer",
   "additional_details_section",
   "wants_tshirt",
-  "tshirt_assigned",
+  "tshirt_delivered",
   "column_break_qbfj",
   "tshirt_size",
   "section_break_tzsu",
@@ -153,13 +153,13 @@
   },
   {
    "default": "0",
-   "fieldname": "tshirt_assigned",
+   "fieldname": "tshirt_delivered",
    "fieldtype": "Check",
-   "label": "Tshirt Assigned?"
+   "label": "Tshirt Delivered?"
   }
  ],
  "links": [],
- "modified": "2024-09-05 16:01:32.717661",
+ "modified": "2024-09-05 16:13:42.830490",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

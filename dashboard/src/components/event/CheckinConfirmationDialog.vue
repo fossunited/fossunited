@@ -31,7 +31,7 @@
         </div>
         <div
           v-if="
-            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_assigned
+            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered
           "
         >
           <hr class="my-4" />
@@ -104,11 +104,11 @@ const makeChangesToAttendeeDict = (attendee) => {
   const index = props.attendees.data.findIndex(
     (data) => data.name === attendee.name,
   )
-  props.attendees.data[index].checkin_data.unshift({
+  props.attendees.data[index].checkin_data.push({
     check_in_time: new Date(),
   })
   if (assignTshirt.value) {
-    props.attendees.data[index].tshirt_assigned = true
+    props.attendees.data[index].tshirt_delivered = true
   }
 }
 </script>

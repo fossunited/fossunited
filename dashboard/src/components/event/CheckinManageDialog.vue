@@ -29,12 +29,12 @@
                 >Tshirt Assigned:
                 <span
                   :class="
-                    selectedAttendee.tshirt_assigned
+                    selectedAttendee.tshirt_delivered
                       ? 'text-green-600'
                       : 'text-red-600'
                   "
                 >
-                  {{ selectedAttendee.tshirt_assigned ? 'Yes' : 'No' }}
+                  {{ selectedAttendee.tshirt_delivered ? 'Yes' : 'No' }}
                 </span>
               </span>
             </p>
@@ -64,7 +64,7 @@
         </div>
         <div
           v-if="
-            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_assigned
+            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered
           "
         >
           <hr class="mb-4" />
@@ -118,7 +118,7 @@ const assignTshirt = createResource({
     const index = props.attendees.data.findIndex(
       (data) => data.name === props.selectedAttendee.name,
     )
-    props.attendees.data[index].tshirt_assigned = true
+    props.attendees.data[index].tshirt_delivered = true
   },
 })
 
@@ -135,7 +135,7 @@ const undoAttendeeCheckin = createResource({
     const index = props.attendees.data.findIndex(
       (data) => data.name === props.selectedAttendee.name,
     )
-    props.attendees.data[index].checkin_data.shift()
+    props.attendees.data[index].checkin_data.pop()
     props.selectedAttendee = null
     showDialog.value = false
   },
