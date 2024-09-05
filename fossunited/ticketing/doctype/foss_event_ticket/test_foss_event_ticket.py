@@ -87,6 +87,11 @@ class TestFOSSEventTicket(FrappeTestCase):
         ticket.reload()
         self.assertTrue(ticket.check_ins)
 
+        # When the user tries to check-in the attendee again on the same day
+        # Then the user should not be able to check-in the attendee again
+        with self.assertRaises(frappe.ValidationError):
+            checkin_attendee(self.event.name, ticket.as_dict(), self.member_email)
+
     def test_checkin_as_non_chapter_member(self):
         fake = Faker()
 
