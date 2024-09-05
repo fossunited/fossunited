@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import frappe
 
 from fossunited.api.tickets import has_valid_permission
@@ -58,11 +60,36 @@ def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.u
     if not has_valid_permission(event_id, user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
+    if check_if_already_checked_in(attendee["name"]):
+        frappe.throw("Attendee is already checked in", frappe.ValidationError)
+
     ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
     if assign_tshirt:
         ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)
+
+
+def check_if_already_checked_in(attendee_id: str) -> bool:
+    """
+    Check if the attendee is already checked in
+
+    Args:
+        attendee_id (str): The attendee / ticket id
+
+    Returns:
+        bool: True if the attendee is already checked in, False otherwise
+    """
+    checkins = frappe.db.get_all("Event Check In", {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"}, ["check_in_time"])
+
+    if not checkins:
+        return False
+
+    for checkin in checkins:
+        if checkin["check_in_time"].date() == datetime.today().date():
+            return True
+
+    return False
 
 
 @frappe.whitelist()
