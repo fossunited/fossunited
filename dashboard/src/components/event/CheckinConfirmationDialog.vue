@@ -68,6 +68,7 @@
   </Dialog>
 </template>
 <script setup>
+import { toast } from 'vue-sonner'
 import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
@@ -97,6 +98,9 @@ const checkinAttendee = createResource({
     props.selectedAttendee = null
     assignTshirt.value = false
     showDialog.value = false
+  },
+  onError(error) {
+    toast.error('Failed to check in attendee')
   },
 })
 
