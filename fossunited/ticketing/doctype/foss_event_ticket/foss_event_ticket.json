@@ -159,7 +159,7 @@
   }
  ],
  "links": [],
- "modified": "2024-09-03 14:40:26.541234",
+ "modified": "2024-09-05 16:01:32.717661",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -176,12 +176,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-  },
-  {
-   "export": 1,
-   "read": 1,
-   "role": "Chapter Lead",
-   "select": 1
   }
  ],
  "sort_field": "creation",
