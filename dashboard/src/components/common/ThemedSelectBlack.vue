@@ -15,7 +15,7 @@ import { Select } from 'frappe-ui'
 import ChevronDown from '@/components/icons/ChevronDown.vue'
 
 const selectClasses = `
-  w-50 h-10 !p-3 !pr-10 !px-3
+  w-50 h-10 !p-2 !pr-10 !px-3
   rounded-sm
   border border-gray-900 bg-gray-900 text-gray-100
   hover:bg-gray-800 hover:border-gray-800
