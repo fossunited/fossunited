@@ -86,3 +86,28 @@ class TestFOSSEventTicket(FrappeTestCase):
         # Then the check-in data should be saved
         ticket.reload()
         self.assertTrue(ticket.check_ins)
+
+    def test_checkin_as_non_chapter_member(self):
+        fake = Faker()
+
+        # Given that a ticket is created for an event
+        ticket = frappe.get_doc(
+            {
+                "doctype": "FOSS Event Ticket",
+                "event": self.event.name,
+                "full_name": fake.name(),
+                "email": fake.email(),
+                "tier": "General",
+            }
+        )
+        ticket.insert(ignore_permissions=True)
+        ticket.reload()
+
+        self.assertFalse(ticket.check_ins)
+        # Set the user as a random user
+        frappe.set_user("test2@example.com")
+
+        # When the user checks in the attendee
+        # Then the user should not have permission to check-in the attendee
+        with self.assertRaises(frappe.PermissionError):
+            checkin_attendee(self.event.name, ticket.as_dict(), "test2@example.com")
