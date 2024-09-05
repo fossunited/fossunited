@@ -47,7 +47,7 @@
               >
                 <span>-></span>
                 <span>
-                  {{ dayjs(data.checkin_time).format('DD MMM YYYY, h:mm A') }}
+                  {{ dayjs(data.check_in_time).format('DD MMM YYYY, h:mm A') }}
                 </span>
               </div>
             </div>
