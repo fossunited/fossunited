@@ -19,6 +19,8 @@
             <br />
             Ticket ID: {{ selectedAttendee.name }}
             <br />
+            Tier: {{ selectedAttendee.tier }}
+            <br />
             Has Tshirt Add-on:
             {{ selectedAttendee.wants_tshirt ? 'Yes' : 'No' }}
             <br />
@@ -34,12 +36,10 @@
         >
           <hr class="my-4" />
           <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
-          <Checkbox
-          v-model="assignTshirt"
-          label="Confirm Tshirt Assignment"
-          />
+          <Checkbox v-model="assignTshirt" label="Confirm Tshirt Assignment" />
           <p class="text-sm leading-5 mt-1 text-gray-600">
-            Only check this if you are providing the T-shirt to the attendee at the time of check-in.
+            Only check this if you are providing the T-shirt to the attendee at
+            the time of check-in.
           </p>
         </div>
       </div>

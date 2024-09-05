@@ -16,6 +16,8 @@
               <br />
               Ticket ID: {{ selectedAttendee.name }}
               <br />
+              Tier: {{ selectedAttendee.tier }}
+              <br />
               Has Tshirt Add-on:
               {{ selectedAttendee.wants_tshirt ? 'Yes' : 'No' }}
               <br />
@@ -104,20 +106,20 @@ const isCheckedInToday = inject('isCheckedInToday')
 const showDialog = defineModel()
 
 const assignTshirt = createResource({
-    url: 'fossunited.api.checkins.assign_tshirt',
-    makeParams(){
-        return {
-            event_id: route.params.id,
-            attendee: props.selectedAttendee,
-            user: session.user,
-        }
-    },
-    onSuccess(){
-        const index = props.attendees.data.findIndex(
-            (data) => data.name === props.selectedAttendee.name
-        )
-        props.attendees.data[index].tshirt_assigned = true
+  url: 'fossunited.api.checkins.assign_tshirt',
+  makeParams() {
+    return {
+      event_id: route.params.id,
+      attendee: props.selectedAttendee,
+      user: session.user,
     }
+  },
+  onSuccess() {
+    const index = props.attendees.data.findIndex(
+      (data) => data.name === props.selectedAttendee.name,
+    )
+    props.attendees.data[index].tshirt_assigned = true
+  },
 })
 
 const undoAttendeeCheckin = createResource({
