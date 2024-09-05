@@ -18,6 +18,11 @@ class TestFOSSEventTicket(FrappeTestCase):
         self.member_email = "test1@example.com"
         self.member_profile = chapter_member
 
+        if not frappe.db.exists("Role", "Chapter Team Member"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(ignore_permissions=True)
+        if not frappe.db.exists("Role", "Chapter Lead"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(ignore_permissions=True)
+
         chapter = frappe.get_doc(
             {
                 "doctype": "FOSS Chapter",
