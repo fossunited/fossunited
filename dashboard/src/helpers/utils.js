@@ -6,6 +6,6 @@ export const redirectRoute = (route) => {
   window.open(document.location.origin + '/' + route, '_blank')
 }
 
-export const redirectRouteToSameWindow = (route) => {
+export const createAbsoluteUrlFromRoute = (route) => {
   return window.location.origin + '/' + route
 }

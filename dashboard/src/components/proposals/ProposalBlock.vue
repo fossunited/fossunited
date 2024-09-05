@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-3 justify-between">
       <h3 class="text-xl font-semibold">
         <a
-          :href="redirectRouteToSameWindow(proposal.route)"
+          :href="createAbsoluteUrlFromRoute(proposal.route)"
           class="hover:text-green-500 transition-colors duration-300 cursor-pointer"
         >
           {{ proposal.talk_title }}
@@ -52,7 +52,7 @@
 import { defineProps } from 'vue'
 import SpeakerIcon from '../../components/icons/SpeakerIcon.vue'
 import LikesIcon from '../../components/icons/LikesIcon.vue'
-import { redirectRouteToSameWindow } from '@/helpers/utils'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 
 const props = defineProps({
   proposal: {

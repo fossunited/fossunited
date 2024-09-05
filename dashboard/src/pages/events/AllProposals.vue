@@ -99,7 +99,7 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { createResource, usePageMeta, LoadingText } from 'frappe-ui'
-import { redirectRouteToSameWindow } from '@/helpers/utils'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import AllProposalsBanner from '../../components/proposals/AllProposalsBanner.vue'
@@ -180,7 +180,7 @@ const breadcrumb_items = computed(() => {
       label: event.data.event_name,
       link: event.data.is_external_event
         ? event.data.external_event_url
-        : redirectRouteToSameWindow(event.data.route),
+        : createAbsoluteUrlFromRoute(event.data.route),
     },
     {
       label: 'All Proposals',
