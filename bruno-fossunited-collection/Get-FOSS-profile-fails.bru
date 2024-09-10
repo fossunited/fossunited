@@ -13,3 +13,11 @@ get {
 params:query {
   email: rahul@fossunited.org
 }
+
+tests {
+  test("should receive the states", function() {
+    const data = res.getBody();
+    // The email address has no FOSS profile
+    expect(data).to.be.empty;
+  });
+}
