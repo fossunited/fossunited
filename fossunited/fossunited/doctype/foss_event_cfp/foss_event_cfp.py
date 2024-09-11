@@ -14,12 +14,8 @@ class FOSSEventCFP(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import (
-            FOSSCustomQuestion,
-        )
-        from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import (
-            FOSSEventCFPReviewer,
-        )
+        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import FOSSCustomQuestion
+        from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import FOSSEventCFPReviewer
 
         allow_cfp_edit: DF.Check
         anonymise_proposals: DF.Check
@@ -34,8 +30,8 @@ class FOSSEventCFP(WebsiteGenerator):
         only_talk_proposals: DF.Check
         only_workshops: DF.Check
         route: DF.Data | None
-
     # end: auto-generated types
+
     def before_insert(self):
         self.assign_reviewers()
 

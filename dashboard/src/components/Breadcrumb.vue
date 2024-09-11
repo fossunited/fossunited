@@ -8,7 +8,7 @@
       <router-link v-if="item.route" class="hover:text-gray-700 transition-colors" :to="item.route">
         {{ item.label }}
       </router-link>
-      <a v-else-if="item.link" :href="item.link" target="_blank" class="hover:text-gray-700 transition-colors">
+      <a v-else-if="item.link" :href="item.link" class="hover:text-gray-700 transition-colors">
         {{ item.label }}
       </a>
       <span v-else>

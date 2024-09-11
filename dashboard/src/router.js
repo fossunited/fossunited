@@ -255,7 +255,13 @@ const routes = [
     name: 'LocalhostAttendanceProcess',
     component: () => import('@/pages/localhost/LocalhostAttendanceProcess.vue'),
     props: true
-  }
+  },
+  {
+    name: 'AllProposalsPage',
+    path: '/cfp/:permalink',
+    component: () => import('@/pages/events/AllProposals.vue'),
+    meta: { isPublicPage: true },
+  },
 ]
 
 let router = createRouter({
