@@ -19,6 +19,6 @@ class HackathonProjectIssuePR(Document):
         parentfield: DF.Data
         parenttype: DF.Data
         title: DF.Data | None
-        type: DF.Literal["Issue", "Pull Request", "Discussion"]
+        type: DF.Literal["Issue", "Pull Request", "Discussion"]  # noqa: F722, F821
     # end: auto-generated types
     pass

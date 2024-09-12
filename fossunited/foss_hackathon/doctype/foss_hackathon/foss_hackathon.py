@@ -43,7 +43,7 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_logo: DF.AttachImage | None
         hackathon_name: DF.Data
         hackathon_rules: DF.TextEditor | None
-        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]
+        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]  # noqa: F722, F821
         has_external_website: DF.Check
         has_localhosts: DF.Check
         has_partner_projects: DF.Check

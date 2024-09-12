@@ -20,7 +20,7 @@ class FOSSHackathonParticipant(Document):
         hackathon: DF.Link | None
         is_student: DF.Check
         localhost: DF.Link | None
-        localhost_request_status: DF.Literal["Pending", "Pending Confirmation", "Accepted", "Rejected"]
+        localhost_request_status: DF.Literal["Pending", "Pending Confirmation", "Accepted", "Rejected"]  # noqa: F722, F821
         organization: DF.Data | None
         user: DF.Link | None
         user_profile: DF.Link | None

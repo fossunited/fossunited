@@ -25,7 +25,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
         city: DF.Link | None
         country: DF.Link | None
         email: DF.Data

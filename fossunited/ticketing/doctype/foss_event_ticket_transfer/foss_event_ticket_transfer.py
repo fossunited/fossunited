@@ -21,7 +21,7 @@ class FOSSEventTicketTransfer(Document):
         owner_name: DF.Data | None
         receiver_email: DF.Data
         receiver_name: DF.Data
-        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]
+        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]  # noqa: F722, F821
         ticket: DF.Link
         tshirt_size: DF.Data | None
         wants_tshirt: DF.Check

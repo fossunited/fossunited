@@ -20,6 +20,6 @@ class FOSSEventCFPReview(Document):
         remarks: DF.SmallText | None
         reviewer: DF.Data | None
         reviewer_profile: DF.Link | None
-        to_approve: DF.Literal["", "Yes", "No", "Maybe"]
+        to_approve: DF.Literal["", "Yes", "No", "Maybe"]  # noqa: F722, F821
     # end: auto-generated types
     pass

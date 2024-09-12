@@ -37,7 +37,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         event_name: DF.Data | None
         first_name: DF.Data | None
         full_name: DF.Data
-        is_first_talk: DF.Literal["Yes", "No"]
+        is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
         last_name: DF.Data | None
         linked_cfp: DF.Link
@@ -47,8 +47,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         positive_reviews: DF.Data | None
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
-        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]
-        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]
+        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]  # noqa: F722, F821
+        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None

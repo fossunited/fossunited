@@ -66,10 +66,10 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
-        status: DF.Literal["", "Draft", "Live", "Approved", "Concluded", "Cancelled"]
+        status: DF.Literal["", "Draft", "Live", "Approved", "Concluded", "Cancelled"]  # noqa: F722, F821
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
-        tickets_status: DF.Literal["Live", "Closed"]
+        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F821
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 

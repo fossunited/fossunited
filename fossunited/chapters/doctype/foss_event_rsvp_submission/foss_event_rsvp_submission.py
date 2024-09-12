@@ -24,7 +24,7 @@ class FOSSEventRSVPSubmission(Document):
         email: DF.Data
         event: DF.Data
         event_name: DF.Data | None
-        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
+        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]  # noqa: F722, F821
         linked_rsvp: DF.Link
         name1: DF.Data
         submitted_by: DF.Link | None
