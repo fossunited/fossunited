@@ -92,7 +92,7 @@ class FOSSUserProfile(WebsiteGenerator):
             frappe.throw("Username must be between 3 and 30 characters")
 
         if not re.match(r"^[a-z0-9_\.]+$", self.username):
-            frappe.throw(f"Username can only contain lowercase letters, numbers, underscores and dots.")
+            frappe.throw("Username can only contain lowercase letters, numbers, underscores and dots.")
 
         if re.search(
             r"\.(txt|html|php|js|json|xml|css|htm)$",

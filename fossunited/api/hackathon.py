@@ -459,7 +459,7 @@ def delete_project(hackathon: str, team: str):
         frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
         frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
-    except Exception as e:
+    except Exception:
         frappe.throw("Error deleting project")
 
 
