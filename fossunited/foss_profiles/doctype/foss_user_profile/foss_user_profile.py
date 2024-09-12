@@ -112,7 +112,7 @@ class FOSSUserProfile(WebsiteGenerator):
             "Administrator",
             self.user,
         ):
-            frappe.throw(_("Profile Not Found"), frappe.DoesNotExistError)
+            frappe.throw("Profile Not Found", frappe.DoesNotExistError)
 
         experiences_dict = {}
         for experience in self.experience:

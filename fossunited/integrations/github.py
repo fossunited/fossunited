@@ -13,7 +13,7 @@ class GithubHelper:
             access_token = github_settings.get_password("access_token")
             self.github = Github(access_token)
         except Exception as e:
-            frappe.log_error(frappe.get_traceback(), _("Github Settings not found"))
+            frappe.log_error(frappe.get_traceback(), "Github Settings not found")
             raise e
 
     def get_repo(self, repo_url):
