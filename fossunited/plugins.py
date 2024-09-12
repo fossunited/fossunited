@@ -1,4 +1,3 @@
-import frappe
 
 
 def show_custom_signup():

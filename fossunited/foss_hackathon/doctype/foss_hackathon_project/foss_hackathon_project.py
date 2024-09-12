@@ -6,7 +6,6 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTICIPANT,
-    HACKATHON_PROJECT,
     HACKATHON_TEAM,
     USER_PROFILE,
 )

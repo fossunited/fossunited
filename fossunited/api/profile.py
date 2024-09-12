@@ -1,6 +1,4 @@
 import frappe
-from frappe.client import set_value
-from pydantic import BaseModel
 
 from fossunited.api.dashboard import get_session_user_profile
 from fossunited.doctype_ids import RESTRICTED_USERNAME, USER_PROFILE

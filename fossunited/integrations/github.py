@@ -1,4 +1,3 @@
-import re
 
 import frappe
 from github import Github

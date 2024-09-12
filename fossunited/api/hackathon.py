@@ -11,7 +11,6 @@ from fossunited.doctype_ids import (
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
     HACKATHON_TEAM_MEMBER,
-    LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper
