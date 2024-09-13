@@ -19,13 +19,13 @@ class FOSSUserProfileWorkExperience(Document):
         country: DF.Data | None
         description: DF.TextEditor | None
         employment_type: DF.Literal[
-            "",
-            "Full-time",
-            "Part-time",
-            "Internship",
-            "Freelance",
-            "Self-employed",
-            "Trainee",
+            "",  # noqa: F722, F821
+            "Full-time",  # noqa: F821
+            "Part-time",  # noqa: F821
+            "Internship",  # noqa: F821
+            "Freelance",  # noqa: F821
+            "Self-employed",  # noqa: F821
+            "Trainee",  # noqa: F821
         ]
         end_date: DF.Date | None
         is_remote: DF.Check

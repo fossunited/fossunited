@@ -1,7 +1,6 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-import frappe
 from frappe.model.document import Document
 
 
@@ -22,7 +21,7 @@ class FOSSHackathonTeam(Document):
         looking_for_members: DF.Check
         members: DF.Table[FOSSHackathonTeamMember]
         partner_project: DF.Link | None
-        partner_project_status: DF.Literal["", "Pending", "Accepted", "Rejected"]
+        partner_project_status: DF.Literal["", "Pending", "Accepted", "Rejected"]  # noqa: F722, F821
         project: DF.Link | None
         team_name: DF.Data
         working_on_partner_project: DF.Check

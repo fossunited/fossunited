@@ -11,7 +11,6 @@ from fossunited.doctype_ids import (
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
     HACKATHON_TEAM_MEMBER,
-    LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper
@@ -460,7 +459,7 @@ def delete_project(hackathon: str, team: str):
         frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
         frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
-    except Exception as e:
+    except Exception:
         frappe.throw("Error deleting project")
 
 

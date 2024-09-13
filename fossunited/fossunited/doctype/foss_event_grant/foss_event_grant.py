@@ -22,10 +22,10 @@ class FOSSEventGrant(Document):
         event_name: DF.Data | None
         event_organiser: DF.Data | None
         event_start_date: DF.Date | None
-        event_type: DF.Literal["Hackathon", "Meetup", "Conference"]
+        event_type: DF.Literal["Hackathon", "Meetup", "Conference"]  # noqa: F821
         event_website: DF.Data | None
-        grant_amount: DF.Literal["", "Rs. 10,000", "Rs. 25,000", "Rs. 50,000", "Custom"]
-        grant_status: DF.Literal["Open", "Approved", "Rejected", "Under Review"]
+        grant_amount: DF.Literal["", "Rs. 10,000", "Rs. 25,000", "Rs. 50,000", "Custom"]  # noqa: F722, F821
+        grant_status: DF.Literal["Open", "Approved", "Rejected", "Under Review"]  # noqa: F722, F821
         poc_name: DF.Data | None
         post_event_report: DF.Attach | None
         post_event_report_received: DF.Check

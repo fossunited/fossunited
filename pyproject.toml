@@ -25,5 +25,6 @@ build-backend = "flit_core.buildapi"
 line-length = 200
 lint.select = [
     "I",
-    "E"
+    "E",
+    "F",
 ]

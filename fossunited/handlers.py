@@ -17,7 +17,6 @@ def handle_razorpay_webhook():
     payment_entity = form_dict["payload"]["payment"]["entity"]
     razorpay_order_id = payment_entity["order_id"]
     razorpay_payment_id = payment_entity["id"]
-    customer_email = payment_entity["email"]
     event = form_dict.get("event")
 
     # Create webhook log
