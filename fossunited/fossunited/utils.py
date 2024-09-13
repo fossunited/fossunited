@@ -41,7 +41,10 @@ def make_badge(text="Default", size="sm"):
     }
     bg_color, text_color = colors.get(text, colors["Default"])
 
-    return f'<span class="badge badge-{size}" style="background-color: {bg_color}; color: {text_color};">{text}</span>'
+    return (
+        f'<span class="badge badge-{size}" '
+        f'style="background-color: {bg_color}; color: {text_color};">{text}</span>'
+    )
 
 
 def get_doc_likes(doctype, name):
@@ -84,7 +87,9 @@ def get_user_editable_doctype_fields(doctype, docname=None):
         if field["fieldname"] in NOT_EDITABLE_FIELDS:
             meta["fields"].remove(field)
 
-    meta["fields"] = [{k: v for k, v in field.items() if filter_field_values(k)} for field in meta["fields"]]
+    meta["fields"] = [
+        {k: v for k, v in field.items() if filter_field_values(k)} for field in meta["fields"]
+    ]
 
     if docname is not None:
         doc = frappe.get_doc(doctype, docname).as_dict()
@@ -154,7 +159,9 @@ def get_signup_optin_checks():
         if frappe.db.get_single_value("FOSSU Settings", check):
             page = frappe.db.get_single_value("FOSSU Settings", mapper[check].get("page_name"))
             route = frappe.db.get_value("Web Page", page, "route")
-            links.append("<a target='_blank' href='/" + route + "'>" + mapper[check].get("title") + "</a>")
+            links.append(
+                "<a target='_blank' href='/" + route + "'>" + mapper[check].get("title") + "</a>"
+            )
 
     return (", ").join(links)
 
@@ -186,7 +193,8 @@ def validate_profile_completion():
 
 def get_grouped_events():
     """
-    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating upcoming and past events.
+    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
+    upcoming and past events.
     """
     events = frappe.get_all(
         "FOSS Chapter Event",
@@ -211,7 +219,8 @@ def get_grouped_events():
 
 def process_event(event, event_list):
     """
-    Processes a single event or hackathon, adding it to the upcoming or past events list based on the current date.
+    Processes a single event or hackathon, adding it to the upcoming or past events list based on
+    the current date.
     """
     now = now_datetime()
     event_date = event.event_start_date if event.event_start_date else event.start_date
@@ -225,7 +234,8 @@ def process_event(event, event_list):
 
 def get_month_grouped_events(events, hackathons):
     """
-    Groups events and hackathons by month and year, ensuring they are sorted chronologically within each group.
+    Groups events and hackathons by month and year, ensuring they are sorted chronologically
+    within each group.
     """
     grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
 
@@ -247,7 +257,9 @@ def get_month_grouped_events(events, hackathons):
             month_grouped_events[key].keys(),
             key=lambda x: datetime.strptime(x, "%B %Y"),
         )
-        month_grouped_events[key] = {month: month_grouped_events[key][month] for month in sorted_month_years}
+        month_grouped_events[key] = {
+            month: month_grouped_events[key][month] for month in sorted_month_years
+        }
 
     return month_grouped_events
 

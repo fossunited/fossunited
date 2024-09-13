@@ -304,8 +304,14 @@ def get_localhost_requests_by_team(
     for request in requests:
         request["profile_route"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "route")
         profile_photo = frappe.db.get_value(USER_PROFILE, request.user_profile, "profile_photo")
-        request["profile_photo"] = profile_photo if profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png"
-        request["profile_username"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "username")
+        request["profile_photo"] = (
+            profile_photo
+            if profile_photo
+            else "/assets/fossunited/images/defaults/user_profile_image.png"
+        )
+        request["profile_username"] = frappe.db.get_value(
+            USER_PROFILE, request.user_profile, "username"
+        )
 
     requests_by_team = {}
 
@@ -545,7 +551,9 @@ def validate_user_as_localhost_member(localhost_id: str):
             ),
         },
     ):
-        frappe.throw("You are not a member of this Localhost. You are not authorized to view this page")
+        frappe.throw(
+            "You are not a member of this Localhost. You are not authorized to view this page"
+        )
 
     return True
 

@@ -21,7 +21,7 @@ class FOSSHackathon(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (

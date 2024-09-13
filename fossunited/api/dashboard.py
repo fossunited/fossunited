@@ -14,7 +14,9 @@ def get_event(name: str) -> dict:
 
 @frappe.whitelist(allow_guest=True)
 def get_event_from_permalink(permalink: str, fields: list) -> dict:
-    return frappe.db.get_value("FOSS Chapter Event", {"event_permalink": permalink}, fields, as_dict=1)
+    return frappe.db.get_value(
+        "FOSS Chapter Event", {"event_permalink": permalink}, fields, as_dict=1
+    )
 
 
 @frappe.whitelist(allow_guest=True)

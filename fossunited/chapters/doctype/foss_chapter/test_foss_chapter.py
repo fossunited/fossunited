@@ -30,9 +30,13 @@ class TestFOSSChapter(FrappeTestCase):
         chapter.insert()
 
         if not frappe.db.exists("Role", "Chapter Team Member"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(ignore_permissions=True)
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
+                ignore_permissions=True
+            )
         if not frappe.db.exists("Role", "Chapter Lead"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(ignore_permissions=True)
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(
+                ignore_permissions=True
+            )
 
         lead_profile = frappe.get_doc("FOSS User Profile", {"user": "test@example.com"})
         chapter.append("chapter_members", {"chapter_member": lead_profile.name, "role": "Lead"})
@@ -49,7 +53,9 @@ class TestFOSSChapter(FrappeTestCase):
 
         # When the chapter was created, a lead was assigned to it.
         # Then the lead should have the role of 'Chapter Lead' and 'Chapter Team Member'
-        user = frappe.db.get_value("FOSS User Profile", chapter.chapter_members[0].chapter_member, "user")
+        user = frappe.db.get_value(
+            "FOSS User Profile", chapter.chapter_members[0].chapter_member, "user"
+        )
         has_role = frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user})
         self.assertTrue(has_role)
 
@@ -60,7 +66,9 @@ class TestFOSSChapter(FrappeTestCase):
         # When a new member is added to the chapter
         new_member = frappe.get_doc("FOSS User Profile", {"user": "test1@example.com"})
 
-        chapter.append("chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"})
+        chapter.append(
+            "chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"}
+        )
         chapter.save()
 
         # Then the new member should have the role of 'Chapter Team Member'
@@ -72,14 +80,24 @@ class TestFOSSChapter(FrappeTestCase):
         # Given a chapter: self.chapter
         chapter = frappe.get_doc("FOSS Chapter", self.chapter.name)
 
-        new_members = frappe.get_all("FOSS User Profile", filters=[["user", "like", "%test%"], ["name", "not in", [m.chapter_member for m in chapter.chapter_members]]])
+        new_members = frappe.get_all(
+            "FOSS User Profile",
+            filters=[
+                ["user", "like", "%test%"],
+                ["name", "not in", [m.chapter_member for m in chapter.chapter_members]],
+            ],
+        )
         for new_member in new_members:
-            chapter.append("chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"})
+            chapter.append(
+                "chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"}
+            )
         chapter.save()
 
         # When a member is removed from the chapter
         removed_member = chapter.chapter_members[0]
-        chapter.chapter_members = [m for m in chapter.chapter_members if m.chapter_member != removed_member.chapter_member]
+        chapter.chapter_members = [
+            m for m in chapter.chapter_members if m.chapter_member != removed_member.chapter_member
+        ]
         chapter.save()
 
         # Then the removed member should not have the role of 'Chapter Team Member'
@@ -89,7 +107,9 @@ class TestFOSSChapter(FrappeTestCase):
         # check other members retain the role
         for member in chapter.chapter_members:
             user = frappe.db.get_value("FOSS User Profile", member.chapter_member, "user")
-            if not bool(frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user})):
+            if not bool(
+                frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user})
+            ):
                 self.fail(f"Role not retained for {member}")
 
         self.assertFalse(has_role)

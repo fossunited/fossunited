@@ -6,7 +6,9 @@ from fossunited.api.tickets import has_valid_permission
 
 
 @frappe.whitelist()
-def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.user, filters: dict = {}) -> dict:
+def get_attendee_with_checkin_data(
+    event_id: str, user: str = frappe.session.user, filters: dict = {}
+) -> dict:
     """
     Get the attendees of the event with their checkin details
 
@@ -24,7 +26,20 @@ def get_attendee_with_checkin_data(event_id: str, user: str = frappe.session.use
     # Map the items in filters to be like "key": ["like", value]
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
 
-    tickets = frappe.db.get_all("FOSS Event Ticket", _filters, ["name", "full_name", "designation", "organization", "wants_tshirt", "tier", "tshirt_delivered", "tshirt_size"])
+    tickets = frappe.db.get_all(
+        "FOSS Event Ticket",
+        _filters,
+        [
+            "name",
+            "full_name",
+            "designation",
+            "organization",
+            "wants_tshirt",
+            "tier",
+            "tshirt_delivered",
+            "tshirt_size",
+        ],
+    )
 
     for ticket in tickets:
         ticket["checkin_data"] = get_checkin_data(ticket["name"])
@@ -43,13 +58,19 @@ def get_checkin_data(attendee_id: str) -> dict:
         dict: The checkin data for the attendee
     """
 
-    checkin_data = frappe.db.get_all("Event Check In", {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"}, ["check_in_time"])
+    checkin_data = frappe.db.get_all(
+        "Event Check In",
+        {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"},
+        ["check_in_time"],
+    )
 
     return checkin_data
 
 
 @frappe.whitelist()
-def checkin_attendee(event_id: str, attendee: dict, user: str = frappe.session.user, assign_tshirt: bool = False):
+def checkin_attendee(
+    event_id: str, attendee: dict, user: str = frappe.session.user, assign_tshirt: bool = False
+):
     """
     Check-in the attendee for the event.
 
@@ -80,7 +101,11 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
     Returns:
         bool: True if the attendee is already checked in, False otherwise
     """
-    checkins = frappe.db.get_all("Event Check In", {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"}, ["check_in_time"])
+    checkins = frappe.db.get_all(
+        "Event Check In",
+        {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"},
+        ["check_in_time"],
+    )
 
     if not checkins:
         return False

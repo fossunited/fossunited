@@ -14,8 +14,12 @@ class FOSSEventCFP(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import FOSSCustomQuestion
-        from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import FOSSEventCFPReviewer
+        from fossunited.fossunited.doctype.foss_custom_question.foss_custom_question import (
+            FOSSCustomQuestion,
+        )
+        from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import (
+            FOSSEventCFPReviewer,
+        )
 
         allow_cfp_edit: DF.Check
         anonymise_proposals: DF.Check
@@ -62,7 +66,9 @@ class FOSSEventCFP(WebsiteGenerator):
         context.submissions = get_cfp_submissions(self.name)
         context.event = frappe.get_doc("FOSS Chapter Event", self.event)
         context.event_name = self.event_name
-        context.event_date = frappe.db.get_value("FOSS Chapter Event", self.event, "event_start_date").strftime("%B %d, %Y")
+        context.event_date = frappe.db.get_value(
+            "FOSS Chapter Event", self.event, "event_start_date"
+        ).strftime("%B %d, %Y")
         context.submission_doctype = "FOSS Event CFP Submission"
         context.already_submitted = True if self.check_if_already_submitted() else False
 
@@ -101,7 +107,9 @@ class FOSSEventCFP(WebsiteGenerator):
                 "fieldtype": "Data",
                 "label": "Picture (URL)",
                 "value": last_doc.get("picture_url") or "",
-                "description": "Paste a URL for your publicly hosted photo. Keep it in a 1:1 ratio.",
+                "description": (
+                    "Paste a URL for your publicly hosted photo. Keep it in a 1:1 ratio."
+                ),
                 "reqd": 1,
             },
             {

@@ -60,6 +60,8 @@ class FOSSEventRSVPSubmission(Document):
         if not frappe.db.exists("FOSS Event RSVP", self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
 
-        is_rsvp_published = frappe.db.get_value("FOSS Event RSVP", self.linked_rsvp, "is_published")
+        is_rsvp_published = frappe.db.get_value(
+            "FOSS Event RSVP", self.linked_rsvp, "is_published"
+        )
         if not is_rsvp_published:
             frappe.throw("RSVP is not published", frappe.PermissionError)

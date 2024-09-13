@@ -19,7 +19,7 @@ class FOSSHackathonLocalHost(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (
+        from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (  # noqa: E501
             FOSSHackathonLocalHostOrganizer,
         )
 
@@ -41,7 +41,9 @@ class FOSSHackathonLocalHost(Document):
         self.check_if_member_removed()
 
     def before_save(self):
-        if self.has_value_changed("organizers") and (len(self.organizers) > len(self.get_doc_before_save().organizers)):
+        if self.has_value_changed("organizers") and (
+            len(self.organizers) > len(self.get_doc_before_save().organizers)
+        ):
             self.assign_localhost_organizer_role()
 
     def assign_localhost_organizer_role(self):

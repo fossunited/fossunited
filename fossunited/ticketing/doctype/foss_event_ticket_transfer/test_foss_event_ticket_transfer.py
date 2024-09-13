@@ -97,7 +97,8 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
     def test_status_pending_on_create(self):
         fake = Faker()
         # Given an event and a ticket linked to the event
-        # With a ticket created for a user, try to transfer this ticket to another user while passing "Completed" as the status
+        # With a ticket created for a user, try to transfer this ticket to another user while
+        # passing "Completed" as the status
         ticket = frappe.get_doc(
             {
                 "doctype": "FOSS Event Ticket",

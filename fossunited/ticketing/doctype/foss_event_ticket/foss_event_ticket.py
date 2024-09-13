@@ -22,7 +22,9 @@ class FOSSEventTicket(Document):
         from frappe.types import DF
 
         from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
-        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import FOSSTicketCustomField
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (  # noqa: E501
+            FOSSTicketCustomField,
+        )
 
         check_ins: DF.Table[EventCheckIn]
         custom_fields: DF.Table[FOSSTicketCustomField]
@@ -83,7 +85,11 @@ class FOSSEventTicket(Document):
         )
 
         for tier in event.tiers:
-            if tier.title == self.tier and tier.maximum_tickets and (tickets_count >= tier.maximum_tickets):
+            if (
+                tier.title == self.tier
+                and tier.maximum_tickets
+                and (tickets_count >= tier.maximum_tickets)
+            ):
                 event.tiers[tier.idx - 1].enabled = 0
                 event.save(ignore_permissions=True)
                 return
@@ -122,7 +128,9 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
             calculated_amount += tshirt_price
 
     if calculated_amount != doc.amount:
-        frappe.throw("Looks like you did some funny stuff in the frontend and amounts don't match!")
+        frappe.throw(
+            "Looks like you did some funny stuff in the frontend and amounts don't match!"
+        )
 
 
 def is_foss_event(doc: "RazorpayPayment"):

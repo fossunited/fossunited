@@ -127,7 +127,11 @@ def create_rsvp(fields):
     fields.update(
         {
             "doctype": "FOSS Event RSVP Submission",
-            "submitted_by": frappe.session.user if frappe.session.user not in ("Guest", "Administrator") else "",
+            "submitted_by": (
+                frappe.session.user
+                if frappe.session.user not in ("Guest", "Administrator")
+                else ""
+            ),
         }
     )
 
