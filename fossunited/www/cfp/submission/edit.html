@@ -1,201 +1,208 @@
-{% extends "templates/foss_base.html" %} {% block title %}Edit CFP Submission{% endblock %} {%
-block page_content %}
-<div class="container">
-  <div class="backlink mt-5">
-    <a href="/{{event.route}}">
-      <i class="ti ti-arrow-left"></i>
-      {{ _("Back to Event Page") }}
-    </a>
-  </div>
-  <div class="foss-form-wrapper">
-    <div class="form-container">
-      {{ render_form_header() }}
-      <form class="foss-form-body">
-        {% from 'fossunited/templates/macros/renderfield.html' import renderfield %} {% for field
-        in form_fields %} {% if field.fieldname == 'session_type' and cfp.only_workshops %}
-        <div class="d-flex flex-column hide">
-          <label for="{{field.fieldname}}" class="foss-form-question text-sm"
-            >{{field.label}}</label
-          >
-          <select
-            data-label="{{ field.label }}"
-            data-type="Select"
-            name="{{ field.fieldname }}"
-            id="{{ field.fieldname }}"
-            class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
-            {%
-            if
-            field.reqd
-            %}
-            required
-            {%
-            endif%}
-          >
-            <option value="Workshop" selected>Workshop</option>
-          </select>
+{% extends "templates/foss_base.html" %} {% block title %}Edit CFP Submission{% endblock %}
+{% block page_content %}
+  <div class="container">
+    <div class="backlink mt-5">
+      <a href="/{{ event.route }}">
+        <i class="ti ti-arrow-left"></i>
+        {{ _("Back to Event Page") }}
+      </a>
+    </div>
+    <div class="foss-form-wrapper">
+      <div class="form-container">
+        {{ render_form_header() }}
+        <form class="foss-form-body">
+          {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+          {%
+            for field
+            in form_fields
+          %}
+            {% if field.fieldname == 'session_type' and cfp.only_workshops %}
+              <div class="d-flex flex-column hide">
+                <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
+                  >{{ field.label }}</label
+                >
+                <select
+                  data-label="{{ field.label }}"
+                  data-type="Select"
+                  name="{{ field.fieldname }}"
+                  id="{{ field.fieldname }}"
+                  class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+                  {%
+                    if
+                    field.reqd
+                  %}
+                    required
+                  {% endif %}
+                >
+                  <option value="Workshop" selected>Workshop</option>
+                </select>
+              </div>
+            {% elif field.fieldname == 'session_type' and cfp.only_talk_proposals %}
+              <div class="d-flex flex-column">
+                <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
+                  >{{ field.label }}</label
+                >
+                <select
+                  data-label="{{ field.label }}"
+                  data-type="Select"
+                  name="{{ field.fieldname }}"
+                  id="{{ field.fieldname }}"
+                  class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+                  {%
+                    if
+                    field.reqd
+                  %}
+                    required
+                  {% endif %}
+                >
+                  <option value="Talk" selected>Talk</option>
+                  <option value="Lightning Talk">Lightning Talk</option>
+                </select>
+              </div>
+            {% else %}
+              {{ renderfield(field, submission) }}
+            {% endif %}
+          {% endfor %}
+        </form>
+        <div class="foss-form-buttons">
+          <button class="primary-button" type="submit" id="update-cfp" disabled="">
+            {{ _("Update Talk Proposal") }}
+          </button>
         </div>
-        {% elif field.fieldname == 'session_type' and cfp.only_talk_proposals %}
-        <div class="d-flex flex-column">
-          <label for="{{field.fieldname}}" class="foss-form-question text-sm"
-            >{{field.label}}</label
-          >
-          <select
-            data-label="{{ field.label }}"
-            data-type="Select"
-            name="{{ field.fieldname }}"
-            id="{{ field.fieldname }}"
-            class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
-            {%
-            if
-            field.reqd
-            %}
-            required
-            {%
-            endif%}
-          >
-            <option value="Talk" selected>Talk</option>
-            <option value="Lightning Talk">Lightning Talk</option>
-          </select>
-        </div>
-        {% else %} {{ renderfield(field, submission) }} {% endif %} {% endfor %}
-      </form>
-      <div class="foss-form-buttons">
-        <button class="primary-button" type="submit" id="update-cfp" disabled="">
-          {{ _("Update Talk Proposal") }}
-        </button>
       </div>
     </div>
   </div>
-</div>
-{% endblock %} {% macro render_form_header() %}
-<div class="foss-form-header">
-  <h3 class="foss-form-heading-3xl">{{ _("Edit Talk Proposal") }}</h3>
-  <div class="event-details my-2">
-    {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block
-    %}
-    <div class="py-2">{{ chapter_branding_block(event.chapter) }}</div>
-    <div class="event-title my-1">
-      <span><strong>Event:</strong></span>
-      {{ event.event_name }}
+{% endblock %}
+{% macro render_form_header() %}
+  <div class="foss-form-header">
+    <h3 class="foss-form-heading-3xl">{{ _("Edit Talk Proposal") }}</h3>
+    <div class="event-details my-2">
+      {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+      <div class="py-2">{{ chapter_branding_block(event.chapter) }}</div>
+      <div class="event-title my-1">
+        <span><strong>Event:</strong></span>
+        {{ event.event_name }}
+      </div>
+      <div class="event-date my-1">
+        <span><strong>Date:</strong></span>
+        {{ event.event_start_date.strftime("%B %d, %Y") }}
+      </div>
     </div>
-    <div class="event-date my-1">
-      <span><strong>Date:</strong></span>
-      {{ event.event_start_date.strftime("%B %d, %Y") }}
-    </div>
+    <div class="foss-form-description my-4">Edit talk proposal details.</div>
   </div>
-  <div class="foss-form-description my-4">Edit talk proposal details.</div>
-</div>
-{% endmacro %} {% block page_script %}
-<script>
-  $(document).ready(function () {
-    check_if_submitter()
-    enable_update_button()
-    set_mandatory_asterisk()
+{% endmacro %}
+{% block page_script %}
+  <script>
+    $(document).ready(function () {
+      check_if_submitter()
+      enable_update_button()
+      set_mandatory_asterisk()
 
-    $('#update-cfp').on('click', (e) => {
-      update_cfp()
-    })
-  })
-
-  function enable_update_button() {
-    let formFields = document.querySelectorAll(
-      '.form-control:not(.custom-question), [type="text-editor"]',
-    )
-    formFields.forEach((field) => {
-      field.addEventListener('input', () => {
-        let button = document.getElementById('update-cfp')
-        button.disabled = false
+      $('#update-cfp').on('click', (e) => {
+        update_cfp()
       })
     })
-  }
 
-  function check_if_submitter() {
-    if (
-      !check_if_logged_in(
-        (message = 'You are not authorized to edit this form. Please login or create an account.'),
+    function enable_update_button() {
+      let formFields = document.querySelectorAll(
+        '.form-control:not(.custom-question), [type="text-editor"]',
       )
-    ) {
-      return
+      formFields.forEach((field) => {
+        field.addEventListener('input', () => {
+          let button = document.getElementById('update-cfp')
+          button.disabled = false
+        })
+      })
     }
-    frappe.call({
-      method: 'fossunited.fossunited.forms.check_if_submitter',
-      args: {
-        doctype: '{{ frappe.form_dict.doctype }}',
-        docname: '{{ frappe.form_dict.submission }}',
-      },
-      callback: (r) => {
-        if (!r.message) {
-          frappe.msgprint(
+
+    function check_if_submitter() {
+      if (
+        !check_if_logged_in(
+          (message =
+            'You are not authorized to edit this form. Please login or create an account.'),
+        )
+      ) {
+        return
+      }
+      frappe.call({
+        method: 'fossunited.fossunited.forms.check_if_submitter',
+        args: {
+          doctype: '{{ frappe.form_dict.doctype }}',
+          docname: '{{ frappe.form_dict.submission }}',
+        },
+        callback: (r) => {
+          if (!r.message) {
+            frappe.msgprint(
+              {
+                message: __('You are not authorized to edit this form.'),
+                indicator: 'red',
+              },
+              2,
+            )
+            setTimeout(() => {
+              window.location.href = '/{{event.route}}'
+            }, 2000)
+          }
+        },
+      })
+    }
+
+    function update_cfp() {
+      let formFields = document.querySelectorAll(
+        '.form-control:not(.custom-question), [type="text-editor"]',
+      )
+      let submission = {}
+      formFields.forEach((field) => {
+        if (field.className.includes('ql-container')) {
+          submission[field.id] = $(field).find('.ql-editor').html()
+        } else if (field.type == 'checkbox') {
+          submission[field.id] = field.checked
+        } else {
+          submission[field.id] = field.value
+        }
+      })
+
+      let custom_answers = []
+      // for each value in submission, if the key has custom_question in it, then add it to custom answers as {question: field.data('label'), response: value}
+      for (const key in submission) {
+        if (key.includes('custom_question')) {
+          const label = $(`[name="${key}"]`).data('label')
+          const type = $(`[name="${key}"]`).data('type')
+          custom_answers.push({ question: label, response: submission[key], type: type })
+          delete submission[key]
+        }
+      }
+
+      // removing empty string keys
+      submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
+
+      frappe.call({
+        method: 'fossunited.fossunited.forms.update_submission',
+        args: {
+          doctype: 'FOSS Event CFP Submission',
+          submission: '{{ frappe.form_dict.submission }}',
+          fields: JSON.stringify(submission),
+          custom: custom_answers,
+        },
+        callback: (r) => {
+          frappe.show_alert(
             {
-              message: __('You are not authorized to edit this form.'),
-              indicator: 'red',
+              message: __('Submission updated successfully!'),
+              indicator: 'green',
             },
-            2,
+            3,
           )
           setTimeout(() => {
-            window.location.href = '/{{event.route}}'
+            window.location.reload()
           }, 2000)
-        }
-      },
-    })
-  }
-
-  function update_cfp() {
-    let formFields = document.querySelectorAll(
-      '.form-control:not(.custom-question), [type="text-editor"]',
-    )
-    let submission = {}
-    formFields.forEach((field) => {
-      if (field.className.includes('ql-container')) {
-        submission[field.id] = $(field).find('.ql-editor').html()
-      } else if (field.type == 'checkbox') {
-        submission[field.id] = field.checked
-      } else {
-        submission[field.id] = field.value
-      }
-    })
-
-    let custom_answers = []
-    // for each value in submission, if the key has custom_question in it, then add it to custom answers as {question: field.data('label'), response: value}
-    for (const key in submission) {
-      if (key.includes('custom_question')) {
-        const label = $(`[name="${key}"]`).data('label')
-        const type = $(`[name="${key}"]`).data('type')
-        custom_answers.push({ question: label, response: submission[key], type: type })
-        delete submission[key]
-      }
+        },
+        error: (e) => {
+          frappe.throw({
+            message: __('Failed to update talk proposal. Please try again.'),
+            indicator: 'red',
+          })
+        },
+      })
     }
-
-    // removing empty string keys
-    submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
-
-    frappe.call({
-      method: 'fossunited.fossunited.forms.update_submission',
-      args: {
-        doctype: 'FOSS Event CFP Submission',
-        submission: '{{ frappe.form_dict.submission }}',
-        fields: JSON.stringify(submission),
-        custom: custom_answers,
-      },
-      callback: (r) => {
-        frappe.show_alert(
-          {
-            message: __('Submission updated successfully!'),
-            indicator: 'green',
-          },
-          3,
-        )
-        setTimeout(() => {
-          window.location.reload()
-        }, 2000)
-      },
-      error: (e) => {
-        frappe.throw({
-          message: __('Failed to update talk proposal. Please try again.'),
-          indicator: 'red',
-        })
-      },
-    })
-  }
-</script>
+  </script>
 {% endblock %}

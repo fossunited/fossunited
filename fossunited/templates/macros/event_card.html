@@ -1,52 +1,54 @@
 {% macro event_card(event) %}
-<div
-  class="event-card"
-  data-docname="{{ event.name }}"
-  data-route="{{ event.route }}"
-  {%
-  if
-  event.is_external_event
-  %}
-  onclick="window.open('{{ event.external_event_url }}', '_blank')"
-  {%
-  else
-  %}
-  onclick="window.location.pathname='/{{event.route}}'"
-  {%
-  endif%}
->
-  <div class="event-card-contents">
-    {% if not event.is_external_event %} {% set chapter = frappe.get_doc("FOSS Chapter",
-    event.chapter) %}
-    <div
-      class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}"
-    >
-      {% if chapter.chapter_type == 'FOSS Club' %}
-      <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
-      <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
-      {% else %}
-      <span class="fff-forward">{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span>
-      {% endif %}
-    </div>
+  <div
+    class="event-card"
+    data-docname="{{ event.name }}"
+    data-route="{{ event.route }}"
+    {%
+      if
+      event.is_external_event
+    %}
+      onclick="window.open('{{ event.external_event_url }}', '_blank')"
     {% else %}
-    <div></div>
+      onclick="window.location.pathname='/{{ event.route }}'"
     {% endif %}
-    <div class="event-card--date-section">
-      <div class="event-card--date">{{ event.event_start_date.strftime("%d %b %Y") }}</div>
-      {% if event.must_attend %}
-      <div class="event-card--must-attend">
-        <i class="ti ti-star-filled"></i>
-        {{ _("Must Attend") }}
-      </div>
+  >
+    <div class="event-card-contents">
+      {% if not event.is_external_event %}
+        {%
+          set chapter = frappe.get_doc("FOSS Chapter",
+          event.chapter)
+        %}
+        <div
+          class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %}"
+        >
+          {% if chapter.chapter_type == 'FOSS Club' %}
+            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
+            <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+          {% else %}
+            <span class="fff-forward"
+              >{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span
+            >
+          {% endif %}
+        </div>
+      {% else %}
+        <div></div>
       {% endif %}
-    </div>
-    <div class="event-card--title">{{ event.event_name | truncate(26, True) }}</div>
-    <div class="event-card--location-section">
-      <div class="event-card--location">
-        <i class="ti ti-map-pin"></i>
-        <span>{{ (event.event_location or 'To Be Announced') | truncate(30, True) }}</span>
+      <div class="event-card--date-section">
+        <div class="event-card--date">{{ event.event_start_date.strftime("%d %b %Y") }}</div>
+        {% if event.must_attend %}
+          <div class="event-card--must-attend">
+            <i class="ti ti-star-filled"></i>
+            {{ _("Must Attend") }}
+          </div>
+        {% endif %}
+      </div>
+      <div class="event-card--title">{{ event.event_name | truncate(26, True) }}</div>
+      <div class="event-card--location-section">
+        <div class="event-card--location">
+          <i class="ti ti-map-pin"></i>
+          <span>{{ (event.event_location or 'To Be Announced') | truncate(30, True) }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 {% endmacro %}

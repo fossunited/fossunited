@@ -88,17 +88,21 @@
     <h2>Support from FOSS United</h2>
 
     <div class="support-category-container">
-      {% for index in range(1, 7) %} {% set support_icon = values['icon_' + index|string ] %} {%
-      set support_title = values['title_' + index|string ] %} {% set support_text = values['text_'
-      + index|string ] %} {% if support_title %}
-
-      <div class="support-card">
-        <img src="{{support_icon}}" alt="" />
-        <h5>{{ support_title }}</h5>
-        <p>{{support_text}}</p>
-      </div>
-
-      {% endif %} {% endfor %}
+      {% for index in range(1, 7) %}
+        {% set support_icon = values['icon_' + index|string ] %}
+        {% set support_title = values['title_' + index|string ] %}
+        {%
+          set support_text = values['text_'
+          + index|string ]
+        %}
+        {% if support_title %}
+          <div class="support-card">
+            <img src="{{ support_icon }}" alt="" />
+            <h5>{{ support_title }}</h5>
+            <p>{{ support_text }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>

@@ -84,21 +84,28 @@
 <div class="grants-program-section container">
   <div class="grants-program-container">
     <div class="grant-program">
-      <h4>{{heading}}</h4>
+      <h4>{{ heading }}</h4>
 
       <div class="about-grant-program">
-        <p>{{subtext}}</p>
+        <p>{{ subtext }}</p>
 
         <div class="grant-detail-category">
-          {% for index in range(1, 4) %} {% set grant_category = values['grant_category_' +
-          index|string ] %} {% set grant_amount = values['grant_amount_' + index|string ] %} {% if
-          grant_category %}
-
-          <div class="grant-type-card">
-            <h3>{{grant_amount}}</h3>
-            <p>{{grant_category}}</p>
-          </div>
-          {% endif %} {% endfor %}
+          {% for index in range(1, 4) %}
+            {%
+              set grant_category = values['grant_category_' +
+              index|string ]
+            %}
+            {% set grant_amount = values['grant_amount_' + index|string ] %}
+            {%
+              if
+              grant_category
+            %}
+              <div class="grant-type-card">
+                <h3>{{ grant_amount }}</h3>
+                <p>{{ grant_category }}</p>
+              </div>
+            {% endif %}
+          {% endfor %}
         </div>
       </div>
     </div>

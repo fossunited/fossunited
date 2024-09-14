@@ -91,21 +91,22 @@
 
 <div class="grants-section container">
   <div class="grants-container">
-    <h1>{{heading}}</h1>
-    <p>{{subtext}}</p>
+    <h1>{{ heading }}</h1>
+    <p>{{ subtext }}</p>
 
     <div class="button-category">
       <div class="button-container">
         {% if primary_cta_link %}
-        <a href="{{primary_cta_link}}" class="primary-button">{{primary_cta_text}}</a>
-        {% endif %} {% if secondary_cta_link %}
-        <a href="{{secondary_cta_link}}" class="secondary-button">{{secondary_cta_text}}</a>
+          <a href="{{ primary_cta_link }}" class="primary-button">{{ primary_cta_text }}</a>
+        {% endif %}
+        {% if secondary_cta_link %}
+          <a href="{{ secondary_cta_link }}" class="secondary-button">{{ secondary_cta_text }}</a>
         {% endif %}
       </div>
     </div>
   </div>
 
   <div class="grants-hero-image">
-    <img src="{{hero_image}}" alt="Grants Icon" />
+    <img src="{{ hero_image }}" alt="Grants Icon" />
   </div>
 </div>

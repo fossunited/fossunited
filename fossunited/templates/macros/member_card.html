@@ -1,9 +1,9 @@
 {% macro member_card(member) %}
-<a class="member-card" href="/{{member.route}}">
-  <img src="{{ member.profile_picture }}" alt="Member Image" class="member-card--image" />
-  <div class="member-card--contents">
-    <div class="member-card--name">{{ member.full_name }}</div>
-    <div class="member-card--role">{{ member.role }}</div>
-  </div>
-</a>
+  <a class="member-card" href="/{{ member.route }}">
+    <img src="{{ member.profile_picture }}" alt="Member Image" class="member-card--image" />
+    <div class="member-card--contents">
+      <div class="member-card--name">{{ member.full_name }}</div>
+      <div class="member-card--role">{{ member.role }}</div>
+    </div>
+  </a>
 {% endmacro %}

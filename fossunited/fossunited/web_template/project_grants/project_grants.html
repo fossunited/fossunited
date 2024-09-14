@@ -126,42 +126,43 @@
 
 <div class="project-grants-section container">
   <div class="project-grants-container">
-    <h4>{{heading}}</h4>
+    <h4>{{ heading }}</h4>
 
     <div class="project-grant-category">
-      {% set project_grants = frappe.get_all("FOSS Project Grant",
-      fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor",
-      "date_of_provision" ], filters={"grant_status": "Approved"}, order_by="date_of_provision
-      desc") %} {% for grant in project_grants %}
+      {%
+        set project_grants = frappe.get_all("FOSS Project Grant",
+        fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor",
+        "date_of_provision" ], filters={"grant_status": "Approved"}, order_by="date_of_provision
+        desc")
+      %}
+      {% for grant in project_grants %}
+        <div class="project-grant-card">
+          <div class="project-details">
+            <a class="project-name" href="{{ grant.project_website }}">
+              <h6>{{ grant.project_name }}</h6>
+              <i class="ti ti-arrow-up-right"></i>
+            </a>
+            <p>{{ grant.about_project }}</p>
+          </div>
 
-      <div class="project-grant-card">
-        <div class="project-details">
-          <a class="project-name" href="{{grant.project_website}}">
-            <h6>{{grant.project_name}}</h6>
-            <i class="ti ti-arrow-up-right"></i>
-          </a>
-          <p>{{grant.about_project}}</p>
+          <div class="grant-details">
+            <div class="grant-detail-card" id="grant-date">
+              <p>Grant Year</p>
+              <h6>{{ grant.date_of_provision.strftime("%Y") }}</h6>
+            </div>
+            <div class="grant-detail-card" id="project-grant-amount">
+              <p>Grant Amt.</p>
+              <h6>₹ {{ grant.grant_amount }}</h6>
+            </div>
+
+            {% if grant.co_sponsor %}
+              <div class="grant-detail-card" id="grant-date">
+                <p>Co-Sponsor</p>
+                <h6>{{ grant.co_sponsor }}</h6>
+              </div>
+            {% endif %}
+          </div>
         </div>
-
-        <div class="grant-details">
-          <div class="grant-detail-card" id="grant-date">
-            <p>Grant Year</p>
-            <h6>{{grant.date_of_provision.strftime("%Y")}}</h6>
-          </div>
-          <div class="grant-detail-card" id="project-grant-amount">
-            <p>Grant Amt.</p>
-            <h6>₹ {{grant.grant_amount}}</h6>
-          </div>
-
-          {%if grant.co_sponsor %}
-          <div class="grant-detail-card" id="grant-date">
-            <p>Co-Sponsor</p>
-            <h6>{{grant.co_sponsor}}</h6>
-          </div>
-
-          {% endif %}
-        </div>
-      </div>
       {% endfor %}
     </div>
   </div>

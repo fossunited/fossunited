@@ -81,20 +81,24 @@
     <h2>Roles of the Lead</h2>
 
     <div class="role-card-container">
-      {% for index in range(1, 7) %} {% set role_title = values['role_' + index|string ] %} {% set
-      role_icon = values['role_' + index|string + '_icon'] %} {% if role_title %}
+      {% for index in range(1, 7) %}
+        {% set role_title = values['role_' + index|string ] %}
+        {%
+          set
+          role_icon = values['role_' + index|string + '_icon']
+        %}
+        {% if role_title %}
+          <div class="role-card">
+            <div class="role-card-header">
+              <h5>{{ role_title }}</h5>
+            </div>
 
-      <div class="role-card">
-        <div class="role-card-header">
-          <h5>{{role_title}}</h5>
-        </div>
-
-        <div class="role-card-footer">
-          <img src="{{role_icon}}" alt="" />
-        </div>
-      </div>
-
-      {% endif %} {% endfor %}
+            <div class="role-card-footer">
+              <img src="{{ role_icon }}" alt="" />
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>

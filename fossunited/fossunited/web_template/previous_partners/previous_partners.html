@@ -51,16 +51,18 @@
   <div class="previous-partners-container">
     <h4>Previous Partners</h4>
 
-    {% set previousPartners = frappe.get_all("Industry Partners", fields=["company", "logo",
-    "website"], filters={ "is_current_partner": 0}, order_by="company")%} {% if previousPartners %}
-
-    <div class="previous-partner-block">
-      {%for partner in previousPartners %}
-      <a class="new-partner" href="{{partner.website}}">
-        <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-      </a>
-      {% endfor %}
-    </div>
+    {%
+      set previousPartners = frappe.get_all("Industry Partners", fields=["company", "logo",
+      "website"], filters={ "is_current_partner": 0}, order_by="company")
+    %}
+    {% if previousPartners %}
+      <div class="previous-partner-block">
+        {% for partner in previousPartners %}
+          <a class="new-partner" href="{{ partner.website }}">
+            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+          </a>
+        {% endfor %}
+      </div>
     {% endif %}
   </div>
 </div>

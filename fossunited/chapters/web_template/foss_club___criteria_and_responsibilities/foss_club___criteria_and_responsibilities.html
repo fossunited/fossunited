@@ -74,10 +74,15 @@
       <h2>Lead's Commitment & Conduct</h2>
 
       <ul>
-        {% for index in range(1, 7) %} {% set conduct_text = values['conduct_point_' + index|string
-        ] %} {% if conduct_text %}
-        <li>{{ conduct_text }}</li>
-        {% endif %} {% endfor %}
+        {% for index in range(1, 7) %}
+          {%
+            set conduct_text = values['conduct_point_' + index|string
+            ]
+          %}
+          {% if conduct_text %}
+            <li>{{ conduct_text }}</li>
+          {% endif %}
+        {% endfor %}
       </ul>
     </div>
 
@@ -85,10 +90,15 @@
       <h2>Responsibilities of the Lead</h2>
 
       <ul>
-        {% for index in range(1, 5) %} {% set responsibility_text = values['responsibility_' +
-        index|string ] %} {% if responsibility_text %}
-        <li>{{ responsibility_text }}</li>
-        {% endif %} {% endfor %}
+        {% for index in range(1, 5) %}
+          {%
+            set responsibility_text = values['responsibility_' +
+            index|string ]
+          %}
+          {% if responsibility_text %}
+            <li>{{ responsibility_text }}</li>
+          {% endif %}
+        {% endfor %}
       </ul>
     </div>
   </div>

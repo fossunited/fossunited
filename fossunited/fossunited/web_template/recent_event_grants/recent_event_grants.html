@@ -123,42 +123,44 @@
     <h4>Recent Event Grants</h4>
 
     <div class="event-grant-category" id="event-grant-category">
-      {% set approved_event_grants = frappe.get_all("FOSS Event Grant",
-      fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount",
-      "custom_amount"], page_length=8, filters={"grant_status": "Approved"},
-      order_by="event_start_date desc") %} {% for grant in approved_event_grants %}
+      {%
+        set approved_event_grants = frappe.get_all("FOSS Event Grant",
+        fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount",
+        "custom_amount"], page_length=8, filters={"grant_status": "Approved"},
+        order_by="event_start_date desc")
+      %}
+      {% for grant in approved_event_grants %}
+        <div class="grant-card">
+          <h6>{{ grant.event_name }}</h6>
 
-      <div class="grant-card">
-        <h6>{{grant.event_name}}</h6>
-
-        <div class="event-detail" id="event-date">
-          <p>Date</p>
-          <p class="grant-card-value">
-            {{grant.event_start_date.strftime("%d %b %Y") if grant.event_start_date else "TBA"}}
-          </p>
-        </div>
-
-        <div class="event-detail" id="event-location">
-          <p>Location</p>
-          <p class="grant-card-value">
-            {{grant.event_location if grant.event_location else "TBA"}}
-          </p>
-        </div>
-
-        <div class="grant-card-footer">
-          <div class="event-detail">
-            <p>Grant Amount</p>
-            <p class="grant-card-value" id="grant-amount">
-              {{ grant.grant_amount if grant.grant_amount != "Custom" else grant.custom_amount }}
+          <div class="event-detail" id="event-date">
+            <p>Date</p>
+            <p class="grant-card-value">
+              {{ grant.event_start_date.strftime("%d %b %Y") if grant.event_start_date else "TBA" }}
             </p>
           </div>
 
-          <a href="{{grant.event_website}}">
-            View Details
-            <i class="ti ti-chevron-right"></i>
-          </a>
+          <div class="event-detail" id="event-location">
+            <p>Location</p>
+            <p class="grant-card-value">
+              {{ grant.event_location if grant.event_location else "TBA" }}
+            </p>
+          </div>
+
+          <div class="grant-card-footer">
+            <div class="event-detail">
+              <p>Grant Amount</p>
+              <p class="grant-card-value" id="grant-amount">
+                {{ grant.grant_amount if grant.grant_amount != "Custom" else grant.custom_amount }}
+              </p>
+            </div>
+
+            <a href="{{ grant.event_website }}">
+              View Details
+              <i class="ti ti-chevron-right"></i>
+            </a>
+          </div>
         </div>
-      </div>
       {% endfor %}
     </div>
 

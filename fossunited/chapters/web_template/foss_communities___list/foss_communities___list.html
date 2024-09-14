@@ -136,22 +136,24 @@
 
     <div class="city-card-section">
       <div class="city-card-container">
-        {% set communities = frappe.get_all("FOSS Chapter", fields=["city",
-        "represent_image","route"], filters={"is_published": 1, "chapter_type": "City Community"},
-        order_by="city") %} {% for community in communities %}
+        {%
+          set communities = frappe.get_all("FOSS Chapter", fields=["city",
+          "represent_image","route"], filters={"is_published": 1, "chapter_type": "City Community"},
+          order_by="city")
+        %}
+        {% for community in communities %}
+          <a class="city-card" href="{{ community.route }}">
+            <h5>{{ community.city }}</h5>
 
-        <a class="city-card" href="{{community.route}}">
-          <h5>{{community.city}}</h5>
-
-          <div class="city-image">
-            <img src="{{community.represent_image}}" alt="{{community.city}}" />
-          </div>
-        </a>
+            <div class="city-image">
+              <img src="{{ community.represent_image }}" alt="{{ community.city }}" />
+            </div>
+          </a>
         {% endfor %}
       </div>
 
       <div class="city-list-image">
-        <img src="{{map_image}}" alt="India map with city communities" />
+        <img src="{{ map_image }}" alt="India map with city communities" />
       </div>
     </div>
   </div>

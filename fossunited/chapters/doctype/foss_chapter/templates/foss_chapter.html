@@ -1,78 +1,97 @@
-{% extends "templates/foss_base.html" %} {% block page_content %} {{ header() }} {{ render_about()
-}} {% if upcoming_events %} {{ render_upcoming_events() }} {% endif %} {% if past_events %} {{
-render_past_events() }} {% endif %} {{ render_members() }}
-<div class="my-5 py-5"></div>
-{% endblock %} {% macro header() %}
-<div class="container header-section-parent">
-  <div class="header-section">
-    <img
-      class="foss-banner-image header--banner"
-      src="{{ doc.banner_image or default_banner}}"
-      alt="Banner Image"
-    />
-    <div class="header--img-title-cta-section">
-      <div class="header--img-title">
-        {% if profile_img_src %}
-        <img
-          src="{{ profile_img_src }}"
-          alt="{{ doc.chapter_type }} Logo"
-          class="header-profile-image ml-lg-6"
-        />
-        {% endif %}
-        <h1
-          class="pt-2 header--title {% if doc.chapter_type == 'City Community' %} city-chapter-heading {% else %} chapter-heading {% endif %}"
-        >
-          {{ doc.chapter_name }}
-        </h1>
-      </div>
-      <!-- <div class="header--cta-section">
+{% extends "templates/foss_base.html" %}
+{% block page_content %}
+  {{ header() }}
+  {{ render_about() }}
+  {% if upcoming_events %}{{ render_upcoming_events() }}{% endif %}
+  {% if past_events %}{{ render_past_events() }}{% endif %}
+  {{ render_members() }}
+  <div class="my-5 py-5"></div>
+{% endblock %}
+{% macro header() %}
+  <div class="container header-section-parent">
+    <div class="header-section">
+      <img
+        class="foss-banner-image header--banner"
+        src="{{ doc.banner_image or default_banner }}"
+        alt="Banner Image"
+      />
+      <div class="header--img-title-cta-section">
+        <div class="header--img-title">
+          {% if profile_img_src %}
+            <img
+              src="{{ profile_img_src }}"
+              alt="{{ doc.chapter_type }} Logo"
+              class="header-profile-image ml-lg-6"
+            />
+          {% endif %}
+          <h1
+            class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
+          >
+            {{ doc.chapter_name }}
+          </h1>
+        </div>
+        <!-- <div class="header--cta-section">
                     <button class="primary-button">
                         <i class="ti ti-user-plus"></i> Follow
                     </button>
                 </div> -->
+      </div>
+    </div>
+    <div class="header-section--socials">
+      {% for (k,v) in social_links.items() %}
+        <a href="{{ v }}"><img src="https://cdn.simpleicons.org/{{ k }}" alt="{{ v }}" /></a>
+      {% endfor %}
     </div>
   </div>
-  <div class="header-section--socials">
-    {% for (k,v) in social_links.items() %}
-    <a href="{{v}}"><img src="https://cdn.simpleicons.org/{{k}}" alt="{{v}}" /></a>
-    {% endfor %}
+{% endmacro %}
+{% macro render_about() %}
+  <div class="container my-5">
+    <h3 class="subtitle">About</h3>
+    <div class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</div>
   </div>
-</div>
-{% endmacro %} {% macro render_about() %}
-<div class="container my-5">
-  <h3 class="subtitle">About</h3>
-  <div class="description-block">{{ doc.about_chapter or 'Nothing in Description'}}</div>
-</div>
-{% endmacro %} {% macro render_upcoming_events() %} {% from
-'fossunited/templates/macros/event_card.html' import event_card %}
-<div class="container my-5">
-  <h3 class="subtitle">Upcoming Events</h3>
-  <div class="events-grid-4">
-    {% for event in upcoming_events %} {{ event_card(event) }} {% endfor %}
+{% endmacro %}
+{% macro render_upcoming_events() %}
+  {%
+    from
+    'fossunited/templates/macros/event_card.html' import event_card
+  %}
+  <div class="container my-5">
+    <h3 class="subtitle">Upcoming Events</h3>
+    <div class="events-grid-4">
+      {% for event in upcoming_events %}{{ event_card(event) }}{% endfor %}
+    </div>
   </div>
-</div>
-{% endmacro %} {% macro render_past_events() %} {% from
-'fossunited/templates/macros/event_card.html' import event_card %}
-<div class="container my-5">
-  <h3 class="subtitle">Past Events</h3>
-  <div class="events-grid-4">
-    {% for event in past_events %} {{ event_card(event) }} {% endfor %}
+{% endmacro %}
+{% macro render_past_events() %}
+  {%
+    from
+    'fossunited/templates/macros/event_card.html' import event_card
+  %}
+  <div class="container my-5">
+    <h3 class="subtitle">Past Events</h3>
+    <div class="events-grid-4">
+      {% for event in past_events %}{{ event_card(event) }}{% endfor %}
+    </div>
   </div>
-</div>
-{% endmacro %} {% macro render_members() %} {% from 'fossunited/templates/macros/member_card.html'
-import member_card %}
-<div class="container my-5">
-  <h3 class="subtitle">Organisers</h3>
-  <div class="members-grid-6">
-    {% for member in members %} {{ member_card(member) }} {% endfor %}
+{% endmacro %}
+{% macro render_members() %}
+  {%
+    from 'fossunited/templates/macros/member_card.html'
+    import member_card
+  %}
+  <div class="container my-5">
+    <h3 class="subtitle">Organisers</h3>
+    <div class="members-grid-6">
+      {% for member in members %}{{ member_card(member) }}{% endfor %}
+    </div>
   </div>
-</div>
-{% endmacro %} {% block page_script %}
-<script>
-  $(document).ready(function () {
-    if (window.innerWidth < 425 && '{{ doc.chapter_type }}' == 'City Community') {
-      $('.header--banner').css('object-position', 'right')
-    }
-  })
-</script>
+{% endmacro %}
+{% block page_script %}
+  <script>
+    $(document).ready(function () {
+      if (window.innerWidth < 425 && '{{ doc.chapter_type }}' == 'City Community') {
+        $('.header--banner').css('object-position', 'right')
+      }
+    })
+  </script>
 {% endblock %}

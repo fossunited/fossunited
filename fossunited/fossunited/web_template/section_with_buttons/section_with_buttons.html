@@ -72,24 +72,29 @@
 <div div="section-container">
   <p class="content">{{ content }}</p>
   {%- if url_1 or url_2 -%}
-  <div class="hero-buttons">
-    {%- if url_1 -%}
-    <a class="button primary-button" href="{{ url_1 }}">
-      {% if icon_1_align == "Left" and icon_1 %}
-      <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
-      {% endif %} {{ _(label_1) }} {% if icon_1_align == "Right" and icon_1 %}
-      <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
-      {% endif %}
-    </a>
-    {%- endif -%} {%- if url_2 -%}
-    <a class="button secondary-button" href="{{ url_2 }}">
-      {% if icon_2_align == "Left" and icon_2 %}
-      <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
-      {% endif %} {{ _(label_2) }} {% if icon_2_align == "Right" and icon_2 %}
-      <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
-      {% endif %}
-    </a>
-    {%- endif -%}
-  </div>
+    <div class="hero-buttons">
+      {%- if url_1 -%}
+        <a class="button primary-button" href="{{ url_1 }}">
+          {% if icon_1_align == "Left" and icon_1 %}
+            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
+          {% endif %}
+          {{ _(label_1) }}
+          {% if icon_1_align == "Right" and icon_1 %}
+            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
+          {% endif %}
+        </a>
+      {%- endif -%}
+      {%- if url_2 -%}
+        <a class="button secondary-button" href="{{ url_2 }}">
+          {% if icon_2_align == "Left" and icon_2 %}
+            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
+          {% endif %}
+          {{ _(label_2) }}
+          {% if icon_2_align == "Right" and icon_2 %}
+            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
+          {% endif %}
+        </a>
+      {%- endif -%}
+    </div>
   {%- endif -%}
 </div>

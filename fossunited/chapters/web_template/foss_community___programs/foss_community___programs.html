@@ -108,28 +108,32 @@
 <div class="programs-section container">
   <div class="programs-container">
     <div class="programs-section-header">
-      <h2>{{heading}}</h2>
+      <h2>{{ heading }}</h2>
 
       <img src="assets/fossunited/images/city_communities.png" alt="" />
     </div>
 
     <div class="program-card-container">
-      {% for index in range(1, 5) %} {% set program_title = values['title_' + index|string ] %} {%
-      set program_icon = values['icon_' + index|string ] %} {% set program_text = values['text_' +
-      index|string ] %} {% if program_title %}
+      {% for index in range(1, 5) %}
+        {% set program_title = values['title_' + index|string ] %}
+        {% set program_icon = values['icon_' + index|string ] %}
+        {%
+          set program_text = values['text_' +
+          index|string ]
+        %}
+        {% if program_title %}
+          <div class="program-card">
+            <div class="program-card-head">
+              <img src="{{ program_icon }}" alt="" />
+            </div>
 
-      <div class="program-card">
-        <div class="program-card-head">
-          <img src="{{program_icon}}" alt="" />
-        </div>
-
-        <div class="program-card-body">
-          <h5>{{program_title}}</h5>
-          <p>{{program_text}}</p>
-        </div>
-      </div>
-
-      {% endif %} {% endfor %}
+            <div class="program-card-body">
+              <h5>{{ program_title }}</h5>
+              <p>{{ program_text }}</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>

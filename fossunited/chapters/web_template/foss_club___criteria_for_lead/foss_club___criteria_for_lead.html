@@ -106,15 +106,16 @@
       </div>
 
       <div class="criteria-category-container">
-        {% for index in range(1, 7) %} {% set criteria_title = values['title_' + index|string ] %}
-        {% set criteria_text = values['text_' + index|string ] %} {% if criteria_title %}
-
-        <div class="criteria-item">
-          <h5>{{ criteria_title }}</h5>
-          <p>{{criteria_text}}</p>
-        </div>
-
-        {% endif %} {% endfor %}
+        {% for index in range(1, 7) %}
+          {% set criteria_title = values['title_' + index|string ] %}
+          {% set criteria_text = values['text_' + index|string ] %}
+          {% if criteria_title %}
+            <div class="criteria-item">
+              <h5>{{ criteria_title }}</h5>
+              <p>{{ criteria_text }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
       </div>
     </div>
 

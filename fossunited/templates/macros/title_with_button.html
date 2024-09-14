@@ -1,25 +1,23 @@
 {% macro title_with_button(title, back=False, button=None) %}
-
-<div class="header-with-back d-flex align-items-center justify-content-between">
-  <div class="d-flex">
-    <button style="border: 0" onclick="history.back()">
-      <i class="ti ti-arrow-left" style="font-size: 24px"></i>
-    </button>
-    <h4 class="ml-2">Edit Profile</h4>
-  </div>
-  {% if button != None %}
-  <button
-    class="{{button.classes or ''}}"
-    style="font-size:var(--text-{{button.size or 'base'}});"
-    onclick="{{button.method}}"
-    id="{{button.id}}"
-  >
-    {% if button.icon %}
-    <i class="{{button.icon}}"></i>
+  <div class="header-with-back d-flex align-items-center justify-content-between">
+    <div class="d-flex">
+      <button style="border: 0" onclick="history.back()">
+        <i class="ti ti-arrow-left" style="font-size: 24px"></i>
+      </button>
+      <h4 class="ml-2">Edit Profile</h4>
+    </div>
+    {% if button != None %}
+      <button
+        class="{{ button.classes or '' }}"
+        style="font-size:var(--text-{{ button.size or 'base' }});"
+        onclick="{{ button.method }}"
+        id="{{ button.id }}"
+      >
+        {% if button.icon %}
+          <i class="{{ button.icon }}"></i>
+        {% endif %}
+        <span> {{ button.text }} </span>
+      </button>
     {% endif %}
-    <span> {{button.text}} </span>
-  </button>
-  {% endif %}
-</div>
-
+  </div>
 {% endmacro %}

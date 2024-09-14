@@ -1,266 +1,273 @@
-{% extends "templates/foss_base.html" %} {% block title %}{{ doc.talk_title }}{% endblock %} {%
-block page_content %}
-<div class="container">
-  <div class="backlink mt-5">
-    <a href="/{{event.route}}">
-      <span>{{ event.event_name }}</span>
-    </a>
-    <i class="ti ti-chevron-right"></i>
-    <a href="/dashboard/cfp/{{event.event_permalink}}">
-      <span>All Proposals</span>
-    </a>
-    <i class="ti ti-chevron-right"></i>
-    <span style="font-weight: var(--fw-normal)">{{ doc.talk_title }}</span>
+{% extends "templates/foss_base.html" %} {% block title %}{{ doc.talk_title }}{% endblock %}
+{% block page_content %}
+  <div class="container">
+    <div class="backlink mt-5">
+      <a href="/{{ event.route }}">
+        <span>{{ event.event_name }}</span>
+      </a>
+      <i class="ti ti-chevron-right"></i>
+      <a href="/dashboard/cfp/{{ event.event_permalink }}">
+        <span>All Proposals</span>
+      </a>
+      <i class="ti ti-chevron-right"></i>
+      <span style="font-weight: var(--fw-normal)">{{ doc.talk_title }}</span>
+    </div>
+    {{ render_cfp_header() }}
   </div>
-  {{ render_cfp_header() }}
-</div>
 
-{% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
-<div class="horizontal-navbar-parent">
-  <div class="container">{{ horizontal_navbar(nav_items) }}</div>
-</div>
+  {% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
+  <div class="horizontal-navbar-parent">
+    <div class="container">{{ horizontal_navbar(nav_items) }}</div>
+  </div>
 
-<div class="container">
-  {{ render_proposal_details() }} {% if not cfp.anonymise_proposals or doc.status=='Approved' %} {{
-  render_speaker_details() }} {% endif %} {{ render_proposal_reviews() }}
-</div>
-{% endblock %} {% macro render_cfp_header() %}
-<div class="cfp-header-container">
-  <div class="cfp-header--title">
-    <h1>{{ doc.talk_title }}</h1>
+  <div class="container">
+    {{ render_proposal_details() }}
+    {% if not cfp.anonymise_proposals or doc.status=='Approved' %}{{ render_speaker_details() }}{% endif %}
+    {{ render_proposal_reviews() }}
   </div>
-  <div class="cfp-header--speaker-status-like">
-    <div class="cfp-header--speaker-status-container">
-      {% if not cfp.anonymise_proposals or doc.status=='Approved' %}
-      <div class="cfp-header--speaker">
-        <img
-          class="user-img-sm rounded"
-          src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}"
-          alt=""
-        />
-        <span class="cfp-header--speaker-name">{{ doc.full_name }}</span>
-      </div>
-      {% endif %}
-      <div class="cfp-header--status">
-        <span>{{ make_badge(text=doc.status) }}</span>
-      </div>
+{% endblock %}
+{% macro render_cfp_header() %}
+  <div class="cfp-header-container">
+    <div class="cfp-header--title">
+      <h1>{{ doc.talk_title }}</h1>
     </div>
-    <div class="cfp-header--like-edit-container">
-      {% if not frappe.session.user == 'Guest' %}
-      <div class="cfp-header--like-container" id="likes-container">
-        <div class="likes-number">
-          <span style="color: hsl(var(--clr-foss-mint-500))">{{ likes | length }} Likes </span>
-        </div>
-        <button id="cfp-like-button" data-liked="{{liked_by_user}}" onclick="toggle_like()">
-          <i
-            class="ti {% if liked_by_user %} ti-heart-filled {% else %} ti-heart {% endif %}"
-            style="{% if liked_by_user %} color: red; {% endif %}"
-          ></i>
-          <span>Like</span>
-        </button>
-      </div>
-      {% endif %} {% if frappe.session.user == doc.submitted_by %}
-      <button onclick="window.location.href='/{{doc.route}}/edit'">Edit CFP</button>
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% endmacro %} {% macro render_proposal_details() %}
-<div class="proposal-detail-container cfp-content-div content-div" id="proposal_details">
-  <h5>{{ _("Talk Description") }}</h5>
-  {% if doc.talk_reference %}
-  <a class="green-link text-lg" href="{{ doc.talk_reference }}">
-    <span>Reference</span>
-    <i class="ti ti-external-link"></i>
-  </a>
-  {% endif %}
-  <div class="cfp--talk-description">{{ doc.talk_description }}</div>
-</div>
-{% endmacro %} {% macro render_speaker_details() %}
-<div class="speaker-detail-container cfp-content-div content-div" id="about_speaker">
-  <h5>{{ _("About the Speaker") }}</h5>
-  {% if submitter_foss_profile %}
-  <a href="/{{submitter_foss_profile.route}}" class="green-link text-lg">
-    <span>View Profile</span>
-    <i class="ti ti-external-link"></i>
-  </a>
-  {% endif %}
-  <div class="cfp--speaker-description">{{ doc.bio }}</div>
-</div>
-{% endmacro %} {% macro render_proposal_reviews() %}
-<div class="proposal-reviews-container cfp-content-div content-div" id="proposal_reviews">
-  <div class="proposal-overview-section">
-    <h5>{{_("Proposal Overview")}}</h5>
-  </div>
-  <div class="review-statistics-grid">
-    {% for statistic in review_statistics %}
-    <div class="review-statistic-container">
-      <div
-        class="statistic-illustrator-container"
-        style="background: hsl({{statistic.background}}); border: 1px solid hsl({{ statistic.color }})"
-      >
-        <div
-          class="statistic-illustrator-fill"
-          style="width: {{ statistic.percentage }}%; background: hsl({{ statistic.color }});"
-        ></div>
-      </div>
-      <div class="review-statistic-values">
-        <div class="statistic-label">{{ statistic.label }}</div>
-        <div class="statistic-percent" style="color: hsl({{ statistic.color }});">
-          {{ statistic.percentage }}%
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-  {% if is_reviewer and not already_reviewed %}
-  <form class="submit-reviews-section">
-    <h5>{{_("Submit Your Review")}}</h5>
-    <fieldset class="select-review-status">
-      <h6>Select your review status:</h6>
-      <div class="review-status-options-flex">
-        <input
-          type="radio"
-          id="review-status-accepted"
-          name="review-status"
-          class="review-status"
-          value="Yes"
-        />
-        <label class="m-0 review-status-option" for="review-status-accepted">Accepted</label>
-        <input
-          type="radio"
-          id="review-status-rejected"
-          name="review-status"
-          class="review-status"
-          value="No"
-        />
-        <label class="m-0 review-status-option" for="review-status-rejected">Rejected</label>
-        <input
-          type="radio"
-          id="review-status-pending"
-          name="review-status"
-          class="review-status"
-          value="Maybe"
-        />
-        <label class="m-0 review-status-option" for="review-status-pending">Not Sure</label>
-      </div>
-    </fieldset>
-    <!-- ToDo: Drop Down of Review Templates -->
-    <div>
-      <h6>Additional Comments</h6>
-      <div class="d-flex mt-5 mb-2">
-        <img
-          class="user-img-sm mr-2 rounded"
-          src="{{ frappe.session.user | get_profile_image }}"
-          alt=""
-        />
-        <textarea
-          class="form-control additional-comments"
-          placeholder="Add your comments here"
-          id="remarks"
-        ></textarea>
-      </div>
-    </div>
-    <div class="d-flex flex-row-reverse">
-      <button class="primary-button text-sm" id="submit-cfp-review">Post your Review</button>
-    </div>
-  </form>
-  {% endif %}
-  <div class="form-divider my-5"></div>
-  <div class="review-comments-section">
-    {% for review in reviews %}
-    <div class="review-comment-container">
-      <div class="d-flex">
-        <img class="user-img-sm rounded" src="{{ review.email | get_profile_image }}" alt="" />
-        <div class="review-comment-username-remarks ml-3">
-          <div class="review-comment-remarks" data-name="{{ review.name }}">
-            {{ review.remarks }}
+    <div class="cfp-header--speaker-status-like">
+      <div class="cfp-header--speaker-status-container">
+        {% if not cfp.anonymise_proposals or doc.status=='Approved' %}
+          <div class="cfp-header--speaker">
+            <img
+              class="user-img-sm rounded"
+              src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+              alt=""
+            />
+            <span class="cfp-header--speaker-name">{{ doc.full_name }}</span>
           </div>
-          <div class="d-flex align-items-baseline">
-            <span class="text-sm mr-1">{{ remark_val[review.to_approve] }}</span>
-            <span class="mx-1">•</span>
-            <a href="/{{review.reviewer}}" class="review-comment-username"
-              >{{ review.reviewer }}</a
-            >
-            <span class="mx-1">•</span>
-            <span class="text-sm"> {{ frappe.utils.pretty_date(review.modified) }} </span>
+        {% endif %}
+        <div class="cfp-header--status">
+          <span>{{ make_badge(text=doc.status) }}</span>
+        </div>
+      </div>
+      <div class="cfp-header--like-edit-container">
+        {% if not frappe.session.user == 'Guest' %}
+          <div class="cfp-header--like-container" id="likes-container">
+            <div class="likes-number">
+              <span style="color: hsl(var(--clr-foss-mint-500))">{{ likes | length }} Likes </span>
+            </div>
+            <button id="cfp-like-button" data-liked="{{ liked_by_user }}" onclick="toggle_like()">
+              <i
+                class="ti {% if liked_by_user %}ti-heart-filled{% else %}ti-heart{% endif %}"
+                style="{% if liked_by_user %}color: red;{% endif %}"
+              ></i>
+              <span>Like</span>
+            </button>
+          </div>
+        {% endif %}
+        {% if frappe.session.user == doc.submitted_by %}
+          <button onclick="window.location.href='/{{ doc.route }}/edit'">Edit CFP</button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_proposal_details() %}
+  <div class="proposal-detail-container cfp-content-div content-div" id="proposal_details">
+    <h5>{{ _("Talk Description") }}</h5>
+    {% if doc.talk_reference %}
+      <a class="green-link text-lg" href="{{ doc.talk_reference }}">
+        <span>Reference</span>
+        <i class="ti ti-external-link"></i>
+      </a>
+    {% endif %}
+    <div class="cfp--talk-description">{{ doc.talk_description }}</div>
+  </div>
+{% endmacro %}
+{% macro render_speaker_details() %}
+  <div class="speaker-detail-container cfp-content-div content-div" id="about_speaker">
+    <h5>{{ _("About the Speaker") }}</h5>
+    {% if submitter_foss_profile %}
+      <a href="/{{ submitter_foss_profile.route }}" class="green-link text-lg">
+        <span>View Profile</span>
+        <i class="ti ti-external-link"></i>
+      </a>
+    {% endif %}
+    <div class="cfp--speaker-description">{{ doc.bio }}</div>
+  </div>
+{% endmacro %}
+{% macro render_proposal_reviews() %}
+  <div class="proposal-reviews-container cfp-content-div content-div" id="proposal_reviews">
+    <div class="proposal-overview-section">
+      <h5>{{ _("Proposal Overview") }}</h5>
+    </div>
+    <div class="review-statistics-grid">
+      {% for statistic in review_statistics %}
+        <div class="review-statistic-container">
+          <div
+            class="statistic-illustrator-container"
+            style="background: hsl({{ statistic.background }}); border: 1px solid hsl({{ statistic.color }})"
+          >
+            <div
+              class="statistic-illustrator-fill"
+              style="width: {{ statistic.percentage }}%; background: hsl({{ statistic.color }});"
+            ></div>
+          </div>
+          <div class="review-statistic-values">
+            <div class="statistic-label">{{ statistic.label }}</div>
+            <div class="statistic-percent" style="color: hsl({{ statistic.color }});">
+              {{ statistic.percentage }}%
+            </div>
           </div>
         </div>
-      </div>
-      <button class="text-sm" data-name="{{ review.name }}" onClick="handleCommentEdit(this)">
-        Edit
-      </button>
+      {% endfor %}
     </div>
-    {% endfor %}
+    {% if is_reviewer and not already_reviewed %}
+      <form class="submit-reviews-section">
+        <h5>{{ _("Submit Your Review") }}</h5>
+        <fieldset class="select-review-status">
+          <h6>Select your review status:</h6>
+          <div class="review-status-options-flex">
+            <input
+              type="radio"
+              id="review-status-accepted"
+              name="review-status"
+              class="review-status"
+              value="Yes"
+            />
+            <label class="m-0 review-status-option" for="review-status-accepted">Accepted</label>
+            <input
+              type="radio"
+              id="review-status-rejected"
+              name="review-status"
+              class="review-status"
+              value="No"
+            />
+            <label class="m-0 review-status-option" for="review-status-rejected">Rejected</label>
+            <input
+              type="radio"
+              id="review-status-pending"
+              name="review-status"
+              class="review-status"
+              value="Maybe"
+            />
+            <label class="m-0 review-status-option" for="review-status-pending">Not Sure</label>
+          </div>
+        </fieldset>
+        <!-- ToDo: Drop Down of Review Templates -->
+        <div>
+          <h6>Additional Comments</h6>
+          <div class="d-flex mt-5 mb-2">
+            <img
+              class="user-img-sm mr-2 rounded"
+              src="{{ frappe.session.user | get_profile_image }}"
+              alt=""
+            />
+            <textarea
+              class="form-control additional-comments"
+              placeholder="Add your comments here"
+              id="remarks"
+            ></textarea>
+          </div>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <button class="primary-button text-sm" id="submit-cfp-review">Post your Review</button>
+        </div>
+      </form>
+    {% endif %}
+    <div class="form-divider my-5"></div>
+    <div class="review-comments-section">
+      {% for review in reviews %}
+        <div class="review-comment-container">
+          <div class="d-flex">
+            <img class="user-img-sm rounded" src="{{ review.email | get_profile_image }}" alt="" />
+            <div class="review-comment-username-remarks ml-3">
+              <div class="review-comment-remarks" data-name="{{ review.name }}">
+                {{ review.remarks }}
+              </div>
+              <div class="d-flex align-items-baseline">
+                <span class="text-sm mr-1">{{ remark_val[review.to_approve] }}</span>
+                <span class="mx-1">•</span>
+                <a href="/{{ review.reviewer }}" class="review-comment-username"
+                  >{{ review.reviewer }}</a
+                >
+                <span class="mx-1">•</span>
+                <span class="text-sm"> {{ frappe.utils.pretty_date(review.modified) }} </span>
+              </div>
+            </div>
+          </div>
+          <button class="text-sm" data-name="{{ review.name }}" onClick="handleCommentEdit(this)">
+            Edit
+          </button>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-</div>
-{% endmacro %} {% block page_script %}
-<script>
-  $(document).ready(() => {
-    $('#submit-cfp-review').on('click', (e) => {
-      e.preventDefault()
-      post_review()
+{% endmacro %}
+{% block page_script %}
+  <script>
+    $(document).ready(() => {
+      $('#submit-cfp-review').on('click', (e) => {
+        e.preventDefault()
+        post_review()
+      })
     })
-  })
 
-  function post_review() {
-    const to_approve = $('input[name="review-status"]:checked').val()
-    const remarks = $('#remarks').val()
-    frappe.call({
-      method: 'fossunited.fossunited.forms.post_review',
-      args: {
-        submission: '{{ doc.name }}',
-        to_approve: to_approve,
-        remarks: remarks,
-      },
-      callback: (r) => {
-        $('#proposal_reviews').load(document.URL + ' #proposal_reviews')
-      },
-      error: (r) => {
-        console.log('ERROR' + r)
-        frappe.msgprint('There was an error posting your review. Please try again.' + r)
-      },
-    })
-  }
-
-  function toggle_like(e) {
-    let liked = $('#cfp-like-button').data('liked')
-    liked = liked === 'True' ? 'False' : 'Yes'
-    console.log(liked)
-    frappe.call({
-      method: 'frappe.desk.like.toggle_like',
-      args: {
-        doctype: 'FOSS Event CFP Submission',
-        name: '{{ doc.name }}',
-        add: liked,
-      },
-      callback: (r) => {
-        $('#likes-container').load(document.URL + ' #likes-container')
-      },
-      error: (r) => {
-        console.log('ERROR' + r)
-      },
-    })
-  }
-
-  function handleCommentEdit(e) {
-    let docname = $(e).data('name')
-    let commentElement = $('.review-comment-remarks[data-name="' + docname + '"]')
-
-    frappe
-      .call({
-        method: 'frappe.client.delete',
+    function post_review() {
+      const to_approve = $('input[name="review-status"]:checked').val()
+      const remarks = $('#remarks').val()
+      frappe.call({
+        method: 'fossunited.fossunited.forms.post_review',
         args: {
-          doctype: 'FOSS Event CFP Review',
-          name: docname,
+          submission: '{{ doc.name }}',
+          to_approve: to_approve,
+          remarks: remarks,
+        },
+        callback: (r) => {
+          $('#proposal_reviews').load(document.URL + ' #proposal_reviews')
+        },
+        error: (r) => {
+          console.log('ERROR' + r)
+          frappe.msgprint('There was an error posting your review. Please try again.' + r)
         },
       })
-      .then((result) => {
-        location.reload()
+    }
+
+    function toggle_like(e) {
+      let liked = $('#cfp-like-button').data('liked')
+      liked = liked === 'True' ? 'False' : 'Yes'
+      console.log(liked)
+      frappe.call({
+        method: 'frappe.desk.like.toggle_like',
+        args: {
+          doctype: 'FOSS Event CFP Submission',
+          name: '{{ doc.name }}',
+          add: liked,
+        },
+        callback: (r) => {
+          $('#likes-container').load(document.URL + ' #likes-container')
+        },
+        error: (r) => {
+          console.log('ERROR' + r)
+        },
       })
-      .catch((err) => {
-        frappe.msgprint(err)
-      })
-  }
-</script>
+    }
+
+    function handleCommentEdit(e) {
+      let docname = $(e).data('name')
+      let commentElement = $('.review-comment-remarks[data-name="' + docname + '"]')
+
+      frappe
+        .call({
+          method: 'frappe.client.delete',
+          args: {
+            doctype: 'FOSS Event CFP Review',
+            name: docname,
+          },
+        })
+        .then((result) => {
+          location.reload()
+        })
+        .catch((err) => {
+          frappe.msgprint(err)
+        })
+    }
+  </script>
 {% endblock %}

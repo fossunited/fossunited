@@ -178,11 +178,11 @@
         <h1>FOSS <span>Clubs</span></h1>
       </div>
 
-      <p>{{subtext}}</p>
+      <p>{{ subtext }}</p>
     </div>
 
     <div class="hero-search">
-      <h5>{{subheading}}</h5>
+      <h5>{{ subheading }}</h5>
       <div class="hero-club-search">
         <input type="text" id="search-club" placeholder="Search by name of club or city" />
       </div>
@@ -190,13 +190,13 @@
 
     <div class="hero-cta">
       {% if cta_link %}
-      <a class="primary-button" href="{{cta_link}}">{{cta_text}} </a>
+        <a class="primary-button" href="{{ cta_link }}">{{ cta_text }} </a>
       {% endif %}
     </div>
   </div>
 
   <div class="hero-image">
-    <img src="{{hero_image}}" alt="FOSS Club Hero" />
+    <img src="{{ hero_image }}" alt="FOSS Club Hero" />
   </div>
 
   <script>

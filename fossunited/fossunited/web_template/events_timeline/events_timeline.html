@@ -1,5 +1,8 @@
-{% from "fossunited/templates/macros/event_card.html" import event_card %} {% from
-"fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
+{% from "fossunited/templates/macros/event_card.html" import event_card %}
+{%
+  from
+  "fossunited/templates/macros/hackathon_card.html" import hackathon_card
+%}
 
 <style>
   .events-timeline {
@@ -93,60 +96,67 @@
     </div>
 
     <!--Primary Event cards listing-->
-    {% set grouped_events = get_grouped_events() %} {% for group, events in grouped_events.items()
-    %}
-
-    <div class="event-group" v-if="searchText.length == 0">
-      <h4>{{ group }}</h4>
-      {% for month, month_events in events.items() %}
-      <h5
-        class="event-month"
-        v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
-      >
-        {{ month }}
-      </h5>
-      <div
-        class="events-grid-4"
-        v-effect="updateTicker()"
-        v-show="ticker > 0 && $el?.children.length > 0"
-      >
-        {% for event in month_events %} {% if event.event_name %}
-        <div
-          class="event-card-holder"
-          v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
-        >
-          {{event_card(event)}}
-        </div>
-
-        {% else %}
-        <div
-          class="event-card-holder"
-          v-if="canShow('{{ event.hackathon_name}}', '{{ event_date_text }}')"
-        >
-          {{hackathon_card(event)}}
-        </div>
-        {% endif %} {% endfor %}
+    {% set grouped_events = get_grouped_events() %}
+    {% for group, events in grouped_events.items() %}
+      <div class="event-group" v-if="searchText.length == 0">
+        <h4>{{ group }}</h4>
+        {% for month, month_events in events.items() %}
+          <h5
+            class="event-month"
+            v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
+          >
+            {{ month }}
+          </h5>
+          <div
+            class="events-grid-4"
+            v-effect="updateTicker()"
+            v-show="ticker > 0 && $el?.children.length > 0"
+          >
+            {% for event in month_events %}{% if event.event_name %}
+              <div
+                class="event-card-holder"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+              >
+                {{ event_card(event) }}
+              </div>
+            {% else %}
+              <div
+                class="event-card-holder"
+                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}')"
+              >
+                {{ hackathon_card(event) }}
+              </div>
+            {% endif %}{% endfor %}
+          </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
     {% endfor %}
 
     <!--Searched and Filtered event cards listing-->
     <div v-if="searchText.length > 0">
       <div class="events-grid-4">
-        {% for group, events in grouped_events.items() %} {% for month, month_events in
-        events.items() %} {% for event in month_events %} {% set event_date_text =
-        event.event_start_date.strftime("%d %b %Y") if event.event_start_date else
-        event.start_date.strftime("%d %b %Y") %}
-        <div
-          class="event-card-holder"
-          v-if="canShow('{{ event.event_name}}', '{{ event_date_text }}', !!{{ event.must_attend }})"
-        >
-          {%if event.event_name %} {{ event_card(event)}} {% else %} {{hackathon_card(event)}} {%
-          endif %}
-        </div>
-
-        {% endfor %} {% endfor %} {% endfor %}
+        {% for group, events in grouped_events.items() %}{%
+          for month, month_events in
+          events.items()
+        %}
+          {% for event in month_events %}
+            {%
+              set event_date_text =
+              event.event_start_date.strftime("%d %b %Y") if event.event_start_date else
+              event.start_date.strftime("%d %b %Y")
+            %}
+            <div
+              class="event-card-holder"
+              v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+            >
+              {% if event.event_name %}
+                {{ event_card(event) }}
+              {% else %}
+                {{ hackathon_card(event) }}
+              {% endif %}
+            </div>
+          {% endfor %}
+        {% endfor %}{% endfor %}
       </div>
     </div>
   </div>

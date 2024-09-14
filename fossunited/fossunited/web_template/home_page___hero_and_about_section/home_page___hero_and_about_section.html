@@ -235,19 +235,19 @@
 
     <div class="hero-heading">
       <h4>
-        <span class="hero-heading-a">{{heading_a}} </span
-        ><span class="hero-heading-b">{{heading_b}}</span>
+        <span class="hero-heading-a">{{ heading_a }} </span
+        ><span class="hero-heading-b">{{ heading_b }}</span>
       </h4>
     </div>
 
     <div class="button-container">
       <div class="button-category">
-        <button class="primary-button" onclick="window.location.href='{{primary_cta_url}}'">
-          {{primary_cta}}
+        <button class="primary-button" onclick="window.location.href='{{ primary_cta_url }}'">
+          {{ primary_cta }}
         </button>
 
-        <button class="secondary-button" onclick="window.location.href='{{secondary_cta_url}}'">
-          {{secondary_cta}}
+        <button class="secondary-button" onclick="window.location.href='{{ secondary_cta_url }}'">
+          {{ secondary_cta }}
         </button>
       </div>
     </div>
@@ -260,26 +260,29 @@
       <p class="about-section-tag">ABOUT</p>
 
       <div class="about-section-text">
-        <h5>{{about_headtext}}</h5>
-        <p class="about_subtext">{{about_subtext}}</p>
+        <h5>{{ about_headtext }}</h5>
+        <p class="about_subtext">{{ about_subtext }}</p>
       </div>
     </div>
 
     <div class="goals-section">
-      {% for index in range(1, 10) %} {% set goal_text = values['goal_text_' + index|string] %} {%
-      set goal_icon = values['goal_icon_' + index|string] %} {% if goal_text %}
-      <div class="goals-card">
-        <div class="goals-card-header">
-          <p class="goals-card-tag">GOALS</p>
-          <p class="goals-card-number">0{{index}}</p>
-        </div>
+      {% for index in range(1, 10) %}
+        {% set goal_text = values['goal_text_' + index|string] %}
+        {% set goal_icon = values['goal_icon_' + index|string] %}
+        {% if goal_text %}
+          <div class="goals-card">
+            <div class="goals-card-header">
+              <p class="goals-card-tag">GOALS</p>
+              <p class="goals-card-number">0{{ index }}</p>
+            </div>
 
-        <div class="goal-content">
-          <p class="goal-text">{{goal_text}}</p>
-          <img class="goal-icon" src="{{goal_icon}}" alt="Goal Icon" />
-        </div>
-      </div>
-      {% endif %} {% endfor %}
+            <div class="goal-content">
+              <p class="goal-text">{{ goal_text }}</p>
+              <img class="goal-icon" src="{{ goal_icon }}" alt="Goal Icon" />
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>

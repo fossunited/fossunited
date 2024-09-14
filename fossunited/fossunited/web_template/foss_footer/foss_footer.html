@@ -148,7 +148,7 @@
   <div class="footer-section container">
     <div class="footer-container">
       <div class="footer-element-logo">
-        <img src="{{footer_logo}}" alt="FOSS United Logo" />
+        <img src="{{ footer_logo }}" alt="FOSS United Logo" />
       </div>
 
       <div class="source-code-link">
@@ -160,38 +160,39 @@
 
       <div class="footer-element-items">
         <div class="footer-link-category">
-          {% for item in footer_items %} {% if not item.parent_label and item.label != "Social
-          Media"%}
-          <div class="footer_parent_label">
-            {% if item.url%}
-            <a href="item.url">{{item.label}}</a>
-            {% else %}
-            <p>{{item.label}}</p>
-            {% endif %}
+          {% for item in footer_items %}{%
+            if not item.parent_label and item.label != "Social
+            Media"
+          %}
+            <div class="footer_parent_label">
+              {% if item.url %}
+                <a href="item.url">{{ item.label }}</a>
+              {% else %}
+                <p>{{ item.label }}</p>
+              {% endif %}
 
-            <div class="footer-category-items">
-              {% for child_item in footer_items %} {% if child_item.parent_label == item.label %}
-              <a href="{{child_item.url}}" class="footer-link">{{child_item.label}}</a>
-              {% endif %} {% endfor %}
+              <div class="footer-category-items">
+                {% for child_item in footer_items %}{% if child_item.parent_label == item.label %}
+                  <a href="{{ child_item.url }}" class="footer-link">{{ child_item.label }}</a>
+                {% endif %}{% endfor %}
+              </div>
             </div>
-          </div>
-          {% endif %} {% endfor %}
+          {% endif %}{% endfor %}
         </div>
 
         <div class="address-element">
           {% set address = frappe.db.get_single_value("Website Settings", "address") %}
 
-          <p>{{copyright}}</p>
-          {{address}}
+          <p>{{ copyright }}</p>
+          {{ address }}
 
           <div class="social-media-credits">
             <div class="social-category-items">
-              {% for child_item in footer_items %} {% if child_item.parent_label == "Social Media"
-              %}
-              <a href="{{child_item.url}}" class="footer-link">
-                <img src="{{child_item.custom_icon}}" alt="" />
-              </a>
-              {% endif %} {% endfor %}
+              {% for child_item in footer_items %}{% if child_item.parent_label == "Social Media" %}
+                <a href="{{ child_item.url }}" class="footer-link">
+                  <img src="{{ child_item.custom_icon }}" alt="" />
+                </a>
+              {% endif %}{% endfor %}
             </div>
 
             <div class="powered-by">

@@ -100,20 +100,23 @@
 
       <div>
         <h5>Industry Partnership</h5>
-        <p>{{section_desc}}</p>
+        <p>{{ section_desc }}</p>
       </div>
 
-      <a href="{{current_partners_Link}}">View Current Partners ↗</a>
+      <a href="{{ current_partners_Link }}">View Current Partners ↗</a>
     </div>
 
     <div class="ip-partners-block">
       <div class="feature-partners">
-        {% set featurePartners = frappe.get_all("Industry Partners", fields=['name', 'logo',
-        'website'], filters={'tier': ['in', ["Patron", "Platinum", "Gold"]], 'is_current_partner':
-        1}, order_by='tier') %} {% for partner in featurePartners %}
-        <a href="{{partner.website}}">
-          <img src="{{ partner.logo }}" alt="{{ partner.name }}" />
-        </a>
+        {%
+          set featurePartners = frappe.get_all("Industry Partners", fields=['name', 'logo',
+          'website'], filters={'tier': ['in', ["Patron", "Platinum", "Gold"]], 'is_current_partner':
+          1}, order_by='tier')
+        %}
+        {% for partner in featurePartners %}
+          <a href="{{ partner.website }}">
+            <img src="{{ partner.logo }}" alt="{{ partner.name }}" />
+          </a>
         {% endfor %}
       </div>
     </div>

@@ -93,97 +93,131 @@
 
 <div class="ip-list-section container">
   <div class="ip-list-container">
-    <h4>{{heading}}</h4>
+    <h4>{{ heading }}</h4>
 
     <div class="ip-list-block">
-      {% set patronPartners = frappe.get_all("Industry Partners", fields=["company", "logo",
-      "website"], filters={"tier": "Patron", "is_current_partner": 1}, order_by="company")%} {% if
-      patronPartners %}
-      <div class="partner-section">
-        <h5>Patrons</h5>
+      {%
+        set patronPartners = frappe.get_all("Industry Partners", fields=["company", "logo",
+        "website"], filters={"tier": "Patron", "is_current_partner": 1}, order_by="company")
+      %}
+      {%
+        if
+        patronPartners
+      %}
+        <div class="partner-section">
+          <h5>Patrons</h5>
 
-        <div class="partner-container">
-          {%for partner in patronPartners %}
-          <a class="new-partner-entry" href="{{partner.website}}" id="patrons">
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-          </a>
-          {% endfor %}
+          <div class="partner-container">
+            {% for partner in patronPartners %}
+              <a class="new-partner-entry" href="{{ partner.website }}" id="patrons">
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+              </a>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endif %} {% set platinumPartners = frappe.get_all("Industry Partners", fields=["company",
-      "logo", "website"], filters={"tier": "Platinum", "is_current_partner": 1},
-      order_by="company")%} {% if platinumPartners %}
-      <div class="partner-section">
-        <h5>Platinum Partners</h5>
-        <div class="partner-container">
-          {%for partner in platinumPartners %}
-          <a class="new-partner-entry platinum" href="{{partner.website}}" id="platinum-partners">
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-          </a>
-          {% endfor %}
+      {% endif %}
+      {%
+        set platinumPartners = frappe.get_all("Industry Partners", fields=["company",
+        "logo", "website"], filters={"tier": "Platinum", "is_current_partner": 1},
+        order_by="company")
+      %}
+      {% if platinumPartners %}
+        <div class="partner-section">
+          <h5>Platinum Partners</h5>
+          <div class="partner-container">
+            {% for partner in platinumPartners %}
+              <a
+                class="new-partner-entry platinum"
+                href="{{ partner.website }}"
+                id="platinum-partners"
+              >
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+              </a>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endif %} {% set goldPartners = frappe.get_all("Industry Partners", fields=["company",
-      "logo", "website"], filters={"tier": "Gold", "is_current_partner": 1}, order_by="company")%}
+      {% endif %}
+      {%
+        set goldPartners = frappe.get_all("Industry Partners", fields=["company",
+        "logo", "website"], filters={"tier": "Gold", "is_current_partner": 1}, order_by="company")
+      %}
       {% if goldPartners %}
-      <div class="partner-section">
-        <h5>Gold Partners</h5>
-        <div class="partner-container">
-          {%for partner in goldPartners %}
-          <a class="new-partner-entry gold" href="{{partner.website}}" id="gold-partners">
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-          </a>
-          {% endfor %}
+        <div class="partner-section">
+          <h5>Gold Partners</h5>
+          <div class="partner-container">
+            {% for partner in goldPartners %}
+              <a class="new-partner-entry gold" href="{{ partner.website }}" id="gold-partners">
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+              </a>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endif %} {% set silverPartners = frappe.get_all("Industry Partners", fields=["company",
-      "logo", "website"], filters={"tier": "Silver", "is_current_partner": 1}, order_by="company")
-      %} {% if silverPartners %}
+      {% endif %}
+      {%
+        set silverPartners = frappe.get_all("Industry Partners", fields=["company",
+        "logo", "website"], filters={"tier": "Silver", "is_current_partner": 1}, order_by="company")
+      %}
+      {% if silverPartners %}
+        <div class="partner-section">
+          <h5>Silver Partners</h5>
+          <div class="partner-container">
+            {% for partner in silverPartners %}
+              <a
+                class="new-partner-entry silver"
+                href="{{ partner.website }}"
+                id="silver-partners"
+              >
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      {%
+        set bronzePartners = frappe.get_all("Industry Partners", fields=["company",
+        "logo", "website"], filters={"tier": "Bronze", "is_current_partner": 1},
+        order_by="company")
+      %}
+      {% if bronzePartners %}
+        <div class="partner-section">
+          <h5>Bronze Partners</h5>
 
-      <div class="partner-section">
-        <h5>Silver Partners</h5>
-        <div class="partner-container">
-          {%for partner in silverPartners %}
-          <a class="new-partner-entry silver" href="{{partner.website}}" id="silver-partners">
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-          </a>
-          {% endfor %}
+          <div class="partner-container">
+            {% for partner in bronzePartners %}
+              <a
+                class="new-partner-entry bronze-other"
+                href="{{ partner.website }}"
+                id="bronze-partners"
+              >
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+              </a>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endif %} {% set bronzePartners = frappe.get_all("Industry Partners", fields=["company",
-      "logo", "website"], filters={"tier": "Bronze", "is_current_partner": 1},
-      order_by="company")%} {% if bronzePartners %}
-      <div class="partner-section">
-        <h5>Bronze Partners</h5>
-
-        <div class="partner-container">
-          {%for partner in bronzePartners %}
-          <a
-            class="new-partner-entry bronze-other"
-            href="{{partner.website}}"
-            id="bronze-partners"
-          >
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-          </a>
-          {% endfor %}
+      {% endif %}
+      {%
+        set otherPartners = frappe.get_all("Industry Partners", fields=["company",
+        "logo", "website", "special_category"], filters={"tier": "Special", "is_current_partner": 1},
+        order_by="company")
+      %}
+      {% if otherPartners %}
+        <div class="partner-section">
+          <h5>Other Partners</h5>
+          <div class="partner-container">
+            {% for partner in otherPartners %}
+              <a
+                class="new-partner-entry bronze-other"
+                href="{{ partner.website }}"
+                id="other-partners"
+              >
+                <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+                <div class="spl-tier-name">
+                  <p>{{ partner.special_category }}</p>
+                </div>
+              </a>
+            {% endfor %}
+          </div>
         </div>
-      </div>
-      {% endif %} {% set otherPartners = frappe.get_all("Industry Partners", fields=["company",
-      "logo", "website", "special_category"], filters={"tier": "Special", "is_current_partner": 1},
-      order_by="company")%} {%if otherPartners %}
-      <div class="partner-section">
-        <h5>Other Partners</h5>
-        <div class="partner-container">
-          {%for partner in otherPartners %}
-          <a class="new-partner-entry bronze-other" href="{{partner.website}}" id="other-partners">
-            <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
-            <div class="spl-tier-name">
-              <p>{{partner.special_category}}</p>
-            </div>
-          </a>
-          {% endfor %}
-        </div>
-      </div>
       {% endif %}
     </div>
   </div>

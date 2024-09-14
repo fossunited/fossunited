@@ -98,34 +98,37 @@
 
 <div class="founder-list-section container">
   <div class="founder-list-container">
-    {% set founders = frappe.get_all("FOSS United Team", fields=["full_name", "username",
-    "headshot", "user_bio", "designation", "portfolio_url"], filters={"org_role": "Founder",
-    "is_active": 1}, order_by="full_name")%} {% if founders %}
-    <div class="member-section">
-      <h4>Founders</h4>
-      <div class="founders-container">
-        {%for member in founders %}
-        <div class="founder-member">
-          <div class="founder-member-image">
-            <img
-              src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
-              alt="{{ member.full_name }}"
-            />
-          </div>
-          <div class="founder-member-details">
-            <a href="{{ '/' + member.username if member.username else member.portfolio_url }}">
-              <h6>
-                {{ member.full_name }}
-                <i class="ti ti-arrow-up-right"></i>
-              </h6>
-            </a>
+    {%
+      set founders = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "user_bio", "designation", "portfolio_url"], filters={"org_role": "Founder",
+      "is_active": 1}, order_by="full_name")
+    %}
+    {% if founders %}
+      <div class="member-section">
+        <h4>Founders</h4>
+        <div class="founders-container">
+          {% for member in founders %}
+            <div class="founder-member">
+              <div class="founder-member-image">
+                <img
+                  src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
+                  alt="{{ member.full_name }}"
+                />
+              </div>
+              <div class="founder-member-details">
+                <a href="{{ '/' + member.username if member.username else member.portfolio_url }}">
+                  <h6>
+                    {{ member.full_name }}
+                    <i class="ti ti-arrow-up-right"></i>
+                  </h6>
+                </a>
 
-            <p>{{member.user_bio}}</p>
-          </div>
+                <p>{{ member.user_bio }}</p>
+              </div>
+            </div>
+          {% endfor %}
         </div>
-        {% endfor %}
       </div>
-    </div>
     {% endif %}
   </div>
 </div>
