@@ -6,8 +6,8 @@
         <p class="text-sm">Get insights about the tickets sold for this event.</p>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <TicketTierInsightCard :tier="today_stats" />
-          <TicketTshirtInsightCard :insight="ticket_insights.data.tshirt_insights" />
+        <TicketTierInsightCard :tier="today_stats" />
+        <TicketTshirtInsightCard :insight="ticket_insights.data.tshirt_insights" />
       </div>
       <div class="prose mt-4">
         <h4>Tier Insights</h4>

@@ -1,68 +1,59 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+/>
 
 <style>
-    .events-list-section{
-        display: flex;
-        align-items: center;
-        justify-content: center;
+  .events-list-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .events-list-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .upcoming-events-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .view-events-link {
+    color: hsl(var(--clr-foss-mint-500));
+    font-weight: 550;
+    line-height: 100%; /* 0.875rem */
+    letter-spacing: -0.035rem;
+  }
+
+  .view-events-link:hover {
+    text-decoration: none;
+    color: hsl(var(--clr-foss-mint-500));
+  }
+
+  @media screen and (max-width: 768px) {
+    .events-list-section {
+      padding-bottom: 4rem;
     }
-
-    .events-list-container{
-        display: flex;
-        align-items: flex-start;
-        gap: 2rem;
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .upcoming-events-header{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-
-    }
-
-    .view-events-link{
-        color: hsl(var(--clr-foss-mint-500));
-        font-weight: 550;
-        line-height: 100%; /* 0.875rem */
-        letter-spacing: -0.035rem;
-    }
-
-    .view-events-link:hover{
-        text-decoration: none;
-        color: hsl(var(--clr-foss-mint-500));
-    }
-
-    @media screen and (max-width: 768px) {
-
-        .events-list-section{
-            padding-bottom: 4rem;
-
-        }
-
-    }
-
+  }
 </style>
 
-
-
 <div class="events-list-section container">
-
-    <div class="events-list-container">
-
-        <div class="upcoming-events-header">
-            <h5>Upcoming Events</h5>
-            <a class="view-events-link" href="{{view_events_link}}">View all Events ↗</a>
-        </div>
-
-        {% from "fossunited/templates/macros/event_card.html" import event_card %}
-        {% set events = frappe.get_all("FOSS Chapter Event", fields=["*"], filters={"status": ["in", ["Approved", "Live"]], "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=8, order_by='event_start_date') %}
-        <div class="events-grid-4">
-            {% for event in events %}
-                {{ event_card(event) }}
-            {% endfor %}
-        </div>
-
+  <div class="events-list-container">
+    <div class="upcoming-events-header">
+      <h5>Upcoming Events</h5>
+      <a class="view-events-link" href="{{view_events_link}}">View all Events ↗</a>
     </div>
+
+    {% from "fossunited/templates/macros/event_card.html" import event_card %} {% set events =
+    frappe.get_all("FOSS Chapter Event", fields=["*"], filters={"status": ["in", ["Approved",
+    "Live"]], "is_published": 1, "event_start_date": ['>=', frappe.utils.now()]}, page_length=8,
+    order_by='event_start_date') %}
+    <div class="events-grid-4">{% for event in events %} {{ event_card(event) }} {% endfor %}</div>
+  </div>
 </div>

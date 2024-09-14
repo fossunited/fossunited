@@ -4,11 +4,21 @@
   class="event-card"
   data-docname="{{ hackathon.name }}"
   data-route="{{ hackathon.route }}"
-  {% if hackathon.has_external_website %} onclick="window.open('{{ hackathon.external_website_url }}', '_blank')" {% else %} onclick="window.location.pathname='/{{hackathon.route}}'" {% endif%}
+  {%
+  if
+  hackathon.has_external_website
+  %}
+  onclick="window.open('{{ hackathon.external_website_url }}', '_blank')"
+  {%
+  else
+  %}
+  onclick="window.location.pathname='/{{hackathon.route}}'"
+  {%
+  endif%}
 >
   <div class="event-card-contents">
-    {% if hackathon.organizing_chapter %} {% set chapter = frappe.get_doc("FOSS
-    Chapter", hackathon.organizing_chapter) %}
+    {% if hackathon.organizing_chapter %} {% set chapter = frappe.get_doc("FOSS Chapter",
+    hackathon.organizing_chapter) %}
     <div
       class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}"
     >
@@ -16,30 +26,25 @@
       <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
       <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
       {% else %}
-      <span class="fff-forward"
-        >{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span
-      >
+      <span class="fff-forward">{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
       {% endif %}
     </div>
     {% endif %}
     <div class="event-card--date-section">
+      <div class="event-card--date">{{ hackathon.start_date.strftime("%d %b %Y") }}</div>
       <div class="event-card--date">
-        {{ hackathon.start_date.strftime("%d %b %Y") }}
-      </div>
-      <div class="event-card--date">
-        <i class="mr-2 ti {% if hackathon.hackathon_type == 'In-Person' %} ti-building {% else %} ti-world {% endif %}"></i>
+        <i
+          class="mr-2 ti {% if hackathon.hackathon_type == 'In-Person' %} ti-building {% else %} ti-world {% endif %}"
+        ></i>
         {{ hackathon.hackathon_type }}
       </div>
     </div>
     <div class="mt-5 mb-2">
-        {% if hackathon.hackathon_logo %}
-        <img class="event-card--logo" src="{{ hackathon.hackathon_logo }}" alt="">
-        {% endif %}
-        {% if not hackathon.only_show_logo %}
-        <div class="mt-2 text-lg">
-            {{ hackathon.hackathon_name | truncate(26, True) }}
-        </div>
-        {% endif %}
+      {% if hackathon.hackathon_logo %}
+      <img class="event-card--logo" src="{{ hackathon.hackathon_logo }}" alt="" />
+      {% endif %} {% if not hackathon.only_show_logo %}
+      <div class="mt-2 text-lg">{{ hackathon.hackathon_name | truncate(26, True) }}</div>
+      {% endif %}
     </div>
   </div>
 </div>

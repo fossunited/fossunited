@@ -1,140 +1,125 @@
 <style>
+  .events-hero-section {
+    font-family: Inter;
+    padding-top: 7rem;
+    display: flex;
+    padding-bottom: 7rem;
+    align-items: center;
+  }
 
-    .events-hero-section{
-        font-family: Inter;
-        padding-top: 7rem;
-        display: flex;
-        padding-bottom: 7rem;
-        align-items: center;
+  .events-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 50%;
+  }
+
+  .hero-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .events-container h1 {
+    margin: 0;
+    color: #08b74f;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: -0.18rem;
+  }
+
+  .events-container p {
+    margin: 0;
+    color: var(--Gray-500, #667085);
+    font-size: 1.2rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+    letter-spacing: -0.04rem;
+  }
+
+  .hero-cta {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .button-container a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1.125rem;
+  }
+
+  .hero-image {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media (max-width: 768px) {
+    .events-hero-section {
+      flex-direction: column-reverse;
+      gap: 6rem;
+      padding-top: 5rem;
+      padding-bottom: 5rem;
     }
 
     .events-container {
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        width: 50%;
+      width: 100%;
+      gap: 3rem;
     }
 
-    .hero-header{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 1rem;
+    .events-container h1 {
+      font-size: 2.5rem;
     }
 
-    .events-container h1{
-        margin:0;
-        color: #08B74F;;
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 100%;
-        letter-spacing: -0.18rem;
+    .hero-header {
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
     }
 
-    .events-container p{
-        margin: 0;
-        color: var(--Gray-500, #667085);
-        font-size: 1.2rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 140%;
-        letter-spacing: -0.04rem;
+    .hero-image {
+      height: 10rem;
+      overflow: hidden;
     }
 
-    .hero-cta{
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+    .btn-primary {
+      width: 100%;
     }
 
-    .button-container a{
-        color: #FFF;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 1.125rem;
+    .hero-image {
+      width: 100%;
+      justify-content: center;
     }
 
-    .hero-image{
-        width: 50%;
-        display: flex;
-        justify-content: flex-end;
+    .hero-image img {
+      position: relative;
+      max-width: 20rem;
     }
-
-
-    @media (max-width: 768px){
-        .events-hero-section{
-            flex-direction: column-reverse;
-            gap: 6rem;
-            padding-top: 5rem;
-            padding-bottom: 5rem;
-        }
-
-        .events-container{
-            width: 100%;
-            gap: 3rem;
-        }
-
-        .events-container h1{
-            font-size: 2.5rem;
-        }
-
-        .hero-header{
-            max-width: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-
-        .hero-image{
-            height: 10rem;
-            overflow: hidden;
-        }
-
-        .btn-primary{
-            width: 100%;
-        }
-
-        .hero-image{
-            width: 100%;
-            justify-content: center;
-        }
-
-        .hero-image img{
-            position: relative;
-            max-width: 20rem;
-        }
-
-    }
-
+  }
 </style>
 
-
 <div class="events-hero-section container">
+  <div class="events-container">
+    <div class="hero-header">
+      <h1>Events</h1>
 
-    <div class="events-container">
-
-        <div class="hero-header">
-
-            <h1>Events</h1>
-
-            <p>{{subtext}}</p>
-
-        </div>
-
-        <div class = "hero-cta">
-
-            <div class="button-container">
-
-                <button class="primary-button">
-                    <a href="{{cta_link}}">{{cta_text}}</a>
-                </button>
-
-            </div>
-
-        </div>
+      <p>{{subtext}}</p>
     </div>
 
-    <div class="hero-image">
-        <img src="assets/fossunited/images/illustrations/events-hero.svg" alt="">
+    <div class="hero-cta">
+      <div class="button-container">
+        <button class="primary-button">
+          <a href="{{cta_link}}">{{cta_text}}</a>
+        </button>
+      </div>
     </div>
+  </div>
 
+  <div class="hero-image">
+    <img src="assets/fossunited/images/illustrations/events-hero.svg" alt="" />
+  </div>
 </div>

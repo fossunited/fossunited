@@ -1,26 +1,26 @@
 {
- "__islocal": true,
- "__unsaved": 1,
- "creation": "2024-02-10 00:27:20.589061",
- "docstatus": 0,
- "doctype": "Web Template",
- "fields": [
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "heading",
-   "fieldtype": "Data",
-   "label": "Heading",
-   "reqd": 0
-  }
- ],
- "idx": 0,
- "modified": "2024-02-10 00:27:20.589061",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "Project grants",
- "owner": "Administrator",
- "standard": 1,
- "template": "",
- "type": "Section"
+  "__islocal": true,
+  "__unsaved": 1,
+  "creation": "2024-02-10 00:27:20.589061",
+  "docstatus": 0,
+  "doctype": "Web Template",
+  "fields": [
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "heading",
+      "fieldtype": "Data",
+      "label": "Heading",
+      "reqd": 0
+    }
+  ],
+  "idx": 0,
+  "modified": "2024-02-10 00:27:20.589061",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "Project grants",
+  "owner": "Administrator",
+  "standard": 1,
+  "template": "",
+  "type": "Section"
 }

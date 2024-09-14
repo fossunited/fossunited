@@ -9,8 +9,7 @@
             {{ event.proposal_page_description }}
           </span>
           <span v-else>
-            Explore the proposals for {{ event.event_name }}, that offers a wide
-            array of sessions.
+            Explore the proposals for {{ event.event_name }}, that offers a wide array of sessions.
           </span>
         </p>
       </div>

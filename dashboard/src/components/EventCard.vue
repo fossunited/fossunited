@@ -8,11 +8,7 @@
       <div class="text-sm font-medium">
         {{ event.chapter_name }}
       </div>
-      <Badge
-        :variant="'subtle'"
-        :theme="badgeColors[event.status]"
-        :label="event.status"
-      ></Badge>
+      <Badge :variant="'subtle'" :theme="badgeColors[event.status]" :label="event.status"></Badge>
     </div>
     <div class="text-sm font-medium">
       {{
@@ -29,11 +25,11 @@
 import { Card, Badge } from 'frappe-ui'
 
 const badgeColors = {
-  'Draft': 'orange',
-  'Approved': 'green',
-  'Live': 'green',
-  'Concluded': 'gray',
-  'Cancelled': 'red',
+  Draft: 'orange',
+  Approved: 'green',
+  Live: 'green',
+  Concluded: 'gray',
+  Cancelled: 'red',
 }
 defineProps({
   event: Object,

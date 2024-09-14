@@ -1,9 +1,6 @@
 <template>
   <Header />
-  <div
-    v-if="hackathon.data"
-    class="flex w-full p-4 items-center justify-center"
-  >
+  <div v-if="hackathon.data" class="flex w-full p-4 items-center justify-center">
     <div class="w-full max-w-screen-xl">
       <Button
         variant="ghost"
@@ -18,10 +15,7 @@
       />
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
       <hr class="my-6" />
-      <div
-        v-if="inSelectProjectType"
-        class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0"
-      >
+      <div v-if="inSelectProjectType" class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0">
         <div
           class="w-full md:h-40 flex flex-col gap-4 items-center justify-center"
           :class="
@@ -41,9 +35,7 @@
           >
             Create Project
           </button>
-          <p class="text-base text-center leading-normal">
-            Create and work on your own project.
-          </p>
+          <p class="text-base text-center leading-normal">Create and work on your own project.</p>
         </div>
         <div
           v-if="hackathon.data.enable_oss_contributon_projects"
@@ -131,8 +123,7 @@
         <div
           class="grid grid-cols-1 gap-4 my-4"
           :class="
-            hackathon.data.has_partner_projects &&
-            hackathon.data.partner_project_guidelines
+            hackathon.data.has_partner_projects && hackathon.data.partner_project_guidelines
               ? 'md:grid-cols-2'
               : ''
           "
@@ -144,26 +135,17 @@
             <h3 class="text-md font-semibold">Contribution Guidelines</h3>
             <div
               class="prose leading-normal"
-              v-html="
-                markdown.render(
-                  hackathon.data.contribution_project_guidelines || '',
-                )
-              "
+              v-html="markdown.render(hackathon.data.contribution_project_guidelines || '')"
             ></div>
           </div>
           <div
             class="w-full bg-blue-50 text-blue-800 rounded p-4"
-            v-if="
-              hackathon.data.partner_project_guidelines &&
-              hackathon.data.has_partner_projects
-            "
+            v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
           >
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
               class="prose leading-normal text-blue-800"
-              v-html="
-                markdown.render(hackathon.data.partner_project_guidelines || '')
-              "
+              v-html="markdown.render(hackathon.data.partner_project_guidelines || '')"
             ></div>
           </div>
         </div>
@@ -196,9 +178,7 @@
                 "
               >
                 <div
-                  :class="[
-                    checked ? 'bg-gray-50 border-gray-700' : 'bg-white ',
-                  ]"
+                  :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
                   class="relative flex cursor-pointer rounded-sm p-4 border focus:outline-none transition-[border]"
                 >
                   <div class="flex w-full items-center justify-between">
@@ -233,11 +213,7 @@
       <!-- CREAT PROJECT FORM -->
       <div v-if="inCreateProject || inContribute">
         <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4">
-          <FormControl
-            label="Title &ast;"
-            type="text"
-            v-model="project.title"
-          />
+          <FormControl label="Title &ast;" type="text" v-model="project.title" />
           <FormControl
             type="text"
             label="Short Description &ast;"
@@ -285,13 +261,7 @@ import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.v
 import TextEditor from '@/components/TextEditor.vue'
 import Markdownit from 'markdown-it'
 import GithubIcon from '@/components/icons/GithubIcon.vue'
-import {
-  createResource,
-  FormControl,
-  ErrorMessage,
-  createListResource,
-  Badge,
-} from 'frappe-ui'
+import { createResource, FormControl, ErrorMessage, createListResource, Badge } from 'frappe-ui'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'

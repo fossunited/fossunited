@@ -1,195 +1,195 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-01-02 18:45:17.070982",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "id_section",
-  "order_id",
-  "razorpay_payment_id",
-  "event",
-  "event_name",
-  "details_section",
-  "first_name",
-  "last_name",
-  "email",
-  "phone",
-  "pin_code",
-  "orgnizaiton_or_institute_name",
-  "state",
-  "tickets_section",
-  "general_ticket_price",
-  "student_ticket_price",
-  "general_tickets",
-  "student_tickets",
-  "total_amount",
-  "payment_captured",
-  "section_break_zgfu",
-  "tshirt_addon",
-  "column_break_dxtd",
-  "tshirt_size"
- ],
- "fields": [
-  {
-   "fieldname": "id_section",
-   "fieldtype": "Section Break",
-   "label": "Order details"
-  },
-  {
-   "fieldname": "order_id",
-   "fieldtype": "Data",
-   "label": "Order ID"
-  },
-  {
-   "fieldname": "details_section",
-   "fieldtype": "Section Break",
-   "label": "Details"
-  },
-  {
-   "fieldname": "first_name",
-   "fieldtype": "Data",
-   "label": "First Name"
-  },
-  {
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "label": "Last name"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email"
-  },
-  {
-   "fieldname": "phone",
-   "fieldtype": "Data",
-   "label": "Phone"
-  },
-  {
-   "fieldname": "pin_code",
-   "fieldtype": "Data",
-   "label": "PIN Code"
-  },
-  {
-   "fieldname": "orgnizaiton_or_institute_name",
-   "fieldtype": "Data",
-   "label": "Orgnizaiton or Institute Name"
-  },
-  {
-   "fieldname": "state",
-   "fieldtype": "Data",
-   "label": "State"
-  },
-  {
-   "fieldname": "tickets_section",
-   "fieldtype": "Section Break",
-   "label": "Tickets"
-  },
-  {
-   "fieldname": "general_tickets",
-   "fieldtype": "Data",
-   "label": "General Tickets"
-  },
-  {
-   "fieldname": "student_tickets",
-   "fieldtype": "Data",
-   "label": "Student Tickets"
-  },
-  {
-   "fetch_from": "event.general_ticket_price",
-   "fieldname": "general_ticket_price",
-   "fieldtype": "Currency",
-   "label": "General Ticket Price"
-  },
-  {
-   "fetch_from": "event.student_ticket_price",
-   "fieldname": "student_ticket_price",
-   "fieldtype": "Currency",
-   "label": "Student Ticket Price"
-  },
-  {
-   "fieldname": "total_amount",
-   "fieldtype": "Data",
-   "label": "Total Amount"
-  },
-  {
-   "default": "0",
-   "fieldname": "payment_captured",
-   "fieldtype": "Check",
-   "label": "Payment Captured"
-  },
-  {
-   "fetch_from": "event.event_name",
-   "fieldname": "event_name",
-   "fieldtype": "Data",
-   "label": "Event Name"
-  },
-  {
-   "fieldname": "section_break_zgfu",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "tshirt_addon",
-   "fieldtype": "Check",
-   "label": "TShirt Addon"
-  },
-  {
-   "fieldname": "column_break_dxtd",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "tshirt_size",
-   "fieldtype": "Data",
-   "label": "TShirt Size",
-   "options": "Select Size\nXS\nS\nM\nL\nXL\n2XL\n3XL\n"
-  },
-  {
-   "fieldname": "event",
-   "fieldtype": "Link",
-   "label": "Event",
-   "options": "FOSS Chapter Event"
-  },
-  {
-   "fieldname": "razorpay_payment_id",
-   "fieldtype": "Data",
-   "label": "Payment ID"
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-03-19 16:59:34.288512",
- "modified_by": "Administrator",
- "module": "Chapters",
- "name": "Conference Ticket",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-01-02 18:45:17.070982",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "id_section",
+    "order_id",
+    "razorpay_payment_id",
+    "event",
+    "event_name",
+    "details_section",
+    "first_name",
+    "last_name",
+    "email",
+    "phone",
+    "pin_code",
+    "orgnizaiton_or_institute_name",
+    "state",
+    "tickets_section",
+    "general_ticket_price",
+    "student_ticket_price",
+    "general_tickets",
+    "student_tickets",
+    "total_amount",
+    "payment_captured",
+    "section_break_zgfu",
+    "tshirt_addon",
+    "column_break_dxtd",
+    "tshirt_size"
+  ],
+  "fields": [
+    {
+      "fieldname": "id_section",
+      "fieldtype": "Section Break",
+      "label": "Order details"
+    },
+    {
+      "fieldname": "order_id",
+      "fieldtype": "Data",
+      "label": "Order ID"
+    },
+    {
+      "fieldname": "details_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "first_name",
+      "fieldtype": "Data",
+      "label": "First Name"
+    },
+    {
+      "fieldname": "last_name",
+      "fieldtype": "Data",
+      "label": "Last name"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email"
+    },
+    {
+      "fieldname": "phone",
+      "fieldtype": "Data",
+      "label": "Phone"
+    },
+    {
+      "fieldname": "pin_code",
+      "fieldtype": "Data",
+      "label": "PIN Code"
+    },
+    {
+      "fieldname": "orgnizaiton_or_institute_name",
+      "fieldtype": "Data",
+      "label": "Orgnizaiton or Institute Name"
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Data",
+      "label": "State"
+    },
+    {
+      "fieldname": "tickets_section",
+      "fieldtype": "Section Break",
+      "label": "Tickets"
+    },
+    {
+      "fieldname": "general_tickets",
+      "fieldtype": "Data",
+      "label": "General Tickets"
+    },
+    {
+      "fieldname": "student_tickets",
+      "fieldtype": "Data",
+      "label": "Student Tickets"
+    },
+    {
+      "fetch_from": "event.general_ticket_price",
+      "fieldname": "general_ticket_price",
+      "fieldtype": "Currency",
+      "label": "General Ticket Price"
+    },
+    {
+      "fetch_from": "event.student_ticket_price",
+      "fieldname": "student_ticket_price",
+      "fieldtype": "Currency",
+      "label": "Student Ticket Price"
+    },
+    {
+      "fieldname": "total_amount",
+      "fieldtype": "Data",
+      "label": "Total Amount"
+    },
+    {
+      "default": "0",
+      "fieldname": "payment_captured",
+      "fieldtype": "Check",
+      "label": "Payment Captured"
+    },
+    {
+      "fetch_from": "event.event_name",
+      "fieldname": "event_name",
+      "fieldtype": "Data",
+      "label": "Event Name"
+    },
+    {
+      "fieldname": "section_break_zgfu",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "tshirt_addon",
+      "fieldtype": "Check",
+      "label": "TShirt Addon"
+    },
+    {
+      "fieldname": "column_break_dxtd",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "tshirt_size",
+      "fieldtype": "Data",
+      "label": "TShirt Size",
+      "options": "Select Size\nXS\nS\nM\nL\nXL\n2XL\n3XL\n"
+    },
+    {
+      "fieldname": "event",
+      "fieldtype": "Link",
+      "label": "Event",
+      "options": "FOSS Chapter Event"
+    },
+    {
+      "fieldname": "razorpay_payment_id",
+      "fieldtype": "Data",
+      "label": "Payment ID"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-03-19 16:59:34.288512",
+  "modified_by": "Administrator",
+  "module": "Chapters",
+  "name": "Conference Ticket",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

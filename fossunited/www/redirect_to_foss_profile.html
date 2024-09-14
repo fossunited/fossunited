@@ -1,32 +1,26 @@
-{% extends "templates/foss_base.html" %}
-
-{% block page_content %}
-{% endblock %}
-
-{% block page_script %}
+{% extends "templates/foss_base.html" %} {% block page_content %} {% endblock %} {% block
+page_script %}
 <script>
-    frappe.ready(function(){
-        let session_user = frappe.session.user;
-        frappe.call({
-            method: 'frappe.client.get_value',
-            args:{
-                doctype: 'FOSS User Profile',
-                filters: {'email': session_user},
-                fieldname: ['route']
-            },
-            callback: (r) => {
-                let route = r.message.route;
-                if (session_user == 'Administrator'){
-                    window.location.href = '/app';
-                }
-                else if (route != 'None'){
-                    window.location.href = '/' + route;
-                }
-                else{
-                    window.location.href = '/';
-                }
-            }
-        })
+  frappe.ready(function () {
+    let session_user = frappe.session.user
+    frappe.call({
+      method: 'frappe.client.get_value',
+      args: {
+        doctype: 'FOSS User Profile',
+        filters: { email: session_user },
+        fieldname: ['route'],
+      },
+      callback: (r) => {
+        let route = r.message.route
+        if (session_user == 'Administrator') {
+          window.location.href = '/app'
+        } else if (route != 'None') {
+          window.location.href = '/' + route
+        } else {
+          window.location.href = '/'
+        }
+      },
     })
+  })
 </script>
 {% endblock %}

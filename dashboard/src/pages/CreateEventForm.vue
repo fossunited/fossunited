@@ -3,23 +3,14 @@
     <div v-if="chapter.doc" class="flex justify-between mt-4">
       <ChapterHeader :chapter="chapter" />
     </div>
-    <div
-      class="flex flex-col md:flex-row gap-2 justify-between mt-6 pb-2 border-b"
-    >
+    <div class="flex flex-col md:flex-row gap-2 justify-between mt-6 pb-2 border-b">
       <div class="text-xl font-semibold">Create Event</div>
-      <Button
-        label="Create"
-        :variant="'solid'"
-        size="md"
-        @click="createEvent"
-      />
+      <Button label="Create" :variant="'solid'" size="md" @click="createEvent" />
     </div>
     <div v-if="eventTypeOptions.data">
       <div class="flex flex-col gap-3 my-6">
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Details</div>
-        <div
-          class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
-        >
+        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
           <FormControl
             :type="'text'"
             size="md"
@@ -70,32 +61,16 @@
             class="col-span-2"
             placeholder="Write an event description"
             :modelValue="temp_event.event_description"
-            @update:modelValue="
-              ($event) => (temp_event.event_description = $event)
-            "
+            @update:modelValue="($event) => (temp_event.event_description = $event)"
           />
         </div>
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
-        <div
-          class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
-        >
-          <FormControl
-            :type="'text'"
-            size="md"
-            v-model="temp_event.location"
-            label="Location"
-          />
-          <FormControl
-            :type="'url'"
-            label="Map Link"
-            v-model="temp_event.map_link"
-            side="md"
-          />
+        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+          <FormControl :type="'text'" size="md" v-model="temp_event.location" label="Location" />
+          <FormControl :type="'url'" label="Map Link" v-model="temp_event.map_link" side="md" />
         </div>
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Timeline</div>
-        <div
-          class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6"
-        >
+        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
           <FormControl
             :type="'datetime-local'"
             size="md"

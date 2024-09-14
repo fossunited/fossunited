@@ -38,19 +38,8 @@
           type="checkbox"
           class="col-span-2 mb-1"
         />
-        <Input
-          v-model="modifyTier.title"
-          label="Title"
-          class="w-full"
-          required
-        />
-        <Input
-          v-model="modifyTier.price"
-          label="Price"
-          class="w-full"
-          placeholder="0.00"
-          required
-        >
+        <Input v-model="modifyTier.title" label="Title" class="w-full" required />
+        <Input v-model="modifyTier.price" label="Price" class="w-full" placeholder="0.00" required>
           <template #input-prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -94,9 +83,7 @@
             rows="4"
             placeholder="Add a description"
           ></textarea>
-          <small class="text-gray-700"
-            >You can use <code>Markdown</code>.</small
-          >
+          <small class="text-gray-700">You can use <code>Markdown</code>.</small>
         </div>
       </div>
       <ErrorMessage class="mt-2" :message="errorMessages" />
@@ -111,33 +98,14 @@
           size="sm"
           @click="handleCreate"
         />
-        <Button
-          v-else
-          label="Update"
-          variant="solid"
-          size="sm"
-          @click="handleSubmit"
-        />
+        <Button v-else label="Update" variant="solid" size="sm" @click="handleSubmit" />
       </div>
     </template>
   </Dialog>
 </template>
 <script setup>
-import {
-  createResource,
-  Dialog,
-  DatePicker,
-  ErrorMessage,
-  FormControl,
-} from 'frappe-ui'
-import {
-  defineProps,
-  defineModel,
-  defineEmits,
-  onMounted,
-  reactive,
-  ref,
-} from 'vue'
+import { createResource, Dialog, DatePicker, ErrorMessage, FormControl } from 'frappe-ui'
+import { defineProps, defineModel, defineEmits, onMounted, reactive, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import Input from '@/components/Input.vue'
 import LivePing from '@/components/animation/LivePing.vue'

@@ -14,9 +14,7 @@
             Tickets are
             <span
               :class="
-                { Live: 'text-green-700', Closed: 'text-red-600' }[
-                  event.data.tickets_status
-                ]
+                { Live: 'text-green-700', Closed: 'text-red-600' }[event.data.tickets_status]
               "
               >{{ event.data.tickets_status }}</span
             >
@@ -27,11 +25,7 @@
         </div>
         <Button
           class="w-fit mt-2"
-          :label="
-            { Live: 'Deactivate', Closed: 'Activate' }[
-              event.data.tickets_status
-            ]
-          "
+          :label="{ Live: 'Deactivate', Closed: 'Activate' }[event.data.tickets_status]"
           :theme="{ Live: 'red', Closed: 'gray' }[event.data.tickets_status]"
           @click="toggleTicketStatus.fetch()"
         />

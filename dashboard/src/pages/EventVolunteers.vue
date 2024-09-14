@@ -17,11 +17,7 @@
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card v-for="member in event.doc.event_members" :title="member.full_name">
         <template v-if="member.email != session.user" #actions>
-          <Button
-            theme="red"
-            label="Remove"
-            @click="handleRemoveModal(member)"
-          />
+          <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
         <div class="flex justify-between">
           <div class="flex flex-col gap-2">
@@ -80,11 +76,7 @@
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
-import {
-  createDocumentResource,
-  Badge,
-  Dialog,
-} from 'frappe-ui'
+import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, inject } from 'vue'
 const session = inject('$session')
@@ -124,9 +116,7 @@ const handleRemoveModal = (member) => {
   selectedMember.value = member
 }
 const removeMember = (member) => {
-  const updatedMembers = event.doc.event_members.filter(
-    (m) => m.idx !== member.idx,
-  )
+  const updatedMembers = event.doc.event_members.filter((m) => m.idx !== member.idx)
   updatedMembers.forEach((m, idx) => {
     m.idx = idx + 1
   })

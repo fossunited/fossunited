@@ -58,48 +58,23 @@
             "
           />
         </template>
-        <template
-          v-else-if="
-            column.key === 'wants_tshirt' || column.key === 'tshirt_delivered'
-          "
-        >
-          <Checkbox
-            :model-value="Boolean(item)"
-            :disabled="true"
-            class="w-4 h-4"
-          />
+        <template v-else-if="column.key === 'wants_tshirt' || column.key === 'tshirt_delivered'">
+          <Checkbox :model-value="Boolean(item)" :disabled="true" class="w-4 h-4" />
         </template>
         <template v-else-if="column.key === 'name'">
-          <span class="font-mono text-sm font-semibold text-gray-800">{{
-            item
-          }}</span>
+          <span class="font-mono text-sm font-semibold text-gray-800">{{ item }}</span>
         </template>
         <template v-else-if="column.key === 'checkin_status'">
-          <div
-            class="flex items-center overflow-hidden overflow-x-visible flex-wrap"
-          >
-            <span
-              v-for="data in row.checkin_data"
-              class="flex items-center p-1 rounded-sm"
-            >
-              <Tooltip
-                arrow-class="fill-black"
-                :placement="'top'"
-                :hoverDelay="0.5"
-              >
+          <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
+            <span v-for="data in row.checkin_data" class="flex items-center p-1 rounded-sm">
+              <Tooltip arrow-class="fill-black" :placement="'top'" :hoverDelay="0.5">
                 <template #body>
-                  <span
-                    class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full"
-                  >
+                  <span class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full">
                     {{ getFormattedDateTime(data.check_in_time) }}
                   </span>
                 </template>
                 <Badge
-                  :theme="
-                    getRelativeTime(data.check_in_time) == 'Today'
-                      ? 'green'
-                      : 'gray'
-                  "
+                  :theme="getRelativeTime(data.check_in_time) == 'Today' ? 'green' : 'gray'"
                   class="flex gap-1 items-center"
                 >
                   <DoubleChecksIcon class="w-4 h-4" />
@@ -121,13 +96,7 @@
 </template>
 <script setup>
 import { ref, defineProps, provide } from 'vue'
-import {
-  LoadingText,
-  ListView,
-  Badge,
-  Tooltip,
-  Checkbox,
-} from 'frappe-ui'
+import { LoadingText, ListView, Badge, Tooltip, Checkbox } from 'frappe-ui'
 import CheckinManageDialog from '@/components/event/CheckinManageDialog.vue'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import DoubleChecksIcon from '@/components/icons/DoubleChecks.vue'
@@ -156,9 +125,7 @@ const showConfirmDialog = ref(false)
 const showManageDialog = ref(false)
 
 const isCheckedInToday = (attendee) => {
-  return attendee.checkin_data.some((data) =>
-    dayjs(data.check_in_time).isToday(),
-  )
+  return attendee.checkin_data.some((data) => dayjs(data.check_in_time).isToday())
 }
 
 provide('isCheckedInToday', isCheckedInToday)

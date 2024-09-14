@@ -1,9 +1,16 @@
 <template>
-  <TabGroup @change="changeModelValue" :class="{'hidden' : dates.length <= 1}">
+  <TabGroup @change="changeModelValue" :class="{ hidden: dates.length <= 1 }">
     <TabList class="flex flex-wrap gap-5">
-      <Tab v-for="(date, index) in dates" :key="date" v-slot="{ selected }" class="focus-visible:outline-none" >
+      <Tab
+        v-for="(date, index) in dates"
+        :key="date"
+        v-slot="{ selected }"
+        class="focus-visible:outline-none"
+      >
         <div class="flex flex-col">
-          <div class="bg-gray-100 text-gray-700 text-sm px-2 py-1 tracking-wider">{{ date }}</div>
+          <div class="bg-gray-100 text-gray-700 text-sm px-2 py-1 tracking-wider">
+            {{ date }}
+          </div>
         </div>
         <div
           class="border border-gray-900 flex items-center justify-center p-2 text-base font-medium hover:bg-gray-100 transition-colors"

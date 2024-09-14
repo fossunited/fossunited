@@ -1,87 +1,87 @@
 {
- "__unsaved": 1,
- "creation": "2023-08-11 23:56:43.239940",
- "docstatus": 0,
- "doctype": "Web Template",
- "fields": [
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_1",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 1",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_2",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 2",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_3",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 3",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_4",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 4",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_5",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 5",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "conduct_point_6",
-   "fieldtype": "Small Text",
-   "label": "Conduct point 6",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "responsibility_1",
-   "fieldtype": "Small Text",
-   "label": "Responsibility 1",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "responsibility2",
-   "fieldtype": "Small Text",
-   "label": "Responsibility2",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "responsibility_3",
-   "fieldtype": "Small Text",
-   "label": "Responsibility 3",
-   "reqd": 0
-  },
-  {
-   "__unsaved": 1,
-   "fieldname": "responsibility_4",
-   "fieldtype": "Small Text",
-   "label": "Responsibility 4",
-   "reqd": 0
-  }
- ],
- "idx": 0,
- "modified": "2024-02-05 05:08:43.559625",
- "modified_by": "Administrator",
- "module": "Chapters",
- "name": "FOSS Club - Criteria and Responsibilities",
- "owner": "Administrator",
- "standard": 1,
- "template": "",
- "type": "Section"
+  "__unsaved": 1,
+  "creation": "2023-08-11 23:56:43.239940",
+  "docstatus": 0,
+  "doctype": "Web Template",
+  "fields": [
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_1",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 1",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_2",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 2",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_3",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 3",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_4",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 4",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_5",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 5",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "conduct_point_6",
+      "fieldtype": "Small Text",
+      "label": "Conduct point 6",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "responsibility_1",
+      "fieldtype": "Small Text",
+      "label": "Responsibility 1",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "responsibility2",
+      "fieldtype": "Small Text",
+      "label": "Responsibility2",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "responsibility_3",
+      "fieldtype": "Small Text",
+      "label": "Responsibility 3",
+      "reqd": 0
+    },
+    {
+      "__unsaved": 1,
+      "fieldname": "responsibility_4",
+      "fieldtype": "Small Text",
+      "label": "Responsibility 4",
+      "reqd": 0
+    }
+  ],
+  "idx": 0,
+  "modified": "2024-02-05 05:08:43.559625",
+  "modified_by": "Administrator",
+  "module": "Chapters",
+  "name": "FOSS Club - Criteria and Responsibilities",
+  "owner": "Administrator",
+  "standard": 1,
+  "template": "",
+  "type": "Section"
 }

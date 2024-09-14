@@ -9,9 +9,7 @@
           {{ proposal.talk_title }}
         </a>
       </h3>
-      <div
-        class="flex flex-col gap-3 items-start mt-1 md:flex-row md:items-center"
-      >
+      <div class="flex flex-col gap-3 items-start mt-1 md:flex-row md:items-center">
         <div class="flex items-center text-xs font-semibold">
           <span class="bg-gray-200 px-2 py-1 text-gray-600 rounded-sm mr-2">{{
             proposal.session_type.toUpperCase()
@@ -24,7 +22,7 @@
             >
           </div>
         </div>
-        <div v-if="proposal.full_name != '' " class="flex text-sm">
+        <div v-if="proposal.full_name != ''" class="flex text-sm">
           <SpeakerIcon />
           <span>
             {{ proposal.full_name }}
@@ -59,7 +57,7 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-});
+})
 
 const getStatusClass = (status) => {
   switch (status) {

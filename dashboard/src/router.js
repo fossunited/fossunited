@@ -6,7 +6,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    redirect: { name: 'MyProfile'},
+    redirect: { name: 'MyProfile' },
     component: () => import('@/pages/Home.vue'),
     children: [
       {
@@ -22,7 +22,7 @@ const routes = [
       {
         path: '/localhost',
         name: 'MyLocalhosts',
-        component: () => import('@/pages/localhost/MyLocalhosts.vue')
+        component: () => import('@/pages/localhost/MyLocalhosts.vue'),
       },
       {
         path: '/chapter',
@@ -34,7 +34,7 @@ const routes = [
         name: 'MyReviews',
         component: () => import('@/pages/reviewers/MyReviews.vue'),
       },
-    ]
+    ],
   },
   {
     path: '/buy-tickets',
@@ -76,8 +76,8 @@ const routes = [
         path: 'talk/:talk_id',
         name: 'SubmissionPage',
         component: () => import('@/pages/reviewers/SubmissionPage.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     name: 'Event',
@@ -169,7 +169,7 @@ const routes = [
         path: 'checkins',
         name: 'EventCheckins',
         component: () => import('@/pages/EventCheckins.vue'),
-      }
+      },
     ],
   },
   {
@@ -212,11 +212,11 @@ const routes = [
   },
   {
     path: '/hack/:permalink',
-    children:[
+    children: [
       {
         path: '',
         name: 'InitialRegister',
-        component: () => import('@/pages/hackathon/InitRegister.vue')
+        component: () => import('@/pages/hackathon/InitRegister.vue'),
       },
       {
         path: 'create-team',
@@ -237,8 +237,8 @@ const routes = [
         path: 'project',
         name: 'MyHackathonProject',
         component: () => import('@/pages/hackathon/MyProject.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/localhost/:id',
@@ -246,15 +246,15 @@ const routes = [
       {
         path: '',
         name: 'ManageLocalhost',
-        component: () => import('@/pages/localhost/ManageLocalhost.vue')
-      }
-    ]
+        component: () => import('@/pages/localhost/ManageLocalhost.vue'),
+      },
+    ],
   },
   {
     path: '/localhost-attendance-process',
     name: 'LocalhostAttendanceProcess',
     component: () => import('@/pages/localhost/LocalhostAttendanceProcess.vue'),
-    props: true
+    props: true,
   },
   {
     name: 'AllProposalsPage',

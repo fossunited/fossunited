@@ -34,7 +34,10 @@
         </div>
       </div>
     </div>
-    <div v-else-if="status == 'Rejected' || status == 'Already Rejected'" class="flex flex-col text-center items-center">
+    <div
+      v-else-if="status == 'Rejected' || status == 'Already Rejected'"
+      class="flex flex-col text-center items-center"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -50,18 +53,21 @@
       </svg>
       <div class="prose">
         <div v-if="status == 'Rejected'">
-            <h2 class="my-3">Transfer Rejected!</h2>
-            <p>
-                Your ticket transfer request has been rejected.<br />
-                For further assistance, please send a mail at <a href="mailto:indiafoss@fossunited.org" class="underline">indiafoss@fossunited.org</a>.
-            </p>
+          <h2 class="my-3">Transfer Rejected!</h2>
+          <p>
+            Your ticket transfer request has been rejected.<br />
+            For further assistance, please send a mail at
+            <a href="mailto:indiafoss@fossunited.org" class="underline">indiafoss@fossunited.org</a
+            >.
+          </p>
         </div>
         <div v-else-if="status == 'Already Rejected'">
-            <h2 class="my-3">Transfer Already Rejected!</h2>
-            <p>
-                Your ticket transfer request has already been rejected.<br />
-                For further assistance, please send a mail at <a href="mailto:indiafoss@fossunited.org">indiafoss@fossunited.org</a>
-            </p>
+          <h2 class="my-3">Transfer Already Rejected!</h2>
+          <p>
+            Your ticket transfer request has already been rejected.<br />
+            For further assistance, please send a mail at
+            <a href="mailto:indiafoss@fossunited.org">indiafoss@fossunited.org</a>
+          </p>
         </div>
       </div>
     </div>

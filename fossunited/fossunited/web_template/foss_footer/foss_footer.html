@@ -1,231 +1,205 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+/>
 
 <style>
+  footer {
+    background: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
+  }
 
-    footer{
-        background: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-    }
+  .footer-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    .footer-section{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+  .footer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 4rem 0rem;
+    width: 100%;
+  }
+  .footer-container p {
+    color: hsl(var(--clr-libre-white-600));
+  }
+
+  .footer-container a {
+    color: hsl(var(--clr-libre-white-600));
+    font-weight: 500;
+  }
+
+  .source-code-link a {
+    font-weight: var(--fw-normal);
+  }
+
+  .footer-container a:hover {
+    color: hsl(var(--clr-foss-mint-500));
+    text-decoration: none;
+  }
+
+  .footer-element-logo > img {
+    max-height: 2.5rem;
+  }
+
+  .footer-element-items {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+  }
+
+  .footer-link-category {
+    display: flex;
+    gap: 2.5rem;
+  }
+
+  .footer_parent_label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: var(--fw-medium);
+  }
+
+  .footer_parent_label p {
+    margin: 0;
+    color: hsl(var(--clr-libre-white-600));
+  }
+
+  .footer_parent_label > a {
+    font-weight: var(--fw-medium);
+    margin: 0;
+  }
+
+  .footer-category-items {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .footer-category-items a {
+    font-size: var(--text-sm);
+    color: hsl(var(--clr-open-gray-200));
+  }
+
+  .address-element {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .address-element p {
+    text-align: right;
+    font-size: var(--text-sm);
+  }
+
+  .address-element a {
+    font-size: var(--text-sm);
+    color: hsl(var(--clr-libre-white-600));
+  }
+
+  .social-media-credits {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .social-category-items {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  @media screen and (max-width: 768px) {
+    .footer-section {
+      padding: 0rem 2rem 0rem 2rem;
     }
 
     .footer-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        padding: 4rem 0rem;
-        width: 100%
-    }
-    .footer-container p{
-        color: hsl(var(--clr-libre-white-600));
-
+      flex-direction: column;
+      padding: 2rem 0rem;
+      font-size: var(--text-xs);
     }
 
-    .footer-container a{
-        color: hsl(var(--clr-libre-white-600));
-        font-weight: 500;
-
+    .footer-element-items {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    .source-code-link a{
-        font-weight: var(--fw-normal);
+    .footer-link-category {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
     }
 
-    .footer-container a:hover{
-        color: hsl(var(--clr-foss-mint-500));
-        text-decoration: none;
+    .footer-element-logo > img {
+      max-height: 2rem;
     }
 
-    .footer-element-logo > img{
-        max-height: 2.5rem;
+    .address-element p {
+      text-align: left;
     }
 
-    .footer-element-items{
-        display: grid;
-        grid-template-columns: 2fr 1fr;
+    .social-category-items {
+      justify-content: flex-start;
     }
-
-    .footer-link-category{
-        display: flex;
-        gap: 2.5rem
-    }
-
-    .footer_parent_label{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        font-weight: var(--fw-medium);
-    }
-
-    .footer_parent_label p{
-        margin: 0;
-        color: hsl(var(--clr-libre-white-600));
-    }
-
-    .footer_parent_label > a{
-        font-weight: var(--fw-medium);
-        margin: 0;
-
-    }
-
-    .footer-category-items{
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-    }
-
-    .footer-category-items a{
-        font-size: var(--text-sm);
-        color: hsl(var(--clr-open-gray-200));
-    }
-
-    .address-element{
-        display: flex;
-        flex-direction: column;
-    }
-
-    .address-element p{
-        text-align: right;
-        font-size: var(--text-sm);
-    }
-
-    .address-element a{
-        font-size: var(--text-sm);
-        color: hsl(var(--clr-libre-white-600));
-    }
-
-    .social-media-credits{
-
-        padding-top: 1rem;
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .social-category-items{
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    @media screen and (max-width: 768px) {
-
-        .footer-section{
-            padding: 0rem 2rem 0rem 2rem;
-
-        }
-
-        .footer-container{
-            flex-direction: column;
-            padding: 2rem 0rem;
-            font-size: var(--text-xs);
-        }
-
-        .footer-element-items{
-            grid-template-columns: 1fr;
-            gap: 2rem
-        }
-
-        .footer-link-category{
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
-        }
-
-        .footer-element-logo > img{
-            max-height: 2rem;
-        }
-
-        .address-element p{
-            text-align:left;
-        }
-
-        .social-category-items{
-            justify-content: flex-start;
-        }
-
-    }
-
+  }
 </style>
 
 <footer>
+  <div class="footer-section container">
+    <div class="footer-container">
+      <div class="footer-element-logo">
+        <img src="{{footer_logo}}" alt="FOSS United Logo" />
+      </div>
 
-    <div class="footer-section container">
-        <div class="footer-container">
+      <div class="source-code-link">
+        <a href="https://github.com/fossunited/fossunited">
+          <i class="ti ti-brand-github"></i>
+          View Source Code
+        </a>
+      </div>
 
-            <div class="footer-element-logo">
-                <img src="{{footer_logo}}" alt="FOSS United Logo" />
+      <div class="footer-element-items">
+        <div class="footer-link-category">
+          {% for item in footer_items %} {% if not item.parent_label and item.label != "Social
+          Media"%}
+          <div class="footer_parent_label">
+            {% if item.url%}
+            <a href="item.url">{{item.label}}</a>
+            {% else %}
+            <p>{{item.label}}</p>
+            {% endif %}
+
+            <div class="footer-category-items">
+              {% for child_item in footer_items %} {% if child_item.parent_label == item.label %}
+              <a href="{{child_item.url}}" class="footer-link">{{child_item.label}}</a>
+              {% endif %} {% endfor %}
             </div>
-
-            <div class="source-code-link">
-                <a href="https://github.com/fossunited/fossunited">
-                    <i class="ti ti-brand-github"></i>
-                    View Source Code
-                </a>
-            </div>
-
-            <div class="footer-element-items">
-                <div class="footer-link-category">
-
-                    {% for item in footer_items %}
-                        {% if not item.parent_label and item.label != "Social Media"%}
-                            <div class="footer_parent_label">
-
-                                {% if item.url%}
-                                    <a href="item.url">{{item.label}}</a>
-                                {% else %}
-                                    <p>{{item.label}}</p>
-                                {% endif %}
-
-                                <div class="footer-category-items">
-                                    {% for child_item in footer_items %}
-                                        {% if child_item.parent_label == item.label %}
-                                            <a href="{{child_item.url}}" class="footer-link">{{child_item.label}}</a>
-                                        {% endif %}
-                                    {% endfor %}
-
-                                </div>
-
-                            </div>
-                        {% endif %}
-                     {% endfor %}
-
-                </div>
-
-                <div class="address-element">
-
-                    {% set address = frappe.db.get_single_value("Website Settings", "address") %}
-
-                    <p>{{copyright}}</p>
-                    {{address}}
-
-                    <div class="social-media-credits">
-
-                        <div class="social-category-items">
-                            {% for child_item in footer_items %}
-                                {% if child_item.parent_label == "Social Media" %}
-                                    <a href="{{child_item.url}}" class="footer-link">
-                                        <img src="{{child_item.custom_icon}}" alt="">
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
-
-                        </div>
-
-                        <div class="powered-by">
-
-                            <p> Built with <a href="https://frappe.io">Frappe</a></p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
+          </div>
+          {% endif %} {% endfor %}
         </div>
-    </div>
 
+        <div class="address-element">
+          {% set address = frappe.db.get_single_value("Website Settings", "address") %}
+
+          <p>{{copyright}}</p>
+          {{address}}
+
+          <div class="social-media-credits">
+            <div class="social-category-items">
+              {% for child_item in footer_items %} {% if child_item.parent_label == "Social Media"
+              %}
+              <a href="{{child_item.url}}" class="footer-link">
+                <img src="{{child_item.custom_icon}}" alt="" />
+              </a>
+              {% endif %} {% endfor %}
+            </div>
+
+            <div class="powered-by">
+              <p>Built with <a href="https://frappe.io">Frappe</a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>

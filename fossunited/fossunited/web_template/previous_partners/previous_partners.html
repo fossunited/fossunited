@@ -1,75 +1,66 @@
 <style>
+  .previous-partners-section {
+    display: flex;
+    font-family: Inter;
+  }
 
-    .previous-partners-section {
-        display: flex;
-        font-family: Inter;
-    }
+  .previous-partners-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 6rem 0rem 6rem 0rem;
+  }
 
-    .previous-partners-container {
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        padding: 6rem 0rem 6rem 0rem;
-    }
+  .previous-partners-container h4 {
+    font-weight: var(--fw-semibold);
+  }
 
-    .previous-partners-container h4{
-        font-weight: var(--fw-semibold);
-    }
+  .previous-partner-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 2.5rem;
+    justify-items: center;
+    column-gap: 1rem;
+  }
 
+  .ip-member {
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .new-partner {
+    display: flex;
+    width: 100%;
+  }
+
+  .new-partner img {
+    width: 90%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
     .previous-partner-block {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-        row-gap: 2.5rem;
-        justify-items: center;
-        column-gap: 1rem;
+      grid-template-columns: 1fr 1fr;
     }
-
-    .ip-member {
-        display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        text-align: center;
-    }
-
-    .new-partner {
-        display: flex;
-        width: 100%;
-    }
-
-    .new-partner img {
-        width: 90%;
-        height: auto;
-    }
-
-    @media (max-width: 768px){
-
-        .previous-partner-block{
-            grid-template-columns: 1fr 1fr;
-
-        }
-    }
-
+  }
 </style>
 
-
 <div class="previous-partners-section container">
+  <div class="previous-partners-container">
+    <h4>Previous Partners</h4>
 
-    <div class="previous-partners-container">
-            <h4>Previous Partners</h4>
+    {% set previousPartners = frappe.get_all("Industry Partners", fields=["company", "logo",
+    "website"], filters={ "is_current_partner": 0}, order_by="company")%} {% if previousPartners %}
 
-            {% set previousPartners = frappe.get_all("Industry Partners", fields=["company", "logo", "website"], filters={ "is_current_partner": 0}, order_by="company")%}
-            {% if previousPartners %}
-
-                        <div class="previous-partner-block">
-
-                            {%for partner in previousPartners %}
-                                    <a class="new-partner" href="{{partner.website}}">
-                                        <img src="{{ partner.logo }}" alt="{{ partner.company }}">
-                                    </a>
-                            {% endfor %}
-                        </div>
-            {% endif %}
-
+    <div class="previous-partner-block">
+      {%for partner in previousPartners %}
+      <a class="new-partner" href="{{partner.website}}">
+        <img src="{{ partner.logo }}" alt="{{ partner.company }}" />
+      </a>
+      {% endfor %}
     </div>
-
+    {% endif %}
+  </div>
 </div>

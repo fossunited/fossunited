@@ -1,121 +1,99 @@
 <style>
+  .community-events-section {
+    display: flex;
+    font-family: Inter;
+  }
 
-    .community-events-section{
-        display: flex;
-        font-family: Inter;
+  .community-events-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 7rem 0rem;
+  }
+
+  .programs-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .program-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2rem;
+    align-items: stretch;
+  }
+
+  .program-card {
+    display: flex;
+    padding: 1.2rem;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    background: #fff;
+    gap: 1.25rem;
+    justify-content: flex-start;
+  }
+
+  .program-card-head img {
+    max-height: 2rem;
+  }
+
+  .program-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .program-card-body p {
+    color: hsl(var(--clr-gray-500));
+    font-size: var(--text-sm);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+  }
+
+  @media screen and (max-width: 768px) {
+    .programs-section {
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 1rem;
     }
 
-    .community-events-container{
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        padding: 7rem 0rem;
+    .programs-section-header img {
+      display: none;
     }
 
-    .programs-section-header{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
+    .program-card-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
-
-
-    .program-card-container{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 2rem;
-        align-items: stretch;
-    }
-
-    .program-card{
-        display: flex;
-        padding: 1.2rem;
-        flex-direction: column;
-        border-radius: 0.5rem;
-        background: #FFF;
-        gap: 1.25rem;
-        justify-content: flex-start;
-    }
-
-    .program-card-head img{
-        max-height: 2rem;
-    }
-
-    .program-card-body{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .program-card-body p{
-        color: hsl(var(--clr-gray-500));
-        font-size: var(--text-sm);
-        font-weight: var(--fw-medium);
-        line-height: 1.4;
-    }
-
-    @media screen and (max-width: 768px){
-
-        .programs-section{
-            flex-direction: column;
-            gap: 2.5rem;
-            padding:1rem;
-        }
-
-        .programs-section-header img{
-            display: none;
-        }
-
-        .program-card-container{
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-
-    }
-
-
+  }
 </style>
 
 <div class="community-events-section container">
+  <div class="community-events-container">
+    <div class="programs-section-header">
+      <h5>{{heading}}</h5>
 
-    <div class="community-events-container">
-
-        <div class="programs-section-header">
-
-            <h5>{{heading}}</h5>
-
-            <p>{{subtext}}</p>
-
-        </div>
-
-        <div class="program-card-container">
-
-            {% for index in range(1, 5) %}
-            {% set program_title = values['title_' + index|string ] %}
-            {% set program_icon = values['icon_' + index|string ] %}
-            {% set program_text = values['text_' + index|string ] %}
-            {% if program_title %}
-
-                <div class="program-card">
-
-                    <div class="program-card-head">
-                        <img src="{{program_icon}}" alt="">
-                    </div>
-
-                    <div class="program-card-body">
-                        <h6>{{program_title}}</h6>
-                        <p>{{program_text}}</p>
-                    </div>
-
-
-                </div>
-
-                {% endif %}
-            {% endfor %}
-
-
-        </div>
-
+      <p>{{subtext}}</p>
     </div>
 
+    <div class="program-card-container">
+      {% for index in range(1, 5) %} {% set program_title = values['title_' + index|string ] %} {%
+      set program_icon = values['icon_' + index|string ] %} {% set program_text = values['text_' +
+      index|string ] %} {% if program_title %}
+
+      <div class="program-card">
+        <div class="program-card-head">
+          <img src="{{program_icon}}" alt="" />
+        </div>
+
+        <div class="program-card-body">
+          <h6>{{program_title}}</h6>
+          <p>{{program_text}}</p>
+        </div>
+      </div>
+
+      {% endif %} {% endfor %}
+    </div>
+  </div>
 </div>

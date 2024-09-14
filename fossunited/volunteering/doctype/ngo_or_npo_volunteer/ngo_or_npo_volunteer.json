@@ -1,89 +1,89 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2023-06-28 13:38:09.240659",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "volunteer_details_section",
-  "title",
-  "photo",
-  "city",
-  "email",
-  "column_break_gcaw",
-  "ngo__npo_organization_name",
-  "description"
- ],
- "fields": [
-  {
-   "fieldname": "volunteer_details_section",
-   "fieldtype": "Section Break",
-   "label": "Volunteer Details"
-  },
-  {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "label": "Full Name"
-  },
-  {
-   "fieldname": "photo",
-   "fieldtype": "Attach Image",
-   "label": "Profile Photo"
-  },
-  {
-   "fieldname": "city",
-   "fieldtype": "Link",
-   "label": "City",
-   "options": "City"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email"
-  },
-  {
-   "fieldname": "column_break_gcaw",
-   "fieldtype": "Column Break",
-   "label": "Non Profit Details"
-  },
-  {
-   "fieldname": "ngo__npo_organization_name",
-   "fieldtype": "Data",
-   "label": "NGO / NPO Organization Name"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Text",
-   "label": "Description"
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "Volunteers",
-   "link_fieldname": "volunteer_name"
-  }
- ],
- "modified": "2023-07-19 20:37:14.528755",
- "modified_by": "Administrator",
- "module": "Volunteering",
- "name": "NGO or NPO Volunteer",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2023-06-28 13:38:09.240659",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "volunteer_details_section",
+    "title",
+    "photo",
+    "city",
+    "email",
+    "column_break_gcaw",
+    "ngo__npo_organization_name",
+    "description"
+  ],
+  "fields": [
+    {
+      "fieldname": "volunteer_details_section",
+      "fieldtype": "Section Break",
+      "label": "Volunteer Details"
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "label": "Full Name"
+    },
+    {
+      "fieldname": "photo",
+      "fieldtype": "Attach Image",
+      "label": "Profile Photo"
+    },
+    {
+      "fieldname": "city",
+      "fieldtype": "Link",
+      "label": "City",
+      "options": "City"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email"
+    },
+    {
+      "fieldname": "column_break_gcaw",
+      "fieldtype": "Column Break",
+      "label": "Non Profit Details"
+    },
+    {
+      "fieldname": "ngo__npo_organization_name",
+      "fieldtype": "Data",
+      "label": "NGO / NPO Organization Name"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text",
+      "label": "Description"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [
+    {
+      "link_doctype": "Volunteers",
+      "link_fieldname": "volunteer_name"
+    }
+  ],
+  "modified": "2023-07-19 20:37:14.528755",
+  "modified_by": "Administrator",
+  "module": "Volunteering",
+  "name": "NGO or NPO Volunteer",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

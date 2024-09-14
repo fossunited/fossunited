@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col w-full border rounded-sm p-4">
-    <div class="text-sm uppercase font-semibold ">{{ tier.title }}</div>
+    <div class="text-sm uppercase font-semibold">{{ tier.title }}</div>
     <div class="flex gap-2 items-end justify-between mt-6">
       <div>
         <div class="prose">

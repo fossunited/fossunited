@@ -16,10 +16,7 @@
         <div class="absolute inset-0 flex items-center">
           <div class="w-full h-px bg-gray-500"></div>
         </div>
-        <SessionTimeComponent
-          :session="session"
-          class="z-20 mx-5 invisible md:visible shrink-0"
-        />
+        <SessionTimeComponent :session="session" class="z-20 mx-5 invisible md:visible shrink-0" />
       </div>
       <div
         class="relative flex flex-col items-start"

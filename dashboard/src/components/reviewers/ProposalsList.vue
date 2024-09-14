@@ -10,15 +10,12 @@
               class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
               v-model="selectedStatusFilter"
             >
-              <option
-                v-for="(filter, index) in statusFilters"
-                @click="filterByStatus(filter)"
-              >
+              <option v-for="(filter, index) in statusFilters" @click="filterByStatus(filter)">
                 {{ filter.label }}
               </option>
             </select>
           </div>
-          <div v-if="selectedStatusFilter=='Reviewed'" class="flex gap-2 items-center">
+          <div v-if="selectedStatusFilter == 'Reviewed'" class="flex gap-2 items-center">
             <label class="text-sm">Review Filter:</label>
             <select
               class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
@@ -33,10 +30,7 @@
             </select>
           </div>
         </div>
-        <RefreshButton
-          @click="cfpSubmissions.fetch"
-          :inSpin="cfpSubmissions.loading"
-        />
+        <RefreshButton @click="cfpSubmissions.fetch" :inSpin="cfpSubmissions.loading" />
       </div>
     </div>
     <ListView
@@ -66,11 +60,11 @@
         selectable: false,
         showTooltip: true,
         resizeColumn: true,
-        onRowClick: (row) => (openSubmission(row)),
+        onRowClick: (row) => openSubmission(row),
         emptyState: {
           title: 'No Submissions',
           description: 'No submissions found.',
-        }
+        },
       }"
     >
       <template #cell="{ item, row, column }">
@@ -81,13 +75,7 @@
           <Badge
             v-if="item"
             :theme="
-              item == 'Yes'
-                ? 'green'
-                : item == 'Maybe'
-                  ? 'orange'
-                  : item == 'No'
-                    ? 'red'
-                    : 'gray'
+              item == 'Yes' ? 'green' : item == 'Maybe' ? 'orange' : item == 'No' ? 'red' : 'gray'
             "
           >
             {{ { Yes: 'Approved', No: 'Reject', Maybe: 'Not Sure' }[item] }}
@@ -155,7 +143,7 @@ const toApproveFilter = [
 ]
 
 const openSubmission = (row) => {
-  let routeData =  router.resolve({
+  let routeData = router.resolve({
     name: 'SubmissionPage',
     params: {
       talk_id: row.name,
@@ -181,7 +169,7 @@ const filterByStatus = (filter) => {
     params: {
       event: props.event,
       status_filter: filter.value,
-    }
+    },
   })
   cfpSubmissions.fetch()
 }
@@ -192,7 +180,7 @@ const filterByToApprove = (filter) => {
       event: props.event,
       status_filter: ['Reviewed'],
       to_approve_filter: filter.value,
-    }
+    },
   })
   cfpSubmissions.fetch()
 }

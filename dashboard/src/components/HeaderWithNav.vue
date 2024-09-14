@@ -1,7 +1,5 @@
 <template>
-  <header
-    class="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-5 py-2"
-  >
+  <header class="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-5 py-2">
     <div>
       <button class="block md:hidden" @click="handleToggleSidebar()">
         <svg
@@ -59,11 +57,7 @@
       </Dropdown>
     </div>
     <div v-else>
-      <a
-        href="/login"
-        class="text-black font-medium text-base hover:text-gray-800"
-        >Login</a
-      >
+      <a href="/login" class="text-black font-medium text-base hover:text-gray-800">Login</a>
     </div>
     <div
       v-if="showNav"
@@ -91,11 +85,7 @@ let user_profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
 })
 
-if (
-  session.isLoggedIn &&
-  session.user != 'Guest' &&
-  session.user != 'Administrator'
-) {
+if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
   user_profile.fetch()
 }
 

@@ -1,9 +1,5 @@
 <template>
-  <ManageTicketTierDialog
-    v-model="showDialog"
-    :tier="tier"
-    @update-tier="updateTier"
-  />
+  <ManageTicketTierDialog v-model="showDialog" :tier="tier" @update-tier="updateTier" />
   <div class="rounded border p-4">
     <div class="flex w-full justify-between items-center">
       <div class="flex flex-wrap items-center">

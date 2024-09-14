@@ -28,9 +28,7 @@
         :key="index"
         :to="menuItem.route"
         :class="
-          isMenuItemActive(menuItem.route, index)
-            ? 'font-semibold text-gray-900 bg-gray-100'
-            : ''
+          isMenuItemActive(menuItem.route, index) ? 'font-semibold text-gray-900 bg-gray-100' : ''
         "
         class="block p-2 text-base rounded-sm text-gray-800 hover:bg-gray-200 hover:text-gray-900"
       >
@@ -61,7 +59,10 @@ const isMenuItemActive = (menuRoute, index) => {
   if (index == 0 && menuRoute != route.path) {
     return false
   }
-  return menuRoute === route.path || menuRoute === ('/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/'))
+  return (
+    menuRoute === route.path ||
+    menuRoute === '/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/')
+  )
 }
 
 let smallScreen = ref(false)

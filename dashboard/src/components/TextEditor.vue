@@ -172,9 +172,7 @@
           class="icon icon-tabler icons-tabler-outline w-5 h-5 icon-tabler-h-2"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-          <path
-            d="M17 12a2 2 0 1 1 4 0c0 .591 -.417 1.318 -.816 1.858l-3.184 4.143l4 0"
-          />
+          <path d="M17 12a2 2 0 1 1 4 0c0 .591 -.417 1.318 -.816 1.858l-3.184 4.143l4 0" />
           <path d="M4 6v12" />
           <path d="M12 6v12" />
           <path d="M11 18h2" />
@@ -406,10 +404,7 @@
           <path d="M3 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2" />
         </svg>
       </button>
-      <button
-        class="p-1 rounded-sm"
-        @click="editor.chain().focus().setHorizontalRule().run()"
-      >
+      <button class="p-1 rounded-sm" @click="editor.chain().focus().setHorizontalRule().run()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -456,12 +451,12 @@ const props = defineProps({
   label: {
     type: String,
     default: '',
-  }
+  },
 })
 
 const editor = useEditor({
   content: props.modelValue,
-  onUpdate: ({editor}) => {
+  onUpdate: ({ editor }) => {
     emit('update:modelValue', editor.getHTML())
   },
   editorProps: {

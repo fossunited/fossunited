@@ -1,153 +1,146 @@
 <style>
+  .ip-section {
+    display: flex;
+    font-family: Inter;
+    overflow: hidden;
+    justify-content: space-between;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+  }
 
+  .ip-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 40%;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+  }
+
+  .ip-container h1 {
+    margin: 0;
+    color: #08b74f;
+    font-size: 4rem;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: -0.18rem;
+  }
+
+  .ip-hero-image {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .ip-hero-image img {
+    width: 50%;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .button-category {
+    display: flex;
+    align-items: center;
+    font-size: 1.125rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 115%;
+    letter-spacing: -0.045rem;
+    gap: 1.5rem;
+  }
+
+  .btn-primary {
+    background: #08b74f;
+    border-radius: 0.5rem;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    font-weight: 450;
+  }
+
+  .btn-primary:active,
+  .btn-primary:hover {
+    background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07a748) !important;
+    border: none !important;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .btn-secondary {
+    display: flex;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--green-400, #b6dec5);
+    background: var(--neutral-white, #fff);
+    font-weight: 450;
+    color: var(--Foundation-FOSS-Mint-foss-mint-600, #07a748);
+  }
+
+  .btn-secondary:active,
+  .btn-secondary:hover {
+    border: 1.5px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07a748) !important;
+    background-color: var(--neutral-white, #fff) !important;
+    color: var(--Foundation-FOSS-Mint-foss-mint-600, #07a748);
+    text-decoration: none;
+  }
+
+  .ip-container p {
+    color: var(--Gray-500, #667085);
+    font-size: 1.2rem;
+    font-weight: 450;
+    line-height: 140%; /* 1.575rem */
+    letter-spacing: -0.0225rem;
+  }
+
+  @media (max-width: 768px) {
     .ip-section {
-        display: flex;
-        font-family: Inter;
-        overflow: hidden;
-        justify-content: space-between;
-        padding-top: 7rem;
-        padding-bottom: 7rem;
+      flex-direction: column-reverse;
+      gap: 3rem;
     }
 
     .ip-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        width: 40%;
-        justify-content: center;
-        padding-left: 0;
-        padding-right: 0;
-        margin: 0;
+      width: 100%;
     }
 
     .ip-container h1 {
-        margin:0;
-        color: #08B74F;
-        font-size: 4rem;
-        font-weight: 700;
-        line-height: 100%;
-        letter-spacing: -0.18rem;
+      font-size: 3rem;
+      letter-spacing: -0.15rem;
     }
 
-    .ip-hero-image{
-        width: 50%;
-        display: flex;
-        justify-content: flex-end;
+    .ip-hero-image {
+      width: 100%;
+      justify-content: center;
     }
 
-    .ip-hero-image img{
-        width: 50%;
+    .ip-hero-image img {
+      max-width: 15rem;
     }
 
-    .button-container{
-        display: flex;
-        gap: 2rem;
+    .button-container {
+      flex-direction: column;
     }
-
-    .button-category{
-        display: flex;
-        align-items: center;
-        font-size: 1.125rem;
-        font-style: normal;
-        font-weight: 500;
-        line-height: 115%;
-        letter-spacing: -0.045rem;
-        gap: 1.5rem;
-    }
-
-    .btn-primary{
-        background: #08B74F;
-        border-radius: 0.5rem;
-        border: none;
-        padding: 0.8rem 1.2rem;
-        font-weight: 450;
-
-    }
-
-    .btn-primary:active, .btn-primary:hover{
-        background-color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
-        border:none !important;
-        color: #FFF;
-        text-decoration: none;
-    }
-
-    .btn-secondary{
-        display: flex;
-        align-items: center;
-        padding: 0.8rem 1.2rem;
-        border-radius: 0.5rem;
-        border: 1px solid var(--green-400, #B6DEC5);
-        background: var(--neutral-white, #FFF);
-        font-weight: 450;
-        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-    }
-
-    .btn-secondary:active, .btn-secondary:hover{
-        border: 1.5px solid var(--Foundation-FOSS-Mint-foss-mint-600, #07A748) !important;
-        background-color: var(--neutral-white, #FFF) !important;
-        color:var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-        text-decoration: none;
-    }
-
-    .ip-container p{
-        color: var(--Gray-500, #667085);
-        font-size: 1.2rem;
-        font-weight: 450;
-        line-height: 140%; /* 1.575rem */
-        letter-spacing: -0.0225rem;
-    }
-
-
-    @media (max-width: 768px){
-        .ip-section{
-            flex-direction: column-reverse;
-            gap: 3rem;
-        }
-
-        .ip-container {
-            width: 100%;
-        }
-
-        .ip-container h1 {
-            font-size: 3rem;
-            letter-spacing: -0.15rem;
-        }
-
-        .ip-hero-image{
-            width: 100%;
-            justify-content: center;
-        }
-
-        .ip-hero-image img {
-            max-width: 15rem;
-        }
-
-        .button-container{
-            flex-direction: column;
-        }
-
-
-    }
-
+  }
 </style>
 
-
 <div class="ip-section container">
-    <div class="ip-container container">
-        <h1>{{heading}}</h1>
-        <p>{{subtext}}</p>
+  <div class="ip-container container">
+    <h1>{{heading}}</h1>
+    <p>{{subtext}}</p>
 
-        <div class="button-category">
-
-            <div class="button-container">
-                <a href="{{primary_cta_link}}" class="btn-primary">{{primary_cta_text}}</a>
-                <a href="{{secondary_cta_link}}" class="btn-secondary">{{secondary_cta_text}}</a>
-
-            </div>
-        </div>
+    <div class="button-category">
+      <div class="button-container">
+        <a href="{{primary_cta_link}}" class="btn-primary">{{primary_cta_text}}</a>
+        <a href="{{secondary_cta_link}}" class="btn-secondary">{{secondary_cta_text}}</a>
+      </div>
     </div>
+  </div>
 
-    <div class="ip-hero-image">
-        <img src="{{hero_image}}" alt="ip Icon">
-    </div>
+  <div class="ip-hero-image">
+    <img src="{{hero_image}}" alt="ip Icon" />
+  </div>
 </div>

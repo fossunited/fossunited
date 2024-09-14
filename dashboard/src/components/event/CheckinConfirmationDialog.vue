@@ -29,17 +29,13 @@
             >
           </p>
         </div>
-        <div
-          v-if="
-            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered
-          "
-        >
+        <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
           <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
           <Checkbox v-model="assignTshirt" label="Confirm Tshirt Assignment" />
           <p class="text-sm leading-5 mt-1 text-gray-600">
-            Only check this if you are providing the T-shirt to the attendee at
-            the time of check-in.
+            Only check this if you are providing the T-shirt to the attendee at the time of
+            check-in.
           </p>
         </div>
       </div>
@@ -105,9 +101,7 @@ const checkinAttendee = createResource({
 })
 
 const makeChangesToAttendeeDict = (attendee) => {
-  const index = props.attendees.data.findIndex(
-    (data) => data.name === attendee.name,
-  )
+  const index = props.attendees.data.findIndex((data) => data.name === attendee.name)
   props.attendees.data[index].checkin_data.push({
     check_in_time: new Date(),
   })

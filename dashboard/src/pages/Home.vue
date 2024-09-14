@@ -1,6 +1,10 @@
 <template>
   <div class="flex">
-    <SideNavbar v-if="navItems.data" :menuItems="navItems.data" :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'" />
+    <SideNavbar
+      v-if="navItems.data"
+      :menuItems="navItems.data"
+      :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"
+    />
     <div class="w-full md:ml-[220px]">
       <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
       <RouterView />
@@ -19,7 +23,7 @@ const showNav = ref(false)
 
 const navItems = createResource({
   url: 'fossunited.api.sidebar.get_sidebar_items',
-  makeParams(){
+  makeParams() {
     return {
       user: session.user,
     }

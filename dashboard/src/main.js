@@ -6,14 +6,7 @@ import App from './App.vue'
 import { session } from './data/session'
 import dayjs from 'dayjs'
 
-import {
-  Button,
-  Card,
-  Input,
-  setConfig,
-  frappeRequest,
-  resourcesPlugin,
-} from 'frappe-ui'
+import { Button, Card, Input, setConfig, frappeRequest, resourcesPlugin } from 'frappe-ui'
 
 let app = createApp(App)
 

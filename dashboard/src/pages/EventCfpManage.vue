@@ -1,10 +1,7 @@
 <template>
   <div v-if="!cfp_exists">
     <div class="px-4 py-8 md:p-8">
-      <Card
-        title="CFP form not created."
-        subtitle="No CFP form has been created for this event."
-      >
+      <Card title="CFP form not created." subtitle="No CFP form has been created for this event.">
         <template #actions>
           <Button
             size="md"
@@ -33,13 +30,7 @@
   </div>
 </template>
 <script setup>
-import {
-  createDocumentResource,
-  createResource,
-  FormControl,
-  Switch,
-  Tabs,
-} from 'frappe-ui'
+import { createDocumentResource, createResource, FormControl, Switch, Tabs } from 'frappe-ui'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'

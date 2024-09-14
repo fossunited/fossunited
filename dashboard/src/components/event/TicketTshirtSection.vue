@@ -8,23 +8,14 @@
       <div class="flex justify-between items-center">
         <div class="text-base font-semibold mb-1">
           T-Shirts add-on is
-          <span
-            :class="
-              event.data.paid_tshirts_available
-                ? 'text-green-600'
-                : 'text-gray-600'
-            "
-            >{{
-              event.data.paid_tshirts_available ? 'Available' : 'Unavailable'
-            }}</span
-          >
+          <span :class="event.data.paid_tshirts_available ? 'text-green-600' : 'text-gray-600'">{{
+            event.data.paid_tshirts_available ? 'Available' : 'Unavailable'
+          }}</span>
         </div>
         <div class="space-x-2">
           <Button
             class="w-fit mt-2"
-            :label="
-              event.data.paid_tshirts_available ? 'Deactivate' : 'Activate'
-            "
+            :label="event.data.paid_tshirts_available ? 'Deactivate' : 'Activate'"
             :theme="event.data.paid_tshirts_available ? 'red' : 'gray'"
             @click="toggleTshirtStatus.fetch()"
           />
@@ -32,12 +23,7 @@
       </div>
       <div class="mt-6 flex flex-col gap-1">
         <div class="flex gap-2" v-if="inPriceEdit">
-          <Input
-            class="w-1/3"
-            v-model="newTshirtPrice"
-            inputClasses="text-2xl"
-            placeholder="0.00"
-          >
+          <Input class="w-1/3" v-model="newTshirtPrice" inputClasses="text-2xl" placeholder="0.00">
           </Input>
           <Button icon="x" @click="inPriceEdit = false" />
           <Button icon="check" theme="green" @click="handleTshirtPriceUpdate" />

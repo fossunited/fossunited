@@ -1,130 +1,116 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+/>
 
 <style>
+  .cta-section {
+    display: flex;
+    font-family: Inter;
+  }
 
-    .cta-section{
-        display: flex;
-        font-family: Inter;
+  .cta-container {
+    width: 100%;
+    display: flex;
+    padding: 5rem 0rem 0rem 0rem;
+    justify-content: space-between;
+  }
 
+  .cta-content {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5rem;
+    gap: 2rem;
+  }
+
+  .cta-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cta-text p {
+    color: hsl(var(--clr-gray-600));
+    font-size: var(--text-x);
+    font-weight: var(--fw-medium);
+    line-height: 1.75;
+  }
+
+  .button-container {
+    width: 50%;
+  }
+
+  .cta-image {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+  }
+
+  .cta-image img {
+    max-width: 70%;
+    height: auto;
+  }
+
+  #cta-button a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .cta-section {
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 1rem 1rem 0rem 1rem;
     }
 
-    .cta-container{
-        width: 100%;
-        display: flex;
-        padding: 5rem 0rem 0rem 0rem;
-        justify-content: space-between;
+    .cta-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3rem;
+      padding-top: 2rem;
+      justify-content: center;
     }
 
-    .cta-content{
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 5rem;
-        gap: 2rem;
+    .cta-content {
+      padding-bottom: 2rem;
     }
 
-    .cta-text{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem
+    cta-text {
+      gap: 0.75rem;
     }
 
-    .cta-text p{
-        color: hsl(var(--clr-gray-600));
-        font-size: var(--text-x);
-        font-weight: var(--fw-medium);
-        line-height: 1.75;
+    .button-container {
+      width: 100%;
     }
 
-    .button-container{
-        width: 50%;
+    .cta-image {
+      justify-content: center;
     }
 
-    .cta-image{
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
+    .cta-image img {
+      max-width: 60%;
+      height: auto;
     }
-
-    .cta-image img{
-        max-width: 70%;
-        height: auto;
-    }
-
-    #cta-button a{
-            color: #ffffff;
-            text-decoration: none;
-    }
-
-    @media screen and (max-width: 768px){
-
-        .cta-section{
-            flex-direction: column;
-            gap: 2.5rem;
-            padding:1rem 1rem 0rem 1rem;
-        }
-
-        .cta-container{
-            display: flex;
-            flex-direction: column;
-            gap: 3rem;
-            padding-top: 2rem;
-            justify-content: center;
-        }
-
-        .cta-content{
-            padding-bottom: 2rem;
-        }
-
-        cta-text{
-            gap: 0.75rem;
-        }
-
-        .button-container{
-            width: 100%;
-        }
-
-        .cta-image{
-            justify-content: center;
-        }
-
-        .cta-image img{
-            max-width: 60%;
-            height: auto;
-        }
-}
-
-
+  }
 </style>
 
 <div class="cta-section container">
+  <div class="cta-container">
+    <div class="cta-content">
+      <div class="cta-text">
+        <h5>{{heading}}</h5>
+        <p>{{subtext}}</p>
+      </div>
 
-    <div class="cta-container">
-
-        <div class="cta-content">
-
-            <div class="cta-text">
-
-                <h5>{{heading}}</h5>
-                <p>{{subtext}}</p>
-
-            </div>
-
-            <div class="button-container">
-
-                <button class="primary-button" onclick="window.location.href='{{cta_link}}'">
-                    <i class="ti ti-map-pin-plus"></i> {{cta}}
-                </button>
-
-            </div>
-
-
-
-        </div>
-
-        <div class="cta-image">
-            <img src="{{cta_image}}" alt="Community CTA image">
-        </div>
-
+      <div class="button-container">
+        <button class="primary-button" onclick="window.location.href='{{cta_link}}'">
+          <i class="ti ti-map-pin-plus"></i> {{cta}}
+        </button>
+      </div>
     </div>
 
+    <div class="cta-image">
+      <img src="{{cta_image}}" alt="Community CTA image" />
+    </div>
+  </div>
 </div>

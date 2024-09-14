@@ -14,10 +14,7 @@
         <h3 class="mb-0">Scheduled Events</h3>
         <p class="text-sm">Manage upcoming events.</p>
       </div>
-      <div
-        v-if="scheduled_events.data"
-        class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
-      >
+      <div v-if="scheduled_events.data" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <EventCard v-for="event in scheduled_events.data" :event="event" />
       </div>
       <div v-else class="text-base mt-6 text-gray-800">
@@ -37,14 +34,12 @@ const session = inject('$session')
 const chapters = createListResource({
   doctype: 'FOSS Chapter',
   fields: ['*'],
-  filters: [
-    ['FOSS Chapter Lead Team Member', 'email', 'like', `%${session.user}%`],
-  ],
+  filters: [['FOSS Chapter Lead Team Member', 'email', 'like', `%${session.user}%`]],
   auto: true,
   pageLength: 999,
   onSuccess(data) {
     if (!data.length) {
-        return
+      return
     }
     scheduled_events.update({
       filters: {
@@ -58,14 +53,7 @@ const chapters = createListResource({
 
 const scheduled_events = createListResource({
   doctype: 'FOSS Chapter Event',
-  fields: [
-    'name',
-    'event_name',
-    'event_type',
-    'chapter_name',
-    'status',
-    'event_start_date',
-  ],
+  fields: ['name', 'event_name', 'event_type', 'chapter_name', 'status', 'event_start_date'],
   filters: {
     status: ['in', ['', 'Draft', 'Approved', 'Live']],
   },

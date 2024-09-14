@@ -6,7 +6,7 @@
       title: 'Change Mode of Attendance',
     }"
   >
-  <template #body-content>
+    <template #body-content>
       <div
         class="flex flex-col gap-2 items-center text-center p-3 rounded w-full bg-orange-50 text-orange-600 border-2 border-dashed border-orange-600 text-xs"
       >
@@ -28,10 +28,9 @@
           <path d="M12 16h.01" />
         </svg>
         <p>
-          <b>Attention!</b> You are about to change your attendance mode for
-          this hackathon.<br /><br />
-          Please note that requests for in-person attendance are subject to
-          approval by the organizers due to limited on-site availability.
+          <b>Attention!</b> You are about to change your attendance mode for this hackathon.<br /><br />
+          Please note that requests for in-person attendance are subject to approval by the
+          organizers due to limited on-site availability.
         </p>
       </div>
       <FormControl
@@ -42,11 +41,11 @@
         :options="attendanceModeOptions"
       />
       <FormControl
-          v-if="attendanceMode == 'local'"
-          label="Your Localhost"
-          :disabled="1"
-          v-model="participant_localhost.data.localhost_name"
-          class="mt-4"
+        v-if="attendanceMode == 'local'"
+        label="Your Localhost"
+        :disabled="1"
+        v-model="participant_localhost.data.localhost_name"
+        class="mt-4"
       />
       <div v-if="attendanceMode == 'local-pending'">
         <FormControl
@@ -70,12 +69,7 @@
     </template>
     <template #actions>
       <div class="grid grid-cols-2 gap-4">
-        <Button
-          label="Cancel"
-          size="sm"
-          theme="gray"
-          @click="showDialog = false"
-        />
+        <Button label="Cancel" size="sm" theme="gray" @click="showDialog = false" />
         <Button
           label="Change"
           size="sm"
@@ -89,9 +83,7 @@
   <div
     class="flex flex-col gap-1 border-2 rounded border-gray-500 border-dashed min-w-[220px] p-4"
   >
-    <h5 class="text-xs text-gray-700 uppercase font-medium">
-      Your Mode of attendance
-    </h5>
+    <h5 class="text-xs text-gray-700 uppercase font-medium">Your Mode of attendance</h5>
     <div class="flex w-full items-center justify-between">
       <div
         class="text-base font-medium"
@@ -116,13 +108,7 @@
   </div>
 </template>
 <script setup>
-import {
-  createResource,
-  createListResource,
-  Dialog,
-  FormControl,
-  ErrorMessage,
-} from 'frappe-ui'
+import { createResource, createListResource, Dialog, FormControl, ErrorMessage } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { defineProps, ref } from 'vue'
 import { toast } from 'vue-sonner'
@@ -150,7 +136,7 @@ const props = defineProps({
 
 const participant_localhost = createResource({
   url: 'frappe.client.get',
-  makeParams(){
+  makeParams() {
     return {
       doctype: 'FOSS Hackathon LocalHost',
       name: participant.data.localhost,
@@ -219,10 +205,7 @@ const localhosts = createListResource({
 
 const handleDisabled = () => {
   if (attendanceMode.value == originalAttendanceMode.value) {
-    if (
-      attendanceMode.value == 'local' ||
-      attendanceMode.value == 'local-pending'
-    ) {
+    if (attendanceMode.value == 'local' || attendanceMode.value == 'local-pending') {
       return selectedLocalhost.value == originalLocalhost.value
     }
     return true
@@ -239,44 +222,44 @@ const updateParticipantLocalhost = (localhost) => {
       doctype: 'FOSS Hackathon Participant',
       name: participant.data.name,
       fieldname: {
-        'wants_to_attend_locally': 1,
-        'localhost': localhost,
-      }
+        wants_to_attend_locally: 1,
+        localhost: localhost,
+      },
     },
     auto: true,
-    onSuccess(data){
+    onSuccess(data) {
       participant.fetch()
       showDialog.value = false
       errorMessage.value = ''
       toast.success('Attendance mode updated successfully!')
     },
-    onError(err){
+    onError(err) {
       toast.error('Failed to update attendance mode.' + err.message)
-    }
+    },
   })
 }
 
 const makeParticipantRemote = () => {
   createResource({
-      url: 'frappe.client.set_value',
-      params: {
-        doctype: 'FOSS Hackathon Participant',
-        name: participant.data.name,
-        fieldname: {
-          'wants_to_attend_locally': 0,
-          'localhost': null,
-        }
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Hackathon Participant',
+      name: participant.data.name,
+      fieldname: {
+        wants_to_attend_locally: 0,
+        localhost: null,
       },
-      auto: true,
-      onSuccess(data){
-        showDialog.value = false
-        errorMessage.value = ''
-        toast.success('Attendance mode updated successfully!')
-      },
-      onError(err){
-        toast.error('Failed to update attendance mode.' + err.message)
-      }
-    })
+    },
+    auto: true,
+    onSuccess(data) {
+      showDialog.value = false
+      errorMessage.value = ''
+      toast.success('Attendance mode updated successfully!')
+    },
+    onError(err) {
+      toast.error('Failed to update attendance mode.' + err.message)
+    },
+  })
 }
 
 const handleAttendanceModeChange = () => {

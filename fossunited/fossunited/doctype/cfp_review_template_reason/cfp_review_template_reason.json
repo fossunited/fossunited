@@ -1,41 +1,38 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-03-07 23:40:35.096424",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "reason",
-  "type"
- ],
- "fields": [
-  {
-   "fieldname": "reason",
-   "fieldtype": "Text",
-   "in_list_view": 1,
-   "label": "Reason",
-   "reqd": 1
-  },
-  {
-   "fieldname": "type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Type",
-   "options": "Accepted\nRejected\nNot Sure",
-   "reqd": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2024-03-08 00:02:39.419531",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "CFP Review Template Reason",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-03-07 23:40:35.096424",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": ["reason", "type"],
+  "fields": [
+    {
+      "fieldname": "reason",
+      "fieldtype": "Text",
+      "in_list_view": 1,
+      "label": "Reason",
+      "reqd": 1
+    },
+    {
+      "fieldname": "type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Type",
+      "options": "Accepted\nRejected\nNot Sure",
+      "reqd": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2024-03-08 00:02:39.419531",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "CFP Review Template Reason",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

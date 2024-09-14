@@ -3,12 +3,15 @@
   <div class="w-full flex items-center justify-center">
     <TransferSuccess v-if="inSuccess" />
     <div v-else class="max-w-screen-xl w-full p-5">
-      <img v-if="transfer_settings.doc?.banner_image" :src="transfer_settings.doc.banner_image" alt="" class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]">
+      <img
+        v-if="transfer_settings.doc?.banner_image"
+        :src="transfer_settings.doc.banner_image"
+        alt=""
+        class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]"
+      />
       <div class="mt-8">
         <div class="prose min-w-full">
-          <div class="text-base uppercase font-medium text-gray-600 mb-2">
-            Portal
-          </div>
+          <div class="text-base uppercase font-medium text-gray-600 mb-2">Portal</div>
           <h1 class="m-0">Ticket Transfers</h1>
           <div
             v-if="transfer_settings.doc"
@@ -168,7 +171,7 @@ const ticket = createResource({
   onSuccess(data) {
     event.fetch()
     receiver.wants_tshirt = data.wants_tshirt
-    if (data.tshirt_size){
+    if (data.tshirt_size) {
       receiver.tshirt_size = data.tshirt_size
     }
   },
@@ -236,15 +239,15 @@ const createTransferDoc = createResource({
   url: 'fossunited.api.tickets.create_transfer_request',
   makeParams() {
     return {
-        ticket: ticketId.value,
-        receiver_details: {
-          receiver_email: receiver.receiver_email,
-          receiver_name: receiver.receiver_name,
-          designation: receiver.designation,
-          organization: receiver.organization,
-          wants_tshirt: receiver.wants_tshirt,
-          tshirt_size: receiver.tshirt_size,
-        }
+      ticket: ticketId.value,
+      receiver_details: {
+        receiver_email: receiver.receiver_email,
+        receiver_name: receiver.receiver_name,
+        designation: receiver.designation,
+        organization: receiver.organization,
+        wants_tshirt: receiver.wants_tshirt,
+        tshirt_size: receiver.tshirt_size,
+      },
     }
   },
   onSuccess(data) {

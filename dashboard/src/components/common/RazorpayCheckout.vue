@@ -97,13 +97,13 @@ const createRazorpayOrder = (
   metaData = {},
   refDocType = null,
   refDocName = null,
-  taxDetails = {}
+  taxDetails = {},
 ) => {
   createRazorpayOrderResource.fetch({
     checkout_info: {
       amount,
       email: customerEmail,
-      tax_details: taxDetails
+      tax_details: taxDetails,
     },
     meta_data: metaData,
     ref_doctype: refDocType,

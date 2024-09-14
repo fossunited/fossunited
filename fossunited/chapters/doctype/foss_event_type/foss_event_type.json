@@ -1,56 +1,54 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "field:event_type",
- "creation": "2023-07-01 23:54:46.695025",
- "default_view": "List",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "event_type"
- ],
- "fields": [
-  {
-   "fieldname": "event_type",
-   "fieldtype": "Data",
-   "label": "Event Type",
-   "unique": 1
-  }
- ],
- "links": [],
- "modified": "2024-06-25 13:22:16.116474",
- "modified_by": "Administrator",
- "module": "Chapters",
- "name": "FOSS Event Type",
- "naming_rule": "By fieldname",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1
-  }
- ],
- "quick_entry": 1,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "field:event_type",
+  "creation": "2023-07-01 23:54:46.695025",
+  "default_view": "List",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": ["event_type"],
+  "fields": [
+    {
+      "fieldname": "event_type",
+      "fieldtype": "Data",
+      "label": "Event Type",
+      "unique": 1
+    }
+  ],
+  "links": [],
+  "modified": "2024-06-25 13:22:16.116474",
+  "modified_by": "Administrator",
+  "module": "Chapters",
+  "name": "FOSS Event Type",
+  "naming_rule": "By fieldname",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "select": 1,
+      "share": 1
+    }
+  ],
+  "quick_entry": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

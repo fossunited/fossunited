@@ -31,9 +31,7 @@
               </template>
             </Badge>
           </Tooltip>
-          <span class="text-sm uppercase">{{
-            submission.data.session_type
-          }}</span>
+          <span class="text-sm uppercase">{{ submission.data.session_type }}</span>
         </div>
         <a
           class="text-sm uppercase text-green-700 cursor-pointer font-medium hover:underline flex items-center gap-1"
@@ -54,9 +52,7 @@
             class="icon icon-tabler stroke-green-700 h-4 w-4 icons-tabler-outline icon-tabler-external-link"
           >
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path
-              d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"
-            />
+            <path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6" />
             <path d="M11 13l9 -9" />
             <path d="M15 4h5v5" />
           </svg>
@@ -67,35 +63,22 @@
           <h3 class="-mb-4">Description</h3>
           <div class="my-2" v-html="submission.data.talk_description"></div>
         </div>
-        <div
-          class="prose min-w-full"
-          v-if="!cfp_settings.data?.anonymise_proposals"
-        >
+        <div class="prose min-w-full" v-if="!cfp_settings.data?.anonymise_proposals">
           <h3>About Speaker</h3>
           <div class="flex flex-col gap-2 items-start">
             <div class="flex gap-4 -mb-2">
-              <img
-                :src="submission.data.picture_url"
-                class="w-12 h-12 rounded m-0"
-              />
+              <img :src="submission.data.picture_url" class="w-12 h-12 rounded m-0" />
               <div class="flex flex-col gap-2">
                 <h5 class="text-lg font-medium">
                   {{ submission.data.full_name }}
                 </h5>
-                <div
-                  class="flex flex-wrap items-center gap-2 divide-x-2 divide-gray-600"
-                >
+                <div class="flex flex-wrap items-center gap-2 divide-x-2 divide-gray-600">
                   <span class="text-sm">{{ submission.data.designation }}</span>
-                  <span class="text-sm pl-2">{{
-                    submission.data.organization
-                  }}</span>
+                  <span class="text-sm pl-2">{{ submission.data.organization }}</span>
                 </div>
               </div>
             </div>
-            <div
-              v-html="submission.data.bio"
-              class="text-base text-gray-600"
-            ></div>
+            <div v-html="submission.data.bio" class="text-base text-gray-600"></div>
           </div>
         </div>
         <ReviewSection :submission="submission" />
@@ -108,13 +91,7 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
-import {
-  createResource,
-  LoadingIndicator,
-  Badge,
-  usePageMeta,
-  Tooltip,
-} from 'frappe-ui'
+import { createResource, LoadingIndicator, Badge, usePageMeta, Tooltip } from 'frappe-ui'
 import { computed, ref } from 'vue'
 import { toast } from 'vue-sonner'
 import Header from '@/components/Header.vue'

@@ -70,10 +70,7 @@
   </Dialog>
 
   <!-- Issue / PR ListView -->
-  <div
-    v-if="project.data.issue_pr_table.length > 0"
-    class="flex flex-row-reverse w-full p-2 mb-2"
-  >
+  <div v-if="project.data.issue_pr_table.length > 0" class="flex flex-row-reverse w-full p-2 mb-2">
     <Button
       class="w-full md:w-fit"
       label="Link Issue / PR / Discussion"
@@ -107,8 +104,7 @@
       onRowClick: (row) => {},
       emptyState: {
         title: 'No issues or PRs linked to the project',
-        description:
-          'You can link issues and PRs to the project to keep track of them.',
+        description: 'You can link issues and PRs to the project to keep track of them.',
         button: {
           label: 'Link Issue / PR / Discussion',
           variant: 'solid',
@@ -123,11 +119,7 @@
   >
     <template #cell="{ item, row, column }">
       <div v-if="column.label == 'Link'">
-        <a
-          :href="item"
-          target="_blank"
-          class="text-gray-900 text-base underline flex gap-1"
-        >
+        <a :href="item" target="_blank" class="text-gray-900 text-base underline flex gap-1">
           <span>
             {{ item }}
           </span>
@@ -135,13 +127,7 @@
         </a>
       </div>
       <div v-else-if="column.key == 'actions'">
-        <Button
-          icon="trash"
-          size="sm"
-          theme="red"
-          variant="subtle"
-          @click="deleteIssuePr(row)"
-        />
+        <Button icon="trash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
       </div>
       <div v-else class="text-base">
         {{ item }}
@@ -215,8 +201,7 @@ const getPrIssueTitle = createResource({
     newIssuePr.title = ''
     newIssuePr.type = ''
     if (err.messages[0] == 'Not a Github URL.') {
-      fetchTitleError.value =
-        'Failed to fetch title :( \nPlease enter data manually.'
+      fetchTitleError.value = 'Failed to fetch title :( \nPlease enter data manually.'
       return
     }
     addIssueErrors.value = 'Failed to fetch title : \n' + err.message

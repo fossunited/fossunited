@@ -1,93 +1,250 @@
 {% macro renderfield(field, submission = None) %}
-    <div class="my-4 py-1">
-    {% if field.fieldtype == 'Table' %}
-        {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
-        {% if frappe.form_dict['cfp'] %}
-            {% for question in frappe.get_doc("FOSS Event CFP", submission.linked_cfp).custom_questions %}
-                {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
-            {% endfor %}
-        {% elif frappe.form_dict['rsvp'] %}
-            {% for question in frappe.get_doc("FOSS Event RSVP", submission.linked_rsvp).custom_questions %}
-                {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
-            {% endfor %}
-        {% endif %}
-    {% elif field.fieldtype == 'Data' %}
-            <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
-            <input name="{{ field.fieldname }}" data-label="{{ field.label }}" data-type="Data" type="{% if field.fieldname == 'email' %} email {% else %} text {% endif %}" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] or field.value or '' }}" {% if field.read_only %} readonly {% endif %} {% if field.reqd %} required {% endif%}>
-    {% elif field.fieldtype == 'Select' %}
-        <div class="d-flex flex-column">
-            <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
-            <select data-label="{{ field.label }}" data-type="Select" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1" {% if field.reqd %} required {% endif%}>
-                {% for option in field.options.splitlines() %}
-                    <option value="{{ option }}" {% if submission[field.fieldname] == option %} selected {% endif %}>{{ option }}</option>
-                {% endfor %}
-            </select>
-        </div>
-    {% elif field.fieldtype == 'Check' %}
-        <div class="form-check d-flex align-items-center">
-            <input value="1" data-label="{{ field.label }}" data-type="Check" name="{{ field.fieldname }}" type="checkbox" class="form-control form-check-input text-sm" id="{{ field.fieldname }}" {% if field.reqd %} required {% endif%} {% if field.value == '1' or submission[field.fieldname] == 1 %} checked {% endif %}>
-            <label class="form-check-label foss-form-question text-sm m-2" for="{{ field.fieldname }}">{{ field.label }}</label>
-        </div>
-    {% elif field.fieldtype == 'Text Editor' %}
-            <div class="foss-form-question text-sm mb-2">
-                {{ field.label }}
-            </div>
-            <div data-label="{{ field.label }}" data-type="Text Editor" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="ql-editor-custom" type="text-editor" {% if field.reqd %} required {% endif%}>
-                {{ submission[field.fieldname] or field.value or '' }}
-            </div>
-    {% elif field.fieldtype == 'Text' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" data-type="Text" name="{{ field.fieldname }}" type="text" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] or field.value or '' }}">
-    {% elif field.fieldtype == 'Small Text' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <textarea data-label="{{ field.label }}" data-type="Small Text" name="{{ field.fieldname }}" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" rows="3" {% if field.reqd %} required {% endif%}>{{ submission[field.fieldname] or field.value or ''}}</textarea>
-    {% elif field.fieldtype == 'Long Text' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <textarea data-label="{{ field.label }}" data-type="Long Text" name="{{ field.fieldname }}" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" rows="6" {% if field.reqd %} required {% endif%}>{{ submission[field.fieldname] or field.value or ''}}</textarea>
-    {% elif field.fieldtype == 'Date' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" name="{{ field.fieldname }}" type="date" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] }}">
-    {% elif field.fieldtype == 'Time' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" name="{{ field.fieldname }}" type="time" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] }}">
-    {% elif field.fieldtype == 'Datetime' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" name="{{ field.fieldname }}" type="datetime-local" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] }}">
-    {% elif field.fieldtype == 'Link' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" name="{{ field.fieldname }}" type="url" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] }}">
-    {% elif field.fieldtype == 'Currency' %}
-            <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
-            <input data-label="{{ field.label }}" name="{{ field.fieldname }}" type="number" class="form-control text-sm rounded-input" id="{{ field.fieldname }}" value="{{ submission[field.fieldname] }}">
-    {% endif %}
+<div class="my-4 py-1">
+  {% if field.fieldtype == 'Table' %} {% from "fossunited/templates/macros/custom_question.html"
+  import CustomQuestion %} {% if frappe.form_dict['cfp'] %} {% for question in frappe.get_doc("FOSS
+  Event CFP", submission.linked_cfp).custom_questions %} {{ CustomQuestion(question,
+  submission.custom_answers[question.idx - 1]) }} {% endfor %} {% elif frappe.form_dict['rsvp'] %}
+  {% for question in frappe.get_doc("FOSS Event RSVP", submission.linked_rsvp).custom_questions %}
+  {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }} {% endfor %} {% endif
+  %} {% elif field.fieldtype == 'Data' %}
+  <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
+  <input
+    name="{{ field.fieldname }}"
+    data-label="{{ field.label }}"
+    data-type="Data"
+    type="{% if field.fieldname == 'email' %} email {% else %} text {% endif %}"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] or field.value or '' }}"
+    {%
+    if
+    field.read_only
+    %}
+    readonly
+    {%
+    endif
+    %}
+    {%
+    if
+    field.reqd
+    %}
+    required
+    {%
+    endif%}
+  />
+  {% elif field.fieldtype == 'Select' %}
+  <div class="d-flex flex-column">
+    <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
+    <select
+      data-label="{{ field.label }}"
+      data-type="Select"
+      name="{{ field.fieldname }}"
+      id="{{ field.fieldname }}"
+      class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+      {%
+      if
+      field.reqd
+      %}
+      required
+      {%
+      endif%}
+    >
+      {% for option in field.options.splitlines() %}
+      <option
+        value="{{ option }}"
+        {%
+        if
+        submission[field.fieldname]=""
+        ="option"
+        %}
+        selected
+        {%
+        endif
+        %}
+      >
+        {{ option }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  {% elif field.fieldtype == 'Check' %}
+  <div class="form-check d-flex align-items-center">
+    <input
+      value="1"
+      data-label="{{ field.label }}"
+      data-type="Check"
+      name="{{ field.fieldname }}"
+      type="checkbox"
+      class="form-control form-check-input text-sm"
+      id="{{ field.fieldname }}"
+      {%
+      if
+      field.reqd
+      %}
+      required
+      {%
+      endif%}
+      {%
+      if
+      field.value=""
+      ="1"
+      or
+      submission[field.fieldname]=""
+      ="1"
+      %}
+      checked
+      {%
+      endif
+      %}
+    />
+    <label class="form-check-label foss-form-question text-sm m-2" for="{{ field.fieldname }}"
+      >{{ field.label }}</label
+    >
+  </div>
+  {% elif field.fieldtype == 'Text Editor' %}
+  <div class="foss-form-question text-sm mb-2">{{ field.label }}</div>
+  <div
+    data-label="{{ field.label }}"
+    data-type="Text Editor"
+    name="{{ field.fieldname }}"
+    id="{{ field.fieldname }}"
+    class="ql-editor-custom"
+    type="text-editor"
+    {%
+    if
+    field.reqd
+    %}
+    required
+    {%
+    endif%}
+  >
+    {{ submission[field.fieldname] or field.value or '' }}
+  </div>
+  {% elif field.fieldtype == 'Text' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    data-type="Text"
+    name="{{ field.fieldname }}"
+    type="text"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] or field.value or '' }}"
+  />
+  {% elif field.fieldtype == 'Small Text' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <textarea
+    data-label="{{ field.label }}"
+    data-type="Small Text"
+    name="{{ field.fieldname }}"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    rows="3"
+    {%
+    if
+    field.reqd
+    %}
+    required
+    {%
+    endif%}
+  >
+{{ submission[field.fieldname] or field.value or ''}}</textarea
+  >
+  {% elif field.fieldtype == 'Long Text' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <textarea
+    data-label="{{ field.label }}"
+    data-type="Long Text"
+    name="{{ field.fieldname }}"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    rows="6"
+    {%
+    if
+    field.reqd
+    %}
+    required
+    {%
+    endif%}
+  >
+{{ submission[field.fieldname] or field.value or ''}}</textarea
+  >
+  {% elif field.fieldtype == 'Date' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    name="{{ field.fieldname }}"
+    type="date"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] }}"
+  />
+  {% elif field.fieldtype == 'Time' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    name="{{ field.fieldname }}"
+    type="time"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] }}"
+  />
+  {% elif field.fieldtype == 'Datetime' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    name="{{ field.fieldname }}"
+    type="datetime-local"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] }}"
+  />
+  {% elif field.fieldtype == 'Link' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    name="{{ field.fieldname }}"
+    type="url"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] }}"
+  />
+  {% elif field.fieldtype == 'Currency' %}
+  <label for="{{ field.fieldname }}" class="foss-form-question text-sm">{{ field.label }}</label>
+  <input
+    data-label="{{ field.label }}"
+    name="{{ field.fieldname }}"
+    type="number"
+    class="form-control text-sm rounded-input"
+    id="{{ field.fieldname }}"
+    value="{{ submission[field.fieldname] }}"
+  />
+  {% endif %} {% if field.description %}
+  <div class="mt-1"></div>
+  <small>{{ field.description }}</small>
+  {% endif %}
+</div>
 
-    {% if field.description %}
-    <div class="mt-1"></div>
-    <small>{{ field.description }}</small>
-    {% endif %}
-    </div>
-
-    {% if field.fieldtype == 'Text Editor' %}
-    <script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
-        var toolbarOptions = [
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
-        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-        [{ 'script': 'sub'}, { 'script': 'super' }],
-        [{ 'indent': '-1'}, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'align': [] }],
-        ['clean']
-        ];
-        var quill = new Quill('#{{ field.fieldname }}', {
-            modules: {
-                toolbar: toolbarOptions
-            },
-            theme: 'snow'
-        });
-    </script>
-    {% endif %}
-{% endmacro %}
+{% if field.fieldtype == 'Text Editor' %}
+<script src="//cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+  var toolbarOptions = [
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+    ['bold', 'italic', 'underline', 'strike'],
+    ['blockquote', 'code-block'],
+    [{ list: 'ordered' }, { list: 'bullet' }],
+    [{ script: 'sub' }, { script: 'super' }],
+    [{ indent: '-1' }, { indent: '+1' }],
+    [{ direction: 'rtl' }],
+    [{ color: [] }, { background: [] }],
+    [{ align: [] }],
+    ['clean'],
+  ]
+  var quill = new Quill('#{{ field.fieldname }}', {
+    modules: {
+      toolbar: toolbarOptions,
+    },
+    theme: 'snow',
+  })
+</script>
+{% endif %} {% endmacro %}

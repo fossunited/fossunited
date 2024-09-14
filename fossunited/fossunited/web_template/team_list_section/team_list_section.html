@@ -90,10 +90,9 @@
     <h4>Meet the Workforce</h4>
 
     <div class="team-section">
-      {% set boardMembers = frappe.get_all("FOSS United Team",
-      fields=["full_name", "username", "headshot", "user_bio", "designation"],
-      filters={"org_role": "Board", "is_active": 1}, order_by="full_name")%} {%
-      if boardMembers %}
+      {% set boardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1},
+      order_by="full_name")%} {% if boardMembers %}
       <div class="member-section">
         <h5>Board</h5>
         <div class="teams-container">
@@ -114,10 +113,9 @@
           {% endfor %}
         </div>
       </div>
-      {% endif %} {% set staff = frappe.get_all("FOSS United Team",
-      fields=["full_name", "username", "headshot", "user_bio", "designation"],
-      filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time"]]},
-      order_by ='full_name') %} {% if staff%}
+      {% endif %} {% set staff = frappe.get_all("FOSS United Team", fields=["full_name",
+      "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+      ["in", ["Full-Time", "Part-Time"]]}, order_by ='full_name') %} {% if staff%}
       <div class="member-section">
         <h5>Full-time and Part-time Staff</h5>
         <div class="teams-container">
@@ -138,10 +136,9 @@
           {% endfor %}
         </div>
       </div>
-      {% endif %} {% set fellowsInterns = frappe.get_all("FOSS United Team",
-      fields=["full_name", "username", "headshot", "user_bio", "designation"],
-      filters={"is_active": 1, "org_role": ["in", ["Fellow", "Intern"]]},
-      order_by ='full_name')%} {% if fellowsInterns %}
+      {% endif %} {% set fellowsInterns = frappe.get_all("FOSS United Team", fields=["full_name",
+      "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+      ["in", ["Fellow", "Intern"]]}, order_by ='full_name')%} {% if fellowsInterns %}
       <div class="member-section">
         <h5>Fellows and Interns</h5>
         <div class="teams-container">
@@ -162,10 +159,9 @@
           {% endfor %}
         </div>
       </div>
-      {% endif %} {% set volunteers = frappe.get_all("FOSS United Team",
-      fields=["full_name", "username", "headshot", "user_bio", "designation"],
-      filters={"is_active": 1, "org_role": "Volunteer"}, order_by
-      ='full_name')%} {% if volunteers %}
+      {% endif %} {% set volunteers = frappe.get_all("FOSS United Team", fields=["full_name",
+      "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+      "Volunteer"}, order_by ='full_name')%} {% if volunteers %}
 
       <div class="member-section">
         <h5>Active and Part-time Volunteers</h5>

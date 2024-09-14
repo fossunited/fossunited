@@ -1,295 +1,285 @@
-
 <style>
+  .container {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
 
-    .container{
-        padding-left: 5rem;
-        padding-right: 5rem;
-    }
+  .hero-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(360deg, #eaecf0 0%, #ffffff 90.79%);
+    flex-direction: column;
+    padding-top: 3.75rem;
+  }
 
+  .hero-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    text-align: center;
+    margin-bottom: 5rem;
+  }
+
+  .hero-image {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #image-centre {
+    width: 16rem;
+    min-width: 16rem;
+  }
+
+  #image-end {
+    width: 2.47763rem;
+    min-width: 2.47763rem;
+  }
+
+  .hero-heading h4 {
+    font-size: var(--text-4xl);
+    line-height: 1.3;
+    letter-spacing: -0.1rem;
+  }
+
+  .hero-heading-a {
+    color: hsl(var(--clr-code-night-500));
+  }
+
+  .hero-heading-b {
+    color: hsl(var(--clr-foss-mint-500));
+  }
+
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .button-category {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .about-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 7rem;
+  }
+
+  .about-section-innerblock {
+    margin-top: -3.5rem;
+    display: flex;
+    padding: 3rem;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    border: 0.4px solid hsl(var(--clr-gray-400));
+    background: #fff;
+    gap: 1rem;
+  }
+
+  .about-section-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about-section-tag {
+    color: hsl(var(--clr-foss-mint-500));
+    font-weight: var(--fw-semibold);
+  }
+
+  .about-section-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about_subtext {
+    color: hsl(var(--clr-gray-500));
+    line-height: 1.5;
+  }
+
+  .goals-section {
+    margin-top: 0.75rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1.2rem;
+  }
+
+  .goals-card {
+    display: flex;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 0.4px solid hsl(var(--clr-gray-400));
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .goals-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--text-xs);
+    font-weight: var(--fw-semibold);
+  }
+
+  .goals-card-tag {
+    color: hsl(var(--clr-gray-500));
+  }
+
+  .goals-card-number {
+    color: hsl(var(--clr-foss-mint-500));
+    text-align: right;
+  }
+
+  .goal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .goal-text {
+    color: hsl(var(--clr-code-night-500));
+    font-weight: var(--fw-semibold);
+    line-height: 1.3;
+    letter-spacing: -0.04rem;
+  }
+
+  .goal-icon {
+    max-width: 2rem;
+  }
+
+  @media screen and (max-width: 768px) {
     .hero-section {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: linear-gradient(360deg, #eaecf0 0%, #ffffff 90.79%);
-        flex-direction: column;
-        padding-top: 3.75rem;
+      padding-top: 3rem;
+    }
+    .hero-container {
+      gap: 2rem;
     }
 
-    .hero-container{
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        text-align: center;
-        margin-bottom: 5rem;
+    #image-centre {
+      width: 40vw;
+      min-width: 8rem;
     }
 
-    .hero-image{
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
+    #image-end {
+      width: 8vw;
+      min-width: 1.2rem;
     }
 
-    #image-centre{
-        width: 16rem;
-        min-width: 16rem;
+    .hero-heading {
+      text-align: center;
     }
 
-    #image-end{
-        width: 2.47763rem;
-        min-width: 2.47763rem;
+    .button-container {
+      flex-direction: column;
+      gap: 1.5rem;
     }
 
-    .hero-heading h4{
-        font-size: var(--text-4xl);
-        line-height: 1.3;
-        letter-spacing: -0.1rem;
+    .button-category {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
     }
 
-    .hero-heading-a{
-        color: hsl(var(--clr-code-night-500));
+    .about_headtext {
+      font-size: 1.2rem;
     }
 
-    .hero-heading-b{
-        color: hsl(var(--clr-foss-mint-500));
+    .about-section-innerblock {
+      margin-top: -3rem;
+      padding: 2rem;
     }
 
-    .button-container{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    .goals-section {
+      grid-template-columns: 1fr;
     }
-
-    .button-category{
-        display: grid;
-        gap: 2rem;
-        grid-template-columns: 1fr 1fr;
-    }
-
-    .about-section{
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-bottom:7rem;
-
-    }
-
-    .about-section-innerblock{
-        margin-top: -3.5rem;
-        display: flex;
-        padding: 3rem;
-        flex-direction: column;
-        border-radius: 0.5rem;
-        border: 0.4px solid hsl(var(--clr-gray-400));
-        background: #FFF;
-        gap: 1rem;
-    }
-
-    .about-section-main{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .about-section-tag{
-        color: hsl(var(--clr-foss-mint-500));
-        font-weight: var(--fw-semibold);
-    }
-
-    .about-section-text{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .about_subtext{
-        color: hsl(var(--clr-gray-500));
-        line-height: 1.5;
-    }
-
-    .goals-section{
-
-        margin-top: 0.75rem;
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 1.2rem;
-    }
-
-    .goals-card{
-        display: flex;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        border: 0.4px solid hsl(var(--clr-gray-400));
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .goals-card-header{
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        font-size: var(--text-xs);
-        font-weight: var(--fw-semibold);
-    }
-
-    .goals-card-tag{
-        color: hsl(var(--clr-gray-500));
-    }
-
-    .goals-card-number{
-        color: hsl(var(--clr-foss-mint-500));
-        text-align: right;
-
-    }
-
-    .goal-content{
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        height: 100%;
-        justify-content: space-between;
-    }
-
-    .goal-text{
-        color: hsl(var(--clr-code-night-500));
-        font-weight: var(--fw-semibold);
-        line-height: 1.3;
-        letter-spacing: -0.04rem;
-    }
-
-    .goal-icon{
-        max-width: 2rem;
-    }
-
-    @media screen and (max-width: 768px){
-
-
-        .hero-section{
-            padding-top: 3rem;
-        }
-        .hero-container{
-            gap: 2rem;
-        }
-
-        #image-centre{
-            width: 40vw;
-            min-width: 8rem;
-        }
-
-        #image-end{
-            width: 8vw;
-            min-width: 1.2rem;
-        }
-
-        .hero-heading{
-            text-align: center;
-        }
-
-        .button-container{
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .button-category{
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        .about_headtext{
-            font-size: 1.2rem
-        }
-
-        .about-section-innerblock{
-            margin-top: -3rem;
-            padding: 2rem;
-
-        }
-
-        .goals-section{
-
-        grid-template-columns: 1fr;
-
-        }
-    }
-
+  }
 </style>
 
 <div class="hero-section">
-    <div class="hero-container container">
+  <div class="hero-container container">
+    <div class="hero-image">
+      <div>
+        <img
+          id="image-end"
+          src="assets/fossunited/images/illustrations/hero-block-right.png"
+          alt="Hero Image"
+          class="hero-image"
+        />
+      </div>
 
-        <div class="hero-image">
+      <div>
+        <img
+          id="image-centre"
+          src="assets/fossunited/images/illustrations/hero-globe.png"
+          alt="Hero Image"
+          class="hero-image"
+        />
+      </div>
 
-            <div>
-                <img id="image-end" src="assets/fossunited/images/illustrations/hero-block-right.png" alt="Hero Image" class="hero-image">
-            </div>
-
-            <div>
-                <img id="image-centre" src="assets/fossunited/images/illustrations/hero-globe.png" alt="Hero Image" class="hero-image">
-            </div>
-
-            <div>
-                <img id="image-end" src="assets/fossunited/images/illustrations/hero-block-left.png" alt="Hero Image" class="hero-image">
-            </div>
-
-        </div>
-
-        <div class="hero-heading">
-            <h4><span class="hero-heading-a">{{heading_a}} </span><span class="hero-heading-b">{{heading_b}}</span></h4>
-        </div>
-
-        <div class="button-container">
-
-            <div class="button-category">
-                <button class="primary-button" onclick="window.location.href='{{primary_cta_url}}'">
-                    {{primary_cta}}
-                </button>
-
-                <button class="secondary-button" onclick="window.location.href='{{secondary_cta_url}}'">
-                    {{secondary_cta}}
-                </button>
-            </div>
-
-        </div>
-
+      <div>
+        <img
+          id="image-end"
+          src="assets/fossunited/images/illustrations/hero-block-left.png"
+          alt="Hero Image"
+          class="hero-image"
+        />
+      </div>
     </div>
 
+    <div class="hero-heading">
+      <h4>
+        <span class="hero-heading-a">{{heading_a}} </span
+        ><span class="hero-heading-b">{{heading_b}}</span>
+      </h4>
+    </div>
+
+    <div class="button-container">
+      <div class="button-category">
+        <button class="primary-button" onclick="window.location.href='{{primary_cta_url}}'">
+          {{primary_cta}}
+        </button>
+
+        <button class="secondary-button" onclick="window.location.href='{{secondary_cta_url}}'">
+          {{secondary_cta}}
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="about-section container">
+  <div class="about-section-innerblock">
+    <div class="about-section-main">
+      <p class="about-section-tag">ABOUT</p>
 
-        <div class="about-section-innerblock">
+      <div class="about-section-text">
+        <h5>{{about_headtext}}</h5>
+        <p class="about_subtext">{{about_subtext}}</p>
+      </div>
+    </div>
 
-            <div class="about-section-main">
-                <p class="about-section-tag">ABOUT</p>
-
-                <div class="about-section-text">
-
-                    <h5>{{about_headtext}}</h5>
-                    <p class="about_subtext">{{about_subtext}}</p>
-
-                </div>
-            </div>
-
-            <div class="goals-section">
-                {% for index in range(1, 10) %}
-                    {% set goal_text = values['goal_text_' + index|string] %}
-                    {% set goal_icon = values['goal_icon_' + index|string] %}
-                    {% if goal_text %}
-                        <div class="goals-card">
-                            <div class="goals-card-header">
-                                <p class="goals-card-tag">GOALS</p>
-                                <p class="goals-card-number">0{{index}}</p>
-                            </div>
-
-                            <div class="goal-content">
-                                <p class="goal-text">{{goal_text}}</p>
-                                <img class="goal-icon" src="{{goal_icon}}" alt="Goal Icon">
-                            </div>
-
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </div>
-
+    <div class="goals-section">
+      {% for index in range(1, 10) %} {% set goal_text = values['goal_text_' + index|string] %} {%
+      set goal_icon = values['goal_icon_' + index|string] %} {% if goal_text %}
+      <div class="goals-card">
+        <div class="goals-card-header">
+          <p class="goals-card-tag">GOALS</p>
+          <p class="goals-card-number">0{{index}}</p>
         </div>
 
+        <div class="goal-content">
+          <p class="goal-text">{{goal_text}}</p>
+          <img class="goal-icon" src="{{goal_icon}}" alt="Goal Icon" />
+        </div>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
 </div>

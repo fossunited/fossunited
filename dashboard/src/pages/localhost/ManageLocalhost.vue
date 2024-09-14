@@ -8,10 +8,7 @@
     }"
   />
   <Header />
-  <div
-    class="w-full p-4 flex items-center justify-center"
-    v-if="localhost.data && requests.data"
-  >
+  <div class="w-full p-4 flex items-center justify-center" v-if="localhost.data && requests.data">
     <div class="max-w-screen-xl w-full">
       <div class="text-base font-medium mt-4">Manage LocalHost</div>
       <LocalhostHeader :localhost="localhost.data" />
@@ -21,20 +18,13 @@
           <div class="flex items-center justify-between w-full">
             <div
               class="flex items-center gap-2 text-lg font-medium pt-4"
-              :class="
-                localhost.data.is_accepting_attendees ? 'text-green-700' : ''
-              "
+              :class="localhost.data.is_accepting_attendees ? 'text-green-700' : ''"
             >
-              <span
-                v-if="localhost.data.is_accepting_attendees"
-                class="relative flex h-3 w-3"
-              >
+              <span v-if="localhost.data.is_accepting_attendees" class="relative flex h-3 w-3">
                 <span
                   class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
                 ></span>
-                <span
-                  class="relative inline-flex rounded-full h-3 w-3 bg-green-500"
-                ></span>
+                <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
               </span>
               <span>
                 {{
@@ -45,18 +35,13 @@
               </span>
             </div>
             <Button
-              :label="
-                localhost.data.is_accepting_attendees ? 'Disable' : 'Enable'
-              "
+              :label="localhost.data.is_accepting_attendees ? 'Disable' : 'Enable'"
               @click="toggleAcceptingAttendees"
             />
           </div>
         </div>
       </div>
-      <div
-        class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4"
-        v-if="requests.data"
-      >
+      <div class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4" v-if="requests.data">
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
           <div class="text-base font-medium">Total Requests</div>
           <div class="text-2xl">
@@ -90,10 +75,7 @@
       </div>
       <hr />
       <div class="flex flex-col gap-2 py-4">
-        <AttendeeRequestList
-          :localhost="localhost"
-          @update-request="requests.reload()"
-        />
+        <AttendeeRequestList :localhost="localhost" @update-request="requests.reload()" />
       </div>
     </div>
   </div>

@@ -1,168 +1,159 @@
 <style>
-    .super-container{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 32px;
-        margin-top: 30px;
-        width: 100%;
-        height: auto;
-        padding: 48px 24px;
-        border-radius: 30px;
-        border: 1px solid #808080;
+  .super-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    margin-top: 30px;
+    width: 100%;
+    height: auto;
+    padding: 48px 24px;
+    border-radius: 30px;
+    border: 1px solid #808080;
+  }
+
+  .chapter-list {
+    padding: 0px 48px;
+    width: 100%;
+    align-self: normal;
+  }
+
+  .container-title {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .state-title {
+    color: #000;
+    text-align: left;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .state-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin: 24px 0px;
+    width: 100%;
+  }
+
+  .state-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 0px;
+  }
+
+  .chapter {
+    display: flex;
+    gap: 8px;
+  }
+
+  .flag-icon {
+    width: 35px;
+    height: auto;
+  }
+
+  .chapter-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    color: #000;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .chapter-type {
+    color: #5e5e5e;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .chapter-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(200px, 1fr));
+    gap: 16px;
+    width: 100%;
+  }
+
+  @media screen and (max-width: 1000px) {
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(200px, 1fr));
+    }
+    .chapter-list {
+      padding: 0px 24px;
+    }
+  }
+
+  @media screen and (max-width: 565px) {
+    .super-container {
+      padding: 24px 16px;
     }
 
-    .chapter-list{
-        padding: 0px 48px;
-        width: 100%;
-        align-self: normal;
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(200px, 1fr));
     }
 
-    .container-title{
-        color: #000;
-        text-align: center;
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
+    .chapter-list {
+      margin: 0px;
+      padding: 0px 16px;
     }
 
-    .state-title{
-        color: #000;
-        text-align: left;
-        font-family: Inter;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
+    .container-title {
+      font-size: 20px;
     }
 
-    .state-list{
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        margin: 24px 0px;
-        width: 100%;
+    .state-title {
+      font-size: 18px;
     }
-
-    .state-container{
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding: 16px 0px;
-    }
-
-    .chapter{
-        display: flex;
-        gap: 8px;
-    }
-
-    .flag-icon{
-        width: 35px;
-        height: auto;
-    }
-
-    .chapter-info{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 4px;
-        color: #000;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
-    }
-
-    .chapter-type{
-        color: #5E5E5E;
-        font-family: Inter;
-        font-size: 14px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-
-    .chapter-grid{
-        display: grid;
-        grid-template-columns: repeat(4, minmax(200px, 1fr));
-        gap: 16px;
-        width: 100%;
-    }
-
-    @media screen and  (max-width: 1000px){
-        .chapter-grid{
-            display: grid;
-            grid-template-columns: repeat(2, minmax(200px, 1fr));
-        }
-        .chapter-list{
-            padding: 0px 24px;
-        }
-    }
-
-    @media screen and (max-width: 565px) {
-        .super-container{
-            padding: 24px 16px;
-        }
-
-        .chapter-grid{
-            display: grid;
-            grid-template-columns: repeat(1, minmax(200px, 1fr));
-        }
-
-        .chapter-list{
-            margin: 0px;
-            padding: 0px 16px;
-        }
-
-        .container-title{
-            font-size: 20px;
-        }
-
-        .state-title{
-            font-size: 18px;
-        }
-    }
-
+  }
 </style>
 
 <div class="super-container" id="clubs-by-region">
-    <div class="container-title">
-        Explore Clubs by Region
-    </div>
-    <div class="chapter-list">
-        {% set states = frappe.get_all("State", fields=["name", "country"], order_by="state asc") %}
-        <div class="state-list">
-            {% for state in states %}
-                {% set college_chapters = frappe.get_all("FOSS Chapter", fields=["chapter_name", "chapter_type", "route"] ,filters={"state":state.name, "chapter_type":"College Chapter", "is_published": 1}, order_by="chapter_name") %}
-                {% if college_chapters %}
-                    <div class="state-container">
-                    <div class="state-title">
-                        {{ state.name }}
-                    </div>
-                    {% if college_chapters %}
-                    <div class="chapter-grid">
-                            {% for chapter in college_chapters %}
-                            <a href="{{chapter.route}}" class="chapter">
-                                <div class="flag-icon">
-                                    {% include "public/icons/chapter_flag_blue.svg" %}
-                                </div>
-                                <div class="chapter-info">
-                                    {{ chapter.chapter_name }}
-                                    <div class="chapter-type">
-                                        Student Club
-                                    </div>
-                                </div>
-                            </a>
-                            {% endfor %}
-                    </div>
-                    {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
+  <div class="container-title">Explore Clubs by Region</div>
+  <div class="chapter-list">
+    {% set states = frappe.get_all("State", fields=["name", "country"], order_by="state asc") %}
+    <div class="state-list">
+      {% for state in states %} {% set college_chapters = frappe.get_all("FOSS Chapter",
+      fields=["chapter_name", "chapter_type", "route"] ,filters={"state":state.name,
+      "chapter_type":"College Chapter", "is_published": 1}, order_by="chapter_name") %} {% if
+      college_chapters %}
+      <div class="state-container">
+        <div class="state-title">{{ state.name }}</div>
+        {% if college_chapters %}
+        <div class="chapter-grid">
+          {% for chapter in college_chapters %}
+          <a href="{{chapter.route}}" class="chapter">
+            <div class="flag-icon">{% include "public/icons/chapter_flag_blue.svg" %}</div>
+            <div class="chapter-info">
+              {{ chapter.chapter_name }}
+              <div class="chapter-type">Student Club</div>
+            </div>
+          </a>
+          {% endfor %}
         </div>
+        {% endif %}
+      </div>
+      {% endif %} {% endfor %}
     </div>
+  </div>
 </div>

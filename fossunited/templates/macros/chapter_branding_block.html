@@ -1,11 +1,13 @@
-{% macro chapter_branding_block(chapter_id) %}
-{% set chapter = frappe.get_doc("FOSS Chapter", chapter_id) %}
-<div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}">
-    {% if chapter.chapter_type == 'FOSS Club' %}
-    <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="">
-    <span>{{ chapter.chapter_name }}</span>
-    {% else %}
-    <span class="fff-forward">{{ chapter.chapter_name }}</span>
-    {% endif %}
+{% macro chapter_branding_block(chapter_id) %} {% set chapter = frappe.get_doc("FOSS Chapter",
+chapter_id) %}
+<div
+  class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %} club-brand {% endif %}"
+>
+  {% if chapter.chapter_type == 'FOSS Club' %}
+  <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
+  <span>{{ chapter.chapter_name }}</span>
+  {% else %}
+  <span class="fff-forward">{{ chapter.chapter_name }}</span>
+  {% endif %}
 </div>
 {% endmacro %}

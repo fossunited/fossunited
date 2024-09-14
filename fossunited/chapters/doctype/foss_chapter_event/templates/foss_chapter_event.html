@@ -1,12 +1,12 @@
 {% extends 'templates/foss_base.html' %} {% block content %} {{ header() }} {{
-render_time_location() }} {% from
-'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
+render_time_location() }} {% from 'fossunited/templates/macros/horizontal_navbar.html' import
+horizontal_navbar %}
 <div class="horizontal-navbar-parent">
   <div class="container">{{ horizontal_navbar(nav_items) }}</div>
 </div>
 <div class="container">
-  {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{
-  render_cfp() }} {{ render_schedule() }}
+  {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }} {{
+  render_schedule() }}
 </div>
 
 {% endblock %} {% macro header() %}
@@ -19,12 +19,9 @@ render_time_location() }} {% from
     />
     <div class="header--title-cta-parent">
       <div>
-        {% if doc.chapter %} {% from
-        'fossunited/templates/macros/chapter_branding_block.html' import
-        chapter_branding_block %}
-        <a href="/{{chapter.route}}">
-          {{ chapter_branding_block(doc.chapter) }}
-        </a>
+        {% if doc.chapter %} {% from 'fossunited/templates/macros/chapter_branding_block.html'
+        import chapter_branding_block %}
+        <a href="/{{chapter.route}}"> {{ chapter_branding_block(doc.chapter) }} </a>
         {% endif %}
         <h1 class="header--event-title">{{ doc.event_name }}</h1>
       </div>
@@ -38,11 +35,9 @@ render_time_location() }} {% from
       {% endif %}
     </div>
     <div class="header--tags">
-      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {{
-      tag(doc.event_type) }} {% if doc.must_attend %} {{ tag("Must Attend",
-      color='hsl(var(--clr-foss-mint-600))',
-      background='hsl(var(--clr-foss-mint-100))', icon='star-filled') }} {%
-      endif %}
+      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {{ tag(doc.event_type) }}
+      {% if doc.must_attend %} {{ tag("Must Attend", color='hsl(var(--clr-foss-mint-600))',
+      background='hsl(var(--clr-foss-mint-100))', icon='star-filled') }} {% endif %}
     </div>
     {% if doc.event_bio %}
     <div class="header--short-desc">{{ doc.event_bio }}</div>
@@ -86,10 +81,7 @@ render_time_location() }} {% from
         style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
       ></i>
       <div class="d-flex flex-column">
-        <a
-          href="{{doc.map_link}}"
-          class="event-location child-container--heading"
-        >
+        <a href="{{doc.map_link}}" class="event-location child-container--heading">
           {{ doc.event_location }}
         </a>
       </div>
@@ -153,11 +145,9 @@ render_time_location() }} {% from
   <div class="event-members-section my-3">
     <h5>Event Members</h5>
     <div class="event--members-block">
-      {% from 'fossunited/templates/macros/member_card.html' import member_card
-      %}
+      {% from 'fossunited/templates/macros/member_card.html' import member_card %}
       <div class="members-grid-6">
-        {% for volunteer in volunteers %} {{ member_card(volunteer) }} {% endfor
-        %}
+        {% for volunteer in volunteers %} {{ member_card(volunteer) }} {% endfor %}
       </div>
     </div>
   </div>
@@ -169,8 +159,8 @@ render_time_location() }} {% from
     <h5>Speakers</h5>
     {% if speakers %}
     <div class="speakers-grid">
-      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {% for
-      speaker in speakers %}
+      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {% for speaker in speakers
+      %}
       <div class="speaker-card">
         <img
           src="{{ speaker.profile_picture }}"
@@ -195,17 +185,16 @@ render_time_location() }} {% from
 <div class="event-content-div content-div" id="rsvp">
   <div class="rsvp-section my-3">
     <h5>RSVP</h5>
-    {% from 'fossunited/templates/macros/status_block_event.html' import
-    status_block %} {{ status_block(rsvp_status_block, doc.name) }}
+    {% from 'fossunited/templates/macros/status_block_event.html' import status_block %} {{
+    status_block(rsvp_status_block, doc.name) }}
   </div>
 </div>
 {% endmacro %} {% macro render_cfp() %}
 <div class="event-content-div content-div" id="talk_proposal">
   <div class="cfp-section my-3">
     <h5>Talk Proposal</h5>
-    {% from 'fossunited/templates/macros/status_block_event.html' import
-    status_block %} {{ status_block(cfp_status_block, doc.name) }} {% if
-    user_cfp_submissions %}
+    {% from 'fossunited/templates/macros/status_block_event.html' import status_block %} {{
+    status_block(cfp_status_block, doc.name) }} {% if user_cfp_submissions %}
     <div class="submitted-proposals-section">
       <h5>Submitted Proposals</h5>
       <div class="submitted-proposals-list">
@@ -214,16 +203,11 @@ render_time_location() }} {% from
           <div class="cfp-submission-left">
             <div class="cfp-submission--title-status">
               <div class="submission--title">{{ proposal.talk_title }}</div>
-              <div class="submission--status">
-                {{ proposal.status | make_badge }}
-              </div>
+              <div class="submission--status">{{ proposal.status | make_badge }}</div>
             </div>
           </div>
           <div class="d-flex button-group">
-            <button
-              class="mr-2 w-full"
-              onclick="window.location.href='/{{proposal.route}}'"
-            >
+            <button class="mr-2 w-full" onclick="window.location.href='/{{proposal.route}}'">
               View Proposal
             </button>
             <button
@@ -239,10 +223,7 @@ render_time_location() }} {% from
     </div>
     {% endif %}
     <div class="d-flex justify-content-end align-items-baseline">
-      <a
-        href="/dashboard/cfp/{{ doc.event_permalink }}"
-        class="secondary-button"
-      >
+      <a href="/dashboard/cfp/{{ doc.event_permalink }}" class="secondary-button">
         <span> View all Proposals </span>
         <i class="ti ti-arrow-right"></i>
       </a>
@@ -284,8 +265,8 @@ render_time_location() }} {% from
           <div class="schedule--title-time-section">
             <div class="schedule--title">{{ schedule.talk_title }}</div>
             <div class="schedule--time">
-              {{ schedule.start_time.strftime('%I:%M %p') }} - {{
-              schedule.end_time.strftime('%I:%M %p') }}
+              {{ schedule.start_time.strftime('%I:%M %p') }} - {{ schedule.end_time.strftime('%I:%M
+              %p') }}
             </div>
           </div>
           {% if not schedule.no_speaker %}
@@ -296,9 +277,7 @@ render_time_location() }} {% from
               class="schedule--speaker-container"
               onclick="event.stopPropagation();"
             >
-              <div class="schedule--speaker-name">
-                {{ schedule.speaker_full_name }}
-              </div>
+              <div class="schedule--speaker-name">{{ schedule.speaker_full_name }}</div>
               <div class="speaker-designation-company">
                 {{ schedule.speaker_designation_company }}
               </div>
@@ -316,15 +295,15 @@ render_time_location() }} {% from
 <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
 <script>
   $(document).ready(function () {
-    $(".schedule-grid").hide();
-    $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show();
-  });
+    $('.schedule-grid').hide()
+    $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show()
+  })
 
   function showScheduleByDate() {
-    $(".buttons-group button").removeClass("dark-button active");
-    $(event.target).addClass("dark-button active");
-    $(".schedule-grid").hide();
-    $('.schedule-grid[data-date="' + $(event.target).data("day") + '"]').show();
+    $('.buttons-group button').removeClass('dark-button active')
+    $(event.target).addClass('dark-button active')
+    $('.schedule-grid').hide()
+    $('.schedule-grid[data-date="' + $(event.target).data('day') + '"]').show()
   }
 </script>
 {% endblock %}

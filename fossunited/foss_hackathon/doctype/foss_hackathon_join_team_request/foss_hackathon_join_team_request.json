@@ -1,149 +1,149 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-06-04 13:57:34.071025",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "is_outgoing_request",
-  "section_break_kkvz",
-  "team",
-  "team_name",
-  "requested_by",
-  "sender_name",
-  "column_break_prrb",
-  "hackathon",
-  "hackathon_name",
-  "section_break_vjrk",
-  "reciever_email",
-  "column_break_vhdr",
-  "status"
- ],
- "fields": [
-  {
-   "fieldname": "team",
-   "fieldtype": "Link",
-   "label": "Team",
-   "options": "FOSS Hackathon Team"
-  },
-  {
-   "fieldname": "requested_by",
-   "fieldtype": "Link",
-   "label": "Requested By",
-   "options": "User"
-  },
-  {
-   "fieldname": "column_break_prrb",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "hackathon",
-   "fieldtype": "Link",
-   "label": "Hackathon",
-   "options": "FOSS Hackathon"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_outgoing_request",
-   "fieldtype": "Check",
-   "label": "Is Outgoing Request?"
-  },
-  {
-   "fieldname": "section_break_vjrk",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "reciever_email",
-   "fieldtype": "Data",
-   "label": "Reciever Email",
-   "options": "Email"
-  },
-  {
-   "fieldname": "column_break_vhdr",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "Pending",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Pending\nAccepted\nRejected"
-  },
-  {
-   "fieldname": "section_break_kkvz",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fetch_from": "requested_by.full_name",
-   "fieldname": "sender_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Sender Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "hackathon.hackathon_name",
-   "fieldname": "hackathon_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Hackathon Name",
-   "read_only": 1
-  },
-  {
-   "fetch_from": "team.team_name",
-   "fieldname": "team_name",
-   "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Team Name",
-   "read_only": 1
-  }
- ],
- "links": [],
- "modified": "2024-06-25 13:11:47.195942",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "FOSS Hackathon Join Team Request",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "FOSS Website User",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-06-04 13:57:34.071025",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "is_outgoing_request",
+    "section_break_kkvz",
+    "team",
+    "team_name",
+    "requested_by",
+    "sender_name",
+    "column_break_prrb",
+    "hackathon",
+    "hackathon_name",
+    "section_break_vjrk",
+    "reciever_email",
+    "column_break_vhdr",
+    "status"
+  ],
+  "fields": [
+    {
+      "fieldname": "team",
+      "fieldtype": "Link",
+      "label": "Team",
+      "options": "FOSS Hackathon Team"
+    },
+    {
+      "fieldname": "requested_by",
+      "fieldtype": "Link",
+      "label": "Requested By",
+      "options": "User"
+    },
+    {
+      "fieldname": "column_break_prrb",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "hackathon",
+      "fieldtype": "Link",
+      "label": "Hackathon",
+      "options": "FOSS Hackathon"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_outgoing_request",
+      "fieldtype": "Check",
+      "label": "Is Outgoing Request?"
+    },
+    {
+      "fieldname": "section_break_vjrk",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "reciever_email",
+      "fieldtype": "Data",
+      "label": "Reciever Email",
+      "options": "Email"
+    },
+    {
+      "fieldname": "column_break_vhdr",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "Pending",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Pending\nAccepted\nRejected"
+    },
+    {
+      "fieldname": "section_break_kkvz",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fetch_from": "requested_by.full_name",
+      "fieldname": "sender_name",
+      "fieldtype": "Data",
+      "hidden": 1,
+      "label": "Sender Name",
+      "read_only": 1
+    },
+    {
+      "fetch_from": "hackathon.hackathon_name",
+      "fieldname": "hackathon_name",
+      "fieldtype": "Data",
+      "hidden": 1,
+      "label": "Hackathon Name",
+      "read_only": 1
+    },
+    {
+      "fetch_from": "team.team_name",
+      "fieldname": "team_name",
+      "fieldtype": "Data",
+      "hidden": 1,
+      "label": "Team Name",
+      "read_only": 1
+    }
+  ],
+  "links": [],
+  "modified": "2024-06-25 13:11:47.195942",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "FOSS Hackathon Join Team Request",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "FOSS Website User",
+      "select": 1,
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "select": 1,
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

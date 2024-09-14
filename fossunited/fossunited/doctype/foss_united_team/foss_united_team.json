@@ -1,129 +1,129 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-01-28 13:24:54.693639",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "user_details_section",
-  "foss_user_profile",
-  "org_role",
-  "is_active",
-  "user_individual_details_section",
-  "full_name",
-  "headshot",
-  "designation",
-  "column_break_yaoh",
-  "username",
-  "user_bio",
-  "portfolio_url"
- ],
- "fields": [
-  {
-   "fieldname": "user_details_section",
-   "fieldtype": "Section Break",
-   "label": "User Meta Details"
-  },
-  {
-   "fieldname": "foss_user_profile",
-   "fieldtype": "Link",
-   "label": "FOSS User Profile",
-   "options": "FOSS User Profile"
-  },
-  {
-   "fieldname": "org_role",
-   "fieldtype": "Select",
-   "in_standard_filter": 1,
-   "label": "Org Role",
-   "options": "\nFounder\nBoard\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
-  },
-  {
-   "fieldname": "user_individual_details_section",
-   "fieldtype": "Section Break",
-   "label": "User Individual Details"
-  },
-  {
-   "fetch_from": ".profile_photo",
-   "fieldname": "headshot",
-   "fieldtype": "Attach Image",
-   "label": "Headshot"
-  },
-  {
-   "fieldname": "designation",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Designation"
-  },
-  {
-   "fetch_from": "foss_user_profile.username",
-   "fieldname": "username",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Username"
-  },
-  {
-   "fieldname": "column_break_yaoh",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": ".full_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Name ",
-   "reqd": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "is_active",
-   "fieldtype": "Check",
-   "label": "Active"
-  },
-  {
-   "fieldname": "user_bio",
-   "fieldtype": "Small Text",
-   "label": "User Bio"
-  },
-  {
-   "fieldname": "portfolio_url",
-   "fieldtype": "Data",
-   "label": "Portfolio URL",
-   "options": "URL"
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-05-21 13:19:50.477734",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "FOSS United Team",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-01-28 13:24:54.693639",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "user_details_section",
+    "foss_user_profile",
+    "org_role",
+    "is_active",
+    "user_individual_details_section",
+    "full_name",
+    "headshot",
+    "designation",
+    "column_break_yaoh",
+    "username",
+    "user_bio",
+    "portfolio_url"
+  ],
+  "fields": [
+    {
+      "fieldname": "user_details_section",
+      "fieldtype": "Section Break",
+      "label": "User Meta Details"
+    },
+    {
+      "fieldname": "foss_user_profile",
+      "fieldtype": "Link",
+      "label": "FOSS User Profile",
+      "options": "FOSS User Profile"
+    },
+    {
+      "fieldname": "org_role",
+      "fieldtype": "Select",
+      "in_standard_filter": 1,
+      "label": "Org Role",
+      "options": "\nFounder\nBoard\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
+    },
+    {
+      "fieldname": "user_individual_details_section",
+      "fieldtype": "Section Break",
+      "label": "User Individual Details"
+    },
+    {
+      "fetch_from": ".profile_photo",
+      "fieldname": "headshot",
+      "fieldtype": "Attach Image",
+      "label": "Headshot"
+    },
+    {
+      "fieldname": "designation",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Designation"
+    },
+    {
+      "fetch_from": "foss_user_profile.username",
+      "fieldname": "username",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Username"
+    },
+    {
+      "fieldname": "column_break_yaoh",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fetch_from": ".full_name",
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Name ",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "label": "Active"
+    },
+    {
+      "fieldname": "user_bio",
+      "fieldtype": "Small Text",
+      "label": "User Bio"
+    },
+    {
+      "fieldname": "portfolio_url",
+      "fieldtype": "Data",
+      "label": "Portfolio URL",
+      "options": "URL"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [],
+  "modified": "2024-05-21 13:19:50.477734",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "FOSS United Team",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "select": 1,
+      "share": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }
