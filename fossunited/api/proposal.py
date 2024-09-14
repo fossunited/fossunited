@@ -28,9 +28,17 @@ def get_event_proposals(
         "status",
     ]
 
-    proposals = frappe.get_all("FOSS Event CFP Submission", filters={"event": event}, fields=fields, page_length=99999, order_by="talk_title")
+    proposals = frappe.get_all(
+        "FOSS Event CFP Submission",
+        filters={"event": event},
+        fields=fields,
+        page_length=99999,
+        order_by="talk_title",
+    )
 
-    is_cfp_anonymous = frappe.db.get_value("FOSS Event CFP", {"event": event}, "anonymise_proposals")
+    is_cfp_anonymous = frappe.db.get_value(
+        "FOSS Event CFP", {"event": event}, "anonymise_proposals"
+    )
 
     for proposal in proposals:
         proposal["likes"] = len(get_doc_likes("FOSS Event CFP Submission", proposal["name"]))

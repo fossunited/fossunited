@@ -120,7 +120,9 @@ def get_tickets_insights(event_id: str) -> dict:
         },
     )
 
-    percentage_change = get_percentage_change(float(tickets_sold_today), float(tickets_sold_yesterday))
+    percentage_change = get_percentage_change(
+        float(tickets_sold_today), float(tickets_sold_yesterday)
+    )
 
     tier_data = {}
 

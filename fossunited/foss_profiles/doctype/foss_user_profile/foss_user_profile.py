@@ -18,16 +18,16 @@ class FOSSUserProfile(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
+        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (  # noqa: E501
             FOSSUserProfileEducation,
         )
-        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
+        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
             FOSSUserProfileWorkExperience,
         )
         from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
             FOSSUserProjects,
         )
-        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
             FOSSUserSkillMultiselect,
         )
 
@@ -92,7 +92,9 @@ class FOSSUserProfile(WebsiteGenerator):
             frappe.throw("Username must be between 3 and 30 characters")
 
         if not re.match(r"^[a-z0-9_\.]+$", self.username):
-            frappe.throw("Username can only contain lowercase letters, numbers, underscores and dots.")
+            frappe.throw(
+                "Username can only contain lowercase letters, numbers, underscores and dots."
+            )
 
         if re.search(
             r"\.(txt|html|php|js|json|xml|css|htm)$",

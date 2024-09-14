@@ -21,11 +21,19 @@ class FOSSChapterEvent(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import FOSSChapterEventMember
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import FOSSEventCommunityPartner
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
+            FOSSChapterEventMember,
+        )
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
+            FOSSEventCommunityPartner,
+        )
         from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
-        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import FOSSEventSchedule
-        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import FOSSEventSponsor
+        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
+            FOSSEventSchedule,
+        )
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+            FOSSEventSponsor,
+        )
         from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
@@ -115,10 +123,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             frappe.throw(f"Event Permalink {self.event_permalink} already exists!")
 
         if "/" in self.event_permalink:
-            frappe.throw("Event Permalink cannot contain / character. Please use a different permalink.")
+            frappe.throw(
+                "Event Permalink cannot contain / character. Please use a different permalink."
+            )
 
         if not self.event_permalink.replace("-", "").replace("_", "").isalnum():
-            frappe.throw("Event Permalink can only contain alphabets, numbers, - and _ characters.")
+            frappe.throw(
+                "Event Permalink can only contain alphabets, numbers, - and _ characters."
+            )
 
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
@@ -194,7 +206,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": member.full_name,
                     "role": member.role or "Volunteer",
-                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": (
+                        profile.profile_photo
+                        if profile.profile_photo
+                        else "/assets/fossunited/images/defaults/user_profile_image.png"
+                    ),
                     "route": profile.route,
                 }
             )
@@ -207,7 +223,14 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "event": self.name,
                 "status": "Approved",
             },
-            fields=["talk_title", "submitted_by", "picture_url", "full_name", "designation", "organization"],
+            fields=[
+                "talk_title",
+                "submitted_by",
+                "picture_url",
+                "full_name",
+                "designation",
+                "organization",
+            ],
         )
         speakers = []
         for cfp in speaker_cfps:
@@ -216,7 +239,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 {
                     "full_name": cfp.full_name,
                     "talk_title": cfp.talk_title,
-                    "profile_picture": cfp.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": (
+                        cfp.picture_url
+                        or user.profile_photo
+                        or "/assets/fossunited/images/defaults/user_profile_image.png"
+                    ),
                     "designation": cfp.designation,
                     "organization": cfp.organization,
                 }
@@ -298,7 +325,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
-                "deadline": cfp_form.deadline.strftime("%d %B, %Y  %I:%M %p") if cfp_form.deadline else None,
+                "deadline": (
+                    cfp_form.deadline.strftime("%d %B, %Y  %I:%M %p")
+                    if cfp_form.deadline
+                    else None
+                ),
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
             }
@@ -387,7 +418,11 @@ class FOSSChapterEvent(WebsiteGenerator):
                 )
                 submission["user_route"] = user.route
                 submission["full_name"] = user.full_name
-                submission["profile_picture"] = submission.picture_url or user.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
+                submission["profile_picture"] = (
+                    submission.picture_url
+                    or user.profile_photo
+                    or "/assets/fossunited/images/defaults/user_profile_image.png"
+                )
         return submissions or []
 
     def get_schedule_dict(self):

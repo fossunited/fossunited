@@ -48,7 +48,10 @@ class FOSSEventTicketTransfer(Document):
     def validate_status_is_pending(self):
         if self.status != "Pending Approval":
             frappe.throw(
-                "Invalid status change. Status should be 'Pending Approval'. Current status is {0}".format(self.status),
+                (
+                    "Invalid status change. Status should be 'Pending Approval'. "
+                    f"Current status is {self.status}"
+                ),
                 frappe.ValidationError,
             )
 
@@ -72,8 +75,8 @@ class FOSSEventTicketTransfer(Document):
         If the ticket that is to be transferred, is already a transferred ticket,
         then set the `is_transfer_ticket` to 0 (unchecked).
 
-        This is done, so that any notification / doc events associated with change in `is_transfer_ticket` field
-        can be triggered again.
+        This is done, so that any notification / doc events associated with change in
+        `is_transfer_ticket` field can be triggered again.
         """
         if not ticket.is_transfer_ticket:
             return

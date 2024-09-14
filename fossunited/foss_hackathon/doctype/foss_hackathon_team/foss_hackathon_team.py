@@ -13,7 +13,7 @@ class FOSSHackathonTeam(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.foss_hackathon_team_member.foss_hackathon_team_member import (
+        from fossunited.foss_hackathon.doctype.foss_hackathon_team_member.foss_hackathon_team_member import (  # noqa: E501
             FOSSHackathonTeamMember,
         )
 

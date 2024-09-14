@@ -51,7 +51,9 @@ def handle_razorpay_webhook():
 
 def verify_webhook_signature(payload):
     signature = frappe.get_request_header("X-Razorpay-Signature")
-    webhook_secret = get_decrypted_password("Razorpay Settings", "Razorpay Settings", "webhook_secret")
+    webhook_secret = get_decrypted_password(
+        "Razorpay Settings", "Razorpay Settings", "webhook_secret"
+    )
 
     client = get_razorpay_client()
     client.utility.verify_webhook_signature(payload.decode(), signature, webhook_secret)

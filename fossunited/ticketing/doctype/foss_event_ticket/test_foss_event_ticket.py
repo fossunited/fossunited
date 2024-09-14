@@ -14,14 +14,20 @@ class TestFOSSEventTicket(FrappeTestCase):
     def setUp(self):
         fake = Faker()
 
-        chapter_member = frappe.db.get_value("FOSS User Profile", {"user": "test1@example.com"}, ["name"])
+        chapter_member = frappe.db.get_value(
+            "FOSS User Profile", {"user": "test1@example.com"}, ["name"]
+        )
         self.member_email = "test1@example.com"
         self.member_profile = chapter_member
 
         if not frappe.db.exists("Role", "Chapter Team Member"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(ignore_permissions=True)
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
+                ignore_permissions=True
+            )
         if not frappe.db.exists("Role", "Chapter Lead"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(ignore_permissions=True)
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(
+                ignore_permissions=True
+            )
 
         chapter = frappe.get_doc(
             {

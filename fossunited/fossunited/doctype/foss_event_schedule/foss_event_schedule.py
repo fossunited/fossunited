@@ -13,7 +13,15 @@ class FOSSEventSchedule(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        category: DF.Literal["Talk", "Lightning Talk", "Workshop", "Panel Discussion", "Opening Note", "Break", "Other"]  # noqa: F722, F821
+        category: DF.Literal[
+            "Talk",  # noqa: F821
+            "Lightning Talk",  # noqa: F722, F821
+            "Workshop",  # noqa: F821
+            "Panel Discussion",  # noqa: F722, F821
+            "Opening Note",  # noqa: F722, F821
+            "Break",  # noqa: F821
+            "Other",  # noqa: F821
+        ]
         end_time: DF.Time | None
         hall: DF.Data | None
         linked_cfp: DF.Link | None

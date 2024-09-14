@@ -34,7 +34,9 @@ def get_event_cfp_submissions(event: str) -> list:
         "approvability",
     ]
 
-    is_cfp_anonymous = frappe.db.get_value("FOSS Event CFP", {"event": event}, "anonymise_proposals")
+    is_cfp_anonymous = frappe.db.get_value(
+        "FOSS Event CFP", {"event": event}, "anonymise_proposals"
+    )
 
     if not is_cfp_anonymous:
         fields += [
@@ -279,7 +281,9 @@ def get_submitter_profile(submission_id: str) -> dict:
     """
     Returns the profile of the submitter of the CFP submission.
     """
-    submitter_email = frappe.db.get_value("FOSS Event CFP Submission", submission_id, ["submitted_by"])
+    submitter_email = frappe.db.get_value(
+        "FOSS Event CFP Submission", submission_id, ["submitted_by"]
+    )
 
     if not submitter_email:
         frappe.throw("Submitter email not found")

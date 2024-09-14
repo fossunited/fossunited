@@ -16,7 +16,7 @@ class FOSSChapter(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (  # noqa: E501
             FOSSChapterLeadTeamMember,
         )
 
@@ -202,7 +202,11 @@ class FOSSChapter(WebsiteGenerator):
                 {
                     "full_name": member.full_name,
                     "role": member.role,
-                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": (
+                        profile.profile_photo
+                        if profile.profile_photo
+                        else "/assets/fossunited/images/defaults/user_profile_image.png"
+                    ),
                     "route": profile.route,
                 }
             )
