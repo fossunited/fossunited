@@ -7,6 +7,8 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
+from fossunited.doctype_ids import EVENT_TICKET, TICKET_TRANSFER
+
 
 class TestFOSSEventTicketTransfer(FrappeTestCase):
     def setUp(self):
@@ -47,7 +49,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # Given for an event, a ticket is created. For that ticket, a transfer is generated.
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": sender["full_name"],
                 "email": sender["email"],
@@ -57,7 +59,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
 
         transfer = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket Transfer",
+                "doctype": TICKET_TRANSFER,
                 "ticket": ticket.name,
                 "receiver_name": recipient["full_name"],
                 "receiver_email": recipient["email"],
@@ -75,7 +77,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # Then check that a ticket with older credentials does not exists.
         # Also check that ticket has new details.
         old_ticket_exists = frappe.db.exists(
-            "FOSS Event Ticket",
+            EVENT_TICKET,
             {
                 "email": sender["email"],
                 "full_name": sender["full_name"],
@@ -85,7 +87,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         self.assertFalse(old_ticket_exists)
 
         new_ticket_exists = frappe.db.exists(
-            "FOSS Event Ticket",
+            EVENT_TICKET,
             {
                 "email": recipient["email"],
                 "full_name": recipient["full_name"],
@@ -101,7 +103,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # passing "Completed" as the status
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": fake.name(),
                 "email": fake.email(),
@@ -113,7 +115,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         with self.assertRaises(frappe.exceptions.ValidationError):
             transfer = frappe.get_doc(
                 {
-                    "doctype": "FOSS Event Ticket Transfer",
+                    "doctype": TICKET_TRANSFER,
                     "ticket": ticket.name,
                     "receiver_name": fake.name(),
                     "receiver_email": fake.email(),
@@ -140,7 +142,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
 
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": sender["full_name"],
                 "email": sender["email"],
@@ -151,7 +153,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # Transfer ticket to recipient_1
         transfer_1 = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket Transfer",
+                "doctype": TICKET_TRANSFER,
                 "ticket": ticket.name,
                 "receiver_name": recipient_1["full_name"],
                 "receiver_email": recipient_1["email"],
@@ -166,7 +168,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # With the ticket transferred once, try to transfer it again to another user : recipient_2
         transfer_2 = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket Transfer",
+                "doctype": TICKET_TRANSFER,
                 "ticket": ticket.name,
                 "receiver_name": recipient_2["full_name"],
                 "receiver_email": recipient_2["email"],
