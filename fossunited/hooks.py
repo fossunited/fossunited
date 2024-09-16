@@ -1,7 +1,7 @@
 app_name = "fossunited"
 app_title = "FOSSUnited Platform"
 app_publisher = "Frappe x FOSSUnited"
-app_description = "Built on Frappe"
+app_description = "FOSS to organize events and to facilitate the community engagement"
 app_email = "developers@fossunited.org"
 app_license = "AGPL-3.0"
 
