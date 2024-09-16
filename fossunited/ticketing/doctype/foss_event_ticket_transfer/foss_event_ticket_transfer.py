@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import EVENT_TICKET
+
 
 class FOSSEventTicketTransfer(Document):
     # begin: auto-generated types
@@ -42,7 +44,7 @@ class FOSSEventTicketTransfer(Document):
         self.validate_ticket_exists()
 
     def validate_ticket_exists(self):
-        if not frappe.db.exists("FOSS Event Ticket", self.ticket):
+        if not frappe.db.exists(EVENT_TICKET, self.ticket):
             frappe.throw("Ticket not found", frappe.DoesNotExistError)
 
     def validate_status_is_pending(self):
@@ -57,7 +59,7 @@ class FOSSEventTicketTransfer(Document):
 
     def transfer_ticket(self):
         try:
-            ticket = frappe.get_doc("FOSS Event Ticket", self.ticket)
+            ticket = frappe.get_doc(EVENT_TICKET, self.ticket)
             self.handle_already_transferred_ticket(ticket)
             ticket.full_name = self.receiver_name
             ticket.email = self.receiver_email

@@ -8,6 +8,7 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
+from fossunited.doctype_ids import EVENT_TICKET
 
 
 class TestFOSSEventTicket(FrappeTestCase):
@@ -77,7 +78,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         # Given that a ticket is created for an event
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": fake.name(),
                 "email": fake.email(),
@@ -109,7 +110,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         # Given that a ticket is created for an event
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": fake.name(),
                 "email": fake.email(),
