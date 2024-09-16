@@ -4,6 +4,8 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
+
 
 class FOSSEventCFP(WebsiteGenerator):
     # begin: auto-generated types
@@ -69,7 +71,7 @@ class FOSSEventCFP(WebsiteGenerator):
         context.event_date = frappe.db.get_value(
             "FOSS Chapter Event", self.event, "event_start_date"
         ).strftime("%B %d, %Y")
-        context.submission_doctype = "FOSS Event CFP Submission"
+        context.submission_doctype = PROPOSAL
         context.already_submitted = True if self.check_if_already_submitted() else False
 
         context.form_fields = self.get_form_fields()
@@ -78,13 +80,13 @@ class FOSSEventCFP(WebsiteGenerator):
     def get_form_fields(self):
         try:
             last_doc = frappe.get_last_doc(
-                "FOSS Event CFP Submission",
+                PROPOSAL,
                 filters={"submitted_by": frappe.session.user},
             )
         except frappe.exceptions.DoesNotExistError:
             last_doc = {}
 
-        meta = frappe.get_meta("FOSS Event CFP Submission").as_dict()
+        meta = frappe.get_meta(PROPOSAL).as_dict()
         current_section = None
 
         form_fields = [
@@ -170,7 +172,7 @@ class FOSSEventCFP(WebsiteGenerator):
 
     def check_if_already_submitted(self):
         return frappe.db.exists(
-            "FOSS Event CFP Submission",
+            PROPOSAL,
             {
                 "linked_cfp": self.name,
                 "submitted_by": frappe.session.user,
@@ -180,11 +182,11 @@ class FOSSEventCFP(WebsiteGenerator):
 
 @frappe.whitelist()
 def create_cfp_submission(fields):
-    if not frappe.db.exists("FOSS Event CFP", frappe.parse_json(fields).get("linked_cfp")):
+    if not frappe.db.exists(EVENT_CFP, frappe.parse_json(fields).get("linked_cfp")):
         frappe.throw("Invalid CFP ID.", frappe.DoesNotExistError)
 
     fields_dict = {
-        "doctype": "FOSS Event CFP Submission",
+        "doctype": PROPOSAL,
         "submitted_by": frappe.session.user,
     }
     fields = frappe.parse_json(fields).update(fields_dict)
@@ -196,7 +198,7 @@ def create_cfp_submission(fields):
 @frappe.whitelist()
 def get_cfp_submissions(linked_cfp):
     submissions = frappe.get_all(
-        "FOSS Event CFP Submission",
+        PROPOSAL,
         fields=["*"],
         filters={
             "submitted_by": frappe.session.user,

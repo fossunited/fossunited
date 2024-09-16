@@ -6,7 +6,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT_CFP, EVENT_RSVP, PROPOSAL, RSVP_RESPONSE, USER_PROFILE
 from fossunited.fossunited.utils import is_user_team_member
 
 BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -218,7 +218,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_speakers(self):
         speaker_cfps = frappe.get_all(
-            "FOSS Event CFP Submission",
+            PROPOSAL,
             filters={
                 "event": self.name,
                 "status": "Approved",
@@ -253,11 +253,11 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_rsvp_status_block(self):
         rsvp_status_block = {}
-        rsvp_status_block["doctype"] = "FOSS Event RSVP"
+        rsvp_status_block["doctype"] = EVENT_RSVP
         rsvp_status_block["block_for"] = "rsvp"
 
-        if frappe.db.exists("FOSS Event RSVP", {"event": self.name}):
-            rsvp_form = frappe.get_doc("FOSS Event RSVP", {"event": self.name})
+        if frappe.db.exists(EVENT_RSVP, {"event": self.name}):
+            rsvp_form = frappe.get_doc(EVENT_RSVP, {"event": self.name})
             rsvp_status_block |= {
                 "form_route": rsvp_form.route,
                 "has_doc": True,
@@ -276,14 +276,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             else:
                 rsvp_status_block["is_team_member"] = False
                 if frappe.db.exists(
-                    "FOSS Event RSVP Submission",
+                    RSVP_RESPONSE,
                     {
                         "linked_rsvp": rsvp_form.name,
                         "submitted_by": frappe.session.user,
                     },
                 ):
                     submission = frappe.get_doc(
-                        "FOSS Event RSVP Submission",
+                        RSVP_RESPONSE,
                         {
                             "linked_rsvp": rsvp_form.name,
                             "submitted_by": frappe.session.user,
@@ -315,11 +315,11 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_cfp_status_block(self):
         cfp_status_block = {}
-        cfp_status_block["doctype"] = "FOSS Event CFP"
+        cfp_status_block["doctype"] = EVENT_CFP
         cfp_status_block["block_for"] = "cfp"
 
-        if frappe.db.exists("FOSS Event CFP", {"event": self.name}):
-            cfp_form = frappe.get_doc("FOSS Event CFP", {"event": self.name})
+        if frappe.db.exists(EVENT_CFP, {"event": self.name}):
+            cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
             cfp_status_block |= {
                 "form_route": cfp_form.route,
                 "has_doc": True,
@@ -343,14 +343,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             else:
                 cfp_status_block["is_team_member"] = False
                 if frappe.db.exists(
-                    "FOSS Event CFP Submission",
+                    PROPOSAL,
                     {
                         "linked_cfp": cfp_form.name,
                         "submitted_by": frappe.session.user,
                     },
                 ):
                     submission = frappe.get_doc(
-                        "FOSS Event CFP Submission",
+                        PROPOSAL,
                         {
                             "linked_cfp": cfp_form.name,
                             "submitted_by": frappe.session.user,
@@ -381,7 +381,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_user_cfp_submissions(self):
         submissions = frappe.get_all(
-            "FOSS Event CFP Submission",
+            PROPOSAL,
             filters={
                 "event": self.name,
                 "submitted_by": frappe.session.user,
@@ -397,7 +397,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_recent_cfp_submissions(self):
         submissions = frappe.get_all(
-            "FOSS Event CFP Submission",
+            PROPOSAL,
             filters={"event": self.name},
             fields=[
                 "name",
@@ -445,7 +445,7 @@ def get_speakers(schedule):
         schedule.no_speaker = True
         return
 
-    cfp = frappe.get_doc("FOSS Event CFP Submission", schedule.linked_cfp)
+    cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
     user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route

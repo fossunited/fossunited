@@ -5,6 +5,8 @@ import json
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.doctype_ids import EVENT_RSVP, RSVP_RESPONSE
+
 
 class FOSSEventRSVP(WebsiteGenerator):
     # begin: auto-generated types
@@ -72,10 +74,10 @@ class FOSSEventRSVP(WebsiteGenerator):
         context.form_fields = form_fields
 
         context.already_rsvp = True if self.check_if_already_rsvp() else False
-        context.submission_doctype = "FOSS Event RSVP Submission"
+        context.submission_doctype = RSVP_RESPONSE
         if context.already_rsvp:
             context.submission = frappe.db.get_value(
-                "FOSS Event RSVP Submission",
+                RSVP_RESPONSE,
                 {
                     "linked_rsvp": self.name,
                     "submitted_by": frappe.session.user,
@@ -108,7 +110,7 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def check_if_already_rsvp(self):
         return frappe.db.exists(
-            "FOSS Event RSVP Submission",
+            RSVP_RESPONSE,
             {
                 "linked_rsvp": self.name,
                 "submitted_by": frappe.session.user,
@@ -120,13 +122,13 @@ class FOSSEventRSVP(WebsiteGenerator):
 def create_rsvp(fields):
     fields = json.loads(fields)
 
-    linked_rsvp_exists = frappe.db.exists("FOSS Event RSVP", fields.get("linked_rsvp"))
+    linked_rsvp_exists = frappe.db.exists(EVENT_RSVP, fields.get("linked_rsvp"))
     if not linked_rsvp_exists:
         frappe.throw("Invalid RSVP ID.", frappe.DoesNotExistError)
 
     fields.update(
         {
-            "doctype": "FOSS Event RSVP Submission",
+            "doctype": RSVP_RESPONSE,
             "submitted_by": (
                 frappe.session.user
                 if frappe.session.user not in ("Guest", "Administrator")
