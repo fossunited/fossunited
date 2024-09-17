@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import frappe
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import EVENT_TICKET
+from fossunited.doctype_ids import EVENT, EVENT_TICKET
 
 if TYPE_CHECKING:
     from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
@@ -80,7 +80,7 @@ class FOSSEventTicket(Document):
         self.check_max_tickets()
 
     def check_max_tickets(self):
-        event = frappe.get_doc("FOSS Chapter Event", self.event)
+        event = frappe.get_doc(EVENT, self.event)
         tickets_count = frappe.db.count(
             EVENT_TICKET,
             {"event": self.event, "tier": self.tier},
@@ -120,7 +120,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     tier = payment_meta_data.get("tier", {}).get("name")
     price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
 
-    tshirt_price = frappe.db.get_value("FOSS Chapter Event", event_name, "t_shirt_price")
+    tshirt_price = frappe.db.get_value(EVENT, event_name, "t_shirt_price")
 
     for attendee in attendees:
         wants_tshirt = attendee.get("wants_tshirt", 0)
@@ -136,7 +136,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
 
 
 def is_foss_event(doc: "RazorpayPayment"):
-    return doc.document_type == "FOSS Chapter Event"
+    return doc.document_type == EVENT
 
 
 def tickets_already_created(doc: "RazorpayPayment"):

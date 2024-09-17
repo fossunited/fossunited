@@ -7,7 +7,7 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import EVENT_RSVP, RSVP_RESPONSE
+from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 
 class TestFOSSEventRSVPSubmission(FrappeTestCase):
@@ -15,7 +15,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # Given an RSVP with max count of 5
         event = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter Event",
+                "doctype": EVENT,
                 "event_name": "_Test_Event",
                 "event_permalink": "test-event-12345",
                 "status": "Live",

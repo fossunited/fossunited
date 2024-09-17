@@ -1,7 +1,14 @@
 import frappe
 
 from fossunited.api.dashboard import get_profile_data
-from fossunited.doctype_ids import EVENT_CFP, PROPOSAL, PROPOSAL_REVIEW
+from fossunited.doctype_ids import (
+    CHAPTER,
+    EVENT,
+    EVENT_CFP,
+    PROPOSAL,
+    PROPOSAL_REVIEW,
+    USER_PROFILE,
+)
 
 
 def get_event_cfp_submissions(event: str) -> list:
@@ -69,7 +76,7 @@ def get_cfp_submissions_by_reviewer_status(
 
     submissions = get_event_cfp_submissions(event)
 
-    reviewer = frappe.db.get_value("FOSS User Profile", {"user": frappe.session.user}, "name")
+    reviewer = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, "name")
 
     for submission in submissions:
         if not frappe.db.exists(
@@ -128,7 +135,7 @@ def get_events_by_open_cfp() -> list:
     cfps_to_review = []
 
     events = frappe.db.get_list(
-        "FOSS Chapter Event",
+        EVENT,
         filters={
             "status": ["in", ["Approved", "Live"]],
             "is_published": 1,
@@ -157,7 +164,7 @@ def get_events_by_open_cfp() -> list:
             as_dict=1,
         )
         chapter = frappe.db.get_value(
-            "FOSS Chapter",
+            CHAPTER,
             event.chapter,
             ["name", "chapter_name", "chapter_type"],
             as_dict=1,
@@ -193,7 +200,7 @@ def has_cfp_review(submission_id: str, reviewer: str = frappe.session.user) -> b
         bool: True if the reviewer has reviewed the submission, False otherwise
     """
 
-    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
 
     return bool(
         frappe.db.exists(
@@ -222,7 +229,7 @@ def get_review(submission_id: str, reviewer: str = frappe.session.user) -> dict:
     if not has_cfp_review(submission_id, reviewer):
         frappe.throw("No review found")
 
-    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
 
     review = frappe.db.get_value(
         PROPOSAL_REVIEW,
@@ -260,7 +267,7 @@ def submit_review(
     if has_cfp_review(submission_id, reviewer):
         frappe.throw("Review already exists")
 
-    reviewer_profile = frappe.db.get_value("FOSS User Profile", {"email": reviewer}, "name")
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
 
     submission_doc = frappe.get_doc(PROPOSAL, submission_id)
 

@@ -14,10 +14,17 @@ HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 
+# Chapter-related identifiers
+CHAPTER = "FOSS Chapter"
+EVENT = "FOSS Chapter Event"
+STUDENT_CLUB = "FOSS Club"
+CONFERENCE = "Conference"
+
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
 PROPOSAL = "FOSS Event CFP Submission"
 PROPOSAL_REVIEW = "FOSS Event CFP Review"
+GLOBAL_REVIEW_SETTINGS = "FOSS Global CFP Review Settings"
 
 # Event RSVP-related identifiers
 EVENT_RSVP = "FOSS Event RSVP"

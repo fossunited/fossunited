@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, STUDENT_CLUB, USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -125,7 +125,7 @@ class FOSSChapter(WebsiteGenerator):
                 break
 
     def set_route(self):
-        if self.chapter_type == "FOSS Club":
+        if self.chapter_type == STUDENT_CLUB:
             self.route = f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
         else:
             self.route = f"{self.chapter_name.lower().replace(' ', '-')}"
@@ -134,7 +134,7 @@ class FOSSChapter(WebsiteGenerator):
         if self.chapter_type == "City Community":
             context.profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
-        elif self.chapter_type == "FOSS Club":
+        elif self.chapter_type == STUDENT_CLUB:
             context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
         else:
@@ -152,7 +152,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_upcoming_events(self):
         return frappe.get_all(
-            "FOSS Chapter Event",
+            EVENT,
             filters={
                 "chapter": self.name,
                 "event_end_date": (">=", frappe.utils.now()),
@@ -174,7 +174,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_past_events(self):
         return frappe.get_all(
-            "FOSS Chapter Event",
+            EVENT,
             filters={
                 "chapter": self.name,
                 "event_end_date": ("<", frappe.utils.now()),

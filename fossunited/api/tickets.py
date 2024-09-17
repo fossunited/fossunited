@@ -5,7 +5,7 @@ APIs for Tickets and Transfer Tickets
 import frappe
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.doctype_ids import EVENT_TICKET, TICKET_TRANSFER
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, TICKET_TRANSFER
 
 
 @frappe.whitelist(allow_guest=True)
@@ -297,7 +297,7 @@ def has_valid_permission(event_id: str, session_user: str = frappe.session.user)
     ):
         return False
 
-    chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, ["chapter"])
+    chapter_id = frappe.db.get_value(EVENT, event_id, ["chapter"])
     if not check_if_chapter_member(chapter_id, session_user):
         return False
 
@@ -334,6 +334,6 @@ def is_ticket_live(event_id: str) -> bool:
     Returns:
         bool: True if ticketing is live, False otherwise
     """
-    ticket_status = frappe.db.get_value("FOSS Chapter Event", event_id, "tickets_status")
+    ticket_status = frappe.db.get_value(EVENT, event_id, "tickets_status")
 
     return ticket_status == "Live"

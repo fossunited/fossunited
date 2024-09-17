@@ -6,7 +6,14 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import EVENT_CFP, EVENT_RSVP, PROPOSAL, RSVP_RESPONSE, USER_PROFILE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    EVENT_CFP,
+    EVENT_RSVP,
+    PROPOSAL,
+    RSVP_RESPONSE,
+    USER_PROFILE,
+)
 from fossunited.fossunited.utils import is_user_team_member
 
 BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
@@ -88,7 +95,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         if not self.chapter:
             return
 
-        chapter_team_members = frappe.get_doc("FOSS Chapter", self.chapter).chapter_members
+        chapter_team_members = frappe.get_doc(CHAPTER, self.chapter).chapter_members
 
         for member in chapter_team_members:
             self.append(
@@ -155,7 +162,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         self.route = f"events/{self.event_permalink}"
 
     def get_context(self, context):
-        context.chapter = frappe.get_doc("FOSS Chapter", self.chapter)
+        context.chapter = frappe.get_doc(CHAPTER, self.chapter)
         context.nav_items = self.get_navbar_items()
         context.sponsors_dict = self.get_sponsors()
         context.volunteers = self.get_volunteers()

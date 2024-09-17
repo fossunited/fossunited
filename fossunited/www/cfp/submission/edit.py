@@ -1,13 +1,13 @@
 import frappe
 
-from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
+from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL
 from fossunited.fossunited.utils import filter_field_values
 
 
 def get_context(context):
     context.submission = frappe.get_doc(PROPOSAL, frappe.form_dict["submission"])
     context.cfp = frappe.get_doc(EVENT_CFP, context.submission.linked_cfp)
-    context.event = frappe.get_doc("FOSS Chapter Event", context.submission.event)
+    context.event = frappe.get_doc(EVENT, context.submission.event)
 
     frappe.form_dict["doctype"] = PROPOSAL
     frappe.form_dict["cfp"] = frappe.form_dict.submission

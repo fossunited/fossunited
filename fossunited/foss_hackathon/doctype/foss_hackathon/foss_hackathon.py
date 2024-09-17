@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import HACKATHON_PROJECT, PROPOSAL, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, HACKATHON_PROJECT, PROPOSAL, USER_PROFILE
 
 no_cache = 1
 
@@ -75,7 +75,7 @@ class FOSSHackathon(WebsiteGenerator):
 
     def get_context(self, context):
         if self.organizing_chapter:
-            context.chapter = frappe.get_doc("FOSS Chapter", self.organizing_chapter)
+            context.chapter = frappe.get_doc(CHAPTER, self.organizing_chapter)
 
         context.nav_items = self.get_nav_items()
         context.sponsors_dict = self.get_sponsors()
