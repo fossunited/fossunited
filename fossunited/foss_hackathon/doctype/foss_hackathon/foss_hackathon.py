@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import HACKATHON_PROJECT, USER_PROFILE
+from fossunited.doctype_ids import HACKATHON_PROJECT, PROPOSAL, USER_PROFILE
 
 no_cache = 1
 
@@ -129,7 +129,7 @@ def get_speakers(schedule):
         schedule.no_speaker = True
         return
 
-    cfp = frappe.get_doc("FOSS Event CFP Submission", schedule.linked_cfp)
+    cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
     user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route

@@ -14,6 +14,15 @@ HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 
+# Event proposal-related identifiers
+EVENT_CFP = "FOSS Event CFP"
+PROPOSAL = "FOSS Event CFP Submission"
+PROPOSAL_REVIEW = "FOSS Event CFP Review"
+
+# Event RSVP-related identifiers
+EVENT_RSVP = "FOSS Event RSVP"
+RSVP_RESPONSE = "FOSS Event RSVP Submission"
+
 # Ticket-related identifiers
 EVENT_TICKET = "FOSS Event Ticket"
 TICKET_TRANSFER = "FOSS Event Ticket Transfer"

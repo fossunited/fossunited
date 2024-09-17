@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
 from fossunited.fossunited.utils import get_doc_likes
 
 
@@ -29,19 +30,17 @@ def get_event_proposals(
     ]
 
     proposals = frappe.get_all(
-        "FOSS Event CFP Submission",
+        PROPOSAL,
         filters={"event": event},
         fields=fields,
         page_length=99999,
         order_by="talk_title",
     )
 
-    is_cfp_anonymous = frappe.db.get_value(
-        "FOSS Event CFP", {"event": event}, "anonymise_proposals"
-    )
+    is_cfp_anonymous = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
 
     for proposal in proposals:
-        proposal["likes"] = len(get_doc_likes("FOSS Event CFP Submission", proposal["name"]))
+        proposal["likes"] = len(get_doc_likes(PROPOSAL, proposal["name"]))
         if is_cfp_anonymous and proposal.status != "Approved":
             proposal.full_name = ""
         del proposal["name"]
