@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
+from fossunited.doctype_ids import EVENT, EVENT_CFP, GLOBAL_REVIEW_SETTINGS, PROPOSAL
 
 
 class FOSSEventCFP(WebsiteGenerator):
@@ -42,7 +42,7 @@ class FOSSEventCFP(WebsiteGenerator):
         self.assign_reviewers()
 
     def assign_reviewers(self):
-        reviewers = frappe.get_single("FOSS Global CFP Review Settings").members
+        reviewers = frappe.get_single(GLOBAL_REVIEW_SETTINGS).members
         for reviewer in reviewers:
             self.append(
                 "cfp_reviewers",
@@ -58,19 +58,19 @@ class FOSSEventCFP(WebsiteGenerator):
         self.enable_cfp_tab()
 
     def set_route(self):
-        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
+        event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/cfp"
 
     def enable_cfp_tab(self):
-        frappe.db.set_value("FOSS Chapter Event", self.event, "show_cfp", 1)
+        frappe.db.set_value(EVENT, self.event, "show_cfp", 1)
 
     def get_context(self, context):
         context.submissions = get_cfp_submissions(self.name)
-        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
+        context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
-        context.event_date = frappe.db.get_value(
-            "FOSS Chapter Event", self.event, "event_start_date"
-        ).strftime("%B %d, %Y")
+        context.event_date = frappe.db.get_value(EVENT, self.event, "event_start_date").strftime(
+            "%B %d, %Y"
+        )
         context.submission_doctype = PROPOSAL
         context.already_submitted = True if self.check_if_already_submitted() else False
 

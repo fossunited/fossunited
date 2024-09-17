@@ -1,7 +1,7 @@
 import frappe
 
 from fossunited.api.dashboard import get_session_user_profile
-from fossunited.doctype_ids import RESTRICTED_USERNAME, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, RESTRICTED_USERNAME, USER_PROFILE
 
 
 @frappe.whitelist()
@@ -110,7 +110,7 @@ def is_valid_username(username: str, id: str) -> bool:
         bool: True if username is unique and not a restricted username
     """
     if (
-        frappe.db.exists("FOSS Chapter", {"route": username})
+        frappe.db.exists(CHAPTER, {"route": username})
         or frappe.db.exists(
             USER_PROFILE,
             {"route": username, "name": ["!=", id]},

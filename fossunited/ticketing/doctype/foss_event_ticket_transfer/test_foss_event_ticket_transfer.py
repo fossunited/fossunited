@@ -7,7 +7,7 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import EVENT_TICKET, TICKET_TRANSFER
+from fossunited.doctype_ids import CONFERENCE, EVENT, EVENT_TICKET, TICKET_TRANSFER
 
 
 class TestFOSSEventTicketTransfer(FrappeTestCase):
@@ -16,11 +16,11 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
 
         event = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter Event",
+                "doctype": EVENT,
                 "event_name": fake.text(max_nb_chars=20),
                 "event_permalink": fake.slug(3).replace("-", "_"),
                 "status": "Approved",
-                "event_type": "Conference",
+                "event_type": CONFERENCE,
                 "event_start_date": datetime.today(),
                 "event_end_date": datetime.today() + timedelta(1),
                 "event_description": "testing",
@@ -31,7 +31,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         self.event = event
 
     def tearDown(self):
-        frappe.delete_doc("FOSS Chapter Event", self.event.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
 
     def test_ticket_transfer(self):
         fake = Faker()

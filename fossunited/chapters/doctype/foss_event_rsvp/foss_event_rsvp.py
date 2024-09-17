@@ -5,7 +5,7 @@ import json
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import EVENT_RSVP, RSVP_RESPONSE
+from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 
 class FOSSEventRSVP(WebsiteGenerator):
@@ -42,7 +42,7 @@ class FOSSEventRSVP(WebsiteGenerator):
             self.is_published = 0
 
     def get_context(self, context):
-        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
+        context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
         context.event_date = context.event.event_start_date.strftime("%B %d, %Y")
 
@@ -87,11 +87,11 @@ class FOSSEventRSVP(WebsiteGenerator):
         context.no_cache = 1
 
     def set_route(self):
-        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
+        event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/rsvp"
 
     def enable_rsvp_tab(self):
-        frappe.db.set_value("FOSS Chapter Event", self.event, "show_rsvp", 1)
+        frappe.db.set_value(EVENT, self.event, "show_rsvp", 1)
 
     def get_custom_questions(self):
         custom_questions = []

@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, USER_PROFILE
 
 
 @frappe.whitelist()
@@ -25,7 +25,7 @@ def check_if_chapter_member(chapter: str, user: str = frappe.session.user) -> bo
             "FOSS Chapter Lead Team Member",
             {
                 "parent": chapter,
-                "parenttype": "FOSS Chapter",
+                "parenttype": CHAPTER,
                 "chapter_member": profile,
             },
         )

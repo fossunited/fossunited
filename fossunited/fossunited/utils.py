@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.utils.data import now_datetime
 
-from fossunited.doctype_ids import HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, EVENT, HACKATHON, USER_PROFILE
 
 
 # Jinja Filter
@@ -15,12 +15,12 @@ def get_profile_image(email):
 
 
 def get_event_volunteers(event):
-    volunteers = frappe.get_doc("FOSS Chapter Event", event).event_members
+    volunteers = frappe.get_doc(EVENT, event).event_members
     return volunteers
 
 
 def is_user_team_member(chapter, user):
-    members = frappe.get_doc("FOSS Chapter", chapter).chapter_members
+    members = frappe.get_doc(CHAPTER, chapter).chapter_members
     for member in members:
         if member.email == user:
             return True
@@ -197,7 +197,7 @@ def get_grouped_events():
     upcoming and past events.
     """
     events = frappe.get_all(
-        "FOSS Chapter Event",
+        EVENT,
         fields=["*"],
         filters={
             "status": ["in", ["Approved", "Live", "Concluded"]],
