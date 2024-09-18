@@ -12,7 +12,7 @@ fake = Faker()
 class TestRazorpayPayment(FrappeTestCase):
     def setUp(self):
         self.admin_user = frappe.get_doc("User", "Administrator")
-        self.normal_user = frappe.get_doc("User", "test@example.com")
+        self.normal_user = frappe.get_doc("User", "test1@example.com")
 
     def tearDown(self):
         frappe.set_user("Administrator")
