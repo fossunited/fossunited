@@ -116,3 +116,7 @@ class TestRazorpayPayment(FrappeTestCase):
         if invoice:
             self.assertEqual(invoice.doctype, RAZORPAY_PAYMENT)
             self.assertEqual(invoice.owner, self.admin_user.name)
+
+    def test_normal_user_cannot_create_invoice(self):
+        invoice = self.create_payment_document(self.normal_user)
+        self.assertIsNone(invoice)
