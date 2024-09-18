@@ -14,6 +14,10 @@ HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 
+# Events
+EVENT = "FOSS Chapter Event"
+# Note: Adding event instead of chapter event as there external events in the doctype too.
+
 # Payments
 
 RAZORPAY_PAYMENT = "Razorpay Payment"
