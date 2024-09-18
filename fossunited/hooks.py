@@ -34,10 +34,6 @@ website_route_rules = [
         "to_route": "/rsvp/create/new",
     },
     {
-        "from_route": "/events/<event_permalink>/schedule",
-        "to_route": "/schedule",
-    },
-    {
         "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },
@@ -56,10 +52,6 @@ website_route_rules = [
     {
         "from_route": "/events/<event_permalink>/book-conference-ticket",
         "to_route": "/book-conference-ticket",
-    },
-    {
-        "from_route": "/events/<event_permalink>/cfp/all",
-        "to_route": "/cfp/all",
     },
     {
         "from_route": "/hack/<permalink>/projects/all",
@@ -106,3 +98,8 @@ doc_events = {
         ],
     },
 }
+
+website_redirects = [
+    {"source": r"events/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
+    {"source": r"events/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
+]
