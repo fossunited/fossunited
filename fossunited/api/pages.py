@@ -1,17 +1,19 @@
 import frappe
 
+from fossunited.doctype_ids import CHAPTER, STUDENT_CLUB
+
 
 @frappe.whitelist(allow_guest=True)
 def search_foss_club(query):
     club_list = frappe.get_all(
-        "FOSS Chapter",
+        CHAPTER,
         fields=[
             "chapter_name",
             "route",
             "city",
         ],
         filters={
-            "chapter_type": "FOSS Club",
+            "chapter_type": STUDENT_CLUB,
         },
         or_filters=[
             ["city", "like", "%" + query + "%"],

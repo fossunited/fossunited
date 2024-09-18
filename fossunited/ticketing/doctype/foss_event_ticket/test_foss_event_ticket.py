@@ -8,15 +8,14 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
+from fossunited.doctype_ids import CHAPTER, CONFERENCE, EVENT, EVENT_TICKET, USER_PROFILE
 
 
 class TestFOSSEventTicket(FrappeTestCase):
     def setUp(self):
         fake = Faker()
 
-        chapter_member = frappe.db.get_value(
-            "FOSS User Profile", {"user": "test1@example.com"}, ["name"]
-        )
+        chapter_member = frappe.db.get_value(USER_PROFILE, {"user": "test1@example.com"}, ["name"])
         self.member_email = "test1@example.com"
         self.member_profile = chapter_member
 
@@ -31,8 +30,8 @@ class TestFOSSEventTicket(FrappeTestCase):
 
         chapter = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter",
-                "chapter_type": "Conference",
+                "doctype": CHAPTER,
+                "chapter_type": CONFERENCE,
                 "chapter_name": fake.name(),
                 "email": fake.email(),
                 "about_chapter": fake.text(),
@@ -43,12 +42,12 @@ class TestFOSSEventTicket(FrappeTestCase):
 
         event = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter Event",
+                "doctype": EVENT,
                 "chapter": chapter.name,
                 "event_name": fake.name(),
                 "event_permalink": fake.slug().replace("-", "_"),
                 "status": "Live",
-                "event_type": "Conference",
+                "event_type": CONFERENCE,
                 "event_start_date": datetime.today(),
                 "event_end_date": datetime.today() + timedelta(1),
                 "event_description": fake.text(),
@@ -69,7 +68,7 @@ class TestFOSSEventTicket(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        frappe.delete_doc("FOSS Chapter Event", self.event.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
 
     def test_checkin(self):
         fake = Faker()
@@ -77,7 +76,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         # Given that a ticket is created for an event
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": fake.name(),
                 "email": fake.email(),
@@ -109,7 +108,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         # Given that a ticket is created for an event
         ticket = frappe.get_doc(
             {
-                "doctype": "FOSS Event Ticket",
+                "doctype": EVENT_TICKET,
                 "event": self.event.name,
                 "full_name": fake.name(),
                 "email": fake.email(),

@@ -3,6 +3,7 @@ from datetime import datetime
 import frappe
 
 from fossunited.api.tickets import has_valid_permission
+from fossunited.doctype_ids import EVENT_TICKET
 
 
 @frappe.whitelist()
@@ -27,7 +28,7 @@ def get_attendee_with_checkin_data(
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
 
     tickets = frappe.db.get_all(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         _filters,
         [
             "name",
@@ -60,7 +61,7 @@ def get_checkin_data(attendee_id: str) -> dict:
 
     checkin_data = frappe.db.get_all(
         "Event Check In",
-        {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"},
+        {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
         ["check_in_time"],
     )
 
@@ -84,7 +85,7 @@ def checkin_attendee(
     if check_if_already_checked_in(attendee["name"]):
         frappe.throw("Attendee is already checked in", frappe.ValidationError)
 
-    ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
+    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
     if assign_tshirt:
         ticket.tshirt_delivered = True
@@ -103,7 +104,7 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
     """
     checkins = frappe.db.get_all(
         "Event Check In",
-        {"parent": attendee_id, "parenttype": "FOSS Event Ticket", "parentfield": "check_ins"},
+        {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
         ["check_in_time"],
     )
 
@@ -129,7 +130,7 @@ def undo_attendee_checkin(event_id: str, attendee: dict, user: str = frappe.sess
     if not has_valid_permission(event_id, user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
-    ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
+    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.check_ins.pop()
     ticket.save(ignore_permissions=True)
 
@@ -147,6 +148,6 @@ def assign_tshirt(event_id: str, attendee: dict, user: str = frappe.session.user
     if not has_valid_permission(event_id, user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
-    ticket = frappe.get_doc("FOSS Event Ticket", attendee["name"])
+    ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)

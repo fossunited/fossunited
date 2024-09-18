@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -9,14 +9,12 @@ from fossunited.utils.payments import (
 
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str) -> dict:
-    return frappe.get_doc("FOSS Chapter Event", name)
+    return frappe.get_doc(EVENT, name)
 
 
 @frappe.whitelist(allow_guest=True)
 def get_event_from_permalink(permalink: str, fields: list) -> dict:
-    return frappe.db.get_value(
-        "FOSS Chapter Event", {"event_permalink": permalink}, fields, as_dict=1
-    )
+    return frappe.db.get_value(EVENT, {"event_permalink": permalink}, fields, as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -134,7 +132,7 @@ def get_profile_data(username: str = None, email: str = None) -> dict:
         frappe.throw("Username or email is required")
 
     user = frappe.db.get_value(
-        "FOSS User Profile",
+        USER_PROFILE,
         {"user": username, "email": email or ""},
         [
             "full_name",
@@ -157,7 +155,7 @@ def get_user_profile_list(filters: dict = None) -> list:
         filters = {}
 
     profiles = frappe.db.get_all(
-        "FOSS User Profile",
+        USER_PROFILE,
         filters=filters,
         fields=[
             "full_name",

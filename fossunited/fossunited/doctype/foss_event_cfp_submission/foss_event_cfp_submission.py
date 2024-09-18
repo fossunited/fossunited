@@ -3,7 +3,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, EVENT_CFP, USER_PROFILE
 from fossunited.fossunited.utils import (
     get_doc_likes,
     get_event_volunteers,
@@ -70,7 +70,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
-        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
+        event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/cfp/{self.name}"
 
     def set_scores(self):
@@ -85,12 +85,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             frappe.throw("Illegal status change", frappe.ValidationError)
 
     def validate_linked_cfp_exists(self):
-        if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
+        if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
-        context.cfp = frappe.get_doc("FOSS Event CFP", self.linked_cfp)
-        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
+        context.cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+        context.event = frappe.get_doc(EVENT, self.event)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
         context.reviewers = self.get_reviewers(context.cfp)
