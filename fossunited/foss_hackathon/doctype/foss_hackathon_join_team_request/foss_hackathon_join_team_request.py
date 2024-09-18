@@ -26,7 +26,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         reciever_email: DF.Data | None
         requested_by: DF.Link | None
         sender_name: DF.Data | None
-        status: DF.Literal["Pending", "Accepted", "Rejected"]
+        status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F821
         team: DF.Link | None
         team_name: DF.Data | None
     # end: auto-generated types

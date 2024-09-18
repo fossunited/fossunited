@@ -1,5 +1,4 @@
 import json
-import uuid
 
 import frappe
 from faker import Faker
@@ -61,10 +60,26 @@ class TestRazorpayPayment(FrappeTestCase):
         # Have taken this metadata to mimic the razorpay payment metadata
         meta_data = {
             "attendees": [
-                {"designation": fake.job(), "email": fake.email(), "full_name": fake.name(), "organization": fake.company(), "placeholder": fake.name(), "wants_tshirt": 0},
-                {"designation": fake.job(), "email": fake.email(), "full_name": fake.name(), "organization": fake.company(), "placeholder": fake.name(), "wants_tshirt": 0},
+                {
+                    "designation": fake.job(),
+                    "email": fake.email(),
+                    "full_name": fake.name(),
+                    "organization": fake.company(),
+                    "placeholder": fake.name(),
+                    "wants_tshirt": 0,
+                },
+                {
+                    "designation": fake.job(),
+                    "email": fake.email(),
+                    "full_name": fake.name(),
+                    "organization": fake.company(),
+                    "placeholder": fake.name(),
+                    "wants_tshirt": 0,
+                },
             ],
-            "custom_fields": {"food_preference": fake.random_element(elements=("Veg", "Non-Veg", "Vegan"))},
+            "custom_fields": {
+                "food_preference": fake.random_element(elements=("Veg", "Non-Veg", "Vegan"))
+            },
             "event": self.event,
             "num_seats": "2",
             "tier": {

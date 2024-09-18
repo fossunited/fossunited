@@ -2,7 +2,7 @@ import json
 
 import frappe
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import PROPOSAL, RSVP_RESPONSE, USER_PROFILE
 
 """
 Some utils and APIs for forms such as RSVP, CFP etc.
@@ -11,12 +11,9 @@ Some utils and APIs for forms such as RSVP, CFP etc.
 
 def is_valid_doctype(doctype: str):
     """
-    Validate the doctype to be either "FOSS Event CFP Submission" or "FOSS Event RSVP Submission"
+    Validate the doctype to be either PROPOSAL or RSVP_RESPONSE
     """
-    return doctype in (
-        "FOSS Event RSVP Submission",
-        "FOSS Event CFP Submission",
-    )
+    return doctype in (RSVP_RESPONSE, PROPOSAL)
 
 
 @frappe.whitelist()
@@ -66,7 +63,7 @@ def post_review(submission, to_approve, remarks):
     """
     reviewer = frappe.get_doc(USER_PROFILE, {"email": frappe.session.user})
 
-    submission_doc = frappe.get_doc("FOSS Event CFP Submission", submission)
+    submission_doc = frappe.get_doc(PROPOSAL, submission)
     submission_doc.append(
         "reviews",
         {

@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import EVENT_TICKET
+
 
 class FOSSEventTicketTransfer(Document):
     # begin: auto-generated types
@@ -21,7 +23,7 @@ class FOSSEventTicketTransfer(Document):
         owner_name: DF.Data | None
         receiver_email: DF.Data
         receiver_name: DF.Data
-        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]
+        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]  # noqa: F722, F821
         ticket: DF.Link
         tshirt_size: DF.Data | None
         wants_tshirt: DF.Check
@@ -42,19 +44,22 @@ class FOSSEventTicketTransfer(Document):
         self.validate_ticket_exists()
 
     def validate_ticket_exists(self):
-        if not frappe.db.exists("FOSS Event Ticket", self.ticket):
+        if not frappe.db.exists(EVENT_TICKET, self.ticket):
             frappe.throw("Ticket not found", frappe.DoesNotExistError)
 
     def validate_status_is_pending(self):
         if self.status != "Pending Approval":
             frappe.throw(
-                "Invalid status change. Status should be 'Pending Approval'. Current status is {0}".format(self.status),
+                (
+                    "Invalid status change. Status should be 'Pending Approval'. "
+                    f"Current status is {self.status}"
+                ),
                 frappe.ValidationError,
             )
 
     def transfer_ticket(self):
         try:
-            ticket = frappe.get_doc("FOSS Event Ticket", self.ticket)
+            ticket = frappe.get_doc(EVENT_TICKET, self.ticket)
             self.handle_already_transferred_ticket(ticket)
             ticket.full_name = self.receiver_name
             ticket.email = self.receiver_email
@@ -72,8 +77,8 @@ class FOSSEventTicketTransfer(Document):
         If the ticket that is to be transferred, is already a transferred ticket,
         then set the `is_transfer_ticket` to 0 (unchecked).
 
-        This is done, so that any notification / doc events associated with change in `is_transfer_ticket` field
-        can be triggered again.
+        This is done, so that any notification / doc events associated with change in
+        `is_transfer_ticket` field can be triggered again.
         """
         if not ticket.is_transfer_ticket:
             return

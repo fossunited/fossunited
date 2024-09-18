@@ -11,7 +11,6 @@ from fossunited.doctype_ids import (
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
     HACKATHON_TEAM_MEMBER,
-    LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper
@@ -305,8 +304,14 @@ def get_localhost_requests_by_team(
     for request in requests:
         request["profile_route"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "route")
         profile_photo = frappe.db.get_value(USER_PROFILE, request.user_profile, "profile_photo")
-        request["profile_photo"] = profile_photo if profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png"
-        request["profile_username"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "username")
+        request["profile_photo"] = (
+            profile_photo
+            if profile_photo
+            else "/assets/fossunited/images/defaults/user_profile_image.png"
+        )
+        request["profile_username"] = frappe.db.get_value(
+            USER_PROFILE, request.user_profile, "username"
+        )
 
     requests_by_team = {}
 
@@ -460,7 +465,7 @@ def delete_project(hackathon: str, team: str):
         frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
         frappe.db.delete(HACKATHON_PROJECT, project.name)
         return True
-    except Exception as e:
+    except Exception:
         frappe.throw("Error deleting project")
 
 
@@ -546,7 +551,9 @@ def validate_user_as_localhost_member(localhost_id: str):
             ),
         },
     ):
-        frappe.throw("You are not a member of this Localhost. You are not authorized to view this page")
+        frappe.throw(
+            "You are not a member of this Localhost. You are not authorized to view this page"
+        )
 
     return True
 

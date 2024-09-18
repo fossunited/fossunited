@@ -23,7 +23,7 @@ class RazorpayPayment(Document):
         billing_address: DF.Text | None
         buyer_name: DF.Data | None
         company_name: DF.Data | None
-        currency: DF.Literal["INR"]
+        currency: DF.Literal["INR"]  # noqa: F821
         document_name: DF.DynamicLink | None
         document_type: DF.Link | None
         email: DF.Data
@@ -33,7 +33,13 @@ class RazorpayPayment(Document):
         payment_id: DF.Data | None
         refund_id: DF.Data | None
         state: DF.Data | None
-        status: DF.Literal["Captured", "Failed", "Pending", "Refund Pending", "Refunded"]
+        status: DF.Literal[
+            "Captured",  # noqa: F821
+            "Failed",  # noqa: F821
+            "Pending",  # noqa: F821
+            "Refund Pending",  # noqa: F722, F821
+            "Refunded",  # noqa: F722, F821
+        ]
     # end: auto-generated types
 
     @frappe.whitelist()

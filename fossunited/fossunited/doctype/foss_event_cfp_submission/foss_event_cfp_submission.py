@@ -3,7 +3,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, EVENT_CFP, USER_PROFILE
 from fossunited.fossunited.utils import (
     get_doc_likes,
     get_event_volunteers,
@@ -37,7 +37,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         event_name: DF.Data | None
         first_name: DF.Data | None
         full_name: DF.Data
-        is_first_talk: DF.Literal["Yes", "No"]
+        is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
         last_name: DF.Data | None
         linked_cfp: DF.Link
@@ -47,8 +47,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         positive_reviews: DF.Data | None
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
-        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]
-        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]
+        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]  # noqa: F722, F821
+        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None
@@ -70,7 +70,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
-        event_route = frappe.db.get_value("FOSS Chapter Event", self.event, "route")
+        event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/cfp/{self.name}"
 
     def set_scores(self):
@@ -85,21 +85,25 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             frappe.throw("Illegal status change", frappe.ValidationError)
 
     def validate_linked_cfp_exists(self):
-        if not frappe.db.exists("FOSS Event CFP", self.linked_cfp):
+        if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
-        context.cfp = frappe.get_doc("FOSS Event CFP", self.linked_cfp)
-        context.event = frappe.get_doc("FOSS Chapter Event", self.event)
+        context.cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+        context.event = frappe.get_doc(EVENT, self.event)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
         context.reviewers = self.get_reviewers(context.cfp)
-        context.is_reviewer = frappe.session.user in [reviewer["email"] for reviewer in context.reviewers]
+        context.is_reviewer = frappe.session.user in [
+            reviewer["email"] for reviewer in context.reviewers
+        ]
         context.nav_items = self.get_navbar_items(context)
         context.submitter_foss_profile = None
 
         if self.submitted_by:
-            context.submitter_foss_profile = frappe.get_doc(USER_PROFILE, {"user": self.submitted_by})
+            context.submitter_foss_profile = frappe.get_doc(
+                USER_PROFILE, {"user": self.submitted_by}
+            )
 
         context.review_statistics = self.get_review_statistics()
         context.reviews = self.get_reviews()
@@ -123,7 +127,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if context.cfp.anonymise_proposals and not self.status == "Approved":
             nav_items.remove("about_speaker")
 
-        if not context.is_reviewer and frappe.session.user not in [volunteer.email for volunteer in volunteers] and not frappe.session.user == self.submitted_by:
+        if (
+            not context.is_reviewer
+            and frappe.session.user not in [volunteer.email for volunteer in volunteers]
+            and not frappe.session.user == self.submitted_by
+        ):
             nav_items.remove("proposal_reviews")
 
         return nav_items

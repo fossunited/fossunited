@@ -5,6 +5,7 @@ APIs for Tickets and Transfer Tickets
 import frappe
 
 from fossunited.api.chapter import check_if_chapter_member
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, TICKET_TRANSFER
 
 
 @frappe.whitelist(allow_guest=True)
@@ -12,7 +13,7 @@ def check_ticket_validity(ticket_id: str):
     """
     Check if the ticket is valid or not
     """
-    is_ticket_valid = frappe.db.exists("FOSS Event Ticket", ticket_id)
+    is_ticket_valid = frappe.db.exists(EVENT_TICKET, ticket_id)
 
     return bool(is_ticket_valid)
 
@@ -23,7 +24,7 @@ def get_ticket_details(ticket_id: str):
     Get the event for the ticket
     """
     ticket = frappe.db.get_value(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         ticket_id,
         ["event", "tier", "wants_tshirt", "tshirt_size"],
         as_dict=True,
@@ -38,7 +39,7 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     """
     transfer_request = frappe.get_doc(
         {
-            "doctype": "FOSS Event Ticket Transfer",
+            "doctype": TICKET_TRANSFER,
             "ticket": ticket,
             "receiver_name": receiver_details.get("receiver_name"),
             "receiver_email": receiver_details.get("receiver_email"),
@@ -58,7 +59,7 @@ def get_transfer_doc_validity(transfer_id: str):
     """
     Check the validity of transfer doc/id
     """
-    is_valid_id = frappe.db.exists("FOSS Event Ticket Transfer", transfer_id)
+    is_valid_id = frappe.db.exists(TICKET_TRANSFER, transfer_id)
 
     return bool(is_valid_id)
 
@@ -69,7 +70,7 @@ def get_transfer_details(id: str):
     Get the transfer doc
     """
     doc = frappe.db.get_value(
-        "FOSS Event Ticket Transfer",
+        TICKET_TRANSFER,
         id,
         ["name", "status", "ticket"],
         as_dict=True,
@@ -82,7 +83,7 @@ def change_transfer_status(transfer_id: str, status: str):
     """
     Change the status of the transfer request
     """
-    doc = frappe.get_doc("FOSS Event Ticket Transfer", transfer_id)
+    doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
     doc.status = status
     doc.save()
     return True
@@ -96,21 +97,21 @@ def get_tickets_insights(event_id: str) -> dict:
     Returns:
         dict: Insights of the tickets
     """
-    total_sold = frappe.db.count("FOSS Event Ticket", filters={"event": event_id})
+    total_sold = frappe.db.count(TICKET_TRANSFER, filters={"event": event_id})
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
 
     # Get the percentage of increase or decrease in the tickets sold compared to till previous day
     tickets_sold_today = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={
             "event": event_id,
             "creation": ["like", f"{frappe.utils.nowdate()}%"],
         },
     )
     tickets_sold_yesterday = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={
             "event": event_id,
             "creation": [
@@ -120,7 +121,9 @@ def get_tickets_insights(event_id: str) -> dict:
         },
     )
 
-    percentage_change = get_percentage_change(float(tickets_sold_today), float(tickets_sold_yesterday))
+    percentage_change = get_percentage_change(
+        float(tickets_sold_today), float(tickets_sold_yesterday)
+    )
 
     tier_data = {}
 
@@ -150,13 +153,13 @@ def get_tshirt_insights(event_id: str) -> dict:
         dict: Insights of the t-shirts
     """
     tshirts_sold = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={"event": event_id, "wants_tshirt": 1},
     )
 
     # Group tshirts sold by size
     tshirt_sizes = frappe.db.get_all(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={"event": event_id, "wants_tshirt": 1},
         fields=["tshirt_size"],
     )
@@ -179,11 +182,11 @@ def get_tier_insights(tier: dict) -> dict:
     stats = {}
     stats["title"] = tier.title
     stats["total_sold"] = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={"event": tier.parent, "tier": tier.title},
     )
     stats["tickets_sold_today"] = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={
             "event": tier.parent,
             "tier": tier.title,
@@ -191,7 +194,7 @@ def get_tier_insights(tier: dict) -> dict:
         },
     )
     stats["tickets_sold_yesterday"] = frappe.db.count(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={
             "event": tier.parent,
             "tier": tier.title,
@@ -242,9 +245,9 @@ def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.sessi
 
     if not has_valid_permission(event_id, user):
         frappe.throw("You are not authorized to view the tickets for this event")
-    print("Filters: ", filters)
+
     tickets = frappe.db.get_all(
-        "FOSS Event Ticket",
+        EVENT_TICKET,
         filters={"event": event_id, **filters},
         fields=[
             "tier",
@@ -282,10 +285,19 @@ def has_valid_permission(event_id: str, session_user: str = frappe.session.user)
                 },
             )
         )
+        or bool(
+            frappe.db.exists(
+                "Has Role",
+                {
+                    "role": "Chapter Team Member",
+                    "parent": session_user,
+                },
+            )
+        )
     ):
         return False
 
-    chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, ["chapter"])
+    chapter_id = frappe.db.get_value(EVENT, event_id, ["chapter"])
     if not check_if_chapter_member(chapter_id, session_user):
         return False
 
@@ -322,6 +334,6 @@ def is_ticket_live(event_id: str) -> bool:
     Returns:
         bool: True if ticketing is live, False otherwise
     """
-    ticket_status = frappe.db.get_value("FOSS Chapter Event", event_id, "tickets_status")
+    ticket_status = frappe.db.get_value(EVENT, event_id, "tickets_status")
 
     return ticket_status == "Live"

@@ -2,6 +2,8 @@ from datetime import datetime
 
 import frappe
 
+from fossunited.doctype_ids import EVENT
+
 
 @frappe.whitelist(allow_guest=True)
 def get_event_schedule(event_id: str) -> dict:
@@ -15,7 +17,12 @@ def get_event_schedule(event_id: str) -> dict:
         dict: Schedule data
     """
 
-    schedule = frappe.db.get_all("FOSS Event Schedule", {"parent": event_id, "parenttype": "FOSS Chapter Event"}, ["*"], order_by="start_time")
+    schedule = frappe.db.get_all(
+        "FOSS Event Schedule",
+        {"parent": event_id, "parenttype": EVENT},
+        ["*"],
+        order_by="start_time",
+    )
 
     schedule_by_date = get_schedule_by_date(schedule)
 

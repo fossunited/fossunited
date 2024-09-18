@@ -50,6 +50,7 @@ const event = createResource({
   makeParams() {
     return {
       permalink: route.params.permalink,
+      fields: ["*"],
     }
   },
   auto: true,

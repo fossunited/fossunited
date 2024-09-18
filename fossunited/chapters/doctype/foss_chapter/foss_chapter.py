@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, STUDENT_CLUB, USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -16,7 +16,7 @@ class FOSSChapter(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (  # noqa: E501
             FOSSChapterLeadTeamMember,
         )
 
@@ -25,7 +25,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
         city: DF.Link | None
         country: DF.Link | None
         email: DF.Data
@@ -125,7 +125,7 @@ class FOSSChapter(WebsiteGenerator):
                 break
 
     def set_route(self):
-        if self.chapter_type == "FOSS Club":
+        if self.chapter_type == STUDENT_CLUB:
             self.route = f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
         else:
             self.route = f"{self.chapter_name.lower().replace(' ', '-')}"
@@ -134,7 +134,7 @@ class FOSSChapter(WebsiteGenerator):
         if self.chapter_type == "City Community":
             context.profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
-        elif self.chapter_type == "FOSS Club":
+        elif self.chapter_type == STUDENT_CLUB:
             context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
         else:
@@ -152,7 +152,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_upcoming_events(self):
         return frappe.get_all(
-            "FOSS Chapter Event",
+            EVENT,
             filters={
                 "chapter": self.name,
                 "event_end_date": (">=", frappe.utils.now()),
@@ -174,7 +174,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_past_events(self):
         return frappe.get_all(
-            "FOSS Chapter Event",
+            EVENT,
             filters={
                 "chapter": self.name,
                 "event_end_date": ("<", frappe.utils.now()),
@@ -202,7 +202,11 @@ class FOSSChapter(WebsiteGenerator):
                 {
                     "full_name": member.full_name,
                     "role": member.role,
-                    "profile_picture": profile.profile_photo if profile.profile_photo else "/assets/fossunited/images/defaults/user_profile_image.png",
+                    "profile_picture": (
+                        profile.profile_photo
+                        if profile.profile_photo
+                        else "/assets/fossunited/images/defaults/user_profile_image.png"
+                    ),
                     "route": profile.route,
                 }
             )

@@ -5,7 +5,7 @@ from datetime import datetime
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import HACKATHON_PROJECT, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, HACKATHON_PROJECT, PROPOSAL, USER_PROFILE
 
 no_cache = 1
 
@@ -21,7 +21,7 @@ class FOSSHackathon(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
@@ -43,7 +43,7 @@ class FOSSHackathon(WebsiteGenerator):
         hackathon_logo: DF.AttachImage | None
         hackathon_name: DF.Data
         hackathon_rules: DF.TextEditor | None
-        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]
+        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]  # noqa: F722, F821
         has_external_website: DF.Check
         has_localhosts: DF.Check
         has_partner_projects: DF.Check
@@ -75,7 +75,7 @@ class FOSSHackathon(WebsiteGenerator):
 
     def get_context(self, context):
         if self.organizing_chapter:
-            context.chapter = frappe.get_doc("FOSS Chapter", self.organizing_chapter)
+            context.chapter = frappe.get_doc(CHAPTER, self.organizing_chapter)
 
         context.nav_items = self.get_nav_items()
         context.sponsors_dict = self.get_sponsors()
@@ -129,7 +129,7 @@ def get_speakers(schedule):
         schedule.no_speaker = True
         return
 
-    cfp = frappe.get_doc("FOSS Event CFP Submission", schedule.linked_cfp)
+    cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
     user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
     schedule.cfp_route = cfp.route
     schedule.speaker_route = user.route

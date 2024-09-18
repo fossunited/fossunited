@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import EVENT_RSVP, RSVP_RESPONSE
+
 
 class FOSSEventRSVPSubmission(Document):
     # begin: auto-generated types
@@ -24,7 +26,7 @@ class FOSSEventRSVPSubmission(Document):
         email: DF.Data
         event: DF.Data
         event_name: DF.Data | None
-        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
+        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]  # noqa: F722, F821
         linked_rsvp: DF.Link
         name1: DF.Data
         submitted_by: DF.Link | None
@@ -40,26 +42,26 @@ class FOSSEventRSVPSubmission(Document):
     def close_rsvp_on_max_count(self):
         max_count = self.get_max_count()
         submission_count = frappe.db.count(
-            "FOSS Event RSVP Submission",
+            RSVP_RESPONSE,
             {"linked_rsvp": self.linked_rsvp},
         )
 
         if submission_count >= max_count:
             frappe.db.set_value(
-                "FOSS Event RSVP",
+                EVENT_RSVP,
                 self.linked_rsvp,
                 "is_published",
                 False,
             )
 
     def get_max_count(self):
-        max_count = frappe.db.get_value("FOSS Event RSVP", self.linked_rsvp, "max_rsvp_count")
+        max_count = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "max_rsvp_count")
         return max_count
 
     def validate_linked_rsvp_exists(self):
-        if not frappe.db.exists("FOSS Event RSVP", self.linked_rsvp):
+        if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
 
-        is_rsvp_published = frappe.db.get_value("FOSS Event RSVP", self.linked_rsvp, "is_published")
+        is_rsvp_published = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "is_published")
         if not is_rsvp_published:
             frappe.throw("RSVP is not published", frappe.PermissionError)

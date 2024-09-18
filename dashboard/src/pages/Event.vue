@@ -70,6 +70,10 @@ const event = createResource({
         label: 'Tickets',
         route: `/event/${route.params.id}/tickets`,
       })
+      sidebar_items.items.push({
+        label: 'Check-Ins',
+        route: `/event/${route.params.id}/checkins`,
+      })
     }
 
     sidebarMenuItems.value.push(sidebar_items)

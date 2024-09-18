@@ -17,7 +17,6 @@ def handle_razorpay_webhook():
     payment_entity = form_dict["payload"]["payment"]["entity"]
     razorpay_order_id = payment_entity["order_id"]
     razorpay_payment_id = payment_entity["id"]
-    customer_email = payment_entity["email"]
     event = form_dict.get("event")
 
     # Create webhook log
@@ -52,7 +51,9 @@ def handle_razorpay_webhook():
 
 def verify_webhook_signature(payload):
     signature = frappe.get_request_header("X-Razorpay-Signature")
-    webhook_secret = get_decrypted_password("Razorpay Settings", "Razorpay Settings", "webhook_secret")
+    webhook_secret = get_decrypted_password(
+        "Razorpay Settings", "Razorpay Settings", "webhook_secret"
+    )
 
     client = get_razorpay_client()
     client.utility.verify_webhook_signature(payload.decode(), signature, webhook_secret)

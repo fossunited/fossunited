@@ -7,13 +7,15 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
+from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+
 
 class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def test_unpublish_on_max_count(self):
         # Given an RSVP with max count of 5
         event = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter Event",
+                "doctype": EVENT,
                 "event_name": "_Test_Event",
                 "event_permalink": "test-event-12345",
                 "status": "Live",
@@ -27,7 +29,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
 
         rsvp = frappe.get_doc(
             {
-                "doctype": "FOSS Event RSVP",
+                "doctype": EVENT_RSVP,
                 "max_rsvp_count": 5,
                 "event": event.name,
             }
@@ -39,7 +41,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         for i in range(5):
             frappe.get_doc(
                 {
-                    "doctype": "FOSS Event RSVP Submission",
+                    "doctype": RSVP_RESPONSE,
                     "linked_rsvp": rsvp.name,
                     "event": rsvp.event,
                     "name1": fake.name(),
@@ -49,5 +51,5 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             ).insert()
 
         # Then the RSVP must be unpublished
-        is_published = frappe.db.get_value("FOSS Event RSVP", rsvp.name, "is_published")
+        is_published = frappe.db.get_value(EVENT_RSVP, rsvp.name, "is_published")
         self.assertFalse(is_published)
