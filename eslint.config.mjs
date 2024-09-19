@@ -5,6 +5,13 @@ import prettierConfig from 'eslint-config-prettier'
 import prettierPlugin from 'eslint-plugin-prettier'
 
 export default [
+  {
+    ignores: [
+      '**/node_modules/**',
+      'fossunited/public/dist/**/*',
+      'fossunited/public/dashboard/**/*',
+    ],
+  },
   { files: ['**/*.{js,mjs,cjs,vue}'] },
   {
     languageOptions: {
