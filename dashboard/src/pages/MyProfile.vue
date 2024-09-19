@@ -95,9 +95,7 @@
               />
               <div class="mt-2 flex items-center">
                 <div v-if="isValidUsername.loading">
-                  <span class="text-sm text-gray-500 mr-2">
-                    Checking availability...
-                  </span>
+                  <span class="text-sm text-gray-500 mr-2"> Checking availability... </span>
                   <span
                     class="animate-spin h-4 w-4 border-2 border-gray-500 rounded-full border-t-transparent"
                   ></span>
@@ -136,10 +134,7 @@
               v-model="profile_dict.bio"
               description="A short tagline about yourself"
             />
-            <FormControl
-              label="Current City"
-              v-model="profile_dict.current_city"
-            />
+            <FormControl label="Current City" v-model="profile_dict.current_city" />
             <TextEditor
               label="About"
               class="col-span-2"
@@ -154,56 +149,16 @@
               Enter the complete links to your social, including
               <code>https://</code>
             </div>
-            <FormControl
-              type="url"
-              label="Website"
-              v-model="profile_dict.website"
-            />
-            <FormControl
-              type="url"
-              label="Twitter / X"
-              v-model="profile_dict.x"
-            />
-            <FormControl
-              type="url"
-              label="LinkedIn"
-              v-model="profile_dict.linkedin"
-            />
-            <FormControl
-              type="url"
-              label="GitHub"
-              v-model="profile_dict.github"
-            />
-            <FormControl
-              type="url"
-              label="GitLab"
-              v-model="profile_dict.gitlab"
-            />
-            <FormControl
-              type="url"
-              label="Instagram"
-              v-model="profile_dict.instagram"
-            />
-            <FormControl
-              type="url"
-              label="YouTube"
-              v-model="profile_dict.youtube"
-            />
-            <FormControl
-              type="url"
-              label="Dev.to"
-              v-model="profile_dict.devto"
-            />
-            <FormControl
-              type="url"
-              label="Medium"
-              v-model="profile_dict.medium"
-            />
-            <FormControl
-              type="url"
-              label="Mastodon"
-              v-model="profile_dict.mastodon"
-            />
+            <FormControl type="url" label="Website" v-model="profile_dict.website" />
+            <FormControl type="url" label="Twitter / X" v-model="profile_dict.x" />
+            <FormControl type="url" label="LinkedIn" v-model="profile_dict.linkedin" />
+            <FormControl type="url" label="GitHub" v-model="profile_dict.github" />
+            <FormControl type="url" label="GitLab" v-model="profile_dict.gitlab" />
+            <FormControl type="url" label="Instagram" v-model="profile_dict.instagram" />
+            <FormControl type="url" label="YouTube" v-model="profile_dict.youtube" />
+            <FormControl type="url" label="Dev.to" v-model="profile_dict.devto" />
+            <FormControl type="url" label="Medium" v-model="profile_dict.medium" />
+            <FormControl type="url" label="Mastodon" v-model="profile_dict.mastodon" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -224,13 +179,7 @@
 </template>
 <script setup>
 import TextEditor from '@/components/TextEditor.vue'
-import {
-  createResource,
-  FileUploader,
-  Switch,
-  FormControl,
-  ErrorMessage,
-} from 'frappe-ui'
+import { createResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
@@ -354,7 +303,7 @@ const getUsernameErrors = () => {
     _errors.push('Username is required')
     return _errors
   }
-  if (profile_dict.username.length < 3 || profile_dict.username.length > 30 ) {
+  if (profile_dict.username.length < 3 || profile_dict.username.length > 30) {
     _errors.push(messages[0])
   }
   if (!/^[a-zA-Z0-9_\.]+$/.test(profile_dict.username)) {
@@ -382,8 +331,7 @@ const validateUsername = async () => {
         usernameValidateErrors.value = ''
       }
     } catch (_) {
-      usernameValidateErrors.value =
-        'Error checking username availability. Refresh and try again!'
+      usernameValidateErrors.value = 'Error checking username availability. Refresh and try again!'
     }
   } else {
     usernameValidateErrors.value = ''
@@ -393,11 +341,11 @@ const validateUsername = async () => {
 watch(
   () => profile_dict.username,
   (newValue) => {
-      usernameValidateErrors.value = ''
-      if (newValue.trim() !== '') {
-        validateUsername()
-      }
-  }
+    usernameValidateErrors.value = ''
+    if (newValue.trim() !== '') {
+      validateUsername()
+    }
+  },
 )
 
 const isValidUsername = createResource({

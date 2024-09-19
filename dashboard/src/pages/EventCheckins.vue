@@ -11,9 +11,7 @@
       <div class="flex flex-col my-4 justify-center">
         <!-- Search Fields -->
         <div class="flex flex-col gap-2 mb-4 mt-2">
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center"
-          >
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 items-center">
             <FormControl
               v-model="filters.full_name"
               label="Name"

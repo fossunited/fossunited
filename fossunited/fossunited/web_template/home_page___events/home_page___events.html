@@ -1,136 +1,141 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css">
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+/>
 
 <style>
-    .events-section{
-        display: flex;
-        align-items: center;
+  .events-section {
+    display: flex;
+    align-items: center;
+  }
+
+  .events-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 7rem;
+    flex-direction: column;
+  }
+
+  .events-subsection {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 3rem;
+    width: 100%;
+  }
+
+  .flagship-events-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-around;
+    gap: 2.5rem;
+    width: 100%;
+  }
+
+  .flagship-event-card {
+    padding: 1.25rem;
+    display: grid;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .flagship-event-card:hover {
+    text-decoration: none;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
+  }
+  .flagship-event-card:hover > .flagship-card-cta {
+    color: var(--Foundation-FOSS-Mint-foss-mint-500, #08b74f);
+  }
+
+  .flagship-card-image {
+    height: 1.75rem;
+  }
+
+  .flagship-card-heading {
+    font-size: var(--text-xl);
+  }
+
+  .flagship-card-desc {
+    color: var(--Gray-500, #667085);
+    font-weight: var(--fw-medium);
+    line-height: 1.5;
+  }
+
+  .flagship-card-cta {
+    display: flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: var(--fw-semibold);
+  }
+
+  @media screen and (max-width: 768px) {
+    .events-card-block {
+      grid-template-columns: 1fr;
     }
 
-    .events-container{
-        display: flex;
-        align-items: flex-start;
-        gap: 7rem;
-        flex-direction: column;
+    .flagship-events-block {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      width: 100%;
     }
 
-    .events-subsection{
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        align-items: flex-start;
-        gap: 3rem;
-        width: 100%;
+    .flagship-event-card {
+      border-radius: 0.5rem;
+      border: 0.5px solid var(--Gray-200, #eaecf0);
     }
 
-    .flagship-events-block{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        justify-content: space-around;
-        gap: 2.5rem;
-        width: 100%
+    .flagship-event-card:hover {
+      text-decoration: none;
+      background: #fff;
+      box-shadow: none;
     }
-
-    .flagship-event-card{
-        padding: 1.25rem;
-        display: grid;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .flagship-event-card:hover{
-        text-decoration: none;
-        border-radius: 0.5rem;
-        background: #FFF;
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
-    }
-    .flagship-event-card:hover > .flagship-card-cta{
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-    }
-
-    .flagship-card-image{
-        height: 1.75rem;
-    }
-
-    .flagship-card-heading{
-        font-size: var(--text-xl);
-    }
-
-    .flagship-card-desc{
-        color: var(--Gray-500, #667085);
-        font-weight: var(--fw-medium);
-        line-height: 1.5;
-    }
-
-    .flagship-card-cta{
-        display: flex;
-        align-items: center;
-        font-size: var(--text-sm);
-        font-weight: var(--fw-semibold);
-
-    }
-
-
-    @media screen and (max-width: 768px) {
-
-        .events-card-block{
-            grid-template-columns: 1fr;
-
-        }
-
-        .flagship-events-block{
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-            width: 100%
-        }
-
-        .flagship-event-card{
-            border-radius: 0.5rem;
-            border: 0.5px solid var(--Gray-200, #EAECF0)
-        }
-
-
-        .flagship-event-card:hover{
-            text-decoration: none;
-            background: #FFF;
-            box-shadow: none;
-        }
-    }
-
+  }
 </style>
 
 <div class="events-section container">
-        <!-- Flagship Events Section -->
-        <div class="events-subsection">
-            <h5>Flagship Events</h5>
+  <!-- Flagship Events Section -->
+  <div class="events-subsection">
+    <h5>Flagship Events</h5>
 
-            <div class="flagship-events-block">
-                <a class="flagship-event-card" href="{{indiafoss_link}}">
-                    <img class="flagship-card-image" src="assets/fossunited/icons/indiafoss-icon.svg" alt="IndiaFOSS">
-                    <h6 class="flagship-card-heading">IndiaFOSS</h6>
-                    <p class="flagship-card-desc">IndiaFOSS is an annual FOSS conference,
-                        organised with passion and commitment by the FOSS United community. </p>
+    <div class="flagship-events-block">
+      <a class="flagship-event-card" href="{{ indiafoss_link }}">
+        <img
+          class="flagship-card-image"
+          src="assets/fossunited/icons/indiafoss-icon.svg"
+          alt="IndiaFOSS"
+        />
+        <h6 class="flagship-card-heading">IndiaFOSS</h6>
+        <p class="flagship-card-desc">
+          IndiaFOSS is an annual FOSS conference, organised with passion and commitment by the FOSS
+          United community.
+        </p>
 
-                    <p class="flagship-card-cta">
-                        View More
-                        <i class="ti ti-chevron-right"></i>
-                    </p>
+        <p class="flagship-card-cta">
+          View More
+          <i class="ti ti-chevron-right"></i>
+        </p>
+      </a>
 
-                </a>
+      <a class="flagship-event-card" href="{{ fosshack_link }}">
+        <img
+          class="flagship-card-image"
+          src="assets/fossunited/icons/fosshack-icon.svg"
+          alt="IndiaFOSS"
+        />
+        <h6 class="flagship-card-heading">FOSS Hack</h6>
+        <p class="flagship-card-desc">
+          FOSS Hack is our flagship hackathon to promote FOSS by bringing enthusiasts together to
+          build or extend FOSS projects.
+        </p>
 
-                <a class="flagship-event-card" href="{{fosshack_link}}">
-
-                    <img class="flagship-card-image" src="assets/fossunited/icons/fosshack-icon.svg" alt="IndiaFOSS">
-                    <h6 class="flagship-card-heading">FOSS Hack</h6>
-                    <p class="flagship-card-desc">FOSS Hack is our flagship hackathon to promote FOSS by bringing enthusiasts
-                        together to build or extend FOSS projects.</p>
-
-                        <p class="flagship-card-cta" href="">
-                            View More
-                            <i class="ti ti-chevron-right"></i>
-                        </p>
-
-                </a>
-
-            </div>
-        </div>
+        <p class="flagship-card-cta" href="">
+          View More
+          <i class="ti ti-chevron-right"></i>
+        </p>
+      </a>
+    </div>
+  </div>
 </div>

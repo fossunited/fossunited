@@ -1,132 +1,124 @@
 <style>
-    .ip-section{
-        display: flex;
-        margin-bottom: 7rem;
+  .ip-section {
+    display: flex;
+    margin-bottom: 7rem;
+  }
+
+  .ip-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .ip-content-block {
+    background: #f5f5f5;
+    display: flex;
+    padding: 1.87rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+  }
+
+  .ip-content-block img {
+    height: 3.75rem;
+  }
+
+  .ip-content-block p {
+    margin: 0.5rem 0 0 0;
+    color: hsl(var(--clr-gray-500));
+  }
+
+  .ip-content-block a {
+    color: hsl(var(--clr-foss-mint-500));
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.05rem;
+  }
+
+  .ip-content-block a:hover {
+    text-decoration: none;
+  }
+
+  .ip-partners-block {
+    background: url('assets/fossunited/icons/ip_block_pattern.svg') no-repeat;
+    padding: 5rem;
+    display: flex;
+    justify-content: center;
+    background-size: cover;
+  }
+
+  .feature-partners {
+    background-color: #fff;
+    border-radius: 0.5875rem;
+    box-shadow: 0px 11.75px 35.25px 0px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 1rem;
+  }
+
+  .feature-partners img {
+    max-width: 9rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ip-container {
+      flex-direction: column-reverse;
     }
 
-    .ip-container{
-        display: flex;
-        justify-content: space-around;
-        align-items: stretch;
-        overflow: hidden;
+    .ip-content-block {
+      width: 100%;
     }
 
-    .ip-content-block{
-        background: #F5F5F5;
-        display: flex;
-        padding: 1.87rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 2rem;
+    .ip-partners-block {
+      background-size: cover;
+      padding: 4rem 1.75rem;
     }
 
-    .ip-content-block img{
-        height: 3.75rem;
+    .feature-partners {
+      padding: 1rem;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
-
-    .ip-content-block p{
-        margin: 0.5rem 0 0 0;
-        color: hsl(var(--clr-gray-500));
+    .feature-partners a {
+      display: flex;
+      justify-content: center;
     }
 
-    .ip-content-block a{
-        color: hsl(var(--clr-foss-mint-500));
-        font-weight: var(--fw-medium);
-        letter-spacing: -0.05rem;
+    .feature-partners img {
+      max-width: 60%;
+      display: block;
     }
-
-    .ip-content-block a:hover{
-        text-decoration: none;
-    }
-
-    .ip-partners-block{
-        background: url('assets/fossunited/icons/ip_block_pattern.svg') no-repeat;
-        padding: 5rem;
-        display: flex;
-        justify-content: center;
-        background-size: cover;
-    }
-
-    .feature-partners{
-        background-color: #fff;
-        border-radius: 0.5875rem;
-        box-shadow: 0px 11.75px 35.25px 0px rgba(0, 0, 0, 0.15);
-        display: flex;
-        justify-content: center;
-        align-items:center;
-        padding-left: 1rem;
-    }
-
-    .feature-partners img{
-        max-width: 9rem;
-    }
-
-    @media screen and (max-width: 768px) {
-
-
-        .ip-container{
-            flex-direction: column-reverse;
-        }
-
-        .ip-content-block{
-            width: 100%;
-        }
-
-        .ip-partners-block{
-            background-size: cover;
-            padding: 4rem 1.75rem;
-        }
-
-        .feature-partners{
-            padding: 1rem;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .feature-partners a{
-            display: flex;
-            justify-content: center;
-        }
-
-        .feature-partners img{
-            max-width: 60%;
-            display: block;
-        }
-
-    }
+  }
 </style>
 
-
 <div class="ip-section container">
-    <div class="ip-container">
+  <div class="ip-container">
+    <div class="ip-content-block">
+      <img src="assets/fossunited/icons/handshake.svg" alt="ip-handshake" />
 
-        <div class="ip-content-block">
+      <div>
+        <h5>Industry Partnership</h5>
+        <p>{{ section_desc }}</p>
+      </div>
 
-            <img src="assets/fossunited/icons/handshake.svg" alt="ip-handshake">
-
-            <div>
-                <h5>Industry Partnership</h5>
-                <p>{{section_desc}}</p>
-            </div>
-
-            <a href="{{current_partners_Link}}">View Current Partners ↗</a>
-        </div>
-
-        <div class="ip-partners-block">
-
-            <div class="feature-partners">
-
-                {% set featurePartners = frappe.get_all("Industry Partners", fields=['name', 'logo', 'website'], filters={'tier': ['in', ["Patron", "Platinum", "Gold"]], 'is_current_partner': 1}, order_by='tier') %}
-
-                {% for partner in featurePartners %}
-                    <a href="{{partner.website}}">
-                        <img src="{{ partner.logo }}" alt="{{ partner.name }}">
-                    </a>
-                {% endfor %}
-            </div>
-
-        </div>
-
+      <a href="{{ current_partners_Link }}">View Current Partners ↗</a>
     </div>
+
+    <div class="ip-partners-block">
+      <div class="feature-partners">
+        {%
+          set featurePartners = frappe.get_all("Industry Partners", fields=['name', 'logo',
+          'website'], filters={'tier': ['in', ["Patron", "Platinum", "Gold"]], 'is_current_partner':
+          1}, order_by='tier')
+        %}
+        {% for partner in featurePartners %}
+          <a href="{{ partner.website }}">
+            <img src="{{ partner.logo }}" alt="{{ partner.name }}" />
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
 </div>

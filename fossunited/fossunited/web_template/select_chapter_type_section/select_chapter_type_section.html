@@ -1,145 +1,134 @@
 <style>
-    .establish-container{
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
+  .establish-container {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .title {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+
+  .select-section {
+    display: flex;
+    flex-direction: row;
+    gap: 80px;
+    justify-content: center;
+  }
+
+  .select-box {
+    box-sizing: border-box;
+    display: flex;
+    width: 320px;
+    height: max-content;
+    padding: 30px;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+    gap: 20px;
+    flex-shrink: 0;
+    border-radius: 20px;
+    transition: box-shadow 0.1s;
+    box-shadow: inset 0px 0px 0px 1px #808080;
+  }
+
+  .select-box:hover {
+    text-decoration: none;
+    box-shadow: inset 0px 0px 0px 3px #4ba306;
+  }
+
+  .select-icon {
+    height: 65px;
+    width: auto;
+  }
+
+  .chapter-title {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+  }
+
+  .subtitle {
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    width: 234px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .select-section {
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
     }
 
-    .title{
-        color: #000;
-        text-align: center;
-        font-family: Inter;
-        font-size: 24px;
-        font-style: normal;
-        font-weight: 700;
-        line-height: normal;
+    .select-box {
+      width: max-content;
+      height: auto;
+      padding: 20px;
+      justify-content: start;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+      border-radius: 20px;
+      border: 1px solid #808080;
+      transition: border 0.05s;
     }
 
-    .select-section{
-        display: flex;
-        flex-direction: row;
-        gap: 80px;
-        justify-content: center;
+    .select-icon {
+      height: 48px;
+      width: auto;
     }
 
-    .select-box{
-        box-sizing: border-box;
-        display: flex;
-        width: 320px;
-        height: max-content;
-        padding: 30px;
-        flex-direction: column;
-        justify-content: start;
-        align-items: center;
-        gap: 20px;
-        flex-shrink: 0;
-        border-radius: 20px;
-        transition: box-shadow 0.1s;
-        box-shadow: inset 0px 0px 0px 1px #808080;
+    .chapter-title {
+      color: #000;
+      text-align: left;
+      font-family: Inter;
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: normal;
     }
 
-    .select-box:hover{
-        text-decoration: none;
-        box-shadow: inset 0px 0px 0px 3px #4BA306;
+    .subtitle {
+      color: #000;
+      text-align: left;
+      font-family: Inter;
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+      width: 234px;
     }
-
-    .select-icon{
-        height: 65px;
-        width: auto;
-    }
-
-    .chapter-title{
-        color: #000;
-        text-align: center;
-        font-family: Inter;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-    }
-
-    .subtitle{
-        color: #000;
-        text-align: center;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-        width: 234px;
-    }
-
-    @media screen and (max-width: 768px) {
-        .select-section{
-            flex-direction: column;
-            align-items: center;
-            gap: 32px;
-        }
-
-        .select-box{
-            width: max-content;
-            height: auto;
-            padding: 20px;
-            justify-content: start;
-            align-items: center;
-            gap: 20px;
-            flex-shrink: 0;
-            border-radius: 20px;
-            border: 1px solid #808080;
-            transition: border 0.05s;
-        }
-
-        .select-icon{
-            height: 48px;
-            width: auto;
-        }
-
-        .chapter-title{
-            color: #000;
-            text-align: left;
-            font-family: Inter;
-            font-size: 20px;
-            font-style: normal;
-            font-weight: 600;
-            line-height: normal;
-        }
-
-        .subtitle{
-            color: #000;
-            text-align: left;
-            font-family: Inter;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: normal;
-            width: 234px;
-        }
-    }
-
+  }
 </style>
 
 <div class="establish-container">
-    <div class="title">
-        {{ title }}
-    </div>
-    <div class="select-section">
-        <a class="select-box" href="{{ url_1 }}" target="_blank">
-            <img class="select-icon" src="{{ icon_1 }}" alt="City Chapter Icon">
-            <div class="chapter-title">
-                {{ label_1 }}
-            </div>
-            <p class="subtitle">
-                {{ subtitle_1 }}
-            </p>
-        </a>
-        <a class="select-box" href="{{ url_2 }}" target="_blank">
-            <img class="select-icon" src="{{ icon_2 }}" alt="City Chapter Icon">
-            <div class="chapter-title">
-                {{ label_2 }}
-            </div>
-            <p class="subtitle">
-                {{ subtitle_2 }}
-            </p>
-        </a>
-    </div>
+  <div class="title">{{ title }}</div>
+  <div class="select-section">
+    <a class="select-box" href="{{ url_1 }}" target="_blank">
+      <img class="select-icon" src="{{ icon_1 }}" alt="City Chapter Icon" />
+      <div class="chapter-title">{{ label_1 }}</div>
+      <p class="subtitle">{{ subtitle_1 }}</p>
+    </a>
+    <a class="select-box" href="{{ url_2 }}" target="_blank">
+      <img class="select-icon" src="{{ icon_2 }}" alt="City Chapter Icon" />
+      <div class="chapter-title">{{ label_2 }}</div>
+      <p class="subtitle">{{ subtitle_2 }}</p>
+    </a>
+  </div>
 </div>

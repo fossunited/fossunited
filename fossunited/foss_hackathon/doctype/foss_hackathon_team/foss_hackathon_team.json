@@ -1,139 +1,139 @@
 {
- "actions": [],
- "allow_rename": 1,
- "autoname": "hash",
- "creation": "2023-12-13 15:39:49.517553",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "tab_break_d38t",
-  "team_details_section",
-  "team_name",
-  "hackathon",
-  "looking_for_members",
-  "members",
-  "project_details_section",
-  "working_on_partner_project",
-  "project",
-  "column_break_zgva",
-  "partner_project",
-  "partner_project_status"
- ],
- "fields": [
-  {
-   "fieldname": "team_details_section",
-   "fieldtype": "Section Break",
-   "label": "Team Details"
-  },
-  {
-   "fieldname": "team_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Team Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "hackathon",
-   "fieldtype": "Link",
-   "label": "Hackathon",
-   "options": "FOSS Hackathon",
-   "reqd": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "members",
-   "fieldtype": "Table",
-   "label": "Members",
-   "options": "FOSS Hackathon Team Member"
-  },
-  {
-   "fieldname": "tab_break_d38t",
-   "fieldtype": "Tab Break",
-   "label": "Team Details"
-  },
-  {
-   "depends_on": "eval:doc.working_on_partner_project != 1",
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "label": "Project",
-   "options": "FOSS Hackathon Project",
-   "search_index": 1
-  },
-  {
-   "fieldname": "project_details_section",
-   "fieldtype": "Section Break",
-   "label": "Project Details"
-  },
-  {
-   "default": "0",
-   "fieldname": "working_on_partner_project",
-   "fieldtype": "Check",
-   "label": "Working on Partner Project?"
-  },
-  {
-   "fieldname": "column_break_zgva",
-   "fieldtype": "Column Break"
-  },
-  {
-   "depends_on": "eval:doc.working_on_partner_project == 1",
-   "fieldname": "partner_project",
-   "fieldtype": "Link",
-   "label": "Partner Project",
-   "options": "FOSS Hackathon Partner Project",
-   "search_index": 1
-  },
-  {
-   "default": "Pending",
-   "depends_on": "eval:doc.working_on_partner_project == 1",
-   "fieldname": "partner_project_status",
-   "fieldtype": "Select",
-   "label": "Partner Project Status",
-   "options": "\nPending\nAccepted\nRejected"
-  },
-  {
-   "default": "0",
-   "fieldname": "looking_for_members",
-   "fieldtype": "Check",
-   "label": "Looking For Members?"
-  }
- ],
- "links": [],
- "modified": "2024-07-10 12:25:54.595850",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "FOSS Hackathon Team",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1,
-   "write": 1
-  }
- ],
- "search_fields": "hackathon",
- "show_title_field_in_link": 1,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "title_field": "team_name"
+  "actions": [],
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2023-12-13 15:39:49.517553",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "tab_break_d38t",
+    "team_details_section",
+    "team_name",
+    "hackathon",
+    "looking_for_members",
+    "members",
+    "project_details_section",
+    "working_on_partner_project",
+    "project",
+    "column_break_zgva",
+    "partner_project",
+    "partner_project_status"
+  ],
+  "fields": [
+    {
+      "fieldname": "team_details_section",
+      "fieldtype": "Section Break",
+      "label": "Team Details"
+    },
+    {
+      "fieldname": "team_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Team Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "hackathon",
+      "fieldtype": "Link",
+      "label": "Hackathon",
+      "options": "FOSS Hackathon",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "members",
+      "fieldtype": "Table",
+      "label": "Members",
+      "options": "FOSS Hackathon Team Member"
+    },
+    {
+      "fieldname": "tab_break_d38t",
+      "fieldtype": "Tab Break",
+      "label": "Team Details"
+    },
+    {
+      "depends_on": "eval:doc.working_on_partner_project != 1",
+      "fieldname": "project",
+      "fieldtype": "Link",
+      "label": "Project",
+      "options": "FOSS Hackathon Project",
+      "search_index": 1
+    },
+    {
+      "fieldname": "project_details_section",
+      "fieldtype": "Section Break",
+      "label": "Project Details"
+    },
+    {
+      "default": "0",
+      "fieldname": "working_on_partner_project",
+      "fieldtype": "Check",
+      "label": "Working on Partner Project?"
+    },
+    {
+      "fieldname": "column_break_zgva",
+      "fieldtype": "Column Break"
+    },
+    {
+      "depends_on": "eval:doc.working_on_partner_project == 1",
+      "fieldname": "partner_project",
+      "fieldtype": "Link",
+      "label": "Partner Project",
+      "options": "FOSS Hackathon Partner Project",
+      "search_index": 1
+    },
+    {
+      "default": "Pending",
+      "depends_on": "eval:doc.working_on_partner_project == 1",
+      "fieldname": "partner_project_status",
+      "fieldtype": "Select",
+      "label": "Partner Project Status",
+      "options": "\nPending\nAccepted\nRejected"
+    },
+    {
+      "default": "0",
+      "fieldname": "looking_for_members",
+      "fieldtype": "Check",
+      "label": "Looking For Members?"
+    }
+  ],
+  "links": [],
+  "modified": "2024-07-10 12:25:54.595850",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "FOSS Hackathon Team",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "select": 1,
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "hackathon",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "team_name"
 }

@@ -1,50 +1,50 @@
 {
- "__unsaved": 1,
- "creation": "2024-02-05 04:27:08.500819",
- "docstatus": 0,
- "doctype": "Web Template",
- "fields": [
-  {
-   "fieldname": "subtext",
-   "fieldtype": "Small Text",
-   "label": "Subtext",
-   "reqd": 0
-  },
-  {
-   "fieldname": "subheading",
-   "fieldtype": "Data",
-   "label": "Subheading",
-   "reqd": 0
-  },
-  {
-   "fieldname": "cta_text",
-   "fieldtype": "Data",
-   "label": "CTA text",
-   "reqd": 0
-  },
-  {
-   "fieldname": "cta_link",
-   "fieldtype": "Data",
-   "label": "CTA link",
-   "options": "URL",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "hero_image",
-   "fieldtype": "Attach Image",
-   "label": "Hero Image",
-   "reqd": 0
-  }
- ],
- "idx": 31,
- "modified": "2024-02-12 15:36:41.454923",
- "modified_by": "Administrator",
- "module": "Chapters",
- "name": "FOSS Clubs Home Page",
- "owner": "Administrator",
- "standard": 1,
- "template": "",
- "type": "Section"
+  "__unsaved": 1,
+  "creation": "2024-02-05 04:27:08.500819",
+  "docstatus": 0,
+  "doctype": "Web Template",
+  "fields": [
+    {
+      "fieldname": "subtext",
+      "fieldtype": "Small Text",
+      "label": "Subtext",
+      "reqd": 0
+    },
+    {
+      "fieldname": "subheading",
+      "fieldtype": "Data",
+      "label": "Subheading",
+      "reqd": 0
+    },
+    {
+      "fieldname": "cta_text",
+      "fieldtype": "Data",
+      "label": "CTA text",
+      "reqd": 0
+    },
+    {
+      "fieldname": "cta_link",
+      "fieldtype": "Data",
+      "label": "CTA link",
+      "options": "URL",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "hero_image",
+      "fieldtype": "Attach Image",
+      "label": "Hero Image",
+      "reqd": 0
+    }
+  ],
+  "idx": 31,
+  "modified": "2024-02-12 15:36:41.454923",
+  "modified_by": "Administrator",
+  "module": "Chapters",
+  "name": "FOSS Clubs Home Page",
+  "owner": "Administrator",
+  "standard": 1,
+  "template": "",
+  "type": "Section"
 }

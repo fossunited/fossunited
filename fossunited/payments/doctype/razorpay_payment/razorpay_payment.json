@@ -1,196 +1,196 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-04-27 12:26:51.530866",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "amount",
-  "currency",
-  "refund_id",
-  "column_break_vtdz",
-  "status",
-  "order_id",
-  "payment_id",
-  "customer_section",
-  "buyer_name",
-  "email",
-  "state",
-  "column_break_enpj",
-  "company_name",
-  "gstn",
-  "billing_address",
-  "references_section",
-  "document_type",
-  "column_break_tdxc",
-  "document_name",
-  "section_break_hwhl",
-  "meta_data"
- ],
- "fields": [
-  {
-   "fieldname": "amount",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Amount",
-   "options": "currency",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_vtdz",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "INR",
-   "fieldname": "currency",
-   "fieldtype": "Select",
-   "label": "Currency",
-   "options": "INR",
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-04-27 12:26:51.530866",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "amount",
+    "currency",
+    "refund_id",
+    "column_break_vtdz",
+    "status",
+    "order_id",
+    "payment_id",
+    "customer_section",
+    "buyer_name",
+    "email",
+    "state",
+    "column_break_enpj",
+    "company_name",
+    "gstn",
+    "billing_address",
+    "references_section",
+    "document_type",
+    "column_break_tdxc",
+    "document_name",
+    "section_break_hwhl",
+    "meta_data"
+  ],
+  "fields": [
+    {
+      "fieldname": "amount",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Amount",
+      "options": "currency",
+      "read_only": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_vtdz",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "INR",
+      "fieldname": "currency",
+      "fieldtype": "Select",
+      "label": "Currency",
+      "options": "INR",
+      "read_only": 1
+    },
+    {
+      "default": "Pending",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Captured\nFailed\nPending\nRefund Pending\nRefunded",
+      "read_only": 1
+    },
+    {
+      "fieldname": "order_id",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Order ID",
+      "read_only": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "payment_id",
+      "fieldtype": "Data",
+      "label": "Payment ID",
+      "read_only": 1
+    },
+    {
+      "fieldname": "customer_section",
+      "fieldtype": "Section Break",
+      "label": "Customer"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Email",
+      "options": "Email",
+      "permlevel": 1,
+      "reqd": 1
+    },
+    {
+      "fieldname": "section_break_hwhl",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "{}",
+      "fieldname": "meta_data",
+      "fieldtype": "Code",
+      "label": "Meta Data",
+      "options": "JSON",
+      "read_only": 1
+    },
+    {
+      "fieldname": "references_section",
+      "fieldtype": "Section Break",
+      "label": "References"
+    },
+    {
+      "fieldname": "document_type",
+      "fieldtype": "Link",
+      "in_standard_filter": 1,
+      "label": "Document Type",
+      "options": "DocType",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_tdxc",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "document_name",
+      "fieldtype": "Dynamic Link",
+      "label": "Document Name",
+      "options": "document_type",
+      "read_only": 1
+    },
+    {
+      "fieldname": "billing_address",
+      "fieldtype": "Text",
+      "label": "Billing Address",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_enpj",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "gstn",
+      "fieldtype": "Data",
+      "label": "GSTN",
+      "permlevel": 1,
    "read_only": 1
-  },
-  {
-   "default": "Pending",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "Captured\nFailed\nPending\nRefund Pending\nRefunded",
-   "read_only": 1
-  },
-  {
-   "fieldname": "order_id",
-   "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "Order ID",
-   "read_only": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "payment_id",
-   "fieldtype": "Data",
-   "label": "Payment ID",
-   "read_only": 1
-  },
-  {
-   "fieldname": "customer_section",
-   "fieldtype": "Section Break",
-   "label": "Customer"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "Email",
-   "options": "Email",
-   "permlevel": 1,
-   "reqd": 1
-  },
-  {
-   "fieldname": "section_break_hwhl",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "{}",
-   "fieldname": "meta_data",
-   "fieldtype": "Code",
-   "label": "Meta Data",
-   "options": "JSON",
-   "read_only": 1
-  },
-  {
-   "fieldname": "references_section",
-   "fieldtype": "Section Break",
-   "label": "References"
-  },
-  {
-   "fieldname": "document_type",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Document Type",
-   "options": "DocType",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_tdxc",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "document_name",
-   "fieldtype": "Dynamic Link",
-   "label": "Document Name",
-   "options": "document_type",
-   "read_only": 1
-  },
-  {
-   "fieldname": "billing_address",
-   "fieldtype": "Text",
-   "label": "Billing Address",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_enpj",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "gstn",
-   "fieldtype": "Data",
-   "label": "GSTN",
-   "permlevel": 1,
-   "read_only": 1
-  },
-  {
-   "fieldname": "company_name",
-   "fieldtype": "Data",
-   "label": "Company Name",
-   "permlevel": 1
-  },
-  {
-   "fieldname": "buyer_name",
-   "fieldtype": "Data",
-   "in_standard_filter": 1,
-   "label": "Customer Name",
-   "permlevel": 1
-  },
-  {
-   "depends_on": "eval:doc.status==\"Refunded\"||doc.status==\"Refund Pending\"",
-   "fieldname": "refund_id",
-   "fieldtype": "Data",
-   "label": "Refund ID",
-   "read_only": 1
-  },
-  {
-   "fieldname": "state",
-   "fieldtype": "Data",
-   "label": "State"
-  }
- ],
- "index_web_pages_for_search": 1,
- "links": [
-  {
-   "link_doctype": "FOSS Event Ticket",
-   "link_fieldname": "razorpay_payment"
-  }
- ],
- "modified": "2024-09-03 18:10:29.980782",
- "modified_by": "Administrator",
- "module": "Payments",
- "name": "Razorpay Payment",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
+    },
+    {
+      "fieldname": "company_name",
+      "fieldtype": "Data",
+      "label": "Company Name",
+      "permlevel": 1
+    },
+    {
+      "fieldname": "buyer_name",
+      "fieldtype": "Data",
+      "in_standard_filter": 1,
+      "label": "Customer Name",
+      "permlevel": 1
+    },
+    {
+      "depends_on": "eval:doc.status==\"Refunded\"||doc.status==\"Refund Pending\"",
+      "fieldname": "refund_id",
+      "fieldtype": "Data",
+      "label": "Refund ID",
+      "read_only": 1
+    },
+    {
+      "fieldname": "state",
+      "fieldtype": "Data",
+      "label": "State"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "links": [
+    {
+      "link_doctype": "FOSS Event Ticket",
+      "link_fieldname": "razorpay_payment"
+    }
+  ],
+  "modified": "2024-09-03 18:10:29.980782",
+  "modified_by": "Administrator",
+  "module": "Payments",
+  "name": "Razorpay Payment",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
   {
    "email": 1,
    "export": 1,
@@ -224,32 +224,32 @@
    "share": 1,
    "write": 1
   }
- ],
- "show_title_field_in_link": 1,
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": [
-  {
-   "color": "Orange",
-   "title": "Pending"
-  },
-  {
-   "color": "Red",
-   "title": "Failed"
-  },
-  {
-   "color": "Green",
-   "title": "Captured"
-  },
-  {
-   "color": "Purple",
-   "title": "Refunded"
-  },
-  {
-   "color": "Pink",
-   "title": "Refund Pending"
-  }
- ],
- "title_field": "order_id",
- "track_changes": 1
+  ],
+  "show_title_field_in_link": 1,
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [
+    {
+      "color": "Orange",
+      "title": "Pending"
+    },
+    {
+      "color": "Red",
+      "title": "Failed"
+    },
+    {
+      "color": "Green",
+      "title": "Captured"
+    },
+    {
+      "color": "Purple",
+      "title": "Refunded"
+    },
+    {
+      "color": "Pink",
+      "title": "Refund Pending"
+    }
+  ],
+  "title_field": "order_id",
+  "track_changes": 1
 }

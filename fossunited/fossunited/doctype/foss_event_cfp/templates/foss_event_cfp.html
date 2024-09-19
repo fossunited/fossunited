@@ -1,180 +1,230 @@
 {% extends "templates/foss_base.html" %}
-
 {% block meta_block %}
-<meta name="title" content="{{ event.event_name }}">
-{% if doc.is_published %}
+  <meta name="title" content="{{ event.event_name }}" />
+  {% if doc.is_published %}
     {% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
-    <meta property="og:title" content="🔴 CFP is live! - {{ event.event_name }}, {{ event.chapter_name | title }}">
+      <meta
+        property="og:title"
+        content="🔴 CFP is live! - {{ event.event_name }}, {{ event.chapter_name | title }}"
+      />
     {% else %}
-    <meta property="og:title" content="🔴 CFP is live! - {{ event.event_name }}">
+      <meta property="og:title" content="🔴 CFP is live! - {{ event.event_name }}" />
     {% endif %}
-{% else %}
-<meta property="og:title" content="CFP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}">
-{% endif %}
+  {% else %}
+    <meta
+      property="og:title"
+      content="CFP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}"
+    />
+  {% endif %}
+  {% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
+    <meta
+      property="og:description"
+      content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}"
+    />
+  {% else %}
+    <meta
+      property="og:description"
+      content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }}"
+    />
+  {% endif %}
 
-{% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
-<meta property="og:description" content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B')}} - {{ event.chapter_name | title }}">
-{% else %}
-<meta property="og:description" content="Talk proposal forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B')}}">
-{% endif %}
-
-<meta property="og:image" content="https://fossunited.org/files/og-image.png">
-<meta property=”og:image:width” content=”1200″/>
-<meta property=”og:image:height” content=”630″/>
+  <meta property="og:image" content="https://fossunited.org/files/og-image.png" />
+  <meta property="”og:image:width”" content="”1200″" />
+  <meta property="”og:image:height”" content="”630″" />
 {% endblock %}
-
-
 {% block title %}{{ _("CFP Form Submission") }}{% endblock %}
-
 {% block page_content %}
-<div class="container">
+  <div class="container">
     <div class="backlink mt-5">
-        <a href="/{{event.route}}">
-            <i class="ti ti-arrow-left"></i>
-            {{ _("Go to this event page") }}
-        </a>
+      <a href="/{{ event.route }}">
+        <i class="ti ti-arrow-left"></i>
+        {{ _("Go to this event page") }}
+      </a>
     </div>
     <div class="foss-form-wrapper">
-        {% if already_submitted %}
-            {{ render_complete_section() }}
-        {% endif %}
-        <div class="form-container" id="cfp-form">
-            {{ form_header() }}
-            <hr>
-            <form class="foss-form-body">
-                {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
-                {% for field in form_fields %}
-                    {% if field.fieldname == 'session_type' and doc.only_workshops %}
-                    <div class="d-flex flex-column hide">
-                        <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
-                        <select data-label="{{ field.label }}" data-type="Select" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1" {% if field.reqd %} required {% endif%}>
-                                <option value="Workshop" selected>Workshop</option>
-                        </select>
-                    </div>
-                    {% elif field.fieldname == 'session_type' and doc.only_talk_proposals %}
-                    <div class="d-flex flex-column">
-                        <label for="{{field.fieldname}}" class="foss-form-question text-sm">{{field.label}}</label>
-                        <select data-label="{{ field.label }}" data-type="Select" name="{{ field.fieldname }}" id="{{ field.fieldname }}" class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1" {% if field.reqd %} required {% endif%}>
-                                <option value="Talk" selected>Talk</option>
-                                <option value="Lightning Talk">Lightning Talk</option>
-                        </select>
-                    </div>
-                    {% else %}
-                    {{ renderfield(field) }}
-                    {% endif %}
-                {% endfor %}
-            </form>
-            <div class="foss-form-buttons">
-                <button class="primary-button"  type="submit" id="submit-rsvp">
-                    {{ _("Submit your proposal") }}
-                </button>
-            </div>
+      {% if already_submitted %}{{ render_complete_section() }}{% endif %}
+      <div class="form-container" id="cfp-form">
+        {{ form_header() }}
+        <hr />
+        <form class="foss-form-body">
+          {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+          {%
+            for field
+            in form_fields
+          %}
+            {% if field.fieldname == 'session_type' and doc.only_workshops %}
+              <div class="d-flex flex-column hide">
+                <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
+                  >{{ field.label }}</label
+                >
+                <select
+                  data-label="{{ field.label }}"
+                  data-type="Select"
+                  name="{{ field.fieldname }}"
+                  id="{{ field.fieldname }}"
+                  class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+                  {%
+                    if
+                    field.reqd
+                  %}
+                    required
+                  {% endif %}
+                >
+                  <option value="Workshop" selected>Workshop</option>
+                </select>
+              </div>
+            {% elif field.fieldname == 'session_type' and doc.only_talk_proposals %}
+              <div class="d-flex flex-column">
+                <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
+                  >{{ field.label }}</label
+                >
+                <select
+                  data-label="{{ field.label }}"
+                  data-type="Select"
+                  name="{{ field.fieldname }}"
+                  id="{{ field.fieldname }}"
+                  class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+                  {%
+                    if
+                    field.reqd
+                  %}
+                    required
+                  {% endif %}
+                >
+                  <option value="Talk" selected>Talk</option>
+                  <option value="Lightning Talk">Lightning Talk</option>
+                </select>
+              </div>
+            {% else %}
+              {{ renderfield(field) }}
+            {% endif %}
+          {% endfor %}
+        </form>
+        <div class="foss-form-buttons">
+          <button class="primary-button" type="submit" id="submit-rsvp">
+            {{ _("Submit your proposal") }}
+          </button>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}
-
 {% macro render_complete_section() %}
-    <div class="form-container my-5">
-        <div class="foss-form-header submitted-container">
-            <h3 class="foss-form-heading-3xl">{{ _("You have submitted talk proposal for this event!") }} <i class="ti ti-speakerphone"></i></h3>
-            <div class="foss-form-description">
-                {{ _("You have successfully submitted the following talk proposals for this event. If you need to make any changes, you can edit the form, or you can submit a new proposal below!") }}
-            </div>
-        </div>
-        <div class="d-flex flex-column foss-form--cfp-list-container">
-            {% set all_submissions = submissions or frappe.form_dict['submissions'] %}
-            {% for submission in all_submissions %}
-            <div class="foss-form--cfp-card">
-                <div class="foss-form--cfp-card--heading-status ">
-                    <i class="ti ti-point"></i>
-                    <div class="foss-form--cfp-card--heading">{{ submission.talk_title }}</div>
-                    <div>{{ make_badge(submission.status) }}</div>
-                </div>
-                <button class="text-sm" onclick="window.location.pathname='/{{submission.route}}/edit'">Edit</button>
-            </div>
-            {% endfor %}
-        </div>
+  <div class="form-container my-5">
+    <div class="foss-form-header submitted-container">
+      <h3 class="foss-form-heading-3xl">
+        {{ _("You have submitted talk proposal for this event!") }}
+        <i class="ti ti-speakerphone"></i>
+      </h3>
+      <div class="foss-form-description">
+        {{
+          _("You have successfully submitted the following talk proposals for this event. If you
+          need to make any changes, you can edit the form, or you can submit a new proposal below!")
+        }}
+      </div>
     </div>
+    <div class="d-flex flex-column foss-form--cfp-list-container">
+      {% set all_submissions = submissions or frappe.form_dict['submissions'] %}
+      {%
+        for submission in
+        all_submissions
+      %}
+        <div class="foss-form--cfp-card">
+          <div class="foss-form--cfp-card--heading-status">
+            <i class="ti ti-point"></i>
+            <div class="foss-form--cfp-card--heading">{{ submission.talk_title }}</div>
+            <div>{{ make_badge(submission.status) }}</div>
+          </div>
+          <button
+            class="text-sm"
+            onclick="window.location.pathname='/{{ submission.route }}/edit'"
+          >
+            Edit
+          </button>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
 {% endmacro %}
-
 {% macro form_header() %}
-<div class="foss-form-header">
+  <div class="foss-form-header">
     <h3 class="foss-form-heading-3xl">{{ _("Call for Proposal!") }}</h3>
     <div class="event-details my-2">
-        {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
-        <div class="py-2">
-            {{ chapter_branding_block(event.chapter) }}
-        </div>
-        <div class="event-title my-1">
-            <span><strong>Event:</strong></span>
-            {{ event_name }}
-        </div>
-        <div class="event-date my-1">
-            <span><strong>Date:</strong></span>
-            {{ event_date }}
-        </div>
+      {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+      <div class="py-2">{{ chapter_branding_block(event.chapter) }}</div>
+      <div class="event-title my-1">
+        <span><strong>Event:</strong></span>
+        {{ event_name }}
+      </div>
+      <div class="event-date my-1">
+        <span><strong>Date:</strong></span>
+        {{ event_date }}
+      </div>
     </div>
-    <div class="foss-form-description">
-        {{ doc.cfp_form_description }}
-    </div>
-</div>
+    <div class="foss-form-description">{{ doc.cfp_form_description }}</div>
+  </div>
 {% endmacro %}
-
-
 {% block page_script %}
-<script>
+  <script>
     $(document).ready(() => {
-        if (!check_if_logged_in(message="You need to be logged in and have a FOSS Profile to submit a talk proposal. <br> Please login or create an account.")){
-            return
+      if (
+        !check_if_logged_in(
+          (message =
+            'You need to be logged in and have a FOSS Profile to submit a talk proposal. <br> Please login or create an account.'),
+        )
+      ) {
+        return
+      }
+      check_if_profile_complete()
+      set_mandatory_asterisk()
+
+      $('#submit-rsvp').on('click', (e) => {
+        e.preventDefault()
+        if (!validate_mandatory_fields()) {
+          return
         }
-        check_if_profile_complete();
-        set_mandatory_asterisk()
 
-        $('#submit-rsvp').on('click', (e) => {
-            e.preventDefault()
-            if (!validate_mandatory_fields()){
-                return
-            }
+        const formData = $('.foss-form-body').serializeArray()
+        const data = {}
 
-            const formData = $('.foss-form-body').serializeArray()
-            const data = {}
-
-            data["linked_cfp"] = "{{ doc.name }}"
-            formData.forEach((field) => {
-                data[field.name] = field.value
-            })
-            $('.ql-editor-custom').each((idx, element) => {
-                data[element.id] = $(element).find('.ql-editor').html()
-            })
-
-            const custom_answers = []
-            for (const key in data) {
-                if (key.includes('custom_question')) {
-                    const label = $(`[name="${key}"]`).attr('data-label')
-                    const type = $(`[name="${key}"]`).data('type')
-                    custom_answers.push({ question: label, response: data[key], type: type})
-                    delete data[key]
-                }
-            }
-            data['custom_answers'] = custom_answers
-
-            frappe.call({
-                method: 'fossunited.fossunited.doctype.foss_event_cfp.foss_event_cfp.create_cfp_submission',
-                args: {
-                    fields: JSON.stringify(data),
-                }
-            }).then((response) => {
-                if (response.message) {
-                    frappe.msgprint("You have successfully submitted your talk proposal!", "Success!")
-                    setTimeout(() => {
-                        window.location.reload()
-                    }, 2000)
-                } else {
-                    frappe.throw("Failed to submit proposal. Please try again.")
-                }
-            })
+        data['linked_cfp'] = '{{ doc.name }}'
+        formData.forEach((field) => {
+          data[field.name] = field.value
         })
+        $('.ql-editor-custom').each((idx, element) => {
+          data[element.id] = $(element).find('.ql-editor').html()
+        })
+
+        const custom_answers = []
+        for (const key in data) {
+          if (key.includes('custom_question')) {
+            const label = $(`[name="${key}"]`).attr('data-label')
+            const type = $(`[name="${key}"]`).data('type')
+            custom_answers.push({ question: label, response: data[key], type: type })
+            delete data[key]
+          }
+        }
+        data['custom_answers'] = custom_answers
+
+        frappe
+          .call({
+            method:
+              'fossunited.fossunited.doctype.foss_event_cfp.foss_event_cfp.create_cfp_submission',
+            args: {
+              fields: JSON.stringify(data),
+            },
+          })
+          .then((response) => {
+            if (response.message) {
+              frappe.msgprint('You have successfully submitted your talk proposal!', 'Success!')
+              setTimeout(() => {
+                window.location.reload()
+              }, 2000)
+            } else {
+              frappe.throw('Failed to submit proposal. Please try again.')
+            }
+          })
+      })
     })
-</script>
+  </script>
 {% endblock %}

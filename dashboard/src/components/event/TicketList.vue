@@ -13,13 +13,13 @@
       @input="attendeesList.fetch()"
     />
     <FormControl
-        type="select"
-        label="Tier"
-        class="md:w-1/6"
-        v-if="tiers.data"
-        :options="tierOptions"
-        v-model="filters.tier"
-        @change="attendeesList.fetch()"
+      type="select"
+      label="Tier"
+      class="md:w-1/6"
+      v-if="tiers.data"
+      :options="tierOptions"
+      v-model="filters.tier"
+      @change="attendeesList.fetch()"
     />
   </div>
   <ListView
@@ -77,21 +77,12 @@
       <div v-else class="text-base">{{ item }}</div>
     </template>
   </ListView>
-  <div
-    v-if="attendeesList.loading"
-    class="w-full h-[220px] flex items-center justify-center"
-  >
+  <div v-if="attendeesList.loading" class="w-full h-[220px] flex items-center justify-center">
     <LoadingIndicator class="w-5 h-5" />
   </div>
 </template>
 <script setup>
-import {
-  createResource,
-  ListView,
-  LoadingIndicator,
-  Checkbox,
-  FormControl,
-} from 'frappe-ui'
+import { createResource, ListView, LoadingIndicator, Checkbox, FormControl } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import { defineProps, reactive, ref, inject } from 'vue'
 
@@ -112,29 +103,29 @@ const filters = reactive({
 const tierOptions = ref([])
 
 const tiers = createResource({
-    url: 'fossunited.api.tickets.get_ticket_tiers',
-    makeParams() {
-        return {
-        event_id: props.event.data.name,
-        }
-    },
-    auto: true,
-    onSuccess(data){
-        let options = []
-        options.push({
-            label: 'All',
-            value: data.map(tier => tier.title),
-        })
-
-        data.forEach(tier => {
-            options.push({
-                label: tier.title,
-                value: tier.title,
-            })
-        })
-        tierOptions.value = options
-        filters.tier = options[0].value
+  url: 'fossunited.api.tickets.get_ticket_tiers',
+  makeParams() {
+    return {
+      event_id: props.event.data.name,
     }
+  },
+  auto: true,
+  onSuccess(data) {
+    let options = []
+    options.push({
+      label: 'All',
+      value: data.map((tier) => tier.title),
+    })
+
+    data.forEach((tier) => {
+      options.push({
+        label: tier.title,
+        value: tier.title,
+      })
+    })
+    tierOptions.value = options
+    filters.tier = options[0].value
+  },
 })
 
 const attendeesList = createResource({
@@ -143,7 +134,7 @@ const attendeesList = createResource({
     return {
       event_id: props.event.data.name,
       filters: {
-        full_name : ['like', `%${filters.search_text}%`],
+        full_name: ['like', `%${filters.search_text}%`],
         tier: ['in', filters.tier],
       },
       user: session.user,

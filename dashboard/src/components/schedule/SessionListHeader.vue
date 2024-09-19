@@ -1,7 +1,12 @@
 <template>
   <div class="w-full flex justify-between px-7 py-3 bg-gray-900 text-white">
     <h3 class="text-lg font-medium">{{ title }}</h3>
-    <button v-if="collapsible" @click="handleCollapse()" class="transition-transform" :class="isCollapsed ? 'rotate-180' : ''">
+    <button
+      v-if="collapsible"
+      @click="handleCollapse()"
+      class="transition-transform"
+      :class="isCollapsed ? 'rotate-180' : ''"
+    >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -34,7 +39,6 @@ const props = defineProps({
 
 const emit = defineEmits(['collapse-hall'])
 const isCollapsed = ref(false)
-
 
 const handleCollapse = () => {
   emit('collapse-hall')

@@ -1,185 +1,185 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-04-27 12:37:58.593416",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "section_break_pvar",
-  "is_transfer_ticket",
-  "section_break_ogof",
-  "event",
-  "full_name",
-  "designation",
-  "column_break_dnhv",
-  "tier",
-  "email",
-  "organization",
-  "payment_details_section",
-  "razorpay_payment",
-  "column_break_uihi",
-  "customer",
-  "additional_details_section",
-  "wants_tshirt",
-  "tshirt_delivered",
-  "column_break_qbfj",
-  "tshirt_size",
-  "section_break_tzsu",
-  "custom_fields",
-  "section_break_ueio",
-  "check_ins"
- ],
- "fields": [
-  {
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Full Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_dnhv",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Email",
-   "options": "Email",
-   "reqd": 1
-  },
-  {
-   "fieldname": "payment_details_section",
-   "fieldtype": "Section Break",
-   "label": "Payment Details"
-  },
-  {
-   "fieldname": "razorpay_payment",
-   "fieldtype": "Link",
-   "label": "Razorpay Payment",
-   "options": "Razorpay Payment",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_uihi",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "razorpay_payment.email",
-   "fieldname": "customer",
-   "fieldtype": "Data",
-   "label": "Customer"
-  },
-  {
-   "fieldname": "event",
-   "fieldtype": "Link",
-   "label": "Event",
-   "options": "FOSS Chapter Event",
-   "reqd": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "tier",
-   "fieldtype": "Data",
-   "label": "Tier"
-  },
-  {
-   "fieldname": "additional_details_section",
-   "fieldtype": "Section Break",
-   "label": "Additional Details"
-  },
-  {
-   "fieldname": "column_break_qbfj",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "wants_tshirt",
-   "fieldtype": "Check",
-   "label": "Wants T Shirt?",
-   "read_only": 1
-  },
-  {
-   "depends_on": "eval:doc.wants_tshirt==1",
-   "fieldname": "tshirt_size",
-   "fieldtype": "Data",
-   "label": "T Shirt Size",
-   "read_only": 1
-  },
-  {
-   "fieldname": "section_break_tzsu",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "custom_fields",
-   "fieldtype": "Table",
-   "label": "Custom Fields",
-   "options": "FOSS Ticket Custom Field"
-  },
-  {
-   "fieldname": "designation",
-   "fieldtype": "Data",
-   "label": "Designation"
-  },
-  {
-   "fieldname": "organization",
-   "fieldtype": "Data",
-   "label": "Organization / College"
-  },
-  {
-   "fieldname": "section_break_pvar",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_transfer_ticket",
-   "fieldtype": "Check",
-   "label": "Is Transfer Ticket?"
-  },
-  {
-   "fieldname": "section_break_ogof",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "section_break_ueio",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "check_ins",
-   "fieldtype": "Table",
-   "label": "Check Ins",
-   "options": "Event Check In"
-  },
-  {
-   "default": "0",
-   "fieldname": "tshirt_delivered",
-   "fieldtype": "Check",
-   "label": "Tshirt Delivered?"
-  }
- ],
- "links": [],
- "modified": "2024-09-05 16:13:42.830490",
- "modified_by": "Administrator",
- "module": "Ticketing",
- "name": "FOSS Event Ticket",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": [],
- "title_field": "full_name"
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-04-27 12:37:58.593416",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "section_break_pvar",
+    "is_transfer_ticket",
+    "section_break_ogof",
+    "event",
+    "full_name",
+    "designation",
+    "column_break_dnhv",
+    "tier",
+    "email",
+    "organization",
+    "payment_details_section",
+    "razorpay_payment",
+    "column_break_uihi",
+    "customer",
+    "additional_details_section",
+    "wants_tshirt",
+    "tshirt_delivered",
+    "column_break_qbfj",
+    "tshirt_size",
+    "section_break_tzsu",
+    "custom_fields",
+    "section_break_ueio",
+    "check_ins"
+  ],
+  "fields": [
+    {
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Full Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_dnhv",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Email",
+      "options": "Email",
+      "reqd": 1
+    },
+    {
+      "fieldname": "payment_details_section",
+      "fieldtype": "Section Break",
+      "label": "Payment Details"
+    },
+    {
+      "fieldname": "razorpay_payment",
+      "fieldtype": "Link",
+      "label": "Razorpay Payment",
+      "options": "Razorpay Payment",
+      "read_only": 1
+    },
+    {
+      "fieldname": "column_break_uihi",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fetch_from": "razorpay_payment.email",
+      "fieldname": "customer",
+      "fieldtype": "Data",
+      "label": "Customer"
+    },
+    {
+      "fieldname": "event",
+      "fieldtype": "Link",
+      "label": "Event",
+      "options": "FOSS Chapter Event",
+      "reqd": 1,
+      "search_index": 1
+    },
+    {
+      "fieldname": "tier",
+      "fieldtype": "Data",
+      "label": "Tier"
+    },
+    {
+      "fieldname": "additional_details_section",
+      "fieldtype": "Section Break",
+      "label": "Additional Details"
+    },
+    {
+      "fieldname": "column_break_qbfj",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "wants_tshirt",
+      "fieldtype": "Check",
+      "label": "Wants T Shirt?",
+      "read_only": 1
+    },
+    {
+      "depends_on": "eval:doc.wants_tshirt==1",
+      "fieldname": "tshirt_size",
+      "fieldtype": "Data",
+      "label": "T Shirt Size",
+      "read_only": 1
+    },
+    {
+      "fieldname": "section_break_tzsu",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "custom_fields",
+      "fieldtype": "Table",
+      "label": "Custom Fields",
+      "options": "FOSS Ticket Custom Field"
+    },
+    {
+      "fieldname": "designation",
+      "fieldtype": "Data",
+      "label": "Designation"
+    },
+    {
+      "fieldname": "organization",
+      "fieldtype": "Data",
+      "label": "Organization / College"
+    },
+    {
+      "fieldname": "section_break_pvar",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_transfer_ticket",
+      "fieldtype": "Check",
+      "label": "Is Transfer Ticket?"
+    },
+    {
+      "fieldname": "section_break_ogof",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "section_break_ueio",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "check_ins",
+      "fieldtype": "Table",
+      "label": "Check Ins",
+      "options": "Event Check In"
+    },
+    {
+      "default": "0",
+      "fieldname": "tshirt_delivered",
+      "fieldtype": "Check",
+      "label": "Tshirt Delivered?"
+    }
+  ],
+  "links": [],
+  "modified": "2024-09-05 16:13:42.830490",
+  "modified_by": "Administrator",
+  "module": "Ticketing",
+  "name": "FOSS Event Ticket",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "full_name"
 }

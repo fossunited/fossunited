@@ -30,9 +30,9 @@
 import { defineProps } from 'vue'
 
 const props = defineProps({
-    localhost : {
-        type: Object,
-        required: true,
-    }
+  localhost: {
+    type: Object,
+    required: true,
+  },
 })
 </script>

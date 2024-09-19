@@ -2,10 +2,7 @@
   <Header />
   <div class="w-full flex flex-col items-center" v-if="event.doc">
     <div class="max-w-screen-xl p-4 w-full">
-      <a
-        href="/dashboard/review"
-        class="text-base hover:underline flex items-center gap-1 my-4"
-      >
+      <a href="/dashboard/review" class="text-base hover:underline flex items-center gap-1 my-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

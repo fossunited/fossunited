@@ -15,7 +15,7 @@
       :disabled="project.data.is_partner_project"
     >
       <template #prefix>
-        <GithubIcon class="w-4"/>
+        <GithubIcon class="w-4" />
       </template>
     </FormControl>
     <FormControl label="Demo Link" v-model="project.data.demo_link" />
@@ -71,10 +71,7 @@ const updateProjectErrors = () => {
   if (!props.project.data.repo_link) {
     errors.push('Repository link cannot be empty')
   }
-  if (
-    props.project.data.repo_link &&
-    !props.project.data.repo_link.startsWith('https://')
-  ) {
+  if (props.project.data.repo_link && !props.project.data.repo_link.startsWith('https://')) {
     errors.push('Enter a valid repo link')
   }
 

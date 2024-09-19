@@ -8,16 +8,11 @@
   </div>
   <div v-else class="container mx-auto px-4">
     <Breadcrumb class="mt-2" :items="breadcrumb_items" />
-    <EventHeader
-      :event="event.data"
-      class="my-4 border-b border-gray-900 pb-4"
-    />
+    <EventHeader :event="event.data" class="my-4 border-b border-gray-900 pb-4" />
 
     <AllProposalsBanner :event="event.data" class="py-2" />
     <!-- Search and filters -->
-    <div
-      class="flex flex-col gap-y-3 justify-between my-7 md:flex-row md:items-center"
-    >
+    <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row md:items-center">
       <div class="w-full md:w-1/2">
         <TextInput
           type="text"
@@ -32,10 +27,7 @@
         </TextInput>
       </div>
       <div class="flex gap-x-2 items-center">
-        <ThemedSelectBlack
-          v-model="selectedSessionType"
-          :options="sessionTypes"
-        />
+        <ThemedSelectBlack v-model="selectedSessionType" :options="sessionTypes" />
         <ThemedSelectBlack v-model="selectedStatus" :options="statuses" />
       </div>
     </div>
@@ -68,13 +60,7 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-  createResource,
-  usePageMeta,
-  LoadingText,
-  TextInput,
-  FeatherIcon,
-} from 'frappe-ui'
+import { createResource, usePageMeta, LoadingText, TextInput, FeatherIcon } from 'frappe-ui'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
@@ -123,9 +109,7 @@ const proposals = createResource({
 })
 
 usePageMeta(() => ({
-  title: event.data
-    ? `${event.data.event_name} | Proposals`
-    : 'Loading Proposals...',
+  title: event.data ? `${event.data.event_name} | Proposals` : 'Loading Proposals...',
 }))
 
 const breadcrumb_items = computed(() => {
@@ -172,10 +156,8 @@ const filteredProposals = computed(() => {
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase())
     const matchesSessionType =
-      selectedSessionType.value === '' ||
-      proposal.session_type === selectedSessionType.value
-    const matchesStatus =
-      selectedStatus.value === '' || proposal.status === selectedStatus.value
+      selectedSessionType.value === '' || proposal.session_type === selectedSessionType.value
+    const matchesStatus = selectedStatus.value === '' || proposal.status === selectedStatus.value
 
     return matchesSearch && matchesSessionType && matchesStatus
   })

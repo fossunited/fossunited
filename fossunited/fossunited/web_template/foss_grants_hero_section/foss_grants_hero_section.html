@@ -1,120 +1,112 @@
 <style>
+  .grants-section {
+    display: flex;
+    font-family: Inter;
+    overflow: hidden;
+    justify-content: space-between;
+  }
 
+  .grants-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 40%;
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+  }
+
+  .grants-container h1 {
+    color: hsl(var(--clr-foss-mint-500));
+    line-height: 100%;
+    letter-spacing: -0.18rem;
+  }
+
+  .grants-hero-image {
+    padding: 8rem 0rem 8rem 0rem;
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .grants-hero-image img {
+    max-width: 20rem;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .button-category {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .button-category a:hover {
+    text-decoration: none;
+  }
+
+  .grants-container p {
+    color: hsl(var(--clr-gray-500));
+    font-size: var(--text-lg);
+    font-weight: var(--fw-medium);
+    line-height: 140%; /* 1.575rem */
+    letter-spacing: -0.0225rem;
+  }
+
+  @media (max-width: 768px) {
     .grants-section {
-        display: flex;
-        font-family: Inter;
-        overflow: hidden;
-        justify-content: space-between;
+      flex-direction: column-reverse;
+      padding: 3rem 0;
     }
 
     .grants-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-        width: 40%;
-        justify-content: center;
-        padding-left: 0;
-        padding-right: 0;
-        margin: 0;
+      margin: 0;
+      width: 100%;
     }
 
     .grants-container h1 {
-        color: hsl(var(--clr-foss-mint-500));
-        line-height: 100%;
-        letter-spacing: -0.18rem;
+      font-size: var(--text-5xl);
+      letter-spacing: -0.15rem;
     }
 
-    .grants-hero-image{
-
-        padding: 8rem 0rem 8rem 0rem;
-        width: 50%;
-        display: flex;
-        justify-content: flex-end;
+    .grants-hero-image {
+      width: 100%;
+      padding: 3rem 2rem;
+      justify-content: center;
     }
 
-    .grants-hero-image img{
-        max-width: 20rem;
+    .grants-hero-image img {
+      max-width: 12rem;
     }
 
-    .button-container{
-        display: flex;
-        gap: 2rem;
+    .button-container {
+      flex-direction: column;
     }
-
-    .button-category{
-        display: flex;
-        align-items: center;
-        gap: 1.5rem;
-    }
-
-    .button-category a:hover{
-        text-decoration: none;
-    }
-
-    .grants-container p{
-        color: hsl(var(--clr-gray-500));
-        font-size: var(--text-lg);
-        font-weight: var(--fw-medium);
-        line-height: 140%; /* 1.575rem */
-        letter-spacing: -0.0225rem;
-    }
-
-
-    @media (max-width: 768px){
-        .grants-section{
-            flex-direction: column-reverse;
-            padding: 3rem 0;
-        }
-
-        .grants-container {
-            margin: 0;
-            width: 100%;
-        }
-
-        .grants-container h1 {
-            font-size: var(--text-5xl);
-            letter-spacing: -0.15rem;
-        }
-
-        .grants-hero-image{
-            width: 100%;
-            padding: 3rem 2rem;
-            justify-content: center;
-        }
-
-        .grants-hero-image img {
-            max-width: 12rem;
-        }
-
-        .button-container{
-            flex-direction: column;
-        }
-    }
-
+  }
 </style>
 
-
 <div class="grants-section container">
-    <div class="grants-container">
-        <h1>{{heading}}</h1>
-        <p>{{subtext}}</p>
+  <div class="grants-container">
+    <h1>{{ heading }}</h1>
+    <p>{{ subtext }}</p>
 
-        <div class="button-category">
-
-            <div class="button-container">
-
-                {% if primary_cta_link %}
-                <a href="{{primary_cta_link}}" class="primary-button">{{primary_cta_text}}</a>
-                {% endif %}
-                {% if secondary_cta_link %}
-                <a href="{{secondary_cta_link}}" class="secondary-button">{{secondary_cta_text}}</a>
-                {% endif %}
-
-            </div>
-        </div>
+    <div class="button-category">
+      <div class="button-container">
+        {% if primary_cta_link %}
+          <a href="{{ primary_cta_link }}" class="primary-button">{{ primary_cta_text }}</a>
+        {% endif %}
+        {% if secondary_cta_link %}
+          <a href="{{ secondary_cta_link }}" class="secondary-button">{{ secondary_cta_text }}</a>
+        {% endif %}
+      </div>
     </div>
+  </div>
 
-    <div class="grants-hero-image">
-        <img src="{{hero_image}}" alt="Grants Icon">
-    </div>
+  <div class="grants-hero-image">
+    <img src="{{ hero_image }}" alt="Grants Icon" />
+  </div>
 </div>

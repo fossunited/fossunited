@@ -1,11 +1,5 @@
 <template>
-  <svg
-    width="125"
-    height="95"
-    viewBox="0 0 125 95"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width="125" height="95" viewBox="0 0 125 95" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M23.0615 48.993H15.767V14.2395H33.7053V21.3394H23.0615V28.0525H33.7053V35.1524H23.0615V48.993Z"
       :fill="props.fill"
@@ -30,10 +24,7 @@
       d="M38.9852 80.7421H33.7136V55.585H49.2413V80.7421H43.9697V60.7244H38.9852V80.7421Z"
       :fill="props.fill"
     />
-    <path
-      d="M56.9332 80.7421H51.6616V55.585H56.9332V80.7421Z"
-      :fill="props.fill"
-    />
+    <path d="M56.9332 80.7421H51.6616V55.585H56.9332V80.7421Z" :fill="props.fill" />
     <path
       d="M69.7534 80.7421H64.4818V60.7244H59.3538V55.585H74.8814V60.7244H69.7534V80.7421Z"
       :fill="props.fill"

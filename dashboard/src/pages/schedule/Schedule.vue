@@ -1,15 +1,9 @@
 <template>
   <Header />
-  <div
-    v-if="event.data && schedule.data"
-    class="w-full flex flex-col items-center p-4"
-  >
+  <div v-if="event.data && schedule.data" class="w-full flex flex-col items-center p-4">
     <div class="max-w-screen-xl w-full">
       <Breadcrumb class="mt-2" :items="breadcrumb_items" />
-      <EventHeader
-        :event="event.data"
-        class="my-4 border-b border-gray-900 pb-4"
-      />
+      <EventHeader :event="event.data" class="my-4 border-b border-gray-900 pb-4" />
       <ScheduleHeader :event="event.data" class="py-2" />
       <div class="flex justify-between items-end gap-4 flex-wrap">
         <ScheduleDateToggle :dates="eventDays" class="mt-4" v-model="selectedDay" />
@@ -19,9 +13,7 @@
     </div>
   </div>
   <div v-else>
-    <div
-      class="max-w-screen-lg mx-auto mt-8 flex items-center justify-center min-h-[320px]"
-    >
+    <div class="max-w-screen-lg mx-auto mt-8 flex items-center justify-center min-h-[320px]">
       <LoadingText class="text-lg" text="Loading schedules..." />
     </div>
   </div>
@@ -50,7 +42,7 @@ const event = createResource({
   makeParams() {
     return {
       permalink: route.params.permalink,
-      fields: ["*"],
+      fields: ['*'],
     }
   },
   auto: true,
@@ -100,7 +92,7 @@ const breadcrumb_items = computed(() => {
   ]
 })
 
-usePageMeta(()=> {
+usePageMeta(() => {
   return {
     title: `${event.data.event_name} Schedule`,
   }

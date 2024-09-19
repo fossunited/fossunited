@@ -65,7 +65,7 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    width:fit-content;
+    width: fit-content;
   }
 
   .hero-search {
@@ -93,7 +93,6 @@
   #search-club:focus {
     outline: none;
   }
-
 
   .autocomp {
     background: #ffffff;
@@ -179,59 +178,53 @@
         <h1>FOSS <span>Clubs</span></h1>
       </div>
 
-      <p>{{subtext}}</p>
+      <p>{{ subtext }}</p>
     </div>
 
     <div class="hero-search">
-      <h5>{{subheading}}</h5>
+      <h5>{{ subheading }}</h5>
       <div class="hero-club-search">
-        <input
-          type="text"
-          id="search-club"
-          placeholder="Search by name of club or city"
-        />
+        <input type="text" id="search-club" placeholder="Search by name of club or city" />
       </div>
     </div>
 
     <div class="hero-cta">
-
-        {% if cta_link %}
-        <a class="primary-button" href="{{cta_link}}">{{cta_text}} </a>
-        {% endif %}
-
+      {% if cta_link %}
+        <a class="primary-button" href="{{ cta_link }}">{{ cta_text }} </a>
+      {% endif %}
     </div>
   </div>
 
   <div class="hero-image">
-    <img src="{{hero_image}}" alt="FOSS Club Hero" />
+    <img src="{{ hero_image }}" alt="FOSS Club Hero" />
   </div>
 
-    <script>
-            function getClubs(query) {
-                return new Promise((resolve, reject) => {
-                    frappe.call({
-                        method: "fossunited.api.pages.search_foss_club",
-                        args: { query },
-                        callback: (r) => {
-                            resolve(r.message);
-                        }
-                    })
-                })
-            }
+  <script>
+    function getClubs(query) {
+      return new Promise((resolve, reject) => {
+        frappe.call({
+          method: 'fossunited.api.pages.search_foss_club',
+          args: { query },
+          callback: (r) => {
+            resolve(r.message)
+          },
+        })
+      })
+    }
 
-    autocomp(document.getElementById("search-club"), {
+    autocomp(document.getElementById('search-club'), {
       onQuery: async (val) => {
-        return await getClubs(val);
+        return await getClubs(val)
       },
       onSelect: (result) => {
-        window.location.href = "/" + result.route;
-        return result.chapter_name;
+        window.location.href = '/' + result.route
+        return result.chapter_name
       },
       onRender: (result) => {
-        const div = document.createElement("div");
-        div.innerHTML = result.chapter_name;
-        return div;
+        const div = document.createElement('div')
+        div.innerHTML = result.chapter_name
+        return div
       },
-    });
+    })
   </script>
 </div>

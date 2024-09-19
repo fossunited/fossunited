@@ -18,11 +18,7 @@
         :collapsible="isCollapsible"
         @collapse-hall="toggleCollapse(hall)"
       />
-      <SessionList
-        v-if="!isCollapsed(hall)"
-        :sessions="sessions"
-        :view="view"
-      />
+      <SessionList v-if="!isCollapsed(hall)" :sessions="sessions" :view="view" />
     </div>
   </div>
 </template>

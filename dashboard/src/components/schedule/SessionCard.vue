@@ -1,17 +1,11 @@
 <template>
-  <div
-    class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full"
-  >
+  <div class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full">
     <div class="flex justify-between">
       <div class="flex gap-3 md:gap-4">
         <div
           class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px] flex items-center"
         >
-          {{
-            session.category != 'Other'
-              ? session.category
-              : session.other_category
-          }}
+          {{ session.category != 'Other' ? session.category : session.other_category }}
         </div>
         <div
           class="px-2 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-[2px] flex items-center"
@@ -24,8 +18,8 @@
         class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-2"
         @click="downloadSessionIcs()"
       >
-          <CalenderAddIcon class="h-4 w-4" />
-          <span class="hidden md:block uppercase">Add to Calendar</span>
+        <CalenderAddIcon class="h-4 w-4" />
+        <span class="hidden md:block uppercase">Add to Calendar</span>
       </button>
     </div>
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
@@ -53,7 +47,7 @@
 <script setup>
 import { createEvent } from 'ics'
 import { toast } from 'vue-sonner'
-import { defineProps, inject,  } from 'vue'
+import { defineProps, inject } from 'vue'
 import CalenderAddIcon from '@/components/icons/CalenderAddIcon.vue'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
@@ -85,9 +79,7 @@ function downloadSessionIcs() {
     end: formatTimeForIcs(props.session.end_time),
     location: `${props.session.hall}, ${event.data.event_location}`,
     categories: [
-      props.session.category !== 'Other'
-        ? props.session.category
-        : props.session.other_category,
+      props.session.category !== 'Other' ? props.session.category : props.session.other_category,
     ],
   }
 

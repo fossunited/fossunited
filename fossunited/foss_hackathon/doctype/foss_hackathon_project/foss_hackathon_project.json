@@ -1,198 +1,198 @@
 {
- "actions": [],
- "allow_guest_to_view": 1,
- "allow_rename": 1,
- "autoname": "hash",
- "creation": "2023-12-13 14:51:40.966943",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "project_details_tab",
-  "status_checks_section",
-  "route",
-  "column_break_ekbb",
-  "is_published",
-  "section_break_xhxb",
-  "is_contribution_project",
-  "column_break_mwcp",
-  "is_partner_project",
-  "partner_project",
-  "project_details_section",
-  "title",
-  "repo_link",
-  "demo_link",
-  "short_description",
-  "column_break_xfpp",
-  "hackathon",
-  "team",
-  "team_name",
-  "description",
-  "issues__prs_section",
-  "issue_pr_table"
- ],
- "fields": [
-  {
-   "fieldname": "project_details_tab",
-   "fieldtype": "Tab Break",
-   "label": "Project Details"
-  },
-  {
-   "fieldname": "status_checks_section",
-   "fieldtype": "Section Break",
-   "label": "Meta Info"
-  },
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route"
-  },
-  {
-   "fieldname": "column_break_ekbb",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "1",
-   "fieldname": "is_published",
-   "fieldtype": "Check",
-   "label": "Is Published"
-  },
-  {
-   "fieldname": "project_details_section",
-   "fieldtype": "Section Break",
-   "label": "Project Details "
-  },
-  {
-   "fieldname": "column_break_xfpp",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "hackathon",
-   "fieldtype": "Link",
-   "label": "Hackathon ",
-   "options": "FOSS Hackathon",
-   "reqd": 1
-  },
-  {
-   "fieldname": "team",
-   "fieldtype": "Link",
-   "label": "Team",
-   "options": "FOSS Hackathon Team",
-   "reqd": 1
-  },
-  {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title",
-   "reqd": 1
-  },
-  {
-   "fieldname": "repo_link",
-   "fieldtype": "Data",
-   "label": "Repo Link",
-   "options": "URL"
-  },
-  {
-   "fieldname": "demo_link",
-   "fieldtype": "Data",
-   "label": "Demo Link",
-   "options": "URL"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Text Editor",
-   "label": "Description",
-   "reqd": 1
-  },
-  {
-   "fieldname": "short_description",
-   "fieldtype": "Small Text",
-   "label": "Short description",
-   "options": "URL"
-  },
-  {
-   "fieldname": "section_break_xhxb",
-   "fieldtype": "Section Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_contribution_project",
-   "fieldtype": "Check",
-   "label": "Is Contribution Project?"
-  },
-  {
-   "fieldname": "column_break_mwcp",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "is_partner_project",
-   "fieldtype": "Check",
-   "label": "Is Partner Project?"
-  },
-  {
-   "depends_on": "eval:doc.is_partner_project==1",
-   "fieldname": "partner_project",
-   "fieldtype": "Link",
-   "label": "Partner Project",
-   "options": "FOSS Hackathon Partner Project"
-  },
-  {
-   "fetch_from": "team.team_name",
-   "fieldname": "team_name",
-   "fieldtype": "Data",
-   "label": "Team Name",
-   "read_only": 1
-  },
-  {
-   "fieldname": "issues__prs_section",
-   "fieldtype": "Section Break",
-   "label": "Issues / PRs"
-  },
-  {
-   "fieldname": "issue_pr_table",
-   "fieldtype": "Table",
-   "label": "Issue PR Table",
-   "options": "Hackathon Project Issue PR"
-  }
- ],
- "has_web_view": 1,
- "index_web_pages_for_search": 1,
- "is_published_field": "is_published",
- "links": [],
- "modified": "2024-07-23 12:39:23.852004",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "FOSS Hackathon Project",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "read": 1,
-   "role": "All",
-   "select": 1,
-   "write": 1
-  }
- ],
- "search_fields": "hackathon",
- "show_title_field_in_link": 1,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "title_field": "title",
- "track_changes": 1,
- "track_views": 1
+  "actions": [],
+  "allow_guest_to_view": 1,
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2023-12-13 14:51:40.966943",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "project_details_tab",
+    "status_checks_section",
+    "route",
+    "column_break_ekbb",
+    "is_published",
+    "section_break_xhxb",
+    "is_contribution_project",
+    "column_break_mwcp",
+    "is_partner_project",
+    "partner_project",
+    "project_details_section",
+    "title",
+    "repo_link",
+    "demo_link",
+    "short_description",
+    "column_break_xfpp",
+    "hackathon",
+    "team",
+    "team_name",
+    "description",
+    "issues__prs_section",
+    "issue_pr_table"
+  ],
+  "fields": [
+    {
+      "fieldname": "project_details_tab",
+      "fieldtype": "Tab Break",
+      "label": "Project Details"
+    },
+    {
+      "fieldname": "status_checks_section",
+      "fieldtype": "Section Break",
+      "label": "Meta Info"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Data",
+      "label": "Route"
+    },
+    {
+      "fieldname": "column_break_ekbb",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_published",
+      "fieldtype": "Check",
+      "label": "Is Published"
+    },
+    {
+      "fieldname": "project_details_section",
+      "fieldtype": "Section Break",
+      "label": "Project Details "
+    },
+    {
+      "fieldname": "column_break_xfpp",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "hackathon",
+      "fieldtype": "Link",
+      "label": "Hackathon ",
+      "options": "FOSS Hackathon",
+      "reqd": 1
+    },
+    {
+      "fieldname": "team",
+      "fieldtype": "Link",
+      "label": "Team",
+      "options": "FOSS Hackathon Team",
+      "reqd": 1
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title",
+      "reqd": 1
+    },
+    {
+      "fieldname": "repo_link",
+      "fieldtype": "Data",
+      "label": "Repo Link",
+      "options": "URL"
+    },
+    {
+      "fieldname": "demo_link",
+      "fieldtype": "Data",
+      "label": "Demo Link",
+      "options": "URL"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Description",
+      "reqd": 1
+    },
+    {
+      "fieldname": "short_description",
+      "fieldtype": "Small Text",
+      "label": "Short description",
+      "options": "URL"
+    },
+    {
+      "fieldname": "section_break_xhxb",
+      "fieldtype": "Section Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_contribution_project",
+      "fieldtype": "Check",
+      "label": "Is Contribution Project?"
+    },
+    {
+      "fieldname": "column_break_mwcp",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_partner_project",
+      "fieldtype": "Check",
+      "label": "Is Partner Project?"
+    },
+    {
+      "depends_on": "eval:doc.is_partner_project==1",
+      "fieldname": "partner_project",
+      "fieldtype": "Link",
+      "label": "Partner Project",
+      "options": "FOSS Hackathon Partner Project"
+    },
+    {
+      "fetch_from": "team.team_name",
+      "fieldname": "team_name",
+      "fieldtype": "Data",
+      "label": "Team Name",
+      "read_only": 1
+    },
+    {
+      "fieldname": "issues__prs_section",
+      "fieldtype": "Section Break",
+      "label": "Issues / PRs"
+    },
+    {
+      "fieldname": "issue_pr_table",
+      "fieldtype": "Table",
+      "label": "Issue PR Table",
+      "options": "Hackathon Project Issue PR"
+    }
+  ],
+  "has_web_view": 1,
+  "index_web_pages_for_search": 1,
+  "is_published_field": "is_published",
+  "links": [],
+  "modified": "2024-07-23 12:39:23.852004",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "FOSS Hackathon Project",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "All",
+      "select": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "hackathon",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "title",
+  "track_changes": 1,
+  "track_views": 1
 }

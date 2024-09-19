@@ -1,330 +1,337 @@
-{% extends 'templates/foss_base.html' %} {% block content %} {{ header() }} {{
-render_time_location() }} {% from
-'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
-<div class="horizontal-navbar-parent">
-  <div class="container">{{ horizontal_navbar(nav_items) }}</div>
-</div>
-<div class="container">
-  {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{
-  render_cfp() }} {{ render_schedule() }}
-</div>
-
-{% endblock %} {% macro header() %}
-<div class="container header-section-parent">
-  <div class="header-section event-header">
-    <img
-      src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png'}}"
-      alt="Cover Image"
-      class="foss-banner-image header--banner"
-    />
-    <div class="header--title-cta-parent">
-      <div>
-        {% if doc.chapter %} {% from
-        'fossunited/templates/macros/chapter_branding_block.html' import
-        chapter_branding_block %}
-        <a href="/{{chapter.route}}">
-          {{ chapter_branding_block(doc.chapter) }}
-        </a>
+{% extends 'templates/foss_base.html' %}
+{% block content %}
+  {{ header() }}
+  {{ render_time_location() }}
+  {%
+    from 'fossunited/templates/macros/horizontal_navbar.html' import
+    horizontal_navbar
+  %}
+  <div class="horizontal-navbar-parent">
+    <div class="container">{{ horizontal_navbar(nav_items) }}</div>
+  </div>
+  <div class="container">
+    {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }}
+    {{ render_schedule() }}
+  </div>
+{% endblock %}
+{% macro header() %}
+  <div class="container header-section-parent">
+    <div class="header-section event-header">
+      <img
+        src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
+        alt="Cover Image"
+        class="foss-banner-image header--banner"
+      />
+      <div class="header--title-cta-parent">
+        <div>
+          {% if doc.chapter %}
+            {%
+              from 'fossunited/templates/macros/chapter_branding_block.html'
+              import chapter_branding_block
+            %}
+            <a href="/{{ chapter.route }}"> {{ chapter_branding_block(doc.chapter) }} </a>
+          {% endif %}
+          <h1 class="header--event-title">{{ doc.event_name }}</h1>
+        </div>
+        {% if doc.is_paid_event %}
+          <button
+            class="primary-button ticket-button"
+            onClick="window.location.href='/dashboard/buy-tickets?event={{ doc.name }}'"
+          >
+            Buy Ticket
+          </button>
         {% endif %}
-        <h1 class="header--event-title">{{ doc.event_name }}</h1>
       </div>
-      {% if doc.is_paid_event %}
-      <button
-        class="primary-button ticket-button"
-        onClick="window.location.href='/dashboard/buy-tickets?event={{doc.name}}'"
-      >
-        Buy Ticket
-      </button>
+      <div class="header--tags">
+        {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
+        {{ tag(doc.event_type) }}
+        {% if doc.must_attend %}{{
+          tag("Must Attend", color='hsl(var(--clr-foss-mint-600))',
+          background='hsl(var(--clr-foss-mint-100))', icon='star-filled')
+        }}{% endif %}
+      </div>
+      {% if doc.event_bio %}
+        <div class="header--short-desc">{{ doc.event_bio }}</div>
       {% endif %}
     </div>
-    <div class="header--tags">
-      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {{
-      tag(doc.event_type) }} {% if doc.must_attend %} {{ tag("Must Attend",
-      color='hsl(var(--clr-foss-mint-600))',
-      background='hsl(var(--clr-foss-mint-100))', icon='star-filled') }} {%
-      endif %}
-    </div>
-    {% if doc.event_bio %}
-    <div class="header--short-desc">{{ doc.event_bio }}</div>
-    {% endif %}
   </div>
-</div>
-{% endmacro %} {% macro render_time_location() %}
-<div class="container">
-  <div class="time-location-parent">
-    <div class="event-date-parent time-location--child-container">
-      <i
-        class="ti ti-calendar-event"
-        style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
-      ></i>
-      <div class="d-flex flex-column">
-        <div class="event-start-date child-container--heading">
-          {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
-        </div>
-        <div class="event-end-date child-container--subtext">
-          {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
-        </div>
-      </div>
-    </div>
-    <div class="event-time-parent time-location--child-container">
-      <i
-        class="ti ti-clock"
-        style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
-      ></i>
-      <div class="d-flex flex-column">
-        <div class="event-start-time child-container--heading">
-          Starts at {{ doc.event_start_date.strftime("%-I:%M %p") }}
-        </div>
-        <div class="event-end-time child-container--subtext">
-          Ends at {{ doc.event_end_date.strftime("%-I:%M %p") }}
-        </div>
-      </div>
-    </div>
-    <div class="event-location-parent time-location--child-container">
-      <i
-        class="ti ti-map-pin"
-        style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
-      ></i>
-      <div class="d-flex flex-column">
-        <a
-          href="{{doc.map_link}}"
-          class="event-location child-container--heading"
-        >
-          {{ doc.event_location }}
-        </a>
-      </div>
-    </div>
-  </div>
-</div>
-{% endmacro %} {% macro render_event_details() %}
-<div class="event-content-div content-div" id="event_information">
-  <div class="description-section my-3">
-    <h5>Description</h5>
-    <div class="event--description-block mt-2">
-      {{ doc.event_description or 'No Description Available for this event'}}
-    </div>
-  </div>
-  {% if doc.sponsor_list or doc.deck_link %}
-  <div class="sponsors-section my-3">
-    <h5 class="mt-3 mb-1">Sponsors</h5>
-    {% if doc.deck_link %}
-    <div class="my-2">
-      Interested in sponsoring this event? Check out our sponsorship deck
-      <a class="green-link" href="{{doc.deck_link}}" target="_blank">here</a>
-      for all the details.
-    </div>
-    {% endif %} {% if doc.sponsor_list %} {% for k,v in sponsors_dict.items() %}
-    <div class="sponsor--tier-block">
-      <div class="sponsor--tier-heading">{{ k }}</div>
-      <div class="sponsor--flex">
-        {% for sponsor in v %}
-        <a href="{{ sponsor.sponsor_link }}" class="sponsor--block">
-          <img
-            src="{{ sponsor.sponsor_image }}"
-            alt="{{ sponsor.sponsor_name }}"
-            class="sponsor--image"
-          />
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-    {% endfor %} {% else %}
-    <div class="my-4">No Sponsors Announced Yet</div>
-    {% endif %}
-  </div>
-  {% endif %} {% if doc.community_partners %}
-  <div class="community-partners-sections my-3">
-    <div class="sponsor--tier-block">
-      <h5>Community Partners</h5>
-      <div class="sponsor--flex">
-        {% for partner in doc.community_partners %}
-        <a href="{{ partner.organization_website }}" class="sponsor--block">
-          <img
-            src="{{ partner.company_logo }}"
-            alt="{{ partner.organization_name }}"
-            class="sponsor--image"
-          />
-        </a>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-  {% endif %} {% if doc.event_members %}
-  <div class="event-members-section my-3">
-    <h5>Event Members</h5>
-    <div class="event--members-block">
-      {% from 'fossunited/templates/macros/member_card.html' import member_card
-      %}
-      <div class="members-grid-6">
-        {% for volunteer in volunteers %} {{ member_card(volunteer) }} {% endfor
-        %}
-      </div>
-    </div>
-  </div>
-  {% endif %}
-</div>
-{% endmacro %} {% macro render_speakers() %}
-<div class="event-content-div content-div" id="speakers">
-  <div class="speakers-section my-3">
-    <h5>Speakers</h5>
-    {% if speakers %}
-    <div class="speakers-grid">
-      {% from 'fossunited/templates/macros/foss_tags.html' import tag %} {% for
-      speaker in speakers %}
-      <div class="speaker-card">
-        <img
-          src="{{ speaker.profile_picture }}"
-          alt="{{ speaker.full_name }}"
-          class="speaker--image"
-        />
-        <div class="speaker--details">
-          <div class="speaker--name">{{ speaker.full_name }}</div>
-          <div class="speaker--talk-title">
-            {{ speaker.designation }}, {{ speaker.organization }}
+{% endmacro %}
+{% macro render_time_location() %}
+  <div class="container">
+    <div class="time-location-parent">
+      <div class="event-date-parent time-location--child-container">
+        <i
+          class="ti ti-calendar-event"
+          style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
+        ></i>
+        <div class="d-flex flex-column">
+          <div class="event-start-date child-container--heading">
+            {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
+          </div>
+          <div class="event-end-date child-container--subtext">
+            {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
           </div>
         </div>
       </div>
-      {% endfor %}
+      <div class="event-time-parent time-location--child-container">
+        <i
+          class="ti ti-clock"
+          style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
+        ></i>
+        <div class="d-flex flex-column">
+          <div class="event-start-time child-container--heading">
+            Starts at {{ doc.event_start_date.strftime("%-I:%M %p") }}
+          </div>
+          <div class="event-end-time child-container--subtext">
+            Ends at {{ doc.event_end_date.strftime("%-I:%M %p") }}
+          </div>
+        </div>
+      </div>
+      <div class="event-location-parent time-location--child-container">
+        <i
+          class="ti ti-map-pin"
+          style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
+        ></i>
+        <div class="d-flex flex-column">
+          <a href="{{ doc.map_link }}" class="event-location child-container--heading">
+            {{ doc.event_location }}
+          </a>
+        </div>
+      </div>
     </div>
-    {% else %}
-    <div class="my-4">No Speakers Announced Yet</div>
-    {% endif %}
   </div>
-</div>
-{% endmacro %} {% macro render_rsvp() %}
-<div class="event-content-div content-div" id="rsvp">
-  <div class="rsvp-section my-3">
-    <h5>RSVP</h5>
-    {% from 'fossunited/templates/macros/status_block_event.html' import
-    status_block %} {{ status_block(rsvp_status_block, doc.name) }}
-  </div>
-</div>
-{% endmacro %} {% macro render_cfp() %}
-<div class="event-content-div content-div" id="talk_proposal">
-  <div class="cfp-section my-3">
-    <h5>Talk Proposal</h5>
-    {% from 'fossunited/templates/macros/status_block_event.html' import
-    status_block %} {{ status_block(cfp_status_block, doc.name) }} {% if
-    user_cfp_submissions %}
-    <div class="submitted-proposals-section">
-      <h5>Submitted Proposals</h5>
-      <div class="submitted-proposals-list">
-        {% for proposal in user_cfp_submissions %}
-        <div class="cfp-submission-card">
-          <div class="cfp-submission-left">
-            <div class="cfp-submission--title-status">
-              <div class="submission--title">{{ proposal.talk_title }}</div>
-              <div class="submission--status">
-                {{ proposal.status | make_badge }}
+{% endmacro %}
+{% macro render_event_details() %}
+  <div class="event-content-div content-div" id="event_information">
+    <div class="description-section my-3">
+      <h5>Description</h5>
+      <div class="event--description-block mt-2">
+        {{ doc.event_description or 'No Description Available for this event' }}
+      </div>
+    </div>
+    {% if doc.sponsor_list or doc.deck_link %}
+      <div class="sponsors-section my-3">
+        <h5 class="mt-3 mb-1">Sponsors</h5>
+        {% if doc.deck_link %}
+          <div class="my-2">
+            Interested in sponsoring this event? Check out our sponsorship deck
+            <a class="green-link" href="{{ doc.deck_link }}" target="_blank">here</a>
+            for all the details.
+          </div>
+        {% endif %}
+        {% if doc.sponsor_list %}
+          {% for k,v in sponsors_dict.items() %}
+            <div class="sponsor--tier-block">
+              <div class="sponsor--tier-heading">{{ k }}</div>
+              <div class="sponsor--flex">
+                {% for sponsor in v %}
+                  <a href="{{ sponsor.sponsor_link }}" class="sponsor--block">
+                    <img
+                      src="{{ sponsor.sponsor_image }}"
+                      alt="{{ sponsor.sponsor_name }}"
+                      class="sponsor--image"
+                    />
+                  </a>
+                {% endfor %}
               </div>
             </div>
-          </div>
-          <div class="d-flex button-group">
-            <button
-              class="mr-2 w-full"
-              onclick="window.location.href='/{{proposal.route}}'"
-            >
-              View Proposal
-            </button>
-            <button
-              class="dark-button w-full"
-              onClick="event.stopPropagation(); window.location.href='/{{proposal.route}}/edit'"
-            >
-              Edit CFP
-            </button>
-          </div>
-        </div>
-        {% endfor %}
+          {% endfor %}
+        {% else %}
+          <div class="my-4">No Sponsors Announced Yet</div>
+        {% endif %}
       </div>
-    </div>
     {% endif %}
-    <div class="d-flex justify-content-end align-items-baseline">
-      <a
-        href="/dashboard/cfp/{{ doc.event_permalink }}"
-        class="secondary-button"
-      >
-        <span> View all Proposals </span>
-        <i class="ti ti-arrow-right"></i>
-      </a>
-    </div>
-  </div>
-</div>
-{% endmacro %} {% macro render_schedule() %}
-<div class="event-content-div content-div" id="schedule">
-  <div class="schedule-section my-3">
-    <h5>Schedule</h5>
-    <div class="my-3">
-      <div class="buttons-group">
-        {% for day in schedule_dict.days %}
-        <button
-          class="button {% if loop.first %} dark-button active {% endif %}"
-          data-day="{{day}}"
-          onclick="showScheduleByDate()"
-        >
-          {{day}}
-        </button>
-        {% endfor %}
-      </div>
-    </div>
-    <div class="my-3">
-      {% for k,schedule_list in schedule_dict.items() %} {% if k != 'days' %}
-      <div class="schedule-grid" data-date="{{k}}">
-        {% for schedule in schedule_list %}
-        <div
-          class="schedule-card {% if not schedule.linked_cfp %} no-hover {% endif %}"
-          {%
-          if
-          schedule.cfp_route
-          %}
-          onclick="window.location.href='/{{schedule.cfp_route}}'"
-          {%
-          endif
-          %}
-        >
-          <div class="schedule--title-time-section">
-            <div class="schedule--title">{{ schedule.talk_title }}</div>
-            <div class="schedule--time">
-              {{ schedule.start_time.strftime('%I:%M %p') }} - {{
-              schedule.end_time.strftime('%I:%M %p') }}
-            </div>
+    {% if doc.community_partners %}
+      <div class="community-partners-sections my-3">
+        <div class="sponsor--tier-block">
+          <h5>Community Partners</h5>
+          <div class="sponsor--flex">
+            {% for partner in doc.community_partners %}
+              <a href="{{ partner.organization_website }}" class="sponsor--block">
+                <img
+                  src="{{ partner.company_logo }}"
+                  alt="{{ partner.organization_name }}"
+                  class="sponsor--image"
+                />
+              </a>
+            {% endfor %}
           </div>
-          {% if not schedule.no_speaker %}
-          <div class="schedule--speakers-section">
-            <a
-              target="_blank"
-              href="/{{ schedule.speaker_route }}"
-              class="schedule--speaker-container"
-              onclick="event.stopPropagation();"
-            >
-              <div class="schedule--speaker-name">
-                {{ schedule.speaker_full_name }}
-              </div>
-              <div class="speaker-designation-company">
-                {{ schedule.speaker_designation_company }}
-              </div>
-            </a>
-          </div>
-          {% endif %}
         </div>
-        {% endfor %}
       </div>
-      {% endif %} {% endfor %}
+    {% endif %}
+    {% if doc.event_members %}
+      <div class="event-members-section my-3">
+        <h5>Event Members</h5>
+        <div class="event--members-block">
+          {% from 'fossunited/templates/macros/member_card.html' import member_card %}
+          <div class="members-grid-6">
+            {% for volunteer in volunteers %}{{ member_card(volunteer) }}{% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+{% macro render_speakers() %}
+  <div class="event-content-div content-div" id="speakers">
+    <div class="speakers-section my-3">
+      <h5>Speakers</h5>
+      {% if speakers %}
+        <div class="speakers-grid">
+          {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
+          {% for speaker in speakers %}
+            <div class="speaker-card">
+              <img
+                src="{{ speaker.profile_picture }}"
+                alt="{{ speaker.full_name }}"
+                class="speaker--image"
+              />
+              <div class="speaker--details">
+                <div class="speaker--name">{{ speaker.full_name }}</div>
+                <div class="speaker--talk-title">
+                  {{ speaker.designation }}, {{ speaker.organization }}
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="my-4">No Speakers Announced Yet</div>
+      {% endif %}
     </div>
   </div>
-</div>
-{% endmacro%} {% block page_script %}
-<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
-<script>
-  $(document).ready(function () {
-    $(".schedule-grid").hide();
-    $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show();
-  });
+{% endmacro %}
+{% macro render_rsvp() %}
+  <div class="event-content-div content-div" id="rsvp">
+    <div class="rsvp-section my-3">
+      <h5>RSVP</h5>
+      {% from 'fossunited/templates/macros/status_block_event.html' import status_block %}
+      {{ status_block(rsvp_status_block, doc.name) }}
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_cfp() %}
+  <div class="event-content-div content-div" id="talk_proposal">
+    <div class="cfp-section my-3">
+      <h5>Talk Proposal</h5>
+      {% from 'fossunited/templates/macros/status_block_event.html' import status_block %}
+      {{ status_block(cfp_status_block, doc.name) }}
+      {% if user_cfp_submissions %}
+        <div class="submitted-proposals-section">
+          <h5>Submitted Proposals</h5>
+          <div class="submitted-proposals-list">
+            {% for proposal in user_cfp_submissions %}
+              <div class="cfp-submission-card">
+                <div class="cfp-submission-left">
+                  <div class="cfp-submission--title-status">
+                    <div class="submission--title">{{ proposal.talk_title }}</div>
+                    <div class="submission--status">{{ proposal.status | make_badge }}</div>
+                  </div>
+                </div>
+                <div class="d-flex button-group">
+                  <button
+                    class="mr-2 w-full"
+                    onclick="window.location.href='/{{ proposal.route }}'"
+                  >
+                    View Proposal
+                  </button>
+                  <button
+                    class="dark-button w-full"
+                    onClick="event.stopPropagation(); window.location.href='/{{ proposal.route }}/edit'"
+                  >
+                    Edit CFP
+                  </button>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      <div class="d-flex justify-content-end align-items-baseline">
+        <a href="/dashboard/cfp/{{ doc.event_permalink }}" class="secondary-button">
+          <span> View all Proposals </span>
+          <i class="ti ti-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_schedule() %}
+  <div class="event-content-div content-div" id="schedule">
+    <div class="schedule-section my-3">
+      <h5>Schedule</h5>
+      <div class="my-3">
+        <div class="buttons-group">
+          {% for day in schedule_dict.days %}
+            <button
+              class="button {% if loop.first %}dark-button active{% endif %}"
+              data-day="{{ day }}"
+              onclick="showScheduleByDate()"
+            >
+              {{ day }}
+            </button>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="my-3">
+        {% for k,schedule_list in schedule_dict.items() %}{% if k != 'days' %}
+          <div class="schedule-grid" data-date="{{ k }}">
+            {% for schedule in schedule_list %}
+              <div
+                class="schedule-card {% if not schedule.linked_cfp %}no-hover{% endif %}"
+                {%
+                  if
+                  schedule.cfp_route
+                %}
+                  onclick="window.location.href='/{{ schedule.cfp_route }}'"
+                {% endif %}
+              >
+                <div class="schedule--title-time-section">
+                  <div class="schedule--title">{{ schedule.talk_title }}</div>
+                  <div class="schedule--time">
+                    {{ schedule.start_time.strftime('%I:%M %p') }} -
+                    {{
+                      schedule.end_time.strftime('%I:%M
+                      %p')
+                    }}
+                  </div>
+                </div>
+                {% if not schedule.no_speaker %}
+                  <div class="schedule--speakers-section">
+                    <a
+                      target="_blank"
+                      href="/{{ schedule.speaker_route }}"
+                      class="schedule--speaker-container"
+                      onclick="event.stopPropagation();"
+                    >
+                      <div class="schedule--speaker-name">{{ schedule.speaker_full_name }}</div>
+                      <div class="speaker-designation-company">
+                        {{ schedule.speaker_designation_company }}
+                      </div>
+                    </a>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}{% endfor %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
+{% block page_script %}
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.schedule-grid').hide()
+      $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show()
+    })
 
-  function showScheduleByDate() {
-    $(".buttons-group button").removeClass("dark-button active");
-    $(event.target).addClass("dark-button active");
-    $(".schedule-grid").hide();
-    $('.schedule-grid[data-date="' + $(event.target).data("day") + '"]').show();
-  }
-</script>
+    function showScheduleByDate() {
+      $('.buttons-group button').removeClass('dark-button active')
+      $(event.target).addClass('dark-button active')
+      $('.schedule-grid').hide()
+      $('.schedule-grid[data-date="' + $(event.target).data('day') + '"]').show()
+    }
+  </script>
 {% endblock %}

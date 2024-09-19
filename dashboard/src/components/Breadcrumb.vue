@@ -5,7 +5,11 @@
       class="text-base flex gap-1 items-center my-2"
       :class="index == items.length - 1 ? 'font-medium text-gray-800' : 'text-gray-600 '"
     >
-      <router-link v-if="item.route" class="hover:text-gray-700 transition-colors" :to="item.route">
+      <router-link
+        v-if="item.route"
+        class="hover:text-gray-700 transition-colors"
+        :to="item.route"
+      >
         {{ item.label }}
       </router-link>
       <a v-else-if="item.link" :href="item.link" class="hover:text-gray-700 transition-colors">

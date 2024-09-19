@@ -6,10 +6,7 @@
         <p class="text-sm mb-4">List of all upcoming events with proposal forms.</p>
       </div>
     </div>
-    <div
-      v-if="events.data.length > 0"
-      class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
-    >
+    <div v-if="events.data.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card
         v-for="event in events.data"
         :title="event.event_name"
@@ -27,15 +24,15 @@
           <span class="text-sm">{{ event.chapter_name }}</span>
           <div class="text-sm text-gray-600">
             <span>{{ formatDate(event.start_date) }}</span>
-            <span v-if="formatDate(event.start_date) != formatDate(event.end_date)"> - {{ formatDate(event.end_date) }}</span>
+            <span v-if="formatDate(event.start_date) != formatDate(event.end_date)">
+              - {{ formatDate(event.end_date) }}</span
+            >
           </div>
         </div>
       </Card>
     </div>
     <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-gray-50">
-      <div class="text-sm font-medium uppercase text-gray-800">
-        No Call For Proposals
-      </div>
+      <div class="text-sm font-medium uppercase text-gray-800">No Call For Proposals</div>
       <div class="text-xs text-gray-600">
         There are no CFPs open right now. There are no talks to review.
       </div>

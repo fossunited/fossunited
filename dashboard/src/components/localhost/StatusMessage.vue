@@ -16,13 +16,11 @@
       </svg>
       <div class="text-center prose">
         <h2>Attendance Confirmed</h2>
-        <p>
-            Your Attendance for the Localhost has been confirmed.
-        </p>
+        <p>Your Attendance for the Localhost has been confirmed.</p>
       </div>
     </div>
     <div v-else class="flex flex-col gap-2 items-center justify-center">
-        <svg
+      <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
@@ -38,7 +36,7 @@
       <div class="prose text-center">
         <h2>Rejected</h2>
         <p>
-            You rejected the attendance confirmation. You will now attend the hackathon remotely.
+          You rejected the attendance confirmation. You will now attend the hackathon remotely.
         </p>
       </div>
     </div>

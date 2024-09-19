@@ -1,13 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./fossunited/www/**/*.html",
-    "./fossunited/templates/**/*.html",
-  ],
+  content: ['./fossunited/www/**/*.html', './fossunited/templates/**/*.html'],
   theme: {
-    extend:{
+    extend: {
       colors: {
-        primary:{
+        primary: {
           50: '#e6f8ed',
           100: '#b2e9c8',
           200: '#8ddeae',
@@ -20,7 +17,7 @@ module.exports = {
           900: '#034d21',
           950: '#003914',
           DEFAULT: '#08b74f',
-        }
+        },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
@@ -29,7 +26,7 @@ module.exports = {
         code: ['"Fira Code"', 'monospace'],
         fff: ['"FFF Forward"', 'sans-serif'],
       },
-    }
+    },
   },
   plugins: [],
 }

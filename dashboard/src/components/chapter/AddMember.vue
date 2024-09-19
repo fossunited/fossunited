@@ -16,12 +16,7 @@
           :multiple="true"
         >
           <template #item-prefix="{ option }">
-            <Avatar
-              shape="circle"
-              :image="option.avatar"
-              :label="option.label"
-              size="lg"
-            />
+            <Avatar shape="circle" :image="option.avatar" :label="option.label" size="lg" />
           </template>
         </Autocomplete>
       </div>
@@ -29,11 +24,7 @@
     <template #actions>
       <div class="grid grid-cols-2 gap-3">
         <Button label="Cancel" @click="$emit('close-dialog')" />
-        <Button
-          label="Add"
-          variant="solid"
-          @click="$emit('update:add-member', newMembers)"
-        />
+        <Button label="Add" variant="solid" @click="$emit('update:add-member', newMembers)" />
       </div>
     </template>
   </Dialog>
@@ -50,14 +41,12 @@ const props = defineProps({
 const existingMembers = computed(() => {
   if (props.chapter) {
     return props.chapter.doc.chapter_members.map((member) => member.chapter_member).join(',')
-  }
-  else if (props.event) {
+  } else if (props.event) {
     return props.event.doc.event_members.map((member) => member.member).join(',')
   }
 
   return []
 })
-
 
 const emits = defineEmits(['update:add-member', 'close-dialog'])
 
@@ -66,10 +55,7 @@ const memberOptions = createResource({
   makeParams() {
     return {
       filters: {
-        name: [
-          'not in',
-          existingMembers.value
-        ],
+        name: ['not in', existingMembers.value],
       },
     }
   },

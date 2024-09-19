@@ -51,11 +51,7 @@
           stroke="currentColor"
           class="w-4 h-4"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
         <span class="font-semibold">{{ hackathon.data.hackathon_name }}</span>
         <svg
@@ -66,11 +62,7 @@
           stroke="currentColor"
           class="w-4 h-4"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
         <span>My Project</span>
       </div>
@@ -78,10 +70,7 @@
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
 
       <!-- Project Name & Edit -->
-      <div
-        v-if="inNameEdit"
-        class="flex flex-col gap-2 mb-4"
-      >
+      <div v-if="inNameEdit" class="flex flex-col gap-2 mb-4">
         <div class="flex flex-col gap-4 md:flex-row w-full justify-between md:items-center">
           <input
             v-model="newProjectName"
@@ -99,12 +88,7 @@
               "
               label="Discard"
             />
-            <Button
-              @click="handleTitleUpdate"
-              variant="solid"
-              theme="green"
-              label="Update"
-            />
+            <Button @click="handleTitleUpdate" variant="solid" theme="green" label="Update" />
           </div>
         </div>
         <ErrorMessage :message="errorMessage" />
@@ -128,8 +112,7 @@
             :key="tab.value"
             class="px-4 pb-2 mx-2 leading-none bg-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
             :class="{
-              'text-gray-800 border-b border-gray-800 font-medium':
-                activeTab === tab.value,
+              'text-gray-800 border-b border-gray-800 font-medium': activeTab === tab.value,
               'text-gray-600 hover:text-gray-800 hover:border-b hover:border-gray-400':
                 activeTab !== tab.value,
             }"
@@ -141,7 +124,7 @@
             <HackathonProjectDetail :project="project" />
           </div>
           <div v-else-if="tab.value === 'issues'">
-            <HackathonProjectIssue :project="project" @fetch-project="project.fetch()"/>
+            <HackathonProjectIssue :project="project" @fetch-project="project.fetch()" />
           </div>
           <div v-else-if="tab.value === 'manage'">
             <HackathonProjectManage @delete-project="showConfirmationDialog = true" />
@@ -150,10 +133,7 @@
       </TabsRoot>
     </div>
   </div>
-  <div
-    v-if="project.loading"
-    class="w-full h-screen flex items-center justify-center"
-  >
+  <div v-if="project.loading" class="w-full h-screen flex items-center justify-center">
     <LoadingIndicator class="w-8" />
   </div>
 </template>
@@ -164,22 +144,11 @@ import HackathonProjectDetail from '@/components/hackathon/HackathonProjectDetai
 import HackathonProjectManage from '@/components/hackathon/HackathonProjectManage.vue'
 import HackathonProjectIssue from '@/components/hackathon/HackathonProjectIssue.vue'
 
-import {
-  createResource,
-  LoadingIndicator,
-  Dialog,
-  ErrorMessage,
-} from 'frappe-ui'
+import { createResource, LoadingIndicator, Dialog, ErrorMessage } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
-import {
-  TabsContent,
-  TabsIndicator,
-  TabsList,
-  TabsRoot,
-  TabsTrigger,
-} from 'radix-vue'
+import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -207,7 +176,7 @@ const project = createResource({
   onSuccess(data) {
     newProjectName.value = data.title
   },
-  transform(data){
+  transform(data) {
     let issue_prs = [
       {
         group: 'Issues',
@@ -225,7 +194,7 @@ const project = createResource({
         rows: [],
       },
     ]
-    data.issue_pr_table.forEach(element => {
+    data.issue_pr_table.forEach((element) => {
       if (element.type === 'Issue') {
         issue_prs[0].rows.push(element)
       } else if (element.type === 'Pull Request') {
@@ -233,12 +202,12 @@ const project = createResource({
       } else {
         issue_prs[2].rows.push(element)
       }
-    });
-    issue_prs.forEach(element => {
+    })
+    issue_prs.forEach((element) => {
       if (element.rows.length === 0) {
         issue_prs = issue_prs.filter((item) => item.group !== element.group)
       }
-    });
+    })
     data.issue_pr_table = issue_prs
     return data
   },

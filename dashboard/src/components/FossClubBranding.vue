@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="gap-2 w-fit font-semibold bg-gray-200 text-gray-900 p-2 rounded-sm flex text-center"
-  >
+  <div class="gap-2 w-fit font-semibold bg-gray-200 text-gray-900 p-2 rounded-sm flex text-center">
     <svg
       class="w-6 h-6"
       width="60"

@@ -1,22 +1,15 @@
 <template>
-  <div
-    v-if="submissions.data && rsvp_form.data"
-    class="px-4 py-8 md:p-8 flex flex-col gap-4"
-  >
+  <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col gap-4 mt-5">
       <div class="flex items-center justify-between">
         <div class="font-semibold text-gray-800">
           Attendees
 
           <span class="text-gray-700 text-base font-normal"
-            >({{ submissions.data.length }}/{{
-              rsvp_form.data.max_rsvp_count
-            }})</span
+            >({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})</span
           >
         </div>
-        <Button size="md" icon-left="download" @click="downloadAttendeeList"
-          >Download</Button
-        >
+        <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
       </div>
       <ListView
         :columns="[
@@ -64,10 +57,7 @@ const submissions = createListResource({
   auto: true,
   transform(data) {
     data.forEach((submission) => {
-      submission.email = submission.email.replace(
-        /(?<=.{3}).(?=[^@]*?@)/g,
-        '*',
-      )
+      submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
     })
   },
 })
@@ -75,9 +65,7 @@ const submissions = createListResource({
 const downloadAttendeeList = () => {
   const csv = submissions.data
     .map((submission) => {
-      return [submission.name1, submission.email, submission.im_a].join(
-        ',',
-      )
+      return [submission.name1, submission.email, submission.im_a].join(',')
     })
     .join('\n')
 

@@ -1,103 +1,100 @@
 <style>
-    .section-container{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-    .content{
-        margin-top: 40px;
-        color: #000;
-        text-align: center;
-        font-family: Inter;
-        font-size: 20px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: normal;
-    }
-    .hero-buttons{
-        display: flex;
-        flex-direction: row;
-        gap: 24px;
-        justify-content: center;
-    }
-    .hero-buttons>a:hover{
-        color: #eef;
-        opacity: 0.8;
-        text-decoration: none;
-    }
-    .button{
-        display: flex;
-        width: 240px;
-        padding: 8px 16px;
-        justify-content: center;
-        align-items: center;
-        gap: 4px;
-        border-radius: 10px;
-        text-align: center;
-        font-family: Inter;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 500;
-        line-height: normal;
+  .section-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .content {
+    margin-top: 40px;
+    color: #000;
+    text-align: center;
+    font-family: Inter;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  .hero-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    justify-content: center;
+  }
+  .hero-buttons > a:hover {
+    color: #eef;
+    opacity: 0.8;
+    text-decoration: none;
+  }
+  .button {
+    display: flex;
+    width: 240px;
+    padding: 8px 16px;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  .primary-button {
+    background-color: #4ba306;
+    color: white;
+  }
+
+  .secondary-button {
+    background-color: black;
+    color: white;
+  }
+
+  .btn-icon {
+    height: 16px;
+    width: auto;
+  }
+
+  @media screen and (max-width: 768px) {
+    .content {
+      font-size: 16px;
     }
 
-    .primary-button{
-        background-color: #4BA306;
-        color: white;
+    .button {
+      width: 200px;
+      font-size: 14px;
     }
-
-    .secondary-button{
-        background-color: black;
-        color: white;
-    }
-
-    .btn-icon{
-        height: 16px;
-        width: auto;
-    }
-
-    @media screen and (max-width: 768px) {
-        .content{
-            font-size: 16px;
-        }
-
-        .button{
-            width: 200px;
-            font-size: 14px;
-        }
-    }
-
+  }
 </style>
 
 <div div="section-container">
-    <p class="content">
-        {{ content }}
-    </p>
-    {%- if url_1 or url_2 -%}
+  <p class="content">{{ content }}</p>
+  {%- if url_1 or url_2 -%}
     <div class="hero-buttons">
-        {%- if url_1 -%}
+      {%- if url_1 -%}
         <a class="button primary-button" href="{{ url_1 }}">
-            {% if icon_1_align == "Left" and icon_1 %}
-            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon">
-            {% endif %}
-            {{ _(label_1) }}
-            {% if icon_1_align == "Right" and icon_1 %}
-            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon">
-            {% endif %}
+          {% if icon_1_align == "Left" and icon_1 %}
+            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
+          {% endif %}
+          {{ _(label_1) }}
+          {% if icon_1_align == "Right" and icon_1 %}
+            <img class="btn-icon" src="{{ icon_1 }}" alt="Primary Icon" />
+          {% endif %}
         </a>
-        {%- endif -%}
-        {%- if url_2 -%}
+      {%- endif -%}
+      {%- if url_2 -%}
         <a class="button secondary-button" href="{{ url_2 }}">
-            {% if icon_2_align == "Left" and icon_2 %}
-            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon">
-            {% endif %}
-            {{ _(label_2) }}
-            {% if icon_2_align == "Right" and icon_2 %}
-            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon">
-            {% endif %}
+          {% if icon_2_align == "Left" and icon_2 %}
+            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
+          {% endif %}
+          {{ _(label_2) }}
+          {% if icon_2_align == "Right" and icon_2 %}
+            <img class="btn-icon" src="{{ icon_2 }}" alt="Secondary Icon" />
+          {% endif %}
         </a>
-        {%- endif -%}
+      {%- endif -%}
     </div>
-    {%- endif -%}
+  {%- endif -%}
 </div>

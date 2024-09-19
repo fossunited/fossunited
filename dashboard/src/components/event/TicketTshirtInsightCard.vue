@@ -7,27 +7,27 @@
     }"
   >
     <template #body-content>
-        <div class="text-sm">
-            <p class="mb-2">T-shirts sold for this event.</p>
-        </div>
-        <table class="w-3/4 table-fixed text-center">
-            <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                <tr>
-                    <th class="p-2 border">Size</th>
-                    <th class="p-2 border">Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr v-for="(quantity, size) in insight.tshirt_size_count">
-                    <td class="p-2 text-base border">{{ size }}</td>
-                    <td class="p-2 text-base border">{{ quantity }}</td>
-                </tr>
-                <tr>
-                    <td class="p-2 text-base font-semibold">Total</td>
-                    <td class="p-2 text-base font-semibold">{{ insight.tshirts_sold }}</td>
-                </tr>
-            </tbody>
-        </table>
+      <div class="text-sm">
+        <p class="mb-2">T-shirts sold for this event.</p>
+      </div>
+      <table class="w-3/4 table-fixed text-center">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+          <tr>
+            <th class="p-2 border">Size</th>
+            <th class="p-2 border">Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(quantity, size) in insight.tshirt_size_count">
+            <td class="p-2 text-base border">{{ size }}</td>
+            <td class="p-2 text-base border">{{ quantity }}</td>
+          </tr>
+          <tr>
+            <td class="p-2 text-base font-semibold">Total</td>
+            <td class="p-2 text-base font-semibold">{{ insight.tshirts_sold }}</td>
+          </tr>
+        </tbody>
+      </table>
     </template>
   </Dialog>
   <div class="flex flex-col w-full border rounded-sm p-4">

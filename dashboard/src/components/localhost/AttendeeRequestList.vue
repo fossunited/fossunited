@@ -115,32 +115,22 @@
               class="text-sm flex font-semibold hover:underline"
             >
               <span>Open</span>
-              <ArrowUpRight class="w-4 h-4"/>
+              <ArrowUpRight class="w-4 h-4" />
             </a>
             <div v-else class="text-sm">No Git Profile</div>
           </div>
           <div v-else-if="column.label == 'Is Student'" class="ml-4">
-            <span class="text-sm text-gray-600">{{
-              row.is_student ? 'Yes' : 'No'
-            }}</span>
+            <span class="text-sm text-gray-600">{{ row.is_student ? 'Yes' : 'No' }}</span>
           </div>
           <div v-else-if="column.label == 'Actions'">
-            <div
-              v-if="row.localhost_request_status == 'Pending'"
-              class="flex gap-2"
-            >
+            <div v-if="row.localhost_request_status == 'Pending'" class="flex gap-2">
               <Button
                 icon="check"
                 :label="'Accept'"
                 :theme="'green'"
                 @click.stop="acceptRequest(row)"
               />
-              <Button
-                icon="x"
-                :label="'Reject'"
-                :theme="'red'"
-                @click.stop="rejectRequest(row)"
-              />
+              <Button icon="x" :label="'Reject'" :theme="'red'" @click.stop="rejectRequest(row)" />
             </div>
           </div>
           <div class="flex" v-else-if="column.label == 'Project'">
@@ -150,7 +140,7 @@
               class="text-sm flex font-semibold hover:underline"
             >
               <span>{{ truncateStr(row.project_title, 20) }}</span>
-              <ArrowUpRight class="w-4 h-4"/>
+              <ArrowUpRight class="w-4 h-4" />
             </a>
             <div v-else class="text-sm">No Project Yet</div>
           </div>
@@ -169,13 +159,7 @@
 
 <script setup>
 import { defineProps, defineEmits, watch, ref } from 'vue'
-import {
-  LoadingIndicator,
-  createResource,
-  Badge,
-  Button,
-  ListView,
-} from 'frappe-ui'
+import { LoadingIndicator, createResource, Badge, Button, ListView } from 'frappe-ui'
 import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'

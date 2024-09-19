@@ -23,11 +23,14 @@
           v-model="inviteEmail"
           placeholder="john.doe@fossunited.org"
         />
-        <Button label="Invite" @click="createJoinRequest" variant="solid" :disabled="!inviteEmail"/>
+        <Button
+          label="Invite"
+          @click="createJoinRequest"
+          variant="solid"
+          :disabled="!inviteEmail"
+        />
       </div>
-      <div class="w-full text-sm font-medium uppercase my-3 text-center">
-        Or
-      </div>
+      <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
       <div class="flex gap-2 items-center text-base flex-wrap">
         <div class="">Invite via team code:</div>
         <CopyToClipboard :route="teamCode" />
@@ -44,11 +47,7 @@
           </div>
           <Badge
             :label="invite.status"
-            :theme="
-              { Pending: 'orange', Accepted: 'green', Rejected: 'red' }[
-                invite.status
-              ]
-            "
+            :theme="{ Pending: 'orange', Accepted: 'green', Rejected: 'red' }[invite.status]"
           />
         </div>
       </div>
@@ -59,19 +58,19 @@
           v-for="member in props.team.data.members"
           class="flex items-center w-full justify-between gap-2"
         >
-            <div class="flex gap-2 items-center">
-                <img :src="member.profile_photo" class="w-8 h-8 rounded-full" />
-                <div>
-                  <div class="text-base font-medium">{{ member.full_name }}</div>
-                  <div class="text-sm text-gray-600">{{ member.email }}</div>
-                </div>
+          <div class="flex gap-2 items-center">
+            <img :src="member.profile_photo" class="w-8 h-8 rounded-full" />
+            <div>
+              <div class="text-base font-medium">{{ member.full_name }}</div>
+              <div class="text-sm text-gray-600">{{ member.email }}</div>
             </div>
-            <Button
-                v-if="member.email != props.team.data.owner || session.user == props.team.data.owner"
-                :label="member.email == session.user ? 'Leave' : 'Remove'"
-                theme="red"
-                @click="removeTeamMember(member)"
-            />
+          </div>
+          <Button
+            v-if="member.email != props.team.data.owner || session.user == props.team.data.owner"
+            :label="member.email == session.user ? 'Leave' : 'Remove'"
+            theme="red"
+            @click="removeTeamMember(member)"
+          />
         </div>
       </div>
     </div>
@@ -79,12 +78,7 @@
 </template>
 <script setup>
 import { defineProps, onMounted, ref, inject } from 'vue'
-import {
-  createListResource,
-  FormControl,
-  Badge,
-  createResource,
-} from 'frappe-ui'
+import { createListResource, FormControl, Badge, createResource } from 'frappe-ui'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboard from '@/components/CopyToClipboardComponent.vue'
@@ -163,9 +157,7 @@ const createJoinRequest = () => {
 }
 
 const removeTeamMember = (member) => {
-  const newMembers = props.team.data.members.filter(
-    (m) => m.email != member.email
-  )
+  const newMembers = props.team.data.members.filter((m) => m.email != member.email)
   const team = createResource({
     url: 'frappe.client.set_value',
     makeParams() {
@@ -177,7 +169,7 @@ const removeTeamMember = (member) => {
       }
     },
     onSuccess() {
-      if (member.email == session.user){
+      if (member.email == session.user) {
         router.push(`/hack/${props.hackathon.permalink}`)
         toast.warning('You have left the team.')
         return

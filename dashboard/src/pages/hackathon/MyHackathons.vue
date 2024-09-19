@@ -4,8 +4,8 @@
       <div class="prose p-4 pb-0">
         <h2 class="mb-1">My Hackathons</h2>
         <p class="text-sm mb-4">
-          Keep track of your hackathon entries, view upcoming events, and manage
-          your participation details.
+          Keep track of your hackathon entries, view upcoming events, and manage your participation
+          details.
         </p>
       </div>
     </div>
@@ -51,12 +51,8 @@
       </div>
     </div>
     <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-gray-50">
-      <div class="text-sm font-medium uppercase text-gray-800">
-        No Hackathons
-      </div>
-      <div class="text-xs text-gray-600">
-        You have not participated in any hackathons yet.
-      </div>
+      <div class="text-sm font-medium uppercase text-gray-800">No Hackathons</div>
+      <div class="text-xs text-gray-600">You have not participated in any hackathons yet.</div>
     </div>
   </div>
 </template>

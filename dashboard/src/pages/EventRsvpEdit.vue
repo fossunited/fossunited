@@ -1,24 +1,16 @@
 <template>
-  <div
-    v-if="rsvp_form.data && rsvp.doc"
-    class="px-4 py-8 md:p-8 flex flex-col gap-4"
-  >
+  <div v-if="rsvp_form.data && rsvp.doc" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col md:flex-row-reverse justify-between gap-2">
       <div class="flex items-center gap-2">
         <Button
-              class="w-fit"
-              size="md"
-              :theme="rsvp.doc.is_published ? 'red' : 'green'"
-              :icon-left="rsvp.doc.is_published ? 'slash' : 'upload'"
-              :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
-              @click="togglePublishForm"
-            />
-        <Button
+          class="w-fit"
           size="md"
-          variant="solid"
-          label="Update Form"
-          @click="updateRsvpForm"
+          :theme="rsvp.doc.is_published ? 'red' : 'green'"
+          :icon-left="rsvp.doc.is_published ? 'slash' : 'upload'"
+          :label="rsvp.doc.is_published ? 'Unpublish Form' : 'Publish Form'"
+          @click="togglePublishForm"
         />
+        <Button size="md" variant="solid" label="Update Form" @click="updateRsvpForm" />
       </div>
     </div>
     <div>
@@ -26,9 +18,7 @@
         <div class="flex flex-col gap-3">
           <div class="text-lg font-semibold">
             <span>RSVP Form is </span>
-            <span v-if="rsvp.doc.is_published" class="text-green-600"
-              >Live</span
-            >
+            <span v-if="rsvp.doc.is_published" class="text-green-600">Live</span>
             <span v-else class="text-red-500">Unpublished</span>
           </div>
 
@@ -46,9 +36,7 @@
       </div>
     </div>
     <div class="flex flex-col my-4 gap-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Edit Details
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
           <FormControl
@@ -79,9 +67,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Standard Fields
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Standard Fields</div>
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <FormControl
           v-for="(field, index) in standard_fields"
@@ -95,9 +81,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Custom Fields
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Custom Fields</div>
       <Button
         class="mt-3"
         size="md"
@@ -155,9 +139,7 @@
               description="Whether the question is mandatory or not."
               v-model="custom_field.is_mandatory"
             />
-            <div class="text-sm text-gray-600">
-              Whether the question is mandatory or not.
-            </div>
+            <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
             size="md"
@@ -201,12 +183,7 @@
             <Button label="Save" variant="solid" @click="updateCustomField" />
             <Button label="Delete" theme="red" @click="deleteCustomQuestion" />
           </div>
-          <Button
-            v-else
-            label="Add Field"
-            variant="solid"
-            @click="addCustomField"
-          />
+          <Button v-else label="Add Field" variant="solid" @click="addCustomField" />
           <Button label="Cancel" @click="() => (show_dialog = false)" />
         </div>
       </template>
@@ -214,13 +191,7 @@
   </div>
 </template>
 <script setup>
-import {
-  createDocumentResource,
-  createResource,
-  FormControl,
-  ListView,
-  Dialog,
-} from 'frappe-ui'
+import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -312,9 +283,7 @@ const handleCustomRowEdit = (row) => {
 }
 
 const updateCustomField = () => {
-  const index = rsvp.doc.custom_questions.findIndex(
-    (field) => field.idx === custom_field.idx,
-  )
+  const index = rsvp.doc.custom_questions.findIndex((field) => field.idx === custom_field.idx)
   rsvp.doc.custom_questions[index] = custom_field
   show_dialog.value = false
   inCustomEdit.value = false

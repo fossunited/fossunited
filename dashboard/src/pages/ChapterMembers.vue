@@ -8,9 +8,7 @@
       <ChapterHeader :chapter="chapter" />
     </div>
     <div class="flex flex-col mt-4 gap-3 w-fit">
-      <div class="text-base text-gray-600">
-        Manage team members of your chapter.
-      </div>
+      <div class="text-base text-gray-600">Manage team members of your chapter.</div>
       <Button
         class="w-fit"
         label="Add New Member"
@@ -20,19 +18,9 @@
       />
     </div>
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card
-        v-for="member in chapter.doc.chapter_members"
-        :title="member.full_name"
-      >
-        <template
-          v-if="member.email != session.user && member.role != 'Lead'"
-          #actions
-        >
-          <Button
-            theme="red"
-            label="Remove"
-            @click="handleRemoveModal(member)"
-          />
+      <Card v-for="member in chapter.doc.chapter_members" :title="member.full_name">
+        <template v-if="member.email != session.user && member.role != 'Lead'" #actions>
+          <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
         <div class="flex justify-between">
           <div class="flex flex-col gap-2">
@@ -134,9 +122,7 @@ const handleRemoveModal = (member) => {
 }
 
 const removeMember = (member) => {
-  let updatedMembers = chapter.doc.chapter_members.filter(
-    (m) => m.idx !== member.idx,
-  )
+  let updatedMembers = chapter.doc.chapter_members.filter((m) => m.idx !== member.idx)
   updatedMembers.forEach((m, idx) => {
     m.idx = idx + 1
   })

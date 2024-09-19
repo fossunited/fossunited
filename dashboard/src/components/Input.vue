@@ -6,7 +6,7 @@
       <slot name="label-prefix"></slot>
       <div class="text-sm text-gray-600" v-if="label">
         <span>
-        {{ label }}
+          {{ label }}
         </span>
         <span v-if="required">*</span>
       </div>

@@ -8,10 +8,7 @@
     </template>
   </Dialog>
   <Header />
-  <div
-    v-if="hackathon.data"
-    class="w-full p-4 flex items-center justify-center"
-  >
+  <div v-if="hackathon.data" class="w-full p-4 flex items-center justify-center">
     <div v-if="team.data" class="max-w-screen-xl w-full">
       <HackathonHeader :hackathon="hackathon" :showBanner="false" />
       <div
@@ -25,12 +22,7 @@
         />
         <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
           <Button @click="inNameEdit = false" label="Discard" />
-          <Button
-            @click="updateTeamName"
-            variant="solid"
-            theme="green"
-            label="Update"
-          />
+          <Button @click="updateTeamName" variant="solid" theme="green" label="Update" />
         </div>
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
@@ -93,15 +85,8 @@
         <div class="rounded border flex flex-col justify-between p-5 gap-8">
           <div class="text-base font-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
-            <div class="font-medium text-lg uppercase">
-              {{ team.data.members.length }} Members
-            </div>
-            <Button
-              class="w-fit"
-              size="sm"
-              @click="inTeamManage = true"
-              label="Manage"
-            />
+            <div class="font-medium text-lg uppercase">{{ team.data.members.length }} Members</div>
+            <Button class="w-fit" size="sm" @click="inTeamManage = true" label="Manage" />
           </div>
         </div>
       </div>
@@ -111,20 +96,14 @@
           v-if="hackathon.data.hackathon_rules"
         >
           <h3 class="text-md font-semibold">Hackathon Rules</h3>
-          <div
-            class="prose leading-normal"
-            v-html="hackathon.data.hackathon_rules"
-          ></div>
+          <div class="prose leading-normal" v-html="hackathon.data.hackathon_rules"></div>
         </div>
         <div
           class="w-full bg-gray-50 text-gray-800 rounded p-4"
           v-if="hackathon.data.hackathon_faq"
         >
           <h3 class="text-md font-semibold">Hackathon FAQs</h3>
-          <div
-            class="prose leading-normal"
-            v-html="hackathon.data.hackathon_faq"
-          ></div>
+          <div class="prose leading-normal" v-html="hackathon.data.hackathon_faq"></div>
         </div>
       </div>
     </div>

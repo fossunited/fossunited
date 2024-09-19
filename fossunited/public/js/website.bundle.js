@@ -1,15 +1,15 @@
-import "./common_functions.js";
-import "../../../../frappe/frappe/public/js/frappe/ui/chart.js";
-import "../../../../frappe/frappe/public/js/frappe/ui/keyboard.js";
-import "../../../../frappe/frappe/public/js/frappe/event_emitter.js";
-import "../../../../frappe/frappe/public/js/frappe/form/controls/control.js";
-import "../../../../frappe/frappe/public/js/frappe/form/controls/link.js";
-import "../../../../frappe/frappe/public/js/frappe/views/factory.js";
-import "../../../../frappe/frappe/public/js/frappe/db.js";
-import "../../../../frappe/frappe/public/js/frappe/model/meta.js";
-import "../../../../frappe/frappe/public/js/frappe/form/controls/dynamic_link.js";
-import "../../../../frappe/frappe/public/js/frappe/utils/utils.js";
-import * as  PetiteVue from "petite-vue";
-window.PetiteVue = PetiteVue;
-import { autocomp } from "@knadh/autocomp";
-window.autocomp = autocomp;
+import './common_functions.js'
+import '../../../../frappe/frappe/public/js/frappe/ui/chart.js'
+import '../../../../frappe/frappe/public/js/frappe/ui/keyboard.js'
+import '../../../../frappe/frappe/public/js/frappe/event_emitter.js'
+import '../../../../frappe/frappe/public/js/frappe/form/controls/control.js'
+import '../../../../frappe/frappe/public/js/frappe/form/controls/link.js'
+import '../../../../frappe/frappe/public/js/frappe/views/factory.js'
+import '../../../../frappe/frappe/public/js/frappe/db.js'
+import '../../../../frappe/frappe/public/js/frappe/model/meta.js'
+import '../../../../frappe/frappe/public/js/frappe/form/controls/dynamic_link.js'
+import '../../../../frappe/frappe/public/js/frappe/utils/utils.js'
+import * as PetiteVue from 'petite-vue'
+window.PetiteVue = PetiteVue
+import { autocomp } from '@knadh/autocomp'
+window.autocomp = autocomp

@@ -12,15 +12,15 @@ Repo for the website and open-source platform of FOSS United. The whole platform
 - Checkout Frappe Framework [Installation Docs](https://frappeframework.com/docs/) for setting up frappe on your [bench](https://frappeframework.com/docs/user/en/tutorial/install-and-setup-bench).
 
 - Create a new bench with
-```bench init fossu-bench```
+  `bench init fossu-bench`
 - Clone the FOSS United Platform App.
-```bench get-app https://github.com/fossunited/fossunited```
+  `bench get-app https://github.com/fossunited/fossunited`
 - Create a [new site](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
-```bench new-site test.localhost```
+  `bench new-site test.localhost`
 - Install the App on the created site
-```bench --site test.localhost install-app fossunited```
+  `bench --site test.localhost install-app fossunited`
 - Finally,
-```bench start```
+  `bench start`
 
 Checkout [Access site in your browser](https://frappeframework.com/docs/user/en/tutorial/create-a-site#access-site-in-your-browser) for adding hosts.
 
@@ -32,7 +32,6 @@ The FOSS United Dashboard is a centralised admin UI for all the users signed up 
 - Install and Build the dashboard with `yarn install`.
 - Run the dashboard in the root directory of the project with `yarn dev`.
 - Dashboard will now be accessible on `<sitename>:8080`.
-
 
 ## Pre-commit
 

@@ -1,319 +1,319 @@
 {
- "actions": [],
- "allow_guest_to_view": 1,
- "allow_rename": 1,
- "autoname": "hash",
- "creation": "2023-07-03 02:44:46.631269",
- "default_view": "List",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "meta_info_section",
-  "is_published",
-  "is_private",
-  "column_break_jkxk",
-  "route",
-  "header_section",
-  "profile_photo",
-  "column_break_tnli",
-  "cover_image",
-  "basic_information_section",
-  "user",
-  "username",
-  "gender",
-  "bio",
-  "column_break_yqk3",
-  "full_name",
-  "email",
-  "current_city",
-  "website",
-  "about",
-  "socials_section",
-  "github",
-  "gitlab",
-  "linkedin",
-  "mastodon",
-  "medium",
-  "column_break_hmr6",
-  "x",
-  "instagram",
-  "devto",
-  "youtube",
-  "skills_section",
-  "skills",
-  "employment_status_section",
-  "education",
-  "work_experience_section",
-  "experience",
-  "projects_section",
-  "projects"
- ],
- "fields": [
-  {
-   "fieldname": "basic_information_section",
-   "fieldtype": "Section Break",
-   "label": "Basic Information"
-  },
-  {
-   "fieldname": "user",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "User",
-   "options": "User",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "fieldname": "username",
-   "fieldtype": "Data",
-   "label": "Username",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "description": "Short bio about yourself",
-   "fieldname": "bio",
-   "fieldtype": "Small Text",
-   "label": "Bio"
-  },
-  {
-   "fieldname": "column_break_yqk3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name"
-  },
-  {
-   "fetch_from": "user.user_image",
-   "fetch_if_empty": 1,
-   "fieldname": "profile_photo",
-   "fieldtype": "Attach Image",
-   "label": "Profile Photo"
-  },
-  {
-   "fetch_from": "user.email",
-   "fetch_if_empty": 1,
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email",
-   "options": "Email",
-   "read_only": 1
-  },
-  {
-   "fieldname": "current_city",
-   "fieldtype": "Link",
-   "label": "Current City",
-   "options": "City"
-  },
-  {
-   "fieldname": "socials_section",
-   "fieldtype": "Section Break",
-   "label": "Socials"
-  },
-  {
-   "fieldname": "linkedin",
-   "fieldtype": "Data",
-   "label": "LinkedIn",
-   "options": "URL"
-  },
-  {
-   "fieldname": "column_break_hmr6",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "instagram",
-   "fieldtype": "Data",
-   "label": "Instagram",
-   "options": "URL"
-  },
-  {
-   "fieldname": "skills_section",
-   "fieldtype": "Section Break",
-   "label": "Skills"
-  },
-  {
-   "fieldname": "skills",
-   "fieldtype": "Table MultiSelect",
-   "label": "Skills",
-   "options": "FOSS User Skill Multiselect"
-  },
-  {
-   "fieldname": "employment_status_section",
-   "fieldtype": "Section Break",
-   "label": "Education"
-  },
-  {
-   "fieldname": "work_experience_section",
-   "fieldtype": "Section Break",
-   "label": "Work Experience"
-  },
-  {
-   "fieldname": "meta_info_section",
-   "fieldtype": "Section Break",
-   "label": "Meta Info"
-  },
-  {
-   "default": "1",
-   "fieldname": "is_published",
-   "fieldtype": "Check",
-   "label": "Is Published?"
-  },
-  {
-   "fieldname": "column_break_jkxk",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route"
-  },
-  {
-   "fieldname": "header_section",
-   "fieldtype": "Section Break",
-   "label": "Header"
-  },
-  {
-   "fieldname": "column_break_tnli",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "cover_image",
-   "fieldtype": "Attach Image",
-   "label": "Cover Image"
-  },
-  {
-   "fieldname": "website",
-   "fieldtype": "Data",
-   "label": "Website",
-   "options": "URL"
-  },
-  {
-   "fieldname": "github",
-   "fieldtype": "Data",
-   "label": "Github",
-   "options": "URL"
-  },
-  {
-   "fieldname": "gitlab",
-   "fieldtype": "Data",
-   "label": "Gitlab",
-   "options": "URL"
-  },
-  {
-   "fieldname": "mastodon",
-   "fieldtype": "Data",
-   "label": "Mastodon",
-   "options": "URL"
-  },
-  {
-   "fieldname": "x",
-   "fieldtype": "Data",
-   "label": "X",
-   "options": "URL"
-  },
-  {
-   "fieldname": "devto",
-   "fieldtype": "Data",
-   "label": "Dev.to",
-   "options": "URL"
-  },
-  {
-   "fieldname": "youtube",
-   "fieldtype": "Data",
-   "label": "YouTube",
-   "options": "URL"
-  },
-  {
-   "fieldname": "medium",
-   "fieldtype": "Data",
-   "label": "Medium",
-   "options": "URL"
-  },
-  {
-   "fieldname": "about",
-   "fieldtype": "Text Editor",
-   "label": "About"
-  },
-  {
-   "fieldname": "education",
-   "fieldtype": "Table",
-   "label": "Education",
-   "options": "FOSS User Profile Education"
-  },
-  {
-   "fieldname": "experience",
-   "fieldtype": "Table",
-   "label": "Experience",
-   "options": "FOSS User Profile Work Experience"
-  },
-  {
-   "fieldname": "projects_section",
-   "fieldtype": "Section Break",
-   "label": "Projects"
-  },
-  {
-   "fieldname": "projects",
-   "fieldtype": "Table",
-   "label": "Projects",
-   "options": "FOSS User Projects"
-  },
-  {
-   "fetch_from": "user.gender",
-   "fieldname": "gender",
-   "fieldtype": "Data",
-   "label": "Gender",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "is_private",
-   "fieldtype": "Check",
-   "label": "Is Private?"
-  }
- ],
- "has_web_view": 1,
- "image_field": "profile_photo",
- "index_web_pages_for_search": 1,
- "is_published_field": "is_published",
- "links": [],
- "modified": "2024-07-02 17:36:34.436149",
- "modified_by": "Administrator",
- "module": "FOSS Profiles",
- "name": "FOSS User Profile",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Administrator",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager"
-  }
- ],
- "quick_entry": 1,
- "search_fields": "username, full_name, email",
- "show_title_field_in_link": 1,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "title_field": "full_name",
- "track_changes": 1,
- "track_views": 1
+  "actions": [],
+  "allow_guest_to_view": 1,
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2023-07-03 02:44:46.631269",
+  "default_view": "List",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "meta_info_section",
+    "is_published",
+    "is_private",
+    "column_break_jkxk",
+    "route",
+    "header_section",
+    "profile_photo",
+    "column_break_tnli",
+    "cover_image",
+    "basic_information_section",
+    "user",
+    "username",
+    "gender",
+    "bio",
+    "column_break_yqk3",
+    "full_name",
+    "email",
+    "current_city",
+    "website",
+    "about",
+    "socials_section",
+    "github",
+    "gitlab",
+    "linkedin",
+    "mastodon",
+    "medium",
+    "column_break_hmr6",
+    "x",
+    "instagram",
+    "devto",
+    "youtube",
+    "skills_section",
+    "skills",
+    "employment_status_section",
+    "education",
+    "work_experience_section",
+    "experience",
+    "projects_section",
+    "projects"
+  ],
+  "fields": [
+    {
+      "fieldname": "basic_information_section",
+      "fieldtype": "Section Break",
+      "label": "Basic Information"
+    },
+    {
+      "fieldname": "user",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "User",
+      "options": "User",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "fieldname": "username",
+      "fieldtype": "Data",
+      "label": "Username",
+      "reqd": 1,
+      "unique": 1
+    },
+    {
+      "description": "Short bio about yourself",
+      "fieldname": "bio",
+      "fieldtype": "Small Text",
+      "label": "Bio"
+    },
+    {
+      "fieldname": "column_break_yqk3",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Full Name"
+    },
+    {
+      "fetch_from": "user.user_image",
+      "fetch_if_empty": 1,
+      "fieldname": "profile_photo",
+      "fieldtype": "Attach Image",
+      "label": "Profile Photo"
+    },
+    {
+      "fetch_from": "user.email",
+      "fetch_if_empty": 1,
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email",
+      "options": "Email",
+      "read_only": 1
+    },
+    {
+      "fieldname": "current_city",
+      "fieldtype": "Link",
+      "label": "Current City",
+      "options": "City"
+    },
+    {
+      "fieldname": "socials_section",
+      "fieldtype": "Section Break",
+      "label": "Socials"
+    },
+    {
+      "fieldname": "linkedin",
+      "fieldtype": "Data",
+      "label": "LinkedIn",
+      "options": "URL"
+    },
+    {
+      "fieldname": "column_break_hmr6",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "instagram",
+      "fieldtype": "Data",
+      "label": "Instagram",
+      "options": "URL"
+    },
+    {
+      "fieldname": "skills_section",
+      "fieldtype": "Section Break",
+      "label": "Skills"
+    },
+    {
+      "fieldname": "skills",
+      "fieldtype": "Table MultiSelect",
+      "label": "Skills",
+      "options": "FOSS User Skill Multiselect"
+    },
+    {
+      "fieldname": "employment_status_section",
+      "fieldtype": "Section Break",
+      "label": "Education"
+    },
+    {
+      "fieldname": "work_experience_section",
+      "fieldtype": "Section Break",
+      "label": "Work Experience"
+    },
+    {
+      "fieldname": "meta_info_section",
+      "fieldtype": "Section Break",
+      "label": "Meta Info"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_published",
+      "fieldtype": "Check",
+      "label": "Is Published?"
+    },
+    {
+      "fieldname": "column_break_jkxk",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Data",
+      "label": "Route"
+    },
+    {
+      "fieldname": "header_section",
+      "fieldtype": "Section Break",
+      "label": "Header"
+    },
+    {
+      "fieldname": "column_break_tnli",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "cover_image",
+      "fieldtype": "Attach Image",
+      "label": "Cover Image"
+    },
+    {
+      "fieldname": "website",
+      "fieldtype": "Data",
+      "label": "Website",
+      "options": "URL"
+    },
+    {
+      "fieldname": "github",
+      "fieldtype": "Data",
+      "label": "Github",
+      "options": "URL"
+    },
+    {
+      "fieldname": "gitlab",
+      "fieldtype": "Data",
+      "label": "Gitlab",
+      "options": "URL"
+    },
+    {
+      "fieldname": "mastodon",
+      "fieldtype": "Data",
+      "label": "Mastodon",
+      "options": "URL"
+    },
+    {
+      "fieldname": "x",
+      "fieldtype": "Data",
+      "label": "X",
+      "options": "URL"
+    },
+    {
+      "fieldname": "devto",
+      "fieldtype": "Data",
+      "label": "Dev.to",
+      "options": "URL"
+    },
+    {
+      "fieldname": "youtube",
+      "fieldtype": "Data",
+      "label": "YouTube",
+      "options": "URL"
+    },
+    {
+      "fieldname": "medium",
+      "fieldtype": "Data",
+      "label": "Medium",
+      "options": "URL"
+    },
+    {
+      "fieldname": "about",
+      "fieldtype": "Text Editor",
+      "label": "About"
+    },
+    {
+      "fieldname": "education",
+      "fieldtype": "Table",
+      "label": "Education",
+      "options": "FOSS User Profile Education"
+    },
+    {
+      "fieldname": "experience",
+      "fieldtype": "Table",
+      "label": "Experience",
+      "options": "FOSS User Profile Work Experience"
+    },
+    {
+      "fieldname": "projects_section",
+      "fieldtype": "Section Break",
+      "label": "Projects"
+    },
+    {
+      "fieldname": "projects",
+      "fieldtype": "Table",
+      "label": "Projects",
+      "options": "FOSS User Projects"
+    },
+    {
+      "fetch_from": "user.gender",
+      "fieldname": "gender",
+      "fieldtype": "Data",
+      "label": "Gender",
+      "read_only": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_private",
+      "fieldtype": "Check",
+      "label": "Is Private?"
+    }
+  ],
+  "has_web_view": 1,
+  "image_field": "profile_photo",
+  "index_web_pages_for_search": 1,
+  "is_published_field": "is_published",
+  "links": [],
+  "modified": "2024-07-02 17:36:34.436149",
+  "modified_by": "Administrator",
+  "module": "FOSS Profiles",
+  "name": "FOSS User Profile",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Administrator",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager"
+    }
+  ],
+  "quick_entry": 1,
+  "search_fields": "username, full_name, email",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "full_name",
+  "track_changes": 1,
+  "track_views": 1
 }
