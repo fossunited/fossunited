@@ -1,49 +1,45 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-03-26 12:33:19.245180",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "member",
-  "full_name",
-  "email"
- ],
- "fields": [
-  {
-   "fieldname": "member",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Member",
-   "options": "FOSS Hackathon Participant",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "member.user",
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Email"
-  },
-  {
-   "fetch_from": "member.full_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Name"
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2024-05-31 16:45:43.398443",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "FOSS Hackathon Team Member",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-03-26 12:33:19.245180",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": ["member", "full_name", "email"],
+  "fields": [
+    {
+      "fieldname": "member",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Member",
+      "options": "FOSS Hackathon Participant",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "member.user",
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Email"
+    },
+    {
+      "fetch_from": "member.full_name",
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Name"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2024-05-31 16:45:43.398443",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "FOSS Hackathon Team Member",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

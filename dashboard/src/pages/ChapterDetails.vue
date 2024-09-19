@@ -11,9 +11,7 @@
       ></Button>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Banner Image
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
       <div class="p-2 my-1">
         <img
           :src="getBannerImage()"
@@ -26,9 +24,7 @@
             :validateFile="validateFile"
             @success="(file) => setBannerImage(file)"
           >
-            <template
-              v-slot="{ file, progress, error, uploading, openFileSelector }"
-            >
+            <template v-slot="{ file, progress, error, uploading, openFileSelector }">
               <Button
                 :variant="'subtle'"
                 :size="'md'"
@@ -58,20 +54,14 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Edit Details
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <FormControl
           :type="'text'"
           size="md"
           :disabled="true"
           v-model="chapter.doc.chapter_name"
-          :label="
-            chapter.doc.chapter_type == 'FOSS Club'
-              ? 'Club Name'
-              : 'Community Name'
-          "
+          :label="chapter.doc.chapter_type == 'FOSS Club' ? 'Club Name' : 'Community Name'"
         />
         <FormControl
           :type="'text'"
@@ -85,9 +75,7 @@
             label="About Chapter"
             placeholder="Write a description about the chapter"
             :modelValue="chapter.doc.about_chapter"
-            @update:modelValue="
-              ($event) => (chapter.doc.about_chapter = $event)
-            "
+            @update:modelValue="($event) => (chapter.doc.about_chapter = $event)"
           />
         </div>
       </div>
@@ -128,12 +116,7 @@
         <i>Eg: https://twitter.com/fossunited</i>
       </p>
       <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormControl
-          :type="'email'"
-          size="md"
-          v-model="chapter.doc.email"
-          label="Email"
-        >
+        <FormControl :type="'email'" size="md" v-model="chapter.doc.email" label="Email">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,12 +136,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl
-          :type="'url'"
-          size="md"
-          v-model="chapter.doc.x"
-          label="Twitter"
-        >
+        <FormControl :type="'url'" size="md" v-model="chapter.doc.x" label="Twitter">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -178,12 +156,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl
-          :type="'url'"
-          size="md"
-          v-model="chapter.doc.facebook"
-          label="Facebook"
-        >
+        <FormControl :type="'url'" size="md" v-model="chapter.doc.facebook" label="Facebook">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -198,18 +171,11 @@
               class="w-5 text-gray-800 icon icon-tabler icons-tabler-outline icon-tabler-brand-facebook"
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-              <path
-                d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3"
-              />
+              <path d="M7 10v4h3v7h4v-7h3l1 -4h-4v-2a1 1 0 0 1 1 -1h3v-4h-3a5 5 0 0 0 -5 5v2h-3" />
             </svg>
           </template>
         </FormControl>
-        <FormControl
-          :type="'url'"
-          size="md"
-          v-model="chapter.doc.linkedin"
-          label="LinkedIn"
-        >
+        <FormControl :type="'url'" size="md" v-model="chapter.doc.linkedin" label="LinkedIn">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -234,12 +200,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl
-          :type="'url'"
-          size="md"
-          v-model="chapter.doc.instagram"
-          label="Instagram"
-        >
+        <FormControl :type="'url'" size="md" v-model="chapter.doc.instagram" label="Instagram">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -262,12 +223,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl
-          :type="'url'"
-          size="md"
-          v-model="chapter.doc.mastodon"
-          label="Mastodon"
-        >
+        <FormControl :type="'url'" size="md" v-model="chapter.doc.mastodon" label="Mastodon">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"

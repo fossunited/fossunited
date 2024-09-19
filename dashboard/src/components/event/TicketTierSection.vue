@@ -1,5 +1,5 @@
 <template>
-  <ManageTicketTierDialog v-model="showDialog" :inCreateMode="true" @update-tier="event.fetch()"/>
+  <ManageTicketTierDialog v-model="showDialog" :inCreateMode="true" @update-tier="event.fetch()" />
   <div>
     <div class="prose">
       <h2 class="mb-1">Ticket Tiers</h2>

@@ -3,9 +3,7 @@
     <FossClubBranding v-if="chapter.doc.chapter_type == 'FOSS Club'">{{
       chapter.doc.chapter_type
     }}</FossClubBranding>
-    <CityCommunityBranding v-else>{{
-      chapter.doc.chapter_type
-    }}</CityCommunityBranding>
+    <CityCommunityBranding v-else>{{ chapter.doc.chapter_type }}</CityCommunityBranding>
     <div class="text-3xl font-semibold">{{ chapter.doc.chapter_name }}</div>
   </div>
 </template>

@@ -11,11 +11,7 @@
             :key="option.value"
             :value="option"
           >
-            <Button
-              :label="option.label"
-              :variant="checked ? 'solid' : 'outline'"
-              size="md"
-            />
+            <Button :label="option.label" :variant="checked ? 'solid' : 'outline'" size="md" />
           </RadioGroupOption>
         </div>
       </RadioGroup>
@@ -33,10 +29,7 @@
       />
     </div>
     <div v-else>
-      <div
-        v-if="hasReviewed.data && reviewData.data"
-        class="text-base flex flex-col gap-4"
-      >
+      <div v-if="hasReviewed.data && reviewData.data" class="text-base flex flex-col gap-4">
         <div>
           <span>Your Review: </span>
           <span
@@ -55,12 +48,7 @@
           <div class="text-md font-semibold">Remarks</div>
           <div>{{ reviewData.data.remarks || 'No remarks.' }}</div>
         </div>
-        <Button
-          label="Edit Review"
-          @click="in_review_edit = true"
-          class="w-fit"
-          size="sm"
-        />
+        <Button label="Edit Review" @click="in_review_edit = true" class="w-fit" size="sm" />
       </div>
       <div v-else>
         <LoadingIndicator class="w-6 h-6" />
@@ -69,12 +57,7 @@
   </div>
 </template>
 <script setup>
-import {
-  createResource,
-  LoadingIndicator,
-  FormControl,
-  ErrorMessage,
-} from 'frappe-ui'
+import { createResource, LoadingIndicator, FormControl, ErrorMessage } from 'frappe-ui'
 import { defineProps, inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'

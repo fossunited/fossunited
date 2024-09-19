@@ -39,9 +39,7 @@
             v-model="cfp_doc.only_workshops"
             @change="validateOnlyOneType"
           />
-          <span class="text-sm text-gray-600"
-            >Only accept workshop proposals.</span
-          >
+          <span class="text-sm text-gray-600">Only accept workshop proposals.</span>
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
@@ -64,9 +62,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Standard Fields
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Standard Fields</div>
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <FormControl
           v-for="(field, index) in standard_fields"
@@ -80,9 +76,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Custom Fields
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Custom Fields</div>
       <Button
         class="mt-3"
         size="md"
@@ -134,9 +128,7 @@
               description="Whether the question is mandatory or not."
               v-model="custom_field.is_mandatory"
             />
-            <div class="text-sm text-gray-600">
-              Whether the question is mandatory or not.
-            </div>
+            <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
             size="md"
@@ -173,36 +165,16 @@
       </template>
       <template #actions>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Button
-            v-if="inCustomEdit"
-            label="Save"
-            variant="solid"
-            @click="updateCustomField"
-          />
-          <Button
-            v-else
-            label="Add Field"
-            variant="solid"
-            @click="addCustomField"
-          />
-          <Button
-            label="Cancel"
-            theme="red"
-            @click="() => (show_dialog = false)"
-          />
+          <Button v-if="inCustomEdit" label="Save" variant="solid" @click="updateCustomField" />
+          <Button v-else label="Add Field" variant="solid" @click="addCustomField" />
+          <Button label="Cancel" theme="red" @click="() => (show_dialog = false)" />
         </div>
       </template>
     </Dialog>
   </div>
 </template>
 <script setup>
-import {
-  createDocumentResource,
-  FormControl,
-  ListView,
-  Dialog,
-  createResource,
-} from 'frappe-ui'
+import { createDocumentResource, FormControl, ListView, Dialog, createResource } from 'frappe-ui'
 import { reactive, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -289,8 +261,7 @@ let cfp_doc = reactive({
 const validateOnlyOneType = () => {
   if (cfp_doc.only_workshops && cfp_doc.only_talk_proposals) {
     toast.error('Invalid Selection.', {
-      description:
-        'If you wish to accept all type of proposals, uncheck both options.',
+      description: 'If you wish to accept all type of proposals, uncheck both options.',
     })
     cfp_doc.only_workshops = 0
     cfp_doc.only_talk_proposals = 0
@@ -327,9 +298,7 @@ const handleCustomRowEdit = (row) => {
   show_dialog.value = true
 }
 const updateCustomField = () => {
-  const index = cfp_doc.cfp_custom_questions.findIndex(
-    (field) => field.idx === custom_field.idx,
-  )
+  const index = cfp_doc.cfp_custom_questions.findIndex((field) => field.idx === custom_field.idx)
   cfp_doc.cfp_custom_questions[index] = custom_field
   show_dialog.value = false
   inCustomEdit.value = false

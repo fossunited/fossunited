@@ -8,9 +8,7 @@
         v-if="props.chapter.chapter_type == 'FOSS Club'"
         class="w-7 h-7"
       ></FossClubLogo>
-      <CityComunityBranding v-else>{{
-        props.chapter.chapter_type
-      }}</CityComunityBranding>
+      <CityComunityBranding v-else>{{ props.chapter.chapter_type }}</CityComunityBranding>
     </template>
     <div class="flex justify-between items-baseline">
       <div class="text-lg font-medium">{{ props.chapter.chapter_name }}</div>

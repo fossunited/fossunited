@@ -6,10 +6,7 @@
         <p class="text-sm mb-4">Keep a track of localhosts you organize.</p>
       </div>
     </div>
-    <div
-      v-if="localhosts.data.length > 0"
-      class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4"
-    >
+    <div v-if="localhosts.data.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card
         v-for="localhost in localhosts.data"
         :title="localhost.localhost_name"
@@ -18,12 +15,8 @@
       />
     </div>
     <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-gray-50">
-      <div class="text-sm font-medium uppercase text-gray-800">
-        No LocalHosts
-      </div>
-      <div class="text-xs text-gray-600">
-        You have not organized any localhosts yet.
-      </div>
+      <div class="text-sm font-medium uppercase text-gray-800">No LocalHosts</div>
+      <div class="text-xs text-gray-600">You have not organized any localhosts yet.</div>
     </div>
   </div>
 </template>

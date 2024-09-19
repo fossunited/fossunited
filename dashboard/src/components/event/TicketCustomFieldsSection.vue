@@ -8,15 +8,8 @@
   <div>
     <div class="prose">
       <h2 class="mb-1">Custom Fields</h2>
-      <p class="text-sm">
-        Any custom fields you want to collect while ticket booking
-      </p>
-      <Button
-        variant="solid"
-        label="Add Field"
-        icon-left="plus"
-        @click="handleCustomRowCreate"
-      />
+      <p class="text-sm">Any custom fields you want to collect while ticket booking</p>
+      <Button variant="solid" label="Add Field" icon-left="plus" @click="handleCustomRowCreate" />
     </div>
     <ListView
       class="mt-4 min-h-[300px]"

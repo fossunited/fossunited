@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="flex bg-gray-50 flex-col gap-4 w-full h-screen items-center py-12"
-  >
+  <div class="flex bg-gray-50 flex-col gap-4 w-full h-screen items-center py-12">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="24"
@@ -35,9 +33,10 @@
         An email has been sent to the ticket holder.
         <br />
         On approval, the ticket will be transferred to the new owner.
-        <br/>
-        <br/>
-        For further assistance, send an email to <a class="underline" href="mailto:team@fossunited.org">team@fossunited.org</a>
+        <br />
+        <br />
+        For further assistance, send an email to
+        <a class="underline" href="mailto:team@fossunited.org">team@fossunited.org</a>
       </p>
     </div>
   </div>

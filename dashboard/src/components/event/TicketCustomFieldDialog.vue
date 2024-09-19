@@ -21,14 +21,8 @@
           ]"
         />
         <div class="my-1 flex flex-col gap-1">
-          <FormControl
-            v-model="question.mandatory"
-            label="Is Mandatory"
-            type="checkbox"
-          />
-          <small class="text-gray-600"
-            >Whether the question is mandatory or not.</small
-          >
+          <FormControl v-model="question.mandatory" label="Is Mandatory" type="checkbox" />
+          <small class="text-gray-600">Whether the question is mandatory or not.</small>
         </div>
         <FormControl
           v-model="question.field_name"
@@ -48,11 +42,11 @@
     <template #actions>
       <div class="flex gap-2 items-center">
         <Button
-            v-if="!inCreateMode"
-            class="w-fit px-2"
-            icon="trash"
-            theme="red"
-            @click="handleDelete"
+          v-if="!inCreateMode"
+          class="w-fit px-2"
+          icon="trash"
+          theme="red"
+          @click="handleDelete"
         />
         <Button class="w-full" label="Cancel" @click="showDialog = false" />
         <Button
@@ -62,13 +56,7 @@
           label="Create"
           @click="handleCreate"
         />
-        <Button
-          v-else
-          class="w-full"
-          variant="solid"
-          label="Save"
-          @click="handleSave"
-        />
+        <Button v-else class="w-full" variant="solid" label="Save" @click="handleSave" />
       </div>
     </template>
   </Dialog>
@@ -164,28 +152,28 @@ const createCustomField = createResource({
 })
 
 const updateCustomField = createResource({
-    url: 'frappe.client.set_value',
-    makeParams() {
-      return {
-        doctype: 'FOSS Event Field',
-        name: props.row.name,
-        fieldname: {
-            label: question.label,
-            field_type: question.field_type,
-            mandatory: question.mandatory,
-            field_name: question.field_name,
-            options: question.options,
-        }
-      }
-    },
-    onSuccess() {
-      props.event.fetch()
-      toast.success('Custom field updated successfully')
-      showDialog.value = false
-    },
-    onError(error) {
-      errorMessages.value = error.message
-    },
+  url: 'frappe.client.set_value',
+  makeParams() {
+    return {
+      doctype: 'FOSS Event Field',
+      name: props.row.name,
+      fieldname: {
+        label: question.label,
+        field_type: question.field_type,
+        mandatory: question.mandatory,
+        field_name: question.field_name,
+        options: question.options,
+      },
+    }
+  },
+  onSuccess() {
+    props.event.fetch()
+    toast.success('Custom field updated successfully')
+    showDialog.value = false
+  },
+  onError(error) {
+    errorMessages.value = error.message
+  },
 })
 
 const deleteCustomField = createResource({
@@ -223,7 +211,7 @@ const handleSave = () => {
     return
   }
   errorMessages.value = ''
-    updateCustomField.fetch()
+  updateCustomField.fetch()
 }
 
 const handleDelete = () => {

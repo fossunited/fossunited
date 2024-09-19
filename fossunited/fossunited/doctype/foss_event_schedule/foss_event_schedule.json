@@ -1,116 +1,116 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2023-08-22 00:12:45.713314",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "linked_cfp_section",
-  "linked_cfp",
-  "section_break_ojro",
-  "title",
-  "category",
-  "other_category",
-  "hall",
-  "speakers",
-  "section_break_cmsn",
-  "scheduled_date",
-  "column_break_iitq",
-  "start_time",
-  "end_time"
- ],
- "fields": [
-  {
-   "fieldname": "section_break_cmsn",
-   "fieldtype": "Section Break",
-   "label": "Timings"
-  },
-  {
-   "columns": 1,
-   "fieldname": "start_time",
-   "fieldtype": "Time",
-   "in_list_view": 1,
-   "label": "Start Time"
-  },
-  {
-   "fieldname": "column_break_iitq",
-   "fieldtype": "Column Break"
-  },
-  {
-   "columns": 1,
-   "fieldname": "end_time",
-   "fieldtype": "Time",
-   "in_list_view": 1,
-   "label": "End Time"
-  },
-  {
-   "columns": 2,
-   "fieldname": "scheduled_date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Scheduled Date"
-  },
-  {
-   "fieldname": "linked_cfp_section",
-   "fieldtype": "Section Break",
-   "label": "Linked CFP"
-  },
-  {
-   "columns": 1,
-   "fieldname": "linked_cfp",
-   "fieldtype": "Link",
-   "label": "Linked CFP",
-   "options": "FOSS Event CFP Submission"
-  },
-  {
-   "fieldname": "section_break_ojro",
-   "fieldtype": "Section Break"
-  },
-  {
-   "description": "Format \n<pre>{\n  \"speakers\": [\n    {\n        \"name\": \"Test Name\",\n        \"designation\": \"Software Engineer\",\n        \"organization\": \"FOSS United\",\n        \"profile\": \"\",\n        \"image\": \"\"\n    }\n  ]\n}\n</pre>\n",
-   "fieldname": "speakers",
-   "fieldtype": "JSON",
-   "label": "Speakers"
-  },
-  {
-   "fieldname": "category",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Category",
-   "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nOpening Note\nBreak\nOther"
-  },
-  {
-   "depends_on": "eval:doc.category=='Other'",
-   "fieldname": "other_category",
-   "fieldtype": "Data",
-   "label": "Other Category"
-  },
-  {
-   "columns": 2,
-   "fetch_from": "linked_cfp.talk_title",
-   "fetch_if_empty": 1,
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title"
-  },
-  {
-   "fieldname": "hall",
-   "fieldtype": "Data",
-   "label": "Hall"
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2024-08-31 17:12:36.763381",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "FOSS Event Schedule",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2023-08-22 00:12:45.713314",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "linked_cfp_section",
+    "linked_cfp",
+    "section_break_ojro",
+    "title",
+    "category",
+    "other_category",
+    "hall",
+    "speakers",
+    "section_break_cmsn",
+    "scheduled_date",
+    "column_break_iitq",
+    "start_time",
+    "end_time"
+  ],
+  "fields": [
+    {
+      "fieldname": "section_break_cmsn",
+      "fieldtype": "Section Break",
+      "label": "Timings"
+    },
+    {
+      "columns": 1,
+      "fieldname": "start_time",
+      "fieldtype": "Time",
+      "in_list_view": 1,
+      "label": "Start Time"
+    },
+    {
+      "fieldname": "column_break_iitq",
+      "fieldtype": "Column Break"
+    },
+    {
+      "columns": 1,
+      "fieldname": "end_time",
+      "fieldtype": "Time",
+      "in_list_view": 1,
+      "label": "End Time"
+    },
+    {
+      "columns": 2,
+      "fieldname": "scheduled_date",
+      "fieldtype": "Date",
+      "in_list_view": 1,
+      "label": "Scheduled Date"
+    },
+    {
+      "fieldname": "linked_cfp_section",
+      "fieldtype": "Section Break",
+      "label": "Linked CFP"
+    },
+    {
+      "columns": 1,
+      "fieldname": "linked_cfp",
+      "fieldtype": "Link",
+      "label": "Linked CFP",
+      "options": "FOSS Event CFP Submission"
+    },
+    {
+      "fieldname": "section_break_ojro",
+      "fieldtype": "Section Break"
+    },
+    {
+      "description": "Format \n<pre>{\n  \"speakers\": [\n    {\n        \"name\": \"Test Name\",\n        \"designation\": \"Software Engineer\",\n        \"organization\": \"FOSS United\",\n        \"profile\": \"\",\n        \"image\": \"\"\n    }\n  ]\n}\n</pre>\n",
+      "fieldname": "speakers",
+      "fieldtype": "JSON",
+      "label": "Speakers"
+    },
+    {
+      "fieldname": "category",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Category",
+      "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nOpening Note\nBreak\nOther"
+    },
+    {
+      "depends_on": "eval:doc.category=='Other'",
+      "fieldname": "other_category",
+      "fieldtype": "Data",
+      "label": "Other Category"
+    },
+    {
+      "columns": 2,
+      "fetch_from": "linked_cfp.talk_title",
+      "fetch_if_empty": 1,
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title"
+    },
+    {
+      "fieldname": "hall",
+      "fieldtype": "Data",
+      "label": "Hall"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2024-08-31 17:12:36.763381",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "FOSS Event Schedule",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

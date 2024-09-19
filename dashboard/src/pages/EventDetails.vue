@@ -20,9 +20,7 @@
       ></Button>
     </div>
     <div class="flex flex-col gap-3 my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Banner Image
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
       <div>
         <img
           :src="getBannerImage()"
@@ -35,9 +33,7 @@
             :validateFile="validateFile"
             @success="(file) => setBannerImage(file)"
           >
-            <template
-              v-slot="{ file, progress, error, uploading, openFileSelector }"
-            >
+            <template v-slot="{ file, progress, error, uploading, openFileSelector }">
               <Button
                 :variant="'subtle'"
                 :size="'md'"
@@ -67,16 +63,9 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Event Details
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-        <FormControl
-          :type="'text'"
-          size="md"
-          v-model="event.doc.event_name"
-          label="Event Name"
-        />
+        <FormControl :type="'text'" size="md" v-model="event.doc.event_name" label="Event Name" />
         <FormControl
           :type="'text'"
           size="md"
@@ -142,16 +131,12 @@
           label="Event Description"
           class="col-span-2"
           :modelValue="event.doc.event_description"
-          @update:modelValue="
-            ($event) => (event.doc.event_description = $event)
-          "
+          @update:modelValue="($event) => (event.doc.event_description = $event)"
         />
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Event Timeline
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Timeline</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           :type="'datetime-local'"
@@ -168,9 +153,7 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">
-        Location Details
-      </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Location Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           :type="'text'"
@@ -178,12 +161,7 @@
           v-model="event.doc.event_location"
           size="md"
         />
-        <FormControl
-          :type="'url'"
-          label="Map Link"
-          v-model="event.doc.map_link"
-          side="md"
-        />
+        <FormControl :type="'url'" label="Map Link" v-model="event.doc.map_link" side="md" />
       </div>
     </div>
   </div>
@@ -191,12 +169,7 @@
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
 import TextEditor from '@/components/TextEditor.vue'
-import {
-  createDocumentResource,
-  createListResource,
-  FileUploader,
-  FormControl,
-} from 'frappe-ui'
+import { createDocumentResource, createListResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 

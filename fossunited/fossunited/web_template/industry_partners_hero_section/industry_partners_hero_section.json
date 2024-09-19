@@ -1,76 +1,76 @@
 {
- "__islocal": true,
- "__unsaved": 1,
- "creation": "2024-02-12 19:02:33.984157",
- "docstatus": 0,
- "doctype": "Web Template",
- "fields": [
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "heading",
-   "fieldtype": "Data",
-   "label": "Heading",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "subtext",
-   "fieldtype": "Data",
-   "label": "Subtext",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "hero_image",
-   "fieldtype": "Attach Image",
-   "label": "Hero Image",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "primary_cta_text",
-   "fieldtype": "Data",
-   "label": "Primary CTA Text",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "primary_cta_link",
-   "fieldtype": "Data",
-   "label": "Primary CTA Link",
-   "options": "URL",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "secondary_cta_text",
-   "fieldtype": "Data",
-   "label": "Secondary CTA Text",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "secondary_cta_link",
-   "fieldtype": "Data",
-   "label": "Secondary CTA Link",
-   "options": "URL",
-   "reqd": 0
-  }
- ],
- "idx": 0,
- "modified": "2024-02-12 19:02:33.984157",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "Industry Partners Hero Section",
- "owner": "Administrator",
- "standard": 1,
- "template": "",
- "type": "Section"
+  "__islocal": true,
+  "__unsaved": 1,
+  "creation": "2024-02-12 19:02:33.984157",
+  "docstatus": 0,
+  "doctype": "Web Template",
+  "fields": [
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "heading",
+      "fieldtype": "Data",
+      "label": "Heading",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "subtext",
+      "fieldtype": "Data",
+      "label": "Subtext",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "hero_image",
+      "fieldtype": "Attach Image",
+      "label": "Hero Image",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "primary_cta_text",
+      "fieldtype": "Data",
+      "label": "Primary CTA Text",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "primary_cta_link",
+      "fieldtype": "Data",
+      "label": "Primary CTA Link",
+      "options": "URL",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "secondary_cta_text",
+      "fieldtype": "Data",
+      "label": "Secondary CTA Text",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "secondary_cta_link",
+      "fieldtype": "Data",
+      "label": "Secondary CTA Link",
+      "options": "URL",
+      "reqd": 0
+    }
+  ],
+  "idx": 0,
+  "modified": "2024-02-12 19:02:33.984157",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "Industry Partners Hero Section",
+  "owner": "Administrator",
+  "standard": 1,
+  "template": "",
+  "type": "Section"
 }

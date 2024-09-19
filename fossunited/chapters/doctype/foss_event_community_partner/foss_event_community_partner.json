@@ -1,47 +1,43 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-02-06 20:16:11.103971",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "organization_name",
-  "organization_website",
-  "company_logo"
- ],
- "fields": [
-  {
-   "fieldname": "organization_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Organization Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "organization_website",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Organization Website",
-   "reqd": 1
-  },
-  {
-   "fieldname": "company_logo",
-   "fieldtype": "Attach Image",
-   "label": "Company Logo",
-   "reqd": 1
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2024-02-06 20:17:06.559041",
- "modified_by": "Administrator",
- "module": "Chapters",
- "name": "FOSS Event Community Partner",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-02-06 20:16:11.103971",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": ["organization_name", "organization_website", "company_logo"],
+  "fields": [
+    {
+      "fieldname": "organization_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Organization Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "organization_website",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Organization Website",
+      "reqd": 1
+    },
+    {
+      "fieldname": "company_logo",
+      "fieldtype": "Attach Image",
+      "label": "Company Logo",
+      "reqd": 1
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2024-02-06 20:17:06.559041",
+  "modified_by": "Administrator",
+  "module": "Chapters",
+  "name": "FOSS Event Community Partner",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

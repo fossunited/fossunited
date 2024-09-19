@@ -52,16 +52,18 @@ const hasCfp = createResource({
     resetTabs()
     if (data > 0) {
       eventCfp.fetch()
-      tabs.options.push(...[
-        {
-          label: 'Web Form',
-          route: `/event/${route.params.id}/cfp/edit`,
-        },
-        {
-          label: 'Insights',
-          route: `/event/${route.params.id}/cfp/insights`,
-        },
-      ])
+      tabs.options.push(
+        ...[
+          {
+            label: 'Web Form',
+            route: `/event/${route.params.id}/cfp/edit`,
+          },
+          {
+            label: 'Insights',
+            route: `/event/${route.params.id}/cfp/insights`,
+          },
+        ],
+      )
       return
     }
     tabs.options.push({

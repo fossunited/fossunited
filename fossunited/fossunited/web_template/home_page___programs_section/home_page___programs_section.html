@@ -1,119 +1,117 @@
 <style>
-    .programs-section{
-        display: flex;
-        align-items: center;
-        margin-bottom: 7rem;
-        justify-content: center;
+  .programs-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 7rem;
+    justify-content: center;
+  }
+
+  .programs-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 3rem;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .programs-card-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-content: space-between;
+    gap: 1.25rem;
+  }
+
+  .program-card {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.875rem;
+  }
+
+  .program-card:hover {
+    text-decoration: none;
+    border-radius: 0.5rem;
+    background: #fff;
+    box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
+  }
+  .program-card:hover > .program-card-cta {
+    color: var(--Foundation-FOSS-Mint-foss-mint-500, #08b74f);
+  }
+
+  .program-card h6 {
+    font-size: var(--text-xl);
+  }
+
+  .program-card-description > p {
+    color: var(--Gray-500, #667085);
+    font-weight: var(--fw-medium);
+    line-height: 1.5;
+  }
+
+  .program-card-cta {
+    display: flex;
+    align-items: center;
+    font-size: var(--text-sm);
+    font-weight: var(--fw-semibold);
+  }
+
+  .program-card-image img {
+    max-height: 2.5rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .programs-card-block {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
     }
 
-    .programs-container{
-        display: flex;
-        align-items: flex-start;
-        gap: 3rem;
-        flex-direction: column;
-        width: 100%;
+    .program-card {
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      border: 0.5px solid var(--Gray-200, #eaecf0);
     }
 
-    .programs-card-block{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        justify-content: space-between;
-        gap: 1.25rem;
+    .program-card:hover {
+      text-decoration: none;
+      background: #fff;
+      box-shadow: none;
     }
-
-    .program-card{
-        padding: 1.25rem;
-        display: flex;
-        flex-direction: column;
-        gap: .875rem;
-    }
-
-    .program-card:hover{
-        text-decoration: none;
-        border-radius: 0.5rem;
-        background: #FFF;
-        box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.15);
-    }
-    .program-card:hover > .program-card-cta{
-        color: var(--Foundation-FOSS-Mint-foss-mint-500, #08B74F);
-    }
-
-    .program-card h6{
-        font-size: var(--text-xl);
-    }
-
-
-    .program-card-description > p{
-        color: var(--Gray-500, #667085);
-        font-weight: var(--fw-medium);
-        line-height: 1.5;
-
-    }
-
-    .program-card-cta{
-        display: flex;
-        align-items: center;
-        font-size: var(--text-sm);
-        font-weight: var(--fw-semibold);
-    }
-
-    .program-card-image img{
-        max-height: 2.5rem;
-    }
-
-    @media screen and (max-width: 768px) {
-
-        .programs-card-block{
-            grid-template-columns: 1fr;
-            gap: 2.5rem;
-        }
-
-        .program-card{
-            padding:1.25rem;
-            border-radius: 0.5rem;
-            border: 0.5px solid var(--Gray-200, #EAECF0);
-        }
-
-
-        .program-card:hover{
-            text-decoration: none;
-            background: #FFF;
-            box-shadow: none;
-        }
-
-    }
-
+  }
 </style>
 
-
-
 <div class="programs-section container">
-    <div class="programs-container">
-        <h5 class="programs-section-heading">Programs</h5>
-        <div class="programs-card-block">
-            {% for index in range(1, 10) %}
-                {% set logo = values['program_' + index|string + '_logo'] %}
-                {% set name = values['program_' + index|string + '_name'] %}
-                {% set description = values['program_' + index|string + '_desc'] %}
-                {% set url = values['program_' + index|string + '_url'] %}
-                {% if logo %}
-                        <a class="program-card" href="{{url}}">
-                                <div class="program-card-image">
-                                    <img src="{{ logo }}" alt="{{ name }}">
-                                </div>
-                                <div>
-                                    <h6>{{name}}</h6>
-                                </div>
-                                <div class="program-card-description">
-                                    <p>{{description}}</p>
-                                </div>
-                                <div class="program-card-cta">
-                                    View More
-                                    <i class="ti ti-chevron-right"></i>
-                                </div>
-                        </a>
-                {% endif %}
-            {% endfor %}
-        </div>
+  <div class="programs-container">
+    <h5 class="programs-section-heading">Programs</h5>
+    <div class="programs-card-block">
+      {% for index in range(1, 10) %}
+        {% set logo = values['program_' + index|string + '_logo'] %}
+        {% set name = values['program_' + index|string + '_name'] %}
+        {%
+          set description =
+          values['program_' + index|string + '_desc']
+        %}
+        {%
+          set url = values['program_' + index|string
+          + '_url']
+        %}
+        {% if logo %}
+          <a class="program-card" href="{{ url }}">
+            <div class="program-card-image">
+              <img src="{{ logo }}" alt="{{ name }}" />
+            </div>
+            <div>
+              <h6>{{ name }}</h6>
+            </div>
+            <div class="program-card-description">
+              <p>{{ description }}</p>
+            </div>
+            <div class="program-card-cta">
+              View More
+              <i class="ti ti-chevron-right"></i>
+            </div>
+          </a>
+        {% endif %}
+      {% endfor %}
     </div>
+  </div>
 </div>

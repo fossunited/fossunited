@@ -26,21 +26,26 @@
   </div>
   <div class="form-group my-5">
     <div class="checkbox">
-        <label>
-            <span class="input-area">
-            <input type="checkbox" autocomplete="off" class="input-with-feedback"
-                data-fieldtype="Check" data-fieldname="terms" id="signup-terms" required>
-            </span>
-            <span class="label-area">
-            {{ _("I have read and agree to your {0}").format(get_signup_optin_checks()) }}
-            </span>
-        </label>
+      <label>
+        <span class="input-area">
+          <input
+            type="checkbox"
+            autocomplete="off"
+            class="input-with-feedback"
+            data-fieldtype="Check"
+            data-fieldname="terms"
+            id="signup-terms"
+            required
+          />
+        </span>
+        <span class="label-area">
+          {{ _("I have read and agree to your {0}").format(get_signup_optin_checks()) }}
+        </span>
+      </label>
     </div>
   </div>
   <div class="page-card-actions">
-    <button class="btn btn-sm btn-primary btn-block btn-signup" type="submit">
-      Sign up
-    </button>
+    <button class="btn btn-sm btn-primary btn-block btn-signup" type="submit">Sign up</button>
 
     <p class="text-center sign-up-message">
       <a href="#login" class="blue">Have an account? Login</a>

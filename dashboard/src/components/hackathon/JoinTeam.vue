@@ -17,12 +17,7 @@
       <hr />
       <div class="text-sm flex items-center gap-1 mt-4">
         <span>Invitations</span>
-        <Badge
-          :label="invitations.data.length"
-          theme="red"
-          variant="solid"
-          size="sm"
-        />
+        <Badge :label="invitations.data.length" theme="red" variant="solid" size="sm" />
       </div>
       <div class="flex flex-col py-2">
         <div
@@ -37,16 +32,23 @@
             >
               {{ invite.team_name }}
             </div>
-            <div class="text-sm flex gap-1 items-end">Invited by <span @click="redirectRoute(invite.sender_profile.data.route)" class="hover:underline hover:cursor-pointer">{{ invite.sender_name }}</span></div>
+            <div class="text-sm flex gap-1 items-end">
+              Invited by
+              <span
+                @click="redirectRoute(invite.sender_profile.data.route)"
+                class="hover:underline hover:cursor-pointer"
+                >{{ invite.sender_name }}</span
+              >
+            </div>
           </div>
           <div class="flex gap-1">
-            <Button icon="check" theme="green" @click="acceptInvite(invite.name)"/>
-            <Button icon="x" theme="red" @click="rejectInvite(invite.name)"/>
+            <Button icon="check" theme="green" @click="acceptInvite(invite.name)" />
+            <Button icon="x" theme="red" @click="rejectInvite(invite.name)" />
           </div>
         </div>
       </div>
     </div>
-</div>
+  </div>
 </template>
 <script setup>
 import { FormControl, createResource, Badge, createDocumentResource } from 'frappe-ui'
@@ -108,7 +110,7 @@ const joinThroughCode = () => {
       user: session.user,
     },
     auto: true,
-    onSuccess(data){
+    onSuccess(data) {
       window.location.reload()
     },
     onError(error) {
@@ -118,40 +120,40 @@ const joinThroughCode = () => {
 }
 
 const acceptInvite = (inviteId) => {
-    createResource({
-        url: 'frappe.client.set_value',
-        params: {
-            doctype: 'FOSS Hackathon Join Team Request',
-            name: inviteId,
-            fieldname: 'status',
-            value: 'Accepted',
-        },
-        auto: true,
-        onSuccess: (data) => {
-            window.location.reload()
-        },
-        onError(error) {
-            console.error(error)
-        },
-    })
+  createResource({
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Hackathon Join Team Request',
+      name: inviteId,
+      fieldname: 'status',
+      value: 'Accepted',
+    },
+    auto: true,
+    onSuccess: (data) => {
+      window.location.reload()
+    },
+    onError(error) {
+      console.error(error)
+    },
+  })
 }
 
 const rejectInvite = (inviteId) => {
-    createResource({
-        url: 'frappe.client.set_value',
-        params: {
-            doctype: 'FOSS Hackathon Join Team Request',
-            name: inviteId,
-            fieldname: 'status',
-            value: 'Rejected',
-        },
-        auto: true,
-        onSuccess: (data) => {
-            props.invitations.fetch()
-        },
-        onError(error) {
-            console.error(error)
-        },
-    })
+  createResource({
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Hackathon Join Team Request',
+      name: inviteId,
+      fieldname: 'status',
+      value: 'Rejected',
+    },
+    auto: true,
+    onSuccess: (data) => {
+      props.invitations.fetch()
+    },
+    onError(error) {
+      console.error(error)
+    },
+  })
 }
 </script>

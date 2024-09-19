@@ -1,180 +1,179 @@
 {% extends "templates/foss_base.html" %}
-
 {% block page_content %}
-<div class="container">
+  <div class="container">
     <div class="backlink d-flex align-items-end mt-6 mb-6">
-        <a href="/{{hackathon.route}}">
-            {{ hackathon.hackathon_name }}
-        </a>
-        <span class="mx-2">></span>
-        <a href="/{{hackathon.route}}/projects/all">
-            {{ _("All Projects") }}
-        </a>
-        <span class="mx-2">></span>
-        <span style="font-weight: var(--fw-normal)">{{ doc.title }}</span>
+      <a href="/{{ hackathon.route }}"> {{ hackathon.hackathon_name }} </a>
+      <span class="mx-2">></span>
+      <a href="/{{ hackathon.route }}/projects/all"> {{ _("All Projects") }} </a>
+      <span class="mx-2">></span>
+      <span style="font-weight: var(--fw-normal)">{{ doc.title }}</span>
     </div>
 
     <div class="my-2">
-        <h1 class="header--event-title">
-            {{ doc.title}}
-        </h1>
-        {% if doc.short_description %}
-        <div class="mt-4">
-            {{ doc.short_description }}
-        </div>
+      <h1 class="header--event-title">{{ doc.title }}</h1>
+      {% if doc.short_description %}
+        <div class="mt-4">{{ doc.short_description }}</div>
+      {% endif %}
+      <div class="d-flex mt-4">
+        {% if doc.repo_link %}
+          <a
+            class="button mr-4"
+            style="text-decoration: none"
+            href="{{ doc.repo_link }}"
+            target="_blank"
+          >
+            <i class="ti ti-brand-github"></i>
+            <span>Repository</span>
+          </a>
         {% endif %}
-        <div class="d-flex mt-4">
-            {% if doc.repo_link %}
-            <a class="button mr-4" style="text-decoration:none;" href="{{ doc.repo_link }}" target="_blank">
-                <i class="ti ti-brand-github"></i>
-                <span>Repository</span>
-            </a>
-            {% endif %}
-            {% if doc.demo_link %}
-            <a class="button mr-4" style="text-decoration:none;" href="{{ doc.demo_link }}" target="_blank">
-                <i class="ti ti-link"></i>
-                <span>Demo</span>
-            </a>
-            {% endif %}
-            {% if not frappe.session.user == 'Guest' %}
-            <div class="cfp-header--like-container" id="likes-container">
-                <button id="project-like-button" data-liked="{{liked_by_user}}" onclick="toggle_like()">
-                    <i class="ti {% if liked_by_user %} ti-heart-filled {% else %} ti-heart {% endif %}" style="{% if liked_by_user %} color: red; {% endif %}"></i>
-                    <span >{{ likes | length }} Likes </span>
-                </button>
-            </div>
-            {% endif %}
-        </div>
+        {% if doc.demo_link %}
+          <a
+            class="button mr-4"
+            style="text-decoration: none"
+            href="{{ doc.demo_link }}"
+            target="_blank"
+          >
+            <i class="ti ti-link"></i>
+            <span>Demo</span>
+          </a>
+        {% endif %}
+        {% if not frappe.session.user == 'Guest' %}
+          <div class="cfp-header--like-container" id="likes-container">
+            <button
+              id="project-like-button"
+              data-liked="{{ liked_by_user }}"
+              onclick="toggle_like()"
+            >
+              <i
+                class="ti {% if liked_by_user %}ti-heart-filled{% else %}ti-heart{% endif %}"
+                style="{% if liked_by_user %}color: red;{% endif %}"
+              ></i>
+              <span>{{ likes | length }} Likes </span>
+            </button>
+          </div>
+        {% endif %}
+      </div>
     </div>
-</div>
+  </div>
 
-{% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
-<div class="horizontal-navbar-parent">
-    <div class="container">
-        {{ horizontal_navbar(nav_items) }}
-    </div>
-</div>
+  {% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
+  <div class="horizontal-navbar-parent">
+    <div class="container">{{ horizontal_navbar(nav_items) }}</div>
+  </div>
 
-<div class="container">
-    {{ render_description() }}
-    {{ render_issue_pr() }}
-    {{ render_team() }}
-</div>
-
+  <div class="container">
+    {{ render_description() }} {{ render_issue_pr() }} {{ render_team() }}
+  </div>
 {% endblock %}
-
 {% macro render_description() %}
-<div class="event-content-div content-div" id="description">
-    <div>
-        {{ doc.description or 'No description added.'}}
-    </div>
-</div>
+  <div class="event-content-div content-div" id="description">
+    <div>{{ doc.description or 'No description added.' }}</div>
+  </div>
 {% endmacro %}
-
 {% macro render_issue_pr() %}
-<div class="event-content-div content-div" id="issue_pr">
+  <div class="event-content-div content-div" id="issue_pr">
     {% if doc.issue_pr_table | len > 0 %}
-    <h6 class="mt-4 border-bottom pb-2">Issues, PRs and Discussions</h6>
-    <div class="issue-pr-list">
+      <h6 class="mt-4 border-bottom pb-2">Issues, PRs and Discussions</h6>
+      <div class="issue-pr-list">
         {% for item in doc.issue_pr_table %}
-        <a href="{{ item.link }}" target="_blank" class="issue-pr-card">
+          <a href="{{ item.link }}" target="_blank" class="issue-pr-card">
             <div class="issue-pr-icon-type">
-                {% if item.type == 'Pull Request' %}
+              {% if item.type == 'Pull Request' %}
                 <i class="ti ti-git-pull-request"></i>
                 <span>Pull Request</span>
-                {% elif item.type == 'Issue' %}
+              {% elif item.type == 'Issue' %}
                 <i class="ti ti-circle-dot"></i>
                 <span>Issue</span>
-                {% else %}
+              {% else %}
                 <i class="ti ti-messages"></i>
                 <span>Discussion</span>
-                {% endif %}
+              {% endif %}
             </div>
-            <div class="issue-pr-title">
-                {{ item.title }}
-            </div>
-        </a>
+            <div class="issue-pr-title">{{ item.title }}</div>
+          </a>
         {% endfor %}
-    </div>
+      </div>
     {% else %}
-    <div class="mt-4">
-        No Issues, PRs or Discussions added.
-    </div>
+      <div class="mt-4">No Issues, PRs or Discussions added.</div>
     {% endif %}
-</div>
+  </div>
 {% endmacro %}
-
 {% macro render_team() %}
-<div class="event-content-div content-div" id="team_members">
+  <div class="event-content-div content-div" id="team_members">
     <div class="team-member-grid">
-        {% for member in team_members %}
-        <div class="team-member-card" onClick="window.open('/{{member.route}}', '_blank').focus()">
-            <img class="team-member--img" src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png'}}" alt="{{ member.full_name }}">
-            <div class="d-flex flex-column">
-                <div class="team-member--name">{{ member.full_name }}</div>
-                <div class="team-member--username">{{ member.username }}</div>
-            </div>
+      {% for member in team_members %}
+        <div
+          class="team-member-card"
+          onClick="window.open('/{{ member.route }}', '_blank').focus()"
+        >
+          <img
+            class="team-member--img"
+            src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+            alt="{{ member.full_name }}"
+          />
+          <div class="d-flex flex-column">
+            <div class="team-member--name">{{ member.full_name }}</div>
+            <div class="team-member--username">{{ member.username }}</div>
+          </div>
         </div>
-        {% endfor %}
+      {% endfor %}
     </div>
-</div>
+  </div>
 {% endmacro %}
-
 {% block page_script %}
-<script>
-    function toggle_like(e){
-        let liked = $('#project-like-button').data('liked');
-        liked = liked === 'True' ? 'False' : 'Yes';
-        frappe.call({
-            method: 'frappe.desk.like.toggle_like',
-            args: {
-                doctype: 'FOSS Hackathon Project',
-                name: '{{ doc.name }}',
-                add: liked,
-            },
-            callback: (r)=>{
-                $('#likes-container').load(document.URL +  ' #likes-container');
-            },
-            error: (r)=>{
-                console.log("ERROR" + r)
-            }
-        })
+  <script>
+    function toggle_like(e) {
+      let liked = $('#project-like-button').data('liked')
+      liked = liked === 'True' ? 'False' : 'Yes'
+      frappe.call({
+        method: 'frappe.desk.like.toggle_like',
+        args: {
+          doctype: 'FOSS Hackathon Project',
+          name: '{{ doc.name }}',
+          add: liked,
+        },
+        callback: (r) => {
+          $('#likes-container').load(document.URL + ' #likes-container')
+        },
+        error: (r) => {
+          console.log('ERROR' + r)
+        },
+      })
     }
-</script>
+  </script>
 {% endblock %}
-
 {% block page_style %}
-<style>
-    .issue-pr-list{
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 1rem;
+  <style>
+    .issue-pr-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1rem;
     }
 
-    .issue-pr-card{
-        display: flex;
-        flex-direction: column;
-        padding: 0.8rem;
-        border-radius: 0.5rem;
-        border: 1px solid hsl(var(--clr-gray-300));
-        transition: border 0.3s;
+    .issue-pr-card {
+      display: flex;
+      flex-direction: column;
+      padding: 0.8rem;
+      border-radius: 0.5rem;
+      border: 1px solid hsl(var(--clr-gray-300));
+      transition: border 0.3s;
     }
-    .issue-pr-card:hover{
-        text-decoration: none;
-        border: 1px solid hsl(var(--clr-gray-400));
+    .issue-pr-card:hover {
+      text-decoration: none;
+      border: 1px solid hsl(var(--clr-gray-400));
     }
 
-    .issue-pr-icon-type{
-        display: flex;
-        gap: 0.2rem;
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
+    .issue-pr-icon-type {
+      display: flex;
+      gap: 0.2rem;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
     }
-    .issue-pr-title{
-        font-size: 1rem;
-        font-family: 'Courier New', Courier, monospace;
+    .issue-pr-title {
+      font-size: 1rem;
+      font-family: 'Courier New', Courier, monospace;
     }
-</style>
+  </style>
 {% endblock %}

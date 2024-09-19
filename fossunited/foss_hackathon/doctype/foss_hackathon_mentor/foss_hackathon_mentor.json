@@ -1,81 +1,81 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-03-26 15:31:41.038087",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "basic_details_section",
-  "mentor",
-  "full_name",
-  "column_break_qzrl",
-  "hackathon"
- ],
- "fields": [
-  {
-   "fieldname": "mentor",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Mentor",
-   "options": "User",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "mentor.full_name",
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name"
-  },
-  {
-   "fieldname": "column_break_qzrl",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "hackathon",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Hackathon",
-   "options": "FOSS Hackathon",
-   "reqd": 1
-  },
-  {
-   "fieldname": "basic_details_section",
-   "fieldtype": "Section Break",
-   "label": "Basic Details"
-  }
- ],
- "links": [],
- "modified": "2024-06-25 13:12:38.595824",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "FOSS Hackathon Mentor",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "All",
-   "select": 1,
-   "share": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [],
- "title_field": "full_name"
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-03-26 15:31:41.038087",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "basic_details_section",
+    "mentor",
+    "full_name",
+    "column_break_qzrl",
+    "hackathon"
+  ],
+  "fields": [
+    {
+      "fieldname": "mentor",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Mentor",
+      "options": "User",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "mentor.full_name",
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Full Name"
+    },
+    {
+      "fieldname": "column_break_qzrl",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "hackathon",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Hackathon",
+      "options": "FOSS Hackathon",
+      "reqd": 1
+    },
+    {
+      "fieldname": "basic_details_section",
+      "fieldtype": "Section Break",
+      "label": "Basic Details"
+    }
+  ],
+  "links": [],
+  "modified": "2024-06-25 13:12:38.595824",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "FOSS Hackathon Mentor",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "All",
+      "select": 1,
+      "share": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [],
+  "title_field": "full_name"
 }

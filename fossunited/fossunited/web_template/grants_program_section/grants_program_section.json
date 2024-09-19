@@ -1,84 +1,84 @@
 {
- "__islocal": true,
- "__unsaved": 1,
- "creation": "2024-02-10 00:25:26.928052",
- "docstatus": 0,
- "doctype": "Web Template",
- "fields": [
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "heading",
-   "fieldtype": "Data",
-   "label": "Heading",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "subtext",
-   "fieldtype": "Small Text",
-   "label": "Subtext",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_category_1",
-   "fieldtype": "Data",
-   "label": "Grant category 1",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_amount_1",
-   "fieldtype": "Data",
-   "label": "Grant amount 1",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_category_2",
-   "fieldtype": "Data",
-   "label": "Grant category 2",
-   "options": "",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_amount_2",
-   "fieldtype": "Data",
-   "label": "Grant amount 2",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_category_3",
-   "fieldtype": "Data",
-   "label": "Grant category 3",
-   "options": "",
-   "reqd": 0
-  },
-  {
-   "__islocal": 1,
-   "__unsaved": 1,
-   "fieldname": "grant_amount_3",
-   "fieldtype": "Data",
-   "label": "Grant amount 3",
-   "reqd": 0
-  }
- ],
- "idx": 0,
- "modified": "2024-02-10 00:25:26.928052",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "Grants program section",
- "owner": "Administrator",
- "standard": 1,
- "template": "",
- "type": "Section"
+  "__islocal": true,
+  "__unsaved": 1,
+  "creation": "2024-02-10 00:25:26.928052",
+  "docstatus": 0,
+  "doctype": "Web Template",
+  "fields": [
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "heading",
+      "fieldtype": "Data",
+      "label": "Heading",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "subtext",
+      "fieldtype": "Small Text",
+      "label": "Subtext",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_category_1",
+      "fieldtype": "Data",
+      "label": "Grant category 1",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_amount_1",
+      "fieldtype": "Data",
+      "label": "Grant amount 1",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_category_2",
+      "fieldtype": "Data",
+      "label": "Grant category 2",
+      "options": "",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_amount_2",
+      "fieldtype": "Data",
+      "label": "Grant amount 2",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_category_3",
+      "fieldtype": "Data",
+      "label": "Grant category 3",
+      "options": "",
+      "reqd": 0
+    },
+    {
+      "__islocal": 1,
+      "__unsaved": 1,
+      "fieldname": "grant_amount_3",
+      "fieldtype": "Data",
+      "label": "Grant amount 3",
+      "reqd": 0
+    }
+  ],
+  "idx": 0,
+  "modified": "2024-02-10 00:25:26.928052",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "Grants program section",
+  "owner": "Administrator",
+  "standard": 1,
+  "template": "",
+  "type": "Section"
 }

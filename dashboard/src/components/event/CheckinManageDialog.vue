@@ -28,11 +28,7 @@
               <span
                 >Tshirt Assigned:
                 <span
-                  :class="
-                    selectedAttendee.tshirt_delivered
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  "
+                  :class="selectedAttendee.tshirt_delivered ? 'text-green-600' : 'text-red-600'"
                 >
                   {{ selectedAttendee.tshirt_delivered ? 'Yes' : 'No' }}
                 </span>
@@ -41,10 +37,7 @@
             <div class="border-b-2 border-dashed border-gray-600 my-3"></div>
             <div class="flex flex-col gap-2">
               <div class="text-sm uppercase font-medium">Check-ins</div>
-              <div
-                v-for="data in selectedAttendee.checkin_data"
-                class="flex gap-2"
-              >
+              <div v-for="data in selectedAttendee.checkin_data" class="flex gap-2">
                 <span>-></span>
                 <span>
                   {{ dayjs(data.check_in_time).format('DD MMM YYYY, h:mm A') }}
@@ -62,18 +55,13 @@
             variant="outline"
           />
         </div>
-        <div
-          v-if="
-            selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered
-          "
-        >
+        <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="mb-4" />
           <div class="text-sm uppercase font-medium">Assign T-shirt</div>
           <p class="text-sm leading-5 mt-1">
             <span class="text-orange-600">Pending</span> T-shirt assignment.
             <br />
-            Click the button below when you have assigned a T-shirt to the
-            attendee.
+            Click the button below when you have assigned a T-shirt to the attendee.
           </p>
           <Button
             class="mt-2"

@@ -47,7 +47,7 @@
 </template>
 <script setup>
 import { inject, computed } from 'vue'
-import { Avatar, Dropdown, createResource } from 'frappe-ui';
+import { Avatar, Dropdown, createResource } from 'frappe-ui'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 const session = inject('$session')

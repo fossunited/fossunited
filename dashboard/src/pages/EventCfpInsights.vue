@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="submissions.data && cfp_form.data"
-    class="px-4 py-8 md:p-8 flex flex-col gap-4"
-  >
+  <div v-if="submissions.data && cfp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col gap-4 my-2">
       <div class="text-xl font-medium">Insights</div>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
@@ -18,9 +15,7 @@
           icon-left="download"
           @click="downloadProposalList"
         />
-        <span class="text-sm text-gray-500">
-          Download the list of proposals for the event.
-        </span>
+        <span class="text-sm text-gray-500"> Download the list of proposals for the event. </span>
       </div>
       <ListView
         class="w-64"
@@ -74,12 +69,7 @@
                   >{{ selected_row_data.doc.status }}</span
                 >
               </div>
-              <Button
-                theme="red"
-                icon-left="trash"
-                label="Delete"
-                @click="deleteSubmission"
-              />
+              <Button theme="red" icon-left="trash" label="Delete" @click="deleteSubmission" />
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div>
@@ -120,19 +110,12 @@
                   },
                 ]"
               />
-              <Button
-                :variant="'solid'"
-                size="md"
-                label="Update Status"
-                @click="setCfpStatus"
-              />
+              <Button :variant="'solid'" size="md" label="Update Status" @click="setCfpStatus" />
             </div>
           </div>
           <div class="flex flex-col gap-4">
             <div class="flex flex-col mb-4 gap-2">
-              <div class="text-lg font-semibold mb-1 pb-2 border-b">
-                Session Details
-              </div>
+              <div class="text-lg font-semibold mb-1 pb-2 border-b">Session Details</div>
               <div>
                 <div class="font-semibold text-gray-800">Session Title</div>
                 <div>{{ selected_row_data.doc.talk_title }}</div>
@@ -142,9 +125,7 @@
                 <div>{{ selected_row_data.doc.session_type }}</div>
               </div>
               <div>
-                <div class="font-semibold text-gray-800">
-                  Session Description
-                </div>
+                <div class="font-semibold text-gray-800">Session Description</div>
                 <div v-html="selected_row_data.doc.talk_description"></div>
               </div>
               <div>
@@ -153,32 +134,28 @@
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Session Reference</div>
-                <a
-                  :href="selected_row_data.doc.talk_reference"
-                  target="_blank"
-                  >{{ selected_row_data.doc.talk_reference }}</a
-                >
+                <a :href="selected_row_data.doc.talk_reference" target="_blank">{{
+                  selected_row_data.doc.talk_reference
+                }}</a>
               </div>
             </div>
             <div
               v-if="selected_row_data.doc.custom_answers.length > 0"
               class="flex flex-col mb-4 gap-2"
             >
-              <div class="text-lg font-semibold mb-1 pb-2 border-b">
-                Custom Question
-              </div>
+              <div class="text-lg font-semibold mb-1 pb-2 border-b">Custom Question</div>
               <div v-for="response in selected_row_data.doc.custom_answers">
                 <div class="font-semibold text-gray-800">
                   {{ response.question }}
                 </div>
-                <div v-if="response.type == 'Check'">{{ response.response == 1 ? 'Yes' : 'No' }}</div>
+                <div v-if="response.type == 'Check'">
+                  {{ response.response == 1 ? 'Yes' : 'No' }}
+                </div>
                 <div v-else v-html="response.response"></div>
               </div>
             </div>
             <div class="flex flex-col mb-4 gap-2">
-              <div class="text-lg font-semibold mb-1 pb-2 border-b">
-                Submitter Details
-              </div>
+              <div class="text-lg font-semibold mb-1 pb-2 border-b">Submitter Details</div>
               <div v-if="selected_row_data.doc.picture_url">
                 <div class="font-semibold text-gray-800 mb-1">Photo</div>
                 <div class="flex flex-col gap-2">
@@ -355,8 +332,7 @@ const downloadProposalList = () => {
     'Organization',
     'Bio',
   ])
-  const csvContent =
-    'data:text/csv;charset=utf-8,' + csv.map((e) => e.join(',')).join('\n')
+  const csvContent = 'data:text/csv;charset=utf-8,' + csv.map((e) => e.join(',')).join('\n')
   const encodedUri = encodeURI(csvContent)
   const link = document.createElement('a')
   link.setAttribute('href', encodedUri)

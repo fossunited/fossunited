@@ -1,57 +1,57 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-04-27 12:21:59.161018",
- "doctype": "DocType",
- "engine": "InnoDB",
- "field_order": [
-  "key_id",
-  "webhook_secret",
-  "column_break_afgo",
-  "key_secret"
- ],
- "fields": [
-  {
-   "fieldname": "key_id",
-   "fieldtype": "Data",
-   "label": "Key ID"
-  },
-  {
-   "fieldname": "column_break_afgo",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "key_secret",
-   "fieldtype": "Password",
-   "label": "Key Secret"
-  },
-  {
-   "fieldname": "webhook_secret",
-   "fieldtype": "Password",
-   "label": "Webhook Secret"
-  }
- ],
- "index_web_pages_for_search": 1,
- "issingle": 1,
- "links": [],
- "modified": "2024-04-28 13:03:38.512731",
- "modified_by": "Administrator",
- "module": "Payments",
- "name": "Razorpay Settings",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "print": 1,
-   "read": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
- "sort_field": "creation",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-04-27 12:21:59.161018",
+  "doctype": "DocType",
+  "engine": "InnoDB",
+  "field_order": [
+    "key_id",
+    "webhook_secret",
+    "column_break_afgo",
+    "key_secret"
+  ],
+  "fields": [
+    {
+      "fieldname": "key_id",
+      "fieldtype": "Data",
+      "label": "Key ID"
+    },
+    {
+      "fieldname": "column_break_afgo",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "key_secret",
+      "fieldtype": "Password",
+      "label": "Key Secret"
+    },
+    {
+      "fieldname": "webhook_secret",
+      "fieldtype": "Password",
+      "label": "Webhook Secret"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "issingle": 1,
+  "links": [],
+  "modified": "2024-04-28 13:03:38.512731",
+  "modified_by": "Administrator",
+  "module": "Payments",
+  "name": "Razorpay Settings",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "print": 1,
+      "read": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    }
+  ],
+  "sort_field": "creation",
+  "sort_order": "DESC",
+  "states": []
 }

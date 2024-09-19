@@ -1,16 +1,21 @@
 <template>
-    <TabGroup @change="changeModelValue">
-        <TabList class="flex gap-6">
-            <Tab v-for="item in tabItems" :key="item.value" v-slot="{ selected }" class="focus-visible:outline-none">
-                <div
-                    class="border border-gray-900 flex items-center justify-center p-2 text-base font-medium hover:bg-gray-100 transition-colors"
-                    :class="{ 'bg-gray-900 text-white hover:bg-gray-800': selected }"
-                >
-                    <component :is="item.icon" :class="{'fill-white': selected}" />
-                </div>
-            </Tab>
-        </TabList>
-    </TabGroup>
+  <TabGroup @change="changeModelValue">
+    <TabList class="flex gap-6">
+      <Tab
+        v-for="item in tabItems"
+        :key="item.value"
+        v-slot="{ selected }"
+        class="focus-visible:outline-none"
+      >
+        <div
+          class="border border-gray-900 flex items-center justify-center p-2 text-base font-medium hover:bg-gray-100 transition-colors"
+          :class="{ 'bg-gray-900 text-white hover:bg-gray-800': selected }"
+        >
+          <component :is="item.icon" :class="{ 'fill-white': selected }" />
+        </div>
+      </Tab>
+    </TabList>
+  </TabGroup>
 </template>
 <script setup>
 import { defineModel } from 'vue'
@@ -28,16 +33,15 @@ const changeModelValue = (index) => {
 }
 
 const tabItems = [
-    {
-        label: 'Vertical',
-        icon: RowIcon,
-        value: 'vertical',
-    },
-    {
-        label: 'Horizontal',
-        icon: ColumnIcon,
-        value: 'horizontal',
-    },
+  {
+    label: 'Vertical',
+    icon: RowIcon,
+    value: 'vertical',
+  },
+  {
+    label: 'Horizontal',
+    icon: ColumnIcon,
+    value: 'horizontal',
+  },
 ]
-
 </script>

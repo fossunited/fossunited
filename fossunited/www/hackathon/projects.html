@@ -1,107 +1,95 @@
-{% extends "templates/foss_base.html" %} {% block page_content %}
-<div class="container">
-  <div class="backlink d-flex align-items-end mt-5">
-    <a href="/{{hackathon.route}}" class="fw-bolder">
-      {{ hackathon.hackathon_name }}
-    </a>
-    <span class="mx-2">></span>
-    <span style="font-weight: var(--fw-normal)">All Projects</span>
-  </div>
-  <div class="header--title-cta-parent mt-6 p-0">
-    <div>
-      {% if hackathon.organizing_chapter and not hackathon.hackathon_logo %} {%
-      from 'fossunited/templates/macros/chapter_branding_block.html' import
-      chapter_branding_block %} {{
-      chapter_branding_block(hackathon.organizing_chapter) }} {% endif %}
-      <div class="hackathon-name--header align-items-end my-2">
-        {% if hackathon.hackathon_logo %}
-        <img
-          src="{{ hackathon.hackathon_logo }}"
-          alt="Hackathon Logo"
-          style="height: 4rem; width: auto"
-          class="mr-4"
-        />
+{% extends "templates/foss_base.html" %}
+{% block page_content %}
+  <div class="container">
+    <div class="backlink d-flex align-items-end mt-5">
+      <a href="/{{ hackathon.route }}" class="fw-bolder"> {{ hackathon.hackathon_name }} </a>
+      <span class="mx-2">></span>
+      <span style="font-weight: var(--fw-normal)">All Projects</span>
+    </div>
+    <div class="header--title-cta-parent mt-6 p-0">
+      <div>
+        {% if hackathon.organizing_chapter and not hackathon.hackathon_logo %}
+          {%
+            from
+            'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block
+          %}
+          {{ chapter_branding_block(hackathon.organizing_chapter) }}
         {% endif %}
-        <h1 class="header--event-title pt-2">{{ hackathon.hackathon_name }}</h1>
+        <div class="hackathon-name--header align-items-end my-2">
+          {% if hackathon.hackathon_logo %}
+            <img
+              src="{{ hackathon.hackathon_logo }}"
+              alt="Hackathon Logo"
+              style="height: 4rem; width: auto"
+              class="mr-4"
+            />
+          {% endif %}
+          <h1 class="header--event-title pt-2">{{ hackathon.hackathon_name }}</h1>
+        </div>
       </div>
     </div>
-  </div>
-  <h5 class="mt-6">All Projects</h5>
+    <h5 class="mt-6">All Projects</h5>
 
-  <div class="search-box">
-    <div
-      class="flex items-center p-2 rounded border border-gray-200 bg-white min-w-[50%]"
-    >
-      <input
-        type="text"
-        id="searchInput"
-        placeholder="Search by project or team name"
-      />
-    </div>
-  </div>
-
-  {% if not projects %}
-  <div class="text-center mt-5">
-    <h3>No projects found</h3>
-  </div>
-  {% endif %}
-  <div class="projects-grid">
-    {% for project in projects %}
-    <div
-      class="project-card"
-      onClick="window.location.href='/{{ project.route }}'"
-    >
-      <div class="project-card--title">{{ project.title }}</div>
-      <div class="project-card--short-bio">
-        {{ project.short_description | truncate(150, true) }}
+    <div class="search-box">
+      <div class="flex items-center p-2 rounded border border-gray-200 bg-white min-w-[50%]">
+        <input type="text" id="searchInput" placeholder="Search by project or team name" />
       </div>
-      <div class="project-card--team">{{ project.team_name }}</div>
     </div>
-    {% endfor %}
+
+    {% if not projects %}
+      <div class="text-center mt-5">
+        <h3>No projects found</h3>
+      </div>
+    {% endif %}
+    <div class="projects-grid">
+      {% for project in projects %}
+        <div class="project-card" onClick="window.location.href='/{{ project.route }}'">
+          <div class="project-card--title">{{ project.title }}</div>
+          <div class="project-card--short-bio">
+            {{ project.short_description | truncate(150, true) }}
+          </div>
+          <div class="project-card--team">{{ project.team_name }}</div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
-</div>
 
-<script>
-  document.getElementById("searchInput").addEventListener("input", (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    let projectSearch = false;
+  <script>
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase()
+      let projectSearch = false
 
-    document.querySelectorAll(".project-card").forEach((card) => {
-      const projectName = card
-        .querySelector(".project-card--title")
-        .innerText.toLowerCase();
-      const teamName = card
-        .querySelector(".project-card--team")
-        .innerText.toLowerCase();
-      if (projectName.includes(searchTerm) || teamName.includes(searchTerm)) {
-        card.style.display = "flex";
-        projectSearch = true;
+      document.querySelectorAll('.project-card').forEach((card) => {
+        const projectName = card.querySelector('.project-card--title').innerText.toLowerCase()
+        const teamName = card.querySelector('.project-card--team').innerText.toLowerCase()
+        if (projectName.includes(searchTerm) || teamName.includes(searchTerm)) {
+          card.style.display = 'flex'
+          projectSearch = true
+        } else {
+          card.style.display = 'none'
+        }
+      })
+
+      // Add empty state in project search
+
+      const searchInputBox = document.querySelector('.search-box')
+      let emptyState = document.querySelector('.no-project')
+      if (!projectSearch) {
+        if (!emptyState) {
+          emptyState = document.createElement('h6')
+          emptyState.classList.add('no-project')
+          emptyState.appendChild(document.createTextNode('No project or team found'))
+
+          // Styles for emptyState element
+          emptyState.style.marginTop = '1rem'
+          emptyState.style.paddingLeft = '0.5rem'
+          searchInputBox.insertAdjacentElement('afterend', emptyState)
+        }
       } else {
-        card.style.display = "none";
+        if (emptyState) {
+          emptyState.remove()
+        }
       }
-    });
-
-    // Add empty state in project search
-
-    const searchInputBox = document.querySelector(".search-box");
-    let emptyState = document.querySelector(".no-project");
-    if (!projectSearch) {
-      if (!emptyState) {
-        emptyState = document.createElement("h6");
-        emptyState.classList.add("no-project");
-        emptyState.appendChild(document.createTextNode("No project or team found"));
-
-        // Styles for emptyState element
-        emptyState.style.marginTop = "1rem";
-        emptyState.style.paddingLeft = "0.5rem"
-        searchInputBox.insertAdjacentElement("afterend", emptyState);
-      }
-    } else {
-      if (emptyState) {
-        emptyState.remove();
-      }
-    }
-  });
-</script>
-
+    })
+  </script>
 {% endblock %}

@@ -178,12 +178,9 @@
     src:
       url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.eot?#iefix')
         format('embedded-opentype'),
-      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff2')
-        format('woff2'),
-      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff')
-        format('woff'),
-      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.ttf')
-        format('truetype'),
+      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff2') format('woff2'),
+      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.woff') format('woff'),
+      url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.ttf') format('truetype'),
       url('/assets/fossunited/fonts/fff_font/fff-forward.regular-webfont.svg#fff_forwardregular')
         format('svg');
   }

@@ -1,35 +1,29 @@
-{% extends "templates/base.html" %}
-
-{% block head_include %}
-	{{ super() }}
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<!-- prettier-ignore-start -->
+{% extends "templates/base.html" %} {% block head_include %} {{ super() }}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
 {% endblock %}
 
 <!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
-{% block style %}
-    {{ super() }}
-    <style>
-        {% include "public/css/custom.css" %}
-    </style>
-	{% block page_style %}{% endblock %}
-{% endblock %}
-
-{% block content %}
-	{% block page_content %}
-		<div class="base-placeholder">
-			<h3>Your Content Goes Here.</h3>
-			<br>-> Change content inside "block page_content" in your page.
-			<br>-> Include new style inside inside "block page_style" in your page.
-			<br>-> Include new script inside inside "block page_script" in your page.
-		</div>
-	{% endblock %}
-{% endblock %}
+{% block style %} {{ super() }}
+<style>
+  {% include "public/css/custom.css" %}
+</style>
+{% block page_style %}{% endblock %} {% endblock %} {% block content %} {% block page_content %}
+<div class="base-placeholder">
+  <h3>Your Content Goes Here.</h3>
+  <br />-> Change content inside "block page_content" in your page. <br />-> Include new style
+  inside inside "block page_style" in your page. <br />-> Include new script inside inside "block
+  page_script" in your page.
+</div>
+{% endblock %} {% endblock %}
 
 <!-- Can write js functions in common_functions.js in public/js -->
-{%- block script -%}
-	{{ super() }}
-	<script>
-		{% include "public/js/common_functions.js" %}
-	</script>
-	{% block page_script %}{% endblock %}
-{%- endblock -%}
+{%- block script -%} {{ super() }}
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% block page_script %}{% endblock %} {%- endblock -%}
+<!-- prettier-ignore-end -->

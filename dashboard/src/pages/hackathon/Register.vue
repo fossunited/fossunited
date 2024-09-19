@@ -11,11 +11,9 @@
   <div class="w-full flex justify-center">
     <div class="container p-8" v-if="hackathon.data">
       <div class="flex gap-2 mb-10 items-center">
-        <a
-          :href="redirectToHackathon"
-          class="font-semibold text-base hover:underline"
-          >{{ hackathon.data.hackathon_name }}</a
-        >
+        <a :href="redirectToHackathon" class="font-semibold text-base hover:underline">{{
+          hackathon.data.hackathon_name
+        }}</a>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -24,11 +22,7 @@
           stroke="currentColor"
           class="w-4 h-4"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
         <span class="text-base">Register</span>
       </div>
@@ -60,11 +54,7 @@
             placeholder="john@fossunited.org"
             v-model="participant.email"
           />
-          <FormControl
-            type="checkbox"
-            label="I am a student"
-            v-model="participant.is_student"
-          />
+          <FormControl type="checkbox" label="I am a student" v-model="participant.is_student" />
           <FormControl
             type="text"
             label="Organization / Institute &ast;"
@@ -72,18 +62,19 @@
           />
         </div>
         <div class="mt-6">
-          <h5 class="text-base font-medium text-gray-800">
-            Link your Git Profile &ast;
-          </h5>
+          <h5 class="text-base font-medium text-gray-800">Link your Git Profile &ast;</h5>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
-          <FormControl type="url" placeholder="https://github.com/username" v-model="participant.git_profile" class="mt-2">
+          <FormControl
+            type="url"
+            placeholder="https://github.com/username"
+            v-model="participant.git_profile"
+            class="mt-2"
+          >
           </FormControl>
         </div>
         <div v-if="localhost.data" class="mt-6">
-          <h5 class="text-base font-medium text-gray-800">
-            How will you participate?
-          </h5>
+          <h5 class="text-base font-medium text-gray-800">How will you participate?</h5>
           <RadioGroup
             v-model="selected_attendance"
             class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
@@ -152,10 +143,7 @@
               </div>
             </RadioGroupOption>
           </RadioGroup>
-          <div
-            v-if="selected_attendance.value == 1"
-            class="grid grid-cols-1 md:grid-cols-2"
-          >
+          <div v-if="selected_attendance.value == 1" class="grid grid-cols-1 md:grid-cols-2">
             <FormControl
               type="select"
               label="Select Location &ast;"
@@ -191,21 +179,15 @@
               <path d="M12 16h.01" />
             </svg>
             <p class="leading-normal text-center sm:text-left">
-              Please note that attendance at offline venues is limited by seat
-              availability. Our team will review your application to attend the
-              hackathon.<br />
-              If there are not enough seats available, your application to
-              attend in person may be <b>declined</b>, and you may need to
-              participate remotely.
+              Please note that attendance at offline venues is limited by seat availability. Our
+              team will review your application to attend the hackathon.<br />
+              If there are not enough seats available, your application to attend in person may be
+              <b>declined</b>, and you may need to participate remotely.
             </p>
           </div>
         </div>
       </div>
-      <ErrorMessage
-        v-if="errorsMessage"
-        class="m-2 mt-5"
-        :message="errorsMessage"
-      />
+      <ErrorMessage v-if="errorsMessage" class="m-2 mt-5" :message="errorsMessage" />
       <div class="flex flex-row-reverse mt-6">
         <Button
           variant="solid"
@@ -278,8 +260,8 @@ const hackathonId = ref(null)
 
 const alreadyParticipant = createResource({
   url: 'frappe.client.get_count',
-  onSuccess(data){
-    if (data > 0){
+  onSuccess(data) {
+    if (data > 0) {
       dialog_content.title = 'Already Registered'
       dialog_content.message = 'You have already registered for this hackathon. Redirecting...'
       show_dialog.value = true
@@ -292,7 +274,7 @@ const alreadyParticipant = createResource({
         })
       }, 3000)
     }
-  }
+  },
 })
 
 const hackathon = createResource({
@@ -302,18 +284,18 @@ const hackathon = createResource({
       name: hackathonId.value,
     }
   },
-  onSuccess(data){
+  onSuccess(data) {
     alreadyParticipant.update({
       params: {
         doctype: 'FOSS Hackathon Participant',
         filters: {
           hackathon: data.name,
           user: session.user,
-        }
-      }
+        },
+      },
     })
     alreadyParticipant.fetch()
-  }
+  },
 })
 
 const localhost = createListResource({
@@ -345,12 +327,12 @@ watch(selected_attendance, (value) => {
 
 let user_profile = createResource({
   url: 'fossunited.fossunited.utils.get_foss_profile',
-  onSuccess(data){
+  onSuccess(data) {
     participant.user_profile = data.name
     participant.full_name = data.full_name
     participant.email = data.user
     participant.git_profile = data.github
-  }
+  },
 })
 
 onMounted(() => {
@@ -359,12 +341,12 @@ onMounted(() => {
     hackathonId.value = params.get('id')
     hackathon.fetch()
   }
-  if(session.user != 'Administrator' && session.user != 'Guest'){
+  if (session.user != 'Administrator' && session.user != 'Guest') {
     participant.user = session.user
     user_profile.update({
-      params:{
-        email: session.user
-      }
+      params: {
+        email: session.user,
+      },
     })
     user_profile.fetch()
   }
@@ -385,24 +367,24 @@ const dialog_content = reactive({
 const registrationErrors = computed(() => {
   const errors = []
 
-  if (!participant.full_name){
-    errors.push("Name is required.")
+  if (!participant.full_name) {
+    errors.push('Name is required.')
   }
-  if(!participant.email){
-    errors.push("Email is required.")
+  if (!participant.email) {
+    errors.push('Email is required.')
   }
-  if(!participant.organization){
-    errors.push("Organization / Institute is required.")
+  if (!participant.organization) {
+    errors.push('Organization / Institute is required.')
   }
-  if(!participant.git_profile){
-    errors.push("Git Profile is required")
+  if (!participant.git_profile) {
+    errors.push('Git Profile is required')
   }
-  if(participant.git_profile && !participant.git_profile.startsWith('https://')){
-    errors.push("Enter a valid URL")
+  if (participant.git_profile && !participant.git_profile.startsWith('https://')) {
+    errors.push('Enter a valid URL')
   }
 
-  if(participant.wants_to_attend_locally && !participant.localhost){
-    errors.push("Please select an In-Person location.")
+  if (participant.wants_to_attend_locally && !participant.localhost) {
+    errors.push('Please select an In-Person location.')
   }
 
   return errors
@@ -410,11 +392,11 @@ const registrationErrors = computed(() => {
 
 const registerForHackathon = createResource({
   url: 'fossunited.api.hackathon.create_participant',
-  params:{
+  params: {
     hackathon: hackathon,
     participant: participant,
   },
-  onSuccess(data){
+  onSuccess(data) {
     router.push({
       name: 'InitialRegister',
       params: {
@@ -422,12 +404,12 @@ const registerForHackathon = createResource({
       },
     })
   },
-  onError(error){
-    console.error();
-    dialog_content.title= 'Error'
+  onError(error) {
+    console.error()
+    dialog_content.title = 'Error'
     dialog_content.message = error.message
     show_dialog.value = true
-  }
+  },
 })
 
 const errorsMessage = ref('')
@@ -436,7 +418,7 @@ const handleRegistration = () => {
   if (registrationErrors.value.length) {
     errorsMessage.value = registrationErrors.value.join(', ')
     return
-  }else{
+  } else {
     errorsMessage.value = null
   }
   registerForHackathon.fetch()

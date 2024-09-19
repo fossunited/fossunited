@@ -1,13 +1,9 @@
 <template>
-  <div
-    class="relative block min-h-0 flex-shrink-0 overflow-hidden hover:overflow-auto"
-  >
+  <div class="relative block min-h-0 flex-shrink-0 overflow-hidden hover:overflow-auto">
     <div class="fixed flex min-h-screen w-[220px] flex-col border-r bg-gray-50">
       <div class="p-4">
         <div class="font-fff text-gray-900 uppercase">FOSS United</div>
-        <div class="text-sm mt-2 tracking-wider text-gray-700 uppercase">
-          Dashboard
-        </div>
+        <div class="text-sm mt-2 tracking-wider text-gray-700 uppercase">Dashboard</div>
       </div>
       <div class="text-lg font-semibold uppercase px-4 mt-4" v-if="title">{{ title }}</div>
       <div class="flex flex-col gap-2 px-4 my-2" v-if="menuItems.length > 0">
@@ -23,14 +19,12 @@
               v-for="(item, index) in group.items"
               :key="item.label"
               :to="item.route"
-              class="w-full text-sm flex items-center gap-1 rounded-sm p-2 hover:bg-gray-100 transition-colors "
+              class="w-full text-sm flex items-center gap-1 rounded-sm p-2 hover:bg-gray-100 transition-colors"
               :class="
-                isMenuItemActive(item.route, index)
-                  ? 'font-medium text-gray-900 bg-gray-100'
-                  : ''
+                isMenuItemActive(item.route, index) ? 'font-medium text-gray-900 bg-gray-100' : ''
               "
             >
-              <FeatherIcon class="w-4 h-4" v-if="item.icon" :name="item.icon"/>
+              <FeatherIcon class="w-4 h-4" v-if="item.icon" :name="item.icon" />
               <span>{{ item.label }}</span>
             </router-link>
           </div>
@@ -63,8 +57,7 @@ const isMenuItemActive = (menuRoute, index) => {
   }
   return (
     menuRoute === route.path ||
-    menuRoute ===
-      '/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/')
+    menuRoute === '/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/')
   )
 }
 </script>

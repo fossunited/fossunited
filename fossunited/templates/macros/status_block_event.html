@@ -1,56 +1,106 @@
 {% macro status_block(status_block_content, event_name) %}
-<div class="submission-status-block">
+  <div class="submission-status-block">
     <div class="status--icon-text-container">
-        <div class="status-icon">
-            {% if status_block_content.create_form %}
-            <i class="ti ti-file-plus"></i>
-            {% elif status_block_content.is_unpublished or not status_block_content.has_doc %}
-            <i class="ti ti-file"></i>
-            {% else %}
-            <lottie-player src="/assets/fossunited/animation/live-animation-blob.json" background="transparent"  speed="1" loop autoplay></lottie-player>
-            {% endif %}
+      <div class="status-icon">
+        {% if status_block_content.create_form %}
+          <i class="ti ti-file-plus"></i>
+        {% elif status_block_content.is_unpublished or not status_block_content.has_doc %}
+          <i class="ti ti-file"></i>
+        {% else %}
+          <lottie-player
+            src="/assets/fossunited/animation/live-animation-blob.json"
+            background="transparent"
+            speed="1"
+            loop
+            autoplay
+          ></lottie-player>
+        {% endif %}
+      </div>
+      <div class="d-flex flex-column">
+        {% if status_block_content.deadline %}
+          <div class="status-block-deadline">Deadline: {{ status_block_content.deadline }}</div>
+        {% endif %}
+        <div
+          class="status-text"
+          style="{% if status_block_content.is_published or status_block_content.has_submission %}
+            color: hsl(var(--clr-foss-mint-500));
+          {% endif %}"
+        >
+          {{ status_block_content.block_heading }}
         </div>
-        <div class="d-flex flex-column">
-            {% if status_block_content.deadline %}
-            <div class="status-block-deadline">
-                Deadline: {{ status_block_content.deadline }}
-            </div>
-            {% endif %}
-            <div class="status-text" style="{% if status_block_content.is_published or status_block_content.has_submission %} color: hsl(var(--clr-foss-mint-500));{% endif %}">
-                {{ status_block_content.block_heading }}
-            </div>
-            {% if status_block_content.is_published %}
-                <div class="d-flex align-items-center copy-url-clipboard">
-                    Share this form with the community!
-                    <button class="copy-to-clipboard" data-url="{{ status_block_content.form_route }}" onclick="copyLinkToClipboard(this)" onmouseout="resetTooltip()">
-                        <span class="tooltip-text">Copy Link</span>
-                        <i class="ti ti-copy"></i>
-                    </button>
-                </div>
-            {% endif %}
-        </div>
+        {% if status_block_content.is_published %}
+          <div class="d-flex align-items-center copy-url-clipboard">
+            Share this form with the community!
+            <button
+              class="copy-to-clipboard"
+              data-url="{{ status_block_content.form_route }}"
+              onclick="copyLinkToClipboard(this)"
+              onmouseout="resetTooltip()"
+            >
+              <span class="tooltip-text">Copy Link</span>
+              <i class="ti ti-copy"></i>
+            </button>
+          </div>
+        {% endif %}
+      </div>
     </div>
     <div class="status--buttons-section">
-        {% if status_block_content.is_team_member %}
-            {% if status_block_content.form_edit %}
-            <button class="secondary-button" onClick="window.location.href='/{{status_block_content.block_for}}/create/{{status_block_content.docname}}/edit'">Edit Form</button>
-            {% endif %}
-            {% if status_block_content.is_unpublished %}
-            <button class="primary-button" onclick="publish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}">Publish Form</button>
-            {% endif %}
-            {% if status_block_content.is_published %}
-            <button class="danger-button" onclick="unpublish_form(this)" data-doctype="{{status_block_content.doctype}}" data-docname="{{status_block_content.docname}}" data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}">Unpublish Form</button>
-            {% endif %}
-            {% if status_block_content.create_form %}
-            <button class="primary-button" onClick="window.location.href='/{{ status_block_content.block_for }}/create/new?event={{ event_name }}'">Create {{ status_block_content.block_for | upper }} Form</button>
-            {% endif %}
+      {% if status_block_content.is_team_member %}
+        {% if status_block_content.form_edit %}
+          <button
+            class="secondary-button"
+            onClick="window.location.href='/{{ status_block_content.block_for }}/create/{{ status_block_content.docname }}/edit'"
+          >
+            Edit Form
+          </button>
         {% endif %}
-        {% if status_block_content.edit_submission %}
-        <button class="secondary-button" onClick="window.location.pathname+='/{{ status_block_content.block_for }}/{{ status_block_content.submission }}/edit'">Edit {{ status_block_content.block_for | upper }} Submission</button>
+        {% if status_block_content.is_unpublished %}
+          <button
+            class="primary-button"
+            onclick="publish_form(this)"
+            data-doctype="{{ status_block_content.doctype }}"
+            data-docname="{{ status_block_content.docname }}"
+            data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}"
+          >
+            Publish Form
+          </button>
         {% endif %}
-        {% if status_block_content.show_primary_cta and status_block_content.is_published %}
-        <button class="primary-button" onClick="window.location.pathname+='/{{ status_block_content.block_for }}'">{{ status_block_content.primary_cta }}</button>
+        {% if status_block_content.is_published %}
+          <button
+            class="danger-button"
+            onclick="unpublish_form(this)"
+            data-doctype="{{ status_block_content.doctype }}"
+            data-docname="{{ status_block_content.docname }}"
+            data-parent="{{ 'talk_proposal' if status_block_content.block_for == 'cfp' else status_block_content.block_for }}"
+          >
+            Unpublish Form
+          </button>
         {% endif %}
+        {% if status_block_content.create_form %}
+          <button
+            class="primary-button"
+            onClick="window.location.href='/{{ status_block_content.block_for }}/create/new?event={{ event_name }}'"
+          >
+            Create {{ status_block_content.block_for | upper }} Form
+          </button>
+        {% endif %}
+      {% endif %}
+      {% if status_block_content.edit_submission %}
+        <button
+          class="secondary-button"
+          onClick="window.location.pathname+='/{{ status_block_content.block_for }}/{{ status_block_content.submission }}/edit'"
+        >
+          Edit {{ status_block_content.block_for | upper }} Submission
+        </button>
+      {% endif %}
+      {% if status_block_content.show_primary_cta and status_block_content.is_published %}
+        <button
+          class="primary-button"
+          onClick="window.location.pathname+='/{{ status_block_content.block_for }}'"
+        >
+          {{ status_block_content.primary_cta }}
+        </button>
+      {% endif %}
     </div>
-</div>
+  </div>
 {% endmacro %}

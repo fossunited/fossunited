@@ -16,5 +16,4 @@
     <path d="M8 7l9 0l0 9" />
   </svg>
 </template>
-<script setup>
-</script>
+<script setup></script>

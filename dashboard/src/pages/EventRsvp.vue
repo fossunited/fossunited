@@ -7,10 +7,7 @@
       :form="event_rsvp"
     />
     <TabsWithRoute :tabs="tabs.options" />
-    <RouterView
-      :event_rsvp="event_rsvp"
-      @rsvp-created="rsvpCreated"
-    />
+    <RouterView :event_rsvp="event_rsvp" @rsvp-created="rsvpCreated" />
   </div>
 </template>
 <script setup>

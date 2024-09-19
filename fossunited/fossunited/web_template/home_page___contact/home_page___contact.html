@@ -1,139 +1,120 @@
 <style>
-    .contact-section{
-        display: flex;
-        justify-content: center;
-        align-items: center;
+  .contact-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 
+  .contact-container {
+    display: flex;
+    padding: 3.75rem 0rem;
+    gap: 6.25rem;
+  }
+
+  .newsletter-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+    width: 50%;
+  }
+
+  .contacts-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.94rem;
+    width: 50%;
+  }
+
+  .newsletter-details {
+    display: flex;
+    gap: 0.94rem;
+    flex-direction: column;
+  }
+
+  .contact-container p {
+    color: hsl(var(--clr-gray-500));
+    line-height: 1.5;
+  }
+
+  .contacts-block a {
+    color: var(--Gray-500, #667085);
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 1.4rem */
+    letter-spacing: -0.02rem;
+    text-decoration: underline;
+  }
+  .contacts-block a:hover {
+    color: var(--Foundation-FOSS-Mint-foss-mint-600, #07a748);
+  }
+
+  .vertical-separator {
+    border-left: 0.07rem solid hsl(var(--clr-gray-500));
+    height: 11.25rem;
+  }
+
+  .horizontal-separator {
+    width: 100%;
+    background-color: hsl(var(--clr-gray-500));
+    display: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    .contact-container {
+      width: 100%;
+      flex-direction: column;
+      gap: 2rem;
     }
 
-    .contact-container{
-        display: flex;
-        padding: 3.75rem 0rem;
-        gap: 6.25rem;
-    }
-
-    .newsletter-block{
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.25rem;
-        width: 50%;
+    .newsletter-block {
+      width: 100%;
     }
 
     .contacts-block {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.94rem;
-        width: 50%;
+      width: 100%;
     }
 
-    .newsletter-details{
-        display: flex;
-        gap: 0.94rem;
-        flex-direction: column;
+    .vertical-separator {
+      display: none;
     }
-
-
-    .contact-container p{
-        color: hsl(var(--clr-gray-500));
-        line-height: 1.5;
-
+    .horizontal-separator {
+      display: block;
     }
-
-
-
-    .contacts-block a{
-        color: var(--Gray-500, #667085);
-        font-size: 1rem;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 140%; /* 1.4rem */
-        letter-spacing: -0.02rem;
-        text-decoration: underline;
-    }
-    .contacts-block a:hover{
-        color: var(--Foundation-FOSS-Mint-foss-mint-600, #07A748);
-    }
-
-    .vertical-separator{
-        border-left: 0.07rem solid hsl(var(--clr-gray-500));
-        height: 11.25rem;
-
-    }
-
-    .horizontal-separator{
-        width: 100%;
-        background-color: hsl(var(--clr-gray-500));
-        display: none;
-    }
-
-
-    @media screen and (max-width: 768px) {
-
-
-        .contact-container{
-            width: 100%;
-            flex-direction: column;
-            gap: 2rem;
-
-        }
-
-        .newsletter-block{
-            width: 100%;
-        }
-
-        .contacts-block {
-            width: 100%;
-        }
-
-        .vertical-separator{
-            display: none;
-
-        }
-        .horizontal-separator{
-            display: block;
-        }
-    }
-
-
+  }
 </style>
 
 <div class="contact-section container">
+  <!-- <div class = "container"> -->
+  <div class="contact-container">
+    <div class="newsletter-block">
+      <div class="newsletter-details">
+        <h5>Newsletter</h5>
+        <p>
+          Monthly digest of the latest news and updates about FOSS grants, events and mon school.
+          Subscribe to stay updated and get news from us directly in your inbox.
+        </p>
+      </div>
 
-    <!-- <div class = "container"> -->
-    <div class="contact-container">
-
-        <div class="newsletter-block">
-            <div class="newsletter-details">
-                <h5>Newsletter</h5>
-                <p>Monthly digest of the latest news and updates about FOSS grants, events and mon school.
-                    Subscribe to stay updated and get news from us directly in your inbox.
-                </p>
-            </div>
-
-            <button class="primary-button">
-                <a href="{{newsletter_subscribe_link}}">Subscribe</a>
-            </button>
-
-        </div>
-
-        <div class="vertical-separator"></div>
-
-        <hr class="horizontal-separator">
-
-        <div class="contacts-block">
-
-            <h5>Get in Touch</h5>
-            <p>
-                Write to us at <a href="mailto:{{email_1}}">{{email_1}}</a> or post a message on the <a href="https://forum.fossunited.org">forum</a>.<br/><br/>
-
-                Join our <a href="{{contact_url}}">Telegram Community</a>. <br/><br/>
-
-            </p>
-
-        </div>
-
+      <button class="primary-button">
+        <a href="{{ newsletter_subscribe_link }}">Subscribe</a>
+      </button>
     </div>
 
+    <div class="vertical-separator"></div>
+
+    <hr class="horizontal-separator" />
+
+    <div class="contacts-block">
+      <h5>Get in Touch</h5>
+      <p>
+        Write to us at <a href="mailto:{{ email_1 }}">{{ email_1 }}</a> or post a message on the
+        <a href="https://forum.fossunited.org">forum</a>.<br /><br />
+
+        Join our <a href="{{ contact_url }}">Telegram Community</a>. <br /><br />
+      </p>
+    </div>
+  </div>
 </div>

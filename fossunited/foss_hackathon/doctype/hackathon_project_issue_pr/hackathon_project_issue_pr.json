@@ -1,59 +1,59 @@
 {
- "actions": [],
- "allow_rename": 1,
- "creation": "2024-07-23 12:34:59.372222",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "link",
-  "details_section",
-  "title",
-  "column_break_xlql",
-  "type"
- ],
- "fields": [
-  {
-   "fieldname": "link",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Link",
-   "options": "URL",
-   "reqd": 1
-  },
-  {
-   "fieldname": "details_section",
-   "fieldtype": "Section Break",
-   "label": "Details"
-  },
-  {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Title"
-  },
-  {
-   "fieldname": "column_break_xlql",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "type",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Type",
-   "options": "Issue\nPull Request\nDiscussion"
-  }
- ],
- "index_web_pages_for_search": 1,
- "istable": 1,
- "links": [],
- "modified": "2024-07-23 12:37:54.889510",
- "modified_by": "Administrator",
- "module": "FOSS Hackathon",
- "name": "Hackathon Project Issue PR",
- "owner": "Administrator",
- "permissions": [],
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": []
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-07-23 12:34:59.372222",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "link",
+    "details_section",
+    "title",
+    "column_break_xlql",
+    "type"
+  ],
+  "fields": [
+    {
+      "fieldname": "link",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Link",
+      "options": "URL",
+      "reqd": 1
+    },
+    {
+      "fieldname": "details_section",
+      "fieldtype": "Section Break",
+      "label": "Details"
+    },
+    {
+      "fieldname": "title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Title"
+    },
+    {
+      "fieldname": "column_break_xlql",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "type",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "label": "Type",
+      "options": "Issue\nPull Request\nDiscussion"
+    }
+  ],
+  "index_web_pages_for_search": 1,
+  "istable": 1,
+  "links": [],
+  "modified": "2024-07-23 12:37:54.889510",
+  "modified_by": "Administrator",
+  "module": "FOSS Hackathon",
+  "name": "Hackathon Project Issue PR",
+  "owner": "Administrator",
+  "permissions": [],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
 }

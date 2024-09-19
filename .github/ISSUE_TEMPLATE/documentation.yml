@@ -1,18 +1,18 @@
 name: 📚 Documentation Request
 description: Request for additional documentation or improvements
-title: "[DOCS] <title>"
+title: '[DOCS] <title>'
 labels: [Documentation]
 
 body:
-- type: textarea
-  attributes:
-    label: Documentation request
-    description: Describe the documentation you would like to see improved or added.
-  validations:
-    required: true
-- type: textarea
-  attributes:
-    label: Additional context
-    description: Provide any additional context or information to help with the documentation request.
-  validations:
-    required: false
+  - type: textarea
+    attributes:
+      label: Documentation request
+      description: Describe the documentation you would like to see improved or added.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Provide any additional context or information to help with the documentation request.
+    validations:
+      required: false

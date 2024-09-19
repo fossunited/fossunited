@@ -2,9 +2,7 @@
 <template>
   <div class="relative">
     <Select v-bind="$attrs" :class="selectClasses" />
-    <div
-      class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none"
-    >
+    <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
       <ChevronDown />
     </div>
   </div>

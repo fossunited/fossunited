@@ -38,7 +38,6 @@ onMounted(() => {
   isChapterMember.fetch()
 })
 
-
 const sidebarMenuItems = [
   {
     items: [
@@ -89,7 +88,7 @@ const isChapterMember = createResource({
   onError(error) {
     dialogMessage.value = error.messages
     showDialog.value = true
-  }
+  },
 })
 
 const chapter = createResource({

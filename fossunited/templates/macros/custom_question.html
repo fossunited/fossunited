@@ -1,18 +1,40 @@
 {% macro CustomQuestion(question, submission) %}
-    <div class="">
-        <label for="{{question.question}}" class="form-label text-sm" >{{question.question}}</label>
-        {% if question.type == "Data" %}
-            <input type="text" class="form-control text-sm rounded-input custom-question" data-question="{{question.question}}" id="{{ question }}" value="{{ submission.response }}">
-        {% elif question.type == "Long Text" %}
-            <textarea class="form-control text-sm rounded-input custom-question" id="{{ question }}" data-question="{{question.question}}" rows="6" >{{ submission.response }}</textarea>
-        {% elif question.type == "Select" %}
-            <div>
-                <select class="form-control form-select custom-select text-sm rounded-input w-100 px-3 py-1 custom-question" id="{{question}}" data-question="{{question.question}}">
-                    {% for option in question.options.splitlines() %}
-                        <option value="{{option}}" {% if submission.response == option %} selected {% endif %} >{{option}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        {% endif %}
-    </div>
+  <div class="">
+    <label for="{{ question.question }}" class="form-label text-sm">{{ question.question }}</label>
+    {% if question.type == "Data" %}
+      <input
+        type="text"
+        class="form-control text-sm rounded-input custom-question"
+        data-question="{{ question.question }}"
+        id="{{ question }}"
+        value="{{ submission.response }}"
+      />
+    {% elif question.type == "Long Text" %}
+      <textarea
+        class="form-control text-sm rounded-input custom-question"
+        id="{{ question }}"
+        data-question="{{ question.question }}"
+        rows="6"
+      >
+{{ submission.response }}</textarea
+      >
+    {% elif question.type == "Select" %}
+      <div>
+        <select
+          class="form-control form-select custom-select text-sm rounded-input w-100 px-3 py-1 custom-question"
+          id="{{ question }}"
+          data-question="{{ question.question }}"
+        >
+          {% for option in question.options.splitlines() %}
+            <option
+              value="{{ option }}"
+              {% if submission.response="" ="option" %}selected{% endif %}
+            >
+              {{ option }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+  </div>
 {% endmacro %}

@@ -1,157 +1,139 @@
 <style>
+  .programs-section {
+    display: flex;
+    font-family: Inter;
+    background: #f5f5f5;
+  }
 
-    .programs-section{
-        display: flex;
-        font-family: Inter;
-        background: #F5F5F5;
+  .programs-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    padding: 5rem 0rem 5rem 0rem;
+  }
 
+  .programs-section-header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .programs-section-header h2 {
+    margin: 0;
+    color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 100%; /* 1.75rem */
+    letter-spacing: -0.105rem;
+  }
+
+  .programs-section-header img {
+    max-height: 1.75rem;
+  }
+
+  .program-card-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .program-card {
+    display: flex;
+    padding: 1.2rem;
+    flex-direction: column;
+    border-radius: 0.5rem;
+    background: #fff;
+    gap: 1.25rem;
+    justify-content: center;
+  }
+
+  .program-card-head img {
+    max-height: 2rem;
+  }
+
+  .program-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .program-card-body h5 {
+    margin: 0;
+    color: var(--Foundation-Code-Night-code-night-500, #1e1e1e);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 100%; /* 1rem */
+    letter-spacing: -0.04rem;
+  }
+
+  .program-card-body p {
+    margin: 0;
+    color: var(--Gray-500, #667085);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 140%; /* 1.05rem */
+    letter-spacing: -0.03rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    .programs-section {
+      flex-direction: column;
+      gap: 2.5rem;
+      padding: 1rem;
     }
 
-    .programs-container{
-        display: flex;
-        flex-direction: column;
-        gap: 3rem;
-        padding: 5rem 0rem 5rem 0rem;
+    .programs-container {
+      padding: 4rem 0rem 4rem 0rem;
+      gap: 3rem;
     }
 
-    .programs-section-header{
-        display: flex;
-        justify-content: space-between;
+    .programs-section-header h2 {
+      font-size: 1.5rem;
     }
 
-    .programs-section-header h2{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1A1A1A);
-        font-size: 1.75rem;
-        font-weight: 600;
-        line-height: 100%; /* 1.75rem */
-        letter-spacing: -0.105rem;
+    .programs-section-header img {
+      display: none;
     }
 
-    .programs-section-header img{
-        max-height: 1.75rem;
+    .program-card-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
     }
 
-    .program-card-container{
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 2rem;
+    .program-card-head h5 {
+      font-size: 1.2rem;
     }
-
-    .program-card{
-        display: flex;
-        padding: 1.2rem;
-        flex-direction: column;
-        border-radius: 0.5rem;
-        background: #FFF;
-        gap: 1.25rem;
-        justify-content: center;
-    }
-
-    .program-card-head img{
-        max-height: 2rem;
-    }
-
-    .program-card-body{
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .program-card-body h5{
-        margin: 0;
-        color: var(--Foundation-Code-Night-code-night-500, #1E1E1E);
-        font-size: 1rem;
-        font-weight: 600;
-        line-height: 100%; /* 1rem */
-        letter-spacing: -0.04rem;
-    }
-
-    .program-card-body p{
-        margin: 0;
-        color: var(--Gray-500, #667085);
-        font-size: 0.875rem;
-        font-weight: 500;
-        line-height: 140%; /* 1.05rem */
-        letter-spacing: -0.03rem;
-    }
-
-    @media screen and (max-width: 768px){
-
-        .programs-section{
-            flex-direction: column;
-            gap: 2.5rem;
-            padding:1rem;
-        }
-
-        .programs-container{
-            padding: 4rem 0rem 4rem 0rem;
-            gap: 3rem;
-        }
-
-        .programs-section-header h2{
-            font-size: 1.5rem;
-        }
-
-        .programs-section-header img{
-            display: none;
-        }
-
-        .program-card-container{
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .program-card-head h5{
-            font-size: 1.2rem;
-        }
-
-
-    }
-
-
+  }
 </style>
 
 <div class="programs-section container">
+  <div class="programs-container">
+    <div class="programs-section-header">
+      <h2>{{ heading }}</h2>
 
-    <div class="programs-container">
-
-        <div class="programs-section-header">
-
-            <h2>{{heading}}</h2>
-
-            <img src="assets/fossunited/images/city_communities.png" alt="">
-
-        </div>
-
-        <div class="program-card-container">
-
-            {% for index in range(1, 5) %}
-            {% set program_title = values['title_' + index|string ] %}
-            {% set program_icon = values['icon_' + index|string ] %}
-            {% set program_text = values['text_' + index|string ] %}
-            {% if program_title %}
-
-                <div class="program-card">
-
-                    <div class="program-card-head">
-                        <img src="{{program_icon}}" alt="">
-                    </div>
-
-                    <div class="program-card-body">
-                        <h5>{{program_title}}</h5>
-                        <p>{{program_text}}</p>
-                    </div>
-
-
-                </div>
-
-                {% endif %}
-            {% endfor %}
-
-
-        </div>
-
+      <img src="assets/fossunited/images/city_communities.png" alt="" />
     </div>
 
+    <div class="program-card-container">
+      {% for index in range(1, 5) %}
+        {% set program_title = values['title_' + index|string ] %}
+        {% set program_icon = values['icon_' + index|string ] %}
+        {%
+          set program_text = values['text_' +
+          index|string ]
+        %}
+        {% if program_title %}
+          <div class="program-card">
+            <div class="program-card-head">
+              <img src="{{ program_icon }}" alt="" />
+            </div>
+
+            <div class="program-card-body">
+              <h5>{{ program_title }}</h5>
+              <p>{{ program_text }}</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
 </div>

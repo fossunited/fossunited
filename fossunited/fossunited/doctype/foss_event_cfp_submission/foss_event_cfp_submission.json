@@ -1,361 +1,361 @@
 {
- "actions": [],
- "allow_guest_to_view": 1,
- "allow_rename": 1,
- "autoname": "hash",
- "creation": "2023-09-17 14:21:01.848016",
- "default_view": "List",
- "doctype": "DocType",
- "editable_grid": 1,
- "engine": "InnoDB",
- "field_order": [
-  "meta_info_section",
-  "is_published",
-  "route",
-  "status",
-  "attendance_confirmed",
-  "first_name",
-  "last_name",
-  "column_break_vctq",
-  "linked_cfp",
-  "chapter",
-  "event",
-  "event_name",
-  "submitted_by",
-  "personal_information_section",
-  "full_name",
-  "email",
-  "picture_url",
-  "designation",
-  "organization",
-  "column_break_dcfl",
-  "bio",
-  "about_talk_section",
-  "is_first_talk",
-  "session_type",
-  "talk_title",
-  "talk_reference",
-  "column_break_mhza",
-  "talk_description",
-  "section_break_ilij",
-  "custom_answers",
-  "reviews_tab",
-  "cfp_reviews_section",
-  "reviews",
-  "review_scores_section",
-  "positive_reviews",
-  "negative_reviews",
-  "unsure_reviews",
-  "column_break_fnih",
-  "approvability"
- ],
- "fields": [
-  {
-   "fieldname": "linked_cfp",
-   "fieldtype": "Link",
-   "label": "Linked CFP",
-   "options": "FOSS Event CFP",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "linked_cfp.event",
-   "fieldname": "event",
-   "fieldtype": "Data",
-   "label": "Event",
-   "reqd": 1
-  },
-  {
-   "fieldname": "submitted_by",
-   "fieldtype": "Link",
-   "label": "Submitted By",
-   "options": "User"
-  },
-  {
-   "columns": 2,
-   "fetch_from": "linked_cfp.event_name",
-   "fieldname": "event_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Event Name"
-  },
-  {
-   "fieldname": "personal_information_section",
-   "fieldtype": "Section Break",
-   "label": "Personal Information"
-  },
-  {
-   "fetch_from": "submitted_by.email",
-   "fetch_if_empty": 1,
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_dcfl",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "bio",
-   "fieldtype": "Text Editor",
-   "label": "Speaker Bio",
-   "reqd": 1
-  },
-  {
-   "fieldname": "organization",
-   "fieldtype": "Data",
-   "label": "Organization"
-  },
-  {
-   "fieldname": "designation",
-   "fieldtype": "Data",
-   "label": "Designation",
-   "reqd": 1
-  },
-  {
-   "fieldname": "about_talk_section",
-   "fieldtype": "Section Break",
-   "label": "About Talk"
-  },
-  {
-   "columns": 3,
-   "fieldname": "talk_title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Session Title",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_mhza",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "talk_description",
-   "fieldtype": "Text Editor",
-   "label": "Session Description",
-   "reqd": 1
-  },
-  {
-   "columns": 2,
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "Review Pending\nScreening\nApproved\nRejected",
-   "permlevel": 2
-  },
-  {
-   "description": "Link relevant references for your talk.",
-   "fieldname": "talk_reference",
-   "fieldtype": "Data",
-   "label": "Session Reference",
-   "options": "URL"
-  },
-  {
-   "fieldname": "section_break_ilij",
-   "fieldtype": "Section Break",
-   "label": "Custom Answers"
-  },
-  {
-   "fieldname": "custom_answers",
-   "fieldtype": "Table",
-   "label": "Custom Answers",
-   "options": "FOSS Custom Answer"
-  },
-  {
-   "fetch_from": "submitted_by.full_name",
-   "fetch_if_empty": 1,
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name",
-   "reqd": 1
-  },
-  {
-   "fieldname": "reviews_tab",
-   "fieldtype": "Tab Break",
-   "label": "Reviews"
-  },
-  {
-   "fieldname": "reviews",
-   "fieldtype": "Table",
-   "label": "Reviews",
-   "options": "FOSS Event CFP Review"
-  },
-  {
-   "fieldname": "route",
-   "fieldtype": "Data",
-   "label": "Route"
-  },
-  {
-   "fieldname": "column_break_vctq",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "1",
-   "fieldname": "is_published",
-   "fieldtype": "Check",
-   "label": "Is Published?"
-  },
-  {
-   "default": "No",
-   "description": "This helps us to curate our agenda better.",
-   "fieldname": "is_first_talk",
-   "fieldtype": "Select",
-   "label": "Is this your first talk?",
-   "options": "Yes\nNo",
-   "reqd": 1
-  },
-  {
-   "fieldname": "meta_info_section",
-   "fieldtype": "Section Break",
-   "label": "Meta Info"
-  },
-  {
-   "default": "0",
-   "fieldname": "attendance_confirmed",
-   "fieldtype": "Check",
-   "label": "Attendance Confirmed"
-  },
-  {
-   "fieldname": "cfp_reviews_section",
-   "fieldtype": "Section Break",
-   "label": "CFP Reviews"
-  },
-  {
-   "fieldname": "review_scores_section",
-   "fieldtype": "Section Break",
-   "label": "Review Scores"
-  },
-  {
-   "fieldname": "positive_reviews",
-   "fieldtype": "Data",
-   "label": "Positive Reviews %"
-  },
-  {
-   "fieldname": "negative_reviews",
-   "fieldtype": "Data",
-   "label": "Negative Reviews  %"
-  },
-  {
-   "fieldname": "unsure_reviews",
-   "fieldtype": "Data",
-   "label": "Unsure Reviews  %"
-  },
-  {
-   "fieldname": "column_break_fnih",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "approvability",
-   "fieldtype": "Data",
-   "label": "Approvability  %"
-  },
-  {
-   "columns": 2,
-   "fetch_from": "linked_cfp.chapter",
-   "fieldname": "chapter",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Chapter"
-  },
-  {
-   "fieldname": "session_type",
-   "fieldtype": "Select",
-   "label": "Session Type",
-   "options": "Talk\nLightning Talk\nWorkshop",
-   "reqd": 1
-  },
-  {
-   "description": "Paste a URL for your publicly hosted photo. ",
-   "fieldname": "picture_url",
-   "fieldtype": "Data",
-   "label": "Picture (URL)",
-   "length": 512,
-   "options": "URL"
-  },
-  {
-   "fieldname": "first_name",
-   "fieldtype": "Data",
-   "label": "First Name"
-  },
-  {
-   "fieldname": "last_name",
-   "fieldtype": "Data",
-   "label": "Last Name"
-  }
- ],
- "has_web_view": 1,
- "is_published_field": "is_published",
- "links": [],
- "modified": "2024-08-07 11:58:39.087697",
- "modified_by": "Administrator",
- "module": "FOSSUnited",
- "name": "FOSS Event CFP Submission",
- "naming_rule": "Random",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "read": 1,
-   "role": "Chapter Team Member",
-   "select": 1,
-   "write": 1
-  },
-  {
-   "permlevel": 1,
-   "read": 1,
-   "role": "Chapter Team Member",
-   "select": 1
-  },
-  {
-   "permlevel": 2,
-   "read": 1,
-   "role": "Chapter Team Member",
-   "write": 1
-  },
-  {
-   "create": 1,
-   "read": 1,
-   "role": "CFP Reviewer",
-   "select": 1,
-   "write": 1
-  }
- ],
- "search_fields": "submitted_by, event, event_name, chapter",
- "show_title_field_in_link": 1,
- "sort_field": "modified",
- "sort_order": "DESC",
- "states": [
-  {
-   "color": "Light Blue",
-   "title": "Review Pending"
-  },
-  {
-   "color": "Red",
-   "title": "Rejected"
-  },
-  {
-   "color": "Green",
-   "title": "Approved"
-  }
- ],
- "title_field": "talk_title",
- "track_changes": 1,
- "track_seen": 1
+  "actions": [],
+  "allow_guest_to_view": 1,
+  "allow_rename": 1,
+  "autoname": "hash",
+  "creation": "2023-09-17 14:21:01.848016",
+  "default_view": "List",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "meta_info_section",
+    "is_published",
+    "route",
+    "status",
+    "attendance_confirmed",
+    "first_name",
+    "last_name",
+    "column_break_vctq",
+    "linked_cfp",
+    "chapter",
+    "event",
+    "event_name",
+    "submitted_by",
+    "personal_information_section",
+    "full_name",
+    "email",
+    "picture_url",
+    "designation",
+    "organization",
+    "column_break_dcfl",
+    "bio",
+    "about_talk_section",
+    "is_first_talk",
+    "session_type",
+    "talk_title",
+    "talk_reference",
+    "column_break_mhza",
+    "talk_description",
+    "section_break_ilij",
+    "custom_answers",
+    "reviews_tab",
+    "cfp_reviews_section",
+    "reviews",
+    "review_scores_section",
+    "positive_reviews",
+    "negative_reviews",
+    "unsure_reviews",
+    "column_break_fnih",
+    "approvability"
+  ],
+  "fields": [
+    {
+      "fieldname": "linked_cfp",
+      "fieldtype": "Link",
+      "label": "Linked CFP",
+      "options": "FOSS Event CFP",
+      "reqd": 1
+    },
+    {
+      "fetch_from": "linked_cfp.event",
+      "fieldname": "event",
+      "fieldtype": "Data",
+      "label": "Event",
+      "reqd": 1
+    },
+    {
+      "fieldname": "submitted_by",
+      "fieldtype": "Link",
+      "label": "Submitted By",
+      "options": "User"
+    },
+    {
+      "columns": 2,
+      "fetch_from": "linked_cfp.event_name",
+      "fieldname": "event_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Event Name"
+    },
+    {
+      "fieldname": "personal_information_section",
+      "fieldtype": "Section Break",
+      "label": "Personal Information"
+    },
+    {
+      "fetch_from": "submitted_by.email",
+      "fetch_if_empty": 1,
+      "fieldname": "email",
+      "fieldtype": "Data",
+      "label": "Email",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_dcfl",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "bio",
+      "fieldtype": "Text Editor",
+      "label": "Speaker Bio",
+      "reqd": 1
+    },
+    {
+      "fieldname": "organization",
+      "fieldtype": "Data",
+      "label": "Organization"
+    },
+    {
+      "fieldname": "designation",
+      "fieldtype": "Data",
+      "label": "Designation",
+      "reqd": 1
+    },
+    {
+      "fieldname": "about_talk_section",
+      "fieldtype": "Section Break",
+      "label": "About Talk"
+    },
+    {
+      "columns": 3,
+      "fieldname": "talk_title",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Session Title",
+      "reqd": 1
+    },
+    {
+      "fieldname": "column_break_mhza",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "talk_description",
+      "fieldtype": "Text Editor",
+      "label": "Session Description",
+      "reqd": 1
+    },
+    {
+      "columns": 2,
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Review Pending\nScreening\nApproved\nRejected",
+      "permlevel": 2
+    },
+    {
+      "description": "Link relevant references for your talk.",
+      "fieldname": "talk_reference",
+      "fieldtype": "Data",
+      "label": "Session Reference",
+      "options": "URL"
+    },
+    {
+      "fieldname": "section_break_ilij",
+      "fieldtype": "Section Break",
+      "label": "Custom Answers"
+    },
+    {
+      "fieldname": "custom_answers",
+      "fieldtype": "Table",
+      "label": "Custom Answers",
+      "options": "FOSS Custom Answer"
+    },
+    {
+      "fetch_from": "submitted_by.full_name",
+      "fetch_if_empty": 1,
+      "fieldname": "full_name",
+      "fieldtype": "Data",
+      "label": "Full Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "reviews_tab",
+      "fieldtype": "Tab Break",
+      "label": "Reviews"
+    },
+    {
+      "fieldname": "reviews",
+      "fieldtype": "Table",
+      "label": "Reviews",
+      "options": "FOSS Event CFP Review"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Data",
+      "label": "Route"
+    },
+    {
+      "fieldname": "column_break_vctq",
+      "fieldtype": "Column Break"
+    },
+    {
+      "default": "1",
+      "fieldname": "is_published",
+      "fieldtype": "Check",
+      "label": "Is Published?"
+    },
+    {
+      "default": "No",
+      "description": "This helps us to curate our agenda better.",
+      "fieldname": "is_first_talk",
+      "fieldtype": "Select",
+      "label": "Is this your first talk?",
+      "options": "Yes\nNo",
+      "reqd": 1
+    },
+    {
+      "fieldname": "meta_info_section",
+      "fieldtype": "Section Break",
+      "label": "Meta Info"
+    },
+    {
+      "default": "0",
+      "fieldname": "attendance_confirmed",
+      "fieldtype": "Check",
+      "label": "Attendance Confirmed"
+    },
+    {
+      "fieldname": "cfp_reviews_section",
+      "fieldtype": "Section Break",
+      "label": "CFP Reviews"
+    },
+    {
+      "fieldname": "review_scores_section",
+      "fieldtype": "Section Break",
+      "label": "Review Scores"
+    },
+    {
+      "fieldname": "positive_reviews",
+      "fieldtype": "Data",
+      "label": "Positive Reviews %"
+    },
+    {
+      "fieldname": "negative_reviews",
+      "fieldtype": "Data",
+      "label": "Negative Reviews  %"
+    },
+    {
+      "fieldname": "unsure_reviews",
+      "fieldtype": "Data",
+      "label": "Unsure Reviews  %"
+    },
+    {
+      "fieldname": "column_break_fnih",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "approvability",
+      "fieldtype": "Data",
+      "label": "Approvability  %"
+    },
+    {
+      "columns": 2,
+      "fetch_from": "linked_cfp.chapter",
+      "fieldname": "chapter",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Chapter"
+    },
+    {
+      "fieldname": "session_type",
+      "fieldtype": "Select",
+      "label": "Session Type",
+      "options": "Talk\nLightning Talk\nWorkshop",
+      "reqd": 1
+    },
+    {
+      "description": "Paste a URL for your publicly hosted photo. ",
+      "fieldname": "picture_url",
+      "fieldtype": "Data",
+      "label": "Picture (URL)",
+      "length": 512,
+      "options": "URL"
+    },
+    {
+      "fieldname": "first_name",
+      "fieldtype": "Data",
+      "label": "First Name"
+    },
+    {
+      "fieldname": "last_name",
+      "fieldtype": "Data",
+      "label": "Last Name"
+    }
+  ],
+  "has_web_view": 1,
+  "is_published_field": "is_published",
+  "links": [],
+  "modified": "2024-08-07 11:58:39.087697",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "FOSS Event CFP Submission",
+  "naming_rule": "Random",
+  "owner": "Administrator",
+  "permissions": [
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "read": 1,
+      "role": "Chapter Team Member",
+      "select": 1,
+      "write": 1
+    },
+    {
+      "permlevel": 1,
+      "read": 1,
+      "role": "Chapter Team Member",
+      "select": 1
+    },
+    {
+      "permlevel": 2,
+      "read": 1,
+      "role": "Chapter Team Member",
+      "write": 1
+    },
+    {
+      "create": 1,
+      "read": 1,
+      "role": "CFP Reviewer",
+      "select": 1,
+      "write": 1
+    }
+  ],
+  "search_fields": "submitted_by, event, event_name, chapter",
+  "show_title_field_in_link": 1,
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": [
+    {
+      "color": "Light Blue",
+      "title": "Review Pending"
+    },
+    {
+      "color": "Red",
+      "title": "Rejected"
+    },
+    {
+      "color": "Green",
+      "title": "Approved"
+    }
+  ],
+  "title_field": "talk_title",
+  "track_changes": 1,
+  "track_seen": 1
 }

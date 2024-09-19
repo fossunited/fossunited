@@ -1,9 +1,6 @@
 <template>
   <Header />
-  <div
-    class="w-full p-4 flex justify-center items-center"
-    v-if="hackathon.data && !team.loading"
-  >
+  <div class="w-full p-4 flex justify-center items-center" v-if="hackathon.data && !team.loading">
     <Dialog class="z-50" v-model="inJoinTeam">
       <template #body-title>
         <div class="text-xl font-semibold">Join Team</div>
@@ -23,17 +20,13 @@
           stroke="currentColor"
           class="w-4 h-4"
         >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-          />
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
         </svg>
         <span>{{ hackathon.data.hackathon_name }}</span>
       </div>
       <HackathonHeader :hackathon="hackathon" />
       <div class="grid grid-cols-1 md:grid-cols-2 w-full mt-2">
-        <HackathonAttendanceMode :hackathon="hackathon" class="w-full"/>
+        <HackathonAttendanceMode :hackathon="hackathon" class="w-full" />
       </div>
       <hr class="my-6" />
       <div class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0">
@@ -52,9 +45,7 @@
           </p>
         </div>
         <div class="md:hidden w-full text-center font-medium">OR</div>
-        <div
-          class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:pt-4"
-        >
+        <div class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:pt-4">
           <div
             @click="inJoinTeam = true"
             class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
@@ -106,13 +97,7 @@ import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import JoinTeam from '@/components/hackathon/JoinTeam.vue'
 import HackathonAttendanceMode from '@/components/hackathon/HackathonAttendanceMode.vue'
-import {
-  createListResource,
-  createResource,
-  LoadingIndicator,
-  Badge,
-  Dialog,
-} from 'frappe-ui'
+import { createListResource, createResource, LoadingIndicator, Badge, Dialog } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -126,7 +111,7 @@ const inJoinTeam = ref(false)
 const team_invitations = createListResource({
   doctype: 'FOSS Hackathon Join Team Request',
   fields: ['*'],
-  tranform(data){
+  tranform(data) {
     return data.map((invite) => {
       invite.sender_profile = createResource({
         url: 'fossunited.fossunited.utils.get_foss_profile',
@@ -151,7 +136,7 @@ const team_invitations = createListResource({
 
       return invite
     })
-  }
+  },
 })
 
 const hackathon = createResource({
