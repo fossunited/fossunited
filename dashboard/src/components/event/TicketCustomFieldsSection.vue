@@ -1,9 +1,9 @@
 <template>
   <TicketCustomFieldDialog
-    :event="event"
-    :inCreateMode="inCreateMode"
-    :row="selectedRow"
     v-model="showDialog"
+    :event="event"
+    :in-create-mode="inCreateMode"
+    :row="selectedRow"
   />
   <div>
     <div class="prose">

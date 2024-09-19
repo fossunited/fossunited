@@ -29,11 +29,11 @@
         />
         <div class="flex gap-2 my-2">
           <FileUploader
-            :fileTypes="'image/*'"
-            :validateFile="validateFile"
+            :file-types="'image/*'"
+            :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
-            <template v-slot="{ file, progress, error, uploading, openFileSelector }">
+            <template #default="{ file, progress, error, uploading, openFileSelector }">
               <Button
                 :variant="'subtle'"
                 :size="'md'"
@@ -65,15 +65,16 @@
     <div class="flex flex-col my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-        <FormControl :type="'text'" size="md" v-model="event.doc.event_name" label="Event Name" />
+        <FormControl v-model="event.doc.event_name" :type="'text'" size="md" label="Event Name" />
         <FormControl
+          v-model="event.doc.event_permalink"
           :type="'text'"
           size="md"
-          v-model="event.doc.event_permalink"
           label="Event Permalink"
           description="Only enter the event endpoint. Events will be rendered at event/<event_permalink>"
         />
         <FormControl
+          v-model="event.doc.status"
           :type="'select'"
           :options="[
             {
@@ -98,40 +99,39 @@
             },
           ]"
           size="md"
-          v-model="event.doc.status"
           label="Event Status"
           description="Current status of the event."
         />
         <FormControl
+          v-model="event.doc.event_type"
           :type="'select'"
           :options="eventTypeOptions.data"
           size="md"
-          v-model="event.doc.event_type"
           label="Event Type"
         />
         <div class="flex flex-col gap-1">
           <FormControl
+            v-model="event.doc.must_attend"
             :type="'checkbox'"
             size="md"
             label="Mark as Must Attend"
-            v-model="event.doc.must_attend"
           />
           <span class="text-sm text-gray-600"
             >Mark this event as a must-attend for the audience.</span
           >
         </div>
         <FormControl
+          v-model="event.doc.event_bio"
           :type="'text'"
           size="md"
-          v-model="event.doc.event_bio"
           label="Short Event Bio"
           description="This bio may be used in OG images and in event cards. Typically it is a one-liner."
         />
         <TextEditor
           label="Event Description"
           class="col-span-2"
-          :modelValue="event.doc.event_description"
-          @update:modelValue="($event) => (event.doc.event_description = $event)"
+          :model-value="event.doc.event_description"
+          @update:model-value="($event) => (event.doc.event_description = $event)"
         />
       </div>
     </div>
@@ -139,14 +139,14 @@
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Timeline</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
-          :type="'datetime-local'"
           v-model="event.doc.event_start_date"
+          :type="'datetime-local'"
           label="Event Start Date & Time"
           size="md"
         />
         <FormControl
-          :type="'datetime-local'"
           v-model="event.doc.event_end_date"
+          :type="'datetime-local'"
           label="Event End Date & Time"
           size="md"
         />
@@ -156,12 +156,12 @@
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Location Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
+          v-model="event.doc.event_location"
           :type="'text'"
           label="Location"
-          v-model="event.doc.event_location"
           size="md"
         />
-        <FormControl :type="'url'" label="Map Link" v-model="event.doc.map_link" side="md" />
+        <FormControl v-model="event.doc.map_link" :type="'url'" label="Map Link" side="md" />
       </div>
     </div>
   </div>

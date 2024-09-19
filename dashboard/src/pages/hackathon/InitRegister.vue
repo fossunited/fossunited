@@ -1,7 +1,7 @@
 <template>
   <Header />
-  <div class="w-full p-4 flex justify-center items-center" v-if="hackathon.data && !team.loading">
-    <Dialog class="z-50" v-model="inJoinTeam">
+  <div v-if="hackathon.data && !team.loading" class="w-full p-4 flex justify-center items-center">
+    <Dialog v-model="inJoinTeam" class="z-50">
       <template #body-title>
         <div class="text-xl font-semibold">Join Team</div>
       </template>
@@ -47,8 +47,8 @@
         <div class="md:hidden w-full text-center font-medium">OR</div>
         <div class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:pt-4">
           <div
-            @click="inJoinTeam = true"
             class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            @click="inJoinTeam = true"
           >
             <span> Join team </span>
             <Badge
@@ -60,7 +60,7 @@
               class="z-10 -mt-1"
             />
           </div>
-          <Badge size="lg" theme="orange" v-if="team_invitations.data?.length > 0">
+          <Badge v-if="team_invitations.data?.length > 0" size="lg" theme="orange">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

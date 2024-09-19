@@ -2,10 +2,10 @@
   <RequestDetailDialog
     class="z-50 my-5"
     :participant="selectedRequest"
-    :showDialog="showDialog"
-    @update:showDialog="showDialog = $event"
-    @acceptRequest="acceptRequest($event)"
-    @rejectRequest="rejectRequest($event)"
+    :show-dialog="showDialog"
+    @update:show-dialog="showDialog = $event"
+    @accept-request="acceptRequest($event)"
+    @reject-request="rejectRequest($event)"
   />
   <div class="prose">
     <h4>Requests</h4>
@@ -32,8 +32,8 @@
       <span class="text-sm font-medium">Filter:</span>
     </div>
     <select
-      class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
       v-model="selectedListFilter"
+      class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
     >
       <option v-for="(_, label) in FILTERS">
         {{ label }}
@@ -41,7 +41,7 @@
     </select>
   </div>
   <div class="w-full place-items-center">
-    <div class="my-2" v-if="requestByGroup.data">
+    <div v-if="requestByGroup.data" class="my-2">
       <ListView
         class="min-h-[440px]"
         :columns="[
@@ -133,11 +133,11 @@
               <Button icon="x" :label="'Reject'" :theme="'red'" @click.stop="rejectRequest(row)" />
             </div>
           </div>
-          <div class="flex" v-else-if="column.label == 'Project'">
+          <div v-else-if="column.label == 'Project'" class="flex">
             <a
               v-if="row.project_route"
-              @click="redirectRoute(row.project_route)"
               class="text-sm flex font-semibold hover:underline"
+              @click="redirectRoute(row.project_route)"
             >
               <span>{{ truncateStr(row.project_title, 20) }}</span>
               <ArrowUpRight class="w-4 h-4" />
@@ -151,7 +151,7 @@
     <div v-else class="text-sm font-medium text-gray-700 w-full my-5 uppercase">
       <p>No Requests</p>
     </div>
-    <div class="w-full p-4 flex justify-center" v-if="requestByGroup.loading">
+    <div v-if="requestByGroup.loading" class="w-full p-4 flex justify-center">
       <LoadingIndicator class="w-5" />
     </div>
   </div>

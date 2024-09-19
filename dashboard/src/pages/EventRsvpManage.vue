@@ -20,10 +20,10 @@
     <div class="p-4 md:p-8">
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <Switch
+          v-model="event.doc.show_rsvp"
           class="mt-3"
           size="md"
           label="Show RSVP Tab"
-          v-model="event.doc.show_rsvp"
           description="Show RSVP section on the event page."
           @click="toggleRSVPSection()"
         />

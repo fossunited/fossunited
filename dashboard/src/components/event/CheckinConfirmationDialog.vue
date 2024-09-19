@@ -1,12 +1,12 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Confirm Attendee Check In?',
     }"
   >
-    <template #body-content v-if="selectedAttendee">
+    <template v-if="selectedAttendee" #body-content>
       <div class="flex flex-col py-2">
         <p class="text-base">
           Are you sure you want to check in
@@ -55,9 +55,9 @@
           label="Check In"
           variant="solid"
           theme="green"
-          @click="checkinAttendee.fetch()"
           :loading="checkinAttendee.loading"
-          loadingText="Checking in..."
+          loading-text="Checking in..."
+          @click="checkinAttendee.fetch()"
         />
       </div>
     </template>

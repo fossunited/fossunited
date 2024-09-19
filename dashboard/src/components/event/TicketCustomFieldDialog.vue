@@ -1,7 +1,7 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: inCreateMode ? 'Create Custom Field' : 'Edit Custom Field',
       width: 'md',
@@ -31,8 +31,8 @@
         />
         <FormControl
           v-if="question.field_type === 'Select'"
-          type="textarea"
           v-model="question.options"
+          type="textarea"
           label="Options"
           description="Options for the select field. Enter each option on a new line."
         />

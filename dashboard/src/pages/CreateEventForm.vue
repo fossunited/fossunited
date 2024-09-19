@@ -12,19 +12,20 @@
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Details</div>
         <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
           <FormControl
+            v-model="temp_event.event_name"
             :type="'text'"
             size="md"
-            v-model="temp_event.event_name"
             label="Event Name"
           />
           <FormControl
+            v-model="temp_event.event_permalink"
             :type="'text'"
             size="md"
-            v-model="temp_event.event_permalink"
             label="Event Permalink"
             description="Only enter the event endpoint. Events will be rendered at event/<event_permalink>"
           />
           <FormControl
+            v-model="temp_event.status"
             :type="'select'"
             :options="[
               {
@@ -45,42 +46,41 @@
               },
             ]"
             size="md"
-            v-model="temp_event.status"
             label="Event Status"
             description="Current status of the event."
           />
           <FormControl
+            v-model="temp_event.event_type"
             :type="'select'"
             :options="eventTypeOptions.data"
             size="md"
-            v-model="temp_event.event_type"
             label="Event Type"
           />
           <TextEditor
             label="Event Description"
             class="col-span-2"
             placeholder="Write an event description"
-            :modelValue="temp_event.event_description"
-            @update:modelValue="($event) => (temp_event.event_description = $event)"
+            :model-value="temp_event.event_description"
+            @update:model-value="($event) => (temp_event.event_description = $event)"
           />
         </div>
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
         <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-          <FormControl :type="'text'" size="md" v-model="temp_event.location" label="Location" />
-          <FormControl :type="'url'" label="Map Link" v-model="temp_event.map_link" side="md" />
+          <FormControl v-model="temp_event.location" :type="'text'" size="md" label="Location" />
+          <FormControl v-model="temp_event.map_link" :type="'url'" label="Map Link" side="md" />
         </div>
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Timeline</div>
         <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
           <FormControl
+            v-model="temp_event.event_start_date"
             :type="'datetime-local'"
             size="md"
-            v-model="temp_event.event_start_date"
             label="Event Start Date"
           />
           <FormControl
+            v-model="temp_event.event_end_date"
             :type="'datetime-local'"
             size="md"
-            v-model="temp_event.event_end_date"
             label="Event End Date"
           />
         </div>

@@ -27,9 +27,9 @@
             </div>
             <div class="w-full flex flex-col md:grid md:grid-cols-2 gap-4">
               <FormControl
+                v-model="ticketId"
                 size="sm"
                 label="Ticket ID  &ast;"
-                v-model="ticketId"
                 type="text"
                 @focusout="
                   () => {
@@ -43,14 +43,14 @@
                 class="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4"
               >
                 <FormControl
-                  label="Event"
                   v-model="event.data.event_name"
+                  label="Event"
                   type="text"
                   :disabled="true"
                 />
                 <FormControl
-                  label="Ticket Tier"
                   v-model="ticket.data.tier"
+                  label="Ticket Tier"
                   type="text"
                   :disabled="true"
                 />
@@ -111,9 +111,9 @@
               variant="solid"
               theme="green"
               size="md"
-              @click="initiateTranfer"
               :disabled="ticketValidateError != ''"
               :loading="createTransferDoc.loading"
+              @click="initiateTranfer"
             />
           </div>
         </div>

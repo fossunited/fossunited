@@ -6,14 +6,14 @@
         variant="ghost"
         icon-left="arrow-left"
         label="Go Back"
+        class="mt-4 mb-2"
         @click="
           router.push({
             name: 'MyHackathonTeam',
           })
         "
-        class="mt-4 mb-2"
       />
-      <HackathonHeader :hackathon="hackathon" :showBanner="false" />
+      <HackathonHeader :hackathon="hackathon" :show-banner="false" />
       <hr class="my-6" />
       <div v-if="inSelectProjectType" class="grid grid-cols-1 gap-5 md:grid-cols-2 pt-6 md:p-0">
         <div
@@ -54,13 +54,6 @@
             theme="gray"
           />
           <button
-            @click="
-              () => {
-                inSelectProjectType = false
-                inContribute = true
-                project.is_contribution_project = 1
-              }
-            "
             class="px-4 py-2 uppercase w-3/4 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
             :class="
               hackathon.data.is_contribution_project_coming_soon
@@ -68,15 +61,22 @@
                 : ''
             "
             :disabled="hackathon.data.is_contribution_project_coming_soon"
+            @click="
+              () => {
+                inSelectProjectType = false
+                inContribute = true
+                project.is_contribution_project = 1
+              }
+            "
           >
             Contribute
           </button>
           <p
-            class="text-sm text-center leading-normal"
             v-if="
               hackathon.data.is_contribution_project_coming_soon &&
               hackathon.data.contribution_coming_soon_description
             "
+            class="text-sm text-center leading-normal"
           >
             {{ hackathon.data.contribution_coming_soon_description }}
           </p>
@@ -129,8 +129,8 @@
           "
         >
           <div
-            class="w-full bg-gray-50 text-gray-800 rounded p-4"
             v-if="hackathon.data.contribution_project_guidelines"
+            class="w-full bg-gray-50 text-gray-800 rounded p-4"
           >
             <h3 class="text-md font-semibold">Contribution Guidelines</h3>
             <div
@@ -139,8 +139,8 @@
             ></div>
           </div>
           <div
-            class="w-full bg-blue-50 text-blue-800 rounded p-4"
             v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
+            class="w-full bg-blue-50 text-blue-800 rounded p-4"
           >
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
@@ -155,9 +155,9 @@
             <p></p>
           </div>
           <FormControl
+            v-model="project.is_partner_project"
             type="checkbox"
             label="Contributing to a partner project."
-            v-model="project.is_partner_project"
           />
           <div v-if="project.is_partner_project" class="flex flex-col gap-2">
             <div class="text-base mt-4">Select Partner Project</div>
@@ -166,11 +166,11 @@
               class="grid grid-cols-2 md:grid-cols-3 gap-2 my-2"
             >
               <RadioGroupOption
-                as="template"
                 v-for="partner_project in partner_projects.data"
                 :key="partner_project.id"
-                :value="partner_project.name"
                 v-slot="{ active, checked }"
+                as="template"
+                :value="partner_project.name"
                 @click="
                   () => {
                     project.repo_link = partner_project.repo_link
@@ -213,42 +213,42 @@
       <!-- CREAT PROJECT FORM -->
       <div v-if="inCreateProject || inContribute">
         <div class="flex flex-col md:grid md:grid-cols-2 my-4 gap-4">
-          <FormControl label="Title &ast;" type="text" v-model="project.title" />
+          <FormControl v-model="project.title" label="Title &ast;" type="text" />
           <FormControl
+            v-model="project.short_description"
             type="text"
             label="Short Description &ast;"
-            v-model="project.short_description"
             description="One line description of this project."
           />
           <FormControl
-            label="Repository Link &ast;"
             v-model="project.repo_link"
+            label="Repository Link &ast;"
             :disabled="project.is_partner_project"
           />
           <FormControl
-            label="Demo Link"
             v-model="project.demo_link"
+            label="Demo Link"
             description="Demo link for the project. Can be a URL to a video demo, hosted app/website link etc. This can be added later."
           />
           <div class="flex flex-col gap-2 col-span-2">
             <div class="text-xs text-gray-600">Project Description &ast;</div>
             <TextEditor
               :placeholder="'Write a detailed description of your project'"
-              :modelValue="project.description"
-              @update:modelValue="($event) => (project.description = $event)"
+              :model-value="project.description"
+              @update:model-value="($event) => (project.description = $event)"
             />
           </div>
         </div>
         <ErrorMessage :message="errorMessage" class="my-4" />
         <div class="flex flex-row-reverse mb-8">
           <Button
-            @click="handleCreateProject"
             label="Create Project"
             theme="green"
             variant="solid"
             class="w-full md:w-2/5"
             size="md"
             :loading="createProject.loading"
+            @click="handleCreateProject"
           />
         </div>
       </div>

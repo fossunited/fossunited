@@ -91,10 +91,10 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
               <FormControl
+                v-model="selected_row_data.doc.status"
                 label="Change Status"
                 type="select"
                 size="md"
-                v-model="selected_row_data.doc.status"
                 :options="[
                   {
                     label: 'Approved',

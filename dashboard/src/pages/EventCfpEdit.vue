@@ -25,10 +25,10 @@
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp.doc.allow_cfp_edit"
             type="checkbox"
             label="Allow Proposal Edit"
             size="md"
-            v-model="cfp.doc.allow_cfp_edit"
           />
           <span class="text-sm text-gray-600"
             >Allow users to edit their CFP after submission.</span
@@ -36,10 +36,10 @@
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp.doc.anonymise_proposals"
             size="md"
             type="checkbox"
             label="Anonymise Proposals?"
-            v-model="cfp.doc.anonymise_proposals"
           />
           <span class="text-sm text-gray-600"
             >The proposals will not show the details of the submitter to the public & reviewers
@@ -48,20 +48,20 @@
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp.doc.only_workshops"
             type="checkbox"
             label="Only Workshops"
             size="md"
-            v-model="cfp.doc.only_workshops"
             @change="validateOnlyOneType"
           />
           <span class="text-sm text-gray-600">Only accept workshop proposals.</span>
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp.doc.only_talk_proposals"
             type="checkbox"
             label="Only Talk Proposals"
             size="md"
-            v-model="cfp.doc.only_talk_proposals"
             @change="validateOnlyOneType"
           />
           <span class="text-sm text-gray-600">Only accept talk proposals.</span>
@@ -70,8 +70,8 @@
           class="col-span-2"
           label="Form Description"
           placeholder="This description will be shown on the CFP form."
-          :modelValue="cfp.doc.cfp_form_description"
-          @update:modelValue="($event) => (cfp.doc.cfp_form_description = $event)"
+          :model-value="cfp.doc.cfp_form_description"
+          @update:model-value="($event) => (cfp.doc.cfp_form_description = $event)"
         />
       </div>
     </div>
@@ -134,24 +134,25 @@
       <template #body-content>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <FormControl
+            v-model="custom_field.question"
             class="col-span-2"
             size="md"
             type="text"
             label="Question"
             description="The question you want to ask the attendees."
-            v-model="custom_field.question"
           />
           <div>
             <FormControl
+              v-model="custom_field.is_mandatory"
               size="md"
               type="checkbox"
               label="Is Mandatory"
               description="Whether the question is mandatory or not."
-              v-model="custom_field.is_mandatory"
             />
             <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
+            v-model="custom_field.type"
             size="md"
             type="select"
             label="Type"
@@ -163,24 +164,23 @@
               { label: 'Check', value: 'Check' },
             ]"
             description="The type of question you want to ask."
-            v-model="custom_field.type"
           />
           <FormControl
-            class="col-span-2"
             v-if="custom_field.type === 'Select'"
+            v-model="custom_field.options"
+            class="col-span-2"
             size="md"
             type="textarea"
             label="Options"
             description="Options for the select field. Enter each option on a new line."
-            v-model="custom_field.options"
           />
           <FormControl
+            v-model="custom_field.description"
             class="col-span-2"
             size="md"
             type="textarea"
             label="Description"
             description="Description for the question."
-            v-model="custom_field.description"
           />
         </div>
       </template>

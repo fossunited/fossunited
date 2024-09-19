@@ -1,7 +1,7 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Change Mode of Attendance',
     }"
@@ -34,24 +34,24 @@
         </p>
       </div>
       <FormControl
-        label="Mode of Attendance"
         v-model="attendanceMode"
+        label="Mode of Attendance"
         type="select"
         class="mt-4"
         :options="attendanceModeOptions"
       />
       <FormControl
         v-if="attendanceMode == 'local'"
+        v-model="participant_localhost.data.localhost_name"
         label="Your Localhost"
         :disabled="1"
-        v-model="participant_localhost.data.localhost_name"
         class="mt-4"
       />
       <div v-if="attendanceMode == 'local-pending'">
         <FormControl
           v-if="localhosts.data.length > 0"
-          label="Select LocalHost"
           v-model="selectedLocalhost"
+          label="Select LocalHost"
           type="select"
           class="mt-4"
           :options="

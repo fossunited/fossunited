@@ -58,7 +58,7 @@
       <div>
         {{ formatDate(hackathon.data.start_date) }}
       </div>
-      <div class="flex gap-1" v-if="hackathon.data.start_date != hackathon.data.end_date">
+      <div v-if="hackathon.data.start_date != hackathon.data.end_date" class="flex gap-1">
         <span>-</span>
         <span>
           {{ formatDate(hackathon.data.end_date) }}

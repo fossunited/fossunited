@@ -6,7 +6,7 @@
       <EventHeader :event="event.data" class="my-4 border-b border-gray-900 pb-4" />
       <ScheduleHeader :event="event.data" class="py-2" />
       <div class="flex justify-between items-end gap-4 flex-wrap">
-        <ScheduleDateToggle :dates="eventDays" class="mt-4" v-model="selectedDay" />
+        <ScheduleDateToggle v-model="selectedDay" :dates="eventDays" class="mt-4" />
         <ScheduleViewToggle v-model="selectedScheduleView" class="mt-4 hidden sm:block" />
       </div>
       <ScheduleView :view="selectedScheduleView" :schedule="selectedSchedule" class="my-6" />

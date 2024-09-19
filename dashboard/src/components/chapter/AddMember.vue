@@ -10,8 +10,8 @@
           Enter the username of the new member you want to add to the team.
         </div>
         <Autocomplete
-          :options="memberOptions.data"
           v-model="newMembers"
+          :options="memberOptions.data"
           placeholder="Search for a user"
           :multiple="true"
         >

@@ -6,7 +6,7 @@
       title: 'Manage Attendee',
     }"
   >
-    <template #body-content v-if="selectedAttendee">
+    <template v-if="selectedAttendee" #body-content>
       <div class="flex flex-col gap-4">
         <div class="space-y-2">
           <div class="text-sm uppercase font-medium">Details</div>
@@ -47,12 +47,12 @@
           </div>
           <Button
             v-if="isCheckedInToday(selectedAttendee)"
-            @click="undoAttendeeCheckin.fetch()"
             class="!text-sm border-orange-600 hover:border-orange-400 text-orange-600"
-            iconLeft="alert-triangle"
+            icon-left="alert-triangle"
             label="Undo Check-In for Today"
             size="sm"
             variant="outline"
+            @click="undoAttendeeCheckin.fetch()"
           />
         </div>
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
@@ -69,7 +69,7 @@
             size="sm"
             variant="solid"
             :loading="assignTshirt.loading"
-            loadingText="Assigning..."
+            loading-text="Assigning..."
             @click="assignTshirt.fetch()"
           />
         </div>

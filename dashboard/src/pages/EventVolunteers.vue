@@ -35,8 +35,8 @@
 
     <div v-if="selectedMember">
       <Dialog
-        class="z-50"
         v-model="showRemoveModal"
+        class="z-50"
         :options="{
           title: 'Remove Team Member?',
           message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
@@ -64,8 +64,8 @@
 
     <div v-if="showAddmodal">
       <AddMemberDialog
-        class="z-50"
         v-model="showAddmodal"
+        class="z-50"
         :event="event"
         @update:add-member="addNewMember"
         @close-dialog="showAddmodal = false"

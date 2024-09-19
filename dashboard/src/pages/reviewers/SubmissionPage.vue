@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="w-full flex flex-col items-center" v-if="submission.data">
+  <div v-if="submission.data" class="w-full flex flex-col items-center">
     <div class="max-w-screen-xl p-4 w-full">
       <Breadcrumb class="mb-5" :items="breadcrumb_items" />
       <div class="flex flex-col gap-2">
@@ -63,7 +63,7 @@
           <h3 class="-mb-4">Description</h3>
           <div class="my-2" v-html="submission.data.talk_description"></div>
         </div>
-        <div class="prose min-w-full" v-if="!cfp_settings.data?.anonymise_proposals">
+        <div v-if="!cfp_settings.data?.anonymise_proposals" class="prose min-w-full">
           <h3>About Speaker</h3>
           <div class="flex flex-col gap-2 items-start">
             <div class="flex gap-4 -mb-2">
@@ -78,7 +78,7 @@
                 </div>
               </div>
             </div>
-            <div v-html="submission.data.bio" class="text-base text-gray-600"></div>
+            <div class="text-base text-gray-600" v-html="submission.data.bio"></div>
           </div>
         </div>
         <ReviewSection :submission="submission" />

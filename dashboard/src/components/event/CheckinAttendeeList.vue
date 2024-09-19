@@ -1,12 +1,12 @@
 <template>
   <CheckinConfirmationDialog
     v-model="showConfirmDialog"
-    :selectedAttendee="selectedAttendee"
+    :selected-attendee="selectedAttendee"
     :attendees="attendees"
   />
   <CheckinManageDialog
     v-model="showManageDialog"
-    :selectedAttendee="selectedAttendee"
+    :selected-attendee="selectedAttendee"
     :attendees="attendees"
   />
 
@@ -67,7 +67,7 @@
         <template v-else-if="column.key === 'checkin_status'">
           <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
             <span v-for="data in row.checkin_data" class="flex items-center p-1 rounded-sm">
-              <Tooltip arrow-class="fill-black" :placement="'top'" :hoverDelay="0.5">
+              <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
                 <template #body>
                   <span class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full">
                     {{ getFormattedDateTime(data.check_in_time) }}

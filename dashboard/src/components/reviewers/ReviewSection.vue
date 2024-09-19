@@ -6,8 +6,8 @@
         <RadioGroupLabel class="text-sm uppercase">Your Review</RadioGroupLabel>
         <div class="flex gap-2 my-1">
           <RadioGroupOption
-            v-slot="{ checked }"
             v-for="option in reviewOptions"
+            v-slot="{ checked }"
             :key="option.value"
             :value="option"
           >
@@ -16,8 +16,8 @@
         </div>
       </RadioGroup>
       <FormControl
-        label="Remarks"
         v-model="newRemarks"
+        label="Remarks"
         type="textarea"
         placeholder="Enter your remarks here"
       />
@@ -48,7 +48,7 @@
           <div class="text-md font-semibold">Remarks</div>
           <div>{{ reviewData.data.remarks || 'No remarks.' }}</div>
         </div>
-        <Button label="Edit Review" @click="in_review_edit = true" class="w-fit" size="sm" />
+        <Button label="Edit Review" class="w-fit" size="sm" @click="in_review_edit = true" />
       </div>
       <div v-else>
         <LoadingIndicator class="w-6 h-6" />

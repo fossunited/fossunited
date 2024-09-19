@@ -2,11 +2,11 @@
   <div class="flex">
     <SideNavbar
       v-if="navItems.data"
-      :menuItems="navItems.data"
+      :menu-items="navItems.data"
       :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"
     />
     <div class="w-full md:ml-[220px]">
-      <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
+      <HeaderWithNav @toggle-sidebar="($event) => (showNav = $event)" />
       <RouterView />
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full items-center" v-if="hackathons.data">
+  <div v-if="hackathons.data" class="w-full items-center">
     <div class="prose">
       <div class="prose p-4 pb-0">
         <h2 class="mb-1">My Hackathons</h2>
@@ -9,8 +9,8 @@
         </p>
       </div>
     </div>
-    <div class="p-4 flex flex-col gap-4" v-if="hackathons.data.length > 0">
-      <div class="flex flex-col gap-2" v-if="ongoing_hackathons.length">
+    <div v-if="hackathons.data.length > 0" class="p-4 flex flex-col gap-4">
+      <div v-if="ongoing_hackathons.length" class="flex flex-col gap-2">
         <div class="prose">
           <h4>Live Hackathons</h4>
         </div>
@@ -18,12 +18,12 @@
           <Card
             v-for="hackathon in ongoing_hackathons"
             :title="hackathon.hackathon_name"
-            @click="$router.push('/hack/' + hackathon.permalink)"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
       </div>
-      <div class="flex flex-col gap-2" v-if="upcoming_hackathons.length">
+      <div v-if="upcoming_hackathons.length" class="flex flex-col gap-2">
         <div class="prose">
           <h4>Upcoming Hackathons</h4>
         </div>
@@ -31,12 +31,12 @@
           <Card
             v-for="hackathon in upcoming_hackathons"
             :title="hackathon.hackathon_name"
-            @click="$router.push('/hack/' + hackathon.permalink)"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
       </div>
-      <div class="flex flex-col gap-2" v-if="past_hackathons.length">
+      <div v-if="past_hackathons.length" class="flex flex-col gap-2">
         <div class="prose">
           <h4>Past Hackathons</h4>
         </div>
@@ -44,8 +44,8 @@
           <Card
             v-for="hackathon in past_hackathons"
             :title="hackathon.hackathon_name"
-            @click="$router.push('/hack/' + hackathon.permalink)"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
       </div>

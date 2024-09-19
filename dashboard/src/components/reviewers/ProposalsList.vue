@@ -7,8 +7,8 @@
           <div class="flex gap-2 items-center">
             <label class="text-sm">Status:</label>
             <select
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
               v-model="selectedStatusFilter"
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
             >
               <option v-for="(filter, index) in statusFilters" @click="filterByStatus(filter)">
                 {{ filter.label }}
@@ -18,8 +18,8 @@
           <div v-if="selectedStatusFilter == 'Reviewed'" class="flex gap-2 items-center">
             <label class="text-sm">Review Filter:</label>
             <select
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
               v-model="selectedToApproveFilter"
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
             >
               <option
                 v-for="(filter, index) in toApproveFilter"
@@ -30,7 +30,7 @@
             </select>
           </div>
         </div>
-        <RefreshButton @click="cfpSubmissions.fetch" :inSpin="cfpSubmissions.loading" />
+        <RefreshButton :in-spin="cfpSubmissions.loading" @click="cfpSubmissions.fetch" />
       </div>
     </div>
     <ListView

@@ -5,12 +5,12 @@
         <div class="font-fff text-gray-900 uppercase">FOSS United</div>
         <div class="text-sm mt-2 tracking-wider text-gray-700 uppercase">Dashboard</div>
       </div>
-      <div class="text-lg font-semibold uppercase px-4 mt-4" v-if="title">{{ title }}</div>
-      <div class="flex flex-col gap-2 px-4 my-2" v-if="menuItems.length > 0">
+      <div v-if="title" class="text-lg font-semibold uppercase px-4 mt-4">{{ title }}</div>
+      <div v-if="menuItems.length > 0" class="flex flex-col gap-2 px-4 my-2">
         <div v-for="group in menuItems" class="my-1">
           <div
-            class="text-xs text-gray-600 font-medium uppercase tracking-wide"
             v-if="group.parent_label"
+            class="text-xs text-gray-600 font-medium uppercase tracking-wide"
           >
             {{ group.parent_label }}
           </div>
@@ -24,7 +24,7 @@
                 isMenuItemActive(item.route, index) ? 'font-medium text-gray-900 bg-gray-100' : ''
               "
             >
-              <FeatherIcon class="w-4 h-4" v-if="item.icon" :name="item.icon" />
+              <FeatherIcon v-if="item.icon" class="w-4 h-4" :name="item.icon" />
               <span>{{ item.label }}</span>
             </router-link>
           </div>

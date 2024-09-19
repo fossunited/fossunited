@@ -1,15 +1,15 @@
 <template>
   <Header />
   <Dialog
-    class="z-50"
     v-model="show_dialog"
+    class="z-50"
     :options="{
       title: dialog_content.title,
       message: dialog_content.message,
     }"
   />
   <div class="w-full flex justify-center">
-    <div class="container p-8" v-if="hackathon.data">
+    <div v-if="hackathon.data" class="container p-8">
       <div class="flex gap-2 mb-10 items-center">
         <a :href="redirectToHackathon" class="font-semibold text-base hover:underline">{{
           hackathon.data.hackathon_name
@@ -35,7 +35,7 @@
         Register For
         <span class="font-bold">{{ hackathon.data.hackathon_name }}</span>
       </h1>
-      <div v-html="hackathon.data.registration_description" class="mt-2"></div>
+      <div class="mt-2" v-html="hackathon.data.registration_description"></div>
       <hr class="my-4" />
 
       <!-- DETAILS -->
@@ -43,22 +43,22 @@
         <h3 class="text-lg font-semibold">Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
           <FormControl
+            v-model="participant.full_name"
             type="text"
             label="Full Name &ast;"
             placeholder="John Doe"
-            v-model="participant.full_name"
           />
           <FormControl
+            v-model="participant.email"
             type="email"
             label="Email &ast;"
             placeholder="john@fossunited.org"
-            v-model="participant.email"
           />
-          <FormControl type="checkbox" label="I am a student" v-model="participant.is_student" />
+          <FormControl v-model="participant.is_student" type="checkbox" label="I am a student" />
           <FormControl
+            v-model="participant.organization"
             type="text"
             label="Organization / Institute &ast;"
-            v-model="participant.organization"
           />
         </div>
         <div class="mt-6">
@@ -66,9 +66,9 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
           <FormControl
+            v-model="participant.git_profile"
             type="url"
             placeholder="https://github.com/username"
-            v-model="participant.git_profile"
             class="mt-2"
           >
           </FormControl>
@@ -80,11 +80,11 @@
             class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
           >
             <RadioGroupOption
-              as="template"
               v-for="option in attend_option"
               :key="option.value"
-              :value="option"
               v-slot="{ active, checked }"
+              as="template"
+              :value="option"
             >
               <div
                 :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
@@ -145,9 +145,9 @@
           </RadioGroup>
           <div v-if="selected_attendance.value == 1" class="grid grid-cols-1 md:grid-cols-2">
             <FormControl
+              v-model="participant.localhost"
               type="select"
               label="Select Location &ast;"
-              v-model="participant.localhost"
               placeholder="-- Select In-Person Venue --"
               :options="
                 localhost.data.map((item) => ({

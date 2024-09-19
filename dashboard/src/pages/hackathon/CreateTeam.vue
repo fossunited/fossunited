@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="w-full p-4 flex justify-center items-center" v-if="hackathon.data">
+  <div v-if="hackathon.data" class="w-full p-4 flex justify-center items-center">
     <div class="w-full max-w-screen-xl">
       <div class="flex flex-wrap gap-2 my-6 items-center text-base uppercase">
         <span class="font-semibold">My Hackathons</span>
@@ -34,12 +34,12 @@
           <h3>Create Team</h3>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormControl type="text" label="Team Name &ast;" v-model="team.team_name" />
+          <FormControl v-model="team.team_name" type="text" label="Team Name &ast;" />
           <div></div>
           <FormControl
+            v-model="team.looking_for_members"
             type="checkbox"
             label="Looking for team members"
-            v-model="team.looking_for_members"
           />
         </div>
       </div>

@@ -18,10 +18,10 @@
       <div class="text-xl font-medium">Manage</div>
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <Switch
+          v-model="event.doc.show_cfp"
           class="mt-3"
           size="md"
           label="Show CFP Tab"
-          v-model="event.doc.show_cfp"
           description="Show CFP section on the event page."
           @click="toggleCFPSection()"
         />

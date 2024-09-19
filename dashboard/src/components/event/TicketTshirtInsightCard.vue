@@ -1,7 +1,7 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Sold T-shirt Details',
     }"

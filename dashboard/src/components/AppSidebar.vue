@@ -1,13 +1,13 @@
 <template>
   <Button
-    @click="toggleSidebar"
     class="block md:hidden absolute bg-white top-14 left-4 z-40 p-4"
     icon="menu"
     theme="subtle"
+    @click="toggleSidebar"
   />
   <div
-    class="hidden w-80 z-10 h-screen absolute md:relative md:flex px-4 py-6 md:h-fill md:w-1/5 bg-white border-r flex-col transition-all duration-300 ease-in-out"
     id="sidebar"
+    class="hidden w-80 z-10 h-screen absolute md:relative md:flex px-4 py-6 md:h-fill md:w-1/5 bg-white border-r flex-col transition-all duration-300 ease-in-out"
     :class="smallScreen ? 'hidden w-80 z-30 absolute' : ''"
   >
     <div class="font-fff text-sm leading-relaxed mt-5 md:mt-0">

@@ -3,9 +3,9 @@
     <h3 class="text-lg font-medium">{{ title }}</h3>
     <button
       v-if="collapsible"
-      @click="handleCollapse()"
       class="transition-transform"
       :class="isCollapsed ? 'rotate-180' : ''"
+      @click="handleCollapse()"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

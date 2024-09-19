@@ -1,5 +1,5 @@
 <template>
-  <Dialog class="z-50" v-model="inTeamManage">
+  <Dialog v-model="inTeamManage" class="z-50">
     <template #body-title>
       <h3 class="text-xl font-semibold">Manage Team</h3>
     </template>
@@ -10,7 +10,7 @@
   <Header />
   <div v-if="hackathon.data" class="w-full p-4 flex items-center justify-center">
     <div v-if="team.data" class="max-w-screen-xl w-full">
-      <HackathonHeader :hackathon="hackathon" :showBanner="false" />
+      <HackathonHeader :hackathon="hackathon" :show-banner="false" />
       <div
         v-if="inNameEdit"
         class="flex flex-col gap-4 md:flex-row w-full justify-between md:items-center mb-4"
@@ -21,8 +21,8 @@
           class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-gray-900 active:outline-none focus:outline-none"
         />
         <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
-          <Button @click="inNameEdit = false" label="Discard" />
-          <Button @click="updateTeamName" variant="solid" theme="green" label="Update" />
+          <Button label="Discard" @click="inNameEdit = false" />
+          <Button variant="solid" theme="green" label="Update" @click="updateTeamName" />
         </div>
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
@@ -48,12 +48,12 @@
               variant="solid"
               class="w-fit"
               size="sm"
+              label="Create"
               @click="
                 $router.push(
                   `/hack/${hackathon.data.permalink}/create-project?team=${team.data.name}`,
                 )
               "
-              label="Create"
             />
           </div>
         </div>
@@ -86,21 +86,21 @@
           <div class="text-base font-semibold uppercase">Team</div>
           <div class="flex justify-between items-end">
             <div class="font-medium text-lg uppercase">{{ team.data.members.length }} Members</div>
-            <Button class="w-fit" size="sm" @click="inTeamManage = true" label="Manage" />
+            <Button class="w-fit" size="sm" label="Manage" @click="inTeamManage = true" />
           </div>
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div
-          class="w-full bg-gray-50 text-gray-800 rounded p-4"
           v-if="hackathon.data.hackathon_rules"
+          class="w-full bg-gray-50 text-gray-800 rounded p-4"
         >
           <h3 class="text-md font-semibold">Hackathon Rules</h3>
           <div class="prose leading-normal" v-html="hackathon.data.hackathon_rules"></div>
         </div>
         <div
-          class="w-full bg-gray-50 text-gray-800 rounded p-4"
           v-if="hackathon.data.hackathon_faq"
+          class="w-full bg-gray-50 text-gray-800 rounded p-4"
         >
           <h3 class="text-md font-semibold">Hackathon FAQs</h3>
           <div class="prose leading-normal" v-html="hackathon.data.hackathon_faq"></div>

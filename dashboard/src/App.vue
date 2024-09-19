@@ -1,7 +1,7 @@
 <template>
   <div>
     <router-view />
-    <Toaster richColors />
+    <Toaster rich-colors />
   </div>
 </template>
 <script setup>

@@ -5,38 +5,38 @@
       <CopyToClipboard :route="getRoute(project.data.route)" />
     </div>
     <FormControl
-      label="Short Description"
       v-model="project.data.short_description"
+      label="Short Description"
       placeholder="Enter a short description of the project"
     />
     <FormControl
-      label="Repository Link"
       v-model="project.data.repo_link"
+      label="Repository Link"
       :disabled="project.data.is_partner_project"
     >
       <template #prefix>
         <GithubIcon class="w-4" />
       </template>
     </FormControl>
-    <FormControl label="Demo Link" v-model="project.data.demo_link" />
+    <FormControl v-model="project.data.demo_link" label="Demo Link" />
     <TextEditor
       class="col-span-2 mt-2"
       label="Project Description"
-      :modelValue="project.data.description"
+      :model-value="project.data.description"
       placeholder="Enter a detailed description of the project"
-      @update:modelValue="($event) => (project.data.description = $event)"
+      @update:model-value="($event) => (project.data.description = $event)"
     />
   </div>
   <div>
     <ErrorMessage :message="errorMessage" />
     <div class="flex flex-row-reverse">
       <Button
-        @click="handleProjectUpdate"
         variant="solid"
         theme="green"
         label="Save"
         size="md"
         class="w-full md:w-2/5"
+        @click="handleProjectUpdate"
       />
     </div>
   </div>

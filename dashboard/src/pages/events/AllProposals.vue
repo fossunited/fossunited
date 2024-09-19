@@ -15,9 +15,9 @@
     <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row md:items-center">
       <div class="w-full md:w-1/2">
         <TextInput
+          v-model="searchQuery"
           type="text"
           class="h-10"
-          v-model="searchQuery"
           placeholder="Search by proposal title"
           variant="subtle outline"
         >
@@ -39,8 +39,8 @@
       <!-- Talk proposals list -->
       <div class="mb-12">
         <div
-          v-if="filteredProposals.length != 0"
           v-for="(proposal, index) in filteredProposals"
+          v-if="filteredProposals.length != 0"
           :key="index"
           class="border-b-2 py-4"
         >

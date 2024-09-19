@@ -18,16 +18,16 @@
       <div class="text-sm">Invite members to join your team</div>
       <div class="flex gap-2 my-2">
         <FormControl
+          v-model="inviteEmail"
           class="grow"
           type="email"
-          v-model="inviteEmail"
           placeholder="john.doe@fossunited.org"
         />
         <Button
           label="Invite"
-          @click="createJoinRequest"
           variant="solid"
           :disabled="!inviteEmail"
+          @click="createJoinRequest"
         />
       </div>
       <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
@@ -35,7 +35,7 @@
         <div class="">Invite via team code:</div>
         <CopyToClipboard :route="teamCode" />
       </div>
-      <div class="mt-2" v-if="outgoingInvites.data.length > 0">
+      <div v-if="outgoingInvites.data.length > 0" class="mt-2">
         <hr class="my-4" />
         <div class="text-sm mb-2">Sent Invites:</div>
         <div

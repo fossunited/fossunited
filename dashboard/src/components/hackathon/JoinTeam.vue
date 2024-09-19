@@ -4,8 +4,8 @@
       <div class="text-sm">Join a team using team code</div>
       <div class="flex items-start gap-2">
         <FormControl
-          type="text"
           v-model="teamCode"
+          type="text"
           placeholder="Enter Team Code"
           class="grow"
           description="Enter the team code shared by your team leader."
@@ -35,8 +35,8 @@
             <div class="text-sm flex gap-1 items-end">
               Invited by
               <span
-                @click="redirectRoute(invite.sender_profile.data.route)"
                 class="hover:underline hover:cursor-pointer"
+                @click="redirectRoute(invite.sender_profile.data.route)"
                 >{{ invite.sender_name }}</span
               >
             </div>

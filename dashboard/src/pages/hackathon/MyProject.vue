@@ -32,12 +32,12 @@
         variant="ghost"
         icon-left="arrow-left"
         label="Go Back"
+        class="mt-4 mb-2"
         @click="
           $router.push({
             name: 'MyHackathonTeam',
           })
         "
-        class="mt-4 mb-2"
       />
 
       <!-- Breadcrumbs -->
@@ -67,7 +67,7 @@
         <span>My Project</span>
       </div>
 
-      <HackathonHeader :hackathon="hackathon" :showBanner="false" />
+      <HackathonHeader :hackathon="hackathon" :show-banner="false" />
 
       <!-- Project Name & Edit -->
       <div v-if="inNameEdit" class="flex flex-col gap-2 mb-4">
@@ -79,6 +79,7 @@
           />
           <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
             <Button
+              label="Discard"
               @click="
                 () => {
                   newProjectName = project.data.title
@@ -86,9 +87,8 @@
                   errorMessage = ''
                 }
               "
-              label="Discard"
             />
-            <Button @click="handleTitleUpdate" variant="solid" theme="green" label="Update" />
+            <Button variant="solid" theme="green" label="Update" @click="handleTitleUpdate" />
           </div>
         </div>
         <ErrorMessage :message="errorMessage" />
@@ -99,7 +99,7 @@
       </div>
 
       <!-- Tabs -->
-      <TabsRoot :default-value="tabs[0].value" v-model="activeTab">
+      <TabsRoot v-model="activeTab" :default-value="tabs[0].value">
         <TabsList class="relative shrink-0 flex border-b border-gray-300">
           <TabsIndicator
             class="absolute px-8 left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300"
@@ -108,8 +108,8 @@
           </TabsIndicator>
           <TabsTrigger
             v-for="tab in tabs"
-            :value="tab.value"
             :key="tab.value"
+            :value="tab.value"
             class="px-4 pb-2 mx-2 leading-none bg-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
             :class="{
               'text-gray-800 border-b border-gray-800 font-medium': activeTab === tab.value,

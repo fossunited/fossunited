@@ -6,8 +6,8 @@
       <span v-if="session.category == 'Break'">{{ getFormattedTime(session.end_time) }}</span>
     </div>
     <div
-      class="flex text-xs items-center gap-2 uppercase text-gray-600 divide-x-2 divide-gray-400"
       v-if="session.category !== 'Break'"
+      class="flex text-xs items-center gap-2 uppercase text-gray-600 divide-x-2 divide-gray-400"
     >
       <span>Day {{ session.day }}</span>
       <span class="pl-2">{{ session.hall }}</span>
