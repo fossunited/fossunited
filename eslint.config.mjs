@@ -136,6 +136,7 @@ export default [
       'no-console': ['warn'],
       'no-extra-boolean-cast': 'off',
       'no-control-regex': 'off',
+      'vue/multi-word-component-names': 'off', // Disable the multi-word component names rule
     },
     plugins: {
       prettier: prettierPlugin,
