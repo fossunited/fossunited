@@ -127,7 +127,7 @@
       "fieldname": "billing_address",
       "fieldtype": "Text",
       "label": "Billing Address",
-      "read_only": 1
+      "permlevel": 1
     },
     {
       "fieldname": "column_break_enpj",
@@ -137,8 +137,7 @@
       "fieldname": "gstn",
       "fieldtype": "Data",
       "label": "GSTN",
-      "permlevel": 1,
-   "read_only": 1
+      "permlevel": 1
     },
     {
       "fieldname": "company_name",
@@ -173,7 +172,7 @@
       "link_fieldname": "razorpay_payment"
     }
   ],
-  "modified": "2024-09-03 18:10:29.980782",
+  "modified": "2024-09-20 15:49:08.884687",
   "modified_by": "Administrator",
   "module": "Payments",
   "name": "Razorpay Payment",
@@ -191,39 +190,39 @@
       "share": 1,
       "write": 1
     },
-  {
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Administrator",
-   "share": 1,
-   "write": 1
-  },
-  {
-   "email": 1,
-   "export": 1,
-   "permlevel": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Administrator",
-   "share": 1,
-   "write": 1
-  }
+    {
+      "email": 1,
+      "export": 1,
+      "permlevel": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "System Manager",
+      "share": 1
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "email": 1,
+      "export": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Administrator",
+      "share": 1,
+      "write": 1
+    },
+    {
+      "email": 1,
+      "export": 1,
+      "permlevel": 1,
+      "print": 1,
+      "read": 1,
+      "report": 1,
+      "role": "Administrator",
+      "share": 1,
+      "write": 1
+    }
   ],
   "show_title_field_in_link": 1,
   "sort_field": "creation",
