@@ -44,11 +44,11 @@ $ pre-commit install
 
 ### Contribution
 
-Want to contribute to the platform ? Checkout the [contribution guidelines](/docs/CONTRIBUTING.md).
+Want to contribute to the platform ? Checkout the [contribution guidelines](/CONTRIBUTING.md).
 
 ### Security Policy
 
-Please checkout [Security Policy](/docs/SECURITY.md) for information about reporting a Security Bug or Vulnerability.
+Please checkout [Security Policy](/SECURITY.md) for information about reporting a Security Bug or Vulnerability.
 
 ## License
 
