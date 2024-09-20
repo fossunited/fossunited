@@ -28,19 +28,12 @@ class TestRazorpayPayment(FrappeTestCase):
 
         frappe.db.commit()
 
-    @staticmethod
-    def generate_random_permalink(max_length=20):
-        words = fake.words(nb=3)
-        permalink = "_".join(word.lower() for word in words)
-
-        return permalink[:max_length]
-
     def create_dummy_event(self):
         event = frappe.get_doc(
             {
                 "doctype": EVENT,
                 "event_name": fake.catch_phrase(),
-                "event_permalink": self.generate_random_permalink(),
+                "event_permalink": fake.slug().replace("-", "_"),
                 "status": "Live",
                 "event_type": "CityFOSS Conference",
                 "event_start_date": "2024-09-05 10:00:00",
