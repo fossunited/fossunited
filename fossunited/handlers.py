@@ -1,6 +1,7 @@
 import frappe
 from frappe.utils.password import get_decrypted_password
 
+from fossunited.doctype_ids import RAZORPAY_PAYMENT, RAZORPAY_SETTINGS, RAZORPAY_WEBHOOK_LOG
 from fossunited.utils.payments import get_razorpay_client
 
 
@@ -22,7 +23,7 @@ def handle_razorpay_webhook():
     # Create webhook log
     frappe.get_doc(
         {
-            "doctype": "Razorpay Webhook Log",
+            "doctype": RAZORPAY_WEBHOOK_LOG,
             "event": event,
             "order_id": razorpay_order_id,
             "payment_id": razorpay_payment_id,
@@ -30,12 +31,12 @@ def handle_razorpay_webhook():
         }
     ).insert().submit()
 
-    order_exists = frappe.db.exists("Razorpay Payment", {"order_id": razorpay_order_id})
+    order_exists = frappe.db.exists(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
 
     if not order_exists:
         return
 
-    payment_doc = frappe.get_doc("Razorpay Payment", {"order_id": razorpay_order_id})
+    payment_doc = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
 
     if event == "payment.captured" and payment_doc.status != "Captured":
         payment_doc.status = "Captured"
@@ -51,9 +52,7 @@ def handle_razorpay_webhook():
 
 def verify_webhook_signature(payload):
     signature = frappe.get_request_header("X-Razorpay-Signature")
-    webhook_secret = get_decrypted_password(
-        "Razorpay Settings", "Razorpay Settings", "webhook_secret"
-    )
+    webhook_secret = get_decrypted_password(RAZORPAY_SETTINGS, RAZORPAY_SETTINGS, "webhook_secret")
 
     client = get_razorpay_client()
     client.utility.verify_webhook_signature(payload.decode(), signature, webhook_secret)

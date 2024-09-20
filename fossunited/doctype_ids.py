@@ -38,4 +38,4 @@ TICKET_TRANSFER = "FOSS Event Ticket Transfer"
 
 RAZORPAY_PAYMENT = "Razorpay Payment"
 RAZORPAY_SETTINGS = "Razorpay Settings"
-RAZORPAY_WEBHOOK_LOGS = "Razorpay Webhook Log"
+RAZORPAY_WEBHOOK_LOG = "Razorpay Webhook Log"
