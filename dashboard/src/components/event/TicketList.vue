@@ -64,7 +64,7 @@
       },
     }"
   >
-    <template #cell="{ item, row, column }" class="even:bg-gray-50">
+    <template #cell="{ item, row, column }">
       <div v-if="column.key === 'wants_tshirt'">
         <Checkbox :model-value="item" :disabled="true" />
       </div>

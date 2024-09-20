@@ -77,11 +77,14 @@ const props = defineProps({
   },
   row: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+  default: false,
+})
 
 const question = reactive({
   label: '',

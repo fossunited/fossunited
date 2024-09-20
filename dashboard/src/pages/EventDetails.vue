@@ -33,7 +33,7 @@
             :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
-            <template #default="{ file, progress, error, uploading, openFileSelector }">
+            <template #default="{ progress, uploading, openFileSelector }">
               <Button
                 :variant="'subtle'"
                 :size="'md'"

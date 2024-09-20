@@ -29,7 +29,10 @@
 <script setup>
 import { defineModel, defineProps } from 'vue'
 
-const model = defineModel()
+const model = defineModel({
+  type: [String, Number, Boolean, Object, Array],
+  default: '',
+})
 
 const props = defineProps({
   type: {

@@ -17,6 +17,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card
             v-for="hackathon in ongoing_hackathons"
+            :key="hackathon.name"
             :title="hackathon.hackathon_name"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"
@@ -30,6 +31,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card
             v-for="hackathon in upcoming_hackathons"
+            :key="hackathon.name"
             :title="hackathon.hackathon_name"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"
@@ -43,6 +45,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Card
             v-for="hackathon in past_hackathons"
+            :key="hackathon.name"
             :title="hackathon.hackathon_name"
             class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"

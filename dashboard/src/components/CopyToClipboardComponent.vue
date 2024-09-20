@@ -12,7 +12,10 @@ import { ref, defineProps } from 'vue'
 let tooltip_label = ref('Copy to clipboard')
 
 const props = defineProps({
-  route: String,
+  route: {
+    type: String,
+    required: true,
+  },
 })
 const copyRouteToClipboard = () => {
   navigator.clipboard.writeText(props.route)

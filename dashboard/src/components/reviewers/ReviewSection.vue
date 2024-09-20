@@ -63,7 +63,10 @@ import { useRoute } from 'vue-router'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 
 const props = defineProps({
-  submission: Object,
+  submission: {
+    type: Object,
+    required: true,
+  },
 })
 const route = useRoute()
 const session = inject('$session')

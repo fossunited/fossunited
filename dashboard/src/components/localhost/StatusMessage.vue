@@ -45,5 +45,10 @@
 <script setup>
 import { defineProps } from 'vue'
 
-const props = defineProps(['status'])
+const props = defineProps({
+  status: {
+    type: String,
+    required: true,
+  },
+})
 </script>

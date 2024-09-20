@@ -7,7 +7,7 @@
       </div>
       <div v-if="title" class="text-lg font-semibold uppercase px-4 mt-4">{{ title }}</div>
       <div v-if="menuItems.length > 0" class="flex flex-col gap-2 px-4 my-2">
-        <div v-for="group in menuItems" class="my-1">
+        <div v-for="(group, groupIndex) in menuItems" :key="groupIndex" class="my-1">
           <div
             v-if="group.parent_label"
             class="text-xs text-gray-600 font-medium uppercase tracking-wide"
@@ -43,6 +43,7 @@ const route = useRoute()
 const props = defineProps({
   title: {
     type: String,
+    default: '',
   },
   menuItems: {
     type: Array,

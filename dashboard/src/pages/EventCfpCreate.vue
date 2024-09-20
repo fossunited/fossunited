@@ -181,7 +181,7 @@ import { toast } from 'vue-sonner'
 import TextEditor from '@/components/TextEditor.vue'
 
 const route = useRoute()
-const emit = defineEmits(['rsvpCreated'])
+const emit = defineEmits(['cfpCreated'])
 
 const event = createDocumentResource({
   doctype: 'FOSS Chapter Event',
@@ -329,7 +329,6 @@ const createCfpForm = () => {
       toast.error('Error creating CFP Form.', {
         description: error.message,
       })
-      console.log(error)
     })
 }
 </script>

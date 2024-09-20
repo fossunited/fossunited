@@ -18,7 +18,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(quantity, size) in insight.tshirt_size_count">
+          <tr v-for="(quantity, size) in insight.tshirt_size_count" :key="size">
             <td class="p-2 text-base border">{{ size }}</td>
             <td class="p-2 text-base border">{{ quantity }}</td>
           </tr>

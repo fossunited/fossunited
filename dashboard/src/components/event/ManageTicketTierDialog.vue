@@ -113,7 +113,7 @@ import LivePing from '@/components/animation/LivePing.vue'
 const props = defineProps({
   tier: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   inCreateMode: {
     type: Boolean,
@@ -124,7 +124,10 @@ const emit = defineEmits(['update-tier'])
 
 const route = useRoute()
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+  default: false,
+})
 
 const modifyTier = reactive({
   enabled: false,

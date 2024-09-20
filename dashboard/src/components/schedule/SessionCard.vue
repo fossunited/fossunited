@@ -25,8 +25,8 @@
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
       {{ session.title }}
     </h3>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div v-for="speaker in getSpeakers().speakers" v-if="getSpeakers()">
+    <div v-if="getSpeakers()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div v-for="(speaker, index) in getSpeakers().speakers" :key="index">
         <div class="flex gap-2 items-start">
           <img
             :src="speaker.image"

@@ -24,6 +24,7 @@ function makeQuill(
     ['clean'],
   ],
 ) {
+  // eslint-disable-next-line no-undef
   let quill = new Quill(`${id}`, {
     modules: {
       toolbar: toolbarOptions,
@@ -63,7 +64,6 @@ function publish_form(e) {
   let doctype = $(e).data('doctype')
   let docname = $(e).data('docname')
   let parent = $(e).data('parent')
-  console.log(parent)
   frappe.call({
     method: 'fossunited.fossunited.forms.publish_form',
     args: {
@@ -74,7 +74,6 @@ function publish_form(e) {
       $(`#${parent}`).load(window.location.href + ` #${parent}`)
     },
     error: (e) => {
-      console.log(e)
       frappe.msgprint(e.message)
     },
   })
@@ -105,7 +104,6 @@ function unpublish_form(e) {
       $(`#${parent}`).load(window.location.href + ` #${parent}`)
     },
     error: (e) => {
-      console.log(e)
       frappe.msgprint(e.message)
     },
   })

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
   <RazorpayCheckout ref="rzpCheckout" />
   <Header />
@@ -62,7 +63,7 @@
                       <RadioGroupDescription
                         as="span"
                         class="mt-2 text-sm text-gray-500"
-                        v-html="markdown.render(tier.description || '')"
+                        :innerHTML="markdown.render(tier.description || '')"
                       >
                       </RadioGroupDescription>
                     </span>
@@ -119,6 +120,7 @@
             <div class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0">
               <FormControl
                 v-for="field in event.data.custom_fields"
+                :key="field.name"
                 v-model="customFields[field.field_name]"
                 :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
                 :label="field.label"
@@ -475,13 +477,16 @@ const redirectToEvent = computed(() => {
   if (event.data) {
     return `${window.location.origin}/${event.data.route}`
   }
+  return window.location.origin
 })
 
 function resetCustomFields() {
-  for (let field of event.data?.custom_fields) {
-    customFields[field.field_name] = ''
-    if (field.field_type == 'Select') {
-      field.options = field.options.split('\n')
+  if (event.data?.custom_fields) {
+    for (let field of event.data.custom_fields) {
+      customFields[field.field_name] = ''
+      if (field.field_type == 'Select') {
+        field.options = field.options.split('\n')
+      }
     }
   }
 }

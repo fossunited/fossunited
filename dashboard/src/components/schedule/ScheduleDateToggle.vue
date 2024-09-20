@@ -36,6 +36,7 @@ const props = defineProps({
 const model = defineModel({
   prop: 'selectedDate',
   event: 'change',
+  type: String,
 })
 
 function changeModelValue(index) {

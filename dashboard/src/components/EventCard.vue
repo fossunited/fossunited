@@ -32,6 +32,9 @@ const badgeColors = {
   Cancelled: 'red',
 }
 defineProps({
-  event: Object,
+  event: {
+    type: Object,
+    required: true,
+  },
 })
 </script>

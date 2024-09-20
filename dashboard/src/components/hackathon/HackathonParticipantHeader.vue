@@ -74,7 +74,7 @@ import { defineProps } from 'vue'
 defineProps({
   hackathon: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   showBanner: {
     type: Boolean,

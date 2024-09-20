@@ -149,7 +149,10 @@ import { toast } from 'vue-sonner'
 import ArrowUpRight from '@/components/icons/ArrowUpRight.vue'
 
 const props = defineProps({
-  project: Object,
+  project: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emits = defineEmits(['fetch-project'])

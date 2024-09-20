@@ -67,7 +67,7 @@ const props = defineProps({
   },
   invitations: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 
@@ -133,7 +133,7 @@ const acceptInvite = (inviteId) => {
       window.location.reload()
     },
     onError(error) {
-      console.error(error)
+      toast.error('An error occurred: ' + error.message)
     },
   })
 }
@@ -152,7 +152,7 @@ const rejectInvite = (inviteId) => {
       props.invitations.fetch()
     },
     onError(error) {
-      console.error(error)
+      toast.error('An error occurred: ' + error.message)
     },
   })
 }

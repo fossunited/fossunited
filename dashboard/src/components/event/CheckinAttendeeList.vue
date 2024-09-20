@@ -66,7 +66,11 @@
         </template>
         <template v-else-if="column.key === 'checkin_status'">
           <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
-            <span v-for="data in row.checkin_data" class="flex items-center p-1 rounded-sm">
+            <span
+              v-for="(data, index) in row.checkin_data"
+              :key="index"
+              class="flex items-center p-1 rounded-sm"
+            >
               <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
                 <template #body>
                   <span class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full">
@@ -84,8 +88,10 @@
             </span>
           </div>
         </template>
-        <template v-else class="text-base">
-          {{ item }}
+        <template v-else>
+          <span class="text-base">
+            {{ item }}
+          </span>
         </template>
       </template>
     </ListView>

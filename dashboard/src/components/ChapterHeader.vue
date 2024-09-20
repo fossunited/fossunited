@@ -12,5 +12,10 @@ import { defineProps } from 'vue'
 import FossClubBranding from '@/components/FossClubBranding.vue'
 import CityCommunityBranding from '@/components/CityCommunityBranding.vue'
 
-defineProps(['chapter'])
+defineProps({
+  chapter: {
+    type: Object,
+    required: true,
+  },
+})
 </script>

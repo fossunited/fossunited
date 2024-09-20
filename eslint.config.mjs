@@ -18,6 +18,7 @@ export default [
       globals: {
         ...globals.browser,
         ...globals.node,
+        Razorpay: 'readonly',
         frappe: 'readonly',
         Vue: 'readonly',
         SetVueGlobals: 'readonly',
@@ -137,6 +138,7 @@ export default [
       'no-extra-boolean-cast': 'off',
       'no-control-regex': 'off',
       'vue/multi-word-component-names': 'off', // Disable the multi-word component names rule
+      'vue/no-reserved-component-names': 'off', // Disable the no-reserved-component-names. This is done because frappe-ui uses names such as "Input" & "Button" for its components.
     },
     plugins: {
       prettier: prettierPlugin,

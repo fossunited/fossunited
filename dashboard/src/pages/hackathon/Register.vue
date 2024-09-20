@@ -82,7 +82,7 @@
             <RadioGroupOption
               v-for="option in attend_option"
               :key="option.value"
-              v-slot="{ active, checked }"
+              v-slot="{ checked }"
               as="template"
               :value="option"
             >
@@ -356,6 +356,7 @@ const redirectToHackathon = computed(() => {
   if (hackathon.data) {
     return `${window.location.origin}/${hackathon.data.route}`
   }
+  return window.location.origin
 })
 
 const show_dialog = ref(false)

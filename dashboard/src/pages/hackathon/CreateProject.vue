@@ -168,7 +168,7 @@
               <RadioGroupOption
                 v-for="partner_project in partner_projects.data"
                 :key="partner_project.id"
-                v-slot="{ active, checked }"
+                v-slot="{ checked }"
                 as="template"
                 :value="partner_project.name"
                 @click="
@@ -376,7 +376,6 @@ const createProject = createResource({
     })
   },
   onError(error) {
-    console.log(error)
     toast.error('Failed to create project')
   },
 })

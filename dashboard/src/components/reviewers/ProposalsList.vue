@@ -10,7 +10,11 @@
               v-model="selectedStatusFilter"
               class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
             >
-              <option v-for="(filter, index) in statusFilters" @click="filterByStatus(filter)">
+              <option
+                v-for="(filter, index) in statusFilters"
+                :key="index"
+                @click="filterByStatus(filter)"
+              >
                 {{ filter.label }}
               </option>
             </select>
@@ -23,6 +27,7 @@
             >
               <option
                 v-for="(filter, index) in toApproveFilter"
+                :key="index"
                 @click="filterByToApprove(filter)"
               >
                 {{ filter.label }}
@@ -67,7 +72,7 @@
         },
       }"
     >
-      <template #cell="{ item, row, column }">
+      <template #cell="{ item, column }">
         <div v-if="column.label == 'Status'">
           <Badge :theme="item == 'Reviewed' ? 'blue' : 'gray'" :label="item" />
         </div>

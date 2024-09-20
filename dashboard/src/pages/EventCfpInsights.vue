@@ -144,7 +144,7 @@
               class="flex flex-col mb-4 gap-2"
             >
               <div class="text-lg font-semibold mb-1 pb-2 border-b">Custom Question</div>
-              <div v-for="response in selected_row_data.doc.custom_answers">
+              <div v-for="response in selected_row_data.doc.custom_answers" :key="response.name">
                 <div class="font-semibold text-gray-800">
                   {{ response.question }}
                 </div>

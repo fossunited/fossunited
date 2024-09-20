@@ -35,7 +35,7 @@
       v-model="selectedListFilter"
       class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
     >
-      <option v-for="(_, label) in FILTERS">
+      <option v-for="(_, label) in FILTERS" :key="label">
         {{ label }}
       </option>
     </select>

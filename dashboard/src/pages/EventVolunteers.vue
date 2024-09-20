@@ -15,7 +15,7 @@
 
     <!-- VOLUNTEERS GRID -->
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card v-for="member in event.doc.event_members" :title="member.full_name">
+      <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
         <template v-if="member.email != session.user" #actions>
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>

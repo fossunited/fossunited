@@ -7,7 +7,7 @@
       </div>
     </div>
     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-      <ChapterCard v-for="chapter in chapters.data" :chapter="chapter" />
+      <ChapterCard v-for="chapter in chapters.data" :key="chapter.name" :chapter="chapter" />
     </div>
     <div class="mt-4">
       <div class="prose pt-4 mb-4">
@@ -15,7 +15,7 @@
         <p class="text-sm">Manage upcoming events.</p>
       </div>
       <div v-if="scheduled_events.data" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <EventCard v-for="event in scheduled_events.data" :event="event" />
+        <EventCard v-for="event in scheduled_events.data" :key="event.name" :event="event" />
       </div>
       <div v-else class="text-base mt-6 text-gray-800">
         <div>There are no scheduled events.</div>

@@ -48,6 +48,7 @@
         onRowClick: (row) => handleCustomRowEdit(row),
       }"
     >
+      <!-- eslint-disable-next-line vue/no-unused-vars -->
       <template #cell="{ item, row, column }">
         <div v-if="column.key === 'mandatory'">
           <Checkbox :model-value="item" :disabled="true" />
