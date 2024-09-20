@@ -109,17 +109,6 @@
           v-model="event.doc.event_type"
           label="Event Type"
         />
-        <div class="flex flex-col gap-1">
-          <FormControl
-            :type="'checkbox'"
-            size="md"
-            label="Mark as Must Attend"
-            v-model="event.doc.must_attend"
-          />
-          <span class="text-sm text-gray-600"
-            >Mark this event as a must-attend for the audience.</span
-          >
-        </div>
         <FormControl
           :type="'text'"
           size="md"
