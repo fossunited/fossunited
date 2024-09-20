@@ -13,6 +13,7 @@ class TestRazorpayPayment(FrappeTestCase):
     def setUp(self):
         self.admin_user = frappe.get_doc("User", "Administrator")
         self.normal_user = frappe.get_doc("User", "test1@example.com")
+        self.event = self.create_dummy_event()
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -37,7 +38,7 @@ class TestRazorpayPayment(FrappeTestCase):
     def create_dummy_event(self):
         event = frappe.get_doc(
             {
-                "doctype": "FOSS Chapter Event",
+                "doctype": EVENT,
                 "event_name": fake.catch_phrase(),
                 "event_permalink": self.generate_random_permalink(),
                 "status": "Live",
@@ -54,8 +55,7 @@ class TestRazorpayPayment(FrappeTestCase):
 
     def create_payment_document(self, user):
         frappe.set_user(user.name)
-        self.event = self.create_dummy_event()
-        tier = frappe.get_doc("FOSS Chapter Event", self.event).tiers[0]
+        tier = frappe.get_doc(EVENT, self.event).tiers[0]
 
         # Have taken this metadata to mimic the razorpay payment metadata
         meta_data = {
@@ -97,7 +97,7 @@ class TestRazorpayPayment(FrappeTestCase):
                 "owner": tier.owner,
                 "parent": tier.parent,
                 "parentfield": "tiers",
-                "parenttype": "FOSS Chapter Event",
+                "parenttype": EVENT,
                 "price": tier.price,
                 "title": tier.title,
                 "valid_till": str(tier.valid_till),
@@ -106,7 +106,7 @@ class TestRazorpayPayment(FrappeTestCase):
 
         invoice = frappe.get_doc(
             {
-                "doctype": "Razorpay Payment",
+                "doctype": RAZORPAY_PAYMENT,
                 "document_type": EVENT,
                 "document_name": self.event,
                 "email": user.email,
@@ -128,10 +128,9 @@ class TestRazorpayPayment(FrappeTestCase):
     def test_admin_can_create_invoice(self):
         invoice = self.create_payment_document(self.admin_user)
         self.assertIsNotNone(invoice)
-        if invoice:
-            self.assertEqual(invoice.doctype, RAZORPAY_PAYMENT)
-            self.assertEqual(invoice.owner, self.admin_user.name)
+        self.assertEqual(invoice.doctype, RAZORPAY_PAYMENT)
+        self.assertEqual(invoice.owner, self.admin_user.name)
 
     def test_normal_user_cannot_create_invoice(self):
-        invoice = self.create_payment_document(self.normal_user)
-        self.assertIsNone(invoice)
+        with self.assertRaises(frappe.PermissionError):
+            self.create_payment_document(self.normal_user)
