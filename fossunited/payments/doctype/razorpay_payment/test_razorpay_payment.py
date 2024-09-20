@@ -114,9 +114,9 @@ class TestRazorpayPayment(FrappeTestCase):
             invoice.insert()
             frappe.db.commit()
             return invoice
-        except frappe.PermissionError:
+        except Exception:
             frappe.db.rollback()
-            return None
+            raise
 
     def test_admin_can_create_invoice(self):
         invoice = self.create_payment_document(self.admin_user)
