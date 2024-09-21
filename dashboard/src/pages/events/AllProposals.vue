@@ -38,13 +38,10 @@
     <div v-else-if="proposals.data">
       <!-- Talk proposals list -->
       <div class="mb-12">
-        <div
-          v-for="(proposal, index) in filteredProposals"
-          v-if="filteredProposals.length != 0"
-          :key="index"
-          class="border-b-2 py-4"
-        >
-          <ProposalBlock :proposal="proposal" />
+        <div v-if="filteredProposals.length != 0">
+          <div v-for="(proposal, index) in filteredProposals" :key="index" class="border-b-2 py-4">
+            <ProposalBlock :proposal="proposal" />
+          </div>
         </div>
         <div v-else>
           <h3>No proposals</h3>

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="flex flex-col md:grid md:grid-cols-2 mb-4 gap-4 md:items-center">
     <div class="flex flex-col py-1">
@@ -50,7 +51,10 @@ import { FormControl, ErrorMessage, createResource } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
-  project: Object,
+  project: {
+    type: Object,
+    required: true,
+  },
 })
 
 const getRoute = (route) => {

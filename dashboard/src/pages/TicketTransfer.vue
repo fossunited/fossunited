@@ -212,7 +212,7 @@ const isTicketValid = () => {
       return true
     },
     onError(err) {
-      console.log(err)
+      toast.error('Failed to validate ticket. ' + err.message)
     },
   })
 }

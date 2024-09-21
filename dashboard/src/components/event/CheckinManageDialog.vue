@@ -37,7 +37,11 @@
             <div class="border-b-2 border-dashed border-gray-600 my-3"></div>
             <div class="flex flex-col gap-2">
               <div class="text-sm uppercase font-medium">Check-ins</div>
-              <div v-for="data in selectedAttendee.checkin_data" class="flex gap-2">
+              <div
+                v-for="(data, index) in selectedAttendee.checkin_data"
+                :key="index"
+                class="flex gap-2"
+              >
                 <span>-></span>
                 <span>
                   {{ dayjs(data.check_in_time).format('DD MMM YYYY, h:mm A') }}
@@ -77,21 +81,32 @@
     </template>
   </Dialog>
 </template>
+
+<!-- eslint-disable vue/no-mutating-props -->
 <script setup>
 import { defineProps, defineModel, inject } from 'vue'
 import { Dialog, createResource } from 'frappe-ui'
 import dayjs from 'dayjs'
 
 const props = defineProps({
-  attendees: Object,
-  selectedAttendee: Object,
+  attendees: {
+    type: Object,
+    required: true,
+  },
+  selectedAttendee: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const session = inject('$session')
 const route = inject('route')
 const isCheckedInToday = inject('isCheckedInToday')
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+  default: false,
+})
 
 const assignTshirt = createResource({
   url: 'fossunited.api.checkins.assign_tshirt',

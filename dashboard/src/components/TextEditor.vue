@@ -447,6 +447,7 @@ const props = defineProps({
         modelValue is the v-model binding for the editor.
     */
     type: String,
+    default: '',
   },
   label: {
     type: String,

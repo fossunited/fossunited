@@ -139,6 +139,7 @@ export default [
       'no-control-regex': 'off',
       'vue/multi-word-component-names': 'off', // Disable the multi-word component names rule
       'vue/no-reserved-component-names': 'off', // Disable the no-reserved-component-names. This is done because frappe-ui uses names such as "Input" & "Button" for its components.
+      'vue/no-v-html': 'off',
     },
     plugins: {
       prettier: prettierPlugin,

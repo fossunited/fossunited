@@ -71,6 +71,7 @@ import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.v
 import { createResource, FormControl, ErrorMessage } from 'frappe-ui'
 import { reactive, inject, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const router = useRouter()
@@ -92,7 +93,7 @@ const userParticipantInfo = createResource({
     })
   },
   onError(error) {
-    console.log(error)
+    toast.error('Error fetching user info' + error)
   },
 })
 
@@ -132,7 +133,7 @@ const createTeam = createResource({
     })
   },
   onError(error) {
-    console.log(error)
+    toast.error('Error creating team' + error)
   },
 })
 

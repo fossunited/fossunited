@@ -34,8 +34,14 @@ import { Dialog, Autocomplete, createResource, Avatar } from 'frappe-ui'
 import { ref, defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
-  chapter: Object,
-  event: Object,
+  chapter: {
+    type: Object,
+    default: () => ({}),
+  },
+  event: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const existingMembers = computed(() => {

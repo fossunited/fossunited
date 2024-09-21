@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <Dialog
     v-model="showDialog"
@@ -63,21 +64,31 @@
     </template>
   </Dialog>
 </template>
+
+<!-- eslint-disable vue/no-mutating-props -->
 <script setup>
 import { toast } from 'vue-sonner'
 import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
 const props = defineProps({
-  selectedAttendee: Object,
-  attendees: Object,
+  selectedAttendee: {
+    type: Object,
+    default: () => null,
+  },
+  attendees: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const session = inject('$session')
 const route = inject('route')
 const assignTshirt = ref(false)
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+})
 
 const checkinAttendee = createResource({
   url: 'fossunited.api.checkins.checkin_attendee',

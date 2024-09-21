@@ -9,12 +9,6 @@ function subscribeHandler(event) {
         email_group: 'FOSSU Newsletter',
       },
     },
-    callback: (r) => {
-      console.log(r)
-    },
-    error: (e) => {
-      console.error(e)
-    },
   })
   event.stopPropagation()
   document.getElementById('subscribe').removeEventListener('click', subscribeHandler)

@@ -406,7 +406,6 @@ const registerForHackathon = createResource({
     })
   },
   onError(error) {
-    console.error()
     dialog_content.title = 'Error'
     dialog_content.message = error.message
     show_dialog.value = true

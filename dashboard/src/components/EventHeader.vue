@@ -11,7 +11,7 @@
         <h1>{{ event.event_name }}</h1>
       </div>
       <Badge
-        v-if="form_exists && form.data"
+        v-if="formExists && form.data"
         :theme="form.data.is_published ? 'green' : 'gray'"
         size="md"
       >
@@ -30,7 +30,7 @@
           </div>
         </div>
       </Badge>
-      <Badge v-if="!form_exists && form" :theme="'gray'" size="md">
+      <Badge v-if="!formExists && form" :theme="'gray'" size="md">
         <div class="font-medium">
           <span> Form Not Created </span>
         </div>
@@ -76,7 +76,7 @@ const props = defineProps({
     type: Object,
     default: null,
   },
-  form_exists: {
+  formExists: {
     type: Boolean,
     default: false,
   },

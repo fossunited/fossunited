@@ -123,7 +123,6 @@ const approveTransfer = (data) => {
       transferStatus.value = 'Approved'
     },
     onError(err) {
-      console.log(err)
       dialogMessage.value +=
         ' There was an error while approving the transfer request. Please contact system admin.' +
         err
@@ -144,7 +143,6 @@ const rejectTransfer = (data) => {
       transferStatus.value = 'Rejected'
     },
     onError(err) {
-      console.log(err)
       dialogMessage.value +=
         ' There was an error while rejecting the transfer request. Please contact system admin.' +
         err

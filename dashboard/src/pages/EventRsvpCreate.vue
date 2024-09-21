@@ -234,9 +234,6 @@ const createRsvpForm = () => {
     params: {
       doc: rsvp_doc,
     },
-    onError(error) {
-      console.log(error)
-    },
   })
   rsvp
     .submit()

@@ -117,6 +117,7 @@ import HackathonAttendanceMode from '@/components/hackathon/HackathonAttendanceM
 import { createResource, usePageMeta, Dialog } from 'frappe-ui'
 import { inject, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { toast } from 'vue-sonner'
 
 const session = inject('$session')
 const route = useRoute()
@@ -214,7 +215,7 @@ const updateTeamName = () => {
       team.fetch()
     },
     onError: (error) => {
-      console.log(error)
+      toast.error('Error updating team name' + error.message)
     },
   })
 }
@@ -233,7 +234,7 @@ const removeMember = (member) => {
       team.fetch()
     },
     onError: (error) => {
-      console.log(error)
+      toast.error('Error removing member' + error.message)
     },
   })
 }
