@@ -34,7 +34,7 @@
         </h1>
         <div
           class="my-2 text-gray-700"
-          v-html="DOMPurify.sanitize(markdown.render(event.data.ticket_form_description || ''))"
+          v-html="markdown.render(event.data.ticket_form_description || '')"
         ></div>
         <RadioGroup v-model="checkoutInfo.tier" class="py-4">
           <RadioGroupLabel class="text-lg font-semibold leading-6 text-gray-800">
@@ -379,7 +379,6 @@ import {
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue'
-import DOMPurify from 'dompurify'
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 
 const dayjs = inject('$dayjs')
