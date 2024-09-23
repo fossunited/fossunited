@@ -2,6 +2,7 @@
   <div class="flex gap-4 mt-0 w-full border-b px-2">
     <div
       v-for="section in sections"
+      :key="section.value"
       class="p-1 cursor-pointer transition-colors text-base"
       :class="
         inInvite == section.value
@@ -18,16 +19,16 @@
       <div class="text-sm">Invite members to join your team</div>
       <div class="flex gap-2 my-2">
         <FormControl
+          v-model="inviteEmail"
           class="grow"
           type="email"
-          v-model="inviteEmail"
           placeholder="john.doe@fossunited.org"
         />
         <Button
           label="Invite"
-          @click="createJoinRequest"
           variant="solid"
           :disabled="!inviteEmail"
+          @click="createJoinRequest"
         />
       </div>
       <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
@@ -35,11 +36,12 @@
         <div class="">Invite via team code:</div>
         <CopyToClipboard :route="teamCode" />
       </div>
-      <div class="mt-2" v-if="outgoingInvites.data.length > 0">
+      <div v-if="outgoingInvites.data.length > 0" class="mt-2">
         <hr class="my-4" />
         <div class="text-sm mb-2">Sent Invites:</div>
         <div
           v-for="invite in outgoingInvites.data"
+          :key="invite.name"
           class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-gray-50"
         >
           <div class="text-sm text-gray-600">
@@ -56,6 +58,7 @@
       <div class="pt-2 px-2 flex flex-col gap-4">
         <div
           v-for="member in props.team.data.members"
+          :key="member.name"
           class="flex items-center w-full justify-between gap-2"
         >
           <div class="flex gap-2 items-center">

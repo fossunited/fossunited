@@ -2,6 +2,7 @@
   <div class="flex gap-1 items-center">
     <div
       v-for="(item, index) in items"
+      :key="index"
       class="text-base flex gap-1 items-center my-2"
       :class="index == items.length - 1 ? 'font-medium text-gray-800' : 'text-gray-600 '"
     >

@@ -9,6 +9,7 @@
     <div v-if="events.data.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card
         v-for="event in events.data"
+        :key="event.name"
         :title="event.event_name"
         class="border-2 border-transparent !rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
         @click="$router.push('/review/' + event.event)"

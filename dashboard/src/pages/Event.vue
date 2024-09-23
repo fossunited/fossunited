@@ -2,11 +2,11 @@
   <div class="flex">
     <SideNavbar
       title="Manage Event"
-      :menuItems="sidebarMenuItems"
+      :menu-items="sidebarMenuItems"
       :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"
     />
     <div class="w-full md:ml-[220px]">
-      <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
+      <HeaderWithNav @toggle-sidebar="($event) => (showNav = $event)" />
       <RouterView />
     </div>
   </div>

@@ -1,8 +1,8 @@
 <template>
   <!-- Add PR/Issue Dialog -->
   <Dialog
-    class="z-50"
     v-model="showAddDialog"
+    class="z-50"
     :options="{
       title: 'Add Issue / PR / Discussion',
     }"
@@ -10,9 +10,9 @@
     <template #body-content>
       <div class="flex flex-col gap-4">
         <FormControl
+          v-model="newIssuePr.link"
           type="url"
           label="Link &ast;"
-          v-model="newIssuePr.link"
           @input="getPrIssueTitle.fetch()"
         />
         <div v-if="getPrIssueTitle.loading" class="flex gap-1">
@@ -22,8 +22,9 @@
         <div v-if="fetchTitleError">
           <small class="text-gray-700">{{ fetchTitleError }}</small>
         </div>
-        <FormControl label="Title &ast;" v-model="newIssuePr.title" />
+        <FormControl v-model="newIssuePr.title" label="Title &ast;" />
         <FormControl
+          v-model="newIssuePr.type"
           type="select"
           :options="[
             {
@@ -40,7 +41,6 @@
             },
           ]"
           label="Type &ast;"
-          v-model="newIssuePr.type"
         />
         <ErrorMessage :message="addIssueErrors" />
       </div>
@@ -149,7 +149,10 @@ import { toast } from 'vue-sonner'
 import ArrowUpRight from '@/components/icons/ArrowUpRight.vue'
 
 const props = defineProps({
-  project: Object,
+  project: {
+    type: Object,
+    required: true,
+  },
 })
 
 const emits = defineEmits(['fetch-project'])

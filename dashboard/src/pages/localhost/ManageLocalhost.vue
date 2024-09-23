@@ -1,14 +1,14 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Error',
       message: dialogMessage,
     }"
   />
   <Header />
-  <div class="w-full p-4 flex items-center justify-center" v-if="localhost.data && requests.data">
+  <div v-if="localhost.data && requests.data" class="w-full p-4 flex items-center justify-center">
     <div class="max-w-screen-xl w-full">
       <div class="text-base font-medium mt-4">Manage LocalHost</div>
       <LocalhostHeader :localhost="localhost.data" />
@@ -41,7 +41,7 @@
           </div>
         </div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4" v-if="requests.data">
+      <div v-if="requests.data" class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4">
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
           <div class="text-base font-medium">Total Requests</div>
           <div class="text-2xl">

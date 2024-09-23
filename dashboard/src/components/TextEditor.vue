@@ -6,9 +6,9 @@
     >
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleBold().run()"
         :disabled="!editor.can().chain().focus().toggleBold().run()"
         :class="{ 'bg-gray-200': editor.isActive('bold') }"
+        @click="editor.chain().focus().toggleBold().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -29,9 +29,9 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleItalic().run()"
         :disabled="!editor.can().chain().focus().toggleItalic().run()"
         :class="{ 'bg-gray-200': editor.isActive('italic') }"
+        @click="editor.chain().focus().toggleItalic().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,9 +53,9 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleUnderline().run()"
         :disabled="!editor.can().chain().focus().toggleUnderline().run()"
         :class="{ 'bg-gray-200': editor.isActive('underline') }"
+        @click="editor.chain().focus().toggleUnderline().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -76,9 +76,9 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleStrike().run()"
         :disabled="!editor.can().chain().focus().toggleStrike().run()"
         :class="{ 'bg-gray-200': editor.isActive('strike') }"
+        @click="editor.chain().focus().toggleStrike().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -101,8 +101,8 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().setParagraph().run()"
         :class="{ 'bg-gray-200': editor.isActive('paragraph') }"
+        @click="editor.chain().focus().setParagraph().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -124,10 +124,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 1 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -154,10 +154,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 2 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -184,10 +184,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 3 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -215,10 +215,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 4 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -245,10 +245,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 5 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -275,10 +275,10 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
         :class="{
           'bg-gray-200': editor.isActive('heading', { level: 6 }),
         }"
+        @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -306,8 +306,8 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleBulletList().run()"
         :class="{ 'bg-gray-200': editor.isActive('bulletList') }"
+        @click="editor.chain().focus().toggleBulletList().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -332,8 +332,8 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleOrderedList().run()"
         :class="{ 'bg-gray-200': editor.isActive('orderedList') }"
+        @click="editor.chain().focus().toggleOrderedList().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -357,8 +357,8 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleCodeBlock().run()"
         :class="{ 'bg-gray-200': editor.isActive('codeBlock') }"
+        @click="editor.chain().focus().toggleCodeBlock().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -380,8 +380,8 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        @click="editor.chain().focus().toggleBlockquote().run()"
         :class="{ 'bg-gray-200': editor.isActive('blockquote') }"
+        @click="editor.chain().focus().toggleBlockquote().run()"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -447,6 +447,7 @@ const props = defineProps({
         modelValue is the v-model binding for the editor.
     */
     type: String,
+    default: '',
   },
   label: {
     type: String,

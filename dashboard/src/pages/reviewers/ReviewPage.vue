@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="w-full flex flex-col items-center" v-if="event.doc">
+  <div v-if="event.doc" class="w-full flex flex-col items-center">
     <div class="max-w-screen-xl p-4 w-full">
       <a href="/dashboard/review" class="text-base hover:underline flex items-center gap-1 my-4">
         <svg

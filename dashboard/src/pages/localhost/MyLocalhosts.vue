@@ -9,6 +9,7 @@
     <div v-if="localhosts.data.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
       <Card
         v-for="localhost in localhosts.data"
+        :key="localhost.name"
         :title="localhost.localhost_name"
         class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
         @click="$router.push('/localhost/' + localhost.name)"

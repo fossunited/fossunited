@@ -40,29 +40,29 @@
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="rsvp.doc.allow_edit"
             type="checkbox"
             label="Allow RSVP Edit"
             description=""
             size="md"
-            v-model="rsvp.doc.allow_edit"
           />
           <span class="text-sm text-gray-600"
             >Allow users to edit their RSVP after submission.</span
           >
         </div>
         <FormControl
+          v-model="rsvp.doc.max_rsvp_count"
           size="md"
           type="number"
           label="Max RSVP Count"
           description="Maximum RSVP Count for the event. Default is 100."
-          v-model="rsvp.doc.max_rsvp_count"
         />
         <TextEditor
           label="RSVP Form Description"
           class="col-span-2"
           placeholder="This description will be shown on the RSVP form."
-          :modelValue="rsvp.doc.rsvp_description"
-          @update:modelValue="($event) => (rsvp.doc.rsvp_description = $event)"
+          :model-value="rsvp.doc.rsvp_description"
+          @update:model-value="($event) => (rsvp.doc.rsvp_description = $event)"
         />
       </div>
     </div>
@@ -124,24 +124,25 @@
       <template #body-content>
         <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <FormControl
+            v-model="custom_field.question"
             class="col-span-2"
             size="md"
             type="text"
             label="Question"
             description="The question you want to ask the attendees."
-            v-model="custom_field.question"
           />
           <div>
             <FormControl
+              v-model="custom_field.is_mandatory"
               size="md"
               type="checkbox"
               label="Is Mandatory"
               description="Whether the question is mandatory or not."
-              v-model="custom_field.is_mandatory"
             />
             <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
+            v-model="custom_field.type"
             size="md"
             type="select"
             label="Type"
@@ -153,24 +154,23 @@
               { label: 'Check', value: 'Check' },
             ]"
             description="The type of question you want to ask."
-            v-model="custom_field.type"
           />
           <FormControl
-            class="col-span-2"
             v-if="custom_field.type === 'Select'"
+            v-model="custom_field.options"
+            class="col-span-2"
             size="md"
             type="textarea"
             label="Options"
             description="Options for the select field. Enter each option on a new line."
-            v-model="custom_field.options"
           />
           <FormControl
+            v-model="custom_field.description"
             class="col-span-2"
             size="md"
             type="textarea"
             label="Description"
             description="Description for the question."
-            v-model="custom_field.description"
           />
         </div>
       </template>
@@ -242,7 +242,7 @@ watch(rsvp_form, (newForm) => {
     fields: ['*'],
     auto: true,
     onSuccess: (doc) => {
-      whole_route = `${window.location.origin}/${doc.route}`
+      whole_route.value = `${window.location.origin}/${doc.route}`
       custom_field.idx = doc.custom_questions.length + 1
     },
   })

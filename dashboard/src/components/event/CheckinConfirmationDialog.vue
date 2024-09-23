@@ -1,12 +1,13 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Confirm Attendee Check In?',
     }"
   >
-    <template #body-content v-if="selectedAttendee">
+    <template v-if="selectedAttendee" #body-content>
       <div class="flex flex-col py-2">
         <p class="text-base">
           Are you sure you want to check in
@@ -55,29 +56,39 @@
           label="Check In"
           variant="solid"
           theme="green"
-          @click="checkinAttendee.fetch()"
           :loading="checkinAttendee.loading"
-          loadingText="Checking in..."
+          loading-text="Checking in..."
+          @click="checkinAttendee.fetch()"
         />
       </div>
     </template>
   </Dialog>
 </template>
+
+<!-- eslint-disable vue/no-mutating-props -->
 <script setup>
 import { toast } from 'vue-sonner'
 import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
 const props = defineProps({
-  selectedAttendee: Object,
-  attendees: Object,
+  selectedAttendee: {
+    type: Object,
+    default: () => null,
+  },
+  attendees: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const session = inject('$session')
 const route = inject('route')
 const assignTshirt = ref(false)
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+})
 
 const checkinAttendee = createResource({
   url: 'fossunited.api.checkins.checkin_attendee',

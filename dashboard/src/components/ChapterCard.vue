@@ -23,7 +23,7 @@ import CityComunityBranding from '@/components/CityCommunityBranding.vue'
 const props = defineProps({
   chapter: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 })
 </script>

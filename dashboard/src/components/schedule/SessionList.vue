@@ -5,7 +5,7 @@
       'h-full': view === 'horizontal',
     }"
   >
-    <div v-for="session in sessions" class="flex items-center">
+    <div v-for="session in sessions" :key="session.name" class="flex items-center">
       <div
         class="relative flex items-center justify-center"
         :class="{

@@ -4,7 +4,7 @@
   >
     <div class="flex gap-1">
       <slot name="label-prefix"></slot>
-      <div class="text-sm text-gray-600" v-if="label">
+      <div v-if="label" class="text-sm text-gray-600">
         <span>
           {{ label }}
         </span>
@@ -14,14 +14,14 @@
     <div class="flex gap-1 items-center">
       <slot name="input-prefix"></slot>
       <input
+        v-model="model"
         :placeholder="placeholder"
         class="focus:border-none focus:ring-0 border-none p-0 uppercase w-full"
         :type="type"
-        v-model="model"
         :class="inputClasses"
       />
     </div>
-    <small class="text-gray-600" v-if="description">
+    <small v-if="description" class="text-gray-600">
       {{ description }}
     </small>
   </div>
@@ -29,7 +29,10 @@
 <script setup>
 import { defineModel, defineProps } from 'vue'
 
-const model = defineModel()
+const model = defineModel({
+  type: [String, Number, Boolean, Object, Array],
+  default: '',
+})
 
 const props = defineProps({
   type: {

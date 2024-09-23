@@ -1,10 +1,10 @@
 <template>
   <Dialog
     :model-value="showDialog"
-    @update:model-value="updateShowDialog"
     :options="{
       title: 'Attendee Details',
     }"
+    @update:model-value="updateShowDialog"
   >
     <template #body-content>
       <div class="grid grid-cols-2 gap-4 text-base">
@@ -27,9 +27,9 @@
           <div class="flex flex-col gap-1">
             <div class="text-base font-medium">{{ participant.full_name }}</div>
             <div
-              @click="redirectRoute(participant.profile_route)"
-              class="text-sm text-green-600 hover:underline hover:cursor-pointer"
               v-if="participant.profile_username"
+              class="text-sm text-green-600 hover:underline hover:cursor-pointer"
+              @click="redirectRoute(participant.profile_route)"
             >
               {{ participant.profile_username }}
             </div>
@@ -53,8 +53,8 @@
           <div class="font-medium">Project</div>
           <div
             v-if="participant.project_title"
-            @click="redirectRoute(participant.project_route)"
             class="hover:underline hover:cursor-pointer flex items-center gap-1"
+            @click="redirectRoute(participant.project_route)"
           >
             {{ truncateStr(participant.project_title, 20)
             }}<FeatherIcon name="external-link" class="w-4 h-4 inline-block" />
@@ -72,11 +72,11 @@
       </div>
     </template>
     <template
-      #actions
       v-if="
         participant.localhost_request_status == 'Pending' ||
         participant.localhost_request_status == 'Pending Confirmation'
       "
+      #actions
     >
       <div class="grid grid-cols-2 gap-4">
         <Button

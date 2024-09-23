@@ -10,8 +10,8 @@
           Enter the username of the new member you want to add to the team.
         </div>
         <Autocomplete
-          :options="memberOptions.data"
           v-model="newMembers"
+          :options="memberOptions.data"
           placeholder="Search for a user"
           :multiple="true"
         >
@@ -34,8 +34,14 @@ import { Dialog, Autocomplete, createResource, Avatar } from 'frappe-ui'
 import { ref, defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
-  chapter: Object,
-  event: Object,
+  chapter: {
+    type: Object,
+    default: () => ({}),
+  },
+  event: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const existingMembers = computed(() => {

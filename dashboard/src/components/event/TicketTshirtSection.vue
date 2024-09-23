@@ -22,8 +22,13 @@
         </div>
       </div>
       <div class="mt-6 flex flex-col gap-1">
-        <div class="flex gap-2" v-if="inPriceEdit">
-          <Input class="w-1/3" v-model="newTshirtPrice" inputClasses="text-2xl" placeholder="0.00">
+        <div v-if="inPriceEdit" class="flex gap-2">
+          <Input
+            v-model="newTshirtPrice"
+            class="w-1/3"
+            input-classes="text-2xl"
+            placeholder="0.00"
+          >
           </Input>
           <Button icon="x" @click="inPriceEdit = false" />
           <Button icon="check" theme="green" @click="handleTshirtPriceUpdate" />

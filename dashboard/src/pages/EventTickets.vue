@@ -1,6 +1,6 @@
 <template>
   <div v-if="event.data" class="w-full z-0">
-    <EventHeader :event="event.doc" v-if="event.doc" class="p-4 md:p-8" />
+    <EventHeader v-if="event.doc" :event="event.doc" class="p-4 md:p-8" />
     <TabsWithRoute :tabs="tabs" />
     <RouterView class="p-4 md:p-8" :event="event" />
   </div>

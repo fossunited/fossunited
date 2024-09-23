@@ -9,7 +9,7 @@
       />
     </div>
     <TabsWithRoute :tabs="tabs.options" />
-    <RouterView @cfp-created="cfpCreated" :eventCfp="eventCfp" />
+    <RouterView :event-cfp="eventCfp" @cfp-created="cfpCreated" />
   </div>
 </template>
 <script setup>

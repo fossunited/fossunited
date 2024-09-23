@@ -18,7 +18,11 @@
       />
     </div>
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <Card v-for="member in chapter.doc.chapter_members" :title="member.full_name">
+      <Card
+        v-for="member in chapter.doc.chapter_members"
+        :key="member.name"
+        :title="member.full_name"
+      >
         <template v-if="member.email != session.user && member.role != 'Lead'" #actions>
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -39,8 +43,8 @@
     <!-- REMOVE A MEMBER -->
     <div v-if="selectedMember">
       <Dialog
-        class="z-50"
         v-model="showRemoveModal"
+        class="z-50"
         :options="{
           title: 'Remove Team Member?',
           message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
@@ -69,8 +73,8 @@
     <!-- ADD NEW MEMBER -->
     <div v-if="showAddmodal">
       <AddMemberDialog
-        class="z-50"
         v-model="showAddmodal"
+        class="z-50"
         :chapter="chapter"
         @update:add-member="addNewMember"
         @close-dialog="showAddmodal = false"

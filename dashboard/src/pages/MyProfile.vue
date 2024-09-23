@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <div class="w-full">
-      <div class="w-full" v-if="profile.data">
+      <div v-if="profile.data" class="w-full">
         <div class="prose p-4 pb-0">
           <h2 class="mb-1">My Profile</h2>
           <p class="text-sm mb-4">Edit your profile details</p>
@@ -18,11 +18,11 @@
             />
             <div class="top-3 right-3 absolute flex gap-1">
               <FileUploader
-                :fileTypes="'image/*'"
-                :validateFile="validateFile"
+                :file-types="'image/*'"
+                :validate-file="validateFile"
                 @success="(file) => setBannerImage(file)"
               >
-                <template v-slot="{ openFileSelector }">
+                <template #default="{ openFileSelector }">
                   <Button
                     :variant="'outline'"
                     :size="'sm'"
@@ -51,11 +51,11 @@
             />
             <FileUploader
               class="top-3 right-3 absolute"
-              :fileTypes="'image/*'"
-              :validateFile="validateFile"
+              :file-types="'image/*'"
+              :validate-file="validateFile"
               @success="(file) => setProfileImage(file)"
             >
-              <template v-slot="{ openFileSelector }">
+              <template #default="{ openFileSelector }">
                 <Button
                   :variant="'outline'"
                   :size="'sm'"
@@ -67,30 +67,30 @@
           </div>
           <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
+              v-model="profile.data.is_private"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
-              v-model="profile.data.is_private"
               @click="toggleProfilePrivacy()"
             />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
             </div>
             <FormControl
-              label="Full Name &ast;"
               v-model="profile_dict.full_name"
+              label="Full Name &ast;"
               placeholder="Enter your full name"
             />
             <FormControl
-              label="Email &ast;"
               v-model="profile_dict.user"
+              label="Email &ast;"
               placeholder="Enter your email"
               disabled
             />
             <div>
               <FormControl
-                label="Username &ast;"
                 v-model="profile_dict.username"
+                label="Username &ast;"
                 placeholder="Enter your username"
               />
               <div class="mt-2 flex items-center">
@@ -130,17 +130,17 @@
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
             <FormControl
-              label="Short Tagline"
               v-model="profile_dict.bio"
+              label="Short Tagline"
               description="A short tagline about yourself"
             />
-            <FormControl label="Current City" v-model="profile_dict.current_city" />
+            <FormControl v-model="profile_dict.current_city" label="Current City" />
             <TextEditor
               label="About"
               class="col-span-2"
               placeholder="Tell more about yourself here."
-              :modelValue="profile_dict.about"
-              @update:modelValue="profile_dict.about = $event"
+              :model-value="profile_dict.about"
+              @update:model-value="profile_dict.about = $event"
             />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">SOCIAL Links</h4>
@@ -149,16 +149,16 @@
               Enter the complete links to your social, including
               <code>https://</code>
             </div>
-            <FormControl type="url" label="Website" v-model="profile_dict.website" />
-            <FormControl type="url" label="Twitter / X" v-model="profile_dict.x" />
-            <FormControl type="url" label="LinkedIn" v-model="profile_dict.linkedin" />
-            <FormControl type="url" label="GitHub" v-model="profile_dict.github" />
-            <FormControl type="url" label="GitLab" v-model="profile_dict.gitlab" />
-            <FormControl type="url" label="Instagram" v-model="profile_dict.instagram" />
-            <FormControl type="url" label="YouTube" v-model="profile_dict.youtube" />
-            <FormControl type="url" label="Dev.to" v-model="profile_dict.devto" />
-            <FormControl type="url" label="Medium" v-model="profile_dict.medium" />
-            <FormControl type="url" label="Mastodon" v-model="profile_dict.mastodon" />
+            <FormControl v-model="profile_dict.website" type="url" label="Website" />
+            <FormControl v-model="profile_dict.x" type="url" label="Twitter / X" />
+            <FormControl v-model="profile_dict.linkedin" type="url" label="LinkedIn" />
+            <FormControl v-model="profile_dict.github" type="url" label="GitHub" />
+            <FormControl v-model="profile_dict.gitlab" type="url" label="GitLab" />
+            <FormControl v-model="profile_dict.instagram" type="url" label="Instagram" />
+            <FormControl v-model="profile_dict.youtube" type="url" label="YouTube" />
+            <FormControl v-model="profile_dict.devto" type="url" label="Dev.to" />
+            <FormControl v-model="profile_dict.medium" type="url" label="Medium" />
+            <FormControl v-model="profile_dict.mastodon" type="url" label="Mastodon" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">

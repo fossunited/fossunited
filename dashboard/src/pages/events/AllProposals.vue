@@ -15,9 +15,9 @@
     <div class="flex flex-col gap-y-3 justify-between my-7 md:flex-row md:items-center">
       <div class="w-full md:w-1/2">
         <TextInput
+          v-model="searchQuery"
           type="text"
           class="h-10"
-          v-model="searchQuery"
           placeholder="Search by proposal title"
           variant="subtle outline"
         >
@@ -38,13 +38,10 @@
     <div v-else-if="proposals.data">
       <!-- Talk proposals list -->
       <div class="mb-12">
-        <div
-          v-if="filteredProposals.length != 0"
-          v-for="(proposal, index) in filteredProposals"
-          :key="index"
-          class="border-b-2 py-4"
-        >
-          <ProposalBlock :proposal="proposal" />
+        <div v-if="filteredProposals.length != 0">
+          <div v-for="(proposal, index) in filteredProposals" :key="index" class="border-b-2 py-4">
+            <ProposalBlock :proposal="proposal" />
+          </div>
         </div>
         <div v-else>
           <h3>No proposals</h3>

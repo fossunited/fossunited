@@ -7,10 +7,14 @@
           <div class="flex gap-2 items-center">
             <label class="text-sm">Status:</label>
             <select
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
               v-model="selectedStatusFilter"
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
             >
-              <option v-for="(filter, index) in statusFilters" @click="filterByStatus(filter)">
+              <option
+                v-for="(filter, index) in statusFilters"
+                :key="index"
+                @click="filterByStatus(filter)"
+              >
                 {{ filter.label }}
               </option>
             </select>
@@ -18,11 +22,12 @@
           <div v-if="selectedStatusFilter == 'Reviewed'" class="flex gap-2 items-center">
             <label class="text-sm">Review Filter:</label>
             <select
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
               v-model="selectedToApproveFilter"
+              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
             >
               <option
                 v-for="(filter, index) in toApproveFilter"
+                :key="index"
                 @click="filterByToApprove(filter)"
               >
                 {{ filter.label }}
@@ -30,7 +35,7 @@
             </select>
           </div>
         </div>
-        <RefreshButton @click="cfpSubmissions.fetch" :inSpin="cfpSubmissions.loading" />
+        <RefreshButton :in-spin="cfpSubmissions.loading" @click="cfpSubmissions.fetch" />
       </div>
     </div>
     <ListView
@@ -67,7 +72,7 @@
         },
       }"
     >
-      <template #cell="{ item, row, column }">
+      <template #cell="{ item, column }">
         <div v-if="column.label == 'Status'">
           <Badge :theme="item == 'Reviewed' ? 'blue' : 'gray'" :label="item" />
         </div>

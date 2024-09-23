@@ -91,10 +91,10 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2 items-end">
               <FormControl
+                v-model="selected_row_data.doc.status"
                 label="Change Status"
                 type="select"
                 size="md"
-                v-model="selected_row_data.doc.status"
                 :options="[
                   {
                     label: 'Approved',
@@ -144,7 +144,7 @@
               class="flex flex-col mb-4 gap-2"
             >
               <div class="text-lg font-semibold mb-1 pb-2 border-b">Custom Question</div>
-              <div v-for="response in selected_row_data.doc.custom_answers">
+              <div v-for="response in selected_row_data.doc.custom_answers" :key="response.name">
                 <div class="font-semibold text-gray-800">
                   {{ response.question }}
                 </div>

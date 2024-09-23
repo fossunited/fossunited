@@ -1,7 +1,7 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Error',
       message: dialogMessage,
@@ -15,7 +15,7 @@
           <HackathonHeader
             v-if="hackathon_doc.data"
             :hackathon="hackathon_doc"
-            :showBanner="false"
+            :show-banner="false"
           />
         </div>
         <div class="flex flex-col md:items-end">

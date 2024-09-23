@@ -6,7 +6,7 @@
       title: 'Manage Attendee',
     }"
   >
-    <template #body-content v-if="selectedAttendee">
+    <template v-if="selectedAttendee" #body-content>
       <div class="flex flex-col gap-4">
         <div class="space-y-2">
           <div class="text-sm uppercase font-medium">Details</div>
@@ -37,7 +37,11 @@
             <div class="border-b-2 border-dashed border-gray-600 my-3"></div>
             <div class="flex flex-col gap-2">
               <div class="text-sm uppercase font-medium">Check-ins</div>
-              <div v-for="data in selectedAttendee.checkin_data" class="flex gap-2">
+              <div
+                v-for="(data, index) in selectedAttendee.checkin_data"
+                :key="index"
+                class="flex gap-2"
+              >
                 <span>-></span>
                 <span>
                   {{ dayjs(data.check_in_time).format('DD MMM YYYY, h:mm A') }}
@@ -47,12 +51,12 @@
           </div>
           <Button
             v-if="isCheckedInToday(selectedAttendee)"
-            @click="undoAttendeeCheckin.fetch()"
             class="!text-sm border-orange-600 hover:border-orange-400 text-orange-600"
-            iconLeft="alert-triangle"
+            icon-left="alert-triangle"
             label="Undo Check-In for Today"
             size="sm"
             variant="outline"
+            @click="undoAttendeeCheckin.fetch()"
           />
         </div>
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
@@ -69,7 +73,7 @@
             size="sm"
             variant="solid"
             :loading="assignTshirt.loading"
-            loadingText="Assigning..."
+            loading-text="Assigning..."
             @click="assignTshirt.fetch()"
           />
         </div>
@@ -77,21 +81,32 @@
     </template>
   </Dialog>
 </template>
+
+<!-- eslint-disable vue/no-mutating-props -->
 <script setup>
 import { defineProps, defineModel, inject } from 'vue'
 import { Dialog, createResource } from 'frappe-ui'
 import dayjs from 'dayjs'
 
 const props = defineProps({
-  attendees: Object,
-  selectedAttendee: Object,
+  attendees: {
+    type: Object,
+    required: true,
+  },
+  selectedAttendee: {
+    type: Object,
+    default: () => ({}),
+  },
 })
 
 const session = inject('$session')
 const route = inject('route')
 const isCheckedInToday = inject('isCheckedInToday')
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+  default: false,
+})
 
 const assignTshirt = createResource({
   url: 'fossunited.api.checkins.assign_tshirt',

@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-6" v-if="event.data">
+  <div v-if="event.data" class="flex flex-col gap-6">
     <!-- Manage Tickets -->
     <div>
       <div class="prose w-full">

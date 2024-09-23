@@ -5,20 +5,20 @@
   </div>
   <div class="flex flex-col flex-wrap md:flex-row gap-5 my-2 md:items-end">
     <FormControl
+      v-model="filters.search_text"
       type="search"
       label="Search"
       placeholder="Search by Name"
       class="md:w-1/4"
-      v-model="filters.search_text"
       @input="attendeesList.fetch()"
     />
     <FormControl
+      v-if="tiers.data"
+      v-model="filters.tier"
       type="select"
       label="Tier"
       class="md:w-1/6"
-      v-if="tiers.data"
       :options="tierOptions"
-      v-model="filters.tier"
       @change="attendeesList.fetch()"
     />
   </div>
@@ -64,7 +64,7 @@
       },
     }"
   >
-    <template #cell="{ item, row, column }" class="even:bg-gray-50">
+    <template #cell="{ item, row, column }">
       <div v-if="column.key === 'wants_tshirt'">
         <Checkbox :model-value="item" :disabled="true" />
       </div>

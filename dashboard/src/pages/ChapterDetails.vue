@@ -20,11 +20,11 @@
         />
         <div class="flex my-2 gap-2">
           <FileUploader
-            :fileTypes="'image/*'"
-            :validateFile="validateFile"
+            :file-types="'image/*'"
+            :validate-file="validateFile"
             @success="(file) => setBannerImage(file)"
           >
-            <template v-slot="{ file, progress, error, uploading, openFileSelector }">
+            <template #default="{ progress, uploading, openFileSelector }">
               <Button
                 :variant="'subtle'"
                 :size="'md'"
@@ -57,55 +57,55 @@
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <FormControl
+          v-model="chapter.doc.chapter_name"
           :type="'text'"
           size="md"
           :disabled="true"
-          v-model="chapter.doc.chapter_name"
           :label="chapter.doc.chapter_type == 'FOSS Club' ? 'Club Name' : 'Community Name'"
         />
         <FormControl
+          v-model="chapter.doc.chapter_type"
           :type="'text'"
           size="md"
           :disabled="true"
-          v-model="chapter.doc.chapter_type"
           label="Chapter Type"
         />
         <div class="col-span-2">
           <TextEditor
             label="About Chapter"
             placeholder="Write a description about the chapter"
-            :modelValue="chapter.doc.about_chapter"
-            @update:modelValue="($event) => (chapter.doc.about_chapter = $event)"
+            :model-value="chapter.doc.about_chapter"
+            @update:model-value="($event) => (chapter.doc.about_chapter = $event)"
           />
         </div>
       </div>
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
       <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormControl
+          v-model="chapter.doc.city"
           :type="'text'"
           :disabled="true"
           size="md"
-          v-model="chapter.doc.city"
           label="City"
         />
         <FormControl
+          v-model="chapter.doc.state"
           :type="'text'"
           size="md"
           :disabled="true"
-          v-model="chapter.doc.state"
           label="State"
         />
         <FormControl
+          v-model="chapter.doc.country"
           :type="'text'"
           size="md"
           :disabled="true"
-          v-model="chapter.doc.country"
           label="Country"
         />
         <FormControl
+          v-model="chapter.doc.google_map_link"
           :type="'text'"
           size="md"
-          v-model="chapter.doc.google_map_link"
           label="Map Link"
         />
       </div>
@@ -116,7 +116,7 @@
         <i>Eg: https://twitter.com/fossunited</i>
       </p>
       <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormControl :type="'email'" size="md" v-model="chapter.doc.email" label="Email">
+        <FormControl v-model="chapter.doc.email" :type="'email'" size="md" label="Email">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +136,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl :type="'url'" size="md" v-model="chapter.doc.x" label="Twitter">
+        <FormControl v-model="chapter.doc.x" :type="'url'" size="md" label="Twitter">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -156,7 +156,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl :type="'url'" size="md" v-model="chapter.doc.facebook" label="Facebook">
+        <FormControl v-model="chapter.doc.facebook" :type="'url'" size="md" label="Facebook">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +175,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl :type="'url'" size="md" v-model="chapter.doc.linkedin" label="LinkedIn">
+        <FormControl v-model="chapter.doc.linkedin" :type="'url'" size="md" label="LinkedIn">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -200,7 +200,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl :type="'url'" size="md" v-model="chapter.doc.instagram" label="Instagram">
+        <FormControl v-model="chapter.doc.instagram" :type="'url'" size="md" label="Instagram">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -223,7 +223,7 @@
             </svg>
           </template>
         </FormControl>
-        <FormControl :type="'url'" size="md" v-model="chapter.doc.mastodon" label="Mastodon">
+        <FormControl v-model="chapter.doc.mastodon" :type="'url'" size="md" label="Mastodon">
           <template #prefix>
             <svg
               xmlns="http://www.w3.org/2000/svg"

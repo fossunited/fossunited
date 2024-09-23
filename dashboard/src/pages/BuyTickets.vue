@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
   <RazorpayCheckout ref="rzpCheckout" />
   <Header />
@@ -34,18 +35,18 @@
         <div
           class="my-2 text-gray-700"
           v-html="markdown.render(event.data.ticket_form_description || '')"
-        />
-        <RadioGroup class="py-4" v-model="checkoutInfo.tier">
+        ></div>
+        <RadioGroup v-model="checkoutInfo.tier" class="py-4">
           <RadioGroupLabel class="text-lg font-semibold leading-6 text-gray-800">
             Select a tier
           </RadioGroupLabel>
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]">
             <RadioGroupOption
-              as="template"
               v-for="tier in ticketTiers"
               :key="tier.name"
-              :value="tier"
               v-slot="{ active, checked }"
+              as="template"
+              :value="tier"
             >
               <div
                 :class="[
@@ -62,12 +63,12 @@
                       <RadioGroupDescription
                         as="span"
                         class="mt-2 text-sm text-gray-500"
-                        v-html="markdown.render(tier.description || '')"
+                        :innerHTML="markdown.render(tier.description || '')"
                       >
                       </RadioGroupDescription>
                     </span>
                     <span class="flex flex-col gap-4 mt-4">
-                      <Badge class="w-fit" variant="outline" theme="green" v-if="tier.valid_till"
+                      <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
                         >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
                       >
                       <RadioGroupDescription as="span" class="text-xl font-medium text-gray-900"
@@ -105,12 +106,12 @@
           <div class="flex flex-col gap-1">
             <span class="text-lg font-semibold leading-6 text-gray-800">No. of Tickets</span>
             <FormControl
+              v-model="checkoutInfo.numSeats"
               class="w-1/4"
               type="select"
               :options="seatOptions"
               size="md"
               variant="subtle"
-              v-model="checkoutInfo.numSeats"
             />
           </div>
 
@@ -119,12 +120,13 @@
             <div class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0">
               <FormControl
                 v-for="field in event.data.custom_fields"
+                :key="field.name"
+                v-model="customFields[field.field_name]"
                 :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
                 :label="field.label"
                 :options="field.options"
                 size="sm"
                 variant="subtle"
-                v-model="customFields[field.field_name]"
               />
             </div>
           </div>
@@ -140,32 +142,32 @@
               <p class="text-base text-gray-600 font-medium mb-1">#{{ index + 1 }}</p>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
                 <FormControl
+                  v-model="attendee.full_name"
                   type="text"
                   size="sm"
                   variant="subtle"
                   :placeholder="attendee.placeholder"
                   label="Full Name"
-                  v-model="attendee.full_name"
                 />
                 <FormControl
+                  v-model="attendee.email"
                   type="email"
                   size="sm"
                   variant="subtle"
-                  v-model="attendee.email"
                   label="Email"
                 />
                 <FormControl
+                  v-model="attendee.organization"
                   type="text"
                   size="sm"
                   variant="subtle"
-                  v-model="attendee.organization"
                   label="Organization / College"
                 />
                 <FormControl
+                  v-model="attendee.designation"
                   type="text"
                   size="sm"
                   variant="subtle"
-                  v-model="attendee.designation"
                   label="Designation"
                 />
               </div>
@@ -174,13 +176,14 @@
                 class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2"
               >
                 <FormControl
+                  v-model="attendee.wants_tshirt"
                   type="checkbox"
                   size="sm"
                   variant="subtle"
                   label="Add a T-shirt?"
-                  v-model="attendee.wants_tshirt"
                 />
                 <FormControl
+                  v-model="attendee.tshirt_size"
                   :class="attendee.wants_tshirt ? '' : ' invisible'"
                   type="select"
                   :options="T_SHIRT_SIZES"
@@ -188,7 +191,6 @@
                   class="min-w-[100px]"
                   variant="subtle"
                   label="Size"
-                  v-model="attendee.tshirt_size"
                 />
               </div>
             </div>
@@ -198,62 +200,62 @@
             <h4 class="text-base font-semibold">Billing Details</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormControl
+                v-model="checkoutInfo.buyer_name"
                 type="text"
                 size="sm"
                 variant="subtle"
                 placeholder="John Doe"
                 label="Name"
-                v-model="checkoutInfo.buyer_name"
               />
               <FormControl
+                v-model="checkoutInfo.email"
                 type="email"
                 size="sm"
                 variant="subtle"
                 placeholder="john@fossunited.org"
                 label="Email"
-                v-model="checkoutInfo.email"
               />
               <FormControl
+                v-model="checkoutInfo.state"
                 type="select"
                 size="sm"
                 variant="subtle"
                 label="State"
                 :options="stateOptions.data"
-                v-model="checkoutInfo.state"
                 :placeholder="stateOptions.data[0]?.label"
               />
             </div>
             <div class="my-2">
               <Switch
+                v-model="checkoutInfo.hasGST"
                 class="w-fit"
                 label="Enter GST Details"
                 description="Invoice will be generated with GST details."
-                v-model="checkoutInfo.hasGST"
               />
             </div>
             <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div class="flex flex-col gap-2">
                 <FormControl
+                  v-model="checkoutInfo.company_name"
                   type="text"
                   size="sm"
                   variant="subtle"
                   label="Company Name"
-                  v-model="checkoutInfo.company_name"
                 />
                 <FormControl
+                  v-model="checkoutInfo.gstn"
                   type="text"
                   size="sm"
                   variant="subtle"
                   label="GSTN (optional)"
-                  v-model="checkoutInfo.gstn"
                 />
               </div>
               <FormControl
+                v-model="checkoutInfo.billing_address"
                 type="textarea"
                 size="sm"
                 variant="subtle"
                 label="Billing Address"
-                v-model="checkoutInfo.billing_address"
               />
             </div>
           </div>
@@ -289,13 +291,13 @@
           <p class="justify-self-end">₹{{ totalAmount }}</p>
         </div>
 
-        <ErrorMessage class="m-2 mt-5" v-if="errorMessage" :message="errorMessage" />
+        <ErrorMessage v-if="errorMessage" class="m-2 mt-5" :message="errorMessage" />
         <Button
           class="mt-4 w-full"
           size="md"
           :loading="rzpCheckout?.resource.loading"
-          @click="createOrder"
           variant="solid"
+          @click="createOrder"
         >
           Pay Now
         </Button>
@@ -316,8 +318,8 @@
       <Button
         size="sm"
         variant="ghost"
-        @click="showAdditionalDetails = !showAdditionalDetails"
         label="Show Details"
+        @click="showAdditionalDetails = !showAdditionalDetails"
       />
     </div>
     <div v-if="showAdditionalDetails" class="w-full mt-2 space-y-1">
@@ -338,7 +340,7 @@
       </div>
       <hr class="my-2" />
     </div>
-    <ErrorMessage class="m-2 mt-5" v-if="errorMessage" :message="errorMessage" />
+    <ErrorMessage v-if="errorMessage" class="m-2 mt-5" :message="errorMessage" />
     <div class="grid grid-cols-3 gap-2 mt-2 font-semibold">
       <p>Total</p>
       <p class="justify-self-center"></p>
@@ -348,8 +350,8 @@
       class="mt-4 w-full"
       size="md"
       :loading="rzpCheckout?.resource.loading"
-      @click="createOrder"
       variant="solid"
+      @click="createOrder"
     >
       Pay Now
     </Button>
@@ -377,7 +379,6 @@ import {
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue'
-
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
 
 const dayjs = inject('$dayjs')
@@ -475,13 +476,16 @@ const redirectToEvent = computed(() => {
   if (event.data) {
     return `${window.location.origin}/${event.data.route}`
   }
+  return window.location.origin
 })
 
 function resetCustomFields() {
-  for (let field of event.data?.custom_fields) {
-    customFields[field.field_name] = ''
-    if (field.field_type == 'Select') {
-      field.options = field.options.split('\n')
+  if (event.data?.custom_fields) {
+    for (let field of event.data.custom_fields) {
+      customFields[field.field_name] = ''
+      if (field.field_type == 'Select') {
+        field.options = field.options.split('\n')
+      }
     }
   }
 }

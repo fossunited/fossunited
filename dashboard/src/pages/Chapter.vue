@@ -1,20 +1,20 @@
 <template>
   <Dialog
-    class="z-50"
     v-model="showDialog"
+    class="z-50"
     :options="{
       title: 'Error',
       message: dialogMessage,
     }"
   />
-  <div class="flex" v-if="chapter.data">
+  <div v-if="chapter.data" class="flex">
     <SideNavbar
       title="Manage Chapter"
-      :menuItems="sidebarMenuItems"
+      :menu-items="sidebarMenuItems"
       :class="showNav ? 'z-50 block mt-[55px]' : 'hidden md:block'"
     />
     <div class="w-full md:ml-[220px]">
-      <HeaderWithNav @toggleSidebar="($event) => (showNav = $event)" />
+      <HeaderWithNav @toggle-sidebar="($event) => (showNav = $event)" />
       <RouterView />
     </div>
   </div>

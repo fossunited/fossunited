@@ -26,6 +26,7 @@ import ColumnIcon from '@/components/icons/ColumnIcon.vue'
 const model = defineModel({
   prop: 'selectedScheduleView',
   event: 'change',
+  type: String,
 })
 
 const changeModelValue = (index) => {

@@ -18,10 +18,10 @@
           {{ tier.price }} <span class="text-lg">{{ tier.currency }}</span>
         </h3>
       </div>
-      <div class="text-xs text-gray-600" v-if="tier.valid_till">
+      <div v-if="tier.valid_till" class="text-xs text-gray-600">
         Closes: {{ new Date(tier.valid_till).toDateString() }}
       </div>
-      <div class="text-xs text-gray-600" v-if="tier.maximum_tickets">
+      <div v-if="tier.maximum_tickets" class="text-xs text-gray-600">
         Max Tickets: {{ tier.maximum_tickets }}
       </div>
     </div>

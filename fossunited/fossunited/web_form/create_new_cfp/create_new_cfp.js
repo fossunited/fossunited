@@ -51,7 +51,6 @@ function handle_cfp_edit() {
         name: frappe.web_form.doc.name,
       },
       callback: (r) => {
-        console.log(r)
         if (r.message) {
           document
             .getElementsByClassName('web-form-title')[0]

@@ -1,5 +1,5 @@
 <template>
-  <TabGroup @change="changeModelValue" :class="{ hidden: dates.length <= 1 }">
+  <TabGroup :class="{ hidden: dates.length <= 1 }" @change="changeModelValue">
     <TabList class="flex flex-wrap gap-5">
       <Tab
         v-for="(date, index) in dates"
@@ -36,6 +36,7 @@ const props = defineProps({
 const model = defineModel({
   prop: 'selectedDate',
   event: 'change',
+  type: String,
 })
 
 function changeModelValue(index) {

@@ -9,8 +9,8 @@
     <template #body-content>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div
-          class="col-span-2 flex items-end justify-between border border-gray-600 p-3 border-dashed rounded-sm"
           v-if="!inCreateMode"
+          class="col-span-2 flex items-end justify-between border border-gray-600 p-3 border-dashed rounded-sm"
         >
           <div class="flex flex-col gap-2">
             <div class="text-sm text-gray-600">Status</div>
@@ -113,7 +113,7 @@ import LivePing from '@/components/animation/LivePing.vue'
 const props = defineProps({
   tier: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   inCreateMode: {
     type: Boolean,
@@ -124,7 +124,10 @@ const emit = defineEmits(['update-tier'])
 
 const route = useRoute()
 
-const showDialog = defineModel()
+const showDialog = defineModel({
+  type: Boolean,
+  default: false,
+})
 
 const modifyTier = reactive({
   enabled: false,
