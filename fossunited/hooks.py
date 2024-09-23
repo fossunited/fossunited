@@ -26,32 +26,12 @@ website_route_rules = [
         "to_route": "dashboard",
     },
     {
-        "from_route": "/events/<event>/cfp/new",
-        "to_route": "/cfp/create/new",
-    },
-    {
-        "from_route": "/events/<event>/rsvp/new",
-        "to_route": "/rsvp/create/new",
-    },
-    {
         "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },
     {
         "from_route": "/events/<event_permalink>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
-    },
-    {
-        "from_route": "/<foss_user>/edit-profile",
-        "to_route": "/foss_profile/edit",
-    },
-    {
-        "from_route": "/create-foss-profile",
-        "to_route": "/foss_profile/create",
-    },
-    {
-        "from_route": "/events/<event_permalink>/book-conference-ticket",
-        "to_route": "/book-conference-ticket",
     },
     {
         "from_route": "/hack/<permalink>/projects/all",
