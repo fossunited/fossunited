@@ -253,10 +253,17 @@ def get_month_grouped_events(events, hackathons):
             month_grouped_events[key][month_year] = list(month_year_events)
 
     for key in month_grouped_events:
-        sorted_month_years = sorted(
-            month_grouped_events[key].keys(),
-            key=lambda x: datetime.strptime(x, "%B %Y"),
-        )
+        if key == "Upcoming FOSS Events":
+            sorted_month_years = sorted(
+                month_grouped_events[key].keys(),
+                key=lambda x: datetime.strptime(x, "%B %Y"),
+            )
+        else:
+            sorted_month_years = sorted(
+                month_grouped_events[key].keys(),
+                key=lambda x: datetime.strptime(x, "%B %Y"),
+                reverse=True,
+            )
         month_grouped_events[key] = {
             month: month_grouped_events[key][month] for month in sorted_month_years
         }
