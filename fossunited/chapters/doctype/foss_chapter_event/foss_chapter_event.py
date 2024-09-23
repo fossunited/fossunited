@@ -273,51 +273,38 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "is_published": rsvp_form.is_published,
                 "is_unpublished": not rsvp_form.is_published,
             }
-            if is_user_team_member(self.chapter, frappe.session.user):
-                rsvp_status_block |= {
-                    "is_team_member": True,
-                    "form_edit": True,
-                    "is_published": rsvp_form.is_published,
-                    "is_unpublished": not rsvp_form.is_published,
-                }
-            else:
-                rsvp_status_block["is_team_member"] = False
-                if frappe.db.exists(
+            rsvp_status_block["is_team_member"] = False
+            if frappe.db.exists(
+                RSVP_RESPONSE,
+                {
+                    "linked_rsvp": rsvp_form.name,
+                    "submitted_by": frappe.session.user,
+                },
+            ):
+                submission = frappe.get_doc(
                     RSVP_RESPONSE,
                     {
                         "linked_rsvp": rsvp_form.name,
                         "submitted_by": frappe.session.user,
                     },
-                ):
-                    submission = frappe.get_doc(
-                        RSVP_RESPONSE,
-                        {
-                            "linked_rsvp": rsvp_form.name,
-                            "submitted_by": frappe.session.user,
-                        },
-                    )
-                    rsvp_status_block |= {
-                        "has_submitted": True,
-                        "block_heading": "You have RSVP'd",
-                        "submission": submission.name,
-                        "edit_submission": True,
-                    }
-                else:
-                    rsvp_status_block["show_primary_cta"] = True
-                    rsvp_status_block["primary_cta"] = "RSVP for the event"
+                )
+                rsvp_status_block |= {
+                    "has_submitted": True,
+                    "block_heading": "You have RSVP'd",
+                    "submission": submission.name,
+                    "edit_submission": True,
+                }
+            else:
+                rsvp_status_block["show_primary_cta"] = True
+                rsvp_status_block["primary_cta"] = "RSVP for the event"
 
             if not rsvp_form.is_published:
-                rsvp_status_block["block_heading"] = "RSVP Form is Unpublished!"
+                rsvp_status_block["block_heading"] = "RSVP form is closed!"
         else:
             rsvp_status_block["has_doc"] = False
-            rsvp_status_block["block_heading"] = "RSVP Form is not live yet!"
-            if is_user_team_member(self.chapter, frappe.session.user):
-                rsvp_status_block["block_heading"] = "Create RSVP for the event"
-                rsvp_status_block["is_team_member"] = True
-                rsvp_status_block["create_form"] = True
-            else:
-                rsvp_status_block["is_team_member"] = False
-                rsvp_status_block["show_primary_cta"] = False
+            rsvp_status_block["block_heading"] = "RSVP form is not live yet!"
+            rsvp_status_block["is_team_member"] = False
+            rsvp_status_block["show_primary_cta"] = False
         return rsvp_status_block
 
     def get_cfp_status_block(self):
@@ -340,50 +327,37 @@ class FOSSChapterEvent(WebsiteGenerator):
                 "is_published": cfp_form.is_published,
                 "is_unpublished": not cfp_form.is_published,
             }
-            if is_user_team_member(self.chapter, frappe.session.user):
-                cfp_status_block |= {
-                    "is_team_member": True,
-                    "form_edit": True,
-                    "is_published": cfp_form.is_published,
-                    "is_unpublished": not cfp_form.is_published,
-                }
-            else:
-                cfp_status_block["is_team_member"] = False
-                if frappe.db.exists(
+            cfp_status_block["is_team_member"] = False
+            if frappe.db.exists(
+                PROPOSAL,
+                {
+                    "linked_cfp": cfp_form.name,
+                    "submitted_by": frappe.session.user,
+                },
+            ):
+                submission = frappe.get_doc(
                     PROPOSAL,
                     {
                         "linked_cfp": cfp_form.name,
                         "submitted_by": frappe.session.user,
                     },
-                ):
-                    submission = frappe.get_doc(
-                        PROPOSAL,
-                        {
-                            "linked_cfp": cfp_form.name,
-                            "submitted_by": frappe.session.user,
-                        },
-                    )
-                    cfp_status_block |= {
-                        "has_submitted": True,
-                        "block_heading": "You have submitted a talk",
-                        "submission": submission.name,
-                    }
+                )
+                cfp_status_block |= {
+                    "has_submitted": True,
+                    "block_heading": "You have submitted a talk",
+                    "submission": submission.name,
+                }
 
-                cfp_status_block["show_primary_cta"] = True
-                cfp_status_block["primary_cta"] = "Submit a talk proposal"
+            cfp_status_block["show_primary_cta"] = True
+            cfp_status_block["primary_cta"] = "Submit a talk proposal"
 
             if not cfp_form.is_published:
                 cfp_status_block["block_heading"] = "Talk Proposal Form is Unpublished!"
         else:
             cfp_status_block["has_doc"] = False
             cfp_status_block["block_heading"] = "Talk Proposal Form is not live yet!"
-            if is_user_team_member(self.chapter, frappe.session.user):
-                cfp_status_block["block_heading"] = "Create Call for Proposal (CFP) for the event"
-                cfp_status_block["is_team_member"] = True
-                cfp_status_block["create_form"] = True
-            else:
-                cfp_status_block["is_team_member"] = False
-                cfp_status_block["show_primary_cta"] = False
+            cfp_status_block["is_team_member"] = False
+            cfp_status_block["show_primary_cta"] = False
         return cfp_status_block
 
     def get_user_cfp_submissions(self):
