@@ -352,6 +352,7 @@ h6 {
 
 .primary-button {
   display: flex;
+  height: max-content;
   padding: 0.75rem 1rem;
   justify-content: center;
   align-items: center;
@@ -359,9 +360,8 @@ h6 {
   border-radius: 0.5rem;
   background: hsl(var(--clr-foss-mint-500, #08b74f));
   color: #fff;
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 450;
-  height: max-content;
 }
 
 .primary-button:hover {
@@ -373,6 +373,7 @@ h6 {
 
 .secondary-button {
   display: flex;
+  height: max-content;
   padding: 0.75rem 1rem;
   justify-content: center;
   align-items: center;
@@ -383,6 +384,7 @@ h6 {
   background: white;
   color: hsl(var(--clr-foss-mint-500));
   font-weight: 450;
+  font-size: var(--text-base);
 }
 
 .secondary-button:hover {
