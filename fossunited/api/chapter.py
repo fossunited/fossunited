@@ -3,7 +3,7 @@ import frappe
 from fossunited.doctype_ids import CHAPTER, USER_PROFILE
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def check_if_chapter_member(chapter: str, user: str = frappe.session.user) -> bool:
     """
     Check if the user is a member of the chapter.

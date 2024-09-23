@@ -33,14 +33,16 @@
           {% endif %}
           <h1 class="header--event-title">{{ doc.event_name }}</h1>
         </div>
-        {% if doc.is_paid_event %}
-          <button
-            class="primary-button ticket-button"
-            onClick="window.location.href='/dashboard/buy-tickets?event={{ doc.name }}'"
-          >
-            Buy Ticket
-          </button>
-        {% endif %}
+        <div class="d-flex gap-4" id="header-cta">
+          {% if doc.is_paid_event %}
+            <button
+              class="primary-button ticket-button"
+              onClick="window.location.href='/dashboard/buy-tickets?event={{ doc.name }}'"
+            >
+              Buy Ticket
+            </button>
+          {% endif %}
+        </div>
       </div>
       <div class="header--tags">
         {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
@@ -325,6 +327,21 @@
     $(document).ready(function () {
       $('.schedule-grid').hide()
       $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show()
+
+      frappe.call({
+        method: 'fossunited.api.chapter.check_if_chapter_member',
+        args: {
+          chapter: '{{ doc.chapter }}',
+          user: frappe.session.user,
+        },
+        callback: (r) => {
+          if (r.message) {
+            $('#header-cta').prepend(
+              '<button class="secondary-button mr-2" onClick="window.location.href=\'/dashboard/event/{{ doc.name }}\'">Edit Event</button>'
+            )
+          }
+        }
+      })
     })
 
     function showScheduleByDate() {
