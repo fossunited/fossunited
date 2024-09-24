@@ -1,0 +1,33 @@
+name: publish-github-pages
+
+on:
+  push:
+    branches:
+      - docs
+    paths:
+      - 'docs/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs
+      - run: pip install mkdocs-material
+
+      # The -d (output) path is relative to the -f (source) path
+      - name: Build docs site
+        run: mkdocs build -f docs/mkdocs.yml
+
+      - name: Deploy
+        run: |
+          cd docs
+          mkdocs gh-deploy

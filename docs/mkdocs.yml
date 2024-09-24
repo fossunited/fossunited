@@ -1,7 +1,7 @@
-site_name: "FOSS United"
-docs_dir: fossunited-docs
+site_name: FOSS United Platform / Docs
 theme:
   name: material
+  logo: /assets/fossunited-white.svg
   features:
   - navigation.sections
   - navigation.instant
