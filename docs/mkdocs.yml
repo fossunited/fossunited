@@ -1,4 +1,5 @@
 site_name: FOSS United Platform / Docs
+
 theme:
   name: material
   logo: /assets/fossunited-white.svg
