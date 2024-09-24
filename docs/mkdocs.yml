@@ -3,6 +3,7 @@ site_name: FOSS United Platform / Docs
 theme:
   name: material
   logo: /assets/fossunited-white.svg
+  favicon: /assets/fossunited-white.svg
   features:
   - navigation.sections
   - navigation.instant

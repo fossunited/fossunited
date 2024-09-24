@@ -3,7 +3,7 @@ name: publish-github-pages
 on:
   push:
     branches:
-      - docs
+      - develop
     paths:
       - 'docs/**'
   workflow_dispatch:
@@ -23,11 +23,10 @@ jobs:
       - run: pip install mkdocs
       - run: pip install mkdocs-material
 
-      # The -d (output) path is relative to the -f (source) path
       - name: Build docs site
         run: mkdocs build -f docs/mkdocs.yml
 
       - name: Deploy
         run: |
           cd docs
-          mkdocs gh-deploy
+          mkdocs gh-deploy --force
