@@ -10,7 +10,7 @@ This guide provides an overview of the platform's architecture, features, and ho
 - Management of city-wise communities
 - Event hosting - free and paid
 
-Find the extended feature set [here]().
+Find the extended feature set [here](features.md).
 
 ### Tech Stack
 
