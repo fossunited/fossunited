@@ -144,7 +144,9 @@ class FOSSChapter(WebsiteGenerator):
             self.set_slug()
 
         if frappe.db.exists("FOSS Chapter", {"slug": self.slug, "name": ["!=", self.name]}):
-            frappe.throw(f"Chapter with slug {self.slug} already exists")
+            frappe.throw(
+                f"Chapter with slug {self.slug} already exists", frappe.UniqueValidationError
+            )
 
         if " " in self.slug:
             frappe.throw("Slug cannot have spaces")

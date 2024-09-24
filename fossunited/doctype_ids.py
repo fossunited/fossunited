@@ -17,6 +17,7 @@ HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 # Chapter-related identifiers
 CHAPTER = "FOSS Chapter"
 EVENT = "FOSS Chapter Event"
+CITY_COMMUNITY = "City Community"
 STUDENT_CLUB = "FOSS Club"
 CONFERENCE = "Conference"
 

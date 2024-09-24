@@ -5,18 +5,19 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import CHAPTER, STUDENT_CLUB, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, CITY_COMMUNITY, USER_PROFILE
+
+fake = Faker()
 
 
 class TestFOSSChapter(FrappeTestCase):
     def setUp(self):
-        fake = Faker()
-
         chapter = frappe.get_doc(
             {
                 "doctype": CHAPTER,
                 "chapter_name": fake.text(max_nb_chars=40),
-                "chapter_type": STUDENT_CLUB,
+                "chapter_type": CITY_COMMUNITY,
+                "slug": fake.slug(),
                 "city": "Pune",
                 "country": "India",
                 "email": fake.email(),
@@ -113,3 +114,30 @@ class TestFOSSChapter(FrappeTestCase):
                 self.fail(f"Role not retained for {member}")
 
         self.assertFalse(has_role)
+
+    def test_unique_chapter_slug(self):
+        # Given a chapter: self.chapter
+        chapter = self.chapter
+
+        # When a new chapter is created with the same slug
+        new_chapter = frappe.get_doc(
+            {
+                "doctype": CHAPTER,
+                "chapter_name": "Test Chapter",
+                "chapter_type": CITY_COMMUNITY,
+                "slug": chapter.slug,
+                "city": "Mumbai",
+                "country": "India",
+                "email": fake.email(),
+                "facebook": fake.url(),
+                "instagram": fake.url(),
+                "linkedin": fake.url(),
+                "mastodon": fake.url(),
+                "public_chat_group_url": fake.url(),
+                "state": "Maharashtra",
+                "x": fake.url(),
+            }
+        )
+
+        with self.assertRaises(frappe.UniqueValidationError):
+            new_chapter.insert()
