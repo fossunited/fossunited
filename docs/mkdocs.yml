@@ -2,3 +2,29 @@ site_name: "FOSS United"
 docs_dir: fossunited-docs
 theme:
   name: material
+  features:
+  - navigation.sections
+  - navigation.instant
+  - toc.integrate
+  - navigation.top
+  - search.suggest
+  - search.highlight
+  - content.tabs.link
+  - content.code.annotation
+  - content.code.copy
+  language: en
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+      primary: green
+      accent: teal
+    - scheme: slate
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+      primary: green
+      accent: light-green
+  font:
+    text: Inter
