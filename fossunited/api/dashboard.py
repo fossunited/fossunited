@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import EVENT, USER_PROFILE
+from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT, USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -39,7 +39,7 @@ def create_razorpay_order(
 
     frappe.get_doc(
         {
-            "doctype": "Razorpay Payment",
+            "doctype": RAZORPAY_PAYMENT,
             "amount": checkout_info["amount"],
             "email": checkout_info["email"],
             "buyer_name": checkout_info.get("tax_details", {}).get("buyer_name"),
@@ -71,7 +71,7 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
     )
 
     # update payment
-    payment = frappe.get_doc("Razorpay Payment", {"order_id": order_id})
+    payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
     payment.status = "Captured"
     payment.payment_id = payment_id
     payment.save(ignore_permissions=True)
@@ -79,7 +79,7 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
 
 @frappe.whitelist(allow_guest=True)
 def handle_payment_failed(order_id):
-    payment = frappe.get_doc("Razorpay Payment", {"order_id": order_id})
+    payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
     payment.status = "Failed"
     payment.save(ignore_permissions=True)
 

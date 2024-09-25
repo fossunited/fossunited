@@ -33,3 +33,9 @@ RSVP_RESPONSE = "FOSS Event RSVP Submission"
 # Ticket-related identifiers
 EVENT_TICKET = "FOSS Event Ticket"
 TICKET_TRANSFER = "FOSS Event Ticket Transfer"
+
+# Payments
+
+RAZORPAY_PAYMENT = "Razorpay Payment"
+RAZORPAY_SETTINGS = "Razorpay Settings"
+RAZORPAY_WEBHOOK_LOG = "Razorpay Webhook Log"

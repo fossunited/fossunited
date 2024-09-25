@@ -40,6 +40,7 @@ class RazorpayPayment(Document):
             "Refund Pending",  # noqa: F722, F821
             "Refunded",  # noqa: F722, F821
         ]
+
     # end: auto-generated types
 
     @frappe.whitelist()
