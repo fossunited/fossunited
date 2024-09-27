@@ -20,6 +20,10 @@ EVENT = "FOSS Chapter Event"
 CITY_COMMUNITY = "City Community"
 STUDENT_CLUB = "FOSS Club"
 CONFERENCE = "Conference"
+CHAPTER_MEMBER = "FOSS Chapter Lead Team Member"
+
+# Event-related identifiers
+EVENT_VOLUNTEER = "FOSS Chapter Event Member"
 
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
