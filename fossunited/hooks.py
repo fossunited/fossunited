@@ -26,11 +26,11 @@ website_route_rules = [
         "to_route": "dashboard",
     },
     {
-        "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
+        "from_route": "/<path:event_route>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },
     {
-        "from_route": "/events/<event_permalink>/rsvp/<submission>/edit",
+        "from_route": "/<path:event_route>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
     },
     {
