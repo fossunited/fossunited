@@ -80,6 +80,6 @@ doc_events = {
 }
 
 website_redirects = [
-    {"source": r"events/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
-    {"source": r"events/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
+    {"source": r"c/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
+    {"source": r"c/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
 ]

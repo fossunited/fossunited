@@ -67,27 +67,28 @@ import EventHeader from '@/components/schedule/EventHeader.vue'
 import ThemedSelectBlack from '@/components/common/ThemedSelectBlack.vue'
 
 const route = useRoute()
-const eventPermalink = route.params.permalink
 
 const event = createResource({
-  url: 'fossunited.api.dashboard.get_event_from_permalink',
-  params: {
-    permalink: eventPermalink,
-    fields: [
-      'name',
-      'chapter',
-      'chapter_name',
-      'event_name',
-      'event_start_date',
-      'event_end_date',
-      'event_location',
-      'event_bio',
-      'is_external_event',
-      'external_event_url',
-      'event_logo',
-      'proposal_page_description',
-      'route',
-    ],
+  url: 'fossunited.api.dashboard.get_event_from_route',
+  makeParams() {
+    return {
+      route: route.params.route,
+      fields: [
+        'name',
+        'chapter',
+        'chapter_name',
+        'event_name',
+        'event_start_date',
+        'event_end_date',
+        'event_location',
+        'event_bio',
+        'is_external_event',
+        'external_event_url',
+        'event_logo',
+        'proposal_page_description',
+        'route',
+      ],
+    }
   },
   auto: true,
   onSuccess(data) {
@@ -105,9 +106,11 @@ const proposals = createResource({
   auto: false,
 })
 
-usePageMeta(() => ({
-  title: event.data ? `${event.data.event_name} | Proposals` : 'Loading Proposals...',
-}))
+usePageMeta(() => {
+  return {
+    title: 'Proposals | ' + event.data?.event_name,
+  }
+})
 
 const breadcrumb_items = computed(() => {
   if (!event.data) return []

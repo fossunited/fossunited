@@ -160,6 +160,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
         context.recent_cfp_submissions = self.get_recent_cfp_submissions()
+        context.all_cfp_link = f'/dashboard/cfp/{self.route.split("c/")[1]}'
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
 
