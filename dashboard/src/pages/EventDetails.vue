@@ -3,7 +3,7 @@
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <EventHeader
         :event="event.doc"
-        :form_exists="true"
+        :form-exists="true"
         :form="{
           data: {
             is_published: event.doc.is_published,

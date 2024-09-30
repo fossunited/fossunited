@@ -4,7 +4,7 @@
       <EventHeader
         class=""
         :event="event.doc"
-        :form_exists="Boolean(hasCfp.data)"
+        :form-exists="Boolean(hasCfp.data)"
         :form="eventCfp"
       />
     </div>
