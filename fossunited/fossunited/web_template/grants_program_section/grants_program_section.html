@@ -91,15 +91,9 @@
 
         <div class="grant-detail-category">
           {% for index in range(1, 4) %}
-            {%
-              set grant_category = values['grant_category_' +
-              index|string ]
-            %}
+            {% set grant_category = values['grant_category_' + index|string ] %}
             {% set grant_amount = values['grant_amount_' + index|string ] %}
-            {%
-              if
-              grant_category
-            %}
+            {% if grant_category %}
               <div class="grant-type-card">
                 <h3>{{ grant_amount }}</h3>
                 <p>{{ grant_category }}</p>

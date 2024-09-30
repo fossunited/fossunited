@@ -125,8 +125,7 @@
     <div class="event-grant-category" id="event-grant-category">
       {%
         set approved_event_grants = frappe.get_all("FOSS Event Grant",
-        fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount",
-        "custom_amount"], page_length=8, filters={"grant_status": "Approved"},
+        fields=["event_name","event_start_date", "event_location", "event_website", "grant_amount","custom_amount"], page_length=8, filters={"grant_status": "Approved"},
         order_by="event_start_date desc")
       %}
       {% for grant in approved_event_grants %}
