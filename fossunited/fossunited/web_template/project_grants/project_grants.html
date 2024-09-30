@@ -131,9 +131,9 @@
     <div class="project-grant-category">
       {%
         set project_grants = frappe.get_all("FOSS Project Grant",
-        fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor",
-        "date_of_provision" ], filters={"grant_status": "Approved"}, order_by="date_of_provision
-        desc")
+        fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor", "date_of_provision" ],
+        filters={"grant_status": "Approved"},
+        order_by="date_of_provision desc")
       %}
       {% for grant in project_grants %}
         <div class="project-grant-card">
