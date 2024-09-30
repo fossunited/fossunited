@@ -65,14 +65,32 @@
     <div class="flex flex-col my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-        <FormControl v-model="event.doc.event_name" :type="'text'" size="md" label="Event Name" />
         <FormControl
           v-model="event.doc.event_permalink"
           :type="'text'"
           size="md"
           label="Event Permalink"
-          description="Only enter the event endpoint. Events will be rendered at event/<event_permalink>"
         />
+        <div class="flex flex-col gap-2">
+          <FormControl
+            :disabled="true"
+            :value="getEventLink()"
+            type="url"
+            size="md"
+            label="Event Link"
+          >
+            <template #suffix>
+              <CopyToClipboardButton :value="getEventLink()" />
+            </template>
+          </FormControl>
+          <Button
+            label="See on Website"
+            class="w-fit"
+            icon-right="external-link"
+            :link="createAbsoluteUrlFromRoute(event.doc.route)"
+          />
+        </div>
+        <FormControl v-model="event.doc.event_name" :type="'text'" size="md" label="Event Name" />
         <FormControl
           v-model="event.doc.status"
           :type="'select'"
@@ -158,9 +176,12 @@
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
 import TextEditor from '@/components/TextEditor.vue'
+import CopyToClipboardButton from '@/components/CopyToClipboardButton.vue'
 import { createDocumentResource, createListResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
+import { inject } from 'vue'
 
 const route = useRoute()
 const event = createDocumentResource({
@@ -169,6 +190,7 @@ const event = createDocumentResource({
   fields: ['*'],
   auto: true,
 })
+const chapter = inject('chapter')
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
@@ -217,5 +239,12 @@ const updateDetails = () => {
         description: error.message,
       })
     })
+}
+
+const getEventLink = () => {
+  let event_route = createAbsoluteUrlFromRoute(
+    chapter.data?.route + '/' + event.doc.event_permalink,
+  )
+  return event_route.replace(/(^\w+:|^)\/\//, '')
 }
 </script>
