@@ -3,7 +3,7 @@
     <EventHeader
       class="px-4 py-8 md:p-8"
       :event="event.doc"
-      :form_exists="Boolean(has_rsvp.data)"
+      :form-exists="Boolean(has_rsvp.data)"
       :form="event_rsvp"
     />
     <TabsWithRoute :tabs="tabs.options" />
