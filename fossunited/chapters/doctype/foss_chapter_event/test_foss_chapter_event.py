@@ -41,6 +41,15 @@ class TestFOSSChapterEvent(FrappeTestCase):
         chapter.insert()
         chapter.reload()
 
+        if not frappe.db.exists("Role", "Chapter Team Member"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
+                ignore_permissions=True
+            )
+        if not frappe.db.exists("Role", "Chapter Lead"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(
+                ignore_permissions=True
+            )
+
         lead_profile = frappe.db.get_value(
             USER_PROFILE,
             {"user": LEAD},
