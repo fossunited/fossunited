@@ -632,3 +632,21 @@ def get_issue_pr_title(url: str) -> dict:
         return {"title": "", "type": "Discussion"}
     else:
         frappe.throw("Invalid URL")
+
+
+@frappe.whitelist()
+def get_count_team_members_and_max_count(hackathon: str, team: str):
+    """
+    Get count of team members and maximum count of team members allowed
+
+    Args:
+        hackathon (str): Hackathon ID
+        team (str): Team ID
+
+    Returns:
+        dict: Team members count and maximum count
+    """
+
+    max_team_size = frappe.db.get_value(HACKATHON, hackathon, "max_team_members")
+    team_members_count = len(frappe.get_doc(HACKATHON_TEAM, team).members)
+    return {"team_members_count": team_members_count, "max_team_size": max_team_size}
