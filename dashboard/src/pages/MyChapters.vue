@@ -14,7 +14,7 @@
         <h3 class="mb-0">Scheduled Events</h3>
         <p class="text-sm">Manage upcoming events.</p>
       </div>
-      <div v-if="scheduled_events.data" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div v-if="scheduled_events.data && scheduled_events.data.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <EventCard v-for="event in scheduled_events.data" :key="event.name" :event="event" />
       </div>
       <div v-else class="text-base mt-6 text-gray-800">
@@ -55,6 +55,7 @@ const scheduled_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: ['name', 'event_name', 'event_type', 'chapter_name', 'status', 'event_start_date'],
   filters: {
+    event_start_date: ['>', new Date()],
     status: ['in', ['', 'Draft', 'Approved', 'Live']],
   },
   orderBy: 'event_start_date',
