@@ -11,23 +11,13 @@
           },
         }"
       />
-      <div class="flex justify-between items-start gap-2 md:flex-col md:items-end">
-        <Button
-          class="w-fit"
-          size="md"
-          label="Update Details"
-          icon-left="edit"
-          @click="updateDetails()"
-        ></Button>
-        <Button
-          class="w-fit bg-green-600 text-white hover:bg-green-700 disabled:opacity-80 disabled:text-white disabled:cursor-not-allowed"
-          size="md"
-          label="See on website"
-          icon-left="external-link"
-          @click="redirectRoute(`events/${event.doc.event_permalink}`)"
-          :disabled="['Draft', 'Cancelled'].includes(event.doc.status)"
-        ></Button>
-      </div>
+      <Button
+        class="w-fit"
+        size="md"
+        label="Update Details"
+        icon-left="edit"
+        @click="updateDetails()"
+      ></Button>
     </div>
     <div class="flex flex-col gap-3 my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
