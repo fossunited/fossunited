@@ -206,7 +206,7 @@ const routes = [
   },
   {
     name: 'SchedulePage',
-    path: '/schedule/:permalink',
+    path: '/schedule/:route(.*)',
     component: () => import('@/pages/schedule/Schedule.vue'),
     meta: { isPublicPage: true },
   },
@@ -258,7 +258,7 @@ const routes = [
   },
   {
     name: 'AllProposalsPage',
-    path: '/cfp/:permalink',
+    path: '/cfp/:route(.*)',
     component: () => import('@/pages/events/AllProposals.vue'),
     meta: { isPublicPage: true },
   },

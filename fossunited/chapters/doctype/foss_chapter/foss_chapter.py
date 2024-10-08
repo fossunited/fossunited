@@ -39,6 +39,7 @@ class FOSSChapter(WebsiteGenerator):
         public_chat_group_url: DF.Data | None
         represent_image: DF.AttachImage | None
         route: DF.Data | None
+        slug: DF.Data | None
         state: DF.Link | None
         x: DF.Data | None
 
@@ -48,6 +49,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def validate(self):
         self.make_city_name_upper()
+        self.validate_slug()
 
     def before_save(self):
         self.set_chapter_lead()
@@ -125,10 +127,29 @@ class FOSSChapter(WebsiteGenerator):
                 break
 
     def set_route(self):
-        if self.chapter_type == STUDENT_CLUB:
-            self.route = f"clubs/{self.chapter_name.lower().replace(' ', '-')}"
-        else:
-            self.route = f"{self.chapter_name.lower().replace(' ', '-')}"
+        if not self.slug:
+            self.set_slug()
+
+        if self.route and not self.has_value_changed("slug"):
+            return
+
+        self.route = f"c/{self.slug}"
+
+    def set_slug(self):
+        if not self.slug:
+            self.slug = frappe.scrub(self.chapter_name).replace("_", "-")
+
+    def validate_slug(self):
+        if not self.slug:
+            self.set_slug()
+
+        if frappe.db.exists("FOSS Chapter", {"slug": self.slug, "name": ["!=", self.name]}):
+            frappe.throw(
+                f"Chapter with slug {self.slug} already exists", frappe.UniqueValidationError
+            )
+
+        if " " in self.slug:
+            frappe.throw("Slug cannot have spaces")
 
     def get_context(self, context):
         if self.chapter_type == "City Community":

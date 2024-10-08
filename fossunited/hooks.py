@@ -26,11 +26,11 @@ website_route_rules = [
         "to_route": "dashboard",
     },
     {
-        "from_route": "/events/<event_permalink>/cfp/<submission>/edit",
+        "from_route": "/<path:event_route>/cfp/<submission>/edit",
         "to_route": "/cfp/submission/edit",
     },
     {
-        "from_route": "/events/<event_permalink>/rsvp/<submission>/edit",
+        "from_route": "/<path:event_route>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
     },
     {
@@ -80,6 +80,6 @@ doc_events = {
 }
 
 website_redirects = [
-    {"source": r"events/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
-    {"source": r"events/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
+    {"source": r"c/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
+    {"source": r"c/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
 ]

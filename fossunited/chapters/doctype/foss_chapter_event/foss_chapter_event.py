@@ -91,6 +91,14 @@ class FOSSChapterEvent(WebsiteGenerator):
     def before_insert(self):
         self.copy_team_members()
 
+    def validate(self):
+        self.validate_permalink()
+
+    def before_save(self):
+        if self.has_value_changed("status"):
+            self.update_published_status()
+        self.set_route()
+
     def copy_team_members(self):
         if not self.chapter:
             return
@@ -108,14 +116,6 @@ class FOSSChapterEvent(WebsiteGenerator):
                 },
             )
 
-    def before_save(self):
-        if self.has_value_changed("status"):
-            self.update_published_status()
-        self.set_route()
-
-    def validate(self):
-        self.validate_permalink()
-
     def validate_permalink(self):
         if self.is_external_event:
             return
@@ -125,41 +125,30 @@ class FOSSChapterEvent(WebsiteGenerator):
             {
                 "event_permalink": self.event_permalink,
                 "name": ("!=", self.name),
+                "chapter": self.chapter,
             },
         ):
-            frappe.throw(f"Event Permalink {self.event_permalink} already exists!")
-
-        if "/" in self.event_permalink:
             frappe.throw(
-                "Event Permalink cannot contain / character. Please use a different permalink."
+                f"Event Permalink {self.event_permalink} already exists!", frappe.ValidationError
             )
 
-        if not self.event_permalink.replace("-", "").replace("_", "").isalnum():
-            frappe.throw(
-                "Event Permalink can only contain alphabets, numbers, - and _ characters."
-            )
+        if " " in self.event_permalink:
+            frappe.throw("Event Permalink cannot have spaces!", frappe.ValidationError)
 
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
             self.is_published = 0
             return
 
-        if self.status == "Live" or self.status == "Approved":
-            self.is_published = 1
-            return
-
-        if self.status == "Concluded":
-            self.is_published = 1
-            self.handle_concluded_event()
-
-    def handle_concluded_event(self):
-        event_permalink = self.event_permalink
-        self.event_permalink = f"{event_permalink}-archive-{frappe.generate_hash(length=8)}"
+        self.is_published = 1
+        return
 
     def set_route(self):
         if self.is_external_event:
             return
-        self.route = f"events/{self.event_permalink}"
+
+        event_route = frappe.db.get_value(CHAPTER, self.chapter, "route")
+        self.route = f"{event_route}/{self.event_permalink}"
 
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
@@ -171,6 +160,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
         context.recent_cfp_submissions = self.get_recent_cfp_submissions()
+        context.all_cfp_link = f'/dashboard/cfp/{self.route.split("c/")[1]}'
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
 
