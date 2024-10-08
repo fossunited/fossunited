@@ -6,7 +6,6 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.doctype_ids import EVENT, EVENT_CFP, USER_PROFILE
 from fossunited.fossunited.utils import (
     get_doc_likes,
-    get_event_volunteers,
 )
 
 
@@ -123,16 +122,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             "proposal_reviews",
         ]
 
-        volunteers = get_event_volunteers(self.event)
         if context.cfp.anonymise_proposals and not self.status == "Approved":
             nav_items.remove("about_speaker")
-
-        if (
-            not context.is_reviewer
-            and frappe.session.user not in [volunteer.email for volunteer in volunteers]
-            and not frappe.session.user == self.submitted_by
-        ):
-            nav_items.remove("proposal_reviews")
 
         return nav_items
 
