@@ -165,7 +165,6 @@ const createJoinRequest = () => {
       }
     },
     onSuccess() {
-      console.log(props.team.data)
       outgoingInvites.fetch()
       inviteEmail.value = ''
       toast.success('Invite sent successfully')
