@@ -11,11 +11,12 @@
           @click="updateDetails()"
         ></Button>
         <Button
-          class="w-fit bg-green-600 text-white hover:bg-green-700"
+          class="w-fit bg-green-600 text-white hover:bg-green-700 disabled:opacity-80 disabled:text-white disabled:cursor-not-allowed"
           size="md"
           label="See on website"
           icon-left="external-link"
           @click="redirectRoute(`${chapter.doc.route}`)"
+          :disabled="!chapter.doc.is_published"
         ></Button>
       </div>
     </div>
