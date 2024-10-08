@@ -65,7 +65,6 @@ const past_events = createListResource({
   fields: ['*'],
   filters: [
     ['chapter', '=', route.params.id],
-    ['event_start_date', '<', new Date()],
     ['status', 'in', ['Concluded', 'Cancelled']],
   ],
   auto: true,
