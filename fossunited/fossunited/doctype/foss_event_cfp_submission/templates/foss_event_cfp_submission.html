@@ -65,6 +65,9 @@
         {% if frappe.session.user == doc.submitted_by %}
           <button onclick="window.location.href='/{{ doc.route }}/edit'">Edit CFP</button>
         {% endif %}
+        {% if is_reviewer %}
+          <button onclick="window.location.href= '/dashboard/review/{{ doc.event }}/talk/{{ doc.name }}'">Review Talk</button>
+        {% endif %}
       </div>
     </div>
   </div>
@@ -96,7 +99,7 @@
 {% macro render_proposal_reviews() %}
   <div class="proposal-reviews-container cfp-content-div content-div" id="proposal_reviews">
     <div class="proposal-overview-section">
-      <h5>{{ _("Proposal Overview") }}</h5>
+      <h5>{{ _("Reviews Overview") }}</h5>
     </div>
     <div class="review-statistics-grid">
       {% for statistic in review_statistics %}
@@ -119,61 +122,11 @@
         </div>
       {% endfor %}
     </div>
-    {% if is_reviewer and not already_reviewed %}
-      <form class="submit-reviews-section">
-        <h5>{{ _("Submit Your Review") }}</h5>
-        <fieldset class="select-review-status">
-          <h6>Select your review status:</h6>
-          <div class="review-status-options-flex">
-            <input
-              type="radio"
-              id="review-status-accepted"
-              name="review-status"
-              class="review-status"
-              value="Yes"
-            />
-            <label class="m-0 review-status-option" for="review-status-accepted">Accepted</label>
-            <input
-              type="radio"
-              id="review-status-rejected"
-              name="review-status"
-              class="review-status"
-              value="No"
-            />
-            <label class="m-0 review-status-option" for="review-status-rejected">Rejected</label>
-            <input
-              type="radio"
-              id="review-status-pending"
-              name="review-status"
-              class="review-status"
-              value="Maybe"
-            />
-            <label class="m-0 review-status-option" for="review-status-pending">Not Sure</label>
-          </div>
-        </fieldset>
-        <!-- ToDo: Drop Down of Review Templates -->
-        <div>
-          <h6>Additional Comments</h6>
-          <div class="d-flex mt-5 mb-2">
-            <img
-              class="user-img-sm mr-2 rounded"
-              src="{{ frappe.session.user | get_profile_image }}"
-              alt=""
-            />
-            <textarea
-              class="form-control additional-comments"
-              placeholder="Add your comments here"
-              id="remarks"
-            ></textarea>
-          </div>
-        </div>
-        <div class="d-flex flex-row-reverse">
-          <button class="primary-button text-sm" id="submit-cfp-review">Post your Review</button>
-        </div>
-      </form>
-    {% endif %}
     <div class="form-divider my-5"></div>
     <div class="review-comments-section">
+      {% if reviews | len == 0 %}
+        <span>No reviews yet</span>
+      {% endif %}
       {% for review in reviews %}
         <div class="review-comment-container">
           <div class="d-flex">
