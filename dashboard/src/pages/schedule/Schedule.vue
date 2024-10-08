@@ -38,10 +38,10 @@ const selectedSchedule = ref(null)
 const selectedScheduleView = ref('vertical')
 
 const event = createResource({
-  url: 'fossunited.api.dashboard.get_event_from_permalink',
+  url: 'fossunited.api.dashboard.get_event_from_route',
   makeParams() {
     return {
-      permalink: route.params.permalink,
+      route: route.params.route,
       fields: ['*'],
     }
   },

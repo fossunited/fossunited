@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, provide } from 'vue'
 import { createResource, usePageMeta } from 'frappe-ui'
 import { RouterView, useRoute } from 'vue-router'
 import SideNavbar from '@/components/NewAppSidebar.vue'
@@ -39,11 +39,12 @@ const event = createResource({
   url: 'frappe.client.get_value',
   params: {
     doctype: 'FOSS Chapter Event',
-    fieldname: ['name', 'event_name', 'is_paid_event'],
+    fieldname: ['name', 'event_name', 'is_paid_event', 'chapter'],
     filters: { name: route.params.id },
   },
   auto: true,
   onSuccess(data) {
+    chapter.fetch()
     let sidebar_items = {
       items: [
         {
@@ -79,6 +80,19 @@ const event = createResource({
     sidebarMenuItems.value.push(sidebar_items)
   },
 })
+
+const chapter = createResource({
+  url: 'frappe.client.get_value',
+  makeParams() {
+    return {
+      doctype: 'FOSS Chapter',
+      fieldname: ['name', 'chapter_name', 'route'],
+      filters: { name: event.data.chapter },
+    }
+  },
+})
+
+provide('chapter', chapter)
 
 usePageMeta(() => {
   return {

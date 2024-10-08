@@ -9,6 +9,7 @@
   "field_order": [
     "meta_info_section",
     "is_published",
+    "slug",
     "column_break_pmbj",
     "route",
     "represent_image",
@@ -219,6 +220,12 @@
       "fieldtype": "Data",
       "label": "Public Chat Group URL",
       "options": "URL"
+    },
+    {
+      "fieldname": "slug",
+      "fieldtype": "Data",
+      "label": "Slug",
+      "unique": 1
     }
   ],
   "has_web_view": 1,
@@ -230,7 +237,7 @@
       "link_fieldname": "chapter"
     }
   ],
-  "modified": "2024-07-08 14:40:16.845746",
+  "modified": "2024-09-24 14:07:16.754531",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Chapter",
@@ -264,7 +271,7 @@
       "share": 1
     }
   ],
-  "route": "chapters",
+  "route": "c",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []
