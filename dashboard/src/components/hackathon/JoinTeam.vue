@@ -156,5 +156,4 @@ const rejectInvite = (inviteId) => {
     },
   })
 }
-
 </script>

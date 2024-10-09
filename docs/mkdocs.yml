@@ -5,15 +5,15 @@ theme:
   logo: /assets/fossunited-white.svg
   favicon: /assets/fossunited-white.svg
   features:
-  - navigation.sections
-  - navigation.instant
-  - toc.integrate
-  - navigation.top
-  - search.suggest
-  - search.highlight
-  - content.tabs.link
-  - content.code.annotation
-  - content.code.copy
+    - navigation.sections
+    - navigation.instant
+    - toc.integrate
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
   language: en
   palette:
     - scheme: default

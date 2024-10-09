@@ -10,11 +10,7 @@
       <div class="prose">
         <h1>{{ event.event_name }}</h1>
       </div>
-      <Badge
-        v-if="formExists && form.data"
-        :theme="getBadgeTheme()"
-        size="md"
-      >
+      <Badge v-if="formExists && form.data" :theme="getBadgeTheme()" size="md">
         <div class="font-medium flex items-center">
           <span v-if="shouldShowStatusDot()" class="relative flex h-3 w-3 mr-2">
             <span
@@ -105,10 +101,14 @@ const isEvent = computed(() => props.form.data?.doctype === 'Event')
 function getBadgeTheme() {
   if (isEvent.value) {
     switch (props.event.status) {
-      case 'Approved': return 'blue'
-      case 'Live': return 'green'
-      case 'Cancelled': return 'red'
-      default: return 'gray'
+      case 'Approved':
+        return 'blue'
+      case 'Live':
+        return 'green'
+      case 'Cancelled':
+        return 'red'
+      default:
+        return 'gray'
     }
   }
   return props.form.data.is_published ? 'green' : 'gray'
@@ -123,7 +123,9 @@ function getBadgeText() {
 }
 
 function shouldShowStatusDot() {
-  return (isEvent.value && props.event.status === 'Live') || (!isEvent.value && props.form.data.is_published)
+  return (
+    (isEvent.value && props.event.status === 'Live') ||
+    (!isEvent.value && props.form.data.is_published)
+  )
 }
-
 </script>

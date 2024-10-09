@@ -15,8 +15,8 @@
           size="md"
           label="See on website"
           icon-left="external-link"
-          @click="redirectRoute(`${chapter.doc.route}`)"
           :disabled="!chapter.doc.is_published"
+          @click="redirectRoute(`${chapter.doc.route}`)"
         ></Button>
       </div>
     </div>

@@ -83,7 +83,6 @@
       </div>
     </div>
   </div>
-
 </template>
 <script setup>
 import { defineProps, onMounted, ref, inject, computed } from 'vue'
@@ -122,7 +121,7 @@ const props = defineProps({
 
 const teamMemberCount = ref({
   team_members_count: 0,
-  max_team_size: 0
+  max_team_size: 0,
 })
 
 const canInvite = computed(() => {
@@ -147,7 +146,6 @@ onMounted(() => {
   outgoingInvites.fetch()
   fetchTeamMemberCount()
 })
-
 
 const createJoinRequest = () => {
   const invite = createResource({
@@ -217,5 +215,4 @@ const fetchTeamMemberCount = () => {
     },
   }).fetch()
 }
-
 </script>
