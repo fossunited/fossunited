@@ -4,84 +4,112 @@
       <ChapterHeader :chapter="chapter" />
     </div>
     <div class="flex flex-col md:flex-row gap-2 justify-between mt-6 pb-2 border-b">
-      <div class="text-xl font-semibold">Create Event</div>
-      <Button label="Create" :variant="'solid'" size="md" @click="createEvent" />
+      <div class="prose">
+        <h2>Create Event</h2>
+      </div>
     </div>
     <div v-if="eventTypeOptions.data">
-      <div class="flex flex-col gap-3 my-6">
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Details</div>
-        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-          <FormControl
-            v-model="temp_event.event_name"
-            :type="'text'"
-            size="md"
-            label="Event Name"
-          />
-          <FormControl
-            v-model="temp_event.event_permalink"
-            :type="'text'"
-            size="md"
-            label="Event Permalink"
-            description="Only enter the event endpoint. Events will be rendered at event/<event_permalink>"
-          />
-          <FormControl
-            v-model="temp_event.status"
-            :type="'select'"
-            :options="[
-              {
-                label: 'Draft',
-                value: 'Draft',
-              },
-              {
-                label: 'Live',
-                value: 'Live',
-              },
-              {
-                label: 'Concluded',
-                value: 'Concluded',
-              },
-              {
-                label: 'Cancelled',
-                value: 'Cancelled',
-              },
-            ]"
-            size="md"
-            label="Event Status"
-            description="Current status of the event."
-          />
-          <FormControl
-            v-model="temp_event.event_type"
-            :type="'select'"
-            :options="eventTypeOptions.data"
-            size="md"
-            label="Event Type"
-          />
-          <TextEditor
-            label="Event Description"
-            class="col-span-2"
-            placeholder="Write an event description"
-            :model-value="temp_event.event_description"
-            @update:model-value="($event) => (temp_event.event_description = $event)"
-          />
+      <div class="flex flex-col gap-5 my-6">
+        <div class="space-y-2">
+          <div class="prose">
+            <h3>Details</h3>
+          </div>
+          <div class="my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+            <FormControl
+              v-model="temp_event.event_type"
+              :type="'select'"
+              :options="eventTypeOptions.data"
+              size="md"
+              label="Event Type&ast;"
+            />
+            <FormControl
+              v-model="temp_event.event_name"
+              :type="'text'"
+              size="md"
+              label="Event Name&ast;"
+            />
+            <FormControl
+              v-model="temp_event.event_permalink"
+              :type="'text'"
+              size="md"
+              label="Event Permalink&ast;"
+            />
+            <FormControl
+              :value="getEventLink()"
+              size="md"
+              label="Event Link"
+              :disabled="true"
+              description="The event link will be as shown above."
+            />
+            <FormControl
+              v-model="temp_event.status"
+              :type="'select'"
+              :options="[
+                {
+                  label: 'Draft',
+                  value: 'Draft',
+                },
+                {
+                  label: 'Live',
+                  value: 'Live',
+                },
+              ]"
+              size="md"
+              label="Event Status&ast;"
+              description="Current status of the event."
+            />
+            <TextEditor
+              label="Event Description&ast;"
+              class="col-span-2"
+              placeholder="Write an event description"
+              :model-value="temp_event.event_description"
+              @update:model-value="($event) => (temp_event.event_description = $event)"
+            />
+          </div>
         </div>
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
-        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-          <FormControl v-model="temp_event.location" :type="'text'" size="md" label="Location" />
-          <FormControl v-model="temp_event.map_link" :type="'url'" label="Map Link" side="md" />
+        <div class="space-y-2">
+          <div class="prose">
+            <h3>Location</h3>
+          </div>
+          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+            <FormControl
+              v-model="temp_event.location"
+              :type="'text'"
+              size="md"
+              label="Location&ast;"
+            />
+            <FormControl v-model="temp_event.map_link" :type="'url'" size="md" label="Map Link" />
+          </div>
         </div>
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Timeline</div>
-        <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
-          <FormControl
-            v-model="temp_event.event_start_date"
-            :type="'datetime-local'"
+        <div class="space-y-2">
+          <div class="prose">
+            <h3>Timeline</h3>
+          </div>
+          <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+            <FormControl
+              v-model="temp_event.event_start_date"
+              :type="'datetime-local'"
+              size="md"
+              label="Event Start Date&ast;"
+            />
+            <FormControl
+              v-model="temp_event.event_end_date"
+              :type="'datetime-local'"
+              size="md"
+              label="Event End Date&ast;"
+            />
+          </div>
+        </div>
+        <ErrorMessage :message="errorMessages" />
+        <div class="grid my-4 justify-items-end grid-cols-1 md:grid-cols-2">
+          <div></div>
+          <Button
+            label="Create"
             size="md"
-            label="Event Start Date"
-          />
-          <FormControl
-            v-model="temp_event.event_end_date"
-            :type="'datetime-local'"
-            size="md"
-            label="Event End Date"
+            variant="solid"
+            class="w-1/2"
+            :loading="createEvent.loading"
+            @click="handleCreateEvent()"
           />
         </div>
       </div>
@@ -95,12 +123,15 @@ import {
   FormControl,
   createListResource,
   createResource,
+  ErrorMessage,
 } from 'frappe-ui'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import ChapterHeader from '@/components/ChapterHeader.vue'
 import TextEditor from '@/components/TextEditor.vue'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils.js'
+import dayjs from 'dayjs'
 
 const route = useRoute()
 const router = useRouter()
@@ -135,28 +166,87 @@ const eventTypeOptions = createListResource({
   },
 })
 
-const createEvent = () => {
-  let event = createResource({
-    url: 'frappe.client.insert',
-    params: {
+const createEvent = createResource({
+  url: 'frappe.client.insert',
+  makeParams() {
+    return {
       doc: temp_event,
-    },
-  })
-  event
-    .submit()
-    .then(() => {
-      toast.success('Event Created Successfully', {
-        description: 'Redirecting to the event dashboard page.',
-      })
-      setTimeout(() => {
-        router.push(`/event/${event.data.name}`)
-      }, 2000)
+    }
+  },
+  onSuccess(data) {
+    toast.success('Event Created Successfully!')
+    setTimeout(() => {
+      router.push(`/event/${data.name}`)
     })
-    .catch((error) => {
-      toast.error('Failed to create event', {
-        description: error,
-      })
-    })
+  },
+  onError(err) {
+    errorMessages.value = err.messages
+    toast.error('Error creating the event.' + err.messages)
+  },
+})
+
+const handleCreateEvent = () => {
+  const errors = getFormError()
+
+  if (errors.length) {
+    errorMessages.value = errors.join('\n')
+    return
+  }
+
+  createEvent.fetch()
+}
+
+const errorMessages = ref('')
+
+const getFormError = () => {
+  const errors = []
+
+  if (!temp_event.event_type) {
+    errors.push('Event Type is required')
+  }
+
+  if (!temp_event.event_name) {
+    errors.push('Event Name is required')
+  }
+
+  if (!temp_event.event_permalink) {
+    errors.push('Permalink is required')
+  }
+
+  if (!temp_event.status) {
+    errors.push('Status is required')
+  }
+
+  if (!temp_event.event_description) {
+    errors.push('Event description is required')
+  }
+
+  if (!temp_event.location) {
+    errors.push(
+      'Location cannot be empty. If it is not finalized, please enter TBD or "To be announced" in the field',
+    )
+  }
+
+  if (!temp_event.event_start_date) {
+    errors.push('Start Date is required')
+  }
+
+  if (!temp_event.event_end_date) {
+    errors.push('End date is required')
+  }
+
+  if (dayjs(temp_event.event_end_date).isBefore(dayjs(temp_event.event_start_date))) {
+    errors.push('End date cannot be before start date')
+  }
+
+  return errors
+}
+
+const getEventLink = () => {
+  let event_route = createAbsoluteUrlFromRoute(
+    chapter.doc?.route + '/' + temp_event.event_permalink,
+  )
+  return event_route.replace(/(^\w+:|^)\/\//, '')
 }
 
 usePageMeta(() => {
