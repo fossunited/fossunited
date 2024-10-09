@@ -144,7 +144,7 @@ onMounted(() => {
     },
   })
   outgoingInvites.fetch()
-  fetchTeamMemberCount()
+  fetchTeamMemberCount.fetch()
 })
 
 const createJoinRequest = () => {
@@ -201,18 +201,16 @@ const removeTeamMember = (member) => {
   })
   team.fetch()
 }
-const fetchTeamMemberCount = () => {
-  createResource({
-    url: 'fossunited.api.hackathon.get_count_team_members_and_max_count',
-    makeParams() {
-      return {
-        hackathon: props.team.data.hackathon,
-        team: props.team.data.name,
-      }
-    },
-    onSuccess(data) {
-      teamMemberCount.value = data
-    },
-  }).fetch()
-}
+const fetchTeamMemberCount = createResource({
+  url: 'fossunited.api.hackathon.get_count_team_members_and_max_count',
+  makeParams() {
+    return {
+      hackathon: props.team.data.hackathon,
+      team: props.team.data.name,
+    }
+  },
+  onSuccess(data) {
+    teamMemberCount.value = data
+  },
+})
 </script>

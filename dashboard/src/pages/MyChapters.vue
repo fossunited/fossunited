@@ -58,7 +58,7 @@ const scheduled_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: ['name', 'event_name', 'event_type', 'chapter_name', 'status', 'event_start_date'],
   filters: {
-    event_start_date: ['>', new Date()],
+    event_end_date: ['>', new Date()],
     status: ['in', ['', 'Draft', 'Approved', 'Live']],
   },
   orderBy: 'event_start_date',
