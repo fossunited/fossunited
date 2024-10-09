@@ -131,6 +131,7 @@ import { toast } from 'vue-sonner'
 import ChapterHeader from '@/components/ChapterHeader.vue'
 import TextEditor from '@/components/TextEditor.vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils.js'
+import dayjs from 'dayjs'
 
 const route = useRoute()
 const router = useRouter()
@@ -232,6 +233,10 @@ const getFormError = () => {
 
   if (!temp_event.event_end_date) {
     errors.push('End date is required')
+  }
+
+  if (dayjs(temp_event.event_end_date).isBefore(dayjs(temp_event.event_start_date))) {
+    errors.push('End date cannot be before start date')
   }
 
   return errors
