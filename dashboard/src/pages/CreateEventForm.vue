@@ -53,14 +53,6 @@
                   label: 'Live',
                   value: 'Live',
                 },
-                {
-                  label: 'Concluded',
-                  value: 'Concluded',
-                },
-                {
-                  label: 'Cancelled',
-                  value: 'Cancelled',
-                },
               ]"
               size="md"
               label="Event Status&ast;"
