@@ -16,42 +16,47 @@
   </div>
   <div class="px-2 py-3">
     <div v-if="inInvite" class="mt-2">
-      <div class="text-sm">Invite members to join your team</div>
-      <div class="flex gap-2 my-2">
-        <FormControl
-          v-model="inviteEmail"
-          class="grow"
-          type="email"
-          placeholder="john.doe@fossunited.org"
-        />
-        <Button
-          label="Invite"
-          variant="solid"
-          :disabled="!inviteEmail"
-          @click="createJoinRequest"
-        />
-      </div>
-      <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
-      <div class="flex gap-2 items-center text-base flex-wrap">
-        <div class="">Invite via team code:</div>
-        <CopyToClipboard :route="teamCode" />
-      </div>
-      <div v-if="outgoingInvites.data.length > 0" class="mt-2">
-        <hr class="my-4" />
-        <div class="text-sm mb-2">Sent Invites:</div>
-        <div
-          v-for="invite in outgoingInvites.data"
-          :key="invite.name"
-          class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-gray-50"
-        >
-          <div class="text-sm text-gray-600">
-            {{ invite.reciever_email }}
-          </div>
-          <Badge
-            :label="invite.status"
-            :theme="{ Pending: 'orange', Accepted: 'green', Rejected: 'red' }[invite.status]"
+      <div v-if="canInvite">
+        <div class="text-sm">Invite members to join your team</div>
+        <div class="flex gap-2 my-2">
+          <FormControl
+            v-model="inviteEmail"
+            class="grow"
+            type="email"
+            placeholder="john.doe@fossunited.org"
+          />
+          <Button
+            label="Invite"
+            variant="solid"
+            :disabled="!inviteEmail"
+            @click="createJoinRequest"
           />
         </div>
+        <div class="w-full text-sm font-medium uppercase my-3 text-center">Or</div>
+        <div class="flex gap-2 items-center text-base flex-wrap">
+          <div class="">Invite via team code:</div>
+          <CopyToClipboard :route="teamCode" />
+        </div>
+        <div v-if="outgoingInvites.data.length > 0" class="mt-2">
+          <hr class="my-4" />
+          <div class="text-sm mb-2">Sent Invites:</div>
+          <div
+            v-for="invite in outgoingInvites.data"
+            :key="invite.name"
+            class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-gray-50"
+          >
+            <div class="text-sm text-gray-600">
+              {{ invite.reciever_email }}
+            </div>
+            <Badge
+              :label="invite.status"
+              :theme="{ Pending: 'orange', Accepted: 'green', Rejected: 'red' }[invite.status]"
+            />
+          </div>
+        </div>
+      </div>
+      <div v-else class="text-sm text-red-600">
+        Reached maximum count of {{ teamMemberCount.max_team_size }} members in team
       </div>
     </div>
     <div v-else>
@@ -80,7 +85,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, onMounted, ref, inject } from 'vue'
+import { defineProps, onMounted, ref, inject, computed } from 'vue'
 import { createListResource, FormControl, Badge, createResource } from 'frappe-ui'
 import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -114,6 +119,15 @@ const props = defineProps({
   },
 })
 
+const teamMemberCount = ref({
+  team_members_count: 0,
+  max_team_size: 0,
+})
+
+const canInvite = computed(() => {
+  return teamMemberCount.value.team_members_count < teamMemberCount.value.max_team_size
+})
+
 const outgoingInvites = createListResource({
   doctype: 'FOSS Hackathon Join Team Request',
   fields: ['*'],
@@ -130,6 +144,7 @@ onMounted(() => {
     },
   })
   outgoingInvites.fetch()
+  fetchTeamMemberCount.fetch()
 })
 
 const createJoinRequest = () => {
@@ -147,7 +162,7 @@ const createJoinRequest = () => {
         },
       }
     },
-    onSuccess(data) {
+    onSuccess() {
       outgoingInvites.fetch()
       inviteEmail.value = ''
       toast.success('Invite sent successfully')
@@ -186,4 +201,16 @@ const removeTeamMember = (member) => {
   })
   team.fetch()
 }
+const fetchTeamMemberCount = createResource({
+  url: 'fossunited.api.hackathon.get_count_team_members_and_max_count',
+  makeParams() {
+    return {
+      hackathon: props.team.data.hackathon,
+      team: props.team.data.name,
+    }
+  },
+  onSuccess(data) {
+    teamMemberCount.value = data
+  },
+})
 </script>

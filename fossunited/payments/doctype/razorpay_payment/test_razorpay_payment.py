@@ -2,14 +2,14 @@ import json
 
 import frappe
 from faker import Faker
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT
 
 fake = Faker()
 
 
-class TestRazorpayPayment(FrappeTestCase):
+class TestRazorpayPayment(UnitTestCase):
     def setUp(self):
         self.admin_user = frappe.get_doc("User", "Administrator")
         self.normal_user = frappe.get_doc("User", "test1@example.com")

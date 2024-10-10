@@ -23,12 +23,12 @@
           <div class="text-base text-gray-600">No events scheduled yet.</div>
         </div>
       </div>
-      <div v-if="upcoming_events.data" class="flex flex-col gap-3">
+      <div v-if="past_events.data" class="flex flex-col gap-3">
         <div class="text-2xl font-semibold">Concluded Events</div>
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <EventCard v-for="event in past_events.data" :key="event.name" :event="event" />
         </div>
-        <div v-if="past_events.data.length == 0">
+        <div v-if="past_events.data.length === 0">
           <div class="text-base text-gray-600">No events history.</div>
         </div>
       </div>
@@ -54,8 +54,8 @@ const upcoming_events = createListResource({
   fields: ['*'],
   filters: [
     ['chapter', '=', route.params.id],
-    ['event_start_date', '>', new Date()],
-    ['status', 'in', ['Approved', 'Live', 'Draft']],
+    ['event_end_date', '>', new Date()],
+    ['status', 'in', ['Approved', 'Live', 'Draft', 'Cancelled']],
   ],
   auto: true,
 })
@@ -66,7 +66,7 @@ const past_events = createListResource({
   filters: [
     ['chapter', '=', route.params.id],
     ['event_start_date', '<', new Date()],
-    ['status', 'in', ['Concluded', 'Cancelled', 'Approved', 'Live']],
+    ['status', 'in', ['Concluded', 'Cancelled']],
   ],
   auto: true,
 })

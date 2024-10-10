@@ -10,24 +10,10 @@
       <div class="prose">
         <h1>{{ event.event_name }}</h1>
       </div>
-      <Badge
-        v-if="formExists && form.data"
-        :theme="form.data.is_published ? 'green' : 'gray'"
-        size="md"
-      >
-        <div class="font-medium">
-          <div v-if="form.data.is_published" class="flex items-center">
-            <span class="relative flex h-3 w-3 mr-2">
-              <span
-                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"
-              ></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-            </span>
-            <span>{{ form.data.doctype.split(' ').pop() }} Live</span>
-          </div>
-          <div v-else>
-            <span>{{ form.data.doctype.split(' ').pop() }} Unpublished</span>
-          </div>
+      <Badge v-if="formExists && form.data" :theme="getBadgeTheme()" size="md">
+        <div class="font-medium flex items-center gap-1">
+          <LivePing v-if="shouldShowStatusDot()" />
+          <span>{{ getBadgeText() }}</span>
         </div>
       </Badge>
       <Badge v-if="!formExists && form" :theme="'gray'" size="md">
@@ -67,9 +53,11 @@
 <script setup>
 import { defineProps } from 'vue'
 import { createDocumentResource, Badge } from 'frappe-ui'
-
+import LivePing from '@/components/animation/LivePing.vue'
 import CityCommunityBranding from '@/components/CityCommunityBranding.vue'
 import FossClubBranding from '@/components/FossClubBranding.vue'
+
+import { computed } from 'vue'
 
 const props = defineProps({
   event: {
@@ -100,4 +88,37 @@ const chapter = createDocumentResource({
   fields: ['*'],
   auto: true,
 })
+
+const isEvent = computed(() => props.form.data?.doctype === 'Event')
+
+function getBadgeTheme() {
+  if (isEvent.value) {
+    switch (props.event.status) {
+      case 'Live':
+        return 'green'
+      case 'Cancelled':
+        return 'red'
+      case 'Draft':
+        return 'orange'
+      default:
+        return 'gray'
+    }
+  }
+  return props.form.data.is_published ? 'green' : 'gray'
+}
+
+function getBadgeText() {
+  if (isEvent.value) {
+    return `${props.event.status}`
+  }
+  const formType = props.form.data.doctype.split(' ').pop()
+  return `${formType} ${props.form.data.is_published ? 'Live' : 'Unpublished'}`
+}
+
+function shouldShowStatusDot() {
+  return (
+    (isEvent.value && props.event.status === 'Live') ||
+    (!isEvent.value && props.form.data.is_published)
+  )
+}
 </script>

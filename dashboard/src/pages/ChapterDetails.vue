@@ -2,13 +2,23 @@
   <div v-if="chapter.doc" class="px-4 py-8 md:p-8 w-full z-0">
     <div class="flex flex-col md:flex-row my-4 gap-4 md:justify-between">
       <ChapterHeader :chapter="chapter" />
-      <Button
-        class="w-fit"
-        size="md"
-        label="Update Details"
-        icon-left="edit"
-        @click="updateDetails()"
-      ></Button>
+      <div class="flex justify-between items-start gap-5 md:flex-col md:items-end">
+        <Button
+          class="w-fit"
+          size="md"
+          label="Update Details"
+          icon-left="edit"
+          @click="updateDetails()"
+        ></Button>
+        <Button
+          class="w-fit bg-green-600 text-white hover:bg-green-700 disabled:opacity-80 disabled:text-white disabled:cursor-not-allowed"
+          size="md"
+          label="See on website"
+          icon-left="external-link"
+          :disabled="!chapter.doc.is_published"
+          @click="redirectRoute(`${chapter.doc.route}`)"
+        ></Button>
+      </div>
     </div>
     <div class="flex flex-col my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
@@ -255,6 +265,7 @@
 import { useRoute } from 'vue-router'
 import { createDocumentResource, FormControl, FileUploader } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue'
+import { redirectRoute } from '@/helpers/utils'
 import { toast } from 'vue-sonner'
 import TextEditor from '@/components/TextEditor.vue'
 

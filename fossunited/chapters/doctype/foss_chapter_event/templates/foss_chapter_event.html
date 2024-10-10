@@ -337,10 +337,10 @@
         callback: (r) => {
           if (r.message) {
             $('#header-cta').prepend(
-              '<button class="secondary-button mr-2" onClick="window.location.href=\'/dashboard/event/{{ doc.name }}\'">Edit Event</button>'
+              '<button class="secondary-button mr-2" onClick="window.location.href=\'/dashboard/event/{{ doc.name }}\'">Edit Event</button>',
             )
           }
-        }
+        },
       })
     })
 

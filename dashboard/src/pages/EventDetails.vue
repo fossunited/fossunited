@@ -88,6 +88,7 @@
             class="w-fit"
             icon-right="external-link"
             :link="createAbsoluteUrlFromRoute(event.doc.route)"
+            :disabled="['Draft', 'Cancelled'].includes(event.doc.status)"
           />
         </div>
         <FormControl v-model="event.doc.event_name" :type="'text'" size="md" label="Event Name" />
