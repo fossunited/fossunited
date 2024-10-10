@@ -5,12 +5,12 @@ from datetime import datetime, timedelta
 
 import frappe
 from faker import Faker
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 
-class TestFOSSEventRSVPSubmission(FrappeTestCase):
+class TestFOSSEventRSVPSubmission(UnitTestCase):
     def test_unpublish_on_max_count(self):
         # Given an RSVP with max count of 5
         event = frappe.get_doc(

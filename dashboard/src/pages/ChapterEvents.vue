@@ -55,7 +55,7 @@ const upcoming_events = createListResource({
   filters: [
     ['chapter', '=', route.params.id],
     ['event_end_date', '>', new Date()],
-    ['status', 'in', ['Approved', 'Live', 'Draft']],
+    ['status', 'in', ['Approved', 'Live', 'Draft', 'Cancelled']],
   ],
   auto: true,
 })
@@ -65,6 +65,7 @@ const past_events = createListResource({
   fields: ['*'],
   filters: [
     ['chapter', '=', route.params.id],
+    ['event_start_date', '<', new Date()],
     ['status', 'in', ['Concluded', 'Cancelled']],
   ],
   auto: true,

@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 import frappe
 from faker import Faker
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -18,7 +18,7 @@ LEAD = "test1@example.com"
 MEMBER1 = "test2@example.com"
 
 
-class TestFOSSChapterEvent(FrappeTestCase):
+class TestFOSSChapterEvent(UnitTestCase):
     def setUp(self):
         chapter = frappe.get_doc(
             {

@@ -5,12 +5,12 @@ from datetime import datetime, timedelta
 
 import frappe
 from faker import Faker
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests import UnitTestCase
 
 from fossunited.doctype_ids import CONFERENCE, EVENT, EVENT_TICKET, TICKET_TRANSFER
 
 
-class TestFOSSEventTicketTransfer(FrappeTestCase):
+class TestFOSSEventTicketTransfer(UnitTestCase):
     def setUp(self):
         fake = Faker()
 
