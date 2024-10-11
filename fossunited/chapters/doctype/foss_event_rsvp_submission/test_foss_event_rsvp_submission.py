@@ -5,19 +5,21 @@ from datetime import datetime, timedelta
 
 import frappe
 from faker import Faker
-from frappe.tests import UnitTestCase
+from frappe.tests import IntegrationTestCase
 
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 
+fake = Faker()
 
-class TestFOSSEventRSVPSubmission(UnitTestCase):
+
+class TestFOSSEventRSVPSubmission(IntegrationTestCase):
     def test_unpublish_on_max_count(self):
         # Given an RSVP with max count of 5
         event = frappe.get_doc(
             {
                 "doctype": EVENT,
-                "event_name": "_Test_Event",
-                "event_permalink": "test-event-12345",
+                "event_name": fake.name(),
+                "event_permalink": fake.slug(),
                 "status": "Live",
                 "event_type": "FOSS Meetup",
                 "event_start_date": datetime.today(),
@@ -37,7 +39,6 @@ class TestFOSSEventRSVPSubmission(UnitTestCase):
         rsvp.insert()
 
         # When submission count reaches the max count
-        fake = Faker()
         for i in range(5):
             frappe.get_doc(
                 {

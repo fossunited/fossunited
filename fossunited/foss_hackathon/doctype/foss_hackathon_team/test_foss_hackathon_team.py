@@ -2,12 +2,12 @@ from datetime import datetime, timedelta
 
 import frappe
 from faker import Faker
-from frappe.tests import UnitTestCase
+from frappe.tests import IntegrationTestCase
 
 from fossunited.doctype_ids import HACKATHON, HACKATHON_PARTICIPANT, HACKATHON_TEAM
 
 
-class TestFOSSHackathonTeam(UnitTestCase):
+class TestFOSSHackathonTeam(IntegrationTestCase):
     def setUp(self):
         self.faker = Faker()
         self.hackathon = frappe.get_doc(

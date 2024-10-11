@@ -3,14 +3,14 @@
 
 import frappe
 from faker import Faker
-from frappe.tests import UnitTestCase
+from frappe.tests import IntegrationTestCase
 
 from fossunited.doctype_ids import CHAPTER, CITY_COMMUNITY, USER_PROFILE
 
 fake = Faker()
 
 
-class TestFOSSChapter(UnitTestCase):
+class TestFOSSChapter(IntegrationTestCase):
     def setUp(self):
         chapter = frappe.get_doc(
             {

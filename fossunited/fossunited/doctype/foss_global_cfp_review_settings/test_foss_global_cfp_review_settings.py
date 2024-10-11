@@ -1,12 +1,12 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and Contributors
 # See license.txt
 import frappe
-from frappe.tests import UnitTestCase
+from frappe.tests import IntegrationTestCase
 
 from fossunited.doctype_ids import GLOBAL_REVIEW_SETTINGS, USER_PROFILE
 
 
-class TestFOSSGlobalCFPReviewSettings(UnitTestCase):
+class TestFOSSGlobalCFPReviewSettings(IntegrationTestCase):
     def test_global_setting_creation(self):
         # Given a new FOSS Global CFP Review Settings document
         # When the document is inserted without any members
