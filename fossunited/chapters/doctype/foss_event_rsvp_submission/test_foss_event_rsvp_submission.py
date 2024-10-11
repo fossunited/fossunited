@@ -11,6 +11,7 @@ from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 fake = Faker()
 
+
 class TestFOSSEventRSVPSubmission(IntegrationTestCase):
     def test_unpublish_on_max_count(self):
         # Given an RSVP with max count of 5
