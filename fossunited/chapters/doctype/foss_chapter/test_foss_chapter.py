@@ -25,7 +25,7 @@ class TestFOSSChapter(IntegrationTestCase):
                 "instagram": fake.url(),
                 "linkedin": fake.url(),
                 "mastodon": fake.url(),
-                "public_chat_group_url": fake.url(),
+                "matrix": fake.url(),
                 "state": "Maharashtra",
                 "x": fake.url(),
             }
@@ -133,7 +133,7 @@ class TestFOSSChapter(IntegrationTestCase):
                 "instagram": fake.url(),
                 "linkedin": fake.url(),
                 "mastodon": fake.url(),
-                "public_chat_group_url": fake.url(),
+                "matrix": fake.url(),
                 "state": "Maharashtra",
                 "x": fake.url(),
             }
