@@ -36,7 +36,7 @@ class FOSSChapter(WebsiteGenerator):
         is_published: DF.Check
         linkedin: DF.Data | None
         mastodon: DF.Data | None
-        public_chat_group_url: DF.Data | None
+        matrix: DF.Data | None
         represent_image: DF.AttachImage | None
         route: DF.Data | None
         slug: DF.Data | None
