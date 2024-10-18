@@ -1,13 +1,30 @@
 site_name: FOSS United Platform / Docs
 
+nav:
+  - Home: index.md
+  - Building your Profile:
+      - Create your Profile: create-profile.md
+      - Manage your Profile: manage-profile.md
+      - Request personal data: request-data.md
+      - Delete personal data: delete-data.md
+  - Participating in the Community:
+      - RSVP to an event: attend-event.md
+      - Call for Proposals (CFP): event-proposals.md
+  - Volunteer Guide:
+      - Volunteering: volunteering.md
+      - Event management: create-event.md
+      - Manage event RSVPs: event-rsvp.md
+      - Manage event proposals: event-cfp.md
+      - Reviewing proposals: reviewing-proposals.md
+      - Creating the event schedule: event-schedule.md
+
 theme:
   name: material
-  logo: /assets/fossunited-white.svg
-  favicon: /assets/fossunited-white.svg
+  logo: ./assets/fossunited-white.svg
+  favicon: ./assets/fossunited-white.svg
   features:
     - navigation.sections
     - navigation.instant
-    - toc.integrate
     - navigation.top
     - search.suggest
     - search.highlight
@@ -30,3 +47,6 @@ theme:
       accent: light-green
   font:
     text: Inter
+
+plugins:
+  - glightbox
