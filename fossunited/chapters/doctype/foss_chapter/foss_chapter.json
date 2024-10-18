@@ -31,7 +31,7 @@
     "email",
     "x",
     "linkedin",
-    "public_chat_group_url",
+    "matrix",
     "column_break_fifp",
     "facebook",
     "instagram",
@@ -216,9 +216,9 @@
       "label": "Representing Image"
     },
     {
-      "fieldname": "public_chat_group_url",
+      "fieldname": "matrix",
       "fieldtype": "Data",
-      "label": "Public Chat Group URL",
+      "label": "Matrix Chat Group URL",
       "options": "URL"
     },
     {
