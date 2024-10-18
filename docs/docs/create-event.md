@@ -2,25 +2,25 @@
 
 ## Create event
 
-* To schedule a new event, open the Community page where the event is being
+- To schedule a new event, open the Community page where the event is being
   organized. Within the chapter, open the `"Events"` page and click on the
   `"Create New Event"` button as seen below.
 
 ![Create an event](./assets/create-event.png)
 
-* Please provide the requested information in the form
+- Please provide the requested information in the form
 
-|Create event|(...)|
-|---|---|
-|![Create event I](./assets/create-event-form.png)|![Create event II](./assets/create-event-form-2.png)|
+| Create event                                      | (...)                                                |
+| ------------------------------------------------- | ---------------------------------------------------- |
+| ![Create event I](./assets/create-event-form.png) | ![Create event II](./assets/create-event-form-2.png) |
 
-* For monthly meetups, please use the following options
-    * Please select `"FOSS meetup"` in the `"Event Type"` dropdown
-    * Please use `"FOSS Meetup {city name}"` for the `"Event Name"`
-      e.g. `"FOSS Meetup Hyderabad"`
-    * Please use `YYYY-MMM` for the `"Event Permalink"` e.g. `2024-nov`
-    * Please use `"Live"` as the `"Event Status"`
-    * Please select the start datetime and the end datetime for the event
+- For monthly meetups, please use the following options
+  - Please select `"FOSS meetup"` in the `"Event Type"` dropdown
+  - Please use `"FOSS Meetup {city name}"` for the `"Event Name"`
+    e.g. `"FOSS Meetup Hyderabad"`
+  - Please use `YYYY-MMM` for the `"Event Permalink"` e.g. `2024-nov`
+  - Please use `"Live"` as the `"Event Status"`
+  - Please select the start datetime and the end datetime for the event
 
 After an event is created successfully, you should be able to see it in the
 `"Manage Chapter"` page.

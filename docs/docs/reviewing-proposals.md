@@ -21,12 +21,12 @@ Once you're added as a reviewer, you should be able to see a new
 
 ## Submitting a review
 
-* Click on one of the events listed in the `"Review Proposals"` page to see
+- Click on one of the events listed in the `"Review Proposals"` page to see
   the list of submitted proposals
 
 ![review event proposals](./assets/review-event-proposals.png)
 
-* Click on one of the proposals to see detailed information about the
+- Click on one of the proposals to see detailed information about the
   proposal and to submit a proposal
 
 ![review proposal](./assets/review-proposal.png)
@@ -35,7 +35,7 @@ Once you're added as a reviewer, you should be able to see a new
 the proposals. One word reviews are stronlgy discouraged. Almost all proposals
 can be improved in some way or another and it is the reviewers' responsibility
 to provide this necessary feedback to the proposers. There exists an
-equilibrium between the proposers and the reviewers - if the reviewers are 
+equilibrium between the proposers and the reviewers - if the reviewers are
 unnecessarily harsh, proposers become demotivated over time and the likelihood
 of repeat proposals from the same proposer goes down. On the other hand, if
 the reviewers approve all proposals without providing meaningful feedback, the
@@ -45,7 +45,7 @@ in the FOSS United Community depends on the reviewers.
 
 ## Updating a review
 
-* Reviews can be updated by clicking on the `"Edit Review"` button on the
+- Reviews can be updated by clicking on the `"Edit Review"` button on the
   proposal
 
 ![Edit review](./assets/edit-review.png)

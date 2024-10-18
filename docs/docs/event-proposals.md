@@ -11,13 +11,13 @@ have a Profile.
 
 ## Submit a Proposal
 
-* In order to submit a proposal for a FOSS United event, visit the
-`"Talk Proposal"` tab on the event page and click on the
-`"Submit a talk proposal"` green button.
+- In order to submit a proposal for a FOSS United event, visit the
+  `"Talk Proposal"` tab on the event page and click on the
+  `"Submit a talk proposal"` green button.
 
 ![CFP tab for meetup](./assets/cfp-meetup.png)
 
-* Please fill in the requested details on the `"Call for Proposal!"` form. If
+- Please fill in the requested details on the `"Call for Proposal!"` form. If
   you are logged-in, the Platform will auto-fill some of the information on
   the form i.e. Full Name, Email. Before submitting, we request you to read
   the [guidelines for proposals](https://forum.fossunited.org/t/talk-proposal-guidelines-for-a-foss-conference-meetup/1923)
@@ -25,11 +25,11 @@ have a Profile.
 **NOTE:** Please note some of the events might need additional information
 from the proposers.
 
-|CFP form|(...)|
-|---|---|
-|![CFP form I](./assets/cfp-form-1.png)|![CFP form II](./assets/cfp-form-2.png)|
+| CFP form                               | (...)                                   |
+| -------------------------------------- | --------------------------------------- |
+| ![CFP form I](./assets/cfp-form-1.png) | ![CFP form II](./assets/cfp-form-2.png) |
 
-* You should receive an email from FOSS United after you successfully submit
+- You should receive an email from FOSS United after you successfully submit
   the form.
 
 ## Update a Proposal
@@ -39,11 +39,11 @@ event. You might want to update the submitted proposal e.g. based on review
 comments from the event organizers. You can either use the `"Edit CFP"` button
 on this page or on the page that displays information about your proposal.
 
-|Talk proposal tab|Proposal page|
-|---|---|
-|![Updated talk proposal tab](./assets/cfp-meetup-updated.png)|![Talk proposal info](./assets/edit-cfp-from-proposals-page.png)|
+| Talk proposal tab                                             | Proposal page                                                    |
+| ------------------------------------------------------------- | ---------------------------------------------------------------- |
+| ![Updated talk proposal tab](./assets/cfp-meetup-updated.png) | ![Talk proposal info](./assets/edit-cfp-from-proposals-page.png) |
 
-* After updating the proposal as necessary, please click the
+- After updating the proposal as necessary, please click the
   `"Update Talk Proposal"` button to save the updates.
 
 ![Update talk proposal](./assets/updated-proposal.png)
