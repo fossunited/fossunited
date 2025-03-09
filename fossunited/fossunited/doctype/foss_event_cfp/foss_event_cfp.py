@@ -53,12 +53,7 @@ class FOSSEventCFP(Document):
             )
 
     def before_save(self):
-        self.set_route()
         self.enable_cfp_tab()
-
-    def set_route(self):
-        event_route = frappe.db.get_value(EVENT, self.event, "route")
-        self.route = f"{event_route}/cfp"
 
     def enable_cfp_tab(self):
         frappe.db.set_value(EVENT, self.event, "show_cfp", 1)
