@@ -1,7 +1,7 @@
 import io
 
 import frappe
-from frappe.utils.file_manager import save_file
+from frappe.utils.file_manager import get_file, save_file
 from PIL import Image
 
 from fossunited.api.dashboard import get_session_user_profile
@@ -24,23 +24,27 @@ def convert_image_to_webp(image_content: bytes) -> bytes:
 
 
 @frappe.whitelist()
-def set_profile_image(file_url: str) -> bool:
+def set_profile_image(name: str) -> bool:
     """
-    Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
-    and update the user's profile image.
+    Get file using its name, convert it to WebP, save it using Frappe's file handling,
+    delete the png uploaded and the older webp and update the user's profile image.
     """
     user_doc = get_session_user_profile()
     try:
-        file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:
-            original_image = f.read()
+        original_image = get_file(name)
+        original_image_content = original_image[1]
 
-        webp_image = convert_image_to_webp(original_image)
+        webp_image = convert_image_to_webp(original_image_content)
         filename = f"profile_{user_doc.name}.webp"
 
         saved_file = save_file(
             fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
         )
+
+        frappe.delete_doc("File", name, ignore_permissions=True)
+
+        old_webp_name = frappe.db.get_value("File", {"file_url": user_doc.profile_photo}, ["name"])
+        frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "profile_photo", saved_file.file_url)
         frappe.db.set_value("User", frappe.session.user, "user_image", saved_file.file_url)
@@ -51,26 +55,34 @@ def set_profile_image(file_url: str) -> bool:
 
 
 @frappe.whitelist()
-def set_cover_image(file_url: str) -> bool:
+def set_cover_image(name: str) -> bool:
     """
-    Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
-    and update the cover image in the user's profile.
+    Get file using its name, convert it to WebP, save it using Frappe's file handling,
+    delete the png uploaded and the older webp and update the cover image in the user's profile.
     """
     user_doc = get_session_user_profile()
     try:
-        if len(file_url) == 0:
+        if len(name) == 0:
             frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", "")
             return True
-        file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:
-            original_image = f.read()
 
-        webp_image = convert_image_to_webp(original_image)
+        original_image = get_file(name)
+        original_image_content = original_image[1]
+
+        webp_image = convert_image_to_webp(original_image_content)
         filename = f"cover_{user_doc.name}.webp"
 
         saved_file = save_file(
             fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
         )
+
+        frappe.delete_doc("File", name, ignore_permissions=True)
+
+        if len(user_doc.cover_image) != 0:
+            old_webp_name = frappe.db.get_value(
+                "File", {"file_url": user_doc.cover_image}, ["name"]
+            )
+            frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", saved_file.file_url)
         return True

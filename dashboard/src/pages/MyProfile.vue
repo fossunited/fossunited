@@ -36,7 +36,7 @@
                 icon="trash"
                 variant="solid"
                 theme="red"
-                @click="setBannerImage({ file_url: '' })"
+                @click="setBannerImage({ name: '' })"
               />
             </div>
           </div>
@@ -213,12 +213,12 @@ const setBannerImage = (_file) => {
     url: 'fossunited.api.profile.set_cover_image',
     makeParams() {
       return {
-        file_url: _file.file_url,
+        name: _file.name,
       }
     },
     auto: true,
     onSuccess() {
-      if (_file.file_url) {
+      if (_file.name) {
         toast.success('Banner Image Updated')
       } else {
         toast.success('Banner Image Removed')
@@ -233,7 +233,7 @@ const setProfileImage = (_file) => {
     url: 'fossunited.api.profile.set_profile_image',
     makeParams() {
       return {
-        file_url: _file.file_url,
+        name: _file.name,
       }
     },
     auto: true,
