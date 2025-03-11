@@ -44,6 +44,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
         is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
+        key_takeaways: DF.TextEditor | None
         last_name: DF.Data | None
         linked_cfp: DF.Link
         negative_reviews: DF.Data | None

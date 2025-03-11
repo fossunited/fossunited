@@ -31,6 +31,7 @@
     "column_break_mhza",
     "intended_audience",
     "talk_description",
+    "key_takeaways",
     "speaker_information_section",
     "speakers",
     "personal_information_section",
@@ -313,12 +314,17 @@
       "fieldtype": "Select",
       "label": "Intended Audience",
       "options": "Beginner\nIntermediate\nAdvanced"
+    },
+    {
+      "fieldname": "key_takeaways",
+      "fieldtype": "Text Editor",
+      "label": "Key Takeaways"
     }
   ],
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-03-09 01:39:24.585791",
+  "modified": "2025-03-11 15:47:18.433541",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Submission",
