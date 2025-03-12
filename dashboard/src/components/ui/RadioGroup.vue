@@ -4,7 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </RadioGroupLabel>
-    <div class="grid gap-4" :class="options.length > 4 ? 'grid-cols-3' : 'md:grid-flow-col'">
+    <div class="grid gap-4" :class="options.length > 4 ? 'md:grid-cols-3' : 'md:grid-flow-col'">
       <RadioGroupOption
         v-for="option in options"
         :key="option.value"

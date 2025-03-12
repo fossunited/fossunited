@@ -4,7 +4,11 @@
       <IconUserCircle />
       <span>Speaker Information</span>
     </h4>
-    <div v-for="(speaker, index) in speakers" :key="index" class="grid md:grid-cols-2 gap-4 my-4">
+    <div
+      v-for="(speaker, index) in speakers"
+      :key="index"
+      class="flex flex-col md:grid md:grid-cols-2 gap-4 my-4"
+    >
       <div
         v-if="speakers.length > 1"
         class="border-b border-gray-500 pb-2 col-span-2 flex justify-between"
