@@ -66,8 +66,7 @@
       "fetch_from": "linked_cfp.event",
       "fieldname": "event",
       "fieldtype": "Data",
-      "label": "Event",
-      "reqd": 1
+      "label": "Event"
     },
     {
       "fieldname": "submitted_by",
@@ -93,8 +92,7 @@
       "fetch_if_empty": 1,
       "fieldname": "email",
       "fieldtype": "Data",
-      "label": "Email",
-      "reqd": 1
+      "label": "Email"
     },
     {
       "fieldname": "column_break_dcfl",
@@ -103,8 +101,7 @@
     {
       "fieldname": "bio",
       "fieldtype": "Text Editor",
-      "label": "Speaker Bio",
-      "reqd": 1
+      "label": "Speaker Bio"
     },
     {
       "fieldname": "organization",
@@ -114,8 +111,7 @@
     {
       "fieldname": "designation",
       "fieldtype": "Data",
-      "label": "Designation",
-      "reqd": 1
+      "label": "Designation"
     },
     {
       "fieldname": "about_talk_section",
@@ -174,8 +170,7 @@
       "fetch_if_empty": 1,
       "fieldname": "full_name",
       "fieldtype": "Data",
-      "label": "Full Name",
-      "reqd": 1
+      "label": "Full Name"
     },
     {
       "fieldname": "reviews_tab",
@@ -324,7 +319,7 @@
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-03-11 15:47:18.433541",
+  "modified": "2025-03-12 23:26:04.096228",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Submission",
