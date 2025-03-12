@@ -8,6 +8,7 @@
   "editable_grid": 1,
   "engine": "InnoDB",
   "field_order": [
+    "meta_section",
     "status",
     "column_break_puww",
     "allow_cfp_edit",
@@ -131,10 +132,15 @@
       "fieldtype": "Select",
       "label": "Status",
       "options": "Closed\nLive"
+    },
+    {
+      "fieldname": "meta_section",
+      "fieldtype": "Section Break",
+      "label": "Meta"
     }
   ],
   "links": [],
-  "modified": "2025-03-10 00:38:18.767702",
+  "modified": "2025-03-11 13:15:05.826680",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
