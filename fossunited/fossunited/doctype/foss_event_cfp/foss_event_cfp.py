@@ -6,7 +6,6 @@ from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT, GLOBAL_CFP_SETTINGS
 
-
 class FOSSEventCFP(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
