@@ -32,18 +32,19 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         approvability: DF.Data | None
         attendance_confirmed: DF.Check
-        bio: DF.TextEditor
+        bio: DF.TextEditor | None
         chapter: DF.Data | None
         custom_answers: DF.Table[FOSSCustomAnswer]
-        designation: DF.Data
-        email: DF.Data
-        event: DF.Data
+        designation: DF.Data | None
+        email: DF.Data | None
+        event: DF.Data | None
         event_name: DF.Data | None
         first_name: DF.Data | None
-        full_name: DF.Data
+        full_name: DF.Data | None
         intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
         is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
+        key_takeaways: DF.TextEditor | None
         last_name: DF.Data | None
         linked_cfp: DF.Link
         negative_reviews: DF.Data | None
