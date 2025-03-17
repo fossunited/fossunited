@@ -319,7 +319,7 @@
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-03-12 23:26:04.096228",
+  "modified": "2025-03-17 11:21:12.555842",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Submission",
@@ -336,6 +336,18 @@
       "report": 1,
       "role": "System Manager",
       "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "role": "All"
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "if_owner": 1,
+      "read": 1,
+      "role": "All",
       "write": 1
     },
     {
