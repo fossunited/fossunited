@@ -16,6 +16,10 @@
     flex-direction: column;
     gap: 1rem;
   }
+  .programs-section-header h2{
+    font-size: var(--text-2xl);
+    font-weight: var(--fw-semibold);
+  }
 
   .program-card-container {
     display: grid;
@@ -51,6 +55,10 @@
     line-height: 1.4;
   }
 
+  .program-card-body h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--fw-semibold);
+  }
   @media screen and (max-width: 768px) {
     .programs-section {
       flex-direction: column;
@@ -72,9 +80,10 @@
 <div class="community-events-section container">
   <div class="community-events-container">
     <div class="programs-section-header">
-      <h5>{{ heading }}</h5>
-
+      
+      <h2>{{ heading }}</h2>
       <p>{{ subtext }}</p>
+
     </div>
 
     <div class="program-card-container">
@@ -92,7 +101,7 @@
             </div>
 
             <div class="program-card-body">
-              <h6>{{ program_title }}</h6>
+              <h3>{{ program_title }}</h3>
               <p>{{ program_text }}</p>
             </div>
           </div>
