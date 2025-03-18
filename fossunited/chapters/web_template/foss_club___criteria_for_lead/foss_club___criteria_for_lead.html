@@ -23,12 +23,12 @@
   }
 
   h2 {
-    margin: 0;
-    color: #000;
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 100%; /* 1.5rem */
-    letter-spacing: -0.06rem;
+  margin: 0;
+  color: #000;
+  font-size: 1.5rem; 
+  font-weight: 700;
+  line-height: 100%; /* 1.75rem */
+  letter-spacing: -0.06rem;
   }
 
   .criteria-category-container {
@@ -43,7 +43,7 @@
     flex-direction: column;
   }
 
-  .criteria-item h5 {
+  .criteria-item h3 {
     margin: 0;
     color: #08b74f;
     font-size: 1.2rem;
@@ -81,7 +81,7 @@
       gap: 2rem;
     }
 
-    .criteria-item h5 {
+    .criteria-item h3 {
       font-size: 1rem;
     }
 
@@ -111,7 +111,7 @@
           {% set criteria_text = values['text_' + index|string ] %}
           {% if criteria_title %}
             <div class="criteria-item">
-              <h5>{{ criteria_title }}</h5>
+              <h3>{{ criteria_title }}</h3>
               <p>{{ criteria_text }}</p>
             </div>
           {% endif %}

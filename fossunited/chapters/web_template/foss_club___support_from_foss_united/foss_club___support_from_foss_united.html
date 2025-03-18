@@ -42,7 +42,7 @@
     max-height: 1.75rem;
   }
 
-  .support-card h5 {
+  .support-card h3 {
     margin: 0;
     color: #08b74f;
     font-size: 1rem;
@@ -77,7 +77,7 @@
       gap: 1.5rem;
     }
 
-    .support-card h5 {
+    .support-card h3 {
       font-size: 1rem;
     }
   }
@@ -98,7 +98,7 @@
         {% if support_title %}
           <div class="support-card">
             <img src="{{ support_icon }}" alt="" />
-            <h5>{{ support_title }}</h5>
+            <h3>{{ support_title }}</h3>
             <p>{{ support_text }}</p>
           </div>
         {% endif %}
