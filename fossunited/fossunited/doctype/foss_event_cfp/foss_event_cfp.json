@@ -140,7 +140,7 @@
     }
   ],
   "links": [],
-  "modified": "2025-03-11 13:15:05.826680",
+  "modified": "2025-03-19 13:26:13.993603",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
@@ -176,6 +176,15 @@
   "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
-  "states": [],
+  "states": [
+    {
+      "color": "Gray",
+      "title": "Closed"
+    },
+    {
+      "color": "Green",
+      "title": "Live"
+    }
+  ],
   "track_changes": 1
 }
