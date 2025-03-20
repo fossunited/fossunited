@@ -1,6 +1,5 @@
 {
   "actions": [],
-  "allow_guest_to_view": 1,
   "allow_rename": 1,
   "autoname": "hash",
   "creation": "2023-07-10 01:05:08.149329",
@@ -9,8 +8,7 @@
   "editable_grid": 1,
   "engine": "InnoDB",
   "field_order": [
-    "is_published",
-    "route",
+    "meta_section",
     "status",
     "column_break_puww",
     "allow_cfp_edit",
@@ -32,19 +30,8 @@
   ],
   "fields": [
     {
-      "fieldname": "route",
-      "fieldtype": "Data",
-      "label": "Route"
-    },
-    {
       "fieldname": "column_break_puww",
       "fieldtype": "Column Break"
-    },
-    {
-      "default": "1",
-      "fieldname": "is_published",
-      "fieldtype": "Check",
-      "label": "Is Published?"
     },
     {
       "default": "0",
@@ -145,13 +132,15 @@
       "fieldtype": "Select",
       "label": "Status",
       "options": "Closed\nLive"
+    },
+    {
+      "fieldname": "meta_section",
+      "fieldtype": "Section Break",
+      "label": "Meta"
     }
   ],
-  "has_web_view": 1,
-  "index_web_pages_for_search": 1,
-  "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-03-04 16:31:27.633950",
+  "modified": "2025-03-19 13:26:13.993603",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
@@ -184,10 +173,18 @@
       "select": 1
     }
   ],
-  "route": "cfp/new",
   "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
-  "states": [],
+  "states": [
+    {
+      "color": "Gray",
+      "title": "Closed"
+    },
+    {
+      "color": "Green",
+      "title": "Live"
+    }
+  ],
   "track_changes": 1
 }

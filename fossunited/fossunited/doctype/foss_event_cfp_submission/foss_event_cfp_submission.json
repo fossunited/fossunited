@@ -31,6 +31,7 @@
     "column_break_mhza",
     "intended_audience",
     "talk_description",
+    "key_takeaways",
     "speaker_information_section",
     "speakers",
     "personal_information_section",
@@ -65,8 +66,7 @@
       "fetch_from": "linked_cfp.event",
       "fieldname": "event",
       "fieldtype": "Data",
-      "label": "Event",
-      "reqd": 1
+      "label": "Event"
     },
     {
       "fieldname": "submitted_by",
@@ -92,8 +92,7 @@
       "fetch_if_empty": 1,
       "fieldname": "email",
       "fieldtype": "Data",
-      "label": "Email",
-      "reqd": 1
+      "label": "Email"
     },
     {
       "fieldname": "column_break_dcfl",
@@ -102,8 +101,7 @@
     {
       "fieldname": "bio",
       "fieldtype": "Text Editor",
-      "label": "Speaker Bio",
-      "reqd": 1
+      "label": "Speaker Bio"
     },
     {
       "fieldname": "organization",
@@ -113,8 +111,7 @@
     {
       "fieldname": "designation",
       "fieldtype": "Data",
-      "label": "Designation",
-      "reqd": 1
+      "label": "Designation"
     },
     {
       "fieldname": "about_talk_section",
@@ -173,8 +170,7 @@
       "fetch_if_empty": 1,
       "fieldname": "full_name",
       "fieldtype": "Data",
-      "label": "Full Name",
-      "reqd": 1
+      "label": "Full Name"
     },
     {
       "fieldname": "reviews_tab",
@@ -313,12 +309,17 @@
       "fieldtype": "Select",
       "label": "Intended Audience",
       "options": "Beginner\nIntermediate\nAdvanced"
+    },
+    {
+      "fieldname": "key_takeaways",
+      "fieldtype": "Text Editor",
+      "label": "Key Takeaways"
     }
   ],
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-03-09 01:39:24.585791",
+  "modified": "2025-03-17 11:21:12.555842",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Submission",
@@ -335,6 +336,18 @@
       "report": 1,
       "role": "System Manager",
       "share": 1,
+      "write": 1
+    },
+    {
+      "create": 1,
+      "role": "All"
+    },
+    {
+      "create": 1,
+      "delete": 1,
+      "if_owner": 1,
+      "read": 1,
+      "role": "All",
       "write": 1
     },
     {
