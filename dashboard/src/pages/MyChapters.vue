@@ -27,10 +27,11 @@
   </div>
 </template>
 <script setup>
+import { defineAsyncComponent, inject } from 'vue';
 import { createListResource } from 'frappe-ui'
-import { inject } from 'vue'
-import ChapterCard from '@/components/ChapterCard.vue'
-import EventCard from '@/components/EventCard.vue'
+
+const ChapterCard = defineAsyncComponent(() => import('@/components/ChapterCard.vue'));
+const EventCard = defineAsyncComponent(() => import('@/components/EventCard.vue'));
 
 const session = inject('$session')
 

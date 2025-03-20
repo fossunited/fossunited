@@ -15,13 +15,20 @@
           <h4>Live Hackathons</h4>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card
-            v-for="hackathon in ongoing_hackathons"
-            :key="hackathon.name"
-            :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
-            @click="$router.push('/hack/' + hackathon.permalink)"
-          />
+          <Suspense>
+            <template #default>
+              <Card
+                v-for="hackathon in ongoing_hackathons"
+                :key="hackathon.name"
+                :title="hackathon.hackathon_name"
+                class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+                @click="$router.push('/hack/' + hackathon.permalink)"
+              />
+            </template>
+            <template #fallback>
+              <div class="p-4">Loading Live Hackathons...</div>
+            </template>
+          </Suspense>
         </div>
       </div>
       <div v-if="upcoming_hackathons.length" class="flex flex-col gap-2">
@@ -29,13 +36,20 @@
           <h4>Upcoming Hackathons</h4>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card
-            v-for="hackathon in upcoming_hackathons"
-            :key="hackathon.name"
-            :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
-            @click="$router.push('/hack/' + hackathon.permalink)"
-          />
+          <Suspense>
+            <template #default>
+              <Card
+                v-for="hackathon in upcoming_hackathons"
+                :key="hackathon.name"
+                :title="hackathon.hackathon_name"
+                class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+                @click="$router.push('/hack/' + hackathon.permalink)"
+              />
+            </template>
+            <template #fallback>
+              <div class="p-4">Loading Upcoming Hackathons...</div>
+            </template>
+          </Suspense>
         </div>
       </div>
       <div v-if="past_hackathons.length" class="flex flex-col gap-2">
@@ -43,13 +57,20 @@
           <h4>Past Hackathons</h4>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Card
-            v-for="hackathon in past_hackathons"
-            :key="hackathon.name"
-            :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
-            @click="$router.push('/hack/' + hackathon.permalink)"
-          />
+          <Suspense>
+            <template #default>
+              <Card
+                v-for="hackathon in past_hackathons"
+                :key="hackathon.name"
+                :title="hackathon.hackathon_name"
+                class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+                @click="$router.push('/hack/' + hackathon.permalink)"
+              />
+            </template>
+            <template #fallback>
+              <div class="p-4">Loading Past Hackathons...</div>
+            </template>
+          </Suspense>
         </div>
       </div>
     </div>

@@ -8,9 +8,11 @@
 </template>
 
 <script setup>
-import { inject, ref } from 'vue'
+import { inject, defineAsyncComponent } from 'vue'
 import { usePageMeta, createResource } from 'frappe-ui'
-import SideNavbar from '@/components/NewAppSidebar.vue'
+
+// Lazy load the SideNavbar component
+const SideNavbar = defineAsyncComponent(() => import('@/components/NewAppSidebar.vue'))
 
 const session = inject('$session')
 
