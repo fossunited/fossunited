@@ -11,6 +11,32 @@ If you are unfamiliar with Entity relationship diagrams or if you need a
 refresher, you could refer to the wiki section on the [Crow's foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation),
 or this explainer from [freecodecamp](https://www.freecodecamp.org/news/crows-foot-notation-relationship-symbols-and-how-to-read-diagrams/)
 
+## Architecture Diagram
+
+Note: Not all features or systems in this diagram are actually used, as the diagram also includes components of what Frappe uses underneath the hood.
+
+```mermaid
+graph TD;
+
+    U[User Browser] <--> N[nginx];
+    U <--> V[VueJS Dashboard];
+
+    Admin[Admin Browser] <--> D[Desk: SPA Custom JS];
+
+    N <--> C[Application Server: Gunicorn & Werkzeug];
+
+    C <--> D;
+    C <--> E[Socket.io Server: Node & Redis];
+    C <--> F[Jinja Templating Engine];
+    C <--> G[Background Workers: Python RQ];
+    C <--> H[MariaDB];
+    C <--> I[Redis Cache];
+    C <--> J[Amazon S3: File Storage];
+
+    G <--> I;
+    G <--> H;
+```
+
 ## Entity relationships for a Chapter
 
 ```mermaid

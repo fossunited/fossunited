@@ -6,7 +6,10 @@
       v-model:editor="editor"
       @insert-link="handleLinkInsert(editor)"
     />
-    <div class="text-base text-gray-600">{{ props.label }}</div>
+    <div class="text-base text-ink-gray-5">
+      {{ props.label }}
+      <span v-if="required" class="text-red-500">*</span>
+    </div>
     <section
       class="flex flex-wrap items-center gap-x-4 border-t border-l border-r border-gray-200 buttons font-mono p-2"
     >
@@ -143,6 +146,7 @@
       </button>
     </section>
     <EditorContent :editor="editor" />
+    <small class="text-sm text-ink-gray-5">{{ description }}</small>
   </div>
 </template>
 <script setup>
@@ -196,6 +200,14 @@ const props = defineProps({
     default: '',
   },
   label: {
+    type: String,
+    default: '',
+  },
+  required: {
+    type: Boolean,
+    default: false,
+  },
+  description: {
     type: String,
     default: '',
   },

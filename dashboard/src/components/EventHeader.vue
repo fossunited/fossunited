@@ -80,19 +80,29 @@ const chapter = createDocumentResource({
 const isEvent = computed(() => props.form.data?.doctype === 'Event')
 
 function getBadgeTheme() {
+  let status = ''
+
   if (isEvent.value) {
-    switch (props.event.status) {
-      case 'Live':
-        return 'green'
-      case 'Cancelled':
-        return 'red'
-      case 'Draft':
-        return 'orange'
-      default:
-        return 'gray'
+    status = props.event.status
+  } else {
+    const formType = props.form.data.doctype.split(' ').pop()
+    if (formType == 'CFP') {
+      status = props.form.data.status
+    } else {
+      status = props.form.data.is_published ? 'Live' : 'Unpublished'
     }
   }
-  return props.form.data.is_published ? 'green' : 'gray'
+
+  switch (status) {
+    case 'Live':
+      return 'green'
+    case 'Cancelled':
+      return 'red'
+    case 'Draft':
+      return 'orange'
+    default:
+      return 'gray'
+  }
 }
 
 function getBadgeText() {
@@ -100,7 +110,14 @@ function getBadgeText() {
     return `${props.event.status}`
   }
   const formType = props.form.data.doctype.split(' ').pop()
-  return `${formType} ${props.form.data.is_published ? 'Live' : 'Unpublished'}`
+
+  let status = ''
+  if (formType == 'CFP') {
+    status = props.form.data.status
+  } else {
+    status = props.form.data.is_published ? 'Live' : 'Unpublished'
+  }
+  return `${formType} ${status}`
 }
 
 function shouldShowStatusDot() {

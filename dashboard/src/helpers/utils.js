@@ -13,3 +13,30 @@ export const createAbsoluteUrlFromRoute = (route) => {
 export const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
 }
+
+// Remove any empty <p> tag, and add custom margins
+export const cleanedHTML = (htmlData) => {
+  const html = htmlData || ''
+  const tempDiv = document.createElement('div')
+  tempDiv.innerHTML = html
+
+  // Process each <p> tag
+  tempDiv.querySelectorAll('p').forEach((p) => {
+    const text = p.textContent.replace(/\u00a0/g, ' ').trim()
+    if (text === '') {
+      p.remove()
+    } else {
+      p.classList.add('my-2')
+    }
+  })
+  return tempDiv.innerHTML
+}
+
+export const isValidUrl = (link) => {
+  try {
+    new URL(link)
+    return true
+  } catch (e) {
+    return false
+  }
+}

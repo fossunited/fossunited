@@ -17,6 +17,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.fossunited.doctype.cfp_submission_reference.cfp_submission_reference import (  # noqa: E501
+            CFPSubmissionReference,
+        )
+        from fossunited.fossunited.doctype.cfp_submission_speaker.cfp_submission_speaker import (
+            CFPSubmissionSpeaker,
+        )
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
@@ -26,26 +32,32 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         approvability: DF.Data | None
         attendance_confirmed: DF.Check
-        bio: DF.TextEditor
+        bio: DF.TextEditor | None
         chapter: DF.Data | None
         custom_answers: DF.Table[FOSSCustomAnswer]
-        designation: DF.Data
-        email: DF.Data
-        event: DF.Data
+        designation: DF.Data | None
+        email: DF.Data | None
+        event: DF.Data | None
         event_name: DF.Data | None
         first_name: DF.Data | None
-        full_name: DF.Data
+        full_name: DF.Data | None
+        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
         is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
+        key_takeaways: DF.TextEditor | None
         last_name: DF.Data | None
         linked_cfp: DF.Link
         negative_reviews: DF.Data | None
         organization: DF.Data | None
         picture_url: DF.Data | None
         positive_reviews: DF.Data | None
+        references: DF.Table[CFPSubmissionReference]
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
-        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]  # noqa: F722, F821
+        session_type: DF.Literal[
+            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F722, F821
+        ]
+        speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
@@ -161,7 +173,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         statistics = [
             {
                 "fieldname": "positive_reviews",
-                "label": f'{score["Yes"]} People Approved this Proposal',
+                "label": f"{score['Yes']} People Approved this Proposal",
                 "value": score["Yes"],
                 "percentage": int((score["Yes"] / reviews_len) * 100),
                 "color": "var(--clr-foss-mint-500)",
@@ -169,7 +181,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
             {
                 "fieldname": "negative_reviews",
-                "label": f'{score["No"]} People Rejected this Proposal',
+                "label": f"{score['No']} People Rejected this Proposal",
                 "value": score["No"],
                 "percentage": int((score["No"] / reviews_len) * 100),
                 "color": "var(--clr-error-500)",
@@ -177,7 +189,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
             {
                 "fieldname": "unsure_reviews",
-                "label": f'{score["Maybe"]} People Marked Unsure',
+                "label": f"{score['Maybe']} People Marked Unsure",
                 "value": score["Maybe"],
                 "percentage": int((score["Maybe"] / reviews_len) * 100),
                 "color": "var(--clr-warning-500)",
