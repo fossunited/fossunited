@@ -65,8 +65,8 @@ export const getProposalFormFields = (cfpData) => {
 
 const getSessionTypeOptions = (only_workshops, only_talk_proposals) => {
   let options = [
-    { label: 'Talk', value: 'Talk', description: '(Upto 45 mins)' },
-    { label: 'Lightning Talk', value: 'Lightning Talk', description: '(Upto 15 mins)' },
+    { label: 'Talk', value: 'Talk', description: '25-30 mins' },
+    { label: 'Lightning Talk', value: 'Lightning Talk', description: 'Upto 15 mins' },
     {
       label: 'Birds of Feather(BoF)',
       value: 'Birds of Feather(BoF)',
