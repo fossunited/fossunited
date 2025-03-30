@@ -19,6 +19,22 @@ export const getProposalFormFields = (cfpData) => {
       value: '',
     },
     {
+      label: 'Session Category',
+      fieldname: 'session_categories',
+      fieldtype: 'multiselect',
+      options: getSessionCategoryOptions(),
+      required: true,
+      value: [],
+    },
+    {
+      label: 'Other Category',
+      fieldname: 'other_category',
+      fieldtype: 'textarea',
+      required: false,
+      value: '',
+      description: 'Press Enter ⏎ after each category.',
+    },
+    {
       label: 'Is this your first talk?',
       fieldname: 'is_first_talk',
       fieldtype: 'radio_group',
@@ -84,6 +100,33 @@ const getSessionTypeOptions = (only_workshops, only_talk_proposals) => {
   }
 
   return options
+}
+
+const getSessionCategoryOptions = () => {
+  return [
+    {
+      value: 'Introducing a FOSS project or a new version of a popular project',
+      label: 'Introducing a FOSS project or a new version of a popular project',
+    },
+    { value: 'Tutorial about using a FOSS project', label: 'Tutorial about using a FOSS project' },
+    { value: 'Contributing to FOSS', label: 'Contributing to FOSS' },
+    { value: 'Technology architecture', label: 'Technology architecture' },
+    {
+      value: 'Engineering practice - productivity, debugging',
+      label: 'Engineering practice - productivity, debugging',
+    },
+    { value: 'Community', label: 'Community' },
+    { value: 'Technology / FOSS licenses, policy', label: 'Technology / FOSS licenses, policy' },
+    {
+      value: 'Story of a FOSS project - from inception to growth',
+      label: 'Story of a FOSS project - from inception to growth',
+    },
+    {
+      value: 'Knowledge Commons (Open Hardware, Open Science, Open Data etc.)',
+      label: 'Knowledge Commons (Open Hardware, Open Science, Open Data etc.)',
+    },
+    { value: 'Other', label: 'Other' },
+  ]
 }
 
 const getCustomQuestions = (questions) => {
@@ -228,6 +271,9 @@ const getTransformedProposalFields = (proposalFields) => {
         type: field.fieldtype,
         response: field.value,
       })
+    } else if (field.fieldname == 'session_categories') {
+      let categories = field.value.join('\n')
+      transformedFields['session_categories'] = categories
     } else {
       transformedFields[field.fieldname] = field.value
     }
