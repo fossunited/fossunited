@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-8 w-full p-8 border rounded bg-white">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-white">
     <h4 class="flex gap-2 items-center font-semibold">
       <IconUserCircle />
       <span>Speaker Information</span>

@@ -19,6 +19,22 @@ export const getProposalFormFields = (cfpData) => {
       value: '',
     },
     {
+      label: 'Session Category',
+      fieldname: 'session_categories',
+      fieldtype: 'multiselect',
+      options: getSessionCategoryOptions(),
+      required: true,
+      value: [],
+    },
+    {
+      label: 'Other Category',
+      fieldname: 'other_category',
+      fieldtype: 'textarea',
+      required: false,
+      value: '',
+      description: 'Press Enter ⏎ after each category.',
+    },
+    {
       label: 'Is this your first talk?',
       fieldname: 'is_first_talk',
       fieldtype: 'radio_group',
@@ -65,8 +81,8 @@ export const getProposalFormFields = (cfpData) => {
 
 const getSessionTypeOptions = (only_workshops, only_talk_proposals) => {
   let options = [
-    { label: 'Talk', value: 'Talk', description: '(Upto 45 mins)' },
-    { label: 'Lightning Talk', value: 'Lightning Talk', description: '(Upto 15 mins)' },
+    { label: 'Talk', value: 'Talk', description: '25-30 mins' },
+    { label: 'Lightning Talk', value: 'Lightning Talk', description: 'Upto 15 mins' },
     {
       label: 'Birds of Feather(BoF)',
       value: 'Birds of Feather(BoF)',
@@ -84,6 +100,33 @@ const getSessionTypeOptions = (only_workshops, only_talk_proposals) => {
   }
 
   return options
+}
+
+const getSessionCategoryOptions = () => {
+  return [
+    {
+      value: 'Introducing a FOSS project or a new version of a popular project',
+      label: 'Introducing a FOSS project or a new version of a popular project',
+    },
+    { value: 'Tutorial about using a FOSS project', label: 'Tutorial about using a FOSS project' },
+    { value: 'Contributing to FOSS', label: 'Contributing to FOSS' },
+    { value: 'Technology architecture', label: 'Technology architecture' },
+    {
+      value: 'Engineering practice - productivity, debugging',
+      label: 'Engineering practice - productivity, debugging',
+    },
+    { value: 'Community', label: 'Community' },
+    { value: 'Technology / FOSS licenses, policy', label: 'Technology / FOSS licenses, policy' },
+    {
+      value: 'Story of a FOSS project - from inception to growth',
+      label: 'Story of a FOSS project - from inception to growth',
+    },
+    {
+      value: 'Knowledge Commons (Open Hardware, Open Science, Open Data etc.)',
+      label: 'Knowledge Commons (Open Hardware, Open Science, Open Data etc.)',
+    },
+    { value: 'Other', label: 'Other' },
+  ]
 }
 
 const getCustomQuestions = (questions) => {
@@ -170,6 +213,40 @@ export const getSpeakerFields = () => {
   ]
 }
 
+export const getSubmissionConfirmationFields = () => {
+  return [
+    {
+      label: 'I have gone through the proposal guidelines before submitting the proposal',
+      fieldname: 'proposal_guidelines_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label: 'I wrote this myself, it was NOT generated primarily by AI',
+      fieldname: 'authorship_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label: 'I have included relevant references to provide as much context as possible',
+      fieldname: 'references_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label:
+        'I am okay with doing a mock presentation of this talk to get better feedback if required (optional)',
+      fieldname: 'mock_presentation_ack',
+      fieldtype: 'checkbox',
+      required: false,
+      value: false,
+    },
+  ]
+}
+
 export const validateRequiredFields = (fields) => {
   const errors = []
 
@@ -228,6 +305,9 @@ const getTransformedProposalFields = (proposalFields) => {
         type: field.fieldtype,
         response: field.value,
       })
+    } else if (field.fieldname == 'session_categories') {
+      let categories = field.value.join('\n')
+      transformedFields['session_categories'] = categories
     } else {
       transformedFields[field.fieldname] = field.value
     }

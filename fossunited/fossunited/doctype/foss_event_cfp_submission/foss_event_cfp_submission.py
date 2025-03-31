@@ -54,6 +54,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         references: DF.Table[CFPSubmissionReference]
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
+        session_categories: DF.Text | None
         session_type: DF.Literal[
             "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F722, F821
         ]
