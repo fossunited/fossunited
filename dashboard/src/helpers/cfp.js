@@ -213,6 +213,40 @@ export const getSpeakerFields = () => {
   ]
 }
 
+export const getSubmissionConfirmationFields = () => {
+  return [
+    {
+      label: 'I have gone through the proposal guidelines before submitting the proposal',
+      fieldname: 'proposal_guidelines_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label: 'I wrote this myself, it was NOT generated primarily by AI',
+      fieldname: 'authorship_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label: 'I have included relevant references to provide as much context as possible',
+      fieldname: 'references_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label:
+        'I am okay with doing a mock presentation of this talk to get better feedback if required (optional)',
+      fieldname: 'mock_presentation_ack',
+      fieldtype: 'checkbox',
+      required: false,
+      value: false,
+    },
+  ]
+}
+
 export const validateRequiredFields = (fields) => {
   const errors = []
 
