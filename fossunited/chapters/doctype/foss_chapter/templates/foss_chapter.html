@@ -2,9 +2,29 @@
 {% block page_content %}
   {{ header() }}
   {{ render_about() }}
-  {% if upcoming_events %}{{ render_upcoming_events() }}{% endif %}
-  {% if past_events %}{{ render_past_events() }}{% endif %}
-  {{ render_members() }}
+  {% set has_upcoming = upcoming_events | length > 0 %}
+  {% set has_past = past_events | length > 0 %}
+  {% if has_upcoming and has_past %}
+    {% set upcoming_heading = 3 %}
+    {% set past_heading = 4 %}
+    {% set members_heading = 5 %}
+  {% elif has_upcoming %}
+    {% set upcoming_heading = 3 %}
+    {% set past_heading = none %}
+    {% set members_heading = 4 %}
+  {% elif has_past %}
+    {% set upcoming_heading = none %}
+    {% set past_heading = 3 %}
+    {% set members_heading = 4 %}
+  {% else %}
+    {% set upcoming_heading = none %}
+    {% set past_heading = none %}
+    {% set members_heading = 3 %}
+  {% endif %}
+
+  {% if has_upcoming %}{{ render_upcoming_events(upcoming_heading) }}{% endif %}
+  {% if has_past %}{{ render_past_events(past_heading) }}{% endif %}
+  {{ render_members(members_heading) }}
   <div class="my-5 py-5"></div>
 {% endblock %}
 {% macro header() %}
@@ -46,41 +66,41 @@
 {% endmacro %}
 {% macro render_about() %}
   <div class="container my-5">
-    <h3 class="subtitle">About</h3>
-    <div class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</div>
+    <h2 class="subtitle">About</h2>
+    <p class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</p>
   </div>
 {% endmacro %}
-{% macro render_upcoming_events() %}
+{% macro render_upcoming_events(heading_level) %}
   {%
     from
     'fossunited/templates/macros/event_card.html' import event_card
   %}
   <div class="container my-5">
-    <h3 class="subtitle">Upcoming Events</h3>
+    <h{{heading_level}} class="subtitle">Upcoming Events</h{{heading_level}}>
     <div class="events-grid-4">
       {% for event in upcoming_events %}{{ event_card(event) }}{% endfor %}
     </div>
   </div>
 {% endmacro %}
-{% macro render_past_events() %}
+{% macro render_past_events(heading_level) %}
   {%
     from
     'fossunited/templates/macros/event_card.html' import event_card
   %}
   <div class="container my-5">
-    <h3 class="subtitle">Past Events</h3>
+    <h{{heading_level}} class="subtitle">Past Events</h{{heading_level}}>
     <div class="events-grid-4">
       {% for event in past_events %}{{ event_card(event) }}{% endfor %}
     </div>
   </div>
 {% endmacro %}
-{% macro render_members() %}
+{% macro render_members(heading_level) %}
   {%
     from 'fossunited/templates/macros/member_card.html'
     import member_card
   %}
   <div class="container my-5">
-    <h3 class="subtitle">Organisers</h3>
+    <h{{heading_level}} class="subtitle">Organisers</h{{heading_level}}>
     <div class="members-grid-6">
       {% for member in members %}{{ member_card(member) }}{% endfor %}
     </div>
