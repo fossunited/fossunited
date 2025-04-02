@@ -40,7 +40,8 @@
     color: var(--Gray-500, #667085);
   }
 
-  #events-search:focus, .must-attend-checkbox input:focus + label {
+  #events-search:focus,
+  .must-attend-checkbox input:focus + label {
     outline: 2px solid var(--Gray-500, #667085);
     outline-offset: 2px;
   }
@@ -115,22 +116,26 @@
         />
         <label for="must-attend-checkbox">Must Attend</label>
       </div>
-      <p id="must-attend-desc" class="sr-only">Filter the events to show only those marked as must-attend.</p>
+      <p id="must-attend-desc" class="sr-only">
+        Filter the events to show only those marked as must-attend.
+      </p>
     </div>
 
     <!--Primary Event cards listing-->
     {% set grouped_events = get_grouped_events() %}
     {% for group, events in grouped_events.items() %}
-      <div class="event-group" v-if="searchText.length == 0" role="region" aria-labelledby="group-{{ loop.index }}">
-        <h3 id="group-{{ loop.index }}">{{ group }}</h3>
+      <div class="event-group" v-if="searchText.length == 0" role="region">
+        <h3>{{ group }}</h3>
         {% for month, month_events in events.items() %}
-          <h4 id="month-{{ loop.index }}-{{ loop.parent.index }}">
+          <h4
+            class="event-month"
+            v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
+          >
             {{ month }}
           </h4>
           <div
             class="events-grid-4"
             role="group"
-            aria-labelledby="month-{{ loop.index }}-{{ loop.parent.index }}"
             v-effect="updateTicker()"
             v-show="ticker > 0 && $el?.children.length > 0"
           >
@@ -159,7 +164,12 @@
     {% endfor %}
 
     <!--Searched and Filtered event cards listing-->
-    <div v-if="searchText.length > 0" aria-live="polite" role="region" aria-labelledby="filtered-events-label">
+    <div
+      v-if="searchText.length > 0"
+      aria-live="polite"
+      role="region"
+      aria-labelledby="filtered-events-label"
+    >
       <h3 id="filtered-events-label" class="sr-only">Filtered Event Results</h3>
       <div class="events-grid-4" role="list">
         {% for group, events in grouped_events.items() %}
