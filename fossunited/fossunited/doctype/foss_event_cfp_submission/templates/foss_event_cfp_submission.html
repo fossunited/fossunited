@@ -1,147 +1,142 @@
-{% extends "templates/foss_base.html" %} {% block title %}{{ doc.talk_title }}{% endblock %}
+{% extends "templates/foss_base.html" %}
+{% from 'fossunited/templates/macros/breadcrumb.html' import breadcrumb %}
+{% from 'fossunited/templates/macros/badge.html' import badge %}
+
+{% block title %}{{ doc.talk_title }}{% endblock %}
+{% set prose_classes="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium" %}
+
 {% block page_content %}
-  <div class="container">
-    <div class="backlink mt-5">
-      <a href="/{{ event.route }}">
-        <span>{{ event.event_name }}</span>
-      </a>
-      <i class="ti ti-chevron-right"></i>
-      <a href="/dashboard/cfp/{{ event.route }}">
-        <span>All Proposals</span>
-      </a>
-      <i class="ti ti-chevron-right"></i>
-      <span style="font-weight: var(--fw-normal)">{{ doc.talk_title }}</span>
-    </div>
-    {{ render_cfp_header() }}
-  </div>
-
-  {% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
-  <div class="horizontal-navbar-parent">
-    <div class="container">{{ horizontal_navbar(nav_items) }}</div>
-  </div>
-
-  <div class="container">
-    {{ render_proposal_details() }}
-    {% if not cfp.anonymise_proposals or doc.status=='Approved' %}{{ render_speaker_details() }}{% endif %}
-    {{ render_proposal_reviews() }}
+  <link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
+  <div class="container max-w-[800px] flex flex-col gap-6 mb-6 px-4">
+    {{ breadcrumb(breadcrumbs) }}
+    {{ talk_header() }}
+    {{ prose_container("Session Description", doc.talk_description) }}
+    {{ prose_container("Key Takeaways", doc.key_takeaways) }}
+    {{ references() }}
+    {{ render_session_categories() }}
+    {% if not anonymous_cfps %}
+      {{ render_speakers() }}
+    {% endif %}
+    <hr />
+    {{ render_reviews() }}
   </div>
 {% endblock %}
-{% macro render_cfp_header() %}
-  <div class="cfp-header-container">
-    <div class="cfp-header--title">
-      <h1>{{ doc.talk_title }}</h1>
+
+{% macro like_button() %}
+  <div class="whitespace-nowrap">{% include "templates/includes/like/like.html" %}</div>
+{% endmacro %}
+
+{% macro talk_header() %}
+  <div class="flex flex-col gap-3">
+    <div class="flex items-center gap-2">
+      {{ badge(label=doc.session_type, variant='outline', theme="blue") }}
+      {{ badge(label=doc.intended_audience, variant='outline', prefix="<i class='ti ti-users-group'></i>", theme="gray") }}
+      {% if doc.is_first_talk == 'Yes' %}
+        {{ badge(label="First Talk", prefix="<i class='ti ti-sparkles'></i>" ) }}
+      {% endif %}
     </div>
-    <div class="cfp-header--speaker-status-like">
-      <div class="cfp-header--speaker-status-container">
-        {% if not cfp.anonymise_proposals or doc.status=='Approved' %}
-          <div class="cfp-header--speaker">
-            <img
-              class="user-img-sm rounded"
-              src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-              alt=""
-            />
-            <span class="cfp-header--speaker-name">{{ doc.full_name }}</span>
-          </div>
-        {% endif %}
-        <div class="cfp-header--status">
-          <span>{{ make_badge(text=doc.status) }}</span>
-        </div>
-      </div>
-      <div class="cfp-header--like-edit-container">
-        {% if not frappe.session.user == 'Guest' %}
-          <div class="cfp-header--like-container" id="likes-container">
-            <div class="likes-number">
-              <span style="color: hsl(var(--clr-foss-mint-500))">{{ likes | length }} Likes </span>
-            </div>
-            <button id="cfp-like-button" data-liked="{{ liked_by_user }}" onclick="toggle_like()">
-              <i
-                class="ti {% if liked_by_user %}ti-heart-filled{% else %}ti-heart{% endif %}"
-                style="{% if liked_by_user %}color: red;{% endif %}"
-              ></i>
-              <span>Like</span>
-            </button>
-          </div>
-        {% endif %}
-        {% if frappe.session.user == doc.submitted_by %}
-          <button onclick="window.location.href='/{{ doc.route }}/edit'">Edit CFP</button>
-        {% endif %}
-      </div>
+    <div class="flex justify-between gap-4">
+      <h1 class="text-3xl font-bold">{{ doc.talk_title }}</h1>
+      {{ like_button() }}
+    </div>
+    <div class="w-fit">{{ badge(label=doc.status, theme=status_badge_theme[doc.status]) }}</div>
+  </div>
+{% endmacro %}
+
+{% macro prose_container(label, content) %}
+  <div class="flex flex-col">
+    <label class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
+      {{ label }}
+    </label>
+    <div class="{{ prose_classes }} max-w-full p-4 border rounded border-gray-400">
+      {{ content }}
     </div>
   </div>
 {% endmacro %}
-{% macro render_proposal_details() %}
-  <div class="proposal-detail-container cfp-content-div content-div" id="proposal_details">
-    <h5>{{ _("Talk Description") }}</h5>
-    {% if doc.talk_reference %}
-      <a class="green-link text-lg" href="{{ doc.talk_reference }}">
-        <span>Reference</span>
-        <i class="ti ti-external-link"></i>
-      </a>
-    {% endif %}
-    <div class="cfp--talk-description">{{ doc.talk_description }}</div>
-  </div>
-{% endmacro %}
-{% macro render_speaker_details() %}
-  <div class="speaker-detail-container cfp-content-div content-div" id="about_speaker">
-    <h5>{{ _("About the Speaker") }}</h5>
-    {% if submitter_foss_profile %}
-      <a href="/{{ submitter_foss_profile.route }}" class="green-link text-lg">
-        <span>View Profile</span>
-        <i class="ti ti-external-link"></i>
-      </a>
-    {% endif %}
-    <div class="cfp--speaker-description">{{ doc.bio }}</div>
-  </div>
-{% endmacro %}
-{% macro render_proposal_reviews() %}
-  <div class="proposal-reviews-container cfp-content-div content-div" id="proposal_reviews">
-    <div class="proposal-overview-section">
-      <h5>{{ _("Reviews Overview") }}</h5>
-    </div>
-    <div class="review-statistics-grid">
-      {% for statistic in review_statistics %}
-        <div class="review-statistic-container">
-          <div
-            class="statistic-illustrator-container"
-            style="background: hsl({{ statistic.background }}); border: 1px solid hsl({{ statistic.color }})"
-          >
-            <div
-              class="statistic-illustrator-fill"
-              style="width: {{ statistic.percentage }}%; background: hsl({{ statistic.color }});"
-            ></div>
-          </div>
-          <div class="review-statistic-values">
-            <div class="statistic-label">{{ statistic.label }}</div>
-            <div class="statistic-percent" style="color: hsl({{ statistic.color }});">
-              {{ statistic.percentage }}%
-            </div>
-          </div>
+
+{% macro references() %}
+  <div>
+    <label class="text-base font-medium text-gray-600"> References </label>
+    <div class="flex flex-col gap-2">
+      {% for reference in doc.references %}
+        <div class="flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors">
+          <i class="ti ti-link text-lg"></i>
+          <a class="no-underline" href="{{ reference.link }}" target="_blank">
+            {{ reference.link }}
+          </a>
         </div>
       {% endfor %}
     </div>
-    <div class="form-divider my-5"></div>
-    <div class="review-comments-section">
-      <h6>Reviews</h6>
-      {% if reviews | len == 0 %}
-        <span>No reviews yet</span>
-      {% endif %}
-      {% for review in reviews %}
-        <div class="review-comment-container">
-          <div class="d-flex">
-            <div class="review-comment-username-remarks ml-3">
-              <div class="review-comment-remarks" data-name="{{ review.name }}">
-                {{ review.remarks }}
-              </div>
-              <div class="d-flex align-items-baseline">
-                <span class="text-sm mr-1">Reviewer #{{ loop.index }}</span>
-                <span class="mx-1">•</span>
-                <span class="text-sm mr-1">{{ remark_val[review.to_approve] }}</span>
-                <span class="mx-1">•</span>
-                <span class="text-sm"> {{ frappe.utils.pretty_date(review.modified) }} </span>
-              </div>
-            </div>
+  </div>
+{% endmacro %}
+
+{% macro render_session_categories() %}
+  <div>
+    <label class="text-base font-medium text-gray-600"> Session Categories </label>
+    <div class="flex flex-wrap gap-2">
+      {% for category in session_categories %}
+        <div
+          class="p-2 flex gap-2 items-center text-sm rounded border border-gray-500 text-gray-600 bg-gray-50"
+        >
+          <span> {{ category }} </span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_speakers() %}
+  <hr />
+  <div>
+    <label class="text-base font-medium text-gray-600"> Speakers </label>
+    <div class="flex flex-col gap-2">
+      {% for speaker in doc.speakers %}
+        {{ speaker_card(speaker) }}
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro speaker_card(speaker) %}
+  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded">
+    <div class="flex gap-6 justify-between">
+      <div class="flex flex-col gap-2 justify-between">
+        <div class="flex flex-col gap-1">
+          <h5 class="text-lg font-medium">{{ speaker.full_name }}</h5>
+          <div class="flex flex-col text-sm font-medium">
+            <span>{{ speaker.designation }}</span>
+            <span>{{ speaker.organization }}</span>
           </div>
         </div>
+        {% if speaker.social_link %}
+          <a href="{{ speaker.social_link }}" target="_blank">
+            {{ badge(label=speaker.social_link, variant="outline", prefix="<i class='ti ti-world'></i>", theme="gray") }}
+          </a>
+        {% endif %}
+      </div>
+      <img class="w-24 h-24 border rounded" src="{{ speaker.photo }}" alt="Speaker Image" />
+    </div>
+    <button
+      class="p-2 text-sm outline-none border-0 w-fit"
+      onclick="this.nextElementSibling.classList.toggle('hidden'); this.innerText = this.nextElementSibling.classList.contains('hidden') ? 'Show Bio' : 'Hide Bio';"
+    >
+      Show Bio
+    </button>
+    <div class="space-y-1 p-2 hidden">
+      <div class="{{ prose_classes }} max-w-full">{{ speaker.bio }}</div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_reviews() %}
+  <div>
+    <label class="text-base font-medium text-gray-600"> Reviews </label>
+    <div class="flex flex-col gap-2">
+      {% if not doc.reviews %}
+        <div class="text-sm text-gray-500">No reviews yet.</div>
+      {% endif %}
+      {% for review in doc.reviews %}
+        {{ review_card(review) }}
         {% if not loop.last %}
           <div class="form-divider"></div>
         {% endif %}
@@ -149,73 +144,14 @@
     </div>
   </div>
 {% endmacro %}
-{% block page_script %}
-  <script>
-    $(document).ready(() => {
-      $('#submit-cfp-review').on('click', (e) => {
-        e.preventDefault()
-        post_review()
-      })
-    })
 
-    function post_review() {
-      const to_approve = $('input[name="review-status"]:checked').val()
-      const remarks = $('#remarks').val()
-      frappe.call({
-        method: 'fossunited.fossunited.forms.post_review',
-        args: {
-          submission: '{{ doc.name }}',
-          to_approve: to_approve,
-          remarks: remarks,
-        },
-        callback: (r) => {
-          $('#proposal_reviews').load(document.URL + ' #proposal_reviews')
-        },
-        error: (r) => {
-          console.log('ERROR' + r)
-          frappe.msgprint('There was an error posting your review. Please try again.' + r)
-        },
-      })
-    }
-
-    function toggle_like(e) {
-      let liked = $('#cfp-like-button').data('liked')
-      liked = liked === 'True' ? 'False' : 'Yes'
-      console.log(liked)
-      frappe.call({
-        method: 'frappe.desk.like.toggle_like',
-        args: {
-          doctype: 'FOSS Event CFP Submission',
-          name: '{{ doc.name }}',
-          add: liked,
-        },
-        callback: (r) => {
-          $('#likes-container').load(document.URL + ' #likes-container')
-        },
-        error: (r) => {
-          console.log('ERROR' + r)
-        },
-      })
-    }
-
-    function handleCommentEdit(e) {
-      let docname = $(e).data('name')
-      let commentElement = $('.review-comment-remarks[data-name="' + docname + '"]')
-
-      frappe
-        .call({
-          method: 'frappe.client.delete',
-          args: {
-            doctype: 'FOSS Event CFP Review',
-            name: docname,
-          },
-        })
-        .then((result) => {
-          location.reload()
-        })
-        .catch((err) => {
-          frappe.msgprint(err)
-        })
-    }
-  </script>
-{% endblock %}
+{% macro review_card(review) %}
+  <div class="flex flex-col gap-1 my-2">
+    <div class="text-base">{{ review.remarks }}</div>
+    <div class="flex gap-2 items-center">
+      <span class="text-sm">Reviewer #{{ review.idx }}</span>
+      <i class="ti ti-circle-filled text-[8px] text-gray-400"></i>
+      {{ badge(label=review_badge[review.to_approve]["label"], theme=review_badge[review.to_approve]["theme"]) }}
+    </div>
+  </div>
+{% endmacro %}
