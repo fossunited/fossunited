@@ -167,10 +167,14 @@
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck } from '@tabler/icons-vue'
-import { createResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
-
-import { reactive, ref, watch, computed } from 'vue'
+import { FileUploader, Switch, FormControl, ErrorMessage, createResource } from 'frappe-ui'
+import { reactive, ref, watch, computed, onMounted } from 'vue'
 import { toast } from 'vue-sonner'
+import { useUserProfileStore } from '@/stores/userProfile'
+import { storeToRefs } from 'pinia'
+
+const userProfileStore = useUserProfileStore()
+const { profile } = storeToRefs(userProfileStore)
 
 const profile_dict = reactive({
   full_name: '',
@@ -191,15 +195,21 @@ const profile_dict = reactive({
   mastodon: '',
 })
 
-const profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-  auto: true,
-  onSuccess(data) {
-    Object.keys(profile_dict).forEach((key) => {
-      profile_dict[key] = data[key]
-    })
-  },
+onMounted(async () => {
+  await userProfileStore.fetchProfile()
 })
+
+watch(
+  () => profile.value.data,
+  (data) => {
+    if (data) {
+      Object.keys(profile_dict).forEach((key) => {
+        profile_dict[key] = data[key] || ''
+      })
+    }
+  },
+  { immediate: true }
+)
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()

@@ -76,12 +76,12 @@
           <div class="hidden md:flex items-center justify-between text-gray-800 py-2 my-1">
             <div class="flex items-center gap-2">
               <img
-                v-if="user_profile.data?.profile_photo"
-                :src="user_profile.data?.profile_photo"
+                v-if="profile.data?.profile_photo"
+                :src="profile.data?.profile_photo"
                 class="w-6 h-6 rounded-full"
               />
               <FeatherIcon v-else name="user" class="w-3 h-3" fill="black" />
-              <span class="text-sm font-medium">{{ user_profile.data?.full_name }}</span>
+              <span class="text-sm font-medium">{{ profile.data?.full_name }}</span>
             </div>
             <div>
               <Popover>
@@ -135,8 +135,8 @@
         <template #target="{ togglePopover }">
           <button @click="togglePopover()">
             <img
-              v-if="user_profile.data?.profile_photo"
-              :src="user_profile.data?.profile_photo"
+              v-if="profile.data?.profile_photo"
+              :src="profile.data?.profile_photo"
               class="w-6 h-6 rounded-full"
             />
             <FeatherIcon v-else name="user" class="w-4 h-4" fill="black" />
@@ -179,9 +179,11 @@
 <script setup>
 import { createResource, FeatherIcon, Popover } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { ref, defineProps, inject } from 'vue'
+import { ref, defineProps, inject, onMounted, watch } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import { IconExternalLink } from '@tabler/icons-vue'
+import { useUserProfileStore } from '@/stores/userProfile'
+import { storeToRefs } from 'pinia'
 
 const route = useRoute()
 const session = inject('$session')
@@ -199,13 +201,26 @@ const props = defineProps({
   },
 })
 
-const user_profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
+const userProfileStore = useUserProfileStore()
+const { profile } = storeToRefs(userProfileStore)
+
+const fetchUserProfile = () => {
+  if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
+    console.log('Sidebar: Requesting profile fetch from store...')
+    userProfileStore.fetchProfile()
+  } else {
+    console.log('Sidebar: Skipping profile fetch (not logged in or guest/admin).')
+  }
+}
+
+onMounted(() => {
+  fetchUserProfile()
 })
 
-if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
-  user_profile.fetch()
-}
+watch(() => session.user, (newUser, oldUser) => {
+  console.log('Sidebar: Session user changed:', newUser)
+  fetchUserProfileIfNeeded()
+}, { immediate: false })
 
 const isMenuItemActive = (menuRoute, index) => {
   if (index == 0 && menuRoute != route.path) {
