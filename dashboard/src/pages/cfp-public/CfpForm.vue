@@ -23,6 +23,13 @@
               v-model:references="proposalReferences"
             />
             <SpeakersForm v-else-if="curr_section === 2" v-model:speakers="proposalSpeakers" />
+            <PreviewSubmission
+              v-else-if="curr_section === 3"
+              v-model:confirmation-fields="proposalConfirmationFields"
+              :proposal-fields="proposalFormFields"
+              :proposal-references="proposalReferences"
+              :proposal-speakers="proposalSpeakers"
+            />
             <SubmissionSuccessView v-else-if="curr_section === 'success'" />
           </div>
         </transition>
@@ -58,6 +65,7 @@ import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
 import StepButtons from '@/components/cfp-public/StepButtons.vue'
 import FormClosedSection from '@/components/cfp-public/FormClosedSection.vue'
 import SubmissionSuccessView from '@/components/cfp-public/SubmissionSuccessView.vue'
+import PreviewSubmission from '@/components/cfp-public/PreviewSubmission.vue'
 import { createResource, LoadingIndicator, usePageMeta, ErrorMessage } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { provide, ref, watch, computed, inject } from 'vue'
@@ -65,6 +73,7 @@ import {
   getProposalFormFields,
   getReferenceItemSchema,
   getSpeakerFields,
+  getSubmissionConfirmationFields,
   validateRequiredFields,
   validateReferences,
   validateSpeakerFields,
@@ -73,7 +82,7 @@ import {
 import { toast } from 'vue-sonner'
 
 const curr_section = ref(0)
-const maxSectionIndex = 2
+const maxSectionIndex = 3
 
 const session = inject('$session')
 
@@ -82,8 +91,11 @@ const inLoading = ref(true)
 const proposalFormFields = ref([])
 const proposalReferences = ref([])
 const proposalSpeakers = ref([])
+const proposalConfirmationFields = ref([])
+
 proposalReferences.value.push(getReferenceItemSchema())
 proposalSpeakers.value.push(getSpeakerFields())
+proposalConfirmationFields.value = getSubmissionConfirmationFields()
 
 const errorMessages = ref('')
 
@@ -172,6 +184,13 @@ function nextStep() {
     errors = errors.concat(validateReferences(proposalReferences.value))
   }
 
+  if (curr_section.value == 2) {
+    const speakerErrors = validateSpeakerFields(proposalSpeakers.value)
+    if (speakerErrors.length) {
+      errors = errors.concat(speakerErrors) // Flattening the array
+    }
+  }
+
   if (errors.length) {
     errorMessages.value = errors.join('\n')
     return
@@ -194,11 +213,8 @@ function prevStep() {
 function submitForm() {
   let errors = []
 
-  if (curr_section.value == 2) {
-    const speakerErrors = validateSpeakerFields(proposalSpeakers.value)
-    if (speakerErrors.length) {
-      errors = errors.concat(speakerErrors) // Flattening the array
-    }
+  if (curr_section.value == 3) {
+    errors = errors.concat(validateRequiredFields(proposalConfirmationFields.value))
   }
 
   if (errors.length) {
