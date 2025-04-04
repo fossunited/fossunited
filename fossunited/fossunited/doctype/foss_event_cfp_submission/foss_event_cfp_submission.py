@@ -94,11 +94,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.unsure_reviews = statistics[2]["percentage"]
         self.approvability = statistics[3]["percentage"]
 
-    def check_status(self):
+    def check_status(self) -> None:
         if self.status != "Review Pending":
             frappe.throw("Illegal status change", frappe.ValidationError)
 
-    def validate_linked_cfp_exists(self):
+    def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
@@ -141,6 +141,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
         }
 
+        context.review_scores = self.get_review_scores()
+        context.total_reviews = len(self.reviews)
+
         # For Like
         context.reference_doctype = self.doctype
         context.reference_name = self.name
@@ -148,7 +151,31 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.like = 1 if frappe.session.user in context.likes else 0
         context.like_count = len(context.likes)
 
-    def get_likes(self):
+    def get_review_scores(self) -> dict[str, int]:
+        positive = 0
+        negative = 0
+        unsure = 0
+
+        for review in self.reviews:
+            if review.to_approve == "Yes":
+                positive += 1
+            elif review.to_approve == "No":
+                negative += 1
+            elif review.to_approve == "Maybe":
+                unsure += 1
+
+        approvability = 0
+        if positive + negative > 0:
+            approvability = (positive / (positive + negative)) * 100
+
+        return {
+            "positive": positive,
+            "negative": negative,
+            "unsure": unsure,
+            "approvability": int(approvability),
+        }
+
+    def get_likes(self) -> list:
         return frappe.db.get_all(
             "Comment",
             {
@@ -160,7 +187,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             page_length=9999,
         )
 
-    def get_breadcrumb(self, event):
+    def get_breadcrumb(self, event) -> list[dict[str, str]]:
         crumbs = [
             {
                 "route": f"/{event.route}",
@@ -236,7 +263,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         return reviews
 
-    def handle_status_change(self):
+    def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):
             return
 
@@ -246,7 +273,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if self.status == "Rejected":
             self.handle_email_group("Rejected Proposers")
 
-    def handle_email_group(self, type):
+    def handle_email_group(self, type) -> None:
         if not frappe.db.exists(
             "Email Group",
             {

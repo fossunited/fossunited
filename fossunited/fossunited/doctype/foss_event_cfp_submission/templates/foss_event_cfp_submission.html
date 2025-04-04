@@ -23,7 +23,9 @@
 {% endblock %}
 
 {% macro like_button() %}
-  <div class="whitespace-nowrap">{% include "templates/includes/like/like.html" %}</div>
+  <div class="whitespace-nowrap bg-gray-100 h-fit w-fit rounded *:!m-0 px-3 py-2">
+    {% include "templates/includes/like/like.html" %}
+  </div>
 {% endmacro %}
 
 {% macro talk_header() %}
@@ -102,10 +104,10 @@
     <div class="flex gap-6 justify-between">
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-medium">{{ speaker.full_name }}</h5>
-          <div class="flex flex-col text-sm font-medium">
+          <h5 class="text-lg font-semibold text-gray-900">{{ speaker.full_name }}</h5>
+          <div class="flex flex-col text-sm text-gray-500">
             <span>{{ speaker.designation }}</span>
-            <span>{{ speaker.organization }}</span>
+            <span class="font-semibold">{{ speaker.organization }}</span>
           </div>
         </div>
         {% if speaker.social_link %}
@@ -129,8 +131,18 @@
 {% endmacro %}
 
 {% macro render_reviews() %}
-  <div>
+  <div class="flex flex-col gap-3">
     <label class="text-base font-medium text-gray-600"> Reviews </label>
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6 "
+    >
+      <div class="!px-0">
+        {{ score_card(label="Approvability", score=review_scores['approvability'], color="text-blue-600", suffix="%") }}
+      </div>
+      {{ score_card(label="Approvals", score=review_scores['positive'], color="text-green-600") }}
+      {{ score_card(label="Rejections", score=review_scores['negative'], color="text-red-600") }}
+      {{ score_card(label="Not Sure", score=review_scores['unsure'], color="text-orange-600") }}
+    </div>
     <div class="flex flex-col gap-2">
       {% if not doc.reviews %}
         <div class="text-sm text-gray-500">No reviews yet.</div>
@@ -153,5 +165,16 @@
       <i class="ti ti-circle-filled text-[8px] text-gray-400"></i>
       {{ badge(label=review_badge[review.to_approve]["label"], theme=review_badge[review.to_approve]["theme"]) }}
     </div>
+  </div>
+{% endmacro %}
+
+{% macro score_card(label, score, color, prefix = '', suffix = '') %}
+  <div class="flex flex-col justify-center md:justify-normal items-center md:items-start">
+    <div class="flex gap-1 {{ color }} items-center">
+      {% if prefix %}{{ prefix }}{% endif %}
+      <span class="text-xl font-bold">{{ score }}</span>
+      {% if suffix %}{{ suffix }}{% endif %}
+    </div>
+    <span class="text-sm text-gray-500">{{ label }}</span>
   </div>
 {% endmacro %}
