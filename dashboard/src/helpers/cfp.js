@@ -238,10 +238,10 @@ export const getSubmissionConfirmationFields = () => {
     },
     {
       label:
-        'I am okay with doing a mock presentation of this talk to get better feedback if required (optional)',
+        'I am okay with doing a mock presentation of this talk to get better feedback if required',
       fieldname: 'mock_presentation_ack',
       fieldtype: 'checkbox',
-      required: false,
+      required: true,
       value: false,
     },
   ]
