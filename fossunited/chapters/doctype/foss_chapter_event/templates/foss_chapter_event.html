@@ -192,11 +192,10 @@
       <h5>Speakers</h5>
       {% if speakers %}
         <div class="speakers-grid">
-          {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
           {% for speaker in speakers %}
             <div class="speaker-card">
               <img
-                src="{{ speaker.profile_picture }}"
+                src="{{ speaker.photo }}"
                 alt="{{ speaker.full_name }}"
                 class="speaker--image"
               />
