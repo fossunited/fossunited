@@ -275,7 +275,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         return members
 
     def get_speakers(self):
-        submissions = frappe.db.get_all(PROPOSAL, {"event": self.name}, pluck="name")
+        submissions = frappe.db.get_all(
+            PROPOSAL, {"event": self.name, "status": "Approved"}, pluck="name"
+        )
 
         speakers = []
 
