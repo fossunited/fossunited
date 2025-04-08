@@ -1,7 +1,4 @@
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
-/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css" />
 
 <style>
   footer {
@@ -21,6 +18,7 @@
     padding: 4rem 0rem;
     width: 100%;
   }
+
   .footer-container p {
     color: hsl(var(--clr-libre-white-600));
   }
@@ -39,7 +37,7 @@
     text-decoration: none;
   }
 
-  .footer-element-logo > img {
+  .footer-element-logo>img {
     max-height: 2.5rem;
   }
 
@@ -65,7 +63,7 @@
     color: hsl(var(--clr-libre-white-600));
   }
 
-  .footer_parent_label > a {
+  .footer_parent_label>a {
     font-weight: var(--fw-medium);
     margin: 0;
   }
@@ -130,7 +128,7 @@
       gap: 1.25rem;
     }
 
-    .footer-element-logo > img {
+    .footer-element-logo>img {
       max-height: 2rem;
     }
 
@@ -161,22 +159,22 @@
       <div class="footer-element-items">
         <div class="footer-link-category">
           {% for item in footer_items %}{%
-            if not item.parent_label and item.label != "Social
-            Media"
+          if not item.parent_label and item.label != "Social
+          Media"
           %}
-            <div class="footer_parent_label">
-              {% if item.url %}
-                <a href="item.url">{{ item.label }}</a>
-              {% else %}
-                <p>{{ item.label }}</p>
-              {% endif %}
+          <div class="footer_parent_label">
+            {% if item.url %}
+            <a href="item.url">{{ item.label }}</a>
+            {% else %}
+            <p>{{ item.label }}</p>
+            {% endif %}
 
-              <div class="footer-category-items">
-                {% for child_item in footer_items %}{% if child_item.parent_label == item.label %}
-                  <a href="{{ child_item.url }}" class="footer-link">{{ child_item.label }}</a>
-                {% endif %}{% endfor %}
-              </div>
+            <div class="footer-category-items">
+              {% for child_item in footer_items %}{% if child_item.parent_label == item.label %}
+              <a href="{{ child_item.url }}" class="footer-link">{{ child_item.label }}</a>
+              {% endif %}{% endfor %}
             </div>
+          </div>
           {% endif %}{% endfor %}
         </div>
 
@@ -189,9 +187,11 @@
           <div class="social-media-credits">
             <div class="social-category-items">
               {% for child_item in footer_items %}{% if child_item.parent_label == "Social Media" %}
-                <a href="{{ child_item.url }}" class="footer-link">
-                  <img src="{{ child_item.custom_icon }}" alt="" />
-                </a>
+              <a href="{{ child_item.url }}" class="footer-link"
+                aria-label="Visit our {{ child_item.label|default('social media')|title }} page">
+                <img src="{{ child_item.custom_icon }}"
+                  alt="{{ child_item.label|default('Social media icon')|title }}" />
+              </a>
               {% endif %}{% endfor %}
             </div>
 
