@@ -28,7 +28,7 @@
           {% for option in question.options.splitlines() %}
             <option
               value="{{ option }}"
-              {% if submission.response="" ="option" %}selected{% endif %}
+              {% if submission.response == option  %} selected {% endif %}
             >
               {{ option }}
             </option>

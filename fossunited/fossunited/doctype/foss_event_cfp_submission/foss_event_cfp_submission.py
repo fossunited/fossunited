@@ -4,8 +4,7 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import add_to_email_group, create_email_group
-from fossunited.doctype_ids import EVENT, EVENT_CFP, USER_PROFILE
-from fossunited.fossunited.utils import get_doc_likes
+from fossunited.doctype_ids import EVENT, EVENT_CFP
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -17,6 +16,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.fossunited.doctype.cfp_submission_reference.cfp_submission_reference import (  # noqa: E501
+            CFPSubmissionReference,
+        )
+        from fossunited.fossunited.doctype.cfp_submission_speaker.cfp_submission_speaker import (
+            CFPSubmissionSpeaker,
+        )
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
@@ -26,26 +31,33 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         approvability: DF.Data | None
         attendance_confirmed: DF.Check
-        bio: DF.TextEditor
+        bio: DF.TextEditor | None
         chapter: DF.Data | None
         custom_answers: DF.Table[FOSSCustomAnswer]
-        designation: DF.Data
-        email: DF.Data
-        event: DF.Data
+        designation: DF.Data | None
+        email: DF.Data | None
+        event: DF.Data | None
         event_name: DF.Data | None
         first_name: DF.Data | None
-        full_name: DF.Data
+        full_name: DF.Data | None
+        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
         is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
         is_published: DF.Check
+        key_takeaways: DF.TextEditor | None
         last_name: DF.Data | None
         linked_cfp: DF.Link
         negative_reviews: DF.Data | None
         organization: DF.Data | None
         picture_url: DF.Data | None
         positive_reviews: DF.Data | None
+        references: DF.Table[CFPSubmissionReference]
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
-        session_type: DF.Literal["Talk", "Lightning Talk", "Workshop"]  # noqa: F722, F821
+        session_categories: DF.Text | None
+        session_type: DF.Literal[
+            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F722, F821
+        ]
+        speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
@@ -82,66 +94,115 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.unsure_reviews = statistics[2]["percentage"]
         self.approvability = statistics[3]["percentage"]
 
-    def check_status(self):
+    def check_status(self) -> None:
         if self.status != "Review Pending":
             frappe.throw("Illegal status change", frappe.ValidationError)
 
-    def validate_linked_cfp_exists(self):
+    def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
     def get_context(self, context):
-        context.cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
-        context.event = frappe.get_doc(EVENT, self.event)
-        context.likes = get_doc_likes(self.doctype, self.name)
-        context.liked_by_user = frappe.session.user in context.likes
-        context.reviewers = self.get_reviewers(context.cfp)
-        context.is_reviewer = frappe.session.user in [
-            reviewer["email"] for reviewer in context.reviewers
-        ]
-        context.nav_items = self.get_navbar_items(context)
-        context.submitter_foss_profile = None
-
-        if self.submitted_by:
-            context.submitter_foss_profile = frappe.get_doc(
-                USER_PROFILE, {"user": self.submitted_by}
-            )
-
-        context.review_statistics = self.get_review_statistics()
-        context.reviews = self.get_reviews()
-        context.already_reviewed = self.check_if_already_reviewed(context)
-
-        context.remark_val = {
-            "Yes": "Approved",
-            "No": "Rejected",
-            "Maybe": "Not Sure",
+        event = frappe.get_doc(EVENT, self.event)
+        context.anonymous_cfps = frappe.db.get_value(
+            EVENT_CFP, self.linked_cfp, "anonymise_proposals"
+        )
+        context.breadcrumbs = self.get_breadcrumb(event)
+        context.session_categories = self.session_categories.splitlines()
+        context.status_badge_theme = {
+            "Review Pending": "orange",
+            "Screening": "blue",
+            "Approved": "green",
+            "Rejected": "red",
         }
-        context.no_cache = 1
-
-    def get_navbar_items(self, context):
-        nav_items = [
-            "proposal_details",
-            "about_speaker",
-            "proposal_reviews",
+        context.tabs = [
+            {
+                "label": "Details",
+                "name": "proposal_details",
+            },
+            {
+                "label": "Reviews",
+                "name": "proposal_reviews",
+            },
         ]
 
-        if context.cfp.anonymise_proposals and not self.status == "Approved":
-            nav_items.remove("about_speaker")
+        context.review_badge = {
+            "Yes": {
+                "label": "Approved",
+                "theme": "green",
+            },
+            "No": {
+                "label": "Rejected",
+                "theme": "red",
+            },
+            "Maybe": {
+                "label": "Not Sure",
+                "theme": "orange",
+            },
+        }
 
-        return nav_items
+        context.review_scores = self.get_review_scores()
+        context.total_reviews = len(self.reviews)
 
-    def get_reviewers(self, cfp):
-        reviewers = []
-        for reviewer in cfp.cfp_reviewers:
-            reviewers.append(
-                {
-                    "full_name": reviewer.full_name,
-                    "email": reviewer.email,
-                    "profile": reviewer.reviewer,
-                }
-            )
+        # For Like
+        context.reference_doctype = self.doctype
+        context.reference_name = self.name
+        context.likes = self.get_likes()
+        context.like = 1 if frappe.session.user in context.likes else 0
+        context.like_count = len(context.likes)
 
-        return reviewers
+    def get_review_scores(self) -> dict[str, int]:
+        positive = 0
+        negative = 0
+        unsure = 0
+
+        for review in self.reviews:
+            if review.to_approve == "Yes":
+                positive += 1
+            elif review.to_approve == "No":
+                negative += 1
+            elif review.to_approve == "Maybe":
+                unsure += 1
+
+        approvability = 0
+        if positive + negative > 0:
+            approvability = (positive / (positive + negative)) * 100
+
+        return {
+            "positive": positive,
+            "negative": negative,
+            "unsure": unsure,
+            "approvability": int(approvability),
+        }
+
+    def get_likes(self) -> list:
+        return frappe.db.get_all(
+            "Comment",
+            {
+                "comment_type": "Like",
+                "reference_doctype": self.doctype,
+                "reference_name": self.name,
+            },
+            pluck="comment_email",
+            page_length=9999,
+        )
+
+    def get_breadcrumb(self, event) -> list[dict[str, str]]:
+        crumbs = [
+            {
+                "route": f"/{event.route}",
+                "label": event.event_name,
+            },
+            {
+                "route": f"/{event.route}/cfp/all",
+                "label": "All Proposals",
+            },
+            {
+                "label": self.talk_title,
+            },
+        ]
+
+        return crumbs
 
     def get_review_statistics(self):
         reviews = self.get_reviews()
@@ -161,7 +222,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         statistics = [
             {
                 "fieldname": "positive_reviews",
-                "label": f'{score["Yes"]} People Approved this Proposal',
+                "label": f"{score['Yes']} People Approved this Proposal",
                 "value": score["Yes"],
                 "percentage": int((score["Yes"] / reviews_len) * 100),
                 "color": "var(--clr-foss-mint-500)",
@@ -169,7 +230,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
             {
                 "fieldname": "negative_reviews",
-                "label": f'{score["No"]} People Rejected this Proposal',
+                "label": f"{score['No']} People Rejected this Proposal",
                 "value": score["No"],
                 "percentage": int((score["No"] / reviews_len) * 100),
                 "color": "var(--clr-error-500)",
@@ -177,7 +238,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
             {
                 "fieldname": "unsure_reviews",
-                "label": f'{score["Maybe"]} People Marked Unsure',
+                "label": f"{score['Maybe']} People Marked Unsure",
                 "value": score["Maybe"],
                 "percentage": int((score["Maybe"] / reviews_len) * 100),
                 "color": "var(--clr-warning-500)",
@@ -202,26 +263,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         return reviews
 
-    def get_review_templates(self):
-        templates = frappe.get_doc("CFP Review Templates")
-        templates_dict = {
-            "Accepted": [],
-            "Rejected": [],
-            "Not Sure": [],
-        }
-        for template in templates.reviews_list:
-            templates_dict[template.type].append(template.reason)
-
-        return templates_dict
-
-    def check_if_already_reviewed(self, context):
-        for review in context.reviews:
-            if review.email == frappe.session.user:
-                return True
-
-        return False
-
-    def handle_status_change(self):
+    def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):
             return
 
@@ -231,7 +273,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if self.status == "Rejected":
             self.handle_email_group("Rejected Proposers")
 
-    def handle_email_group(self, type):
+    def handle_email_group(self, type) -> None:
         if not frappe.db.exists(
             "Email Group",
             {

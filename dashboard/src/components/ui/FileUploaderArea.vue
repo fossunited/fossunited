@@ -1,6 +1,9 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label v-if="label" class="text-xs text-gray-600">{{ label }}</label>
+    <label v-if="label" class="text-base text-ink-gray-5">
+      {{ label }}
+      <span v-if="required" class="text-red-500">*</span>
+    </label>
     <div class="relative">
       <!-- Image Preview -->
       <div v-if="modelValue" class="mb-2">
@@ -77,6 +80,7 @@
         </template>
       </FileUploader>
     </div>
+    <small class="text-sm text-ink-gray-5">{{ description }}</small>
   </div>
 </template>
 
@@ -106,6 +110,14 @@ const props = defineProps({
   maxFileSize: {
     type: Number,
     default: 5,
+  },
+  description: {
+    type: String,
+    default: '',
+  },
+  required: {
+    type: Boolean,
+    default: false,
   },
 })
 

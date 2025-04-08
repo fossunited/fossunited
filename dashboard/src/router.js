@@ -273,9 +273,14 @@ const routes = [
   },
   {
     name: 'AllProposalsPage',
-    path: '/cfp/:route(.*)',
+    path: '/cfp/all/:route(.*)',
     component: () => import('@/pages/events/AllProposals.vue'),
     meta: { isPublicPage: true },
+  },
+  {
+    name: 'Event CFP Form',
+    path: '/cfp/apply/:route(.*)',
+    component: () => import('@/pages/cfp-public/CfpForm.vue'),
   },
 ]
 

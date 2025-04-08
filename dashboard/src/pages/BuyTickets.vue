@@ -464,7 +464,7 @@ const event = createResource({
     }
   },
   onSuccess(data) {
-    const tiers = data.tiers
+    const tiers = data.tiers.filter((tier) => tier.enabled === 1)
     if (tiers.length > 0) {
       checkoutInfo.tier = tiers[0]
     }
