@@ -31,6 +31,7 @@ const proposals = createResource({
     return {
       doctype: 'FOSS Event CFP Submission',
       fields: [
+        'name',
         'status',
         'event_name',
         'session_type',
