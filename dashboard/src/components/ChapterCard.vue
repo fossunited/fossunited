@@ -1,30 +1,25 @@
 <template>
-  <div
+  <Card
     role="button"
     tabindex="0"
     @click="goToChapter"
     @keyup.enter="goToChapter"
     @keyup.space.prevent="goToChapter"
-    class="focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-[8px]"
+    class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
   >
-    <Card
-      class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
-    >
-      <template #actions-left>
-        <FossClubLogo
-          v-if="props.chapter.chapter_type == 'FOSS Club'"
-          class="w-7 h-7"
-        ></FossClubLogo>
-        <CityComunityBranding v-else>{{ props.chapter.chapter_type }}</CityComunityBranding>
-      </template>
+    <template #actions-left>
+      <FossClubLogo
+        v-if="props.chapter.chapter_type == 'FOSS Club'"
+        class="w-7 h-7"
+      ></FossClubLogo>
+      <CityComunityBranding v-else>{{ props.chapter.chapter_type }}</CityComunityBranding>
+    </template>
 
-      <div class="flex justify-between items-baseline">
-        <div class="text-lg font-medium">{{ props.chapter.chapter_name }}</div>
-      </div>
-    </Card>
-  </div>
+    <div class="flex justify-between items-baseline">
+      <div class="text-lg font-medium">{{ props.chapter.chapter_name }}</div>
+    </div>
+  </Card>
 </template>
-
 <script setup>
 import { useRouter } from 'vue-router'
 import FossClubLogo from '@/components/FossClubLogo.vue'
