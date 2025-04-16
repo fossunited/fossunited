@@ -4,8 +4,17 @@
       Session References
       <span class="text-red-500">*</span>
     </label>
+    <p class="text-sm text-ink-gray-5">
+      Add links to external resources that will help attendees learn more about the session.
+    </p>
     <div v-for="(item, index) in references" :key="index" class="flex gap-2 items-center">
-      <FormControl v-model="item.link" type="url" variant="outline" class="grow">
+      <FormControl
+        v-model="item.link"
+        type="url"
+        variant="outline"
+        class="grow"
+        placeholder="https://"
+      >
         <template #prefix>
           <IconLink size="16" class="text-ink-gray-5" />
         </template>
