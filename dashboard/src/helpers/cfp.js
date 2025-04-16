@@ -134,13 +134,32 @@ const getCustomQuestions = (questions) => {
     return {
       label: question.question,
       fieldname: 'custom_question_' + index,
-      fieldtype: question.type,
+      fieldtype: getQuestionType(question.type),
       options: question.options && question.options.split('\n'),
       required: question.is_mandatory,
       value: '',
       description: question.description,
     }
   })
+}
+
+const getQuestionType = (type) => {
+  switch (type) {
+    case 'Data':
+      return 'text'
+    case 'Select':
+      return 'select'
+    case 'Long Text':
+      return 'textarea'
+    case 'Text Editor':
+      return 'text_editor'
+    case 'Check':
+      return 'checkbox'
+    case 'Radio Group':
+      return 'radio_group'
+    default:
+      return 'text'
+  }
 }
 
 export const getReferenceItemSchema = () => {
@@ -238,10 +257,10 @@ export const getSubmissionConfirmationFields = () => {
     },
     {
       label:
-        'I am okay with doing a mock presentation of this talk to get better feedback if required (optional)',
+        'I am okay with doing a mock presentation of this talk to get better feedback if required',
       fieldname: 'mock_presentation_ack',
       fieldtype: 'checkbox',
-      required: false,
+      required: true,
       value: false,
     },
   ]

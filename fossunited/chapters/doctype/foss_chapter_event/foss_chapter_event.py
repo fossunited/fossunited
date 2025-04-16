@@ -16,6 +16,7 @@ from fossunited.doctype_ids import (
     EVENT_RSVP,
     PROPOSAL,
     RSVP_RESPONSE,
+    SPEAKER,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import is_user_team_member
@@ -274,37 +275,19 @@ class FOSSChapterEvent(WebsiteGenerator):
         return members
 
     def get_speakers(self):
-        speaker_cfps = frappe.get_all(
-            PROPOSAL,
-            filters={
-                "event": self.name,
-                "status": "Approved",
-            },
-            fields=[
-                "talk_title",
-                "submitted_by",
-                "picture_url",
-                "full_name",
-                "designation",
-                "organization",
-            ],
+        submissions = frappe.db.get_all(
+            PROPOSAL, {"event": self.name, "status": "Approved"}, pluck="name"
         )
+
         speakers = []
-        for cfp in speaker_cfps:
-            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
-            speakers.append(
-                {
-                    "full_name": cfp.full_name,
-                    "talk_title": cfp.talk_title,
-                    "profile_picture": (
-                        cfp.picture_url
-                        or user.profile_photo
-                        or "/assets/fossunited/images/defaults/user_profile_image.png"
-                    ),
-                    "designation": cfp.designation,
-                    "organization": cfp.organization,
-                }
+
+        for submission in submissions:
+            _submission_speakers = frappe.db.get_all(
+                SPEAKER,
+                {"parent": submission},
+                ["photo", "full_name", "designation", "organization", "linked_user"],
             )
+            speakers.extend(_submission_speakers)
 
         return speakers
 

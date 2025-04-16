@@ -30,6 +30,7 @@ EVENT_CFP = "FOSS Event CFP"
 PROPOSAL = "FOSS Event CFP Submission"
 PROPOSAL_REVIEW = "FOSS Event CFP Review"
 GLOBAL_CFP_SETTINGS = "Global CFP Settings"
+SPEAKER = "CFP Submission Speaker"
 
 # Event RSVP-related identifiers
 EVENT_RSVP = "FOSS Event RSVP"
