@@ -6,7 +6,7 @@
           <h2 class="mb-1">My Profile</h2>
           <p class="text-sm mb-4">Edit your profile details</p>
         </div>
-        <div class="flesx flex-col my-2">
+        <div class="flex flex-col my-2">
           <div class="relative">
             <img
               class="w-full aspect-[4.96/1]"
@@ -28,7 +28,6 @@
                     title="Edit Banner Image"
                     @click="openFileSelector"
                   >
-                    <span class="sr-only">Edit Banner Image</span>
                   </Button>
                 </template>
               </FileUploader>
@@ -41,7 +40,6 @@
                 title="Remove Banner Image"
                 @click="setBannerImage({ file_url: '' })"
               >
-                <span class="sr-only">Remove Banner Image</span>
               </Button>
             </div>
           </div>
@@ -66,7 +64,6 @@
                   title="Edit Profile Picture"
                   @click="openFileSelector"
                 >
-                  <span class="sr-only">Edit Profile Picture</span>
                 </Button>
               </template>
             </FileUploader>
