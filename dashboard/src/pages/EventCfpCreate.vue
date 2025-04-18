@@ -141,6 +141,7 @@
               { label: 'Long Text', value: 'Long Text' },
               { label: 'Text Editor', value: 'Text Editor' },
               { label: 'Check', value: 'Check' },
+              { label: 'Radio Group', value: 'Radio Group' },
             ]"
             description="The type of question you want to ask."
           />

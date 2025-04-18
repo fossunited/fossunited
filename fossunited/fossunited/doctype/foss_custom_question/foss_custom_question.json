@@ -26,7 +26,7 @@
       "fieldtype": "Select",
       "in_list_view": 1,
       "label": "Type",
-      "options": "Data\nSelect\nLong Text\nText Editor\nCheck"
+      "options": "Data\nSelect\nLong Text\nText Editor\nCheck\nRadio Group"
     },
     {
       "fieldname": "column_break_alox",
@@ -56,12 +56,13 @@
   "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-03-03 00:53:09.621757",
+  "modified": "2025-04-08 12:19:46.062091",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Custom Question",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

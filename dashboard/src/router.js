@@ -280,7 +280,12 @@ const routes = [
   {
     name: 'Event CFP Form',
     path: '/cfp/apply/:route(.*)',
-    component: () => import('@/pages/cfp-public/CfpForm.vue'),
+    component: () => import('@/pages/cfp/CfpForm.vue'),
+  },
+  {
+    name: 'Proposal Edit',
+    path: '/my-proposals/edit/:id',
+    component: () => import('@/pages/cfp/ProposalEdit.vue'),
   },
 ]
 

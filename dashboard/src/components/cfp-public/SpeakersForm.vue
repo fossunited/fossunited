@@ -1,6 +1,6 @@
 <template>
-  <div class="flex flex-col gap-8 w-full p-8 border rounded bg-white">
-    <h4 class="flex gap-2 items-center font-semibold">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-white">
+    <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle />
       <span>Speaker Information</span>
     </h4>
@@ -50,6 +50,13 @@ import { getSpeakerFields } from '@/helpers/cfp'
 const speakers = defineModel('speakers', {
   type: Array,
   required: true,
+})
+
+const props = defineProps({
+  showTitle: {
+    type: Boolean,
+    default: true,
+  },
 })
 
 const fields = getSpeakerFields().filter((field) => !['photo', 'bio'].includes(field.fieldname))
