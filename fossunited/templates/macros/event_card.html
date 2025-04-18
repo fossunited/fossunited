@@ -8,7 +8,7 @@
     {% else %}
       href="/{{ event.route }}"
     {% endif %}
-    aria-label="Event {{ event.event_name }} is happening on {{ event.event_start_date.strftime('%d %b %Y') }} at location {{ event.event_location or 'To Be Announced' }}. Click to explore about the event."
+    aria-description="Event {{ event.event_name }} is happening on {{ event.event_start_date.strftime('%d %b %Y') }} at location {{ event.event_location or 'To Be Announced' }}. Click to explore about the event."
   >
     <div class="event-card-contents">
       {% if event.chapter %}
