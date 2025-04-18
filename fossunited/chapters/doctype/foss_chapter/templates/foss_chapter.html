@@ -49,7 +49,7 @@
 {% macro render_about() %}
   <div class="container my-5">
     <h2 class="subtitle">About</h2>
-    <p class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</p>
+    <div class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</div>
   </div>
 {% endmacro %}
 {% macro render_upcoming_events() %}
