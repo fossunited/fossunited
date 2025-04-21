@@ -10,10 +10,7 @@
           <div class="relative">
             <img
               class="w-full aspect-[4.96/1]"
-              :src="
-                profile.data.cover_image ||
-                '/assets/fossunited/images/defaults/user_profile_banner.png'
-              "
+              :src="profile.data.cover_image || '/assets/fossunited/images/defaults/user_profile_banner.png'"
               alt="Banner Image"
             />
             <div class="top-3 right-3 absolute flex gap-1">
@@ -27,8 +24,11 @@
                     :variant="'outline'"
                     :size="'sm'"
                     icon="edit-3"
+                    aria-label="Edit Banner Image"
+                    title="Edit Banner Image"
                     @click="openFileSelector"
-                  />
+                  >
+                  </Button>
                 </template>
               </FileUploader>
               <Button
@@ -36,17 +36,17 @@
                 icon="trash"
                 variant="solid"
                 theme="red"
+                aria-label="Remove Banner Image"
+                title="Remove Banner Image"
                 @click="setBannerImage({ file_url: '' })"
-              />
+              >
+              </Button>
             </div>
           </div>
           <div class="z-10 w-fit relative -mt-12 mx-6">
             <img
               class="aspect-square border-4 border-white rounded w-28"
-              :src="
-                profile.data.profile_photo ||
-                '/assets/fossunited/images/defaults/user_profile_image.png'
-              "
+              :src="profile.data.profile_photo || '/assets/fossunited/images/defaults/user_profile_image.png'"
               alt="Profile Photo"
             />
             <FileUploader
@@ -60,8 +60,11 @@
                   :variant="'outline'"
                   :size="'sm'"
                   icon="edit-3"
+                  aria-label="Edit Profile Picture"
+                  title="Edit Profile Picture"
                   @click="openFileSelector"
-                />
+                >
+                </Button>
               </template>
             </FileUploader>
           </div>
@@ -71,6 +74,8 @@
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
+              aria-label="Make Profile Private"
+              title="Make Profile Private"
               @click="toggleProfilePrivacy()"
             />
             <div class="col-span-2 py-1 border-b">
@@ -101,11 +106,7 @@
                   ></span>
                 </div>
                 <div
-                  v-else-if="
-                    profile_dict.username &&
-                    !usernameValidateErrors &&
-                    profile_dict.username !== initialUsername
-                  "
+                  v-else-if="profile_dict.username && !usernameValidateErrors && profile_dict.username !== initialUsername"
                   class="flex"
                 >
                   <span class="text-sm text-green-500 mr-1 font-semibold">
@@ -319,7 +320,8 @@ const validateUsername = async () => {
         usernameValidateErrors.value = ''
       }
     } catch (_) {
-      usernameValidateErrors.value = 'Error checking username availability. Refresh and try again!'
+      usernameValidateErrors.value =
+        'Error checking username availability. Refresh and try again!'
     }
   } else {
     usernameValidateErrors.value = ''
@@ -333,7 +335,7 @@ watch(
     if (newValue.trim() !== '') {
       validateUsername()
     }
-  },
+  }
 )
 
 const isValidUsername = createResource({
