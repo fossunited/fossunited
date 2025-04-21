@@ -1,6 +1,5 @@
 import frappe
 
-from fossunited.api.dashboard import get_profile_data
 from fossunited.doctype_ids import (
     CHAPTER,
     EVENT,
@@ -48,6 +47,7 @@ def get_cfp_submissions(event: str) -> list:
         {"linked_cfp": cfp},
         fields,
         page_length=9999,
+        order_by="creation desc",
     )
 
     submission_names = [submission.name for submission in submissions]
@@ -109,16 +109,21 @@ def get_reviewed_count(event: str) -> tuple:
     """
     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
 
-    submissions = frappe.db.get_all(PROPOSAL, {"linked_cfp": cfp}, ["name"])
-    reviewed_count = 0
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
 
-    for item in submissions:
-        if has_cfp_review(item.name):
-            reviewed_count += 1
+    reviewed_count = frappe.db.count(
+        PROPOSAL_REVIEW,
+        {
+            "parenttype": PROPOSAL,
+            "reviewer_profile": reviewer_profile,
+            "parent": ("in", frappe.db.get_list(PROPOSAL, {"linked_cfp": cfp}, pluck="name")),
+        },
+    )
 
-    not_reviewed_count = len(submissions) - reviewed_count
+    total_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp})
+    not_reviewed_count = total_count - reviewed_count
 
-    return (reviewed_count, not_reviewed_count)
+    return reviewed_count, not_reviewed_count
 
 
 @frappe.whitelist()
@@ -131,8 +136,6 @@ def get_events_by_open_cfp() -> list:
     """
     if not has_reviewer_role():
         frappe.throw("Unauthorized Access")
-
-    cfps_to_review = []
 
     events = frappe.db.get_list(
         EVENT,
@@ -152,11 +155,9 @@ def get_events_by_open_cfp() -> list:
         order_by="event_start_date",
     )
 
-    for event in events:
-        cfp_exists = frappe.db.exists(EVENT_CFP, {"event": event.name})
-        if not cfp_exists:
-            continue
+    cfps_to_review = []
 
+    for event in events:
         cfp = frappe.db.get_value(
             EVENT_CFP,
             {"event": event.name},
@@ -171,6 +172,7 @@ def get_events_by_open_cfp() -> list:
         )
         submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp.name})
         reviewed_count, not_reviewed_count = get_reviewed_count(event=event.name)
+
         cfps_to_review.append(
             {
                 "event": event.name,
@@ -203,61 +205,15 @@ def has_cfp_review(submission_id: str, reviewer: str = frappe.session.user) -> b
         bool: True if the reviewer has reviewed the submission, False otherwise
     """
 
-    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"user": reviewer}, "name")
 
     return bool(
         frappe.db.exists(
             PROPOSAL_REVIEW,
             {
                 "parent": submission_id,
-                "reviewer_profile": reviewer_profile,
                 "parenttype": PROPOSAL,
+                "reviewer_profile": reviewer_profile,
             },
         )
     )
-
-
-@frappe.whitelist()
-def get_review(submission_id: str, reviewer: str = frappe.session.user) -> dict:
-    """
-    Get the review of the submission by the reviewer
-
-    Args:
-        submission_id (str): The id of the submission
-        reviewer (str): The reviewer's email
-
-    Returns:
-        dict: The review of the submission by the reviewer
-    """
-    if not has_cfp_review(submission_id, reviewer):
-        frappe.throw("No review found")
-
-    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
-
-    review = frappe.db.get_value(
-        PROPOSAL_REVIEW,
-        {
-            "parent": submission_id,
-            "reviewer_profile": reviewer_profile,
-            "parenttype": PROPOSAL,
-        },
-        ["to_approve", "remarks", "name", "reviewer_profile"],
-        as_dict=1,
-    )
-
-    return review
-
-
-@frappe.whitelist()
-def get_submitter_profile(submission_id: str) -> dict:
-    """
-    Returns the profile of the submitter of the CFP submission.
-    """
-    submitter_email = frappe.db.get_value(PROPOSAL, submission_id, ["submitted_by"])
-
-    if not submitter_email:
-        frappe.throw("Submitter email not found")
-
-    user = get_profile_data(email=submitter_email)
-
-    return user

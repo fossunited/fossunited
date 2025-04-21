@@ -71,18 +71,8 @@ const routes = [
   },
   {
     path: '/review/:id',
-    children: [
-      {
-        path: '',
-        name: 'ReviewPage',
-        component: () => import('@/pages/reviewers/ReviewPage.vue'),
-      },
-      {
-        path: 'talk/:talk_id',
-        name: 'SubmissionPage',
-        component: () => import('@/pages/reviewers/SubmissionPage.vue'),
-      },
-    ],
+    name: 'ReviewPage',
+    component: () => import('@/pages/reviewers/ReviewPage.vue'),
   },
   {
     name: 'Event',
