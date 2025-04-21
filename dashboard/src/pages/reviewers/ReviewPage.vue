@@ -46,7 +46,7 @@
 <script setup>
 import { createResource, usePageMeta } from 'frappe-ui'
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'
 import ProposalList from '@/components/reviewers/ProposalsList.vue'
 import Sidebar from '@/components/NewAppSidebar.vue'

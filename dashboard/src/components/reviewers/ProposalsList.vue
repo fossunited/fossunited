@@ -67,6 +67,7 @@ const handleOpenSubmission = (submission) => {
 const filterSubmissions = (filters) => {
   if (
     !filters.talk_title &&
+    !filters.only_show_unreviewed &&
     !filters.session_type &&
     !filters.intended_audience &&
     !filters.status
@@ -80,6 +81,11 @@ const filterSubmissions = (filters) => {
 
     if (filters.talk_title) {
       match = submission.talk_title.toLowerCase().includes(filters.talk_title.toLowerCase())
+      if (!match) return false
+    }
+
+    if (filters.only_show_unreviewed) {
+      match = !submission._is_reviewed
       if (!match) return false
     }
 
