@@ -189,9 +189,9 @@
           <div class="social-media-credits">
             <div class="social-category-items">
               {% for child_item in footer_items %}{% if child_item.parent_label == "Social Media" %}
-                <a href="{{ child_item.url }}" class="footer-link">
-                  <img src="{{ child_item.custom_icon }}" alt="" />
-                </a>
+              <a href="{{ child_item.url }}" class="footer-link" aria-label="Visit our {{ child_item.label|default('social media')|title }} page">
+                <img src="{{ child_item.custom_icon }}" alt="{{ child_item.label|default('Social media icon')|title }}" />
+              </a>
               {% endif %}{% endfor %}
             </div>
 
