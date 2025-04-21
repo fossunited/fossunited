@@ -1,220 +1,104 @@
 <template>
-  <div v-if="cfpSubmissions.data">
-    <div class="flex flex-col gap-2">
-      <div class="text-base font-medium">Filters</div>
-      <div class="flex justify-between">
-        <div class="flex gap-4 mb-5">
-          <div class="flex gap-2 items-center">
-            <label class="text-sm">Status:</label>
-            <select
-              v-model="selectedStatusFilter"
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-            >
-              <option
-                v-for="(filter, index) in statusFilters"
-                :key="index"
-                @click="filterByStatus(filter)"
-              >
-                {{ filter.label }}
-              </option>
-            </select>
-          </div>
-          <div v-if="selectedStatusFilter == 'Reviewed'" class="flex gap-2 items-center">
-            <label class="text-sm">Review Filter:</label>
-            <select
-              v-model="selectedToApproveFilter"
-              class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-            >
-              <option
-                v-for="(filter, index) in toApproveFilter"
-                :key="index"
-                @click="filterByToApprove(filter)"
-              >
-                {{ filter.label }}
-              </option>
-            </select>
-          </div>
-        </div>
-        <RefreshButton :in-spin="cfpSubmissions.loading" @click="cfpSubmissions.fetch" />
-      </div>
-    </div>
-    <ListView
-      class="h-[480px]"
-      :columns="[
-        {
-          label: 'Talk Title',
-          key: 'talk_title',
-        },
-        {
-          label: 'Status',
-          key: 'review_status',
-          width: 1 / 2,
-        },
-        {
-          label: 'Review',
-          key: 'reviewer_status',
-        },
-        {
-          label: 'Remarks',
-          key: 'reviewer_remarks',
-        },
-      ]"
-      :rows="cfpSubmissions.data"
-      row-key="name"
-      :options="{
-        selectable: false,
-        showTooltip: true,
-        resizeColumn: true,
-        onRowClick: (row) => openSubmission(row),
-        emptyState: {
-          title: 'No Submissions',
-          description: 'No submissions found.',
-        },
-      }"
-    >
-      <template #cell="{ item, column }">
-        <div v-if="column.label == 'Status'">
-          <Badge :theme="item == 'Reviewed' ? 'blue' : 'gray'" :label="item" />
-        </div>
-        <div v-else-if="column.label == 'Review'">
-          <Badge
-            v-if="item"
-            :theme="
-              item == 'Yes' ? 'green' : item == 'Maybe' ? 'orange' : item == 'No' ? 'red' : 'gray'
-            "
-          >
-            {{ { Yes: 'Approved', No: 'Reject', Maybe: 'Not Sure' }[item] }}
-          </Badge>
-          <div v-else class="text-sm text-gray-500">-</div>
-        </div>
-        <div v-else-if="column.label == 'Remarks'">
-          <div v-if="item" class="text-sm truncate">{{ item }}</div>
-          <div v-else class="text-sm text-gray-500">-</div>
-        </div>
-        <div v-else class="text-base truncate">
-          {{ item }}
-        </div>
-      </template>
-    </ListView>
+  <div v-if="cfpSubmissions.data" class="flex flex-col">
+    <ProposalListFilters @search="filterSubmissions($event)" />
+    <ProposalListItem
+      v-for="submission in cfpSubmissions.data"
+      :key="submission.name"
+      :submission="submission"
+      tabindex="0"
+      @click="handleOpenSubmission(submission)"
+    />
+  </div>
+  <div
+    v-else-if="cfpSubmissions.loading"
+    class="w-full h-[480px] flex items-center justify-center"
+  >
+    <LoadingIndicator class="w-6 h-6" />
+  </div>
+  <div v-else class="w-full h-[480px] flex items-center justify-center">
+    <div class="text-sm text-gray-500">No submissions found.</div>
   </div>
 </template>
 <script setup>
-import { defineProps, ref } from 'vue'
-import { createResource, ListView, Badge } from 'frappe-ui'
-import { useRouter } from 'vue-router'
-import RefreshButton from '@/components/RefreshButton.vue'
-
-const router = useRouter()
+import ProposalListItem from './ProposalListItem.vue'
+import ProposalListFilters from './ProposalListFilters.vue'
+import { defineProps, watch } from 'vue'
+import { createResource } from 'frappe-ui'
 
 const props = defineProps({
   event: {
     type: String,
     required: true,
   },
+  justReviewed: {
+    type: String,
+    default: null,
+  },
 })
 
-const statusFilters = [
-  {
-    label: 'All',
-    value: ['Reviewed', 'Not Reviewed'],
-  },
-  {
-    label: 'Reviewed',
-    value: ['Reviewed'],
-  },
-  {
-    label: 'Not Reviewed',
-    value: ['Not Reviewed'],
-  },
-]
-
-const toApproveFilter = [
-  {
-    label: 'All',
-    value: ['Yes', 'No', 'Maybe'],
-  },
-  {
-    label: 'Approved',
-    value: ['Yes'],
-  },
-  {
-    label: 'Rejected',
-    value: ['No'],
-  },
-  {
-    label: 'Not Sure',
-    value: ['Maybe'],
-  },
-]
-
-const openSubmission = (row) => {
-  let routeData = router.resolve({
-    name: 'SubmissionPage',
-    params: {
-      talk_id: row.name,
-    },
-  })
-  window.open(routeData.href, '_blank')
-}
-
-const selectedStatusFilter = ref(statusFilters[0].label)
-const selectedToApproveFilter = ref(toApproveFilter[0].label)
+const emit = defineEmits(['open:submission'])
 
 const cfpSubmissions = createResource({
-  url: 'fossunited.api.reviewer.get_cfp_submissions_by_reviewer_status',
+  url: 'fossunited.api.reviewer.get_cfp_submissions',
   params: {
     event: props.event,
   },
   auto: true,
   transform(data) {
-    let groups = [
-      {
-        group: 'Open for reviews',
-        rows: [],
-      },
-      {
-        group: 'Selected Talks',
-        rows: [],
-      },
-      {
-        group: 'Rejected Talks',
-        collapsed: true,
-        rows: [],
-      },
-    ]
-    data.forEach((item) => {
-      if (item.status === 'Review Pending') {
-        groups[0]['rows'].push(item)
-      } else if (item.status === 'Rejected') {
-        groups[2]['rows'].push(item)
+    cfpSubmissions.originalData = data
+    return data.map((d) => {
+      if (d.status == 'Approved') {
+        d.status = 'Accepted'
+      } else if (d.status == 'Rejected') {
+        d.status = 'Declined'
       } else {
-        groups[1]['rows'].push(item)
+        d.status = 'Not Yet Decided'
       }
+      return d
     })
-
-    return groups
   },
 })
 
-const filterByStatus = (filter) => {
-  selectedToApproveFilter.value = toApproveFilter[0].label
-  cfpSubmissions.update({
-    params: {
-      event: props.event,
-      status_filter: filter.value,
-    },
-  })
-  cfpSubmissions.fetch()
+const handleOpenSubmission = (submission) => {
+  submission._is_seen = true
+  emit('open:submission', submission.name)
 }
 
-const filterByToApprove = (filter) => {
-  cfpSubmissions.update({
-    params: {
-      event: props.event,
-      status_filter: ['Reviewed'],
-      to_approve_filter: filter.value,
-    },
+const filterSubmissions = (filters) => {
+  if (
+    !filters.talk_title &&
+    !filters.session_type &&
+    !filters.intended_audience &&
+    !filters.status
+  ) {
+    cfpSubmissions.data = cfpSubmissions.originalData
+    return
+  }
+
+  cfpSubmissions.data = cfpSubmissions.originalData.filter((submission) => {
+    let match = true
+
+    if (filters.talk_title) {
+      match = submission.talk_title.toLowerCase().includes(filters.talk_title.toLowerCase())
+      if (!match) return false
+    }
+
+    if (filters.session_type) {
+      match = submission.session_type === filters.session_type
+      if (!match) return false
+    }
+
+    if (filters.intended_audience) {
+      match = submission.intended_audience === filters.intended_audience
+      if (!match) return false
+    }
+
+    if (filters.status) {
+      match = submission.status === filters.status
+      if (!match) return false
+    }
+
+    return match
   })
-  cfpSubmissions.fetch()
 }
 </script>

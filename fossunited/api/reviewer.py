@@ -11,7 +11,8 @@ from fossunited.doctype_ids import (
 )
 
 
-def get_event_cfp_submissions(event: str) -> list:
+@frappe.whitelist()
+def get_cfp_submissions(event: str) -> list:
     """
     Get all the submissions for the given event
 
@@ -21,96 +22,73 @@ def get_event_cfp_submissions(event: str) -> list:
     Returns:
         list: List of submissions for the given event
     """
+
+    if not has_reviewer_role():
+        frappe.throw(
+            "You do not have permission to access this resource",
+            frappe.PermissionError,
+            "Permission Error!",
+        )
+
+    cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
+
     fields = [
         "name",
-        "linked_cfp",
-        "route",
-        "is_published",
-        "status",
-        "event",
-        "event_name",
-        "is_first_talk",
-        "session_type",
         "talk_title",
-        "talk_reference",
-        "talk_description",
-        "positive_reviews",
-        "negative_reviews",
-        "unsure_reviews",
-        "approvability",
+        "status",
+        "session_categories",
+        "session_type",
+        "is_first_talk",
+        "intended_audience",
+        "creation",
     ]
 
-    is_cfp_anonymous = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
-
-    if not is_cfp_anonymous:
-        fields += [
-            "full_name",
-            "picture_url",
-            "designation",
-            "organization",
-            "bio",
-        ]
-
-    submissions = frappe.db.get_all(
+    submissions = frappe.db.get_list(
         PROPOSAL,
-        filters={"event": event},
-        fields=fields,
-        order_by="creation desc",
+        {"linked_cfp": cfp},
+        fields,
         page_length=9999,
     )
+
+    submission_names = [submission.name for submission in submissions]
+
+    # Fetch review statuses in bulk
+    reviews = frappe.db.get_all(
+        PROPOSAL_REVIEW,
+        {
+            "parent": ("in", submission_names),
+            "parenttype": PROPOSAL,
+            "reviewer_profile": frappe.db.get_value(
+                USER_PROFILE, {"email": frappe.session.user}, "name"
+            ),
+        },
+        ["parent"],
+    )
+    reviewed_submissions = {review.parent for review in reviews}
+
+    # Fetch like counts in bulk
+    likes = frappe.db.get_all(
+        "Comment",
+        {
+            "comment_type": "Like",
+            "reference_doctype": PROPOSAL,
+            "reference_name": ("in", submission_names),
+        },
+        ["reference_name"],
+    )
+    like_counts = {}
+    for like in likes:
+        like_counts[like.reference_name] = like_counts.get(like.reference_name, 0) + 1
+
+    for submission in submissions:
+        submission["_is_reviewed"] = submission.name in reviewed_submissions
+        submission["_is_seen"] = submission["_is_reviewed"]
+        submission["_likes_count"] = like_counts.get(submission.name, 0)
 
     return submissions
 
 
-@frappe.whitelist()
-def get_cfp_submissions_by_reviewer_status(
-    event: str,
-    status_filter: list = ["Reviewed", "Not Reviewed"],
-    to_approve_filter: list = ["Yes", "No", "Maybe"],
-):
-    if not has_reviewer_role():
-        frappe.throw("Unauthorized Access")
-
-    submissions_list = []
-
-    submissions = get_event_cfp_submissions(event)
-
-    reviewer = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, "name")
-
-    for submission in submissions:
-        if not frappe.db.exists(
-            PROPOSAL_REVIEW,
-            {
-                "parent": submission.name,
-                "reviewer_profile": reviewer,
-                "parenttype": PROPOSAL,
-            },
-        ):
-            if "Not Reviewed" in status_filter:
-                submission["review_status"] = "Not Reviewed"
-                submission["remarks"] = "-"
-                submissions_list.append(submission)
-            continue
-
-        if "Reviewed" in status_filter:
-            review = frappe.get_doc(
-                PROPOSAL_REVIEW,
-                {
-                    "parenttype": PROPOSAL,
-                    "parent": submission.name,
-                    "reviewer_profile": reviewer,
-                },
-            )
-            if review.to_approve in to_approve_filter:
-                submission["review_status"] = "Reviewed"
-                submission["reviewer_status"] = review.to_approve
-                submission["reviewer_remarks"] = review.remarks
-                submissions_list.append(submission)
-
-    return submissions_list
-
-
-def has_reviewer_role():
+def has_reviewer_role() -> bool:
     return bool(
         frappe.db.exists(
             "Has Role",
@@ -268,43 +246,6 @@ def get_review(submission_id: str, reviewer: str = frappe.session.user) -> dict:
     )
 
     return review
-
-
-@frappe.whitelist()
-def submit_review(
-    submission_id: str,
-    remarks: str,
-    to_approve: str,
-    reviewer: str = frappe.session.user,
-) -> None:
-    """
-    Create a review for the submission
-
-    Args:
-        submission_id (str): The id of the submission
-        remarks (str): The reviewer's remarks
-        to_approve (str): The reviewer's decision
-        reviewer (str): The reviewer's email
-    """
-    if not has_reviewer_role():
-        frappe.throw("Unauthorized Access")
-
-    if has_cfp_review(submission_id, reviewer):
-        frappe.throw("Review already exists")
-
-    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": reviewer}, "name")
-
-    submission_doc = frappe.get_doc(PROPOSAL, submission_id)
-
-    submission_doc.append(
-        "reviews",
-        {
-            "reviewer_profile": reviewer_profile,
-            "to_approve": to_approve,
-            "remarks": remarks,
-        },
-    )
-    submission_doc.save(ignore_permissions=True)
 
 
 @frappe.whitelist()

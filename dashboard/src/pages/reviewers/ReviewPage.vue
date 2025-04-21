@@ -1,55 +1,104 @@
 <template>
-  <Header />
-  <div v-if="event.doc" class="w-full flex flex-col items-center">
-    <div class="max-w-screen-xl p-4 w-full">
-      <Button label="Go Back" icon-left="arrow-left" variant="ghost" @click="router.back()" />
-      <div class="prose my-5">
-        <h1 class="m-0">CFP Review</h1>
-        <p class="mt-1">Review the session proposals for this event.</p>
+  <div class="flex flex-col md:flex-row">
+    <Sidebar>
+      <template #pre-nav-items>
+        <Button
+          class="w-fit"
+          label="Go Back"
+          icon-left="arrow-left"
+          variant="ghost"
+          route="/review"
+        />
+        <h4 class="text-sm uppercase font-medium text-gray-700">Proposal Review</h4>
+        <p class="text-sm text-gray-600">Review the session proposals for this event.</p>
+      </template>
+    </Sidebar>
+    <div class="w-full md:ml-[220px] flex">
+      <div
+        v-if="event.data"
+        class="w-full shrink-0 md:basis-2/5 p-6 border-r space-y-6 md:overflow-y-scroll max-h-svh"
+      >
+        <div>
+          <Breadcrumb :items="breadcrumbItems" />
+          <div class="prose">
+            <h2>{{ event.data.event_name }}</h2>
+          </div>
+          <span class="text-sm text-gray-700">
+            {{ dayjs(event.data.event_start_date).format('D MMM YYYY') }}
+          </span>
+        </div>
+        <ProposalList :event="event.data.name" @open:submission="handleOpenSubmission($event)" />
       </div>
-      <hr class="mb-6" />
-      <div class="my-6">
-        <EventHeader :event="event.doc" />
-        <a
-          class="text-sm flex gap-1 my-4 hover:underline"
-          target="_blank"
-          :href="redirectToRoute(event.doc.route)"
-        >
-          <span> Go to Event Page </span>
-          <IconArrowUpRight class="w-4 h-4" />
-        </a>
+      <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
+        <ProposalDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" />
+        <div v-else class="w-full h-svh flex items-center justify-center text-base text-gray-600">
+          Select a submission to view details.
+        </div>
       </div>
-      <div class="my-2">
-        <ProposalList :event="event.doc.name" />
-      </div>
+      <ProposalDetailsDrawer
+        v-else
+        v-model:show="showDrawer"
+        :submission-id="selectedSubmission"
+      ></ProposalDetailsDrawer>
     </div>
   </div>
 </template>
 <script setup>
-import { createDocumentResource, usePageMeta } from 'frappe-ui'
+import { createResource, usePageMeta } from 'frappe-ui'
+import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import EventHeader from '@/components/EventHeader.vue'
-import Header from '@/components/Header.vue'
+import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'
 import ProposalList from '@/components/reviewers/ProposalsList.vue'
-import { IconArrowUpRight } from '@tabler/icons-vue'
+import Sidebar from '@/components/NewAppSidebar.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
+import ProposalDetails from '@/components/reviewers/ProposalDetails.vue'
+import dayjs from 'dayjs'
 
 const route = useRoute()
-const router = useRouter()
+
+const selectedSubmission = ref('')
+const showDrawer = ref(false)
+
+const isSmallScreen = computed(() => window.innerWidth < 768)
+
+const handleOpenSubmission = (submission) => {
+  selectedSubmission.value = submission
+
+  if (isSmallScreen.value) {
+    showDrawer.value = true
+  }
+}
+
+const event = createResource({
+  url: 'frappe.client.get',
+  makeParams() {
+    return {
+      doctype: 'FOSS Chapter Event',
+      filters: {
+        name: route.params.id,
+      },
+      fields: ['name', 'event_name', 'route', 'event_start_date', 'event_end_date'],
+    }
+  },
+  auto: true,
+  onSuccess(data) {
+    breadcrumbItems.value.push({
+      label: data.event_name,
+      link: `${window.location.origin}/${data.route}`,
+    })
+  },
+})
+
+const breadcrumbItems = ref([
+  {
+    label: 'CFP Review',
+    route: '/review',
+  },
+])
 
 usePageMeta(() => {
   return {
-    title: 'CFP Review',
+    title: `Review | ${event.data?.event_name}`,
   }
 })
-
-const event = createDocumentResource({
-  doctype: 'FOSS Chapter Event',
-  name: route.params.id,
-  fields: ['*'],
-  auto: true,
-})
-
-const redirectToRoute = (route) => {
-  return `${window.location.origin}/${route}`
-}
 </script>
