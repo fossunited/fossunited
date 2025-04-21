@@ -1,175 +1,168 @@
 <template>
-  <div class="prose min-w-full">
-    <h2 class="mb-2">Your Review</h2>
-    <div v-if="in_review_edit" class="flex flex-col gap-2">
-      <RadioGroup v-model="selectedReviewOption">
-        <RadioGroupLabel class="text-sm uppercase">Your Review</RadioGroupLabel>
-        <div class="flex gap-2 my-1">
-          <RadioGroupOption
-            v-for="option in reviewOptions"
-            v-slot="{ checked }"
-            :key="option.value"
-            :value="option"
-          >
-            <Button :label="option.label" :variant="checked ? 'solid' : 'outline'" size="md" />
-          </RadioGroupOption>
+  <div class="flex flex-col gap-4">
+    <ReviewStatsComponent :reviews="submission.data.reviews" />
+
+    <MessageBanner
+      v-if="!hasReviewed"
+      variant="warning"
+      message="You have not reviewed this submission yet!"
+    >
+      <template #prefix>
+        <IconAlertTriangle class="w-4 h-4" />
+      </template>
+    </MessageBanner>
+    <MessageBanner v-else variant="info" message="You have already reviewed this submission!">
+      <template #prefix>
+        <IconChecks class="w-4 h-4" />
+      </template>
+    </MessageBanner>
+
+    <ReviewCommentBox
+      v-if="!hasReviewed || inEdit"
+      :in-edit="inEdit"
+      :review="selectedReview"
+      :submission-id="submission.data.name"
+      @add:review="handleAddReview()"
+      @update:review="handleUpdateReview()"
+    />
+
+    <!-- Review List -->
+    <div class="flex flex-col">
+      <div
+        v-for="(review, index) in sortedReviews"
+        :key="review.name"
+        class="flex flex-col gap-1 my-2"
+      >
+        <div v-if="isReviewOwner(review)" class="p-4 border rounded flex flex-col gap-2">
+          <h5 class="text-base font-semibold">Your Review</h5>
+          <div class="flex justify-between items-center gap-4">
+            <div v-if="review.remarks" class="text-base" v-html="review.remarks"></div>
+            <span v-else class="text-sm text-gray-600">No Remarks</span>
+            <div class="flex items-center gap-2">
+              <Button label="Edit" @click="editReview(review)" />
+              <Button icon="trash" theme="red" @click="deleteReview(review.name)" />
+            </div>
+          </div>
+          <Badge
+            class="w-fit"
+            :label="getLabel(review.to_approve)"
+            :theme="getTheme(review.to_approve)"
+          />
         </div>
-      </RadioGroup>
-      <FormControl
-        v-model="newRemarks"
-        label="Remarks"
-        type="textarea"
-        placeholder="Enter your remarks here"
-      />
-      <ErrorMessage :message="errors" />
-      <Button
-        class="w-fit"
-        :label="reviewData.data ? 'Update Review' : 'Submit Review'"
-        @click="handleReviewSubmit"
-      />
-    </div>
-    <div v-else>
-      <div v-if="hasReviewed.data && reviewData.data" class="text-base flex flex-col gap-4">
-        <div>
-          <span>Your Review: </span>
-          <span
-            class="font-medium"
-            :class="
-              {
-                Yes: 'text-green-600',
-                No: 'text-red-600',
-                Maybe: 'text-orange-600',
-              }[selectedReviewOption.value]
-            "
-            >{{ selectedReviewOption.label }}</span
-          >
+        <div v-else>
+          <div class="flex justify-between items-center gap-4">
+            <div
+              v-if="review.remarks"
+              class="text-base"
+              v-html="cleanedHTML(review.remarks)"
+            ></div>
+            <span v-else class="text-sm text-gray-600">No Remarks</span>
+          </div>
+          <div class="flex gap-2 items-center">
+            <span class="text-sm">Reviewer #{{ review.idx }}</span>
+            <Badge :label="getLabel(review.to_approve)" :theme="getTheme(review.to_approve)" />
+          </div>
         </div>
-        <div class="flex flex-col gap-2">
-          <div class="text-md font-semibold">Remarks</div>
-          <div>{{ reviewData.data.remarks || 'No remarks.' }}</div>
-        </div>
-        <Button label="Edit Review" class="w-fit" size="sm" @click="in_review_edit = true" />
-      </div>
-      <div v-else>
-        <LoadingIndicator class="w-6 h-6" />
+        <hr v-if="index != sortedReviews.length - 1" class="mt-2" />
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { createResource, LoadingIndicator, FormControl, ErrorMessage } from 'frappe-ui'
-import { defineProps, inject, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
+import { cleanedHTML } from '@/helpers/utils'
+import { ref, inject, computed } from 'vue'
+import { Badge, createResource } from 'frappe-ui'
+import { IconChecks, IconAlertTriangle } from '@tabler/icons-vue'
+import { toast } from 'vue-sonner'
+import { defaultSelectedReviewValue } from '@/helpers/reviewer'
+import MessageBanner from '@/components/ui/MessageBanner.vue'
+import ReviewStatsComponent from './ReviewStatsComponent.vue'
+import ReviewCommentBox from './ReviewCommentBox.vue'
 
-const props = defineProps({
-  submission: {
-    type: Object,
-    required: true,
-  },
-})
-const route = useRoute()
 const session = inject('$session')
 
-const in_review_edit = ref(false)
-const reviewOptions = ref([
-  { value: 'Yes', label: 'Approve' },
-  { value: 'No', label: 'Reject' },
-  { value: 'Maybe', label: 'Unsure' },
-])
-const newRemarks = ref('')
-const errors = ref('')
+const inEdit = ref(false)
+const selectedReview = ref(defaultSelectedReviewValue())
 
-const selectedReviewOption = ref(reviewOptions.value[0])
+const submission = inject('submission')
 
-const hasReviewed = createResource({
-  url: 'fossunited.api.reviewer.has_cfp_review',
-  makeParams() {
-    return {
-      submission_id: route.params.talk_id,
-      reviewer: session.user,
-    }
-  },
-  onSuccess(data) {
-    if (!data) {
-      in_review_edit.value = true
-      return
-    }
-    reviewData.fetch()
-  },
-  auto: true,
+const sortedReviews = computed(() => {
+  // if the session.user has reviewed, put that review item as the first in the list.
+  return [
+    ...submission.data.reviews.filter((review) => review.owner == session.user),
+    ...submission.data.reviews.filter((review) => review.owner != session.user),
+  ]
 })
 
-const reviewData = createResource({
-  url: 'fossunited.api.reviewer.get_review',
-  makeParams() {
-    return {
-      submission_id: route.params.talk_id,
-      reviewer: session.user,
-    }
-  },
-  onSuccess(data) {
-    newRemarks.value = data.remarks
-    selectedReviewOption.value = reviewOptions.value.find(
-      (option) => option.value == data.to_approve,
-    )
-  },
-})
-
-const handleReviewSubmit = () => {
-  if (!selectedReviewOption.value) {
-    errors.value = 'Please select a review option'
-    return
-  }
-
-  if (reviewData.data) {
-    updateReview()
-    return
-  }
-
-  submitReview()
+const isReviewOwner = (review) => {
+  return review.owner == session.user
 }
 
-const updateReview = () => {
+const hasReviewed = computed(() => {
+  return submission.data.reviews.some((review) => review.owner == session.user)
+})
+
+const deleteReview = (reviewId) => {
   createResource({
-    url: 'frappe.client.set_value',
+    url: 'frappe.client.delete',
     makeParams() {
       return {
         doctype: 'FOSS Event CFP Review',
-        name: reviewData.data.name,
-        fieldname: {
-          to_approve: selectedReviewOption.value.value,
-          remarks: newRemarks.value,
-        },
+        name: reviewId,
       }
     },
     auto: true,
     onSuccess() {
-      in_review_edit.value = false
-      reviewData.fetch()
+      inEdit.value = false
+      selectedReview.value = defaultSelectedReviewValue()
+
+      submission.fetch()
     },
-    onError(error) {
-      errors.value = 'Failed to update review'
+    onError(err) {
+      toast.error('Failed to delete review', err.message)
     },
   })
 }
 
-const submitReview = () => {
-  createResource({
-    url: 'fossunited.api.reviewer.submit_review',
-    makeParams() {
-      return {
-        submission_id: route.params.talk_id,
-        to_approve: selectedReviewOption.value.value,
-        remarks: newRemarks.value,
-        reviewer: session.user,
-      }
-    },
-    auto: true,
-    onSuccess() {
-      in_review_edit.value = false
-      hasReviewed.fetch()
-    },
-  })
+const editReview = (review) => {
+  inEdit.value = true
+  selectedReview.value = review
+}
+
+const handleUpdateReview = () => {
+  inEdit.value = false
+  selectedReview.value = defaultSelectedReviewValue()
+  submission.fetch()
+}
+
+const handleAddReview = () => {
+  selectedReview.value = defaultSelectedReviewValue()
+  submission.fetch()
+}
+
+const getLabel = (status) => {
+  switch (status) {
+    case 'Maybe':
+      return 'Maybe'
+    case 'Yes':
+      return 'Approved'
+    case 'No':
+      return 'Rejected'
+    default:
+      return status
+  }
+}
+
+const getTheme = (status) => {
+  switch (status) {
+    case 'Maybe':
+      return 'orange'
+    case 'Yes':
+      return 'green'
+    case 'No':
+      return 'red'
+    default:
+      return 'gray'
+  }
 }
 </script>
