@@ -486,21 +486,37 @@ def insert_cfp_submission(linked_cfp: str, event: str, **kwargs):
         event (str): The id of the event linked to the submission.
         **kwargs: Additional arguments to be passed to the submission document.
     """
+    speakers = kwargs.get("speakers", [])
+    if not speakers:
+        speakers = [
+            {
+                "full_name": fake.name(),
+                "email": fake.email(),
+                "designation": fake.job(),
+                "organization": fake.company(),
+                "bio": "Test Submission",
+            }
+        ]
+
+    references = kwargs.get("references", [])
+    if not references:
+        references = [
+            {
+                "link": fake.url(),
+            }
+        ]
+
     submission_data = {
         "doctype": PROPOSAL,
         "status": kwargs.get("status", "Review Pending"),
         "linked_cfp": linked_cfp,
         "event": event,
         "submitted_by": kwargs.get("submitted_by", ""),
-        "full_name": kwargs.get("full_name", fake.name()),
-        "email": kwargs.get("email", fake.email()),
-        "designation": kwargs.get("designation", "SDE"),
-        "organization": kwargs.get("organization", fake.company()),
-        "bio": kwargs.get("bio", "Test Submission"),
+        "speakers": speakers,
         "is_first_talk": kwargs.get("is_first_talk", "No"),
         "session_type": kwargs.get("session_type", "Talk"),
         "talk_title": kwargs.get("talk_title", fake.text(max_nb_chars=20).strip()),
-        "talk_reference": kwargs.get("talk_reference", ""),
+        "references": references,
         "talk_description": kwargs.get("talk_description", fake.sentence()),
         "custom_answers": kwargs.get("custom_answers", []),
     }

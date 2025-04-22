@@ -71,17 +71,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_linked_cfp_exists()
 
     def before_save(self):
-        self.set_name()
         self.set_route()
         self.set_scores()
         self.handle_status_change()
 
     def after_insert(self):
         self.handle_email_group("CFP Proposers")
-
-    def set_name(self):
-        self.first_name = self.full_name.split(" ")[0]
-        self.last_name = " ".join(self.full_name.split(" ")[1:])
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
@@ -298,7 +293,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             ["name"],
         )
 
-        try:
-            add_to_email_group(email_group, self.email)
-        except frappe.DuplicateEntryError:
-            pass
+        for speaker in self.speakers:
+            if not speaker.email:
+                continue
+
+            try:
+                add_to_email_group(email_group, speaker.email)
+            except frappe.DuplicateEntryError:
+                continue
