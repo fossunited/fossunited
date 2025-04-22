@@ -44,7 +44,7 @@ import SessionDetailForm from '@/components/cfp-public/SessionDetailForm.vue'
 import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
 import { createDocumentResource, createResource, TabButtons, ErrorMessage } from 'frappe-ui'
 import { toast } from 'vue-sonner'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import {
   getProposalFormFields,
   getSpeakerFields,
@@ -56,6 +56,7 @@ import {
 import { ref, watch } from 'vue'
 
 const route = useRoute()
+const router = useRouter()
 const formFields = ref([])
 const speakerFields = ref([])
 const selectedTab = ref(0)

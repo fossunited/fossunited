@@ -2,7 +2,7 @@
   <div v-if="events.data" class="p-4">
     <div class="prose">
       <div class="prose pb-0">
-        <h2 class="mb-1">Review Talks</h2>
+        <h2 class="mb-1">Review Proposals</h2>
         <p class="text-sm mb-4">List of all upcoming events with proposal forms.</p>
       </div>
     </div>
