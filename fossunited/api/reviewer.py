@@ -163,7 +163,6 @@ def get_events_by_open_cfp() -> list:
             EVENT_CFP,
             {"event": event.name},
             ["name"],
-            as_dict=1,
             pluck=True,
         )
 
@@ -177,7 +176,7 @@ def get_events_by_open_cfp() -> list:
             as_dict=1,
         )
 
-        submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp.name})
+        submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp})
         reviewed_count, not_reviewed_count = get_reviewed_count(event=event.name)
 
         cfps_to_review.append(
@@ -186,7 +185,7 @@ def get_events_by_open_cfp() -> list:
                 "event_name": event.event_name,
                 "start_date": event.event_start_date,
                 "end_date": event.event_end_date,
-                "cfp": cfp.name,
+                "cfp": cfp,
                 "submission_count": submission_count,
                 "reviewed_count": reviewed_count,
                 "not_reviewed_count": not_reviewed_count,
