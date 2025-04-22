@@ -135,21 +135,22 @@ def get_events_by_open_cfp() -> list:
         list: List of events with open CFP
     """
     if not has_reviewer_role():
-        frappe.throw("Unauthorized Access")
+        frappe.throw("Unauthorized Access", frappe.PermissionError)
 
-    events = frappe.db.get_list(
+    events = frappe.get_all(
         EVENT,
         filters={
             "status": "Live",
             "is_published": 1,
             "event_start_date": [">=", frappe.utils.nowdate()],
+            "is_external_event": 0,
         },
         fields=[
             "name",
+            "chapter",
             "event_name",
             "event_start_date",
             "event_end_date",
-            "chapter",
         ],
         page_length=99,
         order_by="event_start_date",
@@ -161,15 +162,21 @@ def get_events_by_open_cfp() -> list:
         cfp = frappe.db.get_value(
             EVENT_CFP,
             {"event": event.name},
-            ["name", "chapter"],
+            ["name"],
             as_dict=1,
+            pluck=True,
         )
+
+        if not cfp:
+            continue
+
         chapter = frappe.db.get_value(
             CHAPTER,
             event.chapter,
             ["name", "chapter_name", "chapter_type"],
             as_dict=1,
         )
+
         submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp.name})
         reviewed_count, not_reviewed_count = get_reviewed_count(event=event.name)
 
