@@ -1,31 +1,61 @@
+# Docker Compose file for Frappe ERPNext development environment
+# Designed for persistence and compatibility with Docker & Podman
+
 version: "3.7"
+
 services:
+  # MariaDB Database Service
   mariadb:
-    image: mariadb:10.8
+    image: mariadb:10.8 # Use a specific MariaDB version
     command:
+      # Set character set and collation for proper UTF8 support
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      # Skip client handshake for character set (handled by server settings)
       - --skip-character-set-client-handshake
-      - --skip-innodb-read-only-compressed # Temporary fix for MariaDB 10.6
+      # Recommended setting for newer MariaDB versions
+      - --skip-innodb-read-only-compressed
     environment:
-      MYSQL_ROOT_PASSWORD: 123
+      # Set the root password for MariaDB. CHANGE THIS in production!
+      MYSQL_ROOT_PASSWORD: 123 # Match the password used in init.sh
     volumes:
+      # Mount the named volume for persistent database data
       - mariadb-data:/var/lib/mysql
+    restart: on-failure # Restart the container if it stops due to an error
 
+  # Redis Cache Service
   redis:
-    image: redis:alpine
-
-  frappe:
-    image: frappe/bench:latest
-    command: bash /workspace/docker/init.sh
-    environment:
-      - SHELL=/bin/bash
-    working_dir: /home/frappe
+    image: redis:alpine # Use a lightweight Redis image
     volumes:
-      - ..:/workspace:Z
-    ports:
-      - 8000:8000
-      - 9000:9000
+      # Mount the named volume for persistent Redis data
+      - redis-data:/data
+    restart: on-failure # Restart the container if it stops due to an error
 
+  # Frappe Bench Service (Main Application)
+  frappe:
+    image: frappe/bench:latest # Use the latest Frappe bench image
+    # The init.sh script handles bench initialization and starting
+    # Ensure this path is correct relative to your docker-compose.yml file
+    command: bash /workspace/docker/init.sh
+    depends_on:
+      # Ensure MariaDB and Redis are started before Frappe
+      - mariadb
+      - redis
+    env_file:
+      - .env
+    working_dir: /home/frappe/
+    volumes:
+      # Mount the named volume SPECIFICALLY to the bench directory path inside the container.
+      # This ensures only the bench data is persisted in this volume.
+      - frappe-bench-data:/home/frappe/frappe-bench:Z # Use :Z if needed for SELinux
+    ports:
+      # Map host ports to container ports for accessing Frappe UI and debugger
+      - "8000:8000" # Frappe web server
+      - "9000:9000" # Frappe background worker debugger (if enabled)
+    restart: on-failure # Restart the container if it stops due to an error
+
+# Define the named volumes used by the services
 volumes:
-  mariadb-data:
+  mariadb-data:      # Volume for MariaDB data
+  redis-data:        # Volume for Redis data
+  frappe-bench-data: # Volume specifically for the Frappe bench directory
