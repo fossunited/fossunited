@@ -10,8 +10,8 @@ else
     --bench-name fossu-bench \
     --admin-password admin
     cd fossu-bench
-    bench start
     code -a fossu-bench/apps/fossunited
+    bench start
     exit 0
 fi
 
