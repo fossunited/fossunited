@@ -39,6 +39,10 @@ const props = defineProps({
 
 const model = defineModel({ type: Array, required: true })
 const isSelected = (value) => {
+  if (!model.value) {
+    return false
+  }
+
   return model.value.includes(value)
 }
 
