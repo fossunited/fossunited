@@ -39,14 +39,16 @@
     </div>
     <div class="header-section--socials">
       {% for (k,v) in social_links.items() %}
-        <a href="{{ v }}"><img src="https://cdn.simpleicons.org/{{ k }}" alt="{{ v }}" /></a>
+      <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+        <img src="https://cdn.simpleicons.org/{{ k }}" alt="{{ k|title }}" />
+      </a>
       {% endfor %}
     </div>
   </div>
 {% endmacro %}
 {% macro render_about() %}
   <div class="container my-5">
-    <h3 class="subtitle">About</h3>
+    <h2 class="subtitle">About</h2>
     <div class="description-block">{{ doc.about_chapter or 'Nothing in Description' }}</div>
   </div>
 {% endmacro %}
