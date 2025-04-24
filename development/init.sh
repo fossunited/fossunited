@@ -1,4 +1,6 @@
 #!/bin/bash
+
+# Check for existence of the FOSS United Bench, if not create one
 if [ -d "fossu-bench/Procfile" ]; then
     cd fossu-bench
     bench start
@@ -15,3 +17,14 @@ else
     exit 0
 fi
 
+# check if pre-commit is installed and enabled at .git/hooks/pre-commit
+if ! command -v pre-commit &> /dev/null; then
+    pip install pre-commit
+fi
+
+if [ -f ".git/hooks/pre-commit" ]; then
+    echo "pre-commit is already installed"
+else
+    echo "Installing pre-commit..."
+    pre-commit install
+fi
