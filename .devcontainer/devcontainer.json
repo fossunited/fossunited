@@ -7,7 +7,8 @@
       "extensions": [
         "ms-python.python",
         "ms-vscode.live-server",
-        "visualstudioexptteam.vscodeintellicode"
+        "visualstudioexptteam.vscodeintellicode",
+        "charliermarsh.ruff"
       ],
       "settings": {
         "terminal.integrated.profiles.linux": {
@@ -16,7 +17,11 @@
           }
         },
         "terminal.integrated.defaultProfile.linux": "frappe bash",
-        "debug.node.autoAttach": "disabled"
+        "debug.node.autoAttach": "disabled",
+        "editor.codeActionsOnSave": {
+          "source.fixAll": "explicit"
+        },
+        "editor.formatOnSave": true
       }
     }
   },
