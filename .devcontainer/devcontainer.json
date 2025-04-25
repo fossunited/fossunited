@@ -12,11 +12,11 @@
       ],
       "settings": {
         "terminal.integrated.profiles.linux": {
-          "frappe bash": {
+          "bash": {
             "path": "/bin/bash"
           }
         },
-        "terminal.integrated.defaultProfile.linux": "frappe bash",
+        "terminal.integrated.defaultProfile.linux": "bash",
         "debug.node.autoAttach": "disabled",
         "editor.codeActionsOnSave": {
           "source.fixAll": "explicit"
