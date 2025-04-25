@@ -99,7 +99,7 @@
       %}
         <div class="experience-card">
           <img
-            src="https://logo.clearbit.com/{{ values[0].company_website }}"
+            src="https://img.logo.dev/{{ values[0].company_website.lstrip("https://") }}"
             onerror="renderCompanyImage(this)"
             alt="{{ key }}"
             class="experience-card-logo"
@@ -208,7 +208,7 @@
               {% for company in doc.experience %}{% if company.is_working_here %}
                 <img
                   class="company-badge"
-                  src="https://logo.clearbit.com/{{ company.company_website }}"
+                  src="https://img.logo.dev/{{ company.company_website.lstrip("https://") }}"
                   alt=""
                 />
               {% endif %}{% endfor %}
@@ -255,7 +255,7 @@
         <div class="header-section--socials">
           {% for (key,value) in user_socials.items() %}
             <a rel="me nofollow" href="{{ value }}"
-              ><img src="https://cdn.simpleicons.org/{{ key }}" alt="{{ key }}"
+              ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key }}"
             /></a>
           {% endfor %}
         </div>
