@@ -98,6 +98,7 @@
         values) in experiences_dict.items()
       %}
         <div class="experience-card">
+          <!-- Company logos are provided by https://logo.dev -->
           <img
             src="https://img.logo.dev/{{ values[0].company_website.lstrip("https://") }}"
             onerror="renderCompanyImage(this)"
@@ -206,6 +207,7 @@
             <div class="d-flex mb-1">
               <h4 class="mr-1">{{ doc.full_name }}</h4>
               {% for company in doc.experience %}{% if company.is_working_here %}
+                <!-- Company logos are provided by https://logo.dev -->
                 <img
                   class="company-badge"
                   src="https://img.logo.dev/{{ company.company_website.lstrip("https://") }}"
