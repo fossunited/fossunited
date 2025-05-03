@@ -242,18 +242,15 @@
                   </div>
                 </div>
                 <div class="d-flex button-group">
-                  <button
-                    class="mr-2 w-full"
+                  <a
+                    class="w-full button"
                     onclick="window.location.href='/{{ proposal.route }}'"
                   >
                     View Proposal
-                  </button>
-                  <button
-                    class="dark-button w-full"
-                    onClick="event.stopPropagation(); window.location.href='/{{ proposal.route }}/edit'"
-                  >
-                    Edit CFP
-                  </button>
+                  </a>
+                  <a class="dark-button w-full" href="/dashboard/my-proposals/edit/{{ proposal.name }}">
+                    Edit Submission
+                  </a>
                 </div>
               </div>
             {% endfor %}

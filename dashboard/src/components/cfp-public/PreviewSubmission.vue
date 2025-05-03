@@ -27,10 +27,7 @@
             </template>
           </Badge>
         </div>
-        <div class="space-y-2">
-          <label class="text-base font-medium text-gray-600">Session Categories</label>
-          <RenderSessionCategories :categories="getValueFromProposal('session_categories')" />
-        </div>
+        <RenderSessionCategories :categories="getValueFromProposal('session_categories')" />
         <div class="space-y-2">
           <label class="text-base font-medium text-gray-600">Session Description</label>
           <div
@@ -45,19 +42,7 @@
             v-html="getValueFromProposal('key_takeaways')"
           ></div>
         </div>
-        <div class="space-y-2">
-          <label class="text-base font-medium text-gray-600">References</label>
-          <div
-            v-for="(reference, index) in proposalReferences"
-            :key="index"
-            class="flex gap-2 items-center text-base text-gray-600 hover:cursor-pointer hover:text-gray-800 transition-colors"
-          >
-            <IconLink class="w-4 h-4" />
-            <a :href="reference.link" target="_blank">
-              {{ reference.link }}
-            </a>
-          </div>
-        </div>
+        <RenderReferences :references="proposalReferences" />
         <div class="space-y-2">
           <label class="text-base font-medium text-gray-600">Speakers</label>
           <div class="flex flex-col gap-2">
@@ -79,9 +64,10 @@
   </div>
 </template>
 <script setup>
+import RenderReferences from './RenderReferences.vue'
 import RenderSessionCategories from './RenderSessionCategories.vue'
 import SpeakerCard from './SpeakerCard.vue'
-import { IconUsersGroup, IconLink } from '@tabler/icons-vue'
+import { IconUsersGroup } from '@tabler/icons-vue'
 import { Badge, FormControl } from 'frappe-ui'
 
 const props = defineProps({
