@@ -37,17 +37,25 @@ def set_profile_image(name: str) -> bool:
         webp_image = convert_image_to_webp(original_image_content)
         filename = f"profile_{user_doc.name}.webp"
 
+        old_webp_name = frappe.db.get_value(
+            "File",
+            {
+                "file_url": user_doc.profile_photo,
+                "attached_to_doctype": USER_PROFILE,
+                "attached_to_name": user_doc.name,
+            },
+            ["name"],
+        )
+        frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
+
         saved_file = save_file(
             fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
         )
 
         frappe.delete_doc("File", name, ignore_permissions=True)
-
-        old_webp_name = frappe.db.get_value("File", {"file_url": user_doc.profile_photo}, ["name"])
-        frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
-
         frappe.db.set_value(USER_PROFILE, user_doc.name, "profile_photo", saved_file.file_url)
         frappe.db.set_value("User", frappe.session.user, "user_image", saved_file.file_url)
+
         return True
 
     except Exception as e:
@@ -72,19 +80,25 @@ def set_cover_image(name: str) -> bool:
         webp_image = convert_image_to_webp(original_image_content)
         filename = f"cover_{user_doc.name}.webp"
 
+        if len(user_doc.cover_image) != 0:
+            old_webp_name = frappe.db.get_value(
+                "File",
+                {
+                    "file_url": user_doc.cover_image,
+                    "attached_to_doctype": USER_PROFILE,
+                    "attached_to_name": user_doc.name,
+                },
+                ["name"],
+            )
+            frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
+
         saved_file = save_file(
             fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
         )
 
         frappe.delete_doc("File", name, ignore_permissions=True)
-
-        if len(user_doc.cover_image) != 0:
-            old_webp_name = frappe.db.get_value(
-                "File", {"file_url": user_doc.cover_image}, ["name"]
-            )
-            frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
-
         frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", saved_file.file_url)
+
         return True
 
     except Exception as e:
