@@ -71,18 +71,8 @@ const routes = [
   },
   {
     path: '/review/:id',
-    children: [
-      {
-        path: '',
-        name: 'ReviewPage',
-        component: () => import('@/pages/reviewers/ReviewPage.vue'),
-      },
-      {
-        path: 'talk/:talk_id',
-        name: 'SubmissionPage',
-        component: () => import('@/pages/reviewers/SubmissionPage.vue'),
-      },
-    ],
+    name: 'ReviewPage',
+    component: () => import('@/pages/reviewers/ReviewPage.vue'),
   },
   {
     name: 'Event',
@@ -273,9 +263,19 @@ const routes = [
   },
   {
     name: 'AllProposalsPage',
-    path: '/cfp/:route(.*)',
+    path: '/cfp/all/:route(.*)',
     component: () => import('@/pages/events/AllProposals.vue'),
     meta: { isPublicPage: true },
+  },
+  {
+    name: 'Event CFP Form',
+    path: '/cfp/apply/:route(.*)',
+    component: () => import('@/pages/cfp/CfpForm.vue'),
+  },
+  {
+    name: 'Proposal Edit',
+    path: '/my-proposals/edit/:id',
+    component: () => import('@/pages/cfp/ProposalEdit.vue'),
   },
 ]
 

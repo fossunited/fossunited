@@ -5,6 +5,7 @@ module.exports = {
     './fossunited/templates/**/*.html',
     './fossunited/stack/web_template/**/*.html',
     './fossunited/foss_hackathon/doctype/foss_hackathon_localhost/**/*.html',
+    './fossunited/fossunited/doctype/foss_event_cfp_submission/**/*.html',
   ],
   theme: {
     extend: {
@@ -33,5 +34,5 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

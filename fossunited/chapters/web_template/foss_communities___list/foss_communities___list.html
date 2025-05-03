@@ -1,3 +1,28 @@
+
+<div class="community-list-section container">
+  <div class="community-list-container">
+    <h2>FOSS Communities near you</h2>
+
+    <div class="city-card-section">
+      <div class="city-card-container">
+        {%
+          set communities = frappe.get_all("FOSS Chapter", fields=["city",
+          "represent_image","route"], filters={"is_published": 1, "chapter_type": "City Community"},
+          order_by="city")
+        %}
+        {% for community in communities %}
+          <a class="city-card" href="{{ community.route }}" aria-label="Open source software communities in {{ community.city }}">
+            <div class="city-image">
+              <img src="{{ community.represent_image }}" alt="Community Icon for {{ community.city }}" />
+            </div>
+            <span class="city-name">{{ community.city }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
   .community-list-section {
     display: flex;
@@ -22,7 +47,7 @@
     color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
     font-size: 1.75rem;
     font-weight: 600;
-    line-height: 100%; /* 1.75rem */
+    line-height: 100%;
     letter-spacing: -0.105rem;
   }
 
@@ -41,22 +66,20 @@
     flex-direction: column;
     border-radius: 0.5rem;
     background: #f5f5f5;
+    text-decoration: none;
+    padding: 1rem;
+    align-items: center;
   }
 
-  .city-card :hover {
+  .city-card:hover {
     color: #08b74f;
   }
 
-  a:hover {
-    text-decoration: none;
-  }
-
-  .city-card h5 {
+  .city-name {
     padding: 1.5rem;
     color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
     font-size: 1.125rem;
     font-weight: 600;
-    line-height: normal;
     letter-spacing: -0.045rem;
     text-decoration: none;
   }
@@ -101,7 +124,7 @@
       gap: 1rem;
     }
 
-    .city-card h5 {
+    .city-name {
       padding: 0;
     }
 
@@ -116,28 +139,3 @@
     }
   }
 </style>
-
-<div class="community-list-section container">
-  <div class="community-list-container">
-    <h2>FOSS Communities near you</h2>
-
-    <div class="city-card-section">
-      <div class="city-card-container">
-        {%
-          set communities = frappe.get_all("FOSS Chapter", fields=["city",
-          "represent_image","route"], filters={"is_published": 1, "chapter_type": "City Community"},
-          order_by="city")
-        %}
-        {% for community in communities %}
-          <a class="city-card" href="{{ community.route }}">
-            <h5>{{ community.city }}</h5>
-
-            <div class="city-image">
-              <img src="{{ community.represent_image }}" alt="Open source software communities in {{ community.city }}" />
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-</div>

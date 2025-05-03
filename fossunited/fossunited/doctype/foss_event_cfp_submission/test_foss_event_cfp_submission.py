@@ -24,11 +24,19 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
         self.event = insert_test_event(chapter=self.chapter)
 
         self.cfp = insert_cfp_form(event=self.event)
-        self.submission_email = fake.email()
+        speakers = [
+            {
+                "full_name": fake.name(),
+                "email": fake.email(),
+                "designation": fake.job(),
+                "organization": fake.company(),
+                "bio": "Test Submission",
+            }
+        ]
         self.submission = insert_cfp_submission(
             linked_cfp=self.cfp.name,
             event=self.event.name,
-            email=self.submission_email,
+            speakers=speakers,
         )
 
     def tearDown(self):
@@ -46,60 +54,64 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
         cfp = self.cfp
 
         # When a submission is done by user
-        submission = self.submission
+        # Then the speaker emails should be added to an email group for this event,
+        # where type==CFP Proposers
 
-        # Then the email should be added to an email group linked to event for CFP Proposers
-        self.assertTrue(self.is_added_to_email_group(cfp.event, submission.email, "CFP Proposers"))
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(cfp.event, speaker.email, "CFP Proposers")
+            )
 
     def test_add_to_group_on_accept(self):
         # given a cfp and its submission
-        cfp = self.cfp
-        submission = self.submission
 
         frappe.set_user(LEAD)
         # When the status is changed to Approved
-        submission.status = "Approved"
-        submission.save()
+        self.submission.status = "Approved"
+        self.submission.save()
 
-        # Then it should be added to an email group for this event, where type==Accepted Proposers
-        self.assertTrue(
-            self.is_added_to_email_group(cfp.event, submission.email, "Accepted Proposers")
-        )
+        # Then the speaker emails of this submission should be added to an email group
+        # for this event, where type==Accepted Proposers
+
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event, speaker.email, "Accepted Proposers")
+            )
 
     def test_add_to_group_on_reject(self):
         # given a cfp and its submission
-        cfp = self.cfp
-        submission = self.submission
-
         frappe.set_user(LEAD)
         # When the status is changed to Approved
-        submission.status = "Rejected"
-        submission.save()
+        self.submission.status = "Rejected"
+        self.submission.save()
 
-        # Then it should be added to an email group for this event, where type==Accepted Proposers
-        self.assertTrue(
-            self.is_added_to_email_group(cfp.event, submission.email, "Rejected Proposers")
-        )
+        # Then the speaker emails of this submission should be added to an email group
+        # for this event, where type==Rejected Proposers
+
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event, speaker.email, "Rejected Proposers")
+            )
 
     def test_multiple_submission_by_same_email(self):
         # given a cfp
-        cfp = self.cfp
-
         # When multiple submissions are done by the same email
         # Then they should be submitted without any error.
         submission_email = "test4@example.com"
 
-        # ToDo: test by setting user with above email
-
+        frappe.set_user(submission_email)
         for _ in range(3):
             submission = insert_cfp_submission(
-                linked_cfp=cfp.name, event=cfp.event, email=submission_email
+                linked_cfp=self.cfp.name, event=self.cfp.event, email=submission_email
             )
 
             self.assertTrue(submission)
 
-        # And the email should be added to an email group linked to event for CFP Proposers
-        self.assertTrue(self.is_added_to_email_group(cfp.event, submission_email, "CFP Proposers"))
+        # And the speakers of these submissions should be added to the email group for this event
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event, speaker.email, "CFP Proposers")
+            )
 
     def is_added_to_email_group(self, event_id, email, group_type):
         email_group = frappe.db.get_value(

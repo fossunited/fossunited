@@ -1,7 +1,7 @@
 <template>
   <div
     class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-3 hover:cursor-pointer hover:bg-gray-50"
-    @click="redirectRoute(proposal.route)"
+    @click="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
   >
     <h4 class="text-base font-medium">{{ proposal.talk_title }}</h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
@@ -16,7 +16,6 @@
 </template>
 <script setup>
 import { Badge } from 'frappe-ui'
-import { redirectRoute } from '@/helpers/utils'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)

@@ -1,9 +1,9 @@
 <template>
-  <div class="flex gap-1 items-center">
+  <div class="flex gap-1 flex-wrap items-center my-2">
     <div
       v-for="(item, index) in items"
       :key="index"
-      class="text-base flex gap-1 items-center my-2"
+      class="text-base flex gap-1 items-center"
       :class="index == items.length - 1 ? 'font-medium text-gray-800' : 'text-gray-600 '"
     >
       <router-link

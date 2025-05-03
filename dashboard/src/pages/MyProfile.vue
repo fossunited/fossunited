@@ -27,8 +27,11 @@
                     :variant="'outline'"
                     :size="'sm'"
                     icon="edit-3"
+                    aria-label="Edit Banner Image"
+                    title="Edit Banner Image"
                     @click="openFileSelector"
-                  />
+                  >
+                  </Button>
                 </template>
               </FileUploader>
               <Button
@@ -36,8 +39,11 @@
                 icon="trash"
                 variant="solid"
                 theme="red"
+                aria-label="Remove Banner Image"
+                title="Remove Banner Image"
                 @click="setBannerImage({ name: '' })"
-              />
+              >
+              </Button>
             </div>
           </div>
           <div class="z-10 w-fit relative -mt-12 mx-6">
@@ -60,8 +66,11 @@
                   :variant="'outline'"
                   :size="'sm'"
                   icon="edit-3"
+                  aria-label="Edit Profile Picture"
+                  title="Edit Profile Picture"
                   @click="openFileSelector"
-                />
+                >
+                </Button>
               </template>
             </FileUploader>
           </div>
@@ -71,6 +80,8 @@
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
+              aria-label="Make Profile Private"
+              title="Make Profile Private"
               @click="toggleProfilePrivacy()"
             />
             <div class="col-span-2 py-1 border-b">

@@ -192,11 +192,10 @@
       <h5>Speakers</h5>
       {% if speakers %}
         <div class="speakers-grid">
-          {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
           {% for speaker in speakers %}
             <div class="speaker-card">
               <img
-                src="{{ speaker.profile_picture }}"
+                src="{{ speaker.photo }}"
                 alt="{{ speaker.full_name }}"
                 class="speaker--image"
               />
@@ -243,18 +242,15 @@
                   </div>
                 </div>
                 <div class="d-flex button-group">
-                  <button
-                    class="mr-2 w-full"
+                  <a
+                    class="w-full button"
                     onclick="window.location.href='/{{ proposal.route }}'"
                   >
                     View Proposal
-                  </button>
-                  <button
-                    class="dark-button w-full"
-                    onClick="event.stopPropagation(); window.location.href='/{{ proposal.route }}/edit'"
-                  >
-                    Edit CFP
-                  </button>
+                  </a>
+                  <a class="dark-button w-full" href="/dashboard/my-proposals/edit/{{ proposal.name }}">
+                    Edit Submission
+                  </a>
                 </div>
               </div>
             {% endfor %}

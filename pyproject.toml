@@ -11,7 +11,7 @@ dependencies = [
     "razorpay~=1.4.2",
     "PyGithub~=2.3.0",
     "Faker~=27.0.0",
-    "Pillow~=10.0.0"
+    "Pillow~=11.0.0"
 ]
 
 [project.optional-dependencies]
@@ -30,7 +30,9 @@ build-backend = "flit_core.buildapi"
 
 [tool.ruff]
 line-length = 99
-lint.select = [
+
+[tool.ruff.lint]
+select = [
     "I",
     "E",
     "F",

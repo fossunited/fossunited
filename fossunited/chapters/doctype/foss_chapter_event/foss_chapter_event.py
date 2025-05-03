@@ -16,6 +16,7 @@ from fossunited.doctype_ids import (
     EVENT_RSVP,
     PROPOSAL,
     RSVP_RESPONSE,
+    SPEAKER,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import is_user_team_member
@@ -208,7 +209,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
         context.recent_cfp_submissions = self.get_recent_cfp_submissions()
-        context.all_cfp_link = f'/dashboard/cfp/{self.route.split("c/")[1]}'
+        context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
         context.schedule_dict = self.get_schedule_dict()
         context.no_cache = 1
 
@@ -274,37 +275,19 @@ class FOSSChapterEvent(WebsiteGenerator):
         return members
 
     def get_speakers(self):
-        speaker_cfps = frappe.get_all(
-            PROPOSAL,
-            filters={
-                "event": self.name,
-                "status": "Approved",
-            },
-            fields=[
-                "talk_title",
-                "submitted_by",
-                "picture_url",
-                "full_name",
-                "designation",
-                "organization",
-            ],
+        submissions = frappe.db.get_all(
+            PROPOSAL, {"event": self.name, "status": "Approved"}, pluck="name"
         )
+
         speakers = []
-        for cfp in speaker_cfps:
-            user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
-            speakers.append(
-                {
-                    "full_name": cfp.full_name,
-                    "talk_title": cfp.talk_title,
-                    "profile_picture": (
-                        cfp.picture_url
-                        or user.profile_photo
-                        or "/assets/fossunited/images/defaults/user_profile_image.png"
-                    ),
-                    "designation": cfp.designation,
-                    "organization": cfp.organization,
-                }
+
+        for submission in submissions:
+            _submission_speakers = frappe.db.get_all(
+                SPEAKER,
+                {"parent": submission},
+                ["photo", "full_name", "designation", "organization", "linked_user"],
             )
+            speakers.extend(_submission_speakers)
 
         return speakers
 
@@ -374,8 +357,8 @@ class FOSSChapterEvent(WebsiteGenerator):
                     if cfp_form.deadline
                     else None
                 ),
-                "is_published": cfp_form.is_published,
-                "is_unpublished": not cfp_form.is_published,
+                "is_published": cfp_form.status == "Live",
+                "is_unpublished": cfp_form.status == "Closed",
             }
             cfp_status_block["is_team_member"] = False
             if frappe.db.exists(
@@ -401,7 +384,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             cfp_status_block["show_primary_cta"] = True
             cfp_status_block["primary_cta"] = "Submit a talk proposal"
 
-            if not cfp_form.is_published:
+            if cfp_form.status == "Closed":
                 cfp_status_block["block_heading"] = "Talk Proposal Form is Unpublished!"
         else:
             cfp_status_block["has_doc"] = False

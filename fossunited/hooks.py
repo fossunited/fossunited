@@ -26,10 +26,6 @@ website_route_rules = [
         "to_route": "dashboard",
     },
     {
-        "from_route": "/<path:event_route>/cfp/<submission>/edit",
-        "to_route": "/cfp/submission/edit",
-    },
-    {
         "from_route": "/<path:event_route>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
     },
@@ -81,7 +77,8 @@ doc_events = {
 }
 
 website_redirects = [
-    {"source": r"c/(.+)/cfp/all", "target": r"/dashboard/cfp/\1"},
+    {"source": r"c/(.+)/cfp", "target": r"/dashboard/cfp/apply/\1"},
+    {"source": r"c/(.+)/cfp/all", "target": r"/dashboard/cfp/all/\1"},
     {"source": r"c/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
 ]
 
