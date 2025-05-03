@@ -38,6 +38,9 @@ export const useUserProfileStore = defineStore('userProfile', () => {
     }
     return profile.data
   }
+  const fetchProlife = async () => {
+    return null
+  }
 
-  return { profile, fetchProfile }
+  return { profile, fetchProfile, fetchProlife }
 })
