@@ -1,4 +1,31 @@
 {% extends 'templates/foss_base.html' %}
+
+{% block page_style %}
+  <style>
+    h2,
+    h3 {
+      font-size: var(--text-2xl); /* 1.5rem */
+      font-weight: var(--fw-semibold); /* 600 */
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      color: #000;
+      margin: 0;
+      text-wrap: balance;
+      font-family: var(--ff-san-serif);
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   {{ header() }}
   {{ render_time_location() }}
@@ -10,10 +37,12 @@
     <div class="container">{{ horizontal_navbar(nav_items) }}</div>
   </div>
   <div class="container">
+    <h2 id="event-information-heading" class="sr-only">Event Information</h2>
     {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }}
     {{ render_schedule() }}
   </div>
 {% endblock %}
+
 {% macro header() %}
   <div class="container header-section-parent">
     <div class="header-section event-header">
@@ -68,6 +97,7 @@
     </div>
   </div>
 {% endmacro %}
+
 {% macro render_time_location() %}
   <div class="container">
     <div class="time-location-parent">
@@ -77,9 +107,9 @@
           style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
         ></i>
         <div class="d-flex flex-column">
-          <div class="event-start-date child-container--heading">
+          <h2 class="event-start-date child-container--heading" id="event-date-heading">
             {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
-          </div>
+          </h2>
           <div class="event-end-date child-container--subtext">
             {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
           </div>
@@ -91,9 +121,9 @@
           style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
         ></i>
         <div class="d-flex flex-column">
-          <div class="event-start-time child-container--heading">
+          <h2 class="event-start-time child-container--heading" id="event-time-heading">
             Starts at {{ doc.event_start_date.strftime("%-I:%M %p") }}
-          </div>
+          </h2>
           <div class="event-end-time child-container--subtext">
             Ends at {{ doc.event_end_date.strftime("%-I:%M %p") }}
           </div>
@@ -105,25 +135,26 @@
           style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
         ></i>
         <div class="d-flex flex-column">
-          <a href="{{ doc.map_link }}" class="event-location child-container--heading">
-            {{ doc.event_location }}
-          </a>
+          <h2 class="event-location child-container--heading" id="event-location-heading">
+            <a href="{{ doc.map_link }}">{{ doc.event_location }}</a>
+          </h2>
         </div>
       </div>
     </div>
   </div>
 {% endmacro %}
+
 {% macro render_event_details() %}
-  <div class="event-content-div content-div" id="event_information">
+  <div class="event-content-div content-div" id="event_information" role="region" aria-labelledby="event-information-heading">
     <div class="description-section my-3">
-      <h5>Description</h5>
+      <h3 id="description-heading">Description</h3>
       <div class="event--description-block mt-2">
         {{ doc.event_description or 'No Description Available for this event' }}
       </div>
     </div>
     {% if doc.sponsor_list or doc.deck_link %}
       <div class="sponsors-section my-3">
-        <h5 class="mt-3 mb-1">Sponsors</h5>
+        <h3 id="sponsors-heading">Sponsors</h3>
         {% if doc.deck_link %}
           <div class="my-2">
             Interested in sponsoring this event? Check out our sponsorship deck
@@ -157,7 +188,7 @@
     {% if doc.community_partners %}
       <div class="community-partners-sections my-3">
         <div class="sponsor--tier-block">
-          <h5>Community Partners</h5>
+          <h3 id="community-partners-heading">Community Partners</h3>
           <div class="sponsor--flex">
             {% for partner in doc.community_partners %}
               <a href="{{ partner.link }}" class="sponsor--block">
@@ -175,7 +206,7 @@
     {% endif %}
     {% if doc.event_members %}
       <div class="event-members-section my-3">
-        <h5>Event Members</h5>
+        <h3 id="event-members-heading">Event Members</h3>
         <div class="event--members-block">
           {% from 'fossunited/templates/macros/member_card.html' import member_card %}
           <div class="members-grid-6">
@@ -186,16 +217,18 @@
     {% endif %}
   </div>
 {% endmacro %}
+
 {% macro render_speakers() %}
   <div class="event-content-div content-div" id="speakers">
+    <h2 id="speakers-heading">Speakers</h2>
     <div class="speakers-section my-3">
-      <h5>Speakers</h5>
       {% if speakers %}
         <div class="speakers-grid">
+          {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
           {% for speaker in speakers %}
             <div class="speaker-card">
               <img
-                src="{{ speaker.photo }}"
+                src="{{ speaker.profile_picture }}"
                 alt="{{ speaker.full_name }}"
                 class="speaker--image"
               />
@@ -214,24 +247,26 @@
     </div>
   </div>
 {% endmacro %}
+
 {% macro render_rsvp() %}
   <div class="event-content-div content-div" id="rsvp">
+    <h2 id="rsvp-heading">RSVP</h2>
     <div class="rsvp-section my-3">
-      <h5>RSVP</h5>
       {% from 'fossunited/templates/macros/status_block_event.html' import status_block %}
       {{ status_block(rsvp_status_block, doc.name) }}
     </div>
   </div>
 {% endmacro %}
+
 {% macro render_cfp() %}
   <div class="event-content-div content-div" id="talk_proposal">
+    <h2 id="talk-proposal-heading">Talk Proposal</h2>
     <div class="cfp-section my-3">
-      <h5>Talk Proposal</h5>
       {% from 'fossunited/templates/macros/status_block_event.html' import status_block %}
       {{ status_block(cfp_status_block, doc.name) }}
       {% if user_cfp_submissions %}
         <div class="submitted-proposals-section">
-          <h5>Submitted Proposals</h5>
+          <h3 id="submitted-proposals-heading">Submitted Proposals</h3>
           <div class="submitted-proposals-list">
             {% for proposal in user_cfp_submissions %}
               <div class="cfp-submission-card">
@@ -266,10 +301,11 @@
     </div>
   </div>
 {% endmacro %}
+
 {% macro render_schedule() %}
   <div class="event-content-div content-div" id="schedule">
+    <h2 id="schedule-heading">Schedule</h2>
     <div class="schedule-section my-3">
-      <h5>Schedule</h5>
       <div class="my-3">
         <div class="buttons-group">
           {% for day in schedule_dict.days %}
@@ -300,10 +336,7 @@
                   <div class="schedule--title">{{ schedule.talk_title }}</div>
                   <div class="schedule--time">
                     {{ schedule.start_time.strftime('%I:%M %p') }} -
-                    {{
-                      schedule.end_time.strftime('%I:%M
-                      %p')
-                    }}
+                    {{ schedule.end_time.strftime('%I:%M %p') }}
                   </div>
                 </div>
                 {% if not schedule.no_speaker %}
@@ -329,6 +362,7 @@
     </div>
   </div>
 {% endmacro %}
+
 {% block page_script %}
   <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   <script>
