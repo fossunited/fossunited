@@ -72,6 +72,19 @@ def set_cover_image(name: str) -> bool:
     try:
         if len(name) == 0:
             frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", "")
+
+            if len(user_doc.cover_image) != 0:
+                old_webp_name = frappe.db.get_value(
+                    "File",
+                    {
+                        "file_url": user_doc.cover_image,
+                        "attached_to_doctype": USER_PROFILE,
+                        "attached_to_name": user_doc.name,
+                    },
+                    ["name"],
+                )
+                frappe.delete_doc("File", old_webp_name, ignore_permissions=True)
+
             return True
 
         original_image = get_file(name)
