@@ -62,5 +62,6 @@ const scheduled_events = createListResource({
     status: ['in', ['Draft', 'Live']],
   },
   orderBy: 'event_start_date',
+  pageLength: 999,
 })
 </script>
