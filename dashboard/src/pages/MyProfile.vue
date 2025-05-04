@@ -28,7 +28,8 @@
                     aria-label="Edit Banner Image"
                     title="Edit Banner Image"
                     @click="openFileSelector"
-                  />
+                  >
+                  </Button>
                 </template>
               </FileUploader>
 
@@ -40,7 +41,8 @@
                 aria-label="Remove Banner Image"
                 title="Remove Banner Image"
                 @click="setBannerImage({ file_url: '' })"
-              />
+              >
+              </Button>
             </div>
           </div>
 
@@ -64,7 +66,8 @@
                   aria-label="Edit Profile Picture"
                   title="Edit Profile Picture"
                   @click="openFileSelector"
-                />
+                >
+                </Button>
               </template>
             </FileUploader>
           </div>
