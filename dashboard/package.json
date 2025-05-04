@@ -6,6 +6,7 @@
     "dev": "vite",
     "build": "vite build --base=/assets/fossunited/dashboard/ && yarn copy-html-entry",
     "preview": "vite preview",
+    "test": "vitest",
     "copy-html-entry": "cp ../fossunited/public/dashboard/index.html ../fossunited/www/dashboard.html"
   },
   "dependencies": {
@@ -22,11 +23,14 @@
     "vue-sonner": "^1.1.2"
   },
   "devDependencies": {
+    "@testing-library/vue": "^8.1.0",
     "@vitejs/plugin-vue": "^5.0.4",
     "autoprefixer": "^10.4.2",
+    "jsdom": "^26.1.0",
     "postcss": "^8.4.5",
     "prettier": "3.2.5",
     "tailwindcss": "^3.2.7",
-    "vite": "^5.2.8"
+    "vite": "^5.2.8",
+    "vitest": "^3.1.2"
   }
 }
