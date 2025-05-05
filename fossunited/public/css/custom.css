@@ -1433,6 +1433,7 @@ h6 {
 
 .event-card:hover {
   border: 2px solid hsl(var(--clr-code-night-300));
+  text-decoration: none;
 }
 
 .event-card--banner {

@@ -48,6 +48,7 @@ def make_badge(text="Default", size="sm"):
 
 
 def get_doc_likes(doctype, name):
+    # Need to remove or refactor this method with the one in foss_event_cfp_proposal.py
     likes = frappe.db.get_value(doctype, name, "_liked_by")
     if likes is None:
         return []

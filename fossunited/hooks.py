@@ -26,10 +26,6 @@ website_route_rules = [
         "to_route": "dashboard",
     },
     {
-        "from_route": "/<path:event_route>/cfp/<submission>/edit",
-        "to_route": "/cfp/submission/edit",
-    },
-    {
         "from_route": "/<path:event_route>/rsvp/<submission>/edit",
         "to_route": "/rsvp/submission/edit",
     },
