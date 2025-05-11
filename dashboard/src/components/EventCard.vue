@@ -2,7 +2,13 @@
   <Card
     :title="event.event_name"
     class="border-2 border-transparent hover:border-gray-500 transition-colors hover:cursor-pointer"
-    @click="() => $router.push(`/event/${event.name}`)"
+    @click="
+      () =>
+        $router.push({
+          name: 'Event Dashboard',
+          params: { id: event.name },
+        })
+    "
   >
     <div class="flex justify-between">
       <div class="text-sm font-medium">
