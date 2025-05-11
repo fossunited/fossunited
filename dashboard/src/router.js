@@ -1,8 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { userResource } from '@/data/user'
 import { sessionUser } from './data/session'
+import { isChapterMember, isEventOrganizer } from '@/helpers/event'
 
 const routes = [
+  {
+    path: '/404',
+    name: 'NotFound',
+    component: () => import('@/pages/404.vue'),
+    meta: { isPublicPage: true },
+  },
   {
     path: '/',
     name: 'Home',
@@ -75,9 +82,17 @@ const routes = [
     component: () => import('@/pages/reviewers/ReviewPage.vue'),
   },
   {
-    name: 'Event',
+    name: 'Event Dashboard',
     path: '/event/:id',
+    redirect: { name: 'EventDetails' },
     component: () => import('@/pages/Event.vue'),
+    beforeEnter: async (to, from) => {
+      const isMember = await isEventOrganizer(to.params.id)
+      if (!isMember) {
+        router.replace({ name: 'NotFound', query: { error: 'not-authorized' } })
+        return
+      }
+    },
     children: [
       {
         path: '',
