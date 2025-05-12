@@ -280,8 +280,7 @@ const toggleProfilePrivacy = () => {
 
 const updateErrors = ref('')
 
-// Random Javascript regex to validate URLs
-// Source - https://stackoverflow.com/a/5717133 (yes i know copy paste is bad but im jsphobic)
+// Source - https://stackoverflow.com/a/5717133
 var pattern = new RegExp('^(https?:\\/\\/)' + // protocol
   '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
   '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -295,8 +294,6 @@ const updateProfileErrors = () => {
   if (!profile_dict.username.trim()) errors.push('\nUsername is required')
   if (!profile_dict.user.trim()) errors.push('\nEmail is required')
 
-  // This is jank as hell but its better than having a massive if-elif block
-  // I would have preferred to put all the links in a nested object named socials inside profile_dict itself, but that would break previously existing profiles.
   const socials = {
     website: profile_dict.website,
     x: profile_dict.x,
