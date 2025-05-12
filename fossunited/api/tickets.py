@@ -97,7 +97,7 @@ def get_tickets_insights(event_id: str) -> dict:
     Returns:
         dict: Insights of the tickets
     """
-    total_sold = frappe.db.count(TICKET_TRANSFER, filters={"event": event_id})
+    total_sold = frappe.db.count(EVENT_TICKET, filters={"event": event_id})
 
     # Get the insights of the t-shirts
     tshirt_insights = get_tshirt_insights(event_id)
