@@ -286,6 +286,7 @@ const routes = [
     name: 'Event CFP Form',
     path: '/cfp/apply/:route(.*)',
     component: () => import('@/pages/cfp/CfpForm.vue'),
+    meta: { isPublicPage: true },
   },
   {
     name: 'Proposal Edit',

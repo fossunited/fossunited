@@ -3,7 +3,7 @@ import frappe
 from fossunited.doctype_ids import EVENT, EVENT_CFP
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_cfp_from_route(route: str) -> dict:
     event = frappe.db.get_value(
         EVENT,
@@ -24,3 +24,11 @@ def get_cfp_from_route(route: str) -> dict:
     cfp.event = event
 
     return cfp
+
+
+@frappe.whitelist(allow_guest=True)
+def get_global_cfp_guidelines() -> dict:
+    """
+    Get the global CFP guidelines.
+    """
+    return frappe.db.get_value("Global CFP Settings", None, "guidelines", as_dict=True)
