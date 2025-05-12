@@ -12,14 +12,10 @@ import { ref } from 'vue'
 const _guidelines = ref()
 
 const guidelines = createResource({
-  url: 'frappe.client.get_single_value',
-  params: {
-    doctype: 'Global CFP Settings',
-    field: 'guidelines',
-  },
+  url: 'fossunited.api.cfp.get_global_cfp_guidelines',
   auto: true,
   onSuccess(data) {
-    _guidelines.value = cleanedHTML(data)
+    _guidelines.value = cleanedHTML(data.guidelines)
   },
 })
 </script>

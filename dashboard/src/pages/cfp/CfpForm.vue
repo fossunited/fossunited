@@ -35,15 +35,29 @@
         </transition>
 
         <ErrorMessage :message="errorMessages" />
-
-        <StepButtons
-          v-if="curr_section !== 'success'"
-          :is-first-step="curr_section === 0"
-          :is-last-step="curr_section === maxSectionIndex"
-          @next="nextStep"
-          @back="prevStep"
-          @submit="submitForm"
-        />
+        <MessageBanner
+          v-if="isGuestUser"
+          class="justify-center !text-base gap-4"
+          variant="dark"
+          message="Please login to submit your proposal."
+        >
+          <template #suffix>
+            <Button
+              label="Log In"
+              :link="createAbsoluteUrlFromRoute(`login?redirect=/dashboard${$route.fullPath}`)"
+            />
+          </template>
+        </MessageBanner>
+        <div v-else>
+          <StepButtons
+            v-if="curr_section !== 'success'"
+            :is-first-step="curr_section === 0"
+            :is-last-step="curr_section === maxSectionIndex"
+            @next="nextStep"
+            @back="prevStep"
+            @submit="submitForm"
+          />
+        </div>
       </template>
       <template v-else>
         <FormClosedSection />
@@ -66,6 +80,7 @@ import StepButtons from '@/components/cfp-public/StepButtons.vue'
 import FormClosedSection from '@/components/cfp-public/FormClosedSection.vue'
 import SubmissionSuccessView from '@/components/cfp-public/SubmissionSuccessView.vue'
 import PreviewSubmission from '@/components/cfp-public/PreviewSubmission.vue'
+import MessageBanner from '@/components/ui/MessageBanner.vue'
 import { createResource, LoadingIndicator, usePageMeta, ErrorMessage } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { provide, ref, watch, computed, inject } from 'vue'
@@ -79,12 +94,17 @@ import {
   validateSpeakerFields,
   getTransformedSubmissionFields,
 } from '@/helpers/cfp'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import { toast } from 'vue-sonner'
 
 const curr_section = ref(0)
 const maxSectionIndex = 3
 
 const session = inject('$session')
+
+const isGuestUser = computed(() => {
+  return !session.user
+})
 
 const inLoading = ref(true)
 

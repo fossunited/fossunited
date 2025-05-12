@@ -19,7 +19,8 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'info',
-    validator: (value) => ['info', 'success', 'warning', 'error', 'simple'].includes(value),
+    validator: (value) =>
+      ['info', 'success', 'warning', 'error', 'simple', 'dark'].includes(value),
   },
   size: {
     type: String,
@@ -40,6 +41,8 @@ const themeClasses = computed(() => {
       return 'border-red-600 bg-red-50 text-red-600'
     case 'simple':
       return 'border-gray-300 bg-gray-50 text-gray-600'
+    case 'dark':
+      return 'border-gray-700 bg-gray-800 text-gray-50'
     default:
       return ''
   }
@@ -57,6 +60,6 @@ const sizeClasses = computed(() => {
 })
 
 const containerClasses = computed(() => {
-  return `w-full flex gap-1 items-center border rounded ${themeClasses.value} ${sizeClasses.value}`
+  return `w-full flex gap-2 items-center border rounded ${themeClasses.value} ${sizeClasses.value}`
 })
 </script>
