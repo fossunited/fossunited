@@ -145,7 +145,7 @@
             </div>
             <div class="col-span-2 text-sm text-gray-600">
               Enter the complete links to your social, including
-              <code>https://</code>
+              <code>http(s)://</code>
             </div>
             <FormControl v-model="profile_dict.website" type="url" label="Website" />
             <FormControl v-model="profile_dict.x" type="url" label="Twitter / X" />
@@ -199,7 +199,7 @@ const profile_dict = reactive({
   youtube: '',
   devto: '',
   medium: '',
-  mastodon: '',
+  mastodon: ''
 })
 
 const profile = createResource({
@@ -280,11 +280,39 @@ const toggleProfilePrivacy = () => {
 
 const updateErrors = ref('')
 
+// Source - https://stackoverflow.com/a/5717133
+var pattern = new RegExp('^(https?:\\/\\/)' + // protocol
+  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+
 const updateProfileErrors = () => {
   const errors = []
-  if (!profile_dict.full_name.trim()) errors.push('Full Name is required')
-  if (!profile_dict.username.trim()) errors.push('Username is required')
-  if (!profile_dict.user.trim()) errors.push('Email is required')
+  if (!profile_dict.full_name.trim()) errors.push('\nFull Name is required')
+  if (!profile_dict.username.trim()) errors.push('\nUsername is required')
+  if (!profile_dict.user.trim()) errors.push('\nEmail is required')
+
+  const socials = {
+    website: profile_dict.website,
+    x: profile_dict.x,
+    linkedin: profile_dict.linkedin,
+    github: profile_dict.github,
+    gitlab: profile_dict.gitlab,
+    instagram: profile_dict.instagram,
+    youtube: profile_dict.youtube,
+    devto: profile_dict.devto,
+    medium: profile_dict.medium,
+    mastodon: profile_dict.mastodon,
+  }
+
+  for (let index = 0; index < Object.keys(socials).length; index++) {
+    // error out if it doesnt match regex AND it is not empty variable
+    if ((!pattern.test(Object.values(socials)[index])) && (Object.values(socials)[index] != null)) {
+      errors.push('\n'+Object.keys(socials)[index] + ' is not a valid url')
+    }
+  }
   return errors
 }
 
