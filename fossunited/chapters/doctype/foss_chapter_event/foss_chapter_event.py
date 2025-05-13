@@ -204,7 +204,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.nav_items = self.get_navbar_items()
         context.sponsors_dict = self.get_sponsors()
         context.volunteers = self.get_volunteers()
-        context.speakers = self.get_speakers()
+        context.speakers, context.submissions = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
@@ -276,7 +276,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_speakers(self):
         submissions = frappe.db.get_all(
-            PROPOSAL, {"event": self.name, "status": "Approved"}, pluck="name"
+            PROPOSAL, {"event": self.name, "status": "Approved"}, ["name", "talk_title", "route"]
         )
 
         speakers = []
@@ -284,12 +284,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         for submission in submissions:
             _submission_speakers = frappe.db.get_all(
                 SPEAKER,
-                {"parent": submission},
-                ["photo", "full_name", "designation", "organization", "linked_user"],
+                {"parent": submission.name},
+                ["photo", "full_name", "designation", "organization", "linked_user", "parent"],
             )
             speakers.extend(_submission_speakers)
 
-        return speakers
+        return speakers, submissions
 
     def get_rsvp_status_block(self):
         rsvp_status_block = {}
