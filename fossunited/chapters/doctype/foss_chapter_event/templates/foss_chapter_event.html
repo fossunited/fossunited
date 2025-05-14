@@ -10,8 +10,7 @@
     <div class="container">{{ horizontal_navbar(nav_items) }}</div>
   </div>
   <div class="container">
-    {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }}
-    {{ render_schedule() }}
+    {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }} {{ render_livestream() }} {{ render_schedule() }}
   </div>
 {% endblock %}
 {% macro header() %}
@@ -326,6 +325,15 @@
           </div>
         {% endif %}{% endfor %}
       </div>
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_livestream() %}
+  <div class="event-content-div content-div" id="livestreaming">
+    <div class="livestreaming-section my-3">
+      <h5>Live Stream</h5>
+      <br>
+      <iframe width=100% height=500px src="{{ doc.livestream_embed_link }}"></iframe>
     </div>
   </div>
 {% endmacro %}

@@ -165,6 +165,13 @@
           label="Livestream Link"
           size="md"
         />
+        <FormControl
+          v-model="event.doc.livestream_embed_link"
+          type="url"
+          label="Livestream Link (For embedding)"
+          description="eg. https://youtube.com/watch?v=VIDEOID becomes https://youtube.com/embed/VIDEOID"
+          size="md"
+        />
       </div>
     </div>
     <div class="flex flex-col my-6">

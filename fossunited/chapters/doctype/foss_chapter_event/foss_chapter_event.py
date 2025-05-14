@@ -71,6 +71,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         is_paid_event: DF.Check
         is_published: DF.Check
         livestream_link: DF.Data | None
+        livestream_embed_link: DF.Data | None
         map_link: DF.Data | None
         must_attend: DF.Check
         paid_tshirts_available: DF.Check
@@ -219,6 +220,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "speakers",
             "rsvp",
             "talk_proposal",
+            "livestreaming",
         ]
 
         if is_user_team_member(self.chapter, frappe.session.user):
@@ -230,6 +232,8 @@ class FOSSChapterEvent(WebsiteGenerator):
             navbar_items.remove("rsvp")
         if not self.show_cfp:
             navbar_items.remove("talk_proposal")
+        if self.livestream_embed_link is None:
+            navbar_items.remove("livestreaming")
 
         return navbar_items
 
