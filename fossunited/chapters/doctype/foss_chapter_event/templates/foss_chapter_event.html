@@ -204,7 +204,7 @@
               />
               <div class="speaker--details">
                 <div class="speaker--name">
-                {{ submission.talk_title }}
+                {{ submission.talk_title | truncate(40, False, '...', 0) }}
                 </div>
                 <div class="speaker--talk-title">{{ speaker.full_name }}</div>
                 <div class="speaker--talk-title">
