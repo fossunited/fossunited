@@ -218,6 +218,15 @@ def get_grouped_events():
     return get_month_grouped_events(events, hackathons)
 
 
+def get_chapter_details():
+    """
+    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
+    upcoming and past events.
+    """
+    chapters = frappe.db.get_all(CHAPTER, fields=["chapter_name", "name"])
+    return chapters
+
+
 def process_event(event, event_list):
     """
     Processes a single event or hackathon, adding it to the upcoming or past events list based on
