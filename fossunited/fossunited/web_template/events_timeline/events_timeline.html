@@ -158,7 +158,7 @@
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter_name }}')"
                 >
                   {{ event_card(event) }}
                 </div>
@@ -166,7 +166,7 @@
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+                  v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
                 >
                   {{ hackathon_card(event) }}
                 </div>
@@ -190,14 +190,19 @@
           {% for month, month_events in events.items() %}
             {% for event in month_events %}
               {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
+                {% if event.event_name %}
               <div
                 class="event-card-holder"
                 role="listitem"
-                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter_name }}')"
               >
-                {% if event.event_name %}
                   {{ event_card(event) }}
                 {% else %}
+              <div
+                class="event-card-holder"
+                role="listitem"
+                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+              >
                   {{ hackathon_card(event) }}
                 {% endif %}
               </div>

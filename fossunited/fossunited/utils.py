@@ -225,7 +225,7 @@ def get_chapter_details():
     """
     events = frappe.get_all(
         EVENT,
-        pluck="chapter",
+        pluck="chapter_name",
         filters={
             "status": ["in", ["Approved", "Live", "Concluded"]],
             "is_published": 1,
