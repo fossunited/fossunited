@@ -125,7 +125,7 @@
           <option value="All Cities" selected>All Cities</option>
           {% set chapter_details = get_chapter_details() %}
           {% for chapter in chapter_details %}
-            <option value="{{chapter}}">{{ chapter }}</option>
+            <option value="{{chapter.name}}">{{ chapter.chapter_name }}</option>
           {% endfor %}
         </select>
         <label for="cityChapter">City Chapter</label>
