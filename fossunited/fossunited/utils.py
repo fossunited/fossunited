@@ -218,6 +218,41 @@ def get_grouped_events():
     return get_month_grouped_events(events, hackathons)
 
 
+def get_chapter_details():
+    """
+    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
+    upcoming and past events.
+    """
+    events = frappe.get_all(
+        EVENT,
+        pluck="chapter",
+        filters={
+            "status": ["in", ["Approved", "Live", "Concluded"]],
+            "is_published": 1,
+        },
+        order_by="event_start_date",
+    )
+
+    hackathons = frappe.get_all(
+        HACKATHON,
+        pluck="chapter",
+        filters={
+            "is_published": 1,
+        },
+        order_by="start_date",
+    )
+
+    arr = events + hackathons
+
+    res = []
+
+    for val in arr:
+        if val not in res:
+            res.append(val)
+
+    return res
+
+
 def process_event(event, event_list):
     """
     Processes a single event or hackathon, adding it to the upcoming or past events list based on

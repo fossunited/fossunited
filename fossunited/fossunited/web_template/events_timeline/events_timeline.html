@@ -119,6 +119,20 @@
       <p id="must-attend-desc" class="sr-only">
         Filter the events to show only those marked as must-attend.
       </p>
+      <!-- City Chapter selector -->
+      <div class="must-attend-checkbox">
+        <select id="cityChapter" v-model="cityChapter">
+          <option value="All Cities" selected>All Cities</option>
+          {% set chapter_details = get_chapter_details() %}
+          {% for chapter in chapter_details %}
+            <option value="{{chapter}}">{{ chapter }}</option>
+          {% endfor %}
+        </select>
+        <label for="cityChapter">City Chapter</label>
+      </div>
+      <p id="must-attend-desc" class="sr-only">
+        Filter the events to show only those in your city.
+      </p>
     </div>
 
     <!--Primary Event cards listing-->
@@ -144,7 +158,7 @@
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
                 >
                   {{ event_card(event) }}
                 </div>
@@ -152,7 +166,7 @@
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}')"
+                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
                 >
                   {{ hackathon_card(event) }}
                 </div>
@@ -179,7 +193,7 @@
               <div
                 class="event-card-holder"
                 role="listitem"
-                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }})"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
               >
                 {% if event.event_name %}
                   {{ event_card(event) }}
@@ -199,8 +213,13 @@
       searchText: '',
       ticker: 1,
       mustAttendOnly: false,
-      canShow(eventName, eventDate, eventMustAttend) {
+      cityChapter: 'All Cities',
+      canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
         if (this.mustAttendOnly && !eventMustAttend) {
+          return false
+        }
+
+        if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
           return false
         }
 
@@ -209,8 +228,8 @@
         }
 
         return (
-          eventName.toLowerCase().includes(this.searchText) ||
-          eventDate.toLowerCase().includes(this.searchText)
+          eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+          eventDate.toLowerCase().includes(this.searchText.toLowerCase())
         )
       },
       updateTicker() {
