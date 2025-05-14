@@ -154,11 +154,12 @@
             v-show="ticker > 0 && $el?.children.length > 0"
           >
             {% for event in month_events %}
+              {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
               {% if event.event_name %}
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter_name }}')"
+                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
                 >
                   {{ event_card(event) }}
                 </div>
@@ -166,7 +167,7 @@
                 <div
                   class="event-card-holder"
                   role="listitem"
-                  v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+                  v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
                 >
                   {{ hackathon_card(event) }}
                 </div>
@@ -194,18 +195,19 @@
               <div
                 class="event-card-holder"
                 role="listitem"
-                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter_name }}')"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
               >
                   {{ event_card(event) }}
+              </div>
                 {% else %}
               <div
                 class="event-card-holder"
                 role="listitem"
-                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
               >
                   {{ hackathon_card(event) }}
-                {% endif %}
               </div>
+                {% endif %}
             {% endfor %}
           {% endfor %}
         {% endfor %}
