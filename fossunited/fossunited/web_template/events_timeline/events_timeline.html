@@ -138,7 +138,7 @@
     <!--Primary Event cards listing-->
     {% set grouped_events = get_grouped_events() %}
     {% for group, events in grouped_events.items() %}
-      <div class="event-group" v-if="searchText.length == 0" role="region">
+      <div class="event-group" v-if="searchText.length == 0 && cityChapter === 'All Cities'" role="region">
         <h3>{{ group }}</h3>
         {% for month, month_events in events.items() %}
           <h4
@@ -180,7 +180,7 @@
 
     <!--Searched and Filtered event cards listing-->
     <div
-      v-if="searchText.length > 0"
+      v-if="searchText.length > 0 || cityChapter != 'All Cities'"
       aria-live="polite"
       role="region"
       aria-labelledby="filtered-events-label"
