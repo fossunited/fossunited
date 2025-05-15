@@ -193,19 +193,28 @@
       {% if speakers %}
         <div class="speakers-grid">
           {% for speaker in speakers %}
+                {% for submission in submissions %}
+                {% if submission.name == speaker.parent %}
             <div class="speaker-card">
+              <a href=/{{ submission.route }}>
               <img
                 src="{{ speaker.photo }}"
                 alt="{{ speaker.full_name }}"
                 class="speaker--image"
               />
               <div class="speaker--details">
-                <div class="speaker--name">{{ speaker.full_name }}</div>
+                <div class="speaker--name">
+                {{ submission.talk_title | truncate(40, False, '...', 0) }}
+                </div>
+                <div class="speaker--talk-title">{{ speaker.full_name }}</div>
                 <div class="speaker--talk-title">
                   {{ speaker.designation }}, {{ speaker.organization }}
                 </div>
               </div>
+              </a>
             </div>
+                {% endif %}
+                {% endfor %}
           {% endfor %}
         </div>
       {% else %}
