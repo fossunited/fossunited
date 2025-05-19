@@ -17,6 +17,7 @@
     "banner_image",
     "column_break_3gye",
     "chapter_type",
+    "chapter_status",
     "chapter_name",
     "institution_name",
     "about_chapter_section",
@@ -57,6 +58,15 @@
       "in_list_view": 1,
       "label": "Chapter Type",
       "options": "City Community\nFOSS Club\nConference",
+      "reqd": 1
+    },
+    {
+      "fieldname": "chapter_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "default": "Active",
+      "label": "Chapter Status",
+      "options": "Active\nInactive\nDefunct\nIndependent",
       "reqd": 1
     },
     {
