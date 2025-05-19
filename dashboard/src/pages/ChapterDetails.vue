@@ -80,32 +80,6 @@
           :disabled="true"
           label="Chapter Type"
         />
-        <FormControl
-          v-model="chapter.doc.chapter_status"
-          type="select"
-          :options="[
-            {
-              label: 'Active',
-              value: 'Active',
-            },
-            {
-              label: 'Inactive',
-              value: 'Inactive',
-            },
-            {
-              label: 'Defunct',
-              value: 'Defunct',
-            },
-            {
-              label: 'Independent',
-              value: 'Independent',
-            },
-          ]"
-          variant="subtle"
-          size="md"
-          :disabled="false"
-          label="Chapter Status"
-        />
         <div class="col-span-2">
           <TextEditor
             label="About Chapter"
