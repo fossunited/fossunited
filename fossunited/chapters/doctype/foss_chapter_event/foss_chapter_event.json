@@ -50,6 +50,7 @@
     "event_end_date",
     "livestreaming_section",
     "livestream_link",
+    "livestream_embed_link",
     "event_information_section",
     "event_bio",
     "event_description",
@@ -476,6 +477,13 @@
       "fieldname": "livestream_link",
       "fieldtype": "Data",
       "label": "Livestream Link",
+      "options": "URL"
+    },
+    {
+      "fieldname": "livestream_embed_link",
+      "fieldtype": "Data",
+      "label": "Livestream Link for Embedding",
+      "description": "eg. https://youtube.com/watch?v=VIDEOID becomes https://youtube.com/embed/VIDEOID",
       "options": "URL"
     }
   ],
