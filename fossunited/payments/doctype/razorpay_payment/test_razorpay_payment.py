@@ -2,11 +2,14 @@ import frappe
 from faker import Faker
 from frappe.tests import IntegrationTestCase
 
-from fossunited.doctype_ids import EVENT_TICKET, RAZORPAY_PAYMENT
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
 from fossunited.tests.utils import (
     insert_test_chapter,
     insert_test_event,
     insert_test_razorpay_payment,
+)
+from fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket import (
+    TicketTierMismatchError,
 )
 
 fake = Faker()
@@ -108,3 +111,25 @@ class TestRazorpayPayment(IntegrationTestCase):
         # Then it should throw an error before it is created
         with self.assertRaises(frappe.PermissionError):
             insert_test_razorpay_payment(event=self.event.name)
+
+    def test_event_ticket_tier_mismatch(self):
+        event_1 = self.event
+        event_2 = insert_test_event(
+            chapter=self.chapter,
+            is_paid_event=1,
+            tiers=[
+                {
+                    "enabled": 1,
+                    "title": "Faulty",
+                    "price": 5,
+                    "maximum_tickets": 5,
+                }
+            ],
+            tickets_status="Live",
+        )
+
+        event_2_tier = frappe.get_doc(TICKET_TIER, {"parent": event_2.name, "parenttype": EVENT})
+
+        # create a payment for event_1 but with event_2 tier
+        with self.assertRaises(TicketTierMismatchError):
+            insert_test_razorpay_payment(event=event_1.name, tier=event_2_tier)
