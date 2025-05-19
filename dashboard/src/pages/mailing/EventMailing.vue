@@ -78,12 +78,12 @@ watch(
       campaigns.fetch()
     }
   },
-  { 
+  {
     deep: true,
     immediate: true
   }
 )
-    
+
 const handleRowClick = (row) => {
   selectedCampaign.value = row
   showManageDrawer.value = true
