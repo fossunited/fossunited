@@ -155,6 +155,10 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
             raise
 
 
+class TicketTierMismatchError(frappe.ValidationError):
+    pass
+
+
 def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     # calculate total amount
     calculated_amount = 0
@@ -162,6 +166,9 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     attendees = payment_meta_data.get("attendees", [])
     tier = payment_meta_data.get("tier", {}).get("name")
     price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
+
+    if event_name != payment_meta_data.get("event"):
+        frappe.throw("This tier does not belong to this event!", TicketTierMismatchError)
 
     tshirt_price = frappe.db.get_value(EVENT, event_name, "t_shirt_price")
 
