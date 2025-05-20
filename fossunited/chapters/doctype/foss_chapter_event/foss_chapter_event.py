@@ -67,11 +67,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_type: DF.Link | None
         external_event_url: DF.Data | None
         hall_options: DF.SmallText | None
+        has_external_webpage: DF.Check
         is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
-        livestream_link: DF.Data | None
         livestream_embed_link: DF.Data | None
+        livestream_link: DF.Data | None
         map_link: DF.Data | None
         must_attend: DF.Check
         paid_tshirts_available: DF.Check

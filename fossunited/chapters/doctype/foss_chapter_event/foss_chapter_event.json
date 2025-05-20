@@ -10,6 +10,7 @@
   "engine": "InnoDB",
   "field_order": [
     "is_external_event",
+    "has_external_webpage",
     "column_break_okxh",
     "external_event_url",
     "meta_info_section",
@@ -420,6 +421,7 @@
     },
     {
       "default": "0",
+      "description": "If enabled, all aspects of the event will be managed independently by the organizer.\nThis option is only used to include the event in the event list for displaying its event card.",
       "fieldname": "is_external_event",
       "fieldtype": "Check",
       "label": "Is External Event?"
@@ -431,7 +433,8 @@
     {
       "fieldname": "external_event_url",
       "fieldtype": "Data",
-      "label": "External Event URL"
+      "label": "External Event URL",
+      "mandatory_depends_on": "eval:doc.is_external_event || doc.has_external_webpage"
     },
     {
       "default": "Live",
@@ -480,11 +483,18 @@
       "options": "URL"
     },
     {
+      "description": "eg. https://youtube.com/watch?v=VIDEOID becomes https://youtube.com/embed/VIDEOID",
       "fieldname": "livestream_embed_link",
       "fieldtype": "Data",
       "label": "Livestream Link for Embedding",
-      "description": "eg. https://youtube.com/watch?v=VIDEOID becomes https://youtube.com/embed/VIDEOID",
       "options": "URL"
+    },
+    {
+      "default": "0",
+      "description": "Event features like RSVP, CFP, and Tickets are managed directly on our website \u2014 only an external landing page is created.",
+      "fieldname": "has_external_webpage",
+      "fieldtype": "Check",
+      "label": "Has External Webpage?"
     }
   ],
   "has_web_view": 1,
@@ -506,7 +516,7 @@
       "link_fieldname": "event"
     }
   ],
-  "modified": "2024-12-12 13:47:54.934609",
+  "modified": "2025-05-20 15:13:04.902037",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Chapter Event",
@@ -544,6 +554,7 @@
       "select": 1
     }
   ],
+  "row_format": "Dynamic",
   "search_fields": "event_permalink, chapter",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
