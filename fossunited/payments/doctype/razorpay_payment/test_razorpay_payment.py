@@ -84,7 +84,7 @@ class TestRazorpayPayment(IntegrationTestCase):
         # Given a event ticket payment with multiple participants
         number_of_attendees = 3
         payment = insert_test_razorpay_payment(
-            event=self.event.name, num_seats=number_of_attendees
+            event=self.event.name, attendees=[], num_seats=number_of_attendees
         )
         # The initial status should be `Pending`
         self.assertEqual(payment.status, "Pending")
@@ -133,3 +133,5 @@ class TestRazorpayPayment(IntegrationTestCase):
         # create a payment for event_1 but with event_2 tier
         with self.assertRaises(TicketTierMismatchError):
             insert_test_razorpay_payment(event=event_1.name, tier=event_2_tier)
+
+        event_2.delete()
