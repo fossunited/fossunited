@@ -171,7 +171,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
 
     def validate_permalink(self):
-        if self.is_external_event:
+        if self.has_external_webpage:
             return
 
         if frappe.db.exists(
@@ -198,7 +198,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         return
 
     def set_route(self):
-        if self.is_external_event:
+        if self.has_external_webpage:
             return
 
         event_route = frappe.db.get_value(CHAPTER, self.chapter, "route")
