@@ -82,7 +82,7 @@ const breadcrumb_items = computed(() => {
   return [
     {
       label: event.data.event_name,
-      link: event.data.is_external_event
+      link: event.data.has_external_webpage
         ? event.data.external_event_url
         : getRedirectRoute(event.data.route),
     },
