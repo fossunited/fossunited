@@ -109,6 +109,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         self.validate_permalink()
 
     def before_save(self):
+        if self.is_external_event:
+            self.has_external_webpage = True
+
         if self.has_value_changed("status"):
             self.update_published_status()
         self.set_route()
