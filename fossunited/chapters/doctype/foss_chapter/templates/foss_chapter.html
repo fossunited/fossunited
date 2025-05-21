@@ -39,8 +39,10 @@
     </div>
     <div class="header-section--socials">
       {% for (k,v) in social_links.items() %}
-      {% if k == "github" or k == "matrix" %}
+      {% if k == "github" %}
         {% set k2 = k+"_light" %}
+      {% elif k == "matrix" %}
+        {% set k2 = k+"-light" %}
       {% else %}
         {% set k2 = k %}
       {% endif %}
