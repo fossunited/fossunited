@@ -214,6 +214,7 @@ class FOSSChapter(WebsiteGenerator):
                 "must_attend",
                 "event_location",
                 "is_external_event",
+                "has_external_webpage",
                 "external_event_url",
             ],
             order_by="event_end_date desc",

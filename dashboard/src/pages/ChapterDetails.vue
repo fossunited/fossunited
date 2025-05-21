@@ -156,6 +156,11 @@
             <IconBrandMastodon class="w-5 text-gray-800" />
           </template>
         </FormControl>
+        <FormControl v-model="chapter.doc.telegram" :type="'url'" size="md" label="Telegram">
+          <template #prefix>
+            <IconBrandTelegram class="w-5 text-gray-800" />
+          </template>
+        </FormControl>
       </div>
     </div>
   </div>
@@ -174,6 +179,7 @@ import {
   IconBrandLinkedin,
   IconBrandMastodon,
   IconBrandX,
+  IconBrandTelegram,
 } from '@tabler/icons-vue'
 
 const route = useRoute()

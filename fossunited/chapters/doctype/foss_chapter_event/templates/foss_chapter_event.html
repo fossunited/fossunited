@@ -20,8 +20,7 @@
     <div class="container">{{ horizontal_navbar(nav_items) }}</div>
   </div>
   <div class="container">
-    {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }}
-    {{ render_schedule() }}
+    {{ render_event_details() }} {{ render_speakers() }} {{ render_rsvp() }} {{ render_cfp() }} {{ render_livestream() }} {{ render_schedule() }}
   </div>
 {% endblock %}
 {% macro header() %}
@@ -203,19 +202,28 @@
       {% if speakers %}
         <div class="speakers-grid">
           {% for speaker in speakers %}
+                {% for submission in submissions %}
+                {% if submission.name == speaker.parent %}
             <div class="speaker-card">
+              <a href=/{{ submission.route }}>
               <img
                 src="{{ speaker.photo }}"
                 alt="{{ speaker.full_name }}"
                 class="speaker--image"
               />
               <div class="speaker--details">
-                <div class="speaker--name">{{ speaker.full_name }}</div>
+                <div class="speaker--name">
+                {{ submission.talk_title | truncate(40, False, '...', 0) }}
+                </div>
+                <div class="speaker--talk-title">{{ speaker.full_name }}</div>
                 <div class="speaker--talk-title">
                   {{ speaker.designation }}, {{ speaker.organization }}
                 </div>
               </div>
+              </a>
             </div>
+                {% endif %}
+                {% endfor %}
           {% endfor %}
         </div>
       {% else %}
@@ -336,6 +344,15 @@
           </div>
         {% endif %}{% endfor %}
       </div>
+    </div>
+  </div>
+{% endmacro %}
+{% macro render_livestream() %}
+  <div class="event-content-div content-div" id="livestreaming">
+    <div class="livestreaming-section my-3">
+      <h5>Live Stream</h5>
+      <br>
+      <iframe width=100% height=500px src="{{ doc.livestream_embed_link }}"></iframe>
     </div>
   </div>
 {% endmacro %}

@@ -69,10 +69,20 @@ const event = createDocumentResource({
   name: route.params.id,
   fields: ['*'],
   auto: true,
-  onSuccess() {
-    campaigns.fetch()
-  },
 })
+
+watch(
+  () => event.doc,
+  (doc) => {
+    if (doc) {
+      campaigns.fetch()
+    }
+  },
+  {
+    deep: true,
+    immediate: true
+  }
+)
 
 const handleRowClick = (row) => {
   selectedCampaign.value = row

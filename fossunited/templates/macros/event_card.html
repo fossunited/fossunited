@@ -3,7 +3,7 @@
     class="event-card"
     data-docname="{{ event.name }}"
     data-route="{{ event.route }}"
-    {% if event.is_external_event %}
+    {% if event.has_external_webpage %}
       href="{{ event.external_event_url }}" target="_blank" rel="noopener noreferrer"
     {% else %}
       href="/{{ event.route }}"

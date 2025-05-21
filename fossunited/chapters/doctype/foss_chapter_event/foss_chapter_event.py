@@ -67,9 +67,11 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_type: DF.Link | None
         external_event_url: DF.Data | None
         hall_options: DF.SmallText | None
+        has_external_webpage: DF.Check
         is_external_event: DF.Check
         is_paid_event: DF.Check
         is_published: DF.Check
+        livestream_embed_link: DF.Data | None
         livestream_link: DF.Data | None
         map_link: DF.Data | None
         must_attend: DF.Check
@@ -107,6 +109,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         self.validate_permalink()
 
     def before_save(self):
+        if self.is_external_event:
+            self.has_external_webpage = True
+
         if self.has_value_changed("status"):
             self.update_published_status()
         self.set_route()
@@ -166,7 +171,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
 
     def validate_permalink(self):
-        if self.is_external_event:
+        if self.has_external_webpage:
             return
 
         if frappe.db.exists(
@@ -193,7 +198,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         return
 
     def set_route(self):
-        if self.is_external_event:
+        if self.has_external_webpage:
             return
 
         event_route = frappe.db.get_value(CHAPTER, self.chapter, "route")
@@ -204,7 +209,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.nav_items = self.get_navbar_items()
         context.sponsors_dict = self.get_sponsors()
         context.volunteers = self.get_volunteers()
-        context.speakers = self.get_speakers()
+        context.speakers, context.submissions = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
@@ -219,6 +224,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "speakers",
             "rsvp",
             "talk_proposal",
+            "livestreaming",
         ]
 
         if is_user_team_member(self.chapter, frappe.session.user):
@@ -230,6 +236,8 @@ class FOSSChapterEvent(WebsiteGenerator):
             navbar_items.remove("rsvp")
         if not self.show_cfp:
             navbar_items.remove("talk_proposal")
+        if self.livestream_embed_link is None:
+            navbar_items.remove("livestreaming")
 
         return navbar_items
 
@@ -276,7 +284,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_speakers(self):
         submissions = frappe.db.get_all(
-            PROPOSAL, {"event": self.name, "status": "Approved"}, pluck="name"
+            PROPOSAL, {"event": self.name, "status": "Approved"}, ["name", "talk_title", "route"]
         )
 
         speakers = []
@@ -284,12 +292,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         for submission in submissions:
             _submission_speakers = frappe.db.get_all(
                 SPEAKER,
-                {"parent": submission},
-                ["photo", "full_name", "designation", "organization", "linked_user"],
+                {"parent": submission.name},
+                ["photo", "full_name", "designation", "organization", "linked_user", "parent"],
             )
             speakers.extend(_submission_speakers)
 
-        return speakers
+        return speakers, submissions
 
     def get_rsvp_status_block(self):
         rsvp_status_block = {}

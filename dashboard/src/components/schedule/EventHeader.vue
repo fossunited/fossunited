@@ -1,7 +1,7 @@
 <template>
   <div class="w-full flex flex-col md:flex-row gap-4 justify-between md:items-center">
     <div class="flex gap-2 items-center">
-      <div v-if="event.is_external_event">
+      <div v-if="event.event_logo">
         <img :src="event.event_logo" :alt="event.event_name + ' Logo'" class="h-8" />
       </div>
       <div v-else>

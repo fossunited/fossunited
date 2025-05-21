@@ -83,6 +83,7 @@ const event = createResource({
         'event_location',
         'event_bio',
         'is_external_event',
+        'has_external_webpage',
         'external_event_url',
         'event_logo',
         'proposal_page_description',
@@ -117,7 +118,7 @@ const breadcrumb_items = computed(() => {
   return [
     {
       label: event.data.event_name,
-      link: event.data.is_external_event
+      link: event.data.has_external_webpage
         ? event.data.external_event_url
         : createAbsoluteUrlFromRoute(event.data.route),
     },
