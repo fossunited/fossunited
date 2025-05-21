@@ -71,53 +71,61 @@ const reviewerProfile = createResource({
 })
 
 const submitReview = () => {
-  createResource({
-    url: 'frappe.client.insert',
-    makeParams() {
-      return {
-        doc: {
-          doctype: 'FOSS Event CFP Review',
-          parenttype: 'FOSS Event CFP Submission',
-          parent: props.submissionId,
-          parentfield: 'reviews',
-          remarks: remarks.value,
-          to_approve: review.value,
-          reviewer_profile: reviewerProfile.data.name,
-          reviewer: reviewerProfile.data.full_name,
-        },
-      }
-    },
-    auto: true,
-    onSuccess() {
-      emits('add:review')
-    },
-    onError(err) {
-      toast.error('Failed to submit review', err.message)
-    },
-  })
+  if ((review.value === "No" || review.value === "Maybe") && (!remarks.value || remarks.value === "<p></p>")) {
+    toast.error('cannot submit review unless remarks are added')
+  } else {
+    createResource({
+      url: 'frappe.client.insert',
+      makeParams() {
+        return {
+          doc: {
+            doctype: 'FOSS Event CFP Review',
+            parenttype: 'FOSS Event CFP Submission',
+            parent: props.submissionId,
+            parentfield: 'reviews',
+            remarks: remarks.value,
+            to_approve: review.value,
+            reviewer_profile: reviewerProfile.data.name,
+            reviewer: reviewerProfile.data.full_name,
+          },
+        }
+      },
+      auto: true,
+      onSuccess() {
+        emits('add:review')
+      },
+      onError(err) {
+        toast.error('Failed to submit review', err.message)
+      },
+    })
+  }
 }
 
 const editReview = () => {
-  createResource({
-    url: 'frappe.client.set_value',
-    makeParams() {
-      return {
-        doctype: 'FOSS Event CFP Review',
-        name: props.review.name,
-        fieldname: {
-          remarks: remarks.value,
-          to_approve: review.value,
-        },
-      }
-    },
-    auto: true,
-    onSuccess() {
-      emits('update:review')
-    },
-    onError(err) {
-      toast.error('Failed to update review', err.message)
-    },
-  })
+  if ((review.value === "No" || review.value === "Maybe") && (!remarks.value || remarks.value === "<p></p>")) {
+    toast.error('cannot submit review unless remarks are added')
+  } else {
+    createResource({
+      url: 'frappe.client.set_value',
+      makeParams() {
+        return {
+          doctype: 'FOSS Event CFP Review',
+          name: props.review.name,
+          fieldname: {
+            remarks: remarks.value,
+            to_approve: review.value,
+          },
+        }
+      },
+      auto: true,
+      onSuccess() {
+        emits('update:review')
+      },
+      onError(err) {
+        toast.error('Failed to update review', err.message)
+      },
+    })
+  }
 }
 
 const getCustomAction = () => {
