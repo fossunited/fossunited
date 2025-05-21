@@ -62,6 +62,47 @@
           The ideal dimensions for a banner image are: 1240 x 300 (WxH)
         </div>
       </div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Profile Image</div>
+      <div class="p-2 my-1">
+        <img
+          :src="getProfileImage()"
+          alt="Profile Image"
+          class="object-cover rounded-lg aspect-[1/1]"
+        />
+        <div class="flex my-2 gap-2">
+          <FileUploader
+            :file-types="'image/*'"
+            :validate-file="validateFile"
+            @success="(file) => setProfileImage(file)"
+          >
+            <template #default="{ progress, uploading, openFileSelector }">
+              <Button
+                :variant="'subtle'"
+                :size="'md'"
+                :label="
+                  uploading
+                    ? `Uploading ${progress}`
+                    : chapter.doc.profile_img_src
+                      ? 'Change Image'
+                      : 'Upload Image'
+                "
+                @click="openFileSelector"
+              />
+            </template>
+          </FileUploader>
+          <Button
+            v-if="chapter.doc.profile_img_src"
+            :variant="'subtle'"
+            theme="red"
+            :size="'md'"
+            :label="'Remove Image'"
+            @click="() => setProfileImage({ file_url: '' })"
+          />
+        </div>
+        <div class="text-sm text-gray-600">
+          The ideal dimensions for a profile image are: 120 x 120 (WxH)
+        </div>
+      </div>
     </div>
     <div class="flex flex-col my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
@@ -203,8 +244,8 @@ const getBannerImage = () => {
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg'].includes(extn)) {
-    return 'Only PNG and JPG images are allowed'
+  if (!['png', 'jpg', 'svg'].includes(extn)) {
+    return 'Only PNG, SVG and JPG images are allowed'
   }
 }
 const setBannerImage = (file) => {
@@ -218,6 +259,26 @@ const setBannerImage = (file) => {
   }
 }
 
+const getProfileImage = () => {
+  if (chapter.doc.profile_img_src) {
+    return chapter.doc.profile_img_src
+  } else if (chapter.doc.chapter_type == 'FOSS Club') {
+    return '/assets/fossunited/images/chapter/foss_club_profile.svg'
+  } else {
+    return '/assets/fossunited/images/chapter/city_profile.svg'
+  }
+}
+
+const setProfileImage = (file) => {
+  chapter.setValue.submit({
+    profile_img_src: file.file_url,
+  })
+  if (file.file_url) {
+    toast.success('Profile Image updated successfully')
+  } else {
+    toast.info('Profile Image removed successfully')
+  }
+}
 const updateDetails = () => {
   chapter.save
     .submit()

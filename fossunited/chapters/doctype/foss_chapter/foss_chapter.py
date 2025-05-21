@@ -8,24 +8,25 @@ from fossunited.doctype_ids import EVENT, STUDENT_CLUB, USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
+    # ruff: noqa
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.types import DF
-
-        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
             FOSSChapterLeadTeamMember,
         )
+        from frappe.types import DF
 
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
         chapter_lead: DF.Link | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
+        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent"]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
         city: DF.Link | None
         country: DF.Link | None
         discord: DF.Data | None
@@ -38,6 +39,7 @@ class FOSSChapter(WebsiteGenerator):
         linkedin: DF.Data | None
         mastodon: DF.Data | None
         matrix: DF.Data | None
+        profile_img_src: DF.AttachImage | None
         represent_image: DF.AttachImage | None
         route: DF.Data | None
         slug: DF.Data | None
@@ -46,6 +48,7 @@ class FOSSChapter(WebsiteGenerator):
         whatsapp: DF.Data | None
         x: DF.Data | None
     # end: auto-generated types
+    # ruff: noqa
 
     def before_insert(self):
         self.handle_member_addition()
@@ -156,13 +159,13 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_context(self, context):
         if self.chapter_type == "City Community":
-            context.profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
+            context.default_profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
         elif self.chapter_type == STUDENT_CLUB:
-            context.profile_img_src = "/assets/fossunited/images/chapter/foss_club_profile.svg"
+            context.default_profile_img_src = (
+                "/assets/fossunited/images/chapter/foss_club_profile.svg"
+            )
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
-        else:
-            context.profile_img_src = None
 
         context.upcoming_events = self.get_upcoming_events()
         context.past_events = self.get_past_events()
