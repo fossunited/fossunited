@@ -74,15 +74,15 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
               <div>
                 <div class="font-semibold text-gray-800">Positive Reviews</div>
-                <div>{{ selected_row_data.doc.positive_reviews }}</div>
+                <div>{{ selected_row_data.doc.positive_reviews }}%</div>
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Negative Reviews</div>
-                <div>{{ selected_row_data.doc.negative_reviews }}</div>
+                <div>{{ selected_row_data.doc.negative_reviews }}%</div>
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Unsure Reviews</div>
-                <div>{{ selected_row_data.doc.unsure_reviews }}</div>
+                <div>{{ selected_row_data.doc.unsure_reviews }}%</div>
               </div>
               <div>
                 <div class="font-semibold text-gray-800">Approvability</div>
