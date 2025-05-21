@@ -161,7 +161,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         approvability = 0
         if positive + negative > 0:
-            approvability = (positive / (positive + negative)) * 100
+            approvability = (positive + (unsure / 2) / (positive + negative + unsure)) * 100
 
         return {
             "positive": positive,
