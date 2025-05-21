@@ -236,6 +236,7 @@ const submissions = createListResource({
   filters: {
     event: route.params.id,
   },
+  orderBy: 'approvability DESC',
   pageLength: 99999,
   auto: true,
 })
