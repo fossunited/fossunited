@@ -166,6 +166,16 @@
             <IconBrandMatrix class="w-5 text-gray-800" />
           </template>
         </FormControl>
+        <FormControl v-model="chapter.doc.whatsapp" :type="'url'" size="md" label="Whatsapp">
+          <template #prefix>
+            <IconBrandWhatsapp class="w-5 text-gray-800" />
+          </template>
+        </FormControl>
+        <FormControl v-model="chapter.doc.discord" :type="'url'" size="md" label="Discord">
+          <template #prefix>
+            <IconBrandDiscord class="w-5 text-gray-800" />
+          </template>
+        </FormControl>
       </div>
     </div>
   </div>
@@ -186,6 +196,8 @@ import {
   IconBrandX,
   IconBrandTelegram,
   IconBrandMatrix,
+  IconBrandWhatsapp,
+  IconBrandDiscord,
 } from '@tabler/icons-vue'
 
 const route = useRoute()
