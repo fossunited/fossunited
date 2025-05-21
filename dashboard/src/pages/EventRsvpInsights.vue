@@ -16,6 +16,8 @@
           { label: 'Name', key: 'name1' },
           { label: 'Email', key: 'email' },
           { label: 'I am a', key: 'im_a' },
+          { label: 'Designation', key: 'designation' },
+          { label: 'Company', key: 'company' },
         ]"
         :rows="submissions.data"
         row-key="name"
@@ -47,6 +49,34 @@ const rsvp_form = createResource({
   auto: true,
 })
 
+function censorEmail(email) {
+    const [name, domain] = email.split('@');
+
+    if (name.length <= 7) {
+        // For short usernames, keep first and last characters only
+        return name[0] + '*'.repeat(name.length - 2) + name.slice(-1) + '@' + domain;
+    }
+
+    const first3 = name.slice(0, 3);
+    const middleChar = name[Math.floor(name.length/2)]
+    const last3 = name.slice(-3);
+
+    const starCount = (name.length - 7); // total characters to replace with asterisks
+    let starCount1 = 0
+    let starCount2 = 0
+    if ((starCount/2) == (Math.floor(starCount/2))) {
+      starCount1 = starCount/2
+      starCount2 = starCount/2
+    } else {
+      // Add another asterisk to balance it out
+      starCount1 = starCount/2+1
+      starCount2 = starCount/2
+    }
+    const censored = first3 + '*'.repeat(starCount1) + middleChar + '*'.repeat(starCount2) + last3;
+
+    return censored + '@' + domain;
+}
+
 const submissions = createListResource({
   doctype: 'FOSS Event RSVP Submission',
   fields: ['*'],
@@ -57,15 +87,16 @@ const submissions = createListResource({
   auto: true,
   transform(data) {
     data.forEach((submission) => {
-      submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
+      submission.email = censorEmail(submission.email)
     })
   },
 })
 
 const downloadAttendeeList = () => {
-  const csv = submissions.data
+  let csv = 'name,email,status,designation,company\n'
+  csv = csv+submissions.data
     .map((submission) => {
-      return [submission.name1, submission.email, submission.im_a].join(',')
+      return [submission.name1, submission.email, submission.im_a, submission.designation, submission.company].join(',')
     })
     .join('\n')
 

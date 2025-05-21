@@ -9,28 +9,31 @@ from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 class FOSSEventRSVPSubmission(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
+    # ruff: noqa
 
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.types import DF
-
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
+        from frappe.types import DF
 
         chapter: DF.Data | None
+        company: DF.Data | None
         confirm_attendance: DF.Check
         custom_answers: DF.Table[FOSSCustomAnswer]
+        designation: DF.Data | None
         email: DF.Data
         event: DF.Data
         event_name: DF.Data | None
-        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]  # noqa: F722, F821
+        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
         linked_rsvp: DF.Link
         name1: DF.Data
-        status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F722, F821
+        status: DF.Literal["Pending", "Accepted", "Rejected"]
         submitted_by: DF.Link | None
     # end: auto-generated types
+    # ruff: noqa
 
     def validate(self):
         self.validate_linked_rsvp_exists()

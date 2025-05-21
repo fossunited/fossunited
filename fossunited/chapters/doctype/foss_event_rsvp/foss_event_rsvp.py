@@ -70,6 +70,19 @@ class FOSSEventRSVP(WebsiteGenerator):
                 "options": "\nStudent\nProfessional\nOther",
                 "reqd": 1,
             },
+            {
+                "fieldname": "designation",
+                "fieldtype": "Data",
+                "label": "Designation",
+                "reqd": 0,
+            },
+            {
+                "fieldname": "company",
+                "fieldtype": "Data",
+                "label": "Company/Institute",
+                "reqd": 0,
+                "description": "Your study/workplace",
+            },
         ]
         form_fields.extend(self.get_custom_questions())
         context.form_fields = form_fields
