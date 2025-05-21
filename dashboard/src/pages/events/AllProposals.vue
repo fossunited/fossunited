@@ -145,6 +145,7 @@ const statuses = ref([
   { label: 'All Status', value: '' },
   { label: 'Approved', value: 'Approved' },
   { label: 'Rejected', value: 'Rejected' },
+  { label: 'Review Pending', value: 'Review Pending' },
   { label: 'Screening', value: 'Screening' },
 ])
 
