@@ -3,7 +3,7 @@ from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.api.emailing import add_to_email_group, create_email_group
-from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 
 class FOSSEventRSVPSubmission(Document):
@@ -78,6 +78,31 @@ class FOSSEventRSVPSubmission(Document):
                 "is_published",
                 False,
             )
+            self.notify_organizers()
+
+    def notify_organizers(self):
+        # Notify the organizers that the RSVP has reached its maximum count
+        # This can be done via email or any other notification system
+        organizer_email = frappe.db.get_value(
+            CHAPTER,
+            filters={"name": self.chapter},
+            fieldname="email",
+        )
+
+        message = f"""
+        Dear Organizers,
+        <br>
+        The RSVP for {self.event_name} has reached its maximum count.<br>
+        RSVP form is now closed.<br>
+        Regards,<br>
+        FOSS United Team
+        """
+
+        frappe.sendmail(
+            recipients=organizer_email,
+            subject="RSVP Maximum Count Reached",
+            message=message,
+        )
 
     def get_max_count(self):
         max_count = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "max_rsvp_count")
