@@ -39,15 +39,8 @@
     </div>
     <div class="header-section--socials">
       {% for (k,v) in social_links.items() %}
-      {% if k == "github" %}
-        {% set k2 = k+"_light" %}
-      {% elif k == "matrix" %}
-        {% set k2 = k+"-light" %}
-      {% else %}
-        {% set k2 = k %}
-      {% endif %}
       <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
-        <img src="https://svgl.app/library/{{ k2 }}.svg" alt="{{ k|title }}" />
+        <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
       </a>
       {% endfor %}
     </div>

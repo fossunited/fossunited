@@ -256,13 +256,8 @@
       {% if user_socials %}
         <div class="header-section--socials">
           {% for (key,value) in user_socials.items() %}
-          {% if key == "github" %}
-            {% set key2 = key+"_light" %}
-          {% else %}
-            {% set key2 = key %}
-          {% endif %}
             <a rel="me nofollow" href="{{ value }}"
-              ><img src="https://svgl.app/library/{{ key2 }}.svg" alt="{{ key }}"
+              ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key }}"
             /></a>
           {% endfor %}
         </div>
