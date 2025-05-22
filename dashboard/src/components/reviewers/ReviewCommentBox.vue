@@ -1,4 +1,5 @@
 <template>
+  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br>
   <div>
     <div class="flex gap-2 items-center px-4 pt-4 border border-b-0 rounded-t">
       <span class="text-base text-gray-600">Review: </span>
@@ -19,7 +20,7 @@
   </div>
 </template>
 <script setup>
-import { createResource } from 'frappe-ui'
+import { createResource, ErrorMessage } from 'frappe-ui'
 import { ref, inject } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
 import { toast } from 'vue-sonner'
@@ -70,7 +71,23 @@ const reviewerProfile = createResource({
   auto: true,
 })
 
+const errorMessages = ref('')
+
+const validateRemark = () => {
+  const errors = []
+
+  if (review.value != "Yes" && (!remarks.value || remarks.value === "<p></p>")) {
+       errors.push("You cannot submit the review without adding remarks.")
+   }
+   return errors
+}
+
 const submitReview = () => {
+  const errors = validateRemark()
+  if (errors.length) {
+    errorMessages.value = errors.join('\n')
+    return
+  }
   createResource({
     url: 'frappe.client.insert',
     makeParams() {
@@ -89,15 +106,22 @@ const submitReview = () => {
     },
     auto: true,
     onSuccess() {
+      errorMessages.value = ''
       emits('add:review')
     },
     onError(err) {
+      errorMessages.value = err
       toast.error('Failed to submit review', err.message)
     },
   })
 }
 
 const editReview = () => {
+  const errors = validateRemark()
+  if (errors.length > 0) {
+    errorMessages.value = errors.join('\n')
+    return
+  }
   createResource({
     url: 'frappe.client.set_value',
     makeParams() {
@@ -112,9 +136,11 @@ const editReview = () => {
     },
     auto: true,
     onSuccess() {
+      errorMessages.value = ''
       emits('update:review')
     },
     onError(err) {
+      errorMessages.value = err
       toast.error('Failed to update review', err.message)
     },
   })
