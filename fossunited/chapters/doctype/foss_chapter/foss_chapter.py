@@ -23,6 +23,7 @@ class FOSSChapter(WebsiteGenerator):
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
         chapter_lead: DF.Link | None
+        chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
         chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent"]
@@ -39,7 +40,6 @@ class FOSSChapter(WebsiteGenerator):
         linkedin: DF.Data | None
         mastodon: DF.Data | None
         matrix: DF.Data | None
-        profile_img_src: DF.AttachImage | None
         represent_image: DF.AttachImage | None
         route: DF.Data | None
         slug: DF.Data | None
@@ -48,6 +48,7 @@ class FOSSChapter(WebsiteGenerator):
         whatsapp: DF.Data | None
         x: DF.Data | None
     # end: auto-generated types
+
     # ruff: noqa
 
     def before_insert(self):
@@ -159,10 +160,10 @@ class FOSSChapter(WebsiteGenerator):
 
     def get_context(self, context):
         if self.chapter_type == "City Community":
-            context.default_profile_img_src = "/assets/fossunited/images/chapter/city_profile.svg"
+            context.default_chapter_logo = "/assets/fossunited/images/chapter/city_profile.svg"
             context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
         elif self.chapter_type == STUDENT_CLUB:
-            context.default_profile_img_src = (
+            context.default_chapter_logo = (
                 "/assets/fossunited/images/chapter/foss_club_profile.svg"
             )
             context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"

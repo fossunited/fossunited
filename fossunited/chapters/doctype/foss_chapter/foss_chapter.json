@@ -15,7 +15,7 @@
   "represent_image",
   "basic_information_section",
   "banner_image",
-  "profile_img_src",
+  "chapter_logo",
   "column_break_3gye",
   "chapter_type",
   "chapter_status",
@@ -260,9 +260,9 @@
    "options": "URL"
   },
   {
-   "fieldname": "profile_img_src",
+   "fieldname": "chapter_logo",
    "fieldtype": "Attach Image",
-   "label": "Profile Image"
+   "label": "Chapter Logo"
   }
  ],
  "has_web_view": 1,
@@ -274,7 +274,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-05-21 17:48:04.587287",
+ "modified": "2025-05-22 13:05:31.327574",
  "modified_by": "arya@projectsegfau.lt",
  "module": "Chapters",
  "name": "FOSS Chapter",

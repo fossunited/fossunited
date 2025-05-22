@@ -62,18 +62,18 @@
           The ideal dimensions for a banner image are: 1240 x 300 (WxH)
         </div>
       </div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Profile Image</div>
+      <div class="font-semibold text-gray-800 border-b-2 pb-2">Chapter Logo</div>
       <div class="p-2 my-1">
         <img
-          :src="getProfileImage()"
-          alt="Profile Image"
+          :src="getChapterLogo()"
+          alt="Chapter Logo"
           class="object-cover rounded-lg aspect-[1/1]"
         />
         <div class="flex my-2 gap-2">
           <FileUploader
             :file-types="'image/*'"
             :validate-file="validateFile"
-            @success="(file) => setProfileImage(file)"
+            @success="(file) => setChapterLogo(file)"
           >
             <template #default="{ progress, uploading, openFileSelector }">
               <Button
@@ -82,7 +82,7 @@
                 :label="
                   uploading
                     ? `Uploading ${progress}`
-                    : chapter.doc.profile_img_src
+                    : chapter.doc.chapter_logo
                       ? 'Change Image'
                       : 'Upload Image'
                 "
@@ -91,16 +91,16 @@
             </template>
           </FileUploader>
           <Button
-            v-if="chapter.doc.profile_img_src"
+            v-if="chapter.doc.chapter_logo"
             :variant="'subtle'"
             theme="red"
             :size="'md'"
             :label="'Remove Image'"
-            @click="() => setProfileImage({ file_url: '' })"
+            @click="() => setChapterLogo({ file_url: '' })"
           />
         </div>
         <div class="text-sm text-gray-600">
-          The ideal dimensions for a profile image are: 120 x 120 (WxH)
+          The ideal dimensions for a chapter logo are: 120 x 120 (WxH)
         </div>
       </div>
     </div>
@@ -259,9 +259,9 @@ const setBannerImage = (file) => {
   }
 }
 
-const getProfileImage = () => {
-  if (chapter.doc.profile_img_src) {
-    return chapter.doc.profile_img_src
+const getChapterLogo = () => {
+  if (chapter.doc.chapter_logo) {
+    return chapter.doc.chapter_logo
   } else if (chapter.doc.chapter_type == 'FOSS Club') {
     return '/assets/fossunited/images/chapter/foss_club_profile.svg'
   } else {
@@ -269,14 +269,14 @@ const getProfileImage = () => {
   }
 }
 
-const setProfileImage = (file) => {
+const setChapterLogo = (file) => {
   chapter.setValue.submit({
-    profile_img_src: file.file_url,
+    chapter_logo: file.file_url,
   })
   if (file.file_url) {
-    toast.success('Profile Image updated successfully')
+    toast.success('Chapter logo updated successfully')
   } else {
-    toast.info('Profile Image removed successfully')
+    toast.info('Chapter logo removed successfully')
   }
 }
 const updateDetails = () => {
