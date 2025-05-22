@@ -249,7 +249,6 @@ class FOSSChapter(WebsiteGenerator):
             "instagram",
             "mastodon",
             "youtube",
-            "medium",
             "facebook",
             "matrix",
             "telegram",
@@ -258,6 +257,9 @@ class FOSSChapter(WebsiteGenerator):
         ]
         for k, v in self.as_dict().items():
             if k in SOCIAL_LINK_FIELDNAMES:
+                if k == "matrix":
+                    k = "matrix-light"
+
                 if v:
                     socials[k] = v
             else:

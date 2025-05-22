@@ -111,13 +111,15 @@ def get_user_socials(foss_user):
         "instagram",
         "mastodon",
         "youtube",
-        "medium",
     ]
 
     links = {}
     for field in user:
         if field in SOCIAL_LINK_FIELDNAMES and user[field]:
-            links[field] = user[field]
+            field1 = field
+            if field == "github":
+                field1 = "github_light"
+            links[field1] = user[field]
 
     return links
 
