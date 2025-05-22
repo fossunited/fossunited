@@ -147,11 +147,11 @@
             type="select"
             label="Type"
             :options="[
-              { label: 'Data', value: 'Data' },
+              { label: 'Text', value: 'Data' },
               { label: 'Select', value: 'Select' },
               { label: 'Long Text', value: 'Long Text' },
               { label: 'Text Editor', value: 'Text Editor' },
-              { label: 'Check', value: 'Check' },
+              { label: 'Checkbox', value: 'Check' },
             ]"
             description="The type of question you want to ask."
           />
