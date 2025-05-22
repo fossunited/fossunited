@@ -1,4 +1,5 @@
 <template>
+  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br>
   <div>
     <div class="flex gap-2 items-center px-4 pt-4 border border-b-0 rounded-t">
       <span class="text-base text-gray-600">Review: </span>
@@ -17,7 +18,6 @@
       :custom-actions="getCustomAction()"
     />
   </div>
-  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" />
 </template>
 <script setup>
 import { createResource, ErrorMessage } from 'frappe-ui'
@@ -77,7 +77,7 @@ const validateRemark = () => {
   const errors = []
 
   if (review.value != "Yes" && (!remarks.value || remarks.value === "<p></p>")) {
-       errors.push("cannot submit review unless remarks are added")
+       errors.push("You cannot submit the review without adding remarks.")
    }
    return errors
 }
