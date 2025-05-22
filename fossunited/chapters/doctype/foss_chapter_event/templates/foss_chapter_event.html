@@ -2,10 +2,7 @@
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
 {% block meta_block %}
-{% set page_title = doc.event_name %}
-{% set description = doc.event_name+" is being organized on "+doc.event_start_date.strftime("%A, %-d %B %Y")+" by "+doc.chapter_name+" Community. " + doc.event_description | striptags | truncate(150, False, '...', 0) %}
-{% set image = "https://og.fossunited.org/gen/events?event_name="+doc.event_name+"&event_date="+doc.event_start_date.strftime("%-d %B %Y")+"&event_type="+doc.event_type+"&event_chapter="+doc.chapter_name %}
-{{ meta_tags(page_title, description, image) }}
+{{ meta_tags(pagetitle, description, image) }}
 {% endblock %}
 
 
