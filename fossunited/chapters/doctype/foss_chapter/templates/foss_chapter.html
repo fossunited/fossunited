@@ -17,13 +17,11 @@
       />
       <div class="header--img-title-cta-section">
         <div class="header--img-title">
-          {% if profile_img_src %}
-            <img
-              src="{{ profile_img_src }}"
-              alt="{{ doc.chapter_type }} Logo"
-              class="header-profile-image ml-lg-6"
-            />
-          {% endif %}
+          <img
+            src="{{ doc.chapter_logo or default_chapter_logo }}"
+            alt="{{ doc.chapter_type }} Logo"
+            class="header-profile-image ml-lg-6"
+          />
           <h1
             class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
           >
