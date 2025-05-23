@@ -38,6 +38,7 @@ RSVP_RESPONSE = "FOSS Event RSVP Submission"
 
 # Ticket-related identifiers
 EVENT_TICKET = "FOSS Event Ticket"
+EVENT_CHECKIN = "Event Check In"
 TICKET_TRANSFER = "FOSS Event Ticket Transfer"
 TICKET_TIER = "FOSS Ticket Tier"
 

@@ -84,6 +84,15 @@
               title="Make Profile Private"
               @click="toggleProfilePrivacy()"
             />
+            <Switch
+              v-model="profile.data.show_confs"
+              size="sm"
+              label="Show conferences you have attended publicly"
+              description="Enabling this will allow others to view which FOSS United conferences you have attended till date."
+              aria-label="Show conferences you have attended publicly"
+              title="Show conferences you have attended publicly"
+              @click="toggleShowConfs()"
+            />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
             </div>
@@ -272,6 +281,26 @@ const toggleProfilePrivacy = () => {
         toast.info('Profile is now private')
       } else {
         toast.info('Profile is now public')
+      }
+      profile.fetch()
+    },
+  })
+}
+
+const toggleShowConfs = () => {
+  createResource({
+    url: 'fossunited.api.profile.toggle_show_confs',
+    makeParams() {
+      return {
+        value: profile.data.show_confs,
+      }
+    },
+    auto: true,
+    onSuccess() {
+      if (profile.data.show_confs) {
+        toast.info('Conferences will be shown on your profile page now')
+      } else {
+        toast.info('Conferences won\'t be shown on your profile page now')
       }
       profile.fetch()
     },

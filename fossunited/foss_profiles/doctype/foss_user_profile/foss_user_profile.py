@@ -8,6 +8,7 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, EVENT_CHECKIN
 
 
 class PrivateProfileError(PermissionError):
@@ -18,25 +19,25 @@ class PrivateProfileError(PermissionError):
 
 class FOSSUserProfile(WebsiteGenerator):
     # begin: auto-generated types
+    # ruff: noqa
     # This code is auto-generated. Do not modify anything in this block.
 
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from frappe.types import DF
-
-        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
             FOSSUserProfileEducation,
         )
-        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
             FOSSUserProfileWorkExperience,
         )
         from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
             FOSSUserProjects,
         )
-        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
             FOSSUserSkillMultiselect,
         )
+        from frappe.types import DF
 
         about: DF.TextEditor | None
         bio: DF.SmallText | None
@@ -59,12 +60,14 @@ class FOSSUserProfile(WebsiteGenerator):
         profile_photo: DF.AttachImage | None
         projects: DF.Table[FOSSUserProjects]
         route: DF.Data | None
+        show_confs: DF.Check
         skills: DF.TableMultiSelect[FOSSUserSkillMultiselect]
         user: DF.Link
         username: DF.Data
         website: DF.Data | None
         x: DF.Data | None
         youtube: DF.Data | None
+    # ruff: noqa
     # end: auto-generated types
 
     def validate(self):
@@ -132,6 +135,33 @@ class FOSSUserProfile(WebsiteGenerator):
                 experiences_dict[experience.company] = []
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
+
+        events = frappe.db.get_all(
+            EVENT_TICKET,
+            fields=["event", "name"],
+            filters={"email": self.email},
+            page_length=9999,
+        )
+        context.events = []
+        for val in events:
+            if frappe.db.exists(EVENT_CHECKIN, {"parent": val.name}):
+                for val2 in frappe.db.get_all(
+                    EVENT,
+                    fields=[
+                        "name",
+                        "route",
+                        "chapter",
+                        "event_start_date",
+                        "event_name",
+                        "banner_image",
+                        "must_attend",
+                        "event_location",
+                    ],
+                    filters={"name": val.event},
+                    page_length=9999,
+                ):
+                    context.events.append(val2)
+
         context.no_cache = 1
 
     def on_trash(self):
