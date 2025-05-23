@@ -1,6 +1,8 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
+import re
+import textwrap
 from datetime import datetime
 
 import frappe
@@ -216,6 +218,33 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.recent_cfp_submissions = self.get_recent_cfp_submissions()
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
         context.schedule_dict = self.get_schedule_dict()
+
+        context.pagetitle = self.event_name
+
+        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
+        context.description = (
+            self.event_name
+            + " is being organized on "
+            + self.event_start_date.strftime("%A, %-d %B %Y")
+            + " by "
+            + self.chapter_name
+            + " Community. "
+            + desc_short
+        )
+
+        context.image = (
+            "https://og.fossunited.org/gen/events?event_name="
+            + self.event_name
+            + "&event_date="
+            + self.event_start_date.strftime("%-d %B %Y")
+            + "&event_type="
+            + self.event_type
+            + "&event_chapter="
+            + self.chapter_name
+            + "&event_location="
+            + str(self.event_location)
+        )
+
         context.no_cache = 1
 
     def get_navbar_items(self):
