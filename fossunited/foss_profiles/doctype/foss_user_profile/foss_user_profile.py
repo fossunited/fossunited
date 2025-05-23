@@ -8,7 +8,7 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
-from fossunited.doctype_ids import EVENT, EVENT_TICKET, EVENT_CHECKIN
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, EVENT_CHECKIN, RSVP_RESPONSE
 
 
 class PrivateProfileError(PermissionError):
@@ -142,9 +142,16 @@ class FOSSUserProfile(WebsiteGenerator):
             filters={"email": self.email},
             page_length=9999,
         )
+
+        rsvp = frappe.db.get_all(
+            RSVP_RESPONSE,
+            fields=["event", "name", "im_a"],
+            filters={"email": self.email},
+            page_length=9999,
+        )
         context.events = []
-        for val in events:
-            if frappe.db.exists(EVENT_CHECKIN, {"parent": val.name}):
+        for val in events + rsvp:
+            if frappe.db.exists(EVENT_CHECKIN, {"parent": val.name}) or val.im_a:
                 for val2 in frappe.db.get_all(
                     EVENT,
                     fields=[
