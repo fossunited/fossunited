@@ -232,7 +232,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
-def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.session.user) -> list:
+def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
     """
     Get the list of all tickets sold for the event.
 
@@ -243,7 +243,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.sessi
         list: List of tickets sold for the event
     """
 
-    if not has_valid_permission(event_id, user):
+    if not has_valid_permission(event_id):
         frappe.throw("You are not authorized to view the tickets for this event")
 
     tickets = frappe.db.get_all(
@@ -264,7 +264,7 @@ def get_sold_tickets(event_id: str, filters: dict = {}, user: str = frappe.sessi
     return tickets
 
 
-def has_valid_permission(event_id: str, session_user: str = frappe.session.user) -> bool:
+def has_valid_permission(event_id: str) -> bool:
     """
     Check if the user has valid permission to view the tickets for the event
 
@@ -274,6 +274,7 @@ def has_valid_permission(event_id: str, session_user: str = frappe.session.user)
     Returns:
         bool: True if the user has valid permission, False otherwise
     """
+    session_user = frappe.session.user
 
     if not (
         bool(

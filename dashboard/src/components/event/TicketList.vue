@@ -137,7 +137,6 @@ const attendeesList = createResource({
         full_name: ['like', `%${filters.search_text}%`],
         tier: ['in', filters.tier],
       },
-      user: session.user,
     }
   },
   loading: true,
