@@ -18,7 +18,7 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict = {}) -> dict:
     Returns:
         dict: The attendees of the event with their checkin details
     """
-    if not has_valid_permission(event_id, frappe.session.user):
+    if not has_valid_permission(event_id):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     _filters = {"event": event_id}
@@ -75,7 +75,7 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
         attendee (dict): The attendee details / ticket details
         user (str): The user who is checking in the attendee
     """
-    if not has_valid_permission(event_id, frappe.session.user):
+    if not has_valid_permission(event_id):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     if check_if_already_checked_in(attendee["name"]):
@@ -123,7 +123,7 @@ def undo_attendee_checkin(event_id: str, attendee: dict):
         attendee (dict): The attendee details / ticket details
         user (str): The user who is undoing the check-in
     """
-    if not has_valid_permission(event_id, frappe.session.user):
+    if not has_valid_permission(event_id):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
@@ -141,7 +141,7 @@ def assign_tshirt(event_id: str, attendee: dict):
         attendee (dict): The attendee details / ticket details
         user (str): The user who is assigning the Tshirt
     """
-    if not has_valid_permission(event_id, frappe.session.user):
+    if not has_valid_permission(event_id):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
