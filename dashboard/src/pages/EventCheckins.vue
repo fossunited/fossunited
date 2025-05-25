@@ -82,7 +82,6 @@ const attendees = createResource({
   makeParams() {
     return {
       event_id: route.params.id,
-      user: session.user,
       filters: filters,
     }
   },

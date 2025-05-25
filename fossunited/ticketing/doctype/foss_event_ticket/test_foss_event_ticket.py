@@ -53,7 +53,7 @@ class TestFOSSEventTicket(IntegrationTestCase):
         frappe.set_user(self.lead_email)
 
         # When the user checks in the attendee
-        checkin_attendee(self.event.name, ticket.as_dict(), self.lead_email)
+        checkin_attendee(self.event.name, ticket.as_dict())
 
         # Then the check-in data should be saved
         ticket.reload()
@@ -62,7 +62,7 @@ class TestFOSSEventTicket(IntegrationTestCase):
         # When the user tries to check-in the attendee again on the same day
         # Then the user should not be able to check-in the attendee again
         with self.assertRaises(frappe.ValidationError):
-            checkin_attendee(self.event.name, ticket.as_dict(), self.lead_email)
+            checkin_attendee(self.event.name, ticket.as_dict())
 
     def test_checkin_as_non_chapter_member(self):
         fake = Faker()
@@ -87,7 +87,7 @@ class TestFOSSEventTicket(IntegrationTestCase):
         # When the user checks in the attendee
         # Then the user should not have permission to check-in the attendee
         with self.assertRaises(frappe.PermissionError):
-            checkin_attendee(self.event.name, ticket.as_dict(), "test2@example.com")
+            checkin_attendee(self.event.name, ticket.as_dict())
 
     def test_create_when_tickets_closed(self):
         # Given a paid event with ticket status as "Closed"

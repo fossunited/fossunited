@@ -7,9 +7,7 @@ from fossunited.doctype_ids import EVENT_TICKET
 
 
 @frappe.whitelist()
-def get_attendee_with_checkin_data(
-    event_id: str, user: str = frappe.session.user, filters: dict = {}
-) -> dict:
+def get_attendee_with_checkin_data(event_id: str, filters: dict = {}) -> dict:
     """
     Get the attendees of the event with their checkin details
 
@@ -20,7 +18,7 @@ def get_attendee_with_checkin_data(
     Returns:
         dict: The attendees of the event with their checkin details
     """
-    if not has_valid_permission(event_id, user):
+    if not has_valid_permission(event_id, frappe.session.user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     _filters = {"event": event_id}
@@ -69,9 +67,7 @@ def get_checkin_data(attendee_id: str) -> dict:
 
 
 @frappe.whitelist()
-def checkin_attendee(
-    event_id: str, attendee: dict, user: str = frappe.session.user, assign_tshirt: bool = False
-):
+def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False):
     """
     Check-in the attendee for the event.
 
@@ -79,7 +75,7 @@ def checkin_attendee(
         attendee (dict): The attendee details / ticket details
         user (str): The user who is checking in the attendee
     """
-    if not has_valid_permission(event_id, user):
+    if not has_valid_permission(event_id, frappe.session.user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     if check_if_already_checked_in(attendee["name"]):
@@ -119,7 +115,7 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
 
 
 @frappe.whitelist()
-def undo_attendee_checkin(event_id: str, attendee: dict, user: str = frappe.session.user):
+def undo_attendee_checkin(event_id: str, attendee: dict):
     """
     Undo the check-in for the attendee
 
@@ -127,7 +123,7 @@ def undo_attendee_checkin(event_id: str, attendee: dict, user: str = frappe.sess
         attendee (dict): The attendee details / ticket details
         user (str): The user who is undoing the check-in
     """
-    if not has_valid_permission(event_id, user):
+    if not has_valid_permission(event_id, frappe.session.user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
@@ -136,7 +132,7 @@ def undo_attendee_checkin(event_id: str, attendee: dict, user: str = frappe.sess
 
 
 @frappe.whitelist()
-def assign_tshirt(event_id: str, attendee: dict, user: str = frappe.session.user):
+def assign_tshirt(event_id: str, attendee: dict):
     """
     Assign Tshirt to the attendee
 
@@ -145,7 +141,7 @@ def assign_tshirt(event_id: str, attendee: dict, user: str = frappe.session.user
         attendee (dict): The attendee details / ticket details
         user (str): The user who is assigning the Tshirt
     """
-    if not has_valid_permission(event_id, user):
+    if not has_valid_permission(event_id, frappe.session.user):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
