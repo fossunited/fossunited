@@ -196,30 +196,3 @@ def get_events_by_open_cfp() -> list:
         )
 
     return cfps_to_review
-
-
-@frappe.whitelist()
-def has_cfp_review(submission_id: str, reviewer: str = frappe.session.user) -> bool:
-    """
-    Check if the reviewer has reviewed the submission
-
-    Args:
-        submission_id (str): The id of the submission
-        reviewer (str): The reviewer's email
-
-    Returns:
-        bool: True if the reviewer has reviewed the submission, False otherwise
-    """
-
-    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"user": reviewer}, "name")
-
-    return bool(
-        frappe.db.exists(
-            PROPOSAL_REVIEW,
-            {
-                "parent": submission_id,
-                "parenttype": PROPOSAL,
-                "reviewer_profile": reviewer_profile,
-            },
-        )
-    )

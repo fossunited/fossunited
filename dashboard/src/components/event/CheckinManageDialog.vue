@@ -114,7 +114,6 @@ const assignTshirt = createResource({
     return {
       event_id: route.params.id,
       attendee: props.selectedAttendee,
-      user: session.user,
     }
   },
   onSuccess() {
@@ -131,7 +130,6 @@ const undoAttendeeCheckin = createResource({
     return {
       event_id: route.params.id,
       attendee: props.selectedAttendee,
-      user: session.user,
     }
   },
   onSuccess() {
