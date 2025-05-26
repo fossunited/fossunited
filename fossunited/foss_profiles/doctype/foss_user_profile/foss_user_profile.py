@@ -127,35 +127,34 @@ class FOSSUserProfile(WebsiteGenerator):
 
         events = frappe.db.get_all(
             EVENT_TICKET,
-            fields=["event", "name"],
+            pluck="event",
             filters={"email": self.email},
             page_length=9999,
         )
 
         rsvp = frappe.db.get_all(
             RSVP_RESPONSE,
-            fields=["event", "im_a"],
+            pluck="event",
             filters={"email": self.email},
             page_length=9999,
         )
         for val in events + rsvp:
-            if frappe.db.exists(EVENT_CHECKIN, {"parent": val.name}) or val.im_a:
-                for val2 in frappe.db.get_all(
-                    EVENT,
-                    fields=[
-                        "name",
-                        "route",
-                        "chapter",
-                        "event_start_date",
-                        "event_name",
-                        "banner_image",
-                        "must_attend",
-                        "event_location",
-                    ],
-                    filters={"name": val.event},
-                    page_length=9999,
-                ):
-                    activity.append(val2)
+            for val2 in frappe.db.get_all(
+                EVENT,
+                fields=[
+                    "name",
+                    "route",
+                    "chapter",
+                    "event_start_date",
+                    "event_name",
+                    "banner_image",
+                    "must_attend",
+                    "event_location",
+                ],
+                filters={"name": val.event},
+                page_length=9999,
+            ):
+                activity.append(val2)
 
         return activity
 
