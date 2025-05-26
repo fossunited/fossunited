@@ -115,7 +115,7 @@ def get_session_user_profile():
             "user",
             "name",
             "is_private",
-            "show_confs",
+            "show_activity",
             "github",
             "gitlab",
             "linkedin",
