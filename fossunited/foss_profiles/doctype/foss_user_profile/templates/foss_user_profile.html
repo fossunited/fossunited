@@ -199,7 +199,7 @@
       <h3 class="subtitle">Events Attended</h3>
       {% if doc.show_confs %}
       <div class="events-grid-4">
-        {% for event in events %}{{ event_card(event) }}{% endfor %}
+        {% for event in activities %}{{ event_card(event) }}{% endfor %}
       </div>
       {% else %}
       <div>User has chosen to keep their attended events anonymous</div>

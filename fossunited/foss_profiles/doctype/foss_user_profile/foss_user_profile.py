@@ -122,19 +122,8 @@ class FOSSUserProfile(WebsiteGenerator):
     def set_route(self):
         self.route = f"u/{self.username}"
 
-    def get_context(self, context):
-        if self.is_private and frappe.session.user not in (
-            "Administrator",
-            self.user,
-        ):
-            frappe.throw("Profile is Private", PrivateProfileError)
-
-        experiences_dict = {}
-        for experience in self.experience:
-            if experience.company not in experiences_dict:
-                experiences_dict[experience.company] = []
-            experiences_dict[experience.company].append(experience.as_dict())
-        context.experiences_dict = experiences_dict
+    def get_user_activity(self):
+        activity = []
 
         events = frappe.db.get_all(
             EVENT_TICKET,
@@ -145,11 +134,10 @@ class FOSSUserProfile(WebsiteGenerator):
 
         rsvp = frappe.db.get_all(
             RSVP_RESPONSE,
-            fields=["event", "name", "im_a"],
+            fields=["event", "im_a"],
             filters={"email": self.email},
             page_length=9999,
         )
-        context.events = []
         for val in events + rsvp:
             if frappe.db.exists(EVENT_CHECKIN, {"parent": val.name}) or val.im_a:
                 for val2 in frappe.db.get_all(
@@ -167,7 +155,25 @@ class FOSSUserProfile(WebsiteGenerator):
                     filters={"name": val.event},
                     page_length=9999,
                 ):
-                    context.events.append(val2)
+                    activity.append(val2)
+
+        return activity
+
+    def get_context(self, context):
+        if self.is_private and frappe.session.user not in (
+            "Administrator",
+            self.user,
+        ):
+            frappe.throw("Profile is Private", PrivateProfileError)
+
+        experiences_dict = {}
+        for experience in self.experience:
+            if experience.company not in experiences_dict:
+                experiences_dict[experience.company] = []
+            experiences_dict[experience.company].append(experience.as_dict())
+        context.experiences_dict = experiences_dict
+
+        context.activities = self.get_user_activity()
 
         context.no_cache = 1
 

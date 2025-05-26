@@ -87,10 +87,10 @@
             <Switch
               v-model="profile.data.show_confs"
               size="sm"
-              label="Show conferences you have attended publicly"
-              description="Enabling this will allow others to view which FOSS United conferences you have attended till date."
-              aria-label="Show conferences you have attended publicly"
-              title="Show conferences you have attended publicly"
+              label="Show events you have attended publicly"
+              description="Enabling this will allow others to view which FOSS United events you have attended till date."
+              aria-label="Show events you have attended publicly"
+              title="Show events you have attended publicly"
               @click="toggleShowConfs()"
             />
             <div class="col-span-2 py-1 border-b">
@@ -298,9 +298,9 @@ const toggleShowConfs = () => {
     auto: true,
     onSuccess() {
       if (profile.data.show_confs) {
-        toast.info('Conferences will be shown on your profile page now')
+        toast.info('Events will be shown on your profile page now')
       } else {
-        toast.info('Conferences won\'t be shown on your profile page now')
+        toast.info('Events won\'t be shown on your profile page now')
       }
       profile.fetch()
     },
