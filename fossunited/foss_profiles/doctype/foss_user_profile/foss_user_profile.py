@@ -8,7 +8,7 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
-from fossunited.doctype_ids import EVENT, EVENT_TICKET, EVENT_CHECKIN, RSVP_RESPONSE
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, RSVP_RESPONSE
 
 
 class PrivateProfileError(PermissionError):
@@ -151,7 +151,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     "must_attend",
                     "event_location",
                 ],
-                filters={"name": val.event},
+                filters={"name": val},
                 page_length=9999,
             ):
                 activity.append(val2)
