@@ -12,7 +12,7 @@
   "meta_info_section",
   "is_published",
   "is_private",
-  "show_confs",
+  "show_activity",
   "column_break_jkxk",
   "route",
   "header_section",
@@ -276,9 +276,9 @@
   },
   {
    "default": "0",
-   "fieldname": "show_confs",
+   "fieldname": "show_activity",
    "fieldtype": "Check",
-   "label": "Show conferences you have attended publicly"
+   "label": "Show Community Activity"
   }
  ],
  "has_web_view": 1,
@@ -286,7 +286,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-05-23 17:55:17.019179",
+ "modified": "2025-05-26 15:44:50.259551",
  "modified_by": "arya@projectsegfau.lt",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",

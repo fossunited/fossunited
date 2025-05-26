@@ -85,13 +85,13 @@
               @click="toggleProfilePrivacy()"
             />
             <Switch
-              v-model="profile.data.show_confs"
+              v-model="profile.data.show_activity"
               size="sm"
-              label="Show events you have attended publicly"
+              label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
-              aria-label="Show events you have attended publicly"
-              title="Show events you have attended publicly"
-              @click="toggleShowConfs()"
+              aria-label="Show Community Activity"
+              title="Show Community Activity"
+              @click="toggleShowActivity()"
             />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
@@ -287,20 +287,20 @@ const toggleProfilePrivacy = () => {
   })
 }
 
-const toggleShowConfs = () => {
+const toggleShowActivity = () => {
   createResource({
-    url: 'fossunited.api.profile.toggle_show_confs',
+    url: 'fossunited.api.profile.toggle_show_activity',
     makeParams() {
       return {
-        value: profile.data.show_confs,
+        value: profile.data.show_activity,
       }
     },
     auto: true,
     onSuccess() {
-      if (profile.data.show_confs) {
-        toast.info('Events will be shown on your profile page now')
+      if (profile.data.show_activity) {
+        toast.info('Community Activity will be shown on your profile page now')
       } else {
-        toast.info('Events won\'t be shown on your profile page now')
+        toast.info('Community Activity won\'t be shown on your profile page now')
       }
       profile.fetch()
     },

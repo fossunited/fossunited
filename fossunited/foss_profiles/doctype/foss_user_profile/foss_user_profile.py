@@ -60,7 +60,7 @@ class FOSSUserProfile(WebsiteGenerator):
         profile_photo: DF.AttachImage | None
         projects: DF.Table[FOSSUserProjects]
         route: DF.Data | None
-        show_confs: DF.Check
+        show_activity: DF.Check
         skills: DF.TableMultiSelect[FOSSUserSkillMultiselect]
         user: DF.Link
         username: DF.Data

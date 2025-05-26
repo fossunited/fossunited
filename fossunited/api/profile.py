@@ -90,10 +90,10 @@ def toggle_profile_privacy(value):
 
 
 @frappe.whitelist()
-def toggle_show_confs(value):
+def toggle_show_activity(value):
     user_doc = get_session_user_profile()
     try:
-        frappe.db.set_value(USER_PROFILE, user_doc.name, "show_confs", value)
+        frappe.db.set_value(USER_PROFILE, user_doc.name, "show_activity", value)
         return True
     except Exception as e:
         frappe.throw(str(e))

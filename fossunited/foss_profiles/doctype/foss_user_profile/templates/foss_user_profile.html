@@ -6,7 +6,7 @@
     <div class="container">
       <div class="profile-content-section">
         <div class="horizontal-navbar px-8 pt-2">
-          {% set nav_items = ['about', 'work', 'resume', 'projects', 'events'] %}
+          {% set nav_items = ['about', 'work', 'resume', 'projects', 'activity'] %}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
@@ -33,7 +33,7 @@
           {{ render_experience() }} {{ render_education() }}
         </div>
         <div class="content-div" id="projects">{{ render_projects() }}</div>
-        <div class="content-div" id="events">{{ render_events() }}</div>
+        <div class="content-div" id="events">{{ render_activity() }}</div>
       </div>
     </div>
   </div>
@@ -189,7 +189,7 @@
     {% endif %}
   </div>
 {% endmacro %}
-{% macro render_events() %}
+{% macro render_activity() %}
   {%
     from
     'fossunited/templates/macros/event_card.html' import event_card
@@ -197,12 +197,12 @@
   <div class="profile-content-div" id="events">
     <div class="container my-5">
       <h3 class="subtitle">Events Attended</h3>
-      {% if doc.show_confs %}
+      {% if doc.show_activity %}
       <div class="events-grid-4">
-        {% for event in activities %}{{ event_card(event) }}{% endfor %}
+        {% for activity in activities %}{{ event_card(activity) }}{% endfor %}
       </div>
       {% else %}
-      <div>User has chosen to keep their attended events anonymous</div>
+      <div>User has chosen to keep their Community Activity anonymous</div>
       {% endif %}
       </div>
   </div>
