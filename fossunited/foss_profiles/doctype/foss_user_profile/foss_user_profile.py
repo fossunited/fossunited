@@ -19,25 +19,25 @@ class PrivateProfileError(PermissionError):
 
 class FOSSUserProfile(WebsiteGenerator):
     # begin: auto-generated types
-    # ruff: noqa
     # This code is auto-generated. Do not modify anything in this block.
 
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
+        from frappe.types import DF
+
+        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (  # noqa: E501
             FOSSUserProfileEducation,
         )
-        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
+        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
             FOSSUserProfileWorkExperience,
         )
-        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
+        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (  # noqa: E501
             FOSSUserProjects,
         )
-        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
             FOSSUserSkillMultiselect,
         )
-        from frappe.types import DF
 
         about: DF.TextEditor | None
         bio: DF.SmallText | None
@@ -67,7 +67,6 @@ class FOSSUserProfile(WebsiteGenerator):
         website: DF.Data | None
         x: DF.Data | None
         youtube: DF.Data | None
-    # ruff: noqa
     # end: auto-generated types
 
     def validate(self):
@@ -125,36 +124,37 @@ class FOSSUserProfile(WebsiteGenerator):
     def get_user_activity(self):
         activity = []
 
-        events = frappe.db.get_all(
+        paid_event_ids = frappe.db.get_all(
             EVENT_TICKET,
             pluck="event",
             filters={"email": self.email},
             page_length=9999,
         )
 
-        rsvp = frappe.db.get_all(
+        rsvpd_event_ids = frappe.db.get_all(
             RSVP_RESPONSE,
             pluck="event",
             filters={"email": self.email},
             page_length=9999,
         )
-        for val in events + rsvp:
-            for val2 in frappe.db.get_all(
-                EVENT,
-                fields=[
-                    "name",
-                    "route",
-                    "chapter",
-                    "event_start_date",
-                    "event_name",
-                    "banner_image",
-                    "must_attend",
-                    "event_location",
-                ],
-                filters={"name": val},
-                page_length=9999,
-            ):
-                activity.append(val2)
+        for val in rsvpd_event_ids + paid_event_ids:
+            activity.append(
+                frappe.db.get_value(
+                    EVENT,
+                    fieldname=[
+                        "name",
+                        "route",
+                        "chapter",
+                        "event_start_date",
+                        "event_name",
+                        "banner_image",
+                        "must_attend",
+                        "event_location",
+                    ],
+                    filters={"name": val},
+                    as_dict=1,
+                )
+            )
 
         return activity
 
