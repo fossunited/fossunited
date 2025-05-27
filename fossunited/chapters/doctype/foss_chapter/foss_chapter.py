@@ -8,17 +8,17 @@ from fossunited.doctype_ids import EVENT, STUDENT_CLUB, USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
-    # ruff: noqa
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
-        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
+        from frappe.types import DF
+
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (  # noqa: E501
             FOSSChapterLeadTeamMember,
         )
-        from frappe.types import DF
 
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
@@ -26,8 +26,8 @@ class FOSSChapter(WebsiteGenerator):
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent"]
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]
+        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent"]  # noqa: F722, F821
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
         city: DF.Link | None
         country: DF.Link | None
         discord: DF.Data | None
@@ -48,8 +48,6 @@ class FOSSChapter(WebsiteGenerator):
         whatsapp: DF.Data | None
         x: DF.Data | None
     # end: auto-generated types
-
-    # ruff: noqa
 
     def before_insert(self):
         self.handle_member_addition()
@@ -152,7 +150,8 @@ class FOSSChapter(WebsiteGenerator):
 
         if frappe.db.exists("FOSS Chapter", {"slug": self.slug, "name": ["!=", self.name]}):
             frappe.throw(
-                f"Chapter with slug {self.slug} already exists", frappe.UniqueValidationError
+                f"Chapter with slug {self.slug} already exists",
+                frappe.UniqueValidationError,
             )
 
         if " " in self.slug:
