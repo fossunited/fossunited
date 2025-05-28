@@ -84,6 +84,15 @@
               title="Make Profile Private"
               @click="toggleProfilePrivacy()"
             />
+            <Switch
+              v-model="profile.data.show_activity"
+              size="sm"
+              label="Show Community Activity"
+              description="Enabling this will allow others to view which FOSS United events you have attended till date."
+              aria-label="Show Community Activity"
+              title="Show Community Activity"
+              @click="toggleShowActivity()"
+            />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
             </div>
@@ -272,6 +281,26 @@ const toggleProfilePrivacy = () => {
         toast.info('Profile is now private')
       } else {
         toast.info('Profile is now public')
+      }
+      profile.fetch()
+    },
+  })
+}
+
+const toggleShowActivity = () => {
+  createResource({
+    url: 'fossunited.api.profile.toggle_show_activity',
+    makeParams() {
+      return {
+        value: profile.data.show_activity,
+      }
+    },
+    auto: true,
+    onSuccess() {
+      if (profile.data.show_activity) {
+        toast.info('Community Activity will be shown on your profile page now')
+      } else {
+        toast.info('Community Activity won\'t be shown on your profile page now')
       }
       profile.fetch()
     },

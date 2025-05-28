@@ -8,6 +8,7 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, RSVP_RESPONSE
 
 
 class PrivateProfileError(PermissionError):
@@ -31,7 +32,7 @@ class FOSSUserProfile(WebsiteGenerator):
         from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
             FOSSUserProfileWorkExperience,
         )
-        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
+        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (  # noqa: E501
             FOSSUserProjects,
         )
         from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
@@ -59,6 +60,7 @@ class FOSSUserProfile(WebsiteGenerator):
         profile_photo: DF.AttachImage | None
         projects: DF.Table[FOSSUserProjects]
         route: DF.Data | None
+        show_activity: DF.Check
         skills: DF.TableMultiSelect[FOSSUserSkillMultiselect]
         user: DF.Link
         username: DF.Data
@@ -119,6 +121,43 @@ class FOSSUserProfile(WebsiteGenerator):
     def set_route(self):
         self.route = f"u/{self.username}"
 
+    def get_user_activity(self):
+        activity = []
+
+        paid_event_ids = frappe.db.get_all(
+            EVENT_TICKET,
+            pluck="event",
+            filters={"email": self.email},
+            page_length=9999,
+        )
+
+        rsvpd_event_ids = frappe.db.get_all(
+            RSVP_RESPONSE,
+            pluck="event",
+            filters={"email": self.email},
+            page_length=9999,
+        )
+        for val in rsvpd_event_ids + paid_event_ids:
+            activity.append(
+                frappe.db.get_value(
+                    EVENT,
+                    fieldname=[
+                        "name",
+                        "route",
+                        "chapter",
+                        "event_start_date",
+                        "event_name",
+                        "banner_image",
+                        "must_attend",
+                        "event_location",
+                    ],
+                    filters={"name": val},
+                    as_dict=1,
+                )
+            )
+
+        return activity
+
     def get_context(self, context):
         if self.is_private and frappe.session.user not in (
             "Administrator",
@@ -132,6 +171,9 @@ class FOSSUserProfile(WebsiteGenerator):
                 experiences_dict[experience.company] = []
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
+
+        context.activities = self.get_user_activity()
+
         context.no_cache = 1
 
     def on_trash(self):

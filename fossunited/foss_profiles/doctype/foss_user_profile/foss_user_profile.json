@@ -12,6 +12,7 @@
     "meta_info_section",
     "is_published",
     "is_private",
+    "show_activity",
     "column_break_jkxk",
     "route",
     "header_section",
@@ -272,6 +273,12 @@
       "fieldname": "is_private",
       "fieldtype": "Check",
       "label": "Is Private?"
+    },
+    {
+      "default": "0",
+      "fieldname": "show_activity",
+      "fieldtype": "Check",
+      "label": "Show Community Activity"
     }
   ],
   "has_web_view": 1,
@@ -279,8 +286,8 @@
   "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2024-07-02 17:36:34.436149",
-  "modified_by": "Administrator",
+  "modified": "2025-05-26 15:44:50.259551",
+  "modified_by": "arya@projectsegfau.lt",
   "module": "FOSS Profiles",
   "name": "FOSS User Profile",
   "naming_rule": "Random",
@@ -308,6 +315,7 @@
     }
   ],
   "quick_entry": 1,
+  "row_format": "Dynamic",
   "search_fields": "username, full_name, email",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
