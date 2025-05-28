@@ -1,6 +1,5 @@
 <template>
   <div
-    v-if="logoPath"
     class="w-36 h-36 aspect-square border rounded p-3 flex items-center justify-center bg-white"
   >
     <img :src="logoPath" alt="Event Logo" class="object-contain" />
@@ -10,8 +9,7 @@
 defineProps({
   logoPath: {
     type: String,
-    required: false,
-    default: null,
+    required: true,
   },
 })
 </script>
