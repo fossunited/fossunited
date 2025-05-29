@@ -19,6 +19,7 @@
         v-show="selectedTab === 0"
         v-model:references="submission.doc.references"
         v-model:fields="formFields"
+        :show-withdrawal="true"
         :show-title="false"
         class="border-none p-6"
       />
@@ -154,6 +155,7 @@ const saveProposal = () => {
     formFields.value,
     submission.doc.references,
     speakerFields.value,
+    submission.doc,
   )
 
   submission.setValue

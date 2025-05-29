@@ -320,7 +320,7 @@ export const validateSpeakerFields = (speakers) => {
   return errors
 }
 
-const getTransformedProposalFields = (proposalFields) => {
+const getTransformedProposalFields = (proposalFields, originalValues) => {
   const transformedFields = {}
   const customAnswers = []
 
@@ -334,9 +334,13 @@ const getTransformedProposalFields = (proposalFields) => {
     } else if (field.fieldname == 'session_categories') {
       let categories = field.value.join('\n')
       transformedFields['session_categories'] = categories
-    } else if (field.fieldname == 'withdrawn') {
+    } else if (field.fieldname == 'withdrawn' && originalValues != {}) {
       if (field.value == true) {
         transformedFields['status'] = 'Withdrawn'
+      } else if (originalValues['status'] == 'Withdrawn') {
+        transformedFields['status'] = 'Review Pending'
+      } else {
+        transformedFields['status'] = originalValues['status']
       }
     } else {
       transformedFields[field.fieldname] = field.value
@@ -376,9 +380,9 @@ const getTransformedSpeakers = (speakers) => {
   }
 }
 
-export const getTransformedSubmissionFields = (proposalFields, referenceItems, speakers) => {
+export const getTransformedSubmissionFields = (proposalFields, referenceItems, speakers, originalValues) => {
   return {
-    ...getTransformedProposalFields(proposalFields),
+    ...getTransformedProposalFields(proposalFields, originalValues),
     ...getTransformedReferenceItems(referenceItems),
     ...getTransformedSpeakers(speakers),
   }
