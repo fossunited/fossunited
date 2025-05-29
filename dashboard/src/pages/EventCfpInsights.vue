@@ -108,6 +108,10 @@
                     label: 'Review Pending',
                     value: 'Review Pending',
                   },
+                  {
+                    label: 'Withdrawn',
+                    value: 'Withdrawn',
+                  },
                 ]"
               />
               <Button :variant="'solid'" size="md" label="Update Status" @click="setCfpStatus" />

@@ -40,8 +40,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         event_name: DF.Data | None
         first_name: DF.Data | None
         full_name: DF.Data | None
-        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
-        is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
+        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821, F722
+        is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821, F722
         is_published: DF.Check
         key_takeaways: DF.TextEditor | None
         last_name: DF.Data | None
@@ -55,10 +55,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         route: DF.Data | None
         session_categories: DF.Text | None
         session_type: DF.Literal[
-            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F722, F821
+            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F821, F722, E501
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
-        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected"]  # noqa: F722, F821
+        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]  # noqa: F821, F722
         submitted_by: DF.Link | None
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None
@@ -108,6 +108,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             "Review Pending": "orange",
             "Screening": "blue",
             "Approved": "green",
+            "Withdrawn": "red",
             "Rejected": "red",
         }
         context.tabs = [

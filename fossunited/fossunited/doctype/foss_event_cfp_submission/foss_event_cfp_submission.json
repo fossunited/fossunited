@@ -146,7 +146,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Review Pending\nScreening\nApproved\nRejected",
+   "options": "Review Pending\nScreening\nApproved\nRejected\nWithdrawn",
    "permlevel": 2
   },
   {
@@ -333,8 +333,8 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-03-30 13:12:40.743265",
- "modified_by": "Administrator",
+ "modified": "2025-05-29 17:50:51.829599",
+ "modified_by": "arya@projectsegfau.lt",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
  "naming_rule": "Random",

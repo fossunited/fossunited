@@ -11,6 +11,13 @@ export const getProposalFormFields = (cfpData) => {
       value: '',
     },
     {
+      label: 'Withdraw Proposal',
+      fieldname: 'withdrawn',
+      fieldtype: 'checkbox',
+      required: false,
+      value: false,
+    },
+    {
       label: 'Session Type',
       fieldname: 'session_type',
       fieldtype: 'radio_group',
@@ -327,6 +334,10 @@ const getTransformedProposalFields = (proposalFields) => {
     } else if (field.fieldname == 'session_categories') {
       let categories = field.value.join('\n')
       transformedFields['session_categories'] = categories
+    } else if (field.fieldname == 'withdrawn') {
+      if (field.value == true) {
+        transformedFields['status'] = 'Withdrawn'
+      }
     } else {
       transformedFields[field.fieldname] = field.value
     }
