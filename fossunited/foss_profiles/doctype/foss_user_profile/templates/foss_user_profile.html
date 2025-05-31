@@ -195,17 +195,53 @@
     'fossunited/templates/macros/event_card.html' import event_card
   %}
   <div class="profile-content-div" id="activity">
+    {% if doc.show_activity %}
+    <div class="container my-5">
+      <h3 class="subtitle">Talks Given</h3>
+      {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
+    </div>
+
     <div class="container my-5">
       <h3 class="subtitle">Events Attended</h3>
-      {% if doc.show_activity %}
       <div class="events-grid-4">
-        {% for activity in activities %}{{ event_card(activity) }}{% endfor %}
+        {% for event in attended %}{{ event_card(event) }}{% endfor %}
       </div>
-      {% else %}
-      <div>User has chosen to keep their Community Activity anonymous</div>
-      {% endif %}
-      </div>
+    </div>
+    {% else %}
+    <div>User has chosen to keep their Community Activity anonymous</div>
+    {% endif %}
   </div>
+{% endmacro %}
+{% macro speaker_card(talk) %}
+  <a
+    class="talk-card"
+    data-docname="{{ talk.name }}"
+    data-route="{{ talk.route }}"
+    href="/{{ talk.route }}"
+    aria-description="User is giving a talk about {{ talk.talk_title }} at {{ talk.event_name }} happening on {{ talk.event_start_date.strftime('%d %b %Y') }} at {{ talk.event_location or 'To Be Announced' }}. Click to learn more about the talk."
+  >
+    <div class='talk-card--container'>
+      <div class=talk-card--meta>
+        <div class=talk-card--event-name>
+          {% if talk.chapter %}
+          {% set chapter = frappe.get_doc("FOSS Chapter", talk.chapter) %}
+          <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name">
+            {% if chapter.chapter_type == 'FOSS Club' %}
+              <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
+              <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+            {% else %}
+              <span class="fff-forward">{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span>
+            {% endif %}
+          </div>
+          {% endif %}
+          <div class="talk-card--event-name-text">{{ talk.event_name }}</div>
+        </div>
+        <div class=talk-card--type>{{ talk.session_type }}</div>
+      </div>
+      <div class=talk-card--title>{{ talk.talk_title }}</div>
+    </div>
+    <div class=talk-card--location-date>{{ talk.event_start_date.strftime("%d %b %Y") }} | {{ (talk.event_location or 'To Be Announced' )}}</div>
+  </a>
 {% endmacro %}
 {% macro profile_header() %}
   <div class="container">
