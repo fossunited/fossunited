@@ -202,6 +202,11 @@
     </div>
 
     <div class="container my-5">
+      <h3 class="subtitle">Chapter Volunteership</h3>
+      {% for chapter in volunteered %}{{ chapter_card(chapter) }}{% endfor %}
+    </div>
+
+    <div class="container my-5">
       <h3 class="subtitle">Events Attended</h3>
       <div class="events-grid-4">
         {% for event in attended %}{{ event_card(event) }}{% endfor %}
@@ -211,6 +216,30 @@
     <div>User has chosen to keep their Community Activity anonymous</div>
     {% endif %}
   </div>
+{% endmacro %}
+{% macro chapter_card(chapter) %}
+  <a
+    class="talk-card"
+    data-docname="{{ chapter.chapter_name }}"
+    data-route="{{ chapter.route }}"
+    href="/{{ chapter.route }}"
+    aria-description="{{ chapter.chapter_name }}"
+  >
+    <div class='talk-card--container'>
+      <div class=talk-card--meta>
+        <div class=talk-card--event-name>
+          <div class="city-image">
+            <img src="{{ chapter.chapter_logo or chapter.represent_img }}" alt="FOSS Chapter Logo" />
+          </div>
+        </div>
+      </div>
+      <div class=talk-card--type>{{ chapter.role }}</div>
+      <div class=talk-card--title>{{ chapter.chapter_name }}</div>
+    </div>
+    <div class=talk-card--location-date>{{ chapter.about_chapter }}</div>
+    <div class=talk-card--location-date>{{ chapter.chapter_type }} | {{ chapter.chapter_status }}</div>
+  </a>
+  <br/>
 {% endmacro %}
 {% macro speaker_card(talk) %}
   <a
@@ -242,6 +271,7 @@
     </div>
     <div class=talk-card--location-date>{{ talk.event_start_date.strftime("%d %b %Y") }} | {{ (talk.event_location or 'To Be Announced' )}}</div>
   </a>
+  <br/>
 {% endmacro %}
 {% macro profile_header() %}
   <div class="container">

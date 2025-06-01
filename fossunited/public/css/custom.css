@@ -1537,12 +1537,6 @@ h6 {
   align-items: center;
   align-self: stretch;
 }
-.talk-card--meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-}
 
 .talk-card--event-name {
   display: flex;
@@ -1593,6 +1587,12 @@ h6 {
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+}
+
+.city-image {
+  max-height: 8rem;
+  max-width: 8rem;
+  background-color: #1a1a1a;
 }
 
 .members-grid-6 {
@@ -2703,6 +2703,12 @@ h6 {
 
   .talk-card {
     width: 100%;
+  }
+
+  .city-image {
+    max-width: 2rem;
+    max-height: 2rem;
+    background-color: #1a1a1a;
   }
 
   .members-grid-6 {

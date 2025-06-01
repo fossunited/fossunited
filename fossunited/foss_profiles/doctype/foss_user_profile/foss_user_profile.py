@@ -8,7 +8,14 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
-from fossunited.doctype_ids import EVENT, EVENT_TICKET, PROPOSAL, RSVP_RESPONSE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CHAPTER_MEMBER,
+    EVENT,
+    EVENT_TICKET,
+    PROPOSAL,
+    RSVP_RESPONSE,
+)
 
 
 class PrivateProfileError(PermissionError):
@@ -184,7 +191,36 @@ class FOSSUserProfile(WebsiteGenerator):
                 | val
             )
 
-        return attended, talked
+        volunteered = []
+
+        volunteer_chapters = frappe.db.get_all(
+            CHAPTER_MEMBER,
+            fields=["parent", "role"],
+            filters={"email": self.email},
+            page_length=9999,
+        )
+
+        for val in volunteer_chapters:
+            volunteered.append(
+                frappe.db.get_value(
+                    CHAPTER,
+                    fieldname=[
+                        "name",
+                        "route",
+                        "chapter_logo",
+                        "represent_image",
+                        "about_chapter",
+                        "chapter_type",
+                        "chapter_name",
+                        "chapter_status",
+                    ],
+                    filters={"name": val.parent},
+                    as_dict=1,
+                )
+                | val
+            )
+
+        return attended, talked, volunteered
 
     def get_context(self, context):
         if self.is_private and frappe.session.user not in (
@@ -200,7 +236,7 @@ class FOSSUserProfile(WebsiteGenerator):
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
 
-        context.attended, context.talked = self.get_user_activity()
+        context.attended, context.talked, context.volunteered = self.get_user_activity()
 
         context.no_cache = 1
 
