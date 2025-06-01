@@ -107,6 +107,24 @@ const submitReview = () => {
     auto: true,
     onSuccess() {
       errorMessages.value = ''
+      createResource({
+        url: 'fossunited.api.emailing.notify_proposer_on_review',
+        makeParams() {
+          return {
+            submission_id: props.submissionId,
+            remarks: remarks.value,
+            to_approve: review.value,
+          }
+        },
+        auto: true,
+        onSuccess() {
+          errorMessages.value = ''
+        },
+        onError(err) {
+          errorMessages.value = err
+          toast.error('Failed to notify proposer about review', err.message)
+        },
+      })
       emits('add:review')
     },
     onError(err) {
@@ -137,6 +155,24 @@ const editReview = () => {
     auto: true,
     onSuccess() {
       errorMessages.value = ''
+      createResource({
+        url: 'fossunited.api.emailing.notify_proposer_on_review',
+        makeParams() {
+          return {
+            submission_id: props.submissionId,
+            remarks: remarks.value,
+            to_approve: review.value,
+          }
+        },
+        auto: true,
+        onSuccess(data) {
+          errorMessages.value = ''
+        },
+        onError(err) {
+          errorMessages.value = err
+          toast.error('Failed to notify proposer about review', err.message)
+        },
+      })
       emits('update:review')
     },
     onError(err) {
