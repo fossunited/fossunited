@@ -31,9 +31,11 @@
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
+import { inject } from 'vue'
 import { createListResource, createResource, ListView, Button } from 'frappe-ui'
 
 const route = useRoute()
+const session = inject('$session')
 
 const rsvp_form = createResource({
   url: 'frappe.client.get',
@@ -47,6 +49,21 @@ const rsvp_form = createResource({
   auto: true,
 })
 
+var isEventLead = false;
+const event_lead = createResource({
+  url: 'fossunited.api.chapter.check_if_event_lead',
+  makeParams() {
+    return {
+      event: route.params.id,
+      user: session.user,
+    }
+  },
+  onSuccess(data) {
+    isEventLead = data
+  },
+  auto: true,
+})
+
 const submissions = createListResource({
   doctype: 'FOSS Event RSVP Submission',
   fields: ['*'],
@@ -56,9 +73,11 @@ const submissions = createListResource({
   pageLength: 99999,
   auto: true,
   transform(data) {
-    data.forEach((submission) => {
-      submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
-    })
+    if (!isEventLead) {
+      data.forEach((submission) => {
+        submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
+      })
+    }
   },
 })
 
