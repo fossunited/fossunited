@@ -1,10 +1,10 @@
 export const getStatusBadgeTheme = (status) => {
   switch (status) {
-    case 'Accepted':
+    case 'Approved':
       return 'green'
-    case 'Not Yet Decided':
+    case 'Review Pending':
       return 'orange'
-    case 'Declined':
+    case 'Rejected':
       return 'red'
     default:
       return 'gray'

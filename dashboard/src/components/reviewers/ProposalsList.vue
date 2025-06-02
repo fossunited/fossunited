@@ -59,16 +59,6 @@ const cfpSubmissions = createResource({
   },
   transform(data) {
     cfpSubmissions.originalData = data
-    return data.map((d) => {
-      if (d.status == 'Approved') {
-        d.status = 'Accepted'
-      } else if (d.status == 'Rejected') {
-        d.status = 'Declined'
-      } else {
-        d.status = 'Not Yet Decided'
-      }
-      return d
-    })
   },
 })
 
