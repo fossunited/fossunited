@@ -3,7 +3,7 @@ from typing import Literal
 import frappe
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.doctype_ids import CAMPAIGN, CHAPTER, EMAIL_GROUP, EMAIL_MEMBER, EVENT, PROPOSAL
+from fossunited.doctype_ids import CAMPAIGN, CHAPTER, EMAIL_GROUP, EMAIL_MEMBER, EVENT
 
 EMAIL_GROUP_TYPES = Literal[
     "Chapter Main",
@@ -492,43 +492,3 @@ def get_sending_status(campaign_id: str) -> dict:
     stats = campaign.get_sending_status()
 
     return stats
-
-
-@frappe.whitelist()
-def notify_proposer_on_review(submission_id: str, remarks: str, to_approve: str):
-    # Notify the organizers that the RSVP has reached its maximum count
-    # This can be done via email or any other notification system
-    if not user_is_cfp_reviewer(frappe.session.user):
-        frappe.throw("You are not authorised for this action", frappe.PermissionError)
-
-    submission = frappe.db.get_all(
-        PROPOSAL,
-        filters={"name": submission_id},
-        fields=["email", "route", "full_name", "talk_title", "event_name"],
-    )[0]
-
-    message = f"""
-    Dear {submission.full_name},
-    <br>
-    Your CFP for {submission.event_name}, {submission.talk_title} has gotten a new review<br>
-    Review Conclusion: {to_approve}<br>
-    Remarks: {remarks}<br>
-    You can access the CFP here: https://fossunited.org/{submission.route}<br>
-    Regards,<br>
-    FOSS United Team
-    """
-
-    frappe.sendmail(
-        recipients=submission.email,
-        subject="New review on your CFP for " + submission.event_name,
-        message=message,
-    )
-
-
-def user_is_cfp_reviewer(user: str = frappe.session.user):
-    return bool(
-        frappe.db.exists(
-            "Has Role",
-            {"role": "CFP Reviewer", "parent": user},
-        )
-    )
