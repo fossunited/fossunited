@@ -72,12 +72,6 @@ def get_proposal_filter_fields(event_id: str) -> list:
         and field.fieldname not in fieldnames_to_remove
     ]
 
-    for field in filtered_fields:
-        if field.fieldname == "status":
-            field.label = "Status (from organizer)"
-            field.options = "Accepted\nDeclined\nNot Yet Decided"
-            break
-
     cfp = frappe.get_doc(EVENT_CFP, {"event": event_id})
 
     for question in cfp.cfp_custom_questions:

@@ -8,6 +8,9 @@
       tabindex="0"
       @click="handleOpenSubmission(submission)"
     />
+    <div v-if="cfpSubmissions.data.length === 0">
+      <span class="text-sm text-ink-gray-5"> No submissions found.</span>
+    </div>
   </div>
   <div
     v-else-if="cfpSubmissions.loading"
@@ -59,16 +62,6 @@ const cfpSubmissions = createResource({
   },
   transform(data) {
     cfpSubmissions.originalData = data
-    return data.map((d) => {
-      if (d.status == 'Approved') {
-        d.status = 'Accepted'
-      } else if (d.status == 'Rejected') {
-        d.status = 'Declined'
-      } else {
-        d.status = 'Not Yet Decided'
-      }
-      return d
-    })
   },
 })
 
