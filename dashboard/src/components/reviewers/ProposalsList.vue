@@ -8,6 +8,9 @@
       tabindex="0"
       @click="handleOpenSubmission(submission)"
     />
+    <div v-if="cfpSubmissions.data.length === 0">
+      <span class="text-sm text-ink-gray-5"> No submissions found.</span>
+    </div>
   </div>
   <div
     v-else-if="cfpSubmissions.loading"
