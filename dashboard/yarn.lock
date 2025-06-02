@@ -387,17 +387,17 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tabler/icons-vue@^3.26.0":
-  version "3.26.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons-vue/-/icons-vue-3.26.0.tgz#6c77cbc69e380ea66735ac9d10c20c43ad68a613"
-  integrity sha512-jsZxEfiJSB+HtNpk4+RXMXV8aA8dedJ9+VhQnhNAiYH1dq/TQoSdlvL/707sTiG8NfVKixTNHasjm6MiiDS1Bw==
+"@tabler/icons-vue@^3.33.0":
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons-vue/-/icons-vue-3.33.0.tgz#eea60ec47897fa5a961157950b65b8a40c7b93c1"
+  integrity sha512-uwcqf5bl4A/3NBVPVQ3EoEPHMT/wM5AWwLIkUROWlVPUwHtpJd9udFKsx/EC9HKKyYIMUypf6jCiAh/utyLDgg==
   dependencies:
-    "@tabler/icons" "3.26.0"
+    "@tabler/icons" "3.33.0"
 
-"@tabler/icons@3.26.0":
-  version "3.26.0"
-  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.26.0.tgz#7a23b2a99abda32e3b4cf00ce46dddaa5daa1923"
-  integrity sha512-oO3D4ss+DxzxqU1aDy0f1HmToyrO0gcQWIMpzHAfV1quPUx0BZYvNm5xz1DQb4DxNm/+xNvbBGLJy4pzTLYWag==
+"@tabler/icons@3.33.0":
+  version "3.33.0"
+  resolved "https://registry.yarnpkg.com/@tabler/icons/-/icons-3.33.0.tgz#ad3157eabd0cadbfa865da787156f3e795059982"
+  integrity sha512-NZeFfzcYe7xcBHR3zKoCSrw/cFWvfj6LjenPQ48yVMTGdX854HH9nH44ZfMH8rrDzHBllfjwl4CIX6Vh2tyN0Q==
 
 "@tailwindcss/forms@^0.5.3":
   version "0.5.3"
