@@ -64,11 +64,19 @@ def get_proposal_filter_fields(event_id: str) -> list:
         "approvability",
     ]
 
+    fieldnames_to_remove = set(fields_to_remove)
     filtered_fields = [
         field
         for field in fields
-        if field.fieldtype not in fieldtypes_to_remove and field.fieldname not in fields_to_remove
+        if field.fieldtype not in fieldtypes_to_remove
+        and field.fieldname not in fieldnames_to_remove
     ]
+
+    for field in filtered_fields:
+        if field.fieldname == "status":
+            field.label = "Status (from organizer)"
+            field.options = "Accepted\nDeclined\nNot Yet Decided"
+            break
 
     cfp = frappe.get_doc(EVENT_CFP, {"event": event_id})
 
