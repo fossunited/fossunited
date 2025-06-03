@@ -1,10 +1,13 @@
 # Copyright (c) 2023, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
+import re
+import textwrap
+
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import add_to_email_group, create_email_group
-from fossunited.doctype_ids import EVENT, EVENT_CFP
+from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -145,6 +148,40 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.likes = self.get_likes()
         context.like = 1 if frappe.session.user in context.likes else 0
         context.like_count = len(context.likes)
+
+        context.pagetitle = self.talk_title
+
+        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.talk_description), width=150)
+        context.description = (
+            self.talk_title
+            + " by "
+            + self.full_name
+            + " is a "
+            + self.session_type
+            + " proposal for "
+            + self.event_name
+            + ". "
+            + desc_short
+        )
+
+        chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
+
+        context.image = (
+            "https://og.fossunited.org/gen/submission?talk_title="
+            + textwrap.shorten(self.talk_title, width=50)
+            + "&session_type="
+            + self.session_type
+            + "&event_name="
+            + self.event_name
+            + "&speaker_designation="
+            + self.speakers[0].designation
+            + "&speaker_name="
+            + self.speakers[0].full_name
+            + "&speaker_image="
+            + self.speakers[0].photo
+            + "&event_chapter="
+            + chapter_name
+        )
 
     def get_review_scores(self) -> dict[str, int]:
         positive = 0
