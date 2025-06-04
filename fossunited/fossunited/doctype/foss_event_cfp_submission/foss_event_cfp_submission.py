@@ -142,6 +142,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.review_scores = self.get_review_scores()
         context.total_reviews = len(self.reviews)
 
+        context.pagetitle, context.description, context.image = self.get_meta(context)
+
         # For Like
         context.reference_doctype = self.doctype
         context.reference_name = self.name
@@ -149,39 +151,31 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.like = 1 if frappe.session.user in context.likes else 0
         context.like_count = len(context.likes)
 
-        context.pagetitle = self.talk_title
+    def get_meta(self, context):
+        pagetitle = self.talk_title
 
         desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.talk_description), width=150)
-        context.description = (
-            self.talk_title
-            + " by "
-            + self.full_name
-            + " is a "
-            + self.session_type
-            + " proposal for "
-            + self.event_name
-            + ". "
-            + desc_short
+
+        description = "{self.talk_title} is a {self.session_type} proposal for {self.event_name}. {desc_short}".format(  # noqa: E501
+            self=self, desc_short=desc_short
         )
+
+        speaker = self.speakers[0]
+        if context.anonymous_cfps:
+            speaker.full_name = ""
+            speaker.designation = ""
+            speaker.photo = ""
 
         chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
 
-        context.image = (
-            "https://og.fossunited.org/gen/submission?talk_title="
-            + textwrap.shorten(self.talk_title, width=50)
-            + "&session_type="
-            + self.session_type
-            + "&event_name="
-            + self.event_name
-            + "&speaker_designation="
-            + self.speakers[0].designation
-            + "&speaker_name="
-            + self.speakers[0].full_name
-            + "&speaker_image="
-            + self.speakers[0].photo
-            + "&event_chapter="
-            + chapter_name
+        image = "https://og.fossunited.org/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(
+            self=self,
+            talk_title_short=textwrap.shorten(self.talk_title, width=50),
+            chapter_name=chapter_name,
+            speaker=speaker,
         )
+
+        return pagetitle, description, image
 
     def get_review_scores(self) -> dict[str, int]:
         positive = 0
