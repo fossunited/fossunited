@@ -207,8 +207,6 @@ class FOSSUserProfile(WebsiteGenerator):
                     fieldname=[
                         "name",
                         "route",
-                        "chapter_logo",
-                        "represent_image",
                         "about_chapter",
                         "chapter_type",
                         "chapter_name",

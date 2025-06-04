@@ -227,10 +227,13 @@
   >
     <div class='talk-card--container'>
       <div class=talk-card--meta>
-        <div class=talk-card--event-name>
-          <div class="city-image">
-            <img src="{{ chapter.chapter_logo or chapter.represent_img }}" alt="FOSS Chapter Logo" />
-          </div>
+        <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name">
+          {% if chapter.chapter_type == 'FOSS Club' %}
+            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
+            <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+          {% else %}
+            <span class="fff-forward">{{ chapter.chapter_name.upper() | truncate(25, True, '...', 0) }}</span>
+          {% endif %}
         </div>
       </div>
       <div class=talk-card--type>{{ chapter.role }}</div>
