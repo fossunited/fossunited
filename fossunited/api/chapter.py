@@ -36,7 +36,7 @@ def check_if_chapter_member(chapter: str, user: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
-def check_if_event_lead(event: str, user: str) -> bool:
+def check_if_event_lead(event: str) -> bool:
     """
     Check if the user is an event lead
 
@@ -47,18 +47,19 @@ def check_if_event_lead(event: str, user: str) -> bool:
     Returns:
         bool: True if the user is a member of the chapter, False otherwise.
     """
-    if (
-        frappe.db.get_value(
+    profile = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, ["name"])
+
+    if bool(
+        frappe.db.exists(
             "FOSS Chapter Event Member",
             {
                 "parent": event,
                 "parenttype": EVENT,
-                "email": user,
+                "member": profile,
                 "parentfield": "event_members",
+                "role": "Lead",
             },
-            "role",
         )
-        == "Lead"
     ):
         return True
 
