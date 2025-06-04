@@ -49,7 +49,7 @@ def check_if_event_lead(event: str) -> bool:
     """
     profile = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, ["name"])
 
-    if bool(
+    is_lead = bool(
         frappe.db.exists(
             "FOSS Chapter Event Member",
             {
@@ -60,7 +60,6 @@ def check_if_event_lead(event: str) -> bool:
                 "role": "Lead",
             },
         )
-    ):
-        return True
+    )
 
-    return False
+    return is_lead
