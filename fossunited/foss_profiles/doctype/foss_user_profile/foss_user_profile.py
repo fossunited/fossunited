@@ -196,7 +196,7 @@ class FOSSUserProfile(WebsiteGenerator):
         volunteer_chapters = frappe.db.get_all(
             CHAPTER_MEMBER,
             fields=["parent", "role"],
-            filters={"email": self.email},
+            filters={"chapter_member": self.name},
             page_length=9999,
         )
 

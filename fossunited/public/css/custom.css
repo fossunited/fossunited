@@ -1589,6 +1589,30 @@ h6 {
   line-height: normal;
 }
 
+.chapter-volunteer-card--type {
+  display: flex;
+  padding: 4px 8px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  border-radius: 8px;
+  background: rgba(8, 183, 79, 0.10);
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.chapter-volunteer-card--role {
+  color: #08B74F;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.24px;
+}
+
 .city-image {
   max-height: 8rem;
   max-width: 8rem;
