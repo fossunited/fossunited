@@ -86,9 +86,12 @@
           <div class="event-start-date child-container--heading">
             {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
           </div>
-          <div class="event-end-date child-container--subtext">
+          <div class="child-container--subtext">
             {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
           </div>
+          <a href="" onclick="downloadCal()" class="child-container--subtext">
+            Download ICS
+          </a>
         </div>
       </div>
       <div class="event-time-parent time-location--child-container">
@@ -392,6 +395,18 @@
       if (now_time >= start_time && now_time <= end_time) {
         $('#livestream_link').text('Livestreaming now!')
       }
+    }
+
+    function downloadCal() {
+      const csv = `{{ calendar }}`
+
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `event.ics`
+      a.click()
+      URL.revokeObjectURL(url)
     }
   </script>
 {% endblock %}
