@@ -11,7 +11,7 @@ dependencies = [
     "razorpay~=1.4.2",
     "PyGithub~=2.3.0",
     "Faker~=27.0.0",
-    "Pillow~=11.0.0"
+    "Pillow~=11.0.0",
 	"ics~=0.7.2"
 ]
 
