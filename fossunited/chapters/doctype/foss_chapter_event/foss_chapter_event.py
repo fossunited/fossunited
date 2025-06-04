@@ -222,31 +222,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         context.calendar = self.generate_ics()
 
-        context.pagetitle = self.event_name
-
-        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
-        context.description = (
-            self.event_name
-            + " is being organized on "
-            + self.event_start_date.strftime("%A, %-d %B %Y")
-            + " by "
-            + self.chapter_name
-            + " Community. "
-            + desc_short
-        )
-
-        context.image = (
-            "https://og.fossunited.org/gen/events?event_name="
-            + self.event_name
-            + "&event_date="
-            + self.event_start_date.strftime("%-d %B %Y")
-            + "&event_type="
-            + self.event_type
-            + "&event_chapter="
-            + self.chapter_name
-            + "&event_location="
-            + str(self.event_location)
-        )
+        context.pagetitle, context.description, context.image = self.get_meta()
 
         context.no_cache = 1
 
@@ -270,6 +246,23 @@ class FOSSChapterEvent(WebsiteGenerator):
         c.events.add(e)
 
         return c.serialize()
+
+    def get_meta(self):
+        pagetitle = self.event_name
+
+        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
+
+        description = "{self.event_name} is being organized on {start_date} by {self.chapter_name} Community. {desc_short}".format(  # noqa: E501
+            self=self,
+            desc_short=desc_short,
+            start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
+        )
+
+        image = "https://og.fossunited.org/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
+            self=self, start_date=self.event_start_date.strftime("%-d %B %Y")
+        )
+
+        return pagetitle, description, image
 
     def get_navbar_items(self):
         navbar_items = [

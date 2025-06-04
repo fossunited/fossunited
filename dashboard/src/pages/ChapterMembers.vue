@@ -12,6 +12,7 @@
       <Button
         class="w-fit"
         label="Add New Member"
+        v-if="isLead()"
         icon-left="plus"
         size="md"
         @click="showAddmodal = true"
@@ -23,7 +24,12 @@
         :key="member.name"
         :title="member.full_name"
       >
-        <template v-if="member.email != session.user && member.role != 'Lead'" #actions>
+        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+          <Button label="Edit" @click="handleEditmodal(member)" />
+          <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
+        </template>
+        <template v-if="member.email === session.user" #actions>
+          <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
         <div class="flex justify-between">
@@ -70,6 +76,19 @@
       </Dialog>
     </div>
 
+    <!-- EDIT MEMBER ROLE -->
+    <div v-if="selectedMember && showEditmodal">
+      <EditMemberDialog
+        v-model="showEditmodal"
+        class="z-50"
+        :chapter="chapter"
+        :member=selectedMember
+        :isLead=isLead()
+        @update:edit-member="editNewMember"
+        @close-dialog="showEditmodal = false"
+      />
+    </div>
+
     <!-- ADD NEW MEMBER -->
     <div v-if="showAddmodal">
       <AddMemberDialog
@@ -87,10 +106,19 @@ import { useRoute } from 'vue-router'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { ref, inject } from 'vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
+import EditMemberDialog from '@/components/chapter/EditMember.vue'
 import ChapterHeader from '@/components/ChapterHeader.vue'
 
 const session = inject('$session')
 const route = useRoute()
+
+const isLead = () => {
+    let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
+    if (currentUser[0].role === "Lead") {
+      return true
+    }
+    return false
+}
 
 const chapter = createDocumentResource({
   doctype: 'FOSS Chapter',
@@ -100,15 +128,35 @@ const chapter = createDocumentResource({
 })
 
 const showAddmodal = ref(false)
+const showEditmodal = ref(false)
 
-const addNewMember = (newMembers) => {
+const handleEditmodal = (member) => {
+  showEditmodal.value = true
+  selectedMember.value = member
+}
+
+const editNewMember = (member, role) => {
+  showEditmodal.value = false
+  let updatedMembers = chapter.doc.chapter_members
+  updatedMembers.forEach((m, idx) => {
+    if (m.idx === member.idx) {
+      m.role = role
+    }
+    m.idx = idx + 1
+  })
+  chapter.setValue.submit({
+    chapter_members: updatedMembers,
+  })
+}
+
+const addNewMember = (newMembers, role) => {
   showAddmodal.value = false
   const updatedMembers = chapter.doc.chapter_members.concat(
     newMembers.map((value, idx) => {
       return {
         idx: chapter.doc.chapter_members.length + idx + 1,
         chapter_member: value.value,
-        role: 'Core Team Member',
+        role: role,
       }
     }),
   )

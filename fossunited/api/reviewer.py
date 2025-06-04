@@ -81,11 +81,29 @@ def get_cfp_submissions(event: str) -> list:
         like_counts[like.reference_name] = like_counts.get(like.reference_name, 0) + 1
 
     for submission in submissions:
-        submission["_is_reviewed"] = submission.name in reviewed_submissions
-        submission["_is_seen"] = submission["_is_reviewed"]
+        is_reviewed = submission.name in reviewed_submissions
+        submission.update(
+            {
+                "_is_reviewed": "Yes" if is_reviewed else "No",
+                "_is_not_reviewed": "No" if is_reviewed else "Yes",
+                "_is_seen": is_reviewed,
+            }
+        )
         submission["_likes_count"] = like_counts.get(submission.name, 0)
+        submission.update(get_custom_answers(submission.name))
 
     return submissions
+
+
+def get_custom_answers(submission: str) -> dict:
+    custom_answers = frappe.db.get_all("FOSS Custom Answer", {"parent": submission}, ["*"])
+
+    custom_answers_dict = {}
+
+    for answer in custom_answers:
+        custom_answers_dict[f"custom_question_{answer.idx}"] = answer.response
+
+    return custom_answers_dict
 
 
 def has_reviewer_role() -> bool:

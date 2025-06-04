@@ -338,7 +338,7 @@ const updateProfileErrors = () => {
 
   for (let index = 0; index < Object.keys(socials).length; index++) {
     // error out if it doesnt match regex AND it is not empty variable
-    if ((!pattern.test(Object.values(socials)[index])) && (Object.values(socials)[index] != null)) {
+    if ((!Object.values(socials)[index]) && (!pattern.test(Object.values(socials)[index]))) {
       errors.push('\n'+Object.keys(socials)[index] + ' is not a valid url')
     }
   }

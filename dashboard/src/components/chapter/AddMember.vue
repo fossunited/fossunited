@@ -20,17 +20,53 @@
           </template>
         </Autocomplete>
       </div>
+      <div class="flex flex-col gap-2">
+        <div class="text-p-base text-gray-700">
+          Enter the role of the new members you just added
+        </div>
+        <Select
+          v-model="role"
+          :options="[
+            {
+              label: 'Lead',
+              value: 'Lead',
+            },
+            {
+              label: 'Core Team Member',
+              value: 'Core Team Member',
+            },
+            {
+              label: 'Volunteer',
+              value: 'Volunteer',
+            },
+            {
+              label: 'Graphic Designer',
+              value: 'Graphic Designer',
+            },
+            {
+              label: 'Content Writer',
+              value: 'Content Writer',
+            },
+            {
+              label: 'Marketing',
+              value: 'Marketing',
+            },
+          ]"
+          :multiple="false"
+        >
+        </Select>
+      </div>
     </template>
     <template #actions>
       <div class="grid grid-cols-2 gap-3">
         <Button label="Cancel" @click="$emit('close-dialog')" />
-        <Button label="Add" variant="solid" @click="$emit('update:add-member', newMembers)" />
+        <Button label="Add" variant="solid" @click="$emit('update:add-member', newMembers, role)" />
       </div>
     </template>
   </Dialog>
 </template>
 <script setup>
-import { Dialog, Autocomplete, createResource, Avatar } from 'frappe-ui'
+import { Dialog, Autocomplete, Select, createResource, Avatar } from 'frappe-ui'
 import { ref, defineProps, defineEmits, computed } from 'vue'
 
 const props = defineProps({
@@ -82,4 +118,5 @@ const memberOptions = createResource({
 })
 
 const newMembers = ref([])
+const role = ref('Volunteer')
 </script>
