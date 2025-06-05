@@ -91,7 +91,7 @@
               {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
             </div>
           {% endif %}
-          <a href="" onclick="downloadEventIcs()" class="child-container--subtext">
+          <a onclick="downloadEventIcs()" class="child-container--subtext">
             Download ICS
           </a>
         </div>
@@ -400,15 +400,23 @@
     }
 
     function downloadEventIcs() {
-      const csv = `{{ calendar }}`
-
-      const blob = new Blob([csv], { type: 'text/csv' })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `event.ics`
-      a.click()
-      URL.revokeObjectURL(url)
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: {
+          'event_ids': '{{ doc.name }}',
+        },
+        callback: (r) => {
+          if (r.message) {
+            const blob = new Blob([r.message], { type: 'text/calendar' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `event.ics`
+            a.click()
+            URL.revokeObjectURL(url)
+          }
+        },
+      })
     }
   </script>
 {% endblock %}

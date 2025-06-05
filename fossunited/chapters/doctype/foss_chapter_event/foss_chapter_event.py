@@ -3,11 +3,10 @@
 
 import re
 import textwrap
-from datetime import datetime, timedelta, timezone
+from datetime import datetime
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from ics import Calendar, Event
 
 from fossunited.api.emailing import create_email_group
 from fossunited.doctype_ids import (
@@ -220,32 +219,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
         context.schedule_dict = self.get_schedule_dict()
 
-        context.calendar = self.generate_ics()
-
         context.pagetitle, context.description, context.image = self.get_meta()
 
         context.no_cache = 1
-
-    def generate_ics(self):
-        c = Calendar()
-        e = Event()
-        e.name = (
-            self.event_name
-            + " is being organized on "
-            + self.event_start_date.strftime("%A, %-d %B %Y")
-            + " by "
-            + self.chapter_name
-            + " Community. "
-        )
-        e.location = self.event_location
-        e.organizer = self.chapter_name
-        e.url = "https://fossunited.org" + self.route
-        e.description = self.event_description
-        e.begin = self.event_start_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
-        e.end = self.event_end_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
-        c.events.add(e)
-
-        return c.serialize()
 
     def get_meta(self):
         pagetitle = self.event_name
