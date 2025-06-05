@@ -102,7 +102,7 @@ def generate_ics(event_ids: str) -> str:
         e.location = event.event_location
         e.organizer = event.chapter_name + " Community"
         e.description = event.event_description
-        e.url = "https://fossunited.org" + str(event.route)
+        e.url = "https://fossunited.org/" + str(event.route)
         e.begin = event.event_start_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
         e.end = event.event_end_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
         c.events.add(e)
