@@ -202,6 +202,11 @@
     </div>
 
     <div class="container my-5">
+      <h3 class="subtitle">Chapter Volunteership</h3>
+      {% for chapter in volunteered %}{{ volunteer_chapter_card(chapter) }}{% endfor %}
+    </div>
+
+    <div class="container my-5">
       <h3 class="subtitle">Events Attended</h3>
       <div class="events-grid-4">
         {% for event in attended %}{{ event_card(event) }}{% endfor %}
@@ -211,6 +216,37 @@
     <div>User has chosen to keep their Community Activity anonymous</div>
     {% endif %}
   </div>
+{% endmacro %}
+{% macro volunteer_chapter_card(chapter) %}
+  <a
+    class="talk-card"
+    data-docname="{{ chapter.chapter_name }}"
+    data-route="{{ chapter.route }}"
+    href="/{{ chapter.route }}"
+    aria-description="{{ chapter.chapter_name }}"
+  >
+    <div class='talk-card--container'>
+      <div class=talk-card--meta>
+        <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name">
+          {% if chapter.chapter_type == 'FOSS Club' %}
+            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
+            <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+          {% else %}
+            <span class="fff-forward">{{ chapter.chapter_name.upper() | truncate(25, True, '...', 0) }}</span>
+          {% endif %}
+        </div>
+      </div>
+      <div class=talk-card--title>{{ chapter.chapter_name }}</div>
+      <div class=chapter-volunteer-card--type>
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z" fill="#08B74F"/>
+        </svg>
+        <div class=chapter-volunteer-card--role>{{ chapter.role }}</div>
+      </div>
+    </div>
+    <div class=talk-card--location-date>{{ chapter.chapter_type }} | {{ chapter.chapter_status }}</div>
+  </a>
+  <br/>
 {% endmacro %}
 {% macro speaker_card(talk) %}
   <a
@@ -242,6 +278,7 @@
     </div>
     <div class=talk-card--location-date>{{ talk.event_start_date.strftime("%d %b %Y") }} | {{ (talk.event_location or 'To Be Announced' )}}</div>
   </a>
+  <br/>
 {% endmacro %}
 {% macro profile_header() %}
   <div class="container">
