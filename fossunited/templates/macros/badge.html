@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
 
-{% macro badge(label='', theme='gray', size='md', variant='subtle', prefix='', suffix='') %}
+{% macro badge(label='', theme='gray', size='md', variant='subtle', prefix='', suffix='', additional_classes='') %}
   {% set solid_classes = {
     'gray': 'text-white bg-gray-700',
     'blue': 'text-white bg-blue-500',
@@ -46,7 +46,7 @@
     'ghost': ghost_classes
   }[variant] %}
 
-  <div class="flex items-center gap-1 rounded-full {{ variant_classes[theme] }} {{ size_classes[size] }}">
+  <div class="flex items-center gap-1 rounded-full {{ variant_classes[theme] }} {{ size_classes[size] }} {{additional_classes}}">
     {% if prefix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ prefix }}</div>{% endif %}
     {{ label }}
     {% if suffix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ suffix }}</div>{% endif %}
