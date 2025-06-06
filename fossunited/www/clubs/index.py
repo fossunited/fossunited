@@ -6,6 +6,7 @@ from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_VOLUNTEER, RSVP_RESPONS
 
 
 def get_context(context):
+    context.title = "FOSS Clubs"
     context.body_class = "scroll-smooth"
     context.roles = get_lead_roles()
     context.support_items = get_support_item_content()
