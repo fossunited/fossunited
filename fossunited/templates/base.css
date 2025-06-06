@@ -21,3 +21,17 @@
         format('svg');
   }
 }
+
+@layer utilities {
+  .btn {
+    @apply flex gap-2 items-center justify-center !px-5 !py-3 rounded-lg transition-colors duration-300 ease-in-out hover:bg-gray-100 !text-sm uppercase font-semibold;
+  }
+
+  .btn-solid {
+    @apply bg-gray-800 hover:bg-gray-700 text-white hover:text-white;
+  }
+
+  .btn-subtle {
+    @apply bg-gray-200 hover:bg-gray-300 text-gray-800 hover:text-gray-800;
+  }
+}
