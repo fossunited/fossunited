@@ -1,0 +1,142 @@
+{% extends 'templates/foss_base.html' %}
+{% from 'fossunited/templates/macros/badge.html' import badge %}
+{% from 'fossunited/templates/macros/live_ping.html' import live_ping %}
+
+{% block content %}
+  <link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
+  <div class="bg-[#FAFAFA] w-full">
+    <div class="container max-w-[800px] flex flex-col gap-20 mb-6 px-4 py-12">
+      {{ hero() }}
+      {{ roles_of_lead() }}
+      {{ support_section() }}
+      {{ active_clubs_section() }}
+      {% if past_clubs %}
+        {{ past_clubs_section() }}
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+
+{% macro hero() %}
+  <div class="flex flex-col gap-8 place-items-center">
+    <img
+      class="h-64"
+      src="/assets/fossunited/images/clubs/club_hero_illustration.svg"
+      alt="Illustration of students talking to each other"
+    />
+    <div class="flex flex-col md:flex-row gap-6 items-center">
+      <img
+        class="h-20 w-20 aspect-square"
+        src="/assets/fossunited/images/clubs/fossclub_logo.svg"
+        alt="FOSS Club Logo"
+      />
+      <h1 class="text-4xl md:text-6xl font-bold text-[#1E1E1E]">FOSS Clubs</h1>
+    </div>
+    <p class=" text-center text-gray-500">
+      {{
+        _("FOSS Club by FOSS United is an initiative to promote free and open-source culture and
+        collaboration among students through events, workshops, and networking in college
+        campuses.")
+      }}
+    </p>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 grid-flow-col">
+      <a href="/clubs/start-a-club" class="btn btn-solid w-48">Start a Club</a>
+      <a href="#active-clubs" class="btn btn-subtle w-48">Active Clubs</a>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro roles_of_lead() %}
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+    {% for role in roles %}
+      <div class="p-6 flex flex-col items-center gap-6 bg-white border rounded-lg ">
+        <img class="h-10" src="{{ role.icon }}" />
+        <p class="text-center w-2/3">{{ role.content }}</p>
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro support_section() %}
+  <div class="space-y-10">
+    <h3 class="text-xl font-semibold">Support from FOSS United</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      {% for item in support_items %}
+        <div class="flex items-start gap-2">
+          <i class="ti {{ item.icon }} text-lg"></i>
+          <div class="flex flex-col gap-2">
+            <h4 class="font-semibold  tracking-normal">{{ item.heading }}</h4>
+            <p class="text-gray-500 text-sm  tracking-normal">{{ item.content }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro active_clubs_section() %}
+  <div class="flex flex-col gap-10">
+    <h3 id="active-clubs" class="text-xl font-semibold">Active Clubs</h3>
+    {% for club in active_clubs %}{{ club_card(club) }}{% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro past_clubs_section() %}
+  <div class="flex flex-col gap-10">
+    <h3 class="text-xl font-semibold">Past Clubs</h3>
+    {% for club in past_clubs %}{{ club_card(club) }}{% endfor %}
+  </div>
+{% endmacro %}
+
+{% macro club_card(club) %}
+  <a
+    href="{{ club.route }}"
+    class="flex flex-col gap-4 p-6 bg-white rounded-lg border hover:!border-gray-400 transition-colors ease-in-out duration-300 no-underline"
+  >
+    {% if club.is_new_club %}
+      {{ badge(label="New Club", theme="gray", variant="solid", prefix="<i class='ti ti-star-filled text-yellow-400'></i>", additional_classes=' w-fit font-semibold tracking-wide !rounded-md -mt-8 ') }}
+    {% endif %}
+    <div class="flex gap-4">
+      {% if club.chapter_logo %}
+        <img
+          src="{{ club.chapter_logo }}"
+          alt="Club Logo"
+          class="w-24 h-24 object-contain p-1 rounded-lg border"
+        />
+      {% else %}
+        <img
+          src="/assets/fossunited/images/clubs/club_logo_w_glow.svg"
+          class="w-24 h-24 object-contain p-1 rounded-lg border"
+        />
+      {% endif %}
+      <div class="flex flex-col gap-2">
+        <h4 class="text-base font-semibold">{{ club.chapter_name }}</h4>
+        <div class="flex gap-1 items-center text-gray-500">
+          <i class="ti ti-map-pin"></i>
+          <span class="text-sm">{{ club.city }}, {{ club.state }}</span>
+        </div>
+        {% if club.has_live_event %}
+          <div class="">
+            {{ badge(label="Happening now", theme="green", prefix=live_ping(), additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+          </div>
+        {% elif club.has_upcoming_event %}
+          <div class="">
+            {{ badge(label="Upcoming event", theme="green", prefix=live_ping(), additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+          </div>
+        {% endif %}
+        {% if club.is_inactive %}{{ badge(label="Inactive", theme="red", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}{% endif %}
+      </div>
+    </div>
+    <div
+      class="grid grid-cols-2 md:grid-cols-3 items-center md:divide-x-2  border bg-gray-50 rounded"
+    >
+      {% for item in club.stats %}
+        <div
+          class="px-4 py-3 flex flex-wrap gap-2 items-center justify-center text-sm text-gray-500 font-medium tracking-normal"
+        >
+          <span>{{ item.label }}: </span> <span>{{ item.value }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  </a>
+{% endmacro %}
