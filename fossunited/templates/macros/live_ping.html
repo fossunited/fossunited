@@ -1,0 +1,9 @@
+
+{% macro live_ping(size='size-2', color='green') %}
+  <span class="relative flex {{ size }}">
+    <span
+      class="absolute inline-flex h-full w-full animate-ping rounded-full bg-{{color}}-400 opacity-75"
+    ></span>
+    <span class="relative inline-flex {{ size }} rounded-full bg-{{color}}-500"></span
+  ></span>
+{% endmacro %}
