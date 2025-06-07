@@ -2,6 +2,7 @@
 module.exports = {
   content: [
     './fossunited/www/**/*.html',
+    './fossunited/www/clubs/*.html',
     './fossunited/templates/**/*.html',
     './fossunited/stack/web_template/**/*.html',
     './fossunited/foss_hackathon/doctype/foss_hackathon_localhost/**/*.html',
