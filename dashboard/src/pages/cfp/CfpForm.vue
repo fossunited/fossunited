@@ -37,13 +37,14 @@
         <ErrorMessage :message="errorMessages" />
         <MessageBanner
           v-if="isGuestUser"
-          class="justify-center !text-base gap-4"
-          variant="dark"
+          class="justify-center !text-base gap-4 bg-gray-100"
+          variant="subtle"
           message="Please login to submit your proposal."
         >
           <template #suffix>
             <Button
               label="Log In"
+              variant="outline"
               :link="createAbsoluteUrlFromRoute(`login?redirect=/dashboard${$route.fullPath}`)"
             />
           </template>
