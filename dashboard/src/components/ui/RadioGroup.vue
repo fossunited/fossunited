@@ -4,6 +4,7 @@
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </RadioGroupLabel>
+    <small v-if="description" class="text-sm text-ink-gray-5">{{ description }}</small>
     <div class="grid gap-4" :class="options.length > 4 ? 'md:grid-cols-3' : 'md:grid-flow-col'">
       <RadioGroupOption
         v-for="option in options"
@@ -57,6 +58,10 @@ const props = defineProps({
   modelValue: {
     type: [String, Number],
     required: true,
+  },
+  description: {
+    type: String,
+    default: '',
   },
 })
 

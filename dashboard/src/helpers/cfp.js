@@ -43,8 +43,9 @@ export const getProposalFormFields = (cfpData) => {
         { label: 'Yes', value: 'Yes' },
         { label: 'No', value: 'No' },
       ],
+      required: true,
       value: '',
-      description: 'Please select Yes if this is your first talk.',
+      description: 'Please select Yes if this is your first talk (ever!)',
     },
     {
       label: 'Intended Audience',
