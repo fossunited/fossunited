@@ -2,7 +2,7 @@ from datetime import datetime
 
 import frappe
 
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_VOLUNTEER, RSVP_RESPONSE
+from fossunited.doctype_ids import CHAPTER, CHAPTER_MEMBER, EVENT, RSVP_RESPONSE
 
 
 def get_context(context):
@@ -161,7 +161,7 @@ def get_club_statistics(club_id: str) -> dict[str, str | int]:
     )
 
     team_member_count = frappe.db.count(
-        EVENT_VOLUNTEER,
+        CHAPTER_MEMBER,
         filters={
             "parent": club_id,
             "parenttype": "FOSS Chapter",
