@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col md:flex-row gap-3 md:gap-6 items-center md:items-start">
-    <EventLogo :logo-path="cfpData.data.event.event_logo" />
+    <EventLogo v-if="cfpData.data.event.event_logo" :logo-path="cfpData.data.event.event_logo" />
     <div class="flex flex-col gap-3 flex-grow w-full">
       <div
         class="flex p-3 rounded border gap-4 bg-[#F5F5F5] w-full h-fit justify-between items-center"
