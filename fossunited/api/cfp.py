@@ -41,6 +41,7 @@ def get_proposal_filter_fields(event_id: str) -> list:
 
     fieldtypes_to_remove = ["Section Break", "Tab Break", "Column Break"]
     fields_to_remove = [
+        "talk_title",
         "is_published",
         "route",
         "linked_cfp",

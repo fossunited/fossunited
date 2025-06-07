@@ -1,5 +1,12 @@
 <template>
-  <Filter v-model="filters" :docfields="docfields.data" />
+  <div class="flex flex-col gap-3">
+    <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
+      <template #suffix>
+        <IconSearch class="w-4" />
+      </template>
+    </FormControl>
+    <Filter v-model="filters" :docfields="docfields.data" />
+  </div>
   <div v-if="cfpSubmissions.data" class="flex flex-col">
     <ProposalListItem
       v-for="submission in cfpSubmissions.data"
@@ -24,12 +31,13 @@
 </template>
 <script setup>
 import ProposalListItem from './ProposalListItem.vue'
-import { defineProps, watch } from 'vue'
-import { createResource } from 'frappe-ui'
+import { defineProps, watch, ref } from 'vue'
+import { createResource, FormControl } from 'frappe-ui'
 import Filter from '../ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
 import { useStorage } from '@vueuse/core'
+import { IconSearch } from '@tabler/icons-vue'
 
 const route = useRoute()
 
@@ -46,6 +54,7 @@ const props = defineProps({
 
 const emit = defineEmits(['open:submission'])
 
+const searchTitle = ref('')
 const filters = useStorage(`review-filters:${route.params.id}`, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
@@ -71,6 +80,14 @@ watch(
     cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, filters.value)
   },
   { deep: true },
+)
+
+watch(
+  () => searchTitle.value,
+  () => {
+    const _filters = { ...filters.value, talk_title: ['like', `${searchTitle.value}`] }
+    cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
+  },
 )
 
 const handleOpenSubmission = (submission) => {
