@@ -208,7 +208,7 @@ const profile_dict = reactive({
   youtube: '',
   devto: '',
   medium: '',
-  mastodon: ''
+  mastodon: '',
 })
 
 const profile = createResource({
@@ -300,7 +300,7 @@ const toggleShowActivity = () => {
       if (profile.data.show_activity) {
         toast.info('Community Activity will be shown on your profile page now')
       } else {
-        toast.info('Community Activity won\'t be shown on your profile page now')
+        toast.info("Community Activity won't be shown on your profile page now")
       }
       profile.fetch()
     },
@@ -310,12 +310,15 @@ const toggleShowActivity = () => {
 const updateErrors = ref('')
 
 // Source - https://stackoverflow.com/a/5717133
-var pattern = new RegExp('^(https?:\\/\\/)' + // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+const pattern = new RegExp(
+  '^(https?:\\/\\/)' + // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
+    '(\\#[-a-z\\d_]*)?$',
+  'i',
+) // fragment locator
 
 const updateProfileErrors = () => {
   const errors = []
@@ -335,13 +338,12 @@ const updateProfileErrors = () => {
     medium: profile_dict.medium,
     mastodon: profile_dict.mastodon,
   }
-
-  for (let index = 0; index < Object.keys(socials).length; index++) {
-    // error out if it doesnt match regex AND it is not empty variable
-    if ((!Object.values(socials)[index]) && (!pattern.test(Object.values(socials)[index]))) {
-      errors.push('\n'+Object.keys(socials)[index] + ' is not a valid url')
+  Object.keys(socials).forEach((key) => {
+    const url = socials[key]
+    if (url && !pattern.test(url)) {
+      errors.push(`\n${key} is not a valid url`)
     }
-  }
+  })
   return errors
 }
 
