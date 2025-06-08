@@ -1,33 +1,39 @@
 <template>
+  <!-- Filters -->
   <div class="flex flex-col gap-3">
     <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
       <template #suffix>
         <IconSearch class="w-4" />
       </template>
     </FormControl>
-    <Filter v-model="filters" :docfields="docfields.data" />
-  </div>
-  <div v-if="cfpSubmissions.data" class="flex flex-col">
-    <ProposalListItem
-      v-for="submission in cfpSubmissions.data"
-      :key="submission.name"
-      :submission="submission"
-      tabindex="0"
-      @click="handleOpenSubmission(submission)"
-    />
-    <div v-if="cfpSubmissions.data.length === 0">
-      <span class="text-sm text-ink-gray-5"> No submissions found.</span>
+    <div class="flex flex-wrap justify-between items-center gap-4">
+      <Filter v-model="filters" :docfields="docfields.data" />
+      <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
   </div>
-  <div
-    v-else-if="cfpSubmissions.loading"
-    class="w-full h-[480px] flex items-center justify-center"
-  >
-    <LoadingIndicator class="w-6 h-6" />
-  </div>
-  <div v-else class="w-full h-[480px] flex items-center justify-center">
-    <div class="text-sm text-gray-500">No submissions found.</div>
-  </div>
+
+  <!-- Submission List -->
+  <Suspense>
+    <template #default>
+      <div v-if="cfpSubmissions.data" class="flex flex-col">
+        <ProposalListItem
+          v-for="submission in cfpSubmissions.data"
+          :key="submission.name"
+          :submission="submission"
+          tabindex="0"
+          @click="handleOpenSubmission(submission)"
+        />
+        <div v-if="cfpSubmissions.data.length === 0">
+          <span class="text-sm text-ink-gray-5"> No submissions found.</span>
+        </div>
+      </div>
+    </template>
+    <template #fallback>
+      <div class="w-full h-[480px] flex items-center justify-center">
+        <LoadingIndicator class="w-6 h-6" />
+      </div>
+    </template>
+  </Suspense>
 </template>
 <script setup>
 import ProposalListItem from './ProposalListItem.vue'
