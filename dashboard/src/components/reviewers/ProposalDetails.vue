@@ -112,14 +112,6 @@ const submission = createResource({
     } else {
       data.session_categories = data.session_categories.split('\n')
     }
-
-    if (data.status == 'Approved') {
-      data.status = 'Accepted'
-    } else if (data.status == 'Rejected') {
-      data.status = 'Declined'
-    } else {
-      data.status = 'Not Yet Decided'
-    }
     return data
   },
 })
