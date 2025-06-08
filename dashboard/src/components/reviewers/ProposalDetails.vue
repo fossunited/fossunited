@@ -18,6 +18,14 @@
           Submitted {{ dayjs(submission.data.creation).fromNow() }}
         </span>
       </div>
+      <a
+        class="flex gap-1 items-center text-sm text-gray-600 hover:cursor-pointer hover:text-gray-800 transition-colors"
+        :href="createAbsoluteUrlFromRoute(submission.data.route)"
+        target="_blank"
+      >
+        <span> View Public Page </span>
+        <IconArrowUpRight class="w-4 h-4" />
+      </a>
     </div>
     <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
     <div v-if="activeTab === 0" class="flex flex-col gap-4">
@@ -45,6 +53,8 @@ import { createResource, LoadingIndicator, Badge, TabButtons } from 'frappe-ui'
 import { provide, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
+import { IconArrowUpRight } from '@tabler/icons-vue'
 import ProposalSpeakers from './ProposalSpeakers.vue'
 import ProseContainer from '@/components/ui/ProseContainer.vue'
 import ProposalBadgeGroup from './ProposalBadgeGroup.vue'
