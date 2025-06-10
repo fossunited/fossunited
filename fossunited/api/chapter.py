@@ -1,3 +1,4 @@
+import ast
 from datetime import timedelta, timezone
 
 import frappe
@@ -69,19 +70,19 @@ def check_if_event_lead(event: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
-def generate_ics(event_ids: str) -> str:
+def generate_ics(event_ids):
     """
     Return ICS event for the event ids provided
 
     Args:
-        event_ids (str): Comma-separated list of event ids (doc.name)
+        event_ids (list): list of event ids (doc.name)
 
     Returns:
         str: ICS data
     """
 
     c = Calendar()
-    ids = event_ids.split(",")
+    ids = ast.literal_eval(event_ids)
 
     events = frappe.db.get_all(
         EVENT,

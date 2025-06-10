@@ -254,9 +254,9 @@
     }).mount()
 
     function downloadEventIcs() {
-      var event_ids = ''
-      events = document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
-        event_ids = event_ids+','+event.id
+      let event_ids = new Array()
+      document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
+        event_ids.push(event.id)
       })
       frappe.call({
         method: 'fossunited.api.chapter.generate_ics',

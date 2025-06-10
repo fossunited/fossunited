@@ -403,7 +403,7 @@
       frappe.call({
         method: 'fossunited.api.chapter.generate_ics',
         args: {
-          'event_ids': '{{ doc.name }}',
+          'event_ids': ['{{ doc.name }}'],
         },
         callback: (r) => {
           if (r.message) {
