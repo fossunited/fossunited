@@ -194,6 +194,10 @@
     from
     'fossunited/templates/macros/event_card.html' import event_card
   %}
+  {%
+    from
+    'fossunited/templates/macros/hackathon_card.html' import hackathon_card
+  %}
   <div class="profile-content-div" id="activity">
     {% if doc.show_activity %}
     <div class="container my-5">
@@ -210,6 +214,12 @@
       <h3 class="subtitle">Events Attended</h3>
       <div class="events-grid-4">
         {% for event in attended %}{{ event_card(event) }}{% endfor %}
+      </div>
+    </div>
+    <div class="container my-5">
+      <h3 class="subtitle">Hackathons Attended</h3>
+      <div class="events-grid-4">
+        {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
       </div>
     </div>
     {% else %}

@@ -13,6 +13,9 @@ from fossunited.doctype_ids import (
     CHAPTER_MEMBER,
     EVENT,
     EVENT_TICKET,
+    HACKATHON,
+    HACKATHON_LOCALHOST,
+    HACKATHON_PARTICIPANT,
     PROPOSAL,
     RSVP_RESPONSE,
 )
@@ -163,6 +166,41 @@ class FOSSUserProfile(WebsiteGenerator):
                 )
             )
 
+        attended_hack = []
+
+        hackathon_ids = frappe.db.get_all(
+            HACKATHON_PARTICIPANT,
+            fields=["hackathon", "localhost"],
+            filters={"email": self.email},
+            page_length=9999,
+        )
+        for val in hackathon_ids:
+            attended_hack.append(
+                frappe.db.get_value(
+                    HACKATHON,
+                    fieldname=[
+                        "name",
+                        "route",
+                        "chapter",
+                        "start_date",
+                        "hackathon_type",
+                        "hackathon_logo",
+                        "only_show_logo",
+                        "hackathon_name",
+                    ],
+                    filters={"name": val.hackathon},
+                    as_dict=1,
+                )
+                | frappe.db.get_value(
+                    HACKATHON_LOCALHOST,
+                    fieldname=[
+                        "localhost_name",
+                        "location",
+                    ],
+                    filters={"name": val.localhost},
+                    as_dict=1,
+                )
+            )
         talked = []
 
         approved_cfp_event_ids = frappe.db.get_all(
@@ -217,7 +255,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 | val
             )
 
-        return attended, talked, volunteered
+        return attended, attended_hack, talked, volunteered
 
     def get_context(self, context):
         if self.is_private and frappe.session.user not in (
@@ -233,7 +271,9 @@ class FOSSUserProfile(WebsiteGenerator):
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
 
-        context.attended, context.talked, context.volunteered = self.get_user_activity()
+        context.attended, context.attended_hack, context.talked, context.volunteered = (
+            self.get_user_activity()
+        )
 
         context.no_cache = 1
 
