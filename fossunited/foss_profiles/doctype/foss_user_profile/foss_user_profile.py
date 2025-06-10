@@ -8,6 +8,7 @@ from frappe.exceptions import PermissionError
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
+from fossunited.api.sidebar import user_is_chapter_member
 from fossunited.doctype_ids import (
     CHAPTER,
     CHAPTER_MEMBER,
@@ -42,7 +43,7 @@ class FOSSUserProfile(WebsiteGenerator):
         from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
             FOSSUserProfileWorkExperience,
         )
-        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
             FOSSUserProjects,
         )
         from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
@@ -51,6 +52,7 @@ class FOSSUserProfile(WebsiteGenerator):
 
         about: DF.TextEditor | None
         bio: DF.SmallText | None
+        cfp_visibility: DF.Literal["Everyone", "Chapter Volunteers", "Only Me"]  # noqa: F722, F821
         cover_image: DF.AttachImage | None
         current_city: DF.Link | None
         devto: DF.Data | None
@@ -191,43 +193,71 @@ class FOSSUserProfile(WebsiteGenerator):
                     filters={"name": val.hackathon},
                     as_dict=1,
                 )
-                | frappe.db.get_value(
-                    HACKATHON_LOCALHOST,
-                    fieldname=[
-                        "localhost_name",
-                        "location",
-                    ],
-                    filters={"name": val.localhost},
-                    as_dict=1,
+                | (
+                    frappe.db.get_value(
+                        HACKATHON_LOCALHOST,
+                        fieldname=[
+                            "localhost_name",
+                            "location",
+                        ],
+                        filters={"name": val.localhost},
+                        as_dict=1,
+                    )
+                    if val.localhost != ""
+                    else {"localhost_name": "", "location": ""}
                 )
             )
+
+        cfps = []
         talked = []
 
-        approved_cfp_event_ids = frappe.db.get_all(
+        cfp_event_ids = frappe.db.get_all(
             PROPOSAL,
-            fields=["event", "talk_title", "route", "session_type"],
-            filters={"email": self.email, "status": "Approved"},
+            fields=["event", "status", "talk_title", "route", "session_type"],
+            filters={"email": self.email},
             page_length=9999,
         )
 
-        for val in approved_cfp_event_ids:
-            talked.append(
-                frappe.db.get_value(
-                    EVENT,
-                    fieldname=[
-                        "name",
-                        "chapter",
-                        "event_start_date",
-                        "event_name",
-                        "banner_image",
-                        "must_attend",
-                        "event_location",
-                    ],
-                    filters={"name": val.event},
-                    as_dict=1,
+        for val in cfp_event_ids:
+            if self.cfp_visibility == "Everyone" or (
+                self.cfp_visibility == "Chapter Volunteers"
+                and user_is_chapter_member(frappe.session.user)
+            ):
+                cfps.append(
+                    frappe.db.get_value(
+                        EVENT,
+                        fieldname=[
+                            "name",
+                            "chapter",
+                            "event_start_date",
+                            "event_name",
+                            "banner_image",
+                            "must_attend",
+                            "event_location",
+                        ],
+                        filters={"name": val.event},
+                        as_dict=1,
+                    )
+                    | val
                 )
-                | val
-            )
+            if val.status == "Approved":
+                talked.append(
+                    frappe.db.get_value(
+                        EVENT,
+                        fieldname=[
+                            "name",
+                            "chapter",
+                            "event_start_date",
+                            "event_name",
+                            "banner_image",
+                            "must_attend",
+                            "event_location",
+                        ],
+                        filters={"name": val.event},
+                        as_dict=1,
+                    )
+                    | val
+                )
 
         volunteered = []
 
@@ -255,7 +285,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 | val
             )
 
-        return attended, attended_hack, talked, volunteered
+        return attended, attended_hack, talked, cfps, volunteered
 
     def get_context(self, context):
         if self.is_private and frappe.session.user not in (
@@ -271,9 +301,13 @@ class FOSSUserProfile(WebsiteGenerator):
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
 
-        context.attended, context.attended_hack, context.talked, context.volunteered = (
-            self.get_user_activity()
-        )
+        (
+            context.attended,
+            context.attended_hack,
+            context.talked,
+            context.cfps,
+            context.volunteered,
+        ) = self.get_user_activity()
 
         context.no_cache = 1
 

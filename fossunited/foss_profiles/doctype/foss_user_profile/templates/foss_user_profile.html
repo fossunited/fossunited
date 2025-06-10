@@ -205,6 +205,13 @@
       {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
     </div>
 
+    {% if cfps | length > 0 %}
+    <div class="container my-5">
+      <h3 class="subtitle">CFPs Proposed</h3>
+      {% for talk in cfps %}{{ speaker_card(talk) }}{% endfor %}
+    </div>
+    {% endif %}
+
     <div class="container my-5">
       <h3 class="subtitle">Chapter Volunteership</h3>
       {% for chapter in volunteered %}{{ volunteer_chapter_card(chapter) }}{% endfor %}
@@ -287,6 +294,7 @@
       <div class=talk-card--title>{{ talk.talk_title }}</div>
     </div>
     <div class=talk-card--location-date>{{ talk.event_start_date.strftime("%d %b %Y") }} | {{ (talk.event_location or 'To Be Announced' )}}</div>
+    <div class=talk-card--type>{{ talk.status }}</div>
   </a>
   <br/>
 {% endmacro %}

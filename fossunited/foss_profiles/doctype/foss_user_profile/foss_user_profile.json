@@ -23,6 +23,7 @@
     "user",
     "username",
     "gender",
+    "cfp_visibility",
     "bio",
     "column_break_yqk3",
     "full_name",
@@ -279,6 +280,13 @@
       "fieldname": "show_activity",
       "fieldtype": "Check",
       "label": "Show Community Activity"
+    },
+    {
+      "default": "Only Me",
+      "fieldname": "cfp_visibility",
+      "fieldtype": "Select",
+      "label": "Who can see your CFPs",
+      "options": "Everyone\nChapter Volunteers\nOnly Me"
     }
   ],
   "has_web_view": 1,
@@ -286,7 +294,7 @@
   "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-05-26 15:44:50.259551",
+  "modified": "2025-06-10 16:36:59.223147",
   "modified_by": "arya@projectsegfau.lt",
   "module": "FOSS Profiles",
   "name": "FOSS User Profile",

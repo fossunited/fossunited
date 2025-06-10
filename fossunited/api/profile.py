@@ -112,6 +112,7 @@ def update_profile(fields_dict):
             "full_name": fields_dict.get("full_name"),
             "username": fields_dict.get("username"),
             "bio": fields_dict.get("bio"),
+            "cfp_visibility": fields_dict.get("cfp_visibility"),
             "current_city": fields_dict.get("current_city"),
             "about": fields_dict.get("about"),
             "website": fields_dict.get("website"),
