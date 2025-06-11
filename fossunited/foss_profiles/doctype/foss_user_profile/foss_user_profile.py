@@ -134,6 +134,7 @@ class FOSSUserProfile(WebsiteGenerator):
         self.route = f"u/{self.username}"
 
     def get_user_activity(self):
+        # Events the user has attended
         attended = []
 
         paid_event_ids = frappe.db.get_all(
@@ -168,6 +169,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 )
             )
 
+        # Hackathons the user has attended
         attended_hack = []
 
         hackathon_ids = frappe.db.get_all(
@@ -193,7 +195,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     filters={"name": val.hackathon},
                     as_dict=1,
                 )
-                | (
+                | (  # Add localhost details if he attended a localhost
                     frappe.db.get_value(
                         HACKATHON_LOCALHOST,
                         fieldname=[
@@ -208,6 +210,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 )
             )
 
+        # CFP Proposals submitted, and how many of those were approved
         cfps = []
         talked = []
 
@@ -259,6 +262,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     | val
                 )
 
+        # City Chapters/FOSS Clubs user volunteers for
         volunteered = []
 
         volunteer_chapters = frappe.db.get_all(
