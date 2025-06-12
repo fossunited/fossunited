@@ -73,7 +73,7 @@ jobs:
       - name: Install MariaDB Client
         run: |
           sudo apt-get update
-          sudo apt-get install mariadb-client-10.6
+          sudo apt-get install mariadb-client
 
       - name: Setup Frappe Bench
         run: |
