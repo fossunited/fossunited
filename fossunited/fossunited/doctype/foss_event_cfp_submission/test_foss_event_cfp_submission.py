@@ -23,7 +23,7 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
         self.chapter = insert_test_chapter(lead_email=LEAD)
         self.event = insert_test_event(chapter=self.chapter)
 
-        self.cfp = insert_cfp_form(event=self.event)
+        self.cfp = insert_cfp_form(event=self.event.name)
         speakers = [
             {
                 "full_name": fake.name(),
