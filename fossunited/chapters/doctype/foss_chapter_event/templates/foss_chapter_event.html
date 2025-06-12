@@ -86,9 +86,14 @@
           <div class="event-start-date child-container--heading">
             {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
           </div>
-          <div class="event-end-date child-container--subtext">
-            {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
-          </div>
+          {% if doc.event_start_date.strftime("%A, %-d %B %Y") != doc.event_end_date.strftime("%A, %-d %B %Y") %}
+            <div class="child-container--subtext">
+              {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
+            </div>
+          {% endif %}
+          <a onclick="downloadEventIcs()" class="child-container--subtext">
+            Download ICS
+          </a>
         </div>
       </div>
       <div class="event-time-parent time-location--child-container">
@@ -392,6 +397,26 @@
       if (now_time >= start_time && now_time <= end_time) {
         $('#livestream_link').text('Livestreaming now!')
       }
+    }
+
+    function downloadEventIcs() {
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: {
+          'event_ids': ['{{ doc.name }}'],
+        },
+        callback: (r) => {
+          if (r.message) {
+            const blob = new Blob([r.message], { type: 'text/calendar' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `event.ics`
+            a.click()
+            URL.revokeObjectURL(url)
+          }
+        },
+      })
     }
   </script>
 {% endblock %}
