@@ -202,10 +202,7 @@ def get_grouped_events():
     events = frappe.get_all(
         EVENT,
         fields=["*"],
-        filters={
-            "status": ["in", ["Approved", "Live", "Concluded"]],
-            "is_published": 1,
-        },
+        or_filters=[["is_published", "=", "1"], ["is_external_event", "=", "1"]],
         order_by="event_start_date",
     )
 
