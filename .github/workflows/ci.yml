@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   tests:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.02
     strategy:
       fail-fast: false
     name: Server
@@ -75,7 +75,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install mariadb-client-10.6
 
-      - name: Setup
+      - name: Setup Frappe Bench
         run: |
           pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ~/frappe-bench
@@ -96,7 +96,9 @@ jobs:
       - name: Run Tests
         working-directory: /home/runner/frappe-bench
         run: |
+          bench --site test_site set-config developer_mode 1
           bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app fossunited
+          bench --site test_site run-parallel-tests --app fossunited
         env:
           TYPE: server
+          CI: 'Yes'
