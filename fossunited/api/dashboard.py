@@ -178,3 +178,41 @@ def get_user_profile_list(filters: dict = None) -> list:
     )
 
     return profiles
+
+
+@frappe.whitelist()
+def search_user_profiles(search_term: str = None, existing_members: list = None) -> list:
+    """
+    Search user profiles based on username or full name with dynamic filtering.
+    This function supports real-time search as the user types.
+    """
+    if not search_term or len(search_term.strip()) < 2:
+        return []
+
+    search_term = search_term.strip()
+    filters = []
+
+    if existing_members and len(existing_members) > 0:
+        filters.append(["name", "not in", existing_members])
+
+    or_filters = [
+        ["username", "like", f"%{search_term}%"],
+        ["full_name", "like", f"%{search_term}%"]
+    ]
+
+    profiles = frappe.db.get_all(
+        USER_PROFILE,
+        filters=filters,
+        or_filters=or_filters,
+        fields=[
+            "full_name",
+            "profile_photo",
+            "route",
+            "username",
+            "name",
+        ],
+        page_length=50,  # Not sure what to limit here.
+        order_by="username asc"
+    )
+
+    return profiles
