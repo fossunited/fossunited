@@ -137,6 +137,26 @@
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
             <FormControl
+              v-model="profile_dict.cfp_visibility"
+              type="select"
+              :options="[
+                {
+                  label: 'Everyone',
+                  value: 'Everyone',
+                },
+                {
+                  label: 'Chapter Volunteers',
+                  value: 'Chapter Volunteers',
+                },
+                {
+                  label: 'Only Me',
+                  value: 'Only Me',
+                },
+              ]"
+              label="CFP Visibility"
+              description="Chose who all can see the CFP Proposals you have made till date"
+            />
+            <FormControl
               v-model="profile_dict.bio"
               label="Short Tagline"
               description="A short tagline about yourself"
@@ -197,6 +217,7 @@ const profile_dict = reactive({
   user: '',
   username: '',
   bio: '',
+  cfp_visibility: '',
   current_city: '',
   about: '',
   website: '',
