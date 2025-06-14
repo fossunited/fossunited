@@ -262,7 +262,7 @@ const getBannerImage = () => {
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg', 'svg'].includes(extn)) {
+  if (!['png', 'jpg', 'jpeg', 'svg'].includes(extn)) {
     return 'Only PNG, SVG and JPG images are allowed'
   }
 }
