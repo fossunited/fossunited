@@ -210,6 +210,7 @@ const chapter = inject('chapter')
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
   if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    toast.error('Only PNG and JPG images are allowed')
     return 'Only PNG and JPG images are allowed'
   }
 }
