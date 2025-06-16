@@ -6,7 +6,6 @@ from fossunited.utils.payments import (
     get_razorpay_client,
 )
 
-
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str) -> dict:
     return frappe.get_doc(EVENT, name)
@@ -28,7 +27,6 @@ def get_event_from_route(route: str, fields: list) -> dict:
 @frappe.whitelist(allow_guest=True)
 def get_states():
     return frappe.get_all("State", fields=["name"], page_length=1000, order_by="name")
-
 
 @frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
@@ -157,62 +155,35 @@ def get_profile_data(username: str = None, email: str = None) -> dict:
 
 
 @frappe.whitelist()
-def get_user_profile_list(filters: dict = None) -> list:
+def get_user_profile_list(filters: dict = None, search_term: str = None) -> list:
     """
-    Returns the list of user profiles based on the given filters.
+    Returns the list of user profiles based on the given filters and optional search term.
     """
     if not filters:
         filters = {}
 
-    profiles = frappe.db.get_all(
-        USER_PROFILE,
-        filters=filters,
-        fields=[
-            "full_name",
-            "profile_photo",
-            "route",
-            "username",
-            "name",
-        ],
-        page_length=9999,
-    )
-
-    return profiles
-
-
-@frappe.whitelist()
-def search_user_profiles(search_term: str = None, existing_members: list = None) -> list:
-    """
-    Search user profiles based on username or full name with dynamic filtering.
-    This function supports real-time search as the user types.
-    """
-    if not search_term or len(search_term.strip()) < 2:
-        return []
-
-    search_term = search_term.strip()
-    filters = []
-
-    if existing_members and len(existing_members) > 0:
-        filters.append(["name", "not in", existing_members])
-
-    or_filters = [
-        ["username", "like", f"%{search_term}%"],
-        ["full_name", "like", f"%{search_term}%"]
-    ]
-
-    profiles = frappe.db.get_all(
-        USER_PROFILE,
-        filters=filters,
-        or_filters=or_filters,
-        fields=[
-            "full_name",
-            "profile_photo",
-            "route",
-            "username",
-            "name",
-        ],
-        page_length=50,  # Not sure what to limit here.
-        order_by="username asc"
-    )
+    if search_term and len(search_term.strip()) >= 2:
+        search_term = search_term.strip()
+        or_filters = [
+            ["username", "like", f"%{search_term}%"],
+            ["full_name", "like", f"%{search_term}%"]
+        ]
+        
+        profiles = frappe.db.get_all(
+            USER_PROFILE,
+            filters=filters,
+            or_filters=or_filters,
+            fields=[
+                "full_name",
+                "profile_photo",
+                "route",
+                "username",
+                "name",
+            ],
+            page_length=50,  
+            order_by="username asc"
+        )
+    else:
+        profiles = []
 
     return profiles
