@@ -65,11 +65,12 @@ const filters = useStorage(`review-filters:${route.params.id}`, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
 const cfpSubmissions = createResource({
-  url: 'fossunited.api.reviewer.get_cfp_submissions',
+  url: 'fossunited.api.cfp.get_cfp_submissions',
   params: {
     event: props.event,
   },
   auto: true,
+
   onSuccess(data) {
     if (filters.value) {
       cfpSubmissions.data = filterSubmissions(data, filters.value)

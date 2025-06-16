@@ -1,0 +1,64 @@
+<script setup>
+import { createResource, LoadingIndicator, TabButtons } from 'frappe-ui'
+import { provide, ref, watch } from 'vue'
+import SubmissionHeader from './SubmissionHeader.vue'
+import SubmissionInfoList from './SubmissionInfoList.vue'
+import SubmissionOverview from './SubmissionOverview.vue'
+import ProposalSpeakers from '@/components/reviewers/ProposalSpeakers.vue'
+import SubmissionReviews from './SubmissionReviews.vue'
+
+const submissionId = defineModel('submissionId', { type: String, default: '' })
+const tabs = ref([
+  {
+    label: 'Overview',
+    value: 0,
+  },
+  {
+    label: 'Speakers',
+    value: 1,
+  },
+  {
+    label: 'Reviews',
+    value: 2,
+  },
+])
+const activeTab = ref(0)
+
+const submission = createResource({
+  url: 'frappe.client.get',
+  params: {
+    doctype: 'FOSS Event CFP Submission',
+    fields: ['*'],
+    filters: {
+      name: submissionId.value,
+    },
+  },
+})
+
+provide('curr_submission', submission)
+
+watch(
+  () => submissionId.value,
+  async (newId) => {
+    if (newId) {
+      submission.fetch()
+    }
+  },
+  { immediate: true },
+)
+</script>
+<template>
+  <Suspense>
+    <div v-if="submission.data" class="flex flex-col gap-4">
+      <SubmissionHeader />
+      <SubmissionInfoList />
+      <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
+      <SubmissionOverview v-if="activeTab === 0" />
+      <ProposalSpeakers v-else-if="activeTab === 1" :speakers="submission.data.speakers" />
+      <SubmissionReviews v-else-if="activeTab === 2" :reviews="submission.data.reviews" />
+    </div>
+    <template #fallback>
+      <LoadingIndicator class="w-5 h-5" />
+    </template>
+  </Suspense>
+</template>
