@@ -432,3 +432,18 @@ export const filterSubmissions = (cfpSubmissions, filters) => {
 
   return filteredSubmissions
 }
+
+export const statusIndicatorColor = (status) => {
+  switch (status) {
+    case 'Approved':
+      return 'green-400'
+    case 'Review Pending':
+      return 'orange-400'
+    case 'Rejected':
+      return 'red-400'
+    case 'Screening':
+      return 'gray-400'
+    default:
+      return 'blue-400'
+  }
+}

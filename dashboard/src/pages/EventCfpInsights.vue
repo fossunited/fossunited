@@ -34,7 +34,7 @@ const handleOpenSubmission = (submission) => {
 <template>
   <div class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <Suspense>
-      <InsightsGrid />
+      <InsightsGrid :event-id="route.params.id" />
     </Suspense>
     <Suspense>
       <SubmissionsList @open:submission="handleOpenSubmission($event)"></SubmissionsList>
