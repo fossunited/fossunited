@@ -245,6 +245,8 @@ const profile = createResource({
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
   if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    updateErrors.value = 'Only PNG and JPG images are allowed'
+    toast.error(updateErrors.value)
     return 'Only PNG and JPG images are allowed'
   }
 }

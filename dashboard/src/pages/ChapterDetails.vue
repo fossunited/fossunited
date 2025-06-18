@@ -263,6 +263,7 @@ const getBannerImage = () => {
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
   if (!['png', 'jpg', 'jpeg', 'svg'].includes(extn)) {
+    toast.error('Only PNG, SVG and JPG images are allowed')
     return 'Only PNG, SVG and JPG images are allowed'
   }
 }
