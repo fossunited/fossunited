@@ -330,16 +330,15 @@ const toggleShowActivity = () => {
 
 const updateErrors = ref('')
 
-// Source - https://stackoverflow.com/a/5717133
-const pattern = new RegExp(
-  '^(https?:\\/\\/)' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
-  'i',
-) // fragment locator
+const isValidUrl = (url) => {
+  try {
+    isUrl = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
 
 const updateProfileErrors = () => {
   const errors = []
@@ -361,7 +360,7 @@ const updateProfileErrors = () => {
   }
   Object.keys(socials).forEach((key) => {
     const url = socials[key]
-    if (url && !pattern.test(url)) {
+    if (url && isValidUrl(url)) {
       errors.push(`\n${key} is not a valid url`)
     }
   })
