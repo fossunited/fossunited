@@ -59,6 +59,8 @@
     "event_sponsors_section",
     "sponsor_list",
     "deck_link",
+    "project_showcase_section",
+    "project_showcase",
     "community_partners_section",
     "community_partners",
     "volunteers_tab",
@@ -491,10 +493,21 @@
     },
     {
       "default": "0",
-      "description": "Event features like RSVP, CFP, and Tickets are managed directly on our website \u2014 only an external landing page is created.",
+      "description": "Event features like RSVP, CFP, and Tickets are managed directly on our website — only an external landing page is created.",
       "fieldname": "has_external_webpage",
       "fieldtype": "Check",
       "label": "Has External Webpage?"
+    },
+    {
+      "fieldname": "project_showcase_section",
+      "fieldtype": "Section Break",
+      "label": "Project Showcases"
+    },
+    {
+      "fieldname": "project_showcase",
+      "fieldtype": "Table",
+      "label": "Project Showcase",
+      "options": "FOSS Event Project Showcase"
     }
   ],
   "has_web_view": 1,
@@ -516,7 +529,7 @@
       "link_fieldname": "event"
     }
   ],
-  "modified": "2025-05-20 15:13:04.902037",
+  "modified": "2025-06-18 12:21:34.658057",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Chapter Event",

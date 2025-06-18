@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-18 12:14:39.710421",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "showcase_name",
+  "description",
+  "image",
+  "link"
+ ],
+ "fields": [
+  {
+   "fieldname": "showcase_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Showcase Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Showcase Description"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Showcase Image"
+  },
+  {
+   "fieldname": "link",
+   "fieldtype": "Data",
+   "label": "Showcase Link",
+   "reqd": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-06-18 14:25:17.166079",
+ "modified_by": "arya@projectsegfau.lt",
+ "module": "FOSSUnited",
+ "name": "FOSS Event Project Showcase",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

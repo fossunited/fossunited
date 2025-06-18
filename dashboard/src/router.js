@@ -149,6 +149,11 @@ const routes = [
         component: () => import('@/pages/EventPartner.vue'),
       },
       {
+        path: 'showcases',
+        name: 'EventShowcases',
+        component: () => import('@/pages/EventShowcases.vue'),
+      },
+      {
         path: 'cfp',
         name: 'EventCfp',
         component: () => import('@/pages/EventCfp.vue'),
