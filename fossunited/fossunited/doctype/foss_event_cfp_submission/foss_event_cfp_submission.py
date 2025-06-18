@@ -167,9 +167,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             speaker.photo = ""
 
         chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
+        og_url = frappe.db.get_single_value("Ograph URL", "ograph_url")
 
-        image = "https://og.fossunited.org/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(
+        image = "{og_url}/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(  # noqa: E501
             self=self,
+            og_url=og_url,
             talk_title_short=textwrap.shorten(self.talk_title, width=50),
             chapter_name=chapter_name,
             speaker=speaker,
