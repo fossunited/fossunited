@@ -332,12 +332,11 @@ const updateErrors = ref('')
 
 const isValidUrl = (url) => {
   try {
-    isUrl = new URL(string);
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
   } catch (_) {
     return false;
   }
-
-  return url.protocol === "http:" || url.protocol === "https:";
 }
 
 const updateProfileErrors = () => {
@@ -360,7 +359,7 @@ const updateProfileErrors = () => {
   }
   Object.keys(socials).forEach((key) => {
     const url = socials[key]
-    if (url && isValidUrl(url)) {
+    if (url && !isValidUrl(url)) {
       errors.push(`\n${key} is not a valid url`)
     }
   })
