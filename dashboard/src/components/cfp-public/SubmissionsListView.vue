@@ -65,7 +65,7 @@ watch(
 <template>
   <LoadingText v-if="submissions.loading" class="w-5 h-5 self-center" />
   <Suspense>
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col gap-4 w-full mb-12">
       <div class="w-full flex justify-between items-end gap-4">
         <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
           <template #suffix>
@@ -75,6 +75,12 @@ watch(
         <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
       </div>
       <SubmissionsList v-model="submissions.data" />
+      <div
+        v-if="submissions.data.length == 0"
+        class="w-full flex justify-center items-center text-base text-gray-600"
+      >
+        No proposals found
+      </div>
     </div>
   </Suspense>
 </template>

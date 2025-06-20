@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.api.cfp import get_speakers
+from fossunited.api.cfp import get_custom_answers, get_speakers
 from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
 from fossunited.fossunited.utils import get_doc_likes
 
@@ -20,7 +20,12 @@ def get_event_proposals(
     Returns:
         list: proposals of an event
     """
-    has_anonymous_cfps = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
+    cfp = frappe.db.get_value(
+        EVENT_CFP,
+        {"event": event},
+        ["anonymise_proposals", "has_public_custom_responses"],
+        as_dict=True,
+    )
 
     fields = [
         "name",
@@ -46,10 +51,10 @@ def get_event_proposals(
         likes = get_doc_likes(PROPOSAL, proposal.name)
         proposal["_likes"] = len(likes)
         proposal["_is_liked_by_user"] = frappe.session.user in likes
-
-    if not has_anonymous_cfps:
-        for proposal in proposals:
+        if not cfp.has_anonymous_cfps:
             proposal["_speaker"] = get_speakers(proposal.name)
+        if cfp.has_public_custom_responses:
+            proposal.update(get_custom_answers(proposal.name))
 
     return proposals
 
