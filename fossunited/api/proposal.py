@@ -55,7 +55,9 @@ def get_event_proposals(
 
 
 @frappe.whitelist(allow_guest=True)
-def get_public_proposal_filters():
+def get_public_proposal_filters(
+    event: str,
+):
     filter_fields = [
         {
             "fieldname": "status",
@@ -63,6 +65,49 @@ def get_public_proposal_filters():
             "options": "Approved\nRejected\nReview Pending\nScreening",
             "label": "Status",
         },
+        {
+            "fieldname": "session_type",
+            "fieldtype": "Select",
+            "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nBirds of Feather(BoF)",
+            "label": "Session Type",
+        },
+        {
+            "fieldname": "is_first_talk",
+            "fieldtype": "Select",
+            "options": "Yes\nNo",
+            "label": "Is First Talk?",
+        },
+        {
+            "fieldname": "intended_audience",
+            "fieldtype": "Select",
+            "options": "Beginner\nIntermediate\nAdvanced",
+        },
     ]
+
+    cfp = frappe.db.get_value(
+        EVENT_CFP, {"event": event}, ["name", "has_public_custom_responses"], as_dict=True
+    )
+
+    if cfp.has_public_custom_responses:
+        custom_fields = frappe.get_all(
+            "FOSS Custom Question",
+            filters={
+                "parenttype": EVENT_CFP,
+                "parent": cfp.name,
+            },
+            fields=["question", "type", "description", "options"],
+            limit_page_length=9999,
+        )
+
+        for index, field in enumerate(custom_fields, start=1):
+            filter_fields.append(
+                {
+                    "fieldname": f"custom_question_{index}",
+                    "fieldtype": field.type,
+                    "label": field.question,
+                    "options": field.options or "",
+                    "description": field.description or "",
+                }
+            )
 
     return filter_fields
