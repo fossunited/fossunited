@@ -51,7 +51,7 @@ def get_event_proposals(
         likes = get_doc_likes(PROPOSAL, proposal.name)
         proposal["_likes"] = len(likes)
         proposal["_is_liked_by_user"] = frappe.session.user in likes
-        if not cfp.has_anonymous_cfps:
+        if not cfp.anonymise_proposals:
             proposal["_speaker"] = get_speakers(proposal.name)
         if cfp.has_public_custom_responses:
             proposal.update(get_custom_answers(proposal.name))

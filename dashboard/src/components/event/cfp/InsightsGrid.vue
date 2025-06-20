@@ -2,7 +2,7 @@
 import InsightCard from '@/components/ui/InsightCard.vue'
 import { IconArrowUp } from '@tabler/icons-vue'
 import { createResource, Badge } from 'frappe-ui'
-import { useRoute } from 'vue-router'
+import { statusIndicatorColor } from '@/helpers/cfp'
 
 const props = defineProps({
   eventId: {
@@ -42,6 +42,12 @@ const getClasses = {
             <IconArrowUp class="w-3 h-3" />
             <span> {{ insight.today }} </span>
           </Badge>
+        </template>
+        <template #description>
+          <div
+            class="w-full h-1 rounded-full bg-opacity-50"
+            :class="'bg-' + statusIndicatorColor(insight.label)"
+          ></div>
         </template>
       </InsightCard>
     </div>

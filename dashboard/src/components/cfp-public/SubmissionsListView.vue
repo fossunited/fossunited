@@ -63,7 +63,6 @@ watch(
 )
 </script>
 <template>
-  <LoadingText v-if="submissions.loading" class="w-5 h-5 self-center" />
   <Suspense>
     <div class="flex flex-col gap-4 w-full mb-12">
       <div class="w-full flex justify-between items-end gap-4">
@@ -76,11 +75,12 @@ watch(
       </div>
       <SubmissionsList v-model="submissions.data" />
       <div
-        v-if="submissions.data.length == 0"
+        v-if="submissions.data?.length == 0"
         class="w-full flex justify-center items-center text-base text-gray-600"
       >
         No proposals found
       </div>
     </div>
   </Suspense>
+  <LoadingText v-if="submissions.loading" class="w-5 h-5 self-center" />
 </template>
