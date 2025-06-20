@@ -19,7 +19,7 @@ defineProps({
 })
 </script>
 <template>
-  <div class="flex flex-col gap-4 justify-between border rounded p-4">
+  <div class="bg-white flex flex-col gap-4 justify-between border rounded p-4">
     <div class="flex flex-col gap-4">
       <slot name="title">
         <span class="text-sm font-normal text-gray-600">{{ title }}</span>

@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.api.cfp import get_speakers
 from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
 from fossunited.fossunited.utils import get_doc_likes
 
@@ -19,14 +20,18 @@ def get_event_proposals(
     Returns:
         list: proposals of an event
     """
+    has_anonymous_cfps = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
 
     fields = [
         "name",
         "route",
         "talk_title",
         "session_type",
-        "full_name",
         "status",
+        "session_categories",
+        "intended_audience",
+        "creation",
+        "modified",
     ]
 
     proposals = frappe.get_all(
@@ -37,12 +42,72 @@ def get_event_proposals(
         order_by="talk_title",
     )
 
-    is_cfp_anonymous = frappe.db.get_value(EVENT_CFP, {"event": event}, "anonymise_proposals")
-
     for proposal in proposals:
-        proposal["likes"] = len(get_doc_likes(PROPOSAL, proposal["name"]))
-        if is_cfp_anonymous and proposal.status != "Approved":
-            proposal.full_name = ""
-        del proposal["name"]
+        likes = get_doc_likes(PROPOSAL, proposal.name)
+        proposal["_likes"] = len(likes)
+        proposal["_is_liked_by_user"] = frappe.session.user in likes
+
+    if not has_anonymous_cfps:
+        for proposal in proposals:
+            proposal["_speaker"] = get_speakers(proposal.name)
 
     return proposals
+
+
+@frappe.whitelist(allow_guest=True)
+def get_public_proposal_filters(
+    event: str,
+):
+    filter_fields = [
+        {
+            "fieldname": "status",
+            "fieldtype": "Select",
+            "options": "Approved\nRejected\nReview Pending\nScreening",
+            "label": "Status",
+        },
+        {
+            "fieldname": "session_type",
+            "fieldtype": "Select",
+            "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nBirds of Feather(BoF)",
+            "label": "Session Type",
+        },
+        {
+            "fieldname": "is_first_talk",
+            "fieldtype": "Select",
+            "options": "Yes\nNo",
+            "label": "Is First Talk?",
+        },
+        {
+            "fieldname": "intended_audience",
+            "fieldtype": "Select",
+            "options": "Beginner\nIntermediate\nAdvanced",
+        },
+    ]
+
+    cfp = frappe.db.get_value(
+        EVENT_CFP, {"event": event}, ["name", "has_public_custom_responses"], as_dict=True
+    )
+
+    if cfp.has_public_custom_responses:
+        custom_fields = frappe.get_all(
+            "FOSS Custom Question",
+            filters={
+                "parenttype": EVENT_CFP,
+                "parent": cfp.name,
+            },
+            fields=["question", "type", "description", "options"],
+            limit_page_length=9999,
+        )
+
+        for index, field in enumerate(custom_fields, start=1):
+            filter_fields.append(
+                {
+                    "fieldname": f"custom_question_{index}",
+                    "fieldtype": field.type,
+                    "label": field.question,
+                    "options": field.options or "",
+                    "description": field.description or "",
+                }
+            )
+
+    return filter_fields

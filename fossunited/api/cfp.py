@@ -24,6 +24,7 @@ def get_cfp_from_route(route: str) -> dict:
             "event_location",
             "event_start_date",
             "event_end_date",
+            "event_description",
         ],
         as_dict=True,
     )
@@ -34,7 +35,7 @@ def get_cfp_from_route(route: str) -> dict:
     return cfp
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_cfp_submissions_insight(event_id: str) -> list:
     cfp_form_id = frappe.db.get_value(EVENT_CFP, {"event": event_id}, "name")
 
@@ -44,7 +45,7 @@ def get_cfp_submissions_insight(event_id: str) -> list:
 
     insight_values = [
         {
-            "label": "Total Submissions",
+            "label": "Total",
             "count": frappe.db.count(PROPOSAL, filters),
             "today": frappe.db.count(PROPOSAL, today_filters),
         }
