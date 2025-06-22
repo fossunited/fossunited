@@ -105,7 +105,7 @@ const handleShowcaseUpdate = () => {
     url: 'frappe.client.set_value',
     makeParams() {
       return {
-        doctype: 'FOSS Event Project Showcase',
+        doctype: 'Event Project Showcase',
         name: showcase.value.name,
         fieldname: fields,
       }

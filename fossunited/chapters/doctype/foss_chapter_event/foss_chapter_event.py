@@ -41,10 +41,10 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
-        from fossunited.fossunited.doctype.foss_event_project_showcase.foss_event_project_showcase import (  # noqa: E501
-            FOSSEventProjectShowcase,
+        from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (  # noqa: E501
+            EventProjectShowcase,
         )
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
@@ -83,7 +83,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
-        project_showcase: DF.Table[FOSSEventProjectShowcase]
+        project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
