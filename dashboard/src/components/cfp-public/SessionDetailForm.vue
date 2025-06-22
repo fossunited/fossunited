@@ -9,7 +9,7 @@
       :id="`${_field.fieldname}_field`"
       :key="index"
       v-model:fields="fields"
-      v-if="_field.fieldname != 'withdrawn' || showWithdrawal"
+      v-if="_field.fieldname != 'is_withdrawn' || showWithdrawal"
       :field="_field"
       :class="{ hidden: _field.fieldname === 'other_category' }"
     />

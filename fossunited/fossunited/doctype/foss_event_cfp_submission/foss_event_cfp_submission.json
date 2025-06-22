@@ -13,6 +13,7 @@
   "is_published",
   "route",
   "status",
+  "is_withdrawn",
   "attendance_confirmed",
   "first_name",
   "last_name",
@@ -328,13 +329,19 @@
    "fieldname": "session_categories",
    "fieldtype": "Text",
    "label": "Session Categories"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_withdrawn",
+   "fieldtype": "Check",
+   "label": "Is Withdrawn?"
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-05-29 17:50:51.829599",
- "modified_by": "Administrator",
+ "modified": "2025-06-22 22:55:30.082517",
+ "modified_by": "arya@projectsegfau.lt",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
  "naming_rule": "Random",

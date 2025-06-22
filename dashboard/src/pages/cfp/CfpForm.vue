@@ -246,7 +246,6 @@ function submitForm() {
     proposalFormFields.value,
     proposalReferences.value,
     proposalSpeakers.value,
-    {},
   )
   errorMessages.value = ''
 

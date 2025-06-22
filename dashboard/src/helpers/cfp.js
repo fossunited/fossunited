@@ -12,7 +12,7 @@ export const getProposalFormFields = (cfpData) => {
     },
     {
       label: 'Withdraw Proposal',
-      fieldname: 'withdrawn',
+      fieldname: 'is_withdrawn',
       fieldtype: 'checkbox',
       required: false,
       value: false,
@@ -320,7 +320,7 @@ export const validateSpeakerFields = (speakers) => {
   return errors
 }
 
-const getTransformedProposalFields = (proposalFields, originalValues) => {
+const getTransformedProposalFields = (proposalFields) => {
   const transformedFields = {}
   const customAnswers = []
 
@@ -334,14 +334,6 @@ const getTransformedProposalFields = (proposalFields, originalValues) => {
     } else if (field.fieldname == 'session_categories') {
       let categories = field.value.join('\n')
       transformedFields['session_categories'] = categories
-    } else if (field.fieldname == 'withdrawn' && originalValues != {}) {
-      if (field.value == true) {
-        transformedFields['status'] = 'Withdrawn'
-      } else if (originalValues['status'] == 'Withdrawn') {
-        transformedFields['status'] = 'Review Pending'
-      } else {
-        transformedFields['status'] = originalValues['status']
-      }
     } else {
       transformedFields[field.fieldname] = field.value
     }
@@ -380,9 +372,9 @@ const getTransformedSpeakers = (speakers) => {
   }
 }
 
-export const getTransformedSubmissionFields = (proposalFields, referenceItems, speakers, originalValues) => {
+export const getTransformedSubmissionFields = (proposalFields, referenceItems, speakers) => {
   return {
-    ...getTransformedProposalFields(proposalFields, originalValues),
+    ...getTransformedProposalFields(proposalFields),
     ...getTransformedReferenceItems(referenceItems),
     ...getTransformedSpeakers(speakers),
   }

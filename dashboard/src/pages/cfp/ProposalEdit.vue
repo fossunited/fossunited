@@ -112,12 +112,6 @@ const mapTalkFields = () => {
         (answer) => answer.question === field.label,
       )
       field.value = customAnswer ? customAnswer.response : null
-    } else if (field.fieldname === 'withdrawn' && submission.doc['status']) {
-      if (submission.doc['status'] === 'Withdrawn') {
-        field.value = true
-      } else {
-        field.value = false
-      }
     } else {
       field.value = submission.doc[field.fieldname]
     }
@@ -155,7 +149,6 @@ const saveProposal = () => {
     formFields.value,
     submission.doc.references,
     speakerFields.value,
-    submission.doc,
   )
 
   submission.setValue
