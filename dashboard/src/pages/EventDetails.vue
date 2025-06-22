@@ -229,7 +229,7 @@ const setBannerImage = (file) => {
   if (file.file_url) {
     toast.success('Banner image uploaded successfully')
   } else {
-    toast.info('Banner image removed successfully')
+    toast.info('Banner image removed successfully, will default to chapter banner if set.')
   }
 }
 
