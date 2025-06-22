@@ -7,6 +7,7 @@
       <Button
         class="w-fit"
         label="Add Volunteer"
+        v-if="isLead()"
         icon-left="plus"
         size="md"
         @click="showAddmodal = true"
@@ -16,7 +17,12 @@
     <!-- VOLUNTEERS GRID -->
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
-        <template v-if="member.email != session.user" #actions>
+        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+          <Button label="Edit" @click="handleEditmodal(member)" />
+          <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
+        </template>
+        <template v-if="member.email === session.user" #actions>
+          <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
         <div class="flex justify-between">
@@ -36,7 +42,6 @@
     <div v-if="selectedMember">
       <Dialog
         v-model="showRemoveModal"
-        class="z-50"
         :options="{
           title: 'Remove Team Member?',
           message: `Are you sure you want to remove ${selectedMember.full_name} from the team?`,
@@ -58,8 +63,22 @@
             },
           ],
         }"
+        class="z-50"
       >
       </Dialog>
+    </div>
+
+    <!-- EDIT MEMBER ROLE -->
+    <div v-if="selectedMember && showEditmodal">
+      <EditMemberDialog
+        v-model="showEditmodal"
+        class="z-50"
+        :event="event"
+        :member=selectedMember
+        :isLead=isLead()
+        @update:edit-member="editNewMember"
+        @close-dialog="showEditmodal = false"
+      />
     </div>
 
     <div v-if="showAddmodal">
@@ -76,12 +95,21 @@
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
 import AddMemberDialog from '@/components/chapter/AddMember.vue'
+import EditMemberDialog from '@/components/chapter/EditMember.vue'
 import { createDocumentResource, Badge, Dialog } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, inject } from 'vue'
 const session = inject('$session')
 
 const route = useRoute()
+
+const isLead = () => {
+    let currentUser = event.doc.event_members.filter((m) => m.email === session.user)
+    if (currentUser[0].role === "Lead") {
+      return true
+    }
+    return false
+}
 
 const event = createDocumentResource({
   doctype: 'FOSS Chapter Event',
@@ -91,14 +119,34 @@ const event = createDocumentResource({
 })
 
 const showAddmodal = ref(false)
+const showEditmodal = ref(false)
 
-const addNewMember = (newMembers) => {
+const handleEditmodal = (member) => {
+  showEditmodal.value = true
+  selectedMember.value = member
+}
+
+const editNewMember = (member, role) => {
+  showEditmodal.value = false
+  let updatedMembers = event.doc.event_members
+  updatedMembers.forEach((m, idx) => {
+    if (m.idx === member.idx) {
+      m.role = role
+    }
+    m.idx = idx + 1
+  })
+  event.setValue.submit({
+    event_members: updatedMembers,
+  })
+}
+
+const addNewMember = (newMembers, role) => {
   const updatedMembers = event.doc.event_members.concat(
     newMembers.map((value, idx) => {
       return {
         idx: event.doc.event_members.length + idx + 1,
         member: value.value,
-        role: 'Volunteer',
+        role: role,
       }
     }),
   )

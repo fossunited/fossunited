@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { isValidUrl } from './utils'
+import { createResource } from 'frappe-ui'
 
 export const getProposalFormFields = (cfpData) => {
   const baseFields = ref([
@@ -49,8 +50,9 @@ export const getProposalFormFields = (cfpData) => {
         { label: 'Yes', value: 'Yes' },
         { label: 'No', value: 'No' },
       ],
+      required: true,
       value: '',
-      description: 'Please select Yes if this is your first talk.',
+      description: 'Please select Yes if this is your first talk (ever!)',
     },
     {
       label: 'Intended Audience',
@@ -377,5 +379,78 @@ export const getTransformedSubmissionFields = (proposalFields, referenceItems, s
     ...getTransformedProposalFields(proposalFields),
     ...getTransformedReferenceItems(referenceItems),
     ...getTransformedSpeakers(speakers),
+  }
+}
+
+export const getCfpFilterFields = async (eventId) => {
+  const fields = createResource({
+    url: 'fossunited.api.cfp.get_proposal_filter_fields',
+    makeParams() {
+      return {
+        event_id: eventId,
+      }
+    },
+  })
+
+  await fields.fetch()
+
+  return fields
+}
+
+export const filterSubmissions = (cfpSubmissions, filters) => {
+  let filteredSubmissions = [...cfpSubmissions]
+
+  Object.entries(filters).forEach(([key, value]) => {
+    const operator = value[0]
+    const filterValue = value[1]
+
+    filteredSubmissions = filteredSubmissions.filter((submission) => {
+      let result
+      switch (operator) {
+        case 'like':
+          result = submission[key]?.toLowerCase().includes(filterValue.toLowerCase())
+          break
+        case 'not like':
+          result = !submission[key]?.toLowerCase().includes(filterValue.toLowerCase())
+          break
+        case '!=':
+          result = submission[key] !== filterValue
+          break
+        case '<':
+          result = submission[key] < filterValue
+          break
+        case '>':
+          result = submission[key] > filterValue
+          break
+        case '<=':
+          result = submission[key] <= filterValue
+          break
+        case '>=':
+          result = submission[key] >= filterValue
+          break
+        default:
+          result = submission[key] === filterValue
+          break
+      }
+
+      return result
+    })
+  })
+
+  return filteredSubmissions
+}
+
+export const statusIndicatorColor = (status) => {
+  switch (status) {
+    case 'Approved':
+      return 'green-400'
+    case 'Review Pending':
+      return 'orange-400'
+    case 'Rejected':
+      return 'red-400'
+    case 'Screening':
+      return 'gray-400'
+    default:
+      return 'blue-400'
   }
 }

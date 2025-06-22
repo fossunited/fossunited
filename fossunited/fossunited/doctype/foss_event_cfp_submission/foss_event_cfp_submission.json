@@ -207,8 +207,7 @@
    "fieldname": "is_first_talk",
    "fieldtype": "Select",
    "label": "Is this your first talk?",
-   "options": "Yes\nNo",
-   "reqd": 1
+   "options": "Yes\nNo"
   },
   {
    "fieldname": "meta_info_section",
@@ -341,7 +340,7 @@
  "is_published_field": "is_published",
  "links": [],
  "modified": "2025-06-22 22:55:30.082517",
- "modified_by": "arya@projectsegfau.lt",
+ "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
  "naming_rule": "Random",
@@ -397,6 +396,16 @@
    "role": "CFP Reviewer",
    "select": 1,
    "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 2,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "CFP Reviewer",
+   "share": 1
   }
  ],
  "row_format": "Dynamic",

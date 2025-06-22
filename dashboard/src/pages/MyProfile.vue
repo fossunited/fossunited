@@ -84,6 +84,15 @@
               title="Make Profile Private"
               @click="toggleProfilePrivacy()"
             />
+            <Switch
+              v-model="profile.data.show_activity"
+              size="sm"
+              label="Show Community Activity"
+              description="Enabling this will allow others to view which FOSS United events you have attended till date."
+              aria-label="Show Community Activity"
+              title="Show Community Activity"
+              @click="toggleShowActivity()"
+            />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
             </div>
@@ -127,6 +136,26 @@
               </div>
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
+            <FormControl
+              v-model="profile_dict.cfp_visibility"
+              type="select"
+              :options="[
+                {
+                  label: 'Everyone',
+                  value: 'Everyone',
+                },
+                {
+                  label: 'Chapter Volunteers',
+                  value: 'Chapter Volunteers',
+                },
+                {
+                  label: 'Only Me',
+                  value: 'Only Me',
+                },
+              ]"
+              label="CFP Visibility"
+              description="Chose who all can see the CFP Proposals you have made till date"
+            />
             <FormControl
               v-model="profile_dict.bio"
               label="Short Tagline"
@@ -188,6 +217,7 @@ const profile_dict = reactive({
   user: '',
   username: '',
   bio: '',
+  cfp_visibility: '',
   current_city: '',
   about: '',
   website: '',
@@ -199,7 +229,7 @@ const profile_dict = reactive({
   youtube: '',
   devto: '',
   medium: '',
-  mastodon: ''
+  mastodon: '',
 })
 
 const profile = createResource({
@@ -214,7 +244,9 @@ const profile = createResource({
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg'].includes(extn)) {
+  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    updateErrors.value = 'Only PNG and JPG images are allowed'
+    toast.error(updateErrors.value)
     return 'Only PNG and JPG images are allowed'
   }
 }
@@ -278,15 +310,36 @@ const toggleProfilePrivacy = () => {
   })
 }
 
+const toggleShowActivity = () => {
+  createResource({
+    url: 'fossunited.api.profile.toggle_show_activity',
+    makeParams() {
+      return {
+        value: profile.data.show_activity,
+      }
+    },
+    auto: true,
+    onSuccess() {
+      if (profile.data.show_activity) {
+        toast.info('Community Activity will be shown on your profile page now')
+      } else {
+        toast.info("Community Activity won't be shown on your profile page now")
+      }
+      profile.fetch()
+    },
+  })
+}
+
 const updateErrors = ref('')
 
-// Source - https://stackoverflow.com/a/5717133
-var pattern = new RegExp('^(https?:\\/\\/)' + // protocol
-  '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-  '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-  '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-  '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-  '(\\#[-a-z\\d_]*)?$', 'i'); // fragment locator
+const isValidUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
 
 const updateProfileErrors = () => {
   const errors = []
@@ -306,13 +359,12 @@ const updateProfileErrors = () => {
     medium: profile_dict.medium,
     mastodon: profile_dict.mastodon,
   }
-
-  for (let index = 0; index < Object.keys(socials).length; index++) {
-    // error out if it doesnt match regex AND it is not empty variable
-    if ((!pattern.test(Object.values(socials)[index])) && (Object.values(socials)[index] != null)) {
-      errors.push('\n'+Object.keys(socials)[index] + ' is not a valid url')
+  Object.keys(socials).forEach((key) => {
+    const url = socials[key]
+    if (url && !isValidUrl(url)) {
+      errors.push(`\n${key} is not a valid url`)
     }
-  }
+  })
   return errors
 }
 

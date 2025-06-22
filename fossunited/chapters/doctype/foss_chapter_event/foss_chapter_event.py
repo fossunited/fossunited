@@ -41,6 +41,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
+        from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (  # noqa: E501
+            EventProjectShowcase,
+        )
         from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
@@ -80,6 +83,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
+        project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
@@ -88,15 +92,13 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_cfp: DF.Check
         show_photos: DF.Check
         show_rsvp: DF.Check
-        # This attribute is unused at the moment - it was previously used to determine whether
-        # or not to display the schedule tab on events
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
-        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]  # noqa: F722, F821
+        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]  # noqa: F821
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
-        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F722, F821
+        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F821
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 
@@ -219,33 +221,28 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
         context.schedule_dict = self.get_schedule_dict()
 
-        context.pagetitle = self.event_name
-
-        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
-        context.description = (
-            self.event_name
-            + " is being organized on "
-            + self.event_start_date.strftime("%A, %-d %B %Y")
-            + " by "
-            + self.chapter_name
-            + " Community. "
-            + desc_short
-        )
-
-        context.image = (
-            "https://og.fossunited.org/gen/events?event_name="
-            + self.event_name
-            + "&event_date="
-            + self.event_start_date.strftime("%-d %B %Y")
-            + "&event_type="
-            + self.event_type
-            + "&event_chapter="
-            + self.chapter_name
-            + "&event_location="
-            + str(self.event_location)
-        )
+        context.pagetitle, context.description, context.image = self.get_meta()
 
         context.no_cache = 1
+
+    def get_meta(self):
+        pagetitle = self.event_name
+
+        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
+
+        description = "{self.event_name} is being organized on {start_date} by {self.chapter_name} Community. {desc_short}".format(  # noqa: E501
+            self=self,
+            desc_short=desc_short,
+            start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
+        )
+
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+
+        image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
+            self=self, og_url=og_url, start_date=self.event_start_date.strftime("%-d %B %Y")
+        )
+
+        return pagetitle, description, image
 
     def get_navbar_items(self):
         navbar_items = [
@@ -259,8 +256,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         if is_user_team_member(self.chapter, frappe.session.user):
             return navbar_items
 
-        if not self.show_speakers:
-            navbar_items.remove("speakers")
         if not self.show_rsvp or self.is_paid_event:
             navbar_items.remove("rsvp")
         if not self.show_cfp:

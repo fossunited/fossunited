@@ -1,5 +1,5 @@
 <template>
-  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br>
+  <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br />
   <div>
     <div class="flex gap-2 items-center px-4 pt-4 border border-b-0 rounded-t">
       <span class="text-base text-gray-600">Review: </span>
@@ -76,10 +76,10 @@ const errorMessages = ref('')
 const validateRemark = () => {
   const errors = []
 
-  if (review.value != "Yes" && (!remarks.value || remarks.value === "<p></p>")) {
-       errors.push("You cannot submit the review without adding remarks.")
-   }
-   return errors
+  if (review.value != 'Yes' && (!remarks.value || remarks.value === '<p></p>')) {
+    errors.push('You cannot submit the review without adding remarks.')
+  }
+  return errors
 }
 
 const submitReview = () => {

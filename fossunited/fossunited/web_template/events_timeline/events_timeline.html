@@ -1,6 +1,11 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
 
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
+
 <style>
   .events-timeline {
     padding-top: 7rem;
@@ -71,6 +76,31 @@
     gap: 1.5rem;
   }
 
+  .ics-button {
+    display: flex;
+    height: 44px;
+    width: 230px;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex: 1 0 0;
+    border-radius: var(--radius-4, 8px);
+    background: #1A1A1A;
+    color: #FAFAFA;
+    /* text/base/medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 115%; /* 16.1px */
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
+  }
+  .ics-button:hover {
+    background: #2B2B2B;
+  }
+
   @media (max-width: 768px) {
     .search-filter-controlpanel {
       flex-direction: column;
@@ -134,11 +164,15 @@
         Filter the events to show only those in your city.
       </p>
     </div>
+    <button onclick="downloadEventIcs()" class="child-container--subtext ics-button">
+      Download ICS File
+      <i class="ti ti-download"></i>
+    </button>
 
     <!--Primary Event cards listing-->
     {% set grouped_events = get_grouped_events() %}
     {% for group, events in grouped_events.items() %}
-      <div class="event-group" v-if="searchText.length == 0 && cityChapter === 'All Cities'" role="region">
+      <div class="event-group" role="region">
         <h3>{{ group }}</h3>
         {% for month, month_events in events.items() %}
           <h4
@@ -157,7 +191,8 @@
               {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
               {% if event.event_name %}
                 <div
-                  class="event-card-holder"
+                  class="event-card-holder {{ group | replace(" ", "") }}"
+                  id="{{ event.name }}"
                   role="listitem"
                   v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
                 >
@@ -165,7 +200,8 @@
                 </div>
               {% else %}
                 <div
-                  class="event-card-holder"
+                  class="event-card-holder {{ group | replace(" ", "") }}"
+                  id="{{ event.name }}"
                   role="listitem"
                   v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
                 >
@@ -177,43 +213,6 @@
         {% endfor %}
       </div>
     {% endfor %}
-
-    <!--Searched and Filtered event cards listing-->
-    <div
-      v-if="searchText.length > 0 || cityChapter != 'All Cities'"
-      aria-live="polite"
-      role="region"
-      aria-labelledby="filtered-events-label"
-    >
-      <h3 id="filtered-events-label" class="sr-only">Filtered Event Results</h3>
-      <div class="events-grid-4" role="list">
-        {% for group, events in grouped_events.items() %}
-          {% for month, month_events in events.items() %}
-            {% for event in month_events %}
-              {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
-                {% if event.event_name %}
-              <div
-                class="event-card-holder"
-                role="listitem"
-                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
-              >
-                  {{ event_card(event) }}
-              </div>
-                {% else %}
-              <div
-                class="event-card-holder"
-                role="listitem"
-                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
-              >
-                  {{ hackathon_card(event) }}
-              </div>
-                {% endif %}
-            {% endfor %}
-          {% endfor %}
-        {% endfor %}
-      </div>
-    </div>
-  </div>
 
   <script>
     PetiteVue.createApp({
@@ -240,7 +239,11 @@
         )
       },
       updateTicker() {
+        // mentioning each variable here, will make sure reactivity is appliedie
+        // ie. every time one of thse 3 vars is changed, it will make sure to reload all v-shows/v-ifs
         this.mustAttendOnly
+        this.searchText
+        this.cityChapter
         PetiteVue.nextTick(() => {
           this.ticker++
           PetiteVue.nextTick(() => {
@@ -249,5 +252,29 @@
         })
       },
     }).mount()
+
+    function downloadEventIcs() {
+      let event_ids = new Array()
+      document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
+        event_ids.push(event.id)
+      })
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: {
+          'event_ids': event_ids,
+        },
+        callback: (r) => {
+          if (r.message) {
+            const blob = new Blob([r.message], { type: 'text/calendar' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `events.ics`
+            a.click()
+            URL.revokeObjectURL(url)
+          }
+        },
+      })
+    }
   </script>
 </div>

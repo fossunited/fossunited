@@ -209,7 +209,8 @@ const chapter = inject('chapter')
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg'].includes(extn)) {
+  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    toast.error('Only PNG and JPG images are allowed')
     return 'Only PNG and JPG images are allowed'
   }
 }
@@ -228,7 +229,7 @@ const setBannerImage = (file) => {
   if (file.file_url) {
     toast.success('Banner image uploaded successfully')
   } else {
-    toast.info('Banner image removed successfully')
+    toast.info('Banner image removed successfully, will default to chapter banner if set.')
   }
 }
 

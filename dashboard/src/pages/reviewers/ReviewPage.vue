@@ -27,7 +27,12 @@
             {{ dayjs(event.data.event_start_date).format('D MMM YYYY') }}
           </span>
         </div>
-        <ProposalList :event="event.data.name" @open:submission="handleOpenSubmission($event)" />
+        <Suspense>
+          <ProposalList :event="event.data.name" @open:submission="handleOpenSubmission($event)" />
+          <template #fallback>
+            <LoadingIndicator class="w-4 h-4 place-self-center" />
+          </template>
+        </Suspense>
       </div>
       <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
         <ProposalDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" />
@@ -44,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { createResource, usePageMeta } from 'frappe-ui'
+import { createResource, usePageMeta, LoadingIndicator } from 'frappe-ui'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'

@@ -90,6 +90,16 @@ def toggle_profile_privacy(value):
 
 
 @frappe.whitelist()
+def toggle_show_activity(value):
+    user_doc = get_session_user_profile()
+    try:
+        frappe.db.set_value(USER_PROFILE, user_doc.name, "show_activity", value)
+        return True
+    except Exception as e:
+        frappe.throw(str(e))
+
+
+@frappe.whitelist()
 def update_profile(fields_dict):
     """
     Updates User Profile data.
@@ -102,6 +112,7 @@ def update_profile(fields_dict):
             "full_name": fields_dict.get("full_name"),
             "username": fields_dict.get("username"),
             "bio": fields_dict.get("bio"),
+            "cfp_visibility": fields_dict.get("cfp_visibility"),
             "current_city": fields_dict.get("current_city"),
             "about": fields_dict.get("about"),
             "website": fields_dict.get("website"),
