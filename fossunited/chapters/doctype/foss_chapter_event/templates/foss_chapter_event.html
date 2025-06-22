@@ -68,6 +68,13 @@
           background='hsl(var(--clr-foss-mint-100))', icon='star-filled')
         }}{% endif %}
       </div>
+      <div class="header-section--socials-event">
+        {% for (k,v) in social_links.items() %}
+        <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+          <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+        </a>
+        {% endfor %}
+      </div>
       {% if doc.event_bio %}
         <div class="header--short-desc">{{ doc.event_bio }}</div>
       {% endif %}

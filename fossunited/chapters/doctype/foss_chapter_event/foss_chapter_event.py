@@ -9,6 +9,7 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import create_email_group
+from fossunited.chapters.doctype.foss_chapter.foss_chapter import FOSSChapter
 from fossunited.doctype_ids import (
     CAMPAIGN,
     CHAPTER,
@@ -220,6 +221,10 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.schedule_dict = self.get_schedule_dict()
 
         context.pagetitle, context.description, context.image = self.get_meta()
+
+        context.social_links = FOSSChapter.get_social_links(
+            frappe.get_doc(CHAPTER, {"name": self.chapter})
+        )
 
         context.no_cache = 1
 
