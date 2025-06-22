@@ -132,6 +132,26 @@
         {{ doc.event_description or 'No Description Available for this event' }}
       </div>
     </div>
+    {% if doc.project_showcase %}
+      <div class="community-partners-sections my-3">
+        <div class="sponsor--tier-block">
+          <h5>Project Showcases</h5>
+          <div class="sponsor--flex">
+            {% for showcase in doc.project_showcase %}
+              <a href="{{ showcase.link }}" class="sponsor--block">
+                <img
+                  src="{{ showcase.image }}"
+                  alt="{{ showcase.showcase_name }}"
+                  class="sponsor--image"
+                />
+                <p>{{ showcase.showcase_name }}</p>
+                <div class="member-card--role">{{ showcase.description }}</div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
     {% if doc.sponsor_list or doc.deck_link %}
       <div class="sponsors-section my-3">
         <h5 class="mt-3 mb-1">Sponsors</h5>

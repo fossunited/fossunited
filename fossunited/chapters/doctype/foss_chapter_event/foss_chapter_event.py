@@ -41,6 +41,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
+        from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (  # noqa: E501
+            EventProjectShowcase,
+        )
         from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
@@ -80,6 +83,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         paid_tshirts_available: DF.Check
         primary_button_label: DF.Data | None
         primary_button_url: DF.Data | None
+        project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
@@ -88,15 +92,13 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_cfp: DF.Check
         show_photos: DF.Check
         show_rsvp: DF.Check
-        # This attribute is unused at the moment - it was previously used to determine whether
-        # or not to display the schedule tab on events
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
-        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]  # noqa: F722, F821
+        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]  # noqa: F821
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
-        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F722, F821
+        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F821
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 
