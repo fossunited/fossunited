@@ -234,7 +234,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
         )
 
-        og_url = frappe.db.get_single_value("Ograph URL", "ograph_url")
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
         image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
             self=self, og_url=og_url, start_date=self.event_start_date.strftime("%-d %B %Y")

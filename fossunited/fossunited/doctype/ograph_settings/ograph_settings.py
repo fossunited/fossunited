@@ -5,7 +5,7 @@
 from frappe.model.document import Document
 
 
-class OgraphURL(Document):
+class OgraphSettings(Document):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
@@ -14,7 +14,7 @@ class OgraphURL(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        ograph_url: DF.Data
+        ograph_settings: DF.Data
     # end: auto-generated types
 
     pass
