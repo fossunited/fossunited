@@ -223,6 +223,8 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         context.pagetitle, context.description, context.image = self.get_meta()
 
+        context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
+
         context.no_cache = 1
 
     def get_meta(self):
