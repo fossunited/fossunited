@@ -62,7 +62,7 @@ jobs:
       - name: Install MariaDB Client
         run: |
           sudo apt-get update
-          sudo apt-get install -y mariadb-client-10.6
+          sudo apt-get install -y mariadb-client
 
       - name: Initialize Bench
         run: |
