@@ -68,7 +68,7 @@ def get_public_proposal_filters(
             "fieldname": "status",
             "fieldtype": "Select",
             "options": "Approved\nRejected\nReview Pending\nScreening",
-            "label": "Status",
+            "label": "Review Status",
         },
         {
             "fieldname": "session_type",
