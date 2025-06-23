@@ -68,7 +68,7 @@ def get_public_proposal_filters(
             "fieldname": "status",
             "fieldtype": "Select",
             "options": "Approved\nRejected\nReview Pending\nScreening",
-            "label": "Status",
+            "label": "Review Status",
         },
         {
             "fieldname": "session_type",
@@ -83,6 +83,7 @@ def get_public_proposal_filters(
             "label": "Is First Talk?",
         },
         {
+            "label": "Intended Audience",
             "fieldname": "intended_audience",
             "fieldtype": "Select",
             "options": "Beginner\nIntermediate\nAdvanced",
@@ -105,13 +106,15 @@ def get_public_proposal_filters(
         )
 
         for index, field in enumerate(custom_fields, start=1):
+            if field.type == "Radio Group":
+                field.type = "Select"
+
             filter_fields.append(
                 {
                     "fieldname": f"custom_question_{index}",
                     "fieldtype": field.type,
                     "label": field.question,
                     "options": field.options or "",
-                    "description": field.description or "",
                 }
             )
 
