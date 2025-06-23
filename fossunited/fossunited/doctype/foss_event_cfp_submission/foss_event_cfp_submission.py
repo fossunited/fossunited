@@ -108,9 +108,14 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
-        context.anonymous_cfps = frappe.db.get_value(
-            EVENT_CFP, self.linked_cfp, "anonymise_proposals"
+        cfp = frappe.db.get_value(
+            EVENT_CFP,
+            self.linked_cfp,
+            ["anonymise_proposals", "has_public_custom_responses"],
+            as_dict=True,
         )
+        context.anonymous_cfps = cfp.anonymise_proposals
+        context.has_public_custom_responses = cfp.has_public_custom_responses
         context.breadcrumbs = self.get_breadcrumb(event)
         context.session_categories = self.session_categories.splitlines()
         context.status_badge_theme = {
