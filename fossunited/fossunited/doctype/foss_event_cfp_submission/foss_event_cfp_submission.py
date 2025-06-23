@@ -72,6 +72,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_insert(self):
         self.check_status()
         self.validate_linked_cfp_exists()
+        self.validate_form_is_live()
 
     def before_save(self):
         self.set_route()
@@ -99,6 +100,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
+
+    def validate_form_is_live(self) -> None:
+        linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+        if not linked_cfp.status == "Live":
+            frappe.throw("The CFP Form for this event is not live", frappe.PermissionError)
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
