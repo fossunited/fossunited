@@ -106,13 +106,15 @@ def get_public_proposal_filters(
         )
 
         for index, field in enumerate(custom_fields, start=1):
+            if field.type == "Radio Group":
+                field.type = "Select"
+
             filter_fields.append(
                 {
                     "fieldname": f"custom_question_{index}",
                     "fieldtype": field.type,
                     "label": field.question,
                     "options": field.options or "",
-                    "description": field.description or "",
                 }
             )
 
