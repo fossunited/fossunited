@@ -4,7 +4,7 @@
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
 {% block meta_block %}
-{{ meta_tags(pagetitle, description, image) }}
+  {{ meta_tags(pagetitle, description, image) }}
 {% endblock %}
 
 {% block title %}{{ doc.talk_title }}{% endblock %}
@@ -19,6 +19,9 @@
     {{ prose_container("Key Takeaways", doc.key_takeaways) }}
     {{ references() }}
     {{ render_session_categories() }}
+    {% if has_public_custom_responses %}
+      {{ render_custom_responses() }}
+    {% endif %}
     {% if not anonymous_cfps %}
       {{ render_speakers() }}
     {% endif %}
@@ -132,6 +135,17 @@
     <div class="space-y-1 p-2 hidden">
       <div class="{{ prose_classes }} max-w-full">{{ speaker.bio }}</div>
     </div>
+  </div>
+{% endmacro %}
+
+{% macro render_custom_responses() %}
+  <div class="flex flex-col gap-4 w-full text-base">
+    {% for response in doc.custom_answers %}
+      <div class="flex flex-col gap-1">
+        <h5 class="text-gray-500">{{ response.question }}</h5>
+        <div>{{ response.response }}</div>
+      </div>
+    {% endfor %}
   </div>
 {% endmacro %}
 
