@@ -83,6 +83,7 @@ def get_public_proposal_filters(
             "label": "Is First Talk?",
         },
         {
+            "label": "Intended Audience",
             "fieldname": "intended_audience",
             "fieldtype": "Select",
             "options": "Beginner\nIntermediate\nAdvanced",
