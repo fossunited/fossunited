@@ -1082,6 +1082,16 @@ h6 {
   width: 1.2rem;
 }
 
+.header-section--socials-event {
+  padding: 0.5rem 0rem;
+  display: flex;
+  gap: 1rem;
+}
+.header-section--socials-event > a {
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
 .header-section--skills {
   padding: 1rem 2.5rem;
   gap: 0.6rem;

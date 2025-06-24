@@ -24,6 +24,7 @@
     "cfp_form_description_section",
     "cfp_form_description",
     "custom_questions_section",
+    "has_public_custom_responses",
     "cfp_custom_questions",
     "cfp_reviewers_tab",
     "cfp_reviewers"
@@ -137,10 +138,16 @@
       "fieldname": "meta_section",
       "fieldtype": "Section Break",
       "label": "Meta"
+    },
+    {
+      "default": "0",
+      "fieldname": "has_public_custom_responses",
+      "fieldtype": "Check",
+      "label": "Has Public Custom Responses"
     }
   ],
   "links": [],
-  "modified": "2025-03-19 13:26:13.993603",
+  "modified": "2025-06-19 20:22:36.333513",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
