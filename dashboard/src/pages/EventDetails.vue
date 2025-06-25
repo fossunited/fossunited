@@ -131,6 +131,12 @@
           label="Short Event Bio"
           description="This bio may be used in OG images and in event cards. Typically it is a one-liner."
         />
+        <FormControl
+          v-model="event.doc.show_speakers"
+          :type="'checkbox'"
+          size="md"
+          label="Show Speakers Tab"
+        />
         <TextEditor
           label="Event Description"
           class="col-span-2"
