@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import re
+import textwrap
 
 import frappe
 from frappe.exceptions import PermissionError
@@ -313,7 +314,33 @@ class FOSSUserProfile(WebsiteGenerator):
             context.volunteered,
         ) = self.get_user_activity()
 
+        context.pagetitle, context.description, context.image = self.get_meta()
+
         context.no_cache = 1
+
+    def get_meta(self):
+        if self.is_private:
+            return self.username, "Private Profile", ""
+
+        # eg. Arya | arya_k
+        pagetitle = self.full_name + " | " + self.username
+
+        desc_short = ""
+        if self.about:
+            desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.about), width=150)
+
+        description = "{self.full_name} is a FOSS United Community Member. {desc_short}".format(  # noqa: E501
+            self=self,
+            desc_short=desc_short,
+        )
+
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+
+        image = "{og_url}/gen/fossprofile?username={self.username}&full_name={self.full_name}&designation={self.bio}&image={self.profile_photo}".format(  # noqa: E501
+            self=self, og_url=og_url
+        )
+
+        return pagetitle, description, image
 
     def on_trash(self):
         frappe.delete_doc("User", self.user, force=True)
