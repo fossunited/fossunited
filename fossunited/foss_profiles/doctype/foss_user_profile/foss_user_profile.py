@@ -329,14 +329,14 @@ class FOSSUserProfile(WebsiteGenerator):
         if self.about:
             desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.about), width=150)
 
-        description = "{self.full_name} is a FOSS United Community Member. {desc_short}".format(  # noqa: E501
+        description = "{self.full_name} is a Community Member. {desc_short}".format(  # noqa: E501
             self=self,
             desc_short=desc_short,
         )
 
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
-        image = "{og_url}/gen/fossprofile?username={self.username}&full_name={self.full_name}&designation={self.bio}&image={self.profile_photo}".format(  # noqa: E501
+        image = "{og_url}/gen/profile?username={self.username}&full_name={self.full_name}&designation={self.bio}&image={self.profile_photo}".format(  # noqa: E501
             self=self, og_url=og_url
         )
 
