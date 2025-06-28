@@ -51,7 +51,7 @@ def get_support_item_content() -> list[dict[str, str]]:
         {
             "icon": "ti-cash",
             "heading": "Funding Support",
-            "content": "Financial aid of up to ₹50,000 per club annually and top performing clubs will get additional support up to ₹50,000 to host FOSS Hack.",
+            "content": "Financial aid of up to ₹50,000 per club annually and top performing clubs will get additional support up to ₹50,000 to host FOSS Hack.",  # noqa: E501
         },
     ]
 
