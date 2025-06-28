@@ -7,84 +7,84 @@ on:
   pull_request:
 
 concurrency:
-  group: develop-fossunited-${{ github.head_ref || github.run_id }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 jobs:
   tests:
-    name: Server
+    name: Server Tests
     runs-on: ubuntu-24.04
 
+    env:
+      MARIADB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD || 'root' }}
+      ADMIN_PASSWORD: 'admin'
+      SITE_NAME: 'development.localhost'
+      BENCH_PATH: '~/frappe-bench'
+      
     services:
       redis-cache:
-        image: redis:alpine
+        image: redis:7-alpine
         ports:
           - 13000:6379
+        options: --health-cmd="redis-cli ping" --health-interval=5s --health-timeout=2s --health-retries=5
+
       redis-queue:
-        image: redis:alpine
+        image: redis:7-alpine
         ports:
           - 11000:6379
+        options: --health-cmd="redis-cli ping" --health-interval=5s --health-timeout=2s --health-retries=5
+
       mariadb:
         image: mariadb:10.6
         env:
-          MYSQL_ROOT_PASSWORD: root
+          MYSQL_ROOT_PASSWORD: ${{ env.MARIADB_ROOT_PASSWORD }}
         ports:
           - 3306:3306
         options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - name: Checkout Code
+      - name: 1. Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: 2. Setup Python with Cache
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: pip
+          cache: 'pip'
 
-      - name: Setup Node
+      - name: 3. Setup Node.js with Cache
         uses: actions/setup-node@v4
         with:
-          node-version: 18
-          check-latest: true
+          node-version: '18.x'
+          cache: 'yarn'
 
-      - name: Cache Yarn
-        id: yarn-cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.cache/yarn
-            .yarn/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
-      - name: Install MariaDB Client
+      - name: 4. Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y mariadb-client
 
-      - name: Initialize Bench
+      - name: 5. Initialize Bench Environment
         run: |
-          pip install frappe-bench
-          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" $HOME/frappe-bench
-          mariadb -h 127.0.0.1 -P 3306 -u root -proot -e "SET GLOBAL character_set_server = 'utf8mb4'"
-          mariadb -h 127.0.0.1 -P 3306 -u root -proot -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
-
-      - name: Install App and Setup Site
-        working-directory: $HOME/frappe-bench
+          pip install frappe-bench==5.20.0
+          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
+          
+          mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
+          mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
+        
+      - name: 6. Install App and Setup Site
+        working-directory: ${{ env.BENCH_PATH }}
         run: |
           bench get-app fossunited $GITHUB_WORKSPACE
           bench setup requirements --dev
-          bench new-site --yes --db-root-password root --admin-password admin test_site
-          bench --site test_site install-app fossunited
-        env:
-          CI: 'Yes'
+          bench new-site ${{ env.SITE_NAME }} \
+            --db-root-password ${{ env.MARIADB_ROOT_PASSWORD }} \
+            --admin-password ${{ env.ADMIN_PASSWORD }} \
+            --no-mariadb-socket
+          bench --site ${{ env.SITE_NAME }} install-app fossunited
+          bench build
 
-      - name: Run Tests
-        working-directory: $HOME/frappe-bench
+      - name: 7. Run Tests
+        working-directory: ${{ env.BENCH_PATH }}
         run: |
-          bench --site test_site set-config allow_tests true
-          bench --site test_site run-tests --app fossunited
-        env:
-          TYPE: server
+          bench --site ${{ env.SITE_NAME }} set-config allow_tests true
+          bench --site ${{ env.SITE_NAME }} run-tests --app fossunited
