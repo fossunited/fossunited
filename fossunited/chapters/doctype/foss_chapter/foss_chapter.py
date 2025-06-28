@@ -26,7 +26,7 @@ class FOSSChapter(WebsiteGenerator):
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent"]  # noqa: F722, F821
+        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent", "New"]  # noqa: F722, F821
         chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
         city: DF.Link | None
         country: DF.Link | None
