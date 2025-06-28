@@ -19,7 +19,7 @@ jobs:
       MARIADB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD || 'root' }}
       ADMIN_PASSWORD: 'admin'
       SITE_NAME: 'development.localhost'
-      BENCH_PATH: '~/frappe-bench'
+      BENCH_PATH: '/home/runner/frappe-bench'
 
     services:
       redis-cache:
