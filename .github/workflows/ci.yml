@@ -20,7 +20,7 @@ jobs:
       ADMIN_PASSWORD: 'admin'
       SITE_NAME: 'development.localhost'
       BENCH_PATH: '~/frappe-bench'
-      
+
     services:
       redis-cache:
         image: redis:7-alpine
@@ -55,7 +55,7 @@ jobs:
       - name: 3. Setup Node.js with Cache
         uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '20.x'
           cache: 'yarn'
 
       - name: 4. Install System Dependencies
@@ -65,12 +65,12 @@ jobs:
 
       - name: 5. Initialize Bench Environment
         run: |
-          pip install frappe-bench==5.20.0
+          pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
-          
+
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
-        
+
       - name: 6. Install App and Setup Site
         working-directory: ${{ env.BENCH_PATH }}
         run: |
