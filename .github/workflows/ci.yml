@@ -60,12 +60,12 @@ jobs:
 
       - name: 3.5. Upgrade pip & install setuptools
         run: |
-          python -m pip install --upgrade pip setuptools wheel pkg-config
+          python -m pip install --upgrade pip setuptools wheel
 
       - name: 4. Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y mariadb-client
+          sudo apt-get install -y mariadb-client pkg-config
 
       - name: 5. Initialize Bench Environment
         run: |
