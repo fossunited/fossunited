@@ -13,10 +13,10 @@ concurrency:
 jobs:
   tests:
     name: Server Tests
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
     env:
-      MARIADB_ROOT_PASSWORD: ${{ secrets.DB_ROOT_PASSWORD || 'root' }}
+      MARIADB_ROOT_PASSWORD: 'root'
       ADMIN_PASSWORD: 'admin'
       SITE_NAME: 'development.localhost'
       BENCH_PATH: '/home/runner/frappe-bench'
@@ -43,10 +43,10 @@ jobs:
         options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - name: 1. Checkout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: 2. Setup Python with Cache
+      - name: Setup Python with Cache
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -62,12 +62,12 @@ jobs:
         run: |
           python -m pip install --upgrade pip setuptools wheel
 
-      - name: 4. Install System Dependencies
+      - name: 4. Install MariaDB
         run: |
-          sudo apt-get update
-          sudo apt-get install -y mariadb-client pkg-config
+          sudo apt-get update && sudo apt-get install -y mariadb-client=1:10.11.13-0ubuntu0.24.04.1
 
-      - name: 5. Initialize Bench Environment
+      - name: 5. Setup Bench Environment
+        shell: bash
         run: |
           pip install frappe-bench
           bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
@@ -80,15 +80,17 @@ jobs:
         run: |
           bench get-app fossunited $GITHUB_WORKSPACE
           bench setup requirements --dev
-          bench new-site ${{ env.SITE_NAME }} \
-            --db-root-password ${{ env.MARIADB_ROOT_PASSWORD }} \
-            --admin-password ${{ env.ADMIN_PASSWORD }} \
-            --no-mariadb-socket
+          bench new-site --db-root-password root --admin-password admin ${{ env.SITE_NAME }}
           bench --site ${{ env.SITE_NAME }} install-app fossunited
           bench build
+        env:
+          CI: 'Yes'
 
       - name: 7. Run Tests
         working-directory: ${{ env.BENCH_PATH }}
         run: |
+          source ./env/bin/activate
+          mariadb --host 127.0.0.1 --port 3306 -u root -proot
+          bench --site ${{ env.SITE_NAME }} set-config developer_mode 1
           bench --site ${{ env.SITE_NAME }} set-config allow_tests true
           bench --site ${{ env.SITE_NAME }} run-parallel-tests --app fossunited
