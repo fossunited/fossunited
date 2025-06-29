@@ -72,6 +72,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_insert(self):
         self.check_status()
         self.validate_linked_cfp_exists()
+        self.validate_form_is_live()
 
     def before_save(self):
         self.set_route()
@@ -100,11 +101,21 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
             frappe.throw("Invalid CFP", frappe.DoesNotExistError)
 
+    def validate_form_is_live(self) -> None:
+        linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+        if not linked_cfp.status == "Live":
+            frappe.throw("The CFP Form for this event is not live", frappe.PermissionError)
+
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
-        context.anonymous_cfps = frappe.db.get_value(
-            EVENT_CFP, self.linked_cfp, "anonymise_proposals"
+        cfp = frappe.db.get_value(
+            EVENT_CFP,
+            self.linked_cfp,
+            ["anonymise_proposals", "has_public_custom_responses"],
+            as_dict=True,
         )
+        context.anonymous_cfps = cfp.anonymise_proposals
+        context.has_public_custom_responses = cfp.has_public_custom_responses
         context.breadcrumbs = self.get_breadcrumb(event)
         context.session_categories = self.session_categories.splitlines()
         context.status_badge_theme = {
@@ -167,9 +178,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             speaker.photo = ""
 
         chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
-        image = "https://og.fossunited.org/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(
+        image = "{og_url}/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(  # noqa: E501
             self=self,
+            og_url=og_url,
             talk_title_short=textwrap.shorten(self.talk_title, width=50),
             chapter_name=chapter_name,
             speaker=speaker,

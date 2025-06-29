@@ -137,6 +137,26 @@
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
             <FormControl
+              v-model="profile_dict.cfp_visibility"
+              type="select"
+              :options="[
+                {
+                  label: 'Everyone',
+                  value: 'Everyone',
+                },
+                {
+                  label: 'Chapter Volunteers',
+                  value: 'Chapter Volunteers',
+                },
+                {
+                  label: 'Only Me',
+                  value: 'Only Me',
+                },
+              ]"
+              label="CFP Visibility"
+              description="Chose who all can see the CFP Proposals you have made till date"
+            />
+            <FormControl
               v-model="profile_dict.bio"
               label="Short Tagline"
               description="A short tagline about yourself"
@@ -197,6 +217,7 @@ const profile_dict = reactive({
   user: '',
   username: '',
   bio: '',
+  cfp_visibility: '',
   current_city: '',
   about: '',
   website: '',
@@ -223,7 +244,9 @@ const profile = createResource({
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg'].includes(extn)) {
+  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    updateErrors.value = 'Only PNG and JPG images are allowed'
+    toast.error(updateErrors.value)
     return 'Only PNG and JPG images are allowed'
   }
 }
@@ -309,16 +332,14 @@ const toggleShowActivity = () => {
 
 const updateErrors = ref('')
 
-// Source - https://stackoverflow.com/a/5717133
-const pattern = new RegExp(
-  '^(https?:\\/\\/)' + // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-    '(\\#[-a-z\\d_]*)?$',
-  'i',
-) // fragment locator
+const isValidUrl = (url) => {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "http:" || parsed.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+}
 
 const updateProfileErrors = () => {
   const errors = []
@@ -340,7 +361,7 @@ const updateProfileErrors = () => {
   }
   Object.keys(socials).forEach((key) => {
     const url = socials[key]
-    if (url && !pattern.test(url)) {
+    if (url && !isValidUrl(url)) {
       errors.push(`\n${key} is not a valid url`)
     }
   })

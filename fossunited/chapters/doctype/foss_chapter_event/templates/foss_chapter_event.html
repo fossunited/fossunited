@@ -68,6 +68,13 @@
           background='hsl(var(--clr-foss-mint-100))', icon='star-filled')
         }}{% endif %}
       </div>
+      <div class="header-section--socials-event">
+        {% for (k,v) in social_links.items() %}
+        <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+          <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+        </a>
+        {% endfor %}
+      </div>
       {% if doc.event_bio %}
         <div class="header--short-desc">{{ doc.event_bio }}</div>
       {% endif %}
@@ -86,9 +93,14 @@
           <div class="event-start-date child-container--heading">
             {{ doc.event_start_date.strftime("%A, %-d %B %Y") }}
           </div>
-          <div class="event-end-date child-container--subtext">
-            {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
-          </div>
+          {% if doc.event_start_date.strftime("%A, %-d %B %Y") != doc.event_end_date.strftime("%A, %-d %B %Y") %}
+            <div class="child-container--subtext">
+              {{ doc.event_end_date.strftime("%A, %-d %B %Y") }}
+            </div>
+          {% endif %}
+          <a onclick="downloadEventIcs()" class="child-container--subtext">
+            Download ICS
+          </a>
         </div>
       </div>
       <div class="event-time-parent time-location--child-container">
@@ -127,6 +139,26 @@
         {{ doc.event_description or 'No Description Available for this event' }}
       </div>
     </div>
+    {% if doc.project_showcase %}
+      <div class="community-partners-sections my-3">
+        <div class="sponsor--tier-block">
+          <h5>Project Showcases</h5>
+          <div class="sponsor--flex">
+            {% for showcase in doc.project_showcase %}
+              <a href="{{ showcase.link }}" class="sponsor--block">
+                <img
+                  src="{{ showcase.image }}"
+                  alt="{{ showcase.showcase_name }}"
+                  class="sponsor--image"
+                />
+                <p>{{ showcase.showcase_name }}</p>
+                <div class="member-card--role">{{ showcase.description }}</div>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% endif %}
     {% if doc.sponsor_list or doc.deck_link %}
       <div class="sponsors-section my-3">
         <h5 class="mt-3 mb-1">Sponsors</h5>
@@ -392,6 +424,26 @@
       if (now_time >= start_time && now_time <= end_time) {
         $('#livestream_link').text('Livestreaming now!')
       }
+    }
+
+    function downloadEventIcs() {
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: {
+          'event_ids': ['{{ doc.name }}'],
+        },
+        callback: (r) => {
+          if (r.message) {
+            const blob = new Blob([r.message], { type: 'text/calendar' })
+            const url = URL.createObjectURL(blob)
+            const a = document.createElement('a')
+            a.href = url
+            a.download = `event.ics`
+            a.click()
+            URL.revokeObjectURL(url)
+          }
+        },
+      })
     }
   </script>
 {% endblock %}

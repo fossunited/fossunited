@@ -37,7 +37,11 @@
           <i
             class="mr-2 ti {% if hackathon.hackathon_type == 'In-Person' %}ti-building{% else %}ti-world{% endif %}"
           ></i>
+          {% if hackathon.localhost_name %}
+          {{ hackathon.location }} | {{ hackathon.localhost_name }}
+          {% else %}
           {{ hackathon.hackathon_type }}
+          {% endif %}
         </div>
       </div>
       <div class="mt-5 mb-2">

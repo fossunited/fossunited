@@ -61,6 +61,10 @@ watch(
             route: `/event/${route.params.id}/partner`,
           },
           {
+            label: 'Project Showcases',
+            route: `/event/${route.params.id}/showcases`,
+          },
+          {
             label: 'Volunteers',
             route: `/event/${route.params.id}/volunteers`,
           },

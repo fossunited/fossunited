@@ -1,5 +1,4 @@
 import itertools
-import json
 from datetime import datetime
 
 import frappe
@@ -48,18 +47,16 @@ def make_badge(text="Default", size="sm"):
 
 
 def get_doc_likes(doctype, name):
-    # Need to remove or refactor this method with the one in foss_event_cfp_proposal.py
-    likes = frappe.db.get_value(doctype, name, "_liked_by")
-    if likes is None:
-        return []
-    else:
-        try:
-            # Parse the string into a list
-            likes = json.loads(likes)
-        except json.JSONDecodeError as e:
-            frappe.throw("Error parsing likes: " + str(e))
-
-    return likes
+    return frappe.db.get_all(
+        "Comment",
+        {
+            "comment_type": "Like",
+            "reference_doctype": doctype,
+            "reference_name": name,
+        },
+        pluck="comment_email",
+        page_length=9999,
+    )
 
 
 def filter_field_values(key):
@@ -202,10 +199,7 @@ def get_grouped_events():
     events = frappe.get_all(
         EVENT,
         fields=["*"],
-        filters={
-            "status": ["in", ["Approved", "Live", "Concluded"]],
-            "is_published": 1,
-        },
+        or_filters=[["is_published", "=", "1"], ["is_external_event", "=", "1"]],
         order_by="event_start_date",
     )
 

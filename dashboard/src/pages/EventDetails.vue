@@ -131,6 +131,12 @@
           label="Short Event Bio"
           description="This bio may be used in OG images and in event cards. Typically it is a one-liner."
         />
+        <FormControl
+          v-model="event.doc.show_speakers"
+          :type="'checkbox'"
+          size="md"
+          label="Show Speakers Tab"
+        />
         <TextEditor
           label="Event Description"
           class="col-span-2"
@@ -209,7 +215,8 @@ const chapter = inject('chapter')
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
-  if (!['png', 'jpg'].includes(extn)) {
+  if (!['png', 'jpg', 'jpeg'].includes(extn)) {
+    toast.error('Only PNG and JPG images are allowed')
     return 'Only PNG and JPG images are allowed'
   }
 }
@@ -228,7 +235,7 @@ const setBannerImage = (file) => {
   if (file.file_url) {
     toast.success('Banner image uploaded successfully')
   } else {
-    toast.info('Banner image removed successfully')
+    toast.info('Banner image removed successfully, will default to chapter banner if set.')
   }
 }
 
