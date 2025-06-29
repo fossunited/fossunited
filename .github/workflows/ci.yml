@@ -52,25 +52,27 @@ jobs:
           python-version: '3.12'
           cache: 'pip'
 
-      - name: 3. Setup Node.js with Cache
+      - name: Setup Node.js with Cache
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'yarn'
 
-      - name: 3.1 Install setuptools
+      - name: Install System Dependencies
         run: |
-          sudo apt install --reinstall python3-pkg-resources python3-setuptools
+          sudo apt-get update
+          sudo apt-get install -y python3-dev python3-setuptools python3-pip
 
-      - name: 3.2. Upgrade pip & install setuptools
+      - name: Upgrade pip and install Python dependencies
         run: |
-          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install --upgrade pip
+          pip install setuptools wheel pkg_resources
 
-      - name: 4. Install MariaDB
+      - name: Install MariaDB Client
         run: |
-          sudo apt-get update && sudo apt-get install -y mariadb-client=1:10.11.13-0ubuntu0.24.04.1
+          sudo apt-get install -y mariadb-client
 
-      - name: 5. Setup Bench Environment
+      - name: Setup Bench Environment
         shell: bash
         run: |
           pip install frappe-bench
@@ -79,7 +81,7 @@ jobs:
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
 
-      - name: 6. Install App and Setup Site
+      - name: Install App and Setup Site
         working-directory: ${{ env.BENCH_PATH }}
         run: |
           bench get-app fossunited $GITHUB_WORKSPACE
@@ -90,11 +92,10 @@ jobs:
         env:
           CI: 'Yes'
 
-      - name: 7. Run Tests
+      - name: Run Tests
         working-directory: ${{ env.BENCH_PATH }}
         run: |
           source ./env/bin/activate
-          mariadb --host 127.0.0.1 --port 3306 -u root -proot
           bench --site ${{ env.SITE_NAME }} set-config developer_mode 1
           bench --site ${{ env.SITE_NAME }} set-config allow_tests true
           bench --site ${{ env.SITE_NAME }} run-parallel-tests --app fossunited
