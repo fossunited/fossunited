@@ -70,7 +70,7 @@ jobs:
       - name: 5. Initialize Bench Environment
         run: |
           pip install frappe-bench
-          bench init --frappe-branch version-15 --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
+          bench init --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
 
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL collation_server = 'utf8mb4_unicode_ci'"
@@ -91,4 +91,4 @@ jobs:
         working-directory: ${{ env.BENCH_PATH }}
         run: |
           bench --site ${{ env.SITE_NAME }} set-config allow_tests true
-          bench --site ${{ env.SITE_NAME }} run-tests --app fossunited
+          bench --site ${{ env.SITE_NAME }} run-parallel-tests --app fossunited
