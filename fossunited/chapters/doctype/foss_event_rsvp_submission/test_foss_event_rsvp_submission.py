@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP
 from fossunited.tests.utils import (
@@ -16,7 +16,7 @@ WEBSITE_USER = "test2@example.com"
 LEAD_USER = "test1@example.com"
 
 
-class TestFOSSEventRSVPSubmission(IntegrationTestCase):
+class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter()
         self.event = insert_test_event(chapter=self.chapter)

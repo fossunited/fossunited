@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import HACKATHON_TEAM_MEMBER
 from fossunited.tests.utils import (
@@ -10,7 +10,7 @@ from fossunited.tests.utils import (
 )
 
 
-class TestFOSSHackathonTeam(IntegrationTestCase):
+class TestFOSSHackathonTeam(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter()
         self.hackathon = insert_test_hackathon(

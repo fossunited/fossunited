@@ -1,13 +1,13 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
 from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
 
 
-class TestFOSSEventTicket(IntegrationTestCase):
+class TestFOSSEventTicket(FrappeTestCase):
     def setUp(self):
         self.lead_email = "test1@example.com"
         self.chapter = insert_test_chapter(lead_email=self.lead_email)

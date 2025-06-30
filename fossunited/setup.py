@@ -26,6 +26,32 @@ def before_uninstall():
     delete_custom_fields(get_custom_fields())
 
 
+def before_tests():
+    click.secho("Setting up tests...", fg="cyan")
+    set_default_email_account()
+
+
+def set_default_email_account():
+    if frappe.db.exists("Email Account", {"default_outgoing": 1}):
+        return
+
+    if not frappe.db.exists("Email Account", "_Test Email Account 1"):
+        frappe.get_doc(
+            {
+                "doctype": "Email Account",
+                "email_account_name": "_Test Email Account 1",
+                "email_id": "test@example.com",
+                "password": "test",
+                "enable_outgoing": 1,
+                "smtp_server": "smtp.example.com",
+            }
+        ).insert()
+
+    email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
+    email_account.default_outgoing = 1
+    email_account.save()
+
+
 def delete_custom_fields(custom_fields: dict):
     """
     :param custom_fields: a dict like `{'Salary Slip': [{fieldname: 'loans', ...}]}`

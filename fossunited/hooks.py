@@ -96,6 +96,8 @@ override_doctype_class = {
     "Newsletter": "fossunited.overrides.newsletter_extend.NewsletterExtend",
 }
 
+before_tests = "fossunited.setup.before_tests"
+
 # Migration
 # ----------------
 before_migrate = "fossunited.migrate.before_migrate"

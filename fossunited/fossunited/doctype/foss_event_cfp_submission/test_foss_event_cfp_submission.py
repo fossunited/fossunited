@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
     EVENT,
@@ -18,12 +18,12 @@ fake = Faker()
 LEAD = "test1@example.com"
 
 
-class TestFOSSEventCFPSubmission(IntegrationTestCase):
+class TestFOSSEventCFPSubmission(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter(lead_email=LEAD)
         self.event = insert_test_event(chapter=self.chapter)
 
-        self.cfp = insert_cfp_form(event=self.event)
+        self.cfp = insert_cfp_form(event=self.event.name, status="Live")
         speakers = [
             {
                 "full_name": fake.name(),
@@ -75,7 +75,7 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
 
         for speaker in self.submission.speakers:
             self.assertTrue(
-                self.is_added_to_email_group(self.event, speaker.email, "Accepted Proposers")
+                self.is_added_to_email_group(self.event.name, speaker.email, "Accepted Proposers")
             )
 
     def test_add_to_group_on_reject(self):
@@ -90,7 +90,7 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
 
         for speaker in self.submission.speakers:
             self.assertTrue(
-                self.is_added_to_email_group(self.event, speaker.email, "Rejected Proposers")
+                self.is_added_to_email_group(self.event.name, speaker.email, "Rejected Proposers")
             )
 
     def test_multiple_submission_by_same_email(self):
@@ -102,7 +102,7 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
         frappe.set_user(submission_email)
         for _ in range(3):
             submission = insert_cfp_submission(
-                linked_cfp=self.cfp.name, event=self.cfp.event, email=submission_email
+                linked_cfp=self.cfp.name, event=self.event.name, email=submission_email
             )
 
             self.assertTrue(submission)
@@ -110,7 +110,7 @@ class TestFOSSEventCFPSubmission(IntegrationTestCase):
         # And the speakers of these submissions should be added to the email group for this event
         for speaker in self.submission.speakers:
             self.assertTrue(
-                self.is_added_to_email_group(self.event, speaker.email, "CFP Proposers")
+                self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
             )
 
     def is_added_to_email_group(self, event_id, email, group_type):
