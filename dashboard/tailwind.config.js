@@ -1,5 +1,9 @@
-module.exports = {
-  presets: [require('frappe-ui/src/utils/tailwind.config')],
+import frappeUIPreset from 'frappe-ui/src/tailwind/preset'
+import forms from '@tailwindcss/forms'
+import typography from '@tailwindcss/typography'
+
+export default {
+  presets: [frappeUIPreset],
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -12,5 +16,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [forms, typography],
 }

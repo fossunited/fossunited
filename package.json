@@ -6,6 +6,7 @@
   "directories": {
     "doc": "docs"
   },
+  "type": "module",
   "scripts": {
     "postinstall": "cd dashboard && yarn install",
     "dev": "cd dashboard && yarn dev --host",
