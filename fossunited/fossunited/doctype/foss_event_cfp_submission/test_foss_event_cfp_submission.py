@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
     EVENT,
@@ -18,7 +18,7 @@ fake = Faker()
 LEAD = "test1@example.com"
 
 
-class TestFOSSEventCFPSubmission(IntegrationTestCase):
+class TestFOSSEventCFPSubmission(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter(lead_email=LEAD)
         self.event = insert_test_event(chapter=self.chapter)

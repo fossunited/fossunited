@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.emailing import (
     add_to_email_group,
@@ -15,7 +15,7 @@ from .utils import insert_test_chapter, insert_test_event
 fake = Faker()
 
 
-class TestEmailing(IntegrationTestCase):
+class TestEmailing(FrappeTestCase):
     def setUp(self):
         self.lead_email = "test1@example.com"
         self.chapter = insert_test_chapter(lead_email=self.lead_email)

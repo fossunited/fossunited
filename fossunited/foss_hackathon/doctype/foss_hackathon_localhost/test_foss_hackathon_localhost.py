@@ -1,6 +1,6 @@
 import frappe
 import frappe.permissions
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
     USER_PROFILE,
@@ -12,7 +12,7 @@ from fossunited.tests.utils import (
 )
 
 
-class TestFOSSHackathonLocalHost(IntegrationTestCase):
+class TestFOSSHackathonLocalHost(FrappeTestCase):
     def setUp(self):
         self.ORGANIZER_1 = "test1@example.com"
         self.organizer1_profile = frappe.get_doc(USER_PROFILE, {"user": self.ORGANIZER_1})

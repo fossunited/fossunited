@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, USER_PROFILE
 from fossunited.tests.utils import insert_test_chapter
@@ -8,7 +8,7 @@ from fossunited.tests.utils import insert_test_chapter
 fake = Faker()
 
 
-class TestFOSSChapter(IntegrationTestCase):
+class TestFOSSChapter(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter()
 

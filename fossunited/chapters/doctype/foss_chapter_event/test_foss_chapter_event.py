@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -9,7 +9,7 @@ from fossunited.doctype_ids import (
 from fossunited.tests.utils import insert_test_chapter, insert_test_event
 
 
-class TestFOSSChapterEvent(IntegrationTestCase):
+class TestFOSSChapterEvent(FrappeTestCase):
     def setUp(self):
         self.lead = "test1@example.com"
         self.chapter = insert_test_chapter(lead_email=self.lead)

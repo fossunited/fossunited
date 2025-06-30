@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from unittest.mock import patch
 
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT
 from fossunited.scheduled_tasks import conclude_events
@@ -10,7 +10,7 @@ from fossunited.scheduled_tasks import conclude_events
 from .utils import insert_test_chapter, insert_test_event
 
 
-class TestScheduledTasks(IntegrationTestCase):
+class TestScheduledTasks(FrappeTestCase):
     def setUp(self):
         today = datetime.today()
         self.chapter = insert_test_chapter()
