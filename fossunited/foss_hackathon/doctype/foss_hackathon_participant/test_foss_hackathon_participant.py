@@ -1,5 +1,5 @@
 import frappe
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import EMAIL_GROUP, EMAIL_MEMBER, HACKATHON, USER_PROFILE
 from fossunited.tests.utils import (
@@ -10,7 +10,7 @@ from fossunited.tests.utils import (
 )
 
 
-class TestFOSSHackathonParticipant(IntegrationTestCase):
+class TestFOSSHackathonParticipant(FrappeTestCase):
     def setUp(self):
         self.LOCALHOST_ORGANIZER = "test3@example.com"
         self.PARTICIPANT_1 = "test4@example.com"

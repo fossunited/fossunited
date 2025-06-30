@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
 from fossunited.tests.utils import (
@@ -15,7 +15,7 @@ from fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket import (
 fake = Faker()
 
 
-class TestRazorpayPayment(IntegrationTestCase):
+class TestRazorpayPayment(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter()
         self.event = insert_test_event(

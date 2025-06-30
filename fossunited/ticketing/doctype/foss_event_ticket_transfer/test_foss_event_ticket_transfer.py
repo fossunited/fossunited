@@ -1,6 +1,6 @@
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TRANSFER
 from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
@@ -8,7 +8,7 @@ from fossunited.tests.utils import insert_test_chapter, insert_test_event, inser
 fake = Faker()
 
 
-class TestFOSSEventTicketTransfer(IntegrationTestCase):
+class TestFOSSEventTicketTransfer(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter()
         self.event = insert_test_event(

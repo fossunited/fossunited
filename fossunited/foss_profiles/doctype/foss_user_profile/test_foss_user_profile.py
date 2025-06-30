@@ -4,7 +4,7 @@ import uuid
 
 import frappe
 from faker import Faker
-from frappe.tests import IntegrationTestCase
+from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import USER_PROFILE
 from fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile import (
@@ -14,7 +14,7 @@ from fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile import
 fake = Faker()
 
 
-class TestFOSSUserProfile(IntegrationTestCase):
+class TestFOSSUserProfile(FrappeTestCase):
     def test_add_profile(self):
         # Given a user that does not have a FOSSUnitedProfile
         inserted_username = fake.user_name()

@@ -1,5 +1,8 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+
+import typography from '@tailwindcss/typography'
+
+export default {
   content: [
     './fossunited/www/**/*.html',
     './fossunited/www/clubs/*.html',
@@ -35,5 +38,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require('@tailwindcss/typography')],
+  plugins: [typography],
 }
