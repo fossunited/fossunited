@@ -61,7 +61,7 @@ def get_active_clubs() -> list[dict[str, str]]:
         CHAPTER,
         filters={
             "chapter_type": "FOSS Club",
-            "chapter_status": ["in", ["Active", "Independant"]],
+            "chapter_status": ["in", ["Active", "Independent", "New"]],
         },
         fields=[
             "route",
@@ -98,7 +98,7 @@ def get_active_clubs() -> list[dict[str, str]]:
             },
         ]
         club["is_independant"] = club["chapter_status"] == "Independant"
-        club["is_new_club"] = is_new_club(club["creation"])
+        club["is_new_club"] = is_new_club(club["creation"], club["chapter_status"])
         club["is_inactive"] = False
 
     return active_clubs
@@ -109,7 +109,7 @@ def get_past_clubs() -> list[dict[str, str]]:
         CHAPTER,
         filters={
             "chapter_type": "FOSS Club",
-            "chapter_status": ["not in", ["Active", "Independant"]],
+            "chapter_status": ["not in", ["Active", "Independent", "New"]],
         },
         fields=[
             "route",
@@ -213,8 +213,8 @@ def get_club_statistics(club_id: str) -> dict[str, str | int]:
     }
 
 
-def is_new_club(creation_date: datetime) -> bool:
+def is_new_club(creation_date: datetime, status: str) -> bool:
     """
     A club is new if it was created in the last 90 days
     """
-    return frappe.utils.days_diff(frappe.utils.now(), creation_date) <= 90
+    return frappe.utils.days_diff(frappe.utils.now(), creation_date) <= 90 or status == "New"
