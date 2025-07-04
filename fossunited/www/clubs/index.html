@@ -43,7 +43,9 @@
       <a href="/clubs/start-a-club" class="btn btn-solid w-48">Start a Club</a>
       <a href="#active-clubs" class="btn btn-subtle w-48">Active Clubs</a>
     </div>
-    <p class="text-center text-gray-500">Got Questions? Refer to our <a href="/clubs/faq" class="underline">FAQ Page</a></p>
+    <p class="text-center text-gray-500">
+      Got Questions? Refer to our <a href="/clubs/faq" class="underline">FAQ Page</a>
+    </p>
   </div>
 {% endmacro %}
 
@@ -125,7 +127,12 @@
             {{ badge(label="Upcoming event", theme="green", prefix=live_ping(), additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
           </div>
         {% endif %}
-        {% if club.is_inactive %}{{ badge(label="Inactive", theme="red", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}{% endif %}
+        {% if club.is_inactive %}
+          {{ badge(label=club.chapter_status, theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+        {% endif %}
+        {% if club.is_independant %}
+          {{ badge(label="Independant", theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+        {% endif %}
       </div>
     </div>
     <div

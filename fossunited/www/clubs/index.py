@@ -66,6 +66,7 @@ def get_active_clubs() -> list[dict[str, str]]:
         fields=[
             "route",
             "chapter_name",
+            "chapter_status",
             "chapter_logo",
             "institution_name",
             "city",
@@ -96,6 +97,7 @@ def get_active_clubs() -> list[dict[str, str]]:
                 "value": statistics["team_member_count"],
             },
         ]
+        club["is_independant"] = club["chapter_status"] == "Independant"
         club["is_new_club"] = is_new_club(club["creation"])
         club["is_inactive"] = False
 
@@ -111,6 +113,7 @@ def get_past_clubs() -> list[dict[str, str]]:
         },
         fields=[
             "route",
+            "chapter_status",
             "chapter_name",
             "chapter_logo",
             "institution_name",
