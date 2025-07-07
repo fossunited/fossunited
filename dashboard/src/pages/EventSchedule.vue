@@ -20,6 +20,10 @@ const schedule = computed(() => {
     }
   })
 
+  Object.keys(schedule_dict).forEach((date) => {
+    schedule_dict[date].sort((a, b) => a.start_time.localeCompare(b.start_time))
+  })
+
   return schedule_dict
 })
 
