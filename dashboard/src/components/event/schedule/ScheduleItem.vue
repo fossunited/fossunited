@@ -1,5 +1,7 @@
 <script setup>
+import { IconHomeFilled } from '@tabler/icons-vue'
 import dayjs from 'dayjs'
+import { Badge } from 'frappe-ui'
 const schedule_item = defineModel({ required: true, type: Object })
 
 const formatTime = (time) => {
@@ -14,9 +16,12 @@ const formatTime = (time) => {
     <div class="w-[3px] bg-gray-900 rounded"></div>
     <div class="flex flex-col gap-1">
       <h5 class="text-base font-semibold">{{ schedule_item.title }}</h5>
-      <div class="flex items-center gap-1 text-sm">
-        <span>{{ formatTime(schedule_item.start_time) }}</span>
-        <span>- {{ formatTime(schedule_item.end_time) }}</span>
+      <div class="flex gap-2">
+        <div class="flex items-center gap-1 text-sm">
+          <span>{{ formatTime(schedule_item.start_time) }}</span>
+          <span>- {{ formatTime(schedule_item.end_time) }}</span>
+        </div>
+        <Badge :label="schedule_item.hall" class="w-fit" variant="subtle" />
       </div>
     </div>
   </div>
