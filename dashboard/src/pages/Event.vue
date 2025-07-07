@@ -57,6 +57,10 @@ watch(
             route: `/event/${route.params.id}/cfp`,
           },
           {
+            label: 'Schedule',
+            route: `/event/${route.params.id}/schedule`,
+          },
+          {
             label: 'Partners',
             route: `/event/${route.params.id}/partner`,
           },
