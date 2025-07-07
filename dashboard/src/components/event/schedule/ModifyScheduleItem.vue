@@ -1,6 +1,6 @@
 <script setup>
 import { IconCircleCheckFilled } from '@tabler/icons-vue'
-import { Badge, FormControl, Dialog } from 'frappe-ui'
+import { Badge, FormControl, Dialog, ErrorMessage } from 'frappe-ui'
 import { computed, inject, watch, onMounted, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
@@ -64,9 +64,62 @@ watch(
   },
 )
 
+const errorMessages = ref('')
 const handleSave = () => {
+  const errors = validateScheduleItem()
+
+  if (errors.length) {
+    errorMessages.value = errors.join('\n')
+    return
+  }
+
   emit('update:schedule', selectedScheduleItem.value)
   toast.info('Schedule updated')
+}
+
+const validateScheduleItem = () => {
+  const errors = []
+  if (!selectedScheduleItem.value.title) {
+    errors.push('Title is required')
+  }
+
+  if (!selectedScheduleItem.value.category) {
+    errors.push('Category is required')
+  }
+
+  if (
+    selectedScheduleItem.value.category === 'Opening Note' ||
+    selectedScheduleItem.value.category === 'Break'
+  ) {
+    selectedScheduleItem.value.linked_cfp = ''
+  }
+
+  if (
+    selectedScheduleItem.value.category !== 'Opening Note' &&
+    selectedScheduleItem.value.category !== 'Break'
+  ) {
+    if (!selectedScheduleItem.value.linked_cfp) {
+      errors.push('Linked Proposal is required')
+    }
+  }
+
+  if (!selectedScheduleItem.value.hall) {
+    errors.push('Hall value is required')
+  }
+
+  if (!selectedScheduleItem.value.scheduled_date) {
+    errors.push('Date is required')
+  }
+
+  if (!selectedScheduleItem.value.start_time) {
+    errors.push('Start Time is required')
+  }
+
+  if (!selectedScheduleItem.value.end_time) {
+    errors.push('End Time is required')
+  }
+
+  return errors
 }
 
 const showDeleteConfimation = ref(false)
@@ -194,17 +247,20 @@ const getHallOptions = computed(() => {
         </div>
       </div>
     </div>
-    <div class="bg-white flex gap-2 items-center">
-      <Button icon="trash" theme="red" class="basis-1/6" @click="showDeleteConfimation = true" />
-      <Button label="Save" variant="solid" class="basis-5/6" @click="handleSave">
-        <template #suffix>
-          <span
-            class="px-[2px] pt-[4px] hidden md:block font-mono rounded-[2px] border text-[10px] opacity-80"
-          >
-            ctrl + s
-          </span>
-        </template>
-      </Button>
+    <div class="flex flex-col gap-4">
+      <ErrorMessage class="mt-2" :message="errorMessages" />
+      <div class="bg-white flex gap-2 items-center">
+        <Button icon="trash" theme="red" class="basis-1/6" @click="showDeleteConfimation = true" />
+        <Button label="Save" variant="solid" class="basis-5/6" @click="handleSave">
+          <template #suffix>
+            <span
+              class="px-[2px] pt-[4px] hidden md:block font-mono rounded-[2px] border text-[10px] opacity-80"
+            >
+              ctrl + s
+            </span>
+          </template>
+        </Button>
+      </div>
     </div>
   </div>
 </template>
