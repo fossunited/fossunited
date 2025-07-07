@@ -73,9 +73,18 @@ const handleSave = () => {
     return
   }
 
+  errorMessages.value = ''
+
   emit('update:schedule', selectedScheduleItem.value)
   toast.info('Schedule updated')
 }
+
+watch(
+  () => selectedScheduleItem.value,
+  () => {
+    errorMessages.value = ''
+  },
+)
 
 const validateScheduleItem = () => {
   const errors = []
