@@ -53,9 +53,6 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  cfpid: {
-    type: String,
-  },
 })
 
 const confirmWithdrawal = ref(false)
