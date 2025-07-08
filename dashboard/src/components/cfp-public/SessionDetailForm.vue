@@ -9,7 +9,7 @@
       :id="`${_field.fieldname}_field`"
       :key="index"
       v-model:fields="fields"
-      v-if="_field.fieldname != 'is_withdrawn' || showWithdrawal"
+      v-if="_field.fieldname != 'is_withdrawn'"
       :field="_field"
       :class="{ hidden: _field.fieldname === 'other_category' }"
     />
@@ -37,10 +37,6 @@ const props = defineProps({
   showTitle: {
     type: Boolean,
     default: true,
-  },
-  showWithdrawal: {
-    type: Boolean,
-    default: false,
   },
 })
 

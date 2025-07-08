@@ -19,13 +19,18 @@
         v-show="selectedTab === 0"
         v-model:references="submission.doc.references"
         v-model:fields="formFields"
-        :show-withdrawal="true"
         :show-title="false"
         class="border-none p-6"
       />
       <SpeakersForm
         v-show="selectedTab === 1"
         v-model:speakers="speakerFields"
+        :show-title="false"
+        class="border-none p-6"
+      />
+      <ActionsForm
+        v-show="selectedTab === 2"
+        v-model:cfpid="route.params.id"
         :show-title="false"
         class="border-none p-6"
       />
@@ -43,6 +48,7 @@ import SubmissionHeader from '@/components/cfp-submission-edit/SubmissionHeader.
 import SideNavbar from '@/components/NewAppSidebar.vue'
 import SessionDetailForm from '@/components/cfp-public/SessionDetailForm.vue'
 import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
+import ActionsForm from '@/components/cfp-public/ActionsForm.vue'
 import { createDocumentResource, createResource, TabButtons, ErrorMessage } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import { useRoute, useRouter } from 'vue-router'
@@ -73,6 +79,11 @@ const tabs = [
     label: 'Speakers',
     value: 1,
     component: SpeakersForm,
+  },
+  {
+    label: 'Actions',
+    value: 2,
+    component: ActionsForm,
   },
 ]
 
