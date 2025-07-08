@@ -12,13 +12,6 @@ export const getProposalFormFields = (cfpData) => {
       value: '',
     },
     {
-      label: 'Withdraw Proposal',
-      fieldname: 'is_withdrawn',
-      fieldtype: 'checkbox',
-      required: false,
-      value: false,
-    },
-    {
       label: 'Session Type',
       fieldname: 'session_type',
       fieldtype: 'radio_group',

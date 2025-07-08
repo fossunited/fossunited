@@ -4,16 +4,14 @@
       <IconClipboardText />
       <span>Submission Form</span>
     </h4>
-    <div v-for="(_field, index) in fields">
     <RenderField
+      v-for="(_field, index) in fields"
       :id="`${_field.fieldname}_field`"
       :key="index"
       v-model:fields="fields"
-      v-if="_field.fieldname != 'is_withdrawn'"
       :field="_field"
       :class="{ hidden: _field.fieldname === 'other_category' }"
     />
-    </div>
     <ReferencesComponent v-model:references="references" />
   </div>
 </template>
