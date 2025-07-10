@@ -21,7 +21,12 @@ const schedule = computed(() => {
   })
 
   Object.keys(schedule_dict).forEach((date) => {
-    schedule_dict[date].sort((a, b) => a.start_time.localeCompare(b.start_time))
+    schedule_dict[date].sort((a, b) => {
+      if (a.start_time == null && b.start_time == null) return 0
+      if (a.start_time == null) return 1
+      if (b.start_time == null) return -1
+      return a.start_time.localeCompare(b.start_time)
+    })
   })
 
   return schedule_dict
