@@ -128,6 +128,16 @@ const validateScheduleItem = () => {
     errors.push('End Time is required')
   }
 
+  // Validate that end time is not before start time
+  if (selectedScheduleItem.value.start_time && selectedScheduleItem.value.end_time) {
+    // Compare as "HH:mm"
+    const [startHour, startMinute] = selectedScheduleItem.value.start_time.split(':').map(Number)
+    const [endHour, endMinute] = selectedScheduleItem.value.end_time.split(':').map(Number)
+    if (endHour < startHour || (endHour === startHour && endMinute < startMinute)) {
+      errors.push('End Time cannot be before Start Time')
+    }
+  }
+
   return errors
 }
 
