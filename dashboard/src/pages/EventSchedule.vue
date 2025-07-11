@@ -3,11 +3,12 @@ import { IconArrowUpRight } from '@tabler/icons-vue'
 import { Breadcrumbs, createResource } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
 import { toast } from 'vue-sonner'
-import { redirectRoute } from '@/helpers/utils'
+import { redirectRoute, isSmallScreen } from '@/helpers/utils'
 import ManageDates from '@/components/event/schedule/ManageDates.vue'
 import RenderScheduleItems from '@/components/event/schedule/RenderScheduleItems.vue'
 import ModifyScheduleItem from '@/components/event/schedule/ModifyScheduleItem.vue'
 import ManageHallOptions from '@/components/event/schedule/ManageHallOptions.vue'
+import ModifyScheduleDrawer from '@/components/event/schedule/ModifyScheduleDrawer.vue'
 import dayjs from 'dayjs'
 
 // Constants for default schedule times
@@ -60,6 +61,7 @@ const selectedDate = ref()
 const selectedScheduleItemIndex = ref()
 const handleModify = (item) => {
   selectedScheduleItemIndex.value = item.idx
+  showModifyScheduleItemDrawer.value = true
 }
 
 const cfpSubmissions = createResource({
@@ -139,20 +141,22 @@ const handleUpdateSchedule = () => {
 
 const breadcrumb_items = computed(() => {
   return [
-    { label: event.doc.event_name, onClick: () => redirectRoute(event.doc.route) },
+    { label: event.doc?.event_name, onClick: () => redirectRoute(event.doc?.route) },
     { label: 'Schedule' },
   ]
 })
+
+const showModifyScheduleItemDrawer = ref(false)
 </script>
 <template>
   <div class="flex">
-    <div class="basis-1/2 border-r min-h-svh p-6">
+    <div class="md:basis-1/2 border-r min-h-svh p-6" :class="{ 'basis-full': isSmallScreen }">
       <Breadcrumbs class="mb-6" :items="breadcrumb_items" />
       <div class="prose">
         <h2 class="font-bold">Event Schedule</h2>
         <router-link
           class="text-sm flex items-center gap-1"
-          :to="`/schedule/${event.doc.route}`"
+          :to="`/schedule/${event.doc?.route}`"
           target="_blank"
         >
           <span>Go to Schedule Page</span>
@@ -182,7 +186,7 @@ const breadcrumb_items = computed(() => {
       </div>
     </div>
     <Suspense>
-      <div class="basis-1/2 p-6">
+      <div v-if="!isSmallScreen" class="basis-1/2 p-6">
         <ModifyScheduleItem
           v-if="selectedScheduleItemIndex"
           v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"
@@ -190,6 +194,13 @@ const breadcrumb_items = computed(() => {
           @delete:schedule="($event) => handleRemoveScheduleItem($event)"
         />
       </div>
+      <ModifyScheduleDrawer
+        v-else
+        v-model:show="showModifyScheduleItemDrawer"
+        v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"
+        @update:schedule="handleUpdateSchedule"
+        @delete:schedule="($event) => handleRemoveScheduleItem($event)"
+      />
     </Suspense>
   </div>
 </template>

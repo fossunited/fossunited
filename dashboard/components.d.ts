@@ -70,6 +70,7 @@ declare module 'vue' {
     ManageSponsorDialog: typeof import('./src/components/event/ManageSponsorDialog.vue')['default']
     ManageTicketTierDialog: typeof import('./src/components/event/ManageTicketTierDialog.vue')['default']
     MessageBanner: typeof import('./src/components/ui/MessageBanner.vue')['default']
+    ModifyScheduleDrawer: typeof import('./src/components/event/schedule/ModifyScheduleDrawer.vue')['default']
     ModifyScheduleItem: typeof import('./src/components/event/schedule/ModifyScheduleItem.vue')['default']
     MultiselectInput: typeof import('./src/components/ui/MultiselectInput.vue')['default']
     NestedPopover: typeof import('./src/components/ui/NestedPopover.vue')['default']

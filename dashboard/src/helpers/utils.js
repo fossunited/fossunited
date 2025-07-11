@@ -1,3 +1,5 @@
+import { computed } from 'vue'
+
 export const truncateStr = (title, len) => {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
@@ -40,3 +42,5 @@ export const isValidUrl = (link) => {
     return false
   }
 }
+
+export const isSmallScreen = computed(() => window.innerWidth < 768)
