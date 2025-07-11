@@ -1,12 +1,14 @@
 <script setup>
-import { createResource } from 'frappe-ui'
+import { IconArrowUpRight } from '@tabler/icons-vue'
+import { Breadcrumbs, createResource } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
+import { toast } from 'vue-sonner'
+import { redirectRoute } from '@/helpers/utils'
 import ManageDates from '@/components/event/schedule/ManageDates.vue'
 import RenderScheduleItems from '@/components/event/schedule/RenderScheduleItems.vue'
 import ModifyScheduleItem from '@/components/event/schedule/ModifyScheduleItem.vue'
 import ManageHallOptions from '@/components/event/schedule/ManageHallOptions.vue'
 import dayjs from 'dayjs'
-import { toast } from 'vue-sonner'
 
 // Constants for default schedule times
 const DEFAULT_START_TIME = '10:00'
@@ -134,12 +136,28 @@ const handleUpdateSchedule = () => {
     event_schedule: event.doc.event_schedule,
   })
 }
+
+const breadcrumb_items = computed(() => {
+  return [
+    { label: event.doc.event_name, onClick: () => redirectRoute(event.doc.route) },
+    { label: 'Schedule' },
+  ]
+})
 </script>
 <template>
   <div class="flex">
     <div class="basis-1/2 border-r min-h-svh p-6">
+      <Breadcrumbs class="mb-6" :items="breadcrumb_items" />
       <div class="prose">
         <h2 class="font-bold">Event Schedule</h2>
+        <router-link
+          class="text-sm flex items-center gap-1"
+          :to="`/schedule/${event.doc.route}`"
+          target="_blank"
+        >
+          <span>Go to Schedule Page</span>
+          <IconArrowUpRight class="w-4 h-4" />
+        </router-link>
       </div>
       <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
       <hr class="my-4" />
