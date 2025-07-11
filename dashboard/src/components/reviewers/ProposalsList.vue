@@ -13,6 +13,9 @@
   </div>
 
   <!-- Submission List -->
+  <div v-if="cfpSubmissions.loading" class="flex flex-col items-center gap-2">
+    <LoadingIndicator class="w-5 h-5" />
+  </div>
   <Suspense>
     <template #default>
       <div v-if="cfpSubmissions.data" class="flex flex-col">
@@ -28,17 +31,12 @@
         </div>
       </div>
     </template>
-    <template #fallback>
-      <div class="w-full h-[480px] flex items-center justify-center">
-        <LoadingIndicator class="w-6 h-6" />
-      </div>
-    </template>
   </Suspense>
 </template>
 <script setup>
 import ProposalListItem from './ProposalListItem.vue'
 import { defineProps, watch, ref } from 'vue'
-import { createResource, FormControl } from 'frappe-ui'
+import { createResource, FormControl, LoadingIndicator } from 'frappe-ui'
 import Filter from '../ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
