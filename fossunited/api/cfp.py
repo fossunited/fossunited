@@ -1,5 +1,6 @@
 import frappe
 
+from fossunited.api.proposal import _get_bulk_custom_answers_data
 from fossunited.doctype_ids import (
     EVENT,
     EVENT_CFP,
@@ -97,6 +98,9 @@ def get_cfp_submissions(event: str) -> list:
         order_by="creation desc",
     )
 
+    if not submissions:
+        return submissions
+
     submission_names = [submission.name for submission in submissions]
 
     # Fetch review statuses in bulk
@@ -127,6 +131,12 @@ def get_cfp_submissions(event: str) -> list:
     for like in likes:
         like_counts[like.reference_name] = like_counts.get(like.reference_name, 0) + 1
 
+    # Reuse bulk query functions from proposal.py
+    custom_answers_data = _get_bulk_custom_answers_data(submission_names)
+
+    # Bulk fetch review percentages
+    review_percentages_data = _get_bulk_review_percentages_data(submission_names)
+
     for submission in submissions:
         is_reviewed = submission.name in reviewed_submissions
         submission.update(
@@ -137,10 +147,77 @@ def get_cfp_submissions(event: str) -> list:
             }
         )
         submission["_likes_count"] = like_counts.get(submission.name, 0)
-        submission.update(get_custom_answers(submission.name))
-        submission.update(get_review_percentages(submission.name))
+        submission.update(custom_answers_data.get(submission.name, {}))
+        submission.update(review_percentages_data.get(submission.name, {}))
 
     return submissions
+
+
+def _get_bulk_review_percentages_data(submission_names: list) -> dict:
+    """
+    Bulk fetch review percentages for all submissions.
+
+    Returns:
+        dict: {submission_name: {approved_percent: int, rejected_percent: int, ...}}
+    """
+    if not submission_names:
+        return {}
+
+    # Use frappe.qb for better performance
+    from frappe import qb
+
+    Review = qb.DocType(PROPOSAL_REVIEW)
+
+    reviews_query = (
+        qb.from_(Review)
+        .select(Review.parent, Review.to_approve)
+        .where((Review.parent.isin(submission_names)) & (Review.parenttype == PROPOSAL))
+    )
+
+    reviews_results = reviews_query.run(as_dict=True)
+
+    # Group reviews by submission and calculate percentages
+    review_percentages_data = {}
+    submission_reviews = {}
+
+    for review in reviews_results:
+        submission_name = review.parent
+        if submission_name not in submission_reviews:
+            submission_reviews[submission_name] = []
+        submission_reviews[submission_name].append(review.to_approve)
+
+    for submission_name, reviews in submission_reviews.items():
+        positive_reviews = reviews.count("Yes")
+        negative_reviews = reviews.count("No")
+        unsure_reviews = reviews.count("Maybe")
+
+        total_reviews = len(reviews)
+        if total_reviews == 0:
+            review_percentages_data[submission_name] = {
+                "approved_percent": 0,
+                "rejected_percent": 0,
+                "unsure_percent": 0,
+                "approvability": 0,
+            }
+        else:
+            approved_percent = int((positive_reviews / total_reviews) * 100)
+            rejected_percent = int((negative_reviews / total_reviews) * 100)
+            unsure_percent = int((unsure_reviews / total_reviews) * 100)
+
+            approvability = int(
+                (positive_reviews / (positive_reviews + negative_reviews)) * 100
+                if positive_reviews + negative_reviews > 0
+                else 0
+            )
+
+            review_percentages_data[submission_name] = {
+                "approved_percent": approved_percent,
+                "rejected_percent": rejected_percent,
+                "unsure_percent": unsure_percent,
+                "approvability": approvability,
+            }
+
+    return review_percentages_data
 
 
 def get_review_percentages(submission: str) -> dict:
