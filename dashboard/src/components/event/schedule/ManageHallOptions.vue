@@ -25,7 +25,10 @@ watch(
   () => new_option.value,
   () => {
     if (new_option.value.endsWith('\n')) {
-      hall_options_list.value = [...hall_options_list.value, new_option.value.trim()]
+      const trimmedOption = new_option.value.trim()
+      if (trimmedOption && !hall_options_list.value.includes(trimmedOption)) {
+        hall_options_list.value = [...hall_options_list.value, trimmedOption]
+      }
       new_option.value = ''
       addHallOption()
     }

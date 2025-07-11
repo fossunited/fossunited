@@ -1,7 +1,7 @@
 <script setup>
 import { IconCircleCheckFilled } from '@tabler/icons-vue'
 import { Badge, FormControl, Dialog, ErrorMessage } from 'frappe-ui'
-import { computed, inject, watch, onMounted, ref } from 'vue'
+import { computed, inject, watch, onMounted, ref, onUnmounted } from 'vue'
 import { toast } from 'vue-sonner'
 
 const event = inject('event')
@@ -141,15 +141,21 @@ const validateScheduleItem = () => {
   return errors
 }
 
-const showDeleteConfimation = ref(false)
+const showDeleteConfirmation = ref(false)
+
+const saveShortcut = (e) => {
+  if ((e.ctrlKey || e.metaKey) && e.key == 's') {
+    e.preventDefault()
+    handleSave()
+  }
+}
 
 onMounted(() => {
-  window.addEventListener('keydown', (e) => {
-    if ((e.ctrlKey || e.metaKey) && e.key == 's') {
-      e.preventDefault()
-      handleSave()
-    }
-  })
+  window.addEventListener('keydown', saveShortcut)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', saveShortcut)
 })
 
 const getHallOptions = computed(() => {
@@ -165,7 +171,7 @@ const getHallOptions = computed(() => {
 </script>
 <template>
   <Dialog
-    v-model="showDeleteConfimation"
+    v-model="showDeleteConfirmation"
     class="z-50"
     :options="{
       title: 'Delete Schedule',
@@ -180,12 +186,12 @@ const getHallOptions = computed(() => {
           theme: 'red',
           onClick: () => {
             emit('delete:schedule', selectedScheduleItem)
-            showDeleteConfimation = false
+            showDeleteConfirmation = false
           },
         },
         {
           label: 'Cancel',
-          onClick: () => (showDeleteConfimation.value = false),
+          onClick: () => (showDeleteConfirmation.value = false),
         },
       ],
     }"
@@ -269,7 +275,12 @@ const getHallOptions = computed(() => {
     <div class="flex flex-col gap-4">
       <ErrorMessage class="mt-2" :message="errorMessages" />
       <div class="bg-white flex gap-2 items-center">
-        <Button icon="trash" theme="red" class="basis-1/6" @click="showDeleteConfimation = true" />
+        <Button
+          icon="trash"
+          theme="red"
+          class="basis-1/6"
+          @click="showDeleteConfirmation = true"
+        />
         <Button label="Save" variant="solid" class="basis-5/6" @click="handleSave">
           <template #suffix>
             <span

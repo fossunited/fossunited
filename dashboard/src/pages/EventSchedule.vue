@@ -126,7 +126,7 @@ const handleUpdateSchedule = () => {
       delete schedule.is_new
     }
 
-    if (schedule.linked_cfp && typeof schedule.linked_cfp == 'object') {
+    if (schedule.linked_cfp && typeof schedule.linked_cfp === 'object') {
       schedule.linked_cfp = schedule.linked_cfp.value
     }
   })
