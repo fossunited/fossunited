@@ -219,7 +219,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.user_cfp_submissions = self.get_user_cfp_submissions()
         context.recent_cfp_submissions = self.get_recent_cfp_submissions()
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
-        context.schedule_dict = self.get_schedule_dict()
 
         context.pagetitle, context.description, context.image = self.get_meta()
 
@@ -474,30 +473,3 @@ class FOSSChapterEvent(WebsiteGenerator):
                     or "/assets/fossunited/images/defaults/user_profile_image.png"
                 )
         return submissions or []
-
-    def get_schedule_dict(self):
-        schedule_dict = {}
-        for schedule in self.event_schedule:
-            date = schedule.scheduled_date.strftime("%-d %B")
-            if date not in schedule_dict:
-                schedule_dict[date] = []
-            get_speakers(schedule)
-            schedule.start_time = BASE_DATE + schedule.start_time
-            schedule.end_time = BASE_DATE + schedule.end_time
-            schedule_dict[date].append(schedule)
-
-        schedule_dict["days"] = list(schedule_dict.keys())
-        return schedule_dict
-
-
-def get_speakers(schedule):
-    if not schedule.linked_cfp:
-        schedule.no_speaker = True
-        return
-
-    cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
-    user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
-    schedule.cfp_route = cfp.route
-    schedule.speaker_route = user.route
-    schedule.speaker_full_name = user.full_name
-    schedule.speaker_designation_company = cfp.designation + " at " + cfp.organization
