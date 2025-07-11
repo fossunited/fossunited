@@ -1,7 +1,11 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, inject } from 'vue'
 import { Button, DatePicker, Popover, Dialog } from 'frappe-ui'
 import dayjs from 'dayjs'
+import { toast } from 'vue-sonner'
+
+const event = inject('event')
+const emit = defineEmits(['update:schedule', 'reset:selected-schedule'])
 
 const datePickerRef = ref(null)
 const closePopoverFn = ref(null)
@@ -32,9 +36,17 @@ const getDateButtonVariant = (date) => {
 
 const showConfirmDialog = ref(false)
 const dateToRemove = ref(null)
-const handleRemoveScheduleDate = (index) => {
-  dateToRemove.value = dates.value[index]
-  showConfirmDialog.value = true
+const handleRemoveScheduleDate = () => {
+  event.doc.event_schedule = event.doc.event_schedule.filter(
+    (item) => item.scheduled_date !== dateToRemove.value,
+  )
+
+  emit('update:schedule', event.doc.event_schedule)
+  emit('reset:selected-schedule')
+
+  selectedDate.value = null
+  showConfirmDialog.value = false
+  toast.info('Date removed')
 }
 </script>
 <template>
@@ -54,7 +66,7 @@ const handleRemoveScheduleDate = (index) => {
           label: 'Remove Date',
           theme: 'red',
           onClick: () => {
-            console.log('remove date')
+            handleRemoveScheduleDate()
           },
         },
         {
@@ -74,7 +86,17 @@ const handleRemoveScheduleDate = (index) => {
       @click="selectedDate = date"
     >
       <template #suffix>
-        <Button variant="ghost" theme="white" icon="x" @click="handleRemoveScheduleDate(index)" />
+        <Button
+          variant="ghost"
+          theme="white"
+          icon="x"
+          @click="
+            () => {
+              dateToRemove = date
+              showConfirmDialog = true
+            }
+          "
+        />
       </template>
     </Button>
     <Popover @open="onPopoverOpen">

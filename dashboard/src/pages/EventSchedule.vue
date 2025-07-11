@@ -126,6 +126,9 @@ const handleUpdateSchedule = () => {
       schedule.linked_cfp = schedule.linked_cfp.value
     }
   })
+  event.doc.event_schedule.forEach((schedule, index) => {
+    schedule.idx = index + 1
+  })
 
   event.setValue.submit({
     event_schedule: event.doc.event_schedule,
@@ -138,9 +141,14 @@ const handleUpdateSchedule = () => {
       <div class="prose">
         <h2 class="font-bold">Event Schedule</h2>
       </div>
-      <ManageHallOptions v-model="event.doc.hall_options" />
+      <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
       <hr class="my-4" />
-      <ManageDates v-model="dates" v-model:selected-date="selectedDate" />
+      <ManageDates
+        v-model="dates"
+        v-model:selected-date="selectedDate"
+        @update:schedule="handleUpdateSchedule"
+        @reset:selected-schedule="selectedScheduleItemIndex = null"
+      />
       <div v-if="!selectedDate" class="flex flex-col gap-2 text-base items-center mt-12">
         <p class="text-gray-600">Select a date to add a schedule</p>
       </div>
