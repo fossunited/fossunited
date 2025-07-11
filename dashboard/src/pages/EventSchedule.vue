@@ -8,6 +8,10 @@ import ManageHallOptions from '@/components/event/schedule/ManageHallOptions.vue
 import dayjs from 'dayjs'
 import { toast } from 'vue-sonner'
 
+// Constants for default schedule times
+const DEFAULT_START_TIME = '10:00'
+const DEFAULT_END_TIME = '10:30'
+
 const event = inject('event')
 const schedule = computed(() => {
   let schedule_dict = {}
@@ -75,13 +79,26 @@ onMounted(async () => {
 
 provide('allCfpSubmissions', cfpSubmissions)
 
-const addScheduleItem = (newDate) => {
-  event.doc.event_schedule.push({
+const addScheduleItem = (selectedDate) => {
+  const dateScheduleItems = schedule.value[selectedDate] || []
+
+  const lastItemWithEndTime = dateScheduleItems.filter((item) => item.end_time).pop()
+
+  const newScheduleItem = {
     is_new: true,
     idx: event.doc.event_schedule.length + 1,
     title: 'Placeholder Event',
-    scheduled_date: newDate,
-  })
+    scheduled_date: selectedDate,
+  }
+
+  if (lastItemWithEndTime) {
+    newScheduleItem.start_time = lastItemWithEndTime.end_time
+  } else {
+    newScheduleItem.start_time = DEFAULT_START_TIME
+    newScheduleItem.end_time = DEFAULT_END_TIME
+  }
+
+  event.doc.event_schedule.push(newScheduleItem)
 }
 
 const handleRemoveScheduleItem = (item) => {
