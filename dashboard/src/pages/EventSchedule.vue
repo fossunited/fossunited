@@ -1,6 +1,6 @@
 <script setup>
 import { IconArrowUpRight } from '@tabler/icons-vue'
-import { Breadcrumbs, createResource } from 'frappe-ui'
+import { Breadcrumbs, createResource, Switch } from 'frappe-ui'
 import { inject, onMounted, ref, computed, provide } from 'vue'
 import { toast } from 'vue-sonner'
 import { redirectRoute, isSmallScreen } from '@/helpers/utils'
@@ -146,6 +146,12 @@ const breadcrumb_items = computed(() => {
   ]
 })
 
+const toggleShowSchedule = () => {
+  event.setValue.submit({ show_schedule: event.doc.show_schedule }).then(() => {
+    toast.info('Schedule visibility updated')
+  })
+}
+
 const showModifyScheduleItemDrawer = ref(false)
 </script>
 <template>
@@ -153,15 +159,25 @@ const showModifyScheduleItemDrawer = ref(false)
     <div class="md:basis-1/2 border-r min-h-svh p-6" :class="{ 'basis-full': isSmallScreen }">
       <Breadcrumbs class="mb-6" :items="breadcrumb_items" />
       <div class="prose">
-        <h2 class="font-bold">Event Schedule</h2>
-        <router-link
-          class="text-sm flex items-center gap-1"
-          :to="`/schedule/${event.doc?.route}`"
-          target="_blank"
-        >
-          <span>Go to Schedule Page</span>
-          <IconArrowUpRight class="w-4 h-4" />
-        </router-link>
+        <h2 class="font-bold mb-4">Event Schedule</h2>
+      </div>
+      <div class="flex flex-col gap-4 my-4">
+        <Switch
+          v-model="event.doc.show_schedule"
+          class="!px-0 max-w-md"
+          :disabled="false"
+          label="Show Schedule"
+          description="Show the schedule on the event page"
+          @update:model-value="toggleShowSchedule"
+        />
+        <Button
+          class="w-fit"
+          size="sm"
+          variant="ghost"
+          label="Go to Schedule Page"
+          icon-right="arrow-up-right"
+          @click="redirectRoute(`schedule/${event.doc?.route}`, '_blank')"
+        />
       </div>
       <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
       <hr class="my-4" />
