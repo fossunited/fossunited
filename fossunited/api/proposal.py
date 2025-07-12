@@ -1,7 +1,7 @@
 import frappe
 from frappe import qb
 
-from fossunited.doctype_ids import EVENT_CFP, PROPOSAL
+from fossunited.doctype_ids import EVENT_CFP, PROPOSAL, SPEAKER
 
 
 @frappe.whitelist(allow_guest=True)
@@ -142,7 +142,7 @@ def _get_bulk_speakers_data(proposal_names: list) -> dict:
         return {}
 
     # Use frappe.qb for better performance
-    Speaker = qb.DocType("FOSS Event CFP Submission Speaker")
+    Speaker = qb.DocType(SPEAKER)
 
     speakers_query = (
         qb.from_(Speaker)
