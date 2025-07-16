@@ -181,6 +181,11 @@ const routes = [
         ],
       },
       {
+        path: 'schedule',
+        name: 'EventSchedule',
+        component: () => import('@/pages/EventSchedule.vue'),
+      },
+      {
         path: 'volunteers',
         name: 'EventVolunteers',
         component: () => import('@/pages/EventVolunteers.vue'),

@@ -23,17 +23,7 @@ const cfpData = createResource({
   },
   auto: true,
   onSuccess(data) {
-    submissions.fetch()
     breadcrumb_items.value[1].label = data.event_name
-  },
-})
-
-const submissions = createResource({
-  url: 'fossunited.api.proposal.get_event_proposals',
-  makeParams() {
-    return {
-      event: cfpData.data.event.name,
-    }
   },
 })
 
@@ -59,29 +49,24 @@ usePageMeta(() => {
 </script>
 <template>
   <Header></Header>
-  <Suspense>
-    <NarrowLayout v-if="submissions.data">
-      <Breadcrumb :items="breadcrumb_items" />
-      <div class="w-full space-y-4">
-        <h1 class="text-3xl font-bold">Talk Proposals</h1>
-        <EventHeader :event="cfpData.data.event">
-          <template #logo>
-            <ProposalLogo></ProposalLogo>
-          </template>
-          <template #description>
-            <div
-              class="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
-              v-html="cleanedHTML(cfpData.data.event.event_description)"
-            ></div>
-          </template>
-        </EventHeader>
-      </div>
-      <FormCard :cfp="cfpData.data" />
-      <InsightsGrid :event-id="cfpData.data.event.name" />
-      <SubmissionsListView :event-id="cfpData.data.event.name" />
-    </NarrowLayout>
-    <template #fallback>
-      <LoadingIndicator class="w-5 h-5" />
-    </template>
-  </Suspense>
+  <NarrowLayout v-if="cfpData.data">
+    <Breadcrumb :items="breadcrumb_items" />
+    <div class="w-full space-y-4">
+      <h1 class="text-3xl font-bold">Talk Proposals</h1>
+      <EventHeader :event="cfpData.data.event">
+        <template #logo>
+          <ProposalLogo></ProposalLogo>
+        </template>
+        <template #description>
+          <div
+            class="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
+            v-html="cleanedHTML(cfpData.data.event.event_description)"
+          ></div>
+        </template>
+      </EventHeader>
+    </div>
+    <FormCard :cfp="cfpData.data" />
+    <InsightsGrid :event-id="cfpData.data.event.name" />
+    <SubmissionsListView :event-id="cfpData.data.event.name" />
+  </NarrowLayout>
 </template>
