@@ -30,5 +30,6 @@ const badgeTheme = {
   Pending: 'yellow',
   Approved: 'green',
   Rejected: 'red',
+  Withdrawn: 'red',
 }
 </script>

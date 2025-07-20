@@ -31,6 +31,7 @@ const getTheme = {
   'Review Pending': 'orange',
   Approved: 'green',
   Rejected: 'red',
+  Withdrawn: 'red',
   Screening: 'blue',
 }
 

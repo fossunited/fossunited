@@ -34,6 +34,7 @@ def make_badge(text="Default", size="sm"):
         "Approved": ("#B2E9C8", "#07A748"),
         "Open": ("#FEF0C7", "#F79009"),
         "Review Pending": ("#FEF0C7", "#F79009"),
+        "Withdrawn": ("#FEE4E2", "#F04438"),
         "Rejected": ("#FEE4E2", "#F04438"),
         "Cancelled": ("#FEE4E2", "#F04438"),
         "Default": ("#171717", "#FFFFFF"),
