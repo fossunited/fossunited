@@ -28,13 +28,9 @@
         :show-title="false"
         class="border-none p-6"
       />
-      <ActionsForm
-        v-show="selectedTab === 2"
-        v-model:cfpid="route.params.id"
-        :show-title="false"
-        class="border-none p-6"
-      />
+      <ActionsForm v-show="selectedTab === 2" v-model:cfpid="route.params.id" />
       <div
+        v-if="selectedTab !== 2"
         class="sticky bottom-0 w-full flex flex-col-reverse md:flex-row-reverse justify-between items-end gap-2 p-4 border-t bg-white"
       >
         <Button label="Save" variant="solid" class="w-full md:w-1/3" @click="saveProposal" />
@@ -60,7 +56,7 @@ import {
   validateSpeakerFields,
   getTransformedSubmissionFields,
 } from '@/helpers/cfp'
-import { ref, watch } from 'vue'
+import { ref, provide } from 'vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -112,6 +108,8 @@ const submission = createDocumentResource({
     cfpForm.fetch()
   },
 })
+
+provide('submission', submission)
 
 const mapTalkFields = () => {
   formFields.value = getProposalFormFields(cfpForm.data).value
