@@ -1,17 +1,20 @@
-from datetime import datetime
-
 import frappe
 
 from fossunited.doctype_ids import CHAPTER, CHAPTER_MEMBER, EVENT, RSVP_RESPONSE
 
+DEFAULT_LOGO = "/assets/fossunited/images/clubs/fossclub_logo.svg"
+ACTIVE_STATUSES = ["Active", "Independent", "New"]
+
 
 def get_context(context):
+    context.no_cache = 1
     context.title = "FOSS Clubs"
     context.body_class = "scroll-smooth"
     context.roles = get_lead_roles()
     context.support_items = get_support_item_content()
-    context.active_clubs = get_active_clubs()
-    context.past_clubs = get_past_clubs()
+    clubs = get_all_clubs()
+    context.active_clubs = [club for club in clubs if not club["is_inactive"]]
+    context.past_clubs = [club for club in clubs if club["is_inactive"]]
 
 
 def get_lead_roles() -> list[dict[str, str]]:
@@ -56,13 +59,11 @@ def get_support_item_content() -> list[dict[str, str]]:
     ]
 
 
-def get_active_clubs() -> list[dict[str, str]]:
-    active_clubs = frappe.db.get_all(
+def get_all_clubs() -> list[dict]:
+    # Fetch all clubs (active and past) in one query
+    clubs = frappe.db.get_all(
         CHAPTER,
-        filters={
-            "chapter_type": "FOSS Club",
-            "chapter_status": ["in", ["Active", "Independent", "New"]],
-        },
+        filters={"chapter_type": "FOSS Club"},
         fields=[
             "route",
             "chapter_name",
@@ -72,149 +73,135 @@ def get_active_clubs() -> list[dict[str, str]]:
             "city",
             "state",
             "name",
-            "creation",
         ],
         order_by="chapter_name",
     )
+    club_ids = [club["name"] for club in clubs]
+    now = frappe.utils.now()
 
-    club_statistics = {club["name"]: get_club_statistics(club["name"]) for club in active_clubs}
+    # Batch fetch statistics
+    participants_map = get_participants_count_map(club_ids)
+    team_members_map = get_team_member_count_map(club_ids)
+    events_map = get_events_map(club_ids)
+    live_event_map, upcoming_event_map = get_live_and_upcoming_event_maps(club_ids, now)
 
-    for club in active_clubs:
-        club["logo"] = club["chapter_logo"] or "/assets/fossunited/images/clubs/fossclub_logo.svg"
-        statistics = club_statistics[club["name"]]
-        club.update(statistics)
-        club["stats"] = [
-            {
-                "label": "Participants",
-                "value": statistics["participants_count"],
-            },
-            {
-                "label": "Events",
-                "value": statistics["events_count"],
-            },
-            {
-                "label": "Team Size",
-                "value": statistics["team_member_count"],
-            },
-        ]
-        club["is_independant"] = club["chapter_status"] == "Independant"
-        club["is_new_club"] = is_new_club(club["creation"], club["chapter_status"])
-        club["is_inactive"] = False
+    result = []
+    for club in clubs:
+        club_id = club["name"]
+        status = club["chapter_status"]
+        participants_count = participants_map.get(club_id, 0)
+        team_member_count = team_members_map.get(club_id, 0)
+        events = events_map.get(club_id, [])
+        has_live_event = live_event_map.get(club_id, False)
+        has_upcoming_event = upcoming_event_map.get(club_id, False)
+        events_count = len(events) if has_live_event or has_upcoming_event else 0
+        is_new = status == "New"
+        is_inactive = status not in ACTIVE_STATUSES
+        club_dict = {
+            **club,
+            "logo": club["chapter_logo"] or DEFAULT_LOGO,
+            "participants_count": participants_count,
+            "team_member_count": team_member_count,
+            "events_count": events_count,
+            "has_live_event": has_live_event,
+            "has_upcoming_event": has_upcoming_event,
+            "stats": [
+                {"label": "Participants", "value": participants_count},
+                {"label": "Events", "value": events_count},
+                {"label": "Team Size", "value": team_member_count},
+            ],
+            "is_independent": status == "Independent",
+            "is_new_club": is_new,
+            "is_inactive": is_inactive,
+        }
+        result.append(club_dict)
+    return result
 
-    return active_clubs
 
-
-def get_past_clubs() -> list[dict[str, str]]:
-    past_clubs = frappe.db.get_all(
-        CHAPTER,
-        filters={
-            "chapter_type": "FOSS Club",
-            "chapter_status": ["not in", ["Active", "Independent", "New"]],
-        },
-        fields=[
-            "route",
-            "chapter_status",
-            "chapter_name",
-            "chapter_logo",
-            "institution_name",
-            "city",
-            "state",
-            "name",
-            "creation",
-        ],
-        order_by="chapter_name",
+def get_participants_count_map(club_ids: list[str]) -> dict[str, int]:
+    # Get all RSVP_RESPONSE emails for all clubs, then count unique per club
+    if not club_ids:
+        return {}
+    rows = frappe.db.get_all(
+        RSVP_RESPONSE,
+        filters={"chapter": ["in", club_ids]},
+        fields=["chapter", "email"],
+        page_length=999999,
     )
-
-    club_statistics = {club["name"]: get_club_statistics(club["name"]) for club in past_clubs}
-
-    for club in past_clubs:
-        club["logo"] = club["chapter_logo"] or "/assets/fossunited/images/clubs/fossclub_logo.svg"
-        statistics = club_statistics[club["name"]]
-        club.update(statistics)
-        club["stats"] = [
-            {
-                "label": "Participants",
-                "value": statistics["participants_count"],
-            },
-            {
-                "label": "Events",
-                "value": statistics["events_count"],
-            },
-            {
-                "label": "Team Size",
-                "value": statistics["team_member_count"],
-            },
-        ]
-        club["is_new_club"] = False
-        club["is_inactive"] = True
-
-    return past_clubs
+    participants_map = {}
+    for row in rows:
+        club_id = row["chapter"]
+        email = row["email"]
+        participants_map.setdefault(club_id, set()).add(email)
+    return {k: len(v) for k, v in participants_map.items()}
 
 
-def get_club_statistics(club_id: str) -> dict[str, str | int]:
-    participants_count = len(
-        set(
-            frappe.db.get_all(
-                RSVP_RESPONSE,
-                filters={"chapter": club_id},
-                pluck="email",
-                page_length=999999,
-            )
-        )
-    )
-
-    team_member_count = frappe.db.count(
+def get_team_member_count_map(club_ids: list[str]) -> dict[str, int]:
+    if not club_ids:
+        return {}
+    rows = frappe.db.get_all(
         CHAPTER_MEMBER,
         filters={
-            "parent": club_id,
+            "parent": ["in", club_ids],
             "parenttype": "FOSS Chapter",
         },
+        fields=["parent"],
+        page_length=999999,
     )
+    team_members_map = {}
+    for row in rows:
+        club_id = row["parent"]
+        team_members_map[club_id] = team_members_map.get(club_id, 0) + 1
+    return team_members_map
 
-    events = frappe.db.get_all(
+
+def get_events_map(club_ids: list[str]) -> dict[str, list[dict]]:
+    if not club_ids:
+        return {}
+    rows = frappe.db.get_all(
         EVENT,
         filters={
-            "chapter": club_id,
-            "status": [
-                "in",
-                ["Live", "Concluded"],
-            ],
+            "chapter": ["in", club_ids],
+            "status": ["in", ["Live", "Concluded"]],
         },
-        fields=["event_start_date", "event_end_date"],
+        fields=["chapter", "event_start_date", "event_end_date"],
+        page_length=999999,
     )
+    events_map = {}
+    for row in rows:
+        club_id = row["chapter"]
+        events_map.setdefault(club_id, []).append(row)
+    return events_map
 
-    has_live_event = frappe.db.exists(
+
+def get_live_and_upcoming_event_maps(
+    club_ids: list[str], now
+) -> tuple[dict[str, bool], dict[str, bool]]:
+    if not club_ids:
+        return {}, {}
+    # Live events
+    live_rows = frappe.db.get_all(
         EVENT,
-        {
-            "chapter": club_id,
+        filters={
+            "chapter": ["in", club_ids],
             "status": "Live",
-            "event_start_date": ["<=", frappe.utils.now()],
-            "event_end_date": [">=", frappe.utils.now()],
+            "event_start_date": ["<=", now],
+            "event_end_date": [">=", now],
         },
+        fields=["chapter"],
+        page_length=999999,
     )
-
-    has_upcoming_event = frappe.db.exists(
+    # Upcoming events
+    upcoming_rows = frappe.db.get_all(
         EVENT,
-        {
-            "chapter": club_id,
+        filters={
+            "chapter": ["in", club_ids],
             "status": "Live",
-            "event_start_date": [">", frappe.utils.now()],
+            "event_start_date": [">", now],
         },
+        fields=["chapter"],
+        page_length=999999,
     )
-
-    events_count = len(events) if has_live_event or has_upcoming_event else 0
-
-    return {
-        "participants_count": participants_count,
-        "team_member_count": team_member_count,
-        "events_count": events_count,
-        "has_live_event": has_live_event,
-        "has_upcoming_event": has_upcoming_event,
-    }
-
-
-def is_new_club(creation_date: datetime, status: str) -> bool:
-    """
-    A club is new if it was created in the last 90 days
-    """
-    return frappe.utils.days_diff(frappe.utils.now(), creation_date) <= 90 or status == "New"
+    live_map = {row["chapter"]: True for row in live_rows}
+    upcoming_map = {row["chapter"]: True for row in upcoming_rows}
+    return live_map, upcoming_map
