@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-white">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full p-4 md:p-8 border rounded bg-white">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle />
       <span>Speaker Information</span>
@@ -7,7 +7,7 @@
     <div
       v-for="(speaker, index) in speakers"
       :key="index"
-      class="flex flex-col md:grid md:grid-cols-2 gap-4 my-4"
+      class="flex flex-col gap-4 p-6 border rounded border-gray-300"
     >
       <div
         v-if="speakers.length > 1"
