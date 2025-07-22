@@ -94,7 +94,7 @@ def get_all_clubs() -> list[dict]:
         events = events_map.get(club_id, [])
         has_live_event = live_event_map.get(club_id, False)
         has_upcoming_event = upcoming_event_map.get(club_id, False)
-        events_count = len(events) if has_live_event or has_upcoming_event else 0
+        events_count = len(events)
         is_new = status == "New"
         is_inactive = status not in ACTIVE_STATUSES
         club_dict = {
