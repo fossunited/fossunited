@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     Accordion: typeof import('./src/components/ui/Accordion.vue')['default']
+    ActionsForm: typeof import('./src/components/cfp-public/ActionsForm.vue')['default']
     AddMember: typeof import('./src/components/chapter/AddMember.vue')['default']
     AllProposalsBanner: typeof import('./src/components/proposals/AllProposalsBanner.vue')['default']
     AllProposalsBannerImage: typeof import('./src/components/proposals/AllProposalsBannerImage.vue')['default']

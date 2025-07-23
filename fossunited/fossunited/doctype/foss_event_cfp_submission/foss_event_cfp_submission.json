@@ -13,6 +13,7 @@
   "is_published",
   "route",
   "status",
+  "is_withdrawn",
   "attendance_confirmed",
   "first_name",
   "last_name",
@@ -146,7 +147,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Review Pending\nScreening\nApproved\nRejected",
+   "options": "Review Pending\nScreening\nApproved\nRejected\nWithdrawn",
    "permlevel": 2
   },
   {
@@ -327,12 +328,18 @@
    "fieldname": "session_categories",
    "fieldtype": "Text",
    "label": "Session Categories"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_withdrawn",
+   "fieldtype": "Check",
+   "label": "Is Withdrawn?"
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-06-16 19:40:26.534803",
+ "modified": "2025-06-22 22:55:30.082517",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
