@@ -31,7 +31,7 @@ const props = defineProps({
     required: true,
   },
 })
-const emit = defineEmits(['selected'])//helps to communicate with parent component
+const emit = defineEmits(['selected']) //helps to communicate with parent component
 const router = useRouter()
 const goToChapter = () => {
   emit('selected', props.chapter.chapter_name)

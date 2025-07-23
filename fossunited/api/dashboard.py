@@ -6,6 +6,7 @@ from fossunited.utils.payments import (
     get_razorpay_client,
 )
 
+
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str) -> dict:
     return frappe.get_doc(EVENT, name)
@@ -27,6 +28,7 @@ def get_event_from_route(route: str, fields: list) -> dict:
 @frappe.whitelist(allow_guest=True)
 def get_states():
     return frappe.get_all("State", fields=["name"], page_length=1000, order_by="name")
+
 
 @frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
@@ -166,9 +168,9 @@ def get_user_profile_list(filters: dict = None, search_term: str = None) -> list
         search_term = search_term.strip()
         or_filters = [
             ["username", "like", f"%{search_term}%"],
-            ["full_name", "like", f"%{search_term}%"]
+            ["full_name", "like", f"%{search_term}%"],
         ]
-        
+
         profiles = frappe.db.get_all(
             USER_PROFILE,
             filters=filters,
@@ -180,8 +182,8 @@ def get_user_profile_list(filters: dict = None, search_term: str = None) -> list
                 "username",
                 "name",
             ],
-            page_length=50,  
-            order_by="username asc"
+            page_length=50,
+            order_by="username asc",
         )
     else:
         profiles = []

@@ -24,7 +24,10 @@
         :key="member.name"
         :title="member.full_name"
       >
-        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+        <template
+          v-if="member.email != session.user && member.role != 'Lead' && isLead()"
+          #actions
+        >
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -82,8 +85,8 @@
         v-model="showEditmodal"
         class="z-50"
         :chapter="chapter"
-        :member=selectedMember
-        :isLead=isLead()
+        :member="selectedMember"
+        :isLead="isLead()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -113,11 +116,11 @@ const session = inject('$session')
 const route = useRoute()
 
 const isLead = () => {
-    let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
-    if (currentUser[0].role === "Lead") {
-      return true
-    }
-    return false
+  let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
+  if (currentUser[0].role === 'Lead') {
+    return true
+  }
+  return false
 }
 
 const chapter = createDocumentResource({

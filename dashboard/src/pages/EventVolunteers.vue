@@ -17,7 +17,10 @@
     <!-- VOLUNTEERS GRID -->
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
-        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+        <template
+          v-if="member.email != session.user && member.role != 'Lead' && isLead()"
+          #actions
+        >
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -74,8 +77,8 @@
         v-model="showEditmodal"
         class="z-50"
         :event="event"
-        :member=selectedMember
-        :isLead=isLead()
+        :member="selectedMember"
+        :isLead="isLead()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -104,11 +107,11 @@ const session = inject('$session')
 const route = useRoute()
 
 const isLead = () => {
-    let currentUser = event.doc.event_members.filter((m) => m.email === session.user)
-    if (currentUser[0].role === "Lead") {
-      return true
-    }
-    return false
+  let currentUser = event.doc.event_members.filter((m) => m.email === session.user)
+  if (currentUser[0].role === 'Lead') {
+    return true
+  }
+  return false
 }
 
 const event = createDocumentResource({

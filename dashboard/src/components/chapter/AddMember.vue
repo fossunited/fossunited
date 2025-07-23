@@ -62,7 +62,11 @@
     <template #actions>
       <div class="grid grid-cols-2 gap-3">
         <Button label="Cancel" @click="$emit('close-dialog')" />
-        <Button label="Add" variant="solid" @click="$emit('update:add-member', newMembers, role)" />
+        <Button
+          label="Add"
+          variant="solid"
+          @click="$emit('update:add-member', newMembers, role)"
+        />
       </div>
     </template>
   </Dialog>
@@ -124,19 +128,23 @@ const memberOptions = createResource({
 let searchTimeout = null
 const handleSearchQuery = (query) => {
   searchTerm.value = query || ''
-  
+
   if (searchTimeout) {
     clearTimeout(searchTimeout)
   }
-  
+
   searchTimeout = setTimeout(() => {
     memberOptions.fetch()
   }, 300)
 }
 
-watch(existingMembers, () => {
-  memberOptions.fetch()
-}, { deep: true })
+watch(
+  existingMembers,
+  () => {
+    memberOptions.fetch()
+  },
+  { deep: true },
+)
 
 const newMembers = ref([])
 const role = ref('Volunteer')
