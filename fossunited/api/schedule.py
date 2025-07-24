@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import datetime
 
 import frappe
@@ -5,18 +6,23 @@ import frappe
 from fossunited.doctype_ids import EVENT
 
 
+def format_date(date_obj):
+    """Format a date object to 'dd/mm/YYYY' string."""
+    return date_obj.strftime("%d/%m/%Y")
+
+
 @frappe.whitelist(allow_guest=True)
 def get_event_schedule(event_id: str) -> dict:
     """
-    Get the schedule for the event
+    Get the schedule for the event, grouped by date and hall.
+    For each schedule item with a linked_cfp, also fetch the proposal route and speakers.
 
     Args:
         event_id (str): Event ID
 
     Returns:
-        dict: Schedule data
+        dict: {date: {hall: [sessions]}}
     """
-
     schedule = frappe.db.get_all(
         "FOSS Event Schedule",
         {"parent": event_id, "parenttype": EVENT},
@@ -24,82 +30,45 @@ def get_event_schedule(event_id: str) -> dict:
         order_by="start_time",
     )
 
-    schedule_by_date = get_schedule_by_date(schedule)
+    # Build a sorted list of unique dates
+    unique_dates = sorted({session["scheduled_date"] for session in schedule})
+    date_to_day = {format_date(date): idx + 1 for idx, date in enumerate(unique_dates)}
 
-    schedule_by_date_and_hall = {}
-
-    for date, sessions in schedule_by_date.items():
-        schedule_by_date_and_hall[date] = get_schedule_by_hall(sessions)
-
-    return schedule_by_date_and_hall
-
-
-def get_schedule_by_date(schedule: list) -> dict:
-    """
-    Arrange the schedule in a dict, with keys as dates
-
-    Args:
-        schedule (list): List of schedule items
-
-    Returns:
-        dict: Schedule arranged by date
-    """
-
-    dates = get_event_dates(schedule)
-
-    _schedule = {}
+    # Group by date and hall in a single pass
+    schedule_by_date_and_hall = defaultdict(lambda: defaultdict(list))
     for session in schedule:
-        date = session.get("scheduled_date").strftime("%d/%m/%Y")
-        if date not in _schedule:
-            _schedule[date] = []
-
-        session.day = dates.index(date) + 1
-
-        _schedule[date].append(session)
-
-    _schedule = dict(sorted(_schedule.items(), key=lambda x: datetime.strptime(x[0], "%d/%m/%Y")))
-
-    return _schedule
-
-
-def get_event_dates(schedule: list) -> list:
-    """
-    Get the list of dates for the event
-
-    Args:
-        schedule (list): List of schedule items
-
-    Returns:
-        list: List of dates
-    """
-
-    dates = []
-    for session in schedule:
-        date = session.get("scheduled_date")
-        if date not in dates:
-            dates.append(date)
-
-    dates.sort()
-    return [date.strftime("%d/%m/%Y") for date in dates]
-
-
-def get_schedule_by_hall(schedule: list) -> dict:
-    """
-    Arrange the schedule in a dict, with keys as halls
-
-    Args:
-        schedule (list): List of schedule items
-
-    Returns:
-        dict: Schedule arranged by hall
-    """
-
-    _schedule = {}
-    for session in schedule:
+        date_str = format_date(session["scheduled_date"])
         hall = session.get("hall") or "no-hall"
-        if hall not in _schedule:
-            _schedule[hall] = []
+        session.day = date_to_day[date_str]
 
-        _schedule[hall].append(session)
+        linked_cfp = session.get("linked_cfp")
+        if linked_cfp:
+            proposal_route = frappe.db.get_value("FOSS Event CFP Submission", linked_cfp, "route")
+            session["cfp_route"] = proposal_route
+            speakers = frappe.db.get_all(
+                "CFP Submission Speaker",
+                {"parent": linked_cfp},
+                [
+                    "full_name",
+                    "designation",
+                    "organization",
+                    "bio",
+                    "photo",
+                    "linked_user",
+                    "social_link",
+                ],
+            )
+            session["cfp_speakers"] = speakers
+        else:
+            session["cfp_route"] = None
+            session["cfp_speakers"] = []
 
-    return _schedule
+        schedule_by_date_and_hall[date_str][hall].append(session)
+
+    sorted_schedule = {
+        date: dict(halls)
+        for date, halls in sorted(
+            schedule_by_date_and_hall.items(), key=lambda x: datetime.strptime(x[0], "%d/%m/%Y")
+        )
+    }
+    return sorted_schedule
