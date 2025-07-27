@@ -39,6 +39,7 @@
   "instagram",
   "mastodon",
   "telegram",
+  "bluesky",
   "whatsapp",
   "discord",
   "chapter_members_section",
@@ -245,6 +246,12 @@
    "fieldname": "telegram",
    "fieldtype": "Data",
    "label": "Telegram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "bluesky",
+   "fieldtype": "Data",
+   "label": "Bluesky",
    "options": "URL"
   },
   {
