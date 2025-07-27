@@ -1,5 +1,9 @@
 <template>
-  <div class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full">
+  <a
+    :href="createAbsoluteUrlFromRoute(session.cfp_route)"
+    target="_blank"
+    class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full hover:bg-gray-50"
+  >
     <div class="flex justify-between">
       <div class="flex gap-3 md:gap-4">
         <div
@@ -25,16 +29,16 @@
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
       {{ session.title }}
     </h3>
-    <div v-if="getSpeakers()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div v-for="(speaker, index) in getSpeakers().speakers" :key="index">
+    <div v-if="speakers" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div v-for="(speaker, index) in speakers" :key="index">
         <div class="flex gap-2 items-start">
           <img
-            :src="speaker.image"
-            :alt="speaker.name"
+            :src="speaker.photo"
+            :alt="speaker.full_name"
             class="w-13 h-13 rounded-[2px] object-cover object-top"
           />
           <div class="flex flex-col gap-1">
-            <h4 class="text-base font-medium">{{ speaker.name }}</h4>
+            <h4 class="text-base font-medium">{{ speaker.full_name }}</h4>
             <p class="text-xs text-gray-600">
               {{ speaker.designation }} | {{ speaker.organization }}
             </p>
@@ -42,15 +46,16 @@
         </div>
       </div>
     </div>
-  </div>
+  </a>
 </template>
 <script setup>
+import { IconCalendarPlus } from '@tabler/icons-vue'
 import { createEvent } from 'ics'
 import { toast } from 'vue-sonner'
-import { defineProps, inject } from 'vue'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
+import { computed, defineProps, inject } from 'vue'
 import dayjs from 'dayjs'
 import duration from 'dayjs/plugin/duration'
-import { IconCalendarPlus } from '@tabler/icons-vue'
 
 dayjs.extend(duration)
 
@@ -125,7 +130,11 @@ function getDuration() {
   return `${durationInMinutes} minutes`
 }
 
-function getSpeakers() {
-  return JSON.parse(props.session.speakers)
-}
+const speakers = computed(() => {
+  if (props.session.speakers) {
+    return JSON.parse(props.session.speakers)
+  } else {
+    return props.session.cfp_speakers
+  }
+})
 </script>

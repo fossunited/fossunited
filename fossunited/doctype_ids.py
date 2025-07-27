@@ -24,6 +24,7 @@ CHAPTER_MEMBER = "FOSS Chapter Lead Team Member"
 
 # Event-related identifiers
 EVENT_VOLUNTEER = "FOSS Chapter Event Member"
+EVENT_SCHEDULE = "FOSS Event Schedule"
 
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
