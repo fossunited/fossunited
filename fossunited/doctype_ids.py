@@ -42,6 +42,11 @@ EVENT_TICKET = "FOSS Event Ticket"
 TICKET_TRANSFER = "FOSS Event Ticket Transfer"
 TICKET_TIER = "FOSS Ticket Tier"
 
+# Job-related identifiers
+JOB = "Job Board"
+JOB_STATUS_APPROVED = "Approved"
+JOB_STATUS_EXPIRED = "Expired"
+
 # Payments
 
 RAZORPAY_PAYMENT = "Razorpay Payment"
