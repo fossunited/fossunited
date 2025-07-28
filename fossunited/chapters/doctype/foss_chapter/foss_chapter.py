@@ -45,6 +45,7 @@ class FOSSChapter(WebsiteGenerator):
         slug: DF.Data | None
         state: DF.Link | None
         telegram: DF.Data | None
+        bluesky: DF.Data | None
         whatsapp: DF.Data | None
         x: DF.Data | None
     # end: auto-generated types
@@ -257,6 +258,7 @@ class FOSSChapter(WebsiteGenerator):
             "telegram",
             "whatsapp",
             "discord",
+            "bluesky",
         ]
         for k, v in self.as_dict().items():
             if k in SOCIAL_LINK_FIELDNAMES:
