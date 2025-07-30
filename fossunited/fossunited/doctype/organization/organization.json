@@ -1,65 +1,226 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "autoname": "prompt",
-  "creation": "2023-08-21 22:50:48.655899",
-  "default_view": "List",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": ["country_of_origin", "column_break_sbxo", "logo"],
-  "fields": [
-    {
-      "fieldname": "country_of_origin",
-      "fieldtype": "Data",
-      "label": "Country of Origin"
-    },
-    {
-      "fieldname": "column_break_sbxo",
-      "fieldtype": "Column Break"
-    },
-    {
-      "description": "Attach image in .png or .svg format",
-      "fieldname": "logo",
-      "fieldtype": "Attach Image",
-      "label": "Logo"
-    }
-  ],
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2024-01-23 14:15:27.670765",
-  "modified_by": "Administrator",
-  "module": "FOSSUnited",
-  "name": "Organization",
-  "naming_rule": "Set by user",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "All",
-      "select": 1,
-      "share": 1,
-      "write": 1
-    }
-  ],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+ "actions": [],
+ "allow_guest_to_view": 1,
+ "allow_rename": 1,
+ "autoname": "field:org_name",
+ "creation": "2023-08-21 22:50:48.655899",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "country_of_origin",
+  "published",
+  "route",
+  "column_break_sbxo",
+  "logo",
+  "org_details_section",
+  "org_name",
+  "org_website",
+  "org_email",
+  "org_type",
+  "org_about",
+  "org_social_section",
+  "discuss",
+  "mastodon",
+  "bluesky",
+  "matrix",
+  "twitter",
+  "org_colbreak",
+  "telegram",
+  "linkedin",
+  "instagram",
+  "discord",
+  "org_members_section",
+  "org_members",
+  "org_lead"
+ ],
+ "fields": [
+  {
+   "fieldname": "country_of_origin",
+   "fieldtype": "Data",
+   "label": "Country of Origin"
+  },
+  {
+   "fieldname": "column_break_sbxo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "description": "Attach image in .png or .svg format",
+   "fieldname": "logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "org_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Organization Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "org_website",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Organization Website",
+   "options": "URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "org_email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Organization Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "org_details_section",
+   "fieldtype": "Section Break",
+   "label": "Organization Details"
+  },
+  {
+   "fieldname": "org_type",
+   "fieldtype": "Data",
+   "label": "Organization Type"
+  },
+  {
+   "default": "0",
+   "fieldname": "published",
+   "fieldtype": "Check",
+   "label": "Published?",
+   "reqd": 1
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "Route"
+  },
+  {
+   "fieldname": "org_about",
+   "fieldtype": "Text Editor",
+   "label": "About",
+   "reqd": 1
+  },
+  {
+   "fieldname": "org_social_section",
+   "fieldtype": "Section Break",
+   "label": "Socials"
+  },
+  {
+   "fieldname": "org_colbreak",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "discuss",
+   "fieldtype": "Data",
+   "label": "Forum",
+   "options": "URL"
+  },
+  {
+   "fieldname": "telegram",
+   "fieldtype": "Data",
+   "label": "Telegram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "mastodon",
+   "fieldtype": "Data",
+   "label": "Mastodon",
+   "options": "URL"
+  },
+  {
+   "fieldname": "bluesky",
+   "fieldtype": "Data",
+   "label": "Bluesky",
+   "options": "URL"
+  },
+  {
+   "fieldname": "matrix",
+   "fieldtype": "Data",
+   "label": "Matrix",
+   "options": "URL"
+  },
+  {
+   "fieldname": "twitter",
+   "fieldtype": "Data",
+   "label": "X",
+   "options": "URL"
+  },
+  {
+   "fieldname": "linkedin",
+   "fieldtype": "Data",
+   "label": "Linedin",
+   "options": "URL"
+  },
+  {
+   "fieldname": "instagram",
+   "fieldtype": "Data",
+   "label": "Instagram",
+   "options": "URL"
+  },
+  {
+   "fieldname": "discord",
+   "fieldtype": "Data",
+   "label": "Discord",
+   "options": "URL"
+  },
+  {
+   "fieldname": "org_members_section",
+   "fieldtype": "Section Break",
+   "label": "Organization Members"
+  },
+  {
+   "fieldname": "org_members",
+   "fieldtype": "Table",
+   "label": "Members",
+   "options": "Organization Team Member"
+  },
+  {
+   "fieldname": "org_lead",
+   "fieldtype": "Data",
+   "label": "Organization Lead"
+  }
+ ],
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "published",
+ "links": [],
+ "modified": "2025-07-30 13:17:55.848091",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Organization",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "All",
+   "select": 1,
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "o",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }
