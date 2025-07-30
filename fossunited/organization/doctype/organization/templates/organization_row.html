@@ -2,10 +2,10 @@
 	<a href="{{ doc.route }}" class="doctype-link">
 		<span class="logo-title-wrap">
 			{% if doc.logo %}
-				<img src="{{ doc.logo }}" alt="Logo" class="doctype-logo">
+		  <img src="{{ doc.logo }}" alt="{{ doc.title or doc.name }} logo" class="doctype-logo">
 			{% else %}
 				  <!-- Default organization svg if not present -->
-		  <svg class="doctype-logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+			<svg class="doctype-logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-label="Organization icon">
 			<path d="M3 21v-2h18v2H3zm2-3V5a1 1 0 011-1h4V2h4v2h4a1 1 0 011 1v13H5zm6-5h2v-2h-2v2zm0 4h2v-2h-2v2zm-4-4h2v-2H7v2zm0 4h2v-2H7v2zm8-4h2v-2h-2v2zm0 4h2v-2h-2v2z"/>
 		  </svg>
 			{% endif %}

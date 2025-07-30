@@ -57,10 +57,15 @@
   <div class="org-team">
 	<h2>Team</h2>
 	{% if org_lead %}
-	<p><strong>Lead:</strong> {{ org_lead }}</p>
+	  <p><strong>Lead:</strong> {{ org_lead }}</p>
 	{% endif %}
-			{% if org_members %}
-	<p><strong>Members:</strong> {{ org_members }}</p>
+	{% if org_members %}
+	  <p><strong>Members:</strong></p>
+	  <ul>
+	    {% for m in org_members %}
+	      <li>{{ m.full_name or m.org_member }} — {{ m.org_role }}</li>
+	    {% endfor %}
+	  </ul>
 	{% endif %}
   </div>
   {% endif %}
