@@ -77,8 +77,8 @@ class Organization(WebsiteGenerator):
             profile = frappe.get_doc(USER_PROFILE, member.org_member).as_dict()
             members.append(
                 {
-                    "full_name": member.full_name,
-                    "role": member.role,
+                    "full_name": profile.full_name,
+                    "role": member.org_role,
                     "profile_picture": (
                         profile.profile_photo
                         if profile.profile_photo
