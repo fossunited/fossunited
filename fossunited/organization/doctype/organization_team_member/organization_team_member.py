@@ -14,9 +14,7 @@ class OrganizationTeamMember(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        email: DF.Data | None
-        full_name: DF.Data | None
-        org_member: DF.Link | None
+        org_member: DF.Link
         org_role: DF.Literal[
             "Lead",  # noqa: F821
             "Core Team Member",  # noqa: F722

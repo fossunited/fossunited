@@ -7,41 +7,30 @@
  "engine": "InnoDB",
  "field_order": [
   "org_member",
-  "org_role",
-  "full_name",
-  "email"
+  "org_role"
  ],
  "fields": [
   {
    "fieldname": "org_member",
    "fieldtype": "Link",
-   "label": "Organization Member",
-   "options": "FOSS User Profile"
+   "in_list_view": 1,
+   "label": "Organization Members",
+   "options": "FOSS User Profile",
+   "reqd": 1
   },
   {
    "fieldname": "org_role",
    "fieldtype": "Select",
    "label": "Role",
    "options": "Lead\nCore Team Member\nVolunteer\nGraphic Designer\nContent Writer\nMarketing\nDeveloper\nManager"
-  },
-  {
-   "fieldname": "full_name",
-   "fieldtype": "Data",
-   "label": "Full Name"
-  },
-  {
-   "fieldname": "email",
-   "fieldtype": "Data",
-   "label": "Email"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-30 12:13:03.625920",
+ "modified": "2025-07-30 16:09:44.582013",
  "modified_by": "Administrator",
- "module": "FOSS Profiles",
+ "module": "Organization",
  "name": "Organization Team Member",
  "owner": "Administrator",
  "permissions": [],
