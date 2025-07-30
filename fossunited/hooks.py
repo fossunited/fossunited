@@ -108,4 +108,7 @@ scheduler_events = {
     "daily_long": [
         "fossunited.scheduled_tasks.conclude_events",
     ],
+    "monthly": [
+        "fossunited.scheduled_tasks.update_past_job_status",
+    ],
 }
