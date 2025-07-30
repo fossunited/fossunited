@@ -42,30 +42,24 @@ class Organization(WebsiteGenerator):
 
     def get_social_links(self):
         socials = {}
-        SOCIAL_LINK_FIELDNAMES = [
-            "github",
-            "gitlab",
-            "x",
-            "linkedin",
+        # Get social fields from type annotations to stay in sync
+        social_fields = [
+            "bluesky",
+            "discord",
+            "discuss",
             "instagram",
+            "linkedin",
             "mastodon",
-            "youtube",
-            "facebook",
             "matrix",
             "telegram",
-            "bluesky",
-            "zulip",
-            "whatsapp",
-            "discord",
+            "twitter",
         ]
-        for k, v in self.as_dict().items():
-            if k in SOCIAL_LINK_FIELDNAMES:
-                if k == "matrix":
-                    k = "matrix-light"
 
-                if v:
-                    socials[k] = v
-            else:
-                continue
+        for field in social_fields:
+            value = getattr(self, field, None)
+            if value:
+                # Handle special naming cases
+                display_name = "matrix-light" if field == "matrix" else field
+                socials[display_name] = value
 
         return socials
