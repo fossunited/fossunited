@@ -7,6 +7,8 @@ CHAPTER_LEAD = "Chapter Lead"
 
 REVIEWER = "CFP Reviewer"
 
+ORG_MEMBER = "Organization Member"
+
 HACKATHON_ORGANIZER = "Hackathon Organizer"
 
 LOCALHOST_ORGANIZER = "Localhost Organizer"

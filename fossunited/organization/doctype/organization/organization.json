@@ -187,9 +187,9 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-30 13:17:55.848091",
+ "modified": "2025-07-30 15:58:28.838635",
  "modified_by": "Administrator",
- "module": "FOSSUnited",
+ "module": "Organization",
  "name": "Organization",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
@@ -207,14 +207,21 @@
    "write": 1
   },
   {
-   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "All",
-   "select": 1,
+   "share": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Organization Member",
    "share": 1,
    "write": 1
   }
