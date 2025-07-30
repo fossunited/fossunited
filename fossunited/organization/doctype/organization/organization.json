@@ -13,7 +13,8 @@
   "published",
   "route",
   "column_break_sbxo",
-  "logo",
+  "org_logo",
+  "org_banner",
   "org_details_section",
   "org_name",
   "org_website",
@@ -22,7 +23,7 @@
   "org_about",
   "org_social_section",
   "github",
-  "discuss",
+  "discourse",
   "mastodon",
   "bluesky",
   "matrix",
@@ -45,12 +46,6 @@
   {
    "fieldname": "column_break_sbxo",
    "fieldtype": "Column Break"
-  },
-  {
-   "description": "Attach image in .png or .svg format",
-   "fieldname": "logo",
-   "fieldtype": "Attach Image",
-   "label": "Logo"
   },
   {
    "fieldname": "org_name",
@@ -112,12 +107,6 @@
   {
    "fieldname": "org_colbreak",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "discuss",
-   "fieldtype": "Data",
-   "label": "Forum",
-   "options": "URL"
   },
   {
    "fieldname": "telegram",
@@ -189,13 +178,30 @@
    "fieldtype": "Data",
    "label": "Github",
    "options": "URL"
+  },
+  {
+   "description": "Attach image in .png or .svg format",
+   "fieldname": "org_logo",
+   "fieldtype": "Attach Image",
+   "label": "Logo"
+  },
+  {
+   "fieldname": "org_banner",
+   "fieldtype": "Attach Image",
+   "label": "Banner Image"
+  },
+  {
+   "fieldname": "discourse",
+   "fieldtype": "Data",
+   "label": "Forum",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-30 23:20:20.798506",
+ "modified": "2025-07-30 23:43:44.487278",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization",
