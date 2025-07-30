@@ -21,6 +21,7 @@
   {
    "fieldname": "org_role",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Role",
    "options": "Lead\nCore Team Member\nVolunteer\nGraphic Designer\nContent Writer\nMarketing\nDeveloper\nManager"
   }
@@ -28,7 +29,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-30 16:09:44.582013",
+ "modified": "2025-07-30 19:58:14.170049",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization Team Member",
