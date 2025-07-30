@@ -21,12 +21,13 @@
   "org_type",
   "org_about",
   "org_social_section",
+  "github",
   "discuss",
   "mastodon",
   "bluesky",
   "matrix",
-  "twitter",
   "org_colbreak",
+  "x",
   "telegram",
   "linkedin",
   "instagram",
@@ -143,7 +144,7 @@
    "options": "URL"
   },
   {
-   "fieldname": "twitter",
+   "fieldname": "x",
    "fieldtype": "Data",
    "label": "X",
    "options": "URL"
@@ -182,13 +183,19 @@
    "fieldtype": "Data",
    "label": "Organization Lead",
    "options": "Name"
+  },
+  {
+   "fieldname": "github",
+   "fieldtype": "Data",
+   "label": "Github",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-30 19:52:38.060933",
+ "modified": "2025-07-30 23:20:20.798506",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization",
