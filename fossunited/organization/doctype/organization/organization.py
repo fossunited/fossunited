@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe.utils import markdown, sanitize_html
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.doctype_ids import EVENT, EVENT_SPONSOR, HACKATHON, USER_PROFILE
@@ -173,3 +174,5 @@ class Organization(WebsiteGenerator):
         # NOTE: Falling back to city images until organization graphics are made
         context.default_org_logo = "/assets/fossunited/images/chapter/city_profile.svg"
         context.default_org_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
+
+        context.org_about_html = sanitize_html(markdown(self.org_about))
