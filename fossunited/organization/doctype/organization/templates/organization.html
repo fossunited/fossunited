@@ -30,15 +30,14 @@
       </div>
 
     </div>
-    {% if mastodon or bluesky or matrix or x or telegram or linkedin or instagram or discord %}
+
     <div class="header-section--socials">
       {% for (k,v) in social_links.items() %}
-      <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+      <a href="{{ v }}" aria-label="{{ k|title }} for {{ org_name }} organization.">
         <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
       </a>
       {% endfor %}
     </div>
-    {% endif %}
 
     <div class="mt-3">
       {% if org_type %}<p class="org-type">{{ org_type }}</p>{% endif %}

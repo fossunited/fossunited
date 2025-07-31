@@ -16,7 +16,7 @@ class Organization(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_profiles.doctype.organization_team_member.organization_team_member import (  # noqa: E501
+        from fossunited.organization.doctype.organization_team_member.organization_team_member import (  # noqa: E501
             OrganizationTeamMember,
         )
 
@@ -44,11 +44,11 @@ class Organization(WebsiteGenerator):
         x: DF.Data | None
         youtube: DF.Data | None
     # end: auto-generated types
-    pass
 
     def get_social_links(self):
         socials = {}
         # Get social fields from type annotations to stay in sync
+        # TODO: Consider making social fields configurable.
         social_fields = [
             "github",
             "x",
@@ -80,15 +80,19 @@ class Organization(WebsiteGenerator):
     def get_members(self):
         members = []
         for member in self.org_members:
-            profile = frappe.get_doc(USER_PROFILE, member.org_member).as_dict()
+            try:
+                profile = frappe.get_doc(USER_PROFILE, member.org_member).as_dict()
+            except frappe.DoesNotExistError:
+                # Skip members with missing profiles
+                continue
+
             members.append(
                 {
                     "full_name": profile.full_name,
                     "role": member.org_role,
                     "profile_picture": (
                         profile.profile_photo
-                        if profile.profile_photo
-                        else "/assets/fossunited/images/defaults/user_profile_image.png"
+                        or "/assets/fossunited/images/defaults/user_profile_image.png"
                     ),
                     "route": profile.route,
                 }
