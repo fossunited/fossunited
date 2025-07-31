@@ -1,0 +1,153 @@
+{% macro job_board(active_jobs, expired_jobs) %}
+<div class="container">
+
+    <div class="row job-listing pt-4">
+      {% for job in active_jobs %}
+        {{ job_card(job) }}
+      {% endfor %}
+    </div>
+
+    <details>
+      <summary class="btn btn-outline-secondary">Show Closed Jobs</summary>
+      <div class="row job-listing pt-4">
+        {% for job in expired_jobs %}
+          {{ job_card(job, expired=True) }}
+        {% endfor %}
+      </div>
+    </details>
+</div>
+{{ style() }}
+{% endmacro %}
+
+{% macro job_card(job, expired=False) %}
+<div class="col-lg-4 col-md-6 col-sm-1 card-deck">
+  <div class="card my-2 d-flex">
+    <h5 class="card-title">{{ job.job_title }}</h5>
+    <p class="card-date">Posted on {{ job.creation.strftime("%B %d, %Y") }}</p>
+    {% if expired %}
+      <p class="card-date">Closed on {{ job.modified.strftime("%B %d, %Y") }}</p>
+    {% endif %}
+
+    <div class="card-body">
+      <div class="d-flex flex-row detail">
+        {{ icon_building() }}
+        <h6><a href="{{ job.company_website }}">{{ job.company_name }}</a></h6>
+      </div>
+      <div class="d-flex flex-row detail">
+        {{ icon_location() }}
+        <h6>{{ job.job_location }}</h6>
+      </div>
+    </div>
+
+    <div class="view-details">
+      <div class="job-type">
+        {{ icon_briefcase() }}
+        <h6>{{ job.job_type }}</h6>
+      </div>
+      <div class="job-view">
+        <a href="/jobs/{{ job.name }}">View Details</a>
+        {% if not expired %}
+          {{ icon_arrow() }}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
+
+<!-- Svg icons macro -->
+{% macro icon_building() %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icon-tabler-buildings">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M4 21v-15c0 -1 1 -2 2 -2h5c1 0 2 1 2 2v15" />
+  <path d="M16 8h2c1 0 2 1 2 2v11" />
+  <path d="M3 21h18" />
+  <path d="M10 12v0" /><path d="M10 16v0" /><path d="M10 8v0" />
+  <path d="M7 12v0" /><path d="M7 16v0" /><path d="M7 8v0" />
+  <path d="M17 12v0" /><path d="M17 16v0" />
+</svg>
+{% endmacro %}
+
+{% macro icon_location() %}
+<svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-map-pin"
+     viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none"
+     stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+  <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+</svg>
+{% endmacro %}
+
+{% macro icon_briefcase() %}
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+     class="icon icon-tabler icon-tabler-briefcase-2">
+  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+  <path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9z" />
+  <path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" />
+</svg>
+{% endmacro %}
+
+{% macro icon_arrow() %}
+<svg width="16" height="16" viewBox="0 0 16 16" fill="none"
+     xmlns="http://www.w3.org/2000/svg">
+  <path d="M6 4L10 8L6 12" stroke="#08B74F" stroke-width="2" stroke-linecap="round"
+        stroke-linejoin="round" />
+</svg>
+{% endmacro %}
+
+{% macro style() %}
+<style>
+.job-listing {
+  gap: 5px !important;
+}
+.card {
+  border: 2px solid hsl(var(--clr-open-gray-100));
+  border-radius: 0.5rem;
+  line-height: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 18px 20px;
+  gap: 20px;
+}
+.card-title {
+  font-size: 1.1em;
+}
+.card-date {
+  margin-top: -1.5em;
+}
+.card-body {
+  padding: 0;
+}
+svg {
+  margin: 0 !important;
+}
+.detail {
+  gap: 5px;
+}
+.view-details {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.job-view {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  text-decoration: underline;
+  color: #08B74F;
+}
+.job-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.job-type h6 {
+  font-size: 14px;
+  color: #667085;
+}
+</style>
+{% endmacro %}
