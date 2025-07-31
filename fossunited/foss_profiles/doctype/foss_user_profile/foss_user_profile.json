@@ -297,7 +297,7 @@
    "options": "Organization"
   },
   {
-   "depends_on": "org_link",
+   "depends_on": "eval:doc.org_link;",
    "fieldname": "org_role",
    "fieldtype": "Select",
    "label": "Organization Role",
@@ -309,7 +309,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-07-31 13:16:13.220732",
+ "modified": "2025-07-31 16:24:20.509105",
  "modified_by": "Administrator",
  "module": "FOSS Profiles",
  "name": "FOSS User Profile",
