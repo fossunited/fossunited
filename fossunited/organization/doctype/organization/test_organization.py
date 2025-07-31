@@ -4,9 +4,9 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
     EVENT,
-    JOB,
-    JOB_STATUS_APPROVED,
-    JOB_STATUS_EXPIRED,
+    # JOB,
+    # JOB_STATUS_APPROVED,
+    # JOB_STATUS_EXPIRED,
     ORG,
     USER_PROFILE,
 )
@@ -93,41 +93,41 @@ class TestOrganization(FrappeTestCase):
 
             # D_NOTE: Commented some test since we need to get Job Board doctype
 
-    def test_get_org_jobs(self):
-        # Given: A job associated with the org
-        job_approved = frappe.get_doc(
-            {
-                "doctype": JOB,
-                "title": "Approved Job",
-                "status": JOB_STATUS_APPROVED,
-                "company_name": self.organization.org_name,
-            }
-        )
-        job_approved.db_insert()
+    # def test_get_org_jobs(self):
+    #     # Given: A job associated with the org
+    #     job_approved = frappe.get_doc(
+    #         {
+    #             "doctype": JOB,
+    #             "title": "Approved Job",
+    #             "status": JOB_STATUS_APPROVED,
+    #             "company_name": self.organization.org_name,
+    #         }
+    #     )
+    #     job_approved.db_insert()
 
-        job_expired = frappe.get_doc(
-            {
-                "doctype": JOB,
-                "title": "Expired Job",
-                "status": JOB_STATUS_EXPIRED,
-                "company_name": self.organization.org_name,
-            }
-        )
-        job_expired.db_insert()
+    #     job_expired = frappe.get_doc(
+    #         {
+    #             "doctype": JOB,
+    #             "title": "Expired Job",
+    #             "status": JOB_STATUS_EXPIRED,
+    #             "company_name": self.organization.org_name,
+    #         }
+    #     )
+    #     job_expired.db_insert()
 
-        # When: Fetching jobs via organization methods
-        active = self.organization.get_org_jobs(JOB_STATUS_APPROVED)
-        expired = self.organization.get_org_jobs(JOB_STATUS_EXPIRED)
+    #     # When: Fetching jobs via organization methods
+    #     active = self.organization.get_org_jobs(JOB_STATUS_APPROVED)
+    #     expired = self.organization.get_org_jobs(JOB_STATUS_EXPIRED)
 
-        # Then: Correct jobs are returned
-        self.assertEqual(len(active), 1)
-        self.assertEqual(active[0].title, "Approved Job")
-        self.assertEqual(len(expired), 1)
-        self.assertEqual(expired[0].title, "Expired Job")
+    #     # Then: Correct jobs are returned
+    #     self.assertEqual(len(active), 1)
+    #     self.assertEqual(active[0].title, "Approved Job")
+    #     self.assertEqual(len(expired), 1)
+    #     self.assertEqual(expired[0].title, "Expired Job")
 
-        # Cleanup
-        frappe.delete_doc(JOB, job_approved.name, force=True)
-        frappe.delete_doc(JOB, job_expired.name, force=True)
+    #     # Cleanup
+    #     frappe.delete_doc(JOB, job_approved.name, force=True)
+    #     frappe.delete_doc(JOB, job_expired.name, force=True)
 
     # def test_get_context_structure(self):
     #     # Given: A context dict and organization

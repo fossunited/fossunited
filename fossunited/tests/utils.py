@@ -732,6 +732,8 @@ def insert_test_organization(**kwargs):
             org_data["org_lead"] = lead_profile
 
         # Create and insert the Organization doc
+        if frappe.db.exists("Organization", org_data.get("org_name")):
+            raise ValueError(f"Organization with name '{org_data.get('org_name')}' already exists")
         organization = frappe.get_doc(org_data)
         # print(organization.as_dict())
         organization.insert()

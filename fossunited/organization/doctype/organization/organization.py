@@ -153,14 +153,15 @@ class Organization(WebsiteGenerator):
 
         if doctype == EVENT:
             if type == "past":
-                filters = {"event_end_date": ("<", time_now), "status": "Concluded"}
+                filters.update({"event_end_date": ("<", time_now), "status": "Concluded"})
             else:
-                filters = {"event_end_date": (">=", time_now), "status": "Live"}
+                filters.update({"event_end_date": (">=", time_now), "status": "Live"})
+
         elif doctype == HACKATHON:
             if type == "past":
-                filters = {"is_published": 1, "end_date": ["<", time_now]}
+                filters.update({"is_published": 1, "end_date": ["<", time_now]})
             else:
-                filters = {"is_published": 1, "end_date": [">=", time_now]}
+                filters.update({"is_published": 1, "end_date": [">=", time_now]})
 
         return frappe.get_all(
             doctype,
