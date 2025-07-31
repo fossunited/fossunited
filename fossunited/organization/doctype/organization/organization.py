@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import EVENT, EVENT_SPONSOR, HACKATHON, USER_PROFILE
 
 
 class Organization(WebsiteGenerator):
@@ -38,7 +38,7 @@ class Organization(WebsiteGenerator):
         telegram: DF.Data | None
         x: DF.Data | None
         youtube: DF.Data | None
-    # end: auto-generated types
+        # end: auto-generated types
 
     def get_social_links(self):
         socials = {}
@@ -98,9 +98,78 @@ class Organization(WebsiteGenerator):
 
         return members
 
+    def get_sponsored_docs(
+        self,
+        doctype,
+        type=None,
+        limit=999,
+        date_field_map=None,
+    ):
+        """
+        Fetch docs (Event, Hackathon, etc.) sponsored by this Organization.
+
+        Parameters:
+            doctype (str): Main doctype (e.g., "Event", "FOSS Hackathon")
+            type (str): "past", "now", or None
+            status (str): Optional status filter for events
+            limit (int): Number of records to fetch
+            fields (list): Optional list of fields to fetch
+            date_field_map (dict): Dict like {"start": "event_start_date", "end": "event_end_date"}
+
+        Returns:
+            List of dicts containing the sponsored venue
+        """
+
+        sponsor_name = self.org_name
+
+        sponsored_docs = frappe.get_all(
+            EVENT_SPONSOR, filters={"sponsor_name": sponsor_name}, pluck="parent"
+        )
+
+        if not sponsored_docs:
+            return []
+
+        filters = {"name": ["in", sponsored_docs]}
+
+        time_now = frappe.utils.now()
+
+        if doctype == EVENT:
+            if type == "past":
+                filters = {"event_end_date": ("<", time_now), "status": "Concluded"}
+            else:
+                filters = {"event_end_date": (">=", time_now), "status": "Live"}
+        elif doctype == HACKATHON:
+            if type == "past":
+                filters = {"is_published": 1, "end_date": ["<", time_now]}
+            else:
+                filters = {"is_published": 1, "end_date": [">=", time_now]}
+
+        return frappe.get_all(
+            doctype,
+            filters=filters,
+            fields=["*"],
+            # order_by=order,
+            page_length=limit,
+        )
+
     def get_context(self, context):
         context.members = self.get_members()
         context.social_links = self.get_social_links()
+
+        context.past_sponsored_events = self.get_sponsored_docs(doctype=EVENT, type="past")
+
+        context.present_sponsored_events = self.get_sponsored_docs(doctype=EVENT, type="now")
+
+        context.past_sponsored_hackathons = self.get_sponsored_docs(
+            doctype=HACKATHON,
+            type="past",
+        )
+
+        context.present_sponsored_hackathons = self.get_sponsored_docs(
+            doctype=HACKATHON,
+            type="now",
+        )
+
         # NOTE: Falling back to city images until organization graphics are made
         context.default_org_logo = "/assets/fossunited/images/chapter/city_profile.svg"
         context.default_org_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
