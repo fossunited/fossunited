@@ -25,6 +25,7 @@ CHAPTER_MEMBER = "FOSS Chapter Lead Team Member"
 # Event-related identifiers
 EVENT_VOLUNTEER = "FOSS Chapter Event Member"
 EVENT_SCHEDULE = "FOSS Event Schedule"
+EVENT_SPONSOR = "FOSS Event Sponsor"
 
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
@@ -49,7 +50,6 @@ JOB_STATUS_EXPIRED = "Expired"
 
 # Organization-related identifiers
 ORG = "Organization"
-ORG_MEMBER = "Organization Team Member"
 
 # Payments
 
