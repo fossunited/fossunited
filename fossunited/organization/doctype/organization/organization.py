@@ -98,3 +98,6 @@ class Organization(WebsiteGenerator):
     def get_context(self, context):
         context.members = self.get_members()
         context.social_links = self.get_social_links()
+        # NOTE: Falling back to city images until organization graphics are made
+        context.default_org_logo = "/assets/fossunited/images/chapter/city_profile.svg"
+        context.default_org_banner = "/assets/fossunited/images/chapter/city_community_banner.png"

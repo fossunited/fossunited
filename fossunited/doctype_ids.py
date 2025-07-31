@@ -47,6 +47,10 @@ JOB = "Job Board"
 JOB_STATUS_APPROVED = "Approved"
 JOB_STATUS_EXPIRED = "Expired"
 
+# Organization-related identifiers
+ORG = "Organization"
+ORG_MEMBER = "Organization Team Member"
+
 # Payments
 
 RAZORPAY_PAYMENT = "Razorpay Payment"

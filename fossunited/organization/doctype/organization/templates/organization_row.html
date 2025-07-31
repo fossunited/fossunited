@@ -1,8 +1,8 @@
 <div class="doctype-list-item">
 	<a href="{{ doc.route }}" class="doctype-link">
 		<span class="logo-title-wrap">
-			{% if doc.logo %}
-		  <img src="{{ doc.logo }}" alt="{{ doc.title or doc.name }} logo" class="doctype-logo">
+			{% if org_logo %}
+		  <img src="{{ doc.org_logo }}" alt="{{ doc.title or doc.name }} logo" class="doctype-logo">
 			{% else %}
 				  <!-- Default organization svg if not present -->
 			<svg class="doctype-logo" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-label="Organization icon">
@@ -16,15 +16,7 @@
 
 <style>
 	.doctype-list-item {
-		padding: 15px 12px;
-		border-bottom: 1px solid #eaeaea;
-	}
-
-	.doctype-link {
-		text-decoration: none;
-		color: inherit;
-		display: inline-block;
-		width: 100%;
+		padding: 20px 12px;
 	}
 
 	.logo-title-wrap {
@@ -43,6 +35,5 @@
 
 	.doctype-title {
 		font-size: 2rem;
-		color: #333;
 	}
 </style>
