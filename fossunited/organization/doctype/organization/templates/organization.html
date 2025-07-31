@@ -53,7 +53,7 @@
   {% if org_about %}
   <div class="container my-5">
     <h2 class="subtitle">About</h2>
-    <div class="description-block">{{ org_about }}</div>
+    <div class="description-block">{{ org_about | markdown }}</div>
   </div>
   {% endif %}
 {% endmacro %}

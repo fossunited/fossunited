@@ -96,7 +96,7 @@
   },
   {
    "fieldname": "org_about",
-   "fieldtype": "Text Editor",
+   "fieldtype": "Markdown Editor",
    "label": "About",
    "reqd": 1
   },
@@ -208,7 +208,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-31 10:13:46.543653",
+ "modified": "2025-07-31 10:29:26.386759",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization",

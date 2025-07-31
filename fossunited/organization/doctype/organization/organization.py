@@ -29,7 +29,7 @@ class Organization(WebsiteGenerator):
         linkedin: DF.Data | None
         mastodon: DF.Data | None
         matrix: DF.Data | None
-        org_about: DF.TextEditor
+        org_about: DF.MarkdownEditor
         org_banner: DF.AttachImage | None
         org_email: DF.Data
         org_lead: DF.Data | None
@@ -51,7 +51,6 @@ class Organization(WebsiteGenerator):
         # Get social fields from type annotations to stay in sync
         social_fields = [
             "github",
-            "gitlab",
             "x",
             "bluesky",
             "discord",
@@ -67,8 +66,13 @@ class Organization(WebsiteGenerator):
         for field in social_fields:
             value = getattr(self, field, None)
             if value:
-                # Handle special naming cases
-                display_name = "matrix-light" if field == "matrix" else field
+                if field == "matrix":
+                    display_name = "matrix-light"
+                elif field == "github":
+                    display_name = "github_light"
+                else:
+                    display_name = field
+
                 socials[display_name] = value
 
         return socials
