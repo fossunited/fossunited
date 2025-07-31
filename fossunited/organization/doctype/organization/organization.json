@@ -19,7 +19,10 @@
   "org_name",
   "org_website",
   "org_email",
+  "column_break_info",
   "org_type",
+  "org_lead",
+  "about_break",
   "org_about",
   "org_social_section",
   "github",
@@ -33,10 +36,7 @@
   "youtube",
   "linkedin",
   "instagram",
-  "discord",
-  "org_members_section",
-  "org_members",
-  "org_lead"
+  "discord"
  ],
  "fields": [
   {
@@ -158,21 +158,10 @@
    "options": "URL"
   },
   {
-   "fieldname": "org_members_section",
-   "fieldtype": "Section Break",
-   "label": "Organization Members"
-  },
-  {
-   "fieldname": "org_members",
-   "fieldtype": "Table",
-   "label": "Members",
-   "options": "Organization Team Member"
-  },
-  {
    "fieldname": "org_lead",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Organization Lead",
-   "options": "Name"
+   "options": "FOSS User Profile"
   },
   {
    "fieldname": "github",
@@ -202,13 +191,21 @@
    "fieldtype": "Data",
    "label": "Youtube",
    "options": "URL"
+  },
+  {
+   "fieldname": "column_break_info",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "about_break",
+   "fieldtype": "Section Break"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-31 10:29:26.386759",
+ "modified": "2025-07-31 13:20:44.764697",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization",
@@ -228,16 +225,14 @@
    "write": 1
   },
   {
-   "read": 1,
-   "role": "All"
-  },
-  {
+   "create": 1,
+   "delete": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "Organization Member",
+   "role": "Administrator",
    "share": 1,
    "write": 1
   }

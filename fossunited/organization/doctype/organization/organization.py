@@ -16,10 +16,6 @@ class Organization(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.organization.doctype.organization_team_member.organization_team_member import (  # noqa: E501
-            OrganizationTeamMember,
-        )
-
         bluesky: DF.Data | None
         country_of_origin: DF.Data | None
         discord: DF.Data | None
@@ -32,9 +28,8 @@ class Organization(WebsiteGenerator):
         org_about: DF.MarkdownEditor
         org_banner: DF.AttachImage | None
         org_email: DF.Data
-        org_lead: DF.Data | None
+        org_lead: DF.Link | None
         org_logo: DF.AttachImage | None
-        org_members: DF.Table[OrganizationTeamMember]
         org_name: DF.Data
         org_type: DF.Data | None
         org_website: DF.Data
@@ -79,9 +74,12 @@ class Organization(WebsiteGenerator):
 
     def get_members(self):
         members = []
-        for member in self.org_members:
+        org_members = frappe.get_all(USER_PROFILE, filters={"org_link": self.org_name})
+
+        for member in org_members:
             try:
-                profile = frappe.get_doc(USER_PROFILE, member.org_member).as_dict()
+                # Get the actual document object
+                profile = frappe.get_doc(USER_PROFILE, member.name)
             except frappe.DoesNotExistError:
                 # Skip members with missing profiles
                 continue
@@ -89,7 +87,7 @@ class Organization(WebsiteGenerator):
             members.append(
                 {
                     "full_name": profile.full_name,
-                    "role": member.org_role,
+                    "role": profile.org_role,
                     "profile_picture": (
                         profile.profile_photo
                         or "/assets/fossunited/images/defaults/user_profile_image.png"
@@ -97,6 +95,7 @@ class Organization(WebsiteGenerator):
                     "route": profile.route,
                 }
             )
+
         return members
 
     def get_context(self, context):
