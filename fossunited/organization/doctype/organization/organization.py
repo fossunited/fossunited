@@ -109,6 +109,9 @@ class Organization(WebsiteGenerator):
         return members
 
     def get_org_jobs(self, status):
+        """
+        Simple enough function to fetch jobs from this organization (company_name).
+        """
         return frappe.get_all(
             JOB, filters={"status": status, "company_name": self.org_name}, fields=["*"]
         )
