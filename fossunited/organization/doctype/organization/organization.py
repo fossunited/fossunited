@@ -5,7 +5,15 @@ import frappe
 from frappe.utils import markdown, sanitize_html
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import EVENT, EVENT_SPONSOR, HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import (
+    EVENT,
+    EVENT_SPONSOR,
+    HACKATHON,
+    JOB,
+    JOB_STATUS_APPROVED,
+    JOB_STATUS_EXPIRED,
+    USER_PROFILE,
+)
 
 
 class Organization(WebsiteGenerator):
@@ -44,7 +52,8 @@ class Organization(WebsiteGenerator):
     def get_social_links(self):
         socials = {}
         # Get social fields from type annotations to stay in sync
-        # TODO: Consider making social fields configurable.
+        # D_TODO: Consider making social fields configurable.
+        # or better get these svgs into assets dir rather than external calls
         social_fields = [
             "github",
             "x",
@@ -98,6 +107,11 @@ class Organization(WebsiteGenerator):
             )
 
         return members
+
+    def get_org_jobs(self, status):
+        return frappe.get_all(
+            JOB, filters={"status": status, "company_name": self.org_name}, fields=["*"]
+        )
 
     def get_sponsored_docs(
         self,
@@ -156,6 +170,8 @@ class Organization(WebsiteGenerator):
     def get_context(self, context):
         context.members = self.get_members()
         context.social_links = self.get_social_links()
+        context.org_active_jobs = self.get_org_jobs(JOB_STATUS_APPROVED)
+        context.org_expired_jobs = self.get_org_jobs(JOB_STATUS_EXPIRED)
 
         context.past_sponsored_events = self.get_sponsored_docs(doctype=EVENT, type="past")
 
