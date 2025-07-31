@@ -690,3 +690,68 @@ def insert_test_hackathon_localhost(parent_hackathon: str, **kwargs):
     localhost.insert()
     localhost.reload()
     return localhost
+
+
+def insert_test_organization(**kwargs):
+    """
+    Create a test Organization with optional social media links and members.
+
+    Args:
+        org_name (str, optional): Name of the organization. Defaults to a random company name.
+        org_email (str, optional): Organization email. Defaults to a random email.
+        org_lead (str, optional): Email of the lead user (must exist in User Profile).
+        members (List[str]): List of member emails to attach (must exist in User Profile).
+        **kwargs: Additional social media or custom fields.
+
+    Returns:
+        Organization doc: Created and saved Organization document.
+
+    Raises:
+        ValueError: If org_lead or members are invalid or not found.
+    """
+    try:
+        org_data = {
+            "doctype": "Organization",
+            "org_name": kwargs.get("org_name", fake.company()),
+            "org_email": kwargs.get("org_email", fake.company_email()),
+            "org_website": kwargs.get("org_website", fake.url()),
+            "published": kwargs.get("published", 1),
+            "github": kwargs.get("github", fake.url()),
+            "linkedin": kwargs.get("linkedin", fake.url()),
+            "x": kwargs.get("x", fake.url()),
+            "discord": kwargs.get("discord", fake.url()),
+            "org_about": kwargs.get("org_about", fake.paragraph(nb_sentences=3)),
+        }
+
+        # Validate and link lead profile
+        lead_email = kwargs.get("org_lead")
+        if lead_email:
+            lead_profile = frappe.db.get_value(USER_PROFILE, {"user": lead_email}, "name")
+            if not lead_profile:
+                raise ValueError(f"Invalid org_lead email: {lead_email}")
+            org_data["org_lead"] = lead_profile
+
+        # Create and insert the Organization doc
+        organization = frappe.get_doc(org_data)
+        # print(organization.as_dict())
+        organization.insert()
+
+        # Add test members to User Profile
+        members = kwargs.get("members", [])
+        for member_email in members:
+            member_profile = frappe.db.get_value(USER_PROFILE, {"user": member_email}, "name")
+            if not member_profile:
+                frappe.log_error(f"Member profile not found: {member_email}")
+                continue
+
+            frappe.db.set_value(USER_PROFILE, member_profile, "org_link", organization.org_name)
+
+        # Final save and reload
+        organization.save()
+        organization.reload()
+
+        return organization
+
+    except Exception as e:
+        frappe.log_error(title="Error inserting test organization", message=str(e))
+        raise
