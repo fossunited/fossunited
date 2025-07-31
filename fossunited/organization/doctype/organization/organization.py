@@ -42,6 +42,7 @@ class Organization(WebsiteGenerator):
         route: DF.Data | None
         telegram: DF.Data | None
         x: DF.Data | None
+        youtube: DF.Data | None
     # end: auto-generated types
     pass
 
@@ -60,6 +61,7 @@ class Organization(WebsiteGenerator):
             "mastodon",
             "matrix",
             "telegram",
+            "youtube",
         ]
 
         for field in social_fields:

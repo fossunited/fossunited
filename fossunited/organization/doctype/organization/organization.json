@@ -30,6 +30,7 @@
   "org_colbreak",
   "x",
   "telegram",
+  "youtube",
   "linkedin",
   "instagram",
   "discord",
@@ -195,13 +196,19 @@
    "fieldtype": "Data",
    "label": "Forum",
    "options": "URL"
+  },
+  {
+   "fieldname": "youtube",
+   "fieldtype": "Data",
+   "label": "Youtube",
+   "options": "URL"
   }
  ],
  "has_web_view": 1,
  "index_web_pages_for_search": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2025-07-30 23:43:44.487278",
+ "modified": "2025-07-31 10:13:46.543653",
  "modified_by": "Administrator",
  "module": "Organization",
  "name": "Organization",
