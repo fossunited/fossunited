@@ -70,6 +70,20 @@ class FOSSUserProfile(WebsiteGenerator):
         linkedin: DF.Data | None
         mastodon: DF.Data | None
         medium: DF.Data | None
+        org_link: DF.Link | None
+        org_role: DF.Literal[
+            "Lead",  # noqa: F821
+            "Founder",  # noqa: F821
+            "CEO",  # noqa: F821
+            "CTO",  # noqa: F821
+            "Core Team Member",  # noqa: F722
+            "Volunteer",  # noqa: F821
+            "Graphic Designer",  # noqa: F722
+            "Content Writer",  # noqa: F722
+            "Marketing",  # noqa: F821
+            "Developer",  # noqa: F821
+            "Manager",  # noqa: F821
+        ]
         profile_photo: DF.AttachImage | None
         projects: DF.Table[FOSSUserProjects]
         route: DF.Data | None
