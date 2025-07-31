@@ -2,6 +2,8 @@
 {% block page_content %}
   {{ org_header() }}
   {{ about() }}
+  {% if past_sponsored_events or present_sponsored_events %}{{ render_sponsored_events() }}{% endif %}
+  {% if past_sponsored_hackathons or present_sponsored_hackathons %}{{ render_sponsored_hackathon() }}{% endif %}
   {{ render_members() }}
   <div class="my-5 py-5"></div>
 {% endblock %}
@@ -56,6 +58,54 @@
   </div>
   {% endif %}
 {% endmacro %}
+
+{% macro render_sponsored_events() %}
+  {%
+    from
+    'fossunited/templates/macros/event_card.html' import event_card
+  %}
+  {% if present_sponsored_events %}
+  <div class="container my-5">
+    <h3 class="subtitle">Present Sponsoring Events</h3>
+    <div class="events-grid-4">
+      {% for event in present_sponsored_events %}{{ event_card(event) }}{% endfor %}
+    </div>
+  </div>
+{% endif %}
+  {% if past_sponsored_events %}
+
+  <div class="container my-5">
+    <h3 class="subtitle">Past Sponsored Events</h3>
+    <div class="events-grid-4">
+      {% for event in past_sponsored_events %}{{ event_card(event) }}{% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% endmacro %}
+
+{% macro render_sponsored_hackathon() %}
+    {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
+
+  {% if present_sponsored_hackathons %}
+  <div class="container my-5">
+    <h3 class="subtitle">Present Sponsoring Hackathons</h3>
+    <div class="events-grid-4">
+      {% for hackathon in present_sponsored_hackathons %}{{ hackathon_card(hackathon) }}{% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+  {% if past_sponsored_hackathons %}
+
+  <div class="container my-5">
+    <h3 class="subtitle">Past Sponsored Hackathons</h3>
+    <div class="events-grid-4">
+      {% for hackathon in past_sponsored_hackathons %}{{ hackathon_card(hackathon) }}{% endfor %}
+    </div>
+  </div>
+{% endif %}
+{% endmacro %}
+
 
 {% macro render_members() %}
   {% if members %}
