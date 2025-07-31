@@ -1,7 +1,9 @@
 {% extends "templates/foss_base.html" %}
+
 {% block page_content %}
   {{ org_header() }}
   {{ about() }}
+  {% if org_active_jobs or org_expired_jobs %}{{ render_jobs() }}{% endif %}
   {% if past_sponsored_events or present_sponsored_events %}{{ render_sponsored_events() }}{% endif %}
   {% if past_sponsored_hackathons or present_sponsored_hackathons %}{{ render_sponsored_hackathon() }}{% endif %}
   {{ render_members() }}
@@ -57,6 +59,15 @@
     <div class="description-block">{{ org_about_html | safe }}</div>
   </div>
   {% endif %}
+{% endmacro %}
+
+{% macro render_jobs() %}
+  {% from "fossunited/templates/macros/jobs_card.html" import job_board %}
+  <div class="container my-5">
+    <h3 class="subtitle">Jobs from the Organization</h3>
+  </div>
+   <!-- D_FIXME: Refactor the div element in jobs macro or else this gets indented -->
+      {{ job_board(org_active_jobs, org_expired_jobs) }}
 {% endmacro %}
 
 {% macro render_sponsored_events() %}
