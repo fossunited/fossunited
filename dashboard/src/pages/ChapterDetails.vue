@@ -202,6 +202,11 @@
             <IconBrandTelegram class="w-5 text-gray-800" />
           </template>
         </FormControl>
+        <FormControl v-model="chapter.doc.bluesky" :type="'url'" size="md" label="Bluesky">
+          <template #prefix>
+            <IconBrandBluesky class="w-5 text-gray-800" />
+          </template>
+        </FormControl>
         <FormControl v-model="chapter.doc.matrix" :type="'url'" size="md" label="Matrix">
           <template #prefix>
             <IconBrandMatrix class="w-5 text-gray-800" />
@@ -236,6 +241,7 @@ import {
   IconBrandMastodon,
   IconBrandX,
   IconBrandTelegram,
+  IconBrandBluesky,
   IconBrandMatrix,
   IconBrandWhatsapp,
   IconBrandDiscord,

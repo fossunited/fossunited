@@ -39,6 +39,7 @@
   "instagram",
   "mastodon",
   "telegram",
+  "bluesky",
   "whatsapp",
   "discord",
   "chapter_members_section",
@@ -248,6 +249,12 @@
    "options": "URL"
   },
   {
+   "fieldname": "bluesky",
+   "fieldtype": "Data",
+   "label": "Bluesky",
+   "options": "URL"
+  },
+  {
    "fieldname": "whatsapp",
    "fieldtype": "Data",
    "label": "WhatsApp",
@@ -274,7 +281,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-06-27 17:03:37.385045",
+ "modified": "2025-07-28 12:34:56.000000",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
