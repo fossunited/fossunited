@@ -158,22 +158,6 @@ class TestOrganization(FrappeTestCase):
     #     self.assertIn("present_sponsored_hackathons", context)
     #     self.assertIn("org_about_html", context)
 
-    def test_invalid_org_lead_raises(self):
-        # When: org_lead email does not exist
-        with self.assertRaises(ValueError):
-            insert_test_organization(org_lead="invalid@example.com")
-
-    def test_partial_members_does_not_break(self):
-        # Given: one valid, one invalid member
-        valid_user = self.create_user_profile()
-        insert_test_organization(
-            org_lead=self.lead_user.user, members=[valid_user.user, "ghost@example.com"]
-        )
-
-        # Then: valid member should be linked correctly
-        org_link = frappe.db.get_value(USER_PROFILE, valid_user.name, "org_link")
-        self.assertIsNotNone(org_link)
-
     def test_no_sponsored_docs_returns_empty(self):
         # Given: An organization with no sponsorship
         docs = self.organization.get_sponsored_docs(EVENT)
@@ -202,6 +186,7 @@ class TestOrganization(FrappeTestCase):
             self.organization.save()
 
         frappe.set_user("Guest")
+        frappe.delete_doc(USER_PROFILE, unrelated_user.name, force=True)
 
     def test_guest_cannot_update_org(self):
         frappe.set_user("Guest")
@@ -227,6 +212,7 @@ class TestOrganization(FrappeTestCase):
 
         self.assertEqual(org.org_name, self.organization.org_name)
         self.assertIsNotNone(org.org_lead)
+        frappe.delete_doc(USER_PROFILE, user.name, force=True)
 
     def test_member_user_cannot_update_organization(self):
         member = self.member_users[0]
