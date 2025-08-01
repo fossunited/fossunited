@@ -121,7 +121,6 @@ class Organization(WebsiteGenerator):
         doctype,
         type=None,
         limit=999,
-        date_field_map=None,
     ):
         """
         Fetch docs (Event, Hackathon, etc.) sponsored by this Organization.
@@ -132,7 +131,6 @@ class Organization(WebsiteGenerator):
             status (str): Optional status filter for events
             limit (int): Number of records to fetch
             fields (list): Optional list of fields to fetch
-            date_field_map (dict): Dict like {"start": "event_start_date", "end": "event_end_date"}
 
         Returns:
             List of dicts containing the sponsored venue
