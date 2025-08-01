@@ -185,7 +185,7 @@ class TestOrganization(FrappeTestCase):
         with self.assertRaises(frappe.PermissionError):
             self.organization.save()
 
-        frappe.set_user("Guest")
+        frappe.set_user("Administrator")
         frappe.delete_doc(USER_PROFILE, unrelated_user.name, force=True)
 
     def test_guest_cannot_update_org(self):
@@ -212,6 +212,7 @@ class TestOrganization(FrappeTestCase):
 
         self.assertEqual(org.org_name, self.organization.org_name)
         self.assertIsNotNone(org.org_lead)
+        frappe.set_user("Administrator")
         frappe.delete_doc(USER_PROFILE, user.name, force=True)
 
     def test_member_user_cannot_update_organization(self):
