@@ -37,11 +37,12 @@ class TestOrganization(FrappeTestCase):
         """
         Print debugging is better than Think debugging!
         """
-        banner = "=" * 20 + "=> DEBUG OUTPUT <=" + "=" * 20
-        print(f"\n{banner}")
-        for arg in args:
-            print(arg)
-        print("=" * len(banner) + "\n")
+        if frappe.conf.get("developer_mode"):
+            banner = "=" * 20 + "=> DEBUG OUTPUT <=" + "=" * 20
+            print(f"\n{banner}")
+            for arg in args:
+                print(arg)
+            print("=" * len(banner) + "\n")
 
     def create_user_profile(self):
         user = fake.email()
@@ -59,8 +60,8 @@ class TestOrganization(FrappeTestCase):
 
     def test_organization_created_with_valid_data(self):
         # Given: An organization created via insert_test_organization
-        print(self.member_users)
-        print(self.organization)
+        # self.print_debug(self.member_users)
+        # self.print_debug(self.organization)
         org = self.organization
 
         # # Then: Organization is inserted correctly
@@ -70,7 +71,7 @@ class TestOrganization(FrappeTestCase):
         )
         for member in self.member_users:
             org_link = frappe.db.get_value(USER_PROFILE, member.name, "org_link")
-            print(org_link)
+            self.print_debug(org_link)
             self.assertEqual(org_link, org.org_name)
 
     def test_organization_social_links(self):
@@ -81,7 +82,7 @@ class TestOrganization(FrappeTestCase):
         links = org.get_social_links()
 
         # Then: Correct keys should be returned
-        print(links)
+        self.print_debug(links)
         self.assertIn("github_light", links)
         self.assertIn("linkedin", links)
         self.assertIn("x", links)
@@ -95,7 +96,7 @@ class TestOrganization(FrappeTestCase):
 
         # Then: Member info is returned correctly
         self.assertEqual(len(members), len(self.member_users))
-        print(members)
+        self.print_debug(members)
         for member in members:
             self.assertIn("full_name", member)
             self.assertIn("profile_picture", member)
@@ -234,3 +235,6 @@ class TestOrganization(FrappeTestCase):
         self.organization.website = "https://member-edit.com"
         with self.assertRaises(frappe.PermissionError):
             self.organization.save()
+
+    # D_TODO: Add a way to check if org lead or members can write to org
+    # Easier would be to have a role for Org, if not somehow we need to give permission
