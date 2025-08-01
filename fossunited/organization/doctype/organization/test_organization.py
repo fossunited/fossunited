@@ -20,13 +20,28 @@ class TestOrganization(FrappeTestCase):
         self.lead_user = self.create_user_profile()
         self.member_users = [self.create_user_profile() for _ in range(2)]
         self.organization = insert_test_organization(
-            org_lead=self.lead_user.user, members=[u.user for u in self.member_users]
+            org_lead=self.lead_user.user,
+            members=[u.user for u in self.member_users],
+            github="https://github.com/example",
+            linkedin="https://linkedin.com/example",
+            x="https://x.com/example",
         )
 
     def tearDown(self):
+        frappe.set_user("Administrator")
         frappe.delete_doc(ORG, self.organization.name, force=True)
         for user in [self.lead_user] + self.member_users:
             frappe.delete_doc(USER_PROFILE, user.name, force=True)
+
+    def print_debug(self, *args):
+        """
+        Print debugging is better than Think debugging!
+        """
+        banner = "=" * 20 + "=> DEBUG OUTPUT <=" + "=" * 20
+        print(f"\n{banner}")
+        for arg in args:
+            print(arg)
+        print("=" * len(banner) + "\n")
 
     def create_user_profile(self):
         user = fake.email()
@@ -60,12 +75,7 @@ class TestOrganization(FrappeTestCase):
 
     def test_organization_social_links(self):
         # Given: An org with social fields
-        org = insert_test_organization(
-            org_lead=self.lead_user.user,
-            github="https://github.com/example",
-            linkedin="https://linkedin.com/example",
-            x="https://x.com/example",
-        )
+        org = self.organization
 
         # When: Calling get_social_links
         links = org.get_social_links()
@@ -91,7 +101,7 @@ class TestOrganization(FrappeTestCase):
             self.assertIn("profile_picture", member)
             self.assertIn("route", member)
 
-            # D_NOTE: Commented some test since we need to get Job Board doctype
+    # D_NOTE: Commented some test since we need to get Job Board doctype
 
     # def test_get_org_jobs(self):
     #     # Given: A job associated with the org
@@ -167,3 +177,60 @@ class TestOrganization(FrappeTestCase):
         # Given: An organization with no sponsorship
         docs = self.organization.get_sponsored_docs(EVENT)
         self.assertEqual(docs, [])
+
+    def test_admin_can_update_organization_social_links(self):
+        # Assume 'Administrator' user exists
+        frappe.set_user("Administrator")
+
+        self.organization.github = "https://github.com/admin"
+        self.organization.save()
+
+        updated = frappe.get_doc(ORG, self.organization.name)
+        # self.print_debug(updated.github)
+        self.assertEqual(updated.github, "https://github.com/admin")
+
+        frappe.set_user("Guest")
+
+    def test_normal_user_cannot_update_org_info(self):
+        unrelated_user = self.create_user_profile()
+        frappe.set_user(unrelated_user.user)
+
+        self.organization.twitter = "https://x.com/hacker"
+
+        with self.assertRaises(frappe.PermissionError):
+            self.organization.save()
+
+        frappe.set_user("Guest")
+
+    def test_guest_cannot_update_org(self):
+        frappe.set_user("Guest")
+
+        self.organization.org_about = "Hacked"
+
+        with self.assertRaises(frappe.PermissionError):
+            self.organization.save()
+
+    def test_guest_can_retrieve_organization_info(self):
+        frappe.set_user("Guest")
+
+        org = frappe.get_doc(ORG, self.organization.name)
+
+        self.assertEqual(org.org_name, self.organization.org_name)
+        self.assertIsNotNone(org.org_about)
+
+    def test_authenticated_user_can_view_org_info(self):
+        user = self.create_user_profile()
+        frappe.set_user(user.user)
+
+        org = frappe.get_doc(ORG, self.organization.name)
+
+        self.assertEqual(org.org_name, self.organization.org_name)
+        self.assertIsNotNone(org.org_lead)
+
+    def test_member_user_cannot_update_organization(self):
+        member = self.member_users[0]
+        frappe.set_user(member.user)
+
+        self.organization.website = "https://member-edit.com"
+        with self.assertRaises(frappe.PermissionError):
+            self.organization.save()
