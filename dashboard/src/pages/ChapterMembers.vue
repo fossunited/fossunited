@@ -12,7 +12,7 @@
       <Button
         class="w-fit"
         label="Add New Member"
-        v-if="isLead()"
+        v-if="isCoreTeam()"
         icon-left="plus"
         size="md"
         @click="showAddmodal = true"
@@ -24,7 +24,7 @@
         :key="member.name"
         :title="member.full_name"
       >
-        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+        <template v-if="member.email != session.user && member.role != 'Lead' && isCoreTeam()" #actions>
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -83,7 +83,7 @@
         class="z-50"
         :chapter="chapter"
         :member=selectedMember
-        :isLead=isLead()
+        :isCoreTeam=isCoreTeam()
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -112,10 +112,10 @@ import ChapterHeader from '@/components/ChapterHeader.vue'
 const session = inject('$session')
 const route = useRoute()
 
-const isLead = () => {
+const isCoreTeam = () => {
     let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
-    if (currentUser[0].role === "Lead") {
-      return true
+    if (["Lead", "Core Team Member"].includes(currentUser[0].role)) {
+      return true;
     }
     return false
 }

@@ -7,7 +7,7 @@
       <Button
         class="w-fit"
         label="Add Volunteer"
-        v-if="isLead()"
+        v-if="isCoreTeam()"
         icon-left="plus"
         size="md"
         @click="showAddmodal = true"
@@ -17,7 +17,7 @@
     <!-- VOLUNTEERS GRID -->
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
-        <template v-if="member.email != session.user && member.role != 'Lead' && isLead()" #actions>
+        <template v-if="member.email != session.user && member.role != 'Lead' && isCoreTeam()" #actions>
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -75,7 +75,7 @@
         class="z-50"
         :event="event"
         :member=selectedMember
-        :isLead=isLead()
+        :isCoreTeam=isCoreTeam()
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -103,10 +103,10 @@ const session = inject('$session')
 
 const route = useRoute()
 
-const isLead = () => {
+const isCoreTeam = () => {
     let currentUser = event.doc.event_members.filter((m) => m.email === session.user)
-    if (currentUser[0].role === "Lead") {
-      return true
+    if (["Lead", "Core Team Member"].includes(currentUser[0].role)) {
+		return true;
     }
     return false
 }

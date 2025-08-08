@@ -15,11 +15,11 @@
             {
               label: 'Lead',
               value: 'Lead',
-              disabled: !isLead,
             },
             {
               label: 'Core Team Member',
               value: 'Core Team Member',
+              disabled: !isCoreTeam,
             },
             {
               label: 'Volunteer',
@@ -68,7 +68,7 @@ const props = defineProps({
     type: Object,
     default: () => null,
   },
-  isLead: {
+  isCoreTeam: {
     type: Boolean,
     default: false,
   },
