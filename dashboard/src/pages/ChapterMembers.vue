@@ -24,7 +24,7 @@
         :key="member.name"
         :title="member.full_name"
       >
-        <template v-if="member.email != session.user && member.role != 'Lead' && isCoreTeam()" #actions>
+        <template v-if="member.email != session.user && isCoreTeam()" #actions>
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -38,7 +38,7 @@
             <Badge
               class="w-fit"
               :label="member.role"
-              :theme="member.role === 'Lead' ? 'blue' : 'gray'"
+  			  :theme="member.role === 'Core Team Member' ? 'blue' : 'gray'"
               size="md"
             />
           </div>
@@ -83,7 +83,7 @@
         class="z-50"
         :chapter="chapter"
         :member=selectedMember
-        :isCoreTeam=isCoreTeam()
+        :isCoreTeam="isCoreTeam()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -113,11 +113,8 @@ const session = inject('$session')
 const route = useRoute()
 
 const isCoreTeam = () => {
-    let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
-    if (["Lead", "Core Team Member"].includes(currentUser[0].role)) {
-      return true;
-    }
-    return false
+  const me = chapter.doc?.chapter_members?.find((m) => m.email === session.user)
+  return me ? ['Lead', 'Core Team Member'].includes(me.role) : false
 }
 
 const chapter = createDocumentResource({

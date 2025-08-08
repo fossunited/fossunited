@@ -17,7 +17,7 @@
     <!-- VOLUNTEERS GRID -->
     <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
-        <template v-if="member.email != session.user && member.role != 'Lead' && isCoreTeam()" #actions>
+        <template v-if="member.email != session.user && isCoreTeam()" #actions>
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -31,7 +31,7 @@
             <Badge
               class="w-fit"
               :label="member.role"
-              :theme="member.role === 'Lead' ? 'blue' : 'gray'"
+			  :theme="member.role === 'Core Team Member' ? 'blue' : 'gray'"
               size="md"
             />
           </div>
@@ -75,7 +75,7 @@
         class="z-50"
         :event="event"
         :member=selectedMember
-        :isCoreTeam=isCoreTeam()
+        :isCoreTeam="isCoreTeam()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -104,11 +104,8 @@ const session = inject('$session')
 const route = useRoute()
 
 const isCoreTeam = () => {
-    let currentUser = event.doc.event_members.filter((m) => m.email === session.user)
-    if (["Lead", "Core Team Member"].includes(currentUser[0].role)) {
-		return true;
-    }
-    return false
+  const me = event.doc?.event_members?.find((m) => m.email === session.user)
+  return me ? ['Lead', 'Core Team Member'].includes(me.role) : false
 }
 
 const event = createDocumentResource({
