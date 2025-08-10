@@ -7,3 +7,4 @@
 fossunited.patches.v1_0.duplicate_event_name_to_reference_field  #31-12-2024
 fossunited.patches.v1_0.handle_sharing_all_existing_profiles
 fossunited.patches.v1_0.migrate_old_cfps_to_new_schema
+fossunited.patches.v1_0.convert_lead_to_core_team_chapters
