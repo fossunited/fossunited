@@ -17,8 +17,8 @@ fake = Faker()
 
 class TestEmailing(FrappeTestCase):
     def setUp(self):
-        self.lead_email = "test1@example.com"
-        self.chapter = insert_test_chapter(lead_email=self.lead_email)
+        self.core_team_email = "test1@example.com"
+        self.chapter = insert_test_chapter(members=[self.core_team_email])
         self.event = insert_test_event(chapter=self.chapter)
 
         self.setup_campaign()
@@ -64,13 +64,13 @@ class TestEmailing(FrappeTestCase):
         )
 
     def test_send_test_email(self):
-        frappe.set_user(self.lead_email)
+        frappe.set_user(self.core_team_email)
 
         test_email = fake.email()
 
         send_test_email(self.newsletter.name, test_email)
 
     def test_send_campaign(self):
-        frappe.set_user(self.lead_email)
+        frappe.set_user(self.core_team_email)
 
         send_campaign(self.newsletter.name)

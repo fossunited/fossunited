@@ -9,8 +9,8 @@ from fossunited.tests.utils import insert_test_chapter, insert_test_event, inser
 
 class TestFOSSEventTicket(FrappeTestCase):
     def setUp(self):
-        self.lead_email = "test1@example.com"
-        self.chapter = insert_test_chapter(lead_email=self.lead_email)
+        self.core_team_email = "test1@example.com"
+        self.chapter = insert_test_chapter(members=[self.core_team_email])
         self.event = insert_test_event(
             chapter=self.chapter,
             is_paid_event=True,
@@ -50,7 +50,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         self.assertFalse(ticket.check_ins)
 
         # Set the user as a chapter member
-        frappe.set_user(self.lead_email)
+        frappe.set_user(self.core_team_email)
 
         # When the user checks in the attendee
         checkin_attendee(self.event.name, ticket.as_dict())
