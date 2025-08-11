@@ -3,7 +3,6 @@
 WEBSITE_USER = "FOSS Website User"
 
 CHAPTER_MEMBER = "Chapter Team Member"
-CHAPTER_LEAD = "Chapter Lead"
 
 REVIEWER = "CFP Reviewer"
 

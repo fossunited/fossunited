@@ -3,7 +3,6 @@ import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 from fossunited.id.roles import (
-    CHAPTER_LEAD,
     CHAPTER_MEMBER,
     HACKATHON_ORGANIZER,
     LOCALHOST_ORGANIZER,
@@ -91,7 +90,6 @@ def get_custom_roles():
     return [
         WEBSITE_USER,
         CHAPTER_MEMBER,
-        CHAPTER_LEAD,
         REVIEWER,
         HACKATHON_ORGANIZER,
         LOCALHOST_ORGANIZER,

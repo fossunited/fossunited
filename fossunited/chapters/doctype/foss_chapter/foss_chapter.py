@@ -58,7 +58,6 @@ class FOSSChapter(WebsiteGenerator):
         self.validate_slug()
 
     def before_save(self):
-        self.set_chapter_lead()
         self.set_route()
 
     def on_update(self):
@@ -125,12 +124,6 @@ class FOSSChapter(WebsiteGenerator):
                 },
             )
         )
-
-    def set_chapter_lead(self):
-        for member in self.chapter_members:
-            if member.role == "Lead":
-                self.chapter_lead = member.chapter_member
-                break
 
     def set_route(self):
         if not self.slug:
