@@ -75,8 +75,6 @@ class FOSSChapter(WebsiteGenerator):
                 continue
 
             roles = ["Chapter Team Member"]
-            if member.role == "Lead":
-                roles.append("Chapter Lead")
 
             self.add_member_roles(user, *roles)
 
@@ -91,8 +89,6 @@ class FOSSChapter(WebsiteGenerator):
                 user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
 
                 roles = ["Chapter Team Member"]
-                if member.role == "Lead":
-                    roles.append("Chapter Lead")
 
                 self.remove_member_roles(user, *roles)
 
