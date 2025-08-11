@@ -176,7 +176,7 @@ const showModifyScheduleItemDrawer = ref(false)
           variant="ghost"
           label="Go to Schedule Page"
           icon-right="arrow-up-right"
-          @click="redirectRoute(`schedule/${event.doc?.route}`, '_blank')"
+			@click="redirectRoute(`${event.doc?.route}/schedule`, '_blank')"
         />
       </div>
       <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
