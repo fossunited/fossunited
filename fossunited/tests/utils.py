@@ -101,7 +101,7 @@ def insert_test_chapter(**kwargs):
             "chapter_members",
             {
                 "chapter_member": lead_profile,
-                "role": "Lead",
+                "role": "Core Team Member",
             },
         )
 
