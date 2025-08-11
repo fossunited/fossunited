@@ -19,6 +19,9 @@ def get_event_from_permalink(permalink: str, fields: list) -> dict:
 
 @frappe.whitelist(allow_guest=True)
 def get_event_from_route(route: str, fields: list) -> dict:
+    # if route does not start with c/, add it
+    if not route.startswith("c/"):
+        route = f"c/{route}"
     return frappe.db.get_value(EVENT, {"route": route}, fields, as_dict=1)
 
 
