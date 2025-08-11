@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import CHAPTER, EVENT
+from fossunited.doctype_ids import CHAPTER, EVENT, USER_PROFILE
 
 
 def execute():
@@ -23,14 +23,26 @@ def execute():
                 members = getattr(doc, members_attr, [])
                 for member in members:
                     if member.role == "Lead":
+                        # Convert role value
                         member.role = "Core Team Member"
                         updated = True
 
+                        # Revoke legacy 'Chapter Lead' user role
+                        user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
+                        if user:
+                            frappe.db.delete(
+                                "Has Role",
+                                {"parent": user, "parenttype": "User", "role": "Chapter Lead"},
+                            )
+
                 if updated:
                     doc.save()
+                    # Commit after each doc to keep changes granular; acceptable for one-off patch
                     frappe.db.commit()
                     frappe.logger().info(f"Updated {doctype} {docname}: Lead roles.")
 
-        except Exception as e:
-            frappe.log_error(f"Error Changing role: {doctype} - {docname}", str(e))
-            continue
+        except Exception:
+            frappe.log_error(
+                title=f"Error changing roles for doctype {doctype}",
+                message=frappe.get_traceback(),
+            )
