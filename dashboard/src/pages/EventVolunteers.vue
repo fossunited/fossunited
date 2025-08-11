@@ -74,7 +74,7 @@
         v-model="showEditmodal"
         class="z-50"
         :event="event"
-        :member=selectedMember
+        :member="selectedMember"
         :isCoreTeam="isCoreTeam()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"

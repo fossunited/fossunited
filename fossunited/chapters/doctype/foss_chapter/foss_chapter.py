@@ -22,7 +22,6 @@ class FOSSChapter(WebsiteGenerator):
 
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
-        chapter_lead: DF.Link | None
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
