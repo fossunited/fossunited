@@ -114,7 +114,7 @@ const route = useRoute()
 
 const isCoreTeam = () => {
   const me = chapter.doc?.chapter_members?.find((m) => m.email === session.user)
-  return me ? ['Core Team Member'].includes(me.role) : false
+  return me ? me.role === 'Core Team Member' : false
 }
 
 const chapter = createDocumentResource({
