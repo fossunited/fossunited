@@ -59,37 +59,47 @@ def get_context(context):
 
     for blog in blog_list + news_list:
         blog.link = urljoin(host, blog.route)
-        blog.title = escape_html(blog.title or blog.subject or "")
-        blog.author = escape_html(blog.blogger or f"{blog.sender_name} <{blog.sender_email}>")
-        blog.published_date = format_datetime(
-            datetime.combine(blog.published_on or blog.modified, time())
+        blog.title = escape_html(
+            getattr(blog, "title", None) or getattr(blog, "subject", "") or ""
         )
-
+        blog.author = escape_html(
+            getattr(blog, "blogger", None)
+            or (
+                f"{blog.sender_name} <{blog.sender_email}>" if hasattr(blog, "sender_name") else ""
+            )
+        )
+        blog.published_date = format_datetime(
+            datetime.combine(getattr(blog, "published_on", None) or blog.modified, time())
+        )
         prefix = "message_" if blog.route.startswith("newsletters/") else "content_"
         attr = {"Markdown": prefix + "md", "HTML": prefix + "html"}.get(
             blog.content_type, prefix.rstrip("_")
         )
-
         value = getattr(blog, attr)
         blog_content = markdown(value) if blog.content_type == "Markdown" else value
-
         blog.content = f"<![CDATA[{blog_content}]]>"
 
-    if blog_list:
-        modified = format_datetime(max(blog["modified"] for blog in (blog_list + news_list)))
+    all_items = blog_list + news_list
+    if all_items:
+        modified = format_datetime(max(blog["modified"] for blog in all_items))
     else:
         modified = format_datetime(datetime.now())
 
-    blog_settings = frappe.get_doc("Blog Settings", "Blog Settings")
+    try:
+        blog_settings = frappe.get_doc("Blog Settings", "Blog Settings")
+        title = blog_settings.blog_title or "Blog"
+        description = blog_settings.blog_introduction or ""
+    except frappe.DoesNotExistError:
+        title = "FOSS United Blog"
+        description = "Latest updates from FOSS United"
 
     context = {
-        "title": blog_settings.blog_title or "Blog",
-        "description": blog_settings.blog_introduction or "",
+        "title": title,
+        "description": description,
         "modified": modified,
         "items": blog_list + news_list,
         "link": host + "/blog",
         "feed_url": host + "/rss.xml",
     }
 
-    # print context
     return context

@@ -31,10 +31,10 @@
 	  "reqd": 0
 	},
 	{
-	  "__unsaved": 1,
 	  "fieldname": "rss_feed_link",
 	  "fieldtype": "Data",
-	  "label": "Rss Feed",
+	  "label": "RSS Feed",
+      "options": "URL",
 	  "reqd": 0
 	}
   ],
