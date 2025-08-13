@@ -1,7 +1,80 @@
+{% macro render_team_section(title, members, extra_info) %}
+  {% if members %}
+    <div class="member-section">
+      <div class="header-container">
+        <h5>{{ title }}</h5>
+        {{ extra_info or "" }}
+      </div>
+      <div class="teams-container">
+        {% for member in members %}
+          <a href="/u/{{ member.username }}" class="team-member-link">
+            <div class="team-member">
+              <div class="team-member-image">
+                <img
+                  src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
+                  alt="{{ member.full_name }}"
+                />
+              </div>
+              <div class="team-member-details">
+                <h6>{{ member.full_name }}</h6>
+                <p style="color: hsl(var(--clr-foss-mint-500));">@{{ member.username }}</p>
+                <p>{{ member.designation }}</p>
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
+{%
+  set boardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1},
+  order_by="full_name")
+%}
+{%
+  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1},
+  order_by="full_name")
+%}
+{%
+  set staff = frappe.get_all("FOSS United Team", fields=["full_name",
+  "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+  ["in", ["Full-Time", "Part-Time"]]}, order_by ='full_name')
+%}
+{%
+  set fellowsInterns = frappe.get_all("FOSS United Team", fields=["full_name",
+  "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+  ["in", ["Fellow", "Intern"]]}, order_by ='full_name')
+%}
+{%
+  set volunteers = frappe.get_all("FOSS United Team", fields=["full_name",
+  "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
+  "Volunteer"}, order_by ='full_name')
+%}
 <style>
+  .team-member-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  a:hover {
+    text-decoration: none !important;
+  }
+
   .team-list-section {
     display: flex;
     font-family: Inter;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .blog-link {
+    text-decoration: underline;
   }
 
   .team-list-container {
@@ -39,8 +112,15 @@
   .team-member {
     display: flex;
     gap: 3rem;
-
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 16px;
+    transition: box-shadow 0.3s;
     align-items: center;
+  }
+
+  .team-member:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
   .team-member-image {
@@ -84,119 +164,15 @@
     }
   }
 </style>
-
 <div class="team-list-section container">
   <div class="team-list-container">
     <h4>Meet the Workforce</h4>
-
     <div class="team-section">
-      {%
-        set boardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
-        "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1},
-        order_by="full_name")
-      %}
-      {% if boardMembers %}
-        <div class="member-section">
-          <h5>Board</h5>
-          <div class="teams-container">
-            {% for member in boardMembers %}
-              <div class="team-member">
-                <div class="team-member-image">
-                  <img
-                    src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ member.full_name }}"
-                  />
-                </div>
-                <div class="team-member-details">
-                  <h6>{{ member.full_name }}</h6>
-                  <a href="/u/{{ member.username }}">@{{ member.username }}</a>
-                  <p>{{ member.designation }}</p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-      {%
-        set staff = frappe.get_all("FOSS United Team", fields=["full_name",
-        "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
-        ["in", ["Full-Time", "Part-Time"]]}, order_by ='full_name')
-      %}
-      {% if staff %}
-        <div class="member-section">
-          <h5>Full-time and Part-time Staff</h5>
-          <div class="teams-container">
-            {% for member in staff %}
-              <div class="team-member">
-                <div class="team-member-image">
-                  <img
-                    src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ member.full_name }}"
-                  />
-                </div>
-                <div class="team-member-details">
-                  <h6>{{ member.full_name }}</h6>
-                  <a href="/u/{{ member.username }}">@{{ member.username }}</a>
-                  <p>{{ member.designation }}</p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-      {%
-        set fellowsInterns = frappe.get_all("FOSS United Team", fields=["full_name",
-        "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
-        ["in", ["Fellow", "Intern"]]}, order_by ='full_name')
-      %}
-      {% if fellowsInterns %}
-        <div class="member-section">
-          <h5>Fellows and Interns</h5>
-          <div class="teams-container">
-            {% for member in fellowsInterns %}
-              <div class="team-member">
-                <div class="team-member-image">
-                  <img
-                    src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ member.full_name }}"
-                  />
-                </div>
-                <div class="team-member-details">
-                  <h6>{{ member.full_name }}</h6>
-                  <a href="/u/{{ member.username }}">@{{ member.username }}</a>
-                  <p>{{ member.designation }}</p>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
-      {%
-        set volunteers = frappe.get_all("FOSS United Team", fields=["full_name",
-        "username", "headshot", "user_bio", "designation"], filters={"is_active": 1, "org_role":
-        "Volunteer"}, order_by ='full_name')
-      %}
-      {% if volunteers %}
-        <div class="member-section">
-          <h5>Active and Part-time Volunteers</h5>
-          <div class="teams-container">
-            {% for member in volunteers %}
-              <div class="team-member">
-                <div class="team-member-image">
-                  <img
-                    src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ member.full_name }}"
-                  />
-                </div>
-                <div class="team-member-details">
-                  <h6>{{ member.full_name }}</h6>
-                  <a href="/u/{{ member.username }}">@{{ member.username }}</a>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      {% endif %}
+      {{ render_team_section("Board", boardMembers) }}
+      {{ render_team_section("Governance Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
+      {{ render_team_section("Full-time and Part-time Staff", staff) }}
+      {{ render_team_section("Fellows and Interns", fellowsInterns) }}
+      {{ render_team_section("Active and Part-time Volunteers", volunteers) }}
     </div>
   </div>
 </div>
