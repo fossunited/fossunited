@@ -11,8 +11,8 @@ from fossunited.tests.utils import insert_test_chapter, insert_test_event
 
 class TestFOSSChapterEvent(FrappeTestCase):
     def setUp(self):
-        self.lead = "test1@example.com"
-        self.chapter = insert_test_chapter(lead_email=self.lead)
+        self.core_team_email = "test1@example.com"
+        self.chapter = insert_test_chapter(members=[self.core_team_email])
         self.event = insert_test_event(
             chapter=self.chapter,
         )

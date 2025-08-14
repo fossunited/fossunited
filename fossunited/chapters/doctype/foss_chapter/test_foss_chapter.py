@@ -10,7 +10,7 @@ fake = Faker()
 
 class TestFOSSChapter(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
+        self.chapter = insert_test_chapter(members=["test1@example.com", "member2@example.com"])
 
     def tearDown(self):
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
@@ -19,8 +19,7 @@ class TestFOSSChapter(FrappeTestCase):
         # Given a chapter
         chapter = self.chapter
 
-        # When the chapter was created, a lead was assigned to it.
-        # Then the lead should have the role of 'Chapter Lead' and 'Chapter Team Member'
+        # user must have 'Chapter Team Member' role given
         user = frappe.db.get_value(USER_PROFILE, chapter.chapter_members[0].chapter_member, "user")
         self.assertTrue(self.has_team_member_role(user))
 

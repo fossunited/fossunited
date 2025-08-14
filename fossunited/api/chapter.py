@@ -61,7 +61,7 @@ def check_if_event_lead(event: str) -> bool:
                 "parenttype": EVENT,
                 "member": profile,
                 "parentfield": "event_members",
-                "role": "Lead",
+                "role": "Core Team Member",
             },
         )
     )

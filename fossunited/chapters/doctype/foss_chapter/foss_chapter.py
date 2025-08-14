@@ -22,7 +22,6 @@ class FOSSChapter(WebsiteGenerator):
 
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
-        chapter_lead: DF.Link | None
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
@@ -58,7 +57,6 @@ class FOSSChapter(WebsiteGenerator):
         self.validate_slug()
 
     def before_save(self):
-        self.set_chapter_lead()
         self.set_route()
 
     def on_update(self):
@@ -77,8 +75,6 @@ class FOSSChapter(WebsiteGenerator):
                 continue
 
             roles = ["Chapter Team Member"]
-            if member.role == "Lead":
-                roles.append("Chapter Lead")
 
             self.add_member_roles(user, *roles)
 
@@ -93,8 +89,6 @@ class FOSSChapter(WebsiteGenerator):
                 user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
 
                 roles = ["Chapter Team Member"]
-                if member.role == "Lead":
-                    roles.append("Chapter Lead")
 
                 self.remove_member_roles(user, *roles)
 
@@ -125,12 +119,6 @@ class FOSSChapter(WebsiteGenerator):
                 },
             )
         )
-
-    def set_chapter_lead(self):
-        for member in self.chapter_members:
-            if member.role == "Lead":
-                self.chapter_lead = member.chapter_member
-                break
 
     def set_route(self):
         if not self.slug:

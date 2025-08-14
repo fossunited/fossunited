@@ -43,8 +43,7 @@
   "whatsapp",
   "discord",
   "chapter_members_section",
-  "chapter_members",
-  "chapter_lead"
+  "chapter_members"
  ],
  "fields": [
   {
@@ -91,13 +90,6 @@
    "in_list_view": 1,
    "label": "Country",
    "options": "Country"
-  },
-  {
-   "fieldname": "chapter_lead",
-   "fieldtype": "Link",
-   "label": "Chapter Lead",
-   "options": "FOSS User Profile",
-   "read_only": 1
   },
   {
    "fieldname": "basic_information_section",
@@ -281,7 +273,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-07-28 12:34:56.000000",
+ "modified": "2025-08-11 12:59:52.035174",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
@@ -316,7 +308,6 @@
   }
  ],
  "route": "c",
- "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

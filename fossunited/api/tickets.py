@@ -276,26 +276,7 @@ def has_valid_permission(event_id: str) -> bool:
     """
     session_user = frappe.session.user
 
-    if not (
-        bool(
-            frappe.db.exists(
-                "Has Role",
-                {
-                    "role": "Chapter Lead",
-                    "parent": session_user,
-                },
-            )
-        )
-        or bool(
-            frappe.db.exists(
-                "Has Role",
-                {
-                    "role": "Chapter Team Member",
-                    "parent": session_user,
-                },
-            )
-        )
-    ):
+    if not frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
         return False
 
     chapter_id = frappe.db.get_value(EVENT, event_id, ["chapter"])

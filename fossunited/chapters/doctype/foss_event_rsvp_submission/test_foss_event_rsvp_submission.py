@@ -13,12 +13,12 @@ from fossunited.tests.utils import (
 fake = Faker()
 
 WEBSITE_USER = "test2@example.com"
-LEAD_USER = "test1@example.com"
+CORE_TEAM = "test1@example.com"
 
 
 class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
+        self.chapter = insert_test_chapter(members=[CORE_TEAM])
         self.event = insert_test_event(chapter=self.chapter)
         self.rsvp = insert_rsvp_form(event=self.event.name)
         self.email_group = frappe.db.get_value(
@@ -127,7 +127,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
 
     def test_status_change_after_unpublish(self):
         # Given an RSVP form which requires host approval
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         rsvp = self.rsvp
         rsvp.requires_host_approval = True
         rsvp.save()
@@ -139,7 +139,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # It should be saved with status as pending
         self.assertEqual(submission.status, "Pending")
 
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         # When the RSVP form is unpublished
         rsvp.is_published = False
         rsvp.save()
@@ -150,7 +150,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
 
     def test_add_to_email_on_acceptance(self):
         # Given an RSVP form which requires host approval
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         rsvp = self.rsvp
         rsvp.requires_host_approval = True
         rsvp.save()
@@ -174,7 +174,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         )
 
         # When status is changed to "Accepted"
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         submission.status = "Accepted"
         submission.save()
 
@@ -191,7 +191,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
 
     def test_no_add_to_email_on_rejection(self):
         # Given an RSVP form which requires host approval
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         rsvp = self.rsvp
         rsvp.requires_host_approval = True
         rsvp.save()
@@ -215,7 +215,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         )
 
         # When status is changed to "Accepted"
-        frappe.set_user(LEAD_USER)
+        frappe.set_user(CORE_TEAM)
         submission.status = "Rejected"
         submission.save()
 
