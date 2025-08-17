@@ -98,35 +98,10 @@ def get_session_user_profile():
     Used mainly for dashboard header.
     Returns some basic information about the user profile.
     """
-    user = frappe.db.get_value(
+    user = frappe.get_doc(
         USER_PROFILE,
         {"user": frappe.session.user},
-        [
-            "full_name",
-            "username",
-            "profile_photo",
-            "cover_image",
-            "route",
-            "current_city",
-            "gender",
-            "website",
-            "about",
-            "bio",
-            "user",
-            "name",
-            "is_private",
-            "show_activity",
-            "cfp_visibility",
-            "github",
-            "gitlab",
-            "linkedin",
-            "mastodon",
-            "mastodon",
-            "x",
-            "instagram",
-            "devto",
-            "youtube",
-        ],
+        ["*"],
         as_dict=1,
     )
 

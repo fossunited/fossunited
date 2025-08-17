@@ -186,6 +186,127 @@
             <FormControl v-model="profile_dict.devto" type="url" label="Dev.to" />
             <FormControl v-model="profile_dict.medium" type="url" label="Medium" />
             <FormControl v-model="profile_dict.mastodon" type="url" label="Mastodon" />
+
+            <div class="col-span-2 py-1 border-b">
+              <h4 class="text-md font-medium uppercase">Education Details</h4>
+            </div>
+
+            <div
+              v-for="(edu, index) in profile_dict.education"
+              :key="index"
+              class="grid [grid-template-columns:auto_auto_auto_auto_auto_40px] gap-4 my-2 col-span-2"
+            >
+              <FormControl
+                v-model="profile_dict.education[index].institution"
+                label="College/Institute"
+              />
+              <FormControl v-model="profile_dict.education[index].degree" label="Degree" />
+              <FormControl
+                v-model="profile_dict.education[index].field_of_study"
+                label="Field of Study"
+              />
+              <FormControl v-model="profile_dict.education[index].start_year" label="Start Year" />
+              <FormControl v-model="profile_dict.education[index].end_year" label="End Year" />
+              <button
+                class="h-7 bg-gray-200 hover:bg-red-600 text-white text-xs rounded self-end"
+                @click="deleteItem('education', index)"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div class="col-span-2 mt-2">
+              <Button variant="solid" size="md" theme="gray" @click="addEducation">
+                + Add More
+              </Button>
+            </div>
+
+            <div class="col-span-2 py-1 border-b">
+              <h4 class="text-md font-medium uppercase">Work Experience</h4>
+            </div>
+
+            <div
+              v-for="(work, index) in profile_dict.experience"
+              :key="index"
+              class="grid [grid-template-columns:auto_auto_auto_auto_auto_40px] gap-4 my-2 col-span-2"
+            >
+              <FormControl v-model="profile_dict.experience[index].title" label="Job Title" />
+              <FormControl v-model="profile_dict.experience[index].company" label="Company" />
+              <FormControl
+                v-model="profile_dict.experience[index].company_website"
+                label="Company Website"
+                type="url"
+              />
+              <FormControl
+                v-model="profile_dict.experience[index].employment_type"
+                label="Employment Type"
+                type="select"
+                :options="[
+                  { label: 'Full-time', value: 'Full-time' },
+                  { label: 'Part-time', value: 'Part-time' },
+                  { label: 'Internship', value: 'Internship' },
+                  { label: 'Freelance', value: 'Freelance' },
+                  { label: 'Self-employed', value: 'Self-employed' },
+                  { label: 'Trainee', value: 'Trainee' },
+                ]"
+              />
+              <FormControl
+                v-model="profile_dict.experience[index].start_date"
+                label="Start Date"
+                type="date"
+              />
+              <button
+                class="h-7 bg-gray-200 hover:bg-red-600 text-white text-xs rounded self-end"
+                @click="deleteItem('experience', index)"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div class="col-span-2 mt-2">
+              <Button variant="solid" size="md" theme="gray" @click="addWorkExp">
+                + Add More
+              </Button>
+            </div>
+
+            <div class="col-span-2 py-1 border-b">
+              <h4 class="text-md font-medium uppercase">Project Details</h4>
+            </div>
+
+            <div
+              v-for="(proj, index) in profile_dict.projects"
+              :key="index"
+              class="grid [grid-template-columns:auto_auto_auto_auto_40px] gap-4 my-2 col-span-2"
+            >
+              <FormControl
+                v-model="profile_dict.projects[index].project_name"
+                label="Project Name"
+              />
+              <FormControl
+                v-model="profile_dict.projects[index].project_link"
+                label="Project Link"
+                type="url"
+              />
+              <FormControl v-model="profile_dict.projects[index].tagline" label="Tagline" />
+              <FormControl
+                v-model="profile_dict.projects[index].cover_image"
+                label="Cover Image"
+                type="url"
+              />
+              <button
+                class="h-7 bg-gray-200 hover:bg-red-600 text-white text-xs rounded self-end"
+                @click="deleteItem('projects', index)"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div class="col-span-2 mt-2">
+              <Button variant="solid" size="md" theme="gray" @click="addProjects">
+                + Add More
+              </Button>
+            </div>
+
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -216,29 +337,34 @@ const profile_dict = reactive({
   full_name: '',
   user: '',
   username: '',
-  bio: '',
-  cfp_visibility: '',
-  current_city: '',
-  about: '',
-  website: '',
-  x: '',
-  linkedin: '',
-  github: '',
-  gitlab: '',
-  instagram: '',
-  youtube: '',
-  devto: '',
-  medium: '',
-  mastodon: '',
 })
+
+function deepAssign(target, source) {
+  for (const key in source) {
+    if (Array.isArray(source[key])) {
+      // Replace entire array (or you can go deeper if needed)
+      target[key] = source[key]
+    } else if (source[key] !== null && typeof source[key] === 'object') {
+      if (!target[key] || typeof target[key] !== 'object') {
+        target[key] = {}
+      }
+      deepAssign(target[key], source[key])
+    } else {
+      target[key] = source[key]
+    }
+  }
+}
 
 const profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
   auto: true,
   onSuccess(data) {
-    Object.keys(profile_dict).forEach((key) => {
-      profile_dict[key] = data[key]
-    })
+    // assignValues(profile_dict, data)
+    deepAssign(profile_dict, data)
+    const eduLength = Array.isArray(profile_dict.education) ? profile_dict.education.length : 0
+    // console.log('Updated PROFILE_DICT:', JSON.stringify(profile_dict, null, 2))
+    // console.log('Updated DATA:', JSON.stringify(data, null, 2))
+    // console.log('Updated EDUCATION:', JSON.stringify(profile_dict.education.length, null, 2))
   },
 })
 
@@ -334,10 +460,10 @@ const updateErrors = ref('')
 
 const isValidUrl = (url) => {
   try {
-    const parsed = new URL(url);
-    return parsed.protocol === "http:" || parsed.protocol === "https:";
+    const parsed = new URL(url)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
   } catch (_) {
-    return false;
+    return false
   }
 }
 
@@ -452,6 +578,46 @@ const updateProfile = createResource({
     toast.error('Error updating profile: ' + err.messages)
   },
 })
+
+function addEducation() {
+  profile_dict.education.push({
+    institution: '',
+    degree: '',
+    field_of_study: '',
+    start_year: '',
+    end_year: '',
+  })
+}
+
+function addWorkExp() {
+  profile_dict.experience.push({
+    title: '',
+    company: '',
+    company_website: '',
+    employment_type: '',
+    start_date: '',
+  })
+}
+
+function addProjects() {
+  profile_dict.projects.push({
+    project_title: '',
+    project_link: '',
+    tagline: '',
+  })
+}
+
+function deleteItem(field, index) {
+  if (!['projects', 'education', 'experience'].includes(field)) {
+    console.warn(`Invalid field: ${field}`)
+    return
+  }
+
+  const list = profile_dict[field]
+  if (Array.isArray(list) && index > -1 && index < list.length) {
+    list.splice(index, 1)
+  }
+}
 
 const handleUpdateProfile = () => {
   const errors = updateProfileErrors()

@@ -39,7 +39,11 @@ def set_profile_image(file_url: str) -> bool:
         filename = f"profile_{user_doc.name}.webp"
 
         saved_file = save_file(
-            fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
+            fname=filename,
+            content=webp_image,
+            dt=USER_PROFILE,
+            dn=user_doc.name,
+            is_private=False,
         )
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "profile_photo", saved_file.file_url)
@@ -69,7 +73,11 @@ def set_cover_image(file_url: str) -> bool:
         filename = f"cover_{user_doc.name}.webp"
 
         saved_file = save_file(
-            fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
+            fname=filename,
+            content=webp_image,
+            dt=USER_PROFILE,
+            dn=user_doc.name,
+            is_private=False,
         )
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", saved_file.file_url)
@@ -125,11 +133,19 @@ def update_profile(fields_dict):
             "devto": fields_dict.get("devto"),
             "medium": fields_dict.get("medium"),
             "mastodon": fields_dict.get("mastodon"),
+            "education": fields_dict.get("education"),
+            "experience": fields_dict.get("experience"),
+            "projects": fields_dict.get("projects"),
         }
 
         profile = frappe.get_doc(USER_PROFILE, user_doc.name)
         for field, value in updated_fields.items():
-            if hasattr(profile, field):
+            if field in ["education", "projects", "experience"] and isinstance(value, list):
+                profile.set(field, [])  # Clear existing
+                for row in value:
+                    profile.append(field, row)
+
+            elif hasattr(profile, field):
                 setattr(profile, field, value)
         profile.save()
 
