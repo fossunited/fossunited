@@ -491,12 +491,6 @@
       //for each header-with-button, find the section from its parent
       $('.header-with-button').each((index, element) => {
         let section = $(element).parent().attr('id').split('-')[0]
-        $(element).append(`
-                <button class="add-modal-button" name="add-${section}" onClick="addModal(this)">
-                    <i class="ti ti-plus"></i>
-                    Add ${section}
-                </button>
-            `)
       })
     }
 
