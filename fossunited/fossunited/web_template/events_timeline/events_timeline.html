@@ -155,7 +155,9 @@
           <option value="All Cities" selected>All Cities</option>
           {% set chapter_details = get_chapter_details() %}
           {% for chapter in chapter_details %}
-            <option value="{{chapter.name}}">{{ chapter.chapter_name | truncate(15, False, '...', 0) }}</option>
+		  {% if chapter.chapter_type == "City Community" %}
+          <option value="{{chapter.name}}">{{ chapter.chapter_name | truncate(15, False, '...', 0) }}</option>
+		  {% endif %}
           {% endfor %}
         </select>
         <label for="cityChapter">City Chapter</label>

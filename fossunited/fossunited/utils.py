@@ -220,7 +220,7 @@ def get_chapter_details():
     Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
     upcoming and past events.
     """
-    chapters = frappe.db.get_all(CHAPTER, fields=["chapter_name", "name"])
+    chapters = frappe.db.get_all(CHAPTER, fields=["chapter_name", "name", "chapter_type"])
     return chapters
 
 
