@@ -16,30 +16,34 @@
         alt="Banner Image"
       />
       <div class="header--img-title-cta-section">
-        <div class="header--img-title">
-          <img
-            src="{{ doc.chapter_logo or default_chapter_logo }}"
-            alt="{{ doc.chapter_type }} Logo"
-            class="header-profile-image ml-lg-6"
-          />
-          <h1
-            class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
-          >
-            {{ doc.chapter_name }}
-          </h1>
+        <div>
+          <div class="header--img-title">
+            <img
+              src="{{ doc.chapter_logo or default_chapter_logo }}"
+              alt="{{ doc.chapter_type }} Logo"
+              class="header-profile-image ml-lg-6"
+            />
+            <div>
+              <h1
+                class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
+              >
+                {{ doc.chapter_name }}
+              </h1>
+              {% if doc.chapter_type == 'FOSS Club' %}
+                <i class="ti ti-map-pin"></i>
+                {{ doc.city }}, {{ doc.state }}
+              {% endif %}
+            </div>
+          </div>
         </div>
-        <!-- <div class="header--cta-section">
-                    <button class="primary-button">
-                        <i class="ti ti-user-plus"></i> Follow
-                    </button>
-                </div> -->
       </div>
     </div>
+
     <div class="header-section--socials">
       {% for (k,v) in social_links.items() %}
-      <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
-        <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
-      </a>
+        <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+          <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+        </a>
       {% endfor %}
     </div>
   </div>
