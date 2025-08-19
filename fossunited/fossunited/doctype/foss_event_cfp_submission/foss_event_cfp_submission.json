@@ -267,7 +267,7 @@
    "fieldname": "session_type",
    "fieldtype": "Select",
    "label": "Session Type",
-   "options": "Talk\nLightning Talk\nPanel Discussion\nBirds of Feather(BoF)\nWorkshop",
+   "options": "Talk\nLightning Talk\nPanel Discussion\nBirds of Feather(BoF)\nWorkshop\nInvited Talk",
    "reqd": 1
   },
   {
@@ -339,7 +339,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-06-22 22:55:30.082517",
+ "modified": "2025-08-19 21:25:18.448437",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -408,7 +408,6 @@
    "share": 1
   }
  ],
- "row_format": "Dynamic",
  "search_fields": "submitted_by, event, event_name, chapter",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

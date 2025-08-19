@@ -59,7 +59,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         route: DF.Data | None
         session_categories: DF.Text | None
         session_type: DF.Literal[
-            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F821, F722
+            "Talk",  # noqa: F821
+            "Lightning Talk",  # noqa: F722
+            "Panel Discussion",  # noqa: F821, F722
+            "Birds of Feather(BoF)",  # noqa: F722
+            "Workshop",  # noqa: F821
+            "Invited Talk",  # noqa: F821, F722
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]  # noqa: F821, F722
