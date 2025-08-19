@@ -33,8 +33,7 @@
   order_by="full_name")
 %}
 {%
-  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
-      "headshot", "user_bio", "designation"], filters={"org_role": "Board", "is_active": 1},
+  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"org_role": "Governance Board", "is_active": 1},
   order_by="full_name")
 %}
 {%
