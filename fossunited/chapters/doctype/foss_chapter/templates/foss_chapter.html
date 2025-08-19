@@ -29,9 +29,11 @@
               >
                 {{ doc.chapter_name }}
               </h1>
-              {% if doc.chapter_type == 'FOSS Club' %}
-                <i class="ti ti-map-pin"></i>
-                {{ doc.city }}, {{ doc.state }}
+              {% if doc.chapter_type == 'FOSS Club' and (doc.city or doc.state) %}
+                <span class="header--location">
+                  <i class="ti ti-map-pin" aria-hidden="true"></i>
+                  {% if doc.city %}{{ doc.city }}, {% endif %}{{ doc.state }}
+                </span>
               {% endif %}
             </div>
           </div>
@@ -40,10 +42,17 @@
     </div>
 
     <div class="header-section--socials">
-      {% for (k,v) in social_links.items() %}
-        <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
-          <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
-        </a>
+      {% for (k, v) in social_links.items() %}
+        {% if v and (v.startswith('http://') or v.startswith('https://')) %}
+          <a
+            href="{{ v }}"
+            aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+          </a>
+        {% endif %}
       {% endfor %}
     </div>
   </div>
