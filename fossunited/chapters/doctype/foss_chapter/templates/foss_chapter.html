@@ -45,7 +45,7 @@
                   </span>
                   <div class="seperator-circle"></div>
                 {% endif %}
-                <span>Established {{ doc.creation.strftime('%B %Y') }}</span>
+                <span>Established in {{ frappe.utils.formatdate(doc.creation, "MMMM yyyy") }}</span>
               </div>
             </div>
           </div>
