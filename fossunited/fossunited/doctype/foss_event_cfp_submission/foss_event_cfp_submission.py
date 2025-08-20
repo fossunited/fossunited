@@ -59,7 +59,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         route: DF.Data | None
         session_categories: DF.Text | None
         session_type: DF.Literal[
-            "Talk", "Lightning Talk", "Panel Discussion", "Birds of Feather(BoF)", "Workshop"  # noqa: F821, F722
+            "Talk",  # noqa: F821
+            "Lightning Talk",  # noqa: F722
+            "Panel Discussion",  # noqa: F821, F722
+            "Birds of Feather(BoF)",  # noqa: F722
+            "Workshop",  # noqa: F821
+            "Invited Talk",  # noqa: F821, F722
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]  # noqa: F821, F722
@@ -84,6 +89,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.set_route()
         self.set_scores()
         self.handle_status_change()
+        self.validate_session_type_permissions()
 
     def after_insert(self):
         self.handle_email_group("CFP Proposers")
@@ -111,6 +117,18 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
         if not linked_cfp.status == "Live":
             frappe.throw("The CFP Form for this event is not live", frappe.PermissionError)
+
+    def validate_session_type_permissions(self) -> None:
+        if self.session_type != "Invited Talk":
+            return
+        user = frappe.session.user
+        # Block Website Users outright
+        if frappe.db.get_value("User", user, "user_type") == "Website User":
+            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
+        # Allow only specific desk roles to set this value
+        allowed_roles = {"System Manager", "Chapter Team Member", "CFP Reviewer"}
+        if not set(frappe.get_roles(user)).intersection(allowed_roles):
+            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
