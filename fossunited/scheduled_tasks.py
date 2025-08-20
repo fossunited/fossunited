@@ -32,16 +32,21 @@ def conclude_events():
             doc.status = "Concluded"
         else:
             doc.status = "Cancelled"
+
         doc.show_rsvp = 0
         doc.show_cfp = 0
-        past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
-        past_rsvp.is_published = 0
-        past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
-        past_cfp.status = "Closed"
+
         try:
+            # Fetch linked RSVP/CFP by `event` (link to Event name) and update if present
             doc.save(ignore_permissions=True)
-            past_rsvp.save(ignore_permissions=True)
-            past_cfp.save(ignore_permissions=True)
+            past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
+            if past_rsvp:
+                past_rsvp.is_published = 0
+                past_rsvp.save(ignore_permissions=True)
+            past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
+            if past_cfp:
+                past_cfp.status = "Closed"
+                past_cfp.save(ignore_permissions=True)
         except Exception as e:
             frappe.log_error(
                 frappe.get_traceback(),
