@@ -16,25 +16,37 @@
         alt="Banner Image"
       />
       <div class="header--img-title-cta-section">
-        <div>
-          <div class="header--img-title">
-            <img
-              src="{{ doc.chapter_logo or default_chapter_logo }}"
-              alt="{{ doc.chapter_type }} Logo"
-              class="header-profile-image ml-lg-6"
-            />
-            <div>
-              <h1
-                class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
+        <div class="header--img-title">
+          <!-- Chapter Logo -->
+          <img
+            src="{{ doc.chapter_logo or default_chapter_logo }}"
+            alt="{{ doc.chapter_type }} Logo"
+            class="header-profile-image ml-lg-6"
+          />
+          <!-- Title and Info -->
+          <div class="header-content-edit-section">
+            <div class="header--content-section pl-2">
+              <!-- Title -->
+              <div class="d-flex mb-0">
+                <h1
+                  class="pt-2 header--title mb-0 {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
+                >
+                  {{ doc.chapter_name }}
+                </h1>
+              </div>
+              <div
+                class="header--username-location ml-4"
+                style="font-size: var(--text-sm); margin-top: -20px;"
               >
-                {{ doc.chapter_name }}
-              </h1>
-              {% if doc.chapter_type == 'FOSS Club' and (doc.city or doc.state) %}
-                <span class="header--location">
-                  <i class="ti ti-map-pin" aria-hidden="true"></i>
-                  {% if doc.city %}{{ doc.city }}, {% endif %}{{ doc.state }}
-                </span>
-              {% endif %}
+                {% if doc.chapter_type == 'FOSS Club' and (doc.city or doc.state) %}
+                  <span>
+                    <i class="ti ti-map-pin" aria-hidden="true"></i>
+                    {% if doc.city %}{{ doc.city }},{% endif %} {{ doc.state }}
+                  </span>
+                  <div class="seperator-circle"></div>
+                {% endif %}
+                <span>Established {{ doc.creation.strftime('%B %Y') }}</span>
+              </div>
             </div>
           </div>
         </div>
