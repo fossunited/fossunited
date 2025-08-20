@@ -19,6 +19,8 @@ def conclude_events():
     for event in events:
         doc = frappe.get_doc(EVENT, event.name)
         doc.status = "Concluded"
+        doc.show_rsvp = 0
+        doc.show_cfp = 0
         try:
             doc.save(ignore_permissions=True)
         except Exception as e:
