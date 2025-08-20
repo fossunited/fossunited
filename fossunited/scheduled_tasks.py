@@ -18,14 +18,20 @@ def conclude_events():
     """
     events = frappe.db.get_all(
         EVENT,
-        {"status": "Live", "event_end_date": ["<", datetime.today()]},
+        {
+            "status": ["in", ["Live", "Cancelled"]],
+            "event_end_date": ["<", datetime.today()],
+        },
         ["name", "status", "event_end_date", "event_start_date"],
         page_length=999,
     )
 
     for event in events:
         doc = frappe.get_doc(EVENT, event.name)
-        doc.status = "Concluded"
+        if doc.status == "Live":
+            doc.status = "Concluded"
+        else:
+            doc.status = "Cancelled"
         doc.show_rsvp = 0
         doc.show_cfp = 0
         past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
