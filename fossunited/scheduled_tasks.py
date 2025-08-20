@@ -2,7 +2,14 @@ from datetime import datetime, timedelta
 
 import frappe
 
-from fossunited.doctype_ids import EVENT, JOB, JOB_STATUS_APPROVED, JOB_STATUS_EXPIRED
+from fossunited.doctype_ids import (
+    EVENT,
+    EVENT_CFP,
+    EVENT_RSVP,
+    JOB,
+    JOB_STATUS_APPROVED,
+    JOB_STATUS_EXPIRED,
+)
 
 
 def conclude_events():
@@ -21,8 +28,14 @@ def conclude_events():
         doc.status = "Concluded"
         doc.show_rsvp = 0
         doc.show_cfp = 0
+        past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
+        past_rsvp.is_published = 0
+        past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
+        past_cfp.status = "Closed"
         try:
             doc.save(ignore_permissions=True)
+            past_rsvp.save(ignore_permissions=True)
+            past_cfp.save(ignore_permissions=True)
         except Exception as e:
             frappe.log_error(
                 frappe.get_traceback(),
