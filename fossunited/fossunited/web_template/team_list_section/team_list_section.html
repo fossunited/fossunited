@@ -1,9 +1,9 @@
-{% macro render_team_section(title, members, extra_info) %}
+{% macro render_team_section(title, members, extra_info=None) %}
   {% if members %}
     <div class="member-section">
       <div class="header-container">
         <h5>{{ title }}</h5>
-        {{ extra_info or "" }}
+        {% if extra_info %}{{ extra_info | safe }}{% endif %}
       </div>
       <div class="teams-container">
         {% for member in members %}
@@ -11,7 +11,7 @@
             <div class="team-member">
               <div class="team-member-image">
                 <img
-                  src="{{ member.headshot if member.headshot else 'assets/fossunited/images/defaults/user_profile_image.png' }}"
+                  src="{{ member.headshot if member.headshot else '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                   alt="{{ member.full_name }}"
                 />
               </div>
@@ -33,7 +33,7 @@
   order_by="full_name")
 %}
 {%
-  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"org_role": "Governance Board", "is_active": 1},
+  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "user_bio", "designation"], filters={"org_role": "Governing Board", "is_active": 1},
   order_by="full_name")
 %}
 {%
@@ -58,7 +58,7 @@
     display: block;
   }
 
-  a:hover {
+  .team-member-link:hover {
     text-decoration: none !important;
   }
 
@@ -118,7 +118,7 @@
     align-items: center;
   }
 
-  .team-member:hover {
+  .team-member-link:hover .team-member {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   }
 
@@ -168,7 +168,7 @@
     <h4>Meet the Workforce</h4>
     <div class="team-section">
       {{ render_team_section("Board", boardMembers) }}
-      {{ render_team_section("Governance Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
+      {{ render_team_section("Governing Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
       {{ render_team_section("Full-time and Part-time Staff", staff) }}
       {{ render_team_section("Fellows and Interns", fellowsInterns) }}
       {{ render_team_section("Active and Part-time Volunteers", volunteers) }}

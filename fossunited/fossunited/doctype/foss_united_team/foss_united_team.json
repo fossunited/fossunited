@@ -35,7 +35,7 @@
       "fieldtype": "Select",
       "in_standard_filter": 1,
       "label": "Org Role",
-      "options": "\nFounder\nBoard\nGovernance Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
+      "options": "\nFounder\nBoard\nGoverning Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
     },
     {
       "fieldname": "user_individual_details_section",

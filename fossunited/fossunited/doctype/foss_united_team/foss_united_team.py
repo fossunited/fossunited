@@ -22,7 +22,7 @@ class FOSSUnitedTeam(Document):
             "",  # noqa: F722, F821
             "Founder",  # noqa: F821
             "Board",  # noqa: F821
-            "Governance Board",  # noqa: F722
+            "Governing Board",  # noqa: F722
             "Full-Time",  # noqa: F821
             "Part-Time",  # noqa: F821
             "Intern",  # noqa: F821
