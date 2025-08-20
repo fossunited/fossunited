@@ -234,28 +234,27 @@ class FOSSChapter(WebsiteGenerator):
     def get_social_links(self):
         socials = {}
         SOCIAL_LINK_FIELDNAMES = [
+            "mastodon",
+            "matrix",
+            "bluesky",
+            "telegram",
             "github",
             "gitlab",
-            "x",
-            "linkedin",
-            "instagram",
-            "mastodon",
             "youtube",
+            "linkedin",
             "facebook",
-            "matrix",
-            "telegram",
-            "whatsapp",
+            "instagram",
+            "x",
             "discord",
-            "bluesky",
         ]
         for k, v in self.as_dict().items():
-            if k in SOCIAL_LINK_FIELDNAMES:
+            if v and k in SOCIAL_LINK_FIELDNAMES:
                 if k == "matrix":
                     k = "matrix-light"
+                socials[k] = v
 
-                if v:
-                    socials[k] = v
-            else:
-                continue
+        def sort_key(item):
+            key = "matrix" if item[0] == "matrix-light" else item[0]
+            return SOCIAL_LINK_FIELDNAMES.index(key)
 
-        return socials
+        return dict(sorted(socials.items(), key=sort_key))
