@@ -1,4 +1,4 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
   <channel>
     <title>{{ title }}</title>
     <description>{{ description }}</description>
@@ -12,7 +12,7 @@
     <item>
 	  <title>{{ i.title }}</title>
 	  <description>{{ i.content }}</description>
-	  <author>{{ i.author }}</author>
+	  <dc:creator>{{ i.author }}</dc:creator>
 	  <link>{{ i.link }}</link>
 	  <guid>{{ i.link }}</guid>
 	  <pubDate>{{ i.published_date }}</pubDate>

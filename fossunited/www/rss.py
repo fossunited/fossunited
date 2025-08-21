@@ -52,7 +52,7 @@ def get_context(context):
             "message_html",
             "content_type",
         ],
-        filters={"published": 1},
+        filters={"email_sent": 1},
         order_by="modified desc",
         limit=20,
     )
@@ -76,7 +76,9 @@ def get_context(context):
             blog.content_type, prefix.rstrip("_")
         )
         value = getattr(blog, attr)
-        blog_content = markdown(value) if blog.content_type == "Markdown" else value
+        blog_content = (
+            markdown(value.replace("<br>", " ")) if blog.content_type == "Markdown" else value
+        )
         blog.content = f"<![CDATA[{blog_content}]]>"
 
     all_items = blog_list + news_list
