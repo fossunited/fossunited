@@ -12,10 +12,19 @@ dependencies = [
     "PyGithub~=2.3.0",
     "Faker~=27.0.0",
     "Pillow~=11.0.0",
-    "ics~=0.7.2"
+    "ics~=0.7.2",
 ]
 
 [project.optional-dependencies]
+dev = [
+  "pre-commit==4.2.0",
+  "frappe-bench>=5.25.9",
+  "ruff==0.12.5",
+  "black==25.1.0",
+  "basedpyright>=1.31.0",
+  "python-lsp-server>=1.13.0",
+  "djlint>=1.36.4",
+]
 docs = [
     "mkdocs~=1.6.1",
     "mkdocs-material~=9.5.36",
@@ -38,3 +47,13 @@ select = [
     "E",
     "F",
 ]
+
+[tool.ty.rules]
+possibly-unresolved-reference = "warn"
+division-by-zero = "ignore"
+
+[tool.ty.environment]
+extra-paths = ["../frap/apps/frappe/"]
+
+[tool.basedpyright]
+extraPaths = ["../frap/apps/frappe/"]
