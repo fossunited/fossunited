@@ -1,16 +1,16 @@
 <template>
-  <div class="px-6 py-4 flex flex-col items-center gap-2 border border-gray-500 bg-white h-fit">
-    <div class="flex gap-1 text-base font-medium">
+  <div class="px-3 py-2 flex flex-col items-center gap-1 border border-gray-500 bg-white h-fit">
+    <div class="flex gap-1 text-sm font-semibold">
       <span>{{ getFormattedTime(session.start_time) }}</span>
       <span v-if="session.category == 'Break'">-</span>
       <span v-if="session.category == 'Break'">{{ getFormattedTime(session.end_time) }}</span>
     </div>
     <div
       v-if="session.category !== 'Break'"
-      class="flex text-xs items-center gap-2 uppercase text-gray-600 divide-x-2 divide-gray-400"
+      class="flex text-[10px] items-center gap-1 uppercase text-gray-600 divide-x divide-gray-400"
     >
       <span>Day {{ session.day }}</span>
-      <span class="pl-2">{{ session.hall }}</span>
+      <span class="pl-1">{{ session.hall }}</span>
     </div>
   </div>
 </template>
