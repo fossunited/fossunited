@@ -1,5 +1,8 @@
 <template>
-  <div class="w-full flex justify-between px-7 py-3 bg-gray-900 text-white">
+  <div
+    class="w-full flex justify-between px-7 py-3 bg-gray-900 text-white"
+    :class="{ 'sticky top-15 z-30': view === 'vertical' }"
+  >
     <h3 class="text-lg font-medium">{{ title }}</h3>
     <button
       v-if="collapsible"
@@ -23,6 +26,11 @@ const props = defineProps({
   collapsible: {
     type: Boolean,
     default: false,
+  },
+  view: {
+    type: String,
+    required: true,
+    default: 'vertical',
   },
 })
 
