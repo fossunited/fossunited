@@ -13,7 +13,7 @@ def execute():
     doctype_members_map = {CHAPTER: "chapter_members", EVENT: "event_members"}
 
     for doctype, members_attr in doctype_members_map.items():
-        docnames = frappe.get_all(doctype, pluck="name")
+        docnames = frappe.get_all(doctype, pluck="name", limit_page_length=9999)
 
         try:
             for docname in docnames:
