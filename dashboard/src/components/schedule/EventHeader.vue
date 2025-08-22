@@ -1,6 +1,9 @@
 <template>
   <div class="w-full flex flex-col md:flex-row gap-4 justify-between md:items-center">
-    <div class="flex gap-2 items-center">
+    <router-link
+      :href="`/${event.route}`"
+      class="flex gap-2 items-center no-underline text-inherit"
+    >
       <div v-if="event.event_logo">
         <img :src="event.event_logo" :alt="event.event_name + ' Logo'" class="h-8" />
       </div>
@@ -11,9 +14,19 @@
       </div>
       <div class="text-2xl">|</div>
       <h2 class="text-lg font-semibold">{{ event.event_name }}</h2>
-    </div>
+    </router-link>
     <div class="flex gap-2 text-sm flex-wrap">
-      <div>{{ event.event_location }}</div>
+      <div><IconMapPin class="w-3 h-3" /></div>
+      <div>
+        <component
+          :is="event.map_link ? 'a' : 'div'"
+          :href="event.map_link || null"
+          class="text-sm underline"
+          target="_blank"
+        >
+          {{ event.event_location }}
+        </component>
+      </div>
       <div>|</div>
       <div>
         <span v-if="dayjs(event.event_start_date).date() != dayjs(event.event_end_date).date()">
@@ -30,6 +43,7 @@ import CityBadge from '@/components/CityBadge.vue'
 import FossClubBadge from '@/components/FossClubBadge.vue'
 import dayjs from 'dayjs'
 import advancedFormat from 'dayjs/plugin/advancedFormat'
+import { IconMapPin } from '@tabler/icons-vue'
 
 dayjs.extend(advancedFormat)
 
