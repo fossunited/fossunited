@@ -1,9 +1,6 @@
 <template>
   <div class="w-full flex flex-col md:flex-row gap-4 justify-between md:items-center">
-    <router-link
-      :href="`/${event.route}`"
-      class="flex gap-2 items-center no-underline text-inherit"
-    >
+    <router-link :to="`/${event.route}`" class="flex gap-2 items-center no-underline text-inherit">
       <div v-if="event.event_logo">
         <img :src="event.event_logo" :alt="event.event_name + ' Logo'" class="h-8" />
       </div>
@@ -18,14 +15,18 @@
     <div class="flex gap-2 text-sm flex-wrap">
       <div><IconMapPin class="w-3 h-3" /></div>
       <div>
-        <component
-          :is="event.map_link ? 'a' : 'div'"
-          :href="event.map_link || null"
+        <a
+          v-if="event?.map_link"
+          :href="event.map_link"
           class="text-sm underline"
           target="_blank"
+          rel="noopener noreferrer"
         >
           {{ event.event_location }}
-        </component>
+        </a>
+        <div v-else class="text-sm">
+          {{ event.event_location }}
+        </div>
       </div>
       <div>|</div>
       <div>
