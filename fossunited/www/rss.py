@@ -2,6 +2,7 @@
 # Copyright (c) 2025, FOSS United Organization
 # License: MIT. See LICENSE
 
+import re
 from datetime import datetime, time
 from email.utils import format_datetime
 from urllib.parse import urljoin
@@ -52,7 +53,7 @@ def get_context(context):
             "message_html",
             "content_type",
         ],
-        filters={"published": 1},
+        filters={"email_sent": 1},
         order_by="modified desc",
         limit=20,
     )
@@ -76,7 +77,10 @@ def get_context(context):
             blog.content_type, prefix.rstrip("_")
         )
         value = getattr(blog, attr)
-        blog_content = markdown(value) if blog.content_type == "Markdown" else value
+        if blog.content_type == "Markdown":
+            blog_content = markdown(re.sub(r"(?i)</?br\s*/?>", "\n", value))
+        else:
+            value
         blog.content = f"<![CDATA[{blog_content}]]>"
 
     all_items = blog_list + news_list
