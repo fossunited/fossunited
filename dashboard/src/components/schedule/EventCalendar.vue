@@ -76,7 +76,7 @@ function formatTimeForIcs(dateStr, timeStr) {
 
   if (dateParts.length !== 3 || timeParts.length < 2) {
     console.warn('Invalid date/time:', dateStr, timeStr)
-    return [9999, 1, 1, 0, 0] // fallback to avoid crash
+    return null
   }
 
   return [dateParts[0], dateParts[1], dateParts[2], timeParts[0], timeParts[1]]
@@ -107,20 +107,33 @@ function generateAndDownloadIcs(sessions, filename, eventMeta) {
     return
   }
 
-  const events = sessions.map((session) => ({
-    title: `${session.title} - ${eventMeta.event_name}`,
-    start: formatTimeForIcs(session.scheduled_date, session.start_time),
-    end: formatTimeForIcs(session.scheduled_date, session.end_time),
-    location: `${session.hall || 'TBD'}, ${eventMeta.event_location}`,
-    categories: [session.category !== 'Other' ? session.category : session.other_category],
-    alarms: [
+  const events = sessions.flatMap((session) => {
+    const start = formatTimeForIcs(session.scheduled_date, session.start_time)
+    const end = formatTimeForIcs(session.scheduled_date, session.end_time)
+    if (!start || !end) return []
+    const category = session.category !== 'Other' ? session.category : session.other_category
+    return [
       {
-        action: 'display',
-        description: `Reminder: ${session.title} at ${eventMeta.event_name}`,
-        trigger: { minutes: 10, before: true },
+        title: `${session.title} - ${eventMeta.event_name}`,
+        start,
+        end,
+        location: `${session.hall || 'TBD'}, ${eventMeta.event_location}`,
+        ...(category ? { categories: [category] } : {}),
+        alarms: [
+          {
+            action: 'display',
+            description: `Reminder: ${session.title} at ${eventMeta.event_name}`,
+            trigger: { minutes: 10, before: true },
+          },
+        ],
       },
-    ],
-  }))
+    ]
+  })
+
+  if (!events.length) {
+    toast.error('No valid sessions to export.')
+    return
+  }
 
   createEvents(events, (error, value) => {
     if (error) {
