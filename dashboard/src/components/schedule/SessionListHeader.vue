@@ -1,7 +1,7 @@
 <template>
   <div
     class="w-full flex justify-between px-7 py-3 bg-gray-900 text-white"
-    :class="{ 'sticky top-15 z-30': view === 'vertical' }"
+    :class="['sticky z-30', view === 'vertical' ? 'top-12' : 'top-0']"
   >
     <h3 class="text-lg font-medium">{{ title }}</h3>
     <button
