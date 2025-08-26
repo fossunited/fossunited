@@ -35,7 +35,7 @@ const route = useRoute()
 const eventDays = ref([])
 const selectedDay = ref(null)
 const selectedSchedule = ref(null)
-const selectedScheduleView = ref('vertical')
+const selectedScheduleView = ref(window.innerWidth >= 1024 ? 'horizontal' : 'vertical')
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event_from_route',

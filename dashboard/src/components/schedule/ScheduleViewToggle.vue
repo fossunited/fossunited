@@ -1,5 +1,5 @@
 <template>
-  <TabGroup @change="changeModelValue">
+  <TabGroup :selected-index="tabIndex" @change="changeModelValue">
     <TabList class="flex gap-6">
       <Tab
         v-for="item in tabItems"
@@ -18,7 +18,7 @@
   </TabGroup>
 </template>
 <script setup>
-import { defineModel } from 'vue'
+import { defineModel, computed } from 'vue'
 import { TabGroup, TabList, Tab } from '@headlessui/vue'
 import { IconCarouselHorizontalFilled, IconCarouselVerticalFilled } from '@tabler/icons-vue'
 
@@ -44,4 +44,5 @@ const tabItems = [
     value: 'horizontal',
   },
 ]
+const tabIndex = computed(() => tabItems.findIndex((item) => item.value === model.value))
 </script>
