@@ -2,7 +2,14 @@ from datetime import datetime, timedelta
 
 import frappe
 
-from fossunited.doctype_ids import EVENT, JOB, JOB_STATUS_APPROVED, JOB_STATUS_EXPIRED
+from fossunited.doctype_ids import (
+    EVENT,
+    EVENT_CFP,
+    EVENT_RSVP,
+    JOB,
+    JOB_STATUS_APPROVED,
+    JOB_STATUS_EXPIRED,
+)
 
 
 def conclude_events():
@@ -11,16 +18,35 @@ def conclude_events():
     """
     events = frappe.db.get_all(
         EVENT,
-        {"status": "Live", "event_end_date": ["<", datetime.today()]},
+        {
+            "status": ["in", ["Live", "Cancelled"]],
+            "event_end_date": ["<", datetime.today()],
+        },
         ["name", "status", "event_end_date", "event_start_date"],
         page_length=999,
     )
 
     for event in events:
         doc = frappe.get_doc(EVENT, event.name)
-        doc.status = "Concluded"
+        if doc.status == "Live":
+            doc.status = "Concluded"
+        else:
+            doc.status = "Cancelled"
+
+        doc.show_rsvp = 0
+        doc.show_cfp = 0
+
         try:
+            # Fetch linked RSVP/CFP by `event` (link to Event name) and update if present
             doc.save(ignore_permissions=True)
+            past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
+            if past_rsvp:
+                past_rsvp.is_published = 0
+                past_rsvp.save(ignore_permissions=True)
+            past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
+            if past_cfp:
+                past_cfp.status = "Closed"
+                past_cfp.save(ignore_permissions=True)
         except Exception as e:
             frappe.log_error(
                 frappe.get_traceback(),
