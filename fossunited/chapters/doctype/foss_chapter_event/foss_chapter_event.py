@@ -61,14 +61,14 @@ class FOSSChapterEvent(WebsiteGenerator):
         deck_link: DF.Data | None
         event_bio: DF.Data | None
         event_description: DF.TextEditor | None
-        event_end_date: DF.Datetime | None
+        event_end_date: DF.Datetime
         event_location: DF.Data | None
         event_logo: DF.AttachImage | None
         event_members: DF.Table[FOSSChapterEventMember]
         event_name: DF.Data
         event_permalink: DF.Data | None
         event_schedule: DF.Table[FOSSEventSchedule]
-        event_start_date: DF.Datetime | None
+        event_start_date: DF.Datetime
         event_type: DF.Link | None
         external_event_url: DF.Data | None
         hall_options: DF.SmallText | None

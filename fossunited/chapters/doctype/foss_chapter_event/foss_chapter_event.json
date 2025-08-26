@@ -144,13 +144,15 @@
    "fieldname": "event_start_date",
    "fieldtype": "Datetime",
    "label": "Event Start Date & Time",
-   "mandatory_depends_on": "eval:doc.is_external_event == 0"
+   "mandatory_depends_on": "eval:doc.is_external_event == 0",
+   "reqd": 1
   },
   {
    "fieldname": "event_end_date",
    "fieldtype": "Datetime",
    "label": "Event End Date & Time",
-   "mandatory_depends_on": "eval:doc.is_external_event == 0"
+   "mandatory_depends_on": "eval:doc.is_external_event == 0",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_ae9v",
@@ -529,7 +531,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-06-22 14:00:19.043741",
+ "modified": "2025-08-17 12:01:27.933102",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -567,7 +569,6 @@
    "select": 1
   }
  ],
- "row_format": "Dynamic",
  "search_fields": "event_permalink, chapter",
  "show_title_field_in_link": 1,
  "sort_field": "modified",
