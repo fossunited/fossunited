@@ -32,6 +32,7 @@ declare module 'vue' {
     Drawer: typeof import('./src/components/ui/Drawer.vue')['default']
     EditMember: typeof import('./src/components/chapter/EditMember.vue')['default']
     EmailFormTemplate: typeof import('./src/components/mailing/EmailFormTemplate.vue')['default']
+    EventCalendar: typeof import('./src/components/schedule/EventCalendar.vue')['default']
     EventCard: typeof import('./src/components/EventCard.vue')['default']
     EventHeader: typeof import('./src/components/EventHeader.vue')['default']
     EventLogo: typeof import('./src/components/event/EventLogo.vue')['default']
