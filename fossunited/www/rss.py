@@ -80,7 +80,7 @@ def get_context(context):
         if blog.content_type == "Markdown":
             blog_content = markdown(re.sub(r"(?i)</?br\s*/?>", "\n", value))
         else:
-            value
+            blog_content = value
         blog.content = f"<![CDATA[{blog_content}]]>"
 
     all_items = blog_list + news_list
