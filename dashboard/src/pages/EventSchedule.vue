@@ -155,8 +155,11 @@ const toggleShowSchedule = () => {
 const showModifyScheduleItemDrawer = ref(false)
 </script>
 <template>
-  <div class="flex">
-    <div class="md:basis-1/2 border-r min-h-svh p-6" :class="{ 'basis-full': isSmallScreen }">
+  <div class="flex h-screen overflow-hidden">
+    <div
+      class="md:basis-1/2 min-h-full overflow-y-auto border-r p-6"
+      :class="{ 'basis-full': isSmallScreen }"
+    >
       <Breadcrumbs class="mb-6" :items="breadcrumb_items" />
       <div class="prose">
         <h2 class="font-bold mb-4">Event Schedule</h2>
@@ -176,7 +179,7 @@ const showModifyScheduleItemDrawer = ref(false)
           variant="ghost"
           label="Go to Schedule Page"
           icon-right="arrow-up-right"
-          @click="redirectRoute(`schedule/${event.doc?.route}`, '_blank')"
+          @click="redirectRoute(`${event.doc?.route}/schedule`)"
         />
       </div>
       <ManageHallOptions v-if="event.doc" v-model="event.doc.hall_options" />
@@ -202,7 +205,7 @@ const showModifyScheduleItemDrawer = ref(false)
       </div>
     </div>
     <Suspense>
-      <div v-if="!isSmallScreen" class="basis-1/2 p-6">
+      <div v-if="!isSmallScreen" class="basis-1/2 p-6 min-h-full overflow-y-auto">
         <ModifyScheduleItem
           v-if="selectedScheduleItemIndex"
           v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"

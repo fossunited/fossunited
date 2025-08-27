@@ -103,10 +103,7 @@ const validateScheduleItem = () => {
     selectedScheduleItem.value.linked_cfp = ''
   }
 
-  if (
-    selectedScheduleItem.value.category !== 'Opening Note' &&
-    selectedScheduleItem.value.category !== 'Break'
-  ) {
+  if (!['Talk', 'Other', 'Opening Note', 'Break'].includes(selectedScheduleItem.value.category)) {
     if (!selectedScheduleItem.value.linked_cfp) {
       errors.push('Linked Proposal is required')
     }

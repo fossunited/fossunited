@@ -15,12 +15,12 @@ from fossunited.tests.utils import (
 
 fake = Faker()
 
-LEAD = "test1@example.com"
+CoreTeam = "test1@example.com"
 
 
 class TestFOSSEventCFPSubmission(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter(lead_email=LEAD)
+        self.chapter = insert_test_chapter(members=[CoreTeam])
         self.event = insert_test_event(chapter=self.chapter)
 
         self.cfp = insert_cfp_form(event=self.event.name, status="Live")
@@ -65,7 +65,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
     def test_add_to_group_on_accept(self):
         # given a cfp and its submission
 
-        frappe.set_user(LEAD)
+        frappe.set_user(CoreTeam)
         # When the status is changed to Approved
         self.submission.status = "Approved"
         self.submission.save()
@@ -80,7 +80,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
 
     def test_add_to_group_on_reject(self):
         # given a cfp and its submission
-        frappe.set_user(LEAD)
+        frappe.set_user(CoreTeam)
         # When the status is changed to Approved
         self.submission.status = "Rejected"
         self.submission.save()

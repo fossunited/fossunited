@@ -97,7 +97,22 @@
           Subscribe to stay updated and get news from us directly in your inbox.
         </p>
       </div>
-        <a href="{{ newsletter_subscribe_link }}" class="primary-button" role="button" tabindex="0">Subscribe</a>
+
+      <div class="button-category">
+        <a href="{{ newsletter_subscribe_link }}" class="primary-button" role="button" tabindex="0"
+          >Subscribe</a
+        >
+        <a href="{{ rss_feed_link }}" class="secondary-button" role="button" tabindex="0"
+          >RSS Feed
+        </a>
+
+        <link
+          rel="alternate"
+          type="application/atom+xml"
+          title="RSS Feed"
+          href="{{ rss_feed_link }}"
+        />
+      </div>
     </div>
 
     <div class="vertical-separator"></div>

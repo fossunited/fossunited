@@ -17,29 +17,54 @@
       />
       <div class="header--img-title-cta-section">
         <div class="header--img-title">
+          <!-- Chapter Logo -->
           <img
             src="{{ doc.chapter_logo or default_chapter_logo }}"
             alt="{{ doc.chapter_type }} Logo"
             class="header-profile-image ml-lg-6"
           />
-          <h1
-            class="pt-2 header--title {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
-          >
-            {{ doc.chapter_name }}
-          </h1>
+          <!-- Title and Info -->
+          <div class="header-content-edit-section">
+            <div class="header--content-section pl-2">
+              <!-- Title -->
+              <div class="d-flex mb-0">
+                <h1
+                  class="pt-2 header--title mb-0 {% if doc.chapter_type == 'City Community' %}city-chapter-heading{% else %}chapter-heading{% endif %}"
+                >
+                  {{ doc.chapter_name }}
+                </h1>
+              </div>
+              <div
+                class="header--username-location ml-4"
+                style="font-size: var(--text-sm); margin-top: -20px;"
+              >
+                {% if doc.chapter_type == 'FOSS Club' and (doc.city or doc.state) %}
+                  <span>
+                    <i class="ti ti-map-pin" aria-hidden="true"></i>
+                    {% if doc.city %}{{ doc.city }},{% endif %} {{ doc.state }}
+                  </span>
+                  <div class="seperator-circle"></div>
+                {% endif %}
+                <span>Established in {{ frappe.utils.formatdate(doc.creation, "MMMM yyyy") }}</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <!-- <div class="header--cta-section">
-                    <button class="primary-button">
-                        <i class="ti ti-user-plus"></i> Follow
-                    </button>
-                </div> -->
       </div>
     </div>
+
     <div class="header-section--socials">
-      {% for (k,v) in social_links.items() %}
-      <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
-        <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
-      </a>
+      {% for (k, v) in social_links.items() %}
+        {% if v and (v.startswith('http://') or v.startswith('https://')) %}
+          <a
+            href="{{ v }}"
+            aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter."
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+          </a>
+        {% endif %}
       {% endfor %}
     </div>
   </div>

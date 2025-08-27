@@ -30,10 +30,6 @@
           v-model="role"
           :options="[
             {
-              label: 'Lead',
-              value: 'Lead',
-            },
-            {
               label: 'Core Team Member',
               value: 'Core Team Member',
             },

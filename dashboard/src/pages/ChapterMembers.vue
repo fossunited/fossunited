@@ -12,7 +12,7 @@
       <Button
         class="w-fit"
         label="Add New Member"
-        v-if="isLead()"
+        v-if="isCoreTeam()"
         icon-left="plus"
         size="md"
         @click="showAddmodal = true"
@@ -24,10 +24,7 @@
         :key="member.name"
         :title="member.full_name"
       >
-        <template
-          v-if="member.email != session.user && member.role != 'Lead' && isLead()"
-          #actions
-        >
+        <template v-if="member.email != session.user && isCoreTeam()" #actions>
           <Button label="Edit" @click="handleEditmodal(member)" />
           <Button theme="red" label="Remove" @click="handleRemoveModal(member)" />
         </template>
@@ -41,7 +38,7 @@
             <Badge
               class="w-fit"
               :label="member.role"
-              :theme="member.role === 'Lead' ? 'blue' : 'gray'"
+  			  :theme="member.role === 'Core Team Member' ? 'blue' : 'gray'"
               size="md"
             />
           </div>
@@ -86,7 +83,7 @@
         class="z-50"
         :chapter="chapter"
         :member="selectedMember"
-        :isLead="isLead()"
+        :isCoreTeam="isCoreTeam()"
         @update:edit-member="editNewMember"
         @close-dialog="showEditmodal = false"
       />
@@ -115,12 +112,9 @@ import ChapterHeader from '@/components/ChapterHeader.vue'
 const session = inject('$session')
 const route = useRoute()
 
-const isLead = () => {
-  let currentUser = chapter.doc.chapter_members.filter((m) => m.email === session.user)
-  if (currentUser[0].role === 'Lead') {
-    return true
-  }
-  return false
+const isCoreTeam = () => {
+  const me = chapter.doc?.chapter_members?.find((m) => m.email === session.user)
+  return me ? me.role === 'Core Team Member' : false
 }
 
 const chapter = createDocumentResource({

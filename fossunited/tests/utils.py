@@ -35,7 +35,6 @@ def insert_test_chapter(**kwargs):
         chapter_type (str, optional): Type of chapter. Defaults to CITY_COMMUNITY.
         city (str, optional): City of the chapter. Defaults to "Bangalore".
         state (str, optional): State of the chapter. Defaults to "Karnataka".
-        lead_email (str, optional): Email of the chapter lead. Defaults to "test1@example.com".
         members (List[str], optional): List of member emails to add to the chapter.
         **kwargs : Any additional arguments, such as for social media links
 
@@ -43,7 +42,7 @@ def insert_test_chapter(**kwargs):
         chapter doc: Created chapter document
 
     Raises:
-        ValueError: If lead_email or member emails are invalid
+        ValueError: If member emails are invalid
         Exception: For any unexpected errors during chapter creation
 
     Example:
@@ -51,7 +50,6 @@ def insert_test_chapter(**kwargs):
         chapter = insert_test_chapter(
             chapter_name="Python Developers Chapter",
             city="Mumbai",
-            lead_email="lead@example.com",
             members=["member1@example.com", "member2@example.com"]
         )
     ```
@@ -83,28 +81,6 @@ def insert_test_chapter(**kwargs):
             frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
                 ignore_permissions=True
             )
-        if not frappe.db.exists("Role", "Chapter Lead"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Lead"}).insert(
-                ignore_permissions=True
-            )
-
-        # Handle chapter lead
-        lead_email = kwargs.get("lead_email", "test1@example.com")
-        try:
-            lead_profile = frappe.db.get_value(USER_PROFILE, {"user": lead_email}, "name")
-        except frappe.DoesNotExistError:
-            frappe.log_error(f"Lead profile not found for email: {lead_email}")
-            raise ValueError(f"Invalid lead email: {lead_email}")
-
-        # Add lead to chapter members
-        chapter.append(
-            "chapter_members",
-            {
-                "chapter_member": lead_profile,
-                "role": "Lead",
-            },
-        )
-
         # Add additional members
         members = kwargs.get("members", [])
         for member in members:
