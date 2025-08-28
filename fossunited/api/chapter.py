@@ -121,6 +121,17 @@ def generate_ics(event_ids):
 
 @frappe.whitelist()
 def get_submissions_with_answers(event_id):
+    """
+    Provide RSVP submission with answers for EventInsights
+
+    Args:
+        event_id (str): Event id
+
+    Returns:
+        Provides submission data with custom field (child doctype) only for Core team members,
+    else, just the submission rsvp parent doctype.
+
+    """
     if not frappe.session.user or frappe.session.user == "Guest":
         frappe.throw("Not permitted", frappe.PermissionError)
 
@@ -158,6 +169,10 @@ def get_submissions_with_answers(event_id):
 
 
 def mask_email(email):
+    """
+    Mask email address.
+    Returns: Initial 3 letter followed by * for email address.
+    """
     import re
 
     return re.sub(r"(?<=.{3}).(?=[^@]*?@)", "*", email)
