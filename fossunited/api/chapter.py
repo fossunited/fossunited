@@ -109,3 +109,47 @@ def generate_ics(event_ids):
         c.events.add(e)
 
     return c.serialize()
+
+
+@frappe.whitelist()
+def get_submissions_with_answers(event_id):
+    if not frappe.session.user or frappe.session.user == "Guest":
+        frappe.throw("Not permitted", frappe.PermissionError)
+
+    submissions = frappe.get_all(
+        "FOSS Event RSVP Submission",
+        filters={"event": event_id},
+        fields=["name", "name1", "email", "im_a"],
+    )
+
+    if not check_if_event_lead(event_id):
+        # Mask email and return without answers
+        for s in submissions:
+            s["email"] = mask_email(s["email"])
+        return submissions
+
+    # Event lead: fetch answers
+    submission_ids = [s["name"] for s in submissions]
+
+    answers = frappe.get_all(
+        "FOSS Custom Answer",
+        filters={"parent": ["in", submission_ids]},
+        fields=["parent", "question", "response"],
+    )
+
+    answers_by_parent = {}
+    for a in answers:
+        answers_by_parent.setdefault(a["parent"], []).append(a)
+
+    for s in submissions:
+        for a in answers_by_parent.get(s["name"], []):
+            # Use question as field key
+            s[a["question"]] = a["response"]
+
+    return submissions
+
+
+def mask_email(email):
+    import re
+
+    return re.sub(r"(?<=.{3}).(?=[^@]*?@)", "*", email)
