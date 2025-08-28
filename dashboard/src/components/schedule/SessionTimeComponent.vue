@@ -8,10 +8,7 @@
     <div
       v-if="session.category !== 'Break'"
       class="flex text-[10px] items-center gap-1 uppercase text-gray-600 divide-x divide-gray-400"
-    >
-      <span>Day {{ session.day }}</span>
-      <span class="pl-1">{{ session.hall }}</span>
-    </div>
+    ></div>
   </div>
 </template>
 <script setup>
