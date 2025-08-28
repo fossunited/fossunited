@@ -4,7 +4,15 @@ from datetime import timedelta, timezone
 import frappe
 from ics import Calendar, Event
 
-from fossunited.doctype_ids import CHAPTER, EVENT, USER_PROFILE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CHAPTER_MEMBER,
+    EVENT,
+    EVENT_VOLUNTEER,
+    RSVP_CUSTOM_FIELD,
+    RSVP_RESPONSE,
+    USER_PROFILE,
+)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -26,7 +34,7 @@ def check_if_chapter_member(chapter: str, user: str) -> bool:
 
     is_member = bool(
         frappe.db.exists(
-            "FOSS Chapter Lead Team Member",
+            CHAPTER_MEMBER,
             {
                 "parent": chapter,
                 "parenttype": CHAPTER,
@@ -55,7 +63,7 @@ def check_if_event_lead(event: str) -> bool:
 
     is_lead = bool(
         frappe.db.exists(
-            "FOSS Chapter Event Member",
+            EVENT_VOLUNTEER,
             {
                 "parent": event,
                 "parenttype": EVENT,
@@ -117,7 +125,7 @@ def get_submissions_with_answers(event_id):
         frappe.throw("Not permitted", frappe.PermissionError)
 
     submissions = frappe.get_all(
-        "FOSS Event RSVP Submission",
+        RSVP_RESPONSE,
         filters={"event": event_id},
         fields=["name", "name1", "email", "im_a"],
     )
@@ -132,7 +140,7 @@ def get_submissions_with_answers(event_id):
     submission_ids = [s["name"] for s in submissions]
 
     answers = frappe.get_all(
-        "FOSS Custom Answer",
+        RSVP_CUSTOM_FIELD,
         filters={"parent": ["in", submission_ids]},
         fields=["parent", "question", "response"],
     )
