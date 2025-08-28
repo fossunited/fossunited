@@ -4,34 +4,38 @@
       <div class="flex items-center justify-between">
         <div class="font-semibold text-gray-800">
           Attendees
-
-          <span class="text-gray-700 text-base font-normal"
-            >({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})</span
-          >
+          <span class="text-gray-700 text-base font-normal">
+            ({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})
+          </span>
         </div>
         <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
       </div>
+
       <ListView
-        :columns="[
-          { label: 'Name', key: 'name1' },
-          { label: 'Email', key: 'email' },
-          { label: 'I am a', key: 'im_a' },
-        ]"
+        :columns="listColumns"
         :rows="submissions.data"
         row-key="name"
         :options="{
           selectable: false,
+          resizeColumn: true,
           emptyState: {
             description: 'No one has RSVPed for the event yet.',
           },
         }"
-      />
+      >
+        <template #cell="{ item }">
+          <span>
+            {{ truncate(item, 30) }}
+          </span>
+        </template>
+      </ListView>
     </div>
   </div>
 </template>
+
 <script setup>
 import { useRoute } from 'vue-router'
-import { inject, ref } from 'vue'
+import { inject, ref, computed } from 'vue'
 import { createListResource, createResource, ListView, Button } from 'frappe-ui'
 
 const route = useRoute()
@@ -49,7 +53,16 @@ const rsvp_form = createResource({
   auto: true,
 })
 
-const isEventLead = ref(false);
+const all_form = createResource({
+  url: 'frappe.client.get',
+  params: {
+    doctype: 'FOSS Event RSVP Submission',
+    fields: ['*'],
+  },
+  auto: true,
+})
+
+const isEventLead = ref(false)
 const event_lead = createResource({
   url: 'fossunited.api.chapter.check_if_event_lead',
   makeParams() {
@@ -63,35 +76,85 @@ const event_lead = createResource({
   auto: true,
 })
 
-const submissions = createListResource({
-  doctype: 'FOSS Event RSVP Submission',
-  fields: ['*'],
-  filters: {
-    event: route.params.id,
+const submissions = createResource({
+  url: 'fossunited.api.chapter.get_submissions_with_answers',
+  params: {
+    event_id: route.params.id,
   },
-  pageLength: 99999,
   auto: true,
-  transform(data) {
-    if (!isEventLead.value) {
-      data.forEach((submission) => {
-        submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
-      })
+})
+
+function truncate(text, length = 20) {
+  return text?.length > length ? text.slice(0, length) + '…' : text || ''
+}
+
+const listColumns = computed(() => {
+  const baseKeys = ['name1', 'email', 'im_a']
+  const columns = baseKeys.map((key) => {
+    const labelMap = { name1: 'Name', email: 'Email', im_a: 'I am a' }
+    return {
+      label: labelMap[key] || key,
+      key,
     }
-  },
+  })
+
+  if (isEventLead.value && Array.isArray(submissions.data)) {
+    const customFields = new Set()
+
+    submissions.data.forEach((submission) => {
+      Object.keys(submission).forEach((key) => {
+        // Exclude base keys AND 'name' (internal doctype name)
+        if (!baseKeys.includes(key) && key !== 'name') {
+          customFields.add(key)
+        }
+      })
+    })
+
+    Array.from(customFields)
+      .sort()
+      .forEach((question) => {
+        columns.push({
+          label: question.length > 40 ? question.slice(0, 40) + '…' : question,
+          key: question,
+        })
+      })
+  }
+
+  return columns
 })
 
 const downloadAttendeeList = () => {
-  const csv = submissions.data
-    .map((submission) => {
-      return [submission.name1, submission.email, submission.im_a].join(',')
-    })
-    .join('\n')
+  if (!Array.isArray(submissions.data)) return
 
-  const blob = new Blob([csv], { type: 'text/csv' })
+  const columns = listColumns.value
+
+  // Build header row using column labels
+  const headers = columns.map((col) => col.label)
+  const csvRows = [headers.join(',')]
+
+  // Build each row using column keys
+  submissions.data.forEach((submission) => {
+    const row = columns.map(({ key }) => {
+      const val = submission[key]
+      if (typeof val === 'string' || typeof val === 'number') {
+        return `"${val}"`
+      }
+      if (typeof val === 'object' && val?.answer) {
+        return `"${val.answer}"`
+      }
+      return ''
+    })
+
+    csvRows.push(row.join(','))
+  })
+
+  // Download the CSV
+  const csv = csvRows.join('\n')
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `Attendee List-${rsvp_form.data.event_name}-${new Date().toISOString().split('T')[0]}.csv`
+  a.download = `Attendee List - ${rsvp_form.data.event_name} - ${new Date().toISOString().split('T')[0]}.csv`
   a.click()
   URL.revokeObjectURL(url)
 }
