@@ -75,6 +75,7 @@ const routes = [
         props: true,
       },
     ],
+    meta: { isPublicPage: true },
   },
   {
     path: '/review/:id',
