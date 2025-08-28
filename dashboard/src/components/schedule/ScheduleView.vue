@@ -16,6 +16,7 @@
       <SessionListHeader
         :title="hall"
         :collapsible="isCollapsible"
+        :view="view"
         @collapse-hall="toggleCollapse(hall)"
       />
       <SessionList v-if="!isCollapsed(hall)" :sessions="sessions" :view="view" />
@@ -48,10 +49,13 @@ const isCollapsible = computed(() => props.view === 'vertical')
 const collapsedHalls = ref({})
 
 const toggleCollapse = (hall) => {
-  collapsedHalls.value[hall] = !collapsedHalls.value[hall]
+  if (props.view === 'vertical') {
+    collapsedHalls.value[hall] = !collapsedHalls.value[hall]
+  }
 }
 
 const isCollapsed = (hall) => {
-  return collapsedHalls.value[hall] || false
+  // Collapse only matters in vertical view
+  return props.view === 'vertical' && collapsedHalls.value[hall]
 }
 </script>

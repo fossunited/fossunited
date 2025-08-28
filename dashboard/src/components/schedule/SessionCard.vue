@@ -1,6 +1,6 @@
 <template>
   <a
-    :href="createAbsoluteUrlFromRoute(session.cfp_route)"
+    v-bind="session.cfp_route ? { href: createAbsoluteUrlFromRoute(session.cfp_route) } : {}"
     target="_blank"
     class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full hover:bg-gray-50"
   >

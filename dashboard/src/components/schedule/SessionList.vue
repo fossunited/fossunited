@@ -9,8 +9,8 @@
       <div
         class="relative flex items-center justify-center"
         :class="{
-          'w-1/12 md:w-1/5': view === 'vertical',
-          'md:w-2/6': view === 'horizontal',
+          'flex-none w-1/12 md:w-1/6': view === 'vertical',
+          'flex-none md:w-1/5': view === 'horizontal',
         }"
       >
         <div class="absolute inset-0 flex items-center">
