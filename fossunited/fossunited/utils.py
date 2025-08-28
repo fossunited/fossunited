@@ -215,12 +215,86 @@ def get_grouped_events():
     return get_month_grouped_events(events, hackathons)
 
 
+def get_grouped_events_by_chapter_type():
+    """
+    Retrieves FOSS Chapter Events and Hackathons,
+    groups them by their parent Chapter's chapter_type (City Community or Club),
+    and then groups each by month and year.
+    """
+
+    # Get all events
+    events = frappe.get_all(
+        EVENT,
+        fields=["*"],
+        or_filters=[["is_published", "=", "1"], ["is_external_event", "=", "1"]],
+        order_by="event_start_date",
+    )
+
+    # Get all hackathons
+    hackathons = frappe.get_all(
+        HACKATHON,
+        fields=["*"],
+        filters={"is_published": 1},
+        order_by="start_date",
+    )
+
+    # Grouping events
+    city_events = []
+    club_events = []
+    city_hackathons = []
+    club_hackathons = []
+
+    # Cache to avoid duplicate lookups
+    chapter_type_cache = {}
+
+    def get_chapter_type(chapter_name):
+        """
+        Fetches chapter_type from the Chapter doctype.
+        Caches the result to avoid multiple DB hits.
+        """
+        if not chapter_name:
+            return None
+        if chapter_name in chapter_type_cache:
+            return chapter_type_cache[chapter_name]
+
+        # DB lookup
+        chapter_type = frappe.db.get_value(CHAPTER, chapter_name, "chapter_type")
+        chapter_type_cache[chapter_name] = chapter_type
+        return chapter_type
+
+    # Classify events
+    for event in events:
+        chapter_type = get_chapter_type(event.get("chapter"))
+        if chapter_type == "City Community":
+            city_events.append(event)
+        else:
+            club_events.append(event)
+
+    # Classify hackathons
+    for hackathon in hackathons:
+        chapter_type = get_chapter_type(hackathon.get("chapter"))
+        if chapter_type == "City Community":
+            city_hackathons.append(hackathon)
+        else:
+            club_hackathons.append(hackathon)
+
+    # Group and return
+    return {
+        "city": get_month_grouped_events(city_events, city_hackathons),
+        "club": get_month_grouped_events(club_events, club_hackathons),
+    }
+
+
 def get_chapter_details():
     """
     Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
     upcoming and past events.
     """
-    chapters = frappe.db.get_all(CHAPTER, fields=["chapter_name", "name", "chapter_type"])
+    chapters = frappe.db.get_all(
+        CHAPTER,
+        fields=["chapter_name", "name", "chapter_type"],
+        filters={"chapter_type": "City Community"},
+    )
     return chapters
 
 

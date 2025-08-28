@@ -44,6 +44,7 @@ jinja = {
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
         "fossunited.fossunited.utils.get_grouped_events",
+        "fossunited.fossunited.utils.get_grouped_events_by_chapter_type",
         "fossunited.fossunited.utils.get_chapter_details",
         "fossunited.stack.utils.get_stack_dict",
     ],
