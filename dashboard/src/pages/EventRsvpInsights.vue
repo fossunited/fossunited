@@ -82,25 +82,19 @@ const listColumns = computed(() => {
 
   if (isEventLead.value && Array.isArray(submissions.data) && submissions.data.length > 0) {
     const customFields = new Set()
-
+    const labels = {}
     submissions.data.forEach((submission) => {
       Object.keys(submission).forEach((key) => {
-        if (key.startsWith('cf_')) {
-          customFields.add(key)
-        }
+        if (key.startsWith('cf_')) customFields.add(key)
       })
+      if (submission._answers) {
+        Object.assign(labels, submission._answers)
+      }
     })
-
-    const firstSubmission = submissions.data[0]
-
     Array.from(customFields)
       .sort()
       .forEach((key) => {
-        const label = firstSubmission._answers?.[key] || key
-        columns.push({
-          label,
-          key,
-        })
+        columns.push({ label: labels[key] || key, key })
       })
   }
 
@@ -114,5 +108,4 @@ const downloadAttendeeList2 = () => {
     '_self',
   )
 }
-
 </script>

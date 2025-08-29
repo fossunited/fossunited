@@ -170,9 +170,11 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             key = _safe_column_key(a["question"])  # always max 50 chars
 
             # Truncate the answer if not full
-            response = a["response"]
+            response = a.get("response")
+            if response is None:
+                response = ""
             if not full:
-                response = _truncate_label(response, 50)
+                response = _truncate_label(str(response), 50)
 
             s[f"cf_{key}"] = response
 
@@ -243,7 +245,7 @@ def mask_email(email: str) -> str:
     if local_len <= 2:
         visible = local[0] + "*" * (local_len - 1)
     elif local_len <= 8:
-        visible = local[:3] + "*" * (local_len - 4) + local[-1]
+        visible = local[:3] + "*" * (local_len - 3)
     else:
         mid_index = local_len // 2
         visible = (
@@ -265,6 +267,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     """
     import csv
     import io
+    import re
 
     # Get full submission data (labels and answers)
     submissions = get_submissions_with_answers(event_id, full=True)
@@ -284,25 +287,28 @@ def download_attendee_list_csv(event_id: str) -> str:
     headers = [label_map.get(k, first_answers.get(k, k)) for k in columns]
 
     # Escape helper (like toCSVCell)
-    def escape_csv_cell(value):
+    def cleanse_csv_cell(value):
         s = "" if value is None else str(value)
         if s.startswith(("=", "+", "-", "@")):
             s = "'" + s
-        return s.replace('"', '""')
+        return s
 
     # Prepare CSV content
     output = io.StringIO()
     writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
 
-    writer.writerow([escape_csv_cell(h) for h in headers])
+    writer.writerow([cleanse_csv_cell(h) for h in headers])
 
     for row in submissions:
-        writer.writerow([escape_csv_cell(row.get(col, "")) for col in columns])
+        writer.writerow([cleanse_csv_cell(row.get(col, "")) for col in columns])
 
-    csv_data = output.getvalue()
-    safe_event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
-    filename = f"Attendee List - {safe_event_name.replace(' ', '_')}.csv"
+    csv_data = "\ufeff" + output.getvalue()  # BOM for Excel
+    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
+
+    safe_event_name = re.sub(r"[^A-Za-z0-9._-]+", "_", event_name)
+    filename = f"Attendee_List_-_{safe_event_name}.csv"
 
     frappe.response["filename"] = filename
     frappe.response["filecontent"] = csv_data
+    frappe.response["content_type"] = "text/csv; charset=utf-8"
     frappe.response["type"] = "download"
