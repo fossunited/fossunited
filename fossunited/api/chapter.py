@@ -120,39 +120,44 @@ def generate_ics(event_ids):
 
 
 @frappe.whitelist()
-def get_submissions_with_answers(event_id):
+def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict]:
     """
-    Provide RSVP submission with answers for EventInsights
+    Provide RSVP submission with answers for EventInsights.
 
     Args:
-        event_id (str): Event id
-
+        event_id (str): Event ID
+        full (bool): If True, return full question labels and responses;
+                     otherwise truncate for UI display. Applicable for csv export/download.
     Returns:
-        Provides submission data with custom field (child doctype) only for Core team members,
-    else, just the submission rsvp parent doctype.
-
+        List of submission dicts with custom field answers for core team members.
     """
     if not frappe.session.user or frappe.session.user == "Guest":
         frappe.throw("Not permitted", frappe.PermissionError)
 
+    # Get basic submission fields
     submissions = frappe.get_all(
         RSVP_RESPONSE,
         filters={"event": event_id},
         fields=["name", "name1", "email", "im_a"],
+        order_by="creation asc",
     )
 
     if not check_if_event_lead(event_id):
-        # Mask email and return without answers
+        # Mask email and return limited data
         for s in submissions:
-            s["email"] = mask_email(s["email"])
+            s["email"] = mask_email(s.get("email"))
         return submissions
 
-    # Event lead: fetch answers
+    # Event lead: fetch full answers
     submission_ids = [s["name"] for s in submissions]
 
     answers = frappe.get_all(
         RSVP_CUSTOM_FIELD,
-        filters={"parent": ["in", submission_ids]},
+        filters={
+            "parent": ["in", submission_ids],
+            "parenttype": RSVP_RESPONSE,
+            "parentfield": "custom_answers",
+        },
         fields=["parent", "question", "response"],
     )
 
@@ -162,17 +167,91 @@ def get_submissions_with_answers(event_id):
 
     for s in submissions:
         for a in answers_by_parent.get(s["name"], []):
-            # Use question as field key
-            s[a["question"]] = a["response"]
+            key = _safe_column_key(a["question"])  # always max 50 chars
+
+            # Truncate the answer if not full
+            response = a["response"]
+            if not full:
+                response = _truncate_label(response, 50)
+
+            s[f"cf_{key}"] = response
+
+            # Truncate label if not full
+            label = a["question"]
+            if not full:
+                label = _truncate_label(label, 50)
+
+            s.setdefault("_answers", {})[f"cf_{key}"] = label
 
     return submissions
 
 
-def mask_email(email):
+def _safe_column_key(label: str) -> str:
     """
-    Mask email address.
-    Returns: Initial 3 letter followed by * for email address.
+    Sanitize and shorten a label to create a safe dictionary/column key.
+    This function:
+    - Ensures the label is a string; otherwise returns 'custom_field'.
+    - Normalizes whitespace and strips leading/trailing spaces.
+    - Removes all characters except alphanumerics, underscores, spaces, and hyphens.
+    - Replaces spaces with underscores.
+    - Converts the label to lowercase.
+    - Prefixes the key with an underscore if it starts with a dangerous character
+      (i.e., '=', '+', '-', '@') to prevent CSV injection.
+    - Truncates the key to a maximum of 80 characters.
+
+    Args:
+        label (str): The original label to sanitize.
+
+    Returns:
+        str: A sanitized, safe key string suitable for use in CSV headers or dict keys.
+
     """
     import re
 
-    return re.sub(r"(?<=.{3}).(?=[^@]*?@)", "*", email)
+    if not isinstance(label, str):
+        return "custom_field"
+
+    key = re.sub(r"\s+", " ", label).strip()  # Normalize spaces
+    key = re.sub(r"[^\w\s-]", "", key)  # Remove special chars
+    key = re.sub(r"\s+", "_", key).lower()  # Convert to snake_case
+
+    if not key or key[0] in "=+-@":
+        key = f"_{key}"
+
+    return key[:50]  # Limit to 50 characters
+
+
+def _truncate_label(label: str, max_length: int = 50) -> str:
+    return label if len(label) <= max_length else label[:max_length].strip() + "…"
+
+
+def mask_email(email: str) -> str:
+    """
+    Mask email to reduce PII exposure:
+    - Keep first 2 characters of local-part (or fewer if not available).
+    - For local-part length <= 2: keep first char, mask rest
+    - For 3 <= length <= 8: show first 3, mask the middle, show last
+    - For length > 8: show first 2, one middle char, show last
+    - Keep domain intact.
+    """
+    if not email or "@" not in email:
+        return "***"
+
+    local, domain = email.split("@", 1)
+    local_len = len(local)
+
+    if local_len <= 2:
+        visible = local[0] + "*" * (local_len - 1)
+    elif local_len <= 8:
+        visible = local[:3] + "*" * (local_len - 4) + local[-1]
+    else:
+        mid_index = local_len // 2
+        visible = (
+            local[:2]
+            + "*" * (mid_index - 2)
+            + local[mid_index]
+            + "*" * (local_len - mid_index - 2)
+            + local[-1]
+        )
+
+    return f"{visible}@{domain}"
