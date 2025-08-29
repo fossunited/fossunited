@@ -255,3 +255,54 @@ def mask_email(email: str) -> str:
         )
 
     return f"{visible}@{domain}"
+
+
+@frappe.whitelist()
+def download_attendee_list_csv(event_id: str) -> str:
+    """
+    Generates and returns a CSV string of RSVP submissions with custom field answers.
+    Accessible only by core team / event leads.
+    """
+    import csv
+    import io
+
+    # Get full submission data (labels and answers)
+    submissions = get_submissions_with_answers(event_id, full=True)
+
+    if not submissions:
+        return ""
+
+    # Determine all columns
+    base_keys = ["name1", "email", "im_a"]
+    label_map = {"name1": "Name", "email": "Email", "im_a": "I am a"}
+
+    custom_keys = sorted({key for s in submissions for key in s.keys() if key.startswith("cf_")})
+
+    # Use first row’s _answers mapping to get labels
+    first_answers = submissions[0].get("_answers", {})
+    columns = base_keys + custom_keys
+    headers = [label_map.get(k, first_answers.get(k, k)) for k in columns]
+
+    # Escape helper (like toCSVCell)
+    def escape_csv_cell(value):
+        s = "" if value is None else str(value)
+        if s.startswith(("=", "+", "-", "@")):
+            s = "'" + s
+        return s.replace('"', '""')
+
+    # Prepare CSV content
+    output = io.StringIO()
+    writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
+
+    writer.writerow([escape_csv_cell(h) for h in headers])
+
+    for row in submissions:
+        writer.writerow([escape_csv_cell(row.get(col, "")) for col in columns])
+
+    csv_data = output.getvalue()
+    safe_event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
+    filename = f"Attendee List - {safe_event_name.replace(' ', '_')}.csv"
+
+    frappe.response["filename"] = filename
+    frappe.response["filecontent"] = csv_data
+    frappe.response["type"] = "download"
