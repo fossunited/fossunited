@@ -179,7 +179,8 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             s[f"cf_{key}"] = response
 
             # Truncate label if not full
-            label = a["question"]
+            raw_label = a.get("question")
+            label = "" if raw_label is None else str(raw_label)
             if not full:
                 label = _truncate_label(label, 50)
 
@@ -224,7 +225,9 @@ def _safe_column_key(label: str) -> str:
 
 
 def _truncate_label(label: str, max_length: int = 50) -> str:
-    return label if len(label) <= max_length else label[:max_length].strip() + "…"
+    s = "" if label is None else str(label)
+    s = " ".join(s.split())  # collapse whitespace/newlines
+    return s if len(s) <= max_length else s[:max_length].rstrip() + "…"
 
 
 def mask_email(email: str) -> str:
@@ -281,10 +284,13 @@ def download_attendee_list_csv(event_id: str) -> str:
 
     custom_keys = sorted({key for s in submissions for key in s.keys() if key.startswith("cf_")})
 
-    # Use first row’s _answers mapping to get labels
-    first_answers = submissions[0].get("_answers", {})
+    # Union labels from all rows
+    labels = {}
+    for s in submissions:
+        if "_answers" in s and isinstance(s["_answers"], dict):
+            labels.update(s["_answers"])
     columns = base_keys + custom_keys
-    headers = [label_map.get(k, first_answers.get(k, k)) for k in columns]
+    headers = [label_map.get(k, labels.get(k, k)) for k in columns]
 
     # Escape helper (like toCSVCell)
     def cleanse_csv_cell(value):

@@ -36,6 +36,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
             im_a="Student",
             custom_answers=[{"question": "What’s your goal?", "response": "To learn"}],
         )
+        self._extra_responses = []
 
         # After insert_test_chapter is called
         self.event.reload()
@@ -48,32 +49,35 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
 
     def tearDown(self):
         frappe.set_user("Administrator")
-        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
-        frappe.delete_doc(EVENT, self.event.name, force=True)
-        frappe.delete_doc(EVENT_RSVP, self.rsvp.name, force=True)
+        # Delete children first, then parents
+        for name in self._extra_responses:
+            frappe.delete_doc(RSVP_RESPONSE, name, force=True)
         frappe.delete_doc(RSVP_RESPONSE, self.submission.name, force=True)
+        frappe.delete_doc(EVENT_RSVP, self.rsvp.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
 
     def test_guest_user_denied(self):
-        frappe.session.user = "Guest"
+        frappe.set_user("Guest")
         with self.assertRaises(frappe.PermissionError):
             get_submissions_with_answers(self.event.name)
 
-    def test_non_event_lead_masks_email(self):
-        frappe.session.user = "random@example.com"
+    def test_non_event_core_team_masks_email(self):
+        frappe.set_user(self.volunteer_user)
         result = get_submissions_with_answers(self.event.name, full=False)
         self.assertTrue(result)
         # Check email is masked: basic pattern check
         self.assertIn("@", result[0]["email"])
         self.assertNotEqual(result[0]["email"], "alice@example.com")
 
-    def test_event_lead_full_email(self):
+    def test_event_core_team_full_email(self):
         frappe.set_user(self.core_team_email)
         result = get_submissions_with_answers(self.event.name, full=False)
         self.assertTrue(result)
         self.assertIn("@", result[0]["email"])
         self.assertEqual(result[0]["email"], "alice@example.com")
 
-    def test_event_lead_gets_full_answers(self):
+    def test_event_core_team_gets_full_answers(self):
         frappe.set_user(self.core_team_email)
         result = get_submissions_with_answers(self.event.name, full=True)
         self.assertIn("cf_whats_your_goal", result[0])
@@ -86,7 +90,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         long_q = "Q" * 100
         long_r = "R" * 100
         # Create another submission
-        insert_rsvp_submission(
+        _bob = insert_rsvp_submission(
             linked_rsvp=self.rsvp.name,
             name="Bob",
             email="bob@example.com",
@@ -102,12 +106,14 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         frappe.set_user(self.core_team_email)
         question = "What do you bring?"
         response = "Experience and energy."
-        insert_rsvp_submission(
+        _charlie = insert_rsvp_submission(
             linked_rsvp=self.rsvp.name,
             name="Charlie",
             email="charlie@example.com",
             custom_answers=[{"question": question, "response": response}],
         )
+        self._extra_responses.append(_charlie.name)
+
         result = get_submissions_with_answers(self.event.name, full=True)
         found = False
         for s in result:
@@ -122,13 +128,14 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         frappe.set_user(self.volunteer_user)
 
         # Add another submission with custom fields
-        insert_rsvp_submission(
+        _bob2 = insert_rsvp_submission(
             linked_rsvp=self.rsvp.name,
             name="Bob",
             email="bob@example.com",
             im_a="Student",
             custom_answers=[{"question": "Why are you attending?", "response": "To network"}],
         )
+        self._extra_responses.append(_bob2.name)
 
         result = get_submissions_with_answers(self.event.name)
         for submission in result:
@@ -140,6 +147,6 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
             for key in submission.keys():
                 self.assertFalse(
                     key.startswith("cf_"),
-                    f"Non-lead should not see custom field: {key}",
+                    f"Non-core_team should not see custom field: {key}",
                 )
-            self.assertNotIn("_answers", submission, "Non-lead should not see _answers")
+            self.assertNotIn("_answers", submission, "Non-core_team should not see _answers")

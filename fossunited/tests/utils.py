@@ -90,15 +90,6 @@ def insert_test_chapter(**kwargs):
                 profile = frappe.db.get_value(USER_PROFILE, {"user": member}, "name")
                 if not profile:
                     # Create User and User Profile
-                    if not frappe.db.exists("User", member):
-                        frappe.get_doc(
-                            {
-                                "doctype": "User",
-                                "email": member,
-                                "first_name": member.split("@")[0],
-                            }
-                        ).insert(ignore_permissions=True)
-
                     user_profile = frappe.get_doc(
                         {
                             "doctype": USER_PROFILE,
