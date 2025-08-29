@@ -140,6 +140,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
         filters={"event": event_id},
         fields=["name", "name1", "email", "im_a"],
         order_by="creation asc",
+        limit_page_length=9999,
     )
 
     if not check_if_event_lead(event_id):
@@ -150,6 +151,8 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
 
     # Event lead: fetch full answers
     submission_ids = [s["name"] for s in submissions]
+    if not submission_ids:
+        return submissions
 
     answers = frappe.get_all(
         RSVP_CUSTOM_FIELD,
@@ -158,7 +161,9 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             "parenttype": RSVP_RESPONSE,
             "parentfield": "custom_answers",
         },
-        fields=["parent", "question", "response"],
+        fields=["parent", "question", "response", "idx"],
+        order_by="parent asc, idx asc",
+        limit_page_length=0,
     )
 
     answers_by_parent = {}
