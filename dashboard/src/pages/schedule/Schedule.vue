@@ -7,6 +7,7 @@
       <ScheduleHeader :event="event.data" class="py-2" />
       <div class="flex justify-between items-end gap-4 flex-wrap">
         <ScheduleDateToggle v-model="selectedDay" :dates="eventDays" class="mt-4" />
+        <EventCalendar :schedule="schedule.data" :event="event.data" class="mt-4" />
         <ScheduleViewToggle v-model="selectedScheduleView" class="mt-4 hidden sm:block" />
       </div>
       <ScheduleView :view="selectedScheduleView" :schedule="selectedSchedule" class="my-6" />
@@ -35,7 +36,7 @@ const route = useRoute()
 const eventDays = ref([])
 const selectedDay = ref(null)
 const selectedSchedule = ref(null)
-const selectedScheduleView = ref('vertical')
+const selectedScheduleView = ref(window.innerWidth >= 1024 ? 'horizontal' : 'vertical')
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event_from_route',

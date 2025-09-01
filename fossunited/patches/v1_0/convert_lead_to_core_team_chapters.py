@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import CHAPTER, EVENT, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, EVENT
 
 
 def execute():
@@ -13,7 +13,7 @@ def execute():
     doctype_members_map = {CHAPTER: "chapter_members", EVENT: "event_members"}
 
     for doctype, members_attr in doctype_members_map.items():
-        docnames = frappe.get_all(doctype, pluck="name")
+        docnames = frappe.get_all(doctype, pluck="name", limit_page_length=9999)
 
         try:
             for docname in docnames:
@@ -27,6 +27,7 @@ def execute():
                         member.role = "Core Team Member"
                         updated = True
 
+                        """
                         # Revoke legacy 'Chapter Lead' user role
                         user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
                         if user:
@@ -34,6 +35,7 @@ def execute():
                                 "Has Role",
                                 {"parent": user, "parenttype": "User", "role": "Chapter Lead"},
                             )
+                        """
 
                 if updated:
                     doc.save()

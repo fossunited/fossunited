@@ -35,7 +35,7 @@
       "fieldtype": "Select",
       "in_standard_filter": 1,
       "label": "Org Role",
-      "options": "\nFounder\nBoard\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
+      "options": "\nFounder\nBoard\nGoverning Board\nFull-Time\nPart-Time\nIntern\nFellow\nVolunteer"
     },
     {
       "fieldname": "user_individual_details_section",
@@ -94,7 +94,7 @@
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-21 13:19:50.477734",
+  "modified": "2025-08-19 14:51:58.365494",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS United Team",
