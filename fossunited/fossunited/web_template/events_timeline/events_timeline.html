@@ -1,6 +1,61 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
 
+{% macro render_event_groups(grouped_items, show_city=true, show_club=false) %}
+  {% set items = [] %}
+  {% if show_city %}
+    {% set items = items + grouped_events.city.items() | list %}
+  {% endif %}
+  {% if show_club %}
+    {% set items = items + grouped_events.club.items() | list %}
+  {% endif %}
+  {% for group, events in items %}
+    <div class="event-group" role="region">
+      <h3>{{ group }}</h3>
+
+      {% for month, month_events in events.items() %}
+        <h4
+          class="event-month"
+          v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
+        >
+          {{ month }}
+        </h4>
+
+        <div
+          class="events-grid-4"
+          role="group"
+          v-effect="updateTicker()"
+          v-show="ticker > 0 && $el?.children.length > 0"
+        >
+          {% for event in month_events %}
+            {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
+
+            {% if event.event_name %}
+              <div
+                class="event-card-holder {{ group | replace(" ", "") }}"
+                id="{{ event.name }}"
+                role="listitem"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+              >
+                {{ event_card(event) }}
+              </div>
+            {% else %}
+              <div
+                class="event-card-holder {{ group | replace(" ", "") }}"
+                id="{{ event.name }}"
+                role="listitem"
+                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
+              >
+                {{ hackathon_card(event) }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+{% endmacro %}
+
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
@@ -32,7 +87,7 @@
     border-radius: 0.5rem;
     border: 1px solid var(--Gray-200, #eaecf0);
     background-color: white;
-    min-width: 50%;
+    min-width: 40%;
     align-items: center;
   }
 
@@ -76,6 +131,13 @@
     gap: 1.5rem;
   }
 
+  .select-theme {
+	  border-radius: var(--radius-4, 8px);
+    background: #1a1a1a;
+	color: #fff;
+    padding: 8px;
+  }
+
   .ics-button {
     display: flex;
     height: 44px;
@@ -86,8 +148,8 @@
     gap: 8px;
     flex: 1 0 0;
     border-radius: var(--radius-4, 8px);
-    background: #1A1A1A;
-    color: #FAFAFA;
+    background: #1a1a1a;
+    color: #fafafa;
     /* text/base/medium */
     font-family: Inter;
     font-size: 14px;
@@ -98,7 +160,7 @@
     text-transform: uppercase;
   }
   .ics-button:hover {
-    background: #2B2B2B;
+    background: #2b2b2b;
   }
 
   @media (max-width: 768px) {
@@ -149,13 +211,25 @@
       <p id="must-attend-desc" class="sr-only">
         Filter the events to show only those marked as must-attend.
       </p>
+
+	  <div class="must-attend-checkbox">
+		<select id="selectedEventSource" v-model="selectedEventSource" class="select-theme">
+		  <option value="city">City Events</option>
+		  <option value="club">Club Events</option>
+		  <option value="both">Both</option>
+		</select>
+		<label for="selectedEventSource">Show Events</label>
+	  </div>
+
       <!-- City Chapter selector -->
       <div class="must-attend-checkbox">
-        <select id="cityChapter" v-model="cityChapter">
+        <select id="cityChapter" v-model="cityChapter" class="select-theme">
           <option value="All Cities" selected>All Cities</option>
           {% set chapter_details = get_chapter_details() %}
           {% for chapter in chapter_details %}
-            <option value="{{chapter.name}}">{{ chapter.chapter_name | truncate(15, False, '...', 0) }}</option>
+            <option value="{{ chapter.name }}">
+              {{ chapter.chapter_name | truncate(15, False, '...', 0) }}
+            </option>
           {% endfor %}
         </select>
         <label for="cityChapter">City Chapter</label>
@@ -170,111 +244,84 @@
     </button>
 
     <!--Primary Event cards listing-->
-    {% set grouped_events = get_grouped_events() %}
-    {% for group, events in grouped_events.items() %}
-      <div class="event-group" role="region">
-        <h3>{{ group }}</h3>
-        {% for month, month_events in events.items() %}
-          <h4
-            class="event-month"
-            v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'"
-          >
-            {{ month }}
-          </h4>
-          <div
-            class="events-grid-4"
-            role="group"
-            v-effect="updateTicker()"
-            v-show="ticker > 0 && $el?.children.length > 0"
-          >
-            {% for event in month_events %}
-              {% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
-              {% if event.event_name %}
-                <div
-                  class="event-card-holder {{ group | replace(" ", "") }}"
-                  id="{{ event.name }}"
-                  role="listitem"
-                  v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
-                >
-                  {{ event_card(event) }}
-                </div>
-              {% else %}
-                <div
-                  class="event-card-holder {{ group | replace(" ", "") }}"
-                  id="{{ event.name }}"
-                  role="listitem"
-                  v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
-                >
-                  {{ hackathon_card(event) }}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endfor %}
-      </div>
-    {% endfor %}
+    {% set grouped_events = get_grouped_events_by_chapter_type() %}
 
-  <script>
-    PetiteVue.createApp({
-      searchText: '',
-      ticker: 1,
-      mustAttendOnly: false,
-      cityChapter: 'All Cities',
-      canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
-        if (this.mustAttendOnly && !eventMustAttend) {
-          return false
-        }
+    <div v-if="selectedEventSource === 'city'">
+	  {{ render_event_groups(grouped_items, show_city=true, show_club=false) }}
+    </div>
 
-        if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
-          return false
-        }
+    <div v-else-if="selectedEventSource === 'club'">
+	  {{ render_event_groups(grouped_items, show_city=false, show_club=true) }}
+    </div>
 
-        if (this.searchText.length == 0) {
-          return true
-        }
+    <div v-else-if="selectedEventSource === 'both'">
+	  {{ render_event_groups(grouped_items, show_city=true, show_club=true) }}
+    </div>
 
-        return (
-          eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-          eventDate.toLowerCase().includes(this.searchText.toLowerCase())
-        )
-      },
-      updateTicker() {
-        // mentioning each variable here, will make sure reactivity is appliedie
-        // ie. every time one of thse 3 vars is changed, it will make sure to reload all v-shows/v-ifs
-        this.mustAttendOnly
-        this.searchText
-        this.cityChapter
-        PetiteVue.nextTick(() => {
-          this.ticker++
+    <script>
+      PetiteVue.createApp({
+        searchText: '',
+        ticker: 1,
+        mustAttendOnly: false,
+        cityChapter: 'All Cities',
+        selectedEventSource: 'city',
+        canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
+          if (this.mustAttendOnly && !eventMustAttend) {
+            return false
+          }
+
+          if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
+            return false
+          }
+
+          if (this.searchText.length == 0) {
+            return true
+          }
+
+          return (
+            eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+            eventDate.toLowerCase().includes(this.searchText.toLowerCase())
+          )
+        },
+        updateTicker() {
+          // mentioning each variable here, will make sure reactivity is appliedie
+          // ie. every time one of thse 3 vars is changed, it will make sure to reload all v-shows/v-ifs
+          this.selectedEventSource
+          this.mustAttendOnly
+          this.searchText
+          this.cityChapter
           PetiteVue.nextTick(() => {
             this.ticker++
+            PetiteVue.nextTick(() => {
+              this.ticker++
+            })
           })
-        })
-      },
-    }).mount()
+        },
+      }).mount()
 
-    function downloadEventIcs() {
-      let event_ids = new Array()
-      document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
-        event_ids.push(event.id)
-      })
-      frappe.call({
-        method: 'fossunited.api.chapter.generate_ics',
-        args: {
-          'event_ids': event_ids,
-        },
-        callback: (r) => {
-          if (r.message) {
-            const blob = new Blob([r.message], { type: 'text/calendar' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `events.ics`
-            a.click()
-            URL.revokeObjectURL(url)
-          }
-        },
-      })
-    }
-  </script>
+      function downloadEventIcs() {
+        let event_ids = new Array()
+        document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
+          event_ids.push(event.id)
+        })
+        frappe.call({
+          method: 'fossunited.api.chapter.generate_ics',
+          args: {
+            event_ids: event_ids,
+          },
+          callback: (r) => {
+            if (r.message) {
+              const blob = new Blob([r.message], { type: 'text/calendar' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `events.ics`
+              a.click()
+              URL.revokeObjectURL(url)
+            }
+          },
+        })
+      }
+    </script>
+  </div>
 </div>
