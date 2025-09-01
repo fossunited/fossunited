@@ -306,12 +306,15 @@ def process_event(event, event_list, chapter=""):
     now = now_datetime()
     event_date = event.event_start_date if event.event_start_date else event.start_date
 
-    event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
-    event.month_year = event_month_year
-    if event_date > now:
-        event_list[f"Upcoming {chapter} FOSS Events"].append(event)
+    if event_date:
+        event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
+        event.month_year = event_month_year
+        if event_date > now:
+            event_list[f"Upcoming {chapter} FOSS Events"].append(event)
+        else:
+            event_list[f"Past {chapter} Events"].append(event)
     else:
-        event_list[f"Past {chapter} Events"].append(event)
+        pass
 
 
 def get_month_grouped_events(events, hackathons, chapter=""):
