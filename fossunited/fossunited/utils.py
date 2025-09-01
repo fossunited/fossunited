@@ -280,8 +280,8 @@ def get_grouped_events_by_chapter_type():
 
     # Group and return
     return {
-        "city": get_month_grouped_events(city_events, city_hackathons),
-        "club": get_month_grouped_events(club_events, club_hackathons),
+        "city": get_month_grouped_events(city_events, city_hackathons, "City"),
+        "club": get_month_grouped_events(club_events, club_hackathons, "Club"),
     }
 
 
@@ -298,7 +298,7 @@ def get_chapter_details():
     return chapters
 
 
-def process_event(event, event_list):
+def process_event(event, event_list, chapter=""):
     """
     Processes a single event or hackathon, adding it to the upcoming or past events list based on
     the current date.
@@ -308,23 +308,23 @@ def process_event(event, event_list):
     event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
     event.month_year = event_month_year
     if event_date > now:
-        event_list["Upcoming FOSS Events"].append(event)
+        event_list[f"Upcoming {chapter} FOSS Events"].append(event)
     else:
-        event_list["Past Events"].append(event)
+        event_list[f"Past {chapter} Events"].append(event)
 
 
-def get_month_grouped_events(events, hackathons):
+def get_month_grouped_events(events, hackathons, chapter=""):
     """
     Groups events and hackathons by month and year, ensuring they are sorted chronologically
     within each group.
     """
-    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
+    grouped_events = {f"Upcoming {chapter} FOSS Events": [], f"Past {chapter} Events": []}
 
     for event in events:
-        process_event(event, grouped_events)
+        process_event(event, grouped_events, chapter)
 
     for hackathon in hackathons:
-        process_event(hackathon, grouped_events)
+        process_event(hackathon, grouped_events, chapter)
 
     month_grouped_events = {key: {} for key in grouped_events}
 
@@ -334,7 +334,7 @@ def get_month_grouped_events(events, hackathons):
             month_grouped_events[key][month_year] = list(month_year_events)
 
     for key in month_grouped_events:
-        if key == "Upcoming FOSS Events":
+        if key == f"Upcoming {chapter} FOSS Events":
             sorted_month_years = sorted(
                 month_grouped_events[key].keys(),
                 key=lambda x: datetime.strptime(x, "%B %Y"),
