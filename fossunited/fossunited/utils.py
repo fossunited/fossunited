@@ -283,17 +283,18 @@ def process_event(event, event_list, chapter=""):
     the current date.
     """
     now = now_datetime()
-    event_date = event.event_start_date if event.event_start_date else event.start_date
-
-    if event_date:
-        event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
-        event.month_year = event_month_year
-        if event_date > now:
-            event_list[f"Upcoming {chapter} FOSS Events"].append(event)
-        else:
-            event_list[f"Past {chapter} Events"].append(event)
+    # Support both Events (event_start_date) and Hackathons (start_date)
+    raw_dt = event.get("event_start_date") or event.get("start_date")
+    if not raw_dt:
+        return
+    event_dt = frappe.utils.get_datetime(raw_dt)
+    event["month_year"] = frappe.utils.formatdate(event_dt, "MMMM yyyy")
+    # store for stable sorting later
+    event["_sort_dt"] = event_dt
+    if event_dt > now:
+        event_list[f"Upcoming {chapter} FOSS Events"].append(event)
     else:
-        pass
+        event_list[f"Past {chapter} Events"].append(event)
 
 
 def get_month_grouped_events(events, hackathons, chapter=""):
@@ -312,7 +313,7 @@ def get_month_grouped_events(events, hackathons, chapter=""):
     month_grouped_events = {key: {} for key in grouped_events}
 
     for key, values in grouped_events.items():
-        values.sort(key=lambda x: x.event_start_date if x.event_start_date else x.start_date)
+        values.sort(key=lambda x: x.get("_sort_dt"))
         for month_year, month_year_events in itertools.groupby(values, key=lambda x: x.month_year):
             month_grouped_events[key][month_year] = list(month_year_events)
 
