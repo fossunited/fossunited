@@ -1,1 +1,1 @@
-/home/dev/projects/fossunited-dash/docs/docs/changelog.org
+docs/docs/changelog.org
