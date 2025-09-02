@@ -43,10 +43,22 @@ watch(
 watch(
   () => searchTitle.value,
   () => {
-    const _filters = { ...filters.value, talk_title: ['like', `${searchTitle.value}`] }
-    submissions.data = filterSubmissions(submissions.originalData, _filters)
-  },
+    const search = searchTitle.value.trim().toLowerCase()
+
+    if (!search) {
+      submissions.data = submissions.originalData
+      return
+    }
+
+    submissions.data = submissions.originalData.filter(sub => {
+      return (
+        sub.talk_title?.toLowerCase().includes(search) ||
+        sub.speaker_name?.toLowerCase().includes(search)
+      )
+    })
+  }
 )
+
 </script>
 
 <template>
