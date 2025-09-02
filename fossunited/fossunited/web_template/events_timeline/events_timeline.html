@@ -301,10 +301,26 @@
 
       function downloadEventIcs() {
         let event_ids = new Array()
-      document.querySelectorAll('div.event-card-holder.upcomingcity').forEach((event) => {
+        const selectedSource = document.getElementById('selectedEventSource').value
+
+        const sourceToGroupClass = {
+          city: 'UpcomingCityFOSSEvents',
+          club: 'UpcomingClubFOSSEvents',
+        }
+
+        let selector
+
+        if (selectedSource === 'both') {
+          selector = Object.values(sourceToGroupClass)
+            .map((className) => `div.event-card-holder.${className}`)
+            .join(', ')
+        } else {
+          selector = `div.event-card-holder.${sourceToGroupClass[selectedSource]}`
+        }
+
+        document.querySelectorAll(selector).forEach((event) => {
           event_ids.push(event.id)
         })
-		console.warn(event_ids)
         frappe.call({
           method: 'fossunited.api.chapter.generate_ics',
           args: {
