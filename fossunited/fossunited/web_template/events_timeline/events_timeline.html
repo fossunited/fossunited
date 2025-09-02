@@ -1,7 +1,7 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
 
-{% macro render_event_groups(grouped_items, show_city=true, show_club=false) %}
+{% macro render_event_groups(grouped_events, show_city=true, show_club=false) %}
   {% set items = [] %}
   {% if show_city %}
     {% set items = items + grouped_events.city.items() | list %}
@@ -132,9 +132,9 @@
   }
 
   .select-theme {
-	  border-radius: var(--radius-4, 8px);
+    border-radius: var(--radius-4, 8px);
     background: #1a1a1a;
-	color: #fff;
+    color: #fff;
     padding: 8px;
   }
 
@@ -212,14 +212,14 @@
         Filter the events to show only those marked as must-attend.
       </p>
 
-	  <div class="must-attend-checkbox">
-		<select id="selectedEventSource" v-model="selectedEventSource" class="select-theme">
-		  <option value="city">City Events</option>
-		  <option value="club">Club Events</option>
-		  <option value="both">Both</option>
-		</select>
-		<label for="selectedEventSource">Show Events</label>
-	  </div>
+      <div class="must-attend-checkbox">
+        <select id="selectedEventSource" v-model="selectedEventSource" class="select-theme">
+          <option value="city">City Events</option>
+          <option value="club">Club Events</option>
+          <option value="both">Both</option>
+        </select>
+        <label for="selectedEventSource">Show Events</label>
+      </div>
 
       <!-- City Chapter selector -->
       <div class="must-attend-checkbox">
@@ -247,15 +247,15 @@
     {% set grouped_events = get_grouped_events_by_chapter_type() %}
 
     <div v-if="selectedEventSource === 'city'">
-	  {{ render_event_groups(grouped_items, show_city=true, show_club=false) }}
+      {{ render_event_groups(grouped_events, show_city=true, show_club=false) }}
     </div>
 
     <div v-else-if="selectedEventSource === 'club'">
-	  {{ render_event_groups(grouped_items, show_city=false, show_club=true) }}
+      {{ render_event_groups(grouped_events, show_city=false, show_club=true) }}
     </div>
 
     <div v-else-if="selectedEventSource === 'both'">
-	  {{ render_event_groups(grouped_items, show_city=true, show_club=true) }}
+      {{ render_event_groups(grouped_events, show_city=true, show_club=true) }}
     </div>
 
     <script>
@@ -284,8 +284,8 @@
           )
         },
         updateTicker() {
-          // mentioning each variable here, will make sure reactivity is appliedie
-          // ie. every time one of thse 3 vars is changed, it will make sure to reload all v-shows/v-ifs
+          // Mention each variable here to ensure PetiteVue tracks dependencies.
+          // Whenever any of these change, v-show/v-if will update.
           this.selectedEventSource
           this.mustAttendOnly
           this.searchText
@@ -301,9 +301,10 @@
 
       function downloadEventIcs() {
         let event_ids = new Array()
-        document.querySelectorAll('div.UpcomingFOSSEvents.event-card-holder').forEach((event) => {
+      document.querySelectorAll('div.event-card-holder.upcomingcity').forEach((event) => {
           event_ids.push(event.id)
         })
+		console.warn(event_ids)
         frappe.call({
           method: 'fossunited.api.chapter.generate_ics',
           args: {

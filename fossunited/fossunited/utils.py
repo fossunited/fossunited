@@ -203,7 +203,7 @@ def get_grouped_events_by_chapter_type():
     events = frappe.get_all(
         EVENT,
         fields=["*"],
-        or_filters=[["is_published", "=", "1"], ["is_external_event", "=", "1"]],
+        filters={"is_published": 1},
         order_by="event_start_date",
     )
 
@@ -271,6 +271,7 @@ def get_chapter_details():
         CHAPTER,
         fields=["chapter_name", "name", "chapter_type"],
         filters={"chapter_type": "City Community"},
+        order_by="chapter_name asc",
     )
     return chapters
 
