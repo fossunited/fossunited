@@ -111,7 +111,7 @@ const memberOptions = createResource({
     return data.map((user) => {
       return {
         value: user.name,
-        label: user.username,
+        label: `${user.full_name} (${user.username})`,
         description: user.full_name,
         avatar: user.profile_photo
           ? user.profile_photo
