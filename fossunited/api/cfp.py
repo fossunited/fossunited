@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import frappe
 
 from fossunited.api.proposal import _get_bulk_custom_answers_data
@@ -138,8 +140,6 @@ def get_cfp_submissions(event: str) -> list:
     review_percentages_data = _get_bulk_review_percentages_data(submission_names)
 
     # Bulk fetch speakers for all submissions (outside selected range)
-    from collections import defaultdict
-
     speakers_raw = frappe.db.get_all(
         SPEAKER,
         {"parent": ("in", submission_names)},
@@ -175,7 +175,7 @@ def get_cfp_submissions(event: str) -> list:
         speakers = speakers_by_submission.get(submission.name, [])
         submission["speakers"] = speakers
         submission["speaker_name"] = ", ".join(
-            s["full_name"] for s in speakers if s.get("full_name")
+            name for name in ((s.get("full_name") or "").strip() for s in speakers) if name
         )
 
     return submissions

@@ -58,7 +58,7 @@ watch(
   () => searchTitle.value,
   () => {
     const search = searchTitle.value.trim().toLowerCase()
-    let filtered = submissions.originalData
+    let filtered = Array.isArray(submissions.originalData) ? submissions.originalData : []
 
     // Apply basic field filters (status, session_type, etc.)
     if (filters.value) {
@@ -67,19 +67,26 @@ watch(
 
     // Apply search on talk title or speaker name
     if (search) {
-      filtered = filtered.filter(submission => {
-        const titleMatch = submission.talk_title?.toLowerCase().includes(search)
-        const speakerMatch = submission._speaker?.some(s =>
-          s.full_name?.toLowerCase().includes(search)
-        )
-        return titleMatch || speakerMatch
+      filtered = filtered.filter((submission) => {
+        const title = submission.talk_title?.toLowerCase() ?? ''
+        // Prefer pre-joined string if present; fallback to array forms.
+        const speakerNameStr = submission.speaker_name?.toLowerCase() ?? ''
+        let speakerMatch = false
+        if (speakerNameStr) {
+          speakerMatch = speakerNameStr.includes(search)
+        } else {
+          const speakersArr = submission.speakers ?? submission._speaker
+          if (Array.isArray(speakersArr)) {
+            speakerMatch = speakersArr.some((s) => s?.full_name?.toLowerCase().includes(search))
+          }
+        }
+        return title.includes(search) || speakerMatch
       })
     }
 
     submissions.data = filtered
-  }
+  },
 )
-
 </script>
 <template>
   <Suspense>
