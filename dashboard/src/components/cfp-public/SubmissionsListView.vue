@@ -57,8 +57,34 @@ watch(
 watch(
   () => searchTitle.value,
   () => {
-    const _filters = { ...filters.value, talk_title: ['like', `${searchTitle.value}`] }
-    submissions.data = filterSubmissions(submissions.originalData, _filters)
+    const search = searchTitle.value.trim().toLowerCase()
+    let filtered = Array.isArray(submissions.originalData) ? submissions.originalData : []
+
+    // Apply basic field filters (status, session_type, etc.)
+    if (filters.value) {
+      filtered = filterSubmissions(filtered, filters.value)
+    }
+
+    // Apply search on talk title or speaker name
+    if (search) {
+      filtered = filtered.filter((submission) => {
+        const title = submission.talk_title?.toLowerCase() ?? ''
+        // Prefer pre-joined string if present; fallback to array forms.
+        const speakerNameStr = submission.speaker_name?.toLowerCase() ?? ''
+        let speakerMatch = false
+        if (speakerNameStr) {
+          speakerMatch = speakerNameStr.includes(search)
+        } else {
+          const speakersArr = submission.speakers ?? submission._speaker
+          if (Array.isArray(speakersArr)) {
+            speakerMatch = speakersArr.some((s) => s?.full_name?.toLowerCase().includes(search))
+          }
+        }
+        return title.includes(search) || speakerMatch
+      })
+    }
+
+    submissions.data = filtered
   },
 )
 </script>
