@@ -137,6 +137,28 @@ def get_cfp_submissions(event: str) -> list:
     # Bulk fetch review percentages
     review_percentages_data = _get_bulk_review_percentages_data(submission_names)
 
+    # Bulk fetch speakers for all submissions (outside selected range)
+    from collections import defaultdict
+
+    speakers_raw = frappe.db.get_all(
+        SPEAKER,
+        {"parent": ("in", submission_names)},
+        [
+            "parent",
+            "photo",
+            "full_name",
+            "designation",
+            "organization",
+            "linked_user",
+            "social_link",
+            "bio",
+        ],
+    )
+    speakers_by_submission = defaultdict(list)
+
+    for s in speakers_raw:
+        speakers_by_submission[s["parent"]].append(s)
+
     for submission in submissions:
         is_reviewed = submission.name in reviewed_submissions
         submission.update(
@@ -150,7 +172,7 @@ def get_cfp_submissions(event: str) -> list:
         submission.update(custom_answers_data.get(submission.name, {}))
         submission.update(review_percentages_data.get(submission.name, {}))
 
-        speakers = get_speakers(submission.name)
+        speakers = speakers_by_submission.get(submission.name, [])
         submission["speakers"] = speakers
         submission["speaker_name"] = ", ".join(
             s["full_name"] for s in speakers if s.get("full_name")
