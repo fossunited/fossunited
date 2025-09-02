@@ -150,6 +150,12 @@ def get_cfp_submissions(event: str) -> list:
         submission.update(custom_answers_data.get(submission.name, {}))
         submission.update(review_percentages_data.get(submission.name, {}))
 
+        speakers = get_speakers(submission.name)
+        submission["speakers"] = speakers
+        submission["speaker_name"] = ", ".join(
+            s["full_name"] for s in speakers if s.get("full_name")
+        )
+
     return submissions
 
 
