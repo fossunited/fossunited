@@ -67,12 +67,14 @@ const routes = [
         path: '',
         name: 'TicketTransfer',
         component: () => import('@/pages/TicketTransfer.vue'),
+        meta: { isPublicPage: true },
       },
       {
         path: 'process',
         name: 'TicketTransferProcess',
         component: () => import('@/pages/TicketTransferProcess.vue'),
         props: true,
+        meta: { isPublicPage: true },
       },
     ],
   },
@@ -311,6 +313,10 @@ let router = createRouter({
 })
 
 router.beforeEach(async (to, from, next) => {
+  // Public routes: no need to resolve user/session first
+  if (to.meta.isPublicPage) {
+    return next()
+  }
   let isLoggedIn = Boolean(sessionUser())
   try {
     await userResource.promise
