@@ -192,27 +192,74 @@ def validate_profile_completion():
     )
 
 
-def get_grouped_events():
+def get_grouped_events_by_chapter_type():
     """
-    Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
-    upcoming and past events.
+    Retrieves FOSS Chapter Events and Hackathons,
+    groups them by their parent Chapter's chapter_type (City Community or Club),
+    and then groups each by month and year.
     """
+
+    # Get all events
     events = frappe.get_all(
         EVENT,
         fields=["*"],
-        or_filters=[["is_published", "=", "1"], ["is_external_event", "=", "1"]],
+        filters={"is_published": 1},
         order_by="event_start_date",
     )
 
+    # Get all hackathons
     hackathons = frappe.get_all(
         HACKATHON,
         fields=["*"],
-        filters={
-            "is_published": 1,
-        },
+        filters={"is_published": 1},
         order_by="start_date",
     )
-    return get_month_grouped_events(events, hackathons)
+
+    # Grouping events
+    city_events = []
+    club_events = []
+    city_hackathons = []
+    club_hackathons = []
+
+    # Cache to avoid duplicate lookups
+    chapter_type_cache = {}
+
+    def get_chapter_type(chapter_name):
+        """
+        Fetches chapter_type from the Chapter doctype.
+        Caches the result to avoid multiple DB hits.
+        """
+        if not chapter_name:
+            return None
+        if chapter_name in chapter_type_cache:
+            return chapter_type_cache[chapter_name]
+
+        # DB lookup
+        chapter_type = frappe.db.get_value(CHAPTER, chapter_name, "chapter_type")
+        chapter_type_cache[chapter_name] = chapter_type
+        return chapter_type
+
+    # Classify events
+    for event in events:
+        chapter_type = get_chapter_type(event.get("chapter"))
+        if chapter_type == "City Community":
+            city_events.append(event)
+        else:
+            club_events.append(event)
+
+    # Classify hackathons
+    for hackathon in hackathons:
+        chapter_type = get_chapter_type(hackathon.get("chapter"))
+        if chapter_type == "City Community":
+            city_hackathons.append(hackathon)
+        else:
+            club_hackathons.append(hackathon)
+
+    # Group and return
+    return {
+        "city": get_month_grouped_events(city_events, city_hackathons, "City"),
+        "club": get_month_grouped_events(club_events, club_hackathons, "Club"),
+    }
 
 
 def get_chapter_details():
@@ -220,52 +267,58 @@ def get_chapter_details():
     Retrieves FOSS Chapter Events and Hackathons, then groups them by month and year, separating
     upcoming and past events.
     """
-    chapters = frappe.db.get_all(CHAPTER, fields=["chapter_name", "name"])
+    chapters = frappe.db.get_all(
+        CHAPTER,
+        fields=["chapter_name", "name", "chapter_type"],
+        filters={"chapter_type": "City Community"},
+        order_by="chapter_name asc",
+        page_length=9999,
+    )
     return chapters
 
 
-def process_event(event, event_list):
+def process_event(event, event_list, chapter=""):
     """
     Processes a single event or hackathon, adding it to the upcoming or past events list based on
     the current date.
     """
     now = now_datetime()
-    event_date = event.event_start_date if event.event_start_date else event.start_date
-
-    if event_date:
-        event_month_year = frappe.utils.formatdate(event_date, "MMMM yyyy")
-        event.month_year = event_month_year
-
-        if event_date > now:
-            event_list["Upcoming FOSS Events"].append(event)
-        else:
-            event_list["Past Events"].append(event)
+    # Support both Events (event_start_date) and Hackathons (start_date)
+    raw_dt = event.get("event_start_date") or event.get("start_date")
+    if not raw_dt:
+        return
+    event_dt = frappe.utils.get_datetime(raw_dt)
+    event["month_year"] = frappe.utils.formatdate(event_dt, "MMMM yyyy")
+    # store for stable sorting later
+    event["_sort_dt"] = event_dt
+    if event_dt > now:
+        event_list[f"Upcoming {chapter} FOSS Events"].append(event)
     else:
-        pass
+        event_list[f"Past {chapter} Events"].append(event)
 
 
-def get_month_grouped_events(events, hackathons):
+def get_month_grouped_events(events, hackathons, chapter=""):
     """
     Groups events and hackathons by month and year, ensuring they are sorted chronologically
     within each group.
     """
-    grouped_events = {"Upcoming FOSS Events": [], "Past Events": []}
+    grouped_events = {f"Upcoming {chapter} FOSS Events": [], f"Past {chapter} Events": []}
 
     for event in events:
-        process_event(event, grouped_events)
+        process_event(event, grouped_events, chapter)
 
     for hackathon in hackathons:
-        process_event(hackathon, grouped_events)
+        process_event(hackathon, grouped_events, chapter)
 
     month_grouped_events = {key: {} for key in grouped_events}
 
     for key, values in grouped_events.items():
-        values.sort(key=lambda x: x.event_start_date if x.event_start_date else x.start_date)
+        values.sort(key=lambda x: x.get("_sort_dt"))
         for month_year, month_year_events in itertools.groupby(values, key=lambda x: x.month_year):
             month_grouped_events[key][month_year] = list(month_year_events)
 
     for key in month_grouped_events:
-        if key == "Upcoming FOSS Events":
+        if key == f"Upcoming {chapter} FOSS Events":
             sorted_month_years = sorted(
                 month_grouped_events[key].keys(),
                 key=lambda x: datetime.strptime(x, "%B %Y"),
