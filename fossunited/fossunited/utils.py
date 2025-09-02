@@ -272,6 +272,7 @@ def get_chapter_details():
         fields=["chapter_name", "name", "chapter_type"],
         filters={"chapter_type": "City Community"},
         order_by="chapter_name asc",
+        page_length=9999,
     )
     return chapters
 
