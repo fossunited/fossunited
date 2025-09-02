@@ -43,7 +43,12 @@
       <div class="prose">
         <h2 id="total-tshirts" class="text-lg font-bold">{{ insight.tshirts_sold }}</h2>
       </div>
-      <Button class="w-fit" label="View Details" @click="showDialog = true" aria-labelledby="dialog-title" />
+      <Button
+        class="w-fit"
+        label="View Details"
+        @click="showDialog = true"
+        aria-labelledby="dialog-title"
+      />
     </div>
   </div>
 </template>

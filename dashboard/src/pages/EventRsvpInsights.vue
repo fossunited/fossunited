@@ -49,7 +49,7 @@ const rsvp_form = createResource({
   auto: true,
 })
 
-const isEventLead = ref(false);
+const isEventLead = ref(false)
 const event_lead = createResource({
   url: 'fossunited.api.chapter.check_if_event_lead',
   makeParams() {

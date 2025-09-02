@@ -64,9 +64,7 @@ const handleDelete = () => {
   toast.info('Removing showcase...')
   event.setValue
     .submit({
-      project_showcase: event.doc.project_showcase.filter(
-        (s) => s.name !== props.showcase.name,
-      ),
+      project_showcase: event.doc.project_showcase.filter((s) => s.name !== props.showcase.name),
     })
     .then(() => {
       toast.info('Showcase removed successfully')

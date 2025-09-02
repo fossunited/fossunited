@@ -80,8 +80,8 @@ watch(
   },
   {
     deep: true,
-    immediate: true
-  }
+    immediate: true,
+  },
 )
 
 const handleRowClick = (row) => {

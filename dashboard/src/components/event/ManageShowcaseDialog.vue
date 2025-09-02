@@ -13,7 +13,11 @@
             <IconLink class="w-4" />
           </template>
         </FormControl>
-        <FormControl v-model="showcase.description" label="Showcase Description" :type="'textarea'" />
+        <FormControl
+          v-model="showcase.description"
+          label="Showcase Description"
+          :type="'textarea'"
+        />
         <FileUploaderArea v-model="showcase.image" label="Community Logo" />
         <ErrorMessage :message="errorMessages" class="text-sm -mb-4" />
       </div>

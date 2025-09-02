@@ -157,24 +157,35 @@ def get_profile_data(username: str = None, email: str = None) -> dict:
 
 
 @frappe.whitelist()
-def get_user_profile_list(filters: dict = None) -> list:
+def get_user_profile_list(filters: dict = None, search_term: str = None) -> list:
     """
-    Returns the list of user profiles based on the given filters.
+    Returns the list of user profiles based on the given filters and optional search term.
     """
     if not filters:
         filters = {}
 
-    profiles = frappe.db.get_all(
-        USER_PROFILE,
-        filters=filters,
-        fields=[
-            "full_name",
-            "profile_photo",
-            "route",
-            "username",
-            "name",
-        ],
-        page_length=9999,
-    )
+    if search_term and len(search_term.strip()) >= 2:
+        search_term = search_term.strip()
+        or_filters = [
+            ["username", "like", f"%{search_term}%"],
+            ["full_name", "like", f"%{search_term}%"],
+        ]
+
+        profiles = frappe.db.get_all(
+            USER_PROFILE,
+            filters=filters,
+            or_filters=or_filters,
+            fields=[
+                "full_name",
+                "profile_photo",
+                "route",
+                "username",
+                "name",
+            ],
+            page_length=50,
+            order_by="username asc",
+        )
+    else:
+        profiles = []
 
     return profiles
