@@ -21,6 +21,9 @@
             <Avatar shape="circle" :image="option.avatar" :label="option.label" size="lg" />
           </template>
         </Autocomplete>
+        <div v-if="memberOptions.error" class="text-sm text-red-600">
+          Failed to load results. Please try again.
+        </div>
       </div>
       <div class="flex flex-col gap-2">
         <div class="text-p-base text-gray-700">
@@ -61,6 +64,7 @@
         <Button
           label="Add"
           variant="solid"
+          :disabled="newMembers.length === 0 || memberOptions.loading"
           @click="$emit('update:add-member', newMembers, role)"
         />
       </div>
@@ -70,7 +74,7 @@
 
 <script setup>
 import { Dialog, Autocomplete, Select, createResource, Avatar, Button } from 'frappe-ui'
-import { ref, defineProps, defineEmits, computed, watch } from 'vue'
+import { ref, defineProps, defineEmits, computed, watch, onUnmounted } from 'vue'
 
 const props = defineProps({
   chapter: {
@@ -96,23 +100,25 @@ const existingMembers = computed(() => {
 const emits = defineEmits(['update:add-member', 'close-dialog'])
 
 const searchTerm = ref('')
+const MIN_QUERY_CHARS = 2
 
 const memberOptions = createResource({
   url: 'fossunited.api.dashboard.get_user_profile_list',
   makeParams() {
-    return {
-      filters: {
-        name: ['not in', existingMembers.value],
-      },
-      search_term: searchTerm.value,
+    const params = {
+      filters: { name: ['not in', existingMembers.value] },
     }
+    if (searchTerm.value?.trim().length >= MIN_QUERY_CHARS) {
+      params.search_term = searchTerm.value.trim()
+    }
+    return params
   },
   transform(data) {
     return data.map((user) => {
       return {
         value: user.name,
-        label: `${user.full_name} (${user.username})`,
-        description: user.full_name,
+        label: user.full_name ? `${user.full_name} (${user.username})` : user.username,
+        description: user.full_name || user.username,
         avatar: user.profile_photo
           ? user.profile_photo
           : '/assets/fossunited/images/defaults/user_profile_image.png',
@@ -123,10 +129,12 @@ const memberOptions = createResource({
 
 let searchTimeout = null
 const handleSearchQuery = (query) => {
-  searchTerm.value = query || ''
+  searchTerm.value = (query || '').trim()
 
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
+  if (searchTimeout) clearTimeout(searchTimeout)
+
+  if (searchTerm.value.length < MIN_QUERY_CHARS) {
+    return
   }
 
   searchTimeout = setTimeout(() => {
@@ -137,15 +145,16 @@ const handleSearchQuery = (query) => {
 watch(
   existingMembers,
   () => {
-    memberOptions.fetch()
+    if (searchTerm.value.trim().length >= MIN_QUERY_CHARS) {
+      memberOptions.fetch()
+    }
   },
-  { deep: true },
+  { deep: false },
 )
 
 const newMembers = ref([])
 const role = ref('Volunteer')
 
-import { onUnmounted } from 'vue'
 onUnmounted(() => {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
