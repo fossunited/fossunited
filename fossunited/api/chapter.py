@@ -98,14 +98,21 @@ def generate_ics(event_ids):
         ],
     )
     for event in events:
+        start = event.event_start_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
+        end = event.event_end_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
+
+        # Skip if end is before start
+        if end < start:
+            continue
+
         e = Event()
         e.name = event.event_name
         e.location = event.event_location
         e.organizer = event.chapter_name + " Community"
         e.description = event.event_description
         e.url = "https://fossunited.org/" + str(event.route)
-        e.begin = event.event_start_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
-        e.end = event.event_end_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
+        e.begin = start
+        e.end = end
         c.events.add(e)
 
     return c.serialize()
