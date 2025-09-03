@@ -58,7 +58,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Chapter Type",
-   "options": "City Community\nFOSS Club\nConference",
+   "options": "City Community\nFOSS Club\nConference\nOnline",
    "reqd": 1
   },
   {
