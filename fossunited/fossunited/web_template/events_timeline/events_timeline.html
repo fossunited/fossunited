@@ -1,15 +1,9 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
+{% set grouped_events = get_grouped_events_by_chapter_type() %}
 
-{% macro render_event_groups(grouped_events, show_city=true, show_club=false) %}
-  {% set items = [] %}
-  {% if show_city %}
-    {% set items = items + grouped_events.city.items() | list %}
-  {% endif %}
-  {% if show_club %}
-    {% set items = items + grouped_events.club.items() | list %}
-  {% endif %}
-  {% for group, events in items %}
+{% macro render_event_groups(grouped_events, chapter="All Events") %}
+  {% for group, events in grouped_events[chapter].items() %}
     <div class="event-group" role="region">
       <h3>{{ group }}</h3>
 
@@ -112,7 +106,7 @@
     flex-direction: row-reverse;
     border-radius: 8px;
     background: #fff;
-    padding: 1rem;
+    padding: 0.7rem;
     gap: 0.5rem;
   }
 
@@ -122,7 +116,7 @@
 
   .search-filter-controlpanel {
     display: flex;
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   .event-group {
@@ -136,6 +130,7 @@
     background: #1a1a1a;
     color: #fff;
     padding: 8px;
+    text-align: center;
   }
 
   .ics-button {
@@ -199,6 +194,7 @@
 
       <!-- Must Attend Checkbox -->
       <div class="must-attend-checkbox">
+        <label for="must-attend-checkbox">Must Attend</label>
         <input
           type="checkbox"
           v-model="mustAttendOnly"
@@ -206,19 +202,18 @@
           title="Show only must-attend events"
           aria-describedby="must-attend-desc"
         />
-        <label for="must-attend-checkbox">Must Attend</label>
       </div>
       <p id="must-attend-desc" class="sr-only">
         Filter the events to show only those marked as must-attend.
       </p>
 
-      <div class="must-attend-checkbox">
-        <select id="selectedEventSource" v-model="selectedEventSource" class="select-theme">
-          <option value="city">City Events</option>
-          <option value="club">Club Events</option>
-          <option value="both">Both</option>
+      <div id="event-filter-select" class="must-attend-checkbox">
+        <select id="filterEvent" v-model="filterEvent" class="select-theme">
+          {% for chapter_type in grouped_events.keys() %}
+            <option value="{{ chapter_type }}">{{ chapter_type }}</option>
+          {% endfor %}
         </select>
-        <label for="selectedEventSource">Show Events</label>
+        <label>Filter Events</label>
       </div>
 
       <!-- City Chapter selector -->
@@ -243,20 +238,11 @@
       <i class="ti ti-download"></i>
     </button>
 
-    <!--Primary Event cards listing-->
-    {% set grouped_events = get_grouped_events_by_chapter_type() %}
-
-    <div v-if="selectedEventSource === 'city'">
-      {{ render_event_groups(grouped_events, show_city=true, show_club=false) }}
-    </div>
-
-    <div v-else-if="selectedEventSource === 'club'">
-      {{ render_event_groups(grouped_events, show_city=false, show_club=true) }}
-    </div>
-
-    <div v-else-if="selectedEventSource === 'both'">
-      {{ render_event_groups(grouped_events, show_city=true, show_club=true) }}
-    </div>
+    {% for chapter in grouped_events.keys() %}
+      <div v-show="filterEvent === '{{ chapter }}'">
+        {{ render_event_groups(grouped_events, chapter) }}
+      </div>
+    {% endfor %}
 
     <script>
       PetiteVue.createApp({
@@ -264,7 +250,7 @@
         ticker: 1,
         mustAttendOnly: false,
         cityChapter: 'All Cities',
-        selectedEventSource: 'city',
+        filterEvent: 'All Events',
         canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
           if (this.mustAttendOnly && !eventMustAttend) {
             return false
@@ -283,10 +269,11 @@
             eventDate.toLowerCase().includes(this.searchText.toLowerCase())
           )
         },
+
         updateTicker() {
           // Mention each variable here to ensure PetiteVue tracks dependencies.
           // Whenever any of these change, v-show/v-if will update.
-          this.selectedEventSource
+          this.filterEvent
           this.mustAttendOnly
           this.searchText
           this.cityChapter
@@ -300,27 +287,28 @@
       }).mount()
 
       function downloadEventIcs() {
-        let event_ids = new Array()
-        const selectedSource = document.getElementById('selectedEventSource').value
+        let event_ids = []
 
-        const sourceToGroupClass = {
-          city: 'UpcomingCityFOSSEvents',
-          club: 'UpcomingClubFOSSEvents',
+        const filteredEvents = document.getElementById('filterEvent').value
+        const cleaned = filteredEvents.replace(/ Events/i, '').replace(/\s+/g, '')
+        const result = `Upcoming${cleaned}Events`
+
+        if (filteredEvents.length === 0) {
+          alert('Please select at least one Event Filter before downloading the ICS.')
+          return
         }
 
-        let selector
-
-        if (selectedSource === 'both') {
-          selector = Object.values(sourceToGroupClass)
-            .map((className) => `div.event-card-holder.${className}`)
-            .join(', ')
-        } else {
-          selector = `div.event-card-holder.${sourceToGroupClass[selectedSource]}`
-        }
-
-        document.querySelectorAll(selector).forEach((event) => {
-          event_ids.push(event.id)
+        // Build the CSS selector to match only visible event card holders
+        // Assuming each event is rendered inside a div like:
+        // <div class="event-card-holder UpcomingCityFOSSEvents">
+        // Now select all matching elements
+        document.querySelectorAll(`div.${result}.event-card-holder`).forEach((event) => {
+          if (event.id) {
+            event_ids.push(event.id)
+          }
         })
+
+        // Call your backend method to generate ICS file
         frappe.call({
           method: 'fossunited.api.chapter.generate_ics',
           args: {
