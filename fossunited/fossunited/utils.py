@@ -262,8 +262,7 @@ def get_grouped_events_by_chapter_type():
         )
         result[chapter_type] = grouped
 
-    # Add "All" group
-    result["All"] = get_month_grouped_events(
+    result["All Events"] = get_month_grouped_events(
         all_events,
         all_hackathons,
         "All",
