@@ -33,13 +33,14 @@
               :type="'text'"
               size="md"
               label="Event Permalink&ast;"
+              description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>"
             />
             <FormControl
               :value="getEventLink()"
               size="md"
               label="Event Link"
               :disabled="true"
-              description="The event link will be as shown above."
+              description="The event URL will appear as shown above, using the structure: <event-page>/<event-permalink>."
             />
             <FormControl
               v-model="temp_event.status"
