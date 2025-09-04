@@ -6,7 +6,13 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import create_email_group
-from fossunited.doctype_ids import CHAPTER, HACKATHON, HACKATHON_PROJECT, PROPOSAL, USER_PROFILE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    HACKATHON,
+    HACKATHON_PROJECT,
+    PROPOSAL,
+    USER_PROFILE,
+)
 
 no_cache = 1
 
@@ -114,12 +120,41 @@ class FOSSHackathon(WebsiteGenerator):
         return nav_items
 
     def get_sponsors(self):
-        sponsors_dict = {}
-        for sponsor in self.sponsor_list:
-            if sponsor.tier not in sponsors_dict:
-                sponsors_dict[sponsor.tier] = []
-            sponsors_dict[sponsor.tier].append(sponsor)
-        return sponsors_dict
+        # Get industry partners with joining_date
+        ip_lookup = {
+            ip["company"]: ip["joining_date"]
+            for ip in frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
+        }
+
+        # Define tier sort order
+        sort_order = {"Platinum": 0, "Gold": 1, "Silver": 2, "Bronze": 3}
+
+        # Group sponsors by tier
+        sponsors_by_tier = {}
+        for s in self.sponsor_list:
+            tier = s.custom_tier if s.tier == "Custom" else s.tier
+            s.tier = tier
+            s.is_ip = s.sponsor_name in ip_lookup
+            s.sort_date = ip_lookup.get(s.sponsor_name) if s.is_ip else s.date_of_confirm
+            sponsors_by_tier.setdefault(tier, []).append(s)
+
+        # Sort sponsors within each tier
+        for sponsor_group in sponsors_by_tier.values():
+            sponsor_group.sort(
+                key=lambda s: (
+                    not s.is_ip,
+                    s.sort_date or frappe.utils.getdate(frappe.utils.today()),
+                    s.sponsor_name.lower(),
+                )
+            )
+
+        # Return sponsors_by_tier dict in sorted tier order
+        return dict(
+            sorted(
+                sponsors_by_tier.items(),
+                key=lambda x: sort_order.get(x[0], float("inf")),
+            )
+        )
 
     def get_schedule_dict(self):
         schedule_dict = {}
@@ -127,7 +162,7 @@ class FOSSHackathon(WebsiteGenerator):
             date = schedule.scheduled_date.strftime("%-d %B")
             if date not in schedule_dict:
                 schedule_dict[date] = []
-            get_speakers(schedule)
+            self.get_speakers(schedule)
             if schedule.start_time:
                 schedule.start_time = BASE_DATE + schedule.start_time
             if schedule.end_time:
@@ -162,15 +197,14 @@ class FOSSHackathon(WebsiteGenerator):
             )
         return members
 
+    def get_speakers(schedule):
+        if not schedule.linked_cfp:
+            schedule.no_speaker = True
+            return
 
-def get_speakers(schedule):
-    if not schedule.linked_cfp:
-        schedule.no_speaker = True
-        return
-
-    cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
-    user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
-    schedule.cfp_route = cfp.route
-    schedule.speaker_route = user.route
-    schedule.speaker_full_name = user.full_name
-    schedule.speaker_designation_company = cfp.designation + " at " + cfp.organization
+        cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
+        user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
+        schedule.cfp_route = cfp.route
+        schedule.speaker_route = user.route
+        schedule.speaker_full_name = user.full_name
+        schedule.speaker_designation_company = cfp.designation + " at " + cfp.organization

@@ -44,14 +44,18 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (  # noqa: E501
             EventProjectShowcase,
         )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
+            FOSSEventField,
+        )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
             FOSSEventSponsor,
         )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
+            FOSSTicketTier,
+        )
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -187,7 +191,8 @@ class FOSSChapterEvent(WebsiteGenerator):
             },
         ):
             frappe.throw(
-                f"Event Permalink {self.event_permalink} already exists!", frappe.ValidationError
+                f"Event Permalink {self.event_permalink} already exists!",
+                frappe.ValidationError,
             )
 
         if " " in self.event_permalink:
@@ -240,7 +245,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
         image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
-            self=self, og_url=og_url, start_date=self.event_start_date.strftime("%-d %B %Y")
+            self=self,
+            og_url=og_url,
+            start_date=self.event_start_date.strftime("%-d %B %Y"),
         )
 
         return pagetitle, description, image
@@ -269,27 +276,41 @@ class FOSSChapterEvent(WebsiteGenerator):
         return navbar_items
 
     def get_sponsors(self):
-        sponsors_dict = {}
-        for sponsor in self.sponsor_list:
-            tier = self.get_tier(sponsor)
-            if tier not in sponsors_dict:
-                sponsors_dict[tier] = []
-            sponsors_dict[tier].append(sponsor)
+        # Get industry partners with joining_date
+        ip_lookup = {
+            ip["company"]: ip["joining_date"]
+            for ip in frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
+        }
 
-        sort_order = ["Platinum", "Gold", "Silver", "Bronze", "Custom"]
-        # Sort tiers based on their position in sort_order; unknown tiers go last
-        sponsors_dict = dict(
+        # Define tier sort order
+        sort_order = {"Platinum": 0, "Gold": 1, "Silver": 2, "Bronze": 3}
+
+        # Group sponsors by tier
+        sponsors_by_tier = {}
+        for s in self.sponsor_list:
+            tier = s.custom_tier if s.tier == "Custom" else s.tier
+            s.tier = tier
+            s.is_ip = s.sponsor_name in ip_lookup
+            s.sort_date = ip_lookup.get(s.sponsor_name) if s.is_ip else s.date_of_confirm
+            sponsors_by_tier.setdefault(tier, []).append(s)
+
+        # Sort sponsors within each tier
+        for sponsor_group in sponsors_by_tier.values():
+            sponsor_group.sort(
+                key=lambda s: (
+                    not s.is_ip,
+                    s.sort_date or frappe.utils.getdate(frappe.utils.today()),
+                    s.sponsor_name.lower(),
+                )
+            )
+
+        # Return sponsors_by_tier dict in sorted tier order
+        return dict(
             sorted(
-                sponsors_dict.items(),
-                key=lambda x: sort_order.index(x[0]) if x[0] in sort_order else len(sort_order),
+                sponsors_by_tier.items(),
+                key=lambda x: sort_order.get(x[0], float("inf")),
             )
         )
-        return sponsors_dict
-
-    def get_tier(self, sponsor):
-        if sponsor.tier == "Custom":
-            return sponsor.custom_tier
-        return sponsor.tier
 
     def get_volunteers(self):
         members = []
@@ -311,7 +332,9 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_speakers(self):
         submissions = frappe.db.get_all(
-            PROPOSAL, {"event": self.name, "status": "Approved"}, ["name", "talk_title", "route"]
+            PROPOSAL,
+            {"event": self.name, "status": "Approved"},
+            ["name", "talk_title", "route"],
         )
 
         speakers = []
@@ -320,7 +343,14 @@ class FOSSChapterEvent(WebsiteGenerator):
             _submission_speakers = frappe.db.get_all(
                 SPEAKER,
                 {"parent": submission.name},
-                ["photo", "full_name", "designation", "organization", "linked_user", "parent"],
+                [
+                    "photo",
+                    "full_name",
+                    "designation",
+                    "organization",
+                    "linked_user",
+                    "parent",
+                ],
             )
             speakers.extend(_submission_speakers)
 
