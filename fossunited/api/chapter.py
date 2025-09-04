@@ -144,9 +144,9 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
     )
 
     if not check_if_event_lead(event_id):
-        # Mask email and return limited data
         for s in submissions:
             s["email"] = mask_email(s.get("email"))
+            s.pop("name", None)
         return submissions
 
     # Event lead: fetch full answers
@@ -179,17 +179,17 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             if response is None:
                 response = ""
             if not full:
-                response = _truncate_label(str(response), 50)
+                response = _truncate_label(str(response), 30)
 
-            s[f"cf_{key}"] = response
+            s[f"{key}"] = response
 
             # Truncate label if not full
             raw_label = a.get("question")
             label = "" if raw_label is None else str(raw_label)
             if not full:
-                label = _truncate_label(label, 50)
+                label = _truncate_label(label, 30)
 
-            s.setdefault("_answers", {})[f"cf_{key}"] = label
+        s.pop("name", None)
 
     return submissions
 
@@ -277,25 +277,24 @@ def download_attendee_list_csv(event_id: str) -> str:
     import io
     import re
 
-    # Get full submission data (labels and answers)
+    # Get full submission data (each is a dict)
     submissions = get_submissions_with_answers(event_id, full=True)
 
     if not submissions:
         return ""
 
-    # Determine all columns
-    base_keys = ["name1", "email", "im_a"]
-    label_map = {"name1": "Name", "email": "Email", "im_a": "I am a"}
+    # Start with keys from the first row to preserve order
+    columns = list(submissions[0].keys())
+    seen = set(columns)
 
-    custom_keys = sorted({key for s in submissions for key in s.keys() if key.startswith("cf_")})
+    # Add any new keys from other rows (if any), in the order they appear
+    for row in submissions[1:]:
+        for key in row.keys():
+            if key not in seen:
+                columns.append(key)
+                seen.add(key)
 
-    # Union labels from all rows
-    labels = {}
-    for s in submissions:
-        if "_answers" in s and isinstance(s["_answers"], dict):
-            labels.update(s["_answers"])
-    columns = base_keys + custom_keys
-    headers = [label_map.get(k, labels.get(k, k)) for k in columns]
+    headers = columns
 
     # Escape helper (like toCSVCell)
     def cleanse_csv_cell(value):
@@ -314,12 +313,16 @@ def download_attendee_list_csv(event_id: str) -> str:
         writer.writerow([cleanse_csv_cell(row.get(col, "")) for col in columns])
 
     csv_data = "\ufeff" + output.getvalue()  # BOM for Excel
-    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
 
+    # Create safe filename
+    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
     safe_event_name = re.sub(r"[^A-Za-z0-9._-]+", "_", event_name)
     filename = f"Attendee_List_-_{safe_event_name}.csv"
 
+    # Set file response
     frappe.response["filename"] = filename
     frappe.response["filecontent"] = csv_data
     frappe.response["content_type"] = "text/csv; charset=utf-8"
     frappe.response["type"] = "download"
+
+    return csv_data

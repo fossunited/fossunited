@@ -71,34 +71,20 @@ const submissions = createResource({
 })
 
 const listColumns = computed(() => {
-  const baseKeys = ['name1', 'email', 'im_a']
-  const columns = baseKeys.map((key) => {
-    const labelMap = { name1: 'Name', email: 'Email', im_a: 'I am a' }
-    return {
-      label: labelMap[key] || key,
-      key,
-    }
-  })
+  const columns = new Map()
 
-  if (isEventLead.value && Array.isArray(submissions.data) && submissions.data.length > 0) {
-    const customFields = new Set()
-    const labels = {}
+  // Collect keys from all submissions
+  if (Array.isArray(submissions.data)) {
     submissions.data.forEach((submission) => {
       Object.keys(submission).forEach((key) => {
-        if (key.startsWith('cf_')) customFields.add(key)
+        if (!columns.has(key)) {
+          columns.set(key, { key, label: key }) // Use key as label directly
+        }
       })
-      if (submission._answers) {
-        Object.assign(labels, submission._answers)
-      }
     })
-    Array.from(customFields)
-      .sort()
-      .forEach((key) => {
-        columns.push({ label: labels[key] || key, key })
-      })
   }
 
-  return columns
+  return Array.from(columns.values())
 })
 
 const downloadAttendeeList2 = () => {
