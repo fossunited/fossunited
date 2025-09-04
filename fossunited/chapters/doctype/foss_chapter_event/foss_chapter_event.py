@@ -276,31 +276,45 @@ class FOSSChapterEvent(WebsiteGenerator):
         return navbar_items
 
     def get_sponsors(self):
-        # Get industry partners with joining_date
+        # Get industry partners with joining_date (normalize company names, normalize dates)
+        ip_records = frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
         ip_lookup = {
-            ip["company"]: ip["joining_date"]
-            for ip in frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
+            (ip.get("company") or "").strip().lower(): frappe.utils.getdate(ip.get("joining_date"))
+            if ip.get("joining_date")
+            else None
+            for ip in ip_records
+        }
+        # Define tier sort order (include Venue Partner per spec)
+        sort_order = {
+            "Platinum": 0,
+            "Gold": 1,
+            "Silver": 2,
+            "Bronze": 3,
+            "Venue Partner": 4,
         }
 
-        # Define tier sort order
-        sort_order = {"Platinum": 0, "Gold": 1, "Silver": 2, "Bronze": 3}
-
-        # Group sponsors by tier
+        # Group sponsors by tier (do not mutate persisted fields like `tier`)
         sponsors_by_tier = {}
         for s in self.sponsor_list:
-            tier = s.custom_tier if s.tier == "Custom" else s.tier
-            s.tier = tier
-            s.is_ip = s.sponsor_name in ip_lookup
-            s.sort_date = ip_lookup.get(s.sponsor_name) if s.is_ip else s.date_of_confirm
-            sponsors_by_tier.setdefault(tier, []).append(s)
+            tier_key = (s.custom_tier or "Custom").strip() if s.tier == "Custom" else s.tier
+            sponsor_key = (s.sponsor_name or "").strip().lower()
+            s.is_ip = sponsor_key in ip_lookup
+            s.sort_date = (
+                ip_lookup.get(sponsor_key)
+                if s.is_ip
+                else (frappe.utils.getdate(s.date_of_confirm) if s.date_of_confirm else None)
+            )
+            sponsors_by_tier.setdefault(tier_key, []).append(s)
 
         # Sort sponsors within each tier
+        fallback_date = frappe.utils.getdate(frappe.utils.today())
         for sponsor_group in sponsors_by_tier.values():
             sponsor_group.sort(
                 key=lambda s: (
                     not s.is_ip,
-                    s.sort_date or frappe.utils.getdate(frappe.utils.today()),
-                    s.sponsor_name.lower(),
+                    s.sort_date is None,
+                    s.sort_date or fallback_date,
+                    (s.sponsor_name or "").lower(),
                 )
             )
 
