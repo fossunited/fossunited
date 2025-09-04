@@ -206,7 +206,7 @@ def get_grouped_events_by_chapter_type():
         EVENT,
         fields=["*"],
         filters={"is_published": 1},
-        order_by="event_start_date",
+        order_by="event_start_date asc",
     )
 
     # Get all hackathons
@@ -214,7 +214,7 @@ def get_grouped_events_by_chapter_type():
         HACKATHON,
         fields=["*"],
         filters={"is_published": 1},
-        order_by="start_date",
+        order_by="start_date asc",
     )
 
     # Cache to avoid duplicate DB hits
@@ -253,7 +253,7 @@ def get_grouped_events_by_chapter_type():
     result = {}
 
     # Individual chapter_type groups
-    all_chapter_types = set(event_groups) | set(hackathon_groups)
+    all_chapter_types = sorted(set(event_groups) | set(hackathon_groups))
     for chapter_type in all_chapter_types:
         grouped = get_month_grouped_events(
             event_groups.get(chapter_type, []),
@@ -293,18 +293,18 @@ def process_event(event, event_list, chapter=""):
     """
     now = now_datetime()
 
-    # Support both Events (event_start_date) and Hackathons (start_date)
-    raw_dt = event.get("event_start_date") or event.get("start_date")
-    if not raw_dt:
+    # Start drives grouping; End drives classification
+    start_raw = event.get("event_start_date") or event.get("start_date")
+    end_raw = event.get("event_end_date") or event.get("end_date") or start_raw
+    if not start_raw:
         return
 
-    event_dt = frappe.utils.get_datetime(raw_dt)
-    event["month_year"] = frappe.utils.formatdate(event_dt, "MMMM yyyy")
+    start_dt = frappe.utils.get_datetime(start_raw)
+    end_dt = frappe.utils.get_datetime(end_raw)
+    event["month_year"] = frappe.utils.formatdate(start_dt, "MMMM yyyy")
+    event["_sort_dt"] = start_dt
 
-    # store for stable sorting later
-    event["_sort_dt"] = event_dt
-
-    if event_dt > now:
+    if end_dt >= now:
         event_list[f"Upcoming {chapter} Events"].append(event)
     else:
         event_list[f"Past {chapter} Events"].append(event)
