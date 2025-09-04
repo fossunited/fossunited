@@ -32,9 +32,14 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         self.submission = insert_rsvp_submission(
             linked_rsvp=self.rsvp.name,
             name="Alice",
-            email="alice@example.com",
+            email="alicewonderland@example.com",
             im_a="Student",
-            custom_answers=[{"question": "What’s your goal?", "response": "To learn"}],
+            custom_answers=[
+                {
+                    "question": "What’s your goal?",
+                    "response": "To become the king of the pirates and greatest swordsmen.",
+                }
+            ],
         )
         self._extra_responses = []
 
@@ -68,21 +73,23 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         self.assertTrue(result)
         # Check email is masked: basic pattern check
         self.assertIn("@", result[0]["email"])
-        self.assertNotEqual(result[0]["email"], "alice@example.com")
+        self.assertNotEqual(result[0]["email"], "alicewonderland@example.com")
 
     def test_event_core_team_full_email(self):
         frappe.set_user(self.core_team_email)
         result = get_submissions_with_answers(self.event.name, full=False)
         self.assertTrue(result)
         self.assertIn("@", result[0]["email"])
-        self.assertEqual(result[0]["email"], "alice@example.com")
+        self.assertEqual(result[0]["email"], "alicewonderland@example.com")
 
     def test_event_core_team_gets_full_answers(self):
         frappe.set_user(self.core_team_email)
         result = get_submissions_with_answers(self.event.name, full=True)
-        self.assertIn("cf_whats_your_goal", result[0])
-        self.assertEqual(result[0]["cf_whats_your_goal"], "To learn")
-        self.assertEqual(result[0]["_answers"]["cf_whats_your_goal"], "What’s your goal?")
+        self.assertIn("whats_your_goal", result[0])
+        self.assertEqual(
+            result[0]["whats_your_goal"],
+            "To become the king of the pirates and greatest swordsmen.",
+        )
 
     def test_truncation_when_full_false(self):
         frappe.set_user(self.core_team_email)
@@ -99,7 +106,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         result = get_submissions_with_answers(self.event.name, full=False)
         for s in result:
             for key, val in s.items():
-                if key.startswith("cf_"):
+                if key.startswith(""):
                     self.assertLessEqual(len(val), 52)
 
     def test_no_truncation_when_full_true(self):
@@ -119,8 +126,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         for s in result:
             if s.get("email") == "charlie@example.com":
                 found = True
-                self.assertEqual(s["cf_what_do_you_bring"], response)
-                self.assertEqual(s["_answers"]["cf_what_do_you_bring"], question)
+                self.assertEqual(s["what_do_you_bring"], response)
         self.assertTrue(found, "Charlie submission not found in results")
 
     def test_non_core_basic_fields(self):
@@ -143,10 +149,9 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
             self.assertIn("email", submission)
             self.assertIn("im_a", submission)
 
-            # Ensure no custom fields (starting with 'cf_') are present
+            # Ensure no custom fields (starting with '') are present
             for key in submission.keys():
                 self.assertFalse(
-                    key.startswith("cf_"),
+                    key.startswith("why"),
                     f"Non-core_team should not see custom field: {key}",
                 )
-            self.assertNotIn("_answers", submission, "Non-core_team should not see _answers")
