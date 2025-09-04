@@ -4,23 +4,20 @@
       <div class="flex items-center justify-between">
         <div class="font-semibold text-gray-800">
           Attendees
-
-          <span class="text-gray-700 text-base font-normal"
-            >({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})</span
-          >
+          <span class="text-gray-700 text-base font-normal">
+            ({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})
+          </span>
         </div>
-        <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
+        <Button size="md" icon-left="download" @click="downloadAttendeeList2">Download</Button>
       </div>
+
       <ListView
-        :columns="[
-          { label: 'Name', key: 'name1' },
-          { label: 'Email', key: 'email' },
-          { label: 'I am a', key: 'im_a' },
-        ]"
+        :columns="listColumns"
         :rows="submissions.data"
         row-key="name"
         :options="{
           selectable: false,
+          resizeColumn: true,
           emptyState: {
             description: 'No one has RSVPed for the event yet.',
           },
@@ -29,9 +26,10 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { useRoute } from 'vue-router'
-import { inject, ref } from 'vue'
+import { inject, ref, computed } from 'vue'
 import { createListResource, createResource, ListView, Button } from 'frappe-ui'
 
 const route = useRoute()
@@ -63,36 +61,37 @@ const event_lead = createResource({
   auto: true,
 })
 
-const submissions = createListResource({
-  doctype: 'FOSS Event RSVP Submission',
-  fields: ['*'],
-  filters: {
-    event: route.params.id,
+const submissions = createResource({
+  url: 'fossunited.api.chapter.get_submissions_with_answers',
+  params: {
+    event_id: route.params.id,
+    full: false,
   },
-  pageLength: 99999,
   auto: true,
-  transform(data) {
-    if (!isEventLead.value) {
-      data.forEach((submission) => {
-        submission.email = submission.email.replace(/(?<=.{3}).(?=[^@]*?@)/g, '*')
-      })
-    }
-  },
 })
 
-const downloadAttendeeList = () => {
-  const csv = submissions.data
-    .map((submission) => {
-      return [submission.name1, submission.email, submission.im_a].join(',')
-    })
-    .join('\n')
+const listColumns = computed(() => {
+  const columns = new Map()
 
-  const blob = new Blob([csv], { type: 'text/csv' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `Attendee List-${rsvp_form.data.event_name}-${new Date().toISOString().split('T')[0]}.csv`
-  a.click()
-  URL.revokeObjectURL(url)
+  // Collect keys from all submissions
+  if (Array.isArray(submissions.data)) {
+    submissions.data.forEach((submission) => {
+      Object.keys(submission).forEach((key) => {
+        if (!columns.has(key)) {
+          columns.set(key, { key, label: key }) // Use key as label directly
+        }
+      })
+    })
+  }
+
+  return Array.from(columns.values())
+})
+
+const downloadAttendeeList2 = () => {
+  const eventId = route.params.id
+  window.open(
+    `/api/method/fossunited.api.chapter.download_attendee_list_csv?event_id=${eventId}`,
+    '_self',
+  )
 }
 </script>

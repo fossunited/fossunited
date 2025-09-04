@@ -21,7 +21,9 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
-from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
+from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
+    FOSSTicketTier,
+)
 
 fake = Faker()
 
@@ -87,8 +89,16 @@ def insert_test_chapter(**kwargs):
             try:
                 profile = frappe.db.get_value(USER_PROFILE, {"user": member}, "name")
                 if not profile:
-                    frappe.log_error(f"Profile not found for member: {member}")
-                    continue  # Skip invalid members
+                    # Create User and User Profile
+                    user_profile = frappe.get_doc(
+                        {
+                            "doctype": USER_PROFILE,
+                            "user": member,
+                            "full_name": member.split("@")[0].title(),
+                        }
+                    ).insert(ignore_permissions=True)
+
+                    profile = user_profile.name
 
                 chapter.append(
                     "chapter_members",
@@ -188,6 +198,7 @@ def insert_test_event(chapter: dict, **kwargs):
         # Create and insert event
         event = frappe.get_doc(event_data)
         event.insert()
+        event.save()
         event.reload()
 
         return event
