@@ -3,49 +3,58 @@
 {% set grouped_events = get_grouped_events_by_chapter_type() %}
 
 {% macro render_event_groups(grouped_events, chapter="All Events") %}
-  {% for group, events in grouped_events[chapter].items() %}
-	{% set base_group = chapter[:-7] if chapter.endswith(' Events') else chapter %}
-	{% set is_past = (group == 'Past ' ~ base_group ~ ' Events') %}
-	{% if is_past %}
-	  <details role="region">
-		<summary class="select-theme">Show Past {{ base_group }} Events</summary>
-	{% endif %}
+  {% for group, events in (grouped_events.get(chapter) or {}).items() %}
+    {% set is_past = group.startswith('Past ') %}
+    {% set base_group = group.replace('Upcoming ', '').replace('Past ', '').replace(' FOSS', '').replace(' Events', '') %}
 
-	<div class="event-group" role="region">
-	  <h3>{{ group }}</h3>
+    {% if is_past %}
+      <details role="region">
+        <summary class="select-theme">Show Past {{ base_group }} Events</summary>
+    {% endif %}
 
-	  {% for month, month_events in events.items() %}
-	  <h4 class="event-month"
-			v-show="ticker > 0 && $el?.nextElementSibling.style.display != 'none'">
-		  {{ month }}
-		</h4>
+    <div class="event-group" role="region">
+      <h3>{{ group }}</h3>
 
-		<div class="events-grid-4"
-			 role="group"
-			 v-effect="updateTicker()"
-			 v-show="ticker > 0 && $el?.children.length > 0">
-		  {% for event in month_events %}
-			{% set event_date_text = event.event_start_date.strftime("%d %b %Y") if event.event_start_date else event.start_date.strftime("%d %b %Y") %}
+      {% for month, month_events in events.items() %}
+        <h4
+          class="event-month"
+          v-show="(mustAttendOnly, searchText, cityChapter, filterEvent, $el?.nextElementSibling?.style?.display !== 'none')"
+        >
+          {{ month }}
+        </h4>
 
-			{% if event.event_name %}
-			  <div class="event-card-holder {{ group | replace(" ", "") }}"
-				   id="{{ event.name }}"
-				   role="listitem"
-				   v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')">
-				{{ event_card(event) }}
-			  </div>
-			{% else %}
-			  <div class="event-card-holder {{ group | replace(" ", "") }}"
-				   id="{{ event.name }}"
-				   role="listitem"
-				   v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')">
-				{{ hackathon_card(event) }}
-			  </div>
-			{% endif %}
-		  {% endfor %}
-		</div>
-	  {% endfor %}
-	</div>
+        <div
+          class="events-grid-4"
+          role="group"
+          v-show="(mustAttendOnly, searchText, cityChapter, filterEvent, $el?.children.length > 0)"
+        >
+          {% for event in month_events %}
+            {% set raw_date = event.event_start_date or event.start_date %}
+            {% set event_date_text = frappe.utils.formatdate(raw_date, "d MMM yyyy") %}
+
+            {% if event.event_name %}
+              <div
+                class="event-card-holder {{ group | replace(" ", "") }}"
+                id="{{ event.name }}"
+                role="listitem"
+                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
+              >
+                {{ event_card(event) }}
+              </div>
+            {% else %}
+              <div
+                class="event-card-holder {{ group | replace(" ", "") }}"
+                id="{{ event.name }}"
+                role="listitem"
+                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
+              >
+                {{ hackathon_card(event) }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+    </div>
 	{% if is_past %}
 	  </details>
 	{% endif %}
@@ -59,235 +68,234 @@
 
 <style>
   .events-timeline {
-	padding-top: 7rem;
-	padding-bottom: 7rem;
-	display: flex;
-	flex-direction: column;
-	gap: 4rem;
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 4rem;
   }
   .sr-only {
-	position: absolute;
-	width: 1px;
-	height: 1px;
-	padding: 0;
-	margin: -1px;
-	overflow: hidden;
-	clip: rect(0, 0, 0, 0);
-	white-space: nowrap;
-	border: 0;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .events-search {
-	display: flex;
-	padding: 0.5rem;
-	border-radius: 0.5rem;
-	border: 1px solid var(--Gray-200, #eaecf0);
-	background-color: white;
-	min-width: 40%;
-	align-items: center;
+    display: flex;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--Gray-200, #eaecf0);
+    background-color: white;
+    min-width: 40%;
+    align-items: center;
   }
 
   #events-search {
-	border-color: transparent;
-	width: 100%;
+    border-color: transparent;
+    width: 100%;
   }
 
   #events-search::placeholder {
-	color: var(--Gray-500, #667085);
+    color: var(--Gray-500, #667085);
   }
 
   #events-search:focus,
   .must-attend-checkbox input:focus + label {
-	outline: 2px solid var(--Gray-500, #667085);
-	outline-offset: 2px;
+    outline: 2px solid var(--Gray-500, #667085);
+    outline-offset: 2px;
   }
 
   .must-attend-checkbox {
-	display: flex;
-	align-items: center;
-	flex-direction: row-reverse;
-	border-radius: 8px;
-	background: #fff;
-	padding: 0.7rem;
-	gap: 0.5rem;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    border-radius: 8px;
+    background: #fff;
+    padding: 0.7rem;
+    gap: 0.5rem;
   }
 
   .must-attend-checkbox label {
-	margin: 0;
+    margin: 0;
   }
 
   .search-filter-controlpanel {
-	display: flex;
-	gap: 0.8rem;
+    display: flex;
+    gap: 0.8rem;
   }
 
   .event-group {
-	display: flex;
-	flex-direction: column;
-	gap: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
   }
 
   .select-theme {
-	border-radius: var(--radius-4, 8px);
-	background: #1a1a1a;
-	color: #fff;
-	padding: 8px;
-	text-align: center;
+    border-radius: var(--radius-4, 8px);
+    background: #1a1a1a;
+    color: #fff;
+    padding: 8px;
+    text-align: center;
   }
 
   .ics-button {
-	display: flex;
-	height: 44px;
-	width: 230px;
-	padding: 12px 20px;
-	justify-content: center;
-	align-items: center;
-	gap: 8px;
-	flex: 1 0 0;
-	border-radius: var(--radius-4, 8px);
-	background: #1a1a1a;
-	color: #fafafa;
-	/* text/base/medium */
-	font-family: Inter;
-	font-size: 14px;
-	font-style: normal;
-	font-weight: 600;
-	line-height: 115%; /* 16.1px */
-	letter-spacing: 1.12px;
-	text-transform: uppercase;
+    display: flex;
+    height: 44px;
+    width: 230px;
+    padding: 12px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex: 1 0 0;
+    border-radius: var(--radius-4, 8px);
+    background: #1a1a1a;
+    color: #fafafa;
+    /* text/base/medium */
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 115%; /* 16.1px */
+    letter-spacing: 1.12px;
+    text-transform: uppercase;
   }
   .ics-button:hover {
-	background: #2b2b2b;
+    background: #2b2b2b;
   }
 
   @media (max-width: 768px) {
-	.search-filter-controlpanel {
-	  flex-direction: column;
-	}
+    .search-filter-controlpanel {
+      flex-direction: column;
+    }
 
-	.must-attend-checkbox {
-	  flex-direction: row;
-	  width: fit-content;
-	}
+    .must-attend-checkbox {
+      flex-direction: row;
+      width: fit-content;
+    }
 
-	.event-card-holder {
-	  width: 90%;
-	}
+    .event-card-holder {
+      width: 90%;
+    }
   }
 </style>
 
 <div v-scope>
   <div class="container events-timeline">
-	<!--Search filter panel-->
-	<div class="search-filter-controlpanel" role="search" aria-labelledby="search-panel-label">
-	  <h2 id="search-panel-label" class="sr-only">Search and Filter Events</h2>
+    <!--Search filter panel-->
+    <div class="search-filter-controlpanel" role="search" aria-labelledby="search-panel-label">
+      <h2 id="search-panel-label" class="sr-only">Search and Filter Events</h2>
 
-	  <!-- Search Input -->
-	  <div class="events-search">
-		<label for="events-search" class="sr-only">Search Events</label>
-		<input
-		  v-model="searchText"
-		  type="text"
-		  id="events-search"
-		  placeholder="Search by event name and date"
-		  aria-label="Search events by name and date"
-		/>
-	  </div>
+      <!-- Search Input -->
+      <div class="events-search">
+        <label for="events-search" class="sr-only">Search Events</label>
+        <input
+          v-model="searchText"
+          type="text"
+          id="events-search"
+          placeholder="Search by event name and date"
+          aria-label="Search events by name and date"
+        />
+      </div>
 
-	  <!-- Must Attend Checkbox -->
-	  <div class="must-attend-checkbox">
-		<label for="must-attend-checkbox">Must Attend</label>
-		<input
-		  type="checkbox"
-		  v-model="mustAttendOnly"
-		  id="must-attend-checkbox"
-		  title="Show only must-attend events"
-		  aria-describedby="must-attend-desc"
-		/>
-	  </div>
-	  <p id="must-attend-desc" class="sr-only">
-		Filter the events to show only those marked as must-attend.
-	  </p>
+      <!-- Must Attend Checkbox -->
+      <div class="must-attend-checkbox">
+        <label for="must-attend-checkbox">Must Attend</label>
+        <input
+          type="checkbox"
+          v-model="mustAttendOnly"
+          id="must-attend-checkbox"
+          title="Show only must-attend events"
+          aria-describedby="must-attend-desc"
+        />
+      </div>
+      <p id="must-attend-desc" class="sr-only">
+        Filter the events to show only those marked as must-attend.
+      </p>
 
       <div id="event-filter-select" class="must-attend-checkbox">
-        <select id="filterEvent" v-model="filterEvent" class="select-theme" aria-describedby="filter-event-desc">
-  		  {% for chapter_type in grouped_events.keys() %}
-			<option value="{{ chapter_type }}">{{ chapter_type }}</option>
-		  {% endfor %}
-		</select>
+        <select
+          id="filterEvent"
+          v-model="filterEvent"
+          class="select-theme"
+          aria-describedby="filter-event-desc"
+        >
+          {% for chapter_type in grouped_events.keys() %}
+            <option value="{{ chapter_type }}">{{ chapter_type }}</option>
+          {% endfor %}
+        </select>
         <label for="filterEvent">Filter Events</label>
-	  </div>
-	  <p id="filter-event-desc" class="sr-only">
-		Filter events by chapter type or show all events.
-	  </p>
+      </div>
+      <p id="filter-event-desc" class="sr-only">
+        Filter events by chapter type or show all events.
+      </p>
 
-	  <!-- City Chapter selector -->
-	  <div class="must-attend-checkbox">
-		<select id="cityChapter" v-model="cityChapter" class="select-theme">
-		  <option value="All Cities" selected>All Cities</option>
-		  {% set chapter_details = get_chapter_details() %}
-		  {% for chapter in chapter_details %}
-			<option value="{{ chapter.name }}">
-			  {{ chapter.chapter_name | truncate(15, False, '...', 0) }}
-			</option>
-		  {% endfor %}
-		</select>
-		<label for="cityChapter">City Chapter</label>
-	  </div>
-	  <p id="must-attend-desc" class="sr-only">
-		Filter the events to show only those in your city.
-	  </p>
-	</div>
-	<button onclick="downloadEventIcs()" class="child-container--subtext ics-button">
-	  Download ICS File
-	  <i class="ti ti-download"></i>
-	</button>
+      <!-- City Chapter selector -->
+      <div class="must-attend-checkbox">
+        <select
+          id="cityChapter"
+          v-model="cityChapter"
+          class="select-theme"
+          aria-describedby="city-chapter-desc"
+        >
+          <option value="All Cities" selected>All Cities</option>
+          {% set chapter_details = get_chapter_details() %}
+          {% for chapter in chapter_details %}
+            <option value="{{ chapter.name }}">
+              {{ chapter.chapter_name | truncate(15, False, '...', 0) }}
+            </option>
+          {% endfor %}
+        </select>
+        <label for="cityChapter">City Chapter</label>
+      </div>
+      <p id="must-attend-desc" class="sr-only">
+        Filter the events to show only those in your city.
+      </p>
+    </div>
+    <button onclick="downloadEventIcs()" class="child-container--subtext ics-button">
+      Download ICS File
+      <i class="ti ti-download"></i>
+    </button>
 
-	{% for chapter in grouped_events.keys() %}
-	  <div v-show="filterEvent === '{{ chapter }}'">
-		{{ render_event_groups(grouped_events, chapter) }}
-	  </div>
-	{% endfor %}
+    {% for chapter in grouped_events.keys() %}
+      <div v-show="filterEvent === '{{ chapter }}'">
+        {{ render_event_groups(grouped_events, chapter) }}
+      </div>
+    {% endfor %}
 
-	<script>
-	  PetiteVue.createApp({
-		searchText: '',
-		ticker: 1,
-		mustAttendOnly: false,
-		cityChapter: 'All Cities',
-		filterEvent: 'All Events',
-		canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
-		  if (this.mustAttendOnly && !eventMustAttend) {
-			return false
-		  }
+    <script>
+      PetiteVue.createApp({
+        searchText: '',
+        mustAttendOnly: false,
+        cityChapter: 'All Cities',
+        filterEvent: 'All Events',
+        canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
+          if (this.mustAttendOnly && !eventMustAttend) {
+            return false
+          }
 
-		  if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
-			return false
-		  }
+          if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
+            return false
+          }
 
-		  if (this.searchText.length == 0) {
-			return true
-		  }
+          if (this.searchText.length == 0) {
+            return true
+          }
 
-		  return (
-			eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-			eventDate.toLowerCase().includes(this.searchText.toLowerCase())
-		  )
-		},
+          return (
+            eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
+            eventDate.toLowerCase().includes(this.searchText.toLowerCase())
+          )
+        },
+      }).mount()
 
-		updateTicker() {
-		  // Mention each variable here to ensure PetiteVue tracks dependencies.
-		  // Whenever any of these change, v-show/v-if will update.
-		  this.filterEvent
-		  this.mustAttendOnly
-		  this.searchText
-		  this.cityChapter
-          PetiteVue.nextTick(() => { this.ticker++ })
-		},
-	  }).mount()
-
-	  function downloadEventIcs() {
-	  let event_ids = []
+      function downloadEventIcs() {
+        let event_ids = []
         const visibleCards = Array.from(document.querySelectorAll('div.event-card-holder'))
           // visible if not display:none in any ancestor
           .filter((el) => el.offsetParent !== null)
@@ -299,25 +307,25 @@
           return
         }
 
-		// Call your backend method to generate ICS file
-		frappe.call({
-		  method: 'fossunited.api.chapter.generate_ics',
-		  args: {
-			event_ids: event_ids,
-		  },
-		  callback: (r) => {
-			if (r.message) {
-			  const blob = new Blob([r.message], { type: 'text/calendar' })
-			  const url = URL.createObjectURL(blob)
-			  const a = document.createElement('a')
-			  a.href = url
-			  a.download = `events.ics`
-			  a.click()
-			  URL.revokeObjectURL(url)
-			}
-		  },
-		})
-	  }
-	</script>
+        // Call your backend method to generate ICS file
+        frappe.call({
+          method: 'fossunited.api.chapter.generate_ics',
+          args: {
+            event_ids: event_ids,
+          },
+          callback: (r) => {
+            if (r.message) {
+              const blob = new Blob([r.message], { type: 'text/calendar' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `events.ics`
+              a.click()
+              URL.revokeObjectURL(url)
+            }
+          },
+        })
+      }
+    </script>
   </div>
 </div>
