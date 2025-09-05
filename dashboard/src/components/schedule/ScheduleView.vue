@@ -24,7 +24,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, ref, computed } from 'vue'
+import { defineProps, ref, computed, watch } from 'vue'
 import SessionList from '@/components/schedule/SessionList.vue'
 import SessionListHeader from '@/components/schedule/SessionListHeader.vue'
 
@@ -58,4 +58,14 @@ const isCollapsed = (hall) => {
   // Collapse only matters in vertical view
   return props.view === 'vertical' && collapsedHalls.value[hall]
 }
+
+watch(
+  () => [props.schedule, props.view],
+  ([schedule, view]) => {
+    if (view === 'vertical' && schedule) {
+      collapsedHalls.value = Object.fromEntries(Object.keys(schedule).map((hall) => [hall, true]))
+    }
+  },
+  { immediate: true },
+)
 </script>
