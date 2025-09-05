@@ -10,7 +10,7 @@
       v-for="(sessions, hall) in schedule"
       :key="hall"
       :class="{
-        'min-w-[720px] flex-shrink-0': view === 'horizontal',
+        'flex-shrink-0 basis-1/2': view === 'horizontal',
       }"
     >
       <SessionListHeader
