@@ -2,7 +2,7 @@
   <div class="w-full my-6 relative">
     <!-- Fake scrollbar container at the top -->
     <div
-	  v-if="view === 'horizontal'"
+      v-if="view === 'horizontal'"
       ref="scrollTop"
       class="overflow-x-scroll scrollbar-thick scrollbar-thumb-black-800 scrollbar-track-gray-300 mb-4"
       @scroll="syncScroll('top')"
@@ -38,12 +38,12 @@
       </div>
 
       <!-- Shadow indicator -->
-      <div
-        v-if="view === 'horizontal' && showRightShadow"
-        class="absolute top-0 right-0 h-full pointer-events-none w-15 transition-opacity duration-300"
-        style="background: linear-gradient(to left, #a4a4a4, transparent)"
-      ></div>
     </div>
+    <div
+      v-if="view === 'horizontal' && showRightShadow"
+      class="absolute mt-10 top-0 right-0 h-full pointer-events-none w-15 transition-opacity duration-300"
+      style="background: linear-gradient(to left, #a4a4a4, transparent)"
+    ></div>
   </div>
 </template>
 
@@ -102,7 +102,11 @@ const showRightShadow = ref(false)
 const updateRightShadow = () => {
   const container = scrollMain.value
   if (!container) return
-  showRightShadow.value = container.scrollLeft + container.clientWidth < container.scrollWidth
+
+  const scrollPosition = container.scrollLeft + container.clientWidth
+  const scrollThreshold = container.scrollWidth * 0.9
+
+  showRightShadow.value = scrollPosition < scrollThreshold
 }
 
 const syncScroll = (source) => {
