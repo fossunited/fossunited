@@ -4,13 +4,14 @@
     <div
       v-if="view === 'horizontal'"
       ref="scrollTop"
-      class="overflow-x-scroll scrollbar-thick scrollbar-thumb-black-800 scrollbar-track-gray-300 mb-4"
+      aria-hidden="true"
+      role="presentation"
+      class="overflow-x-scroll scrollbar-thick scrollbar-thumb-gray-800 scrollbar-track-gray-300 mb-4"
       @scroll="syncScroll('top')"
     >
       <div :style="{ width: scrollWidth + 'px' }" class="h-4"></div>
     </div>
 
-    <!-- original container, now scroll-disabled -->
     <div
       ref="scrollMain"
       class="flex gap-4 w-full relative"
@@ -22,7 +23,7 @@
     >
       <!-- Your sessions -->
       <div
-        v-for="(sessions, hall) in schedule"
+        v-for="hall in orderedHalls"
         :key="hall"
         :class="{
           'flex-shrink-0 basis-1/2': view === 'horizontal',
@@ -34,14 +35,14 @@
           :view="view"
           @collapse-hall="toggleCollapse(hall)"
         />
-        <SessionList v-if="!isCollapsed(hall)" :sessions="sessions" :view="view" />
+        <SessionList v-if="!isCollapsed(hall)" :sessions="schedule[hall]" :view="view" />
       </div>
 
       <!-- Shadow indicator -->
     </div>
     <div
       v-if="view === 'horizontal' && showRightShadow"
-      class="absolute mt-10 top-0 right-0 h-full pointer-events-none w-15 transition-opacity duration-300"
+      class="absolute mt-10 top-0 right-0 h-full pointer-events-none w-16 transition-opacity duration-300"
       style="background: linear-gradient(to left, #a4a4a4, transparent)"
     ></div>
   </div>
@@ -57,10 +58,6 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  day: {
-    type: String,
-    required: true,
-  },
   view: {
     type: String,
     required: true,
@@ -69,6 +66,8 @@ const props = defineProps({
 })
 
 const isCollapsible = computed(() => props.view === 'vertical')
+
+const orderedHalls = computed(() => Object.keys(props.schedule || {}).sort())
 
 const collapsedHalls = ref({})
 
@@ -88,6 +87,8 @@ watch(
     if (view === 'vertical' && schedule) {
       collapsedHalls.value = Object.fromEntries(Object.keys(schedule).map((hall) => [hall, true]))
     }
+    // Recompute metrics after DOM updates caused by schedule/view changes
+    nextTick(() => updateScrollMetrics())
   },
   { immediate: true },
 )
@@ -109,28 +110,47 @@ const updateRightShadow = () => {
   showRightShadow.value = scrollPosition < scrollThreshold
 }
 
-const syncScroll = (source) => {
-  if (source === 'top') {
-    scrollMain.value.scrollLeft = scrollTop.value.scrollLeft
-  } else if (source === 'main') {
-    scrollTop.value.scrollLeft = scrollMain.value.scrollLeft
-  }
+// Prevent re-entrant scroll syncing
+const isSyncing = ref(false)
 
-  // After syncing, update shadow visibility
+// Keep scrollWidth and shadow in sync with the actual content
+const updateScrollMetrics = () => {
+  const container = scrollMain.value
+  if (!container) return
+  scrollWidth.value = container.scrollWidth
   updateRightShadow()
+}
+
+const syncScroll = (source) => {
+  // Only sync in horizontal view
+  if (props.view !== 'horizontal') return
+  const topEl = scrollTop.value
+  const mainEl = scrollMain.value
+  if (!topEl || !mainEl) return
+  if (isSyncing.value) return
+  isSyncing.value = true
+
+  if (source === 'top') {
+    mainEl.scrollLeft = topEl.scrollLeft
+  } else if (source === 'main') {
+    topEl.scrollLeft = mainEl.scrollLeft
+  }
+  updateRightShadow()
+  requestAnimationFrame(() => {
+    isSyncing.value = false
+  })
 }
 
 onMounted(() => {
   nextTick(() => {
-    scrollWidth.value = scrollMain.value.scrollWidth
-    updateRightShadow()
+    updateScrollMetrics()
   })
 
-  // Update shadow on window resize (optional but recommended)
-  window.addEventListener('resize', updateRightShadow)
+  // Keep metrics in sync on window resize
+  window.addEventListener('resize', updateScrollMetrics)
 })
 
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateRightShadow)
+  window.removeEventListener('resize', updateScrollMetrics)
 })
 </script>

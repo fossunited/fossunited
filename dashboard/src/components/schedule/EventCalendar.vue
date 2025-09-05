@@ -13,11 +13,14 @@
     <div
       v-if="showDownloadModal"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+      role="dialog"
+      aria-modal="true"
+      :aria-labelledby="'ics-modal-title'"
     >
       <div class="bg-white rounded-md shadow-md p-4 w-[90%] max-w-sm">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-sm font-medium">
-            Download Calendar (.ics) for {{ props.event.event_name }}
+          <h3 id="ics-modal-title" class="text-sm font-medium">
+            Download Calendar (.ics) for {{ event.event_name }}
           </h3>
           <button
             class="text-gray-500 hover:text-black text-lg"
