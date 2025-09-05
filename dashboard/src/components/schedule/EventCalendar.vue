@@ -1,31 +1,75 @@
 <template>
-  <div class="flex flex-wrap items-center gap-2">
-    <!-- Day Dropdown -->
-    <select
-      v-model="selectedDay"
-      class="px-2 py-1 bg-gray-100 border border-gray-300 text-xs rounded-[2px] focus:outline-none min-w-[100px]"
-    >
-      <option value="">All Days</option>
-      <option v-for="day in allDates" :key="day" :value="day">{{ day }}</option>
-    </select>
-
-    <!-- Hall Dropdown -->
-    <select
-      v-model="selectedHall"
-      class="px-2 py-1 bg-gray-100 border border-gray-300 text-xs rounded-[2px] focus:outline-none min-w-[100px]"
-    >
-      <option value="">All Halls</option>
-      <option v-for="hall in allHalls" :key="hall" :value="hall">{{ hall }}</option>
-    </select>
-
-    <!-- Download Button -->
+  <div>
+    <!-- Main Download Button -->
     <button
-      class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-1"
-      @click="handleDownload"
+      class="px-2 py-2 bg-gray-900 text-white text-xs font-medium rounded flex items-center gap-1"
+      @click="showDownloadModal = true"
     >
       <IconCalendarPlus class="w-4 h-4" />
       <span class="hidden md:inline uppercase">Download .ics</span>
     </button>
+
+    <!-- Modal -->
+    <div
+      v-if="showDownloadModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70"
+    >
+      <div class="bg-white rounded-md shadow-md p-4 w-[90%] max-w-sm">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-sm font-medium">
+            Download Calendar (.ics) for {{ props.event.event_name }}
+          </h3>
+          <button
+            class="text-gray-500 hover:text-black text-lg"
+            @click="showDownloadModal = false"
+          >
+            ×
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <!-- Day Dropdown -->
+          <label class="text-xs">
+            Day
+            <select
+              v-model="selectedDay"
+              class="w-full mt-1 px-2 py-1 border border-gray-300 text-lg rounded bg-gray-900 text-white"
+            >
+              <option value="">All Days</option>
+              <option v-for="day in allDates" :key="day" :value="day">{{ day }}</option>
+            </select>
+          </label>
+
+          <!-- Hall Dropdown -->
+          <label class="text-xs">
+            Hall
+            <select
+              v-model="selectedHall"
+              class="w-full mt-1 px-2 py-1 border border-gray-300 text-lg rounded bg-gray-900 text-white"
+            >
+              <option value="">All Halls</option>
+              <option v-for="hall in allHalls" :key="hall" :value="hall">{{ hall }}</option>
+            </select>
+          </label>
+
+          <!-- Buttons -->
+          <div class="flex justify-end gap-2 mt-4">
+            <button
+              class="text-xs text-gray-600 hover:underline"
+              @click="showDownloadModal = false"
+            >
+              Cancel
+            </button>
+            <button
+              class="px-3 py-2 bg-gray-900 text-white text-base font-medium rounded"
+              @click="confirmDownload"
+            >
+              Download
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -34,6 +78,8 @@ import { createEvents } from 'ics'
 import { IconCalendarPlus } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { computed, defineProps, inject, ref } from 'vue'
+
+const showDownloadModal = ref(false)
 
 const props = defineProps({
   event: {
@@ -179,5 +225,10 @@ function handleDownload() {
   }
 
   generateAndDownloadIcs(sessions, filename, props.event)
+}
+
+function confirmDownload() {
+  showDownloadModal.value = false
+  handleDownload()
 }
 </script>
