@@ -1,5 +1,5 @@
 import ast
-from datetime import timedelta, timezone
+from zoneinfo import ZoneInfo
 
 import frappe
 from ics import Calendar, Event
@@ -106,8 +106,13 @@ def generate_ics(event_ids):
         ],
     )
     for event in events:
-        start = event.event_start_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
-        end = event.event_end_date.replace(tzinfo=timezone(timedelta(hours=5, minutes=30)))
+        tz_name = frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
+        tz = ZoneInfo(tz_name)
+        start_dt = frappe.utils.get_datetime(event.event_start_date)
+        end_dt = frappe.utils.get_datetime(event.event_end_date)
+        # If naive, treat as local time in site TZ; if aware, convert
+        start = start_dt.replace(tzinfo=tz) if start_dt.tzinfo is None else start_dt.astimezone(tz)
+        end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
 
         # Skip if end is before start
         if end < start:
@@ -117,8 +122,10 @@ def generate_ics(event_ids):
         e.name = event.event_name
         e.location = event.event_location
         e.organizer = event.chapter_name + " Community"
-        e.description = event.event_description
-        e.url = "https://fossunited.org/" + str(event.route)
+        # Optional hardening (keep if desired):
+        e.description = frappe.utils.strip_html(event.event_description or "") or None
+        if event.route:
+            e.url = f"https://fossunited.org/{str(event.route).lstrip('/')}"
         e.begin = start
         e.end = end
         c.events.add(e)
