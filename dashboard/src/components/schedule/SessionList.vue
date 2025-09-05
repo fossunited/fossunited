@@ -5,24 +5,28 @@
       'h-full': view === 'horizontal',
     }"
   >
-    <div v-for="session in sessions" :key="session.name" class="flex items-center">
+    <div
+      v-for="session in sessions"
+      :key="session.id ?? session.slug ?? session.name"
+      class="flex items-center"
+    >
       <div
         class="relative flex items-center justify-center"
         :class="{
-          'flex-none w-1/12 md:w-1/6': view === 'vertical',
-          'flex-none md:w-1/5': view === 'horizontal',
+          'flex-none w-1/12 md:w-1/5': view === 'vertical',
+          'flex-none md:w-1/6': view === 'horizontal',
         }"
       >
         <div class="absolute inset-0 flex items-center">
           <div class="w-full h-px bg-gray-500"></div>
         </div>
-        <SessionTimeComponent :session="session" class="z-20 mx-5 invisible md:visible shrink-0" />
+        <SessionTimeComponent :session="session" class="z-20 invisible md:visible shrink-0" />
       </div>
       <div
         class="relative flex flex-col items-start"
         :class="{
           'w-full md:w-4/5': view === 'vertical',
-          'w-4/6': view === 'horizontal',
+          'w-full': view === 'horizontal',
         }"
       >
         <SessionTimeComponent

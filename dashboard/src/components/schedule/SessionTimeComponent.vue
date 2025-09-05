@@ -2,8 +2,6 @@
   <div class="px-3 py-2 flex flex-col items-center gap-1 border border-gray-500 bg-white h-fit">
     <div class="flex gap-1 text-sm font-semibold">
       <span>{{ getFormattedTime(session.start_time) }}</span>
-      <span v-if="session.category == 'Break'">-</span>
-      <span v-if="session.category == 'Break'">{{ getFormattedTime(session.end_time) }}</span>
     </div>
     <div
       v-if="session.category !== 'Break'"
