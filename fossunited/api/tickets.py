@@ -54,7 +54,7 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     return transfer_request
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_transfer_doc_validity(transfer_id: str):
     """
     Check the validity of transfer doc/id
@@ -64,7 +64,7 @@ def get_transfer_doc_validity(transfer_id: str):
     return bool(is_valid_id)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_transfer_details(id: str):
     """
     Get the transfer doc
@@ -78,7 +78,7 @@ def get_transfer_details(id: str):
     return doc
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def change_transfer_status(transfer_id: str, status: str):
     """
     Change the status of the transfer request
