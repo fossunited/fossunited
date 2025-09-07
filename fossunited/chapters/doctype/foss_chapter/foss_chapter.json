@@ -39,6 +39,7 @@
   "instagram",
   "mastodon",
   "telegram",
+  "zulip",
   "bluesky",
   "whatsapp",
   "discord",
@@ -239,6 +240,12 @@
    "fieldtype": "Data",
    "label": "Telegram",
    "options": "URL"
+  },
+  {
+    "fieldname": "zulip",
+    "fieldtype": "Data",
+    "label": "Zulip",
+    "options": "URL"
   },
   {
    "fieldname": "bluesky",
