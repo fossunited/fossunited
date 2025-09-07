@@ -245,6 +245,7 @@ import {
   IconBrandMastodon,
   IconBrandX,
   IconBrandTelegram,
+  IconBrandZulip,
   IconBrandBluesky,
   IconBrandMatrix,
   IconBrandWhatsapp,
