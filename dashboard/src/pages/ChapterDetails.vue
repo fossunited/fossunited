@@ -201,6 +201,10 @@
           <template #prefix>
             <IconBrandTelegram class="w-5 text-gray-800" />
           </template>
+        <FormControl v-model="chapter.doc.zulip" :type="'url'" size="md" label="Zulip">
+          <template #prefix>
+            <IconBrandZulip class="w-5 text-gray-800" />
+          </template>
         </FormControl>
         <FormControl v-model="chapter.doc.bluesky" :type="'url'" size="md" label="Bluesky">
           <template #prefix>
