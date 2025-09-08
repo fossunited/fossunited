@@ -193,6 +193,38 @@ def validate_profile_completion():
     )
 
 
+def get_main_foss_events():
+    """
+    Get main foss events to be shown for grid page in /events
+    only for City chapters and Conferences
+    """
+    events = frappe.get_all(
+        EVENT,
+        fields=["*"],
+        filters={
+            "status": "Live",
+            "is_published": 1,
+            "event_end_date": [">=", frappe.utils.now()],
+        },
+        order_by="event_start_date",
+    )
+
+    allowed_types = {"City Community", "Conference"}
+    chapter_type_cache = {}
+    filtered_events = []
+
+    for event in events:
+        chapter = event.get("chapter")
+        if not chapter:
+            continue
+        if chapter not in chapter_type_cache:
+            chapter_type_cache[chapter] = frappe.db.get_value(CHAPTER, chapter, "chapter_type")
+        if chapter_type_cache[chapter] in allowed_types:
+            filtered_events.append(event)
+
+    return filtered_events[:12]
+
+
 def get_grouped_events_by_chapter_type():
     """
     Retrieves FOSS Chapter Events and Hackathons,
