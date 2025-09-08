@@ -23,7 +23,7 @@
     flex-direction: column;
     gap: 1rem;
   }
-  .upcoming-events-header h4{
+  .upcoming-events-header h4 {
     font-size: var(--text-2xl);
     font-weight: var(--fw-semibold);
   }
@@ -54,22 +54,15 @@
     </div>
 
     {% from "fossunited/templates/macros/event_card.html" import event_card %}
-    {%
-      set events = frappe.get_all(
-      "FOSS Chapter Event",
-      fields=["*"],
-      filters={
-        "status": "Live",
-        "is_published": 1,
-        "event_end_date": ['>=', frappe.utils.now()],
-      },
-      page_length=12,
-      order_by='event_start_date')
-    %}
+    {% set events = get_main_foss_events() %}
+
     {% if events | length %}
       <div class="events-grid-4">{% for event in events %}{{ event_card(event) }}{% endfor %}</div>
     {% else %}
-      <p>No upcoming events.</p>
+      <p>
+        No upcoming events.
+        <a class="view-events-link" href="{{ view_events_link }}">Browse all events ↗</a>
+      </p>
     {% endif %}
   </div>
 </div>
