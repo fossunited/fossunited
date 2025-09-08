@@ -121,7 +121,7 @@ def get_session_user_profile():
             "gitlab",
             "linkedin",
             "mastodon",
-            "mastodon",
+            "bluesky",
             "x",
             "instagram",
             "devto",
