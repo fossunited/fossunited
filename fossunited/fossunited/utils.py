@@ -207,19 +207,25 @@ def get_main_foss_events():
             "event_end_date": [">=", frappe.utils.now()],
         },
         order_by="event_start_date",
+        page_length=100,
     )
 
     allowed_types = {"City Community", "Conference"}
-    chapter_type_cache = {}
     filtered_events = []
 
+    chapters = list({e.get("chapter") for e in events if e.get("chapter")})
+    chapter_type_map = {}
+    if chapters:
+        rows = frappe.db.get_all(
+            CHAPTER,
+            filters={"name": ["in", chapters]},
+            fields=["name", "chapter_type"],
+        )
+        chapter_type_map = {r.name: r.chapter_type for r in rows}
+
     for event in events:
-        chapter = event.get("chapter")
-        if not chapter:
-            continue
-        if chapter not in chapter_type_cache:
-            chapter_type_cache[chapter] = frappe.db.get_value(CHAPTER, chapter, "chapter_type")
-        if chapter_type_cache[chapter] in allowed_types:
+        ctype = chapter_type_map.get(event.get("chapter"))
+        if ctype in allowed_types:
             filtered_events.append(event)
 
     return filtered_events[:12]
