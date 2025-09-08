@@ -36,6 +36,7 @@
     "gitlab",
     "linkedin",
     "mastodon",
+    "bluesky",
     "medium",
     "column_break_hmr6",
     "x",
@@ -208,6 +209,12 @@
       "fieldname": "mastodon",
       "fieldtype": "Data",
       "label": "Mastodon",
+      "options": "URL"
+    },
+    {
+      "fieldname": "bluesky",
+      "fieldtype": "Data",
+      "label": "Bluesky",
       "options": "URL"
     },
     {
