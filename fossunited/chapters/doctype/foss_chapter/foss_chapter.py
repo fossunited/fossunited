@@ -44,6 +44,7 @@ class FOSSChapter(WebsiteGenerator):
         slug: DF.Data | None
         state: DF.Link | None
         telegram: DF.Data | None
+        zulip: DF.Data | None
         bluesky: DF.Data | None
         whatsapp: DF.Data | None
         x: DF.Data | None
@@ -238,6 +239,7 @@ class FOSSChapter(WebsiteGenerator):
             "matrix",
             "bluesky",
             "telegram",
+            "zulip",
             "github",
             "gitlab",
             "youtube",
