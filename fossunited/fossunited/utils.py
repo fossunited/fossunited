@@ -110,6 +110,8 @@ def get_user_socials(foss_user):
         "instagram",
         "mastodon",
         "youtube",
+        "devto",
+        "bluesky",
     ]
 
     links = {}
