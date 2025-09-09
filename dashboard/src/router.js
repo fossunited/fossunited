@@ -198,6 +198,11 @@ const routes = [
         component: () => import('@/pages/EventCheckins.vue'),
       },
       {
+        path: 'quick-checkin',
+        name: 'QuickEventCheckin',
+        component: () => import('@/pages/QuickEventCheckin.vue'),
+      },
+      {
         path: 'mailing',
         name: 'Event Mailing',
         component: () => import('@/pages/mailing/EventMailing.vue'),
