@@ -69,6 +69,7 @@ class FOSSUserProfile(WebsiteGenerator):
         is_published: DF.Check
         linkedin: DF.Data | None
         mastodon: DF.Data | None
+        bluesky: DF.Data | None
         medium: DF.Data | None
         profile_photo: DF.AttachImage | None
         projects: DF.Table[FOSSUserProjects]

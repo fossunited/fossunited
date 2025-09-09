@@ -186,6 +186,7 @@
             <FormControl v-model="profile_dict.devto" type="url" label="Dev.to" />
             <FormControl v-model="profile_dict.medium" type="url" label="Medium" />
             <FormControl v-model="profile_dict.mastodon" type="url" label="Mastodon" />
+            <FormControl v-model="profile_dict.bluesky" type="url" label="Bluesky" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -230,6 +231,7 @@ const profile_dict = reactive({
   devto: '',
   medium: '',
   mastodon: '',
+  bluesky: '',
 })
 
 const profile = createResource({
@@ -358,6 +360,7 @@ const updateProfileErrors = () => {
     devto: profile_dict.devto,
     medium: profile_dict.medium,
     mastodon: profile_dict.mastodon,
+    bluesky: profile_dict.bluesky,
   }
   Object.keys(socials).forEach((key) => {
     const url = socials[key]

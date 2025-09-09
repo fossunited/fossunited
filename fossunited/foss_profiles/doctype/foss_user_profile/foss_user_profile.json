@@ -36,6 +36,7 @@
     "gitlab",
     "linkedin",
     "mastodon",
+    "bluesky",
     "medium",
     "column_break_hmr6",
     "x",
@@ -211,6 +212,12 @@
       "options": "URL"
     },
     {
+      "fieldname": "bluesky",
+      "fieldtype": "Data",
+      "label": "Bluesky",
+      "options": "URL"
+    },
+    {
       "fieldname": "x",
       "fieldtype": "Data",
       "label": "X",
@@ -294,7 +301,7 @@
   "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-06-10 16:36:59.223147",
+  "modified": "2025-09-08 18:12:00.000000",
   "modified_by": "Administrator",
   "module": "FOSS Profiles",
   "name": "FOSS User Profile",

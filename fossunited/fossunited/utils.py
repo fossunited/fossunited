@@ -110,6 +110,8 @@ def get_user_socials(foss_user):
         "instagram",
         "mastodon",
         "youtube",
+        "devto",
+        "bluesky",
     ]
 
     links = {}
@@ -118,6 +120,8 @@ def get_user_socials(foss_user):
             field1 = field
             if field == "github":
                 field1 = "github_light"
+            elif field == "devto":
+                field1 = "devto-light"
             links[field1] = user[field]
 
     return links

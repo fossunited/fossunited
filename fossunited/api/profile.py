@@ -125,6 +125,7 @@ def update_profile(fields_dict):
             "devto": fields_dict.get("devto"),
             "medium": fields_dict.get("medium"),
             "mastodon": fields_dict.get("mastodon"),
+            "bluesky": fields_dict.get("bluesky"),
         }
 
         profile = frappe.get_doc(USER_PROFILE, user_doc.name)
