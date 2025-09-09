@@ -28,8 +28,25 @@
             <span v-if="selectedAttendee.wants_tshirt"
               >Tshirt Size: {{ selectedAttendee.tshirt_size }}</span
             >
+            <br />
+            Checkin Log:
           </p>
+          <ul class="text-sm font-mono mt-1 list-disc list-inside">
+            <li v-if="!selectedAttendee.checkin_data?.length" class="text-gray-500">
+              No check-ins yet
+            </li>
+            <li
+              v-for="(log, index) in selectedAttendee.checkin_data"
+              :key="index"
+              :class="{
+                'text-red-600 font-semibold font-2xl uppercase': isToday(log.check_in_time),
+              }"
+            >
+              {{ formatCheckinLog(log.check_in_time) }}
+            </li>
+          </ul>
         </div>
+
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
           <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
@@ -71,6 +88,22 @@ import { toast } from 'vue-sonner'
 import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
+import dayjs from 'dayjs'
+import isTodayPlugin from 'dayjs/plugin/isToday'
+dayjs.extend(isTodayPlugin)
+
+const isToday = (datetime) => dayjs(datetime).isToday()
+
+const formatCheckinLog = (datetime) => {
+  if (isToday(datetime)) {
+    // "Today at 05:56 PM"
+    return `Today at ${dayjs(datetime).format('hh:mm A')}`
+  } else {
+    // "09 Sep 2025, 05:56 PM"
+    return dayjs(datetime).format('DD MMM YYYY, hh:mm A')
+  }
+}
+
 const props = defineProps({
   selectedAttendee: {
     type: Object,
@@ -106,7 +139,7 @@ const checkinAttendee = createResource({
     showDialog.value = false
   },
   onError(error) {
-    toast.error('Failed to check in attendee')
+    toast.error('Failed to check in attendee, maybe attendee already checked in?')
   },
 })
 
