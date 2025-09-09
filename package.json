@@ -22,7 +22,8 @@
   "license": "ISC",
   "dependencies": {
     "@knadh/autocomp": "^1.1.0",
-    "petite-vue": "^0.4.1"
+    "petite-vue": "^0.4.1",
+    "vue-qrcode-reader": "^5.7.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",

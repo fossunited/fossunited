@@ -32,8 +32,23 @@
               placeholder="Search by Ticket ID"
               @input="attendees.fetch()"
             />
+            <div>
+              <button
+                class="w-[150px] btn btn-primary bg-gray-800 text-white rounded mt-4 py-1"
+                @click="toggleScanner"
+              >
+                Scan Ticket QR
+              </button>
+            </div>
           </div>
         </div>
+
+        <qrcode-stream
+          v-if="showScanner"
+          class="my-4 mx-auto border border-gray-300"
+          :style="{ width: '100%', maxWidth: '24rem' }"
+          @detect="onDetect"
+        />
 
         <!-- Attendee List -->
         <CheckinAttendeeList :event="event.data" :attendees="attendees" />
@@ -47,6 +62,55 @@ import CheckinAttendeeList from '@/components/event/CheckinAttendeeList.vue'
 import { createResource, usePageMeta, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { inject, reactive, provide } from 'vue'
+
+import { QrcodeStream } from 'vue-qrcode-reader'
+import { ref, onBeforeUnmount } from 'vue'
+
+const showScanner = ref(false)
+
+function toggleScanner() {
+  showScanner.value = !showScanner.value
+}
+
+function onDetect(detectedCodes) {
+  const rawValue = detectedCodes[0]?.rawValue
+
+  if (!rawValue) return
+
+  console.log('Scanned:', rawValue)
+
+  try {
+    const url = new URL(rawValue)
+    const scannedId = url.searchParams.get('id')
+
+    if (scannedId) {
+      filters.name = scannedId
+      attendees.fetch()
+      showScanner.value = false
+    } else {
+      alert('Invalid QR code')
+    }
+  } catch (err) {
+    alert('Invalid QR code format')
+  }
+}
+
+function onInit(promise) {
+  promise.catch((error) => {
+    console.error('Camera error:', error)
+    alert('Camera failed: ' + error.message)
+    showScanner.value = false
+  })
+}
+
+// just toggles off
+function stopScanner() {
+  showScanner.value = false
+}
+
+onBeforeUnmount(() => {
+  stopScanner()
+})
 
 const session = inject('$session')
 
