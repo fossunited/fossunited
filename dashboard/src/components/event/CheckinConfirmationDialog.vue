@@ -29,7 +29,7 @@
               >Tshirt Size: {{ selectedAttendee.tshirt_size }}</span
             >
             <br />
-            Checkin Log:
+            Check-in Log:
           </p>
           <ul class="text-sm font-mono mt-1 list-disc list-inside">
             <li v-if="!selectedAttendee.checkin_data?.length" class="text-gray-500">
@@ -37,9 +37,9 @@
             </li>
             <li
               v-for="(log, index) in selectedAttendee.checkin_data"
-              :key="index"
+              :key="log.check_in_time || index"
               :class="{
-                'text-red-600 font-semibold font-2xl uppercase': isToday(log.check_in_time),
+                'text-red-600 font-semibold text-2xl uppercase': isToday(log.check_in_time),
               }"
             >
               {{ formatCheckinLog(log.check_in_time) }}
@@ -65,7 +65,7 @@
           @click="
             () => {
               showDialog = false
-              selectedAttendee = null
+              // Parent manages selectedAttendee; avoid prop mutation
             }
           "
         />
@@ -139,15 +139,19 @@ const checkinAttendee = createResource({
     showDialog.value = false
   },
   onError(error) {
-    toast.error('Failed to check in attendee, maybe attendee already checked in?')
+    const msg =
+      error?.message || 'Failed to check in attendee. The attendee may already be checked in.'
+    toast.error(msg)
   },
 })
 
 const makeChangesToAttendeeDict = (attendee) => {
   const index = props.attendees.data.findIndex((data) => data.name === attendee.name)
-  props.attendees.data[index].checkin_data.push({
-    check_in_time: new Date(),
-  })
+  if (index === -1) return
+  const rec = props.attendees.data[index]
+  if (!Array.isArray(rec.checkin_data)) rec.checkin_data = []
+  // Use ISO string for consistency; ideally use server-returned time or refetch.
+  rec.checkin_data.push({ check_in_time: new Date().toISOString() })
   if (assignTshirt.value) {
     props.attendees.data[index].tshirt_delivered = true
   }
