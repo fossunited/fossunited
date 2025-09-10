@@ -88,6 +88,10 @@ watch(
           label: 'Check-Ins',
           route: `/event/${route.params.id}/checkins`,
         })
+        sidebar_items.items.push({
+          label: 'Quick-Checkin',
+          route: `/event/${route.params.id}/quick-checkin`,
+        })
       }
 
       sidebarMenuItems.value = [...sidebarMenuItems.value, sidebar_items]
