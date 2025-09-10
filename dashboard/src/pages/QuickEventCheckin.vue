@@ -1,8 +1,15 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-white">
-    <div class="w-full max-w-sm p-6 text-center">
-      <h1 class="text-xl font-bold mb-2">Quick Check-In</h1>
-      <p class="text-sm text-gray-600 mb-6">Scan or enter a ticket to check in attendee.</p>
+  <div class="min-h-screen flex md:items-center justify-center bg-white">
+    <div class="w-full max-w-md p-4 md:p-6">
+      <!-- Header Section -->
+      <div v-if="event.data" class="mb-10">
+        <EventHeader :event="event.data" />
+      </div>
+
+      <h1 class="text-[2em] font-bold mb-2 text-center">Quick Check-In</h1>
+      <p class="text-sm text-gray-600 mb-10 text-center">
+        Scan or enter a ticket to check in attendee.
+      </p>
 
       <!-- Form Section with vertical spacing -->
       <div class="flex flex-col items-center space-y-10">
@@ -16,7 +23,6 @@
             @keyup.enter="handleTicketInput"
           />
           <button
-            v-if="ticketId"
             class="absolute right-2 top-[17px] bg-gray-800 text-white rounded py-2 px-2 hover:bg-red-500 text-lg"
             title="Clear"
             @click="ticketId = ''"
@@ -67,13 +73,12 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { call } from 'frappe-ui'
+import EventHeader from '@/components/EventHeader.vue'
+import { ref, provide } from 'vue'
+import { call, createResource, FormControl } from 'frappe-ui'
 import { QrcodeStream } from 'vue-qrcode-reader'
-import { FormControl } from 'frappe-ui'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import { useRoute } from 'vue-router'
-import { provide } from 'vue'
 
 // State
 const ticketId = ref('')
@@ -126,6 +131,18 @@ function onInit(promise) {
 
 const route = useRoute()
 provide('route', route)
+
+const event = createResource({
+  url: 'frappe.client.get',
+  makeParams() {
+    return {
+      doctype: 'FOSS Chapter Event',
+      name: route.params.id,
+      fields: ['*'],
+    }
+  },
+  auto: true,
+})
 
 // Fetch attendee and open confirmation dialog
 async function handleTicketInput() {
