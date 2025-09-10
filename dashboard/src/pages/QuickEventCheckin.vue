@@ -34,6 +34,7 @@
         <!-- Manual Check-In Button -->
         <button
           class="btn btn-primary bg-green-500 text-white rounded py-2 px-4 w-full"
+          :disabled="loading"
           @click="handleTicketInput"
         >
           Check-In
@@ -42,20 +43,14 @@
         <!-- Scan QR button -->
         <button
           class="btn btn-primary bg-gray-800 text-white rounded py-2 px-4 w-full"
-          @click="toggleScanner"
+          @click="showScanner = !showScanner"
         >
           {{ showScanner ? 'Close Scanner' : 'Scan QR' }}
         </button>
       </div>
 
       <!-- QR Code Scanner -->
-      <qrcode-stream
-        v-if="showScanner"
-        class="my-6 mx-auto border border-gray-300"
-        :style="{ width: '100%', maxWidth: '24rem' }"
-        @detect="onDetect"
-        @init="onInit"
-      />
+      <QRTicketScanner v-model="showScanner" @scanned="handleScan" />
 
       <!-- Error message -->
       <div v-if="message" class="mt-4 text-sm font-medium text-red-600">
@@ -76,9 +71,9 @@
 import EventHeader from '@/components/EventHeader.vue'
 import { ref, provide } from 'vue'
 import { call, createResource, FormControl } from 'frappe-ui'
-import { QrcodeStream } from 'vue-qrcode-reader'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import { useRoute } from 'vue-router'
+import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
 
 // State
 const ticketId = ref('')
@@ -86,6 +81,7 @@ const showScanner = ref(false)
 const showConfirmDialog = ref(false)
 const selectedAttendee = ref(null)
 const message = ref('')
+const loading = ref(false)
 
 // Dummy attendee resource object to satisfy CheckinConfirmationDialog prop
 const attendeeResource = {
@@ -93,40 +89,9 @@ const attendeeResource = {
   fetch: () => {},
 }
 
-// Toggle scanner
-function toggleScanner() {
-  showScanner.value = !showScanner.value
-  if (showScanner.value) {
-    ticketId.value = '' // clear input when scanner opens
-  }
-}
-
-// Handle QR detection
-function onDetect(detectedCodes) {
-  const rawValue = detectedCodes[0]?.rawValue
-  if (!rawValue) return
-
-  try {
-    const url = new URL(rawValue)
-    const id = url.searchParams.get('id')
-    if (id) {
-      ticketId.value = id
-      handleTicketInput()
-      showScanner.value = false
-    } else {
-      showError('Invalid QR Code')
-    }
-  } catch (e) {
-    showError('Invalid QR Code format')
-  }
-}
-
-// Handle scanner init error
-function onInit(promise) {
-  promise.catch((err) => {
-    showError('Camera error: ' + err.message)
-    showScanner.value = false
-  })
+function handleScan(scannedId) {
+  ticketId.value = scannedId
+  handleTicketInput()
 }
 
 const route = useRoute()
@@ -146,9 +111,12 @@ const event = createResource({
 
 // Fetch attendee and open confirmation dialog
 async function handleTicketInput() {
+  if (loading.value) return
+  loading.value = true
   message.value = ''
   if (!ticketId.value.trim()) {
     showError('Ticket ID is required')
+    loading.value = false
     return
   }
 
@@ -173,6 +141,8 @@ async function handleTicketInput() {
     showConfirmDialog.value = true
   } catch (err) {
     showError(err.message || 'Failed to fetch attendee')
+  } finally {
+    loading.value = false
   }
 }
 
