@@ -24,7 +24,7 @@ const props = defineProps({
 })
 
 // Emits
-const emit = defineEmits(['update:props.modelValue', 'scanned'])
+const emit = defineEmits(['update:modelValue', 'scanned'])
 const processing = ref(false)
 
 function extractTicketId(input) {
@@ -32,6 +32,11 @@ function extractTicketId(input) {
   if (!s) return ''
   try {
     const u = new URL(s)
+    // Allow-list hosts; accept subdomains of these
+    const allowedHosts = ['fossunited.org', 'fossunited.com', 'fossunited.in']
+    const host = u.hostname.toLowerCase()
+    const isAllowed = allowedHosts.some((h) => host === h || host.endsWith('.' + h))
+    if (!isAllowed) return ''
     const q =
       u.searchParams.get('ticket_id') ||
       u.searchParams.get('ticket') ||
@@ -64,7 +69,7 @@ function onDetect(detectedCodes) {
       throw new Error('Invalid scanned ID format')
     }
 
-    emit('update:props.modelValue', false) // Close scanner
+    emit('update:modelValue', false) // Close scanner
     emit('scanned', scannedId) // Emit normalized ID
   } catch (err) {
     toast.error('Invalid QR code or format')
@@ -89,7 +94,7 @@ function onError(error) {
     StreamApiNotSupportedError: 'Browser lacks required APIs',
   }
   toast.error(map[error?.name] || `Camera error: ${error?.message || 'Unknown'}`)
-  emit('update:props.modelValue', false)
+  emit('update:modelValue', false)
 }
 
 watch(

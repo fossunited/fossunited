@@ -37,6 +37,7 @@
 
         <!-- Manual Check-In Button -->
         <button
+          type="button"
           class="btn btn-primary bg-green-500 text-white rounded py-2 px-4 w-full"
           :disabled="loading || !ticketId.trim()"
           @click="handleTicketInput"
@@ -46,6 +47,7 @@
 
         <!-- Scan QR button -->
         <button
+          type="button"
           class="btn btn-primary bg-gray-800 text-white rounded py-2 px-4 w-full"
           :disabled="loading || showConfirmDialog"
           @click="showScanner = !showScanner"
@@ -80,7 +82,7 @@
 
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
-import { ref, provide, onBeforeUnmount, watch } from 'vue'
+import { ref, provide, onBeforeUnmount, reactive, watch } from 'vue'
 import { call, createResource, FormControl } from 'frappe-ui'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import { useRoute } from 'vue-router'
@@ -95,14 +97,14 @@ const selectedAttendee = ref(null)
 const message = ref('')
 const loading = ref(false)
 
-// Dummy attendee resource object to satisfy CheckinConfirmationDialog prop
-const attendeeResource = {
+// Minimal reactive resource for CheckinConfirmationDialog
+const attendeeResource = reactive({
   data: [],
   fetch: () => {},
-}
+})
 
 function handleScan(scannedId) {
-  // Normalize & immediately close scanner to avoid repeat scans
+  // Close scanner and proceed (QRTicketScanner already normalizes/validates)
   ticketId.value = scannedId
   showScanner.value = false
   handleTicketInput()
@@ -133,6 +135,8 @@ const event = createResource({
 async function handleTicketInput() {
   if (loading.value) return
   loading.value = true
+  // Prevent background scans from racing with manual submission
+  if (showScanner.value) showScanner.value = false
   message.value = ''
   const raw = ticketId.value.trim()
   if (!raw) {
@@ -190,5 +194,6 @@ function onSelectedAttendeeUpdate(val) {
     ticketId.value = ''
     toast.success('Checked in successfully')
   }
+  showConfirmDialog.value = false
 }
 </script>

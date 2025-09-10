@@ -37,7 +37,7 @@
             </li>
             <li
               v-for="(log, index) in selectedAttendee.checkin_data"
-              :key="log.check_in_time || index"
+              :key="log.name || log.id || log.check_in_time || index"
               :class="{
                 'text-red-600 font-semibold text-2xl uppercase': isToday(log.check_in_time),
               }"
