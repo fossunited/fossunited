@@ -57,7 +57,7 @@ import EventHeader from '@/components/EventHeader.vue'
 import CheckinAttendeeList from '@/components/event/CheckinAttendeeList.vue'
 import { createResource, usePageMeta, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { inject, reactive, provide, ref, onBeforeUnmount } from 'vue'
+import { inject, reactive, provide, ref, onBeforeUnmount, watch } from 'vue'
 import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
 
 const showScanner = ref(false)
@@ -65,8 +65,15 @@ const showScanner = ref(false)
 // Add method
 function handleScan(scannedId) {
   filters.name = scannedId
+  showScanner.value = false
   attendees.fetch()
 }
+
+watch(showScanner, (val) => {
+  if (val) {
+    filters.name = ''
+  }
+})
 
 const session = inject('$session')
 

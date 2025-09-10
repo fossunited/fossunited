@@ -15,20 +15,24 @@
 
 <script setup>
 import { QrcodeStream } from 'vue-qrcode-reader'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { toast } from 'vue-sonner'
 
 // Props
-defineProps({
-  modelValue: Boolean, // for v-model: show/hide
+const props = defineProps({
+  modelValue: Boolean,
 })
 
 // Emits
-const emit = defineEmits(['update:modelValue', 'scanned'])
+const emit = defineEmits(['update:props.modelValue', 'scanned'])
+const processing = ref(false)
 
 // Parse and validate scanned QR content
 function onDetect(detectedCodes) {
   const rawValue = detectedCodes[0]?.rawValue
   if (!rawValue) return
+  if (processing.value) return
+  processing.value = true
 
   if (import.meta?.env?.DEV) console.log('Scanned:', rawValue)
 
@@ -38,23 +42,30 @@ function onDetect(detectedCodes) {
     // Handle URL with ?id=...
     try {
       const url = new URL(rawValue)
-      const allowed = /\.?fossunited\./.test(url.hostname)
-      scannedId = allowed ? url.searchParams.get('id') || undefined : undefined
+      const allowedHosts = ['fossunited.org', 'fossunited.com']
+      const isAllowed = allowedHosts.some(
+        (h) => url.hostname === h || url.hostname.endsWith('.' + h),
+      )
+      if (isAllowed) {
+        scannedId = url.searchParams.get('id') || url.searchParams.get('ticket') || undefined
+      }
     } catch (e) {
       // Not a valid URL
     }
 
     // Fallback: allow raw alphanumeric IDs
-    scannedId ||= /^[A-Za-z0-9_-]+$/.test(rawValue) ? rawValue : undefined
+    scannedId ||= /^[A-Za-z0-9_-]{6,}$/.test(rawValue) ? rawValue : undefined
 
     if (scannedId) {
-      emit('update:modelValue', false) // Close scanner
+      emit('update:props.modelValue', false) // Close scanner
       emit('scanned', scannedId) // Emit the scanned ID
     } else {
-      alert('Invalid QR code')
+      toast.error('Invalid QR code')
+      processing.value = false
     }
   } catch (err) {
-    alert('Invalid QR code format')
+    toast.error('Invalid QR code format')
+    processing.value = false
   }
 }
 
@@ -74,7 +85,17 @@ function onError(error) {
     OverconstrainedError: 'Requested camera not available',
     StreamApiNotSupportedError: 'Browser lacks required APIs',
   }
-  alert(map[error?.name] || `Camera error: ${error?.message || 'Unknown'}`)
-  emit('update:modelValue', false)
+  toast.error(map[error?.name] || `Camera error: ${error?.message || 'Unknown'}`)
+  emit('update:props.modelValue', false)
 }
+
+watch(
+  () => props.modelValue,
+  (visible) => {
+    if (visible) {
+      // Reset internal state each time scanner is shown
+      processing.value = false
+    }
+  },
+)
 </script>

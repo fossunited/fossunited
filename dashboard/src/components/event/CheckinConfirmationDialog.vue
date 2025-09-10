@@ -115,9 +115,9 @@ const props = defineProps({
   },
 })
 
-const session = inject('$session')
 const route = inject('route')
 const assignTshirt = ref(false)
+const emit = defineEmits(['update:selectedAttendee'])
 
 const showDialog = defineModel({
   type: Boolean,
@@ -133,8 +133,9 @@ const checkinAttendee = createResource({
     }
   },
   onSuccess() {
-    makeChangesToAttendeeDict(props.selectedAttendee)
-    props.selectedAttendee = null
+    // Prefer refetch to get authoritative server time and avoid prop mutation
+    props.attendees.fetch?.()
+    emit?.('update:selectedAttendee', null)
     assignTshirt.value = false
     showDialog.value = false
   },

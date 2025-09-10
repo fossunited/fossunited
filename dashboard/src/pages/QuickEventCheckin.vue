@@ -20,11 +20,15 @@
             label="Ticket ID"
             placeholder="Enter Ticket ID"
             class="pr-10"
+            autocomplete="off"
             @keyup.enter="handleTicketInput"
           />
           <button
+            type="button"
             class="absolute right-2 top-[17px] bg-gray-800 text-white rounded py-2 px-2 hover:bg-red-500 text-lg"
             title="Clear"
+            aria-label="Clear ticket ID"
+            :disabled="!ticketId"
             @click="ticketId = ''"
           >
             &times;
@@ -34,7 +38,7 @@
         <!-- Manual Check-In Button -->
         <button
           class="btn btn-primary bg-green-500 text-white rounded py-2 px-4 w-full"
-          :disabled="loading"
+          :disabled="loading || !ticketId.trim()"
           @click="handleTicketInput"
         >
           Check-In
@@ -43,6 +47,7 @@
         <!-- Scan QR button -->
         <button
           class="btn btn-primary bg-gray-800 text-white rounded py-2 px-4 w-full"
+          :disabled="loading"
           @click="showScanner = !showScanner"
         >
           {{ showScanner ? 'Close Scanner' : 'Scan QR' }}
@@ -53,7 +58,12 @@
       <QRTicketScanner v-model="showScanner" @scanned="handleScan" />
 
       <!-- Error message -->
-      <div v-if="message" class="mt-4 text-sm font-medium text-red-600">
+      <div
+        v-if="message"
+        class="mt-4 text-sm font-medium text-red-600"
+        role="alert"
+        aria-live="polite"
+      >
         {{ message }}
       </div>
 
@@ -69,7 +79,7 @@
 
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
-import { ref, provide } from 'vue'
+import { ref, provide, onBeforeUnmount, watch } from 'vue'
 import { call, createResource, FormControl } from 'frappe-ui'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import { useRoute } from 'vue-router'
@@ -89,10 +99,38 @@ const attendeeResource = {
   fetch: () => {},
 }
 
+function extractTicketId(input) {
+  const s = String(input || '').trim()
+  if (!s) return ''
+  try {
+    const u = new URL(s)
+    // Try common locations first
+    const q =
+      u.searchParams.get('ticket_id') ||
+      u.searchParams.get('ticket') ||
+      u.searchParams.get('id') ||
+      u.searchParams.get('name')
+    if (q) return q
+    const parts = u.pathname.split('/').filter(Boolean)
+    return parts[parts.length - 1] || s
+  } catch {
+    // Not a URL; assume it's already an ID
+    return s
+  }
+}
+
 function handleScan(scannedId) {
-  ticketId.value = scannedId
+  // Normalize & immediately close scanner to avoid repeat scans
+  ticketId.value = extractTicketId(scannedId)
+  showScanner.value = false
   handleTicketInput()
 }
+
+watch(showScanner, (val) => {
+  if (val) {
+    ticketId.value = ''
+  }
+})
 
 const route = useRoute()
 provide('route', route)
@@ -114,7 +152,9 @@ async function handleTicketInput() {
   if (loading.value) return
   loading.value = true
   message.value = ''
-  if (!ticketId.value.trim()) {
+  const raw = ticketId.value.trim()
+  const normalizedId = extractTicketId(raw)
+  if (!normalizedId) {
     showError('Ticket ID is required')
     loading.value = false
     return
@@ -124,7 +164,7 @@ async function handleTicketInput() {
     const res = await call('fossunited.api.checkins.get_attendee_with_checkin_data', {
       event_id: route.params.id,
       filters: {
-        name: ticketId.value.trim(),
+        name: normalizedId,
       },
     })
 
@@ -146,11 +186,20 @@ async function handleTicketInput() {
   }
 }
 
+// near other state
+let clearMsgTimer
+
+onBeforeUnmount(() => {
+  if (clearMsgTimer) clearTimeout(clearMsgTimer)
+})
+
 // Show error message
 function showError(msg) {
   message.value = msg
-  setTimeout(() => {
-    message.value = ''
+  if (clearMsgTimer) clearTimeout(clearMsgTimer)
+  clearMsgTimer = setTimeout(() => {
+    // Only clear if no newer message replaced it
+    if (message.value === msg) message.value = ''
   }, 3000)
 }
 </script>
