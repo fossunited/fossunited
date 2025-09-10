@@ -72,6 +72,7 @@
         v-model="showConfirmDialog"
         :selected-attendee="selectedAttendee"
         :attendees="attendeeResource"
+        @update:selectedAttendee="onSelectedAttendeeUpdate"
       />
     </div>
   </div>
@@ -84,6 +85,7 @@ import { call, createResource, FormControl } from 'frappe-ui'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import { useRoute } from 'vue-router'
 import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
+import { toast } from 'vue-sonner'
 
 // State
 const ticketId = ref('')
@@ -180,5 +182,13 @@ function showError(msg) {
     // Only clear if no newer message replaced it
     if (message.value === msg) message.value = ''
   }, 3000)
+}
+
+function onSelectedAttendeeUpdate(val) {
+  selectedAttendee.value = val
+  if (val == null) {
+    ticketId.value = ''
+    toast.success('Checked in successfully')
+  }
 }
 </script>
