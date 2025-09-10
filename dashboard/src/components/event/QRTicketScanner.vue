@@ -27,6 +27,24 @@ const props = defineProps({
 const emit = defineEmits(['update:props.modelValue', 'scanned'])
 const processing = ref(false)
 
+function extractTicketId(input) {
+  const s = String(input || '').trim()
+  if (!s) return ''
+  try {
+    const u = new URL(s)
+    const q =
+      u.searchParams.get('ticket_id') ||
+      u.searchParams.get('ticket') ||
+      u.searchParams.get('id') ||
+      u.searchParams.get('name')
+    if (q) return q
+    const parts = u.pathname.split('/').filter(Boolean)
+    return parts[parts.length - 1] || s
+  } catch {
+    return s
+  }
+}
+
 // Parse and validate scanned QR content
 function onDetect(detectedCodes) {
   const rawValue = detectedCodes[0]?.rawValue
@@ -39,32 +57,17 @@ function onDetect(detectedCodes) {
   let scannedId
 
   try {
-    // Handle URL with ?id=...
-    try {
-      const url = new URL(rawValue)
-      const allowedHosts = ['fossunited.org', 'fossunited.com']
-      const isAllowed = allowedHosts.some(
-        (h) => url.hostname === h || url.hostname.endsWith('.' + h),
-      )
-      if (isAllowed) {
-        scannedId = url.searchParams.get('id') || url.searchParams.get('ticket') || undefined
-      }
-    } catch (e) {
-      // Not a valid URL
+    scannedId = extractTicketId(rawValue)
+
+    // Optionally validate scannedId format here, e.g. alphanumeric min length
+    if (!scannedId || !/^[A-Za-z0-9_-]{6,}$/.test(scannedId)) {
+      throw new Error('Invalid scanned ID format')
     }
 
-    // Fallback: allow raw alphanumeric IDs
-    scannedId ||= /^[A-Za-z0-9_-]{6,}$/.test(rawValue) ? rawValue : undefined
-
-    if (scannedId) {
-      emit('update:props.modelValue', false) // Close scanner
-      emit('scanned', scannedId) // Emit the scanned ID
-    } else {
-      toast.error('Invalid QR code')
-      processing.value = false
-    }
+    emit('update:props.modelValue', false) // Close scanner
+    emit('scanned', scannedId) // Emit normalized ID
   } catch (err) {
-    toast.error('Invalid QR code format')
+    toast.error('Invalid QR code or format')
     processing.value = false
   }
 }

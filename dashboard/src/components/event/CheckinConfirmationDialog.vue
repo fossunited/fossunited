@@ -89,10 +89,7 @@ import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
 import dayjs from 'dayjs'
-import isTodayPlugin from 'dayjs/plugin/isToday'
-dayjs.extend(isTodayPlugin)
-
-const isToday = (datetime) => dayjs(datetime).isToday()
+const isToday = (datetime) => dayjs(datetime).isSame(dayjs(), 'day')
 
 const formatCheckinLog = (datetime) => {
   if (isToday(datetime)) {
@@ -145,16 +142,4 @@ const checkinAttendee = createResource({
     toast.error(msg)
   },
 })
-
-const makeChangesToAttendeeDict = (attendee) => {
-  const index = props.attendees.data.findIndex((data) => data.name === attendee.name)
-  if (index === -1) return
-  const rec = props.attendees.data[index]
-  if (!Array.isArray(rec.checkin_data)) rec.checkin_data = []
-  // Use ISO string for consistency; ideally use server-returned time or refetch.
-  rec.checkin_data.push({ check_in_time: new Date().toISOString() })
-  if (assignTshirt.value) {
-    props.attendees.data[index].tshirt_delivered = true
-  }
-}
 </script>

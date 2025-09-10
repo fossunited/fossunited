@@ -47,7 +47,7 @@
         <!-- Scan QR button -->
         <button
           class="btn btn-primary bg-gray-800 text-white rounded py-2 px-4 w-full"
-          :disabled="loading"
+          :disabled="loading || showConfirmDialog"
           @click="showScanner = !showScanner"
         >
           {{ showScanner ? 'Close Scanner' : 'Scan QR' }}
@@ -99,29 +99,9 @@ const attendeeResource = {
   fetch: () => {},
 }
 
-function extractTicketId(input) {
-  const s = String(input || '').trim()
-  if (!s) return ''
-  try {
-    const u = new URL(s)
-    // Try common locations first
-    const q =
-      u.searchParams.get('ticket_id') ||
-      u.searchParams.get('ticket') ||
-      u.searchParams.get('id') ||
-      u.searchParams.get('name')
-    if (q) return q
-    const parts = u.pathname.split('/').filter(Boolean)
-    return parts[parts.length - 1] || s
-  } catch {
-    // Not a URL; assume it's already an ID
-    return s
-  }
-}
-
 function handleScan(scannedId) {
   // Normalize & immediately close scanner to avoid repeat scans
-  ticketId.value = extractTicketId(scannedId)
+  ticketId.value = scannedId
   showScanner.value = false
   handleTicketInput()
 }
@@ -153,8 +133,7 @@ async function handleTicketInput() {
   loading.value = true
   message.value = ''
   const raw = ticketId.value.trim()
-  const normalizedId = extractTicketId(raw)
-  if (!normalizedId) {
+  if (!raw) {
     showError('Ticket ID is required')
     loading.value = false
     return
@@ -164,7 +143,7 @@ async function handleTicketInput() {
     const res = await call('fossunited.api.checkins.get_attendee_with_checkin_data', {
       event_id: route.params.id,
       filters: {
-        name: normalizedId,
+        name: raw,
       },
     })
 

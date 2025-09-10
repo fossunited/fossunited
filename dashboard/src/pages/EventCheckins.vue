@@ -36,6 +36,8 @@
               <button
                 type="button"
                 class="w-[150px] btn btn-primary bg-gray-800 text-white rounded mt-4 py-1"
+                :aria-expanded="!!showScanner"
+                aria-controls="qr-ticket-scanner"
                 @click="showScanner = !showScanner"
               >
                 {{ showScanner ? 'Close Scanner' : 'Scan Ticket QR' }}
@@ -72,6 +74,7 @@ function handleScan(scannedId) {
 watch(showScanner, (val) => {
   if (val) {
     filters.name = ''
+    attendees.fetch()
   }
 })
 
