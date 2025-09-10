@@ -169,6 +169,13 @@ const ticket = createResource({
     }
   },
   onSuccess(data) {
+    if (data.tier && data.tier.toLowerCase().includes('free pass')) {
+      ticketValidateError.value =
+        'Free Pass tickets cannot be transferred. Please contact us via email.'
+      ticket.data = null // Clear ticket data to prevent showing
+      return
+    }
+
     event.fetch()
     receiver.wants_tshirt = data.wants_tshirt
     if (data.tshirt_size) {
