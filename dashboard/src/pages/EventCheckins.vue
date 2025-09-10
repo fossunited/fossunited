@@ -32,8 +32,21 @@
               placeholder="Search by Ticket ID"
               @input="attendees.fetch()"
             />
+            <div>
+              <button
+                type="button"
+                class="w-[150px] btn btn-primary bg-gray-800 text-white rounded mt-4 py-1"
+                :aria-expanded="!!showScanner"
+                aria-controls="qr-ticket-scanner"
+                @click="showScanner = !showScanner"
+              >
+                {{ showScanner ? 'Close Scanner' : 'Scan Ticket QR' }}
+              </button>
+            </div>
           </div>
         </div>
+
+        <QRTicketScanner v-model="showScanner" @scanned="handleScan" />
 
         <!-- Attendee List -->
         <CheckinAttendeeList :event="event.data" :attendees="attendees" />
@@ -46,7 +59,24 @@ import EventHeader from '@/components/EventHeader.vue'
 import CheckinAttendeeList from '@/components/event/CheckinAttendeeList.vue'
 import { createResource, usePageMeta, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { inject, reactive, provide } from 'vue'
+import { inject, reactive, provide, ref, onBeforeUnmount, watch } from 'vue'
+import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
+
+const showScanner = ref(false)
+
+// Add method
+function handleScan(scannedId) {
+  filters.name = scannedId
+  showScanner.value = false
+  attendees.fetch()
+}
+
+watch(showScanner, (val) => {
+  if (val) {
+    filters.name = ''
+    attendees.fetch()
+  }
+})
 
 const session = inject('$session')
 

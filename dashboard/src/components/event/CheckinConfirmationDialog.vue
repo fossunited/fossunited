@@ -28,8 +28,25 @@
             <span v-if="selectedAttendee.wants_tshirt"
               >Tshirt Size: {{ selectedAttendee.tshirt_size }}</span
             >
+            <br />
+            Check-in Log:
           </p>
+          <ul class="text-sm font-mono mt-1 list-disc list-inside">
+            <li v-if="!selectedAttendee.checkin_data?.length" class="text-gray-500">
+              No check-ins yet
+            </li>
+            <li
+              v-for="(log, index) in selectedAttendee.checkin_data"
+              :key="log.name || log.id || log.check_in_time || index"
+              :class="{
+                'text-red-600 font-semibold text-2xl uppercase': isToday(log.check_in_time),
+              }"
+            >
+              {{ formatCheckinLog(log.check_in_time) }}
+            </li>
+          </ul>
         </div>
+
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
           <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
@@ -48,7 +65,7 @@
           @click="
             () => {
               showDialog = false
-              selectedAttendee = null
+              // Parent manages selectedAttendee; avoid prop mutation
             }
           "
         />
@@ -71,6 +88,19 @@ import { toast } from 'vue-sonner'
 import { defineProps, defineModel, inject, ref } from 'vue'
 import { createResource, Dialog, Checkbox } from 'frappe-ui'
 
+import dayjs from 'dayjs'
+const isToday = (datetime) => dayjs(datetime).isSame(dayjs(), 'day')
+
+const formatCheckinLog = (datetime) => {
+  if (isToday(datetime)) {
+    // "Today at 05:56 PM"
+    return `Today at ${dayjs(datetime).format('hh:mm A')}`
+  } else {
+    // "09 Sep 2025, 05:56 PM"
+    return dayjs(datetime).format('DD MMM YYYY, hh:mm A')
+  }
+}
+
 const props = defineProps({
   selectedAttendee: {
     type: Object,
@@ -82,9 +112,9 @@ const props = defineProps({
   },
 })
 
-const session = inject('$session')
 const route = inject('route')
 const assignTshirt = ref(false)
+const emit = defineEmits(['update:selectedAttendee'])
 
 const showDialog = defineModel({
   type: Boolean,
@@ -100,23 +130,16 @@ const checkinAttendee = createResource({
     }
   },
   onSuccess() {
-    makeChangesToAttendeeDict(props.selectedAttendee)
-    props.selectedAttendee = null
+    // Prefer refetch to get authoritative server time and avoid prop mutation
+    props.attendees.fetch?.()
+    emit?.('update:selectedAttendee', null)
     assignTshirt.value = false
     showDialog.value = false
   },
   onError(error) {
-    toast.error('Failed to check in attendee')
+    const msg =
+      error?.message || 'Failed to check in attendee. The attendee may already be checked in.'
+    toast.error(msg)
   },
 })
-
-const makeChangesToAttendeeDict = (attendee) => {
-  const index = props.attendees.data.findIndex((data) => data.name === attendee.name)
-  props.attendees.data[index].checkin_data.push({
-    check_in_time: new Date(),
-  })
-  if (assignTshirt.value) {
-    props.attendees.data[index].tshirt_delivered = true
-  }
-}
 </script>

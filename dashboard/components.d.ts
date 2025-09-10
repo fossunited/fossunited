@@ -89,6 +89,7 @@ declare module 'vue' {
     ProposalSpeakerCard: typeof import('./src/components/reviewers/ProposalSpeakerCard.vue')['default']
     ProposalSpeakers: typeof import('./src/components/reviewers/ProposalSpeakers.vue')['default']
     ProseContainer: typeof import('./src/components/ui/ProseContainer.vue')['default']
+    QRTicketScanner: typeof import('./src/components/event/QRTicketScanner.vue')['default']
     RadioGroup: typeof import('./src/components/ui/RadioGroup.vue')['default']
     RazorpayCheckout: typeof import('./src/components/common/RazorpayCheckout.vue')['default']
     ReferencesComponent: typeof import('./src/components/cfp-public/ReferencesComponent.vue')['default']
