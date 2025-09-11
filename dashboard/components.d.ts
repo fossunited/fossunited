@@ -107,6 +107,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ScheduleDateToggle: typeof import('./src/components/schedule/ScheduleDateToggle.vue')['default']
+    ScheduleDownload: typeof import('./src/components/schedule/ScheduleDownload.vue')['default']
     ScheduleHeader: typeof import('./src/components/schedule/ScheduleHeader.vue')['default']
     ScheduleHeroIcon: typeof import('./src/components/icons/ScheduleHeroIcon.vue')['default']
     ScheduleItem: typeof import('./src/components/event/schedule/ScheduleItem.vue')['default']
