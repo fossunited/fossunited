@@ -1,14 +1,17 @@
 import csv
 import io
 import json
+import re
 from collections import defaultdict
 from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 import frappe
 from frappe import _, local
 from frappe.utils.pdf import get_pdf
-from frappe.utils.response import as_csv, as_json, as_pdf, as_txt
+from frappe.utils.response import as_csv, as_json, as_pdf
 from ics import Calendar, Event
+from ics.grammar.parse import ContentLine
 
 from fossunited.doctype_ids import EVENT, EVENT_SCHEDULE, PROPOSAL, SPEAKER
 
@@ -113,125 +116,145 @@ def get_event_schedule(event_id: str) -> dict:
 
 @frappe.whitelist(allow_guest=True)
 def download_schedule(event, format="ics", days="", halls=""):
-    days_list = local.request.args.getlist("days") if local.request else []
-    halls_list = local.request.args.getlist("halls") if local.request else []
+    """
+    Download Event Schedule in various formats for given days and halls.
+
+    Args:
+      event: Event ID
+      format: File formats - ics, csv, txt, md, org, json, pdf
+      days: Dates in ISO format (since function converts it to str)
+      halls: Venue of Hall names
+    """
+
+    if local.request:
+        days_list = local.request.args.getlist("days")
+        halls_list = local.request.args.getlist("halls")
+    else:
+        # fallback: parse comma-separated string params if provided
+        days_list = days.split(",") if days else []
+        halls_list = halls.split(",") if halls else []
 
     # Parse days into date objects
     days_date_objects = []
     for d in days_list:
         try:
-            # NOTE: changed format to match input
             days_date_objects.append(datetime.strptime(d.strip(), "%Y-%m-%d").date())
-        except Exception:
-            frappe.log_error(f"Invalid date format: {d}", "Download Schedule")
+        except Exception as e:
+            frappe.log_error(f"Invalid date format: {d}. Error: {str(e)}", "Download Schedule")
 
     doc = frappe.get_doc(EVENT, event)
+    sessions = get_event_sessions(doc, days_date_objects, halls_list)
+
+    # Event metadata (shared across all formats)
+    event_metadata = {
+        "Event Name": doc.event_name,
+        "Event Type": doc.event_type,
+        "Event Route": f"https://fossunited.org/{doc.route}" if doc.route else "",
+        "Location": doc.event_location or "Online",
+        "Map Link": doc.map_link or "",
+        "Description": frappe.utils.strip_html(doc.event_description or "") or "N/A",
+    }
+
+    # Sanitize filename
+    filename = re.sub(r"[^A-Za-z0-9._-]+", "_", doc.event_name)
+    if days_date_objects:
+        filename += "-Days-" + "-".join([d.strftime("%Y-%m-%d") for d in days_date_objects])
+    if halls_list:
+        filename += "-Halls-" + "-".join(
+            [re.sub(r"[^A-Za-z0-9._-]+", "_", hall) for hall in halls_list]
+        )
+
+    if not sessions:
+        return build_response(format, "No matching sessions found.", filename, empty=True)
+
+    format_alias = {
+        "orgmode": "org",
+        "markdown": "md",
+    }
+    format = format_alias.get(format.lower(), format)
+
+    content = format_schedule_data(format, doc, sessions, event_metadata)
+    return build_response(format, content, filename)
+
+
+def get_event_sessions(doc, days_date_objects, halls_list):
+    """
+    Get event session with information on speakers and CFP link.
+
+    Args:
+      doc: Event doctype data type fetched
+      days_date_objects: The converted date for days in str
+      halls_list: List of halls to get schedule
+    """
+
     sessions = []
-
     for s in doc.event_schedule:
-        session_date = s.scheduled_date
-        if hasattr(session_date, "date"):
-            session_date = session_date.date()
-
+        session_date = (
+            s.scheduled_date.date() if hasattr(s.scheduled_date, "date") else s.scheduled_date
+        )
         if days_date_objects and session_date not in days_date_objects:
             continue
         if halls_list and s.hall not in halls_list:
             continue
 
-        # Ensure required fields for later use
         s.start_time_str = str(timedelta(seconds=int(s.start_time.total_seconds())))
         s.end_time_str = str(timedelta(seconds=int(s.end_time.total_seconds())))
         s.speakers_list = []
 
-        # Parse speakers (if stringified JSON)
         if s.speakers:
             try:
                 s.speakers_list = json.loads(s.speakers)["speakers"]
-            except Exception:
-                pass
+            except Exception as e:
+                frappe.log_error(
+                    f"Failed to parse speakers JSON for session {s.title}: {str(e)}",
+                    "Download Schedule",
+                )
 
         sessions.append(s)
 
-    if not sessions:
-        message = "No matching sessions found."
-
-        if format == "ics":
-            cal = Calendar()
-            # No events added, empty calendar
-            frappe.response["filename"] = f"{doc.event_name}_empty.ics"
-            frappe.response["type"] = "text/calendar"
-            frappe.response["data"] = str(cal)
-            return
-
-        elif format == "csv":
-            output = io.StringIO()
-            writer = csv.writer(output)
-            # Write only headers
-            writer.writerow(["Title", "Date", "Start Time", "End Time", "Hall"])
-            frappe.response["doctype"] = doc.event_name
-            frappe.response["result"] = output.getvalue()
-            return as_csv()
-
-        elif format == "txt":
-            txt_data = "No matching sessions found."
-            frappe.response["doctype"] = doc.event_name
-            frappe.response["result"] = txt_data
-            return as_txt()
-
-        elif format == "pdf":
-            html = "<h3>No matching sessions found.</h3>"
-            pdf_data = get_pdf(html)
-            frappe.response["filename"] = f"{doc.event_name}_empty.pdf"
-            frappe.response["filecontent"] = pdf_data
-            return as_pdf()
-
-        elif format == "json":
-            frappe.response["doctype"] = doc.event_name
-            frappe.response["result"] = []
-            return as_json()
-
-        else:
-            # Unknown format fallback
-            frappe.response["result"] = message
-            return
-
-    # Prepare filename
-    filename = doc.event_name.replace(" ", "_")
-    if days_date_objects:
-        filename += "-Days-" + "-".join([d.strftime("%Y-%m-%d") for d in days_date_objects])
-    if halls_list:
-        filename += "-Halls-" + "-".join(halls_list)
-
-    # ---------- FORMAT: ICS ----------
-    if format == "ics":
-        cal = Calendar()
+    # Attach CFP route
+    linked_cfps = [s.linked_cfp for s in sessions if s.get("linked_cfp")]
+    if linked_cfps:
+        proposals = frappe.db.get_all(
+            PROPOSAL, filters={"name": ("in", linked_cfps)}, fields=["name", "route"]
+        )
+        route_lookup = {p["name"]: p["route"] for p in proposals}
         for s in sessions:
-            e = Event()
-            e.name = f"{s.title} - {doc.event_name}"
-            start_dt = datetime.combine(s.scheduled_date, (datetime.min + s.start_time).time())
-            end_dt = datetime.combine(s.scheduled_date, (datetime.min + s.end_time).time())
-            if end_dt <= start_dt:
-                continue
-            e.begin = start_dt
-            e.end = end_dt
-            e.location = f"{s.hall}, {doc.event_location}"
-            e.description = f"Category: {s.category or 'N/A'}\nSpeakers: {', '.join([sp.get('name') for sp in s.speakers_list])}"  # noqa: E501
-            cal.events.add(e)
+            if s.get("linked_cfp"):
+                s.cfp_route = route_lookup.get(s.linked_cfp)
 
-        # Serve properly with "download" type
-        frappe.response["type"] = "download"
-        frappe.response["filename"] = filename + ".ics"
-        frappe.response["filecontent"] = str(cal)
-        frappe.response["headers"] = {
-            "Content-Type": "text/calendar; charset=utf-8",
-            "Content-Disposition": f"attachment; filename={filename}.ics",
-        }
-        return
+    return sessions
 
-    # ---------- FORMAT: CSV ----------
+
+def format_schedule_data(format, doc, sessions, metadata):
+    """
+    File format the given schedule data.
+
+    Args:
+      format: file format - ics, md, csv, orgmode, txt
+    """
+
+    if format == "json":
+        return [
+            {
+                "title": s.title,
+                "date": str(s.scheduled_date),
+                "start_time": s.start_time_str,
+                "end_time": s.end_time_str,
+                "hall": s.hall,
+                "category": s.category,
+                "cfp_route": s.get("cfp_route"),
+                "speakers": s.speakers_list,
+            }
+            for s in sessions
+        ]
+
     elif format == "csv":
         output = io.StringIO()
         writer = csv.writer(output)
+        for k, v in metadata.items():
+            writer.writerow([k, v])
+        writer.writerow([])
         writer.writerow(
             [
                 "Title",
@@ -258,71 +281,164 @@ def download_schedule(event, format="ics", days="", halls=""):
                     speaker_names,
                 ]
             )
-        frappe.response["doctype"] = filename
-        frappe.response["result"] = output.getvalue()
-        return as_csv()
+        return output.getvalue()
 
-    # ---------- FORMAT: TXT ----------
     elif format == "txt":
-        lines = []
+        lines = [f"{k}: {v}" for k, v in metadata.items()] + ["-" * 40, ""]
         for s in sessions:
             speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
             lines.append(
-                f"Title: {s.title}\n"
-                f"Date: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
-                f"Hall: {s.hall}\n"
-                f"Category: {s.category}\n"
-                f"CFP: {s.get('cfp_route') or 'N/A'}\n"
-                f"Speakers: {speakers}\n"
-                f"{'-' * 40}"
+                f"Title: {s.title}\nDate: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"  # noqa: E501
+                f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {s.get('cfp_route') or 'N/A'}\n"
+                f"Speakers: {speakers}\n{'-' * 40}"
             )
-        txt_data = "\n".join(lines)
-        frappe.response["doctype"] = filename
-        frappe.response["result"] = txt_data
-        return as_txt()
+        return "\n".join(lines)
 
-    # ---------- FORMAT: PDF ----------
     elif format == "pdf":
-        html = "<h2>Schedule</h2><ul>"
+        html = f"<h2>{metadata['Event Name']}</h2><p>"
+        for k, v in metadata.items():
+            html += f"<b>{k}:</b> {v}<br>"
+        html += "</p><hr><ul>"
         for s in sessions:
             speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
-            html += (
-                f"<li><b>{s.title}</b><br>"
-                f"<b>Date:</b> {s.scheduled_date}<br>"
-                f"<b>Time:</b> {s.start_time_str} - {s.end_time_str}<br>"
-                f"<b>Hall:</b> {s.hall}<br>"
-                f"<b>Category:</b> {s.category}<br>"
-                f"<b>Speakers:</b> {speakers}<br>"
-                f"<b>CFP:</b> {s.get('cfp_route') or 'N/A'}"
-                f"</li><br>"
-            )
+            html += f"<li><b>{s.title}</b><br><b>Date:</b> {s.scheduled_date}<br><b>Time:</b> {s.start_time_str} - {s.end_time_str}<br><b>Hall:</b> {s.hall}<br><b>Category:</b> {s.category}<br><b>CFP:</b> {s.get('cfp_route') or 'N/A'}<br><b>Speakers:</b> {speakers}</li><br>"  # noqa: E501
         html += "</ul>"
+        return get_pdf(html)
 
-        pdf_data = get_pdf(html)
-        frappe.response["filename"] = filename + ".pdf"
-        frappe.response["filecontent"] = pdf_data
-        return as_pdf()
-
-    # ---------- FORMAT: JSON ----------
-    elif format == "json":
-        result = []
-        for s in sessions:
-            result.append(
-                {
-                    "title": s.title,
-                    "date": str(s.scheduled_date),
-                    "start_time": s.start_time_str,
-                    "end_time": s.end_time_str,
-                    "hall": s.hall,
-                    "category": s.category,
-                    "cfp_route": s.get("cfp_route"),
-                    "speakers": s.speakers_list,
-                }
+    elif format == "ics":
+        cal = Calendar()
+        cal.extra.append(
+            ContentLine(
+                name="X-WR-CALDESC",
+                value="\n".join([f"{k}: {v}" for k, v in metadata.items()]),
             )
-        frappe.response["doctype"] = filename
-        frappe.response["result"] = result
-        return as_json()
+        )
+        tz = ZoneInfo(frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata")
+        for s in sessions:
+            e = Event()
+            e.name = f"{s.title} - {doc.event_name}"
+            start = datetime.combine(
+                s.scheduled_date, (datetime.min + s.start_time).time(), tzinfo=tz
+            )
+            end = datetime.combine(s.scheduled_date, (datetime.min + s.end_time).time(), tzinfo=tz)
+            if end <= start:
+                continue
+            e.begin = start
+            e.end = end
+            e.location = f"{s.hall}, {metadata['Location']}"
+            e.description = f"Category: {s.category or 'N/A'}\nSpeakers: {', '.join([sp.get('name') for sp in s.speakers_list])}"  # noqa: E501
+            cal.events.add(e)
+        return str(cal)
 
-    # ---------- UNSUPPORTED ----------
+    elif format == "md":
+        lines = [
+            f"# {metadata['Event Name']}",
+            "",
+            f"**Type:** {metadata['Event Type']}",
+            f"**Route:** [{metadata['Event Route']}]({metadata['Event Route']})",
+            f"**Location:** {metadata['Location']}",
+        ]
+        if metadata["Map Link"]:
+            lines.append(f"**Map Link:** [{metadata['Map Link']}]({metadata['Map Link']})")
+        lines += ["", "## Description", metadata["Description"], "", "## Schedule"]
+        for s in sessions:
+            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
+            lines += [
+                f"### {s.title}",
+                f"- **Date:** {s.scheduled_date}",
+                f"- **Time:** {s.start_time_str} – {s.end_time_str}",
+                f"- **Hall:** {s.hall}",
+                f"- **Category:** {s.category}",
+                f"- **CFP:** {s.get('cfp_route') or 'N/A'}",
+                f"- **Speakers:** {speakers}",
+                "",
+                "---",
+                "",
+            ]
+        return "\n".join(lines)
+
+    elif format == "org":
+        lines = [
+            f"* {metadata['Event Name']}",
+            ":PROPERTIES:",
+            f":Type: {metadata['Event Type']}",
+            f":Route: {metadata['Event Route']}",
+            f":Location: {metadata['Location']}",
+        ]
+        if metadata["Map Link"]:
+            lines.append(f":Map_Link: {metadata['Map Link']}")
+        lines += [
+            ":END:",
+            "",
+            "* Description",
+            metadata["Description"],
+            "",
+            "* Schedule",
+        ]
+        for s in sessions:
+            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
+            dt_str = f"<{s.scheduled_date} {str(s.start_time)[:5]}-{str(s.end_time)[:5]}>"
+            lines += [
+                f"** {s.title}",
+                f"SCHEDULED: {dt_str}",
+                ":PROPERTIES:",
+                f":Hall: {s.hall}",
+                f":Category: {s.category}",
+                f":CFP: {s.get('cfp_route') or 'N/A'}",
+                f":Speakers: {speakers}",
+                ":END:",
+                "",
+            ]
+        return "\n".join(lines)
+
     else:
         frappe.throw(_("Unsupported format: {0}").format(format))
+
+
+def build_response(format, content, filename, empty=False, event_metadata=None):
+    """
+    Build response for the API call to download.
+    Adds mimetype to file.
+    """
+
+    if format in ["txt", "md", "org"]:
+        frappe.response["type"] = "download"
+        frappe.response["filename"] = f"{filename}.{format}"
+        frappe.response["filecontent"] = content
+        frappe.response["headers"] = {
+            "Content-Type": "text/plain; charset=utf-8",
+            "Content-Disposition": f"attachment; filename={filename}.{format}",
+        }
+        return
+
+    if format == "pdf":
+        frappe.response["type"] = "download"
+        frappe.response["filename"] = f"{filename}.pdf"
+        frappe.response["filecontent"] = content
+        return as_pdf()
+
+    if format == "ics":
+        frappe.response["type"] = "download"
+        frappe.response["filename"] = f"{filename}.ics"
+        frappe.response["filecontent"] = content
+        frappe.response["headers"] = {
+            "Content-Type": "text/calendar; charset=utf-8",
+            "Content-Disposition": f"attachment; filename={filename}.ics",
+        }
+        return
+
+    if format == "csv":
+        frappe.response["doctype"] = filename
+        frappe.response["result"] = content
+        return as_csv()
+
+    if format == "json":
+        frappe.response["doctype"] = filename
+        frappe.response["result"] = {
+            "event_metadata": event_metadata or {},
+            "sessions": content if not empty else [],
+        }
+        return as_json()
+
+    # fallback
+    frappe.response["result"] = content
