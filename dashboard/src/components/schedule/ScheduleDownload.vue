@@ -1,8 +1,9 @@
 <template>
   <div>
     <!-- Open Modal Button -->
-    <button class="bg-black text-white px-4 py-2 rounded text-sm" @click="showModal = true">
-      Download Schedule
+    <button class="flex bg-black text-white px-4 py-2 rounded text-sm" @click="showModal = true">
+      <IconDownload class="w-4 h-4 mr-1" />
+      <span class="hidden md:block uppercase">Download Schedule</span>
     </button>
 
     <!-- Modal -->
@@ -18,7 +19,7 @@
           <label class="block text-sm font-medium mb-2">Select Format</label>
           <div class="flex gap-2 flex-wrap">
             <label
-              v-for="format in ['ics', 'csv', 'txt', 'pdf', 'json']"
+              v-for="format in ['ics', 'orgmode', 'markdown', 'csv', 'txt', 'pdf', 'json']"
               :key="format"
               class="cursor-pointer px-4 py-2 rounded border border-gray-300 text-sm select-none hover:bg-black hover:text-white transition-colors duration-200"
               :class="{
@@ -88,7 +89,8 @@
 </template>
 
 <script setup>
-import { ref, computed, defineProps } from 'vue'
+import { ref, computed } from 'vue'
+import { IconDownload } from '@tabler/icons-vue'
 
 const props = defineProps({
   event: {
@@ -106,7 +108,7 @@ const selectedFormat = ref('ics')
 const selectedDays = ref([])
 const selectedHalls = ref([])
 
-const allDatesRaw = Object.keys(props.schedule) // dd/mm/YYYY
+const allDatesRaw = props.schedule ? Object.keys(props.schedule) : [] // dd/mm/YYYY
 
 const allDates = computed(() =>
   allDatesRaw.map((d) => {
