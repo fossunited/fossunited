@@ -21,6 +21,20 @@ def format_date(date_obj):
     return date_obj.strftime("%d/%m/%Y")
 
 
+def to_time(val):
+    # Accept datetime.time, timedelta, or "HH:MM:SS"/"HH:MM" strings
+    if isinstance(val, datetime.time):
+        return val
+    if isinstance(val, timedelta):
+        return (datetime.min + val).time()
+    if isinstance(val, str):
+        try:
+            return datetime.strptime(val.strip(), "%H:%M:%S").time()
+        except ValueError:
+            return datetime.strptime(val.strip(), "%H:%M").time()
+    raise TypeError(f"Unsupported time type: {type(val)}")
+
+
 @frappe.whitelist(allow_guest=True)
 def get_event_schedule(event_id: str) -> dict:
     """
@@ -165,7 +179,7 @@ def download_schedule(event, format="ics", days="", halls=""):
         )
 
     if not sessions:
-        return build_response(format, "No matching sessions found.", filename, empty=True)
+        return build_response(format, None, filename, empty=True, event_metadata=event_metadata)
 
     format_alias = {
         "orgmode": "org",
@@ -174,7 +188,7 @@ def download_schedule(event, format="ics", days="", halls=""):
     format = format_alias.get(format.lower(), format)
 
     content = format_schedule_data(format, doc, sessions, event_metadata)
-    return build_response(format, content, filename)
+    return build_response(format, content, filename, event_metadata=event_metadata)
 
 
 def get_event_sessions(doc, days_date_objects, halls_list):
@@ -197,15 +211,18 @@ def get_event_sessions(doc, days_date_objects, halls_list):
         if halls_list and s.hall not in halls_list:
             continue
 
-        s.start_time_str = str(timedelta(seconds=int(s.start_time.total_seconds())))
-        s.end_time_str = str(timedelta(seconds=int(s.end_time.total_seconds())))
+        s.start_time_str = to_time(s.start_time).strftime("%H:%M")
+        s.end_time_str = to_time(s.end_time).strftime("%H:%M")
         s.speakers_list = []
 
         if s.speakers:
             try:
                 speakers_data = json.loads(s.speakers)
-                s.speakers_list = speakers_data.get("speakers", [])
-            except Exception as e:
+                s.speakers_list = (
+                    speakers_data.get("speakers", []) if isinstance(speakers_data, dict) else []
+                )
+            except (json.JSONDecodeError, TypeError, ValueError) as e:
+                s.speakers_list = []
                 frappe.log_error(
                     f"Failed to parse speakers JSON for session {s.title}: {e}",
                     "Download Schedule",
@@ -252,7 +269,7 @@ def format_schedule_data(format, doc, sessions, metadata):
 
     elif format == "csv":
         output = io.StringIO()
-        writer = csv.writer(output)
+        writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
         for k, v in metadata.items():
             writer.writerow([k, v])
         writer.writerow([])
@@ -282,14 +299,15 @@ def format_schedule_data(format, doc, sessions, metadata):
                     speaker_names,
                 ]
             )
-        return output.getvalue()
+        return "\ufeff" + output.getvalue()
 
     elif format == "txt":
         lines = [f"{k}: {v}" for k, v in metadata.items()] + ["-" * 40, ""]
         for s in sessions:
             speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
             lines.append(
-                f"Title: {s.title}\nDate: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"  # noqa: E501
+                f"Title: {s.title}\n"
+                f"Date: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
                 f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {s.get('cfp_route') or 'N/A'}\n"
                 f"Speakers: {speakers}\n{'-' * 40}"
             )
@@ -302,7 +320,15 @@ def format_schedule_data(format, doc, sessions, metadata):
         html += "</p><hr><ul>"
         for s in sessions:
             speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
-            html += f"<li><b>{s.title}</b><br><b>Date:</b> {s.scheduled_date}<br><b>Time:</b> {s.start_time_str} - {s.end_time_str}<br><b>Hall:</b> {s.hall}<br><b>Category:</b> {s.category}<br><b>CFP:</b> {s.get('cfp_route') or 'N/A'}<br><b>Speakers:</b> {speakers}</li><br>"  # noqa: E501
+            html += (
+                f"<li><b>{s.title}</b><br>"
+                f"<b>Date:</b> {s.scheduled_date}<br>"
+                f"<b>Time:</b> {s.start_time_str} - {s.end_time_str}<br>"
+                f"<b>Hall:</b> {s.hall}<br>"
+                f"<b>Category:</b> {s.category}<br>"
+                f"<b>CFP:</b> {s.get('cfp_route') or 'N/A'}<br>"
+                f"<b>Speakers:</b> {speakers}</li><br>"
+            )
         html += "</ul>"
         return get_pdf(html)
 
@@ -318,10 +344,8 @@ def format_schedule_data(format, doc, sessions, metadata):
         for s in sessions:
             e = Event()
             e.name = f"{s.title} - {doc.event_name}"
-            start = datetime.combine(
-                s.scheduled_date, (datetime.min + s.start_time).time(), tzinfo=tz
-            )
-            end = datetime.combine(s.scheduled_date, (datetime.min + s.end_time).time(), tzinfo=tz)
+            start = datetime.combine(s.scheduled_date, to_time(s.start_time), tzinfo=tz)
+            end = datetime.combine(s.scheduled_date, to_time(s.end_time), tzinfo=tz)
             if end <= start:
                 continue
             e.begin = start
@@ -378,7 +402,7 @@ def format_schedule_data(format, doc, sessions, metadata):
         ]
         for s in sessions:
             speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
-            dt_str = f"<{s.scheduled_date} {str(s.start_time)[:5]}-{str(s.end_time)[:5]}>"
+            dt_str = f"<{s.scheduled_date} {to_time(s.start_time).strftime('%H:%M')}-{to_time(s.end_time).strftime('%H:%M')}>"  # noqa: E501
             lines += [
                 f"** {s.title}",
                 f"SCHEDULED: {dt_str}",
@@ -407,12 +431,69 @@ def build_response(format, content, filename, empty=False, event_metadata=None):
     Adds mimetype to file.
     """
 
+    if empty:
+        if format == "json":
+            frappe.response["doctype"] = filename
+            frappe.response["result"] = {
+                "event_metadata": event_metadata or {},
+                "sessions": [],
+            }
+            return as_json()
+        if format == "csv":
+            output = io.StringIO()
+            writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
+            for k, v in (event_metadata or {}).items():
+                writer.writerow([k, v])
+            writer.writerow([])
+            writer.writerow(
+                [
+                    "Title",
+                    "Date",
+                    "Start Time",
+                    "End Time",
+                    "Hall",
+                    "Category",
+                    "CFP",
+                    "Speakers",
+                ]
+            )
+            frappe.response["doctype"] = filename
+            frappe.response["result"] = "\ufeff" + output.getvalue()
+            return as_csv()
+        if format == "ics":
+            cal = Calendar()
+            if event_metadata:
+                cal.extra.append(
+                    ContentLine(
+                        name="X-WR-CALDESC",
+                        value="\n".join([f"{k}: {v}" for k, v in event_metadata.items()]),
+                    )
+                )
+            frappe.response["type"] = "download"
+            frappe.response["filename"] = f"{filename}.ics"
+            frappe.response["filecontent"] = str(cal)
+            frappe.response["headers"] = {
+                "Content-Type": "text/calendar; charset=utf-8",
+                "Content-Disposition": f"attachment; filename={filename}.ics",
+            }
+            return
+        if format in ["txt", "md", "org"]:
+            content = "No matching sessions found."
+        if format == "pdf":
+            html = f"<h2>{(event_metadata or {}).get('Event Name', 'Event')}</h2><p>No matching sessions found.</p>"  # noqa: E501
+            frappe.response["type"] = "download"
+            frappe.response["filename"] = f"{filename}.pdf"
+            frappe.response["filecontent"] = get_pdf(html)
+            return as_pdf()
+
     if format in ["txt", "md", "org"]:
         frappe.response["type"] = "download"
         frappe.response["filename"] = f"{filename}.{format}"
         frappe.response["filecontent"] = content
         frappe.response["headers"] = {
-            "Content-Type": "text/plain; charset=utf-8",
+            "Content-Type": (
+                "text/markdown; charset=utf-8" if format == "md" else "text/plain; charset=utf-8"
+            ),
             "Content-Disposition": f"attachment; filename={filename}.{format}",
         }
         return
