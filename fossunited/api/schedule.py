@@ -139,8 +139,8 @@ def download_schedule(event, format="ics", days="", halls=""):
     for d in days_list:
         try:
             days_date_objects.append(datetime.strptime(d.strip(), "%Y-%m-%d").date())
-        except Exception as e:
-            frappe.log_error(f"Invalid date format: {d}. Error: {str(e)}", "Download Schedule")
+        except ValueError as e:
+            frappe.log_error(f"Invalid date format: {d}. Error: {e}", "Download Schedule")
 
     doc = frappe.get_doc(EVENT, event)
     sessions = get_event_sessions(doc, days_date_objects, halls_list)
@@ -203,10 +203,11 @@ def get_event_sessions(doc, days_date_objects, halls_list):
 
         if s.speakers:
             try:
-                s.speakers_list = json.loads(s.speakers)["speakers"]
+                speakers_data = json.loads(s.speakers)
+                s.speakers_list = speakers_data.get("speakers", [])
             except Exception as e:
                 frappe.log_error(
-                    f"Failed to parse speakers JSON for session {s.title}: {str(e)}",
+                    f"Failed to parse speakers JSON for session {s.title}: {e}",
                     "Download Schedule",
                 )
 
@@ -346,7 +347,7 @@ def format_schedule_data(format, doc, sessions, metadata):
             lines += [
                 f"### {s.title}",
                 f"- **Date:** {s.scheduled_date}",
-                f"- **Time:** {s.start_time_str} – {s.end_time_str}",
+                f"- **Time:** {s.start_time_str} - {s.end_time_str}",
                 f"- **Hall:** {s.hall}",
                 f"- **Category:** {s.category}",
                 f"- **CFP:** {s.get('cfp_route') or 'N/A'}",
@@ -392,7 +393,12 @@ def format_schedule_data(format, doc, sessions, metadata):
         return "\n".join(lines)
 
     else:
-        frappe.throw(_("Unsupported format: {0}").format(format))
+        supported = ["ics", "csv", "txt", "md", "org", "json", "pdf"]
+        frappe.throw(
+            _("Unsupported format: {0}. Supported formats: {1}").format(
+                format, ", ".join(supported)
+            )
+        )
 
 
 def build_response(format, content, filename, empty=False, event_metadata=None):
