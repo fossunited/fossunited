@@ -3,7 +3,7 @@ import io
 import json
 import re
 from collections import defaultdict
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -23,7 +23,7 @@ def format_date(date_obj):
 
 def to_time(val):
     # Accept datetime.time, timedelta, or "HH:MM:SS"/"HH:MM" strings
-    if isinstance(val, datetime.time):
+    if isinstance(val, time):
         return val
     if isinstance(val, timedelta):
         return (datetime.min + val).time()
