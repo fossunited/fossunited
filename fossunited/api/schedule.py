@@ -22,7 +22,9 @@ def format_date(date_obj):
 
 
 def to_time(val):
-    # Accept datetime.time, timedelta, or "HH:MM:SS"/"HH:MM" strings
+    # Accept None, datetime.time, timedelta, or "HH:MM[:SS]" strings
+    if val is None:
+        return None
     if isinstance(val, time):
         return val
     if isinstance(val, timedelta):
@@ -33,6 +35,17 @@ def to_time(val):
         except ValueError:
             return datetime.strptime(val.strip(), "%H:%M").time()
     raise TypeError(f"Unsupported time type: {type(val)}")
+
+
+def cleanse_csv_cell(value):
+    s = "" if value is None else str(value)
+    return "'" + s if s.startswith(("=", "+", "-", "@")) else s
+
+
+def safe_speaker_name(sp):
+    if isinstance(sp, dict):
+        return (sp.get("name") or sp.get("full_name") or "").strip()
+    return str(sp or "").strip()
 
 
 @frappe.whitelist(allow_guest=True)
@@ -51,7 +64,7 @@ def get_event_schedule(event_id: str) -> dict:
         EVENT_SCHEDULE,
         {"parent": event_id, "parenttype": EVENT},
         ["*"],
-        order_by="start_time",
+        order_by="scheduled_date asc, start_time asc",
     )
 
     # Build a sorted list of unique dates
@@ -163,7 +176,7 @@ def download_schedule(event, format="ics", days="", halls=""):
     event_metadata = {
         "Event Name": doc.event_name,
         "Event Type": doc.event_type,
-        "Event Route": f"https://fossunited.org/{doc.route}" if doc.route else "",
+        "Event Route": f"https://fossunited.org/{str(doc.route).lstrip('/')}" if doc.route else "",
         "Location": doc.event_location or "Online",
         "Map Link": doc.map_link or "",
         "Description": frappe.utils.strip_html(doc.event_description or "") or "N/A",
@@ -178,14 +191,10 @@ def download_schedule(event, format="ics", days="", halls=""):
             [re.sub(r"[^A-Za-z0-9._-]+", "_", hall) for hall in halls_list]
         )
 
+    format_alias = {"orgmode": "org", "markdown": "md"}
+    format = format_alias.get(str(format).lower(), format)
     if not sessions:
         return build_response(format, None, filename, empty=True, event_metadata=event_metadata)
-
-    format_alias = {
-        "orgmode": "org",
-        "markdown": "md",
-    }
-    format = format_alias.get(format.lower(), format)
 
     content = format_schedule_data(format, doc, sessions, event_metadata)
     return build_response(format, content, filename, event_metadata=event_metadata)
@@ -211,8 +220,8 @@ def get_event_sessions(doc, days_date_objects, halls_list):
         if halls_list and s.hall not in halls_list:
             continue
 
-        s.start_time_str = to_time(s.start_time).strftime("%H:%M")
-        s.end_time_str = to_time(s.end_time).strftime("%H:%M")
+        s.start_time_str = to_time(s.start_time).strftime("%H:%M") if s.start_time else "N/A"
+        s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else "N/A"
         s.speakers_list = []
 
         if s.speakers:
@@ -271,7 +280,7 @@ def format_schedule_data(format, doc, sessions, metadata):
         output = io.StringIO()
         writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
         for k, v in metadata.items():
-            writer.writerow([k, v])
+            writer.writerow([cleanse_csv_cell(k), cleanse_csv_cell(v)])
         writer.writerow([])
         writer.writerow(
             [
@@ -286,17 +295,19 @@ def format_schedule_data(format, doc, sessions, metadata):
             ]
         )
         for s in sessions:
-            speaker_names = ", ".join([sp.get("name") for sp in s.speakers_list])
+            speaker_names = ", ".join(
+                safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp)
+            )
             writer.writerow(
                 [
-                    s.title,
-                    s.scheduled_date,
-                    s.start_time_str,
-                    s.end_time_str,
-                    s.hall,
-                    s.category,
-                    s.get("cfp_route") or "",
-                    speaker_names,
+                    cleanse_csv_cell(s.title),
+                    cleanse_csv_cell(s.scheduled_date),
+                    cleanse_csv_cell(s.start_time_str),
+                    cleanse_csv_cell(s.end_time_str),
+                    cleanse_csv_cell(s.hall),
+                    cleanse_csv_cell(s.category),
+                    cleanse_csv_cell(s.get("cfp_route") or ""),
+                    cleanse_csv_cell(speaker_names),
                 ]
             )
         return "\ufeff" + output.getvalue()
@@ -304,7 +315,10 @@ def format_schedule_data(format, doc, sessions, metadata):
     elif format == "txt":
         lines = [f"{k}: {v}" for k, v in metadata.items()] + ["-" * 40, ""]
         for s in sessions:
-            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
+            speakers = (
+                ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
+                or "N/A"
+            )
             lines.append(
                 f"Title: {s.title}\n"
                 f"Date: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
@@ -319,7 +333,10 @@ def format_schedule_data(format, doc, sessions, metadata):
             html += f"<b>{k}:</b> {v}<br>"
         html += "</p><hr><ul>"
         for s in sessions:
-            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
+            speakers = (
+                ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
+                or "N/A"
+            )
             html += (
                 f"<li><b>{s.title}</b><br>"
                 f"<b>Date:</b> {s.scheduled_date}<br>"
@@ -342,18 +359,29 @@ def format_schedule_data(format, doc, sessions, metadata):
         )
         tz = ZoneInfo(frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata")
         for s in sessions:
+            # Skip sessions with incomplete timing info
+            if not s.scheduled_date or not s.start_time or not s.end_time:
+                continue
             e = Event()
             e.name = f"{s.title} - {doc.event_name}"
-            start = datetime.combine(s.scheduled_date, to_time(s.start_time), tzinfo=tz)
-            end = datetime.combine(s.scheduled_date, to_time(s.end_time), tzinfo=tz)
+            t_start = to_time(s.start_time)
+            t_end = to_time(s.end_time)
+            # Skip if times missing or invalid range
+            if not t_start or not t_end:
+                continue
+            start = datetime.combine(s.scheduled_date, t_start, tzinfo=tz)
+            end = datetime.combine(s.scheduled_date, t_end, tzinfo=tz)
             if end <= start:
                 continue
             e.begin = start
             e.end = end
             e.location = f"{s.hall}, {metadata['Location']}"
-            e.description = f"Category: {s.category or 'N/A'}\nSpeakers: {', '.join([sp.get('name') for sp in s.speakers_list])}"  # noqa: E501
+            e.description = (
+                f"Category: {s.category or 'N/A'}\n"
+                f"Speakers: {', '.join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))}"  # noqa: E501
+            )
             cal.events.add(e)
-        return str(cal)
+        return cal.serialize()
 
     elif format == "md":
         lines = [
@@ -367,7 +395,10 @@ def format_schedule_data(format, doc, sessions, metadata):
             lines.append(f"**Map Link:** [{metadata['Map Link']}]({metadata['Map Link']})")
         lines += ["", "## Description", metadata["Description"], "", "## Schedule"]
         for s in sessions:
-            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
+            speakers = (
+                ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
+                or "N/A"
+            )
             lines += [
                 f"### {s.title}",
                 f"- **Date:** {s.scheduled_date}",
@@ -401,8 +432,18 @@ def format_schedule_data(format, doc, sessions, metadata):
             "* Schedule",
         ]
         for s in sessions:
-            speakers = ", ".join([sp.get("name") for sp in s.speakers_list]) or "N/A"
-            dt_str = f"<{s.scheduled_date} {to_time(s.start_time).strftime('%H:%M')}-{to_time(s.end_time).strftime('%H:%M')}>"  # noqa: E501
+            speakers = (
+                ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
+                or "N/A"
+            )
+            t_start = to_time(s.start_time)
+            t_end = to_time(s.end_time)
+            if t_start and t_end:
+                dt_str = f"<{s.scheduled_date} {to_time(s.start_time).strftime('%H:%M')}-{to_time(s.end_time).strftime('%H:%M')}>"  # noqa: E501
+            elif t_start:
+                dt_str = f"<{s.scheduled_date} {t_start.strftime('%H:%M')}>"
+            else:
+                dt_str = f"<{s.scheduled_date}>"
             lines += [
                 f"** {s.title}",
                 f"SCHEDULED: {dt_str}",
