@@ -270,7 +270,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 "end_time": s.end_time_str,
                 "hall": s.hall,
                 "category": s.category,
-                "cfp_route": s.get("cfp_route"),
+                "cfp_route": getattr(s, "cfp_route", None),
                 "speakers": s.speakers_list,
             }
             for s in sessions
@@ -322,7 +322,7 @@ def format_schedule_data(format, doc, sessions, metadata):
             lines.append(
                 f"Title: {s.title}\n"
                 f"Date: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
-                f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {s.get('cfp_route') or 'N/A'}\n"
+                f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {getattr(s, 'cfp_route', None) or 'N/A'}\n"  # noqa: E501
                 f"Speakers: {speakers}\n{'-' * 40}"
             )
         return "\n".join(lines)
@@ -343,7 +343,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 f"<b>Time:</b> {s.start_time_str} - {s.end_time_str}<br>"
                 f"<b>Hall:</b> {s.hall}<br>"
                 f"<b>Category:</b> {s.category}<br>"
-                f"<b>CFP:</b> {s.get('cfp_route') or 'N/A'}<br>"
+                f"<b>CFP:</b> {getattr(s, 'cfp_route', None) or 'N/A'}<br>"
                 f"<b>Speakers:</b> {speakers}</li><br>"
             )
         html += "</ul>"
@@ -405,7 +405,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 f"- **Time:** {s.start_time_str} - {s.end_time_str}",
                 f"- **Hall:** {s.hall}",
                 f"- **Category:** {s.category}",
-                f"- **CFP:** {s.get('cfp_route') or 'N/A'}",
+                f"- **CFP:** {getattr(s, 'cfp_route', None) or 'N/A'}",
                 f"- **Speakers:** {speakers}",
                 "",
                 "---",
@@ -439,7 +439,9 @@ def format_schedule_data(format, doc, sessions, metadata):
             t_start = to_time(s.start_time)
             t_end = to_time(s.end_time)
             if t_start and t_end:
-                dt_str = f"<{s.scheduled_date} {to_time(s.start_time).strftime('%H:%M')}-{to_time(s.end_time).strftime('%H:%M')}>"  # noqa: E501
+                dt_str = (
+                    f"<{s.scheduled_date} {t_start.strftime('%H:%M')}-{t_end.strftime('%H:%M')}>"  # noqa: E501
+                )
             elif t_start:
                 dt_str = f"<{s.scheduled_date} {t_start.strftime('%H:%M')}>"
             else:
@@ -450,7 +452,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 ":PROPERTIES:",
                 f":Hall: {s.hall}",
                 f":Category: {s.category}",
-                f":CFP: {s.get('cfp_route') or 'N/A'}",
+                f":CFP: {getattr(s, 'cfp_route', None) or 'N/A'}",
                 f":Speakers: {speakers}",
                 ":END:",
                 "",
@@ -484,7 +486,7 @@ def build_response(format, content, filename, empty=False, event_metadata=None):
             output = io.StringIO()
             writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
             for k, v in (event_metadata or {}).items():
-                writer.writerow([k, v])
+                writer.writerow([cleanse_csv_cell(k), cleanse_csv_cell(v)])
             writer.writerow([])
             writer.writerow(
                 [
@@ -512,7 +514,7 @@ def build_response(format, content, filename, empty=False, event_metadata=None):
                 )
             frappe.response["type"] = "download"
             frappe.response["filename"] = f"{filename}.ics"
-            frappe.response["filecontent"] = str(cal)
+            frappe.response["filecontent"] = cal.serialize()
             frappe.response["headers"] = {
                 "Content-Type": "text/calendar; charset=utf-8",
                 "Content-Disposition": f"attachment; filename={filename}.ics",
@@ -557,6 +559,7 @@ def build_response(format, content, filename, empty=False, event_metadata=None):
 
     if format == "csv":
         frappe.response["doctype"] = filename
+        frappe.response["filename"] = f"{filename}.csv"
         frappe.response["result"] = content
         return as_csv()
 
