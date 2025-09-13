@@ -226,20 +226,29 @@ def get_event_sessions(doc, days_date_objects, halls_list):
 
         sessions.append(s)
 
-    # Fetch linked CFP docs in bulk
+    # Bulk fetch proposal routes
     cfp_docs = {}
+    route_lookup = {}
     if linked_cfps:
-        # Fetch full doc to get child table 'speakers'
-        for cfp_name in linked_cfps:
-            try:
-                cfp_doc = frappe.get_doc(PROPOSAL, cfp_name)
-                cfp_docs[cfp_name] = cfp_doc
-            except Exception as e:
-                frappe.log_error(f"Error fetching CFP doc {cfp_name}: {e}", "Download Schedule")
+        for row in frappe.db.get_all(
+            PROPOSAL,
+            filters={"name": ("in", list(linked_cfps))},
+            fields=["name", "route"],
+        ):
+            route_lookup[row["name"]] = row["route"]
+        # Bulk fetch speakers from child table
+        speakers = frappe.db.get_all(
+            SPEAKER,
+            filters={"parent": ("in", list(linked_cfps))},
+            fields=["parent", "full_name"],
+        )
+        for sp in speakers:
+            cfp_docs.setdefault(sp["parent"], {"speakers": []})
+            cfp_docs[sp["parent"]]["speakers"].append(sp)
 
     for s in sessions:
-        s.start_time_str = to_time(s.start_time).strftime("%H:%M") if s.start_time else "N/A"
-        s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else "N/A"
+        s.start_time_str = to_time(s.start_time).strftime("%H:%M") if s.start_time else ""
+        s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else ""
         s.speakers_list = []
 
         # If no speakers in session, try linked CFP speakers
@@ -251,9 +260,10 @@ def get_event_sessions(doc, days_date_objects, halls_list):
         # Attach CFP route if linked
         if s.get("linked_cfp"):
             cfp_doc = cfp_docs.get(s.linked_cfp)
-            s.cfp_route = (
-                f"https://fossunited.org/{getattr(cfp_doc, 'route', '')}" if cfp_doc else None
-            )
+            if cfp_doc and cfp_doc.get("speakers"):
+                s.speakers_list = [
+                    sp["full_name"] for sp in cfp_doc["speakers"] if sp.get("full_name")
+                ]
 
     return sessions
 
