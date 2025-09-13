@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import frappe
+from frappe.utils import now_datetime
 
 from fossunited.doctype_ids import (
     EVENT,
@@ -14,45 +15,45 @@ from fossunited.doctype_ids import (
 
 def conclude_events():
     """
-    Get all the events which have ended (end_date < today) and set their status to concluded
+    Get all the events which have ended (end_date < today) and set their status to concluded.
+    Also hide RSVP/CFP if present.
     """
+
     events = frappe.db.get_all(
         EVENT,
         {
-            "status": ["in", ["Live", "Cancelled"]],
-            "event_end_date": ["<", datetime.today()],
+            "status": "Live",
+            "event_end_date": ["<", now_datetime()],
         },
         ["name", "status", "event_end_date", "event_start_date"],
         page_length=999,
     )
 
     for event in events:
-        doc = frappe.get_doc(EVENT, event.name)
-        if doc.status == "Live":
-            doc.status = "Concluded"
-        else:
-            doc.status = "Cancelled"
-
-        doc.show_rsvp = 0
-        doc.show_cfp = 0
-
         try:
-            # Fetch linked RSVP/CFP by `event` (link to Event name) and update if present
+            doc = frappe.get_doc(EVENT, event.name)
+            doc.status = "Concluded"
+            doc.show_rsvp = 0
+            doc.show_cfp = 0
             doc.save(ignore_permissions=True)
-            past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
-            if past_rsvp:
+
+            # Safely update RSVP if exists
+            if frappe.db.exists(EVENT_RSVP, {"event_name": doc.event_name}):
+                past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
                 past_rsvp.is_published = 0
                 past_rsvp.save(ignore_permissions=True)
-            past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
-            if past_cfp:
+
+            # Safely update CFP if exists
+            if frappe.db.exists(EVENT_CFP, {"event_name": doc.event_name}):
+                past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
                 past_cfp.status = "Closed"
                 past_cfp.save(ignore_permissions=True)
-        except Exception as e:
+
+        except Exception:
             frappe.log_error(
-                frappe.get_traceback(),
-                f"Error while concluding events through scheduler- ID:{doc.name}\nError:{str(e)}",
+                title=f"Error concluding event: {event.name}",
+                message=frappe.get_traceback(),
             )
-            continue
 
 
 def update_past_job_status():
@@ -73,7 +74,6 @@ def update_past_job_status():
             job_doc = frappe.get_doc(JOB, jobs.name)
             job_doc.status = JOB_STATUS_EXPIRED
             job_doc.save(ignore_permissions=True)
-            frappe.db.commit()
 
             # Send notification email after successful update
             if job_doc.mail:
