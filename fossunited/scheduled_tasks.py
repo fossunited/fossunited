@@ -37,17 +37,13 @@ def conclude_events():
             doc.show_cfp = 0
             doc.save(ignore_permissions=True)
 
-            # Safely update RSVP if exists
-            if frappe.db.exists(EVENT_RSVP, {"event_name": doc.event_name}):
-                past_rsvp = frappe.get_doc(EVENT_RSVP, {"event_name": doc.event_name})
-                past_rsvp.is_published = 0
-                past_rsvp.save(ignore_permissions=True)
+            rsvps = frappe.get_all(EVENT_RSVP, filters={"event": doc.name}, fields=["name"])
+            for r in rsvps:
+                frappe.db.set_value(EVENT_RSVP, r.name, "is_published", 0)
 
-            # Safely update CFP if exists
-            if frappe.db.exists(EVENT_CFP, {"event_name": doc.event_name}):
-                past_cfp = frappe.get_doc(EVENT_CFP, {"event_name": doc.event_name})
-                past_cfp.status = "Closed"
-                past_cfp.save(ignore_permissions=True)
+            cfps = frappe.get_all(EVENT_CFP, filters={"event": doc.name}, fields=["name"])
+            for c in cfps:
+                frappe.db.set_value(EVENT_CFP, c.name, "status", "Closed")
 
         except Exception:
             frappe.log_error(

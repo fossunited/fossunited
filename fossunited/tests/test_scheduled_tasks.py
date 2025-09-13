@@ -88,8 +88,8 @@ class TestScheduledTasks(FrappeTestCase):
 
         # Second event should not change it's status, since it was cancelled
         self.assertEqual(self.event2.status, "Cancelled")
-        self.assertEqual(self.event2_cfp.status, "Closed")
-        self.assertEqual(self.event2_rsvp.is_published, 0)
+        self.assertEqual(self.event2_cfp.status, "Live")
+        self.assertEqual(self.event2_rsvp.is_published, 1)
 
         # Third event is still live, since its end_date > mock date set here
         self.assertEqual(self.event3.status, "Live")
