@@ -23,11 +23,13 @@
 {% macro header() %}
   <div class="container header-section-parent">
     <div class="header-section event-header">
-      <img
-        src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
-        alt="Cover Image"
-        class="foss-banner-image header--banner"
-      />
+	  <div class="foss-banner-wrapper">
+		<img
+		  src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
+		  alt="Cover Image"
+		  class="foss-banner-image"
+		  />
+	  </div>
       <div class="header--title-cta-parent">
         <div>
           {% if doc.chapter %}
@@ -59,12 +61,12 @@
             </a>
           {% endif %}
           {% if doc.is_paid_event %}
-            <button
-              class="primary-button ticket-button"
-              onClick="window.location.href='/dashboard/buy-tickets?event={{ doc.name }}'"
+            <a
+              class="primary-button"
+              href="/dashboard/buy-tickets?event={{ doc.name }}"
             >
               Buy Ticket
-            </button>
+            </a>
           {% endif %}
         </div>
       </div>
@@ -76,7 +78,7 @@
           background='hsl(var(--clr-foss-mint-100))', icon='star-filled')
         }}{% endif %}
       </div>
-      <div class="header-section--socials-event">
+      <div class="header-section--socials-event ml-5 md:ml-0">
         {% for (k,v) in social_links.items() %}
         <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
           <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
