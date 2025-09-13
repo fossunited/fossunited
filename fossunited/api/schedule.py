@@ -251,19 +251,11 @@ def get_event_sessions(doc, days_date_objects, halls_list):
         s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else ""
         s.speakers_list = []
 
-        # If no speakers in session, try linked CFP speakers
+        # Attach CFP route and speakers if linked
         if s.get("linked_cfp"):
-            cfp_doc = cfp_docs.get(s.linked_cfp)
-            if cfp_doc and hasattr(cfp_doc, "speakers") and cfp_doc.speakers:
-                s.speakers_list = [speaker.full_name for speaker in cfp_doc.speakers]
-
-        # Attach CFP route if linked
-        if s.get("linked_cfp"):
-            cfp_doc = cfp_docs.get(s.linked_cfp)
-            if cfp_doc and cfp_doc.get("speakers"):
-                s.speakers_list = [
-                    sp["full_name"] for sp in cfp_doc["speakers"] if sp.get("full_name")
-                ]
+            s.cfp_route = f"https://fossunited.org/{route_lookup.get(s.linked_cfp)}" or ""
+            speakers_data = cfp_docs.get(s.linked_cfp, {}).get("speakers", [])
+            s.speakers_list = [sp["full_name"] for sp in speakers_data if sp.get("full_name")]
 
     return sessions
 
