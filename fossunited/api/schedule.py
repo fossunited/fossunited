@@ -1,6 +1,5 @@
 import csv
 import io
-import json
 import re
 from collections import defaultdict
 from datetime import datetime, time, timedelta
@@ -211,6 +210,8 @@ def get_event_sessions(doc, days_date_objects, halls_list):
     """
 
     sessions = []
+    linked_cfps = set()
+
     for s in doc.event_schedule:
         session_date = (
             s.scheduled_date.date() if hasattr(s.scheduled_date, "date") else s.scheduled_date
@@ -220,35 +221,49 @@ def get_event_sessions(doc, days_date_objects, halls_list):
         if halls_list and s.hall not in halls_list:
             continue
 
-        s.start_time_str = to_time(s.start_time).strftime("%H:%M") if s.start_time else "N/A"
-        s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else "N/A"
-        s.speakers_list = []
-
-        if s.speakers:
-            try:
-                speakers_data = json.loads(s.speakers)
-                s.speakers_list = (
-                    speakers_data.get("speakers", []) if isinstance(speakers_data, dict) else []
-                )
-            except (json.JSONDecodeError, TypeError, ValueError) as e:
-                s.speakers_list = []
-                frappe.log_error(
-                    f"Failed to parse speakers JSON for session {s.title}: {e}",
-                    "Download Schedule",
-                )
+        if s.get("linked_cfp"):
+            linked_cfps.add(s.linked_cfp)
 
         sessions.append(s)
 
-    # Attach CFP route
-    linked_cfps = [s.linked_cfp for s in sessions if s.get("linked_cfp")]
+    # Bulk fetch proposal routes
+    cfp_docs = {}
+    route_lookup = {}
     if linked_cfps:
-        proposals = frappe.db.get_all(
-            PROPOSAL, filters={"name": ("in", linked_cfps)}, fields=["name", "route"]
+        for row in frappe.db.get_all(
+            PROPOSAL,
+            filters={"name": ("in", list(linked_cfps))},
+            fields=["name", "route"],
+        ):
+            route_lookup[row["name"]] = row["route"]
+        # Bulk fetch speakers from child table
+        speakers = frappe.db.get_all(
+            SPEAKER,
+            filters={"parent": ("in", list(linked_cfps))},
+            fields=["parent", "full_name"],
         )
-        route_lookup = {p["name"]: p["route"] for p in proposals}
-        for s in sessions:
-            if s.get("linked_cfp"):
-                s.cfp_route = route_lookup.get(s.linked_cfp)
+        for sp in speakers:
+            cfp_docs.setdefault(sp["parent"], {"speakers": []})
+            cfp_docs[sp["parent"]]["speakers"].append(sp)
+
+    for s in sessions:
+        s.start_time_str = to_time(s.start_time).strftime("%H:%M") if s.start_time else ""
+        s.end_time_str = to_time(s.end_time).strftime("%H:%M") if s.end_time else ""
+        s.speakers_list = []
+
+        # If no speakers in session, try linked CFP speakers
+        if s.get("linked_cfp"):
+            cfp_doc = cfp_docs.get(s.linked_cfp)
+            if cfp_doc and hasattr(cfp_doc, "speakers") and cfp_doc.speakers:
+                s.speakers_list = [speaker.full_name for speaker in cfp_doc.speakers]
+
+        # Attach CFP route if linked
+        if s.get("linked_cfp"):
+            cfp_doc = cfp_docs.get(s.linked_cfp)
+            if cfp_doc and cfp_doc.get("speakers"):
+                s.speakers_list = [
+                    sp["full_name"] for sp in cfp_doc["speakers"] if sp.get("full_name")
+                ]
 
     return sessions
 
@@ -317,12 +332,12 @@ def format_schedule_data(format, doc, sessions, metadata):
         for s in sessions:
             speakers = (
                 ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
-                or "N/A"
+                or ""
             )
             lines.append(
                 f"Title: {s.title}\n"
                 f"Date: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
-                f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {getattr(s, 'cfp_route', None) or 'N/A'}\n"  # noqa: E501
+                f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {getattr(s, 'cfp_route', None) or ''}\n"  # noqa: E501
                 f"Speakers: {speakers}\n{'-' * 40}"
             )
         return "\n".join(lines)
@@ -335,7 +350,7 @@ def format_schedule_data(format, doc, sessions, metadata):
         for s in sessions:
             speakers = (
                 ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
-                or "N/A"
+                or ""
             )
             html += (
                 f"<li><b>{s.title}</b><br>"
@@ -343,7 +358,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 f"<b>Time:</b> {s.start_time_str} - {s.end_time_str}<br>"
                 f"<b>Hall:</b> {s.hall}<br>"
                 f"<b>Category:</b> {s.category}<br>"
-                f"<b>CFP:</b> {getattr(s, 'cfp_route', None) or 'N/A'}<br>"
+                f"<b>CFP:</b> {getattr(s, 'cfp_route', None) or ''}<br>"
                 f"<b>Speakers:</b> {speakers}</li><br>"
             )
         html += "</ul>"
@@ -377,7 +392,7 @@ def format_schedule_data(format, doc, sessions, metadata):
             e.end = end
             e.location = f"{s.hall}, {metadata['Location']}"
             e.description = (
-                f"Category: {s.category or 'N/A'}\n"
+                f"Category: {s.category or ''}\n"
                 f"Speakers: {', '.join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))}"  # noqa: E501
             )
             cal.events.add(e)
@@ -397,7 +412,7 @@ def format_schedule_data(format, doc, sessions, metadata):
         for s in sessions:
             speakers = (
                 ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
-                or "N/A"
+                or ""
             )
             lines += [
                 f"### {s.title}",
@@ -405,7 +420,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 f"- **Time:** {s.start_time_str} - {s.end_time_str}",
                 f"- **Hall:** {s.hall}",
                 f"- **Category:** {s.category}",
-                f"- **CFP:** {getattr(s, 'cfp_route', None) or 'N/A'}",
+                f"- **CFP:** {getattr(s, 'cfp_route', None) or ''}",
                 f"- **Speakers:** {speakers}",
                 "",
                 "---",
@@ -434,7 +449,7 @@ def format_schedule_data(format, doc, sessions, metadata):
         for s in sessions:
             speakers = (
                 ", ".join(safe_speaker_name(sp) for sp in s.speakers_list if safe_speaker_name(sp))
-                or "N/A"
+                or ""
             )
             t_start = to_time(s.start_time)
             t_end = to_time(s.end_time)
@@ -452,7 +467,7 @@ def format_schedule_data(format, doc, sessions, metadata):
                 ":PROPERTIES:",
                 f":Hall: {s.hall}",
                 f":Category: {s.category}",
-                f":CFP: {getattr(s, 'cfp_route', None) or 'N/A'}",
+                f":CFP: {getattr(s, 'cfp_route', None) or ''}",
                 f":Speakers: {speakers}",
                 ":END:",
                 "",
