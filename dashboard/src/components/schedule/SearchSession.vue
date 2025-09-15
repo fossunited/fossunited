@@ -7,7 +7,7 @@
       :view="'vertical'"
     />
     <SessionList :sessions="filteredSessions" :view="'vertical'" />
-    <div v-if="filteredSessions.length === 0" class="text-gray-500">
+    <div v-if="filteredSessions.length === 0" class="text-gray-500" aria-live="polite">
       No sessions found matching <strong>{{ query }}</strong
       >.
     </div>
@@ -37,6 +37,8 @@ function flattenSchedule(schedule) {
     for (const hall of Object.values(day ?? {})) {
       if (Array.isArray(hall)) {
         all.push(...hall)
+      } else if (hall && Array.isArray(hall.sessions)) {
+        all.push(...hall.sessions)
       }
     }
   }
@@ -49,25 +51,16 @@ const filteredSessions = computed(() => {
   if (!query) return []
 
   return allSessions.value.filter((session) => {
-    const title = session.title?.toLowerCase() ?? ''
-    const name = session.name?.toLowerCase() ?? ''
-    const category = session.category?.toLowerCase() ?? ''
-    const speakers = (session.cfp_speakers ?? [])
-      .map((s) =>
-        [
-          s.full_name?.toLowerCase(),
-          s.designation?.toLowerCase(),
-          s.organization?.toLowerCase(),
-        ].join(' '),
-      )
-      .join(' ')
-
-    return (
-      name.includes(query) ||
-      title.includes(query) ||
-      speakers.includes(query) ||
-      category.includes(query)
-    )
+    const parts = [
+      session.name,
+      session.title,
+      session.category,
+      ...(session.cfp_speakers ?? []).flatMap((s) => [s.full_name, s.designation, s.organization]),
+    ]
+      .filter(Boolean)
+      .map((s) => String(s).toLowerCase())
+    const haystack = parts.join(' ')
+    return haystack.includes(query)
   })
 })
 </script>
