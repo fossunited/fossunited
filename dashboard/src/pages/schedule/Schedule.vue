@@ -5,12 +5,37 @@
       <Breadcrumb class="mt-2" :items="breadcrumb_items" />
       <EventHeader :event="event.data" class="my-4 border-b border-gray-900 pb-4" />
       <ScheduleHeader :event="event.data" class="py-2" />
-      <div class="flex justify-between items-end gap-4 flex-wrap">
+      <div
+        class="flex justify-between items-end gap-4 flex-wrap"
+        :class="{ 'opacity-50 pointer-events-none': isSearching }"
+        :aria-disabled="isSearching"
+      >
         <ScheduleDateToggle v-model="selectedDay" :dates="eventDays" class="mt-4" />
-        <ScheduleDownload :schedule="schedule.data" :event="event.data" class="mt-4" />
         <ScheduleViewToggle v-model="selectedScheduleView" class="mt-4 hidden sm:block" />
       </div>
-      <ScheduleView :view="selectedScheduleView" :schedule="selectedSchedule" class="my-6" />
+      <div class="flex flex-col sm:flex-row justify-center items-start gap-6 mt-10">
+        <input
+          v-model="searchQuery"
+          type="search"
+          aria-label="Search sessions"
+          autocomplete="off"
+          autocapitalize="off"
+          enterkeyhint="search"
+          spellcheck="false"
+          placeholder="Search sessions..."
+          class="border border-gray-700 rounded text-sm px-3 py-2 w-full sm:max-w-sm focus:ring-gray-800 focus:border-gray-900"
+        />
+        <ScheduleDownload :schedule="schedule.data" :event="event.data" />
+      </div>
+
+      <ScheduleView
+        v-if="!isSearching"
+        :view="selectedScheduleView"
+        :schedule="selectedSchedule"
+        class="my-6"
+      />
+
+      <SearchSession v-else :schedule="schedule.data" :query="searchQuery" />
     </div>
   </div>
   <div v-else>
@@ -27,6 +52,7 @@ import ScheduleHeader from '@/components/schedule/ScheduleHeader.vue'
 import ScheduleDateToggle from '@/components/schedule/ScheduleDateToggle.vue'
 import ScheduleViewToggle from '@/components/schedule/ScheduleViewToggle.vue'
 import ScheduleView from '@/components/schedule/ScheduleView.vue'
+import SearchSession from '@/components/schedule/SearchSession.vue'
 import { ref, computed, watch, provide } from 'vue'
 import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
@@ -37,6 +63,8 @@ const eventDays = ref([])
 const selectedDay = ref(null)
 const selectedSchedule = ref(null)
 const selectedScheduleView = ref(window.innerWidth >= 1024 ? 'horizontal' : 'vertical')
+const searchQuery = ref('')
+const isSearching = computed(() => searchQuery.value.trim().length > 0)
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event_from_route',
