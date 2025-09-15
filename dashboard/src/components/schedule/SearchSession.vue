@@ -8,8 +8,8 @@
     />
     <SessionList :sessions="filteredSessions" :view="'vertical'" />
     <div v-if="filteredSessions.length === 0" class="text-gray-500">
-      No sessions found matching "<strong>{{ query }}</strong
-      >"
+      No sessions found matching <strong>{{ query }}</strong
+      >.
     </div>
   </div>
 </template>
@@ -43,15 +43,31 @@ function flattenSchedule(schedule) {
   return all
 }
 
+const allSessions = computed(() => flattenSchedule(props.schedule))
 const filteredSessions = computed(() => {
   const query = props.query.trim().toLowerCase()
   if (!query) return []
 
-  return flattenSchedule(props.schedule).filter((session) => {
+  return allSessions.value.filter((session) => {
     const title = session.title?.toLowerCase() ?? ''
     const name = session.name?.toLowerCase() ?? ''
-    const speakers = (session.cfp_speakers ?? []).map((s) => s.full_name?.toLowerCase()).join(' ')
-    return name.includes(query) || title.includes(query) || speakers.includes(query)
+    const category = session.category?.toLowerCase() ?? ''
+    const speakers = (session.cfp_speakers ?? [])
+      .map((s) =>
+        [
+          s.full_name?.toLowerCase(),
+          s.designation?.toLowerCase(),
+          s.organization?.toLowerCase(),
+        ].join(' '),
+      )
+      .join(' ')
+
+    return (
+      name.includes(query) ||
+      title.includes(query) ||
+      speakers.includes(query) ||
+      category.includes(query)
+    )
   })
 })
 </script>

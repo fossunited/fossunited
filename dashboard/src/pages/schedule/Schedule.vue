@@ -12,7 +12,11 @@
       <div class="flex flex-col sm:flex-row justify-center items-start gap-6 mt-10">
         <input
           v-model="searchQuery"
-          type="text"
+          type="search"
+          aria-label="Search sessions"
+          autocomplete="off"
+          enterkeyhint="search"
+          spellcheck="false"
           placeholder="Search sessions..."
           class="border border-gray-700 rounded text-sm px-3 py-2 w-72 focus:ring-gray-800 focus:border-gray-900"
         />
@@ -20,7 +24,7 @@
       </div>
 
       <ScheduleView
-        v-if="!searchQuery"
+        v-if="!isSearching"
         :view="selectedScheduleView"
         :schedule="selectedSchedule"
         class="my-6"
@@ -55,6 +59,7 @@ const selectedDay = ref(null)
 const selectedSchedule = ref(null)
 const selectedScheduleView = ref(window.innerWidth >= 1024 ? 'horizontal' : 'vertical')
 const searchQuery = ref('')
+const isSearching = computed(() => searchQuery.value.trim().length > 0)
 
 const event = createResource({
   url: 'fossunited.api.dashboard.get_event_from_route',
