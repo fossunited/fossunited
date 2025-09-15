@@ -2,7 +2,7 @@
   <div>
     <!-- Open Modal Button -->
     <button class="flex bg-black text-white px-4 py-2 rounded text-sm" @click="showModal = true">
-      <IconDownload class="w-4 h-4 mr-1" />
+      <IconDownload class="w-auto h-3 mr-1" />
       <span class="hidden md:block uppercase">Download Schedule</span>
     </button>
 
