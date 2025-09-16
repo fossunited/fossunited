@@ -16,6 +16,19 @@
         >
           {{ getDuration() }}
         </div>
+        <div
+          v-if="session._date"
+          class="px-2 py-1 bg-blue-100 text-blue-900 text-xs font-medium rounded-[2px] flex items-center"
+        >
+          {{ session._date }}
+        </div>
+
+        <div
+          v-if="session._hall"
+          class="px-2 py-1 bg-purple-100 text-purple-900 text-xs font-medium rounded-[2px] flex items-center"
+        >
+          {{ session._hall }}
+        </div>
       </div>
 
       <button

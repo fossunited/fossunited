@@ -33,12 +33,20 @@ const props = defineProps({
 // Flatten and filter all sessions
 function flattenSchedule(schedule) {
   const all = []
-  for (const day of Object.values(schedule ?? {})) {
-    for (const hall of Object.values(day ?? {})) {
-      if (Array.isArray(hall)) {
-        all.push(...hall)
-      } else if (hall && Array.isArray(hall.sessions)) {
-        all.push(...hall.sessions)
+  for (const [date, day] of Object.entries(schedule ?? {})) {
+    for (const [hallName, hall] of Object.entries(day ?? {})) {
+      const sessions = Array.isArray(hall)
+        ? hall
+        : hall && Array.isArray(hall.sessions)
+          ? hall.sessions
+          : []
+
+      for (const session of sessions) {
+        all.push({
+          ...session,
+          _date: date,
+          _hall: hallName,
+        })
       }
     }
   }
