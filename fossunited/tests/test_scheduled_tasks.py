@@ -23,6 +23,7 @@ class TestScheduledTasks(FrappeTestCase):
         # Event 1 is live and is to end tomorrow
         self.event1 = insert_test_event(
             chapter=self.chapter,
+            status="Live",
             start_date=today.replace(hour=9, minute=00),
             end_date=today.replace(hour=15, minute=30),
         )
@@ -59,15 +60,11 @@ class TestScheduledTasks(FrappeTestCase):
         frappe.delete_doc(EVENT, self.event3.name, force=True)
 
     # Only patching the datetime within the `scheduled_tasks` module
-    @patch("fossunited.scheduled_tasks.datetime")
-    def test_concluded_events(self, mock_datetime):
-        # Set the mock datetime to return a specific date
-        mock_datetime.today.return_value = datetime.today().replace(hour=00, minute=1) + timedelta(
+    @patch("fossunited.scheduled_tasks.now_datetime")
+    def test_concluded_events(self, mock_now_datetime):
+        mock_now_datetime.return_value = datetime.today().replace(hour=0, minute=1) + timedelta(
             days=1
         )
-        mock_datetime.side_effect = lambda *args, **kwargs: datetime(*args, **kwargs)
-
-        # Call the function to test
         conclude_events()
 
         # Fetch events to check their status
