@@ -170,7 +170,10 @@
       {{ render_team_section("Governing Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
       {{ render_team_section("Full-time and Part-time Staff", staff) }}
       {{ render_team_section("Fellows and Interns", fellowsInterns) }}
-      {{ render_team_section("Past Employees and Volunteers", pastMembers) }}
+      <details>
+        <summary class="h5">Past Employees and Volunteers</summary>
+        {{ render_team_section("", pastMembers) }}
+      </details>
     </div>
   </div>
 </div>
