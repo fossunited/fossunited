@@ -47,9 +47,8 @@
   ["in", ["Fellow", "Intern"]]}, order_by ='full_name', limit_page_length=0)
 %}
 {%
-  set volunteers = frappe.get_all("FOSS United Team", fields=["full_name",
-  "username", "headshot", "designation"], filters={"is_active": 1, "org_role":
-  "Volunteer"}, order_by ='full_name', limit_page_length=0)
+  set pastMembers = frappe.get_all("FOSS United Team", fields=["full_name",
+  "username", "headshot", "designation"], filters={"is_active": 0,}, order_by ='full_name', limit_page_length=0)
 %}
 <style>
   .team-member-link {
@@ -171,7 +170,10 @@
       {{ render_team_section("Governing Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
       {{ render_team_section("Full-time and Part-time Staff", staff) }}
       {{ render_team_section("Fellows and Interns", fellowsInterns) }}
-      {{ render_team_section("Active and Part-time Volunteers", volunteers) }}
+      <details>
+        <summary class="h5">Past Employees and Volunteers</summary>
+        {{ render_team_section("", pastMembers) }}
+      </details>
     </div>
   </div>
 </div>
