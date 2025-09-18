@@ -5,9 +5,7 @@
       <div class="prose">
         <h1 class="font-bond">Schedule</h1>
       </div>
-      <div class="text-base text-gray-700">
-        {{ event.schedule_page_description }}
-      </div>
+      <div class="text-base text-gray-700" v-html="event.schedule_page_description"></div>
     </div>
   </div>
 </template>
