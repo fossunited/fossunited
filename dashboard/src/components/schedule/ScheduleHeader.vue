@@ -5,13 +5,14 @@
       <div class="prose">
         <h1 class="font-bond">Schedule</h1>
       </div>
-      <div class="text-base text-gray-700" v-html="event.schedule_page_description"></div>
+      <div class="text-base text-gray-700" v-html="sanitizedScheduleDesc"></div>
     </div>
   </div>
 </template>
 <script setup>
 import ScheduleHeroIcon from '@/components/icons/ScheduleHeroIcon.vue'
-import { defineProps } from 'vue'
+import { defineProps, computed } from 'vue'
+import DOMPurify from 'dompurify'
 
 const props = defineProps({
   event: {
@@ -19,4 +20,8 @@ const props = defineProps({
     required: true,
   },
 })
+
+const sanitizedScheduleDesc = computed(() =>
+  DOMPurify.sanitize(props.event?.schedule_page_description ?? ''),
+)
 </script>

@@ -184,6 +184,7 @@ class FOSSChapter(WebsiteGenerator):
                 "banner_image",
                 "must_attend",
                 "event_location",
+                "is_external_event",
                 "external_event_url",
                 "has_external_webpage",
             ],
