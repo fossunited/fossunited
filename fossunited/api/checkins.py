@@ -72,16 +72,27 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
     Check-in the attendee for the event.
 
     Args:
+        event_id (str): The event ID
         attendee (dict): The attendee details / ticket details
-        user (str): The user who is checking in the attendee
+        assign_tshirt (bool): Whether to assign a T-shirt to the attendee
     """
     if not has_valid_permission(event_id):
         frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
 
-    if check_if_already_checked_in(attendee["name"]):
-        frappe.throw("Attendee is already checked in", frappe.ValidationError)
-
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+
+    already_checked_in = check_if_already_checked_in(attendee["name"])
+
+    if already_checked_in:
+        if assign_tshirt and ticket.get("wants_tshirt"):
+            # Only update tshirt_delivered, do not add another check-in
+            ticket.tshirt_delivered = True
+            ticket.save(ignore_permissions=True)
+            return  # Success, exit early
+        else:
+            frappe.throw("Attendee is already checked in", frappe.ValidationError)
+
+    # Perform full check-in
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
     if assign_tshirt:
         ticket.tshirt_delivered = True
