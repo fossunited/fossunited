@@ -276,14 +276,24 @@ def has_valid_permission(event_id: str) -> bool:
     """
     session_user = frappe.session.user
 
-    if not frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
-        return False
+    # Allow if user has "Chapter Team Member" role AND is a member of the chapter
+    if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
+        chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, "chapter")
+        if chapter_id and check_if_chapter_member(chapter_id, session_user):
+            return True
 
-    chapter_id = frappe.db.get_value(EVENT, event_id, ["chapter"])
-    if not check_if_chapter_member(chapter_id, session_user):
-        return False
+    # Allow if user is listed as an event member
+    if frappe.db.exists(
+        "FOSS Chapter Event Member",
+        {
+            "parent": event_id,
+            "parenttype": "FOSS Chapter Event",
+            "email": session_user,
+        },
+    ):
+        return True
 
-    return True
+    return False
 
 
 @frappe.whitelist()

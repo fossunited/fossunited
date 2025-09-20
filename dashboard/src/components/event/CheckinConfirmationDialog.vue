@@ -14,23 +14,39 @@
           <span class="font-semibold">{{ selectedAttendee.full_name }}</span
           >?
         </p>
-        <div class="bg-gray-50 text-sm p-2 my-2 rounded-sm font-mono">
-          <p class="leading-5">
-            Name: {{ selectedAttendee.full_name }}
-            <br />
-            Ticket ID: {{ selectedAttendee.name }}
-            <br />
-            Tier: {{ selectedAttendee.tier }}
-            <br />
-            Has Tshirt Add-on:
-            {{ selectedAttendee.wants_tshirt ? 'Yes' : 'No' }}
-            <br />
-            <span v-if="selectedAttendee.wants_tshirt"
-              >Tshirt Size: {{ selectedAttendee.tshirt_size }}</span
+        <div class="bg-gray-50 text-base p-2 my-2 rounded-sm font-mono">
+          <p class="leading-6 text-base text-gray-900 font-medium">
+            <strong>Name:</strong> {{ selectedAttendee.full_name }}<br />
+            <strong>Ticket ID:</strong> {{ selectedAttendee.name }}<br />
+            <strong>Tier:</strong> {{ selectedAttendee.tier }}<br />
+            <strong>Organization:</strong> {{ selectedAttendee.organization }}<br />
+
+            <!-- Tshirt section starts -->
+            <template v-if="selectedAttendee.wants_tshirt && selectedAttendee.tshirt_delivered">
+              <strong>Has T-shirt Add-on:</strong>
+              <span class="text-green-700 font-semibold">Delivered already!</span><br />
+            </template>
+
+            <template
+              v-else-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered"
             >
-            <br />
-            Check-in Log:
+              <strong>Has T-shirt Add-on:</strong>
+              <span class="bg-yellow-100 text-yellow-800 font-semibold px-2 py-0.5 rounded">
+                YES </span
+              ><br />
+              <strong>T-shirt Size:</strong>
+              {{ selectedAttendee.tshirt_size || 'Unknown' }}<br />
+            </template>
+
+            <template v-else>
+              <strong>Has T-shirt Add-on:</strong>
+              <span class="bg-red-100 text-red-800 font-semibold px-2 py-0.5 rounded"> NO </span
+              ><br />
+            </template>
+
+            <strong>Check-in Log:</strong>
           </p>
+
           <ul class="text-sm font-mono mt-1 list-disc list-inside">
             <li v-if="!selectedAttendee.checkin_data?.length" class="text-gray-500">
               No check-ins yet
@@ -49,8 +65,8 @@
 
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
-          <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
-          <Checkbox v-model="assignTshirt" label="Confirm Tshirt Assignment" />
+          <div class="text-sm uppercase font-medium mb-2">Assign T‑shirt</div>
+          <Checkbox v-model="assignTshirt" label="Confirm T‑shirt Assignment" />
           <p class="text-sm leading-5 mt-1 text-gray-600">
             Only check this if you are providing the T-shirt to the attendee at the time of
             check-in.
@@ -125,7 +141,7 @@ const checkinAttendee = createResource({
   makeParams() {
     return {
       event_id: route.params.id,
-      attendee: props.selectedAttendee,
+      attendee: { name: props.selectedAttendee?.name },
       assign_tshirt: assignTshirt.value,
     }
   },
