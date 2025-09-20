@@ -34,7 +34,8 @@
               <span class="bg-yellow-100 text-yellow-800 font-semibold px-2 py-0.5 rounded">
                 YES </span
               ><br />
-              <strong>T-shirt Size:</strong> {{ selectedAttendee.tshirt_size }}<br />
+              <strong>T-shirt Size:</strong>
+              {{ selectedAttendee.tshirt_size || 'Unknown' }}<br />
             </template>
 
             <template v-else>
@@ -64,8 +65,8 @@
 
         <div v-if="selectedAttendee.wants_tshirt && !selectedAttendee.tshirt_delivered">
           <hr class="my-4" />
-          <div class="text-sm uppercase font-medium mb-2">Assign T-shirt</div>
-          <Checkbox v-model="assignTshirt" label="Confirm Tshirt Assignment" />
+          <div class="text-sm uppercase font-medium mb-2">Assign T‑shirt</div>
+          <Checkbox v-model="assignTshirt" label="Confirm T‑shirt Assignment" />
           <p class="text-sm leading-5 mt-1 text-gray-600">
             Only check this if you are providing the T-shirt to the attendee at the time of
             check-in.
@@ -140,7 +141,7 @@ const checkinAttendee = createResource({
   makeParams() {
     return {
       event_id: route.params.id,
-      attendee: props.selectedAttendee,
+      attendee: { name: props.selectedAttendee?.name },
       assign_tshirt: assignTshirt.value,
     }
   },

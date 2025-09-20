@@ -84,7 +84,7 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
     already_checked_in = check_if_already_checked_in(attendee["name"])
 
     if already_checked_in:
-        if assign_tshirt and ticket.get("wants_tshirt"):
+        if assign_tshirt and ticket.get("wants_tshirt") and not ticket.get("tshirt_delivered"):
             # Only update tshirt_delivered, do not add another check-in
             ticket.tshirt_delivered = True
             ticket.save(ignore_permissions=True)

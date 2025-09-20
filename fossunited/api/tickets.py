@@ -279,7 +279,7 @@ def has_valid_permission(event_id: str) -> bool:
     # Allow if user has "Chapter Team Member" role AND is a member of the chapter
     if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
         chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, "chapter")
-        if check_if_chapter_member(chapter_id, session_user):
+        if chapter_id and check_if_chapter_member(chapter_id, session_user):
             return True
 
     # Allow if user is listed as an event member
@@ -288,7 +288,7 @@ def has_valid_permission(event_id: str) -> bool:
         {
             "parent": event_id,
             "parenttype": "FOSS Chapter Event",
-            "member": session_user,
+            "email": session_user,
         },
     ):
         return True
