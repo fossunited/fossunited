@@ -20,6 +20,9 @@ If you are interested in volunteering with a city chapter, reach out to one of
 the existing volunteers. If you are a volunteer with a chapter, you should be
 able to add another volunteer from the `"Members"` page on the Dashboard.
 
+To know more about other volunteering opportunities, do check out this thread in
+FOSS United Forum - [How Can I contributed to FOSS United](https://forum.fossunited.org/t/how-can-i-contribute-to-foss-united/1612).
+
 ![add members](./assets/add-chapter-volunteer.png)
 
 If you are interested in starting a new city chapter

@@ -22,3 +22,19 @@ plugins. Every time changes are made in the `develop` branch to the `docs/*`
 folder on the Git repository, a [GitHub Action](https://github.com/fossunited/fossunited/blob/develop/.github/workflows/docs.yml)
 gets triggered, which builds and pushes the documentation to the `gh-pages`
 branch, to be served using [GitHub pages](https://docs.github.com/en/pages).
+
+## Steps to build documentation locally
+
+1. `cd` into docs directory
+
+2. Install [MkDocs](https://www.mkdocs.org/getting-started/) and plugins
+
+    ```sh
+    pip install mkdocs mkdocs-material mkdocs-glightbox
+    ```
+
+3. Build and serve the docs at [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+
+    ```sh
+    mkdocs serve
+    ```

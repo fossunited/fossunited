@@ -1,8 +1,8 @@
 # RSVP to an event
 
-Events like Monthly meetups usually require attendees to RSVP for the
-event. This helps the event organizers plan accordingly e.g. purchase snacks
-and beverages.
+[Events](https://fossunited.org/events/timeline) like monthly meetups usually require
+attendees to RSVP for the event. This helps the event organizers plan
+accordingly e.g. purchase snacks and beverages.
 
 ## RSVPing to an event
 

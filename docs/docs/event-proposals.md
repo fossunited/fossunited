@@ -9,6 +9,23 @@ from the submitted proposals with help from reviewers.
 **NOTE:** Submitting a proposal to a FOSS United event does not require you to
 have a Profile.
 
+## What to Propose?
+
+FOSSUnited encourages a healthy-mix of talks on
+
+- Broad computing/tech principles and concepts (eg: distributed computing, UI/UX stuff, queues etc).
+This is great to intro first principles to a beginner audience.
+- People's personal projects and their journeys (technical + non-technical process and experience).
+No to-do projects, but decent, unique projects.
+- Fun technical stuff, like your hobby projects, projects which you tinkered on or even algorithms
+- Very technical (language constructs, database etc)
+- Incidental (design, philosophy, legalese, policy)
+
+### What proposals are not acceptable?
+
+- Proposals from organisations which seem to promote a certain product with overt commercial interest.
+- Proposals from influencers and content creators whose primary incentive seem to be promoting themselves or their social media profiles.
+
 ## Submit a Proposal
 
 - In order to submit a proposal for a FOSS United event, visit the
