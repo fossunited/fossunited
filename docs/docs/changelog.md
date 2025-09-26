@@ -28,18 +28,18 @@ We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept.
   /events pages takes preference to show Only City and Conference, hiding FOSS Club events
   Related issue [#1144](https://github.com/fossunited/fossunited/issues/1144) and PR [#1145](https://github.com/fossunited/fossunited/pull/1145)
 - [#1128](https://github.com/fossunited/fossunited/pull/1128) Small Doc on purpose of `event_permalink`
-  Some users might confuse with term permalink, so added some doc to give info that it means page 'route' (alias)
+  Some users might confuse with the term permalink, so added some doc to give info that it means page 'route' (alias)
 
 
 #### Ticket Management
 
 - [#1118](https://github.com/fossunited/fossunited/pull/1118) Make ticket transfer page public
   We noticed that not everyone who bought ticket had FossUnited account, so with added security tests, we made Ticket transfer page public to avoid exploits.
-- [#1147](https://github.com/fossunited/fossunited/pull/1147) Added QRcode scanner for Ticket Check-ins
-  Implemented a QRcode based quick check-in scanner to log check-in details. Both pages /event/.../quick-checkin and event/..../checkins utilize this component to scan QR.
+- [#1147](https://github.com/fossunited/fossunited/pull/1147) Added QR code scanner for Ticket Check-ins
+  Implemented a QR code based quick check-in scanner to log check-in details. Both pages `/dashboard/event/.../quick-checkin` and `/dashboard/event/.../checkins` utilize this component to scan QR.
 
 #### Event Schedule
-Could not complete the Schedule re-design, so added some feature to enhance UX.
+Could not complete the Schedule re-design, so added some features to enhance UX.
 
 - [#1126](https://github.com/fossunited/fossunited/pull/1126) Search by Speaker in proposal (CFP) page
   Although it has a frappe filter to narrow, it would be convenient to just type and search by speaker name.
@@ -49,7 +49,7 @@ Could not complete the Schedule re-design, so added some feature to enhance UX.
   Search whole Event schedule in flat List based on Talk Title, Speaker name, Designation and category. Also card shows Hall and Date as Indicator
 - [#1151](https://github.com/fossunited/fossunited/issues/1151) Schedule Download formats
   Schedule can be downloaded in various formats now. CSV | ICS | Orgmode | Markdown and so on.
-  Further plan is to make PDF generation in FOSS theme using `typst`
+  Further plan is to make PDF generation in FOSS theme using `Typst`
 
 ---
 ### New Contributor Spotlight
@@ -74,8 +74,8 @@ Could not complete the Schedule re-design, so added some feature to enhance UX.
 
 Hi everyone,
 
-I'm **Dilip G** (aka *Zororg* on Telegram, or with username `@idlip`), the new Developer for FossUnited. First month on board, after Harsh Tandiya as Developer.
-This is my first monthly tech report as part of the FossUnited team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.
+I'm **Dilip G** (aka *Zororg* on Telegram, or with username `@idlip`), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
+This is my first monthly tech report as part of the FOSS United team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.
 
 ---
 
@@ -85,7 +85,7 @@ This is my first monthly tech report as part of the FossUnited team. I'd love yo
 
 - [#1080](https://github.com/fossunited/fossunited/pull/1080) Scheduled expiry for job posts older than 90 days
   Implemented a background scheduler that automatically marks job listings as *expired* after 90 days.
-  🔗 Visit: [FossUnited Jobs](https://fossunited.org/jobs)
+  🔗 Visit: [FOSS United Jobs](https://fossunited.org/jobs)
 
 #### Roles & Permissions
 
@@ -143,12 +143,12 @@ This is my first monthly tech report as part of the FossUnited team. I'd love yo
 
 ## July 2025
 
-The FossUnited platform was mostly under maintenance mode during this period. This was mostly my scrutiny period with some given tasks for two weeks.
+The FOSS United platform was mostly under maintenance mode during this period. This was mostly my scrutiny period with some given tasks for two weeks.
 
 ---
 ### PR Highlights
 
-#### Setup with Nixos
+#### Setup with NixOS
 - [#1068](https://github.com/fossunited/fossunited/issues/1068) Doc and guide on setting up FossUnited platform with Nixos. I plan to extend this further more.
 
 #### Job Management
