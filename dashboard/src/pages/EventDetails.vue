@@ -276,8 +276,8 @@ const sluggify = (text) => {
 }
 
 const onPermalinkInput = (eventInput) => {
-  const input = eventInput.target.value
-  event.doc.event_permalink = input.replace(/\s+/g, '-')
+  const input = eventInput.target?.value ?? ''
+  event.doc.event_permalink = sluggify(input)
 }
 
 const getEventLink = () => {

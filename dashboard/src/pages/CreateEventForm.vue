@@ -247,8 +247,8 @@ const getFormError = () => {
 }
 
 const onPermalinkInput = (event) => {
-  const input = event.target.value
-  temp_event.event_permalink = input.replace(/\s+/g, '-')
+  const input = event.target?.value ?? ''
+  temp_event.event_permalink = sluggify(input)
 }
 
 const sluggify = (text) => {
@@ -262,7 +262,8 @@ const sluggify = (text) => {
 
 const getEventLink = () => {
   const slug = sluggify(temp_event.event_permalink || '')
-  const event_route = createAbsoluteUrlFromRoute(chapter.data?.route + '/' + slug)
+  const baseRoute = chapter.data?.route ? `${chapter.data.route}/events` : ''
+  const event_route = createAbsoluteUrlFromRoute(`${baseRoute}/${slug}`)
   return event_route.replace(/(^\w+:|^)\/\//, '')
 }
 
