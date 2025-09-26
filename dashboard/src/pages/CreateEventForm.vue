@@ -34,7 +34,9 @@
               size="md"
               label="Event Permalink&ast;"
               description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>. Use '-' instead of spaces."
+              @input="onPermalinkInput"
             />
+
             <FormControl
               :value="getEventLink()"
               size="md"
@@ -42,6 +44,7 @@
               :disabled="true"
               description="The event URL will appear as shown above, using the structure: <event-page>/<event-permalink>."
             />
+
             <FormControl
               v-model="temp_event.status"
               :type="'select'"
@@ -243,10 +246,23 @@ const getFormError = () => {
   return errors
 }
 
+const onPermalinkInput = (event) => {
+  const input = event.target.value
+  temp_event.event_permalink = input.replace(/\s+/g, '-')
+}
+
+const sluggify = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // remove punctuation
+    .trim()
+    .replace(/[\s_-]+/g, '-') // collapse spaces and underscores
+    .replace(/^-+|-+$/g, '') // trim leading/trailing hyphens
+}
+
 const getEventLink = () => {
-  let event_route = createAbsoluteUrlFromRoute(
-    chapter.doc?.route + '/' + temp_event.event_permalink,
-  )
+  const slug = sluggify(temp_event.event_permalink || '')
+  const event_route = createAbsoluteUrlFromRoute(chapter.data?.route + '/' + slug)
   return event_route.replace(/(^\w+:|^)\/\//, '')
 }
 
