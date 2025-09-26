@@ -15,6 +15,7 @@ in
 	  # ruff black
 	  # ty # basedpyright
 	  uv nodePackages.eslint nodePackages.prettier html-tidy nodePackages.yarn
+	  vale harper
 	];
 
   }
