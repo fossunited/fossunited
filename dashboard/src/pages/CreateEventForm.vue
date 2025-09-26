@@ -33,7 +33,7 @@
               :type="'text'"
               size="md"
               label="Event Permalink&ast;"
-              description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>"
+              description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>. Use '-' instead of spaces."
             />
             <FormControl
               :value="getEventLink()"

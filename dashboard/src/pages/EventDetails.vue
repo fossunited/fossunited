@@ -70,6 +70,7 @@
           :type="'text'"
           size="md"
           label="Event Permalink"
+          description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>. Use '-' instead of spaces."
         />
         <div class="flex flex-col gap-2">
           <FormControl
@@ -78,6 +79,7 @@
             type="url"
             size="md"
             label="Event Link"
+            description="The event URL will appear as shown above, using the structure: <event-page>/<event-permalink>."
           >
             <template #suffix>
               <CopyToClipboardButton :value="getEventLink()" />
