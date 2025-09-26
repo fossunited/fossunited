@@ -26,6 +26,7 @@ nav:
       - Project management: project-management.md
       - Code contributions: code-contributions.md
       - Architecture: architecture.md
+      - Changelog: changelog.md
 
 theme:
   name: material
