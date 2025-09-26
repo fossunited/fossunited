@@ -4,7 +4,14 @@
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
           <h5 class="text-lg font-medium">{{ getValue('full_name') }}</h5>
-          <a :href="getValue('social_link')" target="_blank">
+          <a
+            :href="
+              /^https?:\/\//.test(getValue('social_link'))
+                ? getValue('social_link')
+                : 'https://' + getValue('social_link')
+            "
+            target="_blank"
+          >
             <Badge
               :label="getValue('social_link')"
               variant="subtle"
