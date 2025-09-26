@@ -31,4 +31,5 @@ repos:
         pass_filenames: false
         args: [sync]
       - id: vale
+        pass_filenames: true
         args: [--output=line, --minAlertLevel=error]
