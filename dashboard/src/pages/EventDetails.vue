@@ -70,6 +70,8 @@
           :type="'text'"
           size="md"
           label="Event Permalink"
+          description="This text will be added to the event URL, creating a link in the format: <event-page>/<event-permalink>. Use '-' instead of spaces."
+          @input="onPermalinkInput"
         />
         <div class="flex flex-col gap-2">
           <FormControl
@@ -78,6 +80,7 @@
             type="url"
             size="md"
             label="Event Link"
+            description="The event URL will appear as shown above, using the structure: <event-page>/<event-permalink>."
           >
             <template #suffix>
               <CopyToClipboardButton :value="getEventLink()" />
@@ -263,10 +266,23 @@ const updateDetails = () => {
     })
 }
 
+const sluggify = (text) => {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/[\s_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+const onPermalinkInput = (eventInput) => {
+  const input = eventInput.target?.value ?? ''
+  event.doc.event_permalink = sluggify(input)
+}
+
 const getEventLink = () => {
-  let event_route = createAbsoluteUrlFromRoute(
-    chapter.data?.route + '/' + event.doc.event_permalink,
-  )
+  const slug = sluggify(event.doc.event_permalink || '')
+  const event_route = createAbsoluteUrlFromRoute(chapter.data?.route + '/' + slug)
   return event_route.replace(/(^\w+:|^)\/\//, '')
 }
 </script>
