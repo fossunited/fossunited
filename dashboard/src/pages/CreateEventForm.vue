@@ -262,7 +262,7 @@ const sluggify = (text) => {
 
 const getEventLink = () => {
   const slug = sluggify(temp_event.event_permalink || '')
-  const baseRoute = chapter.data?.route ? `${chapter.data.route}/events` : ''
+  const baseRoute = chapter.doc?.route ? `${chapter.doc?.route}` : ''
   const event_route = createAbsoluteUrlFromRoute(`${baseRoute}/${slug}`)
   return event_route.replace(/(^\w+:|^)\/\//, '')
 }
