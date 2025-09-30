@@ -300,7 +300,7 @@
       </div>
 
       <Card class="w-1/4 h-fit sticky top-20 hidden md:block" title="Ticket Summary">
-        <div class="w-full mt-2 space-y-1">
+        <div v-if="checkoutInfo.tier" class="w-full mt-2 space-y-1">
           <div class="grid grid-cols-3 gap-2">
             <p>{{ checkoutInfo.tier?.title }} Ticket</p>
             <p class="justify-self-center">
@@ -482,15 +482,14 @@ const ticketTiers = computed(() => {
 
   return tiers.map((tier) => {
     const isEnabled = Boolean(tier.enabled)
-    const isExpired = tier.valid_till && dayjs().isBefore(tier.valid_till, 'day') === false
+    const isExpired = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
     const isActive = isEnabled && !isExpired
-    const maxAllowed = tier.maximum_tickets
+    const maxAllowed = tier.maximum_tickets // to use in future limitations
 
     return {
       ...tier,
       isActive,
       isExpired,
-      isDisabled: !isEnabled,
     }
   })
 })
@@ -663,6 +662,20 @@ const seatOptions = computed(() => {
 
 const checkoutFormErrors = computed(() => {
   const errors = []
+  const selected = checkoutInfo.tier
+
+  if (!selected) {
+    errors.push('Please select a ticket tier')
+  } else {
+    // Find the tier from the ticketTiers list
+    const match = ticketTiers.value.find((t) => t.id === selected.id)
+
+    // If not found or not active, it's invalid
+    if (!match || !match.isActive) {
+      errors.push('Selected ticket tier is no longer available')
+    }
+  }
+
   if (!checkoutInfo.email) {
     errors.push('Please enter your email')
   }
