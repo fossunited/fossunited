@@ -366,6 +366,7 @@
         @click="showAdditionalDetails = !showAdditionalDetails"
       />
     </div>
+
     <div v-if="showAdditionalDetails" class="w-full mt-2 space-y-1">
       <div class="grid grid-cols-3 gap-2">
         <p>{{ checkoutInfo.tier?.title }} Ticket</p>
@@ -480,17 +481,24 @@ const stateOptions = createResource({
 const ticketTiers = computed(() => {
   const tiers = event.data?.tiers || []
 
-  return tiers.map((tier) => {
+  const enriched = tiers.map((tier) => {
     const isEnabled = Boolean(tier.enabled)
     const isExpired = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
     const isActive = isEnabled && !isExpired
-    const maxAllowed = tier.maximum_tickets // to use in future limitations
+    const maxAllowed = tier.maximum_tickets // placeholder for future
 
     return {
       ...tier,
       isActive,
       isExpired,
+      isDisabled: !isActive, // add this to support sorting
     }
+  })
+
+  return enriched.sort((a, b) => {
+    // Sort: isActive (true first)
+    if (a.isActive !== b.isActive) return a.isActive ? -1 : 1
+    return 0
   })
 })
 
