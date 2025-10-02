@@ -180,8 +180,9 @@ class FOSSUserProfile(WebsiteGenerator):
             filters={"email": self.email},
             page_length=9999,
         )
+
         for val in hackathon_ids:
-            attended_hack.append(
+            hackathon_data = (
                 frappe.db.get_value(
                     HACKATHON,
                     fieldname=[
@@ -197,20 +198,25 @@ class FOSSUserProfile(WebsiteGenerator):
                     filters={"name": val.hackathon},
                     as_dict=1,
                 )
-                | (  # Add localhost details if he attended a localhost
-                    frappe.db.get_value(
-                        HACKATHON_LOCALHOST,
-                        fieldname=[
-                            "localhost_name",
-                            "location",
-                        ],
-                        filters={"name": val.localhost},
-                        as_dict=1,
-                    )
-                    if val.localhost != ""
-                    else {"localhost_name": "", "location": ""}
-                )
+                or {}
             )
+
+            # Add localhost details if he attended a localhost
+            localhost_data = (
+                frappe.db.get_value(
+                    HACKATHON_LOCALHOST,
+                    fieldname=[
+                        "localhost_name",
+                        "location",
+                    ],
+                    filters={"name": val.localhost},
+                    as_dict=1,
+                )
+                if val.localhost
+                else {"localhost_name": "", "location": ""}
+            ) or {}
+
+            attended_hack.append({**hackathon_data, **localhost_data})
 
         # CFP Proposals submitted, and how many of those were approved
         cfps = []
