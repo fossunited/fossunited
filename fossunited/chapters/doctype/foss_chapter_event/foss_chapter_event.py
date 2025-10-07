@@ -434,7 +434,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         if frappe.db.exists(EVENT_CFP, {"event": self.name}):
             cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
             cfp_status_block |= {
-                "form_route": cfp_form.route,
+                "form_route": cfp_form.get("route") or f"{self.route}/cfp",
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
