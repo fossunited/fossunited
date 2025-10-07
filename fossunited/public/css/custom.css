@@ -1500,12 +1500,14 @@ h6 {
 }
 
 .event-card--title {
-  width: 15.625rem;
   height: 3.125rem;
   flex-shrink: 0;
   font-size: var(--text-lg);
   font-weight: 600;
   letter-spacing: -0.045rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .event-card--location-section {
@@ -1531,7 +1533,7 @@ h6 {
   border-radius: 8px;
   border: 2px solid hsl(var(--clr-open-gray-100));
   transition: border 0.2s ease-in-out;
-  background: #FFF;
+  background: #fff;
 }
 
 .talk-card:hover {
@@ -1572,7 +1574,7 @@ h6 {
 }
 
 .talk-card--title {
-  color: #1A1A1A;
+  color: #1a1a1a;
   font-family: Inter;
   font-size: 16px;
   font-style: normal;
@@ -1588,7 +1590,7 @@ h6 {
   align-items: center;
   gap: 5px;
   border-radius: 8px;
-  background: #F1F1F1;
+  background: #f1f1f1;
   padding-left: 8px;
   padding-right: 8px;
   padding-top: 4px;
@@ -1597,7 +1599,7 @@ h6 {
 
 .talk-card--location-date {
   align-items: center;
-  color: #4B4B4B;
+  color: #4b4b4b;
   font-family: Inter;
   font-size: 14px;
   font-style: normal;
@@ -1612,7 +1614,7 @@ h6 {
   align-items: center;
   gap: 5px;
   border-radius: 8px;
-  background: rgba(8, 183, 79, 0.10);
+  background: rgba(8, 183, 79, 0.1);
   padding-left: 8px;
   padding-right: 8px;
   padding-top: 4px;
@@ -1620,7 +1622,7 @@ h6 {
 }
 
 .chapter-volunteer-card--role {
-  color: #08B74F;
+  color: #08b74f;
   font-family: Inter;
   font-size: 12px;
   font-style: normal;
