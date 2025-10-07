@@ -10,7 +10,7 @@
 
 - Please provide the requested information in the form
 
-| Create event                                      | (...)                                                |
+| Create event                                      | (…)                                                |
 | ------------------------------------------------- | ---------------------------------------------------- |
 | ![Create event I](./assets/create-event-form.png) | ![Create event II](./assets/create-event-form-2.png) |
 
@@ -20,7 +20,7 @@
     e.g. `"FOSS Meetup Hyderabad"`
   - Please use `YYYY-MMM` for the `"Event Permalink"` e.g. `2024-nov`
   - Please use `"Live"` as the `"Event Status"`
-  - Please select the start datetime and the end datetime for the event
+  - Please select the start date & time and the end date & time for the event
 
 After an event is created successfully, you should be able to see it in the
 `"Manage Chapter"` page.
@@ -41,10 +41,10 @@ the `"Update Details"` button.
 After an event has concluded, please update the `"Event Status"` from `"Live"`
 to `"Concluded"`.
 
-**NOTE:** The event will not be displayed under the `"Past Events"` section of
+**Note:** The event will not be displayed under the `"Past Events"` section of
 the chapter page unless the `"Event Status"` is updated. We have observed
 events "disappear" from the public pages of chapters because the
 `"Event Status"` doesn't get updated and the events aren't displayed under
-`"Upcoming Events"` because the datetime for the event is in the past.
+`"Upcoming Events"` because the date & time for the event is in the past.
 
 ![concluded event](./assets/concluded-event.png)

@@ -18,7 +18,7 @@ at the moment and known issues about the project are tracked using the GitHub
 
 Apart from documentation, another way to get involved with the project is with
 Project Management. For example, we need users of the Platform to discover and
-report bugs in the project. We need volunteers to keep an eye on the issue
+report bugs in the project. We need volunteers to report on the issue
 board and respond to new issues from the Community. Reproducing issues or
 responding to the issues with request for additional information to aid in
 reproduction of the issue are incredibly valuable ways to contribute to the

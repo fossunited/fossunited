@@ -121,7 +121,7 @@ Or use [uv](https://github.com/astral-sh/uv) as an alternative Python package ma
 
 ## Useful Links
 
-* [FOSS United GitHub Repo](https://github.com/fossunited/fossunited)
+* [FOSS United GitHub repo](https://github.com/fossunited/fossunited)
 * [Frappe Docs](https://frappeframework.com/docs/)
 * [Create a Site Guide](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
 

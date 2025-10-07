@@ -36,7 +36,7 @@ We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept.
 - [#1118](https://github.com/fossunited/fossunited/pull/1118) Make ticket transfer page public
   We noticed that not everyone who bought ticket had FossUnited account, so with added security tests, we made Ticket transfer page public to avoid exploits.
 - [#1147](https://github.com/fossunited/fossunited/pull/1147) Added QR code scanner for Ticket Check-ins
-  Implemented a QR code based quick check-in scanner to log check-in details. Both pages `/dashboard/event/.../quick-checkin` and `/dashboard/event/.../checkins` utilize this component to scan QR.
+  Implemented a QR code based quick check-in scanner to log check-in details. Both pages `/dashboard/event/.../quick-checkin` and `/dashboard/event/.../checkins` use this component to scan QR.
 
 #### Event Schedule
 Could not complete the Schedule re-design, so added some features to enhance UX.
@@ -44,7 +44,7 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
 - [#1126](https://github.com/fossunited/fossunited/pull/1126) Search by Speaker in proposal (CFP) page
   Although it has a frappe filter to narrow, it would be convenient to just type and search by speaker name.
 - [#1132](https://github.com/fossunited/fossunited/issues/1132) Fix Event Schedule ICS download
-  Due to some events having end datetime > start datetime, the API was throwing an error.
+  Due to some events having end `datetime` > start `datetime`, the API was throwing an error.
 - [#1158](https://github.com/fossunited/fossunited/issues/1158) Search support in Schedule page
   Search whole Event schedule in flat List based on Talk Title, Speaker name, Designation and category. Also card shows Hall and Date as Indicator
 - [#1151](https://github.com/fossunited/fossunited/issues/1151) Schedule Download formats
@@ -55,8 +55,8 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
 ### New Contributor Spotlight
 - [@agriyakhetarpal](https://github.com/agriyakhetarpal) made their first contribution:
   - [#1142](https://github.com/fossunited/fossunited/pull/1142): Added Zulip logo for chapters
-    With merge of Zulip into svgl, we now have zulip support into socials link for Chapter Info.
-  - Related [PR](https://github.com/fossunited/fossunited/pull/1146) on adding Bluesky and dev.to logo for Foss user profile page
+    With merge of Zulip into svgl, we now have Zulip support into socials link for Chapter Info.
+  - Related [PR](https://github.com/fossunited/fossunited/pull/1146) on adding Bluesky and dev.to logo for FOSS user profile page
 
 - [@arunppsg](https://github.com/arunppsg) made their first contribution:
   - [#1167](https://github.com/fossunited/fossunited/pull/1167): Added more docs
@@ -74,7 +74,7 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
 
 Hi everyone,
 
-I'm **Dilip G** (aka *Zororg* on Telegram, or with username `@idlip`), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
+I'm **Dilip G** (also known as *Zororg* on Telegram, or with username `@idlip`), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
 This is my first monthly tech report as part of the FOSS United team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.
 
 ---
@@ -149,7 +149,7 @@ The FOSS United platform was mostly under maintenance mode during this period. T
 ### PR Highlights
 
 #### Setup with NixOS
-- [#1068](https://github.com/fossunited/fossunited/issues/1068) Doc and guide on setting up FossUnited platform with Nixos. I plan to extend this further more.
+- [#1068](https://github.com/fossunited/fossunited/issues/1068) Doc and guide on setting up FossUnited platform with NixOS. I plan to extend this further more.
 
 #### Job Management
 - [#1077](https://github.com/fossunited/fossunited/pull/1077) Added date of posting for each job card and closing for expired ones
