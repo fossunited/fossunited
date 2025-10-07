@@ -1,10 +1,10 @@
 <div align="center">
-    <img alt="fossunited logo" src=".github/logo.png" width="150px" height="120px">
+    <img alt="FOSS United logo" src=".github/logo.png" width="150px" height="120px">
 </div>
 
 ## The FOSS United Platform
 
-Repo for the website and open-source platform of FOSS United. The whole platform is being built on [Frappe](https://frappe.io).
+Project repo for the website and open-source platform of FOSS United. The whole platform is being built on [Frappe](https://frappe.io).
 
 ## Installation
 

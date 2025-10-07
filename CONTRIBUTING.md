@@ -1,10 +1,10 @@
 ## Introduction
 
-Thank you for showing interest for contributing in our new FOSS United Platform which we are building for the FOSS Community all over India. You can always take a look at what are the current issues we are working on. There are a lot of ways you can contribute to our platform including requesting Documentation, Bug Reports or Feature Requests and help us make our platform efficient and better at performance
+Thank you for showing interest for contributing in our new FOSS United Platform which we are building for the FOSS Community all over India. You can always take a look at what are the current issues we are working on. Help us make our platform better by requesting documentation, reporting bugs, or suggesting new features. Every contribution improves performance and usability.
 
 ### Bug Report Guidelines
 
-- If you have some query, before asking a question we would suggest you to go through [dontasktoask](https://dontasktoask.com).
+- If you have some query, before asking a question we would suggest you to go through [dont-ask-to-ask](https://dontasktoask.com).
 - Description Questions: If the question is a bit complicated, then the use of application oriented approach might help make it more descriptive.
 
 ### Issue Creation Guidelines
