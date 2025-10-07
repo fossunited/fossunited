@@ -22,11 +22,14 @@ class FOSSChapter(WebsiteGenerator):
 
         about_chapter: DF.TextEditor | None
         banner_image: DF.AttachImage | None
+        bluesky: DF.Data | None
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent", "New"]  # noqa: F722, F821
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference"]  # noqa: F722, F821
+        chapter_status: DF.Literal[
+            "Active", "Inactive", "Defunct", "Independent", "New"  # noqa: F722, F821
+        ]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference", "Virtual"]  # noqa: F722, F821
         city: DF.Link | None
         country: DF.Link | None
         discord: DF.Data | None
@@ -44,10 +47,9 @@ class FOSSChapter(WebsiteGenerator):
         slug: DF.Data | None
         state: DF.Link | None
         telegram: DF.Data | None
-        zulip: DF.Data | None
-        bluesky: DF.Data | None
         whatsapp: DF.Data | None
         x: DF.Data | None
+        zulip: DF.Data | None
     # end: auto-generated types
 
     def before_insert(self):

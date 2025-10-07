@@ -130,7 +130,7 @@
           />
         </div>
       </div>
-      <div v-if="chapter.doc.chapter_type === 'City Community'">
+      <div v-if="['City Community', 'FOSS Club'].includes(chapter.doc.chapter_type)">
         <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
         <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormControl
