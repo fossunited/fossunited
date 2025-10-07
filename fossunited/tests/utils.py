@@ -129,7 +129,7 @@ def insert_test_event(chapter: dict, **kwargs):
         chapter (dict, optional): chapter to associate the event with.
                 If not provided, a new test chapter will be generated.
         event_name (str, optional): Name of the event. Defaults to random text.
-        event_type (str, optional): Type of event. Defaults to "FOSS Meetup".
+        event_type (str, optional): Type of event. Defaults to "Hackathon".
         start_date (datetime, optional): Event start date. Defaults to today.
         end_date (datetime, optional): Event end date. Defaults to next day.
         status (str, optional): Event status. Defaults to "Live".
@@ -173,7 +173,7 @@ def insert_test_event(chapter: dict, **kwargs):
             "event_name": kwargs.get("event_name", fake.text(max_nb_chars=20).strip()),
             "event_permalink": kwargs.get("event_permalink", fake.slug().replace("-", "_")),
             "status": kwargs.get("status", "Live"),
-            "event_type": kwargs.get("event_type", "FOSS Meetup"),
+            "event_type": kwargs.get("event_type", "Hackathon"),
             "event_start_date": kwargs.get("start_date", datetime.today() + timedelta(days=1)),
             "event_end_date": kwargs.get("end_date", datetime.today() + timedelta(days=2)),
             "event_description": kwargs.get(
