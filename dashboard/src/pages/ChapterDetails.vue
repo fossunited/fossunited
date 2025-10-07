@@ -130,35 +130,37 @@
           />
         </div>
       </div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
-      <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormControl
-          v-model="chapter.doc.city"
-          :type="'text'"
-          :disabled="true"
-          size="md"
-          label="City"
-        />
-        <FormControl
-          v-model="chapter.doc.state"
-          :type="'text'"
-          size="md"
-          :disabled="true"
-          label="State"
-        />
-        <FormControl
-          v-model="chapter.doc.country"
-          :type="'text'"
-          size="md"
-          :disabled="true"
-          label="Country"
-        />
-        <FormControl
-          v-model="chapter.doc.google_map_link"
-          :type="'text'"
-          size="md"
-          label="Map Link"
-        />
+      <div v-if="chapter.doc.chapter_type === 'City Community'">
+        <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
+        <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormControl
+            v-model="chapter.doc.city"
+            :type="'text'"
+            :disabled="true"
+            size="md"
+            label="City"
+          />
+          <FormControl
+            v-model="chapter.doc.state"
+            :type="'text'"
+            size="md"
+            :disabled="true"
+            label="State"
+          />
+          <FormControl
+            v-model="chapter.doc.country"
+            :type="'text'"
+            size="md"
+            :disabled="true"
+            label="Country"
+          />
+          <FormControl
+            v-model="chapter.doc.google_map_link"
+            :type="'text'"
+            size="md"
+            label="Map Link"
+          />
+        </div>
       </div>
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Socials</div>
       <p class="mt-2 text-base text-gray-600 leading-normal">
