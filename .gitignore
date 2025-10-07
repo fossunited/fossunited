@@ -13,11 +13,11 @@ fossunited/public/dist
 /fossunited/www/dashboard.html
 /development/fossu-bench/
 
-.docs/styles/*
-!.docs/styles/config/
+docs/styles/*
+!docs/styles/config/
 
-.docs/styles/config/*
-!.docs/styles/config/vocabularies/
+docs/styles/config/*
+!docs/styles/config/vocabularies/
 
-.docs/styles/config/vocabularies/*
-!.docs/styles/config/vocabularies/base
+docs/styles/config/vocabularies/*
+!docs/styles/config/vocabularies/base
