@@ -21,7 +21,7 @@
             <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
           {% else %}
             <span class="fff-forward"
-              >{{ (chapter.city.upper() if chapter.city else '') | truncate(25, True, '...', 0) }}</span
+              >{{ (chapter.city.upper() if chapter.city else chapter.chapter_name) | truncate(25, True, '...', 0) }}</span
             >
           {% endif %}
         </div>
