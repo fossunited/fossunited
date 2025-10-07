@@ -102,19 +102,21 @@
 
   .teams-container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     row-gap: 3rem;
     column-gap: 5rem;
   }
 
   .team-member {
     display: flex;
+    flex-direction: row;
     gap: 3rem;
     border: 1px solid #ccc;
     border-radius: 10px;
     padding: 16px;
     transition: box-shadow 0.3s;
     align-items: center;
+    height: 160px;
   }
 
   .team-member-link:hover .team-member {
