@@ -75,14 +75,14 @@
    "fieldname": "city",
    "fieldtype": "Link",
    "label": "City",
-   "mandatory_depends_on": "eval:doc.chapter_type==='City Community'",
+   "mandatory_depends_on": "eval:['City Community', 'FOSS Club'].includes(doc.chapter_type)",
    "options": "City"
   },
   {
    "fieldname": "state",
    "fieldtype": "Link",
    "label": "State",
-   "mandatory_depends_on": "eval:doc.chapter_type==='City Community'",
+   "mandatory_depends_on": "eval:['City Community', 'FOSS Club'].includes(doc.chapter_type)",
    "options": "State"
   },
   {
@@ -99,7 +99,7 @@
    "label": "Basic Information"
   },
   {
-   "depends_on": "eval:doc.chapter_type==='City Community'",
+   "depends_on": "eval:['City Community', 'FOSS Club'].includes(doc.chapter_type)",
    "fieldname": "location_section",
    "fieldtype": "Section Break",
    "label": "Location"
@@ -122,6 +122,7 @@
    "fieldname": "institution_name",
    "fieldtype": "Link",
    "label": "Institution Name",
+   "mandatory_depends_on": "eval: doc.chapter_type==='FOSS Club'",
    "options": "Institute"
   },
   {
@@ -281,7 +282,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-10-07 10:45:37.496671",
+ "modified": "2025-10-07 23:15:33.866231",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
