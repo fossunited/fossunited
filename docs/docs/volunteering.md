@@ -12,7 +12,7 @@ handle logistics of the event on the ground, communicate what went well
 and what did not with the rest of the Community, and more.
 
 Volunteering is not to be taken lightly. Volunteers in the Community routinely
-spend 10-20+ hours every month. As volunteers, you are held to a higher
+outlay 10-20+ hours every month. As volunteers, you are held to a higher
 standard than the rest of the Community, given your ability to mould and drive
 the Community.
 

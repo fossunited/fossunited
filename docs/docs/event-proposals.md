@@ -6,19 +6,19 @@ Community to submit proposals e.g. talk proposals, workshop proposals. As the
 scheduled date of the event approaches, the organizers choose the final sessions
 from the submitted proposals with help from reviewers.
 
-**NOTE:** Submitting a proposal to a FOSS United event does not require you to
+**Note:** Submitting a proposal to a FOSS United event does not require you to
 have a Profile.
 
 ## What to Propose?
 
-FOSSUnited encourages a healthy-mix of talks on
+FOSS United encourages a healthy mix of talks on
 
-- Broad computing/tech principles and concepts (eg: distributed computing, UI/UX stuff, queues etc).
+- Broad computing/tech principles and concepts (e.g.: distributed computing, UI/UX stuff, queues, etc).
 This is great to intro first principles to a beginner audience.
 - People's personal projects and their journeys (technical + non-technical process and experience).
 No to-do projects, but decent, unique projects.
 - Fun technical stuff, like your hobby projects, projects which you tinkered on or even algorithms
-- Very technical (language constructs, database etc)
+- Technical (language constructs, database, etc)
 - Incidental (design, philosophy, legalese, policy)
 
 ### What proposals are not acceptable?
@@ -34,15 +34,15 @@ No to-do projects, but decent, unique projects.
 
 ![CFP tab for meetup](./assets/cfp-meetup.png)
 
-- Please fill in the requested details on the `"Call for Proposal!"` form. If
-  you are logged-in, the Platform will auto-fill some of the information on
+- Please complete the requested details on the `"Call for Proposal!"` form. If
+  you are logged in, the Platform will auto-fill some of the information on
   the form i.e. Full Name, Email. Before submitting, we request you to read
   the [guidelines for proposals](https://forum.fossunited.org/t/talk-proposal-guidelines-for-a-foss-conference-meetup/1923)
 
-**NOTE:** Please note some of the events might need additional information
+**Note:** Please note some of the events might need additional information
 from the proposers.
 
-| CFP form                               | (...)                                   |
+| CFP form                               | (…)                                   |
 | -------------------------------------- | --------------------------------------- |
 | ![CFP form I](./assets/cfp-form-1.png) | ![CFP form II](./assets/cfp-form-2.png) |
 

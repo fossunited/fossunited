@@ -31,13 +31,13 @@ Once you're added as a reviewer, you should be able to see a new
 
 ![review proposal](./assets/review-proposal.png)
 
-**NOTE:** We humbly request the reviewers to provide constructive criticism of
-the proposals. One word reviews are stronlgy discouraged. Almost all proposals
+**Note:** We humbly request the reviewers to provide constructive criticism of
+the proposals. One word reviews are strongly discouraged. Almost all proposals
 can be improved in some way or another and it is the reviewers' responsibility
 to provide this necessary feedback to the proposers. There exists an
 equilibrium between the proposers and the reviewers - if the reviewers are
 unnecessarily harsh, proposers become demotivated over time and the likelihood
-of repeat proposals from the same proposer goes down. On the other hand, if
+of repeat proposals from the same proposer goes down. However, if
 the reviewers approve all proposals without providing meaningful feedback, the
 proposers don't have any incentive to improve their proposals over time, also
 leading to fewer sound proposals. The long-term quality of proposals and talks

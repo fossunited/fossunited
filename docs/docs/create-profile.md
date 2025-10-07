@@ -8,11 +8,11 @@
 - In the `"login"` page, use the `"Sign up"` button at the bottom to create a
   Profile
 
-![Signup for a Profile](./assets/signup.png)
+![Sign-up for a Profile](./assets/signup.png)
 
 - Please provide your name or an alias and an email address.
 
-  **NOTE:** Please note that it is not possible to change the email address
+  **Note:** Please note that it is not possible to change the email address
   associated with your Profile once it is created. The name or alias can be
   updated.
 
