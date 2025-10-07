@@ -2,7 +2,7 @@
 
 If you find a (suspected) vulnerability in the code or the behavior of the application that is not critical then create an [issue on the repository](https://github.com/fossunited/fossunited/issues) with all the possible details. An issue on the GitHub repo should be created only if the vulnerability or bug is not critical.
 
-In case, the (suspected) Bug or Vulnerability is critical and may leak data, then please send us an email at security@fossunited.org and the team shall get back to you within 12-24 hours. Furthermore, a resolution timeline will be shared in the same thread.
+In case the (suspected) bug or vulnerability is critical and may leak data, then please send us an email at mailto:security@fossunited.org and the team shall get back to you within 12-24 hours. Furthermore, a resolution timeline will be shared in the same thread.
 
 Please include the following things in your report:
 

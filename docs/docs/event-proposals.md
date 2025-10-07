@@ -11,20 +11,20 @@ have a Profile.
 
 ## What to Propose?
 
-FOSS United encourages a healthy-mix of talks on
+FOSS United encourages a healthy mix of talks on
 
-- Broad computing/tech principles and concepts (e.g.: distributed computing, UI/UX stuff, queues etc).
+- Broad computing/tech principles and concepts (e.g.: distributed computing, UI/UX stuff, queues, etc).
 This is great to intro first principles to a beginner audience.
 - People's personal projects and their journeys (technical + non-technical process and experience).
 No to-do projects, but decent, unique projects.
 - Fun technical stuff, like your hobby projects, projects which you tinkered on or even algorithms
-- Technical (language constructs, database etc)
+- Technical (language constructs, database, etc)
 - Incidental (design, philosophy, legalese, policy)
 
 ### What proposals are not acceptable?
 
 - Proposals from organisations which seem to promote a certain product with overt commercial interest.
-- Proposals from influences and content creators whose primary incentive seem to be promoting themselves or their social media profiles.
+- Proposals from influencers and content creators whose primary incentive seem to be promoting themselves or their social media profiles.
 
 ## Submit a Proposal
 
@@ -35,7 +35,7 @@ No to-do projects, but decent, unique projects.
 ![CFP tab for meetup](./assets/cfp-meetup.png)
 
 - Please complete the requested details on the `"Call for Proposal!"` form. If
-  you are logged-in, the Platform will auto-fill some of the information on
+  you are logged in, the Platform will auto-fill some of the information on
   the form i.e. Full Name, Email. Before submitting, we request you to read
   the [guidelines for proposals](https://forum.fossunited.org/t/talk-proposal-guidelines-for-a-foss-conference-meetup/1923)
 

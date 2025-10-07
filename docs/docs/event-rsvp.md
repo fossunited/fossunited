@@ -17,7 +17,7 @@ event.
 
 | Create RSVP Form                                | Standard fields                                   | Custom fields                                                      |
 | ----------------------------------------------- | ------------------------------------------------- | ------------------------------------------------------------------ |
-| ![create RSVP I](./assets/create-rsvp-form.png) | ![create RSVP I](./assets/create-rsvp-form-2.png) | ![add custom field](./assets/create-rsvp-form-custom-question.png) |
+| ![create RSVP I](./assets/create-rsvp-form.png) | ![create RSVP II](./assets/create-rsvp-form-2.png) | ![add custom field](./assets/create-rsvp-form-custom-question.png) |
 
 - Once created, the Event page on the Dashboard should reflect the fact that
   the RSVP is "live"
