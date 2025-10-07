@@ -31,16 +31,16 @@
   "google_map_link",
   "socials_section",
   "email",
-  "x",
-  "linkedin",
-  "matrix",
-  "column_break_fifp",
-  "facebook",
-  "instagram",
   "mastodon",
   "telegram",
-  "zulip",
   "bluesky",
+  "matrix",
+  "x",
+  "column_break_fifp",
+  "facebook",
+  "linkedin",
+  "instagram",
+  "zulip",
   "whatsapp",
   "discord",
   "chapter_members_section",
@@ -59,7 +59,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Chapter Type",
-   "options": "City Community\nFOSS Club\nConference",
+   "options": "City Community\nFOSS Club\nConference\nVirtual",
    "reqd": 1
   },
   {
@@ -75,13 +75,14 @@
    "fieldname": "city",
    "fieldtype": "Link",
    "label": "City",
+   "mandatory_depends_on": "eval:doc.chapter_type==='City Community'",
    "options": "City"
   },
   {
    "fieldname": "state",
    "fieldtype": "Link",
    "label": "State",
-   "mandatory_depends_on": "eval:doc.chapter_type!='Conference'",
+   "mandatory_depends_on": "eval:doc.chapter_type==='City Community'",
    "options": "State"
   },
   {
@@ -98,7 +99,7 @@
    "label": "Basic Information"
   },
   {
-   "depends_on": "eval:doc.chapter_type!='Conference' ",
+   "depends_on": "eval:doc.chapter_type==='City Community'",
    "fieldname": "location_section",
    "fieldtype": "Section Break",
    "label": "Location"
@@ -242,10 +243,10 @@
    "options": "URL"
   },
   {
-    "fieldname": "zulip",
-    "fieldtype": "Data",
-    "label": "Zulip",
-    "options": "URL"
+   "fieldname": "zulip",
+   "fieldtype": "Data",
+   "label": "Zulip",
+   "options": "URL"
   },
   {
    "fieldname": "bluesky",
@@ -280,7 +281,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-09-07 09:45:30.000000",
+ "modified": "2025-10-07 10:45:37.496671",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
@@ -315,6 +316,7 @@
   }
  ],
  "route": "c",
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
