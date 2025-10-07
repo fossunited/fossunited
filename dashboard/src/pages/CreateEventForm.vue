@@ -17,10 +17,10 @@
           <div class="my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
             <FormControl
               v-model="temp_event.event_type"
-              :type="'select'"
+              type="select"
               :options="eventTypeOptions.data"
               size="md"
-              label="Event Type&ast;"
+              label="Event Type*"
             />
             <FormControl
               v-model="temp_event.event_name"
@@ -159,14 +159,17 @@ const chapter = createDocumentResource({
   name: route.params.id,
 })
 
-const eventTypeOptions = createListResource({
-  doctype: 'FOSS Event Type',
-  fields: ['name'],
+const eventTypeOptions = createResource({
+  url: 'fossunited.fossunited.utils.get_select_field_options',
+  makeParams() {
+    return {
+      doctype_name: 'FOSS Chapter Event',
+      fieldname: 'event_type',
+    }
+  },
   auto: true,
   transform(data) {
-    return data.map((d) => {
-      return { label: d.name, value: d.name }
-    })
+    return data.map((opt) => ({ label: opt, value: opt }))
   },
 })
 

@@ -201,7 +201,13 @@
 import EventHeader from '@/components/EventHeader.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import CopyToClipboardButton from '@/components/CopyToClipboardButton.vue'
-import { createDocumentResource, createListResource, FileUploader, FormControl } from 'frappe-ui'
+import {
+  createDocumentResource,
+  createListResource,
+  createResource,
+  FileUploader,
+  FormControl,
+} from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
@@ -242,14 +248,17 @@ const setBannerImage = (file) => {
   }
 }
 
-const eventTypeOptions = createListResource({
-  doctype: 'FOSS Event Type',
-  fields: ['name'],
+const eventTypeOptions = createResource({
+  url: 'fossunited.fossunited.utils.get_select_field_options',
+  makeParams() {
+    return {
+      doctype_name: 'FOSS Chapter Event',
+      fieldname: 'event_type',
+    }
+  },
   auto: true,
   transform(data) {
-    return data.map((d) => {
-      return { label: d.name, value: d.name }
-    })
+    return data.map((opt) => ({ label: opt, value: opt }))
   },
 })
 
