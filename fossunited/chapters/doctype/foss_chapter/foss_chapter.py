@@ -4,7 +4,7 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import EVENT, STUDENT_CLUB, USER_PROFILE
+from fossunited.doctype_ids import CITY_COMMUNITY, EVENT, STUDENT_CLUB, USER_PROFILE
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -150,14 +150,21 @@ class FOSSChapter(WebsiteGenerator):
             frappe.throw("Slug cannot have spaces")
 
     def get_context(self, context):
-        if self.chapter_type == "City Community":
-            context.default_chapter_logo = "/assets/fossunited/images/chapter/city_profile.svg"
-            context.default_banner = "/assets/fossunited/images/chapter/city_community_banner.png"
-        elif self.chapter_type == STUDENT_CLUB:
+        logo_assets = {
+            CITY_COMMUNITY: "city_community",
+            STUDENT_CLUB: "foss_club",
+        }
+
+        asset_key = logo_assets.get(self.chapter_type)
+        if asset_key:
             context.default_chapter_logo = (
-                "/assets/fossunited/images/chapter/foss_club_profile.svg"
+                f"/assets/fossunited/images/chapter/{asset_key}_profile.svg"
             )
-            context.default_banner = "/assets/fossunited/images/chapter/foss_club_banner.png"
+            context.default_banner = f"/assets/fossunited/images/chapter/{asset_key}_banner.png"
+        else:
+            safe_type = (self.chapter_type or "").lower().replace(" ", "_")
+            context.default_chapter_logo = f"/files/{safe_type}_profile.svg"
+            context.default_banner = f"/files/{safe_type}_banner.png"
 
         context.upcoming_events = self.get_upcoming_events()
         context.past_events = self.get_past_events()
@@ -166,7 +173,7 @@ class FOSSChapter(WebsiteGenerator):
 
     # make the chapter name upper case if it is a city community
     def make_city_name_upper(self):
-        if self.chapter_type == "City Community":
+        if self.chapter_type == CITY_COMMUNITY:
             self.chapter_name = self.city.upper()
 
     def get_upcoming_events(self):
