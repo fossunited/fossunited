@@ -11,6 +11,7 @@ def execute():
     mapping = {
         "City Meetup": "Meet Up",
         "FOSS Meetup": "Meet Up",
+        "Meetup": "Meet Up",
         "CityFOSS Conference": "Conference",
         "FOSS Hack": "Hackathon",
     }
@@ -18,14 +19,19 @@ def execute():
     print("\n--- Starting Event Type Migration ---\n")
     # update documents with new values
     for old_value, new_value in mapping.items():
-        frappe.db.set_value(
-            doctype,
-            {"event_type": old_value},
-            fieldname,
-            new_value,
-            update_modified=False,
-        )
-        print(f"Updated '{old_value}' → '{new_value}'")
+        try:
+            frappe.db.set_value(
+                doctype,
+                {"event_type": old_value},
+                fieldname,
+                new_value,
+                update_modified=False,
+            )
+            print(f"Updated '{old_value}' → '{new_value}'")
+        except Exception as e:
+            print(f"Error updating '{old_value}': {str(e)}")
+            frappe.log_error(f"Event type migration error: {str(e)}")
+
     # change fieldtype from Link to Select and set new options
     docfield = frappe.get_doc("DocField", {"parent": doctype, "fieldname": fieldname})
 
