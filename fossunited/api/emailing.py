@@ -3,7 +3,15 @@ from typing import Literal
 import frappe
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.doctype_ids import CAMPAIGN, CHAPTER, EMAIL_GROUP, EMAIL_MEMBER, EVENT
+from fossunited.doctype_ids import (
+    CAMPAIGN,
+    CHAPTER,
+    CITY_COMMUNITY,
+    EMAIL_GROUP,
+    EMAIL_MEMBER,
+    EVENT,
+    STUDENT_CLUB,
+)
 
 EMAIL_GROUP_TYPES = Literal[
     "Chapter Main",
@@ -122,9 +130,9 @@ def create_newsletter_campaign(
         as_dict=1,
     )
 
-    if chapter_dict.chapter_type == "City Community":
+    if chapter_dict.chapter_type == CITY_COMMUNITY:
         chapter_dict.chapter_name = f"FOSS United {chapter_dict.chapter_name}"
-    if chapter_dict.chapter_type == "FOSS Club":
+    if chapter_dict.chapter_type == STUDENT_CLUB:
         chapter_dict.chapter_name = f"FOSS Club {chapter_dict.chapter_name}"
 
     recipient_groups = get_formatted_email_group(data.get("email_group"))

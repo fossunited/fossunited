@@ -5,7 +5,16 @@ from datetime import datetime
 import frappe
 from frappe.utils.data import now_datetime
 
-from fossunited.doctype_ids import CHAPTER, EVENT, HACKATHON, USER_PROFILE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CITY_COMMUNITY,
+    CONFERENCE,
+    EVENT,
+    HACKATHON,
+    STUDENT_CLUB,
+    USER_PROFILE,
+    VIRTUAL,
+)
 
 
 # Jinja Filter
@@ -214,7 +223,7 @@ def get_main_foss_events():
         page_length=100,
     )
 
-    allowed_types = {"City Community", "Conference"}
+    allowed_types = {CITY_COMMUNITY, CONFERENCE, VIRTUAL}
     filtered_events = []
 
     chapters = list({e.get("chapter") for e in events if e.get("chapter")})
@@ -245,8 +254,8 @@ def get_grouped_events_by_chapter_type():
 
     # configurable grouping: view name -> list of chapter types
     GROUPING_CONFIG = {
-        "default": ["City Community", "Conference", "Virtual", "Something"],
-        "club": ["FOSS Club"],
+        "default": [CITY_COMMUNITY, CONFERENCE, VIRTUAL],
+        "club": [STUDENT_CLUB],
     }
 
     # fetch all events
@@ -323,7 +332,7 @@ def get_chapter_details():
     chapters = frappe.db.get_all(
         CHAPTER,
         fields=["chapter_name", "name", "chapter_type"],
-        filters={"chapter_type": "City Community"},
+        filters={"chapter_type": CITY_COMMUNITY},
         order_by="chapter_name asc",
         page_length=9999,
     )

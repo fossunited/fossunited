@@ -1,6 +1,12 @@
 import frappe
 
-from fossunited.doctype_ids import CHAPTER, CHAPTER_MEMBER, EVENT, RSVP_RESPONSE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CHAPTER_MEMBER,
+    EVENT,
+    RSVP_RESPONSE,
+    STUDENT_CLUB,
+)
 
 DEFAULT_LOGO = "/assets/fossunited/images/clubs/fossclub_logo.svg"
 ACTIVE_STATUSES = ["Active", "Independent", "New"]
@@ -63,7 +69,7 @@ def get_all_clubs() -> list[dict]:
     # Fetch all clubs (active and past) in one query
     clubs = frappe.db.get_all(
         CHAPTER,
-        filters={"chapter_type": "FOSS Club"},
+        filters={"chapter_type": STUDENT_CLUB},
         fields=[
             "route",
             "chapter_name",
