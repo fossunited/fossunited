@@ -46,6 +46,7 @@ class FOSSEventRSVP(WebsiteGenerator):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
         context.event_date = context.event.event_start_date.strftime("%B %d, %Y")
+        is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [
             {
@@ -53,14 +54,18 @@ class FOSSEventRSVP(WebsiteGenerator):
                 "fieldtype": "Data",
                 "label": "Full Name",
                 "reqd": 1,
-                "value": frappe.get_value("User", frappe.session.user, "full_name"),
+                "value": ""
+                if is_guest
+                else (frappe.get_value("User", frappe.session.user, "full_name") or ""),
             },
             {
                 "fieldname": "email",
                 "fieldtype": "Data",
                 "label": "Email",
                 "reqd": 1,
-                "value": frappe.get_value("User", frappe.session.user, "email"),
+                "value": ""
+                if is_guest
+                else (frappe.get_value("User", frappe.session.user, "email") or ""),
             },
             {
                 "fieldname": "im_a",
