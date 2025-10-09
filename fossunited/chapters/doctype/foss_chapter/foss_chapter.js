@@ -13,3 +13,15 @@ frappe.ui.form.on('FOSS Chapter', {
     }
   },
 })
+
+frappe.ui.form.on('FOSS Chapter', {
+  institution_name: function (frm) {
+    if (frm.doc.institution_name) {
+      frappe.db.get_doc('Institute', frm.doc.institution_name).then(function (inst) {
+        frm.set_value('city', inst.city)
+        frm.set_value('state', inst.state)
+        frm.set_value('chapter_name', inst.name)
+      })
+    }
+  },
+})

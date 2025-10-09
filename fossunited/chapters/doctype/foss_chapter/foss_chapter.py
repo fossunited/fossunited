@@ -57,6 +57,7 @@ class FOSSChapter(WebsiteGenerator):
 
     def validate(self):
         self.make_city_name_upper()
+        self.set_location()
         self.validate_slug()
 
     def before_save(self):
@@ -135,6 +136,12 @@ class FOSSChapter(WebsiteGenerator):
     def set_slug(self):
         if not self.slug:
             self.slug = frappe.scrub(self.chapter_name).replace("_", "-")
+
+    def set_location(self):
+        if self.institution_name:
+            institution = frappe.get_doc("Institute", self.institution_name)
+            self.city = institution.city
+            self.state = institution.state
 
     def validate_slug(self):
         if not self.slug:
