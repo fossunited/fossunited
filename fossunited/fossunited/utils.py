@@ -431,3 +431,18 @@ def get_foss_profile(email):
         as_dict=1,
     )
     return profile
+
+
+@frappe.whitelist(allow_guest=True)
+def get_select_field_options(doctype_name, fieldname):
+    """
+    Return options for a Select field in a Doctype as a list of strings.
+    """
+    meta = frappe.get_meta(doctype_name)
+    field = meta.get_field(fieldname)
+    if not field or field.fieldtype != "Select":
+        return []
+
+    # Options are stored as newline-separated string in `field.options`
+    options = field.options.split("\n") if field.options else []
+    return options

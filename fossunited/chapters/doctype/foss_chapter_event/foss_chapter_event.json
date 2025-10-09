@@ -104,11 +104,11 @@
   },
   {
    "fieldname": "event_type",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Event Type",
    "mandatory_depends_on": "eval:doc.is_external_event == 0",
-   "options": "FOSS Event Type"
+   "options": "Meet Up\nConference\nWorkshop\nBirds Of Feathers\nHackathon\nLinux Installation Party"
   },
   {
    "fieldname": "chapter_information_section",
@@ -531,7 +531,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-08-17 12:01:27.933102",
+ "modified": "2025-10-07 16:50:15.974998",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -569,6 +569,7 @@
    "select": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "event_permalink, chapter",
  "show_title_field_in_link": 1,
  "sort_field": "modified",

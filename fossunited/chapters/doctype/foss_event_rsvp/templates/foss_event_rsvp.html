@@ -2,7 +2,7 @@
 {% block meta_block %}
   <meta name="title" content="{{ event.event_name }}" />
   {% if doc.is_published %}
-    {% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
+    {% if event.event_type in ['Meet Up'] %}
       <meta
         property="og:title"
         content="🔴 RSVP form is live! - {{ event.event_name }}, {{ event.chapter_name | title }}"
@@ -16,7 +16,7 @@
       content="RSVP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}"
     />
   {% endif %}
-  {% if event.event_type in ['Meetup', 'City Meetup', 'FOSS Meetup'] %}
+  {% if event.event_type in ['Meet Up'] %}
     <meta
       property="og:description"
       content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}"
