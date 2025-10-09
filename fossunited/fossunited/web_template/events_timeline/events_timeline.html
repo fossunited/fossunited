@@ -1,70 +1,50 @@
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 {% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
 {% set grouped_events = get_grouped_events_by_chapter_type() %}
-
 {% macro render_event_groups(grouped_events, chapter="default") %}
-  {% for group, events in (grouped_events.get(chapter) or {}).items() %}
-    {% set is_past = group.startswith('Past ') %}
-
-    {% if is_past %}
-      <details role="region">
-        <summary class="select-theme">Show Past Events</summary>
-    {% endif %}
-
-    <div class="event-group" role="region">
-      <h3>{{ group }}</h3>
-
-      {% for month, month_events in events.items() %}
-        <h4
-          class="event-month"
-          v-show="(mustAttendOnly, searchText, cityChapter, $el?.nextElementSibling?.style?.display !== 'none')"
-        >
-          {{ month }}
-        </h4>
-
-        <div
-          class="events-grid-4"
-          role="group"
-          v-show="(mustAttendOnly, searchText, cityChapter, $el?.children.length > 0)"
-        >
-          {% for event in month_events %}
-            {% set raw_date = event.event_start_date or event.start_date %}
-            {% set event_date_text = frappe.utils.formatdate(raw_date, "d MMM yyyy") %}
-
-            {% if event.event_name %}
-              <div
-                class="event-card-holder {{ group | replace(" ", "") }}"
-                id="{{ event.name }}"
-                role="listitem"
-                v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')"
-              >
-                {{ event_card(event) }}
-              </div>
-            {% else %}
-              <div
-                class="event-card-holder {{ group | replace(" ", "") }}"
-                id="{{ event.name }}"
-                role="listitem"
-                v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')"
-              >
-                {{ hackathon_card(event) }}
-              </div>
+    {% for group, events in (grouped_events.get(chapter) or {}).items() %}
+        {% set is_past = group.startswith('Past ') %}
+        {% if is_past %}
+            <details role="region">
+                <summary class="select-theme">Show Past Events</summary>
             {% endif %}
-          {% endfor %}
-        </div>
-      {% endfor %}
-    </div>
-	{% if is_past %}
-	  </details>
-	{% endif %}
-  {% endfor %}
+            <div class="event-group" role="region">
+                <h3>{{ group }}</h3>
+                {% for month, month_events in events.items() %}
+                    <h4 class="event-month"
+                        v-show="(mustAttendOnly, searchText, selectedCity, $el?.nextElementSibling?.style?.display !== 'none')">
+                        {{ month }}
+                    </h4>
+                    <div class="events-grid-4"
+                         role="group"
+                         v-show="(mustAttendOnly, searchText, selectedCity, $el?.children.length > 0)">
+                        {% for event in month_events %}
+                            {% set raw_date = event.event_start_date or event.start_date %}
+                            {% set event_date_text = frappe.utils.formatdate(raw_date, "d MMM yyyy") %}
+                            {% if event.event_name %}
+                                <div class="event-card-holder {{ group | replace(' ', '') }}"
+                                     id="{{ event.name }}"
+                                     role="listitem"
+                                     v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')">
+                                    {{ event_card(event) }}
+                                </div>
+                            {% else %}
+                                <div class="event-card-holder {{ group | replace(' ', '') }}"
+                                     id="{{ event.name }}"
+                                     role="listitem"
+                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')">
+                                    {{ hackathon_card(event) }}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if is_past %}</details>{% endif %}
+    {% endfor %}
 {% endmacro %}
-
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
-/>
-
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
   .events-timeline {
     padding-top: 7rem;
@@ -183,103 +163,80 @@
     }
   }
 </style>
-
 <div v-scope>
-  <div class="container events-timeline">
-    <!--Search filter panel-->
-    <div class="search-filter-controlpanel" role="search" aria-labelledby="search-panel-label">
-      <h2 id="search-panel-label" class="sr-only">Search and Filter Events</h2>
-
-      <!-- Search Input -->
-      <div class="events-search">
-        <label for="events-search" class="sr-only">Search Events</label>
-        <input
-          v-model="searchText"
-          type="text"
-          id="events-search"
-          placeholder="Search by event name and date"
-          aria-label="Search events by name and date"
-        />
-      </div>
-
-      <!-- Must Attend Checkbox -->
-      <div class="must-attend-checkbox">
-        <label for="must-attend-checkbox">Must Attend</label>
-        <input
-          type="checkbox"
-          v-model="mustAttendOnly"
-          id="must-attend-checkbox"
-          title="Show only must-attend events"
-          aria-describedby="must-attend-desc"
-        />
-      </div>
-      <p id="must-attend-desc" class="sr-only">
-        Filter the events to show only those marked as must-attend.
-      </p>
-
-	  <div class="must-attend-checkbox">
-		<label for="show-fossclub-checkbox">Show Club Events</label>
-		<input
-		  type="checkbox"
-		  id="show-fossclub-checkbox"
-		  v-model="showFossClub"
-		  aria-describedby="show-fossclub-desc"
-		  />
-	  </div>
-	  <p id="show-fossclub-desc" class="sr-only">
-		Toggle to view FOSS Club events. When off, shows rest all Events.
-	  </p>
-
-      <!-- City Chapter selector -->
-      <div class="must-attend-checkbox">
-        <select
-          id="cityChapter"
-          v-model="cityChapter"
-          class="select-theme"
-          aria-describedby="city-chapter-desc"
-        >
-          <option value="All Cities" selected>All Cities</option>
-          {% set chapter_details = get_chapter_details() %}
-          {% for chapter in chapter_details %}
-            <option value="{{ chapter.name }}">
-              {{ chapter.chapter_name | truncate(15, False, '...', 0) }}
-            </option>
-          {% endfor %}
-        </select>
-        <label for="cityChapter">City Chapter</label>
-      </div>
-      <p id="must-attend-desc" class="sr-only">
-        Filter the events to show only those in your city.
-      </p>
-    </div>
-    <button onclick="downloadEventIcs()" class="child-container--subtext ics-button">
-      Download ICS File
-      <i class="ti ti-download"></i>
-    </button>
-
-	<div v-show="!showFossClub">
-	  {{ render_event_groups(grouped_events, "default") }}
-	</div>
-
-	<div v-show="showFossClub">
-	  {{ render_event_groups(grouped_events, "club") }}
-	</div>
-
-    <script>
+    <div class="container events-timeline">
+        <!--Search filter panel-->
+        <div class="search-filter-controlpanel"
+             role="search"
+             aria-labelledby="search-panel-label">
+            <h2 id="search-panel-label" class="sr-only">Search and Filter Events</h2>
+            <!-- Search Input -->
+            <div class="events-search">
+                <label for="events-search" class="sr-only">Search Events</label>
+                <input v-model="searchText"
+                       type="text"
+                       id="events-search"
+                       placeholder="Search by event name and date"
+                       aria-label="Search events by name and date" />
+            </div>
+            <!-- Must Attend Checkbox -->
+            <div class="must-attend-checkbox">
+                <label for="must-attend-checkbox">Must Attend</label>
+                <input type="checkbox"
+                       v-model="mustAttendOnly"
+                       id="must-attend-checkbox"
+                       title="Show only must-attend events"
+                       aria-describedby="must-attend-desc" />
+            </div>
+            <p id="must-attend-desc" class="sr-only">Filter the events to show only those marked as must-attend.</p>
+            <div class="must-attend-checkbox">
+                <label for="show-fossclub-checkbox">Show Club Events</label>
+                <input type="checkbox"
+                       id="show-fossclub-checkbox"
+                       v-model="showFossClub"
+                       aria-describedby="show-fossclub-desc" />
+            </div>
+            <p id="show-fossclub-desc" class="sr-only">Toggle to view FOSS Club events. When off, shows rest all Events.</p>
+            <div class="must-attend-checkbox">
+                <select id="citySelect"
+                        v-model="selectedCity"
+                        class="select-theme"
+                        aria-describedby="city-select-desc">
+                    <option value="All Cities" selected>All Cities</option>
+                    {% set cities = get_all_city_names() %}
+                    {% for city in cities %}<option value="{{ city.name }}">{{ city.name }}</option>{% endfor %}
+                </select>
+            </div>
+            <p id="must-attend-desc" class="sr-only">Filter the events to show only those in your city.</p>
+        </div>
+        <button onclick="downloadEventIcs()"
+                class="child-container--subtext ics-button">
+            Download ICS File
+            <i class="ti ti-download"></i>
+        </button>
+        <div v-show="!showFossClub">{{ render_event_groups(grouped_events, "default") }}</div>
+        <div v-show="showFossClub">{{ render_event_groups(grouped_events, "club") }}</div>
+        <script>
+ const chapterCityMap = {
+ {% set chapter_details = get_chapter_details() %}
+    {% for chapter in chapter_details %}"{{ chapter.name }}": "{{ chapter.city }}",{% endfor %}
+  };
       PetiteVue.createApp({
         searchText: '',
         mustAttendOnly: false,
-        cityChapter: 'All Cities',
+        selectedCity: 'All Cities',
         showFossClub: false,
         canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
           if (this.mustAttendOnly && !eventMustAttend) {
             return false
           }
 
-          if (this.cityChapter != 'All Cities' && eventCityChapter != this.cityChapter) {
-            return false
-          }
-
+ if (this.selectedCity !== 'All Cities') {
+      const chapterCity = chapterCityMap[eventCityChapter] || '';
+      if (chapterCity !== this.selectedCity) {
+        return false;
+      }
+    }
           if (this.searchText.length == 0) {
             return true
           }
@@ -323,6 +280,6 @@
           },
         })
       }
-    </script>
-  </div>
+        </script>
+    </div>
 </div>
