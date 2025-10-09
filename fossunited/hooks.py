@@ -51,6 +51,7 @@ jinja = {
         "fossunited.fossunited.utils.get_chapter_details",
         "fossunited.stack.utils.get_stack_dict",
         "fossunited.fossunited.utils.get_main_foss_events",
+        "fossunited.fossunited.utils.get_all_city_names",
     ],
     "filters": [
         "fossunited.fossunited.utils.make_badge",
