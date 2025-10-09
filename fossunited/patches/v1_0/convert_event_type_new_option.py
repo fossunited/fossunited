@@ -20,14 +20,17 @@ def execute():
     # update documents with new values
     for old_value, new_value in mapping.items():
         try:
-            frappe.db.set_value(
-                doctype,
-                {"event_type": old_value},
-                fieldname,
-                new_value,
-                update_modified=False,
-            )
-            print(f"Updated '{old_value}' → '{new_value}'")
+            event_names = frappe.get_all(doctype, filters={fieldname: old_value}, pluck="name")
+            for name in event_names:
+                frappe.db.set_value(
+                    doctype,
+                    name,
+                    fieldname,
+                    new_value,
+                    update_modified=False,
+                )
+            if event_names:
+                print(f"Updated {len(event_names)} record(s) from '{old_value}' → '{new_value}'")
         except Exception as e:
             print(f"Error updating '{old_value}': {str(e)}")
             frappe.log_error(f"Event type migration error: {str(e)}")
