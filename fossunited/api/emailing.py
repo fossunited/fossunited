@@ -105,6 +105,24 @@ def add_to_email_group(email_group: str, email: str):
     logger.info(f"Email '{email}' added to group '{email_group}'")
 
 
+def remove_from_email_group(email_group: str, email: str):
+    """
+    Remove an email from an email group.
+    """
+    logger = frappe.logger("email_group")
+
+    if not frappe.db.exists(EMAIL_GROUP, email_group):
+        frappe.throw("This email group does not exist", frappe.DoesNotExistError)
+
+    member_name = frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email})
+    if not member_name:
+        logger.info(f"Email '{email}' not found in group '{email_group}', nothing to remove")
+        return
+
+    frappe.delete_doc(EMAIL_MEMBER, member_name, ignore_permissions=True)
+    logger.info(f"Email '{email}' removed from group '{email_group}'")
+
+
 @frappe.whitelist()
 def create_newsletter_campaign(
     data: dict,
