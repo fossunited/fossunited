@@ -364,10 +364,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
             try:
                 if should_subscribe:
-                    add_to_email_group(event_group, speaker.email)
-                    add_to_email_group(chapter_group, speaker.email)
+                    add_to_email_group(event_group.name, speaker.email)
+                    add_to_email_group(chapter_group.name, speaker.email)
                 else:
-                    remove_from_email_group(event_group, speaker.email)
-                    remove_from_email_group(chapter_group, speaker.email)
+                    remove_from_email_group(event_group.name, speaker.email)
+                    remove_from_email_group(chapter_group.name, speaker.email)
             except frappe.DuplicateEntryError:
                 continue
