@@ -14,7 +14,8 @@ from fossunited.doctype_ids import (
 )
 
 EMAIL_GROUP_TYPES = Literal[
-    "Chapter Main",
+    "Chapter Event Participants",
+    "Chapter CFP Proposers",
     "Event Participants",
     "CFP Proposers",
     "Accepted Proposers",
@@ -29,7 +30,8 @@ def create_email_group(
     document_type: str = EVENT,
 ):
     """
-    Create an email group linked to the event
+    Ensure an email group exists for the given document.
+    Returns the existing group or creates a new one.
 
     Args:
         type: type of email group
@@ -39,7 +41,7 @@ def create_email_group(
     _doc = frappe.get_doc(document_type, reference_document)
     _chapter = _doc.get("chapter")
 
-    if frappe.db.exists(
+    existing_group = frappe.get_value(
         EMAIL_GROUP,
         {
             "reference_document": reference_document,
@@ -47,21 +49,24 @@ def create_email_group(
             "chapter": _chapter,
             "group_type": type,
         },
-    ):
-        raise frappe.ValidationError("Email Group already exists for this event")
+        "name",
+    )
+    if existing_group:
+        return frappe.get_doc(EMAIL_GROUP, existing_group)
 
-    # This is done to prevent cases when event id and hackathon id are equal
-    group_title = ""
-    if document_type == EVENT:
+    if document_type == CHAPTER:
+        group_title = f"{type}-{reference_document}"
+    elif document_type == EVENT:
         group_title = f"{type}-{reference_document}-Event"
     else:
         group_title = f"{type}-{reference_document}-Hackathon"
 
-    _group_title = group_title[:140]
+    group_title = group_title[:140]
+
     group = frappe.get_doc(
         {
             "doctype": EMAIL_GROUP,
-            "title": _group_title,
+            "title": group_title,
             "chapter": _chapter,
             "reference_document": reference_document,
             "document_type": document_type,
@@ -86,15 +91,18 @@ def add_to_email_group(email_group: str, email: str):
         email_group: id of email group
         email: email to be added to the group
     """
+    logger = frappe.logger("email_group")  # Logs to logs/email_group.log
 
     if not frappe.db.exists(EMAIL_GROUP, email_group):
         frappe.throw("This email group does not exist", frappe.DoesNotExistError)
 
     if frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email}):
-        frappe.throw("Email already a part of this email group", frappe.DuplicateEntryError)
+        logger.info(f"Email '{email}' already exists in group '{email_group}'")
+        return
 
     member = frappe.get_doc({"doctype": EMAIL_MEMBER, "email_group": email_group, "email": email})
     member.insert(ignore_permissions=True)
+    logger.info(f"Email '{email}' added to group '{email_group}'")
 
 
 @frappe.whitelist()
