@@ -60,8 +60,7 @@ class FOSSChapter(WebsiteGenerator):
     # end: auto-generated types
 
     def after_insert(self):
-        if not self.is_external_event:
-            self.create_email_groups()
+        self.create_email_groups()
 
     def before_insert(self):
         self.handle_member_addition()
