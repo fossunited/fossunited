@@ -72,6 +72,25 @@
                 {{ _("Confirm my attendance for the event.") }}
               </label>
             </div>
+
+            <div class="form-check d-flex align-items-center">
+              <input
+                value="1"
+                class="form-control form-check-input text-sm"
+                type="checkbox"
+                name="subscribe_chapter_mailing"
+                id="subscribe_chapter_mailing"
+                required=""
+                checked
+              />
+              <label
+                class="form-check-label foss-form-question text-sm m-2"
+                for="subscribe_chapter_mailing"
+              >
+                Yes, I’d like to receive email updates about future events from
+                {{ event.chapter }}.
+              </label>
+            </div>
           </form>
           <div class="foss-form-buttons">
             <button class="primary-button" type="submit" id="submit-rsvp">
