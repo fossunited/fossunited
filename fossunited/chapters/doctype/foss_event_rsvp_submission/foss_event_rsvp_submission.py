@@ -2,7 +2,11 @@ import frappe
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.api.emailing import add_to_email_group, create_email_group
+from fossunited.api.emailing import (
+    add_to_email_group,
+    create_email_group,
+    remove_from_email_group,
+)
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 
@@ -45,7 +49,9 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if self.has_value_changed("status") and not self.is_new():
+        if (
+            self.has_value_changed("status") or self.has_value_changed("subscribe_chapter_mailing")
+        ) and not self.is_new():
             self.handle_add_to_email_group()
 
     def validate_linked_rsvp_exists(self):
@@ -129,30 +135,28 @@ class FOSSEventRSVPSubmission(Document):
         self.status = "Accepted"
 
     def handle_add_to_email_group(self):
-        if self.status != "Accepted":
-            return
+        # Check if user should be subscribed
+        should_subscribe = self.status == "Accepted" and self.subscribe_chapter_mailing == "1"
 
-        if not frappe.db.exists(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-        ):
-            create_email_group(
-                type="Event Participants",
-                reference_document=self.event,
-                document_type=EVENT,
-            )
-
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-            ["name"],
+        # Create or get the Event Participants group
+        event_group = create_email_group(
+            type="Event Participants",
+            reference_document=self.event,
+            document_type=EVENT,
         )
-        add_to_email_group(email_group, self.email)
+
+        # Create or get the Chapter Event Participants group
+        chapter_group = create_email_group(
+            type="Chapter Event Participants",
+            reference_document=self.chapter,
+            document_type=CHAPTER,
+        )
+
+        if should_subscribe:
+            # Add the email to both groups
+            add_to_email_group(event_group.name, self.email)
+            add_to_email_group(chapter_group.name, self.email)
+        else:
+            # Remove the email from both groups
+            remove_from_email_group(event_group.name, self.email)
+            remove_from_email_group(chapter_group.name, self.email)
