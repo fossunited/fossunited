@@ -39,43 +39,16 @@ def get_context(context):
         limit=20,
     )
 
-    news_list = frappe.get_all(
-        "Newsletter",
-        fields=[
-            "name",
-            "modified",
-            "subject",
-            "sender_name",
-            "sender_email",
-            "route",
-            "message_md",
-            "message",
-            "message_html",
-            "content_type",
-        ],
-        filters={"email_sent": 1},
-        order_by="modified desc",
-        limit=20,
-    )
-
-    for blog in blog_list + news_list:
+    for blog in blog_list:
         blog.link = urljoin(host, blog.route)
         blog.title = escape_html(
             getattr(blog, "title", None) or getattr(blog, "subject", "") or ""
         )
-        blog.author = escape_html(
-            getattr(blog, "blogger", None)
-            or (
-                f"{blog.sender_name} <{blog.sender_email}>" if hasattr(blog, "sender_name") else ""
-            )
-        )
+        blog.author = escape_html(getattr(blog, "blogger", None) or "")
         blog.published_date = format_datetime(
             datetime.combine(getattr(blog, "published_on", None) or blog.modified, time())
         )
-        prefix = "message_" if blog.route.startswith("newsletters/") else "content_"
-        attr = {"Markdown": prefix + "md", "HTML": prefix + "html"}.get(
-            blog.content_type, prefix.rstrip("_")
-        )
+        attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
         value = getattr(blog, attr)
         if blog.content_type == "Markdown":
             blog_content = markdown(re.sub(r"(?i)</?br\s*/?>", "\n", value))
@@ -83,7 +56,7 @@ def get_context(context):
             blog_content = value
         blog.content = f"<![CDATA[{blog_content}]]>"
 
-    all_items = blog_list + news_list
+    all_items = blog_list
     if all_items:
         modified = format_datetime(max(blog["modified"] for blog in all_items))
     else:
@@ -101,7 +74,7 @@ def get_context(context):
         "title": title,
         "description": description,
         "modified": modified,
-        "items": blog_list + news_list,
+        "items": blog_list,
         "link": host + "/blog",
         "feed_url": host + "/rss.xml",
     }
