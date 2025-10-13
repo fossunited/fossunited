@@ -39,7 +39,7 @@ def create_email_group(
         document_type: type of reference document (default: "FOSS Chapter Event")
     """
     _doc = frappe.get_doc(document_type, reference_document)
-    _chapter = _doc.get("chapter")
+    _chapter = _doc.get("chapter") or _doc.get("name")
 
     existing_group = frappe.get_value(
         EMAIL_GROUP,
