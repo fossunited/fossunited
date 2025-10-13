@@ -6,7 +6,11 @@ import textwrap
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.api.emailing import add_to_email_group, create_email_group
+from fossunited.api.emailing import (
+    add_to_email_group,
+    create_email_group,
+    remove_from_email_group,
+)
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP
 
 
@@ -92,7 +96,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_session_type_permissions()
 
     def after_insert(self):
-        self.handle_email_group("CFP Proposers")
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_email_group("CFP Proposers")
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
@@ -338,28 +343,19 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             self.handle_email_group("Rejected Proposers")
 
     def handle_email_group(self, type) -> None:
-        if not frappe.db.exists(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": type,
-            },
-        ):
-            create_email_group(
-                type=type,
-                reference_document=self.event,
-                document_type=EVENT,
-            )
+        should_subscribe = self.subscribe_chapter_mailing == 1
 
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": type,
-            },
-            ["name"],
+        # Create or get the Event Participants group
+        event_group = create_email_group(
+            type=type,
+            reference_document=self.event,
+            document_type=EVENT,
+        )
+
+        chapter_group = create_email_group(
+            type="Chapter CFP Proposers",
+            reference_document=self.chapter,
+            document_type=CHAPTER,
         )
 
         for speaker in self.speakers:
@@ -367,6 +363,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 continue
 
             try:
-                add_to_email_group(email_group, speaker.email)
+                if should_subscribe:
+                    add_to_email_group(event_group, speaker.email)
+                    add_to_email_group(chapter_group, speaker.email)
+                else:
+                    remove_from_email_group(event_group, speaker.email)
+                    remove_from_email_group(chapter_group, speaker.email)
             except frappe.DuplicateEntryError:
                 continue
