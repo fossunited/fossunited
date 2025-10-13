@@ -4,7 +4,14 @@
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.doctype_ids import CITY_COMMUNITY, EVENT, STUDENT_CLUB, USER_PROFILE
+from fossunited.api.emailing import create_email_group
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CITY_COMMUNITY,
+    EVENT,
+    STUDENT_CLUB,
+    USER_PROFILE,
+)
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -52,6 +59,10 @@ class FOSSChapter(WebsiteGenerator):
         zulip: DF.Data | None
     # end: auto-generated types
 
+    def after_insert(self):
+        if not self.is_external_event:
+            self.create_email_groups()
+
     def before_insert(self):
         self.handle_member_addition()
 
@@ -65,6 +76,13 @@ class FOSSChapter(WebsiteGenerator):
     def on_update(self):
         self.handle_member_addition()
         self.handle_member_removal()
+
+    def create_email_groups(self):
+        for group in [
+            "Chapter Event Participants",
+            "Chapter CFP Proposers",
+        ]:
+            create_email_group(type=group, reference_document=self.name, document_type=CHAPTER)
 
     def handle_member_addition(self):
         # for each member, add roles of 'Chapter Team Member'
