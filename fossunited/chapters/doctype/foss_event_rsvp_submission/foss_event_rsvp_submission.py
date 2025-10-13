@@ -30,6 +30,7 @@ class FOSSEventRSVPSubmission(Document):
         name1: DF.Data
         status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
+        subscribe_chapter_mailing: DF.Check
     # end: auto-generated types
 
     def validate(self):
