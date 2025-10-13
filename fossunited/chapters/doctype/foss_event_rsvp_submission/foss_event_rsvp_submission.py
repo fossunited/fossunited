@@ -136,7 +136,7 @@ class FOSSEventRSVPSubmission(Document):
 
     def handle_add_to_email_group(self):
         # Check if user should be subscribed
-        should_subscribe = self.status == "Accepted" and self.subscribe_chapter_mailing == "1"
+        should_subscribe = self.status == "Accepted" and self.subscribe_chapter_mailing == 1
 
         # Create or get the Event Participants group
         event_group = create_email_group(
