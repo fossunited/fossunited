@@ -56,41 +56,7 @@
             %}
               {{ renderfield(field) }}
             {% endfor %}
-            <div class="form-check d-flex align-items-center">
-              <input
-                value="1"
-                class="form-control form-check-input text-sm"
-                type="checkbox"
-                name="confirm_attendance"
-                id="confirm_attendance"
-                required=""
-              />
-              <label
-                class="form-check-label foss-form-question text-sm m-2"
-                for="confirm_attendance"
-              >
-                {{ _("Confirm my attendance for the event.") }}
-              </label>
-            </div>
 
-            <div class="form-check d-flex align-items-center">
-              <input
-                value="1"
-                class="form-control form-check-input text-sm"
-                type="checkbox"
-                name="subscribe_chapter_mailing"
-                id="subscribe_chapter_mailing"
-                required=""
-                checked
-              />
-              <label
-                class="form-check-label foss-form-question text-sm m-2"
-                for="subscribe_chapter_mailing"
-              >
-                Yes, I’d like to receive email updates about future events from
-                {{ event.chapter }}.
-              </label>
-            </div>
           </form>
           <div class="foss-form-buttons">
             <button class="primary-button" type="submit" id="submit-rsvp">
@@ -171,15 +137,11 @@
           return emailRegex.test(email)
         }
 
-        if (!validate_mandatory_fields() || !$('#confirm_attendance').is(':checked')) {
-          frappe.msgprint('Please confirm your attendance for the event!')
-          return
-        }
-
         const formData = $('.foss-form-body').serializeArray()
         const data = {}
 
         data['linked_rsvp'] = '{{ doc.name }}'
+        data['status'] = 'Accepted' // by default we accept
         formData.forEach((field) => {
           data[field.name] = field.value
         })
