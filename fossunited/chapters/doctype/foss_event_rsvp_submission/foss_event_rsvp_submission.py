@@ -10,7 +10,6 @@ from fossunited.api.emailing import (
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
-frappe.utils.logger.set_log_level("DEBUG")
 logger = frappe.logger("rsvp_submission", allow_site=True, file_count=50)
 
 

@@ -344,7 +344,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             self.handle_email_group("Rejected Proposers")
 
     def handle_email_group(self, type) -> None:
-        should_subscribe = self.subscribe_chapter_mailing == 1
+        should_subscribe = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
 
         # Create or get the Event Participants group
         event_group = create_email_group(
