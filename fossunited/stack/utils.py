@@ -4,7 +4,9 @@ import frappe
 
 
 def get_stack_dict():
-    stacks = frappe.get_all(doctype="Stack", fields=["title", "icon", "category"], page_length=999)
+    stacks = frappe.get_all(
+        doctype="Stack", fields=["title", "icon", "category", "link"], page_length=999
+    )
 
     stack_dict = defaultdict(list)
 
