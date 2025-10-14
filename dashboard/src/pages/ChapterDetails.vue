@@ -298,7 +298,7 @@ const getChapterLogo = () => {
   } else if (chapter.doc.chapter_type == 'FOSS Club') {
     return '/assets/fossunited/images/chapter/foss_club_profile.svg'
   } else {
-    return '/assets/fossunited/images/chapter/city_profile.svg'
+    return '/assets/fossunited/images/chapter/city_community_profile.svg'
   }
 }
 
