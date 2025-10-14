@@ -31,16 +31,21 @@ def update_submission(doctype, submission, fields, custom):
 
     fields = json.loads(fields)
     custom = json.loads(custom)
-    frappe.db.set_value(doctype, submission, fields)
 
-    doc = frappe.get_doc(doctype, submission).as_dict()
-    for field in doc.custom_answers:
-        frappe.db.set_value(
-            "FOSS Custom Answer",
-            field.name,
-            "response",
-            custom[field.idx - 1]["response"],
-        )
+    doc = frappe.get_doc(doctype, submission)
+
+    # Update main fields
+    for key, value in fields.items():
+        setattr(doc, key, value)
+
+    # Update custom answers
+    for idx, field in enumerate(doc.custom_answers):
+        field.response = custom[idx]["response"]
+
+    doc.save(ignore_permissions=True)  # Triggers hooks and methods
+    frappe.db.commit()
+
+    return {"status": "success"}
 
 
 @frappe.whitelist()
