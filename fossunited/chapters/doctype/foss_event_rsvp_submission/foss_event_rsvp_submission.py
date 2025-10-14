@@ -1,5 +1,6 @@
 import frappe
 from frappe.model.document import Document
+from frappe.utils import cint
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.api.emailing import (
@@ -8,6 +9,9 @@ from fossunited.api.emailing import (
     remove_from_email_group,
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
+
+frappe.utils.logger.set_log_level("DEBUG")
+logger = frappe.logger("rsvp_submission", allow_site=True, file_count=50)
 
 
 class FOSSEventRSVPSubmission(Document):
@@ -49,9 +53,7 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if (
-            self.has_value_changed("status") or self.has_value_changed("subscribe_chapter_mailing")
-        ) and not self.is_new():
+        if self.has_value_changed("subscribe_chapter_mailing") and not self.is_new():
             self.handle_add_to_email_group()
 
     def validate_linked_rsvp_exists(self):
@@ -116,47 +118,34 @@ class FOSSEventRSVPSubmission(Document):
         return max_count
 
     def handle_submission_status(self):
-        # Check if the RSVP is accepting all incoming responses
+        if self.status:  # Respect what's set from the web form
+            return
+
         requires_host_approval = bool(
             frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "requires_host_approval")
         )
 
-        # If requires_host_approval == True, but the status is accepted at time of creation,
-        # Throw a frappe.PermissionError
-        if requires_host_approval and self.status == "Accepted":
-            frappe.throw("Invalid action. Status cannot be `Accepted`.", frappe.PermissionError)
-
-        # If the RSVP requires host approval, set the status to Pending
-        if requires_host_approval:
-            self.status = "Pending"
-            return
-
-        # If the RSVP does not require host approval, set the status to Accepted
-        self.status = "Accepted"
+        self.status = "Pending" if requires_host_approval else "Accepted"
 
     def handle_add_to_email_group(self):
-        # Check if user should be subscribed
-        should_subscribe = self.status == "Accepted" and self.subscribe_chapter_mailing == 1
+        wants_subscription = cint(self.subscribe_chapter_mailing) == 1
 
-        # Create or get the Event Participants group
         event_group = create_email_group(
             type="Event Participants",
             reference_document=self.event,
             document_type=EVENT,
         )
-
-        # Create or get the Chapter Event Participants group
         chapter_group = create_email_group(
             type="Chapter Event Participants",
             reference_document=self.chapter,
             document_type=CHAPTER,
         )
 
-        if should_subscribe:
-            # Add the email to both groups
+        if wants_subscription:
+            logger.info(f"[Email Group] Subscribing {self.email} to {event_group.name}")
             add_to_email_group(event_group.name, self.email)
             add_to_email_group(chapter_group.name, self.email)
         else:
-            # Remove the email from both groups
+            logger.info(f"[Email Group] Unsubscribing {self.email} from {event_group.name}")
             remove_from_email_group(event_group.name, self.email)
             remove_from_email_group(chapter_group.name, self.email)
