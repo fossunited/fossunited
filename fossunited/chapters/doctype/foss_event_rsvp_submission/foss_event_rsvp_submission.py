@@ -118,17 +118,26 @@ class FOSSEventRSVPSubmission(Document):
         return max_count
 
     def handle_submission_status(self):
-        if self.status:  # Respect what's set from the web form
-            return
-
+        # If requires_host_approval == True, but the status is accepted at time of creation,
+        # Throw a frappe.PermissionError
         requires_host_approval = bool(
             frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "requires_host_approval")
         )
 
-        self.status = "Pending" if requires_host_approval else "Accepted"
+        if requires_host_approval and self.status == "Accepted":
+            frappe.throw("Invalid action. Status cannot be `Accepted`.", frappe.PermissionError)
+
+        # If the RSVP requires host approval, set the status to Pending
+        if requires_host_approval:
+            self.status = "Pending"
+            return
+
+        # If the RSVP does not require host approval, set the status to Accepted
+        self.status = "Accepted"
 
     def handle_add_to_email_group(self):
         wants_subscription = cint(self.subscribe_chapter_mailing) == 1
+        is_accepted = self.status == "Accepted"
 
         event_group = create_email_group(
             type="Event Participants",
@@ -141,9 +150,10 @@ class FOSSEventRSVPSubmission(Document):
             document_type=CHAPTER,
         )
 
-        if wants_subscription:
+        if wants_subscription and is_accepted:
             logger.info(f"[Email Group] Subscribing {self.email} to {event_group.name}")
             add_to_email_group(event_group.name, self.email)
+        elif wants_subscription:
             add_to_email_group(chapter_group.name, self.email)
         else:
             logger.info(f"[Email Group] Unsubscribing {self.email} from {event_group.name}")
