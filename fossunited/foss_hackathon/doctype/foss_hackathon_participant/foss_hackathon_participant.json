@@ -129,14 +129,14 @@
    "options": "URL"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Chapter Mailing?"
   }
  ],
  "links": [],
- "modified": "2025-10-13 16:09:11.412173",
+ "modified": "2025-10-14 16:06:43.666875",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",

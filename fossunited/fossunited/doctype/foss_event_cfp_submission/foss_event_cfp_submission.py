@@ -97,8 +97,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_session_type_permissions()
 
     def after_insert(self):
-        if self.has_value_changed("subscribe_chapter_mailing"):
-            self.handle_email_group("CFP Proposers")
+        # Always handle initial subscription on insert
+        self.handle_email_group("CFP Proposers")
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
