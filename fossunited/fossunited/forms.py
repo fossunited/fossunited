@@ -29,6 +29,13 @@ def update_submission(doctype, submission, fields, custom):
             frappe.PermissionError,
         )
 
+    # Add authorization check
+    if not check_if_submitter(doctype, submission):
+        frappe.throw(
+            "You are not authorized to update this submission",
+            frappe.PermissionError,
+        )
+
     fields = json.loads(fields)
     custom = json.loads(custom)
 

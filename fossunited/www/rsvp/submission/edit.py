@@ -27,7 +27,7 @@ def get_form_fields(doctype, submission):
             continue
         if field["fieldname"] == "subscribe_chapter_mailing":
             field["label"] = (
-                f"Yes, I’d like to receive updates about future events from {submission.chapter}."
+                f"Yes, I'd like to receive updates about future events from {submission.chapter}."
             )
         if field["fieldname"] == "confirm_attendance":
             continue
