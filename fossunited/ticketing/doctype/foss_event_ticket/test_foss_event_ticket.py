@@ -4,7 +4,11 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
-from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
+from fossunited.tests.utils import (
+    insert_test_chapter,
+    insert_test_event,
+    insert_test_ticket,
+)
 
 
 class TestFOSSEventTicket(FrappeTestCase):
@@ -166,6 +170,81 @@ class TestFOSSEventTicket(FrappeTestCase):
 
         self.assertTrue(
             frappe.db.exists(
-                "Email Group Member", {"email": attendee_email, "email_group": email_group}
+                "Email Group Member",
+                {"email": attendee_email, "email_group": email_group},
             )
         )
+
+    def test_remove_from_email_group_on_unsubscribe(self):
+        attendee_email = "test4@example.com"
+
+        # Given: Ticket created with subscription ON (default behavior)
+        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+
+        email_group_id = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.event.name,
+                "document_type": EVENT,
+                "group_type": "Event Participants",
+            },
+            "name",
+        )
+
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": email_group_id},
+            )
+        )
+
+        # When: Ticket is updated to unsubscribe
+        ticket.subscribe_chapter_mailing = 0
+        ticket.save()
+
+        # Then: Email should be removed from email group
+        self.assertFalse(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": email_group_id},
+            )
+        )
+
+        ticket.delete(force=True)
+
+    def test_resub_from_email_group(self):
+        attendee_email = "test4@example.com"
+
+        # Insert with default subscription (subscribe_chapter_mailing=1)
+        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+
+        ticket.subscribe_chapter_mailing = 0
+        ticket.handle_add_to_email_group()
+        ticket.save()
+
+        email_group_id = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.event.name,
+                "document_type": EVENT,
+                "group_type": "Event Participants",
+            },
+            "name",
+        )
+
+        self.assertFalse(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": email_group_id},
+            )
+        )
+        ticket.subscribe_chapter_mailing = 1
+        ticket.save()
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": email_group_id},
+            )
+        )
+
+        ticket.delete(force=True)

@@ -31,7 +31,8 @@ class TestFOSSChapter(FrappeTestCase):
         new_member = frappe.get_doc(USER_PROFILE, {"user": "test1@example.com"})
 
         chapter.append(
-            "chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"}
+            "chapter_members",
+            {"chapter_member": new_member.name, "role": "Core Team Member"},
         )
         chapter.save()
 
@@ -52,7 +53,8 @@ class TestFOSSChapter(FrappeTestCase):
         )
         for new_member in new_members:
             chapter.append(
-                "chapter_members", {"chapter_member": new_member.name, "role": "Core Team Member"}
+                "chapter_members",
+                {"chapter_member": new_member.name, "role": "Core Team Member"},
             )
         chapter.save()
 
@@ -91,3 +93,30 @@ class TestFOSSChapter(FrappeTestCase):
         # Then an exception should be raised
         with self.assertRaises(frappe.UniqueValidationError):
             insert_test_chapter(slug=chapter.slug)
+
+    def test_email_groups_are_created_on_chapter_insert(self):
+        expected_group_types = [
+            "Chapter Event Participants",
+            "Chapter CFP Proposers",
+        ]
+
+        for group_type in expected_group_types:
+            self.assertTrue(
+                frappe.db.exists(
+                    "Email Group",
+                    {
+                        "group_type": group_type,
+                        "reference_document": self.chapter.name,
+                        "document_type": CHAPTER,
+                    },
+                ),
+                msg=f"Email Group '{group_type}' not created for event {self.chapter.name}",
+            )
+
+        frappe.db.delete(
+            "Email Group",
+            {
+                "reference_document": self.chapter.name,
+                "document_type": CHAPTER,
+            },
+        )

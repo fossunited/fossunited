@@ -51,6 +51,8 @@ class FOSSHackathonParticipant(Document):
         self.handle_localhost_rejection()
         if self.has_value_changed("localhost"):
             self.update_request_status()
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_add_to_email_group()
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:

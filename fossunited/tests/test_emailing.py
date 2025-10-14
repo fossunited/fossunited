@@ -4,7 +4,9 @@ from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.emailing import (
     add_to_email_group,
+    create_email_group,
     create_newsletter_campaign,
+    remove_from_email_group,
     send_campaign,
     send_test_email,
 )
@@ -27,6 +29,7 @@ class TestEmailing(FrappeTestCase):
         frappe.set_user("Administrator")
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.delete_doc(EVENT, self.event.name, force=True)
+        frappe.delete_doc("Email Group", {"reference_document": self.event.name})
 
     def setup_campaign(self):
         email_group = frappe.get_doc(
@@ -38,7 +41,11 @@ class TestEmailing(FrappeTestCase):
             },
         )
 
-        recipient_emails = ["test2@example.com", "test3@example.com", "test5@example.com"]
+        recipient_emails = [
+            "test2@example.com",
+            "test3@example.com",
+            "test5@example.com",
+        ]
         for email in recipient_emails:
             add_to_email_group(email_group.name, email)
 
@@ -74,3 +81,71 @@ class TestEmailing(FrappeTestCase):
         frappe.set_user(self.core_team_email)
 
         send_campaign(self.newsletter.name)
+
+    def test_create_email_group_creates_group(self):
+        group = create_email_group(
+            type="Event Participants",
+            reference_document=self.event.name,
+            document_type=self.event.doctype,
+        )
+
+        self.assertTrue(frappe.db.exists("Email Group", group.name))
+        self.assertEqual(group.reference_document, self.event.name)
+        self.assertEqual(group.document_type, self.event.doctype)
+        self.assertEqual(group.chapter, self.chapter.name)
+
+    def test_create_email_group_returns_existing(self):
+        # First call creates it
+        group1 = create_email_group(
+            type="Event Participants",
+            reference_document=self.event.name,
+            document_type=self.event.doctype,
+        )
+
+        # Second call should not create a new one
+        group2 = create_email_group(
+            type="Event Participants",
+            reference_document=self.event.name,
+            document_type=self.event.doctype,
+        )
+
+        self.assertEqual(group1.name, group2.name)
+
+        count = frappe.db.count("Email Group", {"name": group1.name})
+        self.assertEqual(count, 1)
+
+    def test_add_to_email_group_adds_member(self):
+        group = create_email_group(
+            type="Event Participants",
+            reference_document=self.event.name,
+            document_type=self.event.doctype,
+        )
+        email = "added@example.com"
+        add_to_email_group(group.name, email)
+
+        self.assertTrue(
+            frappe.db.exists("Email Group Member", {"email": email, "email_group": group.name})
+        )
+
+    def test_remove_from_email_group_removes_member(self):
+        group = create_email_group(
+            type="Event Participants",
+            reference_document=self.event.name,
+            document_type=self.event.doctype,
+        )
+        email = "remove@example.com"
+        add_to_email_group(group.name, email)
+
+        self.assertTrue(
+            frappe.db.exists("Email Group Member", {"email": email, "email_group": group.name})
+        )
+
+        remove_from_email_group(group.name, email)
+
+        self.assertFalse(
+            frappe.db.exists("Email Group Member", {"email": email, "email_group": group.name})
+        )
+
+    def test_add_to_nonexistent_email_group_raises(self):
+        with self.assertRaises(frappe.DoesNotExistError):
+            add_to_email_group("non-existent-group", "test@example.com")
