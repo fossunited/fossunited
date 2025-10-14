@@ -19,7 +19,18 @@
             {{ renderfield(field, submission) }}
           {% endfor %}
         </form>
-        <div class="foss-form-buttons">
+
+        <div class="foss-form-section">
+          <label class="foss-form-question text-base mb-2">Attendance Status</label>
+          <input type="hidden" name="status" id="status_input" value="{{ submission.status }}" />
+          <div class="status-toggle-cards d-flex gap-4 my-2">
+            <div class="status-card" data-status="Accepted">Accepted</div>
+            <div class="status-card" data-status="Pending">Pending</div>
+            <div class="status-card" data-status="Rejected">Rejected</div>
+          </div>
+        </div>
+
+        <div class="foss-form-buttons d-flex gap-4">
           <button class="primary-button" type="submit" id="update-rsvp" disabled="">
             {{ _("Update RSVP Form") }}
           </button>
@@ -46,12 +57,84 @@
     <div class="foss-form-description my-4">Edit your RSVP form for the event.</div>
   </div>
 {% endmacro %}
+
+{% block style %}
+  <style>
+    .status-card {
+      padding: 0.75rem 1.25rem;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+      font-weight: 500;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .status-toggle-cards {
+      display: flex;
+      gap: 1.5rem;
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .status-card:hover {
+      background-color: #f0f0f0;
+    }
+
+    .status-card.active[data-status='Accepted'] {
+      border-color: #0f766e;
+      background-color: #ecfdf5;
+      color: #0f766e;
+    }
+    .status-card.active[data-status='Pending'] {
+      border-color: #fef3c7;
+      background-color: #fffbeb;
+      color: #92400e;
+    }
+    .status-card.active[data-status='Rejected'] {
+      border-color: #fee2e2;
+      background-color: #fef2f2;
+      color: #991b1b;
+    }
+  </style>
+{% endblock %}
+
 {% block page_script %}
   <script>
     $(document).ready(function () {
       check_if_submitter()
       enable_update_button()
       set_mandatory_asterisk()
+
+      const currentStatus = $('#status_input').val()
+      $('.status-card').each(function () {
+        if ($(this).data('status') === currentStatus) {
+          $(this).addClass('active')
+        }
+      })
+
+      // Status card click handler
+      $('.status-card').on('click', function () {
+        $('.status-card').removeClass('active')
+        $(this).addClass('active')
+
+        const selectedStatus = $(this).data('status')
+        $('#status_input').val(selectedStatus)
+
+        if (selectedStatus === 'Rejected') {
+          $('#confirm_attendance').prop('checked', false)
+        } else {
+          $('#confirm_attendance').prop('checked', true)
+        }
+
+        $('#update-rsvp').prop('disabled', false)
+      })
+
+      // Enable update button on any change
+      $('.form-control').on('change input', function () {
+        $('#update-rsvp').prop('disabled', false)
+      })
 
       $('#update-rsvp').on('click', (e) => {
         update_rsvp()
@@ -117,8 +200,9 @@
         }
       })
 
+      submission['status'] = $('#status_input').val()
+
       let custom_answers = []
-      // for each value in submission, if the key has custom_question in it, then add it to custom answers as {question: field.data('label'), response: value}
       for (const key in submission) {
         if (key.includes('custom_question')) {
           const label = $(`[name="${key}"]`).data('label')
@@ -128,7 +212,6 @@
         }
       }
 
-      // removing empty string keys
       submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
 
       frappe.call({
