@@ -198,6 +198,23 @@ class TestFOSSEventTicket(FrappeTestCase):
             )
         )
 
+        # Verify initial membership in Chapter Event Participants group
+        chapter_group_id = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.chapter.name,
+                "document_type": CHAPTER,
+                "group_type": "Chapter Event Participants",
+            },
+            "name",
+        )
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": chapter_group_id},
+            )
+        )
+
         # When: Ticket is updated to unsubscribe
         ticket.subscribe_chapter_mailing = 0
         ticket.save()
@@ -211,15 +228,6 @@ class TestFOSSEventTicket(FrappeTestCase):
         )
 
         # Also verify removal from Chapter Event Participants group
-        chapter_group_id = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.chapter.name,
-                "document_type": CHAPTER,
-                "group_type": "Chapter Event Participants",
-            },
-            "name",
-        )
         self.assertFalse(
             frappe.db.exists(
                 "Email Group Member",

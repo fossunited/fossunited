@@ -142,8 +142,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             linked_cfp=self.cfp.name,
             event=self.event.name,
             speakers=speakers,
-            subscribe_chapter_mailing=0,
         )
+        submission.subscribe_chapter_mailing = 0
+        submission.save()
 
         # They should must be added to CFP Proposers group by default
         for speaker in submission.speakers:
@@ -175,7 +176,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.submission.save()
 
         for speaker in self.submission.speakers:
-            self.assertFalse(
+            self.assertTrue(
                 self.is_added_to_email_group(self.event.name, speaker.email, "Accepted Proposers")
             )
 

@@ -4,13 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.api.emailing import (
-    add_to_email_group,
-    create_email_group,
-    remove_from_email_group,
-)
+from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import (
-    CHAPTER,
     HACKATHON,
     HACKATHON_LOCALHOST,
 )
@@ -70,31 +65,17 @@ class FOSSHackathonParticipant(Document):
 
     def handle_add_to_email_group(self):
         # Check if user should be subscribed
-        should_subscribe = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
-
-        # Create or get the Event Participants group
-        hackathon_group = create_email_group(
-            type="Event Participants",
-            reference_document=self.hackathon,
-            document_type=HACKATHON,
-        )
-
-        # Create or get the Chapter Event Participants group
+        wants_subscription = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
-        chapter_group = create_email_group(
-            type="Chapter Event Participants",
-            reference_document=event_doc.chapter,
-            document_type=CHAPTER,
-        )
 
-        if should_subscribe:
-            # Add the email to both groups
-            add_to_email_group(hackathon_group.name, self.email)
-            add_to_email_group(chapter_group.name, self.email)
-        else:
-            # Remove the email from both groups
-            remove_from_email_group(hackathon_group.name, self.email)
-            remove_from_email_group(chapter_group.name, self.email)
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=event_doc.chapter,
+            event=self.hackathon,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=wants_subscription,
+            document_type_event=HACKATHON,
+        )
 
     def update_request_status(self):
         self.localhost_request_status = "Pending"

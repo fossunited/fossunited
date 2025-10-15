@@ -6,12 +6,8 @@ from typing import TYPE_CHECKING
 import frappe
 from frappe.model.document import Document
 
-from fossunited.api.emailing import (
-    add_to_email_group,
-    create_email_group,
-    remove_from_email_group,
-)
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
+from fossunited.api.emailing import handle_email_group_subscription
+from fossunited.doctype_ids import EVENT, EVENT_TICKET
 
 if TYPE_CHECKING:
     from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
@@ -100,31 +96,17 @@ class FOSSEventTicket(Document):
         # Check if user should be subscribed
         if not self.email:
             return
-        should_subscribe = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
+        wants_subscription = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
 
-        # Create or get the Event Participants group
-        event_group = create_email_group(
-            type="Event Participants",
-            reference_document=self.event,
-            document_type=EVENT,
-        )
-
-        # Create or get the Chapter Event Participants group
         event_doc = frappe.get_doc(EVENT, self.event)
-        chapter_group = create_email_group(
-            type="Chapter Event Participants",
-            reference_document=event_doc.chapter,
-            document_type=CHAPTER,
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=event_doc.chapter,
+            event=self.event,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=wants_subscription,
+            document_type_event=EVENT,
         )
-
-        if should_subscribe:
-            # Add the email to both groups
-            add_to_email_group(event_group.name, self.email)
-            add_to_email_group(chapter_group.name, self.email)
-        else:
-            # Remove the email from both groups
-            remove_from_email_group(event_group.name, self.email)
-            remove_from_email_group(chapter_group.name, self.email)
 
     def is_ticket_live(self):
         tickets_status = frappe.db.get_value(

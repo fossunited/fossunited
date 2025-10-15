@@ -3,11 +3,7 @@ from frappe.model.document import Document
 from frappe.utils import cint
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.api.emailing import (
-    add_to_email_group,
-    create_email_group,
-    remove_from_email_group,
-)
+from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
 logger = frappe.logger("rsvp_submission", allow_site=True, file_count=50)
@@ -52,7 +48,11 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if self.has_value_changed("subscribe_chapter_mailing") and not self.is_new():
+        if (
+            self.is_new()
+            or self.has_value_changed("subscribe_chapter_mailing")
+            or self.has_value_changed("status")
+        ):
             self.handle_add_to_email_group()
 
     def on_trash(self):
@@ -149,23 +149,11 @@ class FOSSEventRSVPSubmission(Document):
         wants_subscription = cint(self.subscribe_chapter_mailing) == 1
         is_accepted = self.status == "Accepted"
 
-        event_group = create_email_group(
-            type="Event Participants",
-            reference_document=self.event,
-            document_type=EVENT,
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=self.chapter,
+            event=self.event,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=is_accepted,
+            document_type_event=EVENT,
         )
-        chapter_group = create_email_group(
-            type="Chapter Event Participants",
-            reference_document=self.chapter,
-            document_type=CHAPTER,
-        )
-
-        if wants_subscription and is_accepted:
-            logger.info(f"[Email Group] Subscribing {self.email} to {event_group.name}")
-            add_to_email_group(event_group.name, self.email)
-        elif wants_subscription:
-            add_to_email_group(chapter_group.name, self.email)
-        else:
-            logger.info(f"[Email Group] Unsubscribing {self.email} from {event_group.name}")
-            remove_from_email_group(event_group.name, self.email)
-            remove_from_email_group(chapter_group.name, self.email)

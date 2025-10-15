@@ -59,7 +59,10 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # When an RSVP response is done by a user
         frappe.set_user("Guest")
         insert_rsvp_submission(
-            linked_rsvp=self.rsvp.name, email=WEBSITE_USER, subscribe_chapter_mailing=1
+            linked_rsvp=self.rsvp.name,
+            email=WEBSITE_USER,
+            subscribe_chapter_mailing=1,
+            status="Accepted",
         )
 
         # Then the email should be added to an email group linked to event for participants

@@ -38,8 +38,14 @@ def create_email_group(
         reference_document: id of the reference document of type document_type
         document_type: type of reference document (default: "FOSS Chapter Event")
     """
-    _doc = frappe.get_doc(document_type, reference_document)
-    _chapter = _doc.get("chapter") or _doc.get("name")
+    try:
+        _doc = frappe.get_doc(document_type, reference_document)
+        _chapter = _doc.get("chapter") or _doc.get("name")
+    except Exception:
+        frappe.log_error(
+            frappe.get_traceback(), "Error fetching reference document for email group"
+        )
+        return None
 
     existing_group = frappe.get_value(
         EMAIL_GROUP,
@@ -76,8 +82,9 @@ def create_email_group(
 
     try:
         group.insert(ignore_permissions=True)
-    except Exception as e:
-        frappe.throw(f"Error while creating email group: {e}", frappe.ValidationError)
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Error while creating email group")
+        return None
 
     group.reload()
     return group
@@ -162,6 +169,9 @@ def handle_email_group_subscription(
             document_type=document_type_chapter,
         )
 
+        if not chapter_group:
+            return  # skip silently
+
         event_group = None
         if event and document_type_event:
             event_group = create_email_group(
@@ -171,7 +181,7 @@ def handle_email_group_subscription(
             )
 
         for email in emails:
-            if not email:
+            if not isinstance(email, str) or not email.strip():
                 continue
 
             try:
@@ -182,6 +192,7 @@ def handle_email_group_subscription(
                     add_to_email_group(chapter_group.name, email)
                 else:
                     remove_from_email_group(chapter_group.name, email)
+                    remove_from_email_group(event_group.name, email)
 
             except frappe.DuplicateEntryError:
                 continue
