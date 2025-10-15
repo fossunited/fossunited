@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 import frappe
 
@@ -14,7 +14,8 @@ from fossunited.doctype_ids import (
 )
 
 EMAIL_GROUP_TYPES = Literal[
-    "Chapter Main",
+    "Chapter Event Participants",
+    "Chapter CFP Proposers",
     "Event Participants",
     "CFP Proposers",
     "Accepted Proposers",
@@ -29,17 +30,24 @@ def create_email_group(
     document_type: str = EVENT,
 ):
     """
-    Create an email group linked to the event
+    Ensure an email group exists for the given document.
+    Returns the existing group or creates a new one.
 
     Args:
         type: type of email group
         reference_document: id of the reference document of type document_type
         document_type: type of reference document (default: "FOSS Chapter Event")
     """
-    _doc = frappe.get_doc(document_type, reference_document)
-    _chapter = _doc.get("chapter")
+    try:
+        _doc = frappe.get_doc(document_type, reference_document)
+        _chapter = _doc.get("chapter") or _doc.get("name")
+    except Exception:
+        frappe.log_error(
+            frappe.get_traceback(), "Error fetching reference document for email group"
+        )
+        return None
 
-    if frappe.db.exists(
+    existing_group = frappe.get_value(
         EMAIL_GROUP,
         {
             "reference_document": reference_document,
@@ -47,21 +55,24 @@ def create_email_group(
             "chapter": _chapter,
             "group_type": type,
         },
-    ):
-        raise frappe.ValidationError("Email Group already exists for this event")
+        "name",
+    )
+    if existing_group:
+        return frappe.get_doc(EMAIL_GROUP, existing_group)
 
-    # This is done to prevent cases when event id and hackathon id are equal
-    group_title = ""
-    if document_type == EVENT:
+    if document_type == CHAPTER:
+        group_title = f"{type}-{reference_document}"
+    elif document_type == EVENT:
         group_title = f"{type}-{reference_document}-Event"
     else:
         group_title = f"{type}-{reference_document}-Hackathon"
 
-    _group_title = group_title[:140]
+    group_title = group_title[:140]
+
     group = frappe.get_doc(
         {
             "doctype": EMAIL_GROUP,
-            "title": _group_title,
+            "title": group_title,
             "chapter": _chapter,
             "reference_document": reference_document,
             "document_type": document_type,
@@ -71,8 +82,9 @@ def create_email_group(
 
     try:
         group.insert(ignore_permissions=True)
-    except Exception as e:
-        frappe.throw(f"Error while creating email group: {e}", frappe.ValidationError)
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Error while creating email group")
+        return None
 
     group.reload()
     return group
@@ -86,15 +98,107 @@ def add_to_email_group(email_group: str, email: str):
         email_group: id of email group
         email: email to be added to the group
     """
+    logger = frappe.logger("email_group")  # Logs to logs/email_group.log
 
     if not frappe.db.exists(EMAIL_GROUP, email_group):
         frappe.throw("This email group does not exist", frappe.DoesNotExistError)
 
     if frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email}):
-        frappe.throw("Email already a part of this email group", frappe.DuplicateEntryError)
+        logger.info(f"Email '{email}' already exists in group '{email_group}'")
+        return
 
     member = frappe.get_doc({"doctype": EMAIL_MEMBER, "email_group": email_group, "email": email})
     member.insert(ignore_permissions=True)
+    logger.info(f"Email '{email}' added to group '{email_group}'")
+
+
+def remove_from_email_group(email_group: str, email: str):
+    """
+    Remove an email from an email group.
+    """
+    logger = frappe.logger("email_group")
+
+    if not frappe.db.exists(EMAIL_GROUP, email_group):
+        frappe.throw("This email group does not exist", frappe.DoesNotExistError)
+
+    member_name = frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email})
+    if not member_name:
+        logger.info(f"Email '{email}' not found in group '{email_group}', nothing to remove")
+        return
+
+    frappe.delete_doc(EMAIL_MEMBER, member_name, ignore_permissions=True)
+    logger.info(f"Email '{email}' removed from group '{email_group}'")
+
+
+def handle_email_group_subscription(
+    emails: list[str],
+    chapter: str,
+    event: Optional[str] = None,
+    event_type: str = "Event Participants",
+    chapter_type: str = "Chapter Event Participants",
+    subscribe_to_chapter: bool = True,
+    subscribe_to_event: bool = True,
+    document_type_event: Optional[str] = None,
+    document_type_chapter: str = CHAPTER,
+):
+    """
+    Sync email(s) to event and/or chapter email groups.
+
+    Always adds to event group. Chapter group is conditional.
+
+    Args:
+        emails (list): List of email addresses to process.
+        chapter (str): Chapter name.
+        event (str, optional): Event reference.
+        event_type (str): Event group type.
+        chapter_type (str): Chapter group type.
+        subscribe_to_chapter (bool): Whether to add/remove from chapter group.
+        subscribe_to_event (bool): Whether to add/remove from event group.
+        document_type_event (str): DocType of the event (e.g. "Event", "Hackathon").
+        document_type_chapter (str): DocType of the chapter (default: "Chapter").
+    """
+
+    if not emails or not chapter:
+        return
+
+    try:
+        # Always create chapter group
+        chapter_group = create_email_group(
+            type=chapter_type,
+            reference_document=chapter,
+            document_type=document_type_chapter,
+        )
+
+        if not chapter_group:
+            return  # skip silently
+
+        event_group = None
+        if event and document_type_event:
+            event_group = create_email_group(
+                type=event_type,
+                reference_document=event,
+                document_type=document_type_event,
+            )
+
+        for email in emails:
+            if not isinstance(email, str) or not email.strip():
+                continue
+
+            try:
+                if subscribe_to_event:
+                    add_to_email_group(event_group.name, email)
+                else:
+                    remove_from_email_group(event_group.name, email)
+
+                if subscribe_to_chapter:
+                    add_to_email_group(chapter_group.name, email)
+                else:
+                    remove_from_email_group(chapter_group.name, email)
+            except frappe.DuplicateEntryError:
+                continue
+
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "sync_email_group_subscription failed")
 
 
 @frappe.whitelist()

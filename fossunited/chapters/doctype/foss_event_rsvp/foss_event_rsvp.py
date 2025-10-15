@@ -75,6 +75,11 @@ class FOSSEventRSVP(WebsiteGenerator):
                 "options": "\nStudent\nProfessional\nOther",
                 "reqd": 1,
             },
+            {
+                "fieldname": "subscribe_chapter_mailing",
+                "fieldtype": "Check",
+                "label": f"Yes, I'd like to receive email updates about future events from {self.chapter}.",  # noqa: E501
+            },
         ]
         form_fields.extend(self.get_custom_questions())
         context.form_fields = form_fields

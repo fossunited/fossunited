@@ -3,6 +3,7 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
+    CHAPTER,
     EVENT,
     PROPOSAL,
 )
@@ -126,3 +127,95 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         return bool(
             frappe.db.exists("Email Group Member", {"email": email, "email_group": email_group})
         )
+
+    def test_no_email_group_when_unsubscribed(self):
+        # Given a CFP form and submission
+        speakers = [
+            {
+                "full_name": fake.name(),
+                "email": "nosubscribe@example.com",
+                "designation": fake.job(),
+                "organization": fake.company(),
+                "bio": "Test Submission",
+            }
+        ]
+        submission = insert_cfp_submission(
+            linked_cfp=self.cfp.name,
+            event=self.event.name,
+            speakers=speakers,
+        )
+        submission.subscribe_chapter_mailing = 0
+        submission.save()
+
+        # They should must be added to CFP Proposers group by default
+        for speaker in submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
+            )
+        chapter_group = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.chapter.name,
+                "document_type": CHAPTER,
+                "group_type": "Chapter CFP Proposers",
+            },
+        )
+        submission.delete(force=True, ignore_permissions=True)
+
+        for sp in submission.speakers:
+            self.assertFalse(
+                frappe.db.exists(
+                    "Email Group Member",
+                    {"email": sp.email, "email_group": chapter_group},
+                )
+            )
+
+    def test_status_change_no_add_when_unsubscribed(self):
+        # Given a submission with mailing unsubscribed
+        self.submission.subscribe_chapter_mailing = 0
+        self.submission.save()
+
+        frappe.set_user(CoreTeam)
+        self.submission.status = "Approved"
+        self.submission.save()
+
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event.name, speaker.email, "Accepted Proposers")
+            )
+
+    def test_removal_from_email_group_on_unsubscribe(self):
+        # Given a submission with subscription enabled
+        self.assertEqual(self.submission.subscribe_chapter_mailing, 1)
+
+        for speaker in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
+            )
+
+        # When user unsubscribes & is rejected
+        self.submission.subscribe_chapter_mailing = 0
+        self.submission.status = "Rejected"
+        self.submission.save()
+
+        # they should not be in chapter group, can be in cfp proposers group
+        for speaker in self.submission.speakers:
+            chapter_group = frappe.db.get_value(
+                "Email Group",
+                {
+                    "reference_document": self.chapter.name,
+                    "document_type": CHAPTER,
+                    "group_type": "Chapter CFP Proposers",
+                },
+            )
+            self.assertFalse(
+                frappe.db.exists(
+                    "Email Group Member",
+                    {"email": speaker.email, "email_group": chapter_group},
+                )
+            )
+        # should still present in event CFP Proposers
+        for sp in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event.name, sp.email, "CFP Proposers")
+            )

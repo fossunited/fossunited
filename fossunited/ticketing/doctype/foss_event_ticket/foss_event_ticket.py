@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import frappe
 from frappe.model.document import Document
 
-from fossunited.api.emailing import add_to_email_group, create_email_group
+from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import EVENT, EVENT_TICKET
 
 if TYPE_CHECKING:
@@ -24,7 +24,9 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
         from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (  # noqa: E501
             FOSSTicketCustomField,
         )
@@ -39,6 +41,7 @@ class FOSSEventTicket(Document):
         is_transfer_ticket: DF.Check
         organization: DF.Data | None
         razorpay_payment: DF.Link | None
+        subscribe_chapter_mailing: DF.Check
         tier: DF.Data | None
         tshirt_delivered: DF.Check
         tshirt_size: DF.Data | None
@@ -82,37 +85,28 @@ class FOSSEventTicket(Document):
             frappe.throw("Ticket sale are closed for this event!", frappe.PermissionError)
 
     def after_insert(self):
-        self.handle_add_to_email_group()
         self.check_max_tickets()
+        self.handle_add_to_email_group()
+
+    def before_save(self):
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_add_to_email_group()
 
     def handle_add_to_email_group(self):
-        if not frappe.db.exists(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-        ):
-            create_email_group(
-                type="Event Participants",
-                reference_document=self.event,
-                document_type=EVENT,
-            )
+        # Check if user should be subscribed
+        if not self.email:
+            return
+        wants_subscription = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
 
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-            ["name"],
+        event_doc = frappe.get_doc(EVENT, self.event)
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=event_doc.chapter,
+            event=self.event,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=wants_subscription,
+            document_type_event=EVENT,
         )
-        try:
-            add_to_email_group(email_group, self.email)
-        except frappe.DuplicateEntryError:
-            pass
 
     def is_ticket_live(self):
         tickets_status = frappe.db.get_value(

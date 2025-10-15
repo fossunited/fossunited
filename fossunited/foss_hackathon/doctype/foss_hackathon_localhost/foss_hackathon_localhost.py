@@ -159,14 +159,16 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
 
     def get_attending_stat(self):
         attending_count = frappe.db.count(
-            HACKATHON_PARTICIPANT, {"localhost": self.name, "localhost_request_status": "Accepted"}
+            HACKATHON_PARTICIPANT,
+            {"localhost": self.name, "localhost_request_status": "Accepted"},
         )
 
         return attending_count
 
     def get_interested_stat(self):
         pending_participants = frappe.db.count(
-            HACKATHON_PARTICIPANT, {"localhost": self.name, "localhost_request_status": "Pending"}
+            HACKATHON_PARTICIPANT,
+            {"localhost": self.name, "localhost_request_status": "Pending"},
         )
         localhost_likes = frappe.db.count(
             "Comment",

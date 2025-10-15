@@ -1,9 +1,12 @@
 import frappe
 from frappe.model.document import Document
+from frappe.utils import cint
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.api.emailing import add_to_email_group, create_email_group
+from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
+
+logger = frappe.logger("rsvp_submission", allow_site=True, file_count=50)
 
 
 class FOSSEventRSVPSubmission(Document):
@@ -30,6 +33,7 @@ class FOSSEventRSVPSubmission(Document):
         name1: DF.Data
         status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F722, F821
         submitted_by: DF.Link | None
+        subscribe_chapter_mailing: DF.Check
     # end: auto-generated types
 
     def validate(self):
@@ -44,8 +48,27 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if self.has_value_changed("status") and not self.is_new():
+        if (
+            self.has_value_changed("subscribe_chapter_mailing")
+            or self.has_value_changed("status")
+            or self.has_value_changed("confirm_attendance")
+        ):
             self.handle_add_to_email_group()
+
+    def on_trash(self):
+        # Remove from both event and chapter groups on delete
+        try:
+            if self.email:
+                handle_email_group_subscription(
+                    emails=[self.email],
+                    chapter=self.chapter,
+                    event=self.event,
+                    subscribe_to_chapter=False,
+                    subscribe_to_event=False,
+                    document_type_event=EVENT,
+                )
+        except frappe.ValidationError as e:
+            frappe.log_error(frappe.get_traceback(), f"on_trash unsubscribe failed: {e}")
 
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
@@ -109,13 +132,12 @@ class FOSSEventRSVPSubmission(Document):
         return max_count
 
     def handle_submission_status(self):
-        # Check if the RSVP is accepting all incoming responses
+        # If requires_host_approval == True, but the status is accepted at time of creation,
+        # Throw a frappe.PermissionError
         requires_host_approval = bool(
             frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "requires_host_approval")
         )
 
-        # If requires_host_approval == True, but the status is accepted at time of creation,
-        # Throw a frappe.PermissionError
         if requires_host_approval and self.status == "Accepted":
             frappe.throw("Invalid action. Status cannot be `Accepted`.", frappe.PermissionError)
 
@@ -128,30 +150,17 @@ class FOSSEventRSVPSubmission(Document):
         self.status = "Accepted"
 
     def handle_add_to_email_group(self):
-        if self.status != "Accepted":
+        wants_subscription = cint(self.subscribe_chapter_mailing) == 1
+        is_accepted = self.status == "Accepted"
+        is_attending = cint(self.confirm_attendance) == 1
+        if not self.email:
             return
 
-        if not frappe.db.exists(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-        ):
-            create_email_group(
-                type="Event Participants",
-                reference_document=self.event,
-                document_type=EVENT,
-            )
-
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": "Event Participants",
-            },
-            ["name"],
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=self.chapter,
+            event=self.event,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=is_accepted and is_attending,
+            document_type_event=EVENT,
         )
-        add_to_email_group(email_group, self.email)

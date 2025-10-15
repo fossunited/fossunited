@@ -194,6 +194,13 @@
                   label="Email"
                 />
                 <FormControl
+                  v-model="attendee.subscribe_chapter_mailing"
+                  type="checkbox"
+                  size="sm"
+                  variant="subtle"
+                  label="Yes, I’d like to receive email updates about future events."
+                />
+                <FormControl
                   v-model="attendee.organization"
                   type="text"
                   size="sm"
@@ -524,6 +531,7 @@ watch(
           email: '',
           placeholder: randomPlaceholder,
           designation: '',
+          subscribe_chapter_mailing: true,
           organization: '',
           wants_tshirt: false,
           tshirt_size: 'M',

@@ -62,3 +62,32 @@ class TestFOSSChapterEvent(FrappeTestCase):
 
         # Test 3: Same chapter, different slug (should succeed)
         insert_test_event(chapter=original_chapter)
+
+    def test_email_groups_are_created_on_event_insert(self):
+        expected_group_types = [
+            "Event Participants",
+            "CFP Proposers",
+            "Accepted Proposers",
+            "Rejected Proposers",
+        ]
+
+        for group_type in expected_group_types:
+            self.assertTrue(
+                frappe.db.exists(
+                    "Email Group",
+                    {
+                        "group_type": group_type,
+                        "reference_document": self.event.name,
+                        "document_type": EVENT,
+                    },
+                ),
+                msg=f"Email Group '{group_type}' not created for event {self.event.name}",
+            )
+
+        frappe.db.delete(
+            "Email Group",
+            {
+                "reference_document": self.event.name,
+                "document_type": EVENT,
+            },
+        )

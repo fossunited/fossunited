@@ -4,8 +4,11 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.api.emailing import add_to_email_group, create_email_group
-from fossunited.doctype_ids import EMAIL_GROUP, HACKATHON, HACKATHON_LOCALHOST
+from fossunited.api.emailing import handle_email_group_subscription
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_LOCALHOST,
+)
 
 
 class FOSSHackathonParticipant(Document):
@@ -27,13 +30,14 @@ class FOSSHackathonParticipant(Document):
             "Pending", "Pending Confirmation", "Accepted", "Rejected"  # noqa: F722, F821
         ]
         organization: DF.Data | None
+        subscribe_chapter_mailing: DF.Check
         user: DF.Link | None
         user_profile: DF.Link | None
         wants_to_attend_locally: DF.Check
     # end: auto-generated types
 
     def after_insert(self):
-        self.add_to_email_group()
+        self.handle_add_to_email_group()
 
     def before_save(self):
         if self.has_value_changed("wants_to_attend_locally"):
@@ -41,37 +45,37 @@ class FOSSHackathonParticipant(Document):
         self.handle_localhost_rejection()
         if self.has_value_changed("localhost"):
             self.update_request_status()
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_add_to_email_group()
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
             frappe.throw("No LocalHost value provided", frappe.ValidationError)
 
-    def add_to_email_group(self):
-        if not frappe.db.exists(
-            EMAIL_GROUP,
-            {
-                "document_type": HACKATHON,
-                "reference_document": self.hackathon,
-                "group_type": "Event Participants",
-            },
-        ):
-            create_email_group(
-                type="Event Participants",
-                reference_document=self.hackathon,
-                document_type=HACKATHON,
+    def on_trash(self):
+        try:
+            # remove from mailing group as well
+            self.subscribe_chapter_mailing = 0
+            self.handle_add_to_email_group()
+        except Exception:
+            frappe.log_error(
+                frappe.get_traceback(),
+                "Error in on_trash: Unsubscribing from email groups",
             )
 
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.hackathon,
-                "document_type": HACKATHON,
-                "group_type": "Event Participants",
-            },
-            ["name"],
-        )
+    def handle_add_to_email_group(self):
+        # Check if user should be subscribed
+        wants_subscription = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
+        event_doc = frappe.get_doc(HACKATHON, self.hackathon)
 
-        add_to_email_group(email_group, self.email)
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=event_doc.chapter,
+            event=self.hackathon,
+            subscribe_to_chapter=wants_subscription,
+            subscribe_to_event=wants_subscription,
+            document_type_event=HACKATHON,
+        )
 
     def update_request_status(self):
         self.localhost_request_status = "Pending"
@@ -100,7 +104,8 @@ class FOSSHackathonParticipant(Document):
 
         if (self.localhost == prev_doc.localhost) and self.localhost_request_status == "Rejected":
             frappe.throw(
-                "You have already been rejected from this localhost.", frappe.PermissionError
+                "You have already been rejected from this localhost.",
+                frappe.PermissionError,
             )
 
         self.localhost_request_status = "Pending"

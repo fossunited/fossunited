@@ -58,12 +58,18 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # Given an RSVP form for an event
         # When an RSVP response is done by a user
         frappe.set_user("Guest")
-        insert_rsvp_submission(linked_rsvp=self.rsvp.name, email=WEBSITE_USER)
+        insert_rsvp_submission(
+            linked_rsvp=self.rsvp.name,
+            email=WEBSITE_USER,
+            subscribe_chapter_mailing=1,
+            status="Accepted",
+        )
 
         # Then the email should be added to an email group linked to event for participants
         self.assertTrue(
             frappe.db.exists(
-                "Email Group Member", {"email": WEBSITE_USER, "email_group": self.email_group}
+                "Email Group Member",
+                {"email": WEBSITE_USER, "email_group": self.email_group},
             )
         )
 
@@ -112,6 +118,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         submission.status = "Accepted"
         # Then it should save without any errors
         submission.save()
+        submission.delete(force=True, ignore_permissions=True)
 
     def test_invalid_status_at_creation(self):
         # Given an rsvp with requires_host_approval = False
@@ -147,6 +154,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # Then the status should change without errors
         submission.status = "Rejected"
         submission.save()
+        submission.delete(force=True, ignore_permissions=True)
 
     def test_add_to_email_on_acceptance(self):
         # Given an RSVP form which requires host approval
@@ -176,6 +184,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # When status is changed to "Accepted"
         frappe.set_user(CORE_TEAM)
         submission.status = "Accepted"
+        submission.subscribe_chapter_mailing = 1
         submission.save()
 
         # Then the email should be added to email group
@@ -188,6 +197,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
                 },
             )
         )
+        submission.delete(force=True, ignore_permissions=True)
 
     def test_no_add_to_email_on_rejection(self):
         # Given an RSVP form which requires host approval
@@ -229,6 +239,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
                 },
             )
         )
+        submission.delete(force=True, ignore_permissions=True)
 
     def test_submission_to_unpublished_form(self):
         # Given an rsvp form which is unpublished
@@ -242,3 +253,67 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         frappe.set_user("Guest")
         with self.assertRaises(frappe.ValidationError):
             insert_rsvp_submission(linked_rsvp=rsvp.name)
+
+    def test_email_group_is_not_duplicated(self):
+        frappe.set_user("Guest")
+
+        # First submission
+        sub1 = insert_rsvp_submission(
+            linked_rsvp=self.rsvp.name,
+            email="test@example.com",
+            subscribe_chapter_mailing=1,
+        )
+
+        # Trigger again by second submission
+        sub2 = insert_rsvp_submission(
+            linked_rsvp=self.rsvp.name,
+            email="another@example.com",
+            subscribe_chapter_mailing=1,
+        )
+
+        group_count = frappe.db.count(
+            "Email Group",
+            {
+                "reference_document": self.event.name,
+                "document_type": EVENT,
+                "group_type": "Event Participants",
+            },
+        )
+
+        # Only one email group should exist
+        self.assertEqual(group_count, 1)
+        sub1.delete(force=True, ignore_permissions=True)
+        sub2.delete(force=True, ignore_permissions=True)
+
+    def test_unsubscribe_from_email_group(self):
+        frappe.set_user("Guest")
+
+        # First subscribe
+        submission = insert_rsvp_submission(
+            linked_rsvp=self.rsvp.name,
+            email="unsubscribe@example.com",
+            subscribe_chapter_mailing=True,
+        )
+
+        # Confirm user is added
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": "unsubscribe@example.com", "email_group": self.email_group},
+            )
+        )
+
+        # Unsubscribe
+        frappe.set_user(CORE_TEAM)  # So user can update doc
+        submission.subscribe_chapter_mailing = 0
+        submission.confirm_attendance = 0
+        submission.save()
+
+        # Confirm user is removed
+        self.assertFalse(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": "unsubscribe@example.com", "email_group": self.email_group},
+            )
+        )
+        submission.delete(force=True, ignore_permissions=True)

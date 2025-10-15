@@ -6,7 +6,9 @@ import textwrap
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
-from fossunited.api.emailing import add_to_email_group, create_email_group
+from fossunited.api.emailing import (
+    handle_email_group_subscription,
+)
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP
 
 
@@ -69,6 +71,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]  # noqa: F821, F722
         submitted_by: DF.Link | None
+        subscribe_chapter_mailing: DF.Check
         talk_description: DF.TextEditor
         talk_reference: DF.Data | None
         talk_title: DF.Data
@@ -90,8 +93,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.set_scores()
         self.handle_status_change()
         self.validate_session_type_permissions()
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_email_group("CFP Proposers")
 
     def after_insert(self):
+        # Always handle initial subscription on insert
         self.handle_email_group("CFP Proposers")
 
     def set_route(self):
@@ -337,36 +343,20 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if self.status == "Rejected":
             self.handle_email_group("Rejected Proposers")
 
-    def handle_email_group(self, type) -> None:
-        if not frappe.db.exists(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": type,
-            },
-        ):
-            create_email_group(
-                type=type,
-                reference_document=self.event,
-                document_type=EVENT,
-            )
+    def handle_email_group(self, email_group_type) -> None:
+        emails = [s.email for s in self.speakers if s.email]
 
-        email_group = frappe.db.get_value(
-            "Email Group",
-            {
-                "reference_document": self.event,
-                "document_type": EVENT,
-                "group_type": type,
-            },
-            ["name"],
+        handle_email_group_subscription(
+            emails=emails,
+            chapter=self.chapter,
+            event=self.event,
+            event_type=email_group_type,
+            chapter_type="Chapter CFP Proposers",
+            # NOTE: We mandate subscribe to event mailing cause,
+            # ideally CFPs would require some communication to occur by team
+            # Again, event is temporary for event_duration. Hope logic sounds intentional?
+            # if not, please do raise an issue!
+            subscribe_to_event=True,
+            subscribe_to_chapter=frappe.utils.cint(self.subscribe_chapter_mailing) == 1,
+            document_type_event=EVENT,
         )
-
-        for speaker in self.speakers:
-            if not speaker.email:
-                continue
-
-            try:
-                add_to_email_group(email_group, speaker.email)
-            except frappe.DuplicateEntryError:
-                continue

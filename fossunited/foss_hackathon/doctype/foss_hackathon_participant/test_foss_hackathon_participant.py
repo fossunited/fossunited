@@ -57,11 +57,12 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
         frappe.set_user(self.PARTICIPANT_2)
 
         # Given a hackathon
-        # When a participant registers for this hackathon
+        # When a participant registers for this hackathon and subscribes for mailing
         participant = insert_test_hackathon_participant(
             hackathon_id=self.hackathon.name,
             email=frappe.session.user,
             user=frappe.session.user,
+            subscribe_chapter_mailing=1,
         )
 
         email_group_id = frappe.db.get_value(
@@ -113,3 +114,81 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
         # Then a permission error should be thrown
         with self.assertRaises(frappe.PermissionError):
             self.participant_1.save()
+
+    def test_remove_from_email_group_on_unsubscribe(self):
+        frappe.set_user(self.PARTICIPANT_2)
+
+        # Participant subscribes to email group
+        participant = insert_test_hackathon_participant(
+            hackathon_id=self.hackathon.name,
+            email=frappe.session.user,
+            user=frappe.session.user,
+            subscribe_chapter_mailing=1,
+        )
+
+        email_group_id = frappe.db.get_value(
+            EMAIL_GROUP,
+            {
+                "document_type": HACKATHON,
+                "reference_document": self.hackathon.name,
+                "group_type": "Event Participants",
+            },
+            "name",
+        )
+
+        self.assertTrue(
+            frappe.db.exists(
+                EMAIL_MEMBER,
+                {"email_group": email_group_id, "email": frappe.session.user},
+            )
+        )
+
+        # Participant unsubscribes (update subscription flag)
+        participant.subscribe_chapter_mailing = 0
+        participant.save()
+
+        # Ensure email is removed from the group
+        self.assertFalse(
+            frappe.db.exists(
+                EMAIL_MEMBER,
+                {"email_group": email_group_id, "email": frappe.session.user},
+            )
+        )
+
+        participant.delete(force=True, ignore_permissions=True)
+
+    def test_email_group_cleanup_on_participant_deletion(self):
+        frappe.set_user(self.PARTICIPANT_2)
+
+        # Step 1: Register with mailing subscription
+        participant = insert_test_hackathon_participant(
+            hackathon_id=self.hackathon.name,
+            email=frappe.session.user,
+            user=frappe.session.user,
+            subscribe_chapter_mailing=1,
+        )
+
+        email_group_id = frappe.db.get_value(
+            EMAIL_GROUP,
+            {
+                "document_type": HACKATHON,
+                "reference_document": self.hackathon.name,
+                "group_type": "Event Participants",
+            },
+            "name",
+        )
+
+        self.assertTrue(
+            frappe.db.exists(
+                EMAIL_MEMBER,
+                {"email_group": email_group_id, "email": frappe.session.user},
+            )
+        )
+
+        participant.delete(force=True, ignore_permissions=True)
+        self.assertFalse(
+            frappe.db.exists(
+                EMAIL_MEMBER,
+                {"email_group": email_group_id, "email": frappe.session.user},
+            )
+        )
