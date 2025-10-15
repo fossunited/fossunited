@@ -48,11 +48,7 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if (
-            self.is_new()
-            or self.has_value_changed("subscribe_chapter_mailing")
-            or self.has_value_changed("status")
-        ):
+        if self.has_value_changed("subscribe_chapter_mailing") or self.has_value_changed("status"):
             self.handle_add_to_email_group()
 
     def on_trash(self):
@@ -148,6 +144,8 @@ class FOSSEventRSVPSubmission(Document):
     def handle_add_to_email_group(self):
         wants_subscription = cint(self.subscribe_chapter_mailing) == 1
         is_accepted = self.status == "Accepted"
+        if not self.email:
+            return
 
         handle_email_group_subscription(
             emails=[self.email],

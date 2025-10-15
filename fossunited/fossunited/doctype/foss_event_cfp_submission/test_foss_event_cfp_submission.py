@@ -3,6 +3,7 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import (
+    CHAPTER,
     EVENT,
     PROPOSAL,
 )
@@ -155,16 +156,19 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             "Email Group",
             {
                 "reference_document": self.chapter.name,
-                "document_type": "FOSS Chapter",
+                "document_type": CHAPTER,
                 "group_type": "Chapter CFP Proposers",
             },
         )
-        self.assertFalse(
-            frappe.db.exists(
-                "Email Group Member",
-                {"email": speaker.email, "email_group": chapter_group},
+        submission.delete(force=True, ignore_permissions=True)
+
+        for sp in submission.speakers:
+            self.assertFalse(
+                frappe.db.exists(
+                    "Email Group Member",
+                    {"email": sp.email, "email_group": chapter_group},
+                )
             )
-        )
 
     def test_status_change_no_add_when_unsubscribed(self):
         # Given a submission with mailing unsubscribed
@@ -200,7 +204,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                 "Email Group",
                 {
                     "reference_document": self.chapter.name,
-                    "document_type": "FOSS Chapter",
+                    "document_type": CHAPTER,
                     "group_type": "Chapter CFP Proposers",
                 },
             )
@@ -210,7 +214,8 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                     {"email": speaker.email, "email_group": chapter_group},
                 )
             )
-        # still present in event CFP Proposers
-        self.assertTrue(
-            self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
-        )
+        # should still present in event CFP Proposers
+        for sp in self.submission.speakers:
+            self.assertTrue(
+                self.is_added_to_email_group(self.event.name, sp.email, "CFP Proposers")
+            )

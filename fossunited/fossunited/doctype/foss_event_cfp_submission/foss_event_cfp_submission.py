@@ -352,6 +352,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             event=self.event,
             event_type=email_group_type,
             chapter_type="Chapter CFP Proposers",
+            # NOTE: We mandate subscribe to event mailing cause,
+            # ideally CFPs would require some communication to occur by team
+            # Again, event is temporary for event_duration. Hope logic sounds intentional?
+            # if not, please do raise an issue!
             subscribe_to_event=True,
             subscribe_to_chapter=frappe.utils.cint(self.subscribe_chapter_mailing) == 1,
             document_type_event=EVENT,
