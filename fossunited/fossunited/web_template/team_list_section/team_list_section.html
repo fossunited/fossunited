@@ -1,32 +1,41 @@
 {% macro render_team_section(title, members, extra_info=None) %}
   {% if members %}
-    <div class="member-section">
-      <div class="header-container">
-        <h5>{{ title }}</h5>
-        {% if extra_info %}{{ extra_info | safe }}{% endif %}
+    <div class="member-section mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">{{ title }}</h5>
+        {% if extra_info %}
+          {{ extra_info | safe }}
+        {% endif %}
       </div>
-      <div class="teams-container">
+      <div class="row">
         {% for member in members %}
-          <a href="/u/{{ member.username }}" class="team-member-link">
-            <div class="team-member">
-              <div class="team-member-image">
-                <img
-                  src="{{ member.headshot if member.headshot else '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                  alt="{{ member.full_name }}"
-                />
+        <div class="col-md-4 p-6 d-flex">
+            <a href="/u/{{ member.username }}" class="w-100 text-decoration-none text-dark">
+              <div class="card h-100 pl-4 border shadow-sm hover-shadow" style="min-height: 160px;">
+                <div class="card-body d-flex align-items-center">
+                  <div class="flex-shrink-0 mr-10">
+                    <img
+                      src="{{ member.headshot if member.headshot else '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                      alt="{{ member.full_name }}"
+                      class="rounded-circle img-fluid"
+                      style="width: 80px; height: 80px; object-fit: cover;"
+                    />
+                  </div>
+                  <div>
+                    <h6 class="mb-1">{{ member.full_name }}</h6>
+                    <p class="mb-1 foss-mint">@{{ member.username }}</p>
+                    <p class="mb-0">{{ member.designation or "" }}</p>
+                  </div>
+                </div>
               </div>
-              <div class="team-member-details">
-                <h6>{{ member.full_name }}</h6>
-                <p style="color: hsl(var(--clr-foss-mint-500));">@{{ member.username }}</p>
-                <p>{{ member.designation }}</p>
-              </div>
-            </div>
-          </a>
+            </a>
+          </div>
         {% endfor %}
       </div>
     </div>
   {% endif %}
 {% endmacro %}
+
 {%
   set boardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
       "headshot", "designation"], filters={"org_role": "Board", "is_active": 1},
@@ -50,132 +59,27 @@
   set pastMembers = frappe.get_all("FOSS United Team", fields=["full_name",
   "username", "headshot", "designation"], filters={"is_active": 0,}, order_by ='full_name', limit_page_length=0)
 %}
+
 <style>
-  .team-member-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
-  .team-member-link:hover {
-    text-decoration: none !important;
-  }
-
-  .team-list-section {
-    display: flex;
-    font-family: Inter;
-  }
-
-  .header-container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .blog-link {
-    text-decoration: underline;
-  }
-
-  .team-list-container {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-    padding: 6rem 0rem 6rem 0rem;
-  }
-
-  .team-section {
-    display: flex;
-    gap: 5rem;
-    flex-direction: column;
-  }
-
-  .team-list-container h4 {
-    color: hsl(var(--clr-foss-mint-500));
-    letter-spacing: -0.08rem;
-    font-weight: var(--fw-semibold);
-  }
-
-  .member-section {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
-  .teams-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    row-gap: 3rem;
-    column-gap: 5rem;
-  }
-
-  .team-member {
-    display: flex;
-    flex-direction: row;
-    gap: 3rem;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 16px;
+  .hover-shadow:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
     transition: box-shadow 0.3s;
-    align-items: center;
-    height: 160px;
   }
+.foss-mint {
+  color: hsl(var(--clr-foss-mint-500));
+}
 
-  .team-member-link:hover .team-member {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .team-member-image {
-    display: flex;
-    justify-content: center;
-    max-width: 5rem;
-  }
-
-  .team-member-image img {
-    max-width: 5rem;
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-  }
-
-  .team-member-details {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .team-member-details h6 {
-    font-size: var(--text-xl);
-    font-weight: var(--fw-semibold);
-  }
-
-  .team-member-details a {
-    color: hsl(var(--clr-foss-mint-500));
-    font-size: var(--text-sm);
-    font-weight: var(--fw-medium);
-  }
-
-  .team-member-details p {
-    color: hsl(var(--clr-gray-500));
-    font-size: var(--text-sm);
-    font-weight: 500;
-  }
-
-  @media (max-width: 768px) {
-    .teams-container {
-      grid-template-columns: 1fr;
-    }
-  }
 </style>
+
 <div class="team-list-section container">
   <div class="team-list-container">
-    <h4>Meet the Workforce</h4>
-    <div class="team-section">
+    <h4 class="foss-mint">Meet the Workforce</h4>
+    <div class="team-section mt-10">
       {{ render_team_section("Board", boardMembers) }}
       {{ render_team_section("Governing Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
       {{ render_team_section("Full-time and Part-time Staff", staff) }}
       {{ render_team_section("Fellows and Interns", fellowsInterns) }}
-      <details>
-        <summary class="h5">Past Employees and Volunteers</summary>
-        {{ render_team_section("", pastMembers) }}
-      </details>
+      {{ render_team_section("Past Employees and Volunteers", pastMembers) }}
     </div>
   </div>
 </div>
