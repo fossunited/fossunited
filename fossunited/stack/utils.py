@@ -13,13 +13,18 @@ def get_stack_dict():
     for item in stacks:
         stack_dict[item.category].append(item)
 
-    # Sort categories alphabetically (case-insensitive), with "Past Utilities" at the end
+    # Sort categories alphabetically (case-insensitive), with "Not actively used" at the end
+    past_utilities_key = None
+    for cat in stack_dict:
+        if cat.lower() == "not actively used":
+            past_utilities_key = cat
+            break
     sorted_categories = sorted(
-        [cat for cat in stack_dict if cat.lower() != "past utilities"],
+        [cat for cat in stack_dict if cat != past_utilities_key],
         key=lambda x: x.lower(),
     )
-    if "Past Utilities" in stack_dict:
-        sorted_categories.append("Past Utilities")
+    if past_utilities_key:
+        sorted_categories.append(past_utilities_key)
 
     # Create an OrderedDict to maintain sorted order
     sorted_stack_dict = OrderedDict()
