@@ -150,6 +150,20 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             self.assertTrue(
                 self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
             )
+        chapter_group = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.chapter.name,
+                "document_type": "FOSS Chapter",
+                "group_type": "Chapter CFP Proposers",
+            },
+        )
+        self.assertFalse(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": speaker.email, "email_group": chapter_group},
+            )
+        )
 
     def test_status_change_no_add_when_unsubscribed(self):
         # Given a submission with mailing unsubscribed
@@ -195,3 +209,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                     {"email": speaker.email, "email_group": chapter_group},
                 )
             )
+        # still present in event CFP Proposers
+        self.assertTrue(
+            self.is_added_to_email_group(self.event.name, speaker.email, "CFP Proposers")
+        )

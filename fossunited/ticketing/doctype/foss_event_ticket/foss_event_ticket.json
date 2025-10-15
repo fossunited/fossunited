@@ -158,14 +158,14 @@
    "label": "Tshirt Delivered?"
   },
   {
-   "default": "1",
+   "default": "0",
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Mailing Group?"
   }
  ],
  "links": [],
- "modified": "2025-10-13 15:16:53.771108",
+ "modified": "2025-10-15 12:51:09.109565",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

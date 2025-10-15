@@ -186,3 +186,9 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
         )
 
         participant.delete(force=True, ignore_permissions=True)
+        self.assertFalse(
+            frappe.db.exists(
+                EMAIL_MEMBER,
+                {"email_group": email_group_id, "email": frappe.session.user},
+            )
+        )

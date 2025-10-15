@@ -210,6 +210,23 @@ class TestFOSSEventTicket(FrappeTestCase):
             )
         )
 
+        # Also verify removal from Chapter Event Participants group
+        chapter_group_id = frappe.db.get_value(
+            "Email Group",
+            {
+                "reference_document": self.chapter.name,
+                "document_type": CHAPTER,
+                "group_type": "Chapter Event Participants",
+            },
+            "name",
+        )
+        self.assertFalse(
+            frappe.db.exists(
+                "Email Group Member",
+                {"email": attendee_email, "email_group": chapter_group_id},
+            )
+        )
+
         ticket.delete(force=True)
 
     def test_resub_from_email_group(self):

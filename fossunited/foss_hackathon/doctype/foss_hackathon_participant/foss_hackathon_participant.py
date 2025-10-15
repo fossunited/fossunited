@@ -42,8 +42,7 @@ class FOSSHackathonParticipant(Document):
     # end: auto-generated types
 
     def after_insert(self):
-        if self.has_value_changed("subscribe_chapter_mailing"):
-            self.handle_add_to_email_group()
+        self.handle_add_to_email_group()
 
     def before_save(self):
         if self.has_value_changed("wants_to_attend_locally"):
@@ -58,9 +57,20 @@ class FOSSHackathonParticipant(Document):
         if self.wants_to_attend_locally and not self.localhost:
             frappe.throw("No LocalHost value provided", frappe.ValidationError)
 
+    def on_trash(self):
+        try:
+            # remove from mailing group as well
+            self.subscribe_chapter_mailing = 0
+            self.handle_add_to_email_group()
+        except Exception:
+            frappe.log_error(
+                frappe.get_traceback(),
+                "Error in on_trash: Unsubscribing from email groups",
+            )
+
     def handle_add_to_email_group(self):
         # Check if user should be subscribed
-        should_subscribe = self.subscribe_chapter_mailing == 1
+        should_subscribe = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
 
         # Create or get the Event Participants group
         hackathon_group = create_email_group(

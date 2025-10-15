@@ -93,6 +93,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 self.status = "Review Pending"
         self.set_route()
         self.set_scores()
+        if self.has_value_changed("subscribe_chapter_mailing"):
+            self.handle_email_group("CFP Proposers")
         self.handle_status_change()
         self.validate_session_type_permissions()
 

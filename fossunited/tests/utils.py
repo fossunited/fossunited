@@ -390,6 +390,7 @@ def insert_rsvp_submission(linked_rsvp: str, **kwargs):
         confirm_attendance (int, optional): Attendance confirmation status.
                                             Defaults to 1 (confirmed).
         custom_answers (list, optional): Answers to custom RSVP questions.
+        "subscribe_chapter_mailing": kwargs.get("subscribe_chapter_mailing"),
         **kwargs: Additional arguments to be passed to the RSVP submission.
 
     Returns:

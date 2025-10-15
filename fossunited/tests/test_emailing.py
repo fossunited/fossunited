@@ -29,7 +29,14 @@ class TestEmailing(FrappeTestCase):
         frappe.set_user("Administrator")
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.delete_doc(EVENT, self.event.name, force=True)
-        frappe.delete_doc("Email Group", {"reference_document": self.event.name})
+        # Delete all email groups for the event
+        groups = frappe.get_all(
+            "Email Group",
+            filters={"reference_document": self.event.name},
+            pluck="name",
+        )
+        for group_name in groups:
+            frappe.delete_doc("Email Group", group_name, force=True)
 
     def setup_campaign(self):
         email_group = frappe.get_doc(

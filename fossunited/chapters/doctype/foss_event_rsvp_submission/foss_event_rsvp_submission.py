@@ -55,6 +55,17 @@ class FOSSEventRSVPSubmission(Document):
         if self.has_value_changed("subscribe_chapter_mailing") and not self.is_new():
             self.handle_add_to_email_group()
 
+    def on_trash(self):
+        try:
+            # remove from mailing group as well
+            self.subscribe_chapter_mailing = 0
+            self.handle_add_to_email_group()
+        except Exception:
+            frappe.log_error(
+                frappe.get_traceback(),
+                "Error in on_trash: Unsubscribing from email groups",
+            )
+
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)

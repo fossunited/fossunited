@@ -113,10 +113,13 @@ class TestFOSSChapter(FrappeTestCase):
                 msg=f"Email Group '{group_type}' not created for event {self.chapter.name}",
             )
 
-        frappe.db.delete(
+        groups = frappe.get_all(
             "Email Group",
-            {
+            filters={
                 "reference_document": self.chapter.name,
                 "document_type": CHAPTER,
             },
+            pluck="name",
         )
+        for group_name in groups:
+            frappe.delete_doc("Email Group", group_name, force=True)

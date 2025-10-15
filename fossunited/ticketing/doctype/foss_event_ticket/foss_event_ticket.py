@@ -98,6 +98,8 @@ class FOSSEventTicket(Document):
 
     def handle_add_to_email_group(self):
         # Check if user should be subscribed
+        if not self.email:
+            return
         should_subscribe = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
 
         # Create or get the Event Participants group
