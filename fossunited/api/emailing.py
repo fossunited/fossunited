@@ -185,15 +185,15 @@ def handle_email_group_subscription(
                 continue
 
             try:
-                if event_group and subscribe_to_event:
+                if subscribe_to_event:
                     add_to_email_group(event_group.name, email)
+                else:
+                    remove_from_email_group(event_group.name, email)
 
                 if subscribe_to_chapter:
                     add_to_email_group(chapter_group.name, email)
                 else:
                     remove_from_email_group(chapter_group.name, email)
-                    remove_from_email_group(event_group.name, email)
-
             except frappe.DuplicateEntryError:
                 continue
 
