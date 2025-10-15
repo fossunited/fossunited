@@ -306,6 +306,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
         # Unsubscribe
         frappe.set_user(CORE_TEAM)  # So user can update doc
         submission.subscribe_chapter_mailing = 0
+        submission.confirm_attendance = 0
         submission.save()
 
         # Confirm user is removed

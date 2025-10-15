@@ -48,19 +48,27 @@ class FOSSEventRSVPSubmission(Document):
         self.handle_add_to_email_group()
 
     def before_save(self):
-        if self.has_value_changed("subscribe_chapter_mailing") or self.has_value_changed("status"):
+        if (
+            self.has_value_changed("subscribe_chapter_mailing")
+            or self.has_value_changed("status")
+            or self.has_value_changed("confirm_attendance")
+        ):
             self.handle_add_to_email_group()
 
     def on_trash(self):
+        # Remove from both event and chapter groups on delete
         try:
-            # remove from mailing group as well
-            self.subscribe_chapter_mailing = 0
-            self.handle_add_to_email_group()
-        except Exception:
-            frappe.log_error(
-                frappe.get_traceback(),
-                "Error in on_trash: Unsubscribing from email groups",
-            )
+            if self.email:
+                handle_email_group_subscription(
+                    emails=[self.email],
+                    chapter=self.chapter,
+                    event=self.event,
+                    subscribe_to_chapter=False,
+                    subscribe_to_event=False,
+                    document_type_event=EVENT,
+                )
+        except frappe.ValidationError as e:
+            frappe.log_error(frappe.get_traceback(), f"on_trash unsubscribe failed: {e}")
 
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
@@ -144,6 +152,7 @@ class FOSSEventRSVPSubmission(Document):
     def handle_add_to_email_group(self):
         wants_subscription = cint(self.subscribe_chapter_mailing) == 1
         is_accepted = self.status == "Accepted"
+        is_attending = cint(self.confirm_attendance) == 1
         if not self.email:
             return
 
@@ -152,6 +161,6 @@ class FOSSEventRSVPSubmission(Document):
             chapter=self.chapter,
             event=self.event,
             subscribe_to_chapter=wants_subscription,
-            subscribe_to_event=is_accepted,
+            subscribe_to_event=is_accepted and is_attending,
             document_type_event=EVENT,
         )

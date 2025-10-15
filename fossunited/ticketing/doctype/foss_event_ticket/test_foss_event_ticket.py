@@ -156,8 +156,9 @@ class TestFOSSEventTicket(FrappeTestCase):
 
         attendee_email = "test4@example.com"
         # When a ticket is created with attendee's email
-        insert_test_ticket(event=self.event.name, email=attendee_email)
-
+        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+        ticket.subscribe_chapter_mailing = 1
+        ticket.save()
         # Then the email should be added to an email group linked to event for participants
         email_group = frappe.db.get_value(
             "Email Group",
@@ -174,12 +175,15 @@ class TestFOSSEventTicket(FrappeTestCase):
                 {"email": attendee_email, "email_group": email_group},
             )
         )
+        ticket.delete(force=True)
 
     def test_remove_from_email_group_on_unsubscribe(self):
         attendee_email = "test4@example.com"
 
         # Given: Ticket created with subscription ON (default behavior)
         ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+        ticket.subscribe_chapter_mailing = 1
+        ticket.save()
 
         email_group_id = frappe.db.get_value(
             "Email Group",
