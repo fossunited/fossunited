@@ -2,7 +2,12 @@
   <Drawer v-model="open" title="Create Email Campaign">
     <div class="space-y-4 h-full">
       <p class="text-sm text-gray-600 -mt-4">Create email campaigns to be sent to users.</p>
-      <EmailFormTemplate v-model="data" :event="event" :chapter="chapter" />
+      <EmailFormTemplate
+        v-model="data"
+        :event="event"
+        :chapter="chapter"
+        :document_type="document_type"
+      />
       <div class="w-full pt-4 space-y-2 border-t bg-white sticky bottom-0 z-50 -mb-2">
         <ErrorMessage :message="errorMessages" />
         <Button label="Create" class="w-full" variant="solid" @click="handleCampaignCreate" />
@@ -31,6 +36,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  document_type: {
+    type: String,
+    default: 'FOSS Chapter Event',
+  },
 })
 
 const data = reactive({
@@ -50,6 +59,7 @@ const newsletter = createResource({
       data: data,
       reference_document: props.event,
       chapter: props.chapter,
+      document_type: props.document_type,
     }
   },
   onSuccess() {

@@ -10,7 +10,12 @@
       </Badge>
     </template>
     <div v-if="campaign.data" class="h-full">
-      <EmailFormTemplate v-model="campaignData" :event="event" :chapter="chapter" />
+      <EmailFormTemplate
+        v-model="campaignData"
+        :event="event"
+        :chapter="chapter"
+        :document_type="document_type"
+      />
       <div v-if="campaign.data.status == 'Sent'" class="w-full pt-4 space-y-2 sticky bottom-0">
         <ProgressSection :open="open" :campaign-id="campaign.data.name" />
       </div>
@@ -55,6 +60,10 @@ const props = defineProps({
   chapter: {
     type: String,
     default: '',
+  },
+  document_type: {
+    type: String,
+    default: 'FOSS Chapter Event',
   },
 })
 
