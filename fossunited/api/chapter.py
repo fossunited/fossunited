@@ -78,6 +78,21 @@ def check_if_event_lead(event: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
+def check_if_chapter_or_event_core_member(event: str) -> bool:
+    """
+    A common function to check if user is either chapter or event member to give some access.
+    This API function is intended to only apply for cases where every time event is created
+    they would not add themselves to event_members table
+    """
+    event_doc = frappe.get_doc(EVENT, event, ["name"])
+    chapter_id = event_doc.chapter
+    is_team = bool(
+        check_if_event_lead(event) or check_if_chapter_member(chapter_id, frappe.session.user)
+    )
+    return is_team
+
+
+@frappe.whitelist(allow_guest=True)
 def generate_ics(event_ids):
     """
     Return ICS event for the event ids provided
@@ -157,7 +172,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
         limit_page_length=9999,
     )
 
-    if not check_if_event_lead(event_id):
+    if not check_if_chapter_or_event_core_member(event_id):
         for s in submissions:
             s["email"] = mask_email(s.get("email"))
             s.pop("name", None)
