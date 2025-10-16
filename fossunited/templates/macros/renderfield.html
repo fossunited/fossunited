@@ -2,11 +2,11 @@
   <div class="my-4 py-1">
     {% if field.fieldtype == 'Table' %}
       {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
-      {% if frappe.form_dict['cfp'] %}
+      {% if frappe.form_dict.get('cfp') %}
         {% for question in frappe.get_doc("FOSS Event CFP", submission.linked_cfp).custom_questions %}
           {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
         {% endfor %}
-      {% elif frappe.form_dict['rsvp'] %}
+      {% elif frappe.form_dict.get('rsvp') %}
         {% for question in frappe.get_doc("FOSS Event RSVP", submission.linked_rsvp).custom_questions %}
           {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
         {% endfor %}
@@ -39,10 +39,13 @@
           class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
           {% if field.reqd %}required{% endif %}
         >
-          {% for option in (field.options or '').splitlines() %}
+          {% set field_value = field.get('value') if field else '' %}
+          {% set submission_value = submission.get(field.fieldname) if submission else '' %}
+          {% for raw in (field.options or '').splitlines() %}
+            {% set option = raw.strip() %}
             <option
               value="{{ option }}"
-              {% if (field.get('value') or submission.get(field.fieldname, '')) == option %}selected{% endif %}
+              {% if (submission_value or field_value) == option %}selected{% endif %}
             >
               {{ option }}
             </option>
