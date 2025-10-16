@@ -55,6 +55,10 @@ const sidebarMenuItems = [
         label: 'Members',
         route: `/chapter/${route.params.id}/members`,
       },
+      {
+        label: 'Chapter Mailing',
+        route: `/chapter/${route.params.id}/mailing`,
+      },
     ],
   },
 ]

@@ -234,6 +234,11 @@ const routes = [
         name: 'ChapterMembers',
         component: () => import('@/pages/ChapterMembers.vue'),
       },
+      {
+        path: 'mailing',
+        name: 'Chapter Mailing',
+        component: () => import('@/pages/mailing/ChapterMailing.vue'),
+      },
     ],
   },
   {

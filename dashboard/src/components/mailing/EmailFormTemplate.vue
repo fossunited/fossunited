@@ -103,6 +103,10 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  document_type: {
+    type: String,
+    default: 'FOSS Chapter Event',
+  },
 })
 
 const emailGroups = createResource({
@@ -111,6 +115,7 @@ const emailGroups = createResource({
     return {
       reference_document: props.event,
       chapter: props.chapter,
+      document_type: props.document_type,
     }
   },
   auto: true,
