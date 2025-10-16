@@ -69,7 +69,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
 
     def test_non_event_core_team_masks_email(self):
         frappe.set_user(self.volunteer_user)
-        result = get_submissions_with_answers(self.event.name, full=False)
+        result = get_submissions_with_answers(self.event.name, full_answers=False)
         self.assertTrue(result)
         # Check email is masked: basic pattern check
         self.assertIn("@", result[0]["email"])
@@ -77,14 +77,14 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
 
     def test_event_core_team_full_email(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name, full=False)
+        result = get_submissions_with_answers(self.event.name, full_answers=False)
         self.assertTrue(result)
         self.assertIn("@", result[0]["email"])
         self.assertEqual(result[0]["email"], "alicewonderland@example.com")
 
     def test_event_core_team_gets_full_answers(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name, full=True)
+        result = get_submissions_with_answers(self.event.name, full_answers=True)
         self.assertIn("whats_your_goal", result[0])
         self.assertEqual(
             result[0]["whats_your_goal"],
@@ -103,10 +103,10 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
             email="bob@example.com",
             custom_answers=[{"question": long_q, "response": long_r}],
         )
-        result = get_submissions_with_answers(self.event.name, full=False)
+        result = get_submissions_with_answers(self.event.name, full_answers=False)
         for s in result:
             for key, val in s.items():
-                if key.startswith(""):
+                if key not in ["name1", "email", "im_a", "confirm_attendance"]:
                     self.assertLessEqual(len(val), 52)
 
     def test_no_truncation_when_full_true(self):
@@ -121,7 +121,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         )
         self._extra_responses.append(_charlie.name)
 
-        result = get_submissions_with_answers(self.event.name, full=True)
+        result = get_submissions_with_answers(self.event.name, full_answers=True)
         found = False
         for s in result:
             if s.get("email") == "charlie@example.com":

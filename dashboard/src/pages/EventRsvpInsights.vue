@@ -2,34 +2,36 @@
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <div class="flex flex-col gap-4 mt-5">
       <div class="flex items-center justify-between">
-        <div class="font-semibold text-gray-800">
-          Attendees
-          <span class="text-gray-700 text-base font-normal">
-            ({{ submissions.data.length }}/{{ rsvp_form.data.max_rsvp_count }})
-          </span>
-        </div>
+        <div class="font-semibold text-gray-800">Attendees</div>
         <Button size="md" icon-left="download" @click="downloadAttendeeList2">Download</Button>
       </div>
 
       <ListView
+        v-model:rows="groupedRows"
         :columns="listColumns"
-        :rows="submissions.data"
         row-key="name"
         :options="{
           selectable: false,
+          showTooltip: true,
           resizeColumn: true,
           emptyState: {
             description: 'No one has RSVPed for the event yet.',
           },
         }"
-      />
+      >
+        <template #group-header="{ group }">
+          <span class="text-base font-medium leading-6 text-ink-gray-9">
+            {{ group.group }} ({{ group.rows.length }})
+          </span>
+        </template>
+      </ListView>
     </div>
   </div>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router'
-import { inject, ref, computed } from 'vue'
+import { inject, ref, computed, watchEffect } from 'vue'
 import { createListResource, createResource, ListView, Button } from 'frappe-ui'
 
 const route = useRoute()
@@ -49,7 +51,7 @@ const rsvp_form = createResource({
 
 const isEventLead = ref(false)
 const event_lead = createResource({
-  url: 'fossunited.api.chapter.check_if_event_lead',
+  url: 'fossunited.api.chapter.check_if_chapter_or_event_core_member',
   makeParams() {
     return {
       event: route.params.id,
@@ -65,7 +67,7 @@ const submissions = createResource({
   url: 'fossunited.api.chapter.get_submissions_with_answers',
   params: {
     event_id: route.params.id,
-    full: false,
+    full_answers: false,
   },
   auto: true,
 })
@@ -77,7 +79,7 @@ const listColumns = computed(() => {
   if (Array.isArray(submissions.data)) {
     submissions.data.forEach((submission) => {
       Object.keys(submission).forEach((key) => {
-        if (!columns.has(key)) {
+        if (key !== 'confirm_attendance' && !columns.has(key)) {
           columns.set(key, { key, label: key }) // Use key as label directly
         }
       })
@@ -85,6 +87,36 @@ const listColumns = computed(() => {
   }
 
   return Array.from(columns.values())
+})
+
+const groupedRows = ref([])
+
+watchEffect(() => {
+  const rows = Array.isArray(submissions.data) ? submissions.data : []
+  const attending = []
+  const notAttending = []
+
+  for (const row of rows) {
+    const isAttending = Boolean(Number(row?.confirm_attendance || 0))
+    if (isAttending) {
+      attending.push(row)
+    } else {
+      notAttending.push(row)
+    }
+  }
+
+  groupedRows.value = [
+    {
+      group: 'Attending event',
+      collapsed: false,
+      rows: attending,
+    },
+    {
+      group: 'Not attending',
+      collapsed: true,
+      rows: notAttending,
+    },
+  ]
 })
 
 const downloadAttendeeList2 = () => {

@@ -78,6 +78,21 @@ def check_if_event_lead(event: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
+def check_if_chapter_or_event_core_member(event: str) -> bool:
+    """
+    A common function to check if user is either chapter or event member to give some access.
+    This API function is intended to only apply for cases where every time event is created
+    they would not add themselves to event_members table
+    """
+    event_doc = frappe.get_doc(EVENT, event, ["name"])
+    chapter_id = event_doc.chapter
+    is_team = bool(
+        check_if_event_lead(event) or check_if_chapter_member(chapter_id, frappe.session.user)
+    )
+    return is_team
+
+
+@frappe.whitelist(allow_guest=True)
 def generate_ics(event_ids):
     """
     Return ICS event for the event ids provided
@@ -134,13 +149,16 @@ def generate_ics(event_ids):
 
 
 @frappe.whitelist()
-def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict]:
+def get_submissions_with_answers(
+    event_id: str,
+    full_answers: bool = False,
+) -> list[dict]:
     """
     Provide RSVP submission with answers for EventInsights.
 
     Args:
         event_id (str): Event ID
-        full (bool): If True, return full question labels and responses;
+        full_answers (bool): If True, return full question labels and responses;
                      otherwise truncate for UI display. Applicable for csv export/download.
     Returns:
         List of submission dicts with custom field answers for core team members.
@@ -152,12 +170,12 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
     submissions = frappe.get_all(
         RSVP_RESPONSE,
         filters={"event": event_id},
-        fields=["name", "name1", "email", "im_a"],
+        fields=["name", "confirm_attendance", "name1", "email", "im_a"],
         order_by="creation asc",
         limit_page_length=9999,
     )
 
-    if not check_if_event_lead(event_id):
+    if not check_if_chapter_or_event_core_member(event_id):
         for s in submissions:
             s["email"] = mask_email(s.get("email"))
             s.pop("name", None)
@@ -168,7 +186,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
     if not submission_ids:
         return submissions
 
-    answers = frappe.get_all(
+    answers_rows = frappe.get_all(
         RSVP_CUSTOM_FIELD,
         filters={
             "parent": ["in", submission_ids],
@@ -181,7 +199,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
     )
 
     answers_by_parent = {}
-    for a in answers:
+    for a in answers_rows:
         answers_by_parent.setdefault(a["parent"], []).append(a)
 
     for s in submissions:
@@ -192,7 +210,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             response = a.get("response")
             if response is None:
                 response = ""
-            if not full:
+            if not full_answers:
                 response = _truncate_label(str(response), 30)
 
             s[f"{key}"] = response
@@ -200,7 +218,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             # Truncate label if not full
             raw_label = a.get("question")
             label = "" if raw_label is None else str(raw_label)
-            if not full:
+            if not full_answers:
                 label = _truncate_label(label, 30)
 
         s.pop("name", None)
@@ -219,7 +237,7 @@ def _safe_column_key(label: str) -> str:
     - Converts the label to lowercase.
     - Prefixes the key with an underscore if it starts with a dangerous character
       (i.e., '=', '+', '-', '@') to prevent CSV injection.
-    - Truncates the key to a maximum of 80 characters.
+    - Truncates the key to a maximum of 50 characters.
 
     Args:
         label (str): The original label to sanitize.
@@ -292,7 +310,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     import re
 
     # Get full submission data (each is a dict)
-    submissions = get_submissions_with_answers(event_id, full=True)
+    submissions = get_submissions_with_answers(event_id, full_answers=True)
 
     if not submissions:
         return ""
