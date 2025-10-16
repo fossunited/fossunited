@@ -140,8 +140,9 @@
         const formData = $('.foss-form-body').serializeArray()
         const data = {}
 
+
         data['linked_rsvp'] = '{{ doc.name }}'
-        data['status'] = 'Accepted' // by default we accept
+        data['confirm_attendance'] = '1' // if they fill, its understood that they confirm
         formData.forEach((field) => {
           data[field.name] = field.value
         })

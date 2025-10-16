@@ -9,6 +9,7 @@ def get_context(context):
     context.event = frappe.get_doc(EVENT, context.submission.event)
     frappe.form_dict["rsvp"] = frappe.form_dict.submission
     frappe.form_dict["doctype"] = RSVP_RESPONSE
+    context.confirm_attendance = context.submission.confirm_attendance
     context.form_fields = get_form_fields(context.submission.doctype, context.submission)
     context.no_cache = 1
 
@@ -22,6 +23,12 @@ def get_form_fields(doctype, submission):
             continue
         if field["fieldtype"] == "Section Break":
             current_section = field["label"]
+            continue
+        if field["fieldname"] == "subscribe_chapter_mailing":
+            field["label"] = (
+                f"Yes, I'd like to receive updates about future events from {submission.chapter}."
+            )
+        if field["fieldname"] == "confirm_attendance":
             continue
         if current_section in ["Meta Info", "Custom Answers"]:
             continue

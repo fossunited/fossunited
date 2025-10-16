@@ -29,18 +29,29 @@ def update_submission(doctype, submission, fields, custom):
             frappe.PermissionError,
         )
 
+    # Add authorization check
+    if not check_if_submitter(doctype, submission):
+        frappe.throw(
+            "You are not authorized to update this submission",
+            frappe.PermissionError,
+        )
+
     fields = json.loads(fields)
     custom = json.loads(custom)
-    frappe.db.set_value(doctype, submission, fields)
 
-    doc = frappe.get_doc(doctype, submission).as_dict()
-    for field in doc.custom_answers:
-        frappe.db.set_value(
-            "FOSS Custom Answer",
-            field.name,
-            "response",
-            custom[field.idx - 1]["response"],
-        )
+    doc = frappe.get_doc(doctype, submission)
+
+    # Update main fields
+    for key, value in fields.items():
+        setattr(doc, key, value)
+
+    # Update custom answers
+    for idx, field in enumerate(doc.custom_answers):
+        field.response = custom[idx]["response"]
+
+    doc.save()  # Triggers frappe controller: before_save()
+
+    return {"status": "success"}
 
 
 @frappe.whitelist()

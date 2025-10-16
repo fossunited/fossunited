@@ -20,6 +20,15 @@
           {% endfor %}
         </form>
         <div class="foss-form-buttons">
+          {% if submission.confirm_attendance %}
+            <button class="danger-button" id="toggle-rsvp" data-new-status="0">
+              {{ _("I can't attend the Event!") }}
+            </button>
+          {% else %}
+            <button class="secondary-button" id="toggle-rsvp" data-new-status="1">
+              {{ _("I'll attend the Event!") }}
+            </button>
+          {% endif %}
           <button class="primary-button" type="submit" id="update-rsvp" disabled="">
             {{ _("Update RSVP Form") }}
           </button>
@@ -55,6 +64,13 @@
 
       $('#update-rsvp').on('click', (e) => {
         update_rsvp()
+      })
+      $('#toggle-rsvp').on('click', function (e) {
+        e.preventDefault()
+
+        const newStatus = $(this).data('new-status')
+
+        update_rsvp({ confirm_attendance: newStatus })
       })
     })
 
@@ -102,7 +118,7 @@
       })
     }
 
-    function update_rsvp() {
+    function update_rsvp(override_fields = {}) {
       let formFields = document.querySelectorAll(
         '.form-control:not(.custom-question), [type="text-editor"]',
       )
@@ -130,6 +146,12 @@
 
       // removing empty string keys
       submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
+
+      // Merge overrides (like confirm_attendance: 0)
+      submission = {
+        ...submission,
+        ...override_fields,
+      }
 
       frappe.call({
         method: 'fossunited.fossunited.forms.update_submission',
