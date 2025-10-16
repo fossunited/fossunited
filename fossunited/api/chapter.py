@@ -149,13 +149,16 @@ def generate_ics(event_ids):
 
 
 @frappe.whitelist()
-def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict]:
+def get_submissions_with_answers(
+    event_id: str,
+    answers: bool = False,
+) -> list[dict]:
     """
     Provide RSVP submission with answers for EventInsights.
 
     Args:
         event_id (str): Event ID
-        full (bool): If True, return full question labels and responses;
+        answers (bool): If True, return full question labels and responses;
                      otherwise truncate for UI display. Applicable for csv export/download.
     Returns:
         List of submission dicts with custom field answers for core team members.
@@ -167,7 +170,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
     submissions = frappe.get_all(
         RSVP_RESPONSE,
         filters={"event": event_id},
-        fields=["name", "name1", "email", "im_a"],
+        fields=["name", "confirm_attendance", "name1", "email", "im_a"],
         order_by="creation asc",
         limit_page_length=9999,
     )
@@ -207,7 +210,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             response = a.get("response")
             if response is None:
                 response = ""
-            if not full:
+            if not answers:
                 response = _truncate_label(str(response), 30)
 
             s[f"{key}"] = response
@@ -215,7 +218,7 @@ def get_submissions_with_answers(event_id: str, full: bool = False) -> list[dict
             # Truncate label if not full
             raw_label = a.get("question")
             label = "" if raw_label is None else str(raw_label)
-            if not full:
+            if not answers:
                 label = _truncate_label(label, 30)
 
         s.pop("name", None)
@@ -307,7 +310,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     import re
 
     # Get full submission data (each is a dict)
-    submissions = get_submissions_with_answers(event_id, full=True)
+    submissions = get_submissions_with_answers(event_id, answers=True)
 
     if not submissions:
         return ""
