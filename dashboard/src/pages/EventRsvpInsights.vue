@@ -67,7 +67,7 @@ const submissions = createResource({
   url: 'fossunited.api.chapter.get_submissions_with_answers',
   params: {
     event_id: route.params.id,
-    answers: false,
+    full_answers: false,
   },
   auto: true,
 })
@@ -92,11 +92,13 @@ const listColumns = computed(() => {
 const groupedRows = ref([])
 
 watchEffect(() => {
+  const rows = Array.isArray(submissions.data) ? submissions.data : []
   const attending = []
   const notAttending = []
 
-  for (const row of submissions.data) {
-    if (row.confirm_attendance) {
+  for (const row of rows) {
+    const isAttending = Boolean(Number(row?.confirm_attendance || 0))
+    if (isAttending) {
       attending.push(row)
     } else {
       notAttending.push(row)

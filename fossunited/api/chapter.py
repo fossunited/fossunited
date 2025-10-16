@@ -151,14 +151,14 @@ def generate_ics(event_ids):
 @frappe.whitelist()
 def get_submissions_with_answers(
     event_id: str,
-    answers: bool = False,
+    full_answers: bool = False,
 ) -> list[dict]:
     """
     Provide RSVP submission with answers for EventInsights.
 
     Args:
         event_id (str): Event ID
-        answers (bool): If True, return full question labels and responses;
+        full_answers (bool): If True, return full question labels and responses;
                      otherwise truncate for UI display. Applicable for csv export/download.
     Returns:
         List of submission dicts with custom field answers for core team members.
@@ -186,7 +186,7 @@ def get_submissions_with_answers(
     if not submission_ids:
         return submissions
 
-    answers = frappe.get_all(
+    answers_rows = frappe.get_all(
         RSVP_CUSTOM_FIELD,
         filters={
             "parent": ["in", submission_ids],
@@ -199,7 +199,7 @@ def get_submissions_with_answers(
     )
 
     answers_by_parent = {}
-    for a in answers:
+    for a in answers_rows:
         answers_by_parent.setdefault(a["parent"], []).append(a)
 
     for s in submissions:
@@ -210,7 +210,7 @@ def get_submissions_with_answers(
             response = a.get("response")
             if response is None:
                 response = ""
-            if not answers:
+            if not full_answers:
                 response = _truncate_label(str(response), 30)
 
             s[f"{key}"] = response
@@ -218,7 +218,7 @@ def get_submissions_with_answers(
             # Truncate label if not full
             raw_label = a.get("question")
             label = "" if raw_label is None else str(raw_label)
-            if not answers:
+            if not full_answers:
                 label = _truncate_label(label, 30)
 
         s.pop("name", None)
@@ -237,7 +237,7 @@ def _safe_column_key(label: str) -> str:
     - Converts the label to lowercase.
     - Prefixes the key with an underscore if it starts with a dangerous character
       (i.e., '=', '+', '-', '@') to prevent CSV injection.
-    - Truncates the key to a maximum of 80 characters.
+    - Truncates the key to a maximum of 50 characters.
 
     Args:
         label (str): The original label to sanitize.
@@ -310,7 +310,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     import re
 
     # Get full submission data (each is a dict)
-    submissions = get_submissions_with_answers(event_id, answers=True)
+    submissions = get_submissions_with_answers(event_id, full_answers=True)
 
     if not submissions:
         return ""
