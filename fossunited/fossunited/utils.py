@@ -331,12 +331,24 @@ def get_chapter_details():
     """
     chapters = frappe.db.get_all(
         CHAPTER,
-        fields=["chapter_name", "name", "chapter_type"],
-        filters={"chapter_type": CITY_COMMUNITY},
+        fields=["chapter_name", "name", "chapter_type", "city"],
         order_by="chapter_name asc",
         page_length=9999,
     )
     return chapters
+
+
+def get_all_city_names():
+    """
+    Get all city names for select option use.
+    """
+    cities = frappe.db.get_all(
+        "City",
+        fields=["name"],
+        order_by="name asc",
+        page_length=9999,
+    )
+    return cities
 
 
 def process_event(event, event_list):
