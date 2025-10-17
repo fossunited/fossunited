@@ -33,8 +33,7 @@ nav:
 
   - What We Do:
       - Initiatives Overview: initiative.md
-      - FOSS Clubs:
-          - FOSS Clubs: club.md
+      - FOSS Clubs: club.md
       - Grants Program: grants.md
       - People Behind FOSS United: people.md
       - Principles & Values: principles.md
@@ -62,7 +61,6 @@ theme:
     - content.tabs.link
     - content.code.annotation
     - content.code.copy
-    - search.suggest
     - content.diagram
     - navigation.footer
   language: en
@@ -81,7 +79,7 @@ theme:
       accent: light-green
   font:
     text: Inter
-    code:  JetBrains Mono
+    code: JetBrains Mono
 
 plugins:
   - glightbox
@@ -111,6 +109,8 @@ extra:
       link: https://instagram.com/fossunited
     - icon: fontawesome/brands/reddit
       link: https://reddit.com/r/fossunited
+    - icon: fontawesome/solid/envelope
+      link: mailto:developers@fossunited.org
 
 markdown_extensions:
   - pymdownx.superfences:
