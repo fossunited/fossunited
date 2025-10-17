@@ -1,6 +1,9 @@
 site_name: FOSS United Knowledge Base
 site_description: Comprehensive documentation and resources for the FOSS United platform and community.
+copyright: Copyright &copy; 2021 - 2025 FOSS United Foundation
 # site_url: https://docs.fossunited.org
+repo_url: https://github.com/fossunited/fossunited
+edit_uri: edit/develop/docs/docs/
 
 nav:
   - Home: index.md
@@ -61,6 +64,7 @@ theme:
     - content.code.copy
     - search.suggest
     - content.diagram
+    - navigation.footer
   language: en
   palette:
     - scheme: default
@@ -85,6 +89,28 @@ plugins:
 
 extra_css:
   - assets/custom.css
+
+extra:
+  generator: true
+  social:
+    - icon: fontawesome/brands/discourse
+      link: https://forum.fossunited.org/
+    - icon: fontawesome/brands/telegram
+      link: https://t.me/fossunited
+    - icon: fontawesome/brands/mastodon
+      link: https://mas.to/@fossunited
+    - icon: fontawesome/brands/bluesky
+      link: https://bsky.app/profile/fossunited.mas.to.ap.brid.gy
+    - icon: fontawesome/brands/twitter
+      link: http://x.com/fossunited
+    - icon: fontawesome/brands/youtube
+      link: https://www.youtube.com/c/fossunited
+    - icon: fontawesome/brands/linkedin
+      link: https://in.linkedin.com/company/fossunited
+    - icon: fontawesome/brands/instagram
+      link: https://instagram.com/fossunited
+    - icon: fontawesome/brands/reddit
+      link: https://reddit.com/r/fossunited
 
 markdown_extensions:
   - pymdownx.superfences:
