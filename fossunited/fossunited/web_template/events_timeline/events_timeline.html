@@ -25,14 +25,14 @@
                                 <div class="event-card-holder {{ group | replace(' ', '') }}"
                                      id="{{ event.name }}"
                                      role="listitem"
-                                     v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}')">
+                                     v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}', '{{ event.event_type }}')">
                                     {{ event_card(event) }}
                                 </div>
                             {% else %}
                                 <div class="event-card-holder {{ group | replace(' ', '') }}"
                                      id="{{ event.name }}"
                                      role="listitem"
-                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}')">
+                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}', '{{ event.event_type }}')">
                                     {{ hackathon_card(event) }}
                                 </div>
                             {% endif %}
@@ -148,6 +148,13 @@
     background: #2b2b2b;
   }
 
+  #events-search::placeholder {
+      font-size: 0.9rem;
+      color: #888;
+      font-weight: 400;
+      opacity: 1;
+  }
+
   @media (max-width: 768px) {
     .search-filter-controlpanel {
       flex-direction: column;
@@ -176,8 +183,8 @@
                 <input v-model="searchText"
                        type="text"
                        id="events-search"
-                       placeholder="Search by event name and date"
-                       aria-label="Search events by name and date" />
+                       placeholder="Search by event, chapter name or date or event type"
+                       aria-label="Search events by name or date" />
             </div>
             <!-- Must Attend Checkbox -->
             <div class="must-attend-checkbox">
@@ -221,12 +228,13 @@
  {% set chapter_details = get_chapter_details() %}
     {% for chapter in chapter_details %}"{{ chapter.name }}": "{{ chapter.city }}",{% endfor %}
   };
+
       PetiteVue.createApp({
         searchText: '',
         mustAttendOnly: false,
         selectedCity: 'All Cities',
         showFossClub: false,
-        canShow(eventName, eventDate, eventMustAttend, eventCityChapter) {
+        canShow(eventName, eventDate, eventMustAttend, eventCityChapter, eventType) {
           if (this.mustAttendOnly && !eventMustAttend) {
             return false
           }
@@ -243,7 +251,9 @@
 
           return (
             eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-            eventDate.toLowerCase().includes(this.searchText.toLowerCase())
+            eventDate.toLowerCase().includes(this.searchText.toLowerCase()) ||
+            eventCityChapter.toLowerCase().includes(this.searchText.toLowerCase()) ||
+            eventType.toLowerCase().includes(this.searchText.toLowerCase())
           )
         },
       }).mount()
