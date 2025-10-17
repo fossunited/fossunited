@@ -19,3 +19,8 @@ Vue
 Vite
 dev
 influencers
+Parseable
+Solapur
+Shivamogga
+Mangalore
+Jalandhar
