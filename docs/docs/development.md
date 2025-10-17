@@ -2,7 +2,7 @@
 
 The **FOSS United Platform** is developed and maintained by the [FOSS United Foundation](https://fossunited.org/), with ongoing contributions from the community. Development takes place on [GitHub](https://github.com/fossunited/fossunited).
 
-> **Note:** We welcome contributions from developers. Join us by submitting issues, feature requests, or pull requests!
+> **Note:** We welcome contributions from anyone. Join us by submitting issues, feature requests, or pull requests!
 
 ---
 
@@ -10,7 +10,27 @@ The **FOSS United Platform** is developed and maintained by the [FOSS United Fou
 
 > **Recommended Frappe Version:** v15+
 
-### 1. Prerequisites
+### Recommended: Setup & Quick-start
+Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager](https://github.com/rtCamp/Frappe-Manager).
+
+- Install [`uv`](https://github.com/astral-sh/uv) python manager and `docker`
+- `uv init` in a new directory
+- `uv add frappe-manager`
+- `fm create foss.localhost`
+- `fm start` choose site as it shows in menu
+- `fm shell`
+- `bench get-app https://github.com/fossunited/fossunited.git`
+- `bench install-app fossunited` - This will also install dashboard
+- Open `foss.localhost` in your browser and start exploring!
+- Dashboard page can be accessed via `foss.localhost/dashboard`
+
+Note: Since dashboard is not running live, you'd need to `bench build --apps fossunited` for changes to update.
+
+If you would prefer for manual method, please follow on below
+
+### Manual Install
+
+#### 1. Prerequisites
 - Set up your environment using the [official Frappe installation guide](https://frappeframework.com/docs/).
 - If you encounter a **MariaDB password issue**, refer to [this DigitalOcean guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset your root password.
 
@@ -24,7 +44,7 @@ Ensure MySQL processes are fully stopped before restarting.
 
 ---
 
-### 2. Setup Steps
+#### 2. Setup Steps
 
 ```sh
 # Create a new bench
@@ -32,9 +52,9 @@ bench init fossu-bench
 cd fossu-bench
 ```
 
-#### Install Newsletter App
+##### Install Newsletter App
 
-The **Newsletter** module is now a separate app. Install it *before* `fossunited`:
+For frappe >= v16, the **Newsletter** module has been moved as an separate app. Install it *before* `fossunited`:
 
 ```sh
 bench get-app https://github.com/frappe/newsletter
@@ -43,7 +63,7 @@ bench install-app newsletter
 
 > Related discussion: [#1120](https://github.com/fossunited/fossunited/issues/1120)
 
-#### Install FOSS United App
+##### Install FOSS United App
 
 ```sh
 # Get the app
@@ -64,10 +84,9 @@ bench start
 
 ---
 
-## NixOS Setup
+### NixOS Setup
 
-For those using **NixOS**, refer to this guide by @idlip:
-==> [Issue #1068 – NixOS Setup Guide](https://github.com/fossunited/fossunited/issues/1068)
+For those using **NixOS**, refer to this guide ==> [Issue #1068 – NixOS Setup Guide](https://github.com/fossunited/fossunited/issues/1068) to get going.
 
 ---
 
