@@ -57,8 +57,8 @@ class FOSSChapter(WebsiteGenerator):
 
     def validate(self):
         self.make_city_name_upper()
-        self.set_location()
         self.validate_slug()
+        self.set_location()
 
     def before_save(self):
         self.set_route()

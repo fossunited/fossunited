@@ -32,7 +32,7 @@
                                 <div class="event-card-holder {{ group | replace(' ', '') }}"
                                      id="{{ event.name }}"
                                      role="listitem"
-                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}', '{{ event.event_type }}')">
+                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}', '{{ event.hackathon_type }}')">
                                     {{ hackathon_card(event) }}
                                 </div>
                             {% endif %}
@@ -214,7 +214,7 @@
                     {% for city in cities %}<option value="{{ city.name }}">{{ city.name }}</option>{% endfor %}
                 </select>
             </div>
-            <p id="must-attend-desc" class="sr-only">Filter the events to show only those in your city.</p>
+            <p id="city-select-desc" class="sr-only">Filter the events to show only those in your city.</p>
         </div>
         <button onclick="downloadEventIcs()"
                 class="child-container--subtext ics-button">
@@ -226,7 +226,7 @@
         <script>
  const chapterCityMap = {
  {% set chapter_details = get_chapter_details() %}
-    {% for chapter in chapter_details %}"{{ chapter.name }}": "{{ chapter.city }}",{% endfor %}
+    {% for chapter in chapter_details %}"{{ chapter.name }}": "{{ chapter.city or '' }}",{% endfor %}
   };
 
       PetiteVue.createApp({
@@ -239,12 +239,12 @@
             return false
           }
 
- if (this.selectedCity !== 'All Cities') {
-      const chapterCity = chapterCityMap[eventCityChapter] || '';
-      if (chapterCity !== this.selectedCity) {
-        return false;
-      }
-    }
+        const chapterCity = chapterCityMap[eventCityChapter];
+        if (this.selectedCity !== 'All Cities' &&
+            chapterCity !== undefined &&
+            chapterCity !== this.selectedCity) {
+                return false;
+        }
           if (this.searchText.length == 0) {
             return true
           }
