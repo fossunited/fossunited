@@ -1,0 +1,22 @@
+.md-content h1,
+.md-content h2,
+.md-content h3,
+.md-content h4,
+.md-content h5,
+.md-content h6 {
+  color: var(--md-primary-fg);
+  font-weight: 700;
+  margin-top: 1.6em;
+  margin-bottom: 0.6em;
+}
+
+.md-nav__link {
+    padding-bottom: 10px;
+}
+
+.md-content p,
+.md-content ul,
+.md-content ol {
+  line-height: 1.6;
+  margin-bottom: 1em;
+}
