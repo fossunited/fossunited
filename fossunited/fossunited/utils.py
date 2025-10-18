@@ -110,30 +110,41 @@ def get_user_editable_doctype_fields(doctype, docname=None):
 
 
 def get_user_socials(foss_user):
+    """
+    Function to get dict for social svg for profile page.
+    Based on svgl.app/library
+    """
     user = frappe.get_doc(USER_PROFILE, foss_user).as_dict()
     SOCIAL_LINK_FIELDNAMES = [
         "github",
         "gitlab",
+        "mastodon",
+        "bluesky",
+        "devto",
         "x",
         "linkedin",
         "instagram",
-        "mastodon",
         "youtube",
-        "devto",
-        "bluesky",
     ]
 
-    links = {}
-    for field in user:
-        if field in SOCIAL_LINK_FIELDNAMES and user[field]:
-            field1 = field
-            if field == "github":
-                field1 = "github_light"
-            elif field == "devto":
-                field1 = "devto-light"
-            links[field1] = user[field]
+    KEY_RENAMES = {
+        "github": "github_light",
+        "devto": "devto-light",
+        "instagram": "instagram-icon",
+        "facebook": "facebook-icon",
+    }
 
-    return links
+    REVERSE_RENAMES = {v: k for k, v in KEY_RENAMES.items()}
+
+    socials = {
+        KEY_RENAMES.get(k, k): v for k, v in user.items() if k in SOCIAL_LINK_FIELDNAMES and v
+    }
+
+    def sort_key(item):
+        original_key = REVERSE_RENAMES.get(item[0], item[0])
+        return SOCIAL_LINK_FIELDNAMES.index(original_key)
+
+    return dict(sorted(socials.items(), key=sort_key))
 
 
 @frappe.whitelist()
