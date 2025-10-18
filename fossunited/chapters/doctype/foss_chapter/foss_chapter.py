@@ -269,7 +269,7 @@ class FOSSChapter(WebsiteGenerator):
         return members
 
     def get_social_links(self):
-        socials = {}
+        # social fields in order to appear: WYSIWYG
         SOCIAL_LINK_FIELDNAMES = [
             "mastodon",
             "matrix",
@@ -285,14 +285,24 @@ class FOSSChapter(WebsiteGenerator):
             "x",
             "discord",
         ]
-        for k, v in self.as_dict().items():
-            if v and k in SOCIAL_LINK_FIELDNAMES:
-                if k == "matrix":
-                    k = "matrix-light"
-                socials[k] = v
+
+        # map names to svgl.app/library
+        KEY_RENAMES = {
+            "matrix": "matrix-light",
+            "instagram": "instagram-icon",
+            "facebook": "facebook-icon",
+        }
+
+        REVERSE_RENAMES = {v: k for k, v in KEY_RENAMES.items()}
+
+        data = self.as_dict()
+
+        socials = {
+            KEY_RENAMES.get(k, k): v for k, v in data.items() if v and k in SOCIAL_LINK_FIELDNAMES
+        }
 
         def sort_key(item):
-            key = "matrix" if item[0] == "matrix-light" else item[0]
-            return SOCIAL_LINK_FIELDNAMES.index(key)
+            original_key = REVERSE_RENAMES.get(item[0], item[0])
+            return SOCIAL_LINK_FIELDNAMES.index(original_key)
 
         return dict(sorted(socials.items(), key=sort_key))
