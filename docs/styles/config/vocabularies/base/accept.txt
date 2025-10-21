@@ -24,3 +24,8 @@ Solapur
 Shivamogga
 Mangalore
 Jalandhar
+Liferea
+Newsboat
+Thunderbird
+Newsblur
+Commafeed

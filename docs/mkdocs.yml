@@ -39,6 +39,7 @@ nav:
       - Principles & Values: principles.md
       - FOSS Philosophy: foss.md
       - Speech & Presentations: speech.md
+      - RSS & News: rss.md
 
   - Development & Documentation:
       - Platform Development: development.md
