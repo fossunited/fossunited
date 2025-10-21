@@ -19,3 +19,13 @@ Vue
 Vite
 dev
 influencers
+Parseable
+Solapur
+Shivamogga
+Mangalore
+Jalandhar
+Liferea
+Newsboat
+Thunderbird
+Newsblur
+Commafeed
