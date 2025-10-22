@@ -286,9 +286,6 @@ def format_schedule_data(format, doc, sessions, metadata):
     elif format == "csv":
         output = io.StringIO()
         writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
-        for k, v in metadata.items():
-            writer.writerow([cleanse_csv_cell(k), cleanse_csv_cell(v)])
-        writer.writerow([])
         writer.writerow(
             [
                 "Title",
