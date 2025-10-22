@@ -1357,17 +1357,13 @@ h6 {
   aspect-ratio: 1;
 }
 
-.foss-banner-wrapper {
-  display: grid;
-  place-items: center;
-}
 .foss-banner-image {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 1;
+  object-fit: cover;
+  object-position: center;
   display: block;
   border-radius: 1rem;
-  object-fit: contain;
-  object-position: center;
 }
 
 .buttons-group {
@@ -2712,7 +2708,7 @@ h6 {
   }
 
   .header--banner {
-    height: 12.5rem;
+    height: 8.5rem;
     border-radius: 0;
   }
 

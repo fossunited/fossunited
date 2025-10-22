@@ -23,13 +23,11 @@
 {% macro header() %}
   <div class="container header-section-parent">
     <div class="header-section event-header">
-	  <div class="foss-banner-wrapper">
-		<img
-		  src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
-		  alt="Cover Image"
-		  class="foss-banner-image"
-		  />
-	  </div>
+	  <img
+		src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
+		alt="Cover Image"
+		class="foss-banner-image header--banner"
+		/>
       <div class="header--title-cta-parent">
         <div>
           {% if doc.chapter %}
