@@ -489,9 +489,6 @@ def build_response(format, content, filename, empty=False, event_metadata=None):
         if format == "csv":
             output = io.StringIO()
             writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
-            for k, v in (event_metadata or {}).items():
-                writer.writerow([cleanse_csv_cell(k), cleanse_csv_cell(v)])
-            writer.writerow([])
             writer.writerow(
                 [
                     "Title",
