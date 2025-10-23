@@ -1,8 +1,8 @@
 {% macro render_team_section(title, members, extra_info=None) %}
   {% if members %}
-    <div class="member-section mb-5">
+    <div class="mb-8">
       <div class="d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">{{ title }}</h5>
+        <h5 class="mb-3">{{ title }}</h5>
         {% if extra_info %}
           {{ extra_info | safe }}
         {% endif %}
@@ -13,7 +13,7 @@
             <a href="/u/{{ member.username }}" class="w-100 text-decoration-none text-dark">
               <div class="card h-100 pl-4 border shadow-sm hover-shadow" style="min-height: 160px;">
                 <div class="card-body d-flex align-items-center">
-                  <div class="flex-shrink-0 mr-10">
+                  <div class="flex-shrink-0 mr-8">
                     <img
                       src="{{ member.headshot if member.headshot else '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                       alt="{{ member.full_name }}"
@@ -75,7 +75,7 @@
   <div class="team-list-container">
     <h4 class="foss-mint">Meet the Workforce</h4>
     <div class="team-section mt-10">
-      {{ render_team_section("Board", boardMembers) }}
+      {{ render_team_section("Board of Directors", boardMembers) }}
       {{ render_team_section("Governing Board", GovBoardMembers, '<a href="/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united" class="blog-link">View Blog Post</a>') }}
       {{ render_team_section("Full-time and Part-time Staff", staff) }}
       {{ render_team_section("Fellows and Interns", fellowsInterns) }}
