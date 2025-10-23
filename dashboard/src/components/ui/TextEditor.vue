@@ -274,7 +274,9 @@ const handleLinkInsert = (editor) => {
     return
   }
 
-  if (!newValue.startsWith('http://') && !newValue.startsWith('https://')) {
+  let allowedProtocols = ['http://', 'https://', 'mailto:']
+
+  if (!allowedProtocols.some((proto) => newValue.startsWith(proto))) {
     newValue = `https://${newValue}`
   }
 
