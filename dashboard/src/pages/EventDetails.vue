@@ -192,7 +192,13 @@
           label="Location"
           size="md"
         />
-        <FormControl v-model="event.doc.map_link" :type="'url'" label="Map Link" side="md" />
+        <FormControl
+          v-model="event.doc.map_link"
+          :type="'url'"
+          label="Map Link"
+          side="md"
+          description="Prefer OpenStreetMap (OSM) links, e.g., https://osmapp.org/"
+        />
       </div>
     </div>
   </div>

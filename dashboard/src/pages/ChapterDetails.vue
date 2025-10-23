@@ -156,9 +156,10 @@
           />
           <FormControl
             v-model="chapter.doc.google_map_link"
-            :type="'text'"
+            :type="'url'"
             size="md"
             label="Map Link"
+            description="Prefer OpenStreetMap (OSM) links, e.g., https://osmapp.org/"
           />
         </div>
       </div>
