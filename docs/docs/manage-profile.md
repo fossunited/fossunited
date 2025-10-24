@@ -5,6 +5,8 @@
 
 ![Profile page](./assets/profile-page.png)
 
+### Edit Profile Information
+
 - Click on the `"Edit Profile"` button which will take you to [Dashboard page](https://fossunited.org/dashboard/me) to add or change information about yourself
 
 **Note:** Toggling the `"Make Profile Private"` button will prevent people from seeing your information on the Platform
@@ -13,7 +15,9 @@
 |----------------------------------------------|----------------------------------------------------------|
 | ![Edit Profile I](./assets/edit-profile.png) | ![Edit Profile II](./assets/edit-profile-additional.png) |
 
-**Note:** We also suggest you to enable "Show Community Activity" which will show all your activity and events you've attended.
+### Show Community Activity
+
+We also suggest you to enable "Show Community Activity" which will show all your activity and events you've attended.
 
 It shows activity as cards from:
 
