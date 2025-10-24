@@ -1,0 +1,40 @@
+# Copyright (c) 2025, Frappe x FOSSUnited and contributors
+# For license information, please see license.txt
+
+from frappe.website.website_generator import WebsiteGenerator
+
+
+class JobBoard(WebsiteGenerator):
+    # begin: auto-generated types
+    # This code is auto-generated. Do not modify anything in this block.
+
+    from typing import TYPE_CHECKING
+
+    if TYPE_CHECKING:
+        from frappe.types import DF
+
+        application_link: DF.Data
+        company_name: DF.Data
+        company_vcs: DF.Data | None
+        company_website: DF.Data
+        email: DF.Data
+        is_published: DF.Check
+        job_description: DF.MarkdownEditor | None
+        job_location: DF.Data
+        job_title: DF.Data
+        job_type: DF.Literal[
+            "Full TIme", "Part Time", "Intern", "Freelance", "Contract"  # noqa: F722, F821
+        ]
+        route: DF.Data | None
+        status: DF.Literal["Received", "Approved", "Rejected", "Expired"]  # noqa: F722, F821
+    # end: auto-generated types
+
+    def before_save(self):
+        """Auto-generate a route if not set."""
+        if not self.route:
+            self.route = f"jobs/{(self.name)}"
+
+    def get_context(self, context):
+        """Context for rendering job detail page"""
+        context.title = f"{self.job_title} at {self.company_name}"
+        return context

@@ -1,0 +1,75 @@
+{% extends "templates/foss_base.html" %}
+
+{% block page_content %}
+  <div class="container my-4 py-5">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/jobs">All Jobs</a></li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{ doc.job_title }} at {{ doc.company_name }}
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Job Header -->
+    <div
+      class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3"
+    >
+      <h2 class="text-success fw-bold mb-2 mb-md-0">{{ doc.job_title }}</h2>
+      {% if doc.application_link %}
+        <a class="btn btn-success" href="{{ doc.application_link }}" target="_blank">Apply</a>
+      {% endif %}
+    </div>
+
+    <!-- Job Dates -->
+    <div class="mb-4">
+      <small class="text-muted">
+        Posted on {{ frappe.utils.format_date(doc.creation, "MMMM dd, yyyy") }}
+        {% if doc.status == 'Expired' %}
+          |
+          <span class="text-danger"
+            >Closed on {{ frappe.utils.format_date(doc.modified, "MMMM dd, yyyy") }}</span
+          >
+        {% endif %}
+      </small>
+    </div>
+
+    <!-- Job Details -->
+    <div class="d-flex flex-wrap gap-5 mb-5 bold">
+      <!-- Company -->
+      <div class="d-flex align-items-center mr-5">
+        <i class="ti ti-building text-secondary" style="font-size: 1.5rem;"></i>
+        <a href="{{ doc.company_website }}" target="_blank" class="fs-5">{{ doc.company_name }}</a>
+      </div>
+
+      <!-- Location -->
+      <div class="d-flex align-items-center mr-5">
+        <i class="ti ti-map-pin text-secondary" style="font-size: 1.5rem;"></i>
+        <span class="fs-5">{{ doc.job_location }}</span>
+      </div>
+
+      <!-- Job Type -->
+      <div class="d-flex align-items-center mr-5">
+        <i class="ti ti-briefcase text-secondary" style="font-size: 1.5rem;"></i>
+        <span class="fs-5">{{ doc.job_type }}</span>
+      </div>
+    </div>
+
+    <!-- Job Description -->
+    <div class="mb-5">
+      <h5 class="mb-3">Job Description</h5>
+      {{ frappe.utils.md_to_html(doc.job_description or "") }}
+    </div>
+  </div>
+
+  <!-- Call to Action -->
+  <div
+    class="container py-5 border rounded d-flex flex-column flex-md-row justify-content-between align-items-center gap-3"
+  >
+    <h5 class="mb-2 mb-md-0">Have an opening at your place?</h5>
+    <a href="https://fossunited.org/post-a-job" class="btn btn-primary" target="_blank"
+      >Post a Job</a
+    >
+  </div>
+{% endblock %}

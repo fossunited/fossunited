@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_guest_to_view": 1,
+ "creation": "2025-10-24 16:04:46.364218",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "company_location_section",
+  "is_published",
+  "route",
+  "company_name",
+  "status",
+  "email",
+  "company_website",
+  "company_vcs",
+  "application_link",
+  "job_details_section",
+  "job_title",
+  "job_type",
+  "job_location",
+  "job_description"
+ ],
+ "fields": [
+  {
+   "fieldname": "company_location_section",
+   "fieldtype": "Section Break",
+   "label": "Company Location"
+  },
+  {
+   "fieldname": "company_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Company Name",
+   "reqd": 1
+  },
+  {
+   "default": "Received",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Received\nApproved\nRejected\nExpired"
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": "Company Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_website",
+   "fieldtype": "Data",
+   "label": "Company Website",
+   "options": "URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company_vcs",
+   "fieldtype": "Data",
+   "label": "Github/Gitlab Link"
+  },
+  {
+   "fieldname": "application_link",
+   "fieldtype": "Data",
+   "label": "Application Link",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_details_section",
+   "fieldtype": "Section Break",
+   "label": "Job Details"
+  },
+  {
+   "fieldname": "job_title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Job Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Job Type",
+   "options": "Full TIme\nPart Time\nIntern\nFreelance\nContract",
+   "reqd": 1
+  },
+  {
+   "description": "ex: Remote, Hybrid, City Location",
+   "fieldname": "job_location",
+   "fieldtype": "Data",
+   "label": "Job Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "job_description",
+   "fieldtype": "Markdown Editor",
+   "label": "Job Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_published",
+   "fieldtype": "Check",
+   "label": "Published?"
+  },
+  {
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "label": "route"
+  }
+ ],
+ "grid_page_length": 50,
+ "has_web_view": 1,
+ "index_web_pages_for_search": 1,
+ "is_published_field": "is_published",
+ "links": [],
+ "modified": "2025-10-24 16:47:30.976002",
+ "modified_by": "Administrator",
+ "module": "Job",
+ "name": "Job Board",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "route": "jobs/&lt;name&gt;",
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
