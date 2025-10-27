@@ -5,9 +5,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "company_location_section",
+  "job_view_page_section",
   "is_published",
   "route",
+  "company_location_section",
   "company_name",
   "status",
   "email",
@@ -99,7 +100,8 @@
   {
    "fieldname": "route",
    "fieldtype": "Data",
-   "label": "route"
+   "label": "route",
+   "read_only": 1
   },
   {
    "default": "Received",
@@ -107,6 +109,11 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Received\nApproved\nRejected\nExpired"
+  },
+  {
+   "fieldname": "job_view_page_section",
+   "fieldtype": "Section Break",
+   "label": "Job view page"
   }
  ],
  "grid_page_length": 50,
@@ -114,7 +121,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-10-27 14:25:58.066391",
+ "modified": "2025-10-27 15:29:31.976514",
  "modified_by": "Administrator",
  "module": "Job",
  "name": "Job Board",
@@ -133,7 +140,6 @@
    "write": 1
   }
  ],
- "route": "jobs/<name>",
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
