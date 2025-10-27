@@ -2,9 +2,10 @@ import frappe
 
 
 def get_context(context):
+    context.no_cache = 1
     context.active_jobs = frappe.get_all(
         "Job Board",
-        filters={"status": "Approved"},
+        filters={"status": "Approved", "is_published": 1},
         fields=[
             "name",
             "job_title",
@@ -18,7 +19,7 @@ def get_context(context):
     )
     context.expired_jobs = frappe.get_all(
         "Job Board",
-        filters={"status": "Expired"},
+        filters={"status": "Expired", "is_published": 1},
         fields=[
             "name",
             "job_title",
@@ -32,4 +33,3 @@ def get_context(context):
         order_by="modified desc",
     )
     context.title = "Job Board - FOSS United"
-    return context

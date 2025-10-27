@@ -23,7 +23,7 @@ class JobBoard(WebsiteGenerator):
         job_location: DF.Data
         job_title: DF.Data
         job_type: DF.Literal[
-            "Full TIme", "Part Time", "Intern", "Freelance", "Contract"  # noqa: F722, F821
+            "Full Time", "Part Time", "Intern", "Freelance", "Contract"  # noqa: F722, F821
         ]
         route: DF.Data | None
         status: DF.Literal["Received", "Approved", "Rejected", "Expired"]  # noqa: F722, F821
@@ -31,10 +31,9 @@ class JobBoard(WebsiteGenerator):
 
     def before_save(self):
         """Auto-generate a route if not set."""
-        if not self.route:
-            self.route = f"jobs/{(self.name)}"
+        if not self.route or self.has_value_changed("name"):
+            self.route = f"jobs/{self.name}"
 
     def get_context(self, context):
         """Context for rendering job detail page"""
         context.title = f"{self.job_title} at {self.company_name}"
-        return context

@@ -82,7 +82,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Job Type",
-   "options": "Full TIme\nPart Time\nIntern\nFreelance\nContract",
+   "options": "Full Time\nPart Time\nIntern\nFreelance\nContract",
    "reqd": 1
   },
   {
@@ -114,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-10-24 16:47:30.976002",
+ "modified": "2025-10-27 13:32:18.348327",
  "modified_by": "Administrator",
  "module": "Job",
  "name": "Job Board",
