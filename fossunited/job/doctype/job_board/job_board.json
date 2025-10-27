@@ -34,13 +34,6 @@
    "reqd": 1
   },
   {
-   "default": "Received",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "Received\nApproved\nRejected\nExpired"
-  },
-  {
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Company Email",
@@ -107,6 +100,13 @@
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "route"
+  },
+  {
+   "default": "Received",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Received\nApproved\nRejected\nExpired"
   }
  ],
  "grid_page_length": 50,
@@ -114,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-10-27 13:32:18.348327",
+ "modified": "2025-10-27 14:25:58.066391",
  "modified_by": "Administrator",
  "module": "Job",
  "name": "Job Board",
@@ -133,7 +133,7 @@
    "write": 1
   }
  ],
- "route": "jobs/&lt;name&gt;",
+ "route": "jobs/<name>",
  "row_format": "Dynamic",
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
