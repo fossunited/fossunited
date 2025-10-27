@@ -1,0 +1,79 @@
+{% extends "templates/foss_base.html" %}
+{% block page_content %}
+
+<div class="container">
+  <div class="text-center my-4">
+    <img src="/files/job-board.png" alt="job-thumbnail" class="img-fluid">
+  </div>
+
+  <div class="jobs-board py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4>Job Board</h4>
+      <a href="/post-a-job" class="btn btn-success">Post a Job</a>
+    </div>
+
+    <!-- Active Jobs -->
+    <div class="row">
+      {% for job in active_jobs %}
+      <div class="col-lg-4 col-md-6 mb-3">
+        <div class="card h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">{{ job.job_title }}</h5>
+            <small class="text-muted mb-2">Posted {{ frappe.utils.pretty_date(job.creation) }}</small>
+
+            <div class="d-flex align-items-center mb-1">
+              <i class="ti ti-building mr-2"></i>
+              <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer">{{ job.company_name }}</a>
+            </div>
+
+            <div class="d-flex align-items-center mb-3">
+              <i class="ti ti-map-pin mr-2"></i>
+              <span>{{ job.job_location }}</span>
+            </div>
+
+            <div class="mt-auto d-flex justify-content-between align-items-center">
+              <span class="badge badge-secondary"> <i class="ti ti-briefcase-2 mr-2"></i> {{ job.job_type }}</span>
+              <a href="/jobs/{{ job.name }}" class="text-success">View Details <i class="ti ti-arrow-right"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Closed Jobs -->
+    <details class="mt-4">
+      <summary class="btn btn-outline-secondary mb-3">Show Closed Jobs</summary>
+      <div class="row">
+        {% for job in expired_jobs %}
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="card h-100">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title">{{ job.job_title }}</h5>
+              <small class="text-muted">Posted on {{ job.creation.strftime("%B %d, %Y") }}</small>
+              <small class="text-muted d-block">Closed on {{ job.modified.strftime("%B %d, %Y") }}</small>
+
+              <div class="d-flex align-items-center mb-1 mt-2">
+                <i class="ti ti-building mr-2"></i>
+                <a href="{{ job.company_website }}" target="_blank">{{ job.company_name }}</a>
+              </div>
+
+              <div class="d-flex align-items-center mb-3">
+                <i class="ti ti-map-pin mr-2"></i>
+                <span>{{ job.job_location }}</span>
+              </div>
+
+              <div class="mt-auto d-flex justify-content-between align-items-center">
+                <span class="badge badge-secondary">{{ job.job_type }}</span>
+                <a href="/jobs/{{ job.name }}" class="text-success">View Details <i class="ti ti-arrow-right"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </details>
+  </div>
+</div>
+
+{% endblock %}
