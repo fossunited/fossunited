@@ -12,13 +12,8 @@
 
   .project-grants-container {
     display: flex;
-    padding: 5rem 0rem 4rem 0rem;
+    padding: 3rem 0rem 3rem 0rem;
     flex-direction: column;
-    gap: 2.5rem;
-  }
-
-  .project-grants-container h4 {
-    font-weight: var(--fw-semibold);
   }
 
   .project-grant-category {
@@ -31,13 +26,35 @@
     display: flex;
     padding: 1rem;
     justify-content: flex-start;
-    gap: 3rem;
+    gap: 2rem;
     padding-left: 0;
+    font-size: var(--text-base);
   }
 
-  .project-grant-card p {
-    color: hsl(var(--clr-gray-500));
-    font-size: var(--text-xs);
+  .project-logo {
+    width: 64px;
+    height: 64px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: hsl(var(--clr-gray-100));
+  }
+
+  .grant-type-project {
+    padding-bottom: 4rem;
+  }
+
+  .grant-type-project .project-logo {
+    border-radius: 50%;
+  }
+
+  .grant-type-fellowship .project-logo {
+    border-radius: 0.75rem;
+  }
+
+  .project-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .project-details {
@@ -47,19 +64,9 @@
     width: 60%;
   }
 
-  .project-details p {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: var(--text-base);
-  }
-
   .project-name {
     display: flex;
     align-items: flex-end;
-  }
-
-  .project-name:hover {
-    text-decoration: none;
   }
 
   .grant-details {
@@ -82,88 +89,124 @@
 
   .grant-details h6 {
     font-size: var(--text-sm);
+    font-weight: var(--fw-medium);
   }
 
-  @media (max-width: 768px) {
-    .project-grant-card {
-      padding: 0;
-      flex-direction: column;
-      gap: 1rem;
-    }
+  .grant-detail-card p {
+    font-size: var(--text-xs);
+  }
 
-    .project-grant-category {
-      grid-template-columns: 1fr;
-      gap: 4.5rem;
-    }
+  .year-divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2rem 0 1rem;
+  }
 
-    .project-details {
-      width: 100%;
-    }
-
-    .project-details p {
-      font-size: 0.9rem;
-    }
-
-    .project-details a {
-      align-items: flex-end;
-    }
-
-    .grant-details {
-      grid-template-columns: 1fr 1fr 1fr;
-      padding: 0;
-    }
-    .grant-detail-card {
-      padding: 0;
-      background: none;
-      text-align: left;
-    }
-
-    .grant-details h6 {
-      font-size: 0.9rem;
-    }
+  .year-divider hr {
+    flex-grow: 1;
+    border: none;
+    border-top: 2px solid hsl(var(--clr-gray-300));
   }
 </style>
 
-<div class="project-grants-section container">
-  <div class="project-grants-container">
-    <h4>{{ heading }}</h4>
+{% macro render_grant_section(type, grants) %}
+  {% if grants %}
+    <div class="grant-type-{{ type|lower }}">
+      <h4>{{ type }} Grants</h4>
 
-    <div class="project-grant-category">
       {%
-        set project_grants = frappe.get_all("FOSS Project Grant",
-        fields=["project_name","about_project", "project_website", "grant_amount", "co_sponsor", "date_of_provision" ],
-        filters={"grant_status": "Approved"},
-        order_by="date_of_provision desc")
+        set years = grants
+        | selectattr("date_of_provision")
+        | map(attribute='date_of_provision.year')
+        | list
+        | unique
+        | sort(reverse=true)
       %}
-      {% for grant in project_grants %}
-        <div class="project-grant-card">
-          <div class="project-details">
-            <a class="project-name" href="{{ grant.project_website }}">
-              <h6>{{ grant.project_name }}</h6>
-              <i class="ti ti-arrow-up-right"></i>
-            </a>
-            <p>{{ grant.about_project }}</p>
-          </div>
 
-          <div class="grant-details">
-            <div class="grant-detail-card" id="grant-date">
-              <p>Grant Year</p>
-              <h6>{{ grant.date_of_provision.strftime("%Y") }}</h6>
-            </div>
-            <div class="grant-detail-card" id="project-grant-amount">
-              <p>Grant Amt.</p>
-              <h6>₹ {{ grant.grant_amount }}</h6>
-            </div>
+      {% for year in years %}
+        <div class="year-divider">
+          <h5>{{ year }}</h5>
+          <hr />
+        </div>
 
-            {% if grant.co_sponsor %}
-              <div class="grant-detail-card" id="grant-date">
-                <p>Co-Sponsor</p>
-                <h6>{{ grant.co_sponsor }}</h6>
+        <div class="project-grant-category">
+          {% for grant in grants if grant.date_of_provision and grant.date_of_provision.year == year %}
+            <div class="project-grant-card">
+              {% if grant.project_logo %}
+                <div class="project-logo">
+                  <img src="{{ grant.project_logo }}" alt="{{ grant.project_name }}" />
+                </div>
+              {% endif %}
+
+              <div class="project-details">
+                {% if grant.project_website %}
+                  <a class="project-name" href="{{ grant.project_website }}" target="_blank">
+                    <h6>{{ grant.project_name }}</h6>
+                    <i class="ti ti-arrow-up-right"></i>
+                  </a>
+                {% else %}
+                  <div class="project-name">
+                    <h6>{{ grant.project_name }}</h6>
+                  </div>
+                {% endif %}
+
+                {% if grant.about_project %}
+                  <p>{{ grant.about_project }}</p>
+                {% endif %}
               </div>
-            {% endif %}
-          </div>
+
+              <div class="grant-details">
+                {% if grant.date_of_provision %}
+                  <div class="grant-detail-card">
+                    <p>Grant Year</p>
+                    <h6>{{ grant.date_of_provision.strftime("%Y") }}</h6>
+                  </div>
+                {% endif %}
+                {% if grant.grant_amount %}
+                  <div class="grant-detail-card">
+                    <p>Grant Amt.</p>
+                    <h6>₹ {{ grant.grant_amount }}</h6>
+                  </div>
+                {% endif %}
+                {% if grant.co_sponsor %}
+                  <div class="grant-detail-card">
+                    <p>Co-Sponsor</p>
+                    <h6>{{ grant.co_sponsor }}</h6>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
         </div>
       {% endfor %}
     </div>
+  {% endif %}
+{% endmacro %}
+
+<div class="project-grants-section container">
+  <div class="project-grants-container">
+    {%
+      set project_grants = frappe.get_all(
+        "FOSS Project Grant",
+        fields=[
+          "project_name",
+          "about_project",
+          "project_website",
+          "grant_amount",
+          "co_sponsor",
+          "date_of_provision",
+          "grant_type",
+          "project_logo"
+        ],
+        filters={"grant_status": "Approved"},
+        order_by="date_of_provision desc"
+      )
+    %}
+    {% set project_list = project_grants | selectattr("grant_type", "equalto", "Project") | list %}
+    {% set fellowship_list = project_grants | selectattr("grant_type", "equalto", "Fellowship") | list %}
+
+    {{ render_grant_section("Project", project_list) }}
+    {{ render_grant_section("Fellowship", fellowship_list) }}
   </div>
 </div>
