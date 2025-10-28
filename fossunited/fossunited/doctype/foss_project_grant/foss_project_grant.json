@@ -81,6 +81,7 @@
    "label": "Date of provision"
   },
   {
+   "default": "Project",
    "fieldname": "grant_type",
    "fieldtype": "Select",
    "label": "Grant Type",
@@ -94,7 +95,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 18:29:45.455975",
+ "modified": "2025-10-28 22:54:22.096609",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",
