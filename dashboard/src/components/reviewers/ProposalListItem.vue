@@ -11,7 +11,10 @@
       {{ submission.talk_title }}
     </h4>
     <div class="flex gap-2 items-center !text-sm">
-      <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
+      <Badge
+        :label="submission._is_reviewed === 'Yes' ? 'Reviewed' : submission.status"
+        :theme="getStatusBadgeTheme(submission._is_reviewed || submission.status)"
+      />
       <Badge :label="submission._likes_count" variant="ghost" class="!text-gray-500">
         <template #prefix>
           <IconHeart size="14" />

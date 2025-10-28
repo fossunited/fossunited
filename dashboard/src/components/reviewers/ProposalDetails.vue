@@ -11,8 +11,8 @@
       </div>
       <div class="flex items-center gap-2">
         <Badge
-          :label="submission.data.status"
-          :theme="getStatusBadgeTheme(submission.data.status)"
+          :label="submission.data.hasReviewed ? 'Reviewed' : submission.data.status"
+          :theme="getStatusBadgeTheme(submission.data.hasReviewed ? 'Yes' : 'No')"
         />
         <span class="text-sm text-gray-600">
           Submitted {{ dayjs(submission.data.creation).fromNow() }}
@@ -50,7 +50,7 @@
 </template>
 <script setup>
 import { createResource, LoadingIndicator, Badge, TabButtons } from 'frappe-ui'
-import { provide, ref, watch } from 'vue'
+import { provide, ref, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
@@ -107,6 +107,8 @@ const hasAnonymousSpeaker = createResource({
   auto: true,
 })
 
+const session = inject('$session')
+
 const submission = createResource({
   url: 'frappe.client.get',
   makeParams() {
@@ -117,11 +119,14 @@ const submission = createResource({
     }
   },
   transform(data) {
-    if (!data.session_categories) {
-      data.session_categories = []
-    } else {
-      data.session_categories = data.session_categories.split('\n')
-    }
+    // Ensure session_categories is always an array
+    data.session_categories = (data.session_categories ?? '').split('\n').filter(Boolean)
+
+    // Ensure reviews is always an array
+    data.reviews = data.reviews ?? []
+
+    data.hasReviewed = data.reviews.some((review) => review.owner === session.user)
+
     return data
   },
 })
