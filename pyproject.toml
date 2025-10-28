@@ -48,6 +48,7 @@ select = [
     "E",
     "F",
 ]
+ignore = ["F722", "F821"] # many doctypes needs this!
 
 [tool.ty.rules]
 possibly-unresolved-reference = "warn"
