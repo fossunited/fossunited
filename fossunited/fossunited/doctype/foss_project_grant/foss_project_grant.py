@@ -18,6 +18,8 @@ class FOSSProjectGrant(Document):
         date_of_provision: DF.Date | None
         grant_amount: DF.Data | None
         grant_status: DF.Literal["Open", "Approved", "Under Review", "Rejected"]  # noqa: F722, F821
+        grant_type: DF.Literal["Project", "Fellowship"]  # noqa: F722, F821
+        project_logo: DF.AttachImage | None
         project_name: DF.Data
         project_website: DF.Data | None
     # end: auto-generated types
