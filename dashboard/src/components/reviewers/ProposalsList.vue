@@ -6,8 +6,11 @@
         <IconSearch class="w-4" />
       </template>
     </FormControl>
-    <div class="flex flex-wrap justify-between items-center gap-4">
-      <Filter v-model="filters" :docfields="docfields.data" />
+    <div class="flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center gap-4">
+        <Filter v-model="filters" :docfields="docfields.data" />
+        <Switch v-model="showNotReviewed" label="Only show not reviewed" />
+      </div>
       <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
   </div>
@@ -36,7 +39,7 @@
 <script setup>
 import ProposalListItem from './ProposalListItem.vue'
 import { defineProps, watch, ref } from 'vue'
-import { createResource, FormControl, LoadingIndicator } from 'frappe-ui'
+import { createResource, FormControl, LoadingIndicator, Switch } from 'frappe-ui'
 import Filter from '../ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
@@ -58,6 +61,7 @@ const props = defineProps({
 
 const emit = defineEmits(['open:submission'])
 
+const showNotReviewed = ref(false)
 const searchTitle = ref('')
 const filters = useStorage(`review-filters:${route.params.id}`, {})
 const docfields = await getCfpFilterFields(route.params.id)
@@ -80,19 +84,17 @@ const cfpSubmissions = createResource({
 })
 
 watch(
-  () => filters.value,
-  () => {
-    cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, filters.value)
-  },
-  { deep: true },
-)
+  [() => filters.value, () => searchTitle.value, () => showNotReviewed.value],
+  ([newFilters, newTitle, notReviewed]) => {
+    const _filters = {
+      ...newFilters,
+      ...(newTitle ? { talk_title: ['like', newTitle] } : {}),
+      ...(notReviewed ? { _is_not_reviewed: ['=', 'Yes'] } : {}),
+    }
 
-watch(
-  () => searchTitle.value,
-  () => {
-    const _filters = { ...filters.value, talk_title: ['like', `${searchTitle.value}`] }
     cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
   },
+  { deep: true, immediate: true },
 )
 
 const handleOpenSubmission = (submission) => {
