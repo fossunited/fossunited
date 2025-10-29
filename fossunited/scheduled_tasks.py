@@ -35,6 +35,7 @@ def conclude_events():
             doc.status = "Concluded"
             doc.show_rsvp = 0
             doc.show_cfp = 0
+            doc.show_speakers = 1
             doc.save(ignore_permissions=True)
 
             rsvps = frappe.get_all(EVENT_RSVP, filters={"event": doc.name}, fields=["name"])
@@ -73,7 +74,7 @@ def update_past_job_status():
 
             # Send notification email after successful update
             if job_doc.mail:
-                cc_email = ["developers@fossunited.org"]
+                cc_email = ["foundation@fossunited.org"]
                 subject = (
                     f"Job Posting Auto-Expiry Notice: "
                     f"{frappe.utils.escape_html(job_doc.name)} | "
@@ -84,11 +85,11 @@ def update_past_job_status():
                     f"<p>Dear {frappe.utils.escape_html(job_doc.company_name)},</p>"
                     f"<p>Your job posting titled"
                     f"<strong>{frappe.utils.escape_html(job_doc.job_title)}</strong> "
-                    f"has not been updated in over 90 days and "
+                    f"has been up for 90 days and "
                     f"will now be automatically marked as "
                     f"<strong>Expired</strong>.</p>"
-                    f"<p>If you wish to keep this job open, please update the job post.</p>"
-                    f"<p>Regards,<br>FossUnited Team</p>"
+                    f"<p>If you wish to keep this job open, please reply over this email.</p>"
+                    f"<p>Regards,<br>FOSS United Team</p>"
                 )
                 frappe.sendmail(
                     recipients=[job_doc.mail],
