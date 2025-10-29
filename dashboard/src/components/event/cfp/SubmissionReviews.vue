@@ -42,7 +42,11 @@ const getTheme = (status) => {
     <div class="flex flex-col">
       <div v-for="review in reviews" :key="review.name" class="flex flex-col gap-1 border-b py-3">
         <div class="flex justify-between items-center gap-4">
-          <div v-if="review.remarks" class="text-base" v-html="cleanedHTML(review.remarks)"></div>
+          <div
+            v-if="review.remarks"
+            class="prose prose-sm"
+            v-html="cleanedHTML(review.remarks)"
+          ></div>
           <span v-else class="text-base text-gray-600">No Remarks</span>
         </div>
         <div class="flex gap-2 items-center">

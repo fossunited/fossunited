@@ -36,7 +36,7 @@
         <div v-if="isReviewOwner(review)" class="p-4 border rounded flex flex-col gap-2">
           <h5 class="text-base font-semibold">Your Review</h5>
           <div class="flex justify-between items-center gap-4">
-            <div v-if="review.remarks" class="text-base" v-html="review.remarks"></div>
+            <div v-if="review.remarks" class="prose prose-sm" v-html="review.remarks"></div>
             <span v-else class="text-sm text-gray-600">No Remarks</span>
             <div class="flex items-center gap-2">
               <Button label="Edit" @click="editReview(review)" />
@@ -53,7 +53,7 @@
           <div class="flex justify-between items-center gap-4">
             <div
               v-if="review.remarks"
-              class="text-base"
+              class="prose prose-sm"
               v-html="cleanedHTML(review.remarks)"
             ></div>
             <span v-else class="text-sm text-gray-600">No Remarks</span>
