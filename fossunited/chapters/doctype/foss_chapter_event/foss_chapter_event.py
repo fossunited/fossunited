@@ -271,7 +271,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         if is_user_team_member(self.chapter, frappe.session.user):
             return navbar_items
 
-        if not self.show_speakers:
+        speakers, submissions = self.get_speakers()
+
+        if not self.show_speakers or not speakers:
             navbar_items.remove("speakers")
         if not self.show_rsvp or self.is_paid_event:
             navbar_items.remove("rsvp")
