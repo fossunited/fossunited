@@ -27,6 +27,12 @@ const cfpData = createResource({
   },
 })
 
+const insightFilter = ref('')
+
+function updateStatusFilter(selectedLabel) {
+  insightFilter.value = selectedLabel
+}
+
 const breadcrumb_items = ref([
   {
     label: 'Events',
@@ -66,7 +72,7 @@ usePageMeta(() => {
       </EventHeader>
     </div>
     <FormCard :cfp="cfpData.data" />
-    <InsightsGrid :event-id="cfpData.data.event.name" />
-    <SubmissionsListView :event-id="cfpData.data.event.name" />
+    <InsightsGrid :event-id="cfpData.data.event.name" @select-insight="updateStatusFilter" />
+    <SubmissionsListView :event-id="cfpData.data.event.name" :status-filter="insightFilter" />
   </NarrowLayout>
 </template>

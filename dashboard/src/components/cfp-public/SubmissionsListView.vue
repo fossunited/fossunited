@@ -12,15 +12,13 @@ const route = useRoute()
 
 const filters = useStorage(`submission-filters:${route.params.route}`, {})
 const searchTitle = ref('')
-const statusFilter = ref('')
 
 const props = defineProps({
-  eventId: {
-    type: String,
-    required: true,
-  },
+  eventId: { type: String, required: true },
+  statusFilter: { type: String, default: '' },
 })
 
+const filteredStatus = ref(props.statusFilter)
 const submissions = createResource({
   url: 'fossunited.api.proposal.get_event_proposals',
   params: {
@@ -67,7 +65,7 @@ const statusOptions = computed(() => {
 
 const filteredSubmissions = computed(() => {
   const search = searchTitle.value.trim().toLowerCase()
-  const status = statusFilter.value
+  const status = filteredStatus.value
   let result = Array.isArray(submissions.originalData) ? [...submissions.originalData] : []
 
   if (filters.value) {
@@ -92,6 +90,13 @@ const filteredSubmissions = computed(() => {
   return result
 })
 
+watch(
+  () => props.statusFilter,
+  (newVal) => {
+    filteredStatus.value = newVal
+  },
+)
+
 watch(filteredSubmissions, (val) => {
   submissions.data = val
 })
@@ -106,7 +111,7 @@ watch(filteredSubmissions, (val) => {
           </template>
         </FormControl>
         <div class="flex items-end gap-2">
-          <Select v-model="statusFilter" :options="statusOptions" />
+          <Select v-model="filteredStatus" :options="statusOptions" />
           <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
         </div>
       </div>

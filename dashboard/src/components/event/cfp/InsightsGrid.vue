@@ -21,6 +21,13 @@ const insights = createResource({
   auto: true,
 })
 
+const emit = defineEmits(['select-insight'])
+
+function handleClick(label) {
+  const filterValue = label === 'Total' ? '' : label
+  emit('select-insight', filterValue)
+}
+
 const getClasses = {
   'Total Submissions': 'md:col-span-2 lg:col-span-1',
 }
@@ -36,6 +43,7 @@ const getClasses = {
         :class="getClasses[insight.label]"
         :title="insight.label"
         :value="insight.count"
+        @click="() => handleClick(insight.label)"
       >
         <template v-if="insight.today" #post-value>
           <Badge class="w-fit" theme="green">
