@@ -18,5 +18,5 @@ def execute():
         updates["is_published"] = 1
 
         if updates:
-            frappe.db.set_value("Job Board", job.name, updates)
+            frappe.db.set_value("Job Board", job.name, updates, update_modified=False)
     frappe.logger().info("✅ Job Board migration completed: routes + is_published set.")
