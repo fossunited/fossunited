@@ -178,7 +178,7 @@
 
 {% macro review_card(review) %}
   <div class="flex flex-col gap-1 my-2">
-    <div class="text-base">{{ review.remarks }}</div>
+    <div class="prose prose-sm">{{ review.remarks | escape }}</div>
     <div class="flex gap-2 items-center">
       <span class="text-sm">Reviewer #{{ review.idx }}</span>
       <i class="ti ti-circle-filled text-[8px] text-gray-400"></i>
