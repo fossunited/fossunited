@@ -4,7 +4,7 @@ import Filter from '@/components/ui/Filter.vue'
 import { IconSearch } from '@tabler/icons-vue'
 import { createResource, FormControl, LoadingText } from 'frappe-ui'
 import { filterSubmissions } from '@/helpers/cfp'
-import { watch, ref } from 'vue'
+import { watch, ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 
@@ -46,47 +46,31 @@ const filterFields = createResource({
   },
 })
 
-watch(
-  () => filters.value,
-  () => {
-    submissions.data = filterSubmissions(submissions.originalData, filters.value)
-  },
-  { deep: true },
-)
+const filteredSubmissions = computed(() => {
+  const search = searchTitle.value.trim().toLowerCase()
+  let result = Array.isArray(submissions.originalData) ? [...submissions.originalData] : []
 
-watch(
-  () => searchTitle.value,
-  () => {
-    const search = searchTitle.value.trim().toLowerCase()
-    let filtered = Array.isArray(submissions.originalData) ? submissions.originalData : []
+  if (filters.value) {
+    result = filterSubmissions(result, filters.value)
+  }
 
-    // Apply basic field filters (status, session_type, etc.)
-    if (filters.value) {
-      filtered = filterSubmissions(filtered, filters.value)
-    }
+  if (search) {
+    result = result.filter(({ talk_title, speaker_name, speakers, _speaker }) => {
+      const titleMatch = talk_title?.toLowerCase().includes(search)
+      const allNames = [
+        ...(speaker_name ? [speaker_name.toLowerCase()] : []),
+        ...((speakers ?? _speaker)?.map((s) => s?.full_name?.toLowerCase() ?? '') ?? []),
+      ]
+      return titleMatch || allNames.some((n) => n.includes(search))
+    })
+  }
 
-    // Apply search on talk title or speaker name
-    if (search) {
-      filtered = filtered.filter((submission) => {
-        const title = submission.talk_title?.toLowerCase() ?? ''
-        // Prefer pre-joined string if present; fallback to array forms.
-        const speakerNameStr = submission.speaker_name?.toLowerCase() ?? ''
-        let speakerMatch = false
-        if (speakerNameStr) {
-          speakerMatch = speakerNameStr.includes(search)
-        } else {
-          const speakersArr = submission.speakers ?? submission._speaker
-          if (Array.isArray(speakersArr)) {
-            speakerMatch = speakersArr.some((s) => s?.full_name?.toLowerCase().includes(search))
-          }
-        }
-        return title.includes(search) || speakerMatch
-      })
-    }
+  return result
+})
 
-    submissions.data = filtered
-  },
-)
+watch(filteredSubmissions, (val) => {
+  submissions.data = val
+})
 </script>
 <template>
   <Suspense>
