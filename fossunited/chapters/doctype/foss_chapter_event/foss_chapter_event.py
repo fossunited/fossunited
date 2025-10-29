@@ -222,10 +222,10 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
-        context.nav_items = self.get_navbar_items()
         context.sponsors_dict = self.get_sponsors()
         context.volunteers = self.get_volunteers()
         context.speakers, context.submissions = self.get_speakers()
+        context.nav_items = self.get_navbar_items(context.speakers)
         context.rsvp_status_block = self.get_rsvp_status_block()
         context.cfp_status_block = self.get_cfp_status_block()
         context.user_cfp_submissions = self.get_user_cfp_submissions()
@@ -259,7 +259,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_navbar_items(self):
+    def get_navbar_items(self, speakers=None):
         navbar_items = [
             "event_information",
             "speakers",
@@ -271,7 +271,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         if is_user_team_member(self.chapter, frappe.session.user):
             return navbar_items
 
-        if not self.show_speakers:
+        if speakers is None:
+            speakers, _ = self.get_speakers()
+        if not self.show_speakers or not speakers:
             navbar_items.remove("speakers")
         if not self.show_rsvp or self.is_paid_event:
             navbar_items.remove("rsvp")
