@@ -73,7 +73,7 @@ def update_past_job_status():
             job_doc.save(ignore_permissions=True)
 
             # Send notification email after successful update
-            if job_doc.mail:
+            if job_doc.email:
                 cc_email = ["foundation@fossunited.org"]
                 subject = (
                     f"Job Posting Auto-Expiry Notice: "
@@ -92,7 +92,7 @@ def update_past_job_status():
                     f"<p>Regards,<br>FOSS United Team</p>"
                 )
                 frappe.sendmail(
-                    recipients=[job_doc.mail],
+                    recipients=[job_doc.email],
                     cc=cc_email,
                     subject=subject,
                     message=message,
