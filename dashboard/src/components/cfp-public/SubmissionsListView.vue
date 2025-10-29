@@ -2,7 +2,7 @@
 import SubmissionsList from './SubmissionsList.vue'
 import Filter from '@/components/ui/Filter.vue'
 import { IconSearch } from '@tabler/icons-vue'
-import { createResource, FormControl, LoadingText } from 'frappe-ui'
+import { createResource, FormControl, LoadingText, Select } from 'frappe-ui'
 import { filterSubmissions } from '@/helpers/cfp'
 import { watch, ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
@@ -12,6 +12,7 @@ const route = useRoute()
 
 const filters = useStorage(`submission-filters:${route.params.route}`, {})
 const searchTitle = ref('')
+const statusFilter = ref('')
 
 const props = defineProps({
   eventId: {
@@ -46,12 +47,35 @@ const filterFields = createResource({
   },
 })
 
+const statusOptions = computed(() => {
+  const data = filterFields.data
+  if (!data || !Array.isArray(data)) return []
+
+  const statusField = data.find((field) => field.fieldname === 'status')
+  if (!statusField) return []
+
+  const options = [
+    { label: 'All', value: '' },
+    ...statusField.options.split('\n').map((option) => ({
+      label: option,
+      value: option,
+    })),
+  ]
+
+  return options
+})
+
 const filteredSubmissions = computed(() => {
   const search = searchTitle.value.trim().toLowerCase()
+  const status = statusFilter.value
   let result = Array.isArray(submissions.originalData) ? [...submissions.originalData] : []
 
   if (filters.value) {
     result = filterSubmissions(result, filters.value)
+  }
+
+  if (status) {
+    result = result.filter((item) => item.status === status)
   }
 
   if (search) {
@@ -81,7 +105,10 @@ watch(filteredSubmissions, (val) => {
             <IconSearch class="w-4" />
           </template>
         </FormControl>
-        <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
+        <div class="flex items-end gap-2">
+          <Select v-model="statusFilter" :options="statusOptions" />
+          <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
+        </div>
       </div>
       <SubmissionsList v-model="submissions.data" />
       <div
