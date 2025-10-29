@@ -40,80 +40,45 @@
           <RadioGroupLabel class="text-lg font-semibold leading-6 text-gray-800">
             Select a tier
           </RadioGroupLabel>
-
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]">
             <RadioGroupOption
               v-for="tier in ticketTiers"
               :key="tier.name"
-              :value="tier"
-              :disabled="!tier.isActive"
-              v-slot="{ active, checked, disabled }"
+              v-slot="{ active, checked }"
               as="template"
+              :value="tier"
             >
               <div
                 :class="[
-                  checked && tier.isActive
-                    ? 'border-gray-800 ring-1 ring-gray-800'
-                    : 'border-gray-300',
-                  disabled
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed opacity-60'
-                    : 'bg-white cursor-pointer hover:shadow-md',
-                  'relative flex rounded-lg border p-4 shadow-sm focus:outline-none min-w-36 transition-all',
+                  checked ? 'border-gray-800 ring-1 ring-gray-800' : 'border-gray-300',
+                  'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none min-w-36',
                 ]"
               >
                 <span class="flex flex-1">
                   <span class="flex flex-col justify-between">
-                    <!-- Title & Description -->
                     <span class="flex flex-col gap-2">
-                      <RadioGroupLabel as="span" class="block text-xl font-bold text-gray-900">
-                        {{ tier.title }}
-                      </RadioGroupLabel>
-
+                      <RadioGroupLabel as="span" class="block text-xl font-bold text-gray-900">{{
+                        tier.title
+                      }}</RadioGroupLabel>
                       <RadioGroupDescription
                         as="span"
                         class="mt-2 text-sm text-gray-500"
                         :innerHTML="markdown.render(tier.description || '')"
-                      ></RadioGroupDescription>
-                    </span>
-
-                    <!-- Badge & Price -->
-                    <span class="flex flex-col gap-2">
-                      <Badge
-                        v-if="tier.title"
-                        class="w-fit"
-                        variant="outline"
-                        :theme="tier.isActive ? 'green' : 'red'"
                       >
-                        <template v-if="tier.isActive">
-                          {{
-                            tier.valid_till
-                              ? 'Available till ' + dayjs(tier.valid_till).format('MMM D, YYYY')
-                              : 'Tickets Open!'
-                          }}
-                        </template>
-                        <template v-else>
-                          {{
-                            tier.valid_till
-                              ? 'Closed on ' + dayjs(tier.valid_till).format('MMM D, YYYY')
-                              : 'Closed'
-                          }}
-                        </template>
-                      </Badge>
-
-                      <RadioGroupDescription
-                        as="span"
-                        class="text-xl font-medium"
-                        :class="tier.isActive ? 'text-gray-900' : 'text-gray-500 line-through'"
-                      >
-                        ₹{{ tier.price }}
                       </RadioGroupDescription>
+                    </span>
+                    <span class="flex flex-col gap-4 mt-4">
+                      <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
+                        >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                      >
+                      <RadioGroupDescription as="span" class="text-xl font-medium text-gray-900"
+                        >₹{{ tier.price }}</RadioGroupDescription
+                      >
                     </span>
                   </span>
                 </span>
-
-                <!-- Checkmark Icon -->
                 <svg
-                  :class="[!checked || !tier.isActive ? 'invisible' : '', 'h-6 w-6 text-gray-800']"
+                  :class="[!checked ? 'invisible' : '', 'h-6 w-6 text-gray-800']"
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="currentColor"
@@ -124,12 +89,10 @@
                     clip-rule="evenodd"
                   />
                 </svg>
-
-                <!-- Outline Ring -->
                 <span
                   :class="[
-                    active && !disabled ? 'border' : 'border-2',
-                    checked && tier.isActive ? 'border-gray-800' : 'border-transparent',
+                    active ? 'border' : 'border-2',
+                    checked ? 'border-gray-800' : 'border-transparent',
                     'pointer-events-none absolute -inset-px rounded-lg',
                   ]"
                   aria-hidden="true"
@@ -307,13 +270,13 @@
       </div>
 
       <Card class="w-1/4 h-fit sticky top-20 hidden md:block" title="Ticket Summary">
-        <div v-if="checkoutInfo.tier" class="w-full mt-2 space-y-1">
+        <div class="w-full mt-2 space-y-1">
           <div class="grid grid-cols-3 gap-2">
-            <p>{{ checkoutInfo.tier?.title }} Ticket</p>
+            <p>{{ checkoutInfo.tier.title }} Ticket</p>
             <p class="justify-self-center">
-              ₹{{ checkoutInfo.tier?.price }} x {{ checkoutInfo.numSeats }}
+              ₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}
             </p>
-            <p class="justify-self-end">₹{{ checkoutInfo.tier?.price * checkoutInfo.numSeats }}</p>
+            <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
           </div>
 
           <div
@@ -341,17 +304,10 @@
           size="md"
           :loading="rzpCheckout?.resource.loading"
           variant="solid"
-          :disabled="!checkoutInfo.tier"
-          :class="
-            !checkoutInfo.tier ? 'border border-red-500 text-red-500 bg-white hover:bg-red-50' : ''
-          "
           @click="createOrder"
         >
-          {{ !checkoutInfo.tier ? 'Select a Tier First' : 'Pay Now' }}
+          Pay Now
         </Button>
-        <p v-if="!checkoutInfo.tier" class="mt-2 text-sm text-red-600 text-center">
-          Please select a ticket tier before proceeding to payment.
-        </p>
       </Card>
     </div>
   </div>
@@ -373,14 +329,13 @@
         @click="showAdditionalDetails = !showAdditionalDetails"
       />
     </div>
-
     <div v-if="showAdditionalDetails" class="w-full mt-2 space-y-1">
       <div class="grid grid-cols-3 gap-2">
-        <p>{{ checkoutInfo.tier?.title }} Ticket</p>
+        <p>{{ checkoutInfo.tier.title }} Ticket</p>
         <p class="justify-self-center">
-          ₹{{ checkoutInfo.tier?.price }} x {{ checkoutInfo.numSeats }}
+          ₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}
         </p>
-        <p class="justify-self-end">₹{{ checkoutInfo.tier?.price * checkoutInfo.numSeats }}</p>
+        <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
       </div>
       <div v-if="event.data.paid_tshirts_available && numTShirtAdded > 0" class="grid grid-cols-3">
         <p>T-Shirts</p>
@@ -403,17 +358,10 @@
       size="md"
       :loading="rzpCheckout?.resource.loading"
       variant="solid"
-      :disabled="!checkoutInfo.tier"
-      :class="
-        !checkoutInfo.tier ? 'border border-red-500 text-red-500 bg-white hover:bg-red-50' : ''
-      "
       @click="createOrder"
     >
-      {{ !checkoutInfo.tier ? 'Select a Tier First' : 'Pay Now' }}
+      Pay Now
     </Button>
-    <p v-if="!checkoutInfo.tier" class="mt-2 text-sm text-red-600 text-center">
-      Please select a ticket tier before proceeding to payment.
-    </p>
   </div>
 </template>
 
@@ -485,39 +433,8 @@ const stateOptions = createResource({
   auto: true,
 })
 
-const ticketTiers = computed(() => {
-  const tiers = event.data?.tiers || []
-
-  const enriched = tiers.map((tier) => {
-    const isEnabled = Boolean(tier.enabled)
-    const isExpired = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
-    const isActive = isEnabled && !isExpired
-    const maxAllowed = tier.maximum_tickets // placeholder for future
-
-    return {
-      ...tier,
-      isActive,
-      isExpired,
-      isDisabled: !isActive, // add this to support sorting
-    }
-  })
-
-  return enriched.sort((a, b) => {
-    // Sort: isActive (true first)
-    if (a.isActive !== b.isActive) return a.isActive ? -1 : 1
-    return 0
-  })
-})
-
 watch(
   () => checkoutInfo.numSeats,
-  (ticketTiers,
-  (tiers) => {
-    const stillValid = tiers.some((tier) => tier.isActive && tier.id === checkoutInfo.tier?.id)
-    if (!stillValid) {
-      checkoutInfo.tier = null
-    }
-  }),
   () => {
     if (checkoutInfo.attendees.length < checkoutInfo.numSeats) {
       // fill empty attendees for the seats
@@ -555,13 +472,9 @@ const event = createResource({
     }
   },
   onSuccess(data) {
-    // No need to filter anything again — let ticketTiers handle it
-    const activeTiers = ticketTiers.value.filter((tier) => tier.isActive)
-
-    if (activeTiers.length > 0) {
-      checkoutInfo.tier = activeTiers[0]
-    } else {
-      checkoutInfo.tier = null
+    const tiers = data.tiers.filter((tier) => tier.enabled === 1)
+    if (tiers.length > 0) {
+      checkoutInfo.tier = tiers[0]
     }
     resetCustomFields()
   },
@@ -669,6 +582,16 @@ const numTShirtAdded = computed(() => {
   return tShirts
 })
 
+const ticketTiers = computed(() => {
+  let tiers = event.data?.tiers || []
+  tiers = tiers.filter((tier) => {
+    const isEnabled = Boolean(tier.enabled)
+    const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+    return isEnabled && !deadlinePassed
+  })
+  return tiers
+})
+
 const seatOptions = computed(() => {
   return Array.from({ length: MAX_SEATS_PER_BOOKING }, (_, i) => i + 1).map((i) => ({
     label: i.toString(),
@@ -678,20 +601,6 @@ const seatOptions = computed(() => {
 
 const checkoutFormErrors = computed(() => {
   const errors = []
-  const selected = checkoutInfo.tier
-
-  if (!selected) {
-    errors.push('Please select a ticket tier')
-  } else {
-    // Find the tier from the ticketTiers list
-    const match = ticketTiers.value.find((t) => t.id === selected.id)
-
-    // If not found or not active, it's invalid
-    if (!match || !match.isActive) {
-      errors.push('Selected ticket tier is no longer available')
-    }
-  }
-
   if (!checkoutInfo.email) {
     errors.push('Please enter your email')
   }
