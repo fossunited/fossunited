@@ -1,2 +1,7 @@
 @import './assets/Inter/inter.css';
 @import 'frappe-ui/src/style.css';
+.PopoverContent {
+    /* issue with frappe-ui reka-ui, it has z-index due to AutoComplete being used in Drawer*/
+    /* we can either reduce z of drawer or increase popover     */
+  z-index: 999 !important;
+}
