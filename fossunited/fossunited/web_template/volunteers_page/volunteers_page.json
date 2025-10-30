@@ -1,0 +1,57 @@
+{
+ "__unsaved": 1,
+ "creation": "2025-10-30 22:45:18.492843",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "fieldname": "v_title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 0
+  },
+  {
+   "fieldname": "v_description",
+   "fieldtype": "Small Text",
+   "label": "Description",
+   "reqd": 0
+  },
+  {
+   "fieldname": "docs_text",
+   "fieldtype": "Data",
+   "label": "Link text",
+   "reqd": 0
+  },
+  {
+   "fieldname": "docs_link",
+   "fieldtype": "Data",
+   "label": "Docs Link",
+   "options": "URL",
+   "reqd": 0
+  },
+  {
+   "fieldname": "docs_description",
+   "fieldtype": "Small Text",
+   "label": "Docs Description",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "banner_image",
+   "fieldtype": "Data",
+   "label": "Banner Image",
+   "options": "URL",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2025-10-30 22:58:12.257739",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Volunteers_page",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}

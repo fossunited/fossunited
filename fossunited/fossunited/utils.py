@@ -3,6 +3,7 @@ from collections import defaultdict
 from datetime import datetime
 
 import frappe
+from frappe.utils import add_to_date, get_datetime, nowdate
 from frappe.utils.data import now_datetime
 
 from fossunited.doctype_ids import (
@@ -469,3 +470,121 @@ def get_select_field_options(doctype_name, fieldname):
     # Options are stored as newline-separated string in `field.options`
     options = field.options.split("\n") if field.options else []
     return options
+
+
+@frappe.whitelist(allow_guest=True)
+def get_volunteers_data():
+    """
+    Get all volunteers data - returns flat list of members
+    Frontend handles grouping and sorting via JavaScript
+
+    Returns:
+        dict: Contains members list and stats
+    """
+
+    # Calculate one year ago date
+    one_year_ago = add_to_date(nowdate(), years=-1)
+    one_year_ago_dt = get_datetime(one_year_ago)
+
+    # Get all chapters with their latest event date in one query
+    chapters_data = frappe.db.sql(
+        """
+        SELECT
+            c.name as chapter_id,
+            c.chapter_name,
+            c.chapter_logo,
+            MAX(e.event_start_date) as latest_event_date
+        FROM `tabFOSS Chapter` c
+        LEFT JOIN `tabFOSS Chapter Event` e ON e.chapter = c.name
+        GROUP BY c.name, c.chapter_name, c.chapter_logo
+    """,
+        as_dict=True,
+    )
+
+    # Build chapter lookup maps
+    active_chapters = set()
+    chapter_info = {}
+
+    for chapter in chapters_data:
+        chapter_info[chapter.chapter_id] = {
+            "name": chapter.chapter_name,
+            "logo": chapter.chapter_logo
+            or "/assets/fossunited/images/chapter/foss_club_profile.svg",
+        }
+
+        if chapter.latest_event_date and chapter.latest_event_date >= one_year_ago_dt:
+            active_chapters.add(chapter.chapter_id)
+
+    # Get all chapter members with profile data in single query
+    members_raw = frappe.db.sql(
+        """
+        SELECT DISTINCT
+            cm.chapter_member,
+            cm.parent as chapter_id,
+            p.route as username,
+            p.full_name,
+            p.profile_photo,
+            p.show_activity,
+            p.current_city
+        FROM `tabFOSS Chapter Lead Team Member` cm
+        LEFT JOIN `tabFOSS User Profile` p ON cm.chapter_member = p.name
+        WHERE cm.chapter_member IS NOT NULL
+        AND cm.chapter_member != ''
+        AND p.name IS NOT NULL
+    """,
+        as_dict=True,
+    )
+
+    # Build member data structure
+    members_map = {}
+    active_member_ids = set()
+
+    for row in members_raw:
+        member_id = row.chapter_member
+        chapter_id = row.chapter_id
+        is_active_chapter = chapter_id in active_chapters
+
+        # Initialize member if not exists
+        if member_id not in members_map:
+            members_map[member_id] = {
+                "id": member_id,
+                "username": row.username,
+                "name": row.full_name,
+                "photo": row.profile_photo
+                or "/assets/fossunited/images/defaults/user_profile_image.png",
+                "activity": 1 if row.show_activity else 0,
+                "city": row.current_city or "Anonymous",
+                "chapters": [],
+                "is_active": 0,
+            }
+
+        # Add chapter info
+        if chapter_id in chapter_info:
+            members_map[member_id]["chapters"].append(
+                {
+                    "id": chapter_id,
+                    "name": chapter_info[chapter_id]["name"],
+                    "logo": chapter_info[chapter_id]["logo"],
+                    "active": 1 if is_active_chapter else 0,
+                }
+            )
+
+            # Mark member as active if in any active chapter
+            if is_active_chapter:
+                members_map[member_id]["is_active"] = 1
+                active_member_ids.add(member_id)
+
+    # Convert to list and separate active/past
+    all_members = list(members_map.values())
+    active_members = [m for m in all_members if m["is_active"]]
+    past_members = [m for m in all_members if not m["is_active"]]
+
+    return {
+        "active": active_members,
+        "past": past_members,
+        "stats": {
+            "active_count": len(active_members),
+            "past_count": len(past_members),
+            "communities_count": len(active_chapters),
+        },
+    }
