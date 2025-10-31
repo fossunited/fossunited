@@ -31,3 +31,4 @@ Newsblur
 Commafeed
 hackathon*
 Hackathon*
+doctype

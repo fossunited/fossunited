@@ -8,6 +8,99 @@
 
 <br>
 
+## October 2025
+
+| Metric        | Count |
+|---------------|-------|
+| Issues Closed | 28    |
+| PRs merged    | 31    |
+
+Hey folks,
+
+It was Hack-tober month!
+We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with initiation of **Dark Theme** support was introduced to it, alongside several UI refinements and [documentation](https://docs.fossunited.org) upgrades. Moving on next month, we will be focusing more on IndiaFOSS related issues and hey if you did not know there are many important (Big) events lined up like MangaloreFOSS, MumbaiFOSS, ChennaiFOSS and [more](https://fossunited.org/events/timeline).
+
+---
+
+### PR Highlights
+
+#### Theme & UI Enhancements
+
+- [#1244](https://github.com/fossunited/fossunited/pull/1244) New **Volunteers Page**
+  Added a “Wall of Fame” for active Volunteers with filter and sorting by chapter or user's city.
+  Credits: [@jeswinjosu](https://github.com/jeswinjosu)
+- [#1247](https://github.com/fossunited/fossunited/pull/1247) Add dark theme support for Volunteers page
+  Introduced system-based dark/light mode toggling and persistent theme preference using local storage.
+  Note: Its currently only for Volunteers page (initiation of redesign 3.0)
+- [#1243](https://github.com/fossunited/fossunited/pull/1243) Fix popover z-index for `AutoComplete` in EmailFormTemplate
+  Which did not show recipients popup before in events mailing page.
+
+#### CFP & Review System
+
+- [#1246](https://github.com/fossunited/fossunited/pull/1246) Hide others reviews in CFP review tab
+  Prevents reviewer bias by showing only the user’s own reviews, reducing cross-influence while keeping public visibility unchanged.
+  Related issue: [#1004](https://github.com/fossunited/fossunited/issues/1004)
+- [#1239](https://github.com/fossunited/fossunited/pull/1239) Format CFP review content
+  Enabled `tailwindcss` typography for better rendering of review text within CFP details page; WYSIWYG!.
+- [#1237](https://github.com/fossunited/fossunited/pull/1237) Add CFP Status Filter
+  Added dropdown filters and clickable insight grids for CFP proposals, improving reviewer workflows.
+  for example: [IndiaFOSS 2025 CFP](https://fossunited.org/dashboard/cfp/all/indiafoss/2025) (click on those grid cards)
+- [#1236](https://github.com/fossunited/fossunited/pull/1236) Show CFP reviewer's review status
+  Introduced color-coded reviewer status ("Reviewed") and filtering toggles.
+
+#### Jobs & Grants
+
+- [#1227](https://github.com/fossunited/fossunited/pull/1227) Import Job Board from Desk to Codebase
+  Migrated job management from the Frappe Desk interface into the platform’s code for better version control and transparency.
+  [Explore Jobs](https://fossunited.org/jobs)
+- [#1234](https://github.com/fossunited/fossunited/pull/1234) Project Grants enhancements
+  Introduced logo and grant type fields to the "Project Grants" doctype, enabling categorization of fellowships and year-based grouping.
+  refer: [Grants page](https://fossunited.org/grants)
+- [#1240](https://github.com/fossunited/fossunited/pull/1240) Auto "Show Speaker" visibility in events page.
+  Show speakers tab only if populated and display speaker info by default for past events.
+
+#### Chapter & Mailing System
+
+- [#1215](https://github.com/fossunited/fossunited/pull/1215) Chapter Mailing Page
+  Added support for chapter-level mailing and campaign tracking, mirroring event mailing capabilities with Chapter level email groups.
+  Users have choice to either "Subscribe to mailing list" or not via their RSVP forms. They can edit their preference in [Edit RSVP](https://docs.fossunited.org/attend-event/) to update and remove.
+- [#1206](https://github.com/fossunited/fossunited/pull/1206) Email Group Subscription via RSVP
+  Added `subscribe to chapter mailing` checkboxes on RSVP and ticket forms, ensuring attendees are properly linked to event/chapter mailing groups.
+
+#### Event & RSVP Management
+
+- [#1213](https://github.com/fossunited/fossunited/pull/1213) RSVP toggle improvements
+  Users can now toggle RSVP/Un-RSVP directly with updated UI states to let Organizer know that they are "not attending".
+- [#1214](https://github.com/fossunited/fossunited/pull/1214) RSVP insights grouping
+  Dashboard enhancements now group RSVP data by attendance, improving analytics for event organizers. Shows two groups "Attending" and "Not attending" (not shown by default)
+
+#### Documentation & Developer Tools
+
+- [#1216](https://github.com/fossunited/fossunited/pull/1216) Major Docs overhaul
+  Merged and enhanced documentation from the frappe Wiki, now with improved navigation, Docker setup guide, search functionality, and content for volunteering, clubs, and events.
+- [#1189](https://github.com/fossunited/fossunited/pull/1189) Vale Docs Linting
+  Integrated Vale for consistent doc style and vocabulary validation.
+- [#1204](https://github.com/fossunited/fossunited/pull/1204) Simplified RSS feed
+  Cleaned up RSS feed to include only blog posts, removing newsletters for better content focus.
+
+  Stay nerdy: https://fossunited.org/rss.xml
+
+#### Internal Improvements & Dependencies
+
+- [#1230](https://github.com/fossunited/fossunited/pull/1230) Bump `prettier-plugin-jinja-template` to v2.1.0
+- [#1233](https://github.com/fossunited/fossunited/pull/1233) Bump `globals` from 15.9.0 → 16.4.0
+- [#1235](https://github.com/fossunited/fossunited/pull/1235) Batch dependency upgrades (`vite`, `esbuild`, `rollup`, `postcss`, etc.)
+- [#1186](https://github.com/fossunited/fossunited/pull/1186) Yarn lock bump
+- [#1202](https://github.com/fossunited/fossunited/pull/1202) Expose user fields in `get_session_user_profile` API
+
+---
+
+### New Contributor Spotlight
+
+- [@dependabot[bot]](https://github.com/dependabot) Yea, for Automation of package updates!
+
+---
+
 ## September 2025
 
 | Metric        | Count |
@@ -95,7 +188,7 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 #### Event Management
 
 - [#1088](https://github.com/fossunited/fossunited/pull/1088) Fixed routing to event schedule pages
-  Resolved navigation issues—schedule pages now route correctly from both the dashboard and event views.
+  Resolved navigation issues schedule pages now route correctly from both the dashboard and event views.
 - [#1102](https://github.com/fossunited/fossunited/pull/1102) Auto-close RSVP and CFP forms after event ends
   Extended the event scheduler to automatically close RSVP and Call-for-Proposal forms once the event has concluded.
 
