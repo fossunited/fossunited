@@ -553,7 +553,7 @@ def get_volunteers_data():
                 "photo": row.profile_photo
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
                 "activity": 1 if row.show_activity else 0,
-                "city": row.current_city or "Anonymous",
+                "city": row.current_city or "Unknown",
                 "chapters": [],
                 "is_active": 0,
             }

@@ -528,7 +528,12 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
             groups[city].push(m)
           })
 
-          const sortedCities = Object.keys(groups).sort()
+          const sortedCities = Object.keys(groups).sort((a, b) => {
+              if (a === 'Unknown') return 1
+              if (b === 'Unknown') return -1
+              return a.localeCompare(b)
+          })
+
           sortedCities.forEach((city) => {
             const members = groups[city].sort((a, b) => a.name.localeCompare(b.name))
             html += `
