@@ -23,8 +23,28 @@
   {% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
 
   <style>
+    :root {
+      --card-bg: #fafafa;
+      --main-bg: #f0f0f0;
+      --button-border: #e5e5e5;
+      --text-color: #141414;
+      --text-color2: #4b4b4b;
+      --text-color3: #666666;
+      --primary-button: #07a648;
+    }
+
+    [data-theme='dark'] {
+      --card-bg: #2b2b2b;
+      --main-bg: #141414;
+      --button-border: #4b4b4b;
+      --text-color: #f0f0f0;
+      --text-color2: #e5e5e5;
+      --text-color3: #cccccc;
+      --primary-button: #3af787;
+    }
+
     .foss-page {
-      background: #f0f0f0;
+      background: var(--main-bg);
       min-height: 100vh;
       padding: 1em 0;
     }
@@ -36,12 +56,17 @@
     }
 
     .foss-breadcrumb {
+      color: var(--text-color);
       padding-bottom: 1em;
     }
 
+    .foss-volunteer-card {
+      padding-top: 16px;
+    }
+
     .foss-hero-card {
-      background: #fafafa;
-      border: 1px solid #e5e5e5;
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
       border-radius: 16px;
       padding: 1.5rem;
       margin-bottom: 1.5rem;
@@ -52,19 +77,21 @@
       margin-bottom: 1rem;
       border-radius: 16px;
       overflow: hidden;
+      background: var(--card-bg);
     }
 
     .foss-hero-banner img {
       aspect-ratio: 4 / 1;
       width: 100%;
       border-radius: 8px;
-      background: #fafafa;
+      color: var(--text-color);
     }
 
-    .foss-hero-card h1 {
-      color: #141414;
+    .foss-hero-card h1,
+    .foss-volunteer-card h1 {
+      color: var(--text-color);
       font-family: Inter;
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 600;
       line-height: 120%;
       letter-spacing: -0.035rem;
@@ -72,7 +99,7 @@
     }
 
     .foss-hero-card p {
-      color: #666;
+      color: var(--text-color3);
       font-family: Inter;
       font-size: 16px;
       font-weight: 400;
@@ -88,7 +115,7 @@
     }
 
     .foss-cta-btn {
-      background: #079f44;
+      background: var(--primary-button);
       padding: 12px 20px;
       border-radius: 8px;
       text-align: center;
@@ -96,7 +123,7 @@
       font-weight: 600;
       text-transform: uppercase;
       display: block;
-      color: #fafafa;
+      color: var(--main-bg);
       font-family: Inter;
       font-size: 14px;
       font-style: normal;
@@ -107,7 +134,6 @@
     }
 
     .foss-cta-btn:hover {
-      color: white;
       text-decoration: none;
       opacity: 0.9;
     }
@@ -133,11 +159,11 @@
       left: 50%;
       transform: translateX(-50%);
       width: 1px;
-      background-color: #e5e5e5;
+      background-color: var(--button-border);
     }
 
     .foss-stat-num {
-      color: #079f44;
+      color: var(--primary-button);
       font-family: Inter;
       font-size: 1.25rem;
       font-weight: 600;
@@ -146,7 +172,7 @@
     }
 
     .foss-stats p {
-      color: #4b4b4b;
+      color: var(--text-color2);
       font-family: Inter;
       font-size: 14px;
       font-weight: 400;
@@ -170,8 +196,8 @@
     }
 
     .foss-search-bar {
-      background: #fafafa;
-      border: 1px solid #e5e5e5;
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
       border-radius: 8px;
       padding: 8px 12px;
       display: flex;
@@ -187,7 +213,7 @@
       background: none;
       font-size: 14px;
       outline: none;
-      color: #666;
+      color: var(--text-color3);
       min-width: 0;
     }
 
@@ -200,6 +226,8 @@
       border: none;
       cursor: pointer;
       white-space: nowrap;
+      background: var(--text-color);
+      color: var(--main-bg);
     }
 
     .foss-sort-group {
@@ -209,15 +237,15 @@
     }
 
     .foss-sort-label {
-      color: #666;
+      color: var(--text-color3);
       font-size: 14px;
       white-space: nowrap;
     }
 
     .foss-sort-select {
-      background: #fafafa;
-      color: #666;
-      border: 1px solid #e5e5e5;
+      background: var(--card-bg);
+      color: var(--text-color3);
+      border: 1px solid var(--button-border);
       border-radius: 8px;
       padding: 8px 12px;
       font-size: 14px;
@@ -236,7 +264,7 @@
     .foss-group-logo {
       width: 36px;
       height: 36px;
-      background: #e5e5e5;
+      background: var(--button-border);
       border-radius: 8px;
       object-fit: cover;
       flex-shrink: 0;
@@ -269,7 +297,7 @@
       width: 100%;
       height: 100%;
       border-radius: 8px;
-      background: #e5e5e5;
+      background: var(--button-border);
       object-fit: cover;
       transition: transform 0.2s;
     }
@@ -290,7 +318,7 @@
     }
 
     .foss-member-name {
-      color: #4b4b4b;
+      color: var(--text-color2);
       font-size: 12px;
       white-space: nowrap;
       overflow: hidden;
@@ -304,14 +332,35 @@
       text-transform: uppercase;
       letter-spacing: 1.12px;
       margin: 0;
-      color: #4b4b4b;
+      color: var(--text-color2);
     }
 
     .title-hr {
       flex-grow: 1;
       border: none;
-      border-top: 1px solid #4b4b4b;
+      border-top: 1px solid var(--text-color2);
       margin-left: 10px;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color2);
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      opacity: 0.8;
+    }
+
+    .theme-toggle i {
+      font-size: 18px;
     }
 
     @media (max-width: 840px) {
@@ -360,7 +409,7 @@
           <div class="foss-hero-banner mb-3">
             <img src="{{ banner_image }}" alt="Volunteers workforce" loading="lazy" />
           </div>
-          <div class="foss-hero-card">
+          <div class="foss-volunteer-card">
             <h1>{{ v_title }}</h1>
             <p>{{ v_description }}</p>
           </div>
@@ -368,7 +417,7 @@
 
         <div class="foss-hero-card">
           <div>
-            <p style="color: #666; font-size: 14px;">{{ docs_description }}</p>
+            <p style="font-size: 14px;">{{ docs_description }}</p>
             <a href="{{ docs_link }}" class="foss-cta-btn"
               >{{ docs_text }}<i class="ti ti-arrow-up-right"></i
             ></a>
@@ -396,6 +445,9 @@
         </div>
 
         <div class="foss-sort-group">
+          <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+            <i class="ti ti-moon"></i>
+          </button>
           <div>
             <span class="foss-sort-label">Sort by:</span>
             <select class="foss-sort-select" id="sort">
@@ -428,7 +480,6 @@
       active: {{ active_members | tojson }},
       past: {{ past_members | tojson }}
     }
-
     ;(function () {
       const data = window.volunteersData
       let currentSort = 'alpha'
@@ -617,6 +668,40 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
 
       // Initial render
       renderMembers()
+
+      const themeToggle = document.getElementById('theme-toggle')
+      const themeIcon = themeToggle.querySelector('i')
+
+      // Load saved theme or use system preference
+      let savedTheme = localStorage.getItem('theme')
+
+      if (!savedTheme) {
+        // No saved theme — use system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        savedTheme = prefersDark ? 'dark' : 'light'
+      }
+
+      // Apply theme
+      document.documentElement.setAttribute('data-theme', savedTheme)
+      updateThemeIcon(savedTheme)
+
+      function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+          themeIcon.className = 'ti ti-sun'
+        } else {
+          themeIcon.className = 'ti ti-moon'
+        }
+      }
+
+      // Toggle theme on click
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme')
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+
+        document.documentElement.setAttribute('data-theme', newTheme)
+        localStorage.setItem('theme', newTheme)
+        updateThemeIcon(newTheme)
+      })
     })()
   </script>
 {% endblock %}
