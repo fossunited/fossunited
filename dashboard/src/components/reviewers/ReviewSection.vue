@@ -53,20 +53,6 @@
             :theme="getTheme(review.to_approve)"
           />
         </div>
-        <div v-else>
-          <div class="flex justify-between items-center gap-4">
-            <div
-              v-if="review.remarks"
-              class="prose prose-sm max-w-full"
-              v-html="cleanedHTML(review.remarks)"
-            ></div>
-            <span v-else class="text-sm text-gray-600">No Remarks</span>
-          </div>
-          <div class="flex gap-2 items-center">
-            <span class="text-sm">Reviewer #{{ review.idx }}</span>
-            <Badge :label="getLabel(review.to_approve)" :theme="getTheme(review.to_approve)" />
-          </div>
-        </div>
         <hr v-if="index != sortedReviews.length - 1" class="mt-2" />
       </div>
     </div>
