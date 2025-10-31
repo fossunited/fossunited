@@ -1,6 +1,6 @@
 # RSVP to an event
 
-[Events](https://fossunited.org/events/timeline) like monthly meetups usually require
+[Events](https://fossunited.org/events/timeline) such as monthly meetups usually require
 attendees to RSVP for the event. This helps the event organizers plan
 accordingly e.g. purchase snacks and beverages.
 
@@ -16,6 +16,9 @@ accordingly e.g. purchase snacks and beverages.
 - Complete the form with the necessary information. Please note that if you are
   logged in, the Platform will auto-fill some of the information i.e. the Full
   Name and Email fields.
+- Also it lets you edit your RSVP.
+- You can also opt-in to "Subscribing" to Chapter mailing group from the organizing community to stay updated.
+  Note: You can edit RSVP and opt-out from email group anytime.
 
 ![RSVP form](./assets/rsvp-submission.png)
 
@@ -39,7 +42,9 @@ prevents wasting time, energy, money, and food.
 
 ![Visit RSVP tab for RSVP'ed event](./assets/rsvp-update.png)
 
-- Clear the `"Confirm your attendance!"` field from the RSVP form and click
-  on the `"Update RSVP Form"` button.
+- You can click on "I can't attend the Event" to inform organizers that you won't attend.
 
 ![Clear RSVP](./assets/rsvp-submission-update.png)
+
+- You can also confirm to re-attend via same button as it changes to "I'll attend the Event!" and
+  click "Update" to confirm the changes.
