@@ -356,6 +356,8 @@
     }
 
     .theme-toggle:hover {
+      background: var(--text-color);
+      color: var(--main-bg);
       opacity: 0.8;
     }
 
@@ -644,7 +646,7 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
         const pastSection = document.getElementById('past-section')
         if (pastSection) {
           const pastMembers = pastSection.querySelectorAll('.foss-member')
-        const visiblePast = pastMembers.querySelectorAll('.foss-member:not(.hidden)')
+        const visiblePast = pastSection.querySelectorAll('.foss-member:not(.hidden)')
         pastSection.classList.toggle('hidden', visiblePast.length === 0 && query !== '')
         }
       }
