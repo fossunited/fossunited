@@ -141,7 +141,7 @@
   }
  ],
  "links": [],
- "modified": "2025-10-13 18:31:01.655975",
+ "modified": "2025-10-31 16:53:04.612511",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
@@ -169,7 +169,10 @@
   },
   {
    "create": 1,
-   "role": "All"
+   "if_owner": 1,
+   "read": 1,
+   "role": "All",
+   "write": 1
   },
   {
    "create": 1,
