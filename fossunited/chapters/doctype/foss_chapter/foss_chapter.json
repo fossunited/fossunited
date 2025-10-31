@@ -99,7 +99,6 @@
    "label": "Basic Information"
   },
   {
-   "depends_on": "eval:['City Community', 'FOSS Club'].includes(doc.chapter_type)",
    "fieldname": "location_section",
    "fieldtype": "Section Break",
    "label": "Location"
@@ -282,7 +281,7 @@
    "link_fieldname": "chapter"
   }
  ],
- "modified": "2025-10-09 11:03:50.463731",
+ "modified": "2025-10-31 18:49:26.602558",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter",
