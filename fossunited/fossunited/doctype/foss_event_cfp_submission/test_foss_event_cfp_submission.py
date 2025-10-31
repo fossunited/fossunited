@@ -38,6 +38,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             linked_cfp=self.cfp.name,
             event=self.event.name,
             speakers=speakers,
+            submitted_by=CoreTeam,
         )
 
     def tearDown(self):
@@ -103,7 +104,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         frappe.set_user(submission_email)
         for _ in range(3):
             submission = insert_cfp_submission(
-                linked_cfp=self.cfp.name, event=self.event.name, email=submission_email
+                linked_cfp=self.cfp.name,
+                event=self.event.name,
+                email=submission_email,
+                submitted_by=submission_email,
             )
 
             self.assertTrue(submission)
@@ -143,6 +147,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             linked_cfp=self.cfp.name,
             event=self.event.name,
             speakers=speakers,
+            submitted_by=CoreTeam,
         )
         submission.subscribe_chapter_mailing = 0
         submission.save()
