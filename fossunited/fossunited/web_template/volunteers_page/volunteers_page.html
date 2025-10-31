@@ -4,613 +4,707 @@
 />
 
 {% block head_include %}
-<meta name="description" content="Join over hundreds of volunteers united by FOSS across India">
+  <meta
+    name="description"
+    content="Join over hundreds of volunteers united by FOSS across India"
+  />
 {% endblock %}
 
 {% block page_content %}
+  {% set volunteers_data = get_volunteers_data() %}
+  {% set active_members = volunteers_data.active %}
+  {% set past_members = volunteers_data.past %}
+  {% set stats = volunteers_data.stats %}
+  {% set v_title = v_title | default("Over " ~ stats.active_count ~ " people,<br />United by FOSS") %}
+  {% set v_description = v_description | default("We campaign, convene, and occasionally convert sceptics, all powered by volunteers.") %}
+  {% set docs_text = docs_text | default("Start Volunteering") %}
+  {% set docs_link = docs_link | default("https://docs.fossunited.org/volunteering") %}
+  {% set docs_description = docs_description | default("Be part of the push to make FOSS common sense in India's tech and policy worlds.<br>Join us today.") %}
+  {% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
 
-{% set volunteers_data = get_volunteers_data() %}
-{% set active_members = volunteers_data.active %}
-{% set past_members = volunteers_data.past %}
-{% set stats = volunteers_data.stats %}
-
-{% set v_title = v_title | default("Over " ~ stats.active_count ~ " people,<br />United by FOSS") %}
-{% set v_description = v_description | default("We campaign, convene, and occasionally convert sceptics, all powered by volunteers.") %}
-{% set docs_text = docs_text | default("Start Volunteering") %}
-{% set docs_link = docs_link | default("https://docs.fossunited.org/volunteering") %}
-{% set docs_description = docs_description | default("Be part of the push to make FOSS common sense in India's tech and policy worlds.<br>Join us today.") %}
-{% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
-
-
-<style>
-  .foss-page {
-    background: #f0f0f0;
-    min-height: 100vh;
-    padding: 1em 0;
-  }
-
-  .container {
-    max-width: 840px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .foss-breadcrumb {
-    padding-bottom: 1em;
-  }
-
-  .foss-hero-card {
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
-    border-radius: 16px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .foss-hero-banner {
-    width: 100%;
-    margin-bottom: 1rem;
-    border-radius: 16px;
-    overflow: hidden;
-  }
-
-  .foss-hero-banner img {
-    aspect-ratio: 4 / 1;
-    width: 100%;
-    border-radius: 8px;
-    background: #fafafa;
-  }
-
-  .foss-hero-card h1 {
-    color: #141414;
-    font-family: Inter;
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 120%;
-    letter-spacing: -0.035rem;
-    padding-bottom: 8px;
-  }
-
-  .foss-hero-card p {
-    color: #666;
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%;
-    letter-spacing: -0.02rem;
-  }
-
-  .foss-hero-section {
-    display: grid;
-    grid-template-columns: 60% 40%;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .foss-cta-btn {
-    background: #079f44;
-    padding: 12px 20px;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    display: block;
-    color: #FAFAFA;
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    line-height: 115%;
-    margin: 24px 0px;
-    letter-spacing: 1.12px;
-    text-transform: uppercase;
-  }
-
-  .foss-cta-btn:hover {
-    color: white;
-    text-decoration: none;
-    opacity: 0.9;
-  }
-
-.foss-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  position: relative;
-  text-align: center;
-}
-
-.foss-stats > div {
-  padding: 2px 0;
-  position: relative;
-}
-
-.foss-stats::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 1px;
-  background-color: #e5e5e5;
-}
-
-
-  .foss-stat-num {
-    color: #079f44;
-    font-family: Inter;
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 124%;
-    letter-spacing: -0.025rem;
-  }
-
-  .foss-stats p {
-    color: #4b4b4b;
-    font-family: Inter;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 150%;
-  }
-
-  .foss-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 2rem;
-  }
-
-  .foss-search-group {
-    display: flex;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .foss-search-bar {
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    max-width: 352px;
-  }
-
-  .foss-search-bar input {
-    flex: 1;
-    border: none;
-    background: none;
-    font-size: 14px;
-    outline: none;
-    color: #666;
-    min-width: 0;
-  }
-
-  .dark-button {
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-  }
-
-  .foss-sort-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .foss-sort-label {
-    color: #666;
-    font-size: 14px;
-    white-space: nowrap;
-  }
-
-  .foss-sort-select {
-    background: #fafafa;
-    color: #666;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
-  .foss-group-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 2rem 0 1.25rem 0;
-  }
-
-  .foss-group-logo {
-    width: 36px;
-    height: 36px;
-    background: #e5e5e5;
-    border-radius: 8px;
-    object-fit: cover;
-    flex-shrink: 0;
-  }
-
-  .foss-member-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 0;
-  }
-
-  .foss-member {
-    width: 80px;
-    text-align: center;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    padding-bottom: 20px;
-  }
-
-  .foss-member-avatar {
-    position: relative;
-    width: 64px;
-    height: 64px;
-  }
-
-  .foss-member-avatar img {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    background: #e5e5e5;
-    object-fit: cover;
-    transition: transform 0.2s;
-  }
-
-  .foss-member:hover .foss-member-avatar img {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  .foss-member:hover {
-    text-decoration: none;
-  }
-
-  .foss-activity-badge {
-    position: absolute;
-    bottom: -3px;
-    right: -3px;
-  }
-
-  .foss-member-name {
-    color: #4b4b4b;
-    font-size: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-  }
-
-  .foss-group-title {
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1.12px;
-    margin: 0;
-    color: #4b4b4b;
-  }
-
-  .title-hr {
-    flex-grow: 1;
-    border: none;
-    border-top: 1px solid #4B4B4B;
-    margin-left: 10px;
-  }
-
-  @media (max-width: 840px) {
-    .row {
-      flex-direction: column;
+  <style>
+    :root {
+      --card-bg: #fafafa;
+      --main-bg: #f0f0f0;
+      --button-border: #e5e5e5;
+      --text-color: #141414;
+      --text-color2: #4b4b4b;
+      --text-color3: #666666;
+      --primary-button: #07a648;
     }
 
-    .col-lg-7, .col-lg-5 {
-      width: 100% !important;
-      max-width: 100% !important;
+    [data-theme='dark'] {
+      --card-bg: #2b2b2b;
+      --main-bg: #141414;
+      --button-border: #4b4b4b;
+      --text-color: #f0f0f0;
+      --text-color2: #e5e5e5;
+      --text-color3: #cccccc;
+      --primary-button: #3af787;
     }
-  }
 
-  @media (max-width: 750px) {
+    .foss-page {
+      background: var(--main-bg);
+      min-height: 100vh;
+      padding: 1em 0;
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+      padding: 0 0rem;
+    }
+
+    .foss-breadcrumb {
+      color: var(--text-color);
+      padding-bottom: 1em;
+    }
+
+    .foss-volunteer-card {
+      padding-top: 16px;
+    }
+
+    .foss-hero-card {
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .foss-hero-banner {
+      width: 100%;
+      margin-bottom: 1rem;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--card-bg);
+    }
+
+    .foss-hero-banner img {
+      aspect-ratio: 4 / 1;
+      width: 100%;
+      border-radius: 8px;
+      color: var(--text-color);
+    }
+
+    .foss-hero-card h1,
+    .foss-volunteer-card h1 {
+      color: var(--text-color);
+      font-family: Inter;
+      font-size: 2rem;
+      font-weight: 600;
+      line-height: 120%;
+      letter-spacing: -0.035rem;
+      padding-bottom: 8px;
+    }
+
+    .foss-hero-card p {
+      color: var(--text-color3);
+      font-family: Inter;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 150%;
+      letter-spacing: -0.02rem;
+    }
+
     .foss-hero-section {
-      grid-template-columns: 1fr;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 1.5rem;
+    }
+
+    .foss-cta-btn {
+      background: var(--primary-button);
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: block;
+      color: var(--main-bg);
+      font-family: Inter;
+      font-size: 14px;
+      font-style: normal;
+      line-height: 115%;
+      margin: 24px 0px;
+      letter-spacing: 1.12px;
+      text-transform: uppercase;
+    }
+
+    .foss-cta-btn:hover {
+      text-decoration: none;
+      opacity: 0.9;
+    }
+
+    .foss-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      position: relative;
+      text-align: center;
+    }
+
+    .foss-stats > div {
+      padding: 2px 0;
+      position: relative;
+    }
+
+    .foss-stats::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      background-color: var(--button-border);
+    }
+
+    .foss-stat-num {
+      color: var(--primary-button);
+      font-family: Inter;
+      font-size: 1.25rem;
+      font-weight: 600;
+      line-height: 124%;
+      letter-spacing: -0.025rem;
+    }
+
+    .foss-stats p {
+      color: var(--text-color2);
+      font-family: Inter;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 150%;
     }
 
     .foss-controls {
-      flex-direction: column;
-      align-items: stretch;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 2rem;
     }
 
     .foss-search-group {
-      flex-direction: column;
-      width: 100%;
+      display: flex;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
     }
 
     .foss-search-bar {
-      max-width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 1;
+      max-width: 352px;
+    }
+
+    .foss-search-bar input {
+      flex: 1;
+      border: none;
+      background: none;
+      font-size: 14px;
+      outline: none;
+      color: var(--text-color3);
+      min-width: 0;
+    }
+
+    .dark-button {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      border: none;
+      cursor: pointer;
+      white-space: nowrap;
+      background: var(--text-color);
+      color: var(--main-bg);
     }
 
     .foss-sort-group {
-      justify-content: space-between;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-  }
-</style>
 
-<div class="foss-page">
-  <div class="container">
-    <div class="foss-breadcrumb">
-      <a href="/">Home</a> > <a href="">Volunteers</a>
-    </div>
+    .foss-sort-label {
+      color: var(--text-color3);
+      font-size: 14px;
+      white-space: nowrap;
+    }
 
-    <div class="foss-hero-section">
-      <div>
-        <div class="foss-hero-banner mb-3">
-          <img src="{{ banner_image }}" alt="Volunteers workforce" loading="lazy" />
-        </div>
-        <div class="foss-hero-card">
-          <h1>{{ v_title }}</h1>
-          <p>{{ v_description }}</p>
-        </div>
-      </div>
+    .foss-sort-select {
+      background: var(--card-bg);
+      color: var(--text-color3);
+      border: 1px solid var(--button-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      height: 36px;
+      align-items: center;
+    }
 
-      <div class="foss-hero-card">
+    .foss-group-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 2rem 0 1.25rem 0;
+    }
+
+    .foss-group-logo {
+      width: 36px;
+      height: 36px;
+      background: var(--button-border);
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .foss-member-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+      gap: 8px;
+    }
+
+    .foss-member {
+      width: 80px;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding-bottom: 20px;
+    }
+
+    .foss-member-avatar {
+      position: relative;
+      width: 64px;
+      height: 64px;
+    }
+
+    .foss-member-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      background: var(--button-border);
+      object-fit: cover;
+      transition: transform 0.2s;
+    }
+
+    .foss-member:hover .foss-member-avatar img {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .foss-member:hover {
+      text-decoration: none;
+    }
+
+    .foss-activity-badge {
+      position: absolute;
+      bottom: -3px;
+      right: -3px;
+    }
+
+    .foss-member-name {
+      color: var(--text-color2);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .foss-group-title {
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.12px;
+      margin: 0;
+      color: var(--text-color2);
+    }
+
+    .title-hr {
+      flex-grow: 1;
+      border: none;
+      border-top: 1px solid var(--text-color2);
+      margin-left: 10px;
+    }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--button-border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-color2);
+      transition: all 0.2s;
+    }
+
+    .theme-toggle:hover {
+      opacity: 0.8;
+    }
+
+    .theme-toggle i {
+      font-size: 18px;
+    }
+
+    @media (max-width: 840px) {
+      .row {
+        flex-direction: column;
+      }
+
+      .col-lg-7,
+      .col-lg-5 {
+        width: 100% !important;
+        max-width: 100% !important;
+      }
+    }
+
+    @media (max-width: 750px) {
+      .foss-hero-section {
+        grid-template-columns: 1fr;
+      }
+
+      .foss-controls {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .foss-search-group {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .foss-search-bar {
+        max-width: 100%;
+      }
+
+      .foss-sort-group {
+        justify-content: space-between;
+      }
+      .hidden {
+        display: none !important;
+      }
+    }
+  </style>
+
+  <div class="foss-page">
+    <div class="container">
+      <div class="foss-breadcrumb"><a href="/">Home</a> > <a href="">Volunteers</a></div>
+
+      <div class="foss-hero-section">
         <div>
-          <p style="color: #666; font-size: 14px;">
-            {{ docs_description }}
-          </p>
-          <a href="{{ docs_link }}" class="foss-cta-btn">{{ docs_text }}<i class="ti ti-arrow-up-right"></i></a>
-        </div>
-        <div class="foss-stats">
-          <div>
-            <h3 class="foss-stat-num">{{ stats.active_count }}</h3>
-            <p class="foss-stat-label">Active Volunteers</p>
+          <div class="foss-hero-banner mb-3">
+            <img src="{{ banner_image }}" alt="Volunteers workforce" loading="lazy" />
           </div>
-          <div>
-            <h3 class="foss-stat-num">{{ stats.communities_count }}</h3>
-            <p class="foss-stat-label">Active Communities</p>
+          <div class="foss-volunteer-card">
+            <h1>{{ v_title }}</h1>
+            <p>{{ v_description }}</p>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="foss-controls">
-      <div class="foss-search-group">
-        <div class="foss-search-bar">
-          <input type="text" placeholder="Search" id="search" />
-          <i class="ti ti-search"></i>
+        <div class="foss-hero-card">
+          <div>
+            <p style="font-size: 14px;">{{ docs_description }}</p>
+            <a href="{{ docs_link }}" class="foss-cta-btn"
+              >{{ docs_text }}<i class="ti ti-arrow-up-right"></i
+            ></a>
+          </div>
+          <div class="foss-stats">
+            <div>
+              <h3 class="foss-stat-num">{{ stats.active_count }}</h3>
+              <p class="foss-stat-label">Active Volunteers</p>
+            </div>
+            <div>
+              <h3 class="foss-stat-num">{{ stats.communities_count }}</h3>
+              <p class="foss-stat-label">Active Communities</p>
+            </div>
+          </div>
         </div>
-        <button class="dark-button" id="surprise">Surprise Me</button>
       </div>
 
-      <div class="foss-sort-group">
-        <span class="foss-sort-label">Sort by:</span>
-        <select class="foss-sort-select" id="sort">
-          <option value="alpha">Alphabetical</option>
-          <option value="chapter">Chapter</option>
-          <option value="city">City</option>
-        </select>
-      </div>
-    </div>
+      <div class="foss-controls">
+        <div class="foss-search-group">
+          <div class="foss-search-bar">
+            <input type="text" placeholder="Search" id="search" />
+            <i class="ti ti-search"></i>
+          </div>
+          <button class="dark-button" id="surprise">Surprise Me</button>
+        </div>
 
-    <div id="members-container">
-      {# Members will be rendered here by JavaScript #}
-    </div>
-
-    {# Past members section #}
-    {% if past_members %}
-    <div id="past-section" style="display:none;">
-      <div class="foss-group-header">
-        <h2 class="foss-group-title">Past Volunteers</h2>
-        <hr class="title-hr" />
+        <div class="foss-sort-group">
+          <button class="theme-toggle" id="theme-toggle" title="Toggle theme">
+            <i class="ti ti-moon"></i>
+          </button>
+          <div>
+            <span class="foss-sort-label">Sort by:</span>
+            <select class="foss-sort-select" id="sort">
+              <option value="alpha">Alphabetical</option>
+              <option value="chapter">Chapter</option>
+              <option value="city">City</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="foss-member-grid" id="past-grid"></div>
+
+      <div id="members-container">{# Members will be rendered here by JavaScript #}</div>
+
+      {# Past members section #}
+      {% if past_members %}
+        <div id="past-section" style="display:none;">
+          <div class="foss-group-header">
+            <h2 class="foss-group-title">Past Volunteers</h2>
+            <hr class="title-hr" />
+          </div>
+          <div class="foss-member-grid" id="past-grid"></div>
+        </div>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
-</div>
 
-<script>
-// Store data globally
-window.volunteersData = {
-  active: {{ active_members | tojson }},
-  past: {{ past_members | tojson }}
-};
-
-(function() {
-  const data = window.volunteersData;
-  let currentSort = 'alpha';
-  let searchQuery = '';
-
-  // Render a single member
-  function renderMember(m) {
-    return `
-      <a href="/${m.username}" class="foss-member" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters.map(c => c.name).join('|').toLowerCase()}">
-        <div class="foss-member-avatar">
-          <img src="/assets/fossunited/images/defaults/user_profile_image.png"
-               data-src="${m.photo}"
-               alt="${m.name}"
-               loading="lazy"
-               class="lazy-img" />
-${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-filled" style="font-size: 1rem; color: #141414; background-color: #e5e5e5; border: 1px solid #e5e5e5; border-radius: 50%; "></i></div>' : ''}
-        </div>
-        <div class="foss-member-name">${m.name}</div>
-      </a>
-    `;
-  }
-
-  // Render members by grouping
-  function renderMembers() {
-    const container = document.getElementById('members-container');
-    const pastSection = document.getElementById('past-section');
-    const pastGrid = document.getElementById('past-grid');
-    let html = '';
-
-    if (currentSort === 'alpha') {
-      // Alphabetical - single list
-      const sorted = [...data.active].sort((a, b) => a.name.localeCompare(b.name));
-      html = '<div class="foss-member-grid">' + sorted.map(renderMember).join('') + '</div>';
+  <script>
+    // Store data globally
+    window.volunteersData = {
+      active: {{ active_members | tojson }},
+      past: {{ past_members | tojson }}
     }
-    else if (currentSort === 'city') {
-      // Group by city
-      const groups = {};
-      data.active.forEach(m => {
-        const city = m.city;
-        if (!groups[city]) groups[city] = [];
-        groups[city].push(m);
-      });
+    ;(function () {
+      const data = window.volunteersData
+      let currentSort = 'alpha'
+      let searchQuery = ''
 
-      const sortedCities = Object.keys(groups).sort();
-      sortedCities.forEach(city => {
-        const members = groups[city].sort((a, b) => a.name.localeCompare(b.name));
-        html += `
-          <div class="member-section" data-group="${city}">
-            <div class="foss-group-header">
+      // Render a single member
+      function renderMember(m) {
+        return `
+      <a href="/${m.username}" class="foss-member" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
+        .map((c) => c.name)
+        .join('|')
+        .toLowerCase()}">
+      <div class="foss-member-avatar">
+      <img src="/assets/fossunited/images/defaults/user_profile_image.png"
+      data-src="${m.photo}"
+      alt="${m.name}"
+      loading="lazy"
+      class="lazy-img" />
+${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-filled" style="font-size: 1rem; color: var(--text-color); background-color: var(--main-bg); border: 1px solid var(--main-bg); border-radius: 50%;"></i></div>' : ''}
+</div>
+<div class="foss-member-name">${m.name}</div>
+</a>
+    `
+      }
+
+      // Render members by grouping
+      function renderMembers() {
+        const container = document.getElementById('members-container')
+        const pastSection = document.getElementById('past-section')
+        const pastGrid = document.getElementById('past-grid')
+        let html = ''
+
+        if (currentSort === 'alpha') {
+          // Alphabetical - single list
+          const sorted = [...data.active].sort((a, b) => a.name.localeCompare(b.name))
+          html = '<div class="foss-member-grid">' + sorted.map(renderMember).join('') + '</div>'
+        } else if (currentSort === 'city') {
+          // Group by city
+          const groups = {}
+          data.active.forEach((m) => {
+            const city = m.city
+            if (!groups[city]) groups[city] = []
+            groups[city].push(m)
+          })
+
+          const sortedCities = Object.keys(groups).sort()
+          sortedCities.forEach((city) => {
+            const members = groups[city].sort((a, b) => a.name.localeCompare(b.name))
+            html += `
+              <div class="member-section" data-group="${city}">
+              <div class="foss-group-header">
               <h2 class="foss-group-title">${city}</h2>
               <hr class="title-hr" />
-            </div>
-            <div class="foss-member-grid">
+              </div>
+              <div class="foss-member-grid">
               ${members.map(renderMember).join('')}
-            </div>
-          </div>
-        `;
-      });
-    }
-    else if (currentSort === 'chapter') {
-      // Group by chapter - members can appear multiple times
-      const groups = {};
-      data.active.forEach(m => {
-        m.chapters.filter(c => c.active).forEach(chapter => {
-          if (!groups[chapter.name]) {
-            groups[chapter.name] = {
-              logo: chapter.logo,
-              members: []
-            };
-          }
-          groups[chapter.name].members.push(m);
-        });
-      });
+              </div>
+              </div>
+        `
+          })
+        } else if (currentSort === 'chapter') {
+          // Group by chapter - members can appear multiple times
+          const groups = {}
+          data.active.forEach((m) => {
+            m.chapters
+              .filter((c) => c.active)
+              .forEach((chapter) => {
+                if (!groups[chapter.name]) {
+                  groups[chapter.name] = {
+                    logo: chapter.logo,
+                    members: [],
+                  }
+                }
+                groups[chapter.name].members.push(m)
+              })
+          })
 
-      const sortedChapters = Object.keys(groups).sort();
-      sortedChapters.forEach(chapterName => {
-        const group = groups[chapterName];
-        const members = group.members.sort((a, b) => a.name.localeCompare(b.name));
-        html += `
-          <div class="member-section" data-group="${chapterName}">
-            <div class="foss-group-header">
+          const sortedChapters = Object.keys(groups).sort()
+          sortedChapters.forEach((chapterName) => {
+            const group = groups[chapterName]
+            const members = group.members.sort((a, b) => a.name.localeCompare(b.name))
+            html += `
+              <div class="member-section" data-group="${chapterName}">
+              <div class="foss-group-header">
               <img src="${group.logo}" alt="${chapterName}" class="foss-group-logo" />
               <h2 class="foss-group-title">${chapterName}</h2>
               <hr class="title-hr" />
-            </div>
-            <div class="foss-member-grid">
+              </div>
+              <div class="foss-member-grid">
               ${members.map(renderMember).join('')}
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    container.innerHTML = html;
-
-    // Render past members
-    if (data.past.length > 0) {
-      const sortedPast = [...data.past].sort((a, b) => a.name.localeCompare(b.name));
-      pastGrid.innerHTML = sortedPast.map(renderMember).join('');
-      pastSection.style.display = 'block';
-    }
-
-    // Initialize lazy loading
-    lazyLoadImages();
-    filterMembers();
-  }
-
-  // Lazy load images
-  function lazyLoadImages() {
-    const images = document.querySelectorAll('img.lazy-img');
-
-    const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target;
-          img.src = img.dataset.src;
-          img.classList.remove('lazy-img');
-          observer.unobserve(img);
+              </div>
+              </div>
+        `
+          })
         }
-      });
-    }, {
-      rootMargin: '50px'
-    });
 
-    images.forEach(img => imageObserver.observe(img));
-  }
+        container.innerHTML = html
 
-  // Filter members based on search
-  function filterMembers() {
-    const query = searchQuery.toLowerCase();
-    const members = document.querySelectorAll('.foss-member');
-    const sections = document.querySelectorAll('.member-section');
+        // Render past members
+        if (data.past.length > 0) {
+          const sortedPast = [...data.past].sort((a, b) => a.name.localeCompare(b.name))
+          pastGrid.innerHTML = sortedPast.map(renderMember).join('')
+          pastSection.style.display = 'block'
+        }
 
-    members.forEach(member => {
-      const visible = member.dataset.name.includes(query);
-      member.style.display = visible ? 'flex' : 'none';
-    });
+        // Initialize lazy loading
+        lazyLoadImages()
+        filterMembers()
+      }
 
-    sections.forEach(section => {
-      const visibleMembers = section.querySelectorAll('.foss-member[style*="flex"]');
-      const header = section.querySelector('.foss-group-header');
-      const hasVisible = visibleMembers.length > 0 || query === '';
+      // Lazy load images
+      function lazyLoadImages() {
+        const images = document.querySelectorAll('img.lazy-img')
 
-      if (header) header.style.display = hasVisible ? 'flex' : 'none';
-      section.style.display = hasVisible ? 'block' : 'none';
-    });
+        const imageObserver = new IntersectionObserver(
+          (entries, observer) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const img = entry.target
+                img.src = img.dataset.src
+                img.classList.remove('lazy-img')
+                observer.unobserve(img)
+              }
+            })
+          },
+          {
+            rootMargin: '50px',
+          },
+        )
 
-    // Handle past section
-    const pastSection = document.getElementById('past-section');
-    if (pastSection) {
-      const pastMembers = pastSection.querySelectorAll('.foss-member');
-      const visiblePast = Array.from(pastMembers).filter(m => m.style.display !== 'none');
-      pastSection.style.display = visiblePast.length > 0 || query === '' ? 'block' : 'none';
-    }
-  }
+        images.forEach((img) => imageObserver.observe(img))
+      }
 
-  // Surprise me functionality
-  function surpriseMe() {
-    const visible = Array.from(document.querySelectorAll('.foss-member'))
-      .filter(m => m.style.display !== 'none');
-    if (visible.length > 0) {
-      const random = visible[Math.floor(Math.random() * visible.length)];
-      window.location.href = random.href;
-    }
-  }
+      // Filter members based on search
+      function filterMembers() {
+        const query = searchQuery.toLowerCase()
+        const members = document.querySelectorAll('.foss-member')
+        const sections = document.querySelectorAll('.member-section')
 
-  // Event listeners
-  document.getElementById('search').addEventListener('input', (e) => {
-    searchQuery = e.target.value;
-    filterMembers();
-  });
+        members.forEach((member) => {
+          const visible = member.dataset.name.includes(query)
+        member.classList.toggle('hidden', !visible)
+        })
 
-  document.getElementById('sort').addEventListener('change', (e) => {
-    currentSort = e.target.value;
-    renderMembers();
-  });
+        sections.forEach((section) => {
+        const visibleMembers = section.querySelectorAll('.foss-member:not(.hidden)')
+          const header = section.querySelector('.foss-group-header')
+        const hasVisible = visibleMembers.length > 0 || query === ''
+        header?.classList.toggle('hidden', !hasVisible)
+        section.classList.toggle('hidden', !hasVisible)
+        })
 
-  document.getElementById('surprise').addEventListener('click', surpriseMe);
+        // Handle past section
+        const pastSection = document.getElementById('past-section')
+        if (pastSection) {
+          const pastMembers = pastSection.querySelectorAll('.foss-member')
+        const visiblePast = pastMembers.querySelectorAll('.foss-member:not(.hidden)')
+        pastSection.classList.toggle('hidden', visiblePast.length === 0 && query !== '')
+        }
+      }
 
-  // Initial render
-  renderMembers();
-})();
-</script>
+      // Surprise me functionality
+      function surpriseMe() {
+        const visible = Array.from(document.querySelectorAll('.foss-member'))
+        if (visible.length > 0) {
+          const random = visible[Math.floor(Math.random() * visible.length)]
+          window.location.href = random.href
+        }
+      }
 
+      // Event listeners
+      document.getElementById('search').addEventListener('input', (e) => {
+        searchQuery = e.target.value
+        filterMembers()
+      })
+
+      document.getElementById('sort').addEventListener('change', (e) => {
+        currentSort = e.target.value
+        renderMembers()
+      })
+
+      document.getElementById('surprise').addEventListener('click', surpriseMe)
+
+      // Initial render
+      currentSort = document.getElementById('sort').value
+      document.getElementById('search').value = ''
+      searchQuery = ''
+      renderMembers()
+
+      const themeToggle = document.getElementById('theme-toggle')
+      const themeIcon = themeToggle.querySelector('i')
+
+      // Load saved theme or use system preference
+      let savedTheme = localStorage.getItem('theme')
+
+      if (!savedTheme) {
+        // No saved theme — use system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        savedTheme = prefersDark ? 'dark' : 'light'
+      }
+
+      // Apply theme
+      document.documentElement.setAttribute('data-theme', savedTheme)
+      updateThemeIcon(savedTheme)
+
+      function updateThemeIcon(theme) {
+        if (theme === 'dark') {
+          themeIcon.className = 'ti ti-sun'
+        } else {
+          themeIcon.className = 'ti ti-moon'
+        }
+      }
+
+      // Toggle theme on click
+      themeToggle.addEventListener('click', () => {
+        const currentTheme = document.documentElement.getAttribute('data-theme')
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+
+        document.documentElement.setAttribute('data-theme', newTheme)
+        localStorage.setItem('theme', newTheme)
+        updateThemeIcon(newTheme)
+      })
+    })()
+  </script>
 {% endblock %}
