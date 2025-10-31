@@ -76,7 +76,8 @@
    "fieldname": "submitted_by",
    "fieldtype": "Link",
    "label": "Submitted By",
-   "options": "User"
+   "options": "User",
+   "reqd": 1
   },
   {
    "columns": 2,
@@ -346,7 +347,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-10-13 17:10:24.035388",
+ "modified": "2025-10-31 14:50:44.288866",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
