@@ -397,6 +397,9 @@
       .foss-sort-group {
         justify-content: space-between;
       }
+      .hidden {
+        display: none !important;
+      }
     }
   </style>
 
@@ -498,7 +501,7 @@
       alt="${m.name}"
       loading="lazy"
       class="lazy-img" />
-${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-filled" style="font-size: 1rem; color: #141414; background-color: #e5e5e5; border: 1px solid #e5e5e5; border-radius: 50%; "></i></div>' : ''}
+${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-filled" style="font-size: 1rem; color: var(--text-color); background-color: var(--main-bg); border: 1px solid var(--main-bg); border-radius: 50%;"></i></div>' : ''}
 </div>
 <div class="foss-member-name">${m.name}</div>
 </a>
@@ -621,32 +624,29 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
 
         members.forEach((member) => {
           const visible = member.dataset.name.includes(query)
-          member.style.display = visible ? 'flex' : 'none'
+        member.classList.toggle('hidden', !visible)
         })
 
         sections.forEach((section) => {
-          const visibleMembers = section.querySelectorAll('.foss-member[style*="flex"]')
+        const visibleMembers = section.querySelectorAll('.foss-member:not(.hidden)')
           const header = section.querySelector('.foss-group-header')
-          const hasVisible = visibleMembers.length > 0 || query === ''
-
-          if (header) header.style.display = hasVisible ? 'flex' : 'none'
-          section.style.display = hasVisible ? 'block' : 'none'
+        const hasVisible = visibleMembers.length > 0 || query === ''
+        header?.classList.toggle('hidden', !hasVisible)
+        section.classList.toggle('hidden', !hasVisible)
         })
 
         // Handle past section
         const pastSection = document.getElementById('past-section')
         if (pastSection) {
           const pastMembers = pastSection.querySelectorAll('.foss-member')
-          const visiblePast = Array.from(pastMembers).filter((m) => m.style.display !== 'none')
-          pastSection.style.display = visiblePast.length > 0 || query === '' ? 'block' : 'none'
+        const visiblePast = pastMembers.querySelectorAll('.foss-member:not(.hidden)')
+        pastSection.classList.toggle('hidden', visiblePast.length === 0 && query !== '')
         }
       }
 
       // Surprise me functionality
       function surpriseMe() {
-        const visible = Array.from(document.querySelectorAll('.foss-member')).filter(
-          (m) => m.style.display !== 'none',
-        )
+        const visible = Array.from(document.querySelectorAll('.foss-member'))
         if (visible.length > 0) {
           const random = visible[Math.floor(Math.random() * visible.length)]
           window.location.href = random.href
@@ -667,6 +667,9 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
       document.getElementById('surprise').addEventListener('click', surpriseMe)
 
       // Initial render
+      currentSort = document.getElementById('sort').value
+      document.getElementById('search').value = ''
+      searchQuery = ''
       renderMembers()
 
       const themeToggle = document.getElementById('theme-toggle')
