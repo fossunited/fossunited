@@ -29,3 +29,13 @@ Volunteering at FOSS United offers a multitude of benefits that can enrich both 
 13. **Civic Engagement**: Participate in public policy advocacy and civic engagement to shape laws and regulations that affect the open-source community.
 
 14. **Cultural Exchange**: Engage with a diverse community, fostering cultural understanding and exchange of ideas.
+
+## Get featured in Volunteers page
+
+![Volunteers page](./assets/volunteers-page.png)
+
+### What's surprise me?
+Surprise me randomly shows volunteer profile who has enabled "Show community activity" in their profile
+If you've enabled "Show Community Activity" in profile, that circle checkbox shows at bottom-right in the profile icon.
+
+Please refer [Managing your profile](manage-profile.md#show-community-activity).

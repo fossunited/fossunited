@@ -98,6 +98,10 @@
       padding-bottom: 8px;
     }
 
+    .foss-volunteer-card p {
+      color: var(--text-color2);
+    }
+
     .foss-hero-card p {
       color: var(--text-color3);
       font-family: Inter;
@@ -220,6 +224,7 @@
     .dark-button {
       padding: 12px 20px;
       border-radius: 8px;
+      width: 150px;
       font-size: 14px;
       font-weight: 600;
       text-transform: uppercase;
@@ -446,7 +451,13 @@
             <input type="text" placeholder="Search" id="search" />
             <i class="ti ti-search"></i>
           </div>
-          <button class="dark-button" id="surprise">Surprise Me</button>
+          <div class="d-flex align-items-center">
+          <button class="dark-button mr-1" id="surprise">Surprise Me</button>
+            <a href="http://docs.fossunited.org/volunteering-perks/#whats-surprise-me" target="_blank" class="help-icon" title="What's the surprise?">
+              <i class="ti ti-help"></i>
+            </a>
+            <span class="tooltip">Need help?</span>
+          </div>
         </div>
 
         <div class="foss-sort-group">
@@ -653,7 +664,7 @@ ${m.activity ? '<div class="foss-activity-badge"><i class="ti ti-circle-check-fi
 
       // Surprise me functionality
       function surpriseMe() {
-        const visible = Array.from(document.querySelectorAll('.foss-member'))
+        const visible = Array.from(document.querySelectorAll('.foss-member')).filter(member => member.querySelector('.foss-activity-badge'));
         if (visible.length > 0) {
           const random = visible[Math.floor(Math.random() * visible.length)]
           window.location.href = random.href
