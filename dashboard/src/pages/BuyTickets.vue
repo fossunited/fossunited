@@ -41,8 +41,9 @@
             Select a tier
           </RadioGroupLabel>
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]">
+            <!-- Active Tiers -->
             <RadioGroupOption
-              v-for="tier in ticketTiers"
+              v-for="tier in activeTiers"
               :key="tier.name"
               v-slot="{ active, checked }"
               as="template"
@@ -77,18 +78,7 @@
                     </span>
                   </span>
                 </span>
-                <svg
-                  :class="[!checked ? 'invisible' : '', 'h-6 w-6 text-gray-800']"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
+                <IconCircleCheckFilled class="h-6 w-6" />
                 <span
                   :class="[
                     active ? 'border' : 'border-2',
@@ -99,6 +89,43 @@
                 />
               </div>
             </RadioGroupOption>
+
+            <!-- Disabled/Expired Tiers -->
+            <div
+              v-for="tier in inactiveTiers"
+              :key="tier.name"
+              :class="[
+                'relative flex rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm min-w-36 opacity-60 cursor-not-allowed',
+              ]"
+            >
+              <span class="flex flex-1">
+                <span class="flex flex-col justify-between">
+                  <span class="flex flex-col gap-2">
+                    <span class="block text-xl font-bold text-gray-500">{{ tier.title }}</span>
+                    <span
+                      class="mt-2 text-sm text-gray-400"
+                      v-html="markdown.render(tier.description || '')"
+                    >
+                    </span>
+                  </span>
+                  <span class="flex flex-col gap-4 mt-4">
+                    <Badge v-if="!tier.enabled" class="w-fit" variant="outline" theme="red">
+                      Disabled
+                    </Badge>
+                    <Badge
+                      v-else-if="isTierExpired(tier)"
+                      class="w-fit"
+                      variant="outline"
+                      theme="orange"
+                    >
+                      Expired on {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}
+                    </Badge>
+                    <span class="text-xl font-medium text-gray-500">₹{{ tier.price }}</span>
+                  </span>
+                </span>
+              </span>
+              <IconTicketOff class="h-6 w-6 text-gray-600" />
+            </div>
           </div>
         </RadioGroup>
 
@@ -161,7 +188,7 @@
                   type="checkbox"
                   size="sm"
                   variant="subtle"
-                  label="Yes, I’d like to receive email updates about future events."
+                  label="Yes, I'd like to receive email updates about future events."
                 />
                 <FormControl
                   v-model="attendee.organization"
@@ -396,6 +423,7 @@ import {
   RadioGroupOption,
 } from '@headlessui/vue'
 import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
+import { IconCircleCheckFilled, IconTicketOff } from '@tabler/icons-vue'
 
 const dayjs = inject('$dayjs')
 
@@ -447,8 +475,6 @@ watch(
   () => checkoutInfo.numSeats,
   () => {
     if (checkoutInfo.attendees.length < checkoutInfo.numSeats) {
-      // fill empty attendees for the seats
-
       for (let i = checkoutInfo.attendees.length; i < checkoutInfo.numSeats; i++) {
         const randomPlaceholder =
           fullNamePlaceholders[Math.floor(Math.random() * fullNamePlaceholders.length)]
@@ -465,7 +491,6 @@ watch(
         })
       }
     } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
-      // remove extra attendees
       checkoutInfo.attendees = checkoutInfo.attendees.slice(0, checkoutInfo.numSeats)
     }
   },
@@ -482,9 +507,14 @@ const event = createResource({
     }
   },
   onSuccess(data) {
-    const tiers = data.tiers.filter((tier) => tier.enabled === 1)
-    if (tiers.length > 0) {
-      checkoutInfo.tier = tiers[0]
+    const activeTiersList = data.tiers.filter((tier) => {
+      const isEnabled = Boolean(tier.enabled)
+      const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+      return isEnabled && !deadlinePassed
+    })
+
+    if (activeTiersList.length > 0) {
+      checkoutInfo.tier = activeTiersList[0]
     }
     resetCustomFields()
   },
@@ -508,6 +538,10 @@ function resetCustomFields() {
   }
 }
 
+function isTierExpired(tier) {
+  return tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+}
+
 function createOrder() {
   if (checkoutFormErrors.value.length > 0) {
     errorMessage.value = checkoutFormErrors.value.join(', ')
@@ -516,7 +550,6 @@ function createOrder() {
     errorMessage.value = null
   }
 
-  // start checkout
   rzpCheckout.value.createOrder(
     totalAmount.value,
     checkoutInfo.email,
@@ -592,7 +625,7 @@ const numTShirtAdded = computed(() => {
   return tShirts
 })
 
-const ticketTiers = computed(() => {
+const activeTiers = computed(() => {
   let tiers = event.data?.tiers || []
   tiers = tiers.filter((tier) => {
     const isEnabled = Boolean(tier.enabled)
@@ -600,6 +633,20 @@ const ticketTiers = computed(() => {
     return isEnabled && !deadlinePassed
   })
   return tiers
+})
+
+const inactiveTiers = computed(() => {
+  let tiers = event.data?.tiers || []
+  tiers = tiers.filter((tier) => {
+    const isEnabled = Boolean(tier.enabled)
+    const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+    return !isEnabled || deadlinePassed
+  })
+  return tiers
+})
+
+const ticketTiers = computed(() => {
+  return activeTiers.value
 })
 
 const seatOptions = computed(() => {
@@ -615,7 +662,6 @@ const checkoutFormErrors = computed(() => {
     errors.push('\nPlease enter your email')
   }
 
-  // validate email address
   if (
     checkoutInfo.email &&
     !checkoutInfo.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
@@ -627,7 +673,6 @@ const checkoutFormErrors = computed(() => {
     errors.push('\nPlease fill in all attendee details')
   }
 
-  // check mandatory custom fields
   for (let field of event.data?.custom_fields || []) {
     if (field.mandatory && !customFields[field.field_name]) {
       errors.push(`Please fill in ${field.label}`)
