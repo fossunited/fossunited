@@ -180,9 +180,13 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
 
     # Check if the number of tickets purchased does not exceed the maximum allowed
     maximum_tickets = tier_details.maximum_tickets
-    if maximum_tickets and len(attendees) > maximum_tickets:
+    total_tickets = frappe.db.count(
+        "FOSS Event Ticket",
+        filters={"tier": tier_details.title, "event": payment_meta_data.get("event")},
+    )
+    if maximum_tickets and total_tickets > maximum_tickets:
         frappe.throw(
-            f"The maximum tickets for this tier is {maximum_tickets}. You cannot purchase more.",
+            f"The maximum tickets for this tier is {maximum_tickets}. Sold out, Houseful!",
             TicketTierMismatchError,
         )
 
