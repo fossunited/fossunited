@@ -155,6 +155,16 @@
       opacity: 1;
   }
 
+  .event-card-holder { width: 100%; }
+
+  @media screen and (max-width: 1440px) {
+  .events-grid-4 {
+  width: 100%;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  row-gap: 24px;
+  }
+  }
+
   @media (max-width: 768px) {
     .search-filter-controlpanel {
       flex-direction: column;
@@ -163,10 +173,6 @@
     .must-attend-checkbox {
       flex-direction: row;
       width: fit-content;
-    }
-
-    .event-card-holder {
-      width: 90%;
     }
   }
 </style>
