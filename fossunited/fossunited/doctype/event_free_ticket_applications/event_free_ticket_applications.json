@@ -1,0 +1,125 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-11-04 13:46:19.250389",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "personal_details_section",
+  "full_name",
+  "email",
+  "column_break_mnzv",
+  "designation",
+  "organization",
+  "section_break_amhv",
+  "coupon_id",
+  "column_break_qzhw",
+  "section_break_kdwt",
+  "event"
+ ],
+ "fields": [
+  {
+   "fieldname": "personal_details_section",
+   "fieldtype": "Section Break",
+   "label": "Personal Details"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Full Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Email",
+   "options": "Email",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_mnzv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation"
+  },
+  {
+   "fieldname": "organization",
+   "fieldtype": "Data",
+   "label": "Organization/College"
+  },
+  {
+   "fieldname": "section_break_amhv",
+   "fieldtype": "Section Break",
+   "label": "Ticket Details"
+  },
+  {
+   "fieldname": "coupon_id",
+   "fieldtype": "Link",
+   "label": "Coupon ID",
+   "options": "Event Free Ticket Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_qzhw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_kdwt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "event",
+   "fieldtype": "Link",
+   "label": "Event",
+   "options": "FOSS Chapter Event"
+  }
+ ],
+ "grid_page_length": 50,
+ "links": [],
+ "modified": "2025-11-04 13:59:27.389137",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Event Free Ticket Applications",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "search_fields": "email",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [
+  {
+   "color": "Orange",
+   "title": "Pending"
+  },
+  {
+   "color": "Green",
+   "title": "Accepted"
+  },
+  {
+   "color": "Red",
+   "title": "Rejected"
+  }
+ ],
+ "title_field": "full_name",
+ "track_changes": 1,
+ "track_seen": 1
+}
