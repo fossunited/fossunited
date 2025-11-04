@@ -28,7 +28,7 @@ class EventFreeTicketApplications(Document):
         """Executed automatically before inserting the document."""
         coupon_data = self.validate_coupon()
         ticket_tier = self.get_ticket_tier(coupon_data)
-        self.create_free_ticket(coupon_data, ticket_tier)
+        self.create_free_ticket(ticket_tier)
         self.update_coupon_usage(coupon_data)
 
     def validate_coupon(self):
@@ -60,7 +60,7 @@ class EventFreeTicketApplications(Document):
             return f"{coupon_data.other_tier} Free Pass"
         return f"{coupon_data.tier} Free Pass"
 
-    def create_free_ticket(self, coupon_data, ticket_tier):
+    def create_free_ticket(self, ticket_tier):
         """Create a FOSS Event Ticket for the user."""
         try:
             ticket = frappe.get_doc(
@@ -76,8 +76,11 @@ class EventFreeTicketApplications(Document):
                 }
             )
             ticket.insert(ignore_permissions=True)
-        except Exception as e:
+        except frappe.ValidationError as e:
             frappe.throw(f"Error creating free ticket: {e}")
+        except Exception as e:
+            frappe.log_error(f"Unexpected error creating free ticket: {e}")
+            frappe.throw("An unexpected error occurred while creating your free ticket.")
 
     def update_coupon_usage(self, coupon_data):
         """Increment coupon usage and mark as used if max reached."""
