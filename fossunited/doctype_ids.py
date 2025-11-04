@@ -60,3 +60,7 @@ RAZORPAY_WEBHOOK_LOG = "Razorpay Webhook Log"
 CAMPAIGN = "Newsletter"
 EMAIL_GROUP = "Email Group"
 EMAIL_MEMBER = "Email Group Member"
+
+# Free code
+FREE_TICKET_CODE = "Event Free Ticket Code"
+FREE_TICKET_APPLY = "Event Free Ticket Applications"

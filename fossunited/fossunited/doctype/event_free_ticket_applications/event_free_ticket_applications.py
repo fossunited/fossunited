@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
+
 
 class EventFreeTicketApplications(Document):
     # begin: auto-generated types
@@ -32,14 +34,13 @@ class EventFreeTicketApplications(Document):
     def validate_coupon(self):
         """Ensure the provided coupon is valid and not overused."""
         if not frappe.db.exists(
-            "Event Free Ticket Code",
-            self.coupon_id,
-            {"event": self.event},
+            FREE_TICKET_CODE,
+            {"name": self.coupon_id, "event": self.event},
         ):
-            frappe.throw("Invalid Coupon / Coupon used to max limit.")
+            frappe.throw("Invalid or Deleted Coupon provided.")
 
         coupon_data = frappe.db.get_value(
-            "Event Free Ticket Code",
+            FREE_TICKET_CODE,
             self.coupon_id,
             ["max_count", "used_count", "tier", "other_tier"],
             as_dict=True,
@@ -48,7 +49,7 @@ class EventFreeTicketApplications(Document):
         if not coupon_data:
             frappe.throw("Coupon not found or inactive.")
 
-        if coupon_data.max_count == coupon_data.used_count:
+        if coupon_data.used_count >= coupon_data.max_count:
             frappe.throw("Reached max count of coupon usage.")
 
         return coupon_data
@@ -64,7 +65,7 @@ class EventFreeTicketApplications(Document):
         try:
             ticket = frappe.get_doc(
                 {
-                    "doctype": "FOSS Event Ticket",
+                    "doctype": EVENT_TICKET,
                     "event": self.event,
                     "full_name": self.full_name,
                     "email": self.email,
@@ -81,7 +82,7 @@ class EventFreeTicketApplications(Document):
     def update_coupon_usage(self, coupon_data):
         """Increment coupon usage and mark as used if max reached."""
         new_used_count = int(coupon_data.used_count or 0) + 1
-        frappe.db.set_value("Event Free Ticket Code", self.coupon_id, "used_count", new_used_count)
+        frappe.db.set_value(FREE_TICKET_CODE, self.coupon_id, "used_count", new_used_count)
 
         if new_used_count >= int(coupon_data.max_count):
-            frappe.db.set_value("Event Free Ticket Code", self.coupon_id, "is_used", 1)
+            frappe.db.set_value(FREE_TICKET_CODE, self.coupon_id, "is_used", 1)
