@@ -114,7 +114,7 @@ const tiers = createResource({
     let options = []
     options.push({
       label: 'All',
-      value: data.map((tier) => tier.title),
+      value: '',
     })
 
     data.forEach((tier) => {
@@ -135,7 +135,7 @@ const attendeesList = createResource({
       event_id: props.event.data.name,
       filters: {
         full_name: ['like', `%${filters.search_text}%`],
-        tier: ['in', filters.tier],
+        tier: ['like', `%${filters.tier}%`],
       },
     }
   },

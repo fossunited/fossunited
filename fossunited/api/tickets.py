@@ -133,15 +133,21 @@ def get_tickets_insights(event_id: str) -> dict:
         filters={"parent": event_id, "parentfield": "tiers"},
         fields=["*"],
     )
+
     for tier in tiers:
         tier_data[tier.title] = get_tier_insights(tier)
+
+    combined_tier_data = list(tier_data.values())
+    free_pass_data = get_free_pass_insights(event_id)
+    if free_pass_data:
+        combined_tier_data.append(free_pass_data)
 
     return {
         "total_sold": total_sold,
         "tshirt_insights": tshirt_insights,
         "tickets_sold_today": tickets_sold_today,
         "total_percentage_change": percentage_change,
-        "tier_data": tier_data,
+        "tier_data": combined_tier_data,
     }
 
 
@@ -299,19 +305,34 @@ def has_valid_permission(event_id: str) -> bool:
 @frappe.whitelist()
 def get_ticket_tiers(event_id: str) -> list:
     """
-    Get the list of ticket tiers for the event
-
-    Args:
-        event_id (str): Event ID
-
-    Returns:
-        list: List of ticket tiers
+    Get the list of ticket tiers for the event,
+    including any manually created 'Free pass' tickets (like Speaker/Volunteer passes).
     """
+    # Get all real tiers from FOSS Ticket Tier child table
     tiers = frappe.db.get_all(
         "FOSS Ticket Tier",
         filters={"parent": event_id, "parentfield": "tiers"},
         fields=["title", "maximum_tickets"],
     )
+
+    # Check if there are tickets whose tier name contains 'Free pass'
+    has_free_pass = frappe.db.exists(
+        "FOSS Event Ticket",
+        {
+            "event": event_id,
+            "tier": ["like", "%Free pass%"],
+        },
+    )
+
+    if has_free_pass:
+        # Add one virtual entry to represent all free-pass tickets
+        tiers.append(
+            {
+                "title": "Free pass",
+                "maximum_tickets": 0,
+            }
+        )
+
     return tiers
 
 
@@ -329,3 +350,45 @@ def is_ticket_live(event_id: str) -> bool:
     ticket_status = frappe.db.get_value(EVENT, event_id, "tickets_status")
 
     return ticket_status == "Live"
+
+
+def get_free_pass_insights(event_id: str) -> dict:
+    """
+    Get total free pass tickets claimed for the event.
+    """
+    today = frappe.utils.nowdate()
+    yesterday = frappe.utils.add_days(today, -1)
+
+    stats = {
+        "title": "Free Pass Tickets",
+        "total_sold": frappe.db.count(
+            EVENT_TICKET,
+            filters={
+                "event": event_id,
+                "tier": ["like", "%Free pass%"],
+            },
+        ),
+        "tickets_sold_today": frappe.db.count(
+            EVENT_TICKET,
+            filters={
+                "event": event_id,
+                "tier": ["like", "%Free pass%"],
+                "creation": ["like", f"{today}%"],
+            },
+        ),
+        "tickets_sold_yesterday": frappe.db.count(
+            EVENT_TICKET,
+            filters={
+                "event": event_id,
+                "tier": ["like", "%Free pass%"],
+                "creation": ["like", f"{yesterday}%"],
+            },
+        ),
+    }
+
+    stats["percentage_change"] = get_percentage_change(
+        float(stats["tickets_sold_today"]),
+        float(stats["tickets_sold_yesterday"]),
+    )
+
+    return stats
