@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.doctype_ids import EVENT_TICKET
+from fossunited.doctype_ids import EVENT, EVENT_TICKET
 
 
 class FOSSEventTicketTransfer(Document):
@@ -33,6 +33,7 @@ class FOSSEventTicketTransfer(Document):
     def before_insert(self):
         self.validate_ticket_exists()
         self.validate_status_is_pending()
+        self.validate_non_transferable_free_tier()
 
     def before_save(self):
         if self.has_value_changed("status"):
@@ -42,6 +43,7 @@ class FOSSEventTicketTransfer(Document):
 
     def validate(self):
         self.validate_ticket_exists()
+        self.validate_non_transferable_free_tier()
 
     def validate_ticket_exists(self):
         if not frappe.db.exists(EVENT_TICKET, self.ticket):
@@ -85,3 +87,18 @@ class FOSSEventTicketTransfer(Document):
 
         ticket.is_transfer_ticket = 0
         ticket.save(ignore_permissions=True)
+
+    def validate_non_transferable_free_tier(self):
+        """Prevent transfer of free tier tickets and enforce event status check."""
+        tier = frappe.db.get_value(EVENT_TICKET, self.ticket, "tier")
+        if "Free Pass" in tier:
+            frappe.throw("Free Tier Tickets cannot be transferred!")
+
+        event_name = frappe.db.get_value(EVENT_TICKET, self.ticket, "event")
+        event_status = frappe.db.get_value(EVENT, event_name, "status")
+
+        # avoid scam of people tranferring old event tickets
+        if event_status != "Live":
+            frappe.throw(
+                f"Tickets can only be transferred for Live events. Current status: {event_status}"
+            )
