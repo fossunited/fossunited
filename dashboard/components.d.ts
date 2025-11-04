@@ -45,6 +45,8 @@ declare module 'vue' {
     FossClubIcon: typeof import('./src/components/icons/FossClubIcon.vue')['default']
     FossClubLogo: typeof import('./src/components/FossClubLogo.vue')['default']
     FossUnitedLogo: typeof import('./src/components/FossUnitedLogo.vue')['default']
+    FreeTicketCodeDialog: typeof import('./src/components/event/FreeTicketCodeDialog.vue')['default']
+    FreeTicketCodeSection: typeof import('./src/components/event/FreeTicketCodeSection.vue')['default']
     GuidelineSection: typeof import('./src/components/cfp-public/GuidelineSection.vue')['default']
     HackathonAttendanceMode: typeof import('./src/components/hackathon/HackathonAttendanceMode.vue')['default']
     HackathonParticipantHeader: typeof import('./src/components/hackathon/HackathonParticipantHeader.vue')['default']
