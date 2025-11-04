@@ -19,6 +19,7 @@
       class="mt-4 min-h-[300px]"
       :columns="[
         { label: 'Full Name', key: 'full_name', icon: 'user' },
+        { label: 'Coupon ID', key: 'name' },
         { label: 'Email', key: 'mapped_email', icon: 'at-sign' },
         { label: 'Used / Max', key: 'usage', icon: 'check-circle' },
         { label: 'Tier', key: 'tier', icon: 'award' },

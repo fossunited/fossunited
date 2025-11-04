@@ -8,6 +8,13 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-4">
+        <FormControl
+          v-if="!inCreateMode"
+          v-model="code.name"
+          label="Coupon ID"
+          type="text"
+          readonly
+        />
         <FormControl v-model="code.full_name" label="Full Name" />
         <FormControl v-model="code.mapped_email" label="Email &ast;" type="email" />
         <FormControl
@@ -81,6 +88,7 @@ const showDialog = defineModel({
 })
 
 const code = reactive({
+  name: '',
   full_name: '',
   mapped_email: '',
   tier: '',
@@ -92,6 +100,7 @@ const code = reactive({
 watch(
   () => props.row,
   (row) => {
+    code.name = row.name || ''
     code.full_name = row.full_name || ''
     code.mapped_email = row.mapped_email || ''
     code.tier = row.tier || ''
