@@ -10,7 +10,7 @@
     <div class="prose w-full mb-4">
       <h2 class="mb-1">Free Ticket Codes</h2>
       <p class="text-sm">Manage free ticket codes for this event.</p>
-      <Button variant="solid" label="Add Code" icon-left="plus" @click="handleCreate" />
+      <Button variant="solid" label="Create Free Coupon" icon-left="plus" @click="handleCreate" />
     </div>
 
     <ListView
