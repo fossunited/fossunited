@@ -293,12 +293,13 @@
               />
             </div>
             <div class="my-2">
-              <Checkbox
-                v-model="checkoutInfo.readRefundPolicy"
-                size="sm"
-                ></Checkbox><span class="font-medium leading-normal text-ink-gray-8
-                                         >text-base"> I understand that tickets are non-refundable and have read the
-                  <a href=/refund-transfer-policy>Refund Policy</a></span>
+              <Checkbox v-model="checkoutInfo.readRefundPolicy" size="sm"></Checkbox
+              ><span class="font-medium leading-normal text-ink-gray-8 >text-base">
+                I understand that tickets are non-refundable and have read the
+                <a href="/refund-transfer-policy" class="font-semibold underline"
+                  >Refund Policy</a
+                ></span
+              >
             </div>
           </div>
         </div>
@@ -697,7 +698,9 @@ const checkoutFormErrors = computed(() => {
   }
 
   if (!checkoutInfo.readRefundPolicy) {
-    errors.push('\nPlease read and accept our refund policy if you want to proceed with the purchase')
+    errors.push(
+      '\nPlease read and accept our refund policy if you want to proceed with the purchase',
+    )
   }
 
   return errors
