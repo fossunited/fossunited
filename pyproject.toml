@@ -44,10 +44,17 @@ build-backend = "flit_core.buildapi"
 line-length = 99
 fix = true
 [tool.ruff.lint]
-select = ["I", "E", "F", "B", "Q"]
+select = ["F", "E", "W", "I", "Q"] # from frappe
+# ^ add more rules as well? RUF, UP and more?
 ignore = ["F722", "F821"]
 [tool.ruff.lint.per-file-ignores]
-"apps/*/doctype/**.py" = ["F821", "F722"]
+"**/doctype/**/*.py" = ["F821", "F722"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
 
 [tool.ty.rules]
 possibly-unresolved-reference = "warn"
