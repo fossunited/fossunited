@@ -16,10 +16,15 @@
           readonly
         />
         <FormControl v-model="code.full_name" label="Full Name" />
-        <FormControl v-model="code.mapped_email" label="Email &ast;" type="email" />
+        <FormControl
+          v-model="code.mapped_email"
+          label="Email *"
+          type="email"
+          placeholder="john@fossunited.org"
+        />
         <FormControl
           v-model="code.tier"
-          label="Tier &ast;"
+          label="Tier *"
           type="select"
           :options="[
             { label: 'Volunteer', value: 'Volunteer' },
@@ -33,7 +38,13 @@
         />
         <FormControl v-model="code.company" label="Organization" />
         <FormControl v-if="code.tier === 'Other'" v-model="code.other_tier" label="Other Tier" />
-        <FormControl v-model="code.max_count" label="Max Count &ast;" type="number" :max="30" />
+        <FormControl
+          v-model="code.max_count"
+          label="Max Count *"
+          type="number"
+          :min="1"
+          :max="30"
+        />
       </div>
       <ErrorMessage :message="errorMessages" />
     </template>
