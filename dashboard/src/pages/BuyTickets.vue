@@ -265,6 +265,14 @@
                 label="Billing Address"
               />
             </div>
+            <div class="my-2">
+              <Checkbox
+                v-model="checkoutInfo.readRefundPolicy"
+                size="sm"
+                ></Checkbox><span class="font-medium leading-normal text-ink-gray-8
+                                         >text-base"> I understand that tickets are non-refundable and have read the
+                  <a href=/refund-transfer-policy>Refund Policy</a></span>
+            </div>
           </div>
         </div>
       </div>
@@ -373,6 +381,7 @@ import {
   createResource,
   FormControl,
   Switch,
+  Checkbox,
   Button,
   Card,
   usePageMeta,
@@ -414,6 +423,7 @@ const checkoutInfo = reactive({
   email: '',
   attendees: [],
   hasGST: false,
+  readRefundPolicy: false,
   company_name: '',
   buyer_name: '',
   state: '',
@@ -602,7 +612,7 @@ const seatOptions = computed(() => {
 const checkoutFormErrors = computed(() => {
   const errors = []
   if (!checkoutInfo.email) {
-    errors.push('Please enter your email')
+    errors.push('\nPlease enter your email')
   }
 
   // validate email address
@@ -610,11 +620,11 @@ const checkoutFormErrors = computed(() => {
     checkoutInfo.email &&
     !checkoutInfo.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
   ) {
-    errors.push('Please enter a valid email address')
+    errors.push('\nPlease enter a valid email address')
   }
 
   if (checkoutInfo.attendees.some((a) => !a.full_name || !a.email)) {
-    errors.push('Please fill in all attendee details')
+    errors.push('\nPlease fill in all attendee details')
   }
 
   // check mandatory custom fields
@@ -629,16 +639,20 @@ const checkoutFormErrors = computed(() => {
       attendee.email &&
       !attendee.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
     ) {
-      errors.push('Please enter a valid email address for all attendees')
+      errors.push('\nPlease enter a valid email address for all attendees')
     }
   }
 
   if (!checkoutInfo.state) {
-    errors.push('Please select a state in Billing Details')
+    errors.push('\nPlease select a state in Billing Details')
   }
 
   if (!checkoutInfo.buyer_name) {
-    errors.push('Please enter name in Billing Details')
+    errors.push('\nPlease enter name in Billing Details')
+  }
+
+  if (!checkoutInfo.readRefundPolicy) {
+    errors.push('\nPlease read and accept our refund policy if you want to proceed with the purchase')
   }
 
   return errors
