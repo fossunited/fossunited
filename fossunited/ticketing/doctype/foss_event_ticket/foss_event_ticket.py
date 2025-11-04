@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 import frappe
@@ -161,8 +162,33 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     tier = payment_meta_data.get("tier", {}).get("name")
     price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
 
+    # Check if the tier belongs to the correct event
     if event_name != payment_meta_data.get("event"):
         frappe.throw("This tier does not belong to this event!", TicketTierMismatchError)
+
+    # Retrieve the tier details for validation
+    tier_details = frappe.get_doc("FOSS Ticket Tier", tier)
+
+    # Check if the tier is enabled
+    if not tier_details.enabled:
+        frappe.throw("This ticket tier is not enabled!", TicketTierMismatchError)
+
+    # Check if the ticket purchase is within the valid time frame
+    valid_till = tier_details.valid_till
+    if valid_till and valid_till < datetime.today().date():
+        frappe.throw("This ticket tier has expired!", TicketTierMismatchError)
+
+    # Check if the number of tickets purchased does not exceed the maximum allowed
+    maximum_tickets = tier_details.maximum_tickets
+    total_tickets = frappe.db.count(
+        "FOSS Event Ticket",
+        filters={"tier": tier_details.title, "event": payment_meta_data.get("event")},
+    )
+    if maximum_tickets and total_tickets > maximum_tickets:
+        frappe.throw(
+            f"The maximum tickets for this tier is {maximum_tickets}. Sold out, Houseful!",
+            TicketTierMismatchError,
+        )
 
     tshirt_price = frappe.db.get_value(EVENT, event_name, "t_shirt_price")
 
