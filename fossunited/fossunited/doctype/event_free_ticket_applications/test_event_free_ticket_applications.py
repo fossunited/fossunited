@@ -84,8 +84,8 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         ticket = frappe.get_doc(EVENT_TICKET, {"event": self.event.name, "email": email})
         self.assertEqual(ticket.full_name, full_name)
         self.assertEqual(ticket.tier, "Volunteer Free Pass")
-        self.assertEqual(ticket.designation, None or ticket.designation)
-        self.assertEqual(ticket.organization, None or ticket.organization)
+        self.assertIsNone(ticket.designation)
+        self.assertIsNone(ticket.organization)
         self.assertEqual(ticket.subscribe_chapter_mailing, 1)
 
     def test_coupon_usage_increments(self):
@@ -126,7 +126,7 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         with self.assertRaises(frappe.ValidationError):
             # pass other event id explicitly
             self.submit_application(coupon.name, event=other_event)
-        frappe.delete_doc("FOSS Chapter Event", other_event.name, force=True)
+        frappe.delete_doc(EVENT, other_event.name, force=True)
 
     def test_other_tier_formatting(self):
         coupon = self.create_test_coupon(tier="Other", other_tier="VIP Guest")
