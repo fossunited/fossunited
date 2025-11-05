@@ -392,3 +392,30 @@ def get_free_pass_insights(event_id: str) -> dict:
     )
 
     return stats
+
+
+@frappe.whitelist()
+def get_event_free_codes(event):
+    """Get all free ticket codes for an event"""
+
+    if not has_valid_permission(event):
+        frappe.throw("You are not authorized to view the tickets for this event")
+
+    codes = frappe.get_all(
+        "Event Free Ticket Code",
+        filters={"event": event},
+        fields=[
+            "name",
+            "full_name",
+            "mapped_email",
+            "tier",
+            "company",
+            "other_tier",
+            "used_count",
+            "max_count",
+            "is_used",
+        ],
+        order_by="tier asc, creation desc",
+    )
+
+    return codes
