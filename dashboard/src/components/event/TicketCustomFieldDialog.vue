@@ -40,7 +40,7 @@
       <ErrorMessage :message="errorMessages" />
     </template>
     <template #actions>
-      <div class="flex gap-2 items-center">
+      <div class="grid grid-cols-3 gap-2 items-center">
         <Button
           v-if="!inCreateMode"
           class="w-fit px-2"

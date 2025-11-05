@@ -577,10 +577,10 @@ def get_sending_status(campaign_id: str) -> dict:
         dict: of stats of format
         ```
         {
-            'sent': int,
-            'error': int,
-            'total': int,
-            'emails_queued': int,
+            "sent": int,
+            "error": int,
+            "total": int,
+            "emails_queued": int,
         }
         ```
     """
