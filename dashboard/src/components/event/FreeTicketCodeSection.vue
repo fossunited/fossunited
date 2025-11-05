@@ -81,7 +81,7 @@ const freeCodes = createResource({
   url: 'fossunited.api.tickets.get_event_free_codes',
   makeParams() {
     return {
-      event: route.params.id,
+      event: props.event.name || route.params.id,
     }
   },
   auto: true,

@@ -98,20 +98,29 @@ const showDialog = defineModel({
   default: false,
 })
 
-const code = reactive({
-  name: '',
+const defaultCode = {
   full_name: '',
   mapped_email: '',
   tier: '',
   company: '',
   other_tier: '',
   max_count: 1,
-})
+}
+
+const code = reactive({ ...defaultCode })
+
+const resetCode = () => {
+  Object.assign(code, defaultCode)
+}
 
 watch(
   () => props.row,
   (row) => {
     code.name = row.name || ''
+    if (!row || !Object.keys(row).length) {
+      resetCode()
+      return
+    }
     code.full_name = row.full_name || ''
     code.mapped_email = row.mapped_email || ''
     code.tier = row.tier || ''
@@ -151,9 +160,10 @@ const createCode = createResource({
   },
   onSuccess() {
     toast.success('Free code created successfully')
+    emit('refresh')
     showDialog.value = false
-    // Trigger refresh of parent list
-    window.location.reload()
+    resetCode()
+    errorMessages.value = ''
   },
   onError(error) {
     errorMessages.value = error.message
@@ -178,8 +188,9 @@ const updateCode = createResource({
   },
   onSuccess() {
     toast.success('Free code updated successfully')
+    emit('refresh')
     showDialog.value = false
-    window.location.reload()
+    errorMessages.value = ''
   },
   onError(error) {
     errorMessages.value = error.message
@@ -196,8 +207,10 @@ const deleteCode = createResource({
   },
   onSuccess() {
     toast.info('Free code deleted successfully')
+    emit('refresh')
     showDialog.value = false
-    window.location.reload()
+    resetCode()
+    errorMessages.value = ''
   },
   onError(error) {
     errorMessages.value = error.message
