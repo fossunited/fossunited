@@ -6,7 +6,7 @@
     <div class="container">
       <div class="profile-content-section">
         <div class="horizontal-navbar px-8 pt-2">
-          {% set nav_items = ['about', 'work', 'resume', 'projects', 'activity'] %}
+          {% set nav_items = ['about', 'resume', 'projects'] %}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
@@ -23,18 +23,29 @@
             <div class="about">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
-        <div class="content-div" id="work">
-          <div class="profile-content-div">
-            <h5>Work</h5>
-            <div class="coming-soon-container">Integrations Coming Soon!</div>
-          </div>
-        </div>
         <div class="content-div" id="resume">
           {{ render_experience() }} {{ render_education() }}
         </div>
         <div class="content-div" id="projects">{{ render_projects() }}</div>
-        <div class="content-div" id="activity">{{ render_activity() }}</div>
       </div>
+
+      <div class="profile-content-section mt-10">
+        <div class="d-flex align-items-center border-top-0 border">
+          <h5 class="p-5 pl-10">
+            Activity
+          </h5>
+          <a
+            href="https://docs.fossunited.org/manage-profile/#show-community-activity"
+            target="_blank"
+            class="help-icon"
+            title="What is the activity?"
+          >
+            <i class="ti ti-help"></i>
+          </a>
+        </div>
+        <div id="activity">{{ render_activity() }}</div>
+      </div>
+
     </div>
   </div>
 {% endblock %}
@@ -198,39 +209,39 @@
     from
     'fossunited/templates/macros/hackathon_card.html' import hackathon_card
   %}
-  <div class="profile-content-div" id="activity">
+  <div class="profile-content-div p-5">
     {% if doc.show_activity %}
-    <div class="container my-5">
-      <h3 class="subtitle">Talks Given</h3>
-      {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
-    </div>
-
-    {% if cfps | length > 0 %}
-    <div class="container my-5">
-      <h3 class="subtitle">CFPs Proposed</h3>
-      {% for talk in cfps %}{{ speaker_card(talk) }}{% endfor %}
-    </div>
-    {% endif %}
-
-    <div class="container my-5">
-      <h3 class="subtitle">Chapter Volunteership</h3>
-      {% for chapter in volunteered %}{{ volunteer_chapter_card(chapter) }}{% endfor %}
-    </div>
-
-    <div class="container my-5">
-      <h3 class="subtitle">Events Attended</h3>
-      <div class="events-grid-4">
-        {% for event in attended %}{{ event_card(event) }}{% endfor %}
+      <div class="container">
+        <h3 class="subtitle">Talks Given</h3>
+        {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
       </div>
-    </div>
-    <div class="container my-5">
-      <h3 class="subtitle">Hackathons Attended</h3>
-      <div class="events-grid-4">
-        {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
+
+      {% if cfps | length > 0 %}
+        <div class="container">
+          <h3 class="subtitle">CFPs Proposed</h3>
+          {% for talk in cfps %}{{ speaker_card(talk) }}{% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="container">
+        <h3 class="subtitle">Chapter Volunteership</h3>
+        {% for chapter in volunteered %}{{ volunteer_chapter_card(chapter) }}{% endfor %}
       </div>
-    </div>
+
+      <div class="container">
+        <h3 class="subtitle">Events Attended</h3>
+        <div class="events-grid-4">
+          {% for event in attended %}{{ event_card(event) }}{% endfor %}
+        </div>
+      </div>
+      <div class="container">
+        <h3 class="subtitle">Hackathons Attended</h3>
+        <div class="events-grid-4">
+          {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
+        </div>
+      </div>
     {% else %}
-    <div>User has chosen to keep their Community Activity anonymous</div>
+      <div>User has chosen to keep their Community Activity anonymous</div>
     {% endif %}
   </div>
 {% endmacro %}
@@ -242,28 +253,37 @@
     href="/{{ chapter.route }}"
     aria-description="{{ chapter.chapter_name }}"
   >
-    <div class='talk-card--container'>
-      <div class=talk-card--meta>
-        <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name">
+    <div class="talk-card--container">
+      <div class="talk-card--meta">
+        <div
+          class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name"
+        >
           {% if chapter.chapter_type == 'FOSS Club' %}
             <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
             <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
           {% else %}
-            <span class="fff-forward">{{ chapter.chapter_name.upper() | truncate(25, True, '...', 0) }}</span>
+            <span class="fff-forward"
+              >{{ chapter.chapter_name.upper() | truncate(25, True, '...', 0) }}</span
+            >
           {% endif %}
         </div>
       </div>
-      <div class=talk-card--title>{{ chapter.chapter_name }}</div>
-      <div class=chapter-volunteer-card--type>
+      <div class="talk-card--title">{{ chapter.chapter_name }}</div>
+      <div class="chapter-volunteer-card--type">
         <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z" fill="#08B74F"/>
+          <path
+            d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z"
+            fill="#08B74F"
+          />
         </svg>
-        <div class=chapter-volunteer-card--role>{{ chapter.role }}</div>
+        <div class="chapter-volunteer-card--role">{{ chapter.role }}</div>
       </div>
     </div>
-    <div class=talk-card--location-date>{{ chapter.chapter_type }} | {{ chapter.chapter_status }}</div>
+    <div class="talk-card--location-date">
+      {{ chapter.chapter_type }} | {{ chapter.chapter_status }}
+    </div>
   </a>
-  <br/>
+  <br />
 {% endmacro %}
 {% macro speaker_card(talk) %}
   <a
@@ -273,30 +293,40 @@
     href="/{{ talk.route }}"
     aria-description="User is giving a talk about {{ talk.talk_title }} at {{ talk.event_name }} happening on {{ talk.event_start_date.strftime('%d %b %Y') }} at {{ talk.event_location or 'To Be Announced' }}. Click to learn more about the talk."
   >
-    <div class='talk-card--container'>
-      <div class=talk-card--meta>
-        <div class=talk-card--event-name>
+    <div class="talk-card--container">
+      <div class="talk-card--meta">
+        <div class="talk-card--event-name">
           {% if talk.chapter %}
-          {% set chapter = frappe.get_doc("FOSS Chapter", talk.chapter) %}
-          <div class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name">
-            {% if chapter.chapter_type == 'FOSS Club' %}
-              <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
-              <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
-            {% else %}
-              <span class="fff-forward">{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span>
-            {% endif %}
-          </div>
+            {% set chapter = frappe.get_doc("FOSS Chapter", talk.chapter) %}
+            <div
+              class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %} talk-card--event-name"
+            >
+              {% if chapter.chapter_type == 'FOSS Club' %}
+                <img
+                  src="/assets/fossunited/images/chapter/fossclub_logo.svg"
+                  alt="FOSS Club Logo"
+                />
+                <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
+              {% else %}
+                <span class="fff-forward"
+                  >{{ chapter.city.upper() | truncate(25, True, '...', 0) }}</span
+                >
+              {% endif %}
+            </div>
           {% endif %}
           <div class="talk-card--event-name-text">{{ talk.event_name }}</div>
         </div>
-        <div class=talk-card--type>{{ talk.session_type }}</div>
+        <div class="talk-card--type">{{ talk.session_type }}</div>
       </div>
-      <div class=talk-card--title>{{ talk.talk_title }}</div>
+      <div class="talk-card--title">{{ talk.talk_title }}</div>
     </div>
-    <div class=talk-card--location-date>{{ talk.event_start_date.strftime("%d %b %Y") }} | {{ (talk.event_location or 'To Be Announced' )}}</div>
-    <div class=talk-card--type>{{ talk.status }}</div>
+    <div class="talk-card--location-date">
+      {{ talk.event_start_date.strftime("%d %b %Y") }} |
+      {{ (talk.event_location or 'To Be Announced' ) }}
+    </div>
+    <div class="talk-card--type">{{ talk.status }}</div>
   </a>
-  <br/>
+  <br />
 {% endmacro %}
 {% macro profile_header() %}
   <div class="container">
