@@ -53,6 +53,10 @@ class EventFreeTicketCode(Document):
         if check_if_chapter_or_event_core_member(self.event):
             return True
 
+        frappe.log_error(
+            title="Permission Denied: Free Ticket Code Modification",
+            message=f"User {user} attempted to modify free ticket code for event {self.event}",
+        )
         frappe.throw(
             "You are not allowed to modify free ticket codes for this event.",
             frappe.PermissionError,
