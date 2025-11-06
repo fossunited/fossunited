@@ -1,8 +1,10 @@
 # Copyright (c) 2025, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-# import frappe
+import frappe
 from frappe.model.document import Document
+
+from fossunited.api.chapter import check_if_chapter_or_event_core_member
 
 
 class EventFreeTicketCode(Document):
@@ -32,4 +34,30 @@ class EventFreeTicketCode(Document):
         ]
         used_count: DF.Int
     # end: auto-generated types
-    pass
+
+    def on_trash(self):
+        self.permit_only_team()
+
+    def before_save(self):
+        self.permit_only_team()
+
+    def permit_only_team(self):
+        """Allow only event/chapter team members to modify."""
+
+        user = frappe.session.user
+        roles = frappe.get_roles(user)
+
+        if "System Manager" in roles or "Administrator" in roles:
+            return True
+
+        if check_if_chapter_or_event_core_member(self.event):
+            return True
+
+        frappe.log_error(
+            title="Permission Denied: Free Ticket Code Modification",
+            message=f"User {user} attempted to modify free ticket code for event {self.event}",
+        )
+        frappe.throw(
+            "You are not allowed to modify free ticket codes for this event.",
+            frappe.PermissionError,
+        )

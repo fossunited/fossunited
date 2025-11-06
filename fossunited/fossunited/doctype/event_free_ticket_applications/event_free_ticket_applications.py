@@ -42,14 +42,14 @@ class EventFreeTicketApplications(Document):
         coupon_data = frappe.db.get_value(
             FREE_TICKET_CODE,
             self.coupon_id,
-            ["max_count", "used_count", "tier", "other_tier"],
+            ["max_count", "used_count", "tier", "other_tier", "is_used"],
             as_dict=True,
         )
 
         if not coupon_data:
             frappe.throw("Coupon not found or inactive.")
 
-        if coupon_data.used_count >= coupon_data.max_count:
+        if coupon_data.is_used or (coupon_data.used_count >= coupon_data.max_count):
             frappe.throw("Reached max count of coupon usage.")
 
         return coupon_data
