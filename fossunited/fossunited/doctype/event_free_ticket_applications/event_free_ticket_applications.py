@@ -26,6 +26,12 @@ class EventFreeTicketApplications(Document):
 
     def before_insert(self):
         """Executed automatically before inserting the document."""
+        if not self.event and self.coupon_id:
+            event = frappe.db.get_value(FREE_TICKET_CODE, self.coupon_id, "event")
+            if not event:
+                frappe.throw("Selected coupon has no linked event. Please contact organizers")
+            self.event = event
+
         coupon_data = self.validate_coupon()
         ticket_tier = self.get_ticket_tier(coupon_data)
         self.create_free_ticket(ticket_tier)
