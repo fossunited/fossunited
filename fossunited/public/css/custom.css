@@ -3324,7 +3324,7 @@ h6 {
 .v3-volunteers-card {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .v3-volunteer-item {
@@ -3606,6 +3606,17 @@ h6 {
   background: var(--v3-text-color);
   color: var(--v3-main-bg);
   opacity: 0.8;
+}
+
+.navbar,
+.navbar-light,
+.nav-link,
+.navbar-nav,
+.web-footer,
+.navbar-brand {
+  background: var(--v3-card-bg);
+  color: var(--v3-text-color) !important;
+  border-bottom: 0;
 }
 
 /* Responsive */
