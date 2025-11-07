@@ -1,28 +1,32 @@
 {% macro sponsor_card(sponsors_dict, deck_link) %}
-<div class="v3-card">
-  <div class="v3-sponsor-header">
-    <div class="v3-section-title" style="margin-bottom: 0;">
-      <i class="ti ti-building"></i>
-      <span>Sponsors</span>
+  <div class="v3-card">
+    <div class="v3-sponsor-header">
+      <div class="v3-section-title" style="margin-bottom: 0;">
+        <i class="ti ti-building"></i>
+        <span>Sponsors</span>
+      </div>
+      {% if deck_link %}
+        <a href="{{ deck_link }}" target="_blank" class="v3-sponsor-link">
+          Sponsor this event <i class="ti ti-external-link"></i>
+        </a>
+      {% endif %}
     </div>
-    {% if deck_link %}
-    <a href="{{ deck_link }}" target="_blank" class="v3-sponsor-link">
-      Sponsor this event <i class="ti ti-external-link"></i>
-    </a>
-    {% endif %}
+    {% for tier_name, sponsors in sponsors_dict.items() %}
+      <div class="v3-sponsor-tier">
+        <div class="v3-sponsor-tier-name">{{ tier_name }}</div>
+        <div class="v3-sponsor-grid">
+          {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
+          {% for sponsor in sponsors %}
+            <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank">
+              {% if sponsor.image %}
+                <img src="{{ sponsor.image }}" alt="{{ sponsor.sponsor_name }}" />
+              {% else %}
+                <i class="ti ti-star" style="font-size: 2rem; color: var(--v3-text-color3);"></i>
+              {% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
   </div>
-  {% for tier_name, sponsors in sponsors_dict.items() %}
-  <div class="v3-sponsor-tier">
-    <div class="v3-sponsor-tier-name">{{ tier_name }}</div>
-    <div class="v3-sponsor-grid">
-      {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
-      {% for sponsor in sponsors %}
-      <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank">
-        <img src="{{ sponsor.image }}" alt="{{ sponsor.sponsor_name }}">
-      </a>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-</div>
 {% endmacro %}

@@ -3190,8 +3190,8 @@ h6 {
 }
 
 .v3-text-tertiary,
-v3-text-tertiary p {
-  color: var(--v3-text-color3);
+.v3-text-tertiary p {
+  color: var(--v3-text-color);
 }
 
 /* V3 Section Title */
