@@ -1,0 +1,20 @@
+{% macro volunteers_card(volunteers) %}
+<div class="v3-card">
+  <div class="v3-section-title">
+    <i class="ti ti-users"></i>
+    <span>Volunteers</span>
+  </div>
+  <div class="v3-volunteers-card">
+    {% for volunteer in volunteers %}
+    <div class="v3-clickable" onclick="window.location.href='/{{ volunteer.route }}'">
+      <div class="v3-volunteer-item">
+        <img src="{{ volunteer.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+             alt="{{ volunteer.full_name }}"
+             class="v3-volunteer-avatar">
+        <div class="v3-volunteer-name">{{ volunteer.full_name }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}

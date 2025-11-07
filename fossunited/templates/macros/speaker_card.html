@@ -1,0 +1,26 @@
+{% macro speaker_card(speakers, submissions) %}
+<div class="v3-card">
+  <div class="v3-section-title">
+    <i class="ti ti-users"></i>
+    <span>Speakers</span>
+  </div>
+  <div class="v3-speakers-grid">
+    {% for speaker in speakers %}
+    {% for submission in submissions %}
+    {% if submission.name == speaker.parent %}
+    <div class="v3-clickable" onclick="window.location.href='/{{ submission.route }}'">
+      <div class="v3-speaker-card">
+        <img src="{{ speaker.photo }}" alt="{{ speaker.full_name }}" class="v3-speaker-photo">
+        <div class="v3-speaker-info">
+          <div class="v3-speaker-talk">{{ submission.talk_title | truncate(40, False, '...', 0) }}</div>
+          <div class="v3-speaker-person">{{ speaker.full_name }}</div>
+          <div class="v3-speaker-person">{{ speaker.designation }}, {{ speaker.organization }}</div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}
