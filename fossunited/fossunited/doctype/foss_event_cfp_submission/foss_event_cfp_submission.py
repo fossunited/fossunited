@@ -371,7 +371,4 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             ["talk_video"],
         )
 
-        if not talk_scheduled:
-            return None
-
-        return talk_scheduled or None
+        return talk_scheduled
