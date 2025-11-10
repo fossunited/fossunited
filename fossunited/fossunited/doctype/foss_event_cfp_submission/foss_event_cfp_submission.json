@@ -28,7 +28,7 @@
   "talk_title",
   "session_type",
   "is_first_talk",
-  "talk_reference",
+  "talk_license",
   "references",
   "session_categories",
   "categories_preview",
@@ -151,13 +151,6 @@
    "label": "Status",
    "options": "Review Pending\nScreening\nApproved\nRejected\nWithdrawn",
    "permlevel": 2
-  },
-  {
-   "description": "Link relevant references for your talk.",
-   "fieldname": "talk_reference",
-   "fieldtype": "Data",
-   "label": "Session Reference",
-   "options": "URL"
   },
   {
    "fieldname": "section_break_ilij",
@@ -342,12 +335,18 @@
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Chapter Mailing?"
+  },
+  {
+   "description": "License for the talk/project.",
+   "fieldname": "talk_license",
+   "fieldtype": "Data",
+   "label": "Talk License"
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-10-31 14:50:44.288866",
+ "modified": "2025-11-10 18:27:38.862779",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

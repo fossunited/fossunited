@@ -30,7 +30,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
-        from fossunited.fossunited.doctype.foss_event_cfp_review.foss_event_cfp_review import (  # noqa: E501
+        from fossunited.fossunited.doctype.foss_event_cfp_review.foss_event_cfp_review import (
             FOSSEventCFPReview,
         )
 
@@ -45,8 +45,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         event_name: DF.Data | None
         first_name: DF.Data | None
         full_name: DF.Data | None
-        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]  # noqa: F821
-        is_first_talk: DF.Literal["Yes", "No"]  # noqa: F821
+        intended_audience: DF.Literal["Beginner", "Intermediate", "Advanced"]
+        is_first_talk: DF.Literal["Yes", "No"]
         is_published: DF.Check
         is_withdrawn: DF.Check
         key_takeaways: DF.TextEditor | None
@@ -61,19 +61,19 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         route: DF.Data | None
         session_categories: DF.Text | None
         session_type: DF.Literal[
-            "Talk",  # noqa: F821
-            "Lightning Talk",  # noqa: F722
-            "Panel Discussion",  # noqa: F821, F722
-            "Birds of Feather(BoF)",  # noqa: F722
-            "Workshop",  # noqa: F821
-            "Invited Talk",  # noqa: F821, F722
+            "Talk",
+            "Lightning Talk",
+            "Panel Discussion",
+            "Birds of Feather(BoF)",
+            "Workshop",
+            "Invited Talk",
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
-        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]  # noqa: F821, F722
+        status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]
         submitted_by: DF.Link
         subscribe_chapter_mailing: DF.Check
         talk_description: DF.TextEditor
-        talk_reference: DF.Data | None
+        talk_license: DF.Data | None
         talk_title: DF.Data
         unsure_reviews: DF.Data | None
     # end: auto-generated types
