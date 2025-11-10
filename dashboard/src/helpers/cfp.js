@@ -72,10 +72,30 @@ export const getProposalFormFields = (cfpData) => {
       fieldtype: 'text_editor',
       value: '',
     },
+    {
+      label: 'License',
+      fieldname: 'talk_license',
+      fieldtype: 'text',
+      value: '',
+      description:
+        'Specify the license(s) under which your project/talk is distributed. Examples: MIT License (software), CC BY-SA 4.0 (open data/documentation), CERN OHL-W (open hardware). Refer: https://opensource.org/licenses',
+    },
   ])
 
   let customFields = getCustomQuestions(cfpData.cfp_custom_questions)
+  const order = [
+    'talk_title',
+    'session_type',
+    'session_categories',
+    'other_category',
+    'intended_audience',
+    'talk_license',
+    'talk_description',
+    'key_takeaways',
+    'is_first_talk',
+  ]
 
+  baseFields.value.sort((a, b) => order.indexOf(a.fieldname) - order.indexOf(b.fieldname))
   baseFields.value.push(...customFields)
 
   return baseFields
@@ -258,9 +278,16 @@ export const getSubmissionConfirmationFields = () => {
       value: false,
     },
     {
-      label:
-        'I am okay with doing a mock presentation of this talk to get better feedback if required',
+      label: 'I can do a mock presentation of this talk if required',
       fieldname: 'mock_presentation_ack',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
+    {
+      label:
+        'I agree that my talk, slides, and related materials will be published under a Creative Commons (CC BY-SA 4.0) license if my proposal is accepted.',
+      fieldname: 'license_ack',
       fieldtype: 'checkbox',
       required: true,
       value: false,

@@ -4,8 +4,11 @@
       Session References
       <span class="text-red-500">*</span>
     </label>
-    <p class="text-sm text-ink-gray-5">
-      Add links to external resources that will help attendees learn more about the session.
+    <p class="text-sm text-ink-gray-5 leading-relaxed">
+      Add links to external resources that will help attendees learn more about the session.<br />
+      If this is your first talk, please consider submitting a link to one talk recording of yours.
+      We may use this to understand your presentation style. A mock presentation may be required if
+      this is left empty
     </p>
     <div v-for="(item, index) in references" :key="index" class="flex gap-2 items-center">
       <FormControl
