@@ -9,7 +9,7 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.api.emailing import (
     handle_email_group_subscription,
 )
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP
+from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP, EVENT_SCHEDULE
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -192,6 +192,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.likes = self.get_likes()
         context.like = 1 if frappe.session.user in context.likes else 0
         context.like_count = len(context.likes)
+        context.talk_video = self.cfp_get_talk_video()
 
     def get_meta(self, context):
         pagetitle = self.talk_title
@@ -360,3 +361,17 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             subscribe_to_chapter=frappe.utils.cint(self.subscribe_chapter_mailing) == 1,
             document_type_event=EVENT,
         )
+
+    def cfp_get_talk_video(self) -> str | None:
+        """Return the talk video link if CFP is linked in schedule and has a video."""
+
+        talk_scheduled = frappe.db.get_value(
+            EVENT_SCHEDULE,
+            {"linked_cfp": self.name},
+            ["talk_video"],
+        )
+
+        if not talk_scheduled:
+            return None
+
+        return talk_scheduled or None
