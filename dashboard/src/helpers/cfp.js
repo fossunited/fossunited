@@ -83,9 +83,6 @@ export const getProposalFormFields = (cfpData) => {
   ])
 
   let customFields = getCustomQuestions(cfpData.cfp_custom_questions)
-
-  baseFields.value.push(...customFields)
-
   const order = [
     'talk_title',
     'session_type',
@@ -99,6 +96,7 @@ export const getProposalFormFields = (cfpData) => {
   ]
 
   baseFields.value.sort((a, b) => order.indexOf(a.fieldname) - order.indexOf(b.fieldname))
+  baseFields.value.push(...customFields)
 
   return baseFields
 }
@@ -288,7 +286,7 @@ export const getSubmissionConfirmationFields = () => {
     },
     {
       label:
-        'I agree that my talk, slides, and related materials may be published under a Creative Commons (CC BY-SA 4.0) license.',
+        'I agree that my talk, slides, and related materials will be published under a Creative Commons (CC BY-SA 4.0) license if my proposal is accepted.',
       fieldname: 'license_ack',
       fieldtype: 'checkbox',
       required: true,
