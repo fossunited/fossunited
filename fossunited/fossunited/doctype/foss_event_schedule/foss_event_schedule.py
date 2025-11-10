@@ -14,13 +14,13 @@ class FOSSEventSchedule(Document):
         from frappe.types import DF
 
         category: DF.Literal[
-            "Talk",  # noqa: F821
-            "Lightning Talk",  # noqa: F722, F821
-            "Workshop",  # noqa: F821
-            "Panel Discussion",  # noqa: F722, F821
-            "Opening Note",  # noqa: F722, F821
-            "Break",  # noqa: F821
-            "Other",  # noqa: F821
+            "Talk",
+            "Lightning Talk",
+            "Workshop",
+            "Panel Discussion",
+            "Opening Note",
+            "Break",
+            "Other",
         ]
         end_time: DF.Time | None
         hall: DF.Data | None
@@ -32,6 +32,7 @@ class FOSSEventSchedule(Document):
         scheduled_date: DF.Date | None
         speakers: DF.JSON | None
         start_time: DF.Time | None
+        talk_video: DF.Data | None
         title: DF.Data | None
     # end: auto-generated types
 

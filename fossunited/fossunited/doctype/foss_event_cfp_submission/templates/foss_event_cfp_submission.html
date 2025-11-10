@@ -49,7 +49,21 @@
       <h1 class="text-3xl font-bold">{{ doc.talk_title }}</h1>
       {{ like_button() }}
     </div>
-    <div class="w-fit">{{ badge(label=doc.status, theme=status_badge_theme[doc.status]) }}</div>
+    <div class="flex items-center gap-2">
+      <div class="w-fit">{{ badge(label=doc.status, theme=status_badge_theme[doc.status]) }}</div>
+
+      {% if talk_video %}
+        <a
+          href="{{ talk_video }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Watch on YouTube"
+          class="inline-flex items-center justify-center text-red-600 hover:text-gray-600 transition-colors"
+        >
+          <i class="ti ti-brand-youtube-filled text-xl"></i>
+        </a>
+      {% endif %}
+    </div>
   </div>
 {% endmacro %}
 

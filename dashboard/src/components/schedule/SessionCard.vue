@@ -31,13 +31,28 @@
         </div>
       </div>
 
-      <button
-        class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-2"
-        @click="downloadSessionIcs()"
-      >
-        <IconCalendarPlus class="w-4 h-4" />
-        <span class="hidden md:block uppercase">Add to Calendar</span>
-      </button>
+      <div class="flex items-center gap-4 ml-auto">
+        <a
+          v-if="PastSession && session.talk_video"
+          :href="session.talk_video"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-gray-600 hover:text-gray-900 flex items-center justify-center"
+          title="Watch on YouTube"
+        >
+          <IconBrandYoutubeFilled class="w-6 h-6" />
+        </a>
+
+        <button
+          v-else-if="!PastSession"
+          class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-2"
+          title="Add to calendar"
+          @click="downloadSessionIcs()"
+        >
+          <IconCalendarPlus class="w-4 h-4" />
+          <span class="hidden md:block uppercase">Add to Calendar</span>
+        </button>
+      </div>
     </div>
     <h3 class="text-lg font-semibold tracking-[-0.18px]">
       {{ session.title }}
@@ -62,7 +77,7 @@
   </a>
 </template>
 <script setup>
-import { IconCalendarPlus } from '@tabler/icons-vue'
+import { IconCalendarPlus, IconBrandYoutubeFilled } from '@tabler/icons-vue'
 import { createEvent } from 'ics'
 import { toast } from 'vue-sonner'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
@@ -149,5 +164,11 @@ const speakers = computed(() => {
   } else {
     return props.session.cfp_speakers
   }
+})
+
+const PastSession = computed(() => {
+  const date = props.session.scheduled_date
+  if (!date) return false
+  return new Date(date) < new Date().setHours(0, 0, 0, 0)
 })
 </script>
