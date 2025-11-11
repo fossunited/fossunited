@@ -307,34 +307,6 @@
       font-size: 1rem;
     }
 
-    .ev-livestream-link {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 1rem 1.5rem;
-      background: var(--v3-card-bg);
-      border: 1px solid var(--v3-button-border);
-      border-radius: 0.5rem;
-      color: var(--v3-text-color);
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .ev-livestream-link:hover {
-      background: var(--v3-main-bg);
-      border-color: var(--v3-text-color3);
-    }
-
-    .ev-livestream-link i {
-      font-size: 1.25rem;
-      color: #ff0000;
-    }
-
-    .ev-livestream-text {
-      font-size: 0.875rem;
-      font-weight: 600;
-    }
-
     /* Visibility helpers */
     .show-mobile-only {
       display: block;
@@ -456,154 +428,159 @@
                 </div>
               {% endif %}
               <div class="v3-btn-group">
-                {% if doc.is_paid_event %}
-                  <a
-                    href="/dashboard/buy-tickets?event={{ doc.name }}"
-                    class="v3-btn v3-btn-primary"
-                  >
-                    Buy Ticket
-                  </a>
-                {% elif doc.show_rsvp %}
-                  {% if user_has_registered %}
-                    <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary"> Edit RSVP </a>
-                  {% else %}
-                    <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
-                      Register
+                  {% if status_concluded and doc.livestream_embed_link %}
+                    <a
+                      href="{{ doc.livestream_embed_link }}"
+                      target="_blank"
+                      class="v3-btn v3-btn-secondary"
+                    >
+                      <i class="ti ti-brand-youtube"></i>
+                      <span>Livestream</span>
+                    </a>
+
+                  {% elif status_live %}
+                    {% if doc.is_paid_event %}
+                      <a
+                        href="/dashboard/buy-tickets?event={{ doc.name }}"
+                        class="v3-btn v3-btn-primary"
+                      >
+                        Buy Ticket
+                      </a>
+                    {% elif doc.show_rsvp %}
+                      {% if user_has_registered %}
+                        <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                          Edit RSVP
+                        </a>
+                      {% else %}
+                        <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                          Register
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+
+                  {% if doc.show_cfp and cfp_status_block.has_doc %}
+                    <a href="{{ all_cfp_link }}" class="v3-btn v3-btn-secondary">
+                      TALK PROPOSALS
+                      <i class="ti ti-arrow-up-right"></i>
                     </a>
                   {% endif %}
-                {% endif %}
-
-                {% if doc.show_cfp and cfp_status_block.has_doc %}
-                  <a href="{{ all_cfp_link }}" class="v3-btn v3-btn-secondary">
-                    TALK PROPOSALS
-                    <i class="ti ti-arrow-up-right"></i>
-                  </a>
-                {% endif %}
+                </div>
               </div>
             </div>
+
+            <!-- Banner -->
+            <div class="show-desktop-only">{{ event_cover() }}</div>
+          </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="v3-grid">
+          <!-- Main Column -->
+          <div class="v3-content-main">
+            <!-- About -->
+            {% if doc.event_description %}
+              <div class="v3-card ev-about-section">
+                <div class="v3-section-title">
+                  <i class="ti ti-info-square"></i>
+                  <span>About</span>
+                </div>
+                <div class="v3-text-tertiary" style="font-size: 1rem; line-height: 1.5rem;">
+                  {{ doc.event_description }}
+                </div>
+              </div>
+            {% endif %}
+
+            <!-- CFP Card (Mobile) -->
+            {% if doc.show_cfp and cfp_status_block.has_doc %}
+              <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
+            {% endif %}
+
+            <!-- Schedule -->
+            {% if doc.show_schedule and schedule_data %}
+              <div class="ev-agenda-section">{{ agenda_card(schedule_data, doc.route, 10) }}</div>
+            {% endif %}
+
+            <!-- Sponsors -->
+            {% if sponsors_dict %}
+              <div class="ev-sponsors-section">
+                {{ sponsor_card(sponsors_dict, doc.deck_link) }}
+              </div>
+            {% endif %}
           </div>
 
-          <!-- Banner -->
-          <div class="show-desktop-only">{{ event_cover() }}</div>
-        </div>
-      </div>
+          <!-- Sidebar -->
+          <div class="v3-content-sidebar">
+            <!-- CFP Card (Desktop) -->
+            {% if doc.show_cfp and cfp_status_block.has_doc %}
+              <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
+            {% endif %}
 
-      <!-- Content Grid -->
-      <div class="v3-grid">
-        <!-- Main Column -->
-        <div class="v3-content-main">
-          <!-- About -->
-          {% if doc.event_description %}
-            <div class="v3-card ev-about-section">
-              <div class="v3-section-title">
-                <i class="ti ti-info-square"></i>
-                <span>About</span>
+            <!-- Speakers -->
+            {% if doc.show_speakers and speakers %}
+              <div class="ev-speakers-section">
+                {{ people_card(speakers, 'speakers', submissions) }}
               </div>
-              <div class="v3-text-tertiary" style="font-size: 1rem; line-height: 1.5rem;">
-                {{ doc.event_description }}
+            {% endif %}
+
+            <!-- Volunteers -->
+            {% if volunteers %}
+              <div class="ev-volunteers-section">{{ people_card(volunteers, 'volunteers') }}</div>
+            {% endif %}
+
+            <!-- Contact -->
+            {% if chapter.email %}
+              <div class="v3-card ev-contact ev-contact-section">
+                <i class="ti ti-mail"></i>
+                <div class="ev-contact-email">
+                  <a href="mailto:{{ chapter.email }}">{{ chapter.email }}</a>
+                </div>
               </div>
-            </div>
-          {% endif %}
+            {% endif %}
 
-          <!-- CFP Card (Mobile) -->
-          {% if doc.show_cfp and cfp_status_block.has_doc %}
-            <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
-          {% endif %}
-
-          <!-- Schedule -->
-          {% if doc.show_schedule and schedule_data %}
-            <div class="ev-agenda-section">{{ agenda_card(schedule_data, doc.route, 10) }}</div>
-          {% endif %}
-
-          <!-- Sponsors -->
-          {% if sponsors_dict %}
-            <div class="ev-sponsors-section">{{ sponsor_card(sponsors_dict, doc.deck_link) }}</div>
-          {% endif %}
-        </div>
-
-        <!-- Sidebar -->
-        <div class="v3-content-sidebar">
-          <!-- CFP Card (Desktop) -->
-          {% if doc.show_cfp and cfp_status_block.has_doc %}
-            <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
-          {% endif %}
-
-          <!-- Speakers -->
-          {% if doc.show_speakers and speakers %}
-            <div class="ev-speakers-section">{{ people_card(speakers, 'speakers', submissions) }}</div>
-          {% endif %}
-
-          <!-- Volunteers -->
-          {% if volunteers %}
-            <div class="ev-volunteers-section">{{ people_card(volunteers, 'volunteers') }}</div>
-          {% endif %}
-
-          <!-- Contact -->
-          {% if chapter.email %}
-            <div class="v3-card ev-contact ev-contact-section">
-              <i class="ti ti-mail"></i>
-              <div class="ev-contact-email">
-                <a href="mailto:{{ chapter.email }}">{{ chapter.email }}</a>
-              </div>
-            </div>
-          {% endif %}
-
-          <!-- Livestream Link -->
-          {% if doc.livestream_embed_link %}
-            <div class="ev-livestream-section">
-              <a
-                href="{{ doc.livestream_embed_link }}"
-                target="_blank"
-                class="ev-livestream-link v3-card"
+            <!-- Map -->
+            {% if doc.map_link %}
+              <div
+                class="v3-clickable ev-map-section"
+                onclick="window.open('{{ doc.map_link }}', '_blank')"
               >
-                <i class="ti ti-brand-youtube"></i>
-                <span class="ev-livestream-text">Watch Livestream</span>
-              </a>
-            </div>
-          {% endif %}
-
-          <!-- Map -->
-          {% if doc.map_link %}
-            <div
-              class="v3-clickable ev-map-section"
-              onclick="window.open('{{ doc.map_link }}', '_blank')"
-            >
-              <img
-                src="https://via.placeholder.com/396x81"
-                alt="Map"
-                class="ev-map"
-                style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;"
-              />
-            </div>
-          {% endif %}
+                <img
+                  src="https://via.placeholder.com/396x81"
+                  alt="Map"
+                  class="ev-map"
+                  style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;"
+                />
+              </div>
+            {% endif %}
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    function downloadEventIcs() {
-      frappe.call({
-        method: 'fossunited.api.chapter.generate_ics',
-        args: {
-          event_ids: ['{{ doc.name }}'],
-        },
-        callback: (r) => {
-          if (r.message) {
-            const blob = new Blob([r.message], { type: 'text/calendar' })
-            const url = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = url
-            a.download = `{{ doc.event_name.replace(' ', '_') | replace(' ', '_') }}.ics`
-            a.click()
-            URL.revokeObjectURL(url)
-          }
-        },
+    <script>
+      function downloadEventIcs() {
+        frappe.call({
+          method: 'fossunited.api.chapter.generate_ics',
+          args: {
+            event_ids: ['{{ doc.name }}'],
+          },
+          callback: (r) => {
+            if (r.message) {
+              const blob = new Blob([r.message], { type: 'text/calendar' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `{{ doc.event_name.replace(' ', '_') | replace(' ', '_') }}.ics`
+              a.click()
+              URL.revokeObjectURL(url)
+            }
+          },
+        })
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        initThemeToggle('theme-toggle')
       })
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      initThemeToggle('theme-toggle')
-    })
-  </script>
+    </script>
+  </div>
 {% endblock %}

@@ -3645,7 +3645,6 @@ h6 {
   left: 0;
   right: 0;
   height: 60px;
-  background: linear-gradient(to bottom, transparent, var(--v3-card-bg));
   pointer-events: none;
 }
 
