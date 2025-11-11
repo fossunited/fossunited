@@ -1,7 +1,7 @@
 <script setup>
 import SubmissionsList from './SubmissionsList.vue'
 import Filter from '@/components/ui/Filter.vue'
-import { IconSearch } from '@tabler/icons-vue'
+import { IconSearch, IconDownload } from '@tabler/icons-vue'
 import { createResource, FormControl, LoadingText, Select } from 'frappe-ui'
 import { filterSubmissions } from '@/helpers/cfp'
 import { watch, ref, computed } from 'vue'
@@ -90,6 +90,14 @@ const filteredSubmissions = computed(() => {
   return result
 })
 
+function downloadCSV() {
+  const params = new URLSearchParams()
+  params.append('event', props.eventId)
+
+  const url = `/api/method/fossunited.api.proposal.download_proposals_csv?${params.toString()}`
+  window.open(url, '_blank')
+}
+
 watch(
   () => props.statusFilter,
   (newVal) => {
@@ -113,6 +121,14 @@ watch(filteredSubmissions, (val) => {
         <div class="flex items-end gap-2">
           <Select v-model="filteredStatus" :options="statusOptions" />
           <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
+
+          <button
+            class="flex bg-black text-white px-3 py-2 rounded text-sm hover:bg-gray-800"
+            @click="downloadCSV"
+          >
+            <IconDownload class="w-4 h-4 mr-1" />
+            <span>CSV</span>
+          </button>
         </div>
       </div>
       <SubmissionsList v-model="submissions.data" />
