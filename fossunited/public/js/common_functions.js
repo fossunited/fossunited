@@ -225,3 +225,28 @@ function copyLinkToClipboard(e) {
 function resetTooltip() {
   $('.tooltip-text').html('Copy Link')
 }
+
+window.initThemeToggle = function (toggleButtonId) {
+  const themeToggle = document.getElementById(toggleButtonId)
+  const themeIcon = themeToggle.querySelector('i')
+  let savedTheme = localStorage.getItem('theme')
+
+  if (!savedTheme) {
+    savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  }
+
+  document.documentElement.setAttribute('data-theme', savedTheme)
+  updateThemeIcon(savedTheme)
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+    document.documentElement.setAttribute('data-theme', newTheme)
+    localStorage.setItem('theme', newTheme)
+    updateThemeIcon(newTheme)
+  })
+
+  function updateThemeIcon(theme) {
+    themeIcon.className = theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'
+  }
+}
