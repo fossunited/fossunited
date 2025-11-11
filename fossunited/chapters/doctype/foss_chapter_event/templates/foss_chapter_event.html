@@ -5,6 +5,70 @@
 {% from "fossunited/templates/macros/speaker_card.html" import speaker_card %}
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
 
+{% macro cfp_block(cfp_status_block, doc) %}
+  <div
+    class="v3-clickable cfp-card-v3"
+    onclick="window.location.href='/{{ cfp_status_block.form_route }}'"
+  >
+    <div class="ev-cfp-header">
+      <div class="ev-cfp-title">Call for Proposals</div>
+      {% if cfp_status_block.is_published %}
+        <div class="ev-live">
+          <div class="ev-live-dot"></div>
+          <span class="ev-live-text">Live</span>
+        </div>
+      {% endif %}
+    </div>
+    <div class="ev-cfp-desc">
+      {% if doc.proposal_page_description %}
+        {{ doc.proposal_page_description[:150] }}{% if doc.proposal_page_description|length > 150 %}...{% endif %}
+      {% else %}
+        Give a talk at the event, propose your ideas here and we will get back to you.
+      {% endif %}
+    </div>
+    <div class="ev-cfp-footer">
+      {% if cfp_status_block.get('deadline') %}
+        <div class="ev-cfp-deadline">
+          <span>Deadline:</span>
+          <strong>{{ cfp_status_block.deadline }}</strong>
+        </div>
+      {% endif %}
+      <i class="ti ti-arrow-right"></i>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro event_cover() %}
+  <div class="v3-banner-wrap">
+    <img
+      src="{{ doc.event_logo or '/assets/fossunited/images/defaults/event_logo.png' }}"
+      alt="{{ doc.event_name }}"
+      class="v3-banner"
+    />
+
+    {% if event_stats %}
+      <div class="ev-stats">
+        {% if event_stats.attending > 0 %}
+          <span>{{ event_stats.attending }} Attending</span>
+        {% endif %}
+        {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
+          <span>•</span>
+        {% endif %}
+        {% if event_stats.proposals > 0 %}
+          <span>{{ event_stats.proposals }} Proposals</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if user_has_registered %}
+      <div class="ev-registered">
+        <i class="ti ti-check"></i>
+        You've Registered for this Event
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
 {% block meta_block %}
   {{ meta_tags(pagetitle, description, image) }}
 {% endblock %}
@@ -244,10 +308,56 @@
       font-size: 1rem;
     }
 
+    .ev-livestream-link {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: var(--v3-card-bg);
+      border: 1px solid var(--v3-button-border);
+      border-radius: 0.5rem;
+      color: var(--v3-text-color);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .ev-livestream-link:hover {
+      background: var(--v3-main-bg);
+      border-color: var(--v3-text-color3);
+    }
+
+    .ev-livestream-link i {
+      font-size: 1.25rem;
+      color: #ff0000;
+    }
+
+    .ev-livestream-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* Visibility helpers */
+    .show-mobile-only {
+      display: block;
+    }
+
+    .show-desktop-only {
+      display: none;
+    }
+
     @media (min-width: 48rem) {
       .ev-title {
         font-size: 2rem;
         line-height: 2.4rem;
+      }
+
+      /* Visibility helpers */
+      .show-mobile-only {
+        display: none;
+      }
+
+      .show-desktop-only {
+        display: block;
       }
     }
   </style>
@@ -270,6 +380,7 @@
       <!-- Main Event Card - Fixed 840px -->
       <div class="v3-card ev-main-card">
         <div class="v3-header">
+          <div class="show-mobile-only">{{ event_cover() }}</div>
           <div style="flex: 1; display: flex; flex-direction: column; gap: 1.5rem;">
             <!-- Header Info -->
             <div style="display: flex; flex-direction: column;">
@@ -346,13 +457,23 @@
                 </div>
               {% endif %}
               <div class="v3-btn-group">
-                {% if doc.show_rsvp or doc.is_paid_event %}
+                {% if doc.is_paid_event %}
                   <a
-                    href="{% if doc.is_paid_event %}/dashboard/buy-tickets?event={{ doc.name }}{% else %}{{ rsvp_status_block.form_route }}{% endif %}"
+                    href="/dashboard/buy-tickets?event={{ doc.name }}"
                     class="v3-btn v3-btn-primary"
-                    >REGISTER</a
                   >
+                    Buy Ticket
+                  </a>
+                {% elif doc.show_rsvp %}
+                  {% if user_has_registered %}
+                    <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary"> Edit RSVP </a>
+                  {% else %}
+                    <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                      Register
+                    </a>
+                  {% endif %}
                 {% endif %}
+
                 {% if doc.show_cfp and cfp_status_block.has_doc %}
                   <a href="{{ all_cfp_link }}" class="v3-btn v3-btn-secondary">
                     TALK PROPOSALS
@@ -364,34 +485,7 @@
           </div>
 
           <!-- Banner -->
-          <div class="v3-banner-wrap">
-            <img
-              src="{{ doc.event_logo or '/assets/fossunited/images/defaults/event_logo.png' }}"
-              alt="{{ doc.event_name }}"
-              class="v3-banner"
-            />
-
-            {% if event_stats %}
-              <div class="ev-stats">
-                {% if event_stats.attending > 0 %}
-                  <span>{{ event_stats.attending }} Attending</span>
-                {% endif %}
-                {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
-                  <span>•</span>
-                {% endif %}
-                {% if event_stats.proposals > 0 %}
-                  <span>{{ event_stats.proposals }} Proposals</span>
-                {% endif %}
-              </div>
-            {% endif %}
-
-            {% if user_has_registered %}
-              <div class="ev-registered">
-                <i class="ti ti-check"></i>
-                You've Registered for this Event
-              </div>
-            {% endif %}
-          </div>
+          <div class="show-desktop-only">{{ event_cover() }}</div>
         </div>
       </div>
 
@@ -401,7 +495,7 @@
         <div class="v3-content-main">
           <!-- About -->
           {% if doc.event_description %}
-            <div class="v3-card">
+            <div class="v3-card ev-about-section">
               <div class="v3-section-title">
                 <i class="ti ti-info-circle"></i>
                 <span>About</span>
@@ -412,92 +506,42 @@
             </div>
           {% endif %}
 
-          <!-- CFP Mobile -->
+          <!-- CFP Card (Mobile) -->
           {% if doc.show_cfp and cfp_status_block.has_doc %}
-            <div
-              class="v3-clickable cfp-card-v3 cfp-card-v3-mobile"
-              onclick="window.location.href='/{{ cfp_status_block.form_route }}'"
-            >
-              <div class="ev-cfp-header">
-                <div class="ev-cfp-title">Call for Proposals</div>
-                {% if cfp_status_block.is_published %}
-                  <div class="ev-live">
-                    <div class="ev-live-dot"></div>
-                    <span class="ev-live-text">Live</span>
-                  </div>
-                {% endif %}
-              </div>
-              <div class="ev-cfp-desc">
-                Give a talk at the event, propose your ideas here and we will get back to you.
-              </div>
-              <div class="ev-cfp-footer">
-                {% if cfp_status_block.get('deadline') %}
-                  <div class="ev-cfp-deadline">
-                    <span>Deadline:</span>
-                    <strong>{{ cfp_status_block.deadline }}</strong>
-                  </div>
-                {% endif %}
-                <i class="ti ti-arrow-right"></i>
-              </div>
-            </div>
+            <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
           {% endif %}
 
           <!-- Schedule -->
           {% if doc.show_schedule and schedule_data %}
-            {{ agenda_card(schedule_data, doc.route, 10) }}
-          {% endif %}
-
-          <!-- Speakers -->
-          {% if doc.show_speakers and speakers %}
-            {{ speaker_card(speakers, submissions) }}
+            <div class="ev-agenda-section">{{ agenda_card(schedule_data, doc.route, 10) }}</div>
           {% endif %}
 
           <!-- Sponsors -->
           {% if sponsors_dict %}
-            {{ sponsor_card(sponsors_dict, doc.deck_link) }}
+            <div class="ev-sponsors-section">{{ sponsor_card(sponsors_dict, doc.deck_link) }}</div>
           {% endif %}
         </div>
 
         <!-- Sidebar -->
         <div class="v3-content-sidebar">
-          <!-- CFP Desktop -->
+          <!-- CFP Card (Desktop) -->
           {% if doc.show_cfp and cfp_status_block.has_doc %}
-            <div
-              class="v3-clickable cfp-card-v3 cfp-card-v3-desktop"
-              onclick="window.location.href='/{{ cfp_status_block.form_route }}'"
-            >
-              <div class="ev-cfp-header">
-                <div class="ev-cfp-title">Call for Proposals</div>
-                {% if cfp_status_block.is_published %}
-                  <div class="ev-live">
-                    <div class="ev-live-dot"></div>
-                    <span class="ev-live-text">Live</span>
-                  </div>
-                {% endif %}
-              </div>
-              <div class="ev-cfp-desc">
-                Give a talk at the event, propose your ideas here and we will get back to you.
-              </div>
-              <div class="ev-cfp-footer">
-                {% if cfp_status_block.get('deadline') %}
-                  <div class="ev-cfp-deadline">
-                    <span>Deadline:</span>
-                    <strong>{{ cfp_status_block.deadline }}</strong>
-                  </div>
-                {% endif %}
-                <i class="ti ti-arrow-right"></i>
-              </div>
-            </div>
+            <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
+          {% endif %}
+
+          <!-- Speakers -->
+          {% if doc.show_speakers and speakers %}
+            <div class="ev-speakers-section">{{ speaker_card(speakers, submissions) }}</div>
           {% endif %}
 
           <!-- Volunteers -->
           {% if volunteers %}
-            {{ volunteers_card(volunteers) }}
+            <div class="ev-volunteers-section">{{ volunteers_card(volunteers) }}</div>
           {% endif %}
 
           <!-- Contact -->
           {% if chapter.email %}
-            <div class="v3-card ev-contact">
+            <div class="v3-card ev-contact ev-contact-section">
               <i class="ti ti-mail"></i>
               <div class="ev-contact-email">
                 <a href="mailto:{{ chapter.email }}">{{ chapter.email }}</a>
@@ -505,9 +549,26 @@
             </div>
           {% endif %}
 
-          <!-- TODO: Map -->
+          <!-- Livestream Link -->
+          {% if doc.livestream_embed_link %}
+            <div class="ev-livestream-section">
+              <a
+                href="{{ doc.livestream_embed_link }}"
+                target="_blank"
+                class="ev-livestream-link v3-card"
+              >
+                <i class="ti ti-brand-youtube"></i>
+                <span class="ev-livestream-text">Watch Livestream</span>
+              </a>
+            </div>
+          {% endif %}
+
+          <!-- Map -->
           {% if doc.map_link %}
-            <div class="v3-clickable" onclick="window.open('{{ doc.map_link }}', '_blank')">
+            <div
+              class="v3-clickable ev-map-section"
+              onclick="window.open('{{ doc.map_link }}', '_blank')"
+            >
               <img
                 src="https://via.placeholder.com/396x81"
                 alt="Map"
@@ -542,8 +603,8 @@
       })
     }
 
-   document.addEventListener('DOMContentLoaded', function() {
-      initThemeToggle('theme-toggle');
-    });
+    document.addEventListener('DOMContentLoaded', function () {
+      initThemeToggle('theme-toggle')
+    })
   </script>
 {% endblock %}
