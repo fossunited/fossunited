@@ -595,7 +595,7 @@
             const url = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = url
-            a.download = `{{ doc.event_name.replace(' ', '_') }}.ics`
+            a.download = `{{ doc.event_name.replace(' ', '_') | replace(' ', '_') }}.ics`
             a.click()
             URL.revokeObjectURL(url)
           }

@@ -359,7 +359,7 @@
       // Render a single member
       function renderMember(m) {
         return `
-      <div class="v3-clickable" data-href="/${m.username}" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
+      <div class="v3-clickable" onclick="window.location.href='/${m.username}'" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
         .map((c) => c.name)
         .join('|')
         .toLowerCase()}">
@@ -521,12 +521,13 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
 
       // Surprise me functionality
       function surpriseMe() {
-      const visible = Array.from(document.querySelectorAll('.v3-clickable[data-activity="true"]'));
+        const visible = Array.from(document.querySelectorAll('.v3-clickable[data-name]')).filter(member => member.querySelector('.vol-activity-badge'));
         if (visible.length > 0) {
           const random = visible[Math.floor(Math.random() * visible.length)]
           const onclickAttr = random.getAttribute('onclick')
           if (onclickAttr) {
-          window.location.href = random.getAttribute('data-href')
+            const href = onclickAttr.match(/'([^']+)'/)[1]
+            window.location.href = href
           }
         }
       }
@@ -543,13 +544,6 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
       })
 
       document.getElementById('surprise').addEventListener('click', surpriseMe)
-
-      document.querySelectorAll('.v3-clickable').forEach(el => {
-      el.addEventListener('click', () => {
-      const href = el.getAttribute('data-href');
-      if (href) window.location.href = href;
-      });
-      });
 
       // Initial render
       currentSort = document.getElementById('sort').value

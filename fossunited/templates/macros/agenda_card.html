@@ -21,6 +21,7 @@
                       <div
                         class="v3-clickable"
                         {% if item.cfp_route %}
+                          data-route="{{ item.cfp_route }}"
                           onclick="window.location.href='/{{ item.cfp_route }}'"
                         {% endif %}
                       >
