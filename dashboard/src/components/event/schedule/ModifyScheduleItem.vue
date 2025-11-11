@@ -70,6 +70,8 @@ const handleCfpChange = (cfpName) => {
   const cfp = allCfpSubmissions.data.find((c) => c.name === cfpValue)
 
   if (cfp) {
+    // Update the linked_cfp value properly
+    selectedScheduleItem.value.linked_cfp = cfpValue
     selectedScheduleItem.value.title = cfp.talk_title
     selectedScheduleItem.value.category = cfp.session_type
     // Only set talk_video if it exists and current value is empty
@@ -130,6 +132,11 @@ const handleSave = () => {
   toast.info('Schedule updated')
 }
 
+const handleDelete = () => {
+  emit('delete:schedule', selectedScheduleItem.value)
+  showDeleteConfirmation.value = false
+}
+
 const showDeleteConfirmation = ref(false)
 
 // Keyboard shortcut
@@ -185,7 +192,12 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           variant="outline"
           description="Choose a proposal from approved submissions"
           :options="getLinkedCfpOptions"
-          @update:model-value="handleCfpChange"
+          @update:model-value="
+            (value) => {
+              selectedScheduleItem.linked_cfp = value
+              handleCfpChange(value)
+            }
+          "
         >
           <template #item-prefix="{ selected }">
             <div class="flex gap-2 items-center">
@@ -205,6 +217,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           required
         />
 
+        <!-- Other Category (conditional) -->
         <FormControl
           v-if="selectedScheduleItem.category === 'Other'"
           v-model="selectedScheduleItem.other_category"
@@ -213,6 +226,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           required
         />
 
+        <!-- Title -->
         <FormControl
           v-model="selectedScheduleItem.title"
           label="Title"
@@ -220,6 +234,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           required
         />
 
+        <!-- Hall -->
         <FormControl
           v-model="selectedScheduleItem.hall"
           label="Hall"
@@ -229,6 +244,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           required
         />
 
+        <!-- Date and Time -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-2">
           <FormControl
             v-model="selectedScheduleItem.scheduled_date"
@@ -250,15 +266,17 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
           />
         </div>
 
+        <!-- Talk Video -->
         <FormControl
           v-model="selectedScheduleItem.talk_video"
           label="Talk Video Link"
-          type="url"
+          type="text"
           variant="outline"
         />
       </div>
     </div>
 
+    <!-- Actions -->
     <div class="flex flex-col gap-4">
       <ErrorMessage v-if="errorMessages" class="mt-2" :message="errorMessages" />
 
