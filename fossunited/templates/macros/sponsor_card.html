@@ -13,7 +13,12 @@
     </div>
     {% for tier_name, sponsors in sponsors_dict.items() %}
       <div class="v3-sponsor-tier">
-        <div class="v3-sponsor-tier-name">{{ tier_name }}</div>
+        <div class="v3-schedule-header v3-sponsor-tier-name">
+          <div>{{ tier_name }}</div>
+          <div
+            style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.1rem;"
+          ></div>
+        </div>
         <div class="v3-sponsor-grid">
           {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
           {% for sponsor in sponsors %}

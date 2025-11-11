@@ -3501,8 +3501,8 @@ h6 {
 }
 
 .v3-speaker-photo {
-  width: 5rem;
-  height: 5rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 0.5rem;
   object-fit: cover;
   flex-shrink: 0;
