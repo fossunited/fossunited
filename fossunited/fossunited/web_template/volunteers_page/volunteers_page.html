@@ -308,7 +308,7 @@
           </div>
           <div class="d-flex align-items-center">
             <button class="vol-dark-button mr-1" id="surprise">Surprise Me</button>
-            <a href="http://docs.fossunited.org/volunteering-perks/#whats-surprise-me" target="_blank" class="help-icon" title="What's the surprise?">
+            <a href="https://docs.fossunited.org/volunteering-perks/#whats-surprise-me" target="_blank" class="help-icon" title="What's the surprise?">
               <i class="ti ti-help"></i>
             </a>
             <span class="tooltip">Need help?</span>
@@ -359,7 +359,7 @@
       // Render a single member
       function renderMember(m) {
         return `
-      <div class="v3-clickable" onclick="window.location.href='/${m.username}'" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
+      <div class="v3-clickable" data-href="/${m.username}" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
         .map((c) => c.name)
         .join('|')
         .toLowerCase()}">
@@ -521,13 +521,12 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
 
       // Surprise me functionality
       function surpriseMe() {
-        const visible = Array.from(document.querySelectorAll('.v3-clickable[data-name]')).filter(member => member.querySelector('.vol-activity-badge'));
+      const visible = Array.from(document.querySelectorAll('.v3-clickable[data-activity="true"]'));
         if (visible.length > 0) {
           const random = visible[Math.floor(Math.random() * visible.length)]
           const onclickAttr = random.getAttribute('onclick')
           if (onclickAttr) {
-            const href = onclickAttr.match(/'([^']+)'/)[1]
-            window.location.href = href
+          window.location.href = random.getAttribute('data-href')
           }
         }
       }
@@ -544,6 +543,13 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
       })
 
       document.getElementById('surprise').addEventListener('click', surpriseMe)
+
+      document.querySelectorAll('.v3-clickable').forEach(el => {
+      el.addEventListener('click', () => {
+      const href = el.getAttribute('data-href');
+      if (href) window.location.href = href;
+      });
+      });
 
       // Initial render
       currentSort = document.getElementById('sort').value

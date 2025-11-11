@@ -20,7 +20,9 @@
                     {% if item_count < show_limit %}
                       <div
                         class="v3-clickable"
-                        onclick="window.location.href='/{{ item.cfp_route }}'"
+                        {% if item.cfp_route %}
+                          onclick="window.location.href='/{{ item.cfp_route }}'"
+                        {% endif %}
                       >
                         <div class="v3-schedule-item">
                           <div class="v3-schedule-header">
