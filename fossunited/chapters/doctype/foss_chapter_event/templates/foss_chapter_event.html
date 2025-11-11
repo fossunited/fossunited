@@ -208,6 +208,7 @@
       margin-bottom: 0.5rem;
       font-size: 0.75rem;
       color: var(--v3-text-color2);
+      min-height: 1.5rem;
     }
 
     .ev-deadline strong {
@@ -421,12 +422,12 @@
 
             <!-- Buttons -->
             <div>
-              {% if cfp_status_block.get('deadline') %}
                 <div class="ev-deadline">
+                  {% if cfp_status_block.get('deadline') %}
                   <span>Deadline:</span>
                   <strong>{{ cfp_status_block.deadline }}</strong>
+                  {% endif %}
                 </div>
-              {% endif %}
               <div class="v3-btn-group">
                   {% if status_concluded and doc.livestream_embed_link %}
                     <a
