@@ -304,17 +304,8 @@ def download_proposals_csv(event: str):
         or []
     )
 
-    proposal_names = [p.get("name") for p in proposals] if proposals else []
-
-    anonymise = False
-    try:
-        cfp = (
-            frappe.db.get_value(EVENT_CFP, {"event": event}, ["anonymise_proposals"], as_dict=True)
-            or {}
-        )
-        anonymise = bool(cfp.get("anonymise_proposals"))
-    except Exception:
-        anonymise = False
+    cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, ["anonymise_proposals"], as_dict=True)
+    anonymise = bool(cfp.get("anonymise_proposals")) if cfp else False
 
     speakers_map = {}
     if not anonymise and proposal_names:

@@ -91,10 +91,6 @@ const filteredSubmissions = computed(() => {
 })
 
 function downloadCSV() {
-  const visible = Array.isArray(filteredSubmissions.value)
-    ? filteredSubmissions.value.map((s) => s.name)
-    : []
-
   const params = new URLSearchParams()
   params.append('event', props.eventId)
 
