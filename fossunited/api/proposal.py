@@ -1,7 +1,12 @@
+import csv
+import io
+
 import frappe
 from frappe import qb
+from frappe.utils import get_url
+from frappe.utils.response import as_csv
 
-from fossunited.doctype_ids import EVENT_CFP, PROPOSAL, SPEAKER
+from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL, SPEAKER
 
 
 @frappe.whitelist(allow_guest=True)
@@ -237,7 +242,10 @@ def get_public_proposal_filters(
     ]
 
     cfp = frappe.db.get_value(
-        EVENT_CFP, {"event": event}, ["name", "has_public_custom_responses"], as_dict=True
+        EVENT_CFP,
+        {"event": event},
+        ["name", "has_public_custom_responses"],
+        as_dict=True,
     )
 
     if cfp.has_public_custom_responses:
@@ -265,3 +273,76 @@ def get_public_proposal_filters(
             )
 
     return filter_fields
+
+
+@frappe.whitelist(allow_guest=True)
+def download_proposals_csv(event: str):
+    """
+    CSV export (simple).
+    Columns: timestamp, track, session_title, name, review_status, link
+    Uses _get_bulk_speakers_data to fetch speaker full_name (first speaker) unless anonymised.
+    """
+    if not event:
+        frappe.throw("Event is required")
+
+    event_route = frappe.db.get_value(EVENT, event, "route")
+    event_name = frappe.db.get_value(EVENT, event, "event_name")
+
+    proposals = (
+        frappe.get_all(
+            PROPOSAL,
+            filters={"event": event},
+            fields=[
+                "name",
+                "talk_title",
+                "session_type",
+                "status",
+                "creation",
+            ],
+            order_by="creation asc",
+        )
+        or []
+    )
+
+    proposal_names = [p.get("name") for p in proposals] if proposals else []
+
+    anonymise = False
+    try:
+        cfp = (
+            frappe.db.get_value(EVENT_CFP, {"event": event}, ["anonymise_proposals"], as_dict=True)
+            or {}
+        )
+        anonymise = bool(cfp.get("anonymise_proposals"))
+    except Exception:
+        anonymise = False
+
+    speakers_map = {}
+    if not anonymise and proposal_names:
+        speakers_map = _get_bulk_speakers_data(proposal_names) or {}
+
+    output = io.StringIO()
+    writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL, lineterminator="\r\n")
+    writer.writerow(["timestamp", "track", "session_title", "name", "review_status", "link"])
+
+    for p in proposals:
+        name = p.get("name", "")
+        creation = p.get("creation", "")
+        track = p.get("session_type", "") or ""
+        title = p.get("talk_title", "") or ""
+        status = p.get("status", "") or ""
+
+        speaker_name = ""
+        if not anonymise and speakers_map.get(name):
+            first_sp = speakers_map[name][0]
+            speaker_name = first_sp.get("full_name") or ""
+
+        link = get_url(f"{event_route}/cfp/{p.name}")
+
+        writer.writerow([creation, track, title, speaker_name, status, link])
+
+    filename = f"{event_name}-submissions"
+
+    frappe.response["doctype"] = filename
+    frappe.response["filename"] = f"{filename}.csv"
+    frappe.response["result"] = "\ufeff" + output.getvalue()
+    return as_csv()
