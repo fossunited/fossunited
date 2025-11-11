@@ -41,7 +41,7 @@
 {% macro event_cover() %}
   <div class="v3-banner-wrap">
     <img
-      src="{{ doc.event_logo or '/assets/fossunited/images/defaults/event_logo.png' }}"
+      src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_logo.png' }}"
       alt="{{ doc.event_name }}"
       class="v3-banner"
     />
@@ -62,7 +62,7 @@
 
     {% if user_has_registered %}
       <div class="ev-registered">
-        <i class="ti ti-check"></i>
+        <i class="ti ti-discount-check-filled"></i>
         You've Registered for this Event
       </div>
     {% endif %}
