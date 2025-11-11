@@ -542,24 +542,8 @@
       })
     }
 
-    // Theme Toggle
-    const themeToggle = document.getElementById('theme-toggle')
-    const themeIcon = themeToggle.querySelector('i')
-
-    let savedTheme = localStorage.getItem('theme')
-    if (!savedTheme) {
-      savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-    }
-
-    document.documentElement.setAttribute('data-theme', savedTheme)
-    themeIcon.className = savedTheme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'
-
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme')
-      const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-      document.documentElement.setAttribute('data-theme', newTheme)
-      localStorage.setItem('theme', newTheme)
-      themeIcon.className = newTheme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'
-    })
+   document.addEventListener('DOMContentLoaded', function() {
+      initThemeToggle('theme-toggle');
+    });
   </script>
 {% endblock %}

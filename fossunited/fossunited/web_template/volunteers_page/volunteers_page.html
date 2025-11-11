@@ -551,39 +551,9 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
       searchQuery = ''
       renderMembers()
 
-      const themeToggle = document.getElementById('theme-toggle')
-      const themeIcon = themeToggle.querySelector('i')
-
-      // Load saved theme or use system preference
-      let savedTheme = localStorage.getItem('theme')
-
-      if (!savedTheme) {
-        // No saved theme — use system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-        savedTheme = prefersDark ? 'dark' : 'light'
-      }
-
-      // Apply theme
-      document.documentElement.setAttribute('data-theme', savedTheme)
-      updateThemeIcon(savedTheme)
-
-      function updateThemeIcon(theme) {
-        if (theme === 'dark') {
-          themeIcon.className = 'ti ti-sun'
-        } else {
-          themeIcon.className = 'ti ti-moon'
-        }
-      }
-
-      // Toggle theme on click
-      themeToggle.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme')
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-
-        document.documentElement.setAttribute('data-theme', newTheme)
-        localStorage.setItem('theme', newTheme)
-        updateThemeIcon(newTheme)
-      })
+      document.addEventListener('DOMContentLoaded', function() {
+          initThemeToggle('theme-toggle');
+      });
     })()
   </script>
 {% endblock %}
