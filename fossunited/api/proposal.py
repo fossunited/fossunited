@@ -1,5 +1,6 @@
 import csv
 import io
+import re
 
 import frappe
 from frappe import qb
@@ -278,7 +279,7 @@ def get_public_proposal_filters(
 @frappe.whitelist(allow_guest=True)
 def download_proposals_csv(event: str):
     """
-    CSV export (simple).
+    CSV export for all proposals from an event.
     Columns: timestamp, track, session_title, name, review_status, link
     Uses _get_bulk_speakers_data to fetch speaker full_name (first speaker) unless anonymised.
     """
@@ -306,6 +307,7 @@ def download_proposals_csv(event: str):
 
     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, ["anonymise_proposals"], as_dict=True)
     anonymise = bool(cfp.get("anonymise_proposals")) if cfp else False
+    proposal_names = [p.get("name") for p in proposals] if proposals else []
 
     speakers_map = {}
     if not anonymise and proposal_names:
@@ -331,7 +333,8 @@ def download_proposals_csv(event: str):
 
         writer.writerow([creation, track, title, speaker_name, status, link])
 
-    filename = f"{event_name}-submissions"
+    safe_event = re.sub(r"[^A-Za-z0-9_-]+", "_", str(event_name))
+    filename = f"{safe_event}-submissions"
 
     frappe.response["doctype"] = filename
     frappe.response["filename"] = f"{filename}.csv"
