@@ -280,49 +280,80 @@ def get_public_proposal_filters(
 def download_proposals_csv(event: str):
     """
     CSV export for all proposals from an event.
-    Columns: timestamp, track, session_title, name, review_status, link
-    Uses _get_bulk_speakers_data to fetch speaker full_name (first speaker) unless anonymised.
+    Columns: timestamp, track, session_title, name, review_status, link + dynamic custom questions
     """
     if not event:
         frappe.throw("Event is required")
 
-    event_route = frappe.db.get_value(EVENT, event, "route")
-    event_name = frappe.db.get_value(EVENT, event, "event_name")
+    event_route, event_name = frappe.db.get_value(EVENT, event, ["route", "event_name"])
 
     proposals = (
         frappe.get_all(
             PROPOSAL,
             filters={"event": event},
-            fields=[
-                "name",
-                "talk_title",
-                "session_type",
-                "status",
-                "creation",
-            ],
+            fields=["name", "talk_title", "session_type", "status", "creation"],
             order_by="creation asc",
         )
         or []
     )
 
-    cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, ["anonymise_proposals"], as_dict=True)
-    anonymise = bool(cfp.get("anonymise_proposals")) if cfp else False
-    proposal_names = [p.get("name") for p in proposals] if proposals else []
+    if not proposals:
+        frappe.throw("No proposals found for this event")
+
+    proposal_names = [p["name"] for p in proposals]
+
+    cfp = (
+        frappe.db.get_value(
+            EVENT_CFP,
+            {"event": event},
+            ["name", "anonymise_proposals", "has_public_custom_responses"],
+            as_dict=True,
+        )
+        or {}
+    )
+
+    anonymise = bool(cfp.get("anonymise_proposals"))
+    has_custom = bool(cfp.get("has_public_custom_responses"))
 
     speakers_map = {}
-    if not anonymise and proposal_names:
+    if not anonymise:
         speakers_map = _get_bulk_speakers_data(proposal_names) or {}
+
+    custom_answers_data = {}
+    if has_custom:
+        custom_answers_data = _get_bulk_custom_answers_data(proposal_names)
+
+        # Fetch actual question labels to use as headers (ordered by idx)
+        custom_questions = frappe.get_all(
+            "FOSS Custom Question",
+            filters={"parenttype": EVENT_CFP, "parent": cfp.name},
+            fields=["idx", "question"],
+            order_by="idx asc",
+        )
+    else:
+        custom_questions = []
 
     output = io.StringIO()
     writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL, lineterminator="\r\n")
-    writer.writerow(["timestamp", "track", "session_title", "name", "review_status", "link"])
+
+    header = [
+        "timestamp",
+        "track",
+        "session_title",
+        "name",
+        "review_status",
+        "link",
+    ]
+
+    header.extend([q["question"] for q in custom_questions])
+    writer.writerow(header)
 
     for p in proposals:
-        name = p.get("name", "")
-        creation = p.get("creation", "")
-        track = p.get("session_type", "") or ""
-        title = p.get("talk_title", "") or ""
-        status = p.get("status", "") or ""
+        name = p.get("name")
+        creation = p.get("creation") or ""
+        track = p.get("session_type") or ""
+        title = p.get("talk_title") or ""
+        status = p.get("status") or ""
 
         speaker_name = ""
         if not anonymise and speakers_map.get(name):
@@ -331,10 +362,18 @@ def download_proposals_csv(event: str):
 
         link = get_url(f"{event_route}/cfp/{p.name}")
 
-        writer.writerow([creation, track, title, speaker_name, status, link])
+        row = [creation, track, title, speaker_name, status, link]
+
+        if has_custom and custom_questions:
+            answers = custom_answers_data.get(name, {})
+            for q in custom_questions:
+                key = f"custom_question_{q['idx']}"
+                row.append(answers.get(key, ""))
+
+        writer.writerow(row)
 
     safe_event = re.sub(r"[^A-Za-z0-9_-]+", "_", str(event_name))
-    filename = f"{safe_event}-submissions"
+    filename = f"{safe_event}-submissions.csv"
 
     frappe.response["doctype"] = filename
     frappe.response["filename"] = f"{filename}.csv"
