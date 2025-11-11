@@ -3589,6 +3589,85 @@ h6 {
   object-fit: contain;
 }
 
+/* People Card (Volunteers & Speakers) - Unified List Layout */
+.v3-people-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.v3-people-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0;
+  text-decoration: none;
+  max-width: 233px;
+}
+
+.v3-people-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--v3-button-border);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.v3-people-name {
+  flex: 1;
+  color: var(--v3-text-color3);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* People Card Expand/Collapse Functionality */
+.v3-people-container {
+  position: relative;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.v3-people-container[data-expanded="false"] .v3-people-list {
+  max-height: 209px;
+  overflow: hidden;
+  position: relative;
+}
+
+.v3-people-container[data-expanded="false"]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--v3-card-bg));
+  pointer-events: none;
+}
+
+.v3-people-container[data-expanded="true"]::after {
+  display: none;
+}
+
+.v3-view-all-link {
+  margin-top: 1rem;
+  color: var(--v3-text-color2);
+  font-size: 0.875rem;
+  font-weight: 400;
+  text-decoration: underline;
+  line-height: 1.5;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.v3-view-all-link:hover {
+  color: var(--v3-text-color);
+}
+
 .v3-theme-toggle {
   background: var(--v3-card-bg);
   border: 1px solid var(--v3-button-border);

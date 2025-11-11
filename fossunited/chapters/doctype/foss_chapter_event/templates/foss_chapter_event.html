@@ -1,8 +1,7 @@
 {% extends 'templates/foss_base.html' %}
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
-{% from "fossunited/templates/macros/volunteers_card.html" import volunteers_card %}
+{% from "fossunited/templates/macros/volunteers_card.html" import people_card %}
 {% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
-{% from "fossunited/templates/macros/speaker_card.html" import speaker_card %}
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
@@ -531,12 +530,12 @@
 
           <!-- Speakers -->
           {% if doc.show_speakers and speakers %}
-            <div class="ev-speakers-section">{{ speaker_card(speakers, submissions) }}</div>
+            <div class="ev-speakers-section">{{ people_card(speakers, 'speakers', submissions) }}</div>
           {% endif %}
 
           <!-- Volunteers -->
           {% if volunteers %}
-            <div class="ev-volunteers-section">{{ volunteers_card(volunteers) }}</div>
+            <div class="ev-volunteers-section">{{ people_card(volunteers, 'volunteers') }}</div>
           {% endif %}
 
           <!-- Contact -->
