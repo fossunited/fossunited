@@ -21,7 +21,7 @@
 
   <div
     class="v3-clickable cfp-card-v3"
-    onclick="window.location.href='/{{ cfp_status_block.form_route }}'"
+    onclick="window.location.href='/{{ cfp_status_block.form_route | e }}'"
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
@@ -524,18 +524,18 @@
               </div>
             </div>
 
-            <!-- Map -->
+            <!-- TODO -->
             {% if doc.map_link %}
               <div
                 class="v3-clickable ev-map-section"
-                onclick="window.open('{{ doc.map_link }}', '_blank')"
+                onclick="window.open('{{ doc.map_link | e }}', '_blank')"
               >
-                <img
-                  src="https://via.placeholder.com/396x81"
-                  alt="Map"
-                  class="ev-map"
-                  style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;"
-                />
+                <!-- <img -->
+                <!--   src="https://via.placeholder.com/396x81" -->
+                <!--   alt="Map" -->
+                <!--   class="ev-map" -->
+                <!--   style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;" -->
+                <!-- /> -->
               </div>
             {% endif %}
           </div>

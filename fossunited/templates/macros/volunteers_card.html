@@ -25,7 +25,7 @@
         {% for submission in submissions %}
         {% if submission.name == speaker.parent %}
         <div class="v3-clickable v3-people-item" onclick="window.location.href='/{{ submission.route }}'">
-          <img src="{{ speaker.photo }}" alt="{{ speaker.full_name }}" class="v3-people-avatar">
+        <img src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}" alt="{{ speaker.full_name }}" class="v3-people-avatar">
           <div class="v3-people-name">{{ speaker.full_name }}</div>
         </div>
         {% endif %}
