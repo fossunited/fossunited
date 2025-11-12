@@ -373,7 +373,7 @@ def download_proposals_csv(event: str):
         writer.writerow(row)
 
     safe_event = re.sub(r"[^A-Za-z0-9_-]+", "_", str(event_name))
-    filename = f"{safe_event}-submissions.csv"
+    filename = f"{safe_event}-submissions"
 
     frappe.response["doctype"] = filename
     frappe.response["filename"] = f"{filename}.csv"
