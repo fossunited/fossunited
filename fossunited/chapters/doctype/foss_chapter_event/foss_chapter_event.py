@@ -3,7 +3,7 @@
 
 import re
 import textwrap
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
@@ -24,7 +24,7 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import is_user_team_member
 
-BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+now = datetime.now()
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -433,18 +433,21 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         if frappe.db.exists(EVENT_CFP, {"event": self.name}):
             cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
+            closing_soon = (
+                cfp_form.deadline is not None
+                and now <= cfp_form.deadline <= now + timedelta(days=3)
+            )
             cfp_status_block |= {
                 "form_route": cfp_form.get("route") or f"{self.route}/cfp",
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
                 "deadline": (
-                    cfp_form.deadline.strftime("%d %B, %Y  %I:%M %p")
-                    if cfp_form.deadline
-                    else None
+                    cfp_form.deadline.strftime("%d %b %Y") if cfp_form.deadline else None
                 ),
                 "is_published": cfp_form.status == "Live",
                 "is_unpublished": cfp_form.status == "Closed",
+                "closing_soon": closing_soon,
             }
             cfp_status_block["is_team_member"] = False
             if frappe.db.exists(
@@ -583,20 +586,6 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         schedule_dict = get_event_schedule(self.name)
         context.schedule_data = self.format_schedule_for_template(schedule_dict)
-
-        # Format CFP deadline for short display (already formatted in get_cfp_status_block)
-        if context.cfp_status_block.get("has_doc") and context.cfp_status_block.get("deadline"):
-            # Convert from long format to short format for display
-            try:
-                from datetime import datetime
-
-                deadline_dt = datetime.strptime(
-                    context.cfp_status_block["deadline"], "%d %B, %Y  %I:%M %p"
-                )
-                context.cfp_status_block["deadline"] = deadline_dt.strftime("%d %b %Y")
-            except (ValueError, AttributeError):
-                # If already in short format or invalid, keep as is
-                pass
 
         context.pagetitle, context.description, context.image = self.get_meta()
         context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()

@@ -41,14 +41,18 @@
             style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.1rem;"
           ></div>
         </div>
-        <div class="v3-sponsor-grid">
-          {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
+
+        {# compute tier_class once for this tier and apply to the grid container #}
+        {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
+        <div class="v3-sponsor-grid {{ tier_class }}">
           {% for sponsor in sponsors %}
             <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank">
               {% if sponsor.image %}
                 <img src="{{ sponsor.image }}" alt="{{ sponsor.sponsor_name }}" />
               {% else %}
-                <i class="ti ti-star" style="font-size: 2rem; color: var(--v3-text-color3);"></i>
+                <div class="text-center fw-semibold" style="color: black;">
+                  {{ sponsor.sponsor_name }}
+                </div>
               {% endif %}
             </a>
           {% endfor %}

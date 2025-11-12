@@ -209,6 +209,7 @@ h6 {
   font-weight: var(--fw-bold);
   --ls-tight: -0.04em;
   letter-spacing: var(--ls-tight);
+  color: var(--v3-text-color);
 }
 
 /* Inherit fonts for inputs and buttons */
@@ -3064,7 +3065,7 @@ h6 {
   font-family: 'Inter', sans-serif;
 }
 
-.v3-page * {
+.v3-page *:not(.no-font-inherit) {
   font-family: inherit;
 }
 
@@ -3104,6 +3105,11 @@ h6 {
   border-radius: 1rem;
   border: 1px solid var(--v3-button-border);
   padding: 1.5rem; /* 24px */
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06);
+}
+
+[data-theme='dark'] .v3-card {
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7);
 }
 
 /* V3 Grid - 32px gap */
@@ -3231,7 +3237,7 @@ h6 {
 }
 
 [data-theme='dark'] .cfp-card-v3 {
-  background: linear-gradient(102deg, var(--v3-text-color3) 0%, var(--v3-text-color) 100%);
+  background: linear-gradient(102deg, #f7f7f7 0%, #fcfcfc 100%);
 }
 
 .cfp-card-v3:hover {
@@ -3546,8 +3552,17 @@ h6 {
 .v3-sponsor-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.25rem;
   align-items: center;
+}
+
+.v3-sponsor-grid.tier-1 {
+  gap: 1.25rem;
+  padding: 0.5rem 0;
+}
+
+.v3-sponsor-grid.tier-2,
+.v3-sponsor-grid.tier-3 {
+  gap: 0.8rem;
 }
 
 .v3-sponsor {
@@ -3559,19 +3574,22 @@ h6 {
 }
 
 .v3-sponsor.tier-1 {
-  width: 8.125rem;
-  height: 4.0625rem;
+  width: 9.375rem;
+  aspect-ratio: 2/1;
   padding: 0.625rem 1rem;
+  background: #fff;
 }
 .v3-sponsor.tier-2 {
-  width: 6rem;
-  height: 3rem;
+  width: 7.6rem;
+  aspect-ratio: 2/1;
   padding: 0.625rem 1rem;
+  background: #fff;
 }
 .v3-sponsor.tier-3 {
-  width: 4.5rem;
-  height: 2.25rem;
+  width: 7rem;
+  aspect-ratio: 2/1;
   padding: 0.625rem 1rem;
+  background: #fff;
 }
 
 .v3-sponsor img {

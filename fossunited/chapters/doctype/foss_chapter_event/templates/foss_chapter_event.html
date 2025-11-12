@@ -5,17 +5,32 @@
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
+  {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
+    {% set badge_class = "ev-live--live" %}
+    {% set badge_icon = "<div class='ev-live-dot'></div>" %}
+    {% set badge_text = "Live" %}
+  {% elif cfp_status_block.closing_soon %}
+    {% set badge_class = "ev-live--closing" %}
+    {% set badge_icon = "<div class='ev-live-dot'></div>" %}
+    {% set badge_text = "Closing Soon" %}
+  {% else %}
+    {% set badge_class = "ev-live--closed" %}
+    {% set badge_icon = "<i class='ti ti-ban ev-live-ban-icon'></i>" %}
+    {% set badge_text = "Closed" %}
+  {% endif %}
+
   <div
     class="v3-clickable cfp-card-v3"
     onclick="window.location.href='/{{ cfp_status_block.form_route }}'"
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
-        <div class="ev-live">
-          <div class="ev-live-dot"></div>
-          <span class="ev-live-text">{{ "Live" if status_live else "Closed"}}</span>
-        </div>
+      <div class="ev-live {{ badge_class }}">
+        {{ badge_icon | safe }}
+        <span class="ev-live-text">{{ badge_text }}</span>
+      </div>
     </div>
+
     <div class="ev-cfp-desc">
       {% if doc.proposal_page_description %}
         {{ doc.proposal_page_description[:100] }}{% if doc.proposal_page_description|length > 100 %}...{% endif %}
@@ -23,9 +38,10 @@
         Give a talk at the event, propose your ideas here and we will get back to you.
       {% endif %}
     </div>
+
     <div class="ev-cfp-footer">
         <div class="ev-cfp-deadline">
-      {% if cfp_status_block.get('deadline') %}
+      {% if cfp_status_block.deadline %}
           <span>Deadline:</span>
           <strong>{{ cfp_status_block.deadline }}</strong>
       {% endif %}
@@ -34,6 +50,7 @@
     </div>
   </div>
 {% endmacro %}
+
 
 {% macro event_cover() %}
   <div class="v3-banner-wrap">
@@ -76,54 +93,10 @@
       background: var(--v3-main-bg);
     }
 
-    .ev-page {
-      font-family: 'Inter', sans-serif;
-    }
-
-    .ev-page * {
-      font-family: inherit;
-    }
-
     .ev-main-card {
       width: 100%;
       max-width: 840px;
       margin-bottom: 2rem;
-    }
-
-    .ev-chapter-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 6px 8px;
-      gap: 24px;
-      height: 48px;
-      background: #fff;
-      border: 1px solid var(--v3-button-border, #ddd);
-      border-radius: 8px;
-    }
-    .ev-chapter-badge img {
-      height: 100%;
-      max-width: 92px;
-      object-fit: contain;
-      display: block;
-    }
-
-    [data-theme='dark'] .ev-chapter-badge {
-      background: var(--v3-card-bg);
-    }
-
-    .ev-chapter-name {
-      color: var(--v3-text-color);
-      font-size: 0.75rem;
-      font-weight: 700;
-    }
-
-    .ev-chapter-full {
-      color: var(--v3-text-color2);
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07rem;
     }
 
     .ev-title {
@@ -179,13 +152,11 @@
       flex-shrink: 0;
     }
 
+    .ev-icon:hover { opacity: 0.9; }
+
     .ev-icon i {
       font-size: 1.5rem;
       color: var(--v3-text-color3);
-    }
-
-    .ev-detail-text {
-      flex: 1;
     }
 
     .ev-detail-primary {
@@ -235,27 +206,45 @@
       font-weight: 600;
     }
 
-    .ev-live {
-      padding: 0.25rem 0.5rem;
-      background: rgba(8, 183, 79, 0.15);
-      border-radius: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
+.ev-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
 
-    .ev-live-dot {
-      width: 0.4375rem;
-      height: 0.4375rem;
-      background: #08b74f;
-      border-radius: 50%;
-    }
+/* live */
+.ev-live--live {
+  background: rgba(16, 185, 129, 0.15); /* greenish */
+  color: rgba(16, 185, 129, 1);
+}
 
-    .ev-live-text {
-      color: #08b74f;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
+/* closing soon */
+.ev-live--closing {
+  background: hsla(41, 88%, 45%, 0.15);
+  color: hsla(41, 88%, 46%, 1);
+}
+
+/* closed */
+.ev-live--closed {
+  background: hsla(0, 53%, 52%, 0.15);
+  color: hsla(0, 53%, 52%, 1);
+}
+
+.ev-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.ev-live-ban-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
 
     .ev-cfp-desc {
       font-size: 0.875rem;
@@ -341,16 +330,20 @@
             <!-- Header Info -->
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; flex-direction: column;">
-                <div class="d-flex align-items-center flex-wrap" style="gap: 1rem;">
-                  <div class="ev-chapter-badge">
-                    <img
-                      src="{{ chapter.chapter_logo or '/assets/fossunited/images/chapter/foss_club_profile.svg' }}"
-                      alt="{{ doc.chapter_name }}"
-                      class="img-fluid"
-                    />
-                  </div>
-                  <div class="ev-chapter-full">{{ doc.chapter_name }}</div>
-                </div>
+                <a
+                  href="/{{ chapter.route }}"
+                  class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %}"
+                >
+                  {% if chapter.chapter_type == 'FOSS Club' %}
+                  <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
+                  <span>{{ chapter.chapter_name | truncate(22, True, '...', 0) }}</span>
+                  {% else %}
+                  <span class="no-font-inherit fff-forward">
+                    {{ (chapter.city.upper() if chapter.city else chapter.chapter_name) | truncate(22, True, '...', 0) }}
+                  </span>
+                  {% endif %}
+                </a>
+
 
                 <h1 class="ev-title">{{ doc.event_name }}</h1>
                 <div class="ev-tags">
@@ -399,7 +392,7 @@
                 <div class="ev-detail-row">
                   {% endif %}
                   <div class="ev-icon"><i class="ti ti-map-pin"></i></div>
-                  <div class="ev-detail-text">{{ doc.event_location or 'Location TBD' }}</div>
+                  <div class="ev-detail-secondary">{{ doc.event_location or 'Location TBD' }}</div>
                   {% if doc.map_link %}
               </a>
               {% else %}
@@ -431,11 +424,11 @@
                       </a>
                     {% elif doc.show_rsvp %}
                       {% if user_has_registered %}
-                        <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                        <a href="/{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
                           Edit RSVP
                         </a>
                       {% else %}
-                        <a href="{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                        <a href="/{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
                           Register
                         </a>
                       {% endif %}
