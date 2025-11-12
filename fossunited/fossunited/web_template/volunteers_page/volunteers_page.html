@@ -1,5 +1,15 @@
+{% block style %}
+<style>
+  {% include "public/css/custom.css" %}
+</style>
+{% endblock %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css" />
-{% include "public/css/custom.css" %}
+
+{%- block script -%}
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% endblock %}
 
 {% block head_include %}
   <meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />
