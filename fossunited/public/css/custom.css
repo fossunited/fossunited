@@ -1342,6 +1342,10 @@ h6 {
   font-size: var(--text-xs);
 }
 
+.chapter-brand-block:hover {
+  color: white !important;
+}
+
 .club-brand {
   display: flex;
   gap: 0.5rem;
@@ -3077,7 +3081,7 @@ h6 {
 
 .v3-page a:hover {
   text-decoration: none;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 /* V3 Clickable Div - For divs that act as links */
