@@ -3,7 +3,7 @@
 
 import re
 import textwrap
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
@@ -16,6 +16,7 @@ from fossunited.doctype_ids import (
     EVENT,
     EVENT_CFP,
     EVENT_RSVP,
+    EVENT_TICKET,
     PROPOSAL,
     RSVP_RESPONSE,
     SPEAKER,
@@ -23,7 +24,7 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import is_user_team_member
 
-BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+now = datetime.now()
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -220,24 +221,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_route = frappe.db.get_value(CHAPTER, self.chapter, "route")
         self.route = f"{event_route}/{self.event_permalink}"
 
-    def get_context(self, context):
-        context.chapter = frappe.get_doc(CHAPTER, self.chapter)
-        context.sponsors_dict = self.get_sponsors()
-        context.volunteers = self.get_volunteers()
-        context.speakers, context.submissions = self.get_speakers()
-        context.nav_items = self.get_navbar_items(context.speakers)
-        context.rsvp_status_block = self.get_rsvp_status_block()
-        context.cfp_status_block = self.get_cfp_status_block()
-        context.user_cfp_submissions = self.get_user_cfp_submissions()
-        context.recent_cfp_submissions = self.get_recent_cfp_submissions()
-        context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
-
-        context.pagetitle, context.description, context.image = self.get_meta()
-
-        context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
-
-        context.no_cache = 1
-
     def get_meta(self):
         pagetitle = self.event_name
 
@@ -336,19 +319,34 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
 
     def get_volunteers(self):
+        """Get volunteers with profile information. Batch fetch profiles for performance."""
+        if not self.event_members:
+            return []
+
+        # Batch fetch all profiles
+        member_ids = [member.member for member in self.event_members]
+        profiles = {
+            p.name: p
+            for p in frappe.get_all(
+                USER_PROFILE,
+                filters={"name": ("in", member_ids)},
+                fields=["name", "profile_photo", "route"],
+            )
+        }
+
         members = []
         for member in self.event_members:
-            profile = frappe.get_doc(USER_PROFILE, member.member).as_dict()
+            profile = profiles.get(member.member, {})
             members.append(
                 {
                     "full_name": member.full_name,
                     "role": member.role or "Volunteer",
                     "profile_picture": (
-                        profile.profile_photo
-                        if profile.profile_photo
+                        profile.get("profile_photo")
+                        if profile.get("profile_photo")
                         else "/assets/fossunited/images/defaults/user_profile_image.png"
                     ),
-                    "route": profile.route,
+                    "route": profile.get("route", ""),
                 }
             )
         return members
@@ -435,18 +433,21 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         if frappe.db.exists(EVENT_CFP, {"event": self.name}):
             cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
+            closing_soon = (
+                cfp_form.deadline is not None
+                and now <= cfp_form.deadline <= now + timedelta(days=3)
+            )
             cfp_status_block |= {
                 "form_route": cfp_form.get("route") or f"{self.route}/cfp",
                 "has_doc": True,
                 "block_heading": "Call for Proposal (CFP) Form is Live!",
                 "docname": cfp_form.name,
                 "deadline": (
-                    cfp_form.deadline.strftime("%d %B, %Y  %I:%M %p")
-                    if cfp_form.deadline
-                    else None
+                    cfp_form.deadline.strftime("%d %b %Y") if cfp_form.deadline else None
                 ),
                 "is_published": cfp_form.status == "Live",
                 "is_unpublished": cfp_form.status == "Closed",
+                "closing_soon": closing_soon,
             }
             cfp_status_block["is_team_member"] = False
             if frappe.db.exists(
@@ -481,48 +482,112 @@ class FOSSChapterEvent(WebsiteGenerator):
             cfp_status_block["show_primary_cta"] = False
         return cfp_status_block
 
-    def get_user_cfp_submissions(self):
-        submissions = frappe.get_all(
-            PROPOSAL,
-            filters={
+    def check_user_registration(self):
+        """Check if the current user has registered for this event via RSVP or ticket purchase"""
+        if frappe.session.user == "Guest":
+            return False
+
+        # Check for RSVP
+        rsvp_exists = frappe.db.exists(
+            RSVP_RESPONSE,
+            {
                 "event": self.name,
                 "submitted_by": frappe.session.user,
             },
-            fields=[
-                "name",
-                "route",
-                "talk_title",
-                "status",
-            ],
         )
-        return submissions or []
 
-    def get_recent_cfp_submissions(self):
-        submissions = frappe.get_all(
-            PROPOSAL,
-            filters={"event": self.name},
-            fields=[
-                "name",
-                "route",
-                "talk_title",
-                "submitted_by",
-                "picture_url",
-                "status",
-            ],
-            order_by="creation desc",
-            limit=6,
-        )
-        for submission in submissions:
-            if submission.status == "Approved":
-                user = frappe.get_doc(
-                    USER_PROFILE,
-                    {"email": submission.submitted_by},
-                )
-                submission["user_route"] = user.route
-                submission["full_name"] = user.full_name
-                submission["profile_picture"] = (
-                    submission.picture_url
-                    or user.profile_photo
-                    or "/assets/fossunited/images/defaults/user_profile_image.png"
-                )
-        return submissions or []
+        if rsvp_exists:
+            return True
+
+        # Check for ticket purchase (if ticketing is enabled)
+        if self.is_paid_event:
+            ticket_exists = frappe.db.exists(
+                EVENT_TICKET,
+                {
+                    "event": self.name,
+                    "email": frappe.session.user,
+                },
+            )
+            if ticket_exists:
+                return True
+
+        return False
+
+    def get_event_stats(self):
+        """Get attendance and proposal statistics for the event"""
+        stats = {"attending": 0, "proposals": 0}
+
+        # Count RSVP responses
+        rsvp_count = frappe.db.count(RSVP_RESPONSE, {"event": self.name})
+        stats["attending"] = rsvp_count
+
+        # Add ticket holders if paid event
+        if self.is_paid_event:
+            ticket_count = frappe.db.count(
+                EVENT_TICKET,
+                {"event": self.name},
+            )
+            stats["attending"] += ticket_count
+
+        # Count proposals
+        proposal_count = frappe.db.count(PROPOSAL, {"event": self.name})
+        stats["proposals"] = proposal_count
+
+        return stats
+
+    def format_schedule_for_template(self, schedule_dict):
+        """Format schedule dict with time display for template rendering.
+        Returns nested structure: {date: {hall: [items]}} with start_time_display added.
+        """
+        if not schedule_dict:
+            return {}
+
+        def fmt(td):
+            if not td:
+                return ""
+            s = int(td.total_seconds())
+            h, m = (s // 3600) % 24, (s % 3600) // 60
+            return f"{(h % 12) or 12:02d}:{m:02d} {'AM' if h < 12 else 'PM'}"
+
+        formatted = {}
+        for date_str, halls in schedule_dict.items():
+            formatted[date_str] = {}
+            for hall, items in halls.items():
+                formatted[date_str][hall] = [
+                    (
+                        setattr(
+                            item,
+                            "start_time_display",
+                            fmt(getattr(item, "start_time", None)),
+                        )
+                        or item
+                    )
+                    for item in items
+                ]
+        return formatted
+
+    def get_context(self, context):
+        context.chapter = frappe.get_doc(CHAPTER, self.chapter)
+        context.sponsors_dict = self.get_sponsors()
+        context.volunteers = self.get_volunteers()
+        context.speakers, context.submissions = self.get_speakers()
+        context.rsvp_status_block = self.get_rsvp_status_block()
+        context.cfp_status_block = self.get_cfp_status_block()
+        context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
+
+        # Add user registration status
+        context.user_has_registered = self.check_user_registration()
+
+        # Add event statistics
+        context.event_stats = self.get_event_stats()
+
+        # Add schedule data using existing API - keep nested structure for proper ordering
+        from fossunited.api.schedule import get_event_schedule
+
+        schedule_dict = get_event_schedule(self.name)
+        context.schedule_data = self.format_schedule_for_template(schedule_dict)
+
+        context.pagetitle, context.description, context.image = self.get_meta()
+        context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
+        context.status_concluded = self.status == "Concluded"
+        context.status_live = self.status == "Live"

@@ -1,0 +1,63 @@
+{% macro sponsor_card(sponsors_dict, deck_link) %}
+  <div class="v3-card">
+    <div class="v3-sponsor-header">
+      <div class="v3-section-title" style="margin-bottom: 0;">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 18 18"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <g clip-path="url(#clip0_2639_7416)">
+            <path
+              d="M15.9146 10.2159L8.99507 17.069L2.07558 10.2159C1.61917 9.77179 1.25967 9.23797 1.01971 8.64808C0.779743 8.05819 0.664518 7.42501 0.681287 6.7884C0.698056 6.15179 0.846456 5.52555 1.11714 4.94911C1.38783 4.37267 1.77493 3.85852 2.25409 3.43904C2.73324 3.01956 3.29406 2.70383 3.90123 2.51174C4.50839 2.31964 5.14876 2.25535 5.782 2.3229C6.41523 2.39045 7.02763 2.58838 7.58061 2.90423C8.13359 3.22009 8.61519 3.64701 8.99507 4.15813C9.37659 3.65072 9.85875 3.22753 10.4113 2.91503C10.964 2.60253 11.5751 2.40745 12.2066 2.34202C12.838 2.27658 13.4762 2.34218 14.0811 2.53472C14.6861 2.72726 15.2448 3.04259 15.7222 3.46098C16.1997 3.87937 16.5857 4.39181 16.856 4.96623C17.1263 5.54065 17.2752 6.16468 17.2932 6.79926C17.3113 7.43385 17.1981 8.06533 16.9609 8.65419C16.7237 9.24304 16.3675 9.7766 15.9146 10.2215M8.99499 4.1526L5.95687 7.19072C5.78391 7.36373 5.68675 7.59836 5.68675 7.843C5.68675 8.08764 5.78391 8.32226 5.95687 8.49528L6.45784 8.99625C7.09444 9.63284 8.12775 9.63284 8.76434 8.99625L9.68694 8.07365C10.2375 7.5231 10.9842 7.21381 11.7628 7.21381C12.5414 7.21381 13.2881 7.5231 13.8386 8.07365L15.9145 10.1495M9.45631 12.9173L11.3015 14.7625M11.7628 10.6108L13.608 12.456"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_2639_7416">
+              <rect width="18" height="18" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+
+        <span>Sponsors</span>
+      </div>
+      {% if deck_link %}
+        <a href="{{ deck_link }}" target="_blank" class="v3-sponsor-link">
+          Sponsor this event <i class="ti ti-external-link"></i>
+        </a>
+      {% endif %}
+    </div>
+    {% for tier_name, sponsors in sponsors_dict.items() %}
+      <div class="v3-sponsor-tier">
+        <div class="v3-schedule-header v3-sponsor-tier-name">
+          <div>{{ tier_name }}</div>
+          <div
+            style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.1rem;"
+          ></div>
+        </div>
+
+        {# compute tier_class once for this tier and apply to the grid container #}
+        {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
+        <div class="v3-sponsor-grid {{ tier_class }}">
+          {% for sponsor in sponsors %}
+            <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank">
+              {% if sponsor.image %}
+                <img src="{{ sponsor.image }}" alt="{{ sponsor.sponsor_name }}" />
+              {% else %}
+                <div class="text-center fw-semibold" style="color: black;">
+                  {{ sponsor.sponsor_name }}
+                </div>
+              {% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endmacro %}

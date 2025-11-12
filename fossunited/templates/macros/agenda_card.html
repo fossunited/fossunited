@@ -1,0 +1,93 @@
+{% macro agenda_card(schedule_data, route, show_limit=10) %}
+  <div class="v3-card">
+    <div class="v3-section-title">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3158 1.68421H1.68421L1.68421 14.3158H14.3158V1.68421ZM1.68421 0C0.754047 0 0 0.754047 0 1.68421V14.3158C0 15.246 0.754047 16 1.68421 16H14.3158C15.246 16 16 15.246 16 14.3158V1.68421C16 0.754047 15.246 0 14.3158 0H1.68421Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 5.05255C3.36823 4.58747 3.74525 4.21045 4.21033 4.21045H11.7893C12.2544 4.21045 12.6314 4.58747 12.6314 5.05255C12.6314 5.51764 12.2544 5.89466 11.7893 5.89466H4.21033C3.74525 5.89466 3.36823 5.51764 3.36823 5.05255Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 8.21051C3.36823 7.74543 3.74525 7.36841 4.21033 7.36841H11.7893C12.2544 7.36841 12.6314 7.74543 12.6314 8.21051C12.6314 8.6756 12.2544 9.05262 11.7893 9.05262H4.21033C3.74525 9.05262 3.36823 8.6756 3.36823 8.21051Z" fill="currentColor"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 11.5789C3.36823 11.1138 3.74525 10.7368 4.21033 10.7368H8.42086C8.88594 10.7368 9.26296 11.1138 9.26296 11.5789C9.26296 12.044 8.88594 12.421 8.42086 12.421H4.21033C3.74525 12.421 3.36823 12.044 3.36823 11.5789Z" fill="currentColor"/>
+      </svg>
+      <span>Agenda</span>
+    </div>
+    <div class="v3-schedule-list">
+      {% set item_count = 0 %}
+      {% for date_str, halls in schedule_data.items() %}
+        {% if item_count < show_limit %}
+          <div class="v3-schedule-date-group">
+            <div class="v3-schedule-date-title">{{ date_str }}</div>
+            {% for hall, items in halls.items() %}
+              {% if item_count < show_limit %}
+                <div class="v3-schedule-hall-group">
+                  {% if hall and hall != 'no-hall' %}
+                    <div class="v3-schedule-hall-title">{{ hall }}</div>
+                  {% endif %}
+                  {% for item in items %}
+                    {% if item_count < show_limit %}
+                      <div
+                        class="v3-clickable"
+                        {% if item.cfp_route %}
+                          data-route="{{ item.cfp_route }}"
+                          onclick="window.location.href='/{{ item.cfp_route }}'"
+                        {% endif %}
+                      >
+                        <div class="v3-schedule-item">
+                          <div class="v3-schedule-header">
+                            <div class="v3-schedule-time">{{ item.start_time_display }}</div>
+                            <div
+                              style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"
+                            ></div>
+                            <div class="v3-schedule-badge">{{ item.category }}</div>
+                          </div>
+                          <div class="v3-schedule-content">
+                            {% if item.cfp_speakers %}
+                              <div
+                                class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}"
+                              >
+                                {% for speaker in item.cfp_speakers[:4] %}
+                                  <img
+                                    src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                                    alt="{{ speaker.full_name }}"
+                                    class="v3-speaker-img"
+                                  />
+                                {% endfor %}
+                              </div>
+                            {% endif %}
+                            <div class="v3-schedule-details">
+                              <div class="v3-schedule-title">{{ item.title }}</div>
+                              {% if item.cfp_speakers %}
+                                <div class="v3-speaker-names">
+                                  {% for speaker in item.cfp_speakers %}
+                                    <div class="v3-speaker-name">{{ speaker.full_name }}</div>
+                                  {% endfor %}
+                                </div>
+                              {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      {% set item_count = item_count + 1 %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% set total_items = 0 %}
+    {% for date_str, halls in schedule_data.items() %}
+      {% for hall, items in halls.items() %}
+        {% set total_items = total_items + items|length %}
+      {% endfor %}
+    {% endfor %}
+    {% if total_items >= show_limit %}
+      <a
+        href="/{{ route }}/schedule"
+        class="v3-btn v3-btn-secondary"
+        style="margin-top: 1rem; width: auto;"
+        >View Full Schedule</a
+      >
+    {% endif %}
+  </div>
+{% endmacro %}
