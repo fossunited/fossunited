@@ -1,4 +1,16 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css" />
+{% block foss_base %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
+<style>
+  {% include "public/css/custom.css" %}
+</style>
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% endblock %}
+
 
 {% block head_include %}
   <meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />

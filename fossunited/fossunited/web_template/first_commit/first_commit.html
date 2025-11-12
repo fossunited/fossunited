@@ -1,7 +1,15 @@
+{% block foss_base %}
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
 />
+<style>
+  {% include "public/css/custom.css" %}
+</style>
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% endblock %}
 
 {% block page_content %}
   {% set chapter_id = chapter_id | default("FOSS Commit-Virtual") %}
@@ -73,7 +81,7 @@
               alt="{{ event.event_name }}"
             />
 
-            <div class="event-details">
+            <div class="event-details v3-text-primary">
               <h3 class="event-title">{{ event.event_name }}</h3>
               <p class="event-meta">
                 <span class="event-date">{{ event.event_start_date.strftime("%d %b %Y") }}</span>
@@ -157,7 +165,6 @@
       font-size: 20px;
       font-weight: 600;
       line-height: 24.8px;
-      color: var(--v3-text-color);
       margin: 0;
     }
 
