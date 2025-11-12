@@ -3106,16 +3106,6 @@ h6 {
   padding: 1.5rem; /* 24px */
 }
 
-.v3-content-main .v3-card,
-.v3-content-sidebar .v3-card {
-  margin-bottom: 1rem; /* 32px */
-}
-
-.v3-content-main .v3-card:last-child,
-.v3-content-sidebar .v3-card:last-child {
-  margin-bottom: 2rem;
-}
-
 /* V3 Grid - 32px gap */
 .v3-grid {
   display: flex;
@@ -3237,6 +3227,7 @@ h6 {
   display: block;
   transition: opacity 0.2s;
   color: var(--v3-card-bg) !important;
+  margin-bottom: 0.5rem;
 }
 
 [data-theme='dark'] .cfp-card-v3 {
@@ -3632,13 +3623,13 @@ h6 {
   transition: max-height 0.3s ease;
 }
 
-.v3-people-container[data-expanded="false"] .v3-people-list {
+.v3-people-container[data-expanded='false'] .v3-people-list {
   max-height: 209px;
   overflow: hidden;
   position: relative;
 }
 
-.v3-people-container[data-expanded="false"]::after {
+.v3-people-container[data-expanded='false']::after {
   content: '';
   position: absolute;
   bottom: 0;
@@ -3648,7 +3639,7 @@ h6 {
   pointer-events: none;
 }
 
-.v3-people-container[data-expanded="true"]::after {
+.v3-people-container[data-expanded='true']::after {
   display: none;
 }
 
@@ -3701,6 +3692,24 @@ h6 {
 @media (min-width: 48rem) {
   .v3-header {
     flex-direction: row;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .v3-card {
+    padding: 1.2rem;
+  }
+  .v3-section-title {
+    margin-bottom: 0.8rem;
+  }
+  .v3-content-main .v3-card,
+  .v3-content-sidebar .v3-card {
+    margin-bottom: 0.5rem;
+  }
+
+  .v3-content-main .v3-card:last-child,
+  .v3-content-sidebar .v3-card:last-child {
+    margin-bottom: 0rem;
   }
 }
 
