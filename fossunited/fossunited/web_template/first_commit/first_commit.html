@@ -74,7 +74,7 @@
             />
 
             <div class="event-details">
-              <h3 class="event-title">{{ event.event_name }}</h3>
+              <h3 class="event-title text-center text-md-left">{{ event.event_name }}</h3>
               <p class="event-meta">
                 <span class="event-date">{{ event.event_start_date.strftime("%d %b %Y") }}</span>
                 <span class="event-dot">•</span>
@@ -113,7 +113,7 @@
     }
 
     .commit-hover:hover {
-      border: 1px;
+      border: 1px solid var(--v3-button-border);
       box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06) !important;
     }
 
@@ -170,10 +170,6 @@
     @media (max-width: 768px) {
       .commit-card {
         flex-direction: column;
-      }
-
-      .commit-card-inner {
-        width: 100%;
       }
 
       .event-action {
