@@ -277,7 +277,6 @@
 
     .ev-contact {
       padding: 1.5rem;
-      display: flex;
       align-items: center;
       gap: 0.375rem;
     }
@@ -290,6 +289,7 @@
     .ev-contact-email {
       color: var(--v3-text-color);
       font-size: 1rem;
+      padding-left: 0.5rem;
     }
 
     /* Visibility helpers */
@@ -512,15 +512,24 @@
             {% endif %}
 
             <!-- Contact -->
-            {% if chapter.email %}
-              <div class="v3-card ev-contact ev-contact-section">
+            <div class="v3-card ev-contact">
+              {% if chapter.email %}
+              <div class="d-flex align-items-center pb-2">
                 <i class="ti ti-mail"></i>
                 <div class="ev-contact-email">
                   <a href="mailto:{{ chapter.email }}">{{ chapter.email }}</a>
                 </div>
               </div>
+              {% endif %}
 
-            {% endif %}
+              <div class="header-section--socials-event">
+                {% for (k,v) in social_links.items() %}
+                <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
+                  <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+                </a>
+                {% endfor %}
+              </div>
+            </div>
 
             <!-- Map -->
             {% if doc.map_link %}
