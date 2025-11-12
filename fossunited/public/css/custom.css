@@ -3180,6 +3180,28 @@ h6 {
   opacity: 0.8;
 }
 
+.v3-btn-secondary {
+  background: var(--v3-button-border);
+  color: var(--v3-text-color);
+}
+
+.v3-btn-secondary:hover {
+  color: var(--v3-text-color);
+  opacity: 0.8;
+}
+
+.v3-btn-dark {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+  min-width: 180px;
+}
+
+.v3-btn-dark:hover {
+  opacity: 0.8;
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+}
+
 /* V3 Typography - Inherit font from parent */
 .v3-text-primary {
   color: var(--v3-text-color);
