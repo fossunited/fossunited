@@ -4,10 +4,10 @@
 />
 
 {% block page_content %}
-  {% set chapter_id = chapter_id | default("LetsMakePy-Virtual") %}
+  {% set chapter_id = chapter_id | default("FOSS Commit-Virtual") %}
   {% set banner_image = banner_image | default("/assets/fossunited/images/defaults/first_commit_banner.svg") %}
   {% set description = description | default("FOSS Hack Localhosts are localized, in-person editions of the broader hybrid version of FOSS Hack 2024. Hackers can choose to hack.") %}
-  {% set know_more_link = know_more_link | default("#") %}
+  {% set know_more_link = know_more_link | default("#boilerplate-content") %}
   {%
     set boilerplate_content = boilerplate_content | default("""Hello All,
 
@@ -222,7 +222,7 @@
 
       <!-- Boilerplate Content -->
       {% if boilerplate_content %}
-        <div style="margin-top: 3rem;">
+        <div id="boilerplate-content" style="margin-top: 3rem;">
           <div class="v3-text-tertiary">{{ frappe.utils.md_to_html(boilerplate_content) }}</div>
         </div>
       {% endif %}
