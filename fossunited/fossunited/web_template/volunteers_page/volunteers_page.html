@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css" />
+{% include "public/css/custom.css" %}
 
 {% block head_include %}
   <meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />
@@ -551,6 +552,7 @@ ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-fil
       searchQuery = ''
       renderMembers()
 
+      {% include "public/js/common_functions.js" %}
       document.addEventListener('DOMContentLoaded', function() {
           initThemeToggle('theme-toggle');
       });

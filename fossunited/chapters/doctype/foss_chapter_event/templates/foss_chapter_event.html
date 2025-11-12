@@ -48,7 +48,7 @@
     {% if event_stats %}
       <div class="ev-stats">
         {% if event_stats.attending > 0 %}
-          <span>{{ event_stats.attending }} Attending</span>
+          <span>{{ event_stats.attending }} Attend{{ "ing" if status_live else "ed" }}</span>
         {% endif %}
         {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
           <span>•</span>
