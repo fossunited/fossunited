@@ -74,7 +74,7 @@
             />
 
             <div class="event-details">
-              <h3 class="event-title text-center text-md-left">{{ event.event_name }}</h3>
+              <h3 class="event-title">{{ event.event_name }}</h3>
               <p class="event-meta">
                 <span class="event-date">{{ event.event_start_date.strftime("%d %b %Y") }}</span>
                 <span class="event-dot">•</span>
@@ -167,13 +167,14 @@
       gap: 0.75rem;
     }
 
-    @media (max-width: 768px) {
-      .commit-card {
-        flex-direction: column;
-      }
-
+    @media (max-width: 558px) {
       .event-action {
         width: 100%;
+      }
+
+      .event-meta {
+        font-size: 0.92rem;
+        gap: 5px;
       }
 
       .event-action .v3-btn,
