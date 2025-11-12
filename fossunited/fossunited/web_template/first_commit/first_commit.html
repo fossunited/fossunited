@@ -1,0 +1,240 @@
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.46.0/tabler-icons.min.css"
+/>
+
+{% block page_content %}
+  {% set chapter_id = chapter_id | default("LetsMakePy-Virtual") %}
+  {% set banner_image = banner_image | default("/assets/fossunited/images/defaults/first_commit_banner.svg") %}
+  {% set description = description | default("FOSS Hack Localhosts are localized, in-person editions of the broader hybrid version of FOSS Hack 2024. Hackers can choose to hack.") %}
+  {% set know_more_link = know_more_link | default("#") %}
+  {%
+    set boilerplate_content = boilerplate_content | default("""Hello All,
+
+    If you haven’t contributed to Free and Open Source Software/Hardware (FOSS) yet, this is the best place to begin your journey!
+
+    First Commit Sessions are designed to help you make your first contribution and slowly grow into a confident, mature contributor. The only catch? You’ll have to put in the effort (and you already know that 😉).
+
+    Whether you’re a student, a professional, or just curious, you’re welcome to join, learn, and ask questions—during and even after the session.
+
+    In short: here’s what you’ll get to experience in the First Commit series:
+
+    1. The story of a maintainer’s first commit—the struggles, the fun, and the little victories
+    2. What kept them motivated to keep contributing and how those first steps led them to internships and jobs
+    3. Hands‑on help with your own first commit (who knows, this might also lead to your first internship or job opportunity!)
+    4. The realization that FOSS goes beyond code—design, documentation, testing, community building… there’s a place here for everyone
+    5. Interact with the maintainers
+
+
+    Note: First Commit series was first attempted in 2021 where we hosted 4 sessions. Learn more [here](https://archive.fossunited.org/first-commit).
+
+
+
+    **Stay tuned for future events at [fossunited.org/join](http://fossunited.org/join)**""")
+  %}
+
+  {# Fetch events #}
+  {%
+    set upcoming_events = frappe.get_all(
+      "FOSS Chapter Event",
+      filters={
+        "chapter": chapter_id,
+        "event_end_date": [">=", frappe.utils.today()]
+      },
+      fields=["*"],
+      order_by="event_end_date asc"
+    )
+  %}
+
+  {%
+    set past_events = frappe.get_all(
+      "FOSS Chapter Event",
+      filters={
+        "chapter": chapter_id,
+        "event_end_date": ["<", frappe.utils.today()]
+      },
+      fields=["*"],
+      order_by="event_end_date desc"
+    )
+  %}
+
+  {% macro commit_cards(heading, data, upcoming=True) %}
+    <div style="margin-bottom: 3rem;">
+      <h2 class="v3-section-title">{{ heading }}</h2>
+
+      {% for event in data %}
+        {% set formatted_date = event.event_start_date.strftime("%d %b %Y") %}
+        {% set formatted_time = event.event_start_date.strftime("%I:%M %p") %}
+
+        <div class="v3-card commit-hover" style="margin-bottom: 2rem;">
+          <div class="commit-card" onclick="window.location.href='{{ event.route }}'">
+            <img
+              src="{{ event.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
+              alt="{{ event.event_name }}"
+            />
+
+            <div class="event-details">
+              <h3 class="event-title">{{ event.event_name }}</h3>
+              <p class="event-meta">
+                <span class="event-date">{{ event.event_start_date.strftime("%d %b %Y") }}</span>
+                <span class="event-dot">•</span>
+                <span class="event-time">{{ event.event_start_date.strftime("%I:%M %p") }}</span>
+              </p>
+            </div>
+
+            {% if event.livestream_link and upcoming %}
+              <div class="event-action" onclick="event.stopPropagation();">
+                <a href="{{ event.livestream_embed_link }}" class="v3-btn v3-btn-secondary">
+                  WATCH LIVE <i class="ti ti-arrow-up-right"></i>
+                </a>
+              </div>
+            {% endif %}
+
+            {% if event.livestream_embed_link and not upcoming %}
+              <div class="event-action" onclick="event.stopPropagation();">
+                <a href="{{ event.livestream_embed_link }}" class="v3-btn v3-btn-secondary">
+                  <i class="ti ti-brand-youtube" style="font-size: 16px;"></i> WATCH ON YOUTUBE
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% endmacro %}
+
+  <style>
+    body {
+      background: var(--v3-main-bg);
+    }
+
+    .commit-hover {
+      box-shadow: none !important;
+    }
+
+    .commit-hover:hover {
+      border: 1px;
+      box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06) !important;
+    }
+
+    [data-theme='dark'] .commit-hover:hover {
+      box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7) !important;
+    }
+
+    .event-banner-img {
+      width: 100%;
+      height: auto;
+      border-radius: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .commit-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      flex-wrap: wrap;
+      align-content: center;
+    }
+
+    .commit-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .event-details {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .event-title {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 24.8px;
+      color: var(--v3-text-color);
+      margin: 0;
+    }
+
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .commit-card {
+        flex-direction: column;
+      }
+
+      .commit-card-inner {
+        width: 100%;
+      }
+
+      .event-action {
+        width: 100%;
+      }
+
+      .event-action .v3-btn,
+      .event-action .v3-btn-dark {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <div class="v3-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="v3-breadcrumb"><a href="/">Home</a> > First-commit</div>
+
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+          <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+            <i class="ti ti-moon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Banner Section -->
+      <div class="">
+        <img src="{{ banner_image }}" alt="Banner" class="event-banner-img" />
+
+        <div class="row align-items-center mb-10">
+          <div class="col-md">
+            <p class="v3-text-secondary mb-0" style="line-height: 1.6;">{{ description }}</p>
+          </div>
+          <div class="col-auto">
+            <a href="{{ know_more_link }}" class="v3-btn v3-btn-dark"> KNOW MORE </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Events -->
+      {% if upcoming_events %}
+        {{ commit_cards("UPCOMING", upcoming_events, upcoming=True) }}
+      {% endif %}
+
+      <!-- Past Events -->
+      {% if past_events %}
+        {{ commit_cards("PAST EVENTS", past_events, upcoming=False) }}
+      {% endif %}
+
+      <!-- Boilerplate Content -->
+      {% if boilerplate_content %}
+        <div style="margin-top: 3rem;">
+          <div class="v3-text-tertiary">{{ frappe.utils.md_to_html(boilerplate_content) }}</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initThemeToggle('theme-toggle')
+    })
+  </script>
+{% endblock %}
