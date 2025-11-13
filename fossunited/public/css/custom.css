@@ -3205,20 +3205,37 @@ h6 {
 }
 
 /* V3 Typography - Inherit font from parent */
-.v3-text-primary,
-.v3-text-primary * {
+.v3-text-primary {
   color: var(--v3-text-color) !important;
 }
 
-.v3-text-secondary,
-.v3-text-secondary * {
+.v3-text-secondary {
   color: var(--v3-text-color2) !important;
 }
 
-.v3-text-tertiary,
-.v3-text-tertiary * {
+.v3-text-tertiary {
   color: var(--v3-text-color3) !important;
 }
+
+.v3-text-primary h1,
+.v3-text-secondary h1,
+.v3-text-tertiary h1 { font-size: 2rem; }
+
+.v3-text-primary h2,
+.v3-text-secondary h2,
+.v3-text-tertiary h2 { font-size: 1.8rem; }
+
+.v3-text-primary h3,
+.v3-text-secondary h3,
+.v3-text-tertiary h3 { font-size: 1.5rem; }
+
+.v3-text-primary h4,
+.v3-text-secondary h4,
+.v3-text-tertiary h4 { font-size: 1.3rem; }
+
+.v3-text-primary :is(h5, h6),
+.v3-text-secondary :is(h5, h6),
+.v3-text-tertiary :is(h5, h6) { font-size: 1.1rem; }
 
 /* V3 Section Title */
 .v3-section-title {
