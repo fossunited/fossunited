@@ -326,7 +326,7 @@
       <div class="v3-card ev-main-card">
         <div class="v3-header">
           <div class="show-mobile-only">{{ event_cover() }}</div>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.5rem;">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem;">
             <!-- Header Info -->
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; flex-direction: column;">
@@ -361,7 +361,7 @@
             </div>
 
             <!-- Date/Time/Location -->
-            <div>
+            <div style="margin-top: 3px;">
               <div class="ev-detail-row">
                 <div class="ev-icon">
                   <i
@@ -399,6 +399,10 @@
             </div>
             {% endif %}
 
+            </div>
+
+            <div class="ev-detail-row">
+              <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div>
             </div>
 
             <!-- Buttons -->
