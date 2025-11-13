@@ -195,12 +195,9 @@
     <div class="v3-container">
       <div class="d-flex justify-content-between align-items-center">
         <div class="v3-breadcrumb"><a href="/">Home</a> > First-commit</div>
-
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
           <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
             <i class="ti ti-moon"></i>
           </button>
-        </div>
       </div>
 
       <!-- Banner Section -->
@@ -229,8 +226,8 @@
 
       <!-- Boilerplate Content -->
       {% if boilerplate_content %}
-        <div id="boilerplate-content" style="margin-top: 3rem;">
-          <div class="v3-text-tertiary">{{ frappe.utils.md_to_html(boilerplate_content) }}</div>
+        <div id="boilerplate-content" style="margin: 3rem 0rem;">
+     <div class="v3-text-tertiary">{{ frappe.utils.sanitize_html(frappe.utils.md_to_html(boilerplate_content)) }}</div>
         </div>
       {% endif %}
     </div>

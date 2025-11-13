@@ -591,3 +591,4 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
+        context.no_cache = 1

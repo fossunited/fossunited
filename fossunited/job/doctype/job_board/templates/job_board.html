@@ -59,7 +59,7 @@
     <!-- Job Description -->
     <div class="mb-5">
       <h5 class="mb-3">Job Description</h5>
-      {{ frappe.utils.md_to_html(doc.job_description or "") }}
+      {{ frappe.utils.sanitize_html(frappe.utils.md_to_html(doc.job_description or "")) }}
     </div>
   </div>
 
