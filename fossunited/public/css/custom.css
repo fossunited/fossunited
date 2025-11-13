@@ -3121,6 +3121,7 @@ h6 {
   display: flex;
   flex-direction: column;
   gap: 2rem; /* 32px */
+  margin-bottom: 2rem;
 }
 
 @media (min-width: 52.5rem) {
@@ -3146,6 +3147,7 @@ h6 {
   justify-content: center;
   gap: 0.5rem;
   text-decoration: none;
+  z-index: 9999;
 }
 
 .v3-btn-group {
@@ -3218,6 +3220,26 @@ h6 {
   color: var(--v3-text-color3) !important;
 }
 
+.v3-text-primary h1,
+.v3-text-secondary h1,
+.v3-text-tertiary h1 { font-size: 2rem; }
+
+.v3-text-primary h2,
+.v3-text-secondary h2,
+.v3-text-tertiary h2 { font-size: 1.8rem; }
+
+.v3-text-primary h3,
+.v3-text-secondary h3,
+.v3-text-tertiary h3 { font-size: 1.5rem; }
+
+.v3-text-primary h4,
+.v3-text-secondary h4,
+.v3-text-tertiary h4 { font-size: 1.3rem; }
+
+.v3-text-primary :is(h5, h6),
+.v3-text-secondary :is(h5, h6),
+.v3-text-tertiary :is(h5, h6) { font-size: 1.1rem; }
+
 /* V3 Section Title */
 .v3-section-title {
   display: flex;
@@ -3261,7 +3283,7 @@ h6 {
   display: block;
   transition: opacity 0.2s;
   color: var(--v3-card-bg) !important;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 [data-theme='dark'] .cfp-card-v3 {
@@ -3701,6 +3723,19 @@ h6 {
   transition: color 0.2s;
 }
 
+.v3-card.has-view-all .v3-people-container::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, var(--v3-card-bg));
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
 .v3-view-all-link:hover {
   color: var(--v3-text-color);
 }
@@ -3724,6 +3759,11 @@ h6 {
   opacity: 0.8;
 }
 
+.navbar-toggler {
+  /* not able to get hamburger icon cause they use svg */
+  background: #fafafa !important;
+}
+
 .navbar,
 .navbar-light,
 .nav-link,
@@ -3733,6 +3773,11 @@ h6 {
   background: var(--v3-card-bg);
   color: var(--v3-text-color) !important;
   border-bottom: 0;
+}
+
+.v3-content-main .v3-card,
+.v3-content-sidebar .v3-card {
+  margin-bottom: 1rem;
 }
 
 /* Responsive */

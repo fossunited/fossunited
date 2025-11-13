@@ -25,7 +25,7 @@
         <img
           :src="getBannerImage()"
           alt="Banner Image"
-          class="object-cover w-full border rounded-lg aspect-[4.96/1]"
+          class="object-cover w-[280px] border rounded-lg aspect-[1/1]"
         />
         <div class="flex gap-2 my-2">
           <FileUploader
@@ -58,7 +58,7 @@
           />
         </div>
         <div class="text-sm text-gray-600">
-          The ideal dimensions for a banner image are: 1240 x 300 (WxH)
+          The ideal dimensions for a banner image are: 280px x 280px (WxH) (1:1)
         </div>
       </div>
     </div>
