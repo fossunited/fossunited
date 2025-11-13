@@ -60,7 +60,7 @@
       class="v3-banner"
     />
 
-    {% if event_stats %}
+    {% if event_stats and (event_stats.attending > 0 or event_stats.proposals > 0) %}
       <div class="ev-stats">
         {% if event_stats.attending > 0 %}
           <span>{{ event_stats.attending }} Attend{{ "ing" if status_live else "ed" }}</span>
