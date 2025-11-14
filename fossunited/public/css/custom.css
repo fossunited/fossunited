@@ -3127,7 +3127,7 @@ h6 {
 @media (min-width: 52.5rem) {
   .v3-grid {
     display: grid;
-    grid-template-columns: 1fr 20rem;
+    grid-template-columns: 1fr 1fr;
     gap: 2rem; /* 32px */
   }
 }
@@ -3208,37 +3208,50 @@ h6 {
 .v3-text-primary,
 .v3-text-primary * {
   color: var(--v3-text-color) !important;
+  word-break: break-all;
 }
 
 .v3-text-secondary,
 .v3-text-secondary * {
   color: var(--v3-text-color2) !important;
+  word-break: break-all;
 }
 
 .v3-text-tertiary,
 .v3-text-tertiary * {
   color: var(--v3-text-color3) !important;
+  word-break: break-all;
 }
 
 .v3-text-primary h1,
 .v3-text-secondary h1,
-.v3-text-tertiary h1 { font-size: 2rem; }
+.v3-text-tertiary h1 {
+  font-size: 2rem;
+}
 
 .v3-text-primary h2,
 .v3-text-secondary h2,
-.v3-text-tertiary h2 { font-size: 1.8rem; }
+.v3-text-tertiary h2 {
+  font-size: 1.8rem;
+}
 
 .v3-text-primary h3,
 .v3-text-secondary h3,
-.v3-text-tertiary h3 { font-size: 1.5rem; }
+.v3-text-tertiary h3 {
+  font-size: 1.5rem;
+}
 
 .v3-text-primary h4,
 .v3-text-secondary h4,
-.v3-text-tertiary h4 { font-size: 1.3rem; }
+.v3-text-tertiary h4 {
+  font-size: 1.3rem;
+}
 
 .v3-text-primary :is(h5, h6),
 .v3-text-secondary :is(h5, h6),
-.v3-text-tertiary :is(h5, h6) { font-size: 1.1rem; }
+.v3-text-tertiary :is(h5, h6) {
+  font-size: 1.1rem;
+}
 
 /* V3 Section Title */
 .v3-section-title {
@@ -3724,7 +3737,7 @@ h6 {
 }
 
 .v3-card.has-view-all .v3-people-container::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;

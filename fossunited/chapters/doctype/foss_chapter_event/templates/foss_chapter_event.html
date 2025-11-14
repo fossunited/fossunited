@@ -326,7 +326,7 @@
       <div class="v3-card ev-main-card">
         <div class="v3-header">
           <div class="show-mobile-only">{{ event_cover() }}</div>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem;">
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;">
             <!-- Header Info -->
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; flex-direction: column;">
@@ -398,12 +398,12 @@
               {% else %}
             </div>
             {% endif %}
-
             </div>
 
-            <div class="ev-detail-row">
-              <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div>
-            </div>
+            <!-- Do we need to make them repeat same content? -->
+            <!-- <div class="ev-detail-row"> -->
+            <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
+            <!-- </div> -->
 
             <!-- Buttons -->
             <div>
@@ -414,8 +414,8 @@
                       target="_blank"
                       class="v3-btn v3-btn-secondary"
                     >
-                      <i class="ti ti-brand-youtube"></i>
-                      <span>Livestream</span>
+                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;"></i>
+                      <span>Watch</span>
                     </a>
 
                   {% elif status_live %}
@@ -465,6 +465,18 @@
                   <i class="ti ti-info-square"></i>
                   <span>About</span>
                 </div>
+
+                {% if status_live and doc.livestream_link %}
+                <a
+                  href="{{ doc.livestream_link }}"
+                  target="_blank"
+                  class="v3-btn v3-btn-dark mb-3"
+                >
+                  <i class="ti ti-video" style="font-size: 1.1rem;"></i>
+                  <span>Livestream Link</span>
+                </a>
+                {% endif %}
+
                 <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
                   {{ doc.event_description }}
                 </div>
