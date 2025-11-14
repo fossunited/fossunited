@@ -27,12 +27,14 @@ const submissions = createResource({
   },
   auto: true,
   transform(response) {
-    submissions.proposals = response.proposals
-    submissions.originalData = response.proposals
-    submissions.customQuestions = response.custom_questions
-    submissions.eventRoute = response.event_route
-    submissions.eventName = response.event_name
-    return response.proposals
+    submissions.proposals = Array.isArray(response.proposals) ? response.proposals : []
+    submissions.originalData = submissions.proposals
+    submissions.customQuestions = Array.isArray(response.custom_questions)
+      ? response.custom_questions
+      : []
+    submissions.eventRoute = response.event_route || ''
+    submissions.eventName = response.event_name || 'submissions'
+    return submissions.proposals
   },
   onSuccess(data) {
     if (filters.value) {
@@ -96,6 +98,15 @@ const filteredSubmissions = computed(() => {
   return result
 })
 
+function escapeCsv(value) {
+  if (value == null) return ''
+  const str = String(value)
+  if (/["\n,]/.test(str)) {
+    return `"${str.replace(/"/g, '""')}"`
+  }
+  return str
+}
+
 function downloadCSV() {
   const rows = []
   const customQuestions = submissions.customQuestions || []
@@ -107,17 +118,17 @@ function downloadCSV() {
     'timestamp',
     'track',
     'session_title',
-    'name',
+    'speaker',
     'review_status',
     'link',
     ...customQuestions.map((q) => q.question),
   ]
 
-  let csv = headers.join(',') + '\n'
+  let csv = headers.map(escapeCsv).join(',') + '\n'
 
   const list = submissions.data || []
 
-  list.forEach((p) => {
+  list.forEach((p, i) => {
     const row = [
       p.creation,
       p.session_type,
@@ -127,7 +138,8 @@ function downloadCSV() {
       `${baseUrl}/${eventRoute}/cfp/${p.name}`,
       ...customQuestions.map((q) => p[`custom_question_${q.idx}`] || ''),
     ]
-    csv += row.join(',') + '\n'
+
+    csv += row.map(escapeCsv).join(',') + '\n'
   })
 
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
