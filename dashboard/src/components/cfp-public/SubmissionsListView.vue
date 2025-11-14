@@ -19,19 +19,25 @@ const props = defineProps({
 })
 
 const filteredStatus = ref(props.statusFilter)
+
 const submissions = createResource({
   url: 'fossunited.api.proposal.get_event_proposals',
   params: {
     event: props.eventId,
   },
   auto: true,
+  transform(response) {
+    submissions.proposals = response.proposals
+    submissions.originalData = response.proposals
+    submissions.customQuestions = response.custom_questions
+    submissions.eventRoute = response.event_route
+    submissions.eventName = response.event_name
+    return response.proposals
+  },
   onSuccess(data) {
     if (filters.value) {
       submissions.data = filterSubmissions(data, filters.value)
     }
-  },
-  transform(data) {
-    submissions.originalData = data
   },
 })
 
@@ -91,11 +97,46 @@ const filteredSubmissions = computed(() => {
 })
 
 function downloadCSV() {
-  const params = new URLSearchParams()
-  params.append('event', props.eventId)
+  const rows = []
+  const customQuestions = submissions.customQuestions || []
+  const eventRoute = submissions.eventRoute || ''
+  const eventName = submissions.eventName || 'submissions'
+  const baseUrl = window.location.origin
 
-  const url = `/api/method/fossunited.api.proposal.download_proposals_csv?${params.toString()}`
-  window.open(url, '_blank')
+  const headers = [
+    'timestamp',
+    'track',
+    'session_title',
+    'name',
+    'review_status',
+    'link',
+    ...customQuestions.map((q) => q.question),
+  ]
+
+  let csv = headers.join(',') + '\n'
+
+  const list = submissions.data || []
+
+  list.forEach((p) => {
+    const row = [
+      p.creation,
+      p.session_type,
+      p.talk_title,
+      p._speaker?.[0]?.full_name || '',
+      p.status,
+      `${baseUrl}/${eventRoute}/cfp/${p.name}`,
+      ...customQuestions.map((q) => p[`custom_question_${q.idx}`] || ''),
+    ]
+    csv += row.join(',') + '\n'
+  })
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.setAttribute('download', `${eventName}-submissions.csv`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 
 watch(
