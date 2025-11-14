@@ -5,9 +5,7 @@ from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL, SPEAKER
 
 
 @frappe.whitelist(allow_guest=True)
-def get_event_proposals(
-    event: str,
-) -> list:
+def get_event_proposals(event: str) -> dict:
     """
     Get all the proposal submissions for the given event.
 
@@ -17,7 +15,12 @@ def get_event_proposals(
         event (str): The id of the event
 
     Returns:
-        list: proposals of an event
+        dict: {
+            "proposals": list[dict],
+            "custom_questions": list[dict],
+            "event_route": str,
+            "event_name": str,
+        }
     """
     # Get CFP settings in a single query
     cfp = frappe.db.get_value(
