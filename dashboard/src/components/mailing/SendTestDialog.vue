@@ -6,6 +6,7 @@
       title: inSuccess ? ' ' : 'Send Test Mail',
       actions: getActions,
     }"
+    :disable-outside-click-to-close="true"
   >
     <template #body-content>
       <TransitionRoot
