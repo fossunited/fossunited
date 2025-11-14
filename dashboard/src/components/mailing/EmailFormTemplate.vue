@@ -1,25 +1,6 @@
 <template>
   <div class="flex flex-col h-full justify-between relative gap-4 pb-4">
     <div class="flex flex-col gap-4">
-      <div
-        v-if="data.schedule_sending"
-        class="space-y-3 bg-blue-50 border border-blue-500 border-dashed p-4 rounded"
-      >
-        <h5 class="text-base font-semibold mb-1">Scheduled Sending</h5>
-        <FormControl
-          v-model="data.schedule_sending"
-          type="checkbox"
-          label="Schedule sending at a later time"
-          :disabled="data.status == 'Sent'"
-        />
-        <FormControl
-          v-model="data.schedule_send"
-          variant="outline"
-          type="datetime-local"
-          :disabled="data.status == 'Sent'"
-          label="Sent Email At&ast;"
-        />
-      </div>
       <div class="space-y-3">
         <h5 class="text-base font-semibold mb-1">Email Group</h5>
         <label class="text-sm text-gray-600">Audience&ast;</label>
@@ -84,6 +65,25 @@
             </a>
           </div>
         </div>
+      </div>
+      <div
+        v-if="data.schedule_sending"
+        class="space-y-3 bg-blue-50 border border-blue-500 border-dashed p-4 rounded"
+      >
+        <h5 class="text-base font-semibold mb-1">Scheduled Sending</h5>
+        <FormControl
+          v-model="data.schedule_sending"
+          type="checkbox"
+          label="Schedule sending at a later time"
+          :disabled="data.status == 'Sent'"
+        />
+        <FormControl
+          v-model="data.schedule_send"
+          variant="outline"
+          type="datetime-local"
+          :disabled="data.status == 'Sent'"
+          label="Sent Email At&ast;"
+        />
       </div>
     </div>
   </div>
