@@ -37,7 +37,7 @@ const getBadgeTheme = computed(() => {
       <p class="text-sm text-gray-600">Propose your ideas here and we will get back to you.</p>
       <div v-if="cfp.deadline" class="text-sm mt-2">
         <span class="text-gray-600">Deadline: </span>
-        <span class="text-gray-800">{{ dayjs(cfp.deadline).format('d MMM YYYY') }}</span>
+        <span class="text-gray-800">{{ dayjs(cfp.deadline).format('DD MMM YYYY') }}</span>
       </div>
     </div>
     <router-link
