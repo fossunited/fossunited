@@ -1,6 +1,11 @@
 <template>
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <div class="flex flex-col gap-4 mt-5">
+    <div class="flex flex-col gap-4 mt-1">
+      <div v-if="rsvp_form.data?.requires_host_approval" class="text-sm text-gray-600">
+        Note: Host approval is enabled, attendees will receive an email notification when you
+        accept or reject their RSVP.
+      </div>
+
       <div class="flex items-center justify-between">
         <div class="font-semibold text-gray-800">Attendees</div>
         <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
@@ -54,7 +59,7 @@
                 label="Reject"
                 theme="red"
                 :disabled="row.status === 'Rejected'"
-                @click="() => updateRsvpStatus(row, 'Rejected')"
+                @click="() => confirmReject(row)"
               />
             </div>
           </div>
@@ -166,6 +171,12 @@ const updateRsvpStatus = (row, status) => {
       toast.error(err.message || 'Update failed')
     },
   }).fetch()
+}
+
+const confirmReject = (row) => {
+  if (confirm(`Are you sure you want to reject ${row.name1 || 'this attendee'}?`)) {
+    updateRsvpStatus(row, 'Rejected')
+  }
 }
 
 watchEffect(() => {

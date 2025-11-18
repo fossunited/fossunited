@@ -225,7 +225,6 @@ import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue
 import TextEditor from '@/components/ui/TextEditor.vue'
 
 const route = useRoute()
-const hostApproval = ref(false)
 
 const rsvp_form = createResource({
   url: 'frappe.client.get',
