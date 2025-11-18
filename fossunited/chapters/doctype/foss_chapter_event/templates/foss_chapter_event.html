@@ -22,10 +22,14 @@
   <div
     class="v3-clickable cfp-card-v3"
     onclick="window.location.href='/{{ cfp_status_block.form_route | e }}'"
+    role="button"
+    tabindex="0"
+    aria-label="Call for Proposals - {{ badge_text }}"
+    onkeypress="if(event.key==='Enter'||event.key===' ')window.location.href='/{{ cfp_status_block.form_route | e }}'"
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
-      <div class="ev-live {{ badge_class }}">
+      <div class="ev-live {{ badge_class }}" role="status" aria-live="polite">
         {{ badge_icon | safe }}
         <span class="ev-live-text">{{ badge_text }}</span>
       </div>
@@ -46,7 +50,7 @@
           <strong>{{ cfp_status_block.deadline }}</strong>
       {% endif %}
         </div>
-      <i class="ti ti-arrow-right"></i>
+      <i class="ti ti-arrow-right" aria-hidden="true"></i>
     </div>
   </div>
 {% endmacro %}
@@ -56,17 +60,18 @@
   <div class="v3-banner-wrap">
     <img
       src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_logo.png' }}"
-      alt="{{ doc.event_name }}"
+      alt="{{ doc.event_name }} event banner"
       class="v3-banner"
+      role="img"
     />
 
     {% if event_stats and (event_stats.attending > 0 or event_stats.proposals > 0) %}
-      <div class="ev-stats">
+      <div class="ev-stats" role="region" aria-label="Event statistics">
         {% if event_stats.attending > 0 %}
           <span>{{ event_stats.attending }} Attend{{ "ing" if status_live else "ed" }}</span>
         {% endif %}
         {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
-          <span>•</span>
+          <span aria-hidden="true">•</span>
         {% endif %}
         {% if event_stats.proposals > 0 %}
           <span>{{ event_stats.proposals }} Proposals</span>
@@ -75,8 +80,8 @@
     {% endif %}
 
     {% if user_has_registered %}
-      <div class="ev-registered">
-        <i class="ti ti-discount-check-filled"></i>
+      <div class="ev-registered" role="status" aria-live="polite">
+        <i class="ti ti-discount-check-filled" aria-hidden="true"></i>
         You've Registered for this Event
       </div>
     {% endif %}
@@ -310,14 +315,19 @@
   <div class="v3-page ev-page">
     <div class="v3-container">
       <div class="d-flex justify-content-between align-items-center">
-        <div class="v3-breadcrumb">
+        <nav class="v3-breadcrumb" aria-label="Breadcrumb navigation">
           <a href="/">Home</a> > <a href="/events/timeline">Events</a> >
-          <a href="">{{ doc.event_name }}</a>
-        </div>
+          <a href="" aria-current="page">{{ doc.event_name }}</a>
+        </nav>
 
         <div>
-          <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
-            <i class="ti ti-moon"></i>
+          <button
+            class="v3-theme-toggle"
+            id="theme-toggle"
+            title="Toggle theme"
+            aria-label="Toggle dark/light theme"
+          >
+            <i class="ti ti-moon" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -333,9 +343,14 @@
                 <a
                   href="/{{ chapter.route }}"
                   class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %}"
+                  aria-label="{{ chapter.chapter_name }} chapter page"
                 >
                   {% if chapter.chapter_type == 'FOSS Club' %}
-                  <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club Logo" />
+                  <img
+                    src="/assets/fossunited/images/chapter/fossclub_logo.svg"
+                    alt="FOSS Club Logo"
+                    role="img"
+                  />
                   <span>{{ chapter.chapter_name | truncate(22, True, '...', 0) }}</span>
                   {% else %}
                   <span class="no-font-inherit fff-forward">
@@ -346,15 +361,15 @@
 
 
                 <h1 class="ev-title">{{ doc.event_name }}</h1>
-                <div class="ev-tags">
+                <div class="ev-tags" role="list" aria-label="Event tags">
                   {% if doc.must_attend %}
-                    <div class="ev-tag ev-tag-must">
-                      <i class="ti ti-star-filled"></i>
+                    <div class="ev-tag ev-tag-must" role="listitem">
+                      <i class="ti ti-star-filled" aria-hidden="true"></i>
                       Must Attend
                     </div>
                   {% endif %}
                   {% if doc.event_type %}
-                    <div class="ev-tag ev-tag-cat">{{ doc.event_type }}</div>
+                    <div class="ev-tag ev-tag-cat" role="listitem">{{ doc.event_type }}</div>
                   {% endif %}
                 </div>
               </div>
@@ -363,14 +378,14 @@
             <!-- Date/Time/Location -->
             <div style="margin-top: 3px;">
               <div class="ev-detail-row">
-                <div class="ev-icon">
-                  <i
-                    class="ti ti-calendar-plus"
-                    style="cursor: pointer;"
-                    onclick="downloadEventIcs()"
-                    title="Download to calendar"
-                  ></i>
-                </div>
+                <button
+                  class="ev-icon"
+                  onclick="downloadEventIcs()"
+                  aria-label="Add event to calendar"
+                  title="Download to calendar"
+                >
+                  <i class="ti ti-calendar-plus" aria-hidden="true"></i>
+                </button>
                 <div class="ev-detail-text">
                   <div class="ev-detail-primary">
                     {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
@@ -380,18 +395,27 @@
                     {% endif %}
                   </div>
                   <div class="ev-detail-secondary">
-                    {{ doc.event_start_date.strftime("%-I:%M %p") }} -
-                    {{ doc.event_end_date.strftime("%-I:%M %p") }}
+                    <time datetime="{{ doc.event_start_date.isoformat() }}">
+                      {{ doc.event_start_date.strftime("%-I:%M %p") }}
+                    </time>
+                     -
+                    <time datetime="{{ doc.event_end_date.isoformat() }}">
+                      {{ doc.event_end_date.strftime("%-I:%M %p") }}
+                    </time>
                   </div>
                 </div>
               </div>
 
               {% if doc.map_link %}
-              <a href="{{ doc.map_link }}" class="ev-detail-row ev-detail-link">
+              <a
+                href="{{ doc.map_link }}"
+                class="ev-detail-row ev-detail-link"
+                aria-label="View {{ doc.event_location or 'event location' }} on map"
+              >
                 {% else %}
                 <div class="ev-detail-row">
                   {% endif %}
-                  <div class="ev-icon"><i class="ti ti-map-pin"></i></div>
+                  <div class="ev-icon" aria-hidden="true"><i class="ti ti-map-pin"></i></div>
                   <div class="ev-detail-secondary">{{ doc.event_location or 'Location TBD' }}</div>
                   {% if doc.map_link %}
               </a>
@@ -404,17 +428,18 @@
             <!-- <div class="ev-detail-row"> -->
             <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
             <!-- </div> -->
-
             <!-- Buttons -->
             <div>
-              <div class="v3-btn-group">
+              <div class="v3-btn-group" role="group" aria-label="Event actions">
                   {% if status_concluded and doc.livestream_embed_link %}
                     <a
                       href="{{ doc.livestream_embed_link }}"
                       target="_blank"
+                      rel="noopener noreferrer"
                       class="v3-btn v3-btn-secondary"
+                      aria-label="Watch event recording on YouTube"
                     >
-                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;"></i>
+                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
                       <span>Watch</span>
                     </a>
 
@@ -423,16 +448,25 @@
                       <a
                         href="/dashboard/buy-tickets?event={{ doc.name }}"
                         class="v3-btn v3-btn-primary"
+                        aria-label="Buy ticket for {{ doc.event_name }}"
                       >
                         Buy Ticket
                       </a>
                     {% elif doc.show_rsvp %}
                       {% if user_has_registered %}
-                        <a href="/{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                        <a
+                          href="/{{ rsvp_status_block.form_route }}"
+                          class="v3-btn v3-btn-primary"
+                          aria-label="Edit your RSVP for this event"
+                        >
                           Edit RSVP
                         </a>
                       {% else %}
-                        <a href="/{{ rsvp_status_block.form_route }}" class="v3-btn v3-btn-primary">
+                        <a
+                          href="/{{ rsvp_status_block.form_route }}"
+                          class="v3-btn v3-btn-primary"
+                          aria-label="Register for {{ doc.event_name }}"
+                        >
                           Register
                         </a>
                       {% endif %}
@@ -440,9 +474,13 @@
                   {% endif %}
 
                   {% if doc.show_cfp and cfp_status_block.has_doc %}
-                    <a href="{{ all_cfp_link }}" class="v3-btn v3-btn-secondary">
+                    <a
+                      href="{{ all_cfp_link }}"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="View all talk proposals"
+                    >
                       TALK PROPOSALS
-                      <i class="ti ti-arrow-up-right"></i>
+                      <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
                     </a>
                   {% endif %}
                 </div>
@@ -457,22 +495,24 @@
         <!-- Content Grid -->
         <div class="v3-grid">
           <!-- Main Column -->
-          <div class="v3-content-main">
+          <main class="v3-content-main">
             <!-- About -->
             {% if doc.event_description %}
-              <div class="v3-card ev-about-section">
-                <div class="v3-section-title">
-                  <i class="ti ti-info-square"></i>
+              <section class="v3-card ev-about-section" aria-labelledby="about-heading">
+                <h2 class="v3-section-title" id="about-heading">
+                  <i class="ti ti-info-square" aria-hidden="true"></i>
                   <span>About</span>
-                </div>
+                </h2>
 
                 {% if status_live and doc.livestream_link %}
                 <a
                   href="{{ doc.livestream_link }}"
                   target="_blank"
+                  rel="noopener noreferrer"
                   class="v3-btn v3-btn-dark mb-3"
+                  aria-label="Join livestream"
                 >
-                  <i class="ti ti-video" style="font-size: 1.1rem;"></i>
+                  <i class="ti ti-video" style="font-size: 1.1rem;" aria-hidden="true"></i>
                   <span>Livestream Link</span>
                 </a>
                 {% endif %}
@@ -480,7 +520,7 @@
                 <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
                   {{ doc.event_description }}
                 </div>
-              </div>
+              </section>
             {% endif %}
 
             <!-- CFP Card (Mobile) -->
@@ -490,19 +530,23 @@
 
             <!-- Schedule -->
             {% if doc.show_schedule and schedule_data %}
-              <div class="ev-agenda-section">{{ agenda_card(schedule_data, doc.route, 10) }}</div>
+              <section class="ev-agenda-section" aria-labelledby="schedule-heading">
+                <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
+                {{ agenda_card(schedule_data, doc.route, 10) }}
+              </section>
             {% endif %}
 
             <!-- Sponsors -->
             {% if sponsors_dict %}
-              <div class="ev-sponsors-section">
+              <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
+                <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
                 {{ sponsor_card(sponsors_dict, doc.deck_link) }}
-              </div>
+              </section>
             {% endif %}
-          </div>
+          </main>
 
           <!-- Sidebar -->
-          <div class="v3-content-sidebar">
+          <div class="v3-content-sidebar" aria-label="Event information sidebar">
             <!-- CFP Card (Desktop) -->
             {% if doc.show_cfp and cfp_status_block.has_doc %}
               <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
@@ -510,41 +554,64 @@
 
             <!-- Speakers -->
             {% if doc.show_speakers and speakers %}
-              <div class="ev-speakers-section">
+              <section class="ev-speakers-section" aria-labelledby="speakers-heading">
+                <h2 id="speakers-heading" class="sr-only">Event Speakers</h2>
                 {{ people_card(speakers, 'speakers', submissions) }}
-              </div>
+              </section>
             {% endif %}
 
             <!-- Volunteers -->
             {% if volunteers %}
-              <div class="ev-volunteers-section">{{ people_card(volunteers, 'volunteers') }}</div>
+              <section class="ev-volunteers-section" aria-labelledby="volunteers-heading">
+                <h2 id="volunteers-heading" class="sr-only">Event Volunteers</h2>
+                {{ people_card(volunteers, 'volunteers') }}
+              </section>
             {% endif %}
 
             <!-- Contact -->
-            <div class="v3-card ev-contact">
+            <section class="v3-card ev-contact" aria-labelledby="contact-heading">
+              <h2 id="contact-heading" class="sr-only">Contact Information</h2>
               {% if chapter.email %}
               <div class="d-flex align-items-center pb-2">
-                <i class="ti ti-mail"></i>
+                <i class="ti ti-mail" aria-hidden="true"></i>
                 <div class="ev-contact-email">
-                  <a href="mailto:{{ chapter.email }}">{{ chapter.email }}</a>
+                  <a
+                    href="mailto:{{ chapter.email }}"
+                    aria-label="Email {{ chapter.email }}"
+                  >
+                    {{ chapter.email }}
+                  </a>
                 </div>
               </div>
               {% endif %}
 
-              <div class="header-section--socials-event">
+              <nav class="header-section--socials-event" aria-label="Social media links">
                 {% for (k,v) in social_links.items() %}
-                <a href="{{ v }}" aria-label="{{ k|title }} for {{ doc.chapter_name }} chapter.">
-                  <img src="https://svgl.app/library/{{ k }}.svg" alt="{{ k|title }}" />
+                <a
+                  href="{{ v }}"
+                  aria-label="{{ k|title }} page for {{ doc.chapter_name }} chapter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="https://svgl.app/library/{{ k }}.svg"
+                    alt=""
+                    aria-hidden="true"
+                  />
                 </a>
                 {% endfor %}
-              </div>
-            </div>
+              </nav>
+            </section>
 
-            <!-- TODO -->
+            <!-- Map -->
             {% if doc.map_link %}
               <div
                 class="v3-clickable ev-map-section"
                 onclick="window.open('{{ doc.map_link | e }}', '_blank')"
+                role="button"
+                tabindex="0"
+                aria-label="Open location in map"
+                onkeypress="if(event.key==='Enter'||event.key===' ')window.open('{{ doc.map_link | e }}', '_blank')"
               >
                 <!-- <img -->
                 <!--   src="https://via.placeholder.com/396x81" -->
