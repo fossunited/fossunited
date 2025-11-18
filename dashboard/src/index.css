@@ -5,3 +5,12 @@
     /* we can either reduce z of drawer or increase popover     */
   z-index: 999 !important;
 }
+
+/* for sendtestdialog.vue to appear over email drawer*/
+.dialog-overlay {
+  z-index: 999 !important;
+}
+
+.dialog-content {
+  z-index: 999 !important;
+}
