@@ -170,7 +170,7 @@ def get_submissions_with_answers(
     submissions = frappe.get_all(
         RSVP_RESPONSE,
         filters={"event": event_id},
-        fields=["name", "confirm_attendance", "name1", "email", "im_a"],
+        fields=["name", "confirm_attendance", "status", "name1", "email", "im_a"],
         order_by="creation asc",
         limit_page_length=9999,
     )
@@ -220,8 +220,6 @@ def get_submissions_with_answers(
             label = "" if raw_label is None else str(raw_label)
             if not full_answers:
                 label = _truncate_label(label, 30)
-
-        s.pop("name", None)
 
     return submissions
 
