@@ -22,19 +22,38 @@
             <span v-else class="text-red-500">Unpublished</span>
           </div>
 
-          <span v-if="rsvp.doc.is_published" class="text-sm text-gray-600"
-            >Unpublishing the form will make it unaccessible to users.</span
-          >
-          <span v-else class="text-sm text-gray-600"
-            >Publish this form to make it accessible to public.</span
-          >
+          <span v-if="rsvp.doc.is_published" class="text-sm text-gray-600">
+            Unpublishing the form will make it unaccessible to users.
+          </span>
+          <span v-else class="text-sm text-gray-600">
+            Publish this form to make it accessible to public.
+          </span>
+
+          <div class="flex items-center justify-between mt-2 p-3 border rounded-md">
+            <div class="flex flex-col">
+              <span class="font-medium text-gray-800">Requires organizer approval</span>
+              <span class="text-sm text-gray-600">
+                When enabled, Attendees must be accepted or denied via
+                <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
+                  insights
+                </RouterLink>
+                tab to confirm them via mail.
+              </span>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <Switch v-model="rsvp.doc.requires_host_approval" />
+            </div>
+          </div>
         </div>
+
         <div class="flex flex-col gap-2 text-base">
           <span>Route of the RSVP form</span>
           <CopyToClipboardComponent :route="whole_route" />
         </div>
       </div>
     </div>
+
     <div class="flex flex-col my-4 gap-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
@@ -191,7 +210,14 @@
   </div>
 </template>
 <script setup>
-import { createDocumentResource, createResource, FormControl, ListView, Dialog } from 'frappe-ui'
+import {
+  createDocumentResource,
+  createResource,
+  FormControl,
+  ListView,
+  Dialog,
+  Switch,
+} from 'frappe-ui'
 import { reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
