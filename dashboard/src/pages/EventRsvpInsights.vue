@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-4 mt-5">
       <div class="flex items-center justify-between">
         <div class="font-semibold text-gray-800">Attendees</div>
-        <Button size="md" icon-left="download" @click="downloadAttendeeList2">Download</Button>
+        <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
       </div>
 
       <ListView
@@ -24,6 +24,45 @@
             {{ group.group }} ({{ group.rows.length }})
           </span>
         </template>
+
+        <template #cell="{ item, row, column }">
+          <div v-if="column.key === 'confirm_attendance'">
+            <span
+              class="px-2 py-1 rounded text-sm font-medium"
+              :class="
+                Number(row.confirm_attendance || 0) === 1
+                  ? 'bg-green-100 text-green-700'
+                  : 'bg-red-100 text-red-700'
+              "
+            >
+              {{ Number(row.confirm_attendance || 0) === 1 ? 'Yes' : 'No' }}
+            </span>
+          </div>
+
+          <div v-else-if="column.key === 'actions'">
+            <!-- show actions when host approval is required -->
+            <div class="flex gap-2">
+              <Button
+                size="sm"
+                label="Accept"
+                variant="solid"
+                :disabled="row.status === 'Accepted'"
+                @click="() => updateRsvpStatus(row, 'Accepted')"
+              />
+              <Button
+                size="sm"
+                label="Reject"
+                theme="red"
+                :disabled="row.status === 'Rejected'"
+                @click="() => updateRsvpStatus(row, 'Rejected')"
+              />
+            </div>
+          </div>
+
+          <div v-else>
+            <span class="text-base">{{ item }}</span>
+          </div>
+        </template>
       </ListView>
     </div>
   </div>
@@ -33,6 +72,7 @@
 import { useRoute } from 'vue-router'
 import { inject, ref, computed, watchEffect } from 'vue'
 import { createListResource, createResource, ListView, Button } from 'frappe-ui'
+import { toast } from 'vue-sonner'
 
 const route = useRoute()
 const session = inject('$session')
@@ -79,47 +119,107 @@ const listColumns = computed(() => {
   if (Array.isArray(submissions.data)) {
     submissions.data.forEach((submission) => {
       Object.keys(submission).forEach((key) => {
-        if (key !== 'confirm_attendance' && !columns.has(key)) {
+        if (key !== 'confirm_attendance' && key !== 'status' && !columns.has(key)) {
           columns.set(key, { key, label: key }) // Use key as label directly
         }
       })
     })
   }
 
-  return Array.from(columns.values())
+  // include confirm_attendance and status
+  const result = [
+    { key: 'confirm_attendance', label: 'Attending', icon: 'check-circle' },
+    ...Array.from(columns.values()),
+  ]
+
+  // for host approval, add an actions column
+  if (rsvp_form.data?.requires_host_approval) {
+    result.push({ key: 'actions', label: 'Actions' })
+  }
+
+  return result
 })
 
 const groupedRows = ref([])
 
+const updateRsvpStatus = (row, status) => {
+  if (!row?.name) {
+    toast.error('Invalid row')
+    return
+  }
+
+  createResource({
+    url: 'frappe.client.set_value',
+    params: {
+      doctype: 'FOSS Event RSVP Submission',
+      name: row.name,
+      fieldname: {
+        status,
+        confirm_attendance: status === 'Accepted' ? 1 : 0,
+      },
+    },
+    onSuccess() {
+      toast.success(`RSVP ${status}`)
+      submissions.fetch()
+    },
+    onError(err) {
+      toast.error(err.message || 'Update failed')
+    },
+  }).fetch()
+}
+
 watchEffect(() => {
   const rows = Array.isArray(submissions.data) ? submissions.data : []
-  const attending = []
+
+  const pending = []
+  const accepted = []
+  const rejected = []
   const notAttending = []
 
+  const requiresHostApproval = Boolean(rsvp_form.data?.requires_host_approval)
+
   for (const row of rows) {
-    const isAttending = Boolean(Number(row?.confirm_attendance || 0))
-    if (isAttending) {
-      attending.push(row)
+    const confirm = Number(row?.confirm_attendance || 0) === 1
+    const status = String(row?.status || '').trim()
+
+    if (requiresHostApproval) {
+      if (status === 'Pending') {
+        pending.push(row)
+      } else if (status === 'Accepted' && confirm) {
+        accepted.push(row)
+      } else if (status === 'Rejected') {
+        rejected.push(row)
+      } else {
+        // everything else falls into Not attending (covers accepted but confirm=false,
+        // missing status, or other odd cases)
+        notAttending.push(row)
+      }
     } else {
-      notAttending.push(row)
+      // legacy behaviour: grouping based purely on confirm_attendance
+      if (confirm) {
+        accepted.push(row)
+      } else {
+        notAttending.push(row)
+      }
     }
   }
 
-  groupedRows.value = [
-    {
-      group: 'Attending event',
-      collapsed: false,
-      rows: attending,
-    },
-    {
-      group: 'Not attending',
-      collapsed: true,
-      rows: notAttending,
-    },
-  ]
+  if (requiresHostApproval) {
+    groupedRows.value = [
+      { group: 'Pending requests', collapsed: false, rows: pending },
+      { group: 'Attending event', collapsed: false, rows: accepted },
+      { group: 'Not attending', collapsed: true, rows: notAttending },
+      { group: 'Rejected attendees', collapsed: true, rows: rejected },
+    ]
+  } else {
+    groupedRows.value = [
+      { group: 'Attending event', collapsed: false, rows: accepted },
+      { group: 'Not attending', collapsed: true, rows: notAttending },
+    ]
+  }
 })
 
-const downloadAttendeeList2 = () => {
+const downloadAttendeeList = () => {
   const eventId = route.params.id
   window.open(
     `/api/method/fossunited.api.chapter.download_attendee_list_csv?event_id=${eventId}`,
