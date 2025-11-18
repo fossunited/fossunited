@@ -62,7 +62,6 @@
       src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_logo.png' }}"
       alt="{{ doc.event_name }} event banner"
       class="v3-banner"
-      role="img"
     />
 
     {% if event_stats and (event_stats.attending > 0 or event_stats.proposals > 0) %}
@@ -349,7 +348,6 @@
                   <img
                     src="/assets/fossunited/images/chapter/fossclub_logo.svg"
                     alt="FOSS Club Logo"
-                    role="img"
                   />
                   <span>{{ chapter.chapter_name | truncate(22, True, '...', 0) }}</span>
                   {% else %}
