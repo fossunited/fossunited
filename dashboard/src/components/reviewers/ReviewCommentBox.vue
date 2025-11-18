@@ -25,6 +25,7 @@ import { ref, inject } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
 import { toast } from 'vue-sonner'
 import { filter } from 'lodash'
+import { useStorage } from '@vueuse/core'
 
 const emits = defineEmits(['add:review', 'update:review'])
 
@@ -48,8 +49,8 @@ const props = defineProps({
   },
 })
 
-const review = ref(props.review.to_approve)
-const remarks = ref(props.review.remarks)
+const review = useStorage(`review-${props.submissionId}`, props.review.to_approve)
+const remarks = useStorage(`remarks-${props.submissionId}`, props.review.remarks)
 
 const reviewOptions = [
   { label: 'Approve', value: 'Yes' },
