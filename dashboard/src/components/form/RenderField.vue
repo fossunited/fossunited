@@ -12,21 +12,11 @@
       size="md"
       :aria-required="field.required"
       :aria-describedby="field.description ? `${field.fieldname}-description` : undefined"
-      :aria-invalid="hasError ? 'true' : 'false'"
-      :aria-errormessage="hasError ? `${field.fieldname}-error` : undefined"
     ></component>
     <!-- hidden label for screen readers -->
     <label v-if="!field.label" :id="`${field.fieldname}-label`" class="sr-only">
       {{ field.fieldname }}
     </label>
-    <!-- description for screen readers -->
-    <span v-if="field.description" :id="`${field.fieldname}-description`" class="sr-only">
-      {{ field.description }}
-    </span>
-    <!-- error message -->
-    <span v-if="hasError" :id="`${field.fieldname}-error`" class="sr-only" role="alert">
-      {{ errorMessage }}
-    </span>
   </div>
 </template>
 <script setup>
