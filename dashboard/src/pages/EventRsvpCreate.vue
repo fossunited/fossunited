@@ -17,6 +17,18 @@
           <span class="text-sm text-gray-600"
             >Allow users to edit their RSVP after submission.</span
           >
+          <div class="flex items-center justify-between mt-2">
+            <div class="flex items-center pr-2">
+              <Switch v-model="rsvp_doc.requires_host_approval" />
+            </div>
+            <div class="flex flex-col">
+              <span class="font-medium text-gray-800">Requires organizer approval</span>
+              <span class="text-sm text-gray-600">
+                When enabled, Attendees must be accepted or denied via insights tab to confirm them
+                via mail.
+              </span>
+            </div>
+          </div>
         </div>
         <FormControl
           v-model="rsvp_doc.max_rsvp_count"
@@ -146,7 +158,14 @@
   </div>
 </template>
 <script setup>
-import { createDocumentResource, FormControl, ListView, Dialog, createResource } from 'frappe-ui'
+import {
+  createDocumentResource,
+  FormControl,
+  ListView,
+  Dialog,
+  createResource,
+  Switch,
+} from 'frappe-ui'
 import { reactive, ref, defineEmits } from 'vue'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
@@ -179,6 +198,7 @@ let rsvp_doc = reactive({
   doctype: 'FOSS Event RSVP',
   event: route.params.id,
   allow_edit: 0,
+  requires_host_approval: 0,
   max_rsvp_count: 100,
   rsvp_description: '',
   custom_questions: [],
