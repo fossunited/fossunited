@@ -1,0 +1,159 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}{{ page_title or "FOSS Grants & Funding" }}{% endblock %}
+
+{% block page_content %}
+  <style>
+    .v3-container {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+  </style>
+
+  <div class="v3-page">
+    <div class="v3-container mb-5">
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;"
+      >
+        <div class="v3-breadcrumb">
+          <a href="/">Home</a> > <a href="/grants/">Grants</a> >
+          <a href="">Directory</a>
+        </div>
+        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="v3-card v3-main-card">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div class="d-flex flex-column">
+            <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">FOSS Grants & Funding</h1>
+            <p class="v3-text-secondary mb-0">
+              Explore projects from Funding JSON manifests. Inspired by
+              <a style="text-decoration: underline;" href="https://dir.floss.fund">floss.fund</a>
+            </p>
+          </div>
+
+          <div
+            id="count"
+            class="text-end v3-gradient-text ms-auto"
+            style="font-size:1.75rem; font-weight:500;"
+          >
+            {{ items|length }} Projects
+          </div>
+        </div>
+
+        <!-- Search + Sort -->
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.25rem;">
+          <input
+            id="search"
+            placeholder="Search by name..."
+            class="v3-text-primary"
+            style="flex:1; min-width:200px; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
+          />
+          <select
+            id="sort"
+            class="v3-text-primary"
+            style="padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
+          >
+            <option value="modified-desc">Recently updated</option>
+            <option value="modified-asc">Oldest first</option>
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+          </select>
+        </div>
+
+        <!-- List -->
+        <div id="grants-list" style="display:flex; flex-direction:column; gap:0.75rem;">
+          {% for it in items %}
+            <a
+              class="grant-row v3-card v3-clickable align-items-center d-flex"
+              data-datetime="{{ it.last_updated_iso or '' }}"
+              data-title="{{ it.entity_name|lower }}"
+              href="/{{ it.route }}"
+            >
+              <div style="flex:1; margin-right:1rem;">
+                <h3 class="v3-text-primary mb-1" style="font-size:1.1rem;">
+                  {{ it.entity_name }}
+                </h3>
+
+                {% if it.description_short %}
+                  <p class="v3-text-secondary mb-0" style="font-size:0.95rem;">
+                    {{ it.description_short }}
+                  </p>
+                {% endif %}
+              </div>
+
+              <div
+                class="text-end v3-text-tertiary"
+                style="white-space:nowrap; font-size:0.85rem;"
+              >
+                {{ it.last_updated_fmt }}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+
+        <!-- Empty state -->
+        <div id="empty" style="display:none; text-align:center; padding:2.5rem 1rem;">
+          <i
+            class="ti ti-folder-open v3-text-tertiary"
+            style="font-size:2.5rem; margin-bottom:0.75rem;"
+          ></i>
+          <p class="v3-text-secondary">No funding profiles found.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .grant-row.hidden {
+      display: none !important;
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
+      const search = document.getElementById('search')
+      const sort = document.getElementById('sort')
+      const list = document.getElementById('grants-list')
+      const empty = document.getElementById('empty')
+      const count = document.getElementById('count')
+
+      const dateOf = (r) => (r.dataset.datetime ? new Date(r.dataset.datetime).getTime() : 0)
+      const titleOf = (r) =>
+        (r.dataset.title || r.querySelector('h3')?.textContent || '').toLowerCase()
+
+      function render() {
+        const q = (search.value || '').toLowerCase()
+        const rows = Array.from(list.querySelectorAll('.grant-row'))
+        let visible = 0
+        rows.forEach((r) => {
+          const match = q === '' || titleOf(r).includes(q)
+          r.classList.toggle('hidden', !match)
+          if (match) visible++
+        })
+
+        rows
+          .filter((r) => !r.classList.contains('hidden'))
+          .sort((a, b) => {
+            const mode = sort.value
+            if (mode === 'modified-desc') return dateOf(b) - dateOf(a)
+            if (mode === 'modified-asc') return dateOf(a) - dateOf(b)
+            if (mode === 'name-asc') return titleOf(a).localeCompare(titleOf(b))
+            if (mode === 'name-desc') return titleOf(b).localeCompare(titleOf(a))
+            return 0
+          })
+          .forEach((r) => list.appendChild(r))
+
+        empty.style.display = visible ? 'none' : 'block'
+        count.textContent = visible + ' Projects'
+      }
+
+      search.addEventListener('input', render)
+      sort.addEventListener('change', render)
+      render()
+    })
+  </script>
+{% endblock %}

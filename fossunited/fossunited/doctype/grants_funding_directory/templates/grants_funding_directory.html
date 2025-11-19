@@ -1,0 +1,375 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}{{ entity.name }} – Funding Profile{% endblock %}
+
+{% macro external_link(url, classes, icon, text) %}
+  {% if url and url.startswith(("http://", "https://")) %}
+    <a href="{{ url }}" target="_blank" class="{{ classes }}">
+      <i class="{{ icon }}"></i>
+      {{ text }}
+    </a>
+  {% endif %}
+{% endmacro %}
+
+{% block page_content %}
+  <style>
+    .small-btn {
+      padding: 0.35rem 0.6rem;
+      font-size: 0.75rem;
+    }
+    .v3-card {
+      margin-bottom: 2rem;
+    }
+  </style>
+
+  <div class="v3-page">
+    <div class="v3-container">
+      <!-- Breadcrumb -->
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="v3-breadcrumb">
+          <a href="/">Home</a> > <a href="/grants/">Grants</a> >
+          <a href="/grants/directory">Directory</a> > <a href="">{{ entity.name }}</a>
+        </div>
+        <div>
+          <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+            <i class="ti ti-moon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Header Card -->
+      {# helper macro to avoid repeating URL checks #}
+      {% macro external_link(url, classes, icon, text) -%}
+        {%- if url and url.startswith(("http://", "https://")) -%}
+          <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="{{ classes }}">
+            <i class="{{ icon }}"></i> {{ text }}
+          </a>
+        {%- endif -%}
+      {%- endmacro %}
+
+      {# main card #}
+      <div class="v3-card v3-main-card">
+        <h1 class="v3-text-primary" style="font-size:2rem; font-weight:700; margin-bottom:1rem;">
+          {{ entity.name }}
+        </h1>
+
+        {% if entity.description %}
+          <p
+            class="v3-text-secondary"
+            style="font-size:1rem; line-height:1.6; margin-bottom:1.5rem;"
+          >
+            {{ entity.description }}
+          </p>
+        {% endif %}
+
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="v3-btn-group d-flex" style="gap:1rem;">
+            {% set website_url = entity.webpageUrl.url if entity.webpageUrl else None %}
+            {{ external_link(website_url, "v3-btn v3-btn-primary", "ti ti-external-link", "Visit Website") }}
+
+            {% if entity.email %}
+              <a href="mailto:{{ entity.email }}" class="v3-btn v3-btn-secondary">
+                <i class="ti ti-mail"></i>email
+              </a>
+            {% endif %}
+          </div>
+
+          <div class="v3-btn-group d-flex" style="gap:0.5rem;">
+            {% set funding_url = funding_json if funding_json else None %}
+            {{ external_link(funding_url, "v3-btn v3-btn-dark", "ti ti-braces", "Manifest") }}
+
+            {%
+              set mailto =
+              "mailto:foundation@fossunited.org"
+              ~ "?subject=" ~ ("[Funding Directory] Issue with " ~ entity.name)|urlencode
+              ~ "&body=" ~ ("Link: " ~ funding_url)|urlencode
+            %}
+
+            <a href="{{ mailto }}" class="v3-btn v3-btn-secondary">
+              <i class="ti ti-flag"></i> Report
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Projects Card -->
+      {% if projects %}
+        <div class="v3-card">
+          <div class="v3-section-title">
+            <i class="ti ti-code"></i>
+            <span>Projects</span>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem;"
+          >
+            {% for project in projects %}
+              <div
+                style="padding: 1.25rem; background: var(--v3-main-bg); border-radius: 0.5rem; display: flex; flex-direction: column;"
+              >
+                <h3
+                  class="v3-text-primary"
+                  style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
+                >
+                  {{ project.name }}
+                </h3>
+
+                {% if project.licenses %}
+                  <div
+                    class="v3-text-tertiary"
+                    style="font-size: 0.875rem; margin-bottom: 0.75rem;"
+                  >
+                    {{ project.licenses | join(', ') }}
+                  </div>
+                {% endif %}
+
+                {% if project.description %}
+                  <p
+                    class="v3-text-secondary"
+                    style="font-size: 0.9375rem; line-height: 1.5; margin-bottom: 1rem; flex: 1;"
+                  >
+                    {{ project.description }}
+                  </p>
+                {% endif %}
+
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  {% set website_url = project.webpageUrl.url if project.webpageUrl else None %}
+                  {{ external_link(website_url, "v3-btn v3-btn-secondary", "ti ti-world", "Website") }}
+
+                  {% set repo_url = project.repositoryUrl.url if project.repositoryUrl else None %}
+                  {{ external_link(repo_url, "v3-btn v3-btn-dark", "ti ti-brand-github", "Repository") }}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Funding Plans Card -->
+      {% if funding.plans %}
+        <div class="v3-card">
+          <div class="v3-section-title">
+            <i class="ti ti-coin-rupee"></i>
+            <span>Funding Plans</span>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem;"
+          >
+            {% for plan in funding.plans %}
+              <div
+                style="padding: 1.5rem; background: var(--v3-main-bg); border-radius: 0.5rem; display: flex; flex-direction: column;"
+              >
+                <h3
+                  class="v3-text-primary"
+                  style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
+                >
+                  {{ plan.name }}
+                </h3>
+
+                <div class="v3-text-tertiary" style="font-size: 0.875rem; margin-bottom: 0.75rem;">
+                  {{ plan.frequency | capitalize }} · {{ plan.currency }}
+                </div>
+
+                {% if plan.description %}
+                  <p
+                    class="v3-text-secondary"
+                    style="font-size: 0.875rem; line-height: 1.5; margin-bottom: 1rem; flex: 1;"
+                  >
+                    {{ plan.description }}
+                  </p>
+                {% endif %}
+
+                {% if plan.amount %}
+                  <div
+                    class="v3-text-primary"
+                    style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;"
+                  >
+                    {{ plan.amount }} {{ plan.currency }}
+                    {% if plan.frequency != "one-time" %}
+                      <span
+                        class="v3-text-tertiary"
+                        style="font-size: 0.875rem; font-weight: 400;"
+                      >
+                        / {{ plan.frequency }}
+                      </span>
+                    {% endif %}
+                  </div>
+                {% endif %}
+
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  {% for ch_guid in plan.channels %}
+                    {% set channel = funding_channels.get(ch_guid) %}
+                    {% if channel and channel.address %}
+                      <a
+                        href="{{ channel.address }}"
+                        target="_blank"
+                        class="v3-btn v3-btn-primary"
+                      >
+                        {{ channel.guid }}
+                      </a>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Funding Channels Card -->
+      {% if funding_channels_list %}
+        <div class="v3-card">
+          <div class="v3-section-title">
+            <i class="ti ti-wallet"></i>
+            <span>Funding Channels</span>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr)); gap: 1rem;"
+          >
+            {% for channel in funding_channels_list %}
+              <div style="padding: 1rem; background: var(--v3-main-bg); border-radius: 0.5rem;">
+                <div
+                  class="v3-text-primary"
+                  style="font-size: 0.9375rem; font-weight: 600; margin-bottom: 0.25rem;"
+                >
+                  {{ channel.guid | replace("_", " ") | title }}
+                </div>
+                <div class="v3-text-tertiary" style="font-size: 0.8125rem; margin-bottom: 0.5rem;">
+                  {{ channel.type | title }}
+                </div>
+                {% if channel.description %}
+                  <div
+                    class="v3-text-secondary"
+                    style="font-size: 0.8125rem; margin-bottom: 0.5rem;"
+                  >
+                    {{ channel.description }}
+                  </div>
+                {% endif %}
+                {% if channel.address %}
+                  {% if channel.address.startswith("http") %}
+                    <a
+                      href="{{ channel.address }}"
+                      target="_blank"
+                      class="v3-text-primary"
+                      style="font-size: 0.8125rem; text-decoration: underline;"
+                    >
+                      Visit Channel
+                    </a>
+                  {% elif channel.address.startswith("mailto:") %}
+                    <a
+                      href="{{ channel.address }}"
+                      class="v3-text-primary"
+                      style="font-size: 0.8125rem; text-decoration: underline;"
+                    >
+                      {{ channel.address[7:] }}
+                    </a>
+                  {% else %}
+                    <div
+                      class="v3-text-tertiary"
+                      style="font-size: 0.8125rem; font-family: monospace; word-break: break-all;"
+                    >
+                      {{ channel.address }}
+                    </div>
+                  {% endif %}
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Funding History Card -->
+      {% if funding.history %}
+        <div class="v3-card">
+          <div class="v3-section-title">
+            <i class="ti ti-history"></i>
+            <span>Funding History</span>
+          </div>
+
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 1px solid var(--v3-button-border);">
+                  <th
+                    class="v3-text-secondary"
+                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
+                  >
+                    Year
+                  </th>
+                  <th
+                    class="v3-text-secondary"
+                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
+                  >
+                    Income
+                  </th>
+                  <th
+                    class="v3-text-secondary"
+                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
+                  >
+                    Expenses
+                  </th>
+                  <th
+                    class="v3-text-secondary"
+                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
+                  >
+                    Taxes
+                  </th>
+                  <th
+                    class="v3-text-secondary"
+                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
+                  >
+                    Description
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in funding.history %}
+                  <tr style="border-bottom: 1px solid var(--v3-button-border);">
+                    <td
+                      class="v3-text-primary"
+                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
+                    >
+                      {{ item.year }}
+                    </td>
+                    <td
+                      class="v3-text-primary"
+                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
+                    >
+                      {{ item.income }} {{ item.currency }}
+                    </td>
+                    <td
+                      class="v3-text-primary"
+                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
+                    >
+                      {{ item.expenses }} {{ item.currency }}
+                    </td>
+                    <td
+                      class="v3-text-primary"
+                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
+                    >
+                      {{ item.taxes }} {{ item.currency }}
+                    </td>
+                    <td
+                      class="v3-text-tertiary"
+                      style="padding: 0.75rem 0.5rem; font-size: 0.875rem;"
+                    >
+                      {{ item.description or "—" }}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initThemeToggle('theme-toggle')
+    })
+  </script>
+{% endblock %}

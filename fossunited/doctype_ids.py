@@ -64,3 +64,6 @@ EMAIL_MEMBER = "Email Group Member"
 # Free code
 FREE_TICKET_CODE = "Event Free Ticket Code"
 FREE_TICKET_APPLY = "Event Free Ticket Applications"
+
+# Grants
+GRANTS_DIR = "Grants Funding Directory"
