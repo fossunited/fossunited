@@ -1,0 +1,23 @@
+<div class="v3-clickable mb-5" onclick="window.location.href='/{{ doc.route }}'">
+  <div
+    style="padding: 1.25rem; background: var(--v3-main-bg); border-radius: 0.5rem; border: 1px solid var(--v3-button-border);"
+  >
+    <h3
+      class="v3-text-primary"
+      style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
+    >
+      {{ json.loads(doc.json_data).get("entity", {}).name }}
+    </h3>
+
+    <p>
+      {{ json.loads(doc.json_data).get("entity", {}).description[:100] + "..." or "" }}
+    </p>
+
+    {% if doc.last_updated %}
+      <div class="v3-text-tertiary" style="font-size: 0.875rem; margin-bottom: 0.5rem;">
+        Last updated: {{ frappe.utils.format_datetime(doc.last_updated, "dd MMM yyyy") }}
+      </div>
+    {% endif %}
+    <div class="v3-text-secondary" style="font-size: 0.9375rem;">View funding profile →</div>
+  </div>
+</div>
