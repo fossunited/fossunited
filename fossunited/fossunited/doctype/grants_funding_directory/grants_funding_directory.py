@@ -3,7 +3,7 @@
 
 import json
 import re
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 import frappe
 import requests
@@ -82,7 +82,6 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
     def _validate_json_with_api(self, url: str, json_content: str) -> dict:
         """Validate JSON using dir.floss.fund API."""
-        # First try with just the body (some URLs might fail with url parameter)
         validation_data = {"url": url, "body": json_content}
 
         try:
@@ -93,22 +92,25 @@ class GrantsFundingDirectory(WebsiteGenerator):
                 timeout=15,
             )
 
-            validation_result = validation_response.json()
-
-            # Check if validation failed
+            # If API returned non-200, raise immediately
             if validation_response.status_code != 200:
-                error_msg = validation_result.get("message", "Invalid Funding JSON")
+                result = validation_response.json()
+                error_msg = result.get("message", "Invalid Funding JSON")
                 frappe.throw(f"Validation failed: {error_msg}")
 
-            return validation_result.get("data", json.loads(json_content))
+            # API returned 200 → parse JSON
+            result = validation_response.json()
+
+            # Must contain validated data
+            if "data" not in result:
+                frappe.throw("Validation failed: API returned no data")
+
+            return result["data"]
 
         except Exception as e:
-            # Fallback: if validation API fails, do basic JSON parsing
-            frappe.log_error(
-                f"Validation API failed, falling back to basic parsing: {str(e)}",
-                "Grants Funding Directory Warning",
+            frappe.throw(
+                f"Validation error. Please verify with https://dir.floss.fund/validate: {str(e)}"
             )
-            return json.loads(json_content)
 
     def set_route(self):
         """route based on entity name."""
@@ -189,61 +191,6 @@ class GrantsFundingDirectory(WebsiteGenerator):
         channels_dict = {ch["guid"]: ch for ch in normalized_channels if ch.get("guid")}
 
         return normalized_channels, channels_dict
-
-
-@frappe.whitelist(allow_guest=True)
-def validate_json(url: Optional[str] = None, body: Optional[str] = None) -> dict:
-    """
-    API endpoint to validate funding JSON.
-    Proxies to official dir.floss.fund/api/validate
-    """
-    try:
-        # Prepare data for validation
-        data = {}
-        if body:
-            data["body"] = body
-        if url and not body:  # Only send URL if no body provided
-            data["url"] = url
-
-        if not data:
-            return {
-                "error": True,
-                "message": "Either 'url' or 'body' parameter required",
-            }
-
-        # Call official validation API
-        response = requests.post(
-            "https://dir.floss.fund/api/validate",
-            data=data,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
-            timeout=15,
-        )
-
-        result = response.json()
-
-        # Return result in consistent format
-        if response.status_code == 200:
-            return {
-                "error": False,
-                "message": result.get("message", "Valid funding JSON"),
-                "data": result.get("data"),
-            }
-        else:
-            return {
-                "error": True,
-                "message": result.get("message", "Validation failed"),
-            }
-
-    except requests.exceptions.RequestException as e:
-        return {
-            "error": True,
-            "message": f"Failed to connect to validation service: {str(e)}",
-        }
-    except json.JSONDecodeError as e:
-        return {"error": True, "message": f"Invalid JSON response: {str(e)}"}
-    except Exception as e:
-        frappe.log_error(f"Validation error: {e}")
-        return {"error": True, "message": f"Validation error: {str(e)}"}
 
 
 @frappe.whitelist()
