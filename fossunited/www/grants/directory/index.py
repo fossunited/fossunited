@@ -18,7 +18,7 @@ def get_context(context):
     for d in docs:
         try:
             data = json.loads(d.get("json_data") or "{}")
-        except Exception:
+        except json.JSONDecodeError:
             data = {}
 
         entity = data.get("entity") or {}
@@ -39,7 +39,7 @@ def get_context(context):
                     "route": d.route,
                     "entity_name": entity_name,
                     "description_short": short_desc,
-                    "last_updated_iso": dt,
+                    "last_updated_iso": dt.isoformat() if dt else "",
                     "last_updated_fmt": dt_fmt,
                 }
             )
