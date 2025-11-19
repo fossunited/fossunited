@@ -3066,6 +3066,7 @@ h6 {
 
 /* V3 Base Typography - Inter font for all v3 pages */
 .v3-page {
+  background: var(--v3-main-bg);
   font-family: 'Inter', sans-serif;
 }
 
@@ -3195,7 +3196,6 @@ h6 {
 .v3-btn-dark {
   background: var(--v3-text-color);
   color: var(--v3-main-bg);
-  min-width: 180px;
 }
 
 .v3-btn-dark:hover {
@@ -3791,6 +3791,17 @@ h6 {
 .v3-content-main .v3-card,
 .v3-content-sidebar .v3-card {
   margin-bottom: 1rem;
+}
+
+.v3-gradient-text {
+  background: linear-gradient(
+    135deg,
+    var(--v3-primary-button),
+    var(--v3-dark-green)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 /* Responsive */
