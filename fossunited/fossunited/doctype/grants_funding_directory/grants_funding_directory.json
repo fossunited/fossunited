@@ -28,8 +28,10 @@
   {
    "fieldname": "funding_json",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "funding json",
-   "options": "URL"
+   "options": "URL",
+   "unique": 1
   },
   {
    "fieldname": "json_data",
@@ -54,7 +56,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-11-19 18:00:57.167249",
+ "modified": "2025-11-19 20:35:45.761953",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Grants Funding Directory",

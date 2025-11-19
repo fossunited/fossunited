@@ -83,7 +83,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
     def _validate_json_with_api(self, url: str, json_content: str) -> dict:
         """Validate JSON using dir.floss.fund API."""
         # First try with just the body (some URLs might fail with url parameter)
-        validation_data = {"body": json_content}
+        validation_data = {"url": url, "body": json_content}
 
         try:
             validation_response = requests.post(
@@ -251,7 +251,7 @@ def refresh_funding_data(docname: str) -> dict:
     """Refresh funding data by re-fetching and validating JSON."""
     try:
         doc = frappe.get_doc("Grants Funding Directory", docname)
-        doc._fetch_and_validate_json()
+        doc.fetch_and_validate_json()
         doc.save()
         return {"success": True, "message": "Funding data refreshed successfully"}
     except Exception as e:
