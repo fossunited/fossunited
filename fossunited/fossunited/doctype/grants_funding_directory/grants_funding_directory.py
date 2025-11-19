@@ -23,7 +23,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
         from frappe.types import DF
 
         email: DF.Data | None
-        funding_json: DF.Data | None
+        funding_json: DF.Data
         is_published: DF.Check
         json_data: DF.Code | None
         last_updated: DF.Datetime | None

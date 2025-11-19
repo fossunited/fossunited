@@ -10,8 +10,8 @@
   "route",
   "email",
   "funding_json",
-  "json_data",
-  "last_updated"
+  "last_updated",
+  "json_data"
  ],
  "fields": [
   {
@@ -31,6 +31,7 @@
    "in_list_view": 1,
    "label": "funding json",
    "options": "URL",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -56,7 +57,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-11-19 20:35:45.761953",
+ "modified": "2025-11-19 22:42:31.910608",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Grants Funding Directory",
