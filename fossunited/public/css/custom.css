@@ -3369,6 +3369,10 @@ h6 {
   margin: 1rem 0;
 }
 
+.v3-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
 .v3-main-card {
   width: 100%;
   max-width: 840px;
@@ -3806,11 +3810,7 @@ h6 {
 }
 
 .v3-gradient-text {
-  background: linear-gradient(
-    135deg,
-    var(--v3-primary-button),
-    var(--v3-dark-green)
-  );
+  background: linear-gradient(135deg, var(--v3-primary-button), var(--v3-dark-green));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

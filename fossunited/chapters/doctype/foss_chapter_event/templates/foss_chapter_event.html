@@ -376,7 +376,7 @@
             <!-- Date/Time/Location -->
             <div style="margin-top: 3px;">
               <div class="ev-detail-row">
-                <button
+                <div
                   class="ev-icon"
                   onclick="downloadEventIcs()"
                   type="button"
@@ -384,7 +384,7 @@
                   title="Download to calendar"
                 >
                   <i class="ti ti-calendar-plus" aria-hidden="true"></i>
-                </button>
+                </div>
                 <div class="ev-detail-text">
                   <div class="ev-detail-primary">
                     {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
