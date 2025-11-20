@@ -36,10 +36,8 @@ class GrantsFundingDirectory(WebsiteGenerator):
             self.fetch_and_validate_json()
 
         # auto-set route based on entity name
-        if not self.route:
-            self.set_route()
+        self.set_route()
 
-        # auto-extract email if not provided
         if not self.email:
             self.extract_email_from_json()
 
@@ -114,34 +112,16 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
     def set_route(self):
         """route based on entity name."""
-        try:
-            data = json.loads(self.json_data or "{}")
-            entity_name = data.get("entity", {}).get("name", self.name)
-            slug = frappe.scrub(entity_name)
-            self.route = f"grants/directory/{slug}"
-        except Exception as e:
-            frappe.log_error(f"Error setting route: {str(e)}")
-            # Fallback to default
-            self.route = f"grants/directory/{frappe.scrub(self.name)}"
+        data = json.loads(self.json_data or "{}")
+        entity_name = data.get("entity", {}).get("name", self.name)
+        slug = frappe.scrub(entity_name)
+        self.route = f"grants/directory/{slug}"
 
     def extract_email_from_json(self):
         """Extract email from JSON data if available."""
-        try:
-            data = json.loads(self.json_data or "{}")
-
-            # Try multiple places for email
-            email = None
-
-            # Check entity email
-            entity = data.get("entity", {})
-            if entity.get("email"):
-                email = entity["email"]
-
-            if email:
-                self.email = email
-
-        except Exception as e:
-            frappe.log_error(f"Error extracting email: {str(e)}")
+        data = json.loads(self.json_data or "{}")
+        entity = data.get("entity", {})
+        self.email = entity["email"]
 
     def get_context(self, context):
         """Prepare context for rendering the page."""
