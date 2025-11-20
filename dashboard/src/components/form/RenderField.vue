@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div role="group" :aria-labelledby="`${field.fieldname}-label`">
     <component
       :is="getComponent"
       v-model="fields[getFieldIndex(field.fieldname)]['value']"
@@ -10,7 +10,13 @@
       :options="field.options || []"
       :description="field.description"
       size="md"
+      :aria-required="field.required"
+      :aria-describedby="field.description ? `${field.fieldname}-description` : undefined"
     ></component>
+    <!-- hidden label for screen readers -->
+    <label v-if="!field.label" :id="`${field.fieldname}-label`" class="sr-only">
+      {{ field.fieldname }}
+    </label>
   </div>
 </template>
 <script setup>

@@ -1,5 +1,5 @@
 {% macro renderfield(field, submission = None) %}
-  <div class="my-4 py-1">
+<div class="my-4 py-1" role="group" {% if field.fieldtype != 'Table' %}aria-labelledby="{{ field.fieldname }}-label"{% endif %}>
     {% if field.fieldtype == 'Table' %}
       {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
       {% if frappe.form_dict.get('cfp') %}
@@ -12,9 +12,13 @@
         {% endfor %}
       {% endif %}
     {% elif field.fieldtype == 'Data' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         name="{{ field.fieldname }}"
         data-label="{{ field.label }}"
@@ -23,21 +27,25 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] or field.value or '' }}"
-        {% if field.read_only %}readonly{% endif %}
-        {% if field.reqd %}required{% endif %}
+        {% if field.read_only %}readonly aria-readonly="true"{% endif %}
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
     {% elif field.fieldtype == 'Select' %}
       <div class="d-flex flex-column">
-        <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-          >{{ field.label }}</label
+        <label
+          for="{{ field.fieldname }}"
+          id="{{ field.fieldname }}-label"
+          class="foss-form-question text-sm"
         >
+          {{ field.label }}
+        </label>
         <select
           data-label="{{ field.label }}"
           data-type="Select"
           name="{{ field.fieldname }}"
           id="{{ field.fieldname }}"
           class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
-          {% if field.reqd %}required{% endif %}
+          {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
         >
           {% set field_value = field.get('value') if field else '' %}
           {% set submission_value = submission.get(field.fieldname) if submission else '' %}
@@ -62,15 +70,25 @@
           type="checkbox"
           class="form-control form-check-input text-sm"
           id="{{ field.fieldname }}"
-          {% if field.reqd %}required{% endif %}
           {% if field.value == '1' or submission[field.fieldname] == 1 %}checked{% endif %}
+          {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
         />
-        <label class="form-check-label foss-form-question text-sm m-2" for="{{ field.fieldname }}"
-          >{{ field.label }}</label
+        <label
+          class="form-check-label foss-form-question text-sm m-2"
+          for="{{ field.fieldname }}"
+          id="{{ field.fieldname }}-label"
         >
+          {{ field.label }}
+        </label>
       </div>
     {% elif field.fieldtype == 'Text Editor' %}
-      <div class="foss-form-question text-sm mb-2">{{ field.label }}</div>
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm mb-2"
+      >
+        {{ field.label }}
+      </label>
       <div
         data-label="{{ field.label }}"
         data-type="Text Editor"
@@ -78,14 +96,21 @@
         id="{{ field.fieldname }}"
         class="ql-editor-custom"
         type="text-editor"
-        {% if field.reqd %}required{% endif %}
+        role="textbox"
+        aria-multiline="true"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
+        aria-labelledby="{{ field.fieldname }}-label"
       >
         {{ submission[field.fieldname] or field.value or '' }}
       </div>
     {% elif field.fieldtype == 'Text' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         data-type="Text"
@@ -94,11 +119,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] or field.value or '' }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
     {% elif field.fieldtype == 'Small Text' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <textarea
         data-label="{{ field.label }}"
         data-type="Small Text"
@@ -106,14 +136,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         rows="3"
-        {% if field.reqd %}required{% endif %}
-      >
-{{ submission[field.fieldname] or field.value or '' }}</textarea
-      >
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
+      >{{ submission[field.fieldname] or field.value or '' }}</textarea>
     {% elif field.fieldtype == 'Long Text' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <textarea
         data-label="{{ field.label }}"
         data-type="Long Text"
@@ -121,14 +153,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         rows="6"
-        {% if field.reqd %}required{% endif %}
-      >
-{{ submission[field.fieldname] or field.value or '' }}</textarea
-      >
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
+      >{{ submission[field.fieldname] or field.value or '' }}</textarea>
     {% elif field.fieldtype == 'Date' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         name="{{ field.fieldname }}"
@@ -136,11 +170,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
     {% elif field.fieldtype == 'Time' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         name="{{ field.fieldname }}"
@@ -148,11 +187,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
     {% elif field.fieldtype == 'Datetime' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         name="{{ field.fieldname }}"
@@ -160,11 +204,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
     {% elif field.fieldtype == 'Link' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         name="{{ field.fieldname }}"
@@ -172,11 +221,17 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
+        inputmode="url"
       />
     {% elif field.fieldtype == 'Currency' %}
-      <label for="{{ field.fieldname }}" class="foss-form-question text-sm"
-        >{{ field.label }}</label
+      <label
+        for="{{ field.fieldname }}"
+        id="{{ field.fieldname }}-label"
+        class="foss-form-question text-sm"
       >
+        {{ field.label }}
+      </label>
       <input
         data-label="{{ field.label }}"
         name="{{ field.fieldname }}"
@@ -184,12 +239,16 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] }}"
+        {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
+        inputmode="numeric"
       />
     {% endif %}
 
     {% if field.description %}
       <div class="mt-1"></div>
-      <small>{{ field.description }}</small>
+      <small id="{{ field.fieldname }}-description" class="form-text">
+        {{ field.description }}
+      </small>
     {% endif %}
   </div>
 
@@ -214,6 +273,58 @@
         },
         theme: 'snow',
       })
+
+      // Enhance accessibility for Quill editor
+      var editor = document.querySelector('#{{ field.fieldname }} .ql-editor');
+      if (editor) {
+        editor.setAttribute('role', 'textbox');
+        editor.setAttribute('aria-multiline', 'true');
+        editor.setAttribute('aria-labelledby', '{{ field.fieldname }}-label');
+        {% if field.description %}
+        editor.setAttribute('aria-describedby', '{{ field.fieldname }}-description');
+        {% endif %}
+        {% if field.reqd %}
+        editor.setAttribute('aria-required', 'true');
+        {% endif %}
+      }
+
+      // Add accessible labels to toolbar buttons
+      var editorContainer = document.querySelector('#{{ field.fieldname }}').parentElement;
+      var toolbar = editorContainer ? editorContainer.querySelector('.ql-toolbar') : null;
+      if (toolbar && toolbar.classList.contains('ql-toolbar')) {
+        // Add aria-label to toolbar
+        toolbar.setAttribute('role', 'toolbar');
+        toolbar.setAttribute('aria-label', 'Text formatting options');
+        toolbar.setAttribute('aria-controls', '{{ field.fieldname }}');
+
+        // Label common buttons
+        var boldBtn = toolbar.querySelector('.ql-bold');
+        if (boldBtn) boldBtn.setAttribute('aria-label', 'Bold');
+
+        var italicBtn = toolbar.querySelector('.ql-italic');
+        if (italicBtn) italicBtn.setAttribute('aria-label', 'Italic');
+
+        var underlineBtn = toolbar.querySelector('.ql-underline');
+        if (underlineBtn) underlineBtn.setAttribute('aria-label', 'Underline');
+
+        var strikeBtn = toolbar.querySelector('.ql-strike');
+        if (strikeBtn) strikeBtn.setAttribute('aria-label', 'Strikethrough');
+
+        var blockquoteBtn = toolbar.querySelector('.ql-blockquote');
+        if (blockquoteBtn) blockquoteBtn.setAttribute('aria-label', 'Blockquote');
+
+        var codeBlockBtn = toolbar.querySelector('.ql-code-block');
+        if (codeBlockBtn) codeBlockBtn.setAttribute('aria-label', 'Code block');
+
+        var orderedListBtn = toolbar.querySelector('.ql-list[value="ordered"]');
+        if (orderedListBtn) orderedListBtn.setAttribute('aria-label', 'Numbered list');
+
+        var bulletListBtn = toolbar.querySelector('.ql-list[value="bullet"]');
+        if (bulletListBtn) bulletListBtn.setAttribute('aria-label', 'Bullet list');
+
+        var cleanBtn = toolbar.querySelector('.ql-clean');
+        if (cleanBtn) cleanBtn.setAttribute('aria-label', 'Remove formatting');
+      }
     </script>
   {% endif %}
 {% endmacro %}

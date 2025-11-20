@@ -3033,6 +3033,18 @@ h6 {
   }
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* ============================================
    V3 Design Language Styles
    ============================================ */
@@ -3355,6 +3367,10 @@ h6 {
   color: var(--v3-text-color2);
   font-size: 0.875rem;
   margin: 1rem 0;
+}
+
+.v3-breadcrumb a:hover {
+  text-decoration: underline;
 }
 
 .v3-main-card {
@@ -3794,11 +3810,7 @@ h6 {
 }
 
 .v3-gradient-text {
-  background: linear-gradient(
-    135deg,
-    var(--v3-primary-button),
-    var(--v3-dark-green)
-  );
+  background: linear-gradient(135deg, var(--v3-primary-button), var(--v3-dark-green));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
