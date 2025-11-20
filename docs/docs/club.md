@@ -25,7 +25,7 @@ Applications are encouraged from students who: Have a genuine interest in open s
 
 ### iii. Who this is not for?
 FOSS Clubs may not be suitable for:
-- Students are primarily seeking leadership titles for resumes rather than building genuine communities
+- Students who are primarily seeking leadership titles for resumes rather than building genuine communities
 - Cases where existing clubs at the college already serve similar purposes - collaboration with existing groups is preferable
 - Students without an actual interest in FOSS culture and philosophy
 
@@ -39,30 +39,30 @@ Clubs without activity for certain periods(one academic year) may be marked inac
 
 ### v. What type of events can we host?
 - Workshops and hands-on sessions - Teaching version control, introducing first-time contributions, exploring specific technologies and tools.
-- Talks and meetups - Sessions with industry professionals, open source maintainers, and experienced developers sharing their experiences and insights through First Commit.
-- Hackathons and build days - Collaborative coding sessions ranging from weekend projects to larger organised hackathons like FOSS Hack.
-- Contribution drives - Dedicated sessions for contributing to real open source projects, helping students make genuine contributions.
+- Talks and meetups - Sessions with industry professionals, open-source maintainers, and experienced developers sharing their experiences and insights through First Commit.
+- Hackathons and build days - Collaborative coding sessions ranging from weekend projects to larger, organised hackathons like FOSS Hack.
+- Contribution drives - Dedicated sessions for contributing to real open-source projects, helping students make genuine contributions.
 - Study groups - Regular meetups for learning programming languages, frameworks, or technical concepts together.
-- Design and UX sessions - Workshops on contributing design work, creating assets for FOSS projects, and improving user experience. Open source projects benefit significantly from design contributions.
-- Documentation sprints - Sessions focused on improving documentation for open source projects. Clear documentation is essential and often overlooked.
-- Policy and licensing discussions - Exploring open source licenses, software freedom, digital rights, and data privacy. These topics are relevant for students interested in law, policy, and governance.
-- Community building and governance workshops - Examining how open source communities make decisions, handle conflicts, and maintain healthy ecosystems.
-- Accessibility initiatives - Working on making open source software accessible to everyone, including people with disabilities, through design, development, testing, and advocacy.
-- Localisation drives - Translating open source software into regional Indian languages.
-- Research discussions - Academic exploration of open source economics, social impact, and sustainability models.
-- Art and creative sessions - Creating artwork, illustrations, and icons for open source projects.
-- Events should be related to FOSS tools, contributing to FOSS projects, spreading open source philosophy, or building the ecosystem.
+- Design and UX sessions - Workshops on contributing design work, creating assets for FOSS projects, and improving user experience. Open-source projects benefit significantly from design contributions.
+- Documentation sprints - Sessions focused on improving documentation for open-source projects. Clear documentation is essential and often overlooked.
+- Policy and licensing discussions - Exploring open-source licenses, software freedom, digital rights, and data privacy. These topics are relevant for students interested in law, policy, and governance.
+- Community building and governance workshops - Examining how open-source communities make decisions, handle conflicts, and maintain healthy ecosystems.
+- Accessibility initiatives - Working on making open-source software accessible to everyone, including people with disabilities, through design, development, testing, and advocacy.
+- Localisation drives - Translating open-source software into regional Indian languages.
+- Research discussions - Academic exploration of open-source economics, social impact, and sustainability models.
+- Art and creative sessions - Creating artwork, illustrations, and icons for open-source projects.
+- Events should be related to FOSS tools, contributing to FOSS projects, spreading open-source philosophy, or building the ecosystem.
 
 ####  a. What is FOSS Hack?
 [FOSS Hack](https://fossunited.org/fosshack) is the flagship hackathon program under FOSS United. Unlike typical hackathons focused on building new products, we also emphasise contributing to existing open source projects. The format exposes students to real world open source development, working with established codebases, interacting with maintainers, and making contributions that persist. Events typically run for 2 days over the weekend, often bringing together multiple colleges with mentors from actual FOSS projects as the Partner Projects. FOSS United provides additional support for FOSS Hack events, including higher budgets and logistical assistance.
  
-- **Who gets to organize FOSS Hack?**
+- **Who gets to organise FOSS Hack?**
 
-  The most active FOSS Clubs will get the opportunity to host FOSS Hack. FOSS United will decide this based on the number of events organized and your club's activity on the FOSS Club group and FOSS United community. Selected organizers will receive up to ₹50,000 to conduct the hackathon.
+  The most active FOSS Clubs will get the opportunity to host FOSS Hack. FOSS United will decide this based on the number of events organised and your club's activity on the FOSS Club group and the FOSS United community. Selected organisers will receive up to ₹50,000 to conduct the hackathon.
 
-- **What should we do after organizing an event?**
+- **What should we do after organising an event?**
 
-  After organizing an event, core members are expected to:
+  After organising an event, core members are expected to:
 
   1. Share a brief report on the forum and FOSS United community on Telegram
   2. Upload event pictures
@@ -92,7 +92,7 @@ Design assets are provided here: [FOSS Club Design Assets/Guide](https://www.fig
 - Top-performing clubs may receive an additional ₹50,000 to host FOSS Hack 
 
 #### How do active clubs receive their annual ₹50,000 support?
-For each event organized by your FOSS Club, FOSS United will provide support of up to ₹5,000 for refreshments per event. Additionally, FOSS United will cover travel expenses for invited speakers and mentors. For detailed information, visit: https://forum.fossunited.org/t/foss-event-standards/2004#p-3900-h-4-refreshment-5
+For each event organized by your FOSS Club, FOSS United will provide support of up to ₹5,000 for refreshments per event. Additionally, FOSS United will cover travel expenses for invited speakers and mentors. For detailed information, visit: [FOSS Event Standards](https://forum.fossunited.org/t/foss-event-standards/2004#p-3900-h-4-refreshment-5)
 
 #### Who is eligible for reimbursement?
 Active FOSS Clubs organizing events can apply for reimbursements when:
@@ -128,7 +128,7 @@ FOSS Hack events receive higher budgets due to their larger, often multi-college
 - Submit budget applications early with detailed breakdowns
 - Provide clear justification for expenses
 - Track all spending carefully
-- Maintain organized receipt records
+- Maintain organised receipt records
 
 #### How do I apply for reimbursement?
 Reimbursement Process:
@@ -156,29 +156,27 @@ Documentation is inadequate, unclear, receipts, missing receipts, or incomplete 
 ### i. Code of Conduct 
 All FOSS Clubs follow the FOSS United Code of Conduct with these principles: [https://fossunited.org/code-of-conduct](https://fossunited.org/code-of-conduct)
 Zero tolerance for harassment, discrimination, or hate speech. All participants should feel welcome regardless of background, experience level, or identity. Questions at any level should be met with patience and support rather than condescension. Credit should be shared, and cooperative work encouraged, reflecting FOSS values. Knowledge should be shared freely, with a focus on helping others learn rather than just providing answers.
-Code of Conduct violations are taken seriously with clear reporting and handling processes to maintain safe, inclusive communities. The Club who violates CoC will face strict consequences, including a permanent ban. Such clubs will no longer be considered part of the program and will not be allowed to reapply in the future
+Code of Conduct violations are taken seriously with clear reporting and handling processes to maintain safe, inclusive communities. The Club that violates the CoC will face strict consequences, including a permanent ban. Such clubs will no longer be considered part of the program and will not be allowed to reapply in the future
 
 ### ii. Best Practices
-1. Ask questions directly rather than asking permission to ask. See [https://dontasktoask.com/](https://dontasktoask.com) for detailed explanation. This saves time for everyone involved.
+1. Ask questions directly rather than asking permission to ask. See [https://dontasktoask.com/](https://dontasktoask.com) for a detailed explanation. This saves time for everyone involved.
 2. The FOSS Club is active on Telegram, and the group is open to every member. Clubs are encouraged to learn from each other, collaborate on events, and share resources.
-3. Support is available through proper way- forum posts for general questions, messages on the right channel of the Telegram group for quick clarifications.
+3. Support is available through the proper way- forum posts for general questions, messages on the right channel of the Telegram group for quick clarifications.
 4. Event reports or documentation, photos, and notes on outcomes help future club members and assist FOSS United in providing better support.
 
 **Use the right platform for the right question:**
 
 Telegram [FOSS Clubs](https://t.me/fossclubs) — Quick questions, informal discussions, and inter-club connections. Best for simple, time-sensitive matters
 
-Forum [forum.fossunited.org](forum.fossunited.org) — Extended discussions, advice, and experience sharing. Suitable for thoughtful questions and content that may help future members
+[Forum](https://forum.fossunited.org) — Extended discussions, advice, and experience sharing. Suitable for thoughtful questions and content that may help future members
 
 FOSS United Platform — Official event management, reimbursements, and formal processes
-
-The FOSS Club is active on Telegram, and the group is open to every member. Clubs are encouraged to learn from each other, collaborate on events, and share resources.
 
 **Who should I contact for different issues?**
 
 For Generic Issues:
 
-[Praneel](https://t.me/Praneel_s), [Nilabrata]((https://t.me/Nilabrata), [Ganesh](https://t.me/sudo_medark) — For general questions not answered in FAQs
+[Praneel](https://t.me/Praneel_s), [Nilabrata](https://t.me/Nilabrata), [Ganesh](https://t.me/sudo_medark) — For general questions not answered in FAQs
 
 For Technical Issues:
 
