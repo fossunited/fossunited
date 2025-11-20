@@ -18,7 +18,7 @@ def upload_json(file_path):
     """
 
     headers = {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64)",
+        "User-Agent": "curl/8.16.0",
     }
 
     # Try 0x0.st first
@@ -26,17 +26,19 @@ def upload_json(file_path):
         with open(file_path, "rb") as f:
             r = requests.post("https://0x0.st", files={"file": f}, headers=headers, timeout=20)
         if r.status_code == 200 and r.text.startswith("https://0x0.st"):
+            print(r.text)
             return r.text.strip()
-    except Exception as e:
+    except requests.exceptions.RequestException as e:
         frappe.log_error(f"0x0.st upload failed: {str(e)}")
 
     # Fallback: paste.rs
     with open(file_path, "rb") as f:
         r = requests.post("https://paste.rs", data=f, headers=headers, timeout=20)
         if r.status_code in (200, 201) and r.text.startswith("http"):
+            print(r.text)
             return r.text.strip()
 
-    raise Exception("Upload failed on both 0x0.st and paste.rs")
+    raise RuntimeError("Upload failed on both 0x0.st and paste.rs")
 
 
 class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
@@ -127,7 +129,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
     def test_valid_json_api_validation(self):
         """floss.fund validate API using uploaded valid JSON."""
         url = self.upload_temp(self.valid_json)
-
+        # .https://0x0.st/KOKA.json
         doc = frappe.get_doc(
             {
                 "doctype": "Grants Funding Directory",
@@ -151,7 +153,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad["projects"] = []
 
         url = self.upload_temp(bad)
-
+        # https://0x0.st/KOKb.json
         doc = frappe.get_doc(
             {
                 "doctype": "Grants Funding Directory",
@@ -161,7 +163,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         )
 
         # The real API should reject this
-        with self.assertRaises(Exception):
+        with self.assertRaises(frappe.exceptions.ValidationError):
             doc.insert()
 
         self.assertFalse(frappe.db.exists("Grants Funding Directory", "Real Invalid FundingTest"))
@@ -172,7 +174,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad["entity"]["name"] = None
 
         url = self.upload_temp(bad)
-
+        # .https://0x0.st/KOKT.json
         doc = frappe.get_doc(
             {
                 "doctype": "Grants Funding Directory",
@@ -181,7 +183,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
             }
         )
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(frappe.exceptions.ValidationError):
             doc.insert()
 
     def test_missing_email_fails(self):
@@ -190,7 +192,7 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad["entity"]["email"] = ""
 
         url = self.upload_temp(bad)
-
+        # .https://0x0.st/KOKc.json
         doc = frappe.get_doc(
             {
                 "doctype": "Grants Funding Directory",
@@ -199,5 +201,5 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
             }
         )
 
-        with self.assertRaises(Exception):
+        with self.assertRaises(frappe.exceptions.ValidationError):
             doc.insert()
