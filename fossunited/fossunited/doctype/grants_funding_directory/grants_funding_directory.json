@@ -15,7 +15,7 @@
  ],
  "fields": [
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Published?"
@@ -57,7 +57,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-11-19 22:42:31.910608",
+ "modified": "2025-11-20 12:31:33.777640",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Grants Funding Directory",
