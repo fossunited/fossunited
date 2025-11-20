@@ -1,3 +1,8 @@
+"""
+Tests for robust validation check on funding.json schema via dir.floss.fund/api/validate
+"""
+
+import copy
 import json
 import os
 import tempfile
@@ -22,8 +27,8 @@ def upload_json(file_path):
             r = requests.post("https://0x0.st", files={"file": f}, headers=headers, timeout=20)
         if r.status_code == 200 and r.text.startswith("https://0x0.st"):
             return r.text.strip()
-    except Exception:
-        pass  # Try fallback
+    except Exception as e:
+        frappe.log_error(f"0x0.st upload failed: {str(e)}")
 
     # Fallback: paste.rs
     with open(file_path, "rb") as f:
@@ -142,7 +147,10 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
 
     def test_invalid_json_api_validation(self):
         """Real validation MUST reject this invalid JSON."""
-        url = self.upload_temp(self.invalid_json)
+        bad = copy.deepcopy(self.valid_json)
+        bad["projects"] = []
+
+        url = self.upload_temp(bad)
 
         doc = frappe.get_doc(
             {
@@ -157,3 +165,39 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
             doc.insert()
 
         self.assertFalse(frappe.db.exists("Grants Funding Directory", "Real Invalid FundingTest"))
+
+    def test_missing_entity_name_fails(self):
+        """simple test to check if entity name is missing"""
+        bad = copy.deepcopy(self.valid_json)
+        bad["entity"]["name"] = None
+
+        url = self.upload_temp(bad)
+
+        doc = frappe.get_doc(
+            {
+                "doctype": "Grants Funding Directory",
+                "funding_json": url,
+                "name": "Missing Entity Name Test",
+            }
+        )
+
+        with self.assertRaises(Exception):
+            doc.insert()
+
+    def test_missing_email_fails(self):
+        """simple test if no email is given, api validation should raise error"""
+        bad = copy.deepcopy(self.valid_json)
+        bad["entity"]["email"] = ""
+
+        url = self.upload_temp(bad)
+
+        doc = frappe.get_doc(
+            {
+                "doctype": "Grants Funding Directory",
+                "funding_json": url,
+                "name": "Missing Email Test",
+            }
+        )
+
+        with self.assertRaises(Exception):
+            doc.insert()
