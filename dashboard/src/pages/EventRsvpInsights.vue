@@ -120,24 +120,26 @@ const submissions = createResource({
 const listColumns = computed(() => {
   const columns = new Map()
 
+  const excludedFields = ['confirm_attendance', 'status', 'name']
+
   // Collect keys from all submissions
   if (Array.isArray(submissions.data)) {
     submissions.data.forEach((submission) => {
       Object.keys(submission).forEach((key) => {
-        if (key !== 'confirm_attendance' && key !== 'status' && !columns.has(key)) {
-          columns.set(key, { key, label: key }) // Use key as label directly
+        if (!excludedFields.includes(key) && !columns.has(key)) {
+          columns.set(key, { key, label: key })
         }
       })
     })
   }
 
-  // include confirm_attendance and status
+  // include confirm_attendance only (status stays hidden)
   const result = [
     { key: 'confirm_attendance', label: 'Attending', icon: 'check-circle' },
     ...Array.from(columns.values()),
   ]
 
-  // for host approval, add an actions column
+  // host approval column
   if (rsvp_form.data?.requires_host_approval) {
     result.push({ key: 'actions', label: 'Actions' })
   }
