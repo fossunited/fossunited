@@ -383,7 +383,7 @@ def get_checked_in_attendees(event_id):
     if not event_start or not event_end:
         return {"show_checkins": False, "attendees": [], "by_date": {}}
     now = get_datetime()
-    if not (get_datetime(event_start) <= now <= get_datetime(event_end)):
+    if not (get_datetime(event_start) <= now):
         return {"show_checkins": False, "attendees": [], "by_date": {}}
 
     Submission = DocType("FOSS Event RSVP Submission")
@@ -402,6 +402,7 @@ def get_checked_in_attendees(event_id):
         )
         .where(Submission.event == event_id)
         .where(Submission.status == "Accepted")
+        .where(Submission.confirm_attendance == 1)
         .orderby(CheckIn.check_in_time, Order.desc)
         .run(as_dict=True)
     )
@@ -423,8 +424,7 @@ def get_checked_in_attendees(event_id):
         }
 
     checkins_by_parent = defaultdict(list)
-    by_date = defaultdict(lambda: {"date": None, "attendees": [], "unique_count": 0})
-    seen = set()
+    by_date = defaultdict(lambda: {"date": None, "attendees": []})
 
     for r in rows:
         p, t = r["submission"], r["check_in_time"]
@@ -441,10 +441,6 @@ def get_checked_in_attendees(event_id):
                 "check_in_time": t,
             }
         )
-        key = f"{date_key}:{p}"
-        if key not in seen:
-            seen.add(key)
-            by_date[date_key]["unique_count"] += 1
 
     attendees = [
         {
