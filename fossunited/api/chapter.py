@@ -365,6 +365,8 @@ def download_attendee_list_csv(event_id: str) -> str:
 @frappe.whitelist()
 def get_checked_in_attendees(event_id):
     # event date check (same guard as before)
+    if not check_if_chapter_or_event_core_member(event_id):
+        frappe.throw("Not permitted, only intended for event core team.", frappe.PermissionError)
 
     event_start, event_end = frappe.db.get_value(
         EVENT, event_id, ["event_start_date", "event_end_date"]
