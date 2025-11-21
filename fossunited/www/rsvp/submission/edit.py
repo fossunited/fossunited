@@ -1,6 +1,8 @@
 import frappe
-from frappe.utils import get_datetime, getdate
 
+from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
+    FOSSEventRSVPSubmission,
+)
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 from fossunited.fossunited.utils import filter_field_values
 
@@ -28,37 +30,13 @@ def get_context(context):
     context.form_fields = get_form_fields(context.submission.doctype, context.submission)
 
     # Check-in logic
-    context.can_check_in = can_check_in_now(context.event)
-    context.checked_in_today = has_checked_in_today(context.submission)
+    context.can_check_in = FOSSEventRSVPSubmission.can_check_in(
+        context.event, context.event.event_start_date, context.event.event_end_date
+    )
+    context.checked_in_today = FOSSEventRSVPSubmission.has_checked_in_today(context.submission)
     context.show_check_in_button = context.can_check_in and not context.checked_in_today
 
     context.no_cache = 1
-
-
-@frappe.whitelist()
-def can_check_in_now(event):
-    """Check if check-in is currently allowed for this event"""
-    if not event.event_start_date or not event.event_end_date:
-        return False
-
-    now = get_datetime()
-    start = get_datetime(event.event_start_date)
-    end = get_datetime(event.event_end_date)
-
-    return start <= now <= end
-
-
-def has_checked_in_today(submission):
-    """Check if user has already checked in today"""
-    if not submission.check_ins:
-        return False
-
-    today = getdate()
-    for check_in in submission.check_ins:
-        if getdate(check_in.check_in_time) == today:
-            return True
-
-    return False
 
 
 def get_form_fields(doctype, submission):
