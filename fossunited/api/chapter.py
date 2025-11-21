@@ -1,7 +1,10 @@
 import ast
+from collections import defaultdict
 from zoneinfo import ZoneInfo
 
 import frappe
+from frappe.query_builder import DocType, Order
+from frappe.utils import get_datetime, getdate
 from ics import Calendar, Event
 
 from fossunited.doctype_ids import (
@@ -356,3 +359,95 @@ def download_attendee_list_csv(event_id: str) -> str:
     frappe.response["type"] = "download"
 
     return csv_data
+
+
+@frappe.whitelist()
+def get_checked_in_attendees(event_id):
+    # event date check (same guard as before)
+    event_start, event_end = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"]
+    )
+    if not event_start or not event_end:
+        return {"show_checkins": False, "attendees": [], "by_date": {}}
+    now = get_datetime()
+    if not (get_datetime(event_start) <= now <= get_datetime(event_end)):
+        return {"show_checkins": False, "attendees": [], "by_date": {}}
+
+    Submission = DocType("FOSS Event RSVP Submission")
+    CheckIn = DocType("Event Check In")
+
+    rows = (
+        frappe.qb.from_(CheckIn)
+        .join(Submission)
+        .on(CheckIn.parent == Submission.name)
+        .select(
+            Submission.name.as_("submission"),
+            Submission.name1,
+            Submission.email,
+            Submission.im_a,
+            CheckIn.check_in_time,
+        )
+        .where(Submission.event == event_id)
+        .where(Submission.status == "Accepted")
+        .orderby(CheckIn.check_in_time, Order.desc)
+        .run(as_dict=True)
+    )
+
+    if not rows:
+        return {
+            "show_checkins": True,
+            "attendees": [],
+            "by_date": {},
+            "total_checked_in": 0,
+            "total_accepted": 0,
+            "event_start": str(getdate(event_start)),
+            "event_end": str(getdate(event_end)),
+        }
+
+    checkins_by_parent = defaultdict(list)
+    by_date = defaultdict(lambda: {"date": None, "attendees": [], "unique_count": 0})
+    seen = set()
+
+    for r in rows:
+        p, t = r["submission"], r["check_in_time"]
+        checkins_by_parent[p].append(r)
+        date_key = str(getdate(t))
+        if by_date[date_key]["date"] is None:
+            by_date[date_key]["date"] = date_key
+        by_date[date_key]["attendees"].append(
+            {
+                "name": p,
+                "name1": r.get("name1"),
+                "email": r.get("email"),
+                "im_a": r.get("im_a"),
+                "check_in_time": t,
+            }
+        )
+        key = f"{date_key}:{p}"
+        if key not in seen:
+            seen.add(key)
+            by_date[date_key]["unique_count"] += 1
+
+    attendees = [
+        {
+            "name": p,
+            "name1": lst[0].get("name1"),
+            "email": lst[0].get("email"),
+            "im_a": lst[0].get("im_a"),
+            "check_in_time": lst[0].get("check_in_time"),
+            "total_check_ins": len(lst),
+        }
+        for p, lst in checkins_by_parent.items()
+    ]
+
+    by_date_sorted = {d: by_date[d] for d in sorted(by_date)}
+
+    return {
+        "show_checkins": True,
+        "attendees": attendees,
+        "by_date": by_date_sorted,
+        "total_checked_in": len(attendees),
+        "total_accepted": len({r["submission"] for r in rows}),
+        "event_start": str(getdate(event_start)),
+        "event_end": str(getdate(event_end)),
+    }
