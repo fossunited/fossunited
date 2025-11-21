@@ -38,6 +38,7 @@ SPEAKER = "CFP Submission Speaker"
 EVENT_RSVP = "FOSS Event RSVP"
 RSVP_RESPONSE = "FOSS Event RSVP Submission"
 RSVP_CUSTOM_FIELD = "FOSS Custom Answer"
+EVENT_CHECKIN = "Event Check In"
 
 # Ticket-related identifiers
 EVENT_TICKET = "FOSS Event Ticket"

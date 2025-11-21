@@ -11,6 +11,7 @@ from fossunited.doctype_ids import (
     CHAPTER,
     CHAPTER_MEMBER,
     EVENT,
+    EVENT_CHECKIN,
     EVENT_VOLUNTEER,
     RSVP_CUSTOM_FIELD,
     RSVP_RESPONSE,
@@ -90,8 +91,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     event_doc = frappe.get_doc(EVENT, event, ["name"])
     chapter_id = event_doc.chapter
     is_team = bool(
-        check_if_event_lead(event)
-        or check_if_chapter_member(chapter_id, frappe.session.user)
+        check_if_event_lead(event) or check_if_chapter_member(chapter_id, frappe.session.user)
     )
     return is_team
 
@@ -125,23 +125,13 @@ def generate_ics(event_ids):
         ],
     )
     for event in events:
-        tz_name = (
-            frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
-        )
+        tz_name = frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
         tz = ZoneInfo(tz_name)
         start_dt = frappe.utils.get_datetime(event.event_start_date)
         end_dt = frappe.utils.get_datetime(event.event_end_date)
         # If naive, treat as local time in site TZ; if aware, convert
-        start = (
-            start_dt.replace(tzinfo=tz)
-            if start_dt.tzinfo is None
-            else start_dt.astimezone(tz)
-        )
-        end = (
-            end_dt.replace(tzinfo=tz)
-            if end_dt.tzinfo is None
-            else end_dt.astimezone(tz)
-        )
+        start = start_dt.replace(tzinfo=tz) if start_dt.tzinfo is None else start_dt.astimezone(tz)
+        end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
 
         # Skip if end is before start
         if end < start:
@@ -359,9 +349,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     csv_data = "\ufeff" + output.getvalue()  # BOM for Excel
 
     # Create safe filename
-    event_name = (
-        frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
-    )
+    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
     safe_event_name = re.sub(r"[^A-Za-z0-9._-]+", "_", event_name)
     filename = f"Attendee_List_-_{safe_event_name}.csv"
 
@@ -377,6 +365,7 @@ def download_attendee_list_csv(event_id: str) -> str:
 @frappe.whitelist()
 def get_checked_in_attendees(event_id):
     # event date check (same guard as before)
+
     event_start, event_end = frappe.db.get_value(
         EVENT, event_id, ["event_start_date", "event_end_date"]
     )
@@ -386,8 +375,8 @@ def get_checked_in_attendees(event_id):
     if not (get_datetime(event_start) <= now):
         return {"show_checkins": False, "attendees": [], "by_date": {}}
 
-    Submission = DocType("FOSS Event RSVP Submission")
-    CheckIn = DocType("Event Check In")
+    Submission = DocType(RSVP_RESPONSE)
+    CheckIn = DocType(EVENT_CHECKIN)
 
     rows = (
         frappe.qb.from_(CheckIn)
@@ -403,6 +392,8 @@ def get_checked_in_attendees(event_id):
         .where(Submission.event == event_id)
         .where(Submission.status == "Accepted")
         .where(Submission.confirm_attendance == 1)
+        .where(CheckIn.parenttype == RSVP_RESPONSE)
+        .where(CheckIn.parentfield == "check_ins")
         .orderby(CheckIn.check_in_time, Order.desc)
         .run(as_dict=True)
     )
