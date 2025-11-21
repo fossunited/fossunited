@@ -185,7 +185,7 @@ class FOSSEventRSVPSubmission(Document):
 
         # Add check-in record
         self.append("check_ins", {"check_in_time": now_datetime()})
-        self.save(ignore_permissions=True)
+        self.save()
 
         return {"success": True, "message": "Checked in successfully"}
 

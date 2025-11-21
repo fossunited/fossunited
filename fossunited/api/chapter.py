@@ -393,13 +393,18 @@ def get_checked_in_attendees(event_id):
         .run(as_dict=True)
     )
 
+    total_accepted = frappe.db.count(
+        RSVP_RESPONSE,
+        filters={"event": event_id, "status": "Accepted"},
+    )
+
     if not rows:
         return {
             "show_checkins": True,
             "attendees": [],
             "by_date": {},
             "total_checked_in": 0,
-            "total_accepted": 0,
+            "total_accepted": total_accepted,
             "event_start": str(getdate(event_start)),
             "event_end": str(getdate(event_end)),
         }
@@ -447,7 +452,7 @@ def get_checked_in_attendees(event_id):
         "attendees": attendees,
         "by_date": by_date_sorted,
         "total_checked_in": len(attendees),
-        "total_accepted": len({r["submission"] for r in rows}),
+        "total_accepted": total_accepted,
         "event_start": str(getdate(event_start)),
         "event_end": str(getdate(event_end)),
     }
