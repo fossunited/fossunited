@@ -1,6 +1,6 @@
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint
+from frappe.utils import cint, get_datetime, getdate, now_datetime
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.api.emailing import handle_email_group_subscription
@@ -18,20 +18,24 @@ class FOSSEventRSVPSubmission(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
 
         chapter: DF.Data | None
+        check_ins: DF.Table[EventCheckIn]
         confirm_attendance: DF.Check
         custom_answers: DF.Table[FOSSCustomAnswer]
         email: DF.Data
         event: DF.Data
         event_name: DF.Data | None
-        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]  # noqa: F722, F821
+        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
         linked_rsvp: DF.Link
         name1: DF.Data
-        status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F722, F821
+        status: DF.Literal["Pending", "Accepted", "Rejected"]
         submitted_by: DF.Link | None
         subscribe_chapter_mailing: DF.Check
     # end: auto-generated types
@@ -164,3 +168,50 @@ class FOSSEventRSVPSubmission(Document):
             subscribe_to_event=is_accepted and is_attending,
             document_type_event=EVENT,
         )
+
+    @frappe.whitelist()
+    def add_check_in(self):
+        """Add a check-in record for this submission"""
+        # Check if event allows check-in (between start and end date)
+        event_start, event_end = frappe.db.get_value(
+            EVENT, self.event, ["event_start_date", "event_end_date"]
+        )
+        if not self.can_check_in(event_start, event_end):
+            frappe.throw("Check-in is only available during the event dates")
+
+        # Check if already checked in today
+        if self.has_checked_in_today():
+            frappe.throw("You have already checked in today")
+
+        # Add check-in record
+        self.append("check_ins", {"check_in_time": now_datetime()})
+        self.save()
+
+        return {"success": True, "message": "Checked in successfully"}
+
+    def can_check_in(self, event_start_date, event_end_date):
+        """Check if check-in is allowed (between event start and end dates)"""
+        if not event_start_date or not event_end_date:
+            return False
+
+        now = get_datetime()
+        start = get_datetime(event_start_date)
+        end = get_datetime(event_end_date)
+
+        return start <= now <= end
+
+    def has_checked_in_today(self):
+        """Check if user has already checked in today"""
+
+        today = getdate()
+        for check_in in self.check_ins:
+            if getdate(check_in.check_in_time) == today:
+                return True
+        return False
+
+
+@frappe.whitelist()
+def self_check_in(submission_name):
+    """API endpoint for self check-in"""
+    doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
+    return doc.add_check_in()

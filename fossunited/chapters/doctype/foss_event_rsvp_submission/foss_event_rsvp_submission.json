@@ -23,7 +23,9 @@
   "confirm_attendance",
   "subscribe_chapter_mailing",
   "section_break_vzwa",
-  "custom_answers"
+  "custom_answers",
+  "checkin_section",
+  "check_ins"
  ],
  "fields": [
   {
@@ -138,10 +140,21 @@
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Chapter Mailing?"
+  },
+  {
+   "fieldname": "checkin_section",
+   "fieldtype": "Section Break",
+   "label": "Checkin"
+  },
+  {
+   "fieldname": "check_ins",
+   "fieldtype": "Table",
+   "label": "Checkin Table",
+   "options": "Event Check In"
   }
  ],
  "links": [],
- "modified": "2025-10-31 16:53:04.612511",
+ "modified": "2025-11-21 12:03:36.919346",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",
