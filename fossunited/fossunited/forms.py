@@ -18,39 +18,54 @@ def is_valid_doctype(doctype: str):
 
 @frappe.whitelist()
 def update_submission(doctype, submission, fields, custom):
-    """
-    Used for RSVP and CFPS
-    Update the given submission with the given fields and custom answers
-    """
+    """Update submission fields and upsert custom answers (update existing, append new)."""
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of update_submission")
-        frappe.throw(
-            "You are not permitted to use this resource",
-            frappe.PermissionError,
-        )
+        frappe.throw("You are not permitted to use this resource", frappe.PermissionError)
 
-    # Add authorization check
     if not check_if_submitter(doctype, submission):
-        frappe.throw(
-            "You are not authorized to update this submission",
-            frappe.PermissionError,
-        )
+        frappe.throw("You are not authorized to update this submission", frappe.PermissionError)
 
-    fields = json.loads(fields)
-    custom = json.loads(custom)
+    fields = json.loads(fields or "{}")
+    custom = json.loads(custom or "[]")
 
     doc = frappe.get_doc(doctype, submission)
 
-    # Update main fields
-    for key, value in fields.items():
-        setattr(doc, key, value)
+    # Update only fields that exist on the doctype (avoid creating unknown fields)
+    meta = frappe.get_meta(doctype)
+    for k, v in fields.items():
+        if meta.get_field(k):
+            doc.set(k, v)
+        else:
+            frappe.logger("rsvp_update").debug(f"Ignored unknown field: {k}")
 
-    # Update custom answers
-    for idx, field in enumerate(doc.custom_answers):
-        field.response = custom[idx]["response"]
+    # Build map of existing custom answers (question -> row)
+    existing = {row.question: row for row in (doc.custom_answers or [])}
 
-    doc.save()  # Triggers frappe controller: before_save()
+    for item in custom:
+        q = item.get("question")
+        resp = item.get("response")
+        ftype = item.get("type")
 
+        if not q:
+            continue
+
+        if q in existing:
+            row = existing[q]
+            row.response = resp
+            if ftype is not None:
+                row.type = ftype
+        else:
+            doc.append(
+                "custom_answers",
+                {
+                    "question": q,
+                    "response": resp,
+                    **({"type": ftype} if ftype is not None else {}),
+                },
+            )
+
+    doc.save()  # runs validations/hooks
     return {"status": "success"}
 
 

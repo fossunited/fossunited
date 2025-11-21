@@ -7,7 +7,6 @@ from fossunited.fossunited.utils import filter_field_values
 IGNORE_FIELDNAMES = {
     "confirm_attendance",
     "check_ins",
-    "subscribe_chapter_mailing",
 }
 
 IGNORE_FIELD_LABEL_SECTIONS = {
@@ -92,9 +91,6 @@ def get_form_fields(doctype, submission):
             )
 
         form_fields.append({k: v for k, v in field.items() if filter_field_values(k)})
-
-    if not submission.custom_answers:
-        return form_fields
 
     rsvp_doc = frappe.get_doc(EVENT_RSVP, submission.linked_rsvp)
 
