@@ -18,20 +18,22 @@ class FOSSEventRSVPSubmission(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
 
         chapter: DF.Data | None
+        check_ins: DF.Table[EventCheckIn]
         confirm_attendance: DF.Check
         custom_answers: DF.Table[FOSSCustomAnswer]
         email: DF.Data
         event: DF.Data
         event_name: DF.Data | None
-        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]  # noqa: F722, F821
+        im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
         linked_rsvp: DF.Link
         name1: DF.Data
-        status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F722, F821
+        status: DF.Literal["Pending", "Accepted", "Rejected"]
         submitted_by: DF.Link | None
         subscribe_chapter_mailing: DF.Check
     # end: auto-generated types
