@@ -1,5 +1,56 @@
 <template>
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
+    <!-- Check-In Section - only visible during event dates -->
+    <div v-if="checkedInData.data?.show_checkins" class="flex flex-col gap-4 mt-1">
+      <div class="flex items-center justify-between">
+        <div class="font-semibold text-gray-800">
+          Event Check-Ins
+          <span class="ml-2 text-sm font-normal text-gray-600">
+            ({{ checkedInData.data.total_checked_in }} attended the event, out of
+            {{ checkedInData.data.total_accepted }} confirmed attendees)
+          </span>
+        </div>
+        <div class="flex gap-2">
+          <Button size="md" icon-left="download" @click="downloadCheckinCSV"> Download </Button>
+          <Button size="md" icon-left="refresh-cw" @click="checkedInData.reload()">
+            Refresh
+          </Button>
+        </div>
+      </div>
+
+      <ListView
+        v-model:rows="checkedInGroups"
+        :columns="checkinColumns"
+        row-key="name"
+        :options="{
+          selectable: false,
+          showTooltip: true,
+          resizeColumn: true,
+          emptyState: {
+            description: 'No attendees have checked in yet.',
+          },
+        }"
+      >
+        <template #group-header="{ group }">
+          <span class="text-base font-medium leading-6 text-ink-gray-9">
+            {{ formatDate(group.group) }} - {{ group.rows.length }} check-ins
+          </span>
+        </template>
+
+        <template #cell="{ item, row, column }">
+          <div v-if="column.key === 'check_in_time'">
+            <span class="text-sm text-gray-700">
+              {{ formatTime(row.check_in_time) }}
+            </span>
+          </div>
+          <div v-else>
+            <span class="text-base">{{ item }}</span>
+          </div>
+        </template>
+      </ListView>
+    </div>
+
+    <!-- attendance status section -->
     <div class="flex flex-col gap-4 mt-1">
       <div v-if="rsvp_form.data?.requires_host_approval" class="text-sm text-gray-600">
         Note: Host approval is enabled, attendees will receive an email notification when you
@@ -7,7 +58,7 @@
       </div>
 
       <div class="flex items-center justify-between">
-        <div class="font-semibold text-gray-800">Attendees</div>
+        <div class="font-semibold text-gray-800">Attendance Status</div>
         <Button size="md" icon-left="download" @click="downloadAttendeeList">Download</Button>
       </div>
 
@@ -45,7 +96,6 @@
           </div>
 
           <div v-else-if="column.key === 'actions'">
-            <!-- show actions when host approval is required -->
             <div class="flex gap-2">
               <Button
                 size="sm"
@@ -116,6 +166,61 @@ const submissions = createResource({
   },
   auto: true,
 })
+
+// Check-in data resource
+const checkedInData = createResource({
+  url: 'fossunited.api.chapter.get_checked_in_attendees',
+  params: {
+    event_id: route.params.id,
+  },
+  auto: true,
+})
+
+const checkinColumns = [
+  { key: 'name1', label: 'Name' },
+  { key: 'email', label: 'Email' },
+  { key: 'im_a', label: 'Im a' },
+  { key: 'check_in_time', label: 'Checked-in Time' },
+]
+
+const checkedInGroups = ref([])
+
+watchEffect(() => {
+  const byDate = checkedInData.data?.by_date || {}
+  const dates = Object.keys(byDate)
+
+  const existingByKey = Object.fromEntries(checkedInGroups.value.map((g) => [g.group, g]))
+
+  checkedInGroups.value = dates.map((date) => {
+    const data = byDate[date]
+    if (existingByKey[date]) {
+      existingByKey[date].rows = data.attendees
+      return existingByKey[date]
+    }
+    return { group: date, collapsed: false, rows: data.attendees, key: date }
+  })
+})
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return ''
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+const formatTime = (datetime) => {
+  if (!datetime) return ''
+  const date = new Date(datetime)
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+}
 
 const listColumns = computed(() => {
   const columns = new Map()
@@ -238,5 +343,43 @@ const downloadAttendeeList = () => {
     `/api/method/fossunited.api.chapter.download_attendee_list_csv?event_id=${eventId}`,
     '_self',
   )
+}
+
+const downloadCheckinCSV = () => {
+  if (!checkedInData.data?.by_date) return
+
+  const rows = []
+
+  // add header
+  rows.push(['date', 'name', 'email', 'im_a', 'checkin_time'])
+
+  // Add data grouped by date
+  for (const [date, data] of Object.entries(checkedInData.data.by_date)) {
+    for (const attendee of data.attendees) {
+      rows.push([
+        date,
+        attendee.name1 || '',
+        attendee.email || '',
+        attendee.im_a || '',
+        attendee.check_in_time || '',
+      ])
+    }
+  }
+
+  // convert to CSV
+  const csvContent = rows
+    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+    .join('\n')
+
+  // Download
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  const url = URL.createObjectURL(blob)
+  link.setAttribute('href', url)
+  link.setAttribute('download', `event-checkins-${route.params.id}.csv`)
+  link.style.visibility = 'hidden'
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 </script>
