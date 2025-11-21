@@ -29,7 +29,7 @@
           {% if show_check_in_button %}
             <button class="v3-btn v3-btn-primary" id="check-in-btn">
               <i class="ti ti-circle-check"></i>
-              {{ _("Check-In Now") }}
+              {{ _("Check-In Today") }}
             </button>
           {% endif %}
 
@@ -94,7 +94,6 @@
       check_if_submitter()
       enable_update_button()
       set_mandatory_asterisk()
-      check_if_can_check_in()
 
       $('#update-rsvp').on('click', (e) => {
         e.preventDefault()
@@ -112,47 +111,6 @@
         do_check_in()
       })
     })
-
-    function check_if_can_check_in() {
-      frappe.call({
-        method:
-          'fossunited.www.rsvp.submission.edit.can_check_in_now',
-        args: {
-          event_id: '{{ event.name }}',
-        },
-        callback: (r) => {
-          if (r.message && r.message.allowed) {
-            check_if_checked_in_today()
-          }
-        },
-      })
-    }
-
-    function check_if_checked_in_today() {
-      frappe.call({
-        method: 'frappe.client.get',
-        args: {
-          doctype: 'FOSS Event RSVP Submission',
-          name: '{{ frappe.form_dict.submission }}',
-        },
-        callback: (r) => {
-          if (r.message && r.message.check_ins) {
-            const today = new Date().toDateString()
-            const hasCheckedInToday = r.message.check_ins.some((check_in) => {
-              return new Date(check_in.check_in_time).toDateString() === today
-            })
-
-            if (hasCheckedInToday) {
-              $('#check-in-status').css('display', 'flex')
-            } else {
-              $('#check-in-btn').show()
-            }
-          } else {
-            $('#check-in-btn').show()
-          }
-        },
-      })
-    }
 
     function do_check_in() {
       const btn = $('#check-in-btn')
@@ -260,6 +218,7 @@
 
       submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
       submission = { ...submission, ...override_fields }
+      console.log("ans", custom_answers)
 
       frappe.call({
         method: 'fossunited.fossunited.forms.update_submission',
