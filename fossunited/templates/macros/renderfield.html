@@ -4,11 +4,11 @@
       {% from "fossunited/templates/macros/custom_question.html" import CustomQuestion %}
       {% if frappe.form_dict.get('cfp') %}
         {% for question in frappe.get_doc("FOSS Event CFP", submission.linked_cfp).custom_questions %}
-          {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
+          {{ CustomQuestion(question, (submission.custom_answers[question.idx - 1] or {"response": ""})) }}
         {% endfor %}
       {% elif frappe.form_dict.get('rsvp') %}
         {% for question in frappe.get_doc("FOSS Event RSVP", submission.linked_rsvp).custom_questions %}
-          {{ CustomQuestion(question, submission.custom_answers[question.idx - 1]) }}
+          {{ CustomQuestion(question, (submission.custom_answers[question.idx - 1]) or {"response": ""}) }}
         {% endfor %}
       {% endif %}
     {% elif field.fieldtype == 'Data' %}

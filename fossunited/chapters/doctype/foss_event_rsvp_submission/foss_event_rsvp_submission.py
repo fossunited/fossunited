@@ -72,7 +72,9 @@ class FOSSEventRSVPSubmission(Document):
                     document_type_event=EVENT,
                 )
         except frappe.ValidationError as e:
-            frappe.log_error(frappe.get_traceback(), f"on_trash unsubscribe failed: {e}")
+            frappe.log_error(
+                frappe.get_traceback(), f"on_trash unsubscribe failed: {e}"
+            )
 
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
@@ -80,14 +82,18 @@ class FOSSEventRSVPSubmission(Document):
 
     def validate_rsvp_is_published(self):
         is_system_user = frappe.get_roles(frappe.session.user).count("System Manager")
-        is_chapter_member = check_if_chapter_member(chapter=self.chapter, user=frappe.session.user)
+        is_chapter_member = check_if_chapter_member(
+            chapter=self.chapter, user=frappe.session.user
+        )
 
         # If the user is system user or team member,
         # don't check for validation before rsvp submission creation
         if is_system_user or is_chapter_member:
             return
 
-        rsvp_published = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "is_published")
+        rsvp_published = frappe.db.get_value(
+            EVENT_RSVP, self.linked_rsvp, "is_published"
+        )
         if not rsvp_published:
             frappe.throw("RSVP is not published")
 
@@ -143,7 +149,9 @@ class FOSSEventRSVPSubmission(Document):
         )
 
         if requires_host_approval and self.status == "Accepted":
-            frappe.throw("Invalid action. Status cannot be `Accepted`.", frappe.PermissionError)
+            frappe.throw(
+                "Invalid action. Status cannot be `Accepted`.", frappe.PermissionError
+            )
 
         # If the RSVP requires host approval, set the status to Pending
         if requires_host_approval:

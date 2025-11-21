@@ -1,7 +1,24 @@
 import frappe
 
+from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
+    FOSSEventRSVPSubmission,
+)
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
 from fossunited.fossunited.utils import filter_field_values
+
+IGNORE_FIELDNAMES = {
+    "confirm_attendance",
+    "check_ins",
+}
+
+IGNORE_FIELD_LABEL_SECTIONS = {
+    "Meta Info",
+    "Custom Answers",
+}
+
+IGNORE_FIELDTYPES = {
+    "Column Break",
+}
 
 
 def get_context(context):
@@ -11,6 +28,14 @@ def get_context(context):
     frappe.form_dict["doctype"] = RSVP_RESPONSE
     context.confirm_attendance = context.submission.confirm_attendance
     context.form_fields = get_form_fields(context.submission.doctype, context.submission)
+
+    # Check-in logic
+    context.can_check_in = FOSSEventRSVPSubmission.can_check_in(
+        context.event, context.event.event_start_date, context.event.event_end_date
+    )
+    context.checked_in_today = FOSSEventRSVPSubmission.has_checked_in_today(context.submission)
+    context.show_check_in_button = context.can_check_in and not context.checked_in_today
+
     context.no_cache = 1
 
 
@@ -18,33 +43,49 @@ def get_form_fields(doctype, submission):
     meta = frappe.get_meta(doctype).as_dict()
     form_fields = []
     current_section = None
+
     for field in meta["fields"]:
-        if field["fieldtype"] == "Column Break":
+        # Skip unwanted fieldtypes
+        if field["fieldtype"] in IGNORE_FIELDTYPES:
             continue
+
+        # Section logic
         if field["fieldtype"] == "Section Break":
-            current_section = field["label"]
+            current_section = field.get("label")
             continue
+
+        # Skip entire sections
+        if current_section in IGNORE_FIELD_LABEL_SECTIONS:
+            continue
+
+        # Skip specific fieldnames
+        if field["fieldname"] in IGNORE_FIELDNAMES:
+            continue
+
+        # Special case — dynamic label
         if field["fieldname"] == "subscribe_chapter_mailing":
             field["label"] = (
                 f"Yes, I'd like to receive updates about future events from {submission.chapter}."
             )
-        if field["fieldname"] == "confirm_attendance":
-            continue
-        if current_section in ["Meta Info", "Custom Answers"]:
-            continue
+
         form_fields.append({k: v for k, v in field.items() if filter_field_values(k)})
 
     rsvp_doc = frappe.get_doc(EVENT_RSVP, submission.linked_rsvp)
-    for question in submission.custom_answers:
+
+    # Create a mapping of question -> response for quick lookup
+    answer_map = {ans.question: ans.response for ans in submission.custom_answers}
+
+    # Iterate through RSVP questions (not submission answers) to avoid duplicates
+    for idx, question in enumerate(rsvp_doc.custom_questions, start=1):
         form_fields.append(
             {
-                "fieldname": f"custom_question_{question.idx}",
+                "fieldname": f"custom_question_{idx}",
                 "fieldtype": question.type,
                 "label": question.question,
-                "value": question.response,
-                "options": rsvp_doc.custom_questions[question.idx - 1].options,
-                "reqd": rsvp_doc.custom_questions[question.idx - 1].is_mandatory or 0,
-                "description": rsvp_doc.custom_questions[question.idx - 1].description,
+                "value": answer_map.get(question.question, ""),
+                "options": question.options,
+                "reqd": question.is_mandatory or 0,
+                "description": question.description,
             }
         )
 

@@ -3181,6 +3181,7 @@ h6 {
 }
 
 .v3-btn-primary:hover {
+  background: var(--v3-primary-button);
   color: var(--v3-main-bg);
   opacity: 0.9;
 }
@@ -3191,16 +3192,7 @@ h6 {
 }
 
 .v3-btn-secondary:hover {
-  color: var(--v3-text-color);
-  opacity: 0.8;
-}
-
-.v3-btn-secondary {
   background: var(--v3-button-border);
-  color: var(--v3-text-color);
-}
-
-.v3-btn-secondary:hover {
   color: var(--v3-text-color);
   opacity: 0.8;
 }

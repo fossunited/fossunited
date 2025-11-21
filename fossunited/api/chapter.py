@@ -90,7 +90,8 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     event_doc = frappe.get_doc(EVENT, event, ["name"])
     chapter_id = event_doc.chapter
     is_team = bool(
-        check_if_event_lead(event) or check_if_chapter_member(chapter_id, frappe.session.user)
+        check_if_event_lead(event)
+        or check_if_chapter_member(chapter_id, frappe.session.user)
     )
     return is_team
 
@@ -124,13 +125,23 @@ def generate_ics(event_ids):
         ],
     )
     for event in events:
-        tz_name = frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
+        tz_name = (
+            frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
+        )
         tz = ZoneInfo(tz_name)
         start_dt = frappe.utils.get_datetime(event.event_start_date)
         end_dt = frappe.utils.get_datetime(event.event_end_date)
         # If naive, treat as local time in site TZ; if aware, convert
-        start = start_dt.replace(tzinfo=tz) if start_dt.tzinfo is None else start_dt.astimezone(tz)
-        end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
+        start = (
+            start_dt.replace(tzinfo=tz)
+            if start_dt.tzinfo is None
+            else start_dt.astimezone(tz)
+        )
+        end = (
+            end_dt.replace(tzinfo=tz)
+            if end_dt.tzinfo is None
+            else end_dt.astimezone(tz)
+        )
 
         # Skip if end is before start
         if end < start:
@@ -348,7 +359,9 @@ def download_attendee_list_csv(event_id: str) -> str:
     csv_data = "\ufeff" + output.getvalue()  # BOM for Excel
 
     # Create safe filename
-    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
+    event_name = (
+        frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
+    )
     safe_event_name = re.sub(r"[^A-Za-z0-9._-]+", "_", event_name)
     filename = f"Attendee_List_-_{safe_event_name}.csv"
 
