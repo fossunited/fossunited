@@ -1,35 +1,64 @@
-{% extends "templates/foss_base.html" %} {% block title %}Edit RSVP Submission{% endblock %}
+{% extends "templates/foss_base.html" %}
+{% block title %}Edit RSVP Submission{% endblock %}
+
 {% block page_content %}
-  <div class="container">
-    <div class="backlink mt-5">
-      <a href="/{{ event.route }}">
-        <i class="ti ti-arrow-left"></i>
-        {{ _("Back to Event Page") }}
-      </a>
-    </div>
-    <div class="foss-form-wrapper">
-      <div class="form-container">
+  <div class="v3-page">
+    <div class="v3-container" style="margin-bottom: 3rem;">
+      <!-- Breadcrumb -->
+      <div class="v3-breadcrumb">
+        <a href="/{{ event.route }}">
+          <i class="ti ti-arrow-left"></i>
+          {{ _("Back to Event Page") }}
+        </a>
+      </div>
+
+      <!-- Main Card -->
+      <div class="v3-card" style="margin-top: 1rem;">
         {{ render_form_header() }}
-        <form class="foss-form-body">
+
+        <form class="foss-form-body" style="margin-top: 1.5rem;">
           {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
-          {%
-            for field
-            in form_fields
-          %}
+          {% for field in form_fields %}
             {{ renderfield(field, submission) }}
           {% endfor %}
         </form>
-        <div class="foss-form-buttons">
+
+        <!-- Action Buttons -->
+        <div class="v3-btn-group" style="margin-top: 2rem;">
+          <!-- Check-in Button - Only show if backend says we can -->
+          {% if show_check_in_button %}
+            <button class="v3-btn v3-btn-primary" id="check-in-btn">
+              <i class="ti ti-circle-check"></i>
+              {{ _("Check-In Now") }}
+            </button>
+          {% endif %}
+
+          <!-- Check-in Status - Only show if already checked in today -->
+          {% if checked_in_today %}
+            <div
+              class="v3-btn"
+              style="display: flex; align-items: center; border-radius: 0.5rem; background: var(--v3-live-button); font-weight: 600; cursor: default;"
+            >
+              <span class="v3-gradient-text">Already checked-in for today!</span>
+            </div>
+          {% endif %}
+
+          <!-- Attendance Toggle -->
           {% if submission.confirm_attendance %}
-            <button class="danger-button" id="toggle-rsvp" data-new-status="0">
+            <button class="v3-btn danger-button" id="toggle-rsvp" data-new-status="0">
+              <i class="ti ti-circle-x"></i>
               {{ _("I can't attend the Event!") }}
             </button>
           {% else %}
-            <button class="secondary-button" id="toggle-rsvp" data-new-status="1">
+            <button class="v3-btn v3-btn-primary" id="toggle-rsvp" data-new-status="1">
+              <i class="ti ti-circle-dashed-check"></i>
               {{ _("I'll attend the Event!") }}
             </button>
           {% endif %}
-          <button class="primary-button" type="submit" id="update-rsvp" disabled="">
+
+          <!-- Update Button -->
+          <button class="v3-btn v3-btn-dark" type="submit" id="update-rsvp" disabled="">
+            <i class="ti ti-device-floppy"></i>
             {{ _("Update RSVP Form") }}
           </button>
         </div>
@@ -37,42 +66,128 @@
     </div>
   </div>
 {% endblock %}
+
 {% macro render_form_header() %}
-  <div class="foss-form-header">
-    <h3 class="foss-form-heading-3xl">{{ _("Edit RSVP Form") }}</h3>
-    <div class="event-details my-2">
+  <div style="margin-bottom: 1.5rem;">
+    <h3 class="v3-text-primary" style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">
+      {{ _("Edit RSVP Form") }}
+    </h3>
+
+    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
       {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
-      <div class="py-2">{{ chapter_branding_block(event.chapter) }}</div>
-      <div class="event-title my-1">
-        <span><strong>Event:</strong></span>
-        {{ event.event_name }}
-      </div>
-      <div class="event-date my-1">
-        <span><strong>Date:</strong></span>
-        {{ event.event_start_date.strftime("%B %d, %Y") }}
+      <div>{{ chapter_branding_block(event.chapter) }}</div>
+
+      <div class="v3-text-secondary"><strong>Event:</strong> {{ event.event_name }}</div>
+
+      <div class="v3-text-secondary">
+        <strong>Date:</strong> {{ event.event_start_date.strftime("%B %d, %Y") }}
       </div>
     </div>
-    <div class="foss-form-description my-4">Edit your RSVP form for the event.</div>
+
+    <p class="v3-text-tertiary" style="margin-top: 1rem;">Edit your RSVP form for the event.</p>
   </div>
 {% endmacro %}
+
 {% block page_script %}
   <script>
     $(document).ready(function () {
       check_if_submitter()
       enable_update_button()
       set_mandatory_asterisk()
+      check_if_can_check_in()
 
       $('#update-rsvp').on('click', (e) => {
+        e.preventDefault()
         update_rsvp()
       })
+
       $('#toggle-rsvp').on('click', function (e) {
         e.preventDefault()
-
         const newStatus = $(this).data('new-status')
-
         update_rsvp({ confirm_attendance: newStatus })
       })
+
+      $('#check-in-btn').on('click', function (e) {
+        e.preventDefault()
+        do_check_in()
+      })
     })
+
+    function check_if_can_check_in() {
+      frappe.call({
+        method:
+          'fossunited.www.rsvp.submission.edit.can_check_in_now',
+        args: {
+          event_id: '{{ event.name }}',
+        },
+        callback: (r) => {
+          if (r.message && r.message.allowed) {
+            check_if_checked_in_today()
+          }
+        },
+      })
+    }
+
+    function check_if_checked_in_today() {
+      frappe.call({
+        method: 'frappe.client.get',
+        args: {
+          doctype: 'FOSS Event RSVP Submission',
+          name: '{{ frappe.form_dict.submission }}',
+        },
+        callback: (r) => {
+          if (r.message && r.message.check_ins) {
+            const today = new Date().toDateString()
+            const hasCheckedInToday = r.message.check_ins.some((check_in) => {
+              return new Date(check_in.check_in_time).toDateString() === today
+            })
+
+            if (hasCheckedInToday) {
+              $('#check-in-status').css('display', 'flex')
+            } else {
+              $('#check-in-btn').show()
+            }
+          } else {
+            $('#check-in-btn').show()
+          }
+        },
+      })
+    }
+
+    function do_check_in() {
+      const btn = $('#check-in-btn')
+      const originalText = btn.html()
+
+      btn.prop('disabled', true).html('<i class="ti ti-loader"></i> Checking in...')
+
+      frappe.call({
+        method:
+          'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
+        args: {
+          submission_name: '{{ frappe.form_dict.submission }}',
+        },
+        callback: (r) => {
+          if (r.message && r.message.success) {
+            frappe.show_alert(
+              {
+                message: __('Checked in successfully!'),
+                indicator: 'green',
+              },
+              3,
+            )
+            btn.hide()
+            $('#check-in-status').css('display', 'flex')
+          }
+        },
+        error: (e) => {
+          btn.prop('disabled', false).html(originalText)
+          frappe.msgprint({
+            message: e.message || __('Failed to check in. Please try again.'),
+            indicator: 'red',
+          })
+        },
+      })
+    }
 
     function enable_update_button() {
       let formFields = document.querySelectorAll(
@@ -134,7 +249,6 @@
       })
 
       let custom_answers = []
-      // for each value in submission, if the key has custom_question in it, then add it to custom answers as {question: field.data('label'), response: value}
       for (const key in submission) {
         if (key.includes('custom_question')) {
           const label = $(`[name="${key}"]`).data('label')
@@ -144,14 +258,8 @@
         }
       }
 
-      // removing empty string keys
       submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
-
-      // Merge overrides (like confirm_attendance: 0)
-      submission = {
-        ...submission,
-        ...override_fields,
-      }
+      submission = { ...submission, ...override_fields }
 
       frappe.call({
         method: 'fossunited.fossunited.forms.update_submission',
