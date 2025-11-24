@@ -42,9 +42,18 @@ prevents wasting time, energy, money, and food.
 
 ![Visit RSVP tab for RSVP'ed event](./assets/rsvp-update.png)
 
-- You can click on "I can't attend the Event" to inform organizers that you won't attend.
+- You can click on "I can't attend the Event" to inform organizers that you won't be able to attend the event.
 
 ![Clear RSVP](./assets/rsvp-submission-update.png)
 
 - You can also confirm to re-attend via same button as it changes to "I'll attend the Event!" and
   click "Update" to confirm the changes.
+
+## Checkin to an Event
+
+You can do self check-in for an event during the event days via your Edit RSVP form as above.
+
+It'll show "Check-in for Today" to make attendance of the day.
+This will help the organizers to have statistics on event management and plan further. This can be viewed by organizer via [dashboard ListView](event-rsvp.md#event-check-ins)
+
+Note: Check-in button will only be shown during the event days (start till end date). Also you can only check-in once per day.

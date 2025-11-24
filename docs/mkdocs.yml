@@ -15,15 +15,15 @@ nav:
       - Delete Personal Data: delete-data.md
 
   - Events & Participation:
+      - Creating an Event: create-event.md
+      - Event RSVPs: event-rsvp.md
       - Attending Events: attend-event.md
       - Event Call for Proposals (CFP): event-proposals.md
       - Managing Event Proposals: event-cfp.md
       - Reviewing Proposals: reviewing-proposals.md
       - Creating Event Schedule: event-schedule.md
-      - Event RSVPs: event-rsvp.md
       - Event Attendees Communication: event-attendees.md
       - What to Do at the Event: event.md
-      - Creating an Event: create-event.md
 
   - Volunteering:
       - Volunteering Overview: volunteering.md
@@ -68,13 +68,13 @@ theme:
   palette:
     - scheme: default
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-night
         name: Switch to dark mode
       primary: green
       accent: teal
     - scheme: slate
       toggle:
-        icon: material/brightness-7
+        icon: material/weather-sunny
         name: Switch to light mode
       primary: green
       accent: light-green
