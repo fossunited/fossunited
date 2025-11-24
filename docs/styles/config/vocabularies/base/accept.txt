@@ -32,3 +32,8 @@ Commafeed
 hackathon*
 Hackathon*
 doctype
+checkin
+rsvp
+RSVP
+RSVPs
+Checkin

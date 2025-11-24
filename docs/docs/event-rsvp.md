@@ -24,6 +24,19 @@ event.
 
 ![RSVP live](./assets/rsvp-live.png)
 
+## Restrictive access to event
+
+You can manage RSVP to be restrictive based on organizer's approval basis.
+
+Simply you can enable the toggle switch on "Require organizer approval" while creating RSVP as shown above or you can also make the change via editing RSVP later if you decide so.
+![Enable RSVP requires approval](./assets/rsvp-req-approval.png)
+
+In dashboard RSVP insights tab you'll see four group in list view for "Attendance status". Attendees will get a confirmation email on status if accepted or denied their request.
+
+Note: On clicking reject you'd get a fair warning (popup) to confirm rejection.
+
+![Approve the RSVPs](./assets/rsvp-approve.png)
+
 ## Update RSVP form
 
 - If necessary, you can use the `"Web Form"` tab to update the form e.g.
@@ -47,6 +60,12 @@ event.
 
 ![RSVP Insights](./assets/rsvp-insights.png)
 
-**Note:** Please note that responses to custom fields in the RSVP form cannot
-be downloaded using the `"Download"` button on the `"Insights"` tab. Please
-reach out to the Foundation if and when that information is required.
+As of October 2025 you can download the full RSVP responses (custom fields) in CSV format.
+
+## Event Check-ins
+
+Attendees are expected to do self check-in via their [Edit RSVP form](./attend-event.md#Checkin-to-an-Event)
+
+This will reflect on the dashboard insights in ListView based on date and this information can also be download as CSV.
+
+![RSVP Check-in](./assets/rsvp-checkin.png)
