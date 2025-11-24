@@ -3163,6 +3163,11 @@ h6 {
   z-index: 9999;
 }
 
+.v3-btn i {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
 .v3-btn-group {
   display: grid;
   gap: 1.25rem;
@@ -3269,7 +3274,7 @@ h6 {
 }
 
 .v3-section-title i {
-  font-size: 1.125rem;
+  font-size: 1.3rem;
 }
 
 /* Event Grid V3 - For event pages */

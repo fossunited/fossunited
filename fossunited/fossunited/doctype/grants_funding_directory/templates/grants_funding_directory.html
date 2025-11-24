@@ -49,9 +49,20 @@
 
       {# main card #}
       <div class="v3-card v3-main-card">
-        <h1 class="v3-text-primary" style="font-size:2rem; font-weight:700; margin-bottom:1rem;">
-          {{ entity.name }}
-        </h1>
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="v3-text-primary" style="font-size:2rem; font-weight:700; margin-bottom:1rem;">
+            {{ entity.name }}
+          </h1>
+
+          {%
+            set mailto =
+            "mailto:foundation@fossunited.org"
+            ~ "?subject=" ~ ("[Funding Directory] Issue with " ~ entity.name)|urlencode
+            ~ "&body=" ~ ("Link: " ~ funding_url)|urlencode
+          %}
+
+          <a href="{{ mailto }}" class="v3-text-tertiary"> <i class="ti ti-flag"></i> Report </a>
+        </div>
 
         {% if entity.description %}
           <p
@@ -62,7 +73,7 @@
           </p>
         {% endif %}
 
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between flex-column flex-md-row" style="gap: 1rem;">
           <div class="v3-btn-group d-flex" style="gap:1rem;">
             {% set website_url = entity.webpageUrl.url if entity.webpageUrl else None %}
             {{ external_link(website_url, "v3-btn v3-btn-primary", "ti ti-external-link", "Visit Website") }}
@@ -74,20 +85,9 @@
             {% endif %}
           </div>
 
-          <div class="v3-btn-group d-flex" style="gap:0.5rem;">
+          <div class="v3-btn-group d-flex" style="gap:1rem;">
             {% set funding_url = funding_json if funding_json else None %}
             {{ external_link(funding_url, "v3-btn v3-btn-dark", "ti ti-braces", "Manifest") }}
-
-            {%
-              set mailto =
-              "mailto:foundation@fossunited.org"
-              ~ "?subject=" ~ ("[Funding Directory] Issue with " ~ entity.name)|urlencode
-              ~ "&body=" ~ ("Link: " ~ funding_url)|urlencode
-            %}
-
-            <a href="{{ mailto }}" class="v3-btn v3-btn-secondary">
-              <i class="ti ti-flag"></i> Report
-            </a>
           </div>
         </div>
       </div>
@@ -101,7 +101,7 @@
           </div>
 
           <div
-            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr)); gap: 1rem;"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem;"
           >
             {% for project in projects %}
               <div
@@ -288,75 +288,26 @@
             <span>Funding History</span>
           </div>
 
-          <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
+          <div class="table-responsive">
+            <table class="table" style="color: var(--v3-text-color2)">
               <thead>
-                <tr style="border-bottom: 1px solid var(--v3-button-border);">
-                  <th
-                    class="v3-text-secondary"
-                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
-                  >
-                    Year
-                  </th>
-                  <th
-                    class="v3-text-secondary"
-                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
-                  >
-                    Income
-                  </th>
-                  <th
-                    class="v3-text-secondary"
-                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
-                  >
-                    Expenses
-                  </th>
-                  <th
-                    class="v3-text-secondary"
-                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
-                  >
-                    Taxes
-                  </th>
-                  <th
-                    class="v3-text-secondary"
-                    style="text-align: left; padding: 0.75rem 0.5rem; font-size: 0.875rem; font-weight: 600;"
-                  >
-                    Description
-                  </th>
+                <tr class="border-bottom">
+                  <th class="text-nowrap">Year</th>
+                  <th class="text-nowrap">Income</th>
+                  <th class="text-nowrap">Expenses</th>
+                  <th class="text-nowrap">Taxes</th>
+                  <th class="text-wrap">Description</th>
                 </tr>
               </thead>
+
               <tbody>
                 {% for item in funding.history %}
-                  <tr style="border-bottom: 1px solid var(--v3-button-border);">
-                    <td
-                      class="v3-text-primary"
-                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
-                    >
-                      {{ item.year }}
-                    </td>
-                    <td
-                      class="v3-text-primary"
-                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
-                    >
-                      {{ item.income }} {{ item.currency }}
-                    </td>
-                    <td
-                      class="v3-text-primary"
-                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
-                    >
-                      {{ item.expenses }} {{ item.currency }}
-                    </td>
-                    <td
-                      class="v3-text-primary"
-                      style="padding: 0.75rem 0.5rem; font-size: 0.9375rem;"
-                    >
-                      {{ item.taxes }} {{ item.currency }}
-                    </td>
-                    <td
-                      class="v3-text-tertiary"
-                      style="padding: 0.75rem 0.5rem; font-size: 0.875rem;"
-                    >
-                      {{ item.description or "—" }}
-                    </td>
+                  <tr class="border-bottom align-top">
+                    <td class="text-nowrap">{{ item.year }}</td>
+                    <td class="text-nowrap">{{ item.income }} {{ item.currency }}</td>
+                    <td class="text-nowrap">{{ item.expenses }} {{ item.currency }}</td>
+                    <td class="text-nowrap">{{ item.taxes }} {{ item.currency }}</td>
+                    <td class="text-wrap w-100">{{ item.description or "—" }}</td>
                   </tr>
                 {% endfor %}
               </tbody>

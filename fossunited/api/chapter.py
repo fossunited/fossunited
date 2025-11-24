@@ -156,6 +156,7 @@ def generate_ics(event_ids):
 def get_submissions_with_answers(
     event_id: str,
     full_answers: bool = False,
+    remove_id: bool = False,
 ) -> list[dict]:
     """
     Provide RSVP submission with answers for EventInsights.
@@ -224,6 +225,9 @@ def get_submissions_with_answers(
             label = "" if raw_label is None else str(raw_label)
             if not full_answers:
                 label = _truncate_label(label, 30)
+
+            if remove_id:
+                s.pop("name", None)
 
     return submissions
 
@@ -312,7 +316,7 @@ def download_attendee_list_csv(event_id: str) -> str:
     import re
 
     # Get full submission data (each is a dict)
-    submissions = get_submissions_with_answers(event_id, full_answers=True)
+    submissions = get_submissions_with_answers(event_id, full_answers=True, remove_id=True)
 
     if not submissions:
         return ""

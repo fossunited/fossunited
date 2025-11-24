@@ -25,22 +25,25 @@
       </div>
 
       <div class="v3-card v3-main-card">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-          <div class="d-flex flex-column">
+        <div class="mb-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between">
             <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">FOSS Grants & Funding</h1>
-            <p class="v3-text-secondary mb-0">
-              Explore projects from Funding JSON manifests. Inspired by
-              <a style="text-decoration: underline;" href="https://dir.floss.fund">floss.fund</a>
-            </p>
+
+            <div
+              id="count"
+              class="v3-gradient-text text-nowrap mt-2 mt-md-0"
+              style="font-size:2rem; font-weight:600;"
+            >
+              {{ items|length }} Projects
+            </div>
           </div>
 
-          <div
-            id="count"
-            class="text-end v3-gradient-text ms-auto"
-            style="font-size:1.75rem; font-weight:500;"
-          >
-            {{ items|length }} Projects
-          </div>
+          <p class="v3-text-secondary mt-2 mb-0">
+            Explore projects from Funding JSON manifests. Inspired by
+            <a href="https://dir.floss.fund" style="text-decoration:underline;">floss.fund</a>. To
+            add your project apply
+            <a href="/grants/apply" style="text-decoration:underline;">here</a>.
+          </p>
         </div>
 
         <!-- Search + Sort -->

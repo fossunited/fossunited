@@ -48,4 +48,5 @@ def get_context(context):
     context.items = items
     context.count = len(items)
     context.page_title = "FOSS Grants & Funding"
+    context.no_cache = 1
     return context
