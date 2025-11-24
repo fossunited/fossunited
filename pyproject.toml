@@ -65,3 +65,16 @@ extra-paths = ["../frappe/"]
 
 [tool.basedpyright]
 extraPaths = ["../frappe/"]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[tool.uv.sources]
+fossunited = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "fossunited[dev]",
+]

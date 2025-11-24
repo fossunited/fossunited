@@ -1,10 +1,12 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.10"
 resolution-markers = [
     "python_full_version >= '3.14' and platform_python_implementation != 'PyPy'",
-    "python_full_version < '3.14' and platform_python_implementation != 'PyPy'",
-    "platform_python_implementation == 'PyPy'",
+    "python_full_version >= '3.11' and python_full_version < '3.14' and platform_python_implementation != 'PyPy'",
+    "python_full_version < '3.11' and platform_python_implementation != 'PyPy'",
+    "python_full_version >= '3.11' and platform_python_implementation == 'PyPy'",
+    "python_full_version < '3.11' and platform_python_implementation == 'PyPy'",
 ]
 
 [[package]]
@@ -484,7 +486,6 @@ dependencies = [
     { name = "pillow" },
     { name = "pygithub" },
     { name = "razorpay" },
-    { name = "ty" },
 ]
 
 [package.optional-dependencies]
@@ -496,11 +497,17 @@ dev = [
     { name = "pre-commit" },
     { name = "python-lsp-server" },
     { name = "ruff" },
+    { name = "ty" },
 ]
 docs = [
     { name = "mkdocs" },
     { name = "mkdocs-glightbox" },
     { name = "mkdocs-material" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "fossunited", extra = ["dev"] },
 ]
 
 [package.metadata]
@@ -520,9 +527,12 @@ requires-dist = [
     { name = "python-lsp-server", marker = "extra == 'dev'", specifier = ">=1.13.0" },
     { name = "razorpay", specifier = "~=1.4.2" },
     { name = "ruff", marker = "extra == 'dev'", specifier = "==0.12.5" },
-    { name = "ty", specifier = ">=0.0.1a25" },
+    { name = "ty", marker = "extra == 'dev'", specifier = ">=0.0.1a25" },
 ]
 provides-extras = ["dev", "docs"]
+
+[package.metadata.requires-dev]
+dev = [{ name = "fossunited", extras = ["dev"], editable = "." }]
 
 [[package]]
 name = "frappe-bench"
