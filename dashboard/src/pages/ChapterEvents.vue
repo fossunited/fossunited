@@ -57,6 +57,7 @@ const upcoming_events = createListResource({
     ['event_end_date', '>', new Date()],
     ['status', 'in', ['Live', 'Draft', 'Cancelled']],
   ],
+  orderBy: 'event_start_date asc',
   auto: true,
 })
 
@@ -68,6 +69,7 @@ const past_events = createListResource({
     ['event_start_date', '<', new Date()],
     ['status', 'in', ['Concluded', 'Cancelled']],
   ],
+  orderBy: 'event_start_date desc',
   auto: true,
 })
 </script>

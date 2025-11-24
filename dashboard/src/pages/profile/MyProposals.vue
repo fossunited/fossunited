@@ -40,7 +40,7 @@ const proposals = createResource({
         'creation',
         'modified',
       ],
-      order_by: 'creation',
+      orderBy: 'creation',
       limit_page_length: 999,
       or_filters: { email: session.user, submitted_by: session.user },
     }
