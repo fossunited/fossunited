@@ -44,6 +44,7 @@ class FOSSEventRSVPSubmission(Document):
         self.validate_linked_rsvp_exists()
 
     def before_insert(self):
+        self.deny_if_duplicate()
         self.validate_rsvp_is_published()
         self.handle_submission_status()
 
@@ -77,6 +78,15 @@ class FOSSEventRSVPSubmission(Document):
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
             frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
+
+    def deny_if_duplicate(self):
+        already_rsvp = frappe.db.exists(
+            RSVP_RESPONSE,
+            {"linked_rsvp": self.linked_rsvp, "email": self.email},
+        )
+
+        if already_rsvp:
+            frappe.throw("You've Already RSVP'd for this event!")
 
     def validate_rsvp_is_published(self):
         is_system_user = frappe.get_roles(frappe.session.user).count("System Manager")
