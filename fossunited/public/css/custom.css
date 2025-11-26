@@ -3029,6 +3029,7 @@ h6 {
   --v3-dark-green: hsla(145, 63%, 18%, 1);
   --v3-pale-green: hsla(145, 92%, 86%, 1);
   --v3-live-button: hsla(144, 92%, 37%, 0.15);
+  --v3-link-blue: hsla(211, 95%, 57%, 1);
 }
 
 [data-theme='dark'] {
@@ -3042,6 +3043,7 @@ h6 {
   --v3-dark-green: hsla(145, 63%, 18%, 1);
   --v3-live-button: hsla(144, 92%, 37%, 0.15);
   --v3-pale-green: hsla(145, 92%, 86%, 1);
+  --v3-link-blue: hsla(211, 95%, 75%, 1);
 }
 
 /* V3 Base Typography - Inter font for all v3 pages */

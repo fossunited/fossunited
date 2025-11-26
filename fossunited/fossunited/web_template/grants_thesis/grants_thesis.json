@@ -1,0 +1,79 @@
+{
+ "__unsaved": 1,
+ "creation": "2025-11-26 17:18:53.624222",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "fieldname": "page_title",
+   "fieldtype": "Data",
+   "label": "Page Title",
+   "reqd": 0
+  },
+  {
+   "fieldname": "intro_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Intro text",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "grants_program_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Grants program text",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "projects_evaluation_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Project Evaluation",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "events_evaluation_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Event Evaluation",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "structure_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Structure Intro",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "projects_structure_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Project structure",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "events_structure_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Event structure",
+   "options": "Markdown",
+   "reqd": 0
+  },
+  {
+   "fieldname": "changes_text",
+   "fieldtype": "Markdown Editor",
+   "label": "Changes & Future plans",
+   "options": "Markdown",
+   "reqd": 0
+  }
+ ],
+ "idx": 0,
+ "modified": "2025-11-26 17:58:44.261630",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Grants Thesis",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}
