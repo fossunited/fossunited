@@ -57,8 +57,8 @@
           {%
             set mailto =
             "mailto:foundation@fossunited.org"
-            ~ "?subject=" ~ ("[Funding Directory] Issue with " ~ entity.name)|urlencode
-            ~ "&body=" ~ ("Link: " ~ funding_url)|urlencode
+            ~ "?subject=" ~ ("[Grants Directory] Issue with " ~ entity.name)|urlencode
+            ~ "&body=" ~ ("Link: " ~ funding_json)|urlencode
           %}
 
           <a href="{{ mailto }}" class="v3-text-tertiary"> <i class="ti ti-flag"></i> Report </a>
@@ -86,8 +86,7 @@
           </div>
 
           <div class="v3-btn-group d-flex" style="gap:1rem;">
-            {% set funding_url = funding_json if funding_json else None %}
-            {{ external_link(funding_url, "v3-btn v3-btn-dark", "ti ti-braces", "Manifest") }}
+            {{ external_link(funding_json, "v3-btn v3-btn-dark", "ti ti-braces", "Manifest") }}
           </div>
         </div>
       </div>

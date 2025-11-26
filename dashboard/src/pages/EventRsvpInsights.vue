@@ -2,7 +2,7 @@
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <!-- Check-In Section - only visible during event dates -->
     <div v-if="checkedInData.data?.show_checkins" class="flex flex-col gap-4 mt-1">
-      <div class="flex items-center justify-between">
+      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="font-semibold text-gray-800">
           Event Check-Ins
           <span class="ml-2 text-sm font-normal text-gray-600">
@@ -10,7 +10,8 @@
             {{ checkedInData.data.total_accepted }} confirmed attendees)
           </span>
         </div>
-        <div class="flex gap-2">
+
+        <div class="flex gap-2 w-full sm:w-auto sm:justify-end">
           <Button size="md" icon-left="download" @click="downloadCheckinCSV"> Download </Button>
           <Button size="md" icon-left="refresh-cw" @click="checkedInData.reload()">
             Refresh
@@ -240,7 +241,7 @@ const listColumns = computed(() => {
 
   // include confirm_attendance only (status stays hidden)
   const result = [
-    { key: 'confirm_attendance', label: 'Attending', icon: 'check-circle' },
+    { key: 'confirm_attendance', label: 'Attending', icon: 'check-circle', width: '40px' },
     ...Array.from(columns.values()),
   ]
 

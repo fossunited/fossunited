@@ -76,7 +76,7 @@ const handleRemoveScheduleDate = () => {
       ],
     }"
   ></Dialog>
-  <div class="flex gap-2 items-center my-4">
+  <div class="flex flex-wrap gap-2 items-center my-4">
     <Button
       v-for="(date, index) in dates"
       :key="index"

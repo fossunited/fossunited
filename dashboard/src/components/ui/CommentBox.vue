@@ -2,14 +2,14 @@
   <div class="border rounded p-4 bg-white w-full">
     <EditorContent :editor="editor" />
     <div class="flex justify-between items-center pt-2 mt-4">
-      <div class="flex gap-2">
+      <div class="flex gap-1">
         <button
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
           :class="{ 'bg-gray-200': editor.isActive('bold') }"
           @click="editor.chain().focus().toggleBold().run()"
         >
-          <IconBold class="w-5 h-5" />
+          <IconBold class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
@@ -17,7 +17,7 @@
           :class="{ 'bg-gray-200': editor.isActive('italic') }"
           @click="editor.chain().focus().toggleItalic().run()"
         >
-          <IconItalic class="w-5 h-5" />
+          <IconItalic class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
@@ -25,7 +25,7 @@
           :class="{ 'bg-gray-200': editor.isActive('underline') }"
           @click="editor.chain().focus().toggleUnderline().run()"
         >
-          <IconUnderline class="w-5 h-5" />
+          <IconUnderline class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
@@ -33,28 +33,28 @@
           :class="{ 'bg-gray-200': editor.isActive('strike') }"
           @click="editor.chain().focus().toggleStrike().run()"
         >
-          <IconStrikethrough class="w-5 h-5" />
+          <IconStrikethrough class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-gray-200': editor.isActive('bulletList') }"
           @click="editor.chain().focus().toggleBulletList().run()"
         >
-          <IconList class="w-5 h-5" />
+          <IconList class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-gray-200': editor.isActive('orderedList') }"
           @click="editor.chain().focus().toggleOrderedList().run()"
         >
-          <IconListNumbers class="w-5 h-5" />
+          <IconListNumbers class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-gray-200': editor.isActive('blockquote') }"
           @click="editor.chain().focus().toggleBlockquote().run()"
         >
-          <IconBlockquote class="w-5 h-5" />
+          <IconBlockquote class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
       </div>
       <Button :label="buttonLabel" variant="solid" @click="submit" />
