@@ -1,0 +1,164 @@
+{% block foss_base %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
+<style>
+  {% include "public/css/custom.css" %}
+</style>
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% endblock %}
+
+{% block page_content %}
+  {% set page_title = page_title | default("Grants Thesis") %}
+  {% set intro_text = intro_text | default("FOSS United Foundation was launched in 2020 with one broad goal - Strengthening India's FOSS ecosystem...") %}
+
+  {% set grants_program_text = grants_program_text | default("The FOSS United grants program aims to provide financial support to FOSS projects and events all over India...") %}
+
+  {% set projects_evaluation_text = projects_evaluation_text | default("The grants program is largely 'non-thematic'. In the past, we have funded developer tools...") %}
+
+  {% set events_evaluation_text = events_evaluation_text | default("Our event funding has significantly decreased over the last year...") %}
+
+  {% set structure_text = structure_text | default("As of 2025, FOSS United Foundation has a 25L grant budget...") %}
+
+  {% set projects_structure_text = projects_structure_text | default("Grants are one-time (usually disbursed over a year)...") %}
+
+  {% set events_structure_text = events_structure_text | default("The average event grant size is 25k INR...") %}
+
+  {% set changes_text = changes_text | default("These are the changes that we have made to the grants program and our plans for 2026...") %}
+
+  <style>
+    body {
+      background: var(--v3-main-bg);
+    }
+
+    .v3-text-secondary a, .v3-text-primary a, p a {
+        text-decoration: underline !important;
+        color: var(--v3-primary-button) !important;
+    }
+
+    .grants-eval-box {
+      border-radius: 0;
+    }
+
+    .v3-section-title {
+      font-size: 1.5rem;
+    }
+
+    .v3-section-title i {
+      font-size: 2rem;
+    }
+
+    .grants-eval-box.projects {
+      border-left: 3px solid var(--v3-primary-button);
+    }
+
+    .grants-eval-box.events {
+      border-left: 3px solid var(--v3-link-blue);
+    }
+  </style>
+
+  <div class="v3-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center">
+        <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="/grants">Grants</a> > {{ page_title }}</nav>
+        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 5rem; padding: 1.5rem 0;">
+
+        <div style="display: flex; flex-direction: column; gap: 2rem;">
+          <h1 class="v3-text-primary" style="font-size: 2.5rem; font-weight: 700; line-height: 1.2; margin: 0;">
+            {{ page_title }}
+          </h1>
+          <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+            {{ frappe.utils.md_to_html(intro_text) }}
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="v3-section-title">
+            <i class="ti ti-coin-rupee" style="color: var(--v3-primary-button);"></i>
+            <span>The Grants Program</span>
+          </div>
+          <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+            {{ frappe.utils.md_to_html(grants_program_text) }}
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="v3-section-title">
+            <i class="ti ti-clipboard-list" style="color: var(--v3-primary-button);"></i>
+            <span>Evaluations</span>
+          </div>
+
+          <div class="v3-card grants-eval-box projects">
+            <div class="v3-text-primary" style="font-size: 1.375rem; font-weight: 600; line-height: 1.625;">
+              Projects
+            </div>
+            <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+              {{ frappe.utils.md_to_html(projects_evaluation_text) }}
+            </div>
+          </div>
+
+          <div class="v3-card grants-eval-box events">
+            <div class="v3-text-primary" style="font-size: 1.375rem; font-weight: 600; line-height: 1.625;">
+              Events
+            </div>
+            <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+              {{ frappe.utils.md_to_html(events_evaluation_text) }}
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="v3-section-title">
+            <i class="ti ti-frame" style="color: var(--v3-primary-button);"></i>
+            <span>Structure</span>
+          </div>
+          <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+            {{ frappe.utils.md_to_html(structure_text) }}
+          </div>
+
+          <div class="v3-card grants-eval-box projects">
+            <div class="v3-text-primary" style="font-size: 1.375rem; font-weight: 600; line-height: 1.625;">
+              Projects
+            </div>
+            <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+              {{ frappe.utils.md_to_html(projects_structure_text) }}
+            </div>
+          </div>
+
+          <div class="v3-card grants-eval-box events">
+            <div class="v3-text-primary" style="font-size: 1.375rem; font-weight: 600; line-height: 1.625;">
+              Events
+            </div>
+            <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+              {{ frappe.utils.md_to_html(events_structure_text) }}
+            </div>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          <div class="v3-section-title">
+            <i class="ti ti-bell" style="color: var(--v3-primary-button);"></i>
+            <span>Changes and Future Plans</span>
+          </div>
+          <div class="v3-text-secondary" style="font-size: 1rem; line-height: 1.625;">
+            {{ frappe.utils.md_to_html(changes_text) }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initThemeToggle('theme-toggle')
+    })
+  </script>
+{% endblock %}
