@@ -628,14 +628,6 @@ h6 {
   box-shadow: inset 0px 0px 0px 3px #4ba306;
 }
 
-.events-grid {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(3, minmax(320px, 1fr));
-  row-gap: 24px;
-  justify-items: center;
-}
-
 .past-event {
   box-shadow: inset 0px 0px 0px 1px #5b5b5b;
   transition: box-shadow 0.2s ease-in-out;
@@ -2526,28 +2518,13 @@ h6 {
 @media screen and (max-width: 1440px) {
   .events-grid-4 {
     width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
     row-gap: 24px;
   }
-}
-@media screen and (max-width: 1000px) {
-  .events-grid {
-    width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    row-gap: 24px;
-  }
-
   .sponsor-grid {
     grid-template-columns: repeat(3, minmax(200px, 1fr));
     row-gap: 24px;
     justify-items: center;
-  }
-
-  .events-grid-4 {
-    width: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    place-items: center;
-    gap: 2.5rem;
   }
 
   .members-grid-6 {
@@ -2565,10 +2542,6 @@ h6 {
     display: flex;
     flex-direction: column;
     gap: 24px;
-  }
-  .events-grid {
-    grid-template-columns: repeat(1, minmax(300px, 1fr));
-    row-gap: 24px;
   }
   .team-grid {
     padding: 8px;
@@ -2924,11 +2897,6 @@ h6 {
     width: 100%;
     font-size: var(--text-base);
     padding: 0.5rem;
-  }
-
-  .events-grid {
-    grid-template-columns: repeat(1, minmax(280px, 1fr));
-    row-gap: 24px;
   }
 
   .team-grid {
