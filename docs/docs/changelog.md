@@ -12,8 +12,8 @@
 
 | Metric        | Count |
 |---------------|-------|
-| Issues Closed | 35    |
-| PRs merged    | 42    |
+| Issues Closed | 19    |
+| PRs merged    | 40    |
 
 Hi everyone,
 
@@ -33,6 +33,7 @@ Eg: https://fossunited.org/c/mumbai/minidebconf2025
 
 - [#1271](https://github.com/fossunited/fossunited/pull/1271) **First Commit Page**
   Added dedicated page for First Commit initiative.
+  https://fossunited.org/first-commit
 
 Credits: [@jeswinjosu](https://github.com/jeswinjosu)
 
@@ -141,6 +142,10 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
 - [#935](https://github.com/fossunited/fossunited/pull/935) **Refund Policy Acceptance**
   Users must now accept refund policy before purchasing tickets.
   Closes: [#898](https://github.com/fossunited/fossunited/issues/898)
+
+#### User Profile
+
+- [#1278](https://github.com/fossunited/fossunited/issues/1278) Temporarily hid the **Projects**, **Education**, and **Resume** tabs on user profiles until we redesigned profile page. For now, only the **About** and **Activity** sections will be shown.
 
 ---
 
