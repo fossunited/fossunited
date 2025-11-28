@@ -8,6 +8,147 @@
 
 <br>
 
+## November 2025
+
+| Metric        | Count |
+|---------------|-------|
+| Issues Closed | 19    |
+| PRs merged    | 40    |
+
+Hi everyone,
+
+November brought some major additions to the platform! We've introduced a **Grants Funding Directory** inspired by floss.fund, implemented **RSVP Check-ins** for better event management, and launched **Host Approval workflow** for RSVPs. The new **Events Page redesign** with v3.0 design is now live, alongside the [**First Commit**](https://fossunited.org/first-commit) initiative page. We've also added comprehensive **Free Ticket management** for organizers.
+
+---
+
+### PR Highlights
+
+#### Events Page Redesign & First Commit
+
+- [#1265](https://github.com/fossunited/fossunited/pull/1265) **Events Page Redesign**
+  Complete redesign of events page with v3.0 design language, dark mode support, and better visual hierarchy. Features improved event cards, sponsor display, speaker sections, and social links.
+  Note: From now on event banner will be in aspect ratio of 1:1 only. Suggested resolution is 280×280px
+
+Eg: https://fossunited.org/c/mumbai/minidebconf2025
+
+- [#1271](https://github.com/fossunited/fossunited/pull/1271) **First Commit Page**
+  Added dedicated page for First Commit initiative.
+  https://fossunited.org/first-commit
+
+Credits: [@jeswinjosu](https://github.com/jeswinjosu)
+
+#### Grants Funding Directory
+
+- [#1283](https://github.com/fossunited/fossunited/pull/1283) **Grants Funding Directory**
+  Introduced funding directory inspired by floss.fund using `funding.json` manifest schema. Projects can submit their funding information via JSON schema validation.
+  [Explore Grants Directory](https://fossunited.org/grants/directory)
+
+- [#1284](https://github.com/fossunited/fossunited/pull/1284) **Grants JSON Schema Validation**
+  Added unit tests to ensure robust validation of funding.json against the schema using `floss.fund/api/validate` endpoint.
+
+- [#1294](https://github.com/fossunited/fossunited/pull/1294) **Grants Thesis Page**
+  Added grants thesis template page with v3 design for detailed project information.
+
+#### RSVP Self Check-in System
+
+- [#1286](https://github.com/fossunited/fossunited/pull/1286) **RSVP Check-in doctype**
+  Added check-in table to RSVP submissions allowing attendees to check-in during event timeline.
+
+- [#1287](https://github.com/fossunited/fossunited/pull/1287) **Self Check-in Frontend**
+  Attendees can now check-in via their RSVP edit page during event hours. Shows "Checked for today" status after check-in. Includes automatic handling of custom questions added after initial RSVP.
+  [Documentation](https://docs.fossunited.org/attend-event/)
+
+- [#1288](https://github.com/fossunited/fossunited/pull/1288) **Check-in Insights Dashboard**
+  Event organizers can view check-in data grouped by dates in a dedicated insights page with download functionality.
+
+#### RSVP Host Approval
+
+- [#1282](https://github.com/fossunited/fossunited/pull/1282) **Host Approval Workflow**
+  Added host-requires-approval feature for RSVP forms. Organizers can approve or reject RSVPs directly from insights page with email notifications. Includes confirmation dialog for rejections.
+  Related issue: [#676](https://github.com/fossunited/fossunited/issues/676)
+
+#### Free Ticket Management
+
+- [#1259](https://github.com/fossunited/fossunited/pull/1259) **Free Ticket doctype**
+  Imported free ticket code and application doctype from desk into codebase. Includes validation, count tracking, and server-side checks for coupon redemption. Added comprehensive unit tests.
+
+- [#1260](https://github.com/fossunited/fossunited/pull/1260) **Free Ticket Dashboard**
+  Event organizers can now manage free ticket codes directly from dashboard. Create, edit, delete, and view coupon IDs for distribution to organizations.
+
+- [#1261](https://github.com/fossunited/fossunited/pull/1261) **Permission Controls**
+  Only chapter team members can modify their event's free ticket codes, preventing cross-injection attacks.
+
+- [#1262](https://github.com/fossunited/fossunited/pull/1262) **Auto-set Event**
+  Free ticket form now automatically sets event based on coupon code, making it generic for all events.
+
+- [#1258](https://github.com/fossunited/fossunited/pull/1258) **Free Pass Insights**
+  Ticket insights now show free pass holders in attendee list and counts.
+
+- [#1257](https://github.com/fossunited/fossunited/pull/1257) **Ticket Transparency**
+  Buy ticket page now shows disabled and expired tickets for transparency. Added proper validity checks for date and count.
+  Closes: [#1183](https://github.com/fossunited/fossunited/issues/1183)
+
+#### CFP & Schedule Enhancements
+
+- [#1268](https://github.com/fossunited/fossunited/pull/1268) **Talk Licensing**
+  Added license field to CFP submissions with acknowledgment checkbox. Proposers can specify talk licenses upfront.
+
+- [#1266](https://github.com/fossunited/fossunited/pull/1266) **Talk Video Links**
+  Added `talk_video` field to link recorded talks in schedule and CFP pages. Shows video links for past sessions and "Add to calendar" only for upcoming sessions. This video link will be shown in schedule page as well as in CFP linked page.
+
+- [#1270](https://github.com/fossunited/fossunited/pull/1270) **CSV Download for Proposals**
+  Reviewers and organizers can now download all proposals in CSV format for analysis. Includes custom answers if marked public.
+  [#1274](https://github.com/fossunited/fossunited/pull/1274) Moved CSV generation to frontend to reduce backend load, properly escaping content to avoid CSV injection.
+
+- [#1269](https://github.com/fossunited/fossunited/pull/1269) **Schedule Management Filters**
+  Enhanced event schedule modification page with better filtering options to reduce cognitive load (especially useful for large events like IndiaFOSS).
+
+#### UI/UX Improvements
+
+- [#1281](https://github.com/fossunited/fossunited/pull/1281) **Web Accessibility**
+  Improved accessibility with proper ARIA labels for events page and render fields. Replaced div with nav for breadcrumb items.
+  Partially addresses: [#788](https://github.com/fossunited/fossunited/issues/788)
+
+- [#1293](https://github.com/fossunited/fossunited/pull/1293) **Mobile Responsiveness**
+  Adjusted mobile adaptiveness for grants directory, RSVP insights, drawer components, and comment box icons.
+
+- [#1292](https://github.com/fossunited/fossunited/pull/1292) **Events Grid CSS**
+  Fixed events card grid to display uniformly without breaking.
+  Thanks to Nihal for reporting in telegram.
+
+- [#1280](https://github.com/fossunited/fossunited/pull/1280) **Comment Review Retention**
+  Review comments are now retained locally even after page reload using localStorage.
+  Closes: [#968](https://github.com/fossunited/fossunited/issues/968)
+
+- [#1276](https://github.com/fossunited/fossunited/pull/1276) **Email Drawer UX**
+  Fixed opacity issues and improved UX for email dialog and scheduling components.
+
+- [#1273](https://github.com/fossunited/fossunited/pull/1273) **Text Wrapping**
+  Fixed word-wrap for long links and text content. Added livestream link to event about section.
+
+- [#1272](https://github.com/fossunited/fossunited/pull/1272) **V3 CSS Standardization**
+  Applied v3 design CSS across multiple pages. Updated event banner to 1:1 aspect ratio (280×280px).
+
+- [#1263](https://github.com/fossunited/fossunited/pull/1263) **Profile Activity Placement**
+  Moved profile activity card below "about" section for better prominence. Hid work tab temporarily.
+
+#### Documentation
+
+- [#1289](https://github.com/fossunited/fossunited/pull/1289) **RSVP & Event Docs**
+  Added comprehensive documentation for RSVP check-ins, event schedule, and related features with screenshots.
+
+#### Refund Policy
+
+- [#935](https://github.com/fossunited/fossunited/pull/935) **Refund Policy Acceptance**
+  Users must now accept refund policy before purchasing tickets.
+  Closes: [#898](https://github.com/fossunited/fossunited/issues/898)
+
+#### User Profile
+
+- [#1278](https://github.com/fossunited/fossunited/issues/1278) Temporarily hid the **Projects**, **Education**, and **Resume** tabs on user profiles until we redesigned profile page. For now, only the **About** and **Activity** sections will be shown.
+
+---
+
 ## October 2025
 
 | Metric        | Count |
