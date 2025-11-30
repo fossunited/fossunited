@@ -9,79 +9,78 @@
       </svg>
       <a href="/{{ route }}/schedule">Agenda</a><i class="ti ti-arrow-up-right" style="font-size: 0.9rem;" aria-hidden="true"></i>
     </div>
+
     <div class="v3-schedule-list">
-      {% set item_count = 0 %}
+      {% set item_count = namespace(value=0) %}
       {% for date_str, halls in schedule_data.items() %}
-        {% if item_count < show_limit %}
-          <div class="v3-schedule-date-group">
-            <div class="v3-schedule-date-title">{{ date_str }}</div>
-            {% for hall, items in halls.items() %}
-              {% if item_count < show_limit %}
-                <div class="v3-schedule-hall-group">
-                  {% if hall and hall != 'no-hall' %}
-                    <div class="v3-schedule-hall-title">{{ hall }}</div>
-                  {% endif %}
-                  {% for item in items %}
-                    {% if item_count < show_limit %}
-                      <div
-                        class="v3-clickable"
-                        {% if item.cfp_route %}
-                          data-route="{{ item.cfp_route }}"
-                          onclick="window.location.href='/{{ item.cfp_route }}'"
+        <div class="v3-schedule-date-group">
+          <div class="v3-schedule-date-title">{{ date_str }}</div>
+          {% for hall, items in halls.items() %}
+            <div class="v3-schedule-hall-group">
+              {% if hall and hall != 'no-hall' %}
+                <div class="v3-schedule-hall-title">{{ hall }}</div>
+              {% endif %}
+              {% for item in items %}
+                {% if item_count.value < show_limit %}
+                  <div
+                    class="v3-clickable"
+                    {% if item.cfp_route %}
+                      data-route="{{ item.cfp_route }}"
+                      onclick="window.location.href='/{{ item.cfp_route }}'"
+                    {% endif %}
+                  >
+                    <div class="v3-schedule-item">
+                      <div class="v3-schedule-header">
+                        <div class="v3-schedule-time">{{ item.start_time_display }}</div>
+                        <div
+                          style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"
+                        ></div>
+                        <div class="v3-schedule-badge">{{ item.category }}</div>
+                      </div>
+                      <div class="v3-schedule-content">
+                        {% if item.cfp_speakers %}
+                          <div
+                            class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}"
+                          >
+                            {% for speaker in item.cfp_speakers[:4] %}
+                              <img
+                                src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                                alt="{{ speaker.full_name }}"
+                                class="v3-speaker-img"
+                              />
+                            {% endfor %}
+                          </div>
                         {% endif %}
-                      >
-                        <div class="v3-schedule-item">
-                          <div class="v3-schedule-header">
-                            <div class="v3-schedule-time">{{ item.start_time_display }}</div>
-                            <div
-                              style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"
-                            ></div>
-                            <div class="v3-schedule-badge">{{ item.category }}</div>
-                          </div>
-                          <div class="v3-schedule-content">
-                            {% if item.cfp_speakers %}
-                              <div
-                                class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}"
-                              >
-                                {% for speaker in item.cfp_speakers[:4] %}
-                                  <img
-                                    src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                                    alt="{{ speaker.full_name }}"
-                                    class="v3-speaker-img"
-                                  />
-                                {% endfor %}
-                              </div>
-                            {% endif %}
-                            <div class="v3-schedule-details">
-                              <div class="v3-schedule-title">{{ item.title }}</div>
-                              {% if item.cfp_speakers %}
-                                <div class="v3-speaker-names">
-                                  {% for speaker in item.cfp_speakers %}
-                                    <div class="v3-speaker-name">{{ speaker.full_name }}</div>
-                                  {% endfor %}
-                                </div>
-                              {% endif %}
+                        <div class="v3-schedule-details">
+                          <div class="v3-schedule-title">{{ item.title }}</div>
+                          {% if item.cfp_speakers %}
+                            <div class="v3-speaker-names">
+                              {% for speaker in item.cfp_speakers %}
+                                <div class="v3-speaker-name">{{ speaker.full_name }}</div>
+                              {% endfor %}
                             </div>
-                          </div>
+                          {% endif %}
                         </div>
                       </div>
-                      {% set item_count = item_count + 1 %}
-                    {% endif %}
-                  {% endfor %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
-        {% endif %}
+                    </div>
+                  </div>
+                  {% set item_count.value = item_count.value + 1 %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
       {% endfor %}
     </div>
-    {% set total_items = 0 %}
+
+    {% set total_items = namespace(value=0) %}
     {% for date_str, halls in schedule_data.items() %}
       {% for hall, items in halls.items() %}
-        {% set total_items = total_items + items|length %}
+        {% set total_items.value = total_items.value + items|length %}
       {% endfor %}
     {% endfor %}
-    {% if total_items >= show_limit %}
+
+    {% if total_items.value > show_limit %}
       <a
         href="/{{ route }}/schedule"
         class="v3-btn v3-btn-secondary"
