@@ -1,6 +1,6 @@
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint, get_datetime, getdate, now_datetime
+from frappe.utils import get_datetime, getdate, now_datetime
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.api.emailing import handle_email_group_subscription
@@ -164,9 +164,7 @@ class FOSSEventRSVPSubmission(Document):
         self.status = "Accepted"
 
     def handle_add_to_email_group(self):
-        wants_subscription = cint(self.subscribe_chapter_mailing) == 1
         is_accepted = self.status == "Accepted"
-        is_attending = cint(self.confirm_attendance) == 1
         if not self.email:
             return
 
@@ -174,8 +172,8 @@ class FOSSEventRSVPSubmission(Document):
             emails=[self.email],
             chapter=self.chapter,
             event=self.event,
-            subscribe_to_chapter=wants_subscription,
-            subscribe_to_event=is_accepted and is_attending,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
+            subscribe_to_event=is_accepted and self.confirm_attendance,
             document_type_event=EVENT,
         )
 

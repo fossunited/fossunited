@@ -358,7 +358,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             # Again, event is temporary for event_duration. Hope logic sounds intentional?
             # if not, please do raise an issue!
             subscribe_to_event=True,
-            subscribe_to_chapter=frappe.utils.cint(self.subscribe_chapter_mailing) == 1,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
             document_type_event=EVENT,
         )
 

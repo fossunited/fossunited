@@ -65,15 +65,14 @@ class FOSSHackathonParticipant(Document):
 
     def handle_add_to_email_group(self):
         # Check if user should be subscribed
-        wants_subscription = frappe.utils.cint(self.subscribe_chapter_mailing) == 1
         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
 
         handle_email_group_subscription(
             emails=[self.email],
             chapter=event_doc.chapter,
             event=self.hackathon,
-            subscribe_to_chapter=wants_subscription,
-            subscribe_to_event=wants_subscription,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
+            subscribe_to_event=self.subscribe_chapter_mailing,
             document_type_event=HACKATHON,
         )
 
