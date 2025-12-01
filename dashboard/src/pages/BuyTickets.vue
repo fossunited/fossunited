@@ -181,42 +181,49 @@
             >
               <p class="text-base text-gray-600 font-medium mb-1">#{{ index + 1 }}</p>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-                <FormControl
-                  v-model="attendee.full_name"
-                  type="text"
-                  size="sm"
-                  variant="subtle"
-                  :placeholder="attendee.placeholder"
-                  label="Full Name"
-                />
-                <FormControl
-                  v-model="attendee.email"
-                  type="email"
-                  size="sm"
-                  variant="subtle"
-                  label="Email"
-                />
-                <FormControl
-                  v-model="attendee.organization"
-                  type="text"
-                  size="sm"
-                  variant="subtle"
-                  label="Organization / College"
-                />
-                <FormControl
-                  v-model="attendee.subscribe_chapter_mailing"
-                  type="checkbox"
-                  size="sm"
-                  variant="subtle"
-                  :label="`Yes, I'd like to receive email updates about future events from ${event.data.event_name}.`"
-                />
-                <FormControl
-                  v-model="attendee.designation"
-                  type="text"
-                  size="sm"
-                  variant="subtle"
-                  label="Designation"
-                />
+                <div class="flex flex-col gap-7">
+                  <FormControl
+                    v-model="attendee.full_name"
+                    type="text"
+                    size="sm"
+                    variant="subtle"
+                    :placeholder="attendee.placeholder"
+                    label="Full Name"
+                  />
+                  <FormControl
+                    v-model="attendee.organization"
+                    type="text"
+                    size="sm"
+                    variant="subtle"
+                    label="Organization / College"
+                  />
+                </div>
+                <div class="flex flex-col gap-1">
+                  <FormControl
+                    v-model="attendee.email"
+                    type="email"
+                    size="sm"
+                    variant="subtle"
+                    label="Email"
+                  />
+                  <div class="pl-1">
+                    <FormControl
+                      v-model="attendee.subscribe_chapter_mailing"
+                      class="text-sm"
+                      type="checkbox"
+                      size="sm"
+                      variant="subtle"
+                      :label="`Yes, I'd like to receive email updates about future events from ${event.data.event_name}.`"
+                    />
+                  </div>
+                  <FormControl
+                    v-model="attendee.designation"
+                    type="text"
+                    size="sm"
+                    variant="subtle"
+                    label="Designation"
+                  />
+                </div>
               </div>
 
               <!-- Per-Attendee custom fields (when apply to all is disabled) -->
@@ -496,6 +503,9 @@ const checkoutInfo = reactive({
 const customFields = reactive({})
 const errorMessage = ref(null)
 
+const customFieldsApplyToAll = ref(false)
+const globalCustomFields = reactive({})
+
 const fullNamePlaceholders = ['Jenny Smith', 'Jacob Doe', 'Jim Brown']
 
 const stateOptions = createResource({
@@ -504,6 +514,36 @@ const stateOptions = createResource({
     return data.map((state) => ({ label: state.name, value: state.name }))
   },
   auto: true,
+})
+
+const rzpCheckout = ref(null)
+
+const event = createResource({
+  url: 'fossunited.api.dashboard.get_event',
+  makeParams() {
+    return {
+      name: eventName.value,
+    }
+  },
+  onSuccess(data) {
+    const activeTiersList = data.tiers.filter((tier) => {
+      const isEnabled = Boolean(tier.enabled)
+      const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
+      return isEnabled && !deadlinePassed
+    })
+
+    if (activeTiersList.length > 0) {
+      checkoutInfo.tier = activeTiersList[0]
+    }
+    resetCustomFields()
+  },
+})
+
+const redirectToEvent = computed(() => {
+  if (event.data) {
+    return `${window.location.origin}/${event.data.route}`
+  }
+  return window.location.origin
 })
 
 watch(
@@ -542,39 +582,6 @@ watch(
   { immediate: true },
 )
 
-const rzpCheckout = ref(null)
-
-const event = createResource({
-  url: 'fossunited.api.dashboard.get_event',
-  makeParams() {
-    return {
-      name: eventName.value,
-    }
-  },
-  onSuccess(data) {
-    const activeTiersList = data.tiers.filter((tier) => {
-      const isEnabled = Boolean(tier.enabled)
-      const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
-      return isEnabled && !deadlinePassed
-    })
-
-    if (activeTiersList.length > 0) {
-      checkoutInfo.tier = activeTiersList[0]
-    }
-    resetCustomFields()
-  },
-})
-
-const redirectToEvent = computed(() => {
-  if (event.data) {
-    return `${window.location.origin}/${event.data.route}`
-  }
-  return window.location.origin
-})
-
-const customFieldsApplyToAll = ref(false)
-const globalCustomFields = reactive({})
-
 // Update the customFields initialization
 function resetCustomFields() {
   if (event.data?.custom_fields) {
@@ -603,6 +610,8 @@ function resetCustomFields() {
 }
 
 watch(customFieldsApplyToAll, (newValue) => {
+  if (!event.data?.custom_fields) return
+
   if (newValue) {
     // When switching to "apply to all", clear individual attendee custom fields
     for (let attendee of checkoutInfo.attendees) {
@@ -611,8 +620,10 @@ watch(customFieldsApplyToAll, (newValue) => {
   } else {
     // When switching to individual, initialize custom fields for each attendee
     for (let attendee of checkoutInfo.attendees) {
-      attendee.custom_fields = {}
-      for (let field of event.data?.custom_fields || []) {
+      if (!attendee.custom_fields) {
+        attendee.custom_fields = {}
+      }
+      for (let field of event.data.custom_fields) {
         attendee.custom_fields[field.field_name] = globalCustomFields[field.field_name] || ''
       }
     }
