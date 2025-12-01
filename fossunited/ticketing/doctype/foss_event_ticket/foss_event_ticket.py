@@ -51,8 +51,17 @@ class FOSSEventTicket(Document):
 
     @staticmethod
     def create_tickets_for_payment(payment: "RazorpayPayment"):
+        """
+        Create tickets for a successful payment.
+        Handles both global custom fields (applied to all attendees)
+        and individual custom fields (per attendee).
+        """
         payment_meta_data: dict = frappe.parse_json(payment.meta_data)
         attendees = payment_meta_data.get("attendees", [])
+
+        # Check if custom fields should be applied to all attendees
+        custom_fields_apply_to_all = payment_meta_data.get("custom_fields_apply_to_all", False)
+        global_custom_fields = payment_meta_data.get("global_custom_fields", {})
 
         for attendee in attendees:
             ticket_doc = frappe.get_doc(
@@ -71,14 +80,22 @@ class FOSSEventTicket(Document):
                 }
             )
 
-            # add custom fields
-            custom_fields = payment_meta_data.get("custom_fields", {})
+            # Determine which custom fields to use
+            if custom_fields_apply_to_all:
+                # Use global custom fields for all attendees
+                custom_fields = global_custom_fields
+            else:
+                # Use individual attendee's custom fields
+                custom_fields = attendee.get("custom_fields", {})
+
+            # Add custom fields to ticket
             for k, v in custom_fields.items():
                 if k and v:
                     ticket_doc.append(
                         "custom_fields",
                         {"field_name": k, "data": str(v)},
                     )
+
             ticket_doc.save(ignore_permissions=True)
 
     def before_insert(self):
