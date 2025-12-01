@@ -4,7 +4,7 @@
     <div class="flex w-full justify-between items-center">
       <div class="flex flex-wrap items-center">
         <div class="prose">
-          <h3 class="uppercase">{{ tier.title }}</h3>
+          <h3>{{ tier.title }}</h3>
         </div>
         <Badge :theme="tier.enabled ? 'green' : 'gray'" class="ml-2">
           {{ tier.enabled ? 'Active' : 'Inactive' }}
