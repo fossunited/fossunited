@@ -71,6 +71,7 @@ class FOSSEventTicket(Document):
                     "event": payment.document_name,
                     "full_name": attendee.get("full_name"),
                     "email": attendee.get("email"),
+                    "subscribe_chapter_mailing": attendee.get("subscribe_chapter_mailing"),
                     "organization": attendee.get("organization"),
                     "designation": attendee.get("designation"),
                     "wants_tshirt": attendee.get("wants_tshirt", 0),
