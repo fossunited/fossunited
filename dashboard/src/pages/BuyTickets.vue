@@ -142,13 +142,26 @@
             />
           </div>
 
+          <!-- custom fields section -->
           <div v-if="event.data.custom_fields.length > 0">
-            <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
-            <div class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0">
+            <div class="flex-row mb-2">
+              <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
+              <Switch
+                v-model="customFieldsApplyToAll"
+                class="w-fit text-xs"
+                label="Apply Same answers for all tickets/attendees"
+              />
+            </div>
+
+            <!-- global custom fields (when apply to all is enabled) -->
+            <div
+              v-if="customFieldsApplyToAll"
+              class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0"
+            >
               <FormControl
                 v-for="field in event.data.custom_fields"
                 :key="field.name"
-                v-model="customFields[field.field_name]"
+                v-model="globalCustomFields[field.field_name]"
                 :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
                 :label="field.label"
                 :options="field.options"
@@ -158,7 +171,7 @@
             </div>
           </div>
 
-          <!-- ATTENDEE DETAILS -->
+          <!-- attendee details -->
           <h2 class="text-lg font-semibold leading-6 text-gray-800 mt-4">Attendees</h2>
           <div>
             <div
@@ -184,18 +197,18 @@
                   label="Email"
                 />
                 <FormControl
-                  v-model="attendee.subscribe_chapter_mailing"
-                  type="checkbox"
-                  size="sm"
-                  variant="subtle"
-                  label="Yes, I'd like to receive email updates about future events."
-                />
-                <FormControl
                   v-model="attendee.organization"
                   type="text"
                   size="sm"
                   variant="subtle"
                   label="Organization / College"
+                />
+                <FormControl
+                  v-model="attendee.subscribe_chapter_mailing"
+                  type="checkbox"
+                  size="sm"
+                  variant="subtle"
+                  :label="`Yes, I'd like to receive email updates about future events from ${event.data.event_name}.`"
                 />
                 <FormControl
                   v-model="attendee.designation"
@@ -205,6 +218,27 @@
                   label="Designation"
                 />
               </div>
+
+              <!-- Per-Attendee custom fields (when apply to all is disabled) -->
+              <div
+                v-if="!customFieldsApplyToAll && event.data.custom_fields.length > 0"
+                class="mt-4 border-t pt-4"
+              >
+                <h3 class="text-sm font-medium text-gray-700 mb-2">Additional Details</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
+                  <FormControl
+                    v-for="field in event.data.custom_fields"
+                    :key="field.name"
+                    v-model="attendee.custom_fields[field.field_name]"
+                    :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
+                    :label="field.label"
+                    :options="field.options"
+                    size="sm"
+                    variant="subtle"
+                  />
+                </div>
+              </div>
+
               <div
                 v-if="event.data.paid_tshirts_available"
                 class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2"
@@ -480,7 +514,7 @@ watch(
         const randomPlaceholder =
           fullNamePlaceholders[Math.floor(Math.random() * fullNamePlaceholders.length)]
 
-        checkoutInfo.attendees.push({
+        const newAttendee = {
           full_name: '',
           email: '',
           placeholder: randomPlaceholder,
@@ -489,7 +523,17 @@ watch(
           organization: '',
           wants_tshirt: false,
           tshirt_size: 'M',
-        })
+          custom_fields: {},
+        }
+
+        // Initialize custom fields for new attendee if not applying to all
+        if (!customFieldsApplyToAll.value && event.data?.custom_fields) {
+          for (let field of event.data.custom_fields) {
+            newAttendee.custom_fields[field.field_name] = ''
+          }
+        }
+
+        checkoutInfo.attendees.push(newAttendee)
       }
     } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
       checkoutInfo.attendees = checkoutInfo.attendees.slice(0, checkoutInfo.numSeats)
@@ -528,16 +572,52 @@ const redirectToEvent = computed(() => {
   return window.location.origin
 })
 
+const customFieldsApplyToAll = ref(false)
+const globalCustomFields = reactive({})
+
+// Update the customFields initialization
 function resetCustomFields() {
   if (event.data?.custom_fields) {
+    // Reset global custom fields
     for (let field of event.data.custom_fields) {
-      customFields[field.field_name] = ''
+      globalCustomFields[field.field_name] = ''
       if (field.field_type == 'Select') {
         field.options = field.options.split('\n')
       }
     }
+
+    // Initialize custom fields for existing attendees if apply to all is disabled
+    if (!customFieldsApplyToAll.value) {
+      for (let attendee of checkoutInfo.attendees) {
+        if (!attendee.custom_fields) {
+          attendee.custom_fields = {}
+        }
+        for (let field of event.data.custom_fields) {
+          if (!(field.field_name in attendee.custom_fields)) {
+            attendee.custom_fields[field.field_name] = ''
+          }
+        }
+      }
+    }
   }
 }
+
+watch(customFieldsApplyToAll, (newValue) => {
+  if (newValue) {
+    // When switching to "apply to all", clear individual attendee custom fields
+    for (let attendee of checkoutInfo.attendees) {
+      attendee.custom_fields = {}
+    }
+  } else {
+    // When switching to individual, initialize custom fields for each attendee
+    for (let attendee of checkoutInfo.attendees) {
+      attendee.custom_fields = {}
+      for (let field of event.data?.custom_fields || []) {
+        attendee.custom_fields[field.field_name] = globalCustomFields[field.field_name] || ''
+      }
+    }
+  }
+})
 
 function isTierExpired(tier) {
   return tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
@@ -559,7 +639,8 @@ function createOrder() {
       tier: checkoutInfo.tier,
       attendees: checkoutInfo.attendees,
       num_seats: checkoutInfo.numSeats,
-      custom_fields: customFields,
+      custom_fields_apply_to_all: customFieldsApplyToAll.value,
+      global_custom_fields: customFieldsApplyToAll.value ? globalCustomFields : null,
     },
     event.data.doctype,
     event.data.name,
@@ -572,7 +653,6 @@ function createOrder() {
     },
   )
 }
-
 const showDialog = ref(false)
 const dialogError = ref('')
 
@@ -674,9 +754,22 @@ const checkoutFormErrors = computed(() => {
     errors.push('\nPlease fill in all attendee details')
   }
 
-  for (let field of event.data?.custom_fields || []) {
-    if (field.mandatory && !customFields[field.field_name]) {
-      errors.push(`Please fill in ${field.label}`)
+  // Validate global custom fields if apply to all is enabled
+  if (customFieldsApplyToAll.value) {
+    for (let field of event.data?.custom_fields || []) {
+      if (field.mandatory && !globalCustomFields[field.field_name]) {
+        errors.push(`\nPlease fill in ${field.label}`)
+      }
+    }
+  } else {
+    // Validate individual attendee custom fields
+    for (let attendee of checkoutInfo.attendees) {
+      for (let field of event.data?.custom_fields || []) {
+        if (field.mandatory && !attendee.custom_fields?.[field.field_name]) {
+          errors.push(`\nPlease fill in ${field.label} for all attendees`)
+          break // Only show error once per missing field
+        }
+      }
     }
   }
 
