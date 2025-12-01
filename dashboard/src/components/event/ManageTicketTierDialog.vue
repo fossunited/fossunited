@@ -15,7 +15,7 @@
           <div class="flex flex-col gap-2">
             <div class="text-sm text-gray-600">Status</div>
             <div
-              class="font-medium text-sm uppercase flex items-center gap-2"
+              class="font-medium text-sm flex items-center gap-2"
               :class="tier.enabled ? 'text-green-600' : ''"
             >
               <LivePing v-if="tier.enabled" />

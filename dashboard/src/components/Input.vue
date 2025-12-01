@@ -16,7 +16,7 @@
       <input
         v-model="model"
         :placeholder="placeholder"
-        class="focus:border-none focus:ring-0 border-none p-0 uppercase w-full"
+        class="focus:border-none focus:ring-0 border-none p-0 w-full"
         :type="type"
         :class="inputClasses"
       />
