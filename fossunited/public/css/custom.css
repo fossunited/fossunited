@@ -3232,6 +3232,16 @@ h6 {
   font-size: 1.1rem;
 }
 
+.v3-text-primary blockquote,
+.v3-text-secondary blockquote,
+.v3-text-tertiary blockquote {
+  margin: 1rem 0;
+  padding: 1rem;
+  font-style: italic;
+  background: var(--v3-card-bg);
+  border-left: 3px solid var(--v3-button-border);
+}
+
 /* V3 Section Title */
 .v3-section-title {
   display: flex;
