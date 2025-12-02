@@ -153,217 +153,62 @@ def generate_ics(event_ids):
 
 
 @frappe.whitelist()
-def get_submissions_with_answers(
-    event_id: str,
-    full_answers: bool = False,
-    remove_id: bool = False,
-) -> list[dict]:
+def get_submissions_with_answers(event_id: str) -> list[dict]:
     """
-    Provide RSVP submission with answers for EventInsights.
+    Get all RSVP submissions with their custom field answers.
 
     Args:
         event_id (str): Event ID
-        full_answers (bool): If True, return full question labels and responses;
-                     otherwise truncate for UI display. Applicable for csv export/download.
+
     Returns:
-        List of submission dicts with custom field answers for core team members.
+        list[dict]: List of submissions with custom answers as dynamic fields
     """
-    if not frappe.session.user or frappe.session.user == "Guest":
+    if not check_if_chapter_or_event_core_member(event_id):
         frappe.throw("Not permitted", frappe.PermissionError)
 
-    # Get basic submission fields
+    # Get all submissions
     submissions = frappe.get_all(
         RSVP_RESPONSE,
         filters={"event": event_id},
         fields=["name", "confirm_attendance", "status", "name1", "email", "im_a"],
         order_by="creation asc",
-        limit_page_length=9999,
     )
 
-    if not check_if_chapter_or_event_core_member(event_id):
-        for s in submissions:
-            s["email"] = mask_email(s.get("email"))
-            s.pop("name", None)
-        return submissions
+    if not submissions:
+        return []
 
-    # Event lead: fetch full answers
+    # Get all custom field answers for these submissions
     submission_ids = [s["name"] for s in submissions]
-    if not submission_ids:
-        return submissions
 
-    answers_rows = frappe.get_all(
+    answers = frappe.get_all(
         RSVP_CUSTOM_FIELD,
         filters={
             "parent": ["in", submission_ids],
             "parenttype": RSVP_RESPONSE,
             "parentfield": "custom_answers",
         },
-        fields=["parent", "question", "response", "idx"],
+        fields=["parent", "question", "response"],
         order_by="parent asc, idx asc",
-        limit_page_length=0,
     )
 
-    answers_by_parent = {}
-    for a in answers_rows:
-        answers_by_parent.setdefault(a["parent"], []).append(a)
+    # Group answers by parent (submission)
+    answers_map = {}
+    for answer in answers:
+        parent = answer["parent"]
+        if parent not in answers_map:
+            answers_map[parent] = {}
 
-    for s in submissions:
-        for a in answers_by_parent.get(s["name"], []):
-            key = _safe_column_key(a["question"])  # always max 50 chars
+        # Use question as key, response as value
+        question = answer["question"] or "custom_field"
+        answers_map[parent][question] = answer["response"] or ""
 
-            # Truncate the answer if not full
-            response = a.get("response")
-            if response is None:
-                response = ""
-            if not full_answers:
-                response = _truncate_label(str(response), 30)
-
-            s[f"{key}"] = response
-
-            # Truncate label if not full
-            raw_label = a.get("question")
-            label = "" if raw_label is None else str(raw_label)
-            if not full_answers:
-                label = _truncate_label(label, 30)
-
-            if remove_id:
-                s.pop("name", None)
+    # merge answers into submissions
+    for submission in submissions:
+        submission_id = submission["name"]
+        if submission_id in answers_map:
+            submission.update(answers_map[submission_id])
 
     return submissions
-
-
-def _safe_column_key(label: str) -> str:
-    """
-    Sanitize and shorten a label to create a safe dictionary/column key.
-    This function:
-    - Ensures the label is a string; otherwise returns 'custom_field'.
-    - Normalizes whitespace and strips leading/trailing spaces.
-    - Removes all characters except alphanumerics, underscores, spaces, and hyphens.
-    - Replaces spaces with underscores.
-    - Converts the label to lowercase.
-    - Prefixes the key with an underscore if it starts with a dangerous character
-      (i.e., '=', '+', '-', '@') to prevent CSV injection.
-    - Truncates the key to a maximum of 50 characters.
-
-    Args:
-        label (str): The original label to sanitize.
-
-    Returns:
-        str: A sanitized, safe key string suitable for use in CSV headers or dict keys.
-
-    """
-    import re
-
-    if not isinstance(label, str):
-        return "custom_field"
-
-    key = re.sub(r"\s+", " ", label).strip()  # Normalize spaces
-    key = re.sub(r"[^\w\s-]", "", key)  # Remove special chars
-    key = re.sub(r"\s+", "_", key).lower()  # Convert to snake_case
-
-    if not key or key[0] in "=+-@":
-        key = f"_{key}"
-
-    return key[:50]  # Limit to 50 characters
-
-
-def _truncate_label(label: str, max_length: int = 50) -> str:
-    s = "" if label is None else str(label)
-    s = " ".join(s.split())  # collapse whitespace/newlines
-    return s if len(s) <= max_length else s[:max_length].rstrip() + "…"
-
-
-def mask_email(email: str) -> str:
-    """
-    Mask email to reduce PII exposure:
-    - Keep first 2 characters of local-part (or fewer if not available).
-    - For local-part length <= 2: keep first char, mask rest
-    - For 3 <= length <= 8: show first 3, mask the middle, show last
-    - For length > 8: show first 2, one middle char, show last
-    - Keep domain intact.
-    """
-    if not email or "@" not in email:
-        return "***"
-
-    local, domain = email.split("@", 1)
-    local_len = len(local)
-
-    if local_len <= 2:
-        visible = local[0] + "*" * (local_len - 1)
-    elif local_len <= 8:
-        visible = local[:3] + "*" * (local_len - 3)
-    else:
-        mid_index = local_len // 2
-        visible = (
-            local[:2]
-            + "*" * (mid_index - 2)
-            + local[mid_index]
-            + "*" * (local_len - mid_index - 2)
-            + local[-1]
-        )
-
-    return f"{visible}@{domain}"
-
-
-@frappe.whitelist()
-def download_attendee_list_csv(event_id: str) -> str:
-    """
-    Generates and returns a CSV string of RSVP submissions with custom field answers.
-    Accessible only by core team / event leads.
-    """
-    import csv
-    import io
-    import re
-
-    # Get full submission data (each is a dict)
-    submissions = get_submissions_with_answers(event_id, full_answers=True, remove_id=True)
-
-    if not submissions:
-        return ""
-
-    # Start with keys from the first row to preserve order
-    columns = list(submissions[0].keys())
-    seen = set(columns)
-
-    # Add any new keys from other rows (if any), in the order they appear
-    for row in submissions[1:]:
-        for key in row.keys():
-            if key not in seen:
-                columns.append(key)
-                seen.add(key)
-
-    headers = columns
-
-    # Escape helper (like toCSVCell)
-    def cleanse_csv_cell(value):
-        s = "" if value is None else str(value)
-        if s.startswith(("=", "+", "-", "@")):
-            s = "'" + s
-        return s
-
-    # Prepare CSV content
-    output = io.StringIO()
-    writer = csv.writer(output, quoting=csv.QUOTE_ALL, lineterminator="\r\n")
-
-    writer.writerow([cleanse_csv_cell(h) for h in headers])
-
-    for row in submissions:
-        writer.writerow([cleanse_csv_cell(row.get(col, "")) for col in columns])
-
-    csv_data = "\ufeff" + output.getvalue()  # BOM for Excel
-
-    # Create safe filename
-    event_name = frappe.db.get_value(EVENT, event_id, "event_name", cache=True) or "event"
-    safe_event_name = re.sub(r"[^A-Za-z0-9._-]+", "_", event_name)
-    filename = f"Attendee_List_-_{safe_event_name}.csv"
-
-    # Set file response
-    frappe.response["filename"] = filename
-    frappe.response["filecontent"] = csv_data
-    frappe.response["content_type"] = "text/csv; charset=utf-8"
-    frappe.response["type"] = "download"
-
-    return csv_data
 
 
 @frappe.whitelist()
