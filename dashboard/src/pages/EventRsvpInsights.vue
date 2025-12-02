@@ -186,7 +186,7 @@ const checkinColumns = [
 const checkedInGroups = ref([])
 
 function truncate(text, maxLength = 30) {
-  if (!text) return ''
+  if (text === null || text === undefined) return ''
   const str = String(text).trim()
   return str.length > maxLength ? str.substring(0, maxLength) + '…' : str
 }
@@ -351,7 +351,7 @@ const downloadCSV = (data, filename, excludeKeys = ['name']) => {
   const rows = [
     keys.join(','), // Header
     ...data.map((row) =>
-      keys.map((k) => `"${String(row[k] || '').replace(/"/g, '""')}"`).join(','),
+      keys.map((k) => `"${String(row[k] ?? '').replace(/"/g, '""')}"`).join(','),
     ),
   ]
 
