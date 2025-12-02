@@ -3,6 +3,7 @@
 {% from "fossunited/templates/macros/volunteers_card.html" import people_card %}
 {% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
+{% from "fossunited/templates/macros/projects_card.html" import projects_card %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
   {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
@@ -535,11 +536,25 @@
               </section>
             {% endif %}
 
+            {% if doc.project_showcase %}
+              <section aria-labelledby="projects-heading">
+                <h2 id="projects-heading" class="sr-only">Project Showcase</h2>
+                {{ projects_card(doc.project_showcase, "Project Showcase", "ti-code") }}
+              </section>
+            {% endif %}
+
             <!-- Sponsors -->
             {% if sponsors_dict %}
               <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
                 <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
                 {{ sponsor_card(sponsors_dict, doc.deck_link) }}
+              </section>
+            {% endif %}
+
+            {% if doc.community_partners %}
+              <section aria-labelledby="partners-heading">
+                <h2 id="partners-heading" class="sr-only">Community Partners</h2>
+                {{ projects_card(doc.community_partners, "Community Partners", "ti-users") }}
               </section>
             {% endif %}
           </main>

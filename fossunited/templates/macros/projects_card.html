@@ -1,0 +1,34 @@
+{% macro projects_card(items, title, icon_name) %}
+  <div class="v3-card">
+    <div class="v3-sponsor-header">
+      <div class="v3-section-title" style="margin-bottom: 0;">
+        <i class="ti {{ icon_name }}"></i>
+        <span>{{ title }}</span>
+      </div>
+    </div>
+
+    <div class="v3-sponsor-tier">
+      <div class="v3-sponsor-grid tier-2">
+        {% for item in items %}
+          <a
+            href="{{ item.link }}"
+            class="v3-sponsor tier-2"
+            target="_blank"
+            {% if item.description %}title="{{ item.description }}"{% endif %}
+          >
+            {% if item.image or item.logo %}
+              <img
+                src="{{ item.image or item.logo }}"
+                alt="{{ item.sponsor_name or item.org_name or item.showcase_name }}"
+              />
+            {% else %}
+              <div class="text-center fw-semibold" style="color: black;">
+                {{ item.sponsor_name or item.org_name or item.showcase_name }}
+              </div>
+            {% endif %}
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endmacro %}
