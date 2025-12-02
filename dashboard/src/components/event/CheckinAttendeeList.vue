@@ -14,11 +14,11 @@
   <div v-if="attendees.data">
     <ListView
       :columns="[
+        { label: 'Ticket ID', key: 'name', width: '100px' },
         { label: 'Name', key: 'full_name' },
-        { label: 'Ticket ID', key: 'name' },
-        { label: 'Bought Tshirt?', key: 'wants_tshirt', width: '150px' },
-        { label: 'Tshirt Delivered?', key: 'tshirt_delivered', width: '150px' },
-        { label: 'Check-in Status', key: 'checkin_status', width: 1.5 },
+        { label: 'Bought Tshirt?', key: 'wants_tshirt', width: '100px' },
+        { label: 'Tshirt Delivered?', key: 'tshirt_delivered', width: '100px' },
+        { label: 'Check-in Status', key: 'checkin_status', width: 1 },
         { label: 'Actions', key: 'action' },
       ]"
       :rows="attendees.data"
