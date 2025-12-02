@@ -116,7 +116,7 @@
           </div>
 
           <div v-else>
-            <span class="text-base">{{ item }}</span>
+            <span class="text-base" :title="item">{{ truncate(item, 30) }}</span>
           </div>
         </template>
       </ListView>
@@ -163,7 +163,6 @@ const submissions = createResource({
   url: 'fossunited.api.chapter.get_submissions_with_answers',
   params: {
     event_id: route.params.id,
-    full_answers: false,
   },
   auto: true,
 })
@@ -185,6 +184,12 @@ const checkinColumns = [
 ]
 
 const checkedInGroups = ref([])
+
+function truncate(text, maxLength = 30) {
+  if (!text) return ''
+  const str = String(text).trim()
+  return str.length > maxLength ? str.substring(0, maxLength) + '…' : str
+}
 
 watchEffect(() => {
   const byDate = checkedInData.data?.by_date || {}
@@ -224,33 +229,33 @@ const formatTime = (datetime) => {
 }
 
 const listColumns = computed(() => {
-  const columns = new Map()
+  if (!submissions.data?.length) return []
 
-  const excludedFields = ['confirm_attendance', 'status', 'name']
-
-  // Collect keys from all submissions
-  if (Array.isArray(submissions.data)) {
-    submissions.data.forEach((submission) => {
-      Object.keys(submission).forEach((key) => {
-        if (!excludedFields.includes(key) && !columns.has(key)) {
-          columns.set(key, { key, label: key })
-        }
-      })
-    })
-  }
-
-  // include confirm_attendance only (status stays hidden)
-  const result = [
-    { key: 'confirm_attendance', label: 'Attending', icon: 'check-circle', width: '40px' },
-    ...Array.from(columns.values()),
+  const baseColumns = [
+    { label: 'Name', key: 'name1', width: '200px' },
+    { label: 'Email', key: 'email', width: '250px' },
+    { label: 'Im a', key: 'im_a', width: '150px' },
+    { label: 'Confirmed', key: 'confirm_attendance', width: '120px' },
   ]
 
-  // host approval column
+  const firstSubmission = submissions.data[0]
+  const customFields = Object.keys(firstSubmission).filter(
+    (key) => !['name', 'name1', 'email', 'im_a', 'confirm_attendance', 'status'].includes(key),
+  )
+
+  const customColumns = customFields.map((field) => ({
+    label: truncate(field, 20),
+    key: field,
+    width: '300px',
+  }))
+
+  const columns = [...baseColumns, ...customColumns]
+
   if (rsvp_form.data?.requires_host_approval) {
-    result.push({ key: 'actions', label: 'Actions' })
+    columns.push({ label: 'Actions', key: 'actions', width: '200px' })
   }
 
-  return result
+  return columns
 })
 
 const groupedRows = ref([])
@@ -338,49 +343,37 @@ watchEffect(() => {
   }
 })
 
+const downloadCSV = (data, filename, excludeKeys = ['name']) => {
+  if (!data?.length) return
+
+  const keys = Object.keys(data[0]).filter((k) => !excludeKeys.includes(k))
+
+  const rows = [
+    keys.join(','), // Header
+    ...data.map((row) =>
+      keys.map((k) => `"${String(row[k] || '').replace(/"/g, '""')}"`).join(','),
+    ),
+  ]
+
+  const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' })
+  const link = document.createElement('a')
+  link.href = URL.createObjectURL(blob)
+  link.download = filename
+  link.click()
+  URL.revokeObjectURL(link.href)
+}
+
 const downloadAttendeeList = () => {
-  const eventId = route.params.id
-  window.open(
-    `/api/method/fossunited.api.chapter.download_attendee_list_csv?event_id=${eventId}`,
-    '_self',
-  )
+  downloadCSV(submissions.data, `rsvp_submissions_${route.params.id}.csv`)
 }
 
 const downloadCheckinCSV = () => {
   if (!checkedInData.data?.by_date) return
 
-  const rows = []
+  const flatData = Object.entries(checkedInData.data.by_date).flatMap(([date, data]) =>
+    data.attendees.map((a) => ({ date, ...a })),
+  )
 
-  // add header
-  rows.push(['date', 'name', 'email', 'im_a', 'checkin_time'])
-
-  // Add data grouped by date
-  for (const [date, data] of Object.entries(checkedInData.data.by_date)) {
-    for (const attendee of data.attendees) {
-      rows.push([
-        date,
-        attendee.name1 || '',
-        attendee.email || '',
-        attendee.im_a || '',
-        attendee.check_in_time || '',
-      ])
-    }
-  }
-
-  // convert to CSV
-  const csvContent = rows
-    .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
-    .join('\n')
-
-  // Download
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-  const link = document.createElement('a')
-  const url = URL.createObjectURL(blob)
-  link.setAttribute('href', url)
-  link.setAttribute('download', `event-checkins-${route.params.id}.csv`)
-  link.style.visibility = 'hidden'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+  downloadCSV(flatData, `event-checkins-${route.params.id}.csv`)
 }
 </script>
