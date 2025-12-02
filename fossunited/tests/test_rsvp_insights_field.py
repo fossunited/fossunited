@@ -7,7 +7,6 @@ from fossunited.doctype_ids import (
     EVENT,
     EVENT_RSVP,
     RSVP_RESPONSE,
-    USER_PROFILE,
 )
 
 from .utils import (
@@ -22,7 +21,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
     def setUp(self):
         # Create a chapter → event → RSVP form
         self.core_team_email = "test1@example.com"
-        self.volunteer_user = "volunteer@example.com"
+        self.volunteer_user = "volunteer1@example.com"
         self.chapter = insert_test_chapter(
             members=[self.core_team_email, self.volunteer_user],
         )
@@ -43,15 +42,6 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         )
         self._extra_responses = []
 
-        # After insert_test_chapter is called
-        self.event.reload()
-        for member in self.event.event_members:
-            if frappe.db.get_value(USER_PROFILE, member.member, "user") == self.volunteer_user:
-                member.role = "Volunteer"
-
-        self.event.save(ignore_permissions=True)
-        self.event.reload()
-
     def tearDown(self):
         frappe.set_user("Administrator")
         # Delete children first, then parents
@@ -67,91 +57,29 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         with self.assertRaises(frappe.PermissionError):
             get_submissions_with_answers(self.event.name)
 
-    def test_non_event_core_team_masks_email(self):
-        frappe.set_user(self.volunteer_user)
-        result = get_submissions_with_answers(self.event.name, full_answers=False)
-        self.assertTrue(result)
-        # Check email is masked: basic pattern check
-        self.assertIn("@", result[0]["email"])
-        self.assertNotEqual(result[0]["email"], "alicewonderland@example.com")
-
     def test_event_core_team_full_email(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name, full_answers=False)
+        result = get_submissions_with_answers(self.event.name)
         self.assertTrue(result)
         self.assertIn("@", result[0]["email"])
         self.assertEqual(result[0]["email"], "alicewonderland@example.com")
 
     def test_event_core_team_gets_full_answers(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name, full_answers=True)
-        self.assertIn("whats_your_goal", result[0])
+        result = get_submissions_with_answers(self.event.name)
+        self.assertIn("What’s your goal?", result[0])
         self.assertEqual(
-            result[0]["whats_your_goal"],
+            result[0]["What’s your goal?"],
             "To become the king of the pirates and greatest swordsmen.",
         )
 
-    def test_truncation_when_full_false(self):
+    def test_custom_field(self):
+        # Simulate a user who is part of the chapter (member)
         frappe.set_user(self.core_team_email)
-        # Use long question/response to test truncation
-        long_q = "Q" * 100
-        long_r = "R" * 100
-        # Create another submission
-        _bob = insert_rsvp_submission(
-            linked_rsvp=self.rsvp.name,
-            name="Bob",
-            email="bob@example.com",
-            custom_answers=[{"question": long_q, "response": long_r}],
-        )
-        result = get_submissions_with_answers(self.event.name, full_answers=False)
-        for s in result:
-            for key, val in s.items():
-                if key not in ["name1", "email", "im_a", "confirm_attendance"]:
-                    self.assertLessEqual(len(val), 52)
-
-    def test_no_truncation_when_full_true(self):
-        frappe.set_user(self.core_team_email)
-        question = "What do you bring?"
-        response = "Experience and energy."
-        _charlie = insert_rsvp_submission(
-            linked_rsvp=self.rsvp.name,
-            name="Charlie",
-            email="charlie@example.com",
-            custom_answers=[{"question": question, "response": response}],
-        )
-        self._extra_responses.append(_charlie.name)
-
-        result = get_submissions_with_answers(self.event.name, full_answers=True)
-        found = False
-        for s in result:
-            if s.get("email") == "charlie@example.com":
-                found = True
-                self.assertEqual(s["what_do_you_bring"], response)
-        self.assertTrue(found, "Charlie submission not found in results")
-
-    def test_non_core_basic_fields(self):
-        # Simulate a user who is part of the chapter (member) but not the core member
-        frappe.set_user(self.volunteer_user)
-
-        # Add another submission with custom fields
-        _bob2 = insert_rsvp_submission(
-            linked_rsvp=self.rsvp.name,
-            name="Bob",
-            email="bob@example.com",
-            im_a="Student",
-            custom_answers=[{"question": "Why are you attending?", "response": "To network"}],
-        )
-        self._extra_responses.append(_bob2.name)
 
         result = get_submissions_with_answers(self.event.name)
         for submission in result:
             self.assertIn("name1", submission)
             self.assertIn("email", submission)
             self.assertIn("im_a", submission)
-
-            # Ensure no custom fields (starting with '') are present
-            for key in submission.keys():
-                self.assertFalse(
-                    key.startswith("why"),
-                    f"Non-core_team should not see custom field: {key}",
-                )
+            self.assertIn("What’s your goal?", submission)
