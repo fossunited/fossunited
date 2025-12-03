@@ -217,9 +217,10 @@ const editor = useEditor({
   content: props.modelValue,
   onUpdate: ({ editor }) => {
     let html = editor.getHTML()
+    // Replace comments anywhere in paragraphs
     html = html.replace(
-      /<p>&lt;!--(.*?)--&gt;<\/p>/g,
-      '<p class="hidden-html-comment">&lt;!--$1--&gt;</p>',
+      /&lt;!--(.*?)--&gt;/g,
+      '<span class="hidden-html-comment">&lt;!--$1--&gt;</span>',
     )
     emit('update:modelValue', html)
   },
