@@ -45,17 +45,16 @@
     </div>
 
     <div class="ev-cfp-footer">
-        <div class="ev-cfp-deadline">
-      {% if cfp_status_block.deadline %}
+      <div class="ev-cfp-deadline">
+        {% if cfp_status_block.deadline %}
           <span>Deadline:</span>
           <strong>{{ cfp_status_block.deadline }}</strong>
-      {% endif %}
-        </div>
+        {% endif %}
+      </div>
       <i class="ti ti-arrow-right" aria-hidden="true"></i>
     </div>
   </div>
 {% endmacro %}
-
 
 {% macro event_cover() %}
   <div class="v3-banner-wrap">
@@ -157,7 +156,9 @@
       flex-shrink: 0;
     }
 
-    .ev-icon:hover { opacity: 0.9; }
+    .ev-icon:hover {
+      opacity: 0.9;
+    }
 
     .ev-icon i {
       font-size: 1.5rem;
@@ -211,45 +212,45 @@
       font-weight: 600;
     }
 
-.ev-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
+    .ev-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
 
-/* live */
-.ev-live--live {
-  background: rgba(16, 185, 129, 0.15); /* greenish */
-  color: rgba(16, 185, 129, 1);
-}
+    /* live */
+    .ev-live--live {
+      background: rgba(16, 185, 129, 0.15); /* greenish */
+      color: rgba(16, 185, 129, 1);
+    }
 
-/* closing soon */
-.ev-live--closing {
-  background: hsla(41, 88%, 45%, 0.15);
-  color: hsla(41, 88%, 46%, 1);
-}
+    /* closing soon */
+    .ev-live--closing {
+      background: hsla(41, 88%, 45%, 0.15);
+      color: hsla(41, 88%, 46%, 1);
+    }
 
-/* closed */
-.ev-live--closed {
-  background: hsla(0, 53%, 52%, 0.15);
-  color: hsla(0, 53%, 52%, 1);
-}
+    /* closed */
+    .ev-live--closed {
+      background: hsla(0, 53%, 52%, 0.15);
+      color: hsla(0, 53%, 52%, 1);
+    }
 
-.ev-live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-}
+    .ev-live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
 
-.ev-live-ban-icon {
-  font-size: 1rem;
-  line-height: 1;
-}
+    .ev-live-ban-icon {
+      font-size: 1rem;
+      line-height: 1;
+    }
 
     .ev-cfp-desc {
       font-size: 0.875rem;
@@ -336,7 +337,9 @@
       <div class="v3-card ev-main-card">
         <div class="v3-header">
           <div class="show-mobile-only">{{ event_cover() }}</div>
-          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;">
+          <div
+            style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;"
+          >
             <!-- Header Info -->
             <div style="display: flex; flex-direction: column;">
               <div style="display: flex; flex-direction: column;">
@@ -346,18 +349,17 @@
                   aria-label="{{ chapter.chapter_name }} chapter page"
                 >
                   {% if chapter.chapter_type == 'FOSS Club' %}
-                  <img
-                    src="/assets/fossunited/images/chapter/fossclub_logo.svg"
-                    alt="FOSS Club Logo"
-                  />
-                  <span>{{ chapter.chapter_name | truncate(22, True, '...', 0) }}</span>
+                    <img
+                      src="/assets/fossunited/images/chapter/fossclub_logo.svg"
+                      alt="FOSS Club Logo"
+                    />
+                    <span>{{ chapter.chapter_name | truncate(22, True, '...', 0) }}</span>
                   {% else %}
-                  <span class="no-font-inherit fff-forward">
-                    {{ (chapter.city.upper() if chapter.city else chapter.chapter_name) | truncate(22, True, '...', 0) }}
-                  </span>
+                    <span class="no-font-inherit fff-forward">
+                      {{ (chapter.city.upper() if chapter.city else chapter.chapter_name) | truncate(22, True, '...', 0) }}
+                    </span>
                   {% endif %}
                 </a>
-
 
                 <h1 class="ev-title">{{ doc.event_name }}</h1>
                 <div class="ev-tags" role="list" aria-label="Event tags">
@@ -398,7 +400,7 @@
                     <time datetime="{{ doc.event_start_date.isoformat() }}">
                       {{ doc.event_start_date.strftime("%-I:%M %p") }}
                     </time>
-                     -
+                    -
                     <time datetime="{{ doc.event_end_date.isoformat() }}">
                       {{ doc.event_end_date.strftime("%-I:%M %p") }}
                     </time>
@@ -424,13 +426,13 @@
             {% endif %}
             </div>
 
-            <!-- Do we need to make them repeat same content? -->
-            <!-- <div class="ev-detail-row"> -->
-            <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
-            <!-- </div> -->
-            <!-- Buttons -->
-            <div>
-              <div class="v3-btn-group" role="group" aria-label="Event actions">
+              <!-- Do we need to make them repeat same content? -->
+              <!-- <div class="ev-detail-row"> -->
+              <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
+              <!-- </div> -->
+              <!-- Buttons -->
+              <div>
+                <div class="v3-btn-group" role="group" aria-label="Event actions">
                   {% if status_concluded and doc.livestream_embed_link %}
                     <a
                       href="{{ doc.livestream_embed_link }}"
@@ -439,10 +441,13 @@
                       class="v3-btn v3-btn-secondary"
                       aria-label="Watch event recording on YouTube"
                     >
-                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                      <i
+                        class="ti ti-brand-youtube"
+                        style="font-size: 1.1rem;"
+                        aria-hidden="true"
+                      ></i>
                       <span>Watch</span>
                     </a>
-
                   {% elif status_live %}
                     {% if doc.is_paid_event %}
                       <a
@@ -505,16 +510,16 @@
                 </h2>
 
                 {% if status_live and doc.livestream_link %}
-                <a
-                  href="{{ doc.livestream_link }}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="v3-btn v3-btn-dark mb-3"
-                  aria-label="Join livestream"
-                >
-                  <i class="ti ti-video" style="font-size: 1.1rem;" aria-hidden="true"></i>
-                  <span>Livestream Link</span>
-                </a>
+                  <a
+                    href="{{ doc.livestream_link }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="v3-btn v3-btn-dark mb-3"
+                    aria-label="Join livestream"
+                  >
+                    <i class="ti ti-video" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                    <span>Livestream Link</span>
+                  </a>
                 {% endif %}
 
                 <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
@@ -586,55 +591,113 @@
             <section class="v3-card ev-contact" aria-labelledby="contact-heading">
               <h2 id="contact-heading" class="sr-only">Contact Information</h2>
               {% if chapter.email %}
-              <div class="d-flex align-items-center pb-2">
-                <i class="ti ti-mail" aria-hidden="true"></i>
-                <div class="ev-contact-email">
-                  <a
-                    href="mailto:{{ chapter.email }}"
-                    aria-label="Email {{ chapter.email }}"
-                  >
-                    {{ chapter.email }}
-                  </a>
+                <div class="d-flex align-items-center pb-2">
+                  <i class="ti ti-mail" aria-hidden="true"></i>
+                  <div class="ev-contact-email">
+                    <a href="mailto:{{ chapter.email }}" aria-label="Email {{ chapter.email }}">
+                      {{ chapter.email }}
+                    </a>
+                  </div>
                 </div>
-              </div>
               {% endif %}
 
               <nav class="header-section--socials-event" aria-label="Social media links">
                 {% for (k,v) in social_links.items() %}
-                <a
-                  href="{{ v }}"
-                  aria-label="{{ k|title }} page for {{ doc.chapter_name }} chapter"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="https://svgl.app/library/{{ k }}.svg"
-                    alt=""
-                    aria-hidden="true"
-                  />
-                </a>
+                  <a
+                    href="{{ v }}"
+                    aria-label="{{ k|title }} page for {{ doc.chapter_name }} chapter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src="https://svgl.app/library/{{ k }}.svg" alt="" aria-hidden="true" />
+                  </a>
                 {% endfor %}
               </nav>
             </section>
 
             <!-- Map -->
+
             {% if doc.map_link %}
+              <link
+                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                rel="stylesheet"
+                integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                crossorigin=""
+              />
+              <script
+                src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                crossorigin=""
+              ></script>
+
               <div
                 class="v3-clickable ev-map-section"
-                onclick="window.open('{{ doc.map_link | e }}', '_blank')"
                 role="button"
                 tabindex="0"
                 aria-label="Open location in map"
-                onkeypress="if(event.key==='Enter'||event.key===' ')window.open('{{ doc.map_link | e }}', '_blank')"
               >
-                <!-- <img -->
-                <!--   src="https://via.placeholder.com/396x81" -->
-                <!--   alt="Map" -->
-                <!--   class="ev-map" -->
-                <!--   style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;" -->
-                <!-- /> -->
+                <div
+                  id="osm-map-{{ doc.id | default('main') }}"
+                  class="ev-map"
+                  style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); cursor: pointer;"
+                ></div>
               </div>
+
+              <script>
+                (function () {
+                  var mapLink = '{{ doc.map_link | e }}'
+                  var lat, lng
+
+                  var osmMatch = mapLink.match(/#[\d.]+\/([\d.]+)\/([\d.]+)/)
+                  if (osmMatch) {
+                    lat = parseFloat(osmMatch[1])
+                    lng = parseFloat(osmMatch[2])
+                  }
+
+                  var gmapsMatch = mapLink.match(/@([\d.]+),([\d.]+),/)
+                  if (gmapsMatch) {
+                    lat = parseFloat(gmapsMatch[1])
+                    lng = parseFloat(gmapsMatch[2])
+                  }
+
+                  if (!lat || !lng) {
+                    var gPlaceLatMatch = mapLink.match(/!3d([\d.]+)/)
+                    var gPlaceLngMatch = mapLink.match(/!4d([\d.]+)/)
+                    if (gPlaceLatMatch && gPlaceLngMatch) {
+                      lat = parseFloat(gPlaceLatMatch[1])
+                      lng = parseFloat(gPlaceLngMatch[1])
+                    }
+                  }
+
+                  if (lat && lng) {
+                    var mapId = 'osm-map-{{ doc.id | default("main") }}'
+                    var element = document.getElementById(mapId)
+
+                    if (element) {
+                      var map = L.map(element).setView([lat, lng], 14)
+
+                      map.attributionControl.setPrefix('')
+                      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                      }).addTo(map)
+
+                      L.marker([lat, lng]).addTo(map)
+
+                      element.addEventListener('click', function (e) {
+                        window.open(mapLink, '_blank')
+                      })
+
+                      element.addEventListener('keypress', function (e) {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          window.open(mapLink, '_blank')
+                        }
+                      })
+                    }
+                  }
+                })()
+              </script>
             {% endif %}
+
           </div>
         </div>
       </div>
