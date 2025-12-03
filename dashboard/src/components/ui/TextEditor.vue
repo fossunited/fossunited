@@ -226,7 +226,8 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        'border border-gray-200 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[12rem] overflow-y-auto focus:border-gray-400 prose text-base',
+        'border border-gray-200 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[48rem] overflow-y-auto focus:border-gray-400 prose text-base resize-y',
+      style: 'resize: vertical;',
     },
   },
   extensions: [
