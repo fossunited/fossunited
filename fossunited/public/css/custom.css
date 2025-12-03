@@ -3825,3 +3825,11 @@ h6 {
     gap: 2rem;
   }
 }
+
+.hidden-html-comment {
+  display: none !important;
+}
+
+p.hidden-html-comment {
+  display: none !important;
+}

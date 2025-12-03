@@ -216,7 +216,12 @@ const props = defineProps({
 const editor = useEditor({
   content: props.modelValue,
   onUpdate: ({ editor }) => {
-    emit('update:modelValue', editor.getHTML())
+    let html = editor.getHTML()
+    html = html.replace(
+      /<p>&lt;!--(.*?)--&gt;<\/p>/g,
+      '<p class="hidden-html-comment">&lt;!--$1--&gt;</p>',
+    )
+    emit('update:modelValue', html)
   },
   editorProps: {
     attributes: {
