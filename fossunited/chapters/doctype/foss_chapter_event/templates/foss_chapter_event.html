@@ -616,8 +616,7 @@
             </section>
 
             <!-- Map -->
-
-            {% if doc.map_link %}
+            {% if map_lat and map_lng %}
               <link
                 href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
                 rel="stylesheet"
@@ -637,64 +636,44 @@
                 aria-label="Open location in map"
               >
                 <div
-                  id="osm-map-{{ doc.id | default('main') }}"
+                  id="osm-map-{{ doc.event_location | default('main') }}"
                   class="ev-map"
                   style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); cursor: pointer;"
                 ></div>
               </div>
 
               <script>
-                (function () {
-                  var mapLink = '{{ doc.map_link | e }}'
-                  var lat, lng
+            (function () {
+                 var lat = {{ map_lat }}
+                 var lng = {{ map_lng }}
+                 var mapLink = '{{ doc.map_link | e }}'
+                 var mapId = 'osm-map-{{ doc.event_location| e | default("main") }}'
+                 var element = document.getElementById(mapId)
 
-                  var osmMatch = mapLink.match(/#[\d.]+\/([\d.]+)\/([\d.]+)/)
-                  if (osmMatch) {
-                    lat = parseFloat(osmMatch[1])
-                    lng = parseFloat(osmMatch[2])
-                  }
+                 if (element) {
+                   var map = L.map(element).setView([lat, lng], 14)
 
-                  var gmapsMatch = mapLink.match(/@([\d.]+),([\d.]+),/)
-                  if (gmapsMatch) {
-                    lat = parseFloat(gmapsMatch[1])
-                    lng = parseFloat(gmapsMatch[2])
-                  }
+                   map.attributionControl.setPrefix('')
+                   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                     maxZoom: 19,
+                   }).addTo(map)
 
-                  if (!lat || !lng) {
-                    var gPlaceLatMatch = mapLink.match(/!3d([\d.]+)/)
-                    var gPlaceLngMatch = mapLink.match(/!4d([\d.]+)/)
-                    if (gPlaceLatMatch && gPlaceLngMatch) {
-                      lat = parseFloat(gPlaceLatMatch[1])
-                      lng = parseFloat(gPlaceLngMatch[1])
-                    }
-                  }
+                   L.marker([lat, lng])
+                     .addTo(map)
+                     <!-- .bindPopup('{{ doc.event_location | e }}') -->
+                     <!-- .openPopup() -->
 
-                  if (lat && lng) {
-                    var mapId = 'osm-map-{{ doc.id | default("main") }}'
-                    var element = document.getElementById(mapId)
+                   element.addEventListener('click', function (e) {
+                     window.open(mapLink, '_blank')
+                   })
 
-                    if (element) {
-                      var map = L.map(element).setView([lat, lng], 14)
-
-                      map.attributionControl.setPrefix('')
-                      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                      }).addTo(map)
-
-                      L.marker([lat, lng]).addTo(map)
-
-                      element.addEventListener('click', function (e) {
-                        window.open(mapLink, '_blank')
-                      })
-
-                      element.addEventListener('keypress', function (e) {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          window.open(mapLink, '_blank')
-                        }
-                      })
-                    }
-                  }
-                })()
+                   element.addEventListener('keypress', function (e) {
+                     if (e.key === 'Enter' || e.key === ' ') {
+                       window.open(mapLink, '_blank')
+                     }
+                   })
+                 }
+               })()
               </script>
             {% endif %}
 
