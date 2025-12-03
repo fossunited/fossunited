@@ -216,12 +216,16 @@ const props = defineProps({
 const editor = useEditor({
   content: props.modelValue,
   onUpdate: ({ editor }) => {
-    emit('update:modelValue', editor.getHTML())
+    let html = editor.getHTML()
+    // Replace comments anywhere in paragraphs
+    html = html.replace(/<!--(.*?)-->/gs, '<span class="hidden-html-comment"><!--$1--></span>')
+    emit('update:modelValue', html)
   },
   editorProps: {
     attributes: {
       class:
-        'border border-gray-200 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[12rem] overflow-y-auto focus:border-gray-400 prose text-base',
+        'border border-gray-200 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[48rem] overflow-y-auto focus:border-gray-400 prose text-base resize-y',
+      style: 'resize: vertical;',
     },
   },
   extensions: [
