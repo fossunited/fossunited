@@ -18,13 +18,20 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 - `uv add frappe-manager`
 - `fm create foss.localhost`
 - `fm start` choose site as it shows in menu
-- `fm shell`
+- `fm shell` (enter into docker container shell and run further steps there)
 - `bench get-app https://github.com/fossunited/fossunited.git`
 - `bench install-app fossunited` - This will also install dashboard
+- Also please configure frappe for server scripts and running tests
+  - `bench set-config -g server_script_enabled true`
+
+- To run tests please create new-site since it can have unintended DB changes.
+  - `bench new-site break.site`
+  - `bench --site break.site set-config allow_tests true`
+
 - Open `foss.localhost` in your browser and start exploring!
 - Dashboard page can be accessed via `foss.localhost/dashboard`
 
-Note: Since dashboard is not running live, you'd need to `bench build --apps fossunited` for changes to update.
+Note: Since dashboard is not running as live dev server, you'd need to `bench build --apps fossunited` for changes to update.
 
 If you would prefer for manual method, please follow on below
 
@@ -129,8 +136,12 @@ The dashboard will be available at:
 
 To automatically run linters before commits:
 
+- We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
+- [Vale]((https://vale.sh)) is used for spell check and grammar check for docs content.
+
+
 ```sh
-pip install pre-commit
+uv add pre-commit
 pre-commit install
 ```
 

@@ -2,44 +2,41 @@
     <img alt="FOSS United logo" src=".github/logo.png" width="150px" height="120px">
 </div>
 
+<p align="center">
+<a href="https://docs.fossunited.org/">
+<img src="https://img.shields.io/badge/FOSSUnited-Docs-lightgreen?style=for-the-badge&labelColor=black">
+</a>
+<a href="https://frappe.io/framework/">
+<img src="https://img.shields.io/badge/Frappe-framework-blue?style=for-the-badge&logo=frappe&labelColor=black">
+</a>
+<a href="https://vuejs.org/">
+<img src="https://img.shields.io/badge/Vue.js-dashboard-42b883?style=for-the-badge&logo=vuedotjs&labelColor=black">
+</a>
+<a href="https://tailwindcss.com/">
+<img src="https://img.shields.io/badge/TailwindCSS-dashboard-38bdf8?style=for-the-badge&logo=tailwindcss&labelColor=black">
+</a>
+</p>
+
+
 ## The FOSS United Platform
 
 Project repo for the website and open-source platform of FOSS United. The whole platform is being built on [Frappe](https://frappe.io).
 
+Read more at [https://docs.fossunited.org/](https://docs.fossunited.org/)
+
 ## Installation
 
-- This project works the best on the latest Frappe Version v15. And is suggested to be installed on the same.
-- Checkout Frappe Framework [Installation Docs](https://frappeframework.com/docs/) for setting up frappe on your [bench](https://frappeframework.com/docs/user/en/tutorial/install-and-setup-bench).
-- If you encounter a password-related error after installing MariaDB while following the Frappe installation guide—despite not setting a password—follow [this DigitalOcean guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset the root password. If the `kill` command near the end of the article fails, find the MySQL processes using `ps aux | grep mysqld`, identify the `mysqld` and `mysql_safe` processes, and terminate them with `sudo kill -9 <pid>`. Verify that the processes are no longer running before proceeding.
-- Create a new bench with
-  `bench init fossu-bench`
-- Clone the FOSS United Platform App.
-  `bench get-app https://github.com/fossunited/fossunited`
-- Create a [new site](https://frappeframework.com/docs/user/en/tutorial/create-a-site)
-  `bench new-site test.localhost`
-- Install the App on the created site
-  `bench --site test.localhost install-app fossunited`
-- Finally,
-  `bench start`
-
-Checkout [Access site in your browser](https://frappeframework.com/docs/user/en/tutorial/create-a-site#access-site-in-your-browser) for adding hosts.
-
-### Steps to install and run the [FOSS United Dashboard](https://fossunited.org/dashboard)
-
-The FOSS United Dashboard is a centralised admin UI for all the users signed up on fossunited.org. The Dashboard provides volunteers with the feature to manage all of the activities happening in their FOSS Club or City Chapter. Here are the steps to install and get the dashboard going:
-
-- The code for dashboard is located under `fossunited/dashboard`.
-- Install and Build the dashboard with `yarn install`.
-- In a development environment, you need to put the below key-value pair in your site_config.json file: `"ignore_csrf": 1`.
-- Run the dashboard in the root directory of the project with `yarn dev`.
-- Dashboard will now be accessible on `<sitename>:8080`.
+Please follow our [guide to setup and get started](https://docs.fossunited.org/development/).
 
 ## Pre-commit
 
 For automatic running of linters before you commit:
 
+- We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
+- [Vale]((https://vale.sh)) is used for spell check and grammar check for docs content.
+
 ```
-$ pip install pre-commit
+$ uv add pre-commit
 $ pre-commit install
 ```
 
