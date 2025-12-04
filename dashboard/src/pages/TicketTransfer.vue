@@ -6,7 +6,7 @@
       <img
         v-if="transfer_settings.doc?.banner_image"
         :src="transfer_settings.doc.banner_image"
-        alt=""
+        alt="Ticket Transfers banner"
         class="object-cover hidden md:block w-full border rounded-lg aspect-[4.96/1]"
       />
       <div class="mt-8">
