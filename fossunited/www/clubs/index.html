@@ -53,7 +53,7 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
     {% for role in roles %}
       <div class="p-6 flex flex-col items-center gap-6 bg-white border rounded-lg ">
-        <img class="h-10" src="{{ role.icon }}" />
+        <img class="h-10" src="{{ role.icon }}" alt="Role icon" />
         <p class="text-center w-2/3">{{ role.content }}</p>
       </div>
     {% endfor %}
@@ -109,6 +109,7 @@
       {% else %}
         <img
           src="/assets/fossunited/images/clubs/club_logo_w_glow.svg"
+          alt="Club logo with glow"
           class="w-24 h-24 object-contain p-1 rounded-lg border"
         />
       {% endif %}

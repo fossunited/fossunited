@@ -346,12 +346,12 @@
           <div class="header--content-section">
             <div class="d-flex mb-1">
               <h4 class="mr-1">{{ doc.full_name }}</h4>
-              {% for company in doc.experience %}{% if company.is_working_here %}
+                {% for company in doc.experience %}{% if company.is_working_here %}
                 <!-- Company logos are provided by https://logo.dev -->
                 <img
                   class="company-badge"
                   src="https://img.logo.dev/{{ company.company_website.lstrip("https://") }}"
-                  alt=""
+                  alt="{{ company.company or company.company_website }} logo"
                 />
               {% endif %}{% endfor %}
             </div>
@@ -408,6 +408,7 @@
             <div class="skill-container">
               <img
                 src="https://cdn.simpleicons.org/{{ skill.skill }}"
+                alt="{{ skill.skill }} icon"
                 onError="removeElement(this);"
               />
               <span>{{ skill.skill }}</span>
