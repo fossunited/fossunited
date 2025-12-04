@@ -3,9 +3,16 @@ APIs for Tickets and Transfer Tickets
 """
 
 import frappe
+from frappe.utils import add_days, now_datetime
 
 from fossunited.api.chapter import check_if_chapter_member
-from fossunited.doctype_ids import EVENT, EVENT_TICKET, TICKET_TRANSFER
+from fossunited.doctype_ids import (
+    EVENT,
+    EVENT_TICKET,
+    FREE_TICKET_APPLY,
+    FREE_TICKET_CODE,
+    TICKET_TRANSFER,
+)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -284,7 +291,7 @@ def has_valid_permission(event_id: str) -> bool:
 
     # Allow if user has "Chapter Team Member" role AND is a member of the chapter
     if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
-        chapter_id = frappe.db.get_value("FOSS Chapter Event", event_id, "chapter")
+        chapter_id = frappe.db.get_value(EVENT, event_id, "chapter")
         if chapter_id and check_if_chapter_member(chapter_id, session_user):
             return True
 
@@ -293,7 +300,7 @@ def has_valid_permission(event_id: str) -> bool:
         "FOSS Chapter Event Member",
         {
             "parent": event_id,
-            "parenttype": "FOSS Chapter Event",
+            "parenttype": EVENT,
             "email": session_user,
         },
     ):
@@ -402,7 +409,7 @@ def get_event_free_codes(event):
         frappe.throw("You are not authorized to view the tickets for this event")
 
     codes = frappe.get_all(
-        "Event Free Ticket Code",
+        FREE_TICKET_CODE,
         filters={"event": event},
         fields=[
             "name",
@@ -419,3 +426,115 @@ def get_event_free_codes(event):
     )
 
     return codes
+
+
+@frappe.whitelist()
+def get_paid_events():
+    """Get list of paid events for ticket search - Live or recently concluded (within 30 days)"""
+    thirty_days_ago = add_days(now_datetime(), -30)
+
+    return frappe.get_all(
+        EVENT,
+        filters={
+            "is_paid_event": 1,
+            "status": ["in", ["Live", "Concluded"]],
+            "event_end_date": [">=", thirty_days_ago],
+        },
+        fields=["name", "event_name"],
+        order_by="event_end_date desc",
+    )
+
+
+@frappe.whitelist()
+def search_tickets(search_term, event=None):
+    """Search tickets by ticket_id, email, or coupon_id"""
+    if not search_term:
+        frappe.throw("Search term is required")
+
+    search_term = search_term.strip()
+
+    # Email search - requires event
+    if "@" in search_term:
+        if not event:
+            frappe.throw("Please select an event to search by email")
+
+        return frappe.get_all(
+            EVENT_TICKET,
+            filters={"event": event, "email": search_term},
+            fields=["name", "full_name", "email", "tier", "organization"],
+            order_by="full_name",
+        )
+
+    # Ticket ID - direct lookup, no event needed
+    if frappe.db.exists(EVENT_TICKET, search_term):
+        ticket_data = frappe.db.get_value(
+            EVENT_TICKET,
+            search_term,
+            ["name", "full_name", "email", "tier", "organization"],
+            as_dict=True,
+        )
+        return [ticket_data]
+
+    coupon_event = frappe.db.get_value(FREE_TICKET_CODE, search_term, "event")
+    if not coupon_event:
+        return []
+
+    coupon_apps = frappe.get_all(
+        FREE_TICKET_APPLY,
+        filters={"coupon_id": search_term, "event": coupon_event},
+        fields=["email"],
+        pluck="email",
+    )
+
+    if coupon_apps:
+        return frappe.get_all(
+            EVENT_TICKET,
+            filters={"email": ["in", coupon_apps], "event": coupon_event},
+            fields=["name", "full_name", "email", "tier", "organization"],
+            order_by="full_name",
+        )
+
+    return []
+
+
+@frappe.whitelist(allow_guest=True)
+def download_ticket(ticket_id):
+    """Download single ticket PDF"""
+    if not frappe.db.exists(EVENT_TICKET, ticket_id):
+        frappe.throw("Ticket not found")
+
+    from frappe.utils.print_format import download_pdf
+
+    return download_pdf(
+        doctype=EVENT_TICKET,
+        name=ticket_id,
+        format="[Designer] Event Ticket",
+        no_letterhead=1,
+    )
+
+
+@frappe.whitelist(allow_guest=True)
+def download_all_tickets(ticket_ids):
+    """Download multiple tickets as single PDF"""
+    import json
+
+    if isinstance(ticket_ids, str):
+        ticket_ids = json.loads(ticket_ids)
+
+    if not ticket_ids or not isinstance(ticket_ids, list):
+        frappe.throw("No tickets provided")
+
+    # Verify all tickets exist
+    for ticket_id in ticket_ids:
+        if not frappe.db.exists(EVENT_TICKET, ticket_id):
+            frappe.throw(f"Ticket {ticket_id} not found")
+
+    from frappe.utils.print_format import download_multi_pdf
+
+    # download_multi_pdf returns the PDF content directly
+    download_multi_pdf(
+        doctype=EVENT_TICKET,
+        name=json.dumps(ticket_ids),
+        format="[Designer] Event Ticket",
+        no_letterhead=True,
+    )

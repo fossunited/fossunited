@@ -1,0 +1,261 @@
+{% block foss_base %}
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
+<style>
+  {% include "public/css/custom.css" %}
+    .v3-container {
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+    }
+</style>
+<script>
+  {% include "public/js/common_functions.js" %}
+</script>
+{% endblock %}
+
+{% block title %}Get Your Event Tickets{% endblock %}
+
+{% block page_content %}
+  {% set page_title = page_title | default("Grab Your Event Tickets") %}
+  {% set intro_text = intro_text | default("Download your event tickets by searching with your ticket ID, email, or name.") %}
+  {% set ticket_info_text = ticket_info_text | default("") %}
+
+
+  <div class="v3-page">
+    <div class="v3-container mb-5">
+      <div
+        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;"
+      >
+        <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="">{{ page_title }}</a></nav>
+        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="v3-card v3-main-card">
+        <div class="mb-5">
+          <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">{{ page_title }}</h1>
+          <div class="v3-text-secondary mt-2 mb-0">
+            {{ frappe.utils.md_to_html(intro_text) }}
+          </div>
+        </div>
+
+        <div id="search-section">
+          <div class="mb-8">
+            <label class="v3-text-primary mb-2" style="display:block; font-weight:500;">
+              Select Event
+              <span class="v3-text-tertiary" style="font-size:0.85rem; font-weight:400;"
+                >(only needed for email search)</span
+              >
+            </label>
+            <select
+              id="event-select"
+              class="v3-text-primary"
+              style="width:100%; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
+            >
+              <option value="">-- Select Event --</option>
+            </select>
+          </div>
+
+          <div class="mb-8">
+            <label class="v3-text-primary mb-2" style="display:block; font-weight:500;"
+              >Search by Ticket ID, Email or Coupon Code</label
+            >
+            <input
+              type="text"
+              id="search-input"
+              class="v3-text-primary"
+              placeholder="Enter ticket ID, email or coupon code"
+              style="width:100%; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
+            />
+          </div>
+
+          <button class="v3-btn v3-btn-primary" id="search-btn">
+            <i class="ti ti-search"></i>
+            Search Tickets
+          </button>
+        </div>
+
+        <div id="loading" style="display:none; text-align:center; padding:2rem;">
+          <span class="v3-text-secondary">Loading...</span>
+        </div>
+
+        <div
+          id="error-message"
+          class="v3-text-secondary"
+          style="display:none; margin-top:1.5rem; padding:1rem; background:var(--v3-main-bg); border-radius:6px; border:1px solid var(--v3-button-border);"
+        ></div>
+
+        <div id="results-section" style="display:none; margin-top:2rem;">
+          <div class="flex flex-wrap align-items-center justify-content-between mb-4">
+            <h3 class="v3-gradient-text" style="font-size:2rem;">Your Tickets are here!</h3>
+            <button class="v3-btn v3-btn-dark" id="download-all-btn" style="display:none;">
+              <i class="ti ti-download"></i>
+              Download All Tickets
+            </button>
+          </div>
+          {% if ticket_info_text %}
+          <div class="v3-text-secondary text-sm mb-4">{{ ticket_info_text }}</div>
+          {% endif %}
+
+          <div id="tickets-list" style="display:flex; flex-direction:column; gap:1rem;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let foundTickets = []
+
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
+
+      loadEvents()
+
+      const urlParams = new URLSearchParams(window.location.search)
+      const ticketId = urlParams.get('id')
+
+      if (ticketId) {
+        document.getElementById('search-input').value = ticketId
+        searchTickets()
+      }
+
+      document.getElementById('search-btn').addEventListener('click', searchTickets)
+      document.getElementById('download-all-btn').addEventListener('click', downloadAll)
+      document.getElementById('search-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') searchTickets()
+      })
+    })
+
+    function loadEvents() {
+      frappe.call({
+        method: 'fossunited.api.tickets.get_paid_events',
+        callback: function (r) {
+          if (r.message) {
+            const select = document.getElementById('event-select')
+            r.message.forEach((event) => {
+              const option = document.createElement('option')
+              option.value = event.name
+              option.textContent = event.event_name || event.name
+              select.appendChild(option)
+            })
+          }
+        },
+      })
+    }
+
+    function searchTickets() {
+      const event = document.getElementById('event-select').value
+      const searchTerm = document.getElementById('search-input').value.trim()
+
+      if (!searchTerm) {
+        showError('Please enter ticket ID, email or coupon code')
+        return
+      }
+
+      if (searchTerm.includes('@') && !event) {
+        showError('Please select an event to search by email')
+        return
+      }
+
+      showLoading(true)
+      hideError()
+      document.getElementById('results-section').style.display = 'none'
+
+      frappe.call({
+        method: 'fossunited.api.tickets.search_tickets',
+        args: {
+          search_term: searchTerm,
+          event: event || null,
+        },
+        callback: function (r) {
+          showLoading(false)
+          if (r.message && r.message.length > 0) {
+            foundTickets = r.message
+            displayTickets(r.message)
+          } else {
+            showError('No tickets found matching your search')
+          }
+        },
+        error: function (r) {
+          showLoading(false)
+          showError(r.message || 'An error occurred while searching')
+        },
+      })
+    }
+
+    function displayTickets(tickets) {
+      const list = document.getElementById('tickets-list')
+      list.innerHTML = ''
+
+      tickets.forEach((ticket) => {
+        const div = document.createElement('div')
+        div.className = 'v3-card'
+        div.style.padding = '1rem'
+        div.innerHTML = `
+        <div style="margin-bottom:0.5rem;">
+          <strong class="v3-text-primary" style="font-size:1.1rem;">${ticket.full_name}</strong>
+        </div>
+        <div class="v3-text-secondary" style="font-size:0.9rem; margin-bottom:0.5rem;">
+          ${ticket.email}
+        </div>
+        <div class="v3-text-tertiary" style="font-size:0.85rem; margin-bottom:0.75rem;">
+    Ticket ID: ${ticket.name}${[
+      ticket.tier && ` | Tier: ${ticket.tier}`,
+      ticket.organization && ` | Organization: ${ticket.organization}`,
+    ]
+      .filter(Boolean)
+      .join('')}
+
+        </div>
+        <button class="v3-btn v3-btn-secondary v3-btn-sm" onclick="downloadTicket('${ticket.name}')" style="padding:0.5rem 1rem; font-size:0.8rem;">
+          <i class="ti ti-download"></i>
+          Download Ticket
+        </button>
+      `
+        list.appendChild(div)
+      })
+
+      document.getElementById('results-section').style.display = 'block'
+
+      if (tickets.length > 1) {
+        document.getElementById('download-all-btn').style.display = 'inline-flex'
+      }
+    }
+
+    function downloadTicket(ticketName) {
+      const url = `/api/method/fossunited.api.tickets.download_ticket?ticket_id=${ticketName}`
+      window.open(url, '_blank')
+    }
+
+    function downloadAll() {
+      if (foundTickets.length > 1) {
+        if (!confirm(`Download ${foundTickets.length} tickets as single PDF?`)) {
+          return
+        }
+      }
+
+      const ticketIds = foundTickets.map((t) => t.name)
+      const url = `/api/method/fossunited.api.tickets.download_all_tickets?ticket_ids=${encodeURIComponent(JSON.stringify(ticketIds))}`
+      window.open(url, '_blank')
+    }
+
+    function showLoading(show) {
+      document.getElementById('loading').style.display = show ? 'block' : 'none'
+      document.getElementById('search-section').style.opacity = show ? '0.5' : '1'
+      document.getElementById('search-btn').disabled = show
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('error-message')
+      errorDiv.innerHTML = `<i class="ti ti-alert-circle" style="margin-right:0.5rem;"></i>${message}`
+      errorDiv.style.display = 'block'
+    }
+
+    function hideError() {
+      document.getElementById('error-message').style.display = 'none'
+    }
+  </script>
+{% endblock %}
