@@ -1,13 +1,9 @@
 <template>
   <Header />
-  <Dialog
-    v-model="show_dialog"
-    class="z-50"
-    :options="{
-      title: dialog_content.title,
-      message: dialog_content.message,
-    }"
-  />
+  <Dialog v-model="show_dialog" class="z-50" :options="{
+    title: dialog_content.title,
+    message: dialog_content.message,
+  }" />
   <div class="w-full flex justify-center">
     <div v-if="hackathon.data" class="container p-8">
       <div class="flex gap-2 mb-10 items-center">
@@ -17,12 +13,9 @@
         <IconChevronRight class="w-5" />
         <span class="text-base">Register</span>
       </div>
-      <img
-        v-if="hackathon.data.hackathon_logo"
-        :src="hackathon.data.hackathon_logo"
+      <img v-if="hackathon.data.hackathon_logo" :src="hackathon.data.hackathon_logo"
         :alt="hackathon.data.hackathon_name ? `Logo of ${hackathon.data.hackathon_name}` : 'Hackathon logo'"
-        class="h-12 mb-4"
-      />
+        class="h-12 mb-4" />
       <h1 class="text-3xl font-medium">
         Register For
         <span class="font-bold">{{ hackathon.data.hackathon_name }}</span>
@@ -34,54 +27,26 @@
       <div class="w-full">
         <h3 class="text-lg font-semibold">Details</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3">
-          <FormControl
-            v-model="participant.full_name"
-            type="text"
-            label="Full Name &ast;"
-            placeholder="John Doe"
-          />
-          <FormControl
-            v-model="participant.email"
-            type="email"
-            label="Email &ast;"
-            placeholder="john@fossunited.org"
-          />
+          <FormControl v-model="participant.full_name" type="text" label="Full Name &ast;" placeholder="John Doe" />
+          <FormControl v-model="participant.email" type="email" label="Email &ast;" placeholder="john@fossunited.org" />
           <FormControl v-model="participant.is_student" type="checkbox" label="I am a student" />
-          <FormControl
-            v-model="participant.organization"
-            type="text"
-            label="Organization / Institute &ast;"
-          />
+          <FormControl v-model="participant.organization" type="text" label="Organization / Institute &ast;" />
         </div>
         <div class="mt-6">
           <h5 class="text-base font-medium text-gray-800">Link your Git Profile &ast;</h5>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
-          <FormControl
-            v-model="participant.git_profile"
-            type="url"
-            placeholder="https://github.com/username"
-            class="mt-2"
-          >
+          <FormControl v-model="participant.git_profile" type="url" placeholder="https://github.com/username"
+            class="mt-2">
           </FormControl>
         </div>
         <div v-if="localhost.data" class="mt-6">
           <h5 class="text-base font-medium text-gray-800">How will you participate?</h5>
-          <RadioGroup
-            v-model="selected_attendance"
-            class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
-          >
-            <RadioGroupOption
-              v-for="option in attend_option"
-              :key="option.value"
-              v-slot="{ checked }"
-              as="template"
-              :value="option"
-            >
-              <div
-                :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
-                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-gray-500 transition-[border]"
-              >
+          <RadioGroup v-model="selected_attendance" class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3">
+            <RadioGroupOption v-for="option in attend_option" :key="option.value" v-slot="{ checked }" as="template"
+              :value="option">
+              <div :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
+                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-gray-500 transition-[border]">
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
                     <IconWorld v-if="option.title == 'Virtually'" class="w-6 h-6" />
@@ -97,23 +62,16 @@
             </RadioGroupOption>
           </RadioGroup>
           <div v-if="selected_attendance.value == 1" class="grid grid-cols-1 md:grid-cols-2">
-            <FormControl
-              v-model="participant.localhost"
-              type="select"
-              label="Select Location &ast;"
-              placeholder="-- Select In-Person Venue --"
-              :options="
-                localhost.data.map((item) => ({
-                  label: item.localhost_name,
-                  value: item.name,
-                }))
-              "
-            />
+            <FormControl v-model="participant.localhost" type="select" label="Select Location &ast;"
+              placeholder="-- Select In-Person Venue --" :options="localhost.data.map((item) => ({
+                label: item.localhost_name,
+                value: item.name,
+              }))
+                " />
           </div>
 
           <div
-            class="flex flex-col items-center sm:flex-row gap-3 bg-yellow-50 w-full p-4 text-sm rounded-sm my-4 text-yellow-700 outline-2 outline-dashed"
-          >
+            class="flex flex-col items-center sm:flex-row gap-3 bg-yellow-50 w-full p-4 text-sm rounded-sm my-4 text-yellow-700 outline-2 outline-dashed">
             <IconAlertCircle class="w-6 h-6 shrink-0 stroke-yellow-700" />
             <p class="leading-normal text-center sm:text-left">
               Please note that attendance at offline venues is limited by seat availability. Our
@@ -126,14 +84,8 @@
       </div>
       <ErrorMessage v-if="errorsMessage" class="m-2 mt-5" :message="errorsMessage" />
       <div class="flex flex-row-reverse mt-6">
-        <Button
-          variant="solid"
-          theme="green"
-          class="w-full md:w-2/5 font-medium"
-          label="Register"
-          :loading="registerForHackathon.loading"
-          @click="handleRegistration"
-        />
+        <Button variant="solid" theme="green" class="w-full md:w-2/5 font-medium" label="Register"
+          :loading="registerForHackathon.loading" @click="handleRegistration" />
       </div>
     </div>
     <div v-else class="w-full h-screen flex justify-center align-middle">
