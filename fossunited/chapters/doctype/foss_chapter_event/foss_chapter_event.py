@@ -591,4 +591,48 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
+
+        if self.map_link:
+            context.map_lat, context.map_lng = extract_map_coordinates(self.map_link)
+
         context.no_cache = 1
+
+
+def extract_map_coordinates(map_url):
+    """
+    Extract latitude and longitude from map URLs.
+
+    Returns tuple: (lat, lng) or (None, None) if not found
+    """
+    import re
+
+    import requests
+
+    if not map_url:
+        return None, None
+
+    # Follow redirects for shortened URLs (goo.gl, maps.app.goo.gl)
+    if "goo.gl" in map_url:
+        try:
+            response = requests.head(map_url, allow_redirects=True, timeout=5)
+            map_url = response.url
+        except requests.RequestException:
+            return None, None
+
+    # OSM format: #zoom/lat/lng
+    match = re.search(r"#[\d.]+/([-\d.]+)/([-\d.]+)", map_url)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # Google Maps @ format: @lat,lng,zoom
+    match = re.search(r"@([-\d.]+),([-\d.]+),", map_url)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # Google Maps !3d and !4d format
+    lat_match = re.search(r"!3d([-\d.]+)", map_url)
+    lng_match = re.search(r"!4d([-\d.]+)", map_url)
+    if lat_match and lng_match:
+        return float(lat_match.group(1)), float(lng_match.group(1))
+
+    return None, None
