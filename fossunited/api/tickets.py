@@ -475,24 +475,21 @@ def search_tickets(search_term, event=None):
         )
         return [ticket_data]
 
+    coupon_event = frappe.db.get_value(FREE_TICKET_CODE, search_term, "event")
+    if not coupon_event:
+        return []
+
     coupon_apps = frappe.get_all(
         FREE_TICKET_APPLY,
-        filters={"coupon_id": search_term},
-        fields=["email", "event"],
+        filters={"coupon_id": search_term, "event": coupon_event},
+        fields=["email"],
+        pluck="email",
     )
 
     if coupon_apps:
-        # Get event from coupon to scope ticket search
-        coupon_event = coupon_apps[0].get("event") if coupon_apps else None
-        emails = [app.email for app in coupon_apps]
-
-        filters = {"email": ["in", emails]}
-        if coupon_event:
-            filters["event"] = coupon_event
-
         return frappe.get_all(
             EVENT_TICKET,
-            filters=filters,
+            filters={"email": ["in", coupon_apps], "event": coupon_event},
             fields=["name", "full_name", "email", "tier", "organization"],
             order_by="full_name",
         )
