@@ -9,7 +9,15 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.api.emailing import (
     handle_email_group_subscription,
 )
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP, EVENT_SCHEDULE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    CHAPTER_MEMBER,
+    CORE_TEAM,
+    EVENT,
+    EVENT_CFP,
+    EVENT_SCHEDULE,
+    PROPOSAL,
+)
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -85,7 +93,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def before_save(self):
         if self.has_value_changed("is_withdrawn"):
-            if self.is_withdrawn:
+            if self.is_withdrawn and self.status == "Approved":
+                self.status = "Withdrawn"
+                self.proposal_withdrawn_inform_chapter_member()
+            elif self.is_withdrawn:
                 self.status = "Withdrawn"
             else:
                 self.status = "Review Pending"
@@ -372,3 +383,45 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
         return talk_scheduled
+
+    def proposal_withdrawn_inform_chapter_member(self):
+        members_email = frappe.db.get_all(
+            CHAPTER_MEMBER,
+            {
+                "parent": self.chapter,
+                "role": CORE_TEAM,
+            },
+            ["email"],
+        )
+
+        emails = [m["email"] for m in members_email if m.get("email")]
+        to = frappe.db.get_value(CHAPTER, self.chapter, "email")
+        message = f"""
+        <p>Dear {self.chapter} team,</p>
+
+        <p><b>{self.full_name}</b> has withdrawn their proposal from <b>{self.event_name}</b>,
+        which was <b>approved</b> before for the event.</p>
+
+        <p>You can find the proposal link below:</p>
+
+        <p><a href="{frappe.utils.get_url(self.route)}" target="_blank">
+            View CFP
+        </a></p>
+
+        <p>Regards,<br>
+        FOSS United Team</p>
+        """
+
+        try:
+            frappe.sendmail(
+                recipients=to,
+                cc=emails,
+                subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
+                message=message,
+                reference_doctype=PROPOSAL,
+                reference_name=self.name,
+            )
+
+        except Exception as exc:
+            frappe.log_error(title="email_core_team:send_failed", message=frappe.get_traceback())
+            frappe.throw(f"Failed to send email: {exc}")
