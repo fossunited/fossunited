@@ -94,12 +94,16 @@
                       class="!justify-start !text-sm rounded-sm cursor-pointer"
                       label="My Profile"
                       :link="createAbsoluteUrlFromRoute('me')"
+                      role="link"
+                      aria-label="Go to my profile page"
                       variant="ghost"
                     />
                     <Button
                       class="!justify-start !text-sm rounded-sm cursor-pointer"
                       label="Go To Website"
                       :link="createAbsoluteUrlFromRoute('')"
+                      role="link"
+                      aria-label="Go to home page"
                       variant="ghost"
                     />
                     <Button
@@ -107,6 +111,7 @@
                       theme="red"
                       class="!justify-start !text-sm rounded-sm cursor-pointer"
                       label="Logout"
+                      aria-label="Logout from website"
                       @click="session.logout.fetch()"
                     />
                   </div>
