@@ -27,7 +27,7 @@ defineEmits(['open:submission'])
     class="border-t border-b py-4 px-2 flex justify-between items-center gap-4 hover:bg-gray-50 focus:bg-gray-50 hover:cursor-pointer transition-colors duration-300"
     @click="$emit('open:submission', submission)"
     @keydown.enter="$emit('open:submission', submission)"
-    @keydown.space="$emit('open:submission', submission)"
+    @keydown.space.prevent="$emit('open:submission', submission)"
     >
     <div class="flex flex-col gap-4">
       <ProposalBadgeGroup
