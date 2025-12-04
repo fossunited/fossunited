@@ -33,7 +33,7 @@ def get_ticket_details(ticket_id: str):
     ticket = frappe.db.get_value(
         EVENT_TICKET,
         ticket_id,
-        ["event", "tier", "wants_tshirt", "tshirt_size"],
+        ["*"],
         as_dict=True,
     )
     return ticket
@@ -428,7 +428,7 @@ def get_event_free_codes(event):
     return codes
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_paid_events():
     """Get list of paid events for ticket search - Live or recently concluded (within 30 days)"""
     thirty_days_ago = add_days(now_datetime(), -30)
@@ -445,7 +445,7 @@ def get_paid_events():
     )
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_tickets(search_term, event=None):
     """Search tickets by ticket_id, email, or coupon_id"""
     if not search_term:
@@ -467,13 +467,7 @@ def search_tickets(search_term, event=None):
 
     # Ticket ID - direct lookup, no event needed
     if frappe.db.exists(EVENT_TICKET, search_term):
-        ticket_data = frappe.db.get_value(
-            EVENT_TICKET,
-            search_term,
-            ["name", "full_name", "email", "tier", "organization"],
-            as_dict=True,
-        )
-        return [ticket_data]
+        return [get_ticket_details(search_term)]
 
     coupon_event = frappe.db.get_value(FREE_TICKET_CODE, search_term, "event")
     if not coupon_event:
