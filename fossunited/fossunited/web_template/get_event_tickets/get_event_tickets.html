@@ -37,9 +37,9 @@
       <div class="v3-card v3-main-card">
         <div class="mb-5">
           <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">{{ page_title }}</h1>
-          <p class="v3-text-secondary mt-2 mb-0">
+          <div class="v3-text-secondary mt-2 mb-0">
             {{ frappe.utils.md_to_html(intro_text) }}
-          </p>
+          </div>
         </div>
 
         <div id="search-section">
@@ -79,7 +79,7 @@
         </div>
 
         <div id="loading" style="display:none; text-align:center; padding:2rem;">
-          <p class="v3-text-secondary">Loading...</p>
+          <span class="v3-text-secondary">Loading...</span>
         </div>
 
         <div
@@ -96,7 +96,9 @@
               Download All Tickets
             </button>
           </div>
-          <p class="text-sm mb-2">{{ ticket_info_text }}</p>
+          {% if ticket_info_text %}
+          <div class="v3-text-secondary text-sm mb-4">{{ ticket_info_text }}</div>
+          {% endif %}
 
           <div id="tickets-list" style="display:flex; flex-direction:column; gap:1rem;"></div>
         </div>
@@ -113,7 +115,7 @@
       loadEvents()
 
       const urlParams = new URLSearchParams(window.location.search)
-      const ticketId = urlParams.get('ticket-id')
+      const ticketId = urlParams.get('id')
 
       if (ticketId) {
         document.getElementById('search-input').value = ticketId
@@ -176,6 +178,10 @@
           } else {
             showError('No tickets found matching your search')
           }
+        },
+        error: function (r) {
+          showLoading(false)
+          showError(r.message || 'An error occurred while searching')
         },
       })
     }

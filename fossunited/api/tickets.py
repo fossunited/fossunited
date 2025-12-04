@@ -478,19 +478,26 @@ def search_tickets(search_term, event=None):
     coupon_apps = frappe.get_all(
         FREE_TICKET_APPLY,
         filters={"coupon_id": search_term},
-        fields=["email"],
-        pluck="email",
+        fields=["email", "event"],
     )
 
     if coupon_apps:
+        # Get event from coupon to scope ticket search
+        coupon_event = coupon_apps[0].get("event") if coupon_apps else None
+        emails = [app.email for app in coupon_apps]
+
+        filters = {"email": ["in", emails]}
+        if coupon_event:
+            filters["event"] = coupon_event
+
         return frappe.get_all(
             EVENT_TICKET,
-            filters={"email": ["in", coupon_apps]},
+            filters=filters,
             fields=["name", "full_name", "email", "tier", "organization"],
             order_by="full_name",
         )
 
-    frappe.throw("No tickets found")
+    return []
 
 
 @frappe.whitelist(allow_guest=True)
@@ -501,7 +508,12 @@ def download_ticket(ticket_id):
 
     from frappe.utils.print_format import download_pdf
 
-    return download_pdf(doctype=EVENT_TICKET, name=ticket_id, format="Standard", no_letterhead=1)
+    return download_pdf(
+        doctype=EVENT_TICKET,
+        name=ticket_id,
+        format="[Designer] Event Ticket",
+        no_letterhead=1,
+    )
 
 
 @frappe.whitelist(allow_guest=True)
@@ -526,6 +538,6 @@ def download_all_tickets(ticket_ids):
     download_multi_pdf(
         doctype=EVENT_TICKET,
         name=json.dumps(ticket_ids),
-        format="Standard",
+        format="[Designer] Event Ticket",
         no_letterhead=True,
     )
