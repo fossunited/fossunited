@@ -1,4 +1,5 @@
 import frappe
+
 from fossunited.doctype_ids import EVENT, USER_PROFILE
 
 

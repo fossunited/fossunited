@@ -1,8 +1,6 @@
-import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.api.stats import get_event_stats, get_user_stats, get_platform_stats
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.api.stats import get_event_stats, get_platform_stats, get_user_stats
 
 
 class TestFossUserProfile(FrappeTestCase):
