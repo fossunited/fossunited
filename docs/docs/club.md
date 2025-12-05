@@ -216,4 +216,5 @@ The FOSS Club Program Committee members are:
 - Sai Rahul Poruri
 - Ruchika Bagde
 - Siddhartha Shivkumar
+- Siddhartha Shivkumar
 
