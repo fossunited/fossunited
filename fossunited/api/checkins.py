@@ -80,9 +80,10 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
 
     # Check if already checked in today
-    today = frappe.utils.getdate(frappe.utils.now_datetime())
+    import datetime
+    today = datetime.date.today()
     already_checked_in_today = any(
-        frappe.utils.getdate(checkin.check_in_time) == today
+        checkin.check_in_time.date() == today
         for checkin in ticket.get("check_ins", [])
     )
 
