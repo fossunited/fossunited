@@ -79,9 +79,14 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
 
-    already_checked_in = check_if_already_checked_in(attendee["name"])
+    # Check if already checked in today
+    today = frappe.utils.getdate(frappe.utils.now_datetime())
+    already_checked_in_today = any(
+        frappe.utils.getdate(checkin.check_in_time) == today
+        for checkin in ticket.get("check_ins", [])
+    )
 
-    if already_checked_in:
+    if already_checked_in_today:
         if assign_tshirt and ticket.get("wants_tshirt") and not ticket.get("tshirt_delivered"):
             # Only update tshirt_delivered, do not add another check-in
             ticket.tshirt_delivered = True
@@ -95,35 +100,6 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
     if assign_tshirt:
         ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)
-
-
-def check_if_already_checked_in(attendee_id: str) -> bool:
-    """
-    Check if the attendee is already checked in today
-
-    Args:
-        attendee_id (str): The attendee / ticket id
-
-    Returns:
-        bool: True if the attendee is already checked in today, False otherwise
-    """
-    checkins = frappe.db.get_all(
-        "Event Check In",
-        {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
-        ["check_in_time"],
-    )
-
-    if not checkins:
-        return False
-
-    today = frappe.utils.getdate(frappe.utils.now_datetime())
-
-    for checkin in checkins:
-        checkin_date = frappe.utils.getdate(checkin["check_in_time"])
-        if checkin_date == today:
-            return True
-
-    return False
 
 
 @frappe.whitelist()
