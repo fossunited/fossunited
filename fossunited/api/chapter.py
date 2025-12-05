@@ -10,6 +10,7 @@ from ics import Calendar, Event
 from fossunited.doctype_ids import (
     CHAPTER,
     CHAPTER_MEMBER,
+    CORE_TEAM,
     EVENT,
     EVENT_CHECKIN,
     EVENT_VOLUNTEER,
@@ -307,3 +308,15 @@ def get_checked_in_attendees(event_id):
         "event_start": str(getdate(event_start)),
         "event_end": str(getdate(event_end)),
     }
+
+
+@frappe.whitelist()
+def get_chapter_members_email(chapter):
+    return frappe.db.get_all(
+        CHAPTER_MEMBER,
+        {
+            "parent": chapter,
+            "role": ["in", [CORE_TEAM, "Volunteer"]],
+        },
+        pluck="email",
+    )
