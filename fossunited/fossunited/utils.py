@@ -588,3 +588,40 @@ def get_volunteers_data():
             "communities_count": len(active_chapters),
         },
     }
+
+
+def is_event_upcoming(event):
+    """
+    Check if an event is upcoming based on its end date.
+
+    Args:
+        event (dict): Event document as dict with 'event_end_date' or 'end_date' key
+
+    Returns:
+        bool: True if event is upcoming, False otherwise
+    """
+    now = now_datetime()
+    end_date = event.get("event_end_date") or event.get("end_date")
+
+    if not end_date:
+        return False
+
+    end_dt = frappe.utils.get_datetime(end_date)
+    return end_dt >= now
+
+
+def get_upcoming_events_count():
+    """
+    Get the count of upcoming published events.
+
+    Returns:
+        int: Number of upcoming events
+    """
+    return frappe.db.count(
+        EVENT,
+        {
+            "is_published": 1,
+            "status": "Live",
+            "event_end_date": [">=", frappe.utils.now()],
+        }
+    )

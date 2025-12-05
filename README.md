@@ -33,7 +33,7 @@ Please follow our [guide to setup and get started](https://docs.fossunited.org/d
 For automatic running of linters before you commit:
 
 - We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
-- [Vale]((https://vale.sh)) is used for spell check and grammar check for docs content.
+- [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
 
 ```sh
 $ uv add pre-commit
@@ -43,6 +43,10 @@ $ pre-commit install
 ### Contribution
 
 Want to contribute to the platform? Checkout the [contribution guidelines](/CONTRIBUTING.md).
+
+### Code of Conduct
+
+Please follow our [Code of Conduct](/CODE_OF_CONDUCT.md) to ensure a welcoming environment for all contributors.
 
 ### Security Policy
 
