@@ -15,7 +15,7 @@
     <Button size="md" icon-left="download" @click="downloadCSV">Download</Button>
   </div>
   <ListView
-    v-if="attendeesList.data.tickets"
+    v-if="attendeesList.data?.tickets"
     class="h-[540px]"
     :columns="columns"
     :rows="groupedRows"
@@ -94,7 +94,7 @@ const columns = computed(() => [
 ])
 
 watchEffect(() => {
-  if (!tickets.value) {
+  if (!tickets.value || tickets.value.length === 0) {
     groupedRows.value = []
     return
   }
