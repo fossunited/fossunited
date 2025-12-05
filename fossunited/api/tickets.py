@@ -245,36 +245,76 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
-def get_sold_tickets(event_id: str, filters: dict = {}) -> list:
+def get_tickets_with_custom_fields(event_id: str, filters: dict | None = None) -> dict:
     """
-    Get the list of all tickets sold for the event.
+    Get all tickets with their custom field answers merged as dynamic fields.
 
     Args:
         event_id (str): Event ID
+        filters (dict): Additional filters for tickets
 
     Returns:
-        list: List of tickets sold for the event
+        dict: Dictionary containing tickets list and custom field names
     """
-
     if not has_valid_permission(event_id):
         frappe.throw("You are not authorized to view the tickets for this event")
 
-    tickets = frappe.db.get_all(
+    if filters is None:
+        filters = {}
+
+    tickets = frappe.get_all(
         EVENT_TICKET,
         filters={"event": event_id, **filters},
         fields=[
+            "name",
             "tier",
             "wants_tshirt",
             "tshirt_size",
             "event",
             "full_name",
+            "email",
             "designation",
             "organization",
             "is_transfer_ticket",
         ],
         order_by="creation",
     )
-    return tickets
+
+    if not tickets:
+        return {"tickets": [], "custom_fields": []}
+
+    ticket_ids = [t["name"] for t in tickets]
+
+    custom_fields = frappe.get_all(
+        "FOSS Ticket Custom Field",
+        filters={
+            "parent": ["in", ticket_ids],
+            "parenttype": EVENT_TICKET,
+            "parentfield": "custom_fields",
+        },
+        fields=["parent", "field_name", "data"],
+        order_by="parent asc, idx asc",
+    )
+    custom_field_names = list(dict.fromkeys([f["field_name"] for f in custom_fields]))
+
+    # Group custom fields by parent (ticket)
+    custom_fields_map = {}
+    for field in custom_fields:
+        parent = field["parent"]
+        if parent not in custom_fields_map:
+            custom_fields_map[parent] = {}
+
+        # Use field_name as key, data as value
+        field_name = field["field_name"] or "unknown_field"
+        custom_fields_map[parent][f"custom_field_{field_name}"] = field["data"] or ""
+
+    # Merge custom fields into tickets
+    for ticket in tickets:
+        ticket_id = ticket["name"]
+        if ticket_id in custom_fields_map:
+            ticket.update(custom_fields_map[ticket_id])
+
+    return {"tickets": tickets, "custom_fields": custom_field_names}
 
 
 def has_valid_permission(event_id: str) -> bool:
