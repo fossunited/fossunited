@@ -105,6 +105,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_session_type_permissions()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
+        self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
@@ -417,3 +418,76 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         except Exception as exc:
             frappe.log_error(title="email_core_team:send_failed", message=frappe.get_traceback())
             frappe.throw(f"Failed to send email: {exc}")
+
+    def notify_proposer_on_review(self):
+        """Notify proposer on new or updated review."""
+        if self.is_new() or not self._doc_before_save:
+            return
+
+        old_reviews = {r.name: r for r in self._doc_before_save.reviews if r.name}
+
+        for review in self.reviews:
+            old_review = old_reviews.get(review.name)
+
+            # New review
+            if not old_review:
+                self._send_review_email("New review on your proposal for", review, "new")
+            # Updated review
+            elif old_review.to_approve != review.to_approve:
+                self._send_review_email(
+                    "A Review status changed on your proposal for",
+                    review,
+                    "approval_changed",
+                    old_review,
+                )
+            elif review.remarks != old_review.remarks:
+                self._send_review_email(
+                    "A Review remarks changed on your proposal for",
+                    review,
+                    "remarks_changed",
+                    old_review,
+                )
+
+    def _send_review_email(self, subject_prefix, review, change_type, old_review=None):
+        """Helper to send review notification emails."""
+        frappe.sendmail(
+            recipients=self.email,
+            subject=f"{subject_prefix} {self.event_name}",
+            message=build_review_message(self, review, change_type, old_review),
+        )
+
+
+def build_review_message(submission, review, change_type, old_review=None):
+    """Build review notification message."""
+    base_intro = (
+        f"Dear {submission.full_name},<br><br>"
+        f"Your proposal for <b>{submission.event_name}</b>, "
+        f"titled <b>{submission.talk_title}</b>, has an update.<br><br>"
+    )
+
+    messages = {
+        "new": (
+            f"<b>A new review has been submitted.</b><br>"
+            f"Review Conclusion: {review}<br>"
+            f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
+        ),
+        "approval_changed": lambda: (
+            f"<b>A reviewer decision has changed.</b><br>"
+            f"Previous decision: {old_review.to_approve}<br>"
+            f"New decision: <b>{review.to_approve}</b><br>"
+            f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
+        ),
+        "remarks_changed": lambda: (
+            f"<b>A reviewer has updated their remarks.</b><br>"
+            f"Old Remarks: <pre><code> {old_review.remarks} </code></pre><br>"
+            f"New Remarks: <pre><code> {review.remarks} </code></pre><br>"
+            f"Review Conclusion: {review.to_approve}<br>"
+        ),
+    }
+
+    closing = (
+        f"You can access your proposal here: https://fossunited.org/{submission.route}<br><br>"
+        "Regards,<br>FOSS United Team"
+    )
+
+    return base_intro + messages[change_type] + closing
