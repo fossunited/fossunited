@@ -77,7 +77,7 @@ FOSS United maintains brand guidelines for consistency across all clubs:
 - Maintain logo integrity without unauthorised modifications
 - Acknowledge FOSS United support in events and communications
 
-Design assets are provided here: [FOSS Club Design Assets/Guide](https://www.figma.com/design/dfTCzPNwORsJmJVmB3QtMj/FOSS-Clubs-Design-Guidelines---Community?node-id=1-84&t=4sLA1AGo2uaunSRV-1).
+Design assets are provided here: [FOSS Club Design Assets/Guide](https://drive.google.com/file/d/1HadV-KEyogKyvbzxwT_2WAR3JzP27V2E/view?usp=sharing).
 
 ## 3. Funding and Reimbursements
 #### What funding support is available for FOSS Clubs?
@@ -166,7 +166,7 @@ Code of Conduct violations are taken seriously with clear reporting and handling
 
 **Use the right platform for the right question:**
 
-Telegram [FOSS Clubs](https://t.me/fossclubs) — Quick questions, informal discussions, and inter-club connections. Best for simple, time-sensitive matters
+[Telegram FOSS Clubs](https://t.me/fossclubs) — Quick questions, informal discussions, and inter-club connections. Best for simple, time-sensitive matters
 
 [Forum](https://forum.fossunited.org) — Extended discussions, advice, and experience sharing. Suitable for thoughtful questions and content that may help future members
 
@@ -174,19 +174,19 @@ FOSS United Platform — Official event management, reimbursements, and formal p
 
 **Who should I contact for different issues?**
 
-For Generic Issues:
+**For Generic Issues:**
 
 [Praneel](https://t.me/Praneel_s), [Nilabrata](https://t.me/Nilabrata), [Ganesh](https://t.me/sudo_medark) — For general questions not answered in FAQs
 
-For Technical Issues:
+**For Technical Issues:**
 
 [Dilip](https://t.me/zororg) — Technical support and troubleshooting
 
-For Permissions and Foundation Help:
+**For Permissions and Foundation Help:**
 
-[Ruchika](https://t.me/B18ruchi), [Hari](https://t.me/nammahari), and [Vishal](https://t.me/fossdot) — Questions requiring permissions or help from the Foundation team
+[Ruchika](https://t.me/B18ruchi), and [Hari](https://t.me/nammahari) — Questions requiring permissions or help from the Foundation team
 
-General Contact: [clubs@fossunited.org](mailto:clubs@fossunited.org)
+**General Contact:** [clubs@fossunited.org](mailto:clubs@fossunited.org)
 
 #### What is the expected timeline for common requests?
 
@@ -198,15 +198,17 @@ General Contact: [clubs@fossunited.org](mailto:clubs@fossunited.org)
 If responses take longer than expected, polite follow-ups are appropriate after allowing reasonable initial processing time.
 
 #### Resources
-#### i. Design templates
-FOSS United provides templates for event posters, social media graphics, and design assets. Templates and design assets are available here: [Figma link](https://www.figma.com/design/dfTCzPNwORsJmJVmB3QtMj/FOSS-Clubs-Design-Guidelines---Community?node-id=1-84&t=4sLA1AGo2uaunSRV-1)
+- Design templates
+[Penpot File](https://drive.google.com/file/d/1HadV-KEyogKyvbzxwT_2WAR3JzP27V2E/view?usp=sharing) or/and [Figma link](https://www.figma.com/design/dfTCzPNwORsJmJVmB3QtMj/FOSS-Clubs-Design-Guidelines---Community?node-id=1-84&t=isJpyQnKPhpHz6LU-1)
 - [Speaker request form](https://fossunited.org/clubs/speaker-request)
 - [Expense Reimbursement form](https://account.fossunited.org/expense-reimbursement/new)
+
+#### How to contribute to FOSS United
+Check [Getting involved](https://docs.fossunited.org/#getting-involved) and/or [Developement and Documentation](https://docs.fossunited.org/development/). 
 
 #### Program Committee
 The FOSS Club Program Committee members are:
 
-- Vishal Arya
 - Hari Prasanth S
 - Praneel Sindhole
 - Nilabrata Sanyal
@@ -214,5 +216,4 @@ The FOSS Club Program Committee members are:
 - Sai Rahul Poruri
 - Ruchika Bagde
 - Siddhartha Shivkumar
-
 
