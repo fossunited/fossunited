@@ -75,7 +75,6 @@ const attendeesList = createResource({
       filters: { full_name: ['like', `%${searchName.value}%`] },
     }
   },
-  params: () => ({}),
   auto: true,
   debounce: 500,
   onError: (e) => toast.error(e.message),
@@ -117,7 +116,7 @@ const escapeCSV = (str) => {
 }
 
 const downloadCSV = () => {
-  if (!attendeesList.data.tickets?.length) return toast.error('No data to download')
+  if (!attendeesList.data?.tickets?.length) return toast.error('No data to download')
 
   const headers = [
     'Tier',
@@ -148,6 +147,7 @@ const downloadCSV = () => {
   link.href = URL.createObjectURL(blob)
   link.download = `attendees_${props.event.data.name}_${new Date().toISOString().split('T')[0]}.csv`
   link.click()
+  URL.revokeObjectURL(link.href)
 
   toast.success('CSV downloaded successfully')
 }

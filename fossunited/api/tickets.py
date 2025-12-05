@@ -245,7 +245,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
-def get_tickets_with_custom_fields(event_id: str, filters: dict = {}) -> list[dict]:
+def get_tickets_with_custom_fields(event_id: str, filters: dict | None = None) -> dict:
     """
     Get all tickets with their custom field answers merged as dynamic fields.
 
@@ -254,10 +254,13 @@ def get_tickets_with_custom_fields(event_id: str, filters: dict = {}) -> list[di
         filters (dict): Additional filters for tickets
 
     Returns:
-        list[dict]: List of tickets with custom fields as dynamic properties
+        dict: Dictionary containing tickets list and custom field names
     """
     if not has_valid_permission(event_id):
         frappe.throw("You are not authorized to view the tickets for this event")
+
+    if filters is None:
+        filters = {}
 
     tickets = frappe.get_all(
         EVENT_TICKET,
@@ -278,7 +281,7 @@ def get_tickets_with_custom_fields(event_id: str, filters: dict = {}) -> list[di
     )
 
     if not tickets:
-        return []
+        return {"tickets": [], "custom_fields": []}
 
     ticket_ids = [t["name"] for t in tickets]
 
@@ -286,7 +289,7 @@ def get_tickets_with_custom_fields(event_id: str, filters: dict = {}) -> list[di
         "FOSS Ticket Custom Field",
         filters={
             "parent": ["in", ticket_ids],
-            "parenttype": "FOSS Event Ticket",
+            "parenttype": EVENT_TICKET,
             "parentfield": "custom_fields",
         },
         fields=["parent", "field_name", "data"],
