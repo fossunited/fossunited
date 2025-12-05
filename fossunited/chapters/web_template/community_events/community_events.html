@@ -97,7 +97,7 @@
         {% if program_title %}
           <div class="program-card">
             <div class="program-card-head">
-              <img src="{{ program_icon }}" alt="" />
+              <img src="{{ program_icon }}" alt="{{ program_title | default('Program icon') }} logo" />
             </div>
 
             <div class="program-card-body">

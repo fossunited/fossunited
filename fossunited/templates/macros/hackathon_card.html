@@ -22,7 +22,7 @@
           class="chapter-brand-block {% if chapter.chapter_type == 'FOSS Club' %}club-brand{% endif %}"
         >
           {% if chapter.chapter_type == 'FOSS Club' %}
-            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="" />
+            <img src="/assets/fossunited/images/chapter/fossclub_logo.svg" alt="FOSS Club logo" />
             <span>{{ chapter.chapter_name | truncate(25, True, '...', 0) }}</span>
           {% else %}
             <span class="fff-forward"
@@ -46,7 +46,7 @@
       </div>
       <div class="mt-5 mb-2">
         {% if hackathon.hackathon_logo %}
-          <img class="event-card--logo" src="{{ hackathon.hackathon_logo }}" alt="" />
+          <img class="event-card--logo" src="{{ hackathon.hackathon_logo }}" alt="{{ hackathon.hackathon_name }} logo" />
         {% endif %}
         {% if not hackathon.only_show_logo %}
           <div class="mt-2 text-lg">{{ hackathon.hackathon_name | truncate(26, True) }}</div>

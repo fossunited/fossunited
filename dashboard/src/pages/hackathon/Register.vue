@@ -20,6 +20,11 @@
       <img
         v-if="hackathon.data.hackathon_logo"
         :src="hackathon.data.hackathon_logo"
+        :alt="
+          hackathon.data.hackathon_name
+            ? `Logo of ${hackathon.data.hackathon_name}`
+            : 'Hackathon logo'
+        "
         class="h-12 mb-4"
       />
       <h1 class="text-3xl font-medium">

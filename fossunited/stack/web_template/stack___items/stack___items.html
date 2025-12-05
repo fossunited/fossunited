@@ -12,7 +12,7 @@
 {% macro stack_item(item) %}
   <a href="{{ item.link or '#' }}" target="_blank" rel="noopener noreferrer" class="no-underline">
     <div class="flex gap-3 p-3 items-center justify-center border rounded-sm bg-gray-50 hover:bg-gray-200 transition">
-      <img src="{{ item.icon }}" class="w-7 h-7 aspect-square object-contain" />
+      <img src="{{ item.icon }}" alt="{{ item.title }} logo" class="w-7 h-7 aspect-square object-contain" />
       <span class="text-base font-medium text-gray-800">{{ item.title }}</span>
     </div>
   </a>

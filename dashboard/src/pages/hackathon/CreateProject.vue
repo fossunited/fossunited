@@ -183,7 +183,15 @@
                 >
                   <div class="flex w-full items-center justify-between">
                     <div class="flex flex-col gap-2 items-start">
-                      <img :src="partner_project.logo" class="h-8" />
+                      <img
+                        :src="partner_project.logo"
+                        :alt="
+                          partner_project.project_name
+                            ? partner_project.project_name + ' logo'
+                            : 'Partner project logo'
+                        "
+                        class="h-8"
+                      />
                       <RadioGroupLabel as="p" class="text-base font-medium">
                         {{ partner_project.project_name }}
                       </RadioGroupLabel>

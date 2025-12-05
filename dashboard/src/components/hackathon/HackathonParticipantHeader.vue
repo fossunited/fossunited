@@ -2,7 +2,7 @@
   <img
     v-if="hackathon.data.hackathon_banner && showBanner"
     :src="hackathon.data.hackathon_banner"
-    alt=""
+    alt="Hackathon banner"
     class="w-full h-32 md:h-full md:max-h-72 object-cover rounded-sm"
   />
   <img :src="hackathon.data.hackathon_logo" alt="Logo" class="h-10 md:h-14 mt-6 mb-4" />

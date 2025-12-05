@@ -67,7 +67,11 @@
           class="flex items-center w-full justify-between gap-2"
         >
           <div class="flex gap-2 items-center">
-            <img :src="member.profile_photo" class="w-8 h-8 rounded-full" />
+            <img
+              :src="member.profile_photo"
+              :alt="`Profile photo of ${member.full_name}`"
+              class="w-8 h-8 rounded-full"
+            />
             <div>
               <div class="text-base font-medium">{{ member.full_name }}</div>
               <div class="text-sm text-gray-600">{{ member.email }}</div>

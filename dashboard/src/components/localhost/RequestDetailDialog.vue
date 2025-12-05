@@ -23,7 +23,11 @@
           >
         </div>
         <div class="flex gap-2">
-          <img :src="participant.profile_photo" alt="" class="rounded-full h-8 w-8" />
+          <img
+            :src="participant.profile_photo"
+            :alt="`${participant.full_name} profile photo`"
+            class="rounded-full h-8 w-8"
+          />
           <div class="flex flex-col gap-1">
             <div class="text-base font-medium">{{ participant.full_name }}</div>
             <div
