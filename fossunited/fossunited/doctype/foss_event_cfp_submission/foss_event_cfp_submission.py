@@ -6,13 +6,12 @@ import textwrap
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.api.chapter import get_chapter_members_email
 from fossunited.api.emailing import (
     handle_email_group_subscription,
 )
 from fossunited.doctype_ids import (
     CHAPTER,
-    CHAPTER_MEMBER,
-    CORE_TEAM,
     EVENT,
     EVENT_CFP,
     EVENT_SCHEDULE,
@@ -95,7 +94,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if self.has_value_changed("is_withdrawn"):
             if self.is_withdrawn and self.status == "Approved":
                 self.status = "Withdrawn"
-                self.proposal_withdrawn_inform_chapter_member()
+                self.notify_team_approved_proposal_withdrawn()
             elif self.is_withdrawn:
                 self.status = "Withdrawn"
             else:
@@ -384,17 +383,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         return talk_scheduled
 
-    def proposal_withdrawn_inform_chapter_member(self):
-        members_email = frappe.db.get_all(
-            CHAPTER_MEMBER,
-            {
-                "parent": self.chapter,
-                "role": CORE_TEAM,
-            },
-            ["email"],
-        )
-
-        emails = [m["email"] for m in members_email if m.get("email")]
+    def notify_team_approved_proposal_withdrawn(self):
+        """Notify chapter members that an approved proposal has been withdrawn by proposer."""
+        team_emails = get_chapter_members_email(self.chapter)
         to = frappe.db.get_value(CHAPTER, self.chapter, "email")
         message = f"""
         <p>Dear {self.chapter} team,</p>
@@ -402,6 +393,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         <p><b>{self.full_name}</b> has withdrawn their proposal from <b>{self.event_name}</b>,
         which was <b>approved</b> before for the event.</p>
 
+        Proposal title: {self.talk_title}
         <p>You can find the proposal link below:</p>
 
         <p><a href="{frappe.utils.get_url(self.route)}" target="_blank">
@@ -415,7 +407,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         try:
             frappe.sendmail(
                 recipients=to,
-                cc=emails,
+                cc=team_emails,
                 subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
                 message=message,
                 reference_doctype=PROPOSAL,
