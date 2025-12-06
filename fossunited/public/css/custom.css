@@ -3047,7 +3047,7 @@ h6 {
 }
 
 /* V3 Base Typography - Inter font for all v3 pages */
-.v3-page {
+.v3-page, body:has(.v3-page) {
   background: var(--v3-main-bg);
   font-family: 'Inter', sans-serif;
 }
@@ -3808,7 +3808,8 @@ h6 {
     margin-bottom: 0.8rem;
   }
   .v3-content-main .v3-card,
-  .v3-content-sidebar .v3-card {
+  .v3-content-sidebar .v3-card,
+  .cfp-card-v3 {
     margin-bottom: 0.5rem;
   }
 
