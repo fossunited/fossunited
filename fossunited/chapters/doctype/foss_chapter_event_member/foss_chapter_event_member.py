@@ -18,8 +18,6 @@ class FOSSChapterEventMember(Document):
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data
-        role: DF.Literal[
-            "Volunteer", "Core Team Member", "Graphic Designer", "Content Writer", "Marketing"  # noqa: F722, F821
-        ]
+        role: DF.Literal["Volunteer", "Core Team Member", "Graphic Designer", "Content Writer", "Marketing", "Speaker"]
     # end: auto-generated types
     pass

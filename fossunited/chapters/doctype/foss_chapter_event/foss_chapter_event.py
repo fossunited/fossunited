@@ -34,29 +34,14 @@ class FOSSChapterEvent(WebsiteGenerator):
     from typing import TYPE_CHECKING
 
     if TYPE_CHECKING:
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import FOSSChapterEventMember
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import FOSSEventCommunityPartner
+        from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import EventProjectShowcase
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
+        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import FOSSEventSchedule
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import FOSSEventSponsor
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
         from frappe.types import DF
-
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
-            FOSSChapterEventMember,
-        )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
-            FOSSEventCommunityPartner,
-        )
-        from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
-            EventProjectShowcase,
-        )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
-            FOSSEventField,
-        )
-        from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
-            FOSSEventSchedule,
-        )
-        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
-            FOSSEventSponsor,
-        )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
-            FOSSTicketTier,
-        )
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -73,15 +58,9 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_name: DF.Data
         event_permalink: DF.Data | None
         event_schedule: DF.Table[FOSSEventSchedule]
+        event_speakers: DF.Table[FOSSChapterEventMember]
         event_start_date: DF.Datetime
-        event_type: DF.Literal[
-            "Meet Up",  # noqa: F722, F821
-            "Conference",  # noqa: F722, F821
-            "Workshop",  # noqa: F722, F821
-            "Birds Of Feathers",  # noqa: F722, F821
-            "Hackathon",  # noqa: F722, F821
-            "Linux Installation Party",  # noqa: F722, F821
-        ]
+        event_type: DF.Literal["Meet Up", "Conference", "Workshop", "Birds Of Feathers", "Hackathon", "Online", "Linux Installation Party"]
         external_event_url: DF.Data | None
         hall_options: DF.SmallText | None
         has_external_webpage: DF.Check
@@ -107,10 +86,10 @@ class FOSSChapterEvent(WebsiteGenerator):
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
-        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]  # noqa: F722, F821
+        status: DF.Literal["Draft", "Live", "Concluded", "Cancelled"]
         t_shirt_price: DF.Currency
         ticket_form_description: DF.MarkdownEditor | None
-        tickets_status: DF.Literal["Live", "Closed"]  # noqa: F722, F821
+        tickets_status: DF.Literal["Live", "Closed"]
         tiers: DF.Table[FOSSTicketTier]
     # end: auto-generated types
 

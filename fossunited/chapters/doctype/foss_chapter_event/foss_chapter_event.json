@@ -66,6 +66,9 @@
   "volunteers_tab",
   "event_members_section",
   "event_members",
+  "event_speakers_section",
+  "column_break_qhec",
+  "event_speakers",
   "schedule_tab",
   "schedule_section",
   "event_schedule",
@@ -108,7 +111,7 @@
    "in_list_view": 1,
    "label": "Event Type",
    "mandatory_depends_on": "eval:doc.is_external_event == 0",
-   "options": "Meet Up\nConference\nWorkshop\nBirds Of Feathers\nHackathon\nLinux Installation Party"
+   "options": "Meet Up\nConference\nWorkshop\nBirds Of Feathers\nHackathon\nOnline\nLinux Installation Party"
   },
   {
    "fieldname": "chapter_information_section",
@@ -510,6 +513,21 @@
    "fieldtype": "Table",
    "label": "Project Showcase",
    "options": "Event Project Showcase"
+  },
+  {
+   "fieldname": "event_speakers_section",
+   "fieldtype": "Section Break",
+   "label": "Speakers"
+  },
+  {
+   "fieldname": "column_break_qhec",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "event_speakers",
+   "fieldtype": "Table",
+   "label": "Event Speakers",
+   "options": "FOSS Chapter Event Member"
   }
  ],
  "has_web_view": 1,
@@ -531,7 +549,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-10-07 16:50:15.974998",
+ "modified": "2025-12-06 18:50:56.404551",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
