@@ -421,11 +421,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def notify_proposer_on_review(self):
         """Notify proposer on new or updated review."""
-        if self.is_new() or not self._doc_before_save:
+        old_doc = self.get_doc_before_save()
+        if self.is_new() or not old_doc:
             return
 
-        old_reviews = {r.name: r for r in self._doc_before_save.reviews if r.name}
-
+        old_reviews = {r.name: r for r in old_doc.reviews if r.name}
         for review in self.reviews:
             old_review = old_reviews.get(review.name)
 
@@ -450,10 +450,16 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def _send_review_email(self, subject_prefix, review, change_type, old_review=None):
         """Helper to send review notification emails."""
+        if not self.email:
+            return
+        speaker_emails = [s.email for s in self.speakers if s.email]
         frappe.sendmail(
             recipients=self.email,
+            cc=speaker_emails,
             subject=f"{subject_prefix} {self.event_name}",
             message=build_review_message(self, review, change_type, old_review),
+            reference_doctype=PROPOSAL,
+            reference_name=self.name,
         )
 
 
@@ -468,7 +474,7 @@ def build_review_message(submission, review, change_type, old_review=None):
     messages = {
         "new": (
             f"<b>A new review has been submitted.</b><br>"
-            f"Review Conclusion: {review}<br>"
+            f"Review Conclusion: {review.to_approve}<br>"
             f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
         ),
         "approval_changed": lambda: (
