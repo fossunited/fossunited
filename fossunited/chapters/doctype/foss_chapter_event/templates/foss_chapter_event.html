@@ -617,23 +617,67 @@
             </section>
 
             <!-- Map -->
-            {% if doc.map_link %}
+            {% if map_lat and map_lng %}
+              <link
+                href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+                rel="stylesheet"
+                integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+                crossorigin=""
+              />
+              <script
+                src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+                integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+                crossorigin=""
+              ></script>
+
               <div
                 class="v3-clickable ev-map-section"
-                onclick="window.open('{{ doc.map_link | e }}', '_blank')"
                 role="button"
                 tabindex="0"
                 aria-label="Open location in map"
-                onkeypress="if(event.key==='Enter'||event.key===' ')window.open('{{ doc.map_link | e }}', '_blank')"
               >
-                <!-- <img -->
-                <!--   src="https://via.placeholder.com/396x81" -->
-                <!--   alt="Map" -->
-                <!--   class="ev-map" -->
-                <!--   style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); object-fit: cover;" -->
-                <!-- /> -->
+                <div
+                  id="osm-map-{{ doc.event_location | default('main') }}"
+                  class="ev-map"
+                  style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); cursor: pointer;"
+                ></div>
               </div>
+
+              <script>
+            (function () {
+                 var lat = {{ map_lat }}
+                 var lng = {{ map_lng }}
+                 var mapLink = '{{ doc.map_link | e }}'
+                 var mapId = 'osm-map-{{ doc.event_location| e | default("main") }}'
+                 var element = document.getElementById(mapId)
+
+                 if (element) {
+                   var map = L.map(element).setView([lat, lng], 14)
+
+                   map.attributionControl.setPrefix('')
+                   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                     maxZoom: 19,
+                   }).addTo(map)
+
+                   L.marker([lat, lng])
+                     .addTo(map)
+                     <!-- .bindPopup('{{ doc.event_location | e }}') -->
+                     <!-- .openPopup() -->
+
+                   element.addEventListener('click', function (e) {
+                     window.open(mapLink, '_blank')
+                   })
+
+                   element.addEventListener('keypress', function (e) {
+                     if (e.key === 'Enter' || e.key === ' ') {
+                       window.open(mapLink, '_blank')
+                     }
+                   })
+                 }
+               })()
+              </script>
             {% endif %}
+
           </div>
         </div>
       </div>
