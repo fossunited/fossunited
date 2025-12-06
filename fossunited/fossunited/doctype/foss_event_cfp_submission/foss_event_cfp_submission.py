@@ -453,14 +453,20 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if not self.email:
             return
         speaker_emails = [s.email for s in self.speakers if s.email]
-        frappe.sendmail(
-            recipients=self.email,
-            cc=speaker_emails,
-            subject=f"{subject_prefix} {self.event_name}",
-            message=build_review_message(self, review, change_type, old_review),
-            reference_doctype=PROPOSAL,
-            reference_name=self.name,
-        )
+        try:
+            frappe.sendmail(
+                recipients=self.email,
+                cc=speaker_emails,
+                subject=f"{subject_prefix} {self.event_name}",
+                message=build_review_message(self, review, change_type, old_review),
+                reference_doctype=PROPOSAL,
+                reference_name=self.name,
+            )
+        except Exception:
+            frappe.log_error(
+                title="review_notification:send_failed",
+                message=frappe.get_traceback(),
+            )
 
 
 def build_review_message(submission, review, change_type, old_review=None):
