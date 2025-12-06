@@ -29,8 +29,7 @@ Newsboat
 Thunderbird
 Newsblur
 Commafeed
-(?i)hackathon*
-(?i)Hackathon*
+(?i)hackathon.*
 (?i)doctype
 (?i)checkin
 (?i)rsvp
@@ -66,3 +65,4 @@ Poruri
 Ruchika
 Bagde
 Shivkumar
+Penpot

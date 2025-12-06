@@ -21,7 +21,7 @@ Applications are evaluated based on genuine interest and thoughtful planning rat
 Application link: [https://fossunited.org/clubs/start-a-club/new](https://fossunited.org/clubs/start-a-club/new)
 
 ### ii. Who should apply and why?
-Applications are encouraged from students who: Have a genuine interest in open source and want to build a campus community around it. Want to create collaborative learning environments where knowledge is shared openly. Are willing to commit consistent effort to organising and maintaining the club. Seek access to funding, mentorship, speaker connections, and a network of similar clubs. Teams with diverse backgrounds strengthen clubs.  
+Applications are encouraged from students who: Have a genuine interest in open source and want to build a campus community around it. Want to create collaborative learning environments where knowledge is shared openly. Are willing to commit consistent effort to organizing and maintaining the club. Seek access to funding, mentorship, speaker connections, and a network of similar clubs. Teams with diverse backgrounds strengthen clubs.
 
 ### iii. Who this is not for?
 FOSS Clubs may not be suitable for:
@@ -40,7 +40,7 @@ Clubs without activity for certain periods(one academic year) may be marked inac
 ### v. What type of events can we host?
 - Workshops and hands-on sessions - Teaching version control, introducing first-time contributions, exploring specific technologies and tools.
 - Talks and meetups - Sessions with industry professionals, open-source maintainers, and experienced developers sharing their experiences and insights through First Commit.
-- Hackathons and build days - Collaborative coding sessions ranging from weekend projects to larger, organised hackathons like FOSS Hack.
+- Hackathons and build days - Collaborative coding sessions ranging from weekend projects to larger, organized hackathons like FOSS Hack.
 - Contribution drives - Dedicated sessions for contributing to real open-source projects, helping students make genuine contributions.
 - Study groups - Regular meetups for learning programming languages, frameworks, or technical concepts together.
 - Design and UX sessions - Workshops on contributing design work, creating assets for FOSS projects, and improving user experience. Open-source projects benefit significantly from design contributions.
@@ -54,15 +54,15 @@ Clubs without activity for certain periods(one academic year) may be marked inac
 - Events should be related to FOSS tools, contributing to FOSS projects, spreading open-source philosophy, or building the ecosystem.
 
 ####  a. What is FOSS Hack?
-[FOSS Hack](https://fossunited.org/fosshack) is the flagship hackathon program under FOSS United. Unlike typical hackathons focused on building new products, we also emphasise contributing to existing open source projects. The format exposes students to real world open source development, working with established codebases, interacting with maintainers, and making contributions that persist. Events typically run for 2 days over the weekend, often bringing together multiple colleges with mentors from actual FOSS projects as the Partner Projects. FOSS United provides additional support for FOSS Hack events, including higher budgets and logistical assistance.
- 
-- **Who gets to organise FOSS Hack?**
+[FOSS Hack](https://fossunited.org/fosshack) is the flagship hackathon program under FOSS United. Unlike typical hackathons focused on building new products, we also emphasize contributing to existing open source projects. The format exposes students to real world open source development, working with established codebases, interacting with maintainers, and making contributions that persist. Events typically run for 2 days over the weekend, often bringing together multiple colleges with mentors from actual FOSS projects as the Partner Projects. FOSS United provides additional support for FOSS Hack events, including higher budgets and logistical assistance.
 
-  The most active FOSS Clubs will get the opportunity to host FOSS Hack. FOSS United will decide this based on the number of events organised and your club's activity on the FOSS Club group and the FOSS United community. Selected organisers will receive up to ₹50,000 to conduct the hackathon.
+- **Who gets to organize FOSS Hack?**
 
-- **What should we do after organising an event?**
+  The most active FOSS Clubs will get the opportunity to host FOSS Hack. FOSS United will decide this based on the number of events organized and your club's activity on the FOSS Club group and the FOSS United community. Selected organizers will receive up to ₹50,000 to conduct the hackathon.
 
-  After organising an event, core members are expected to:
+- **What should we do after organizing an event?**
+
+  After organizing an event, core members are expected to:
 
   1. Share a brief report on the forum and FOSS United community on Telegram
   2. Upload event pictures
@@ -89,7 +89,7 @@ Design assets are provided here: [FOSS Club Design Assets/Guide](https://drive.g
 - Expert speakers for lectures and workshops
 - Educational resources and learning materials
 - Mentorship for projects and activities
-- Top-performing clubs may receive an additional ₹50,000 to host FOSS Hack 
+- Top-performing clubs may receive an additional ₹50,000 to host FOSS Hack
 
 #### How do active clubs receive their annual ₹50,000 support?
 For each event organized by your FOSS Club, FOSS United will provide support of up to ₹5,000 for refreshments per event. Additionally, FOSS United will cover travel expenses for invited speakers and mentors. For detailed information, visit: [FOSS Event Standards](https://forum.fossunited.org/t/foss-event-standards/2004#p-3900-h-4-refreshment-5)
@@ -106,10 +106,10 @@ Club members can submit reimbursements on behalf of the club with proper documen
 #### What expenses can be reimbursed?
 Typically Reimbursable Expenses (case-by-case basis):
 
-- Venue costs when college spaces aren't available 
+- Venue costs when college spaces aren't available
 - Food for event participants
 - Event materials (stickers, T-shirts in reasonable quantities)
-- Equipment rental for events 
+- Equipment rental for events
 - Printing and event supplies
 - Speaker and mentor travel expenses
 
@@ -128,7 +128,7 @@ FOSS Hack events receive higher budgets due to their larger, often multi-college
 - Submit budget applications early with detailed breakdowns
 - Provide clear justification for expenses
 - Track all spending carefully
-- Maintain organised receipt records
+- Maintain organized receipt records
 
 #### How do I apply for reimbursement?
 Reimbursement Process:
@@ -150,10 +150,10 @@ Payment processing after approval: 1-2 weeks (may vary based on request volume)
 **Reimbursement Form:** [https://account.fossunited.org/expense-reimbursement/new](https://account.fossunited.org/expense-reimbursement/new)
 
 **Common rejection reasons** - Reimbursements are rejected, or when:
-Documentation is inadequate, unclear, receipts, missing receipts, or incomplete information. Numbers don't match stated event details (e.g., attendee count versus purchase quantities). Significant expenses were made without advance communication. Insufficient proof that the event occurred (photos, attendee lists). Spending significantly exceeds necessary amounts or appears unrelated to the event.
+Documentation is inadequate, unclear, receipts, missing receipts, or incomplete information. Numbers don't match stated event details (e.g., attendee count compared to purchase quantities). Significant expenses were made without advance communication. Insufficient proof that the event occurred (photos, attendee lists). Spending significantly exceeds necessary amounts or appears unrelated to the event.
 
 ## 4 Help, Resources, and Contacts
-### i. Code of Conduct 
+### i. Code of Conduct
 All FOSS Clubs follow the FOSS United Code of Conduct with these principles: [https://fossunited.org/code-of-conduct](https://fossunited.org/code-of-conduct)
 Zero tolerance for harassment, discrimination, or hate speech. All participants should feel welcome regardless of background, experience level, or identity. Questions at any level should be met with patience and support rather than condescension. Credit should be shared, and cooperative work encouraged, reflecting FOSS values. Knowledge should be shared freely, with a focus on helping others learn rather than just providing answers.
 Code of Conduct violations are taken seriously with clear reporting and handling processes to maintain safe, inclusive communities. The Club that violates the CoC will face strict consequences, including a permanent ban. Such clubs will no longer be considered part of the program and will not be allowed to reapply in the future
@@ -204,7 +204,7 @@ If responses take longer than expected, polite follow-ups are appropriate after 
 - [Expense Reimbursement form](https://account.fossunited.org/expense-reimbursement/new)
 
 #### How to contribute to FOSS United
-Check [Getting involved](https://docs.fossunited.org/#getting-involved) and/or [Developement and Documentation](https://docs.fossunited.org/development/). 
+Check [Getting involved](https://docs.fossunited.org/#getting-involved) and/or [Development and Documentation](https://docs.fossunited.org/development/).
 
 #### Program Committee
 The FOSS Club Program Committee members are:
@@ -216,4 +216,3 @@ The FOSS Club Program Committee members are:
 - Sai Rahul Poruri
 - Ruchika Bagde
 - Siddhartha Shivkumar
-
