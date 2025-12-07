@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-3 hover:cursor-pointer hover:bg-gray-50"
+    class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-3 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-700 hover:cursor-pointer hover:bg-gray-50"
     tabindex="0" @click="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
     @keydown.enter="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
     @keydown.space="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
