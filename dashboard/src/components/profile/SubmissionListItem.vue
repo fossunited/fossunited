@@ -1,12 +1,16 @@
 <template>
   <div
     class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-3 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-700 hover:cursor-pointer hover:bg-gray-50"
-    tabindex="0" @click="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
-    @keydown.enter="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
-    @keydown.space="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
-    aria-label="Edit proposal: {{ proposal.talk_title }}" role="link"
-    aria-labelledby="proposal-title-{{ proposal.name }}">
-    <h4 id="proposal-title-{{  proposal.name }}" class="text-base font-medium">{{ proposal.talk_title }}</h4>
+    tabindex="0"
+    @click="navigateToProposal"
+    @keydown.enter="navigateToProposal"
+    @keydown.space.prevent="navigateToProposal"
+    role="link"
+    :aria-labelledby="`proposal-title-${proposal.name}`"
+  >
+    <h4 :id="`proposal-title-${proposal.name}`" class="text-base font-medium">
+      {{ proposal.talk_title }}
+    </h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div class="flex flex-wrap gap-2 items-center divide-x-2 text-gray-800">
         <Badge class="!rounded-sm" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
@@ -21,7 +25,10 @@
 import { Badge } from 'frappe-ui'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import { useRouter } from 'vue-router'
 dayjs.extend(relativeTime)
+
+const router = useRouter()
 
 const props = defineProps({
   proposal: {
@@ -29,6 +36,10 @@ const props = defineProps({
     required: true,
   },
 })
+
+const navigateToProposal = () => {
+  router.push({ name: 'Proposal Edit', params: { id: props.proposal.name } })
+}
 
 const getTheme = {
   'Review Pending': 'orange',
