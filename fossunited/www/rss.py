@@ -2,13 +2,12 @@
 # Copyright (c) 2025, FOSS United Organization
 # License: MIT. See LICENSE
 
-import re
 from datetime import datetime, time
 from email.utils import format_datetime
 from urllib.parse import urljoin
 
 import frappe
-from frappe.utils import escape_html, get_request_site_address, markdown
+from frappe.utils import escape_html, get_request_site_address, md_to_html
 
 no_cache = 1
 base_template_path = "www/rss.xml"
@@ -51,7 +50,7 @@ def get_context(context):
         attr = {"Markdown": "content_md", "HTML": "content_html"}.get(blog.content_type, "content")
         value = getattr(blog, attr)
         if blog.content_type == "Markdown":
-            blog_content = markdown(re.sub(r"(?i)</?br\s*/?>", "\n", value))
+            blog_content = md_to_html(value)
         else:
             blog_content = value
         blog.content = f"<![CDATA[{blog_content}]]>"
