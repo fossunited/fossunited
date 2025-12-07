@@ -1,9 +1,14 @@
 <template>
   <div
     class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-3 hover:cursor-pointer hover:bg-gray-50"
+    tabindex="0"
     @click="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
-  >
-    <h4 class="text-base font-medium">{{ proposal.talk_title }}</h4>
+    @keydown.enter="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
+    @keydown.space="$router.push({ name: 'Proposal Edit', params: { id: proposal.name } })"
+    aria-label="Edit proposal: {{ proposal.talk_title }}" role="link"
+    aria-labelledby="proposal-title-{{ proposal.name }}"
+    >
+    <h4 id="proposal-title-{{  proposal.name }}" class="text-base font-medium">{{ proposal.talk_title }}</h4>
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-2">
       <div class="flex flex-wrap gap-2 items-center divide-x-2 text-gray-800">
         <Badge class="!rounded-sm" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
