@@ -83,10 +83,7 @@
   "column_break_cntx",
   "t_shirt_price",
   "section_break_hjyr",
-  "custom_fields",
-  "event_speakers_section",
-  "column_break_qhec",
-  "event_speakers"
+  "custom_fields"
  ],
  "fields": [
   {
@@ -513,21 +510,6 @@
    "fieldtype": "Table",
    "label": "Project Showcase",
    "options": "Event Project Showcase"
-  },
-  {
-   "fieldname": "event_speakers_section",
-   "fieldtype": "Section Break",
-   "label": "Speakers"
-  },
-  {
-   "fieldname": "column_break_qhec",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "event_speakers",
-   "fieldtype": "Table",
-   "label": "Event Speakers",
-   "options": "FOSS Chapter Event Member"
   }
  ],
  "has_web_view": 1,
@@ -549,7 +531,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-08 17:59:11.571537",
+ "modified": "2025-12-08 18:36:33.710891",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
