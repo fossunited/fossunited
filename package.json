@@ -21,7 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@knadh/autocomp": "^1.1.0",
+    "@knadh/autocomp": "^1.2.0",
     "petite-vue": "^0.4.1"
   },
   "devDependencies": {
