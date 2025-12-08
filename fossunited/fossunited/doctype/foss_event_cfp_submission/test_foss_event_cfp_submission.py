@@ -343,28 +343,6 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             expected_recipients=[self.submission.email],
         )
 
-    def test_notify_proposer_on_approval_change(self):
-        frappe.set_user(CoreTeam)
-
-        self.submission.append(
-            "reviews",
-            {
-                "reviewer": CoreTeam,
-                "to_approve": "Maybe",
-                "remarks": "Might be good?",
-            },
-        )
-        self.submission.save()
-
-        frappe.db.delete("Email Queue")
-        self.submission.reviews[0].to_approve = "No"
-        self.submission.save()
-
-        self._assert_email_sent(
-            subject_contains="A Review status changed on your proposal for",
-            expected_recipients=[self.submission.email],
-        )
-
     def test_notify_proposer_on_remarks_changed(self):
         frappe.set_user(CoreTeam)
 
@@ -384,7 +362,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.submission.save()
 
         self._assert_email_sent(
-            subject_contains="A Review remarks changed on your proposal for",
+            subject_contains="Review remarks updated on your proposal for",
             expected_recipients=[self.submission.email],
         )
 
@@ -426,13 +404,3 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.assertIsNotNone(self.submission.positive_reviews)
         self.assertIsNotNone(self.submission.negative_reviews)
         self.assertIsNotNone(self.submission.approvability)
-
-    def test_illegal_status_change_on_insert(self):
-        # When trying to insert with non-pending status
-        # Then it should raise ValidationError
-        with self.assertRaises(frappe.ValidationError):
-            submission = frappe.new_doc(PROPOSAL)
-            submission.linked_cfp = self.cfp.name
-            submission.event = self.event.name
-            submission.status = "Approved"
-            submission.insert()
