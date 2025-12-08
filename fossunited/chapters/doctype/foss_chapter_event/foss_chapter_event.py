@@ -36,10 +36,10 @@ class FOSSChapterEvent(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501 # noqa: E501
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
             FOSSChapterEventMember,
         )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501 # noqa: E501
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
