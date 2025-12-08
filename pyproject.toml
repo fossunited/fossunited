@@ -13,6 +13,7 @@ dependencies = [
     "Faker~=27.0.0",
     "Pillow~=11.0.0",
     "ics~=0.7.2",
+    "pre-commit>=4.2.0",
 ]
 
 [project.optional-dependencies]

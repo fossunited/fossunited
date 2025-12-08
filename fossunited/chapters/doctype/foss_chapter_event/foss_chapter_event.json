@@ -108,7 +108,7 @@
    "in_list_view": 1,
    "label": "Event Type",
    "mandatory_depends_on": "eval:doc.is_external_event == 0",
-   "options": "Meet Up\nConference\nWorkshop\nBirds Of Feathers\nHackathon\nLinux Installation Party"
+   "options": "Meet Up\nConference\nWorkshop\nBirds Of Feathers\nHackathon\nOnline\nLinux Installation Party"
   },
   {
    "fieldname": "chapter_information_section",
@@ -531,7 +531,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-10-07 16:50:15.974998",
+ "modified": "2025-12-08 18:36:33.710891",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
