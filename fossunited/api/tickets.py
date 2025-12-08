@@ -485,7 +485,6 @@ def get_paid_events():
     )
 
 
-@frappe.whitelist(allow_guest=True)
 def search_tickets(search_term, event=None):
     """Search tickets by ticket_id, email, or coupon_id"""
     if not search_term:
@@ -531,7 +530,7 @@ def search_tickets(search_term, event=None):
     return []
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def download_ticket(ticket_id):
     """Download single ticket PDF"""
     if not frappe.db.exists(EVENT_TICKET, ticket_id):
@@ -547,7 +546,7 @@ def download_ticket(ticket_id):
     )
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def download_all_tickets(ticket_ids):
     """Download multiple tickets as single PDF"""
     import json

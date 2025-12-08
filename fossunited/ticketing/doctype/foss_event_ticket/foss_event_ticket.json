@@ -165,7 +165,7 @@
   }
  ],
  "links": [],
- "modified": "2025-12-04 22:29:14.517585",
+ "modified": "2025-12-08 21:17:03.458231",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -182,11 +182,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-  },
-  {
-   "print": 1,
-   "read": 1,
-   "role": "Guest"
   }
  ],
  "row_format": "Dynamic",
