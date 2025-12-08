@@ -70,8 +70,8 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_permalink: DF.Data | None
         event_schedule: DF.Table[FOSSEventSchedule]
         event_start_date: DF.Datetime
-        event_type: DF.Literal[  # noqa: E501
-            "Meet Up",  # noqa: E501
+        event_type: DF.Literal[
+            "Meet Up",
             "Conference",
             "Workshop",
             "Birds Of Feathers",
