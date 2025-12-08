@@ -1,12 +1,12 @@
 <template>
   <div>
-    <div class="flex flex-col flex-wrap md:flex-row gap-5 my-2 md:items-end">
+    <div class="flex flex-col md:flex-row gap-2 my-2 md:items-end">
       <FormControl
         v-if="searchable"
         v-model="search"
         type="search"
         :placeholder="searchPlaceholder"
-        class="md:w-1/4"
+        class="max-w-xs"
         :class="searchClass"
       />
 
@@ -15,6 +15,7 @@
           v-if="exportable"
           icon-left="download"
           :label="exportLabel"
+          class="h-10 px-3"
           @click="handleExport"
         />
       </slot>
