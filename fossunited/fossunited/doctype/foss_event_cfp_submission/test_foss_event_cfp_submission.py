@@ -343,6 +343,51 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             expected_recipients=[self.submission.email],
         )
 
+    def test_notify_proposer_on_approval_change(self):
+        frappe.set_user(CoreTeam)
+
+        self.submission.append(
+            "reviews",
+            {
+                "reviewer": CoreTeam,
+                "to_approve": "Maybe",
+                "remarks": "Might be good?",
+            },
+        )
+        self.submission.save()
+
+        frappe.db.delete("Email Queue")
+        self.submission.reviews[0].to_approve = "No"
+        self.submission.save()
+
+        self._assert_email_sent(
+            subject_contains="A Review status changed on your proposal for",
+            expected_recipients=[self.submission.email],
+        )
+
+    def test_notify_proposer_on_remarks_changed(self):
+        frappe.set_user(CoreTeam)
+
+        # When a review is added
+        self.submission.append(
+            "reviews",
+            {
+                "reviewer": CoreTeam,
+                "to_approve": "Maybe",
+                "remarks": "This needs more explanation.",
+            },
+        )
+        self.submission.save()
+
+        frappe.db.delete("Email Queue")
+        self.submission.reviews[0].remarks = "This is promising now!"
+        self.submission.save()
+
+        self._assert_email_sent(
+            subject_contains="A Review remarks changed on your proposal for",
+            expected_recipients=[self.submission.email],
+        )
+
     def test_get_review_scores_calculation(self):
         # Given a submission with multiple reviews
         frappe.set_user(CoreTeam)

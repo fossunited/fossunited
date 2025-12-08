@@ -440,6 +440,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                     "approval_changed",
                     old_review,
                 )
+
             elif review.remarks != old_review.remarks:
                 self._send_review_email(
                     "A Review remarks changed on your proposal for",
@@ -477,29 +478,32 @@ def build_review_message(submission, review, change_type, old_review=None):
         f"titled <b>{submission.talk_title}</b>, has an update.<br><br>"
     )
 
-    messages = {
-        "new": (
+    if change_type == "new":
+        body = (
             f"<b>A new review has been submitted.</b><br>"
             f"Review Conclusion: {review.to_approve}<br>"
             f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
-        ),
-        "approval_changed": lambda: (
+        )
+
+    elif change_type == "approval_changed":
+        body = (
             f"<b>A reviewer decision has changed.</b><br>"
             f"Previous decision: {old_review.to_approve}<br>"
             f"New decision: <b>{review.to_approve}</b><br>"
             f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
-        ),
-        "remarks_changed": lambda: (
+        )
+
+    elif change_type == "remarks_changed":
+        body = (
             f"<b>A reviewer has updated their remarks.</b><br>"
             f"Old Remarks: <pre><code> {old_review.remarks} </code></pre><br>"
             f"New Remarks: <pre><code> {review.remarks} </code></pre><br>"
             f"Review Conclusion: {review.to_approve}<br>"
-        ),
-    }
+        )
 
     closing = (
         f"You can access your proposal here: https://fossunited.org/{submission.route}<br><br>"
         "Regards,<br>FOSS United Team"
     )
 
-    return base_intro + messages[change_type] + closing
+    return base_intro + body + closing
