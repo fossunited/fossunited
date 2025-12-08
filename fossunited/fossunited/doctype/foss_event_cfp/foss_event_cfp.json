@@ -146,8 +146,14 @@
       "label": "Has Public Custom Responses"
     }
   ],
-  "links": [],
-  "modified": "2025-06-19 20:22:36.333513",
+  "links": [
+    {
+      "group": "Submissions",
+      "link_doctype": "FOSS Event CFP Submission",
+      "link_fieldname": "linked_cfp"
+    }
+  ],
+  "modified": "2025-12-08 17:46:08.489691",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
