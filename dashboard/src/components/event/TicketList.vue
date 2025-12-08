@@ -4,7 +4,7 @@
     <p class="text-sm">List of attendees for this event.</p>
   </div>
   <SearchListView
-    v-if="attendeesList.data.tickets"
+    v-if="attendeesList.data?.tickets"
     :rows="groupedRows"
     :columns="columns"
     row-key="id"
@@ -35,14 +35,7 @@
 </template>
 
 <script setup>
-import {
-  createResource,
-  ListView,
-  LoadingIndicator,
-  Checkbox,
-  FormControl,
-  Button,
-} from 'frappe-ui'
+import { createResource, LoadingIndicator, Checkbox } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import SearchListView from '@/components/ui/SearchListView.vue'
 
@@ -52,7 +45,6 @@ const props = defineProps({
   event: { type: Object, required: true },
 })
 
-const searchName = ref('')
 const groupedRows = ref([])
 
 const attendeesList = createResource({
@@ -60,7 +52,6 @@ const attendeesList = createResource({
   makeParams() {
     return {
       event_id: props.event.data.name,
-      filters: { full_name: ['like', `%${searchName.value}%`] },
     }
   },
   auto: true,
@@ -97,46 +88,4 @@ watchEffect(() => {
 
   groupedRows.value = Object.values(grouped)
 })
-
-const escapeCSV = (str) => {
-  const s = String(str)
-  return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g, '""')}"` : s
-}
-
-const downloadCSV = () => {
-  if (!attendeesList.data?.tickets?.length) return toast.error('No data to download')
-
-  const headers = [
-    'Tier',
-    'Name',
-    'Email',
-    'Designation',
-    'Organization',
-    'Wants T-shirt',
-    'T-shirt Size',
-    ...customFields.value,
-  ]
-
-  const rows = attendeesList.data.tickets.map((t) => [
-    t.tier,
-    t.full_name,
-    t.email,
-    t.designation || '',
-    t.organization || '',
-    t.wants_tshirt ? 'Yes' : 'No',
-    t.tshirt_size || '',
-    ...customFields.value.map((f) => t[`custom_field_${f}`] || ''),
-  ])
-
-  const csv = [headers, ...rows].map((row) => row.map(escapeCSV).join(',')).join('\n')
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
-  const link = document.createElement('a')
-  link.href = URL.createObjectURL(blob)
-  link.download = `attendees_${props.event.data.name}_${new Date().toISOString().split('T')[0]}.csv`
-  link.click()
-  URL.revokeObjectURL(link.href)
-
-  toast.success('CSV downloaded successfully')
-}
 </script>
