@@ -479,10 +479,13 @@ def build_review_message(submission, review, change_type, old_review=None):
     )
 
     if change_type == "new":
+        remarks_section = (
+            f"Remarks: <pre><code> {review.remarks} </code></pre><br>" if review.remarks else ""
+        )
         body = (
             f"<b>A new review has been submitted.</b><br>"
             f"Review Conclusion: {review.to_approve}<br>"
-            f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
+            f"{remarks_section}"
         )
 
     elif change_type == "approval_changed":
@@ -502,7 +505,7 @@ def build_review_message(submission, review, change_type, old_review=None):
         )
 
     closing = (
-        f"You can access your proposal here: https://fossunited.org/{submission.route}<br><br>"
+        f"You can access your proposal here: {frappe.utils.get_url(submission.route)}<br><br>"
         "Regards,<br>FOSS United Team"
     )
 
