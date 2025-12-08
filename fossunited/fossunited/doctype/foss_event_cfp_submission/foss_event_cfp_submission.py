@@ -429,37 +429,29 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         for review in self.reviews:
             old_review = old_reviews.get(review.name)
 
-            # New review
             if not old_review:
-                self._send_review_email("New review on your proposal for", review, "new")
-            # Updated review
-            elif old_review.to_approve != review.to_approve:
-                self._send_review_email(
-                    "A Review status changed on your proposal for",
-                    review,
-                    "approval_changed",
-                    old_review,
-                )
-
+                change_type = "new"
             elif review.remarks != old_review.remarks:
-                self._send_review_email(
-                    "A Review remarks changed on your proposal for",
-                    review,
-                    "remarks_changed",
-                    old_review,
-                )
+                change_type = "remarks_changed"
+            else:
+                continue
 
-    def _send_review_email(self, subject_prefix, review, change_type, old_review=None):
+            self._send_review_email(review, change_type, old_review)
+
+    def _send_review_email(self, review, change_type, old_review=None):
         """Helper to send review notification emails."""
         if not self.email:
             return
+
         speaker_emails = [s.email for s in self.speakers if s.email]
+        sub_prefix = "New review" if change_type == "new" else "Review remarks updated"
+
         try:
             frappe.sendmail(
                 recipients=self.email,
                 cc=speaker_emails,
-                subject=f"{subject_prefix} {self.event_name}",
-                message=build_review_message(self, review, change_type, old_review),
+                subject=f"{sub_prefix} on your proposal for {self.event_name}",
+                message=self._build_review_message(review, change_type, old_review),
                 reference_doctype=PROPOSAL,
                 reference_name=self.name,
             )
@@ -469,44 +461,29 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 message=frappe.get_traceback(),
             )
 
-
-def build_review_message(submission, review, change_type, old_review=None):
-    """Build review notification message."""
-    base_intro = (
-        f"Dear {submission.full_name},<br><br>"
-        f"Your proposal for <b>{submission.event_name}</b>, "
-        f"titled <b>{submission.talk_title}</b>, has an update.<br><br>"
-    )
-
-    if change_type == "new":
-        remarks_section = (
-            f"Remarks: <pre><code> {review.remarks} </code></pre><br>" if review.remarks else ""
-        )
-        body = (
-            f"<b>A new review has been submitted.</b><br>"
-            f"Review Conclusion: {review.to_approve}<br>"
-            f"{remarks_section}"
+    def _build_review_message(self, review, change_type, old_review=None):
+        """Build review notification message."""
+        base_intro = (
+            f"Dear {self.full_name},<br><br>"
+            f"Your proposal for <b>{self.event_name}</b>, "
+            f"titled <b>{self.talk_title}</b>, has an update.<br><br>"
         )
 
-    elif change_type == "approval_changed":
-        body = (
-            f"<b>A reviewer decision has changed.</b><br>"
-            f"Previous decision: {old_review.to_approve}<br>"
-            f"New decision: <b>{review.to_approve}</b><br>"
-            f"Remarks: <pre><code> {review.remarks} </code></pre><br>"
+        if change_type == "new":
+            remarks_section = (
+                f"Remarks: <pre><code>{review.remarks}</code></pre><br>" if review.remarks else ""
+            )
+            body = f"<b>A new review has been submitted.</b><br>{remarks_section}"
+        else:  # remarks_changed
+            body = (
+                f"<b>A reviewer has updated their remarks.</b><br>"
+                f"Old Remarks: <pre><code>{old_review.remarks}</code></pre><br>"
+                f"New Remarks: <pre><code>{review.remarks}</code></pre><br>"
+            )
+
+        closing = (
+            f"You can access your proposal here: {frappe.utils.get_url(self.route)}<br><br>"
+            "Regards,<br>FOSS United Team"
         )
 
-    elif change_type == "remarks_changed":
-        body = (
-            f"<b>A reviewer has updated their remarks.</b><br>"
-            f"Old Remarks: <pre><code> {old_review.remarks} </code></pre><br>"
-            f"New Remarks: <pre><code> {review.remarks} </code></pre><br>"
-            f"Review Conclusion: {review.to_approve}<br>"
-        )
-
-    closing = (
-        f"You can access your proposal here: {frappe.utils.get_url(submission.route)}<br><br>"
-        "Regards,<br>FOSS United Team"
-    )
-
-    return base_intro + body + closing
+        return base_intro + body + closing
