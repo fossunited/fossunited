@@ -224,3 +224,183 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             self.assertTrue(
                 self.is_added_to_email_group(self.event.name, sp.email, "CFP Proposers")
             )
+
+    def test_withdrawal_changes_status_to_withdrawn(self):
+        # Given an approved submission
+        frappe.set_user(CoreTeam)
+        self.submission.status = "Approved"
+        self.submission.save()
+
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+
+        self.assertEqual(self.submission.status, "Withdrawn")
+
+    def _get_single_email(self, reference_doctype=PROPOSAL, reference_name=None):
+        """Return the single Email Queue doc for a given reference."""
+        if reference_name is None:
+            reference_name = self.submission.name
+
+        email_name = frappe.db.get_value(
+            "Email Queue",
+            {
+                "reference_doctype": reference_doctype,
+                "reference_name": reference_name,
+            },
+            "name",
+        )
+
+        self.assertIsNotNone(
+            email_name,
+            f"No Email Queue record found for {reference_doctype} {reference_name}",
+        )
+
+        return frappe.get_doc("Email Queue", email_name)
+
+    def _assert_email_sent(
+        self,
+        subject_contains: str,
+        expected_recipients: list[str],
+        reference_doctype=PROPOSAL,
+        reference_name=None,
+    ):
+        """Assert an email was queued with the given subject fragment and recipients."""
+        email = self._get_single_email(reference_doctype, reference_name)
+
+        self.assertIn(subject_contains, email.message)
+
+        # Recipients is a child table; collect all emails into a set
+        recipients = {r.recipient for r in email.recipients}
+        for addr in expected_recipients:
+            self.assertIn(
+                addr,
+                recipients,
+                f"Expected recipient {addr} not found in {recipients}",
+            )
+
+    def test_un_withdrawal_restores_status(self):
+        # Given a withdrawn submission
+        frappe.set_user(CoreTeam)
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+        self.assertEqual(self.submission.status, "Withdrawn")
+
+        # When withdrawal is reverted
+        self.submission.is_withdrawn = 0
+        self.submission.save()
+
+        # Then status should be Review Pending
+        self.assertEqual(self.submission.status, "Review Pending")
+
+    def test_session_type_invited_talk_blocked_for_website_users(self):
+        # Given a website user
+        frappe.set_user("test_website_user@example.com")
+
+        # When trying to set session_type to Invited Talk
+        # Then it should raise PermissionError
+        with self.assertRaises(frappe.PermissionError):
+            self.submission.session_type = "Invited Talk"
+            self.submission.save()
+
+    def test_withdrawal_notifies_team_when_approved(self):
+        # Given an approved submission
+        frappe.set_user(CoreTeam)
+        self.submission.status = "Approved"
+        self.submission.save()
+
+        # Clear email queue
+        frappe.db.delete("Email Queue")
+
+        # When it is withdrawn
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+
+        # Then team should be notified via email
+        self._assert_email_sent(
+            subject_contains="Withdrawn",
+            expected_recipients=[self.chapter.email],
+        )
+
+    def test_notify_proposer_on_new_review(self):
+        # Given a submission
+        frappe.set_user(CoreTeam)
+        frappe.db.delete("Email Queue")
+
+        # When a review is added
+        self.submission.append(
+            "reviews",
+            {
+                "reviewer": CoreTeam,
+                "to_approve": "Yes",
+                "remarks": "Great proposal!",
+            },
+        )
+        self.submission.save()
+
+        # Then proposer should be notified
+        self._assert_email_sent(
+            subject_contains="New review",
+            expected_recipients=[self.submission.email],
+        )
+
+    def test_notify_proposer_on_remarks_changed(self):
+        frappe.set_user(CoreTeam)
+
+        # When a review is added
+        self.submission.append(
+            "reviews",
+            {
+                "reviewer": CoreTeam,
+                "to_approve": "Maybe",
+                "remarks": "This needs more explanation.",
+            },
+        )
+        self.submission.save()
+
+        frappe.db.delete("Email Queue")
+        self.submission.reviews[0].remarks = "This is promising now!"
+        self.submission.save()
+
+        self._assert_email_sent(
+            subject_contains="Review remarks updated on your proposal for",
+            expected_recipients=[self.submission.email],
+        )
+
+    def test_get_review_scores_calculation(self):
+        # Given a submission with multiple reviews
+        frappe.set_user(CoreTeam)
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Yes", "remarks": ""}
+        )
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Yes", "remarks": ""}
+        )
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "No", "remarks": ""}
+        )
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Maybe", "remarks": ""}
+        )
+        self.submission.save()
+
+        # When getting review scores
+        scores = self.submission.get_review_scores()
+
+        # Then scores should be calculated correctly
+        self.assertEqual(scores["positive"], 2)
+        self.assertEqual(scores["negative"], 1)
+        self.assertEqual(scores["unsure"], 1)
+        self.assertEqual(scores["approvability"], 66)  # 2/(2+1) * 100
+
+    def test_set_scores_updates_fields(self):
+        # Given a submission with reviews
+        frappe.set_user(CoreTeam)
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Yes", "remarks": ""}
+        )
+        self.submission.save()
+
+        # Then score fields should be updated
+        self.assertIsNotNone(self.submission.positive_reviews)
+        self.assertIsNotNone(self.submission.negative_reviews)
+        self.assertIsNotNone(self.submission.approvability)

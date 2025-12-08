@@ -105,6 +105,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_session_type_permissions()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
+        self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
@@ -417,3 +418,72 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         except Exception as exc:
             frappe.log_error(title="email_core_team:send_failed", message=frappe.get_traceback())
             frappe.throw(f"Failed to send email: {exc}")
+
+    def notify_proposer_on_review(self):
+        """Notify proposer on new or updated review."""
+        old_doc = self.get_doc_before_save()
+        if self.is_new() or not old_doc:
+            return
+
+        old_reviews = {r.name: r for r in old_doc.reviews if r.name}
+        for review in self.reviews:
+            old_review = old_reviews.get(review.name)
+
+            if not old_review:
+                change_type = "new"
+            elif review.remarks != old_review.remarks:
+                change_type = "remarks_changed"
+            else:
+                continue
+
+            self._send_review_email(review, change_type, old_review)
+
+    def _send_review_email(self, review, change_type, old_review=None):
+        """Helper to send review notification emails."""
+        if not self.email:
+            return
+
+        speaker_emails = [s.email for s in self.speakers if s.email]
+        sub_prefix = "New review" if change_type == "new" else "Review remarks updated"
+
+        try:
+            frappe.sendmail(
+                recipients=self.email,
+                cc=speaker_emails,
+                subject=f"{sub_prefix} on your proposal for {self.event_name}",
+                message=self._build_review_message(review, change_type, old_review),
+                reference_doctype=PROPOSAL,
+                reference_name=self.name,
+            )
+        except Exception:
+            frappe.log_error(
+                title="review_notification:send_failed",
+                message=frappe.get_traceback(),
+            )
+
+    def _build_review_message(self, review, change_type, old_review=None):
+        """Build review notification message."""
+        base_intro = (
+            f"Dear {self.full_name},<br><br>"
+            f"Your proposal for <b>{self.event_name}</b>, "
+            f"titled <b>{self.talk_title}</b>, has an update.<br><br>"
+        )
+
+        if change_type == "new":
+            remarks_section = (
+                f"Remarks: <pre><code>{review.remarks}</code></pre><br>" if review.remarks else ""
+            )
+            body = f"<b>A new review has been submitted.</b><br>{remarks_section}"
+        else:  # remarks_changed
+            body = (
+                f"<b>A reviewer has updated their remarks.</b><br>"
+                f"Old Remarks: <pre><code>{old_review.remarks}</code></pre><br>"
+                f"New Remarks: <pre><code>{review.remarks}</code></pre><br>"
+            )
+
+        closing = (
+            f"You can access your proposal here: {frappe.utils.get_url(self.route)}<br><br>"
+            "Regards,<br>FOSS United Team"
+        )
+
+        return base_intro + body + closing
