@@ -115,6 +115,7 @@ declare module 'vue' {
     ScheduleView: typeof import('./src/components/schedule/ScheduleView.vue')['default']
     ScheduleViewToggle: typeof import('./src/components/schedule/ScheduleViewToggle.vue')['default']
     SearchComplete: typeof import('./src/components/ui/SearchComplete.vue')['default']
+    SearchListView: typeof import('./src/components/ui/SearchListView.vue')['default']
     SearchSession: typeof import('./src/components/schedule/SearchSession.vue')['default']
     SendTestDialog: typeof import('./src/components/mailing/SendTestDialog.vue')['default']
     SessionCard: typeof import('./src/components/schedule/SessionCard.vue')['default']

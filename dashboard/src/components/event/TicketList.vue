@@ -3,45 +3,32 @@
     <h3 class="mb-1">Attendee List</h3>
     <p class="text-sm">List of attendees for this event.</p>
   </div>
-  <div class="flex flex-col flex-wrap md:flex-row gap-5 my-2 md:items-end">
-    <FormControl
-      v-model="searchName"
-      type="search"
-      label="Search"
-      placeholder="Search by Name"
-      class="md:w-1/4"
-      @input="attendeesList.fetch()"
-    />
-    <Button size="md" icon-left="download" @click="downloadCSV">Download</Button>
-  </div>
-  <ListView
-    v-if="attendeesList.data?.tickets"
-    class="h-[540px]"
-    :columns="columns"
+  <SearchListView
+    v-if="attendeesList.data.tickets"
     :rows="groupedRows"
+    :columns="columns"
+    row-key="id"
+    search-placeholder="Search attendees..."
+    item-label="attendees"
+    export-filename="event_attendees"
+    :export-columns="[{ label: 'Tier', key: 'tier' }, ...columns]"
     :options="{
       selectable: false,
-      showTooltip: false,
-      resizeColumn: false,
       emptyState: {
-        title: 'No attendees for this event',
-        description: 'Attendees will be listed here once they buy tickets.',
+        title: 'No attendees yet',
+        description: 'Attendees will appear once they register.',
       },
     }"
   >
     <template #group-header="{ group }">
-      <span class="text-base font-medium leading-6 text-ink-gray-9">
-        {{ group.group }} ({{ group.rows.length }})
-      </span>
+      <span class="text-base font-medium"> {{ group.group }} ({{ group.rows.length }}) </span>
     </template>
+
     <template #cell="{ item, row, column }">
       <Checkbox v-if="column.key === 'wants_tshirt'" :model-value="item" disabled />
-      <div v-else-if="column.key === 'tshirt_size'" class="text-base">
-        {{ row.wants_tshirt ? item : '-' }}
-      </div>
-      <div v-else class="text-base">{{ item || '-' }}</div>
+      <div v-else>{{ item || '-' }}</div>
     </template>
-  </ListView>
+  </SearchListView>
   <div v-if="attendeesList.loading" class="w-full h-[220px] flex items-center justify-center">
     <LoadingIndicator class="w-5 h-5" />
   </div>
@@ -57,6 +44,7 @@ import {
   Button,
 } from 'frappe-ui'
 import { toast } from 'vue-sonner'
+import SearchListView from '@/components/ui/SearchListView.vue'
 
 import { defineProps, computed, ref, watchEffect } from 'vue'
 
