@@ -66,9 +66,6 @@
   "volunteers_tab",
   "event_members_section",
   "event_members",
-  "event_speakers_section",
-  "column_break_qhec",
-  "event_speakers",
   "schedule_tab",
   "schedule_section",
   "event_schedule",
@@ -86,7 +83,10 @@
   "column_break_cntx",
   "t_shirt_price",
   "section_break_hjyr",
-  "custom_fields"
+  "custom_fields",
+  "event_speakers_section",
+  "column_break_qhec",
+  "event_speakers"
  ],
  "fields": [
   {
@@ -549,7 +549,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-06 18:50:56.404551",
+ "modified": "2025-12-08 17:59:11.571537",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

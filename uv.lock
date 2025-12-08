@@ -484,6 +484,7 @@ dependencies = [
     { name = "faker" },
     { name = "ics" },
     { name = "pillow" },
+    { name = "pre-commit" },
     { name = "pygithub" },
     { name = "razorpay" },
 ]
@@ -522,6 +523,7 @@ requires-dist = [
     { name = "mkdocs-glightbox", marker = "extra == 'docs'", specifier = ">=0.5.1" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = "~=9.5.36" },
     { name = "pillow", specifier = "~=11.0.0" },
+    { name = "pre-commit", specifier = ">=4.2.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = "==4.2.0" },
     { name = "pygithub", specifier = "~=2.3.0" },
     { name = "python-lsp-server", marker = "extra == 'dev'", specifier = ">=1.13.0" },

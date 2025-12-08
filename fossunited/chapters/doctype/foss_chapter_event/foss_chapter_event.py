@@ -71,7 +71,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         event_schedule: DF.Table[FOSSEventSchedule]
         event_speakers: DF.Table[FOSSChapterEventMember]
         event_start_date: DF.Datetime
-        event_type: DF.Literal[
+        event_type: DF.Literal[  # noqa: E501
             "Meet Up",
             "Conference",
             "Workshop",
