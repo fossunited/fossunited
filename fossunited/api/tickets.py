@@ -485,6 +485,7 @@ def get_paid_events():
     )
 
 
+@frappe.whitelist()
 def search_tickets(search_term, event=None):
     """Search tickets by ticket_id, email, or coupon_id"""
     if not search_term:
@@ -536,14 +537,19 @@ def download_ticket(ticket_id):
     if not frappe.db.exists(EVENT_TICKET, ticket_id):
         frappe.throw("Ticket not found")
 
-    from frappe.utils.print_format import download_pdf
+    frappe.local.flags.ignore_print_permissions = True
 
-    return download_pdf(
-        doctype=EVENT_TICKET,
-        name=ticket_id,
-        format="[Designer] Event Ticket",
+    pdf_file = frappe.get_print(
+        EVENT_TICKET,
+        ticket_id,
+        "[Designer] Event Ticket",
         no_letterhead=1,
+        as_pdf=True,
     )
+
+    frappe.local.response.filename = "event-ticket.pdf"
+    frappe.local.response.filecontent = pdf_file
+    frappe.local.response.type = "download"
 
 
 @frappe.whitelist()
@@ -564,10 +570,12 @@ def download_all_tickets(ticket_ids):
 
     from frappe.utils.print_format import download_multi_pdf
 
-    # download_multi_pdf returns the PDF content directly
+    frappe.local.flags.ignore_print_permissions = True
+
     download_multi_pdf(
         doctype=EVENT_TICKET,
         name=json.dumps(ticket_ids),
         format="[Designer] Event Ticket",
         no_letterhead=True,
     )
+    frappe.local.response.type = "download"
