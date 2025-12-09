@@ -130,10 +130,9 @@ class FOSSChapterEvent(WebsiteGenerator):
             self.update_published_status()
         self.set_route()
 
-        if self.map_link and (self.is_new() or self.has_value_changed("map_link")):
+        if self.has_value_changed("map_link") or (self.map_link and not self.map_coordinate):
             lat, lng = extract_map_coordinates(self.map_link)
-            if lat and lng:
-                self.map_coordinate = f"{lat},{lng}"
+            self.map_coordinate = f"{lat},{lng}"
 
     def on_trash(self):
         self.delete_campaigns()
@@ -595,8 +594,11 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
 
-        if self.map_coordinate:
-            context.map_lat, context.map_lng = self.map_coordinate.split(",")
+        lat_str, lng_str = self.map_coordinate.split(",")
+        context.map_lat, context.map_lng = (
+            None if lat_str == "None" else float(lat_str),
+            None if lng_str == "None" else float(lng_str),
+        )
 
         context.no_cache = 1
 
