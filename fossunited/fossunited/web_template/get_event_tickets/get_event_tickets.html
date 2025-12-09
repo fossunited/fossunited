@@ -221,7 +221,7 @@
 
     function downloadTicket(ticketName) {
       const url = `/api/method/fossunited.api.tickets.download_ticket?ticket_id=${ticketName}`
-      window.open(url, '_blank')
+      window.location.href = url
     }
 
     function downloadAll() {
@@ -233,7 +233,7 @@
 
       const ticketIds = foundTickets.map((t) => t.name)
       const url = `/api/method/fossunited.api.tickets.download_all_tickets?ticket_ids=${encodeURIComponent(JSON.stringify(ticketIds))}`
-      window.open(url, '_blank')
+      window.location.href = url
     }
 
     function showLoading(show) {
