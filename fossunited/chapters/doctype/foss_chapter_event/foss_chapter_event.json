@@ -488,9 +488,9 @@
  "is_published_field": "is_published",
  "links": [
   {
-   "group": "Participants",
-   "link_doctype": "FOSS Chapter Event Participant",
-   "link_fieldname": "event_name"
+   "group": "Proposals",
+   "link_doctype": "FOSS Event CFP Submission",
+   "link_fieldname": "event"
   },
   {
    "group": "RSVP",
@@ -498,11 +498,12 @@
    "link_fieldname": "chapter"
   },
   {
+   "group": "Tickets",
    "link_doctype": "FOSS Event Ticket",
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-09 16:32:55.690541",
+ "modified": "2025-12-09 23:06:56.568909",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
