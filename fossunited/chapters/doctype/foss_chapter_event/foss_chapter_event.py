@@ -45,14 +45,18 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
             EventProjectShowcase,
         )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
+            FOSSEventField,
+        )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
             FOSSEventSponsor,
         )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
+            FOSSTicketTier,
+        )
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -87,17 +91,14 @@ class FOSSChapterEvent(WebsiteGenerator):
         is_published: DF.Check
         livestream_embed_link: DF.Data | None
         livestream_link: DF.Data | None
+        map_coordinate: DF.Data | None
         map_link: DF.Data | None
         must_attend: DF.Check
         paid_tshirts_available: DF.Check
-        primary_button_label: DF.Data | None
-        primary_button_url: DF.Data | None
         project_showcase: DF.Table[EventProjectShowcase]
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
-        secondary_button_label: DF.Data | None
-        secondary_button_url: DF.Data | None
         show_cfp: DF.Check
         show_photos: DF.Check
         show_rsvp: DF.Check
@@ -128,6 +129,10 @@ class FOSSChapterEvent(WebsiteGenerator):
         if self.has_value_changed("status"):
             self.update_published_status()
         self.set_route()
+
+        if self.has_value_changed("map_link") or (self.map_link and not self.map_coordinate):
+            lat, lng = extract_map_coordinates(self.map_link)
+            self.map_coordinate = f"{lat},{lng}"
 
     def on_trash(self):
         self.delete_campaigns()
@@ -589,8 +594,11 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
 
-        if self.map_link:
-            context.map_lat, context.map_lng = extract_map_coordinates(self.map_link)
+        lat_str, lng_str = self.map_coordinate.split(",")
+        context.map_lat, context.map_lng = (
+            None if lat_str == "None" else float(lat_str),
+            None if lng_str == "None" else float(lng_str),
+        )
 
         context.no_cache = 1
 
@@ -598,7 +606,6 @@ class FOSSChapterEvent(WebsiteGenerator):
 def extract_map_coordinates(map_url):
     """
     Extract latitude and longitude from map URLs.
-
     Returns tuple: (lat, lng) or (None, None) if not found
     """
     import re
@@ -622,7 +629,7 @@ def extract_map_coordinates(map_url):
         return float(match.group(1)), float(match.group(2))
 
     # Google Maps @ format: @lat,lng,zoom
-    match = re.search(r"@([-\d.]+),([-\d.]+),", map_url)
+    match = re.search(r"@([-\d.]+),([-\d.]+)", map_url)
     if match:
         return float(match.group(1)), float(match.group(2))
 
@@ -631,5 +638,94 @@ def extract_map_coordinates(map_url):
     lng_match = re.search(r"!4d([-\d.]+)", map_url)
     if lat_match and lng_match:
         return float(lat_match.group(1)), float(lng_match.group(1))
+
+    # OSMand pin format: pin=lat,lng
+    match = re.search(r"[?&]pin=([-\d.]+),([-\d.]+)", map_url)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # OpenStreetMap directions with to= parameter: to=lat%2Clng
+    match = re.search(r"[?&]to=([-\d.]+)%2C([-\d.]+)", map_url)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # Direct lat/lng query parameters
+    match = re.search(r"[?&]lat=([-\d.]+).*[?&]lng=([-\d.]+)", map_url, re.IGNORECASE)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # Reverse pattern: lng, lat
+    match = re.search(r"[?&]lng=([-\d.]+).*[?&]lat=([-\d.]+)", map_url, re.IGNORECASE)
+    if match:
+        return float(match.group(2)), float(match.group(1))
+
+    # Google q param: q=lat,lng
+    match = re.search(r"[?&]q=([-\d.]+),([-\d.]+)", map_url)
+    if match:
+        return float(match.group(1)), float(match.group(2))
+
+    # OSM shortlink with way/node/relation parameter: osm.org/go/xxxxx?way=123
+    match = re.search(r"osm\.org/go/[^?]+\?(node|way|relation)=([\d]+)", map_url)
+    if match:
+        obj_type, obj_id = match.groups()
+        # Rewrite URL to standard format and continue to API fetch below
+        map_url = f"https://www.openstreetmap.org/{obj_type}/{obj_id}"
+
+    # OSM node/way/relation - fetch from API
+    match = re.search(r"/(node|way|relation)/([\d]+)", map_url)
+    if match:
+        obj_type, obj_id = match.groups()
+        try:
+            # Fetch object from OSM API
+            response = requests.get(
+                f"https://www.openstreetmap.org/api/0.6/{obj_type}/{obj_id}.json",
+                timeout=5,
+            )
+
+            if response.status_code == 200:
+                data = response.json()
+                elements = data.get("elements", [])
+
+                if not elements:
+                    return None, None
+
+                element = elements[0]
+
+                # Direct coordinates (for nodes)
+                if element.get("lat") is not None and element.get("lon") is not None:
+                    return float(element["lat"]), float(element["lon"])
+
+                # Center coordinates (for some ways/relations)
+                center = element.get("center")
+                if center and center.get("lat") is not None and center.get("lon") is not None:
+                    return float(center["lat"]), float(center["lon"])
+
+                # For ways without center: fetch nodes and calculate centroid
+                nodes_list = element.get("nodes", [])
+                if nodes_list:
+                    # Remove duplicate nodes (closing polygons)
+                    unique_nodes = list(dict.fromkeys(nodes_list))
+                    node_ids = ",".join(map(str, unique_nodes))
+
+                    nodes_response = requests.get(
+                        f"https://www.openstreetmap.org/api/0.6/nodes.json?nodes={node_ids}",
+                        timeout=5,
+                    )
+
+                    if nodes_response.status_code == 200:
+                        nodes_data = nodes_response.json()
+                        nodes = [
+                            n
+                            for n in nodes_data.get("elements", [])
+                            if n.get("lat") is not None and n.get("lon") is not None
+                        ]
+
+                        if nodes:
+                            avg_lat = sum(n["lat"] for n in nodes) / len(nodes)
+                            avg_lon = sum(n["lon"] for n in nodes) / len(nodes)
+                            return float(avg_lat), float(avg_lon)
+
+        except (requests.RequestException, ValueError, KeyError):
+            pass
 
     return None, None

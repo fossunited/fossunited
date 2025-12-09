@@ -39,12 +39,7 @@
   "banner_image",
   "event_location",
   "map_link",
-  "cta_section_section",
-  "primary_button_label",
-  "primary_button_url",
-  "column_break_hrox",
-  "secondary_button_label",
-  "secondary_button_url",
+  "map_coordinate",
   "event_timeline_section",
   "event_start_date",
   "column_break_ae9v",
@@ -225,35 +220,6 @@
    "fieldtype": "Data",
    "label": "Deck Link",
    "options": "URL"
-  },
-  {
-   "fieldname": "cta_section_section",
-   "fieldtype": "Section Break",
-   "label": "CTA Section"
-  },
-  {
-   "fieldname": "primary_button_label",
-   "fieldtype": "Data",
-   "label": "Primary Button Label"
-  },
-  {
-   "fieldname": "primary_button_url",
-   "fieldtype": "Data",
-   "label": "Primary Button URL"
-  },
-  {
-   "fieldname": "column_break_hrox",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "secondary_button_label",
-   "fieldtype": "Data",
-   "label": "Secondary Button Label"
-  },
-  {
-   "fieldname": "secondary_button_url",
-   "fieldtype": "Data",
-   "label": "Secondary Button URL"
   },
   {
    "fieldname": "volunteers_tab",
@@ -510,6 +476,11 @@
    "fieldtype": "Table",
    "label": "Project Showcase",
    "options": "Event Project Showcase"
+  },
+  {
+   "fieldname": "map_coordinate",
+   "fieldtype": "Data",
+   "label": "Map Coordinates"
   }
  ],
  "has_web_view": 1,
@@ -532,7 +503,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-08 18:36:33.710891",
+ "modified": "2025-12-09 23:06:56.568909",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
