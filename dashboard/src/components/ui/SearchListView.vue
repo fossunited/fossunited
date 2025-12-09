@@ -100,37 +100,30 @@ const getSearchableText = (row) => {
     .toLowerCase()
 }
 
-const precomputedRows = computed(() => {
-  const withSearchText = (row) => ({
-    ...row,
-    __searchText: getSearchableText(row),
-  })
+const searchTextCache = new WeakMap()
 
-  if (isGrouped.value) {
-    return props.rows.map((group) => ({
-      ...group,
-      rows: group.rows.map(withSearchText),
-    }))
+const getSearchText = (row) => {
+  if (!searchTextCache.has(row)) {
+    searchTextCache.set(row, getSearchableText(row))
   }
-
-  return props.rows.map(withSearchText)
-})
+  return searchTextCache.get(row)
+}
 
 const filteredRows = computed(() => {
-  if (!search.value) return precomputedRows.value
+  if (!search.value) return props.rows
 
   const term = search.value.toLowerCase().trim()
 
   if (isGrouped.value) {
-    return precomputedRows.value
+    return props.rows
       .map((group) => ({
         ...group,
-        rows: group.rows.filter((row) => row.__searchText.includes(term)),
+        rows: group.rows.filter((row) => getSearchText(row).includes(term)),
       }))
       .filter((group) => group.rows.length > 0)
   }
 
-  return precomputedRows.value.filter((row) => row.__searchText.includes(term))
+  return props.rows.filter((row) => getSearchText(row).includes(term))
 })
 
 const totalCount = computed(() => {
