@@ -43,6 +43,7 @@
 import { ListView, FormControl, Button } from 'frappe-ui'
 import { ref, computed } from 'vue'
 import { toast } from 'vue-sonner'
+import { debounce } from 'lodash-es'
 
 const props = defineProps({
   rows: { type: Array, required: true },
@@ -65,7 +66,13 @@ const props = defineProps({
 
 defineOptions({ inheritAttrs: false })
 
-const search = ref('')
+const searchRaw = ref('')
+const search = computed({
+  get: () => searchRaw.value,
+  set: debounce((v) => {
+    searchRaw.value = v
+  }, 400),
+})
 
 const isGrouped = computed(
   () =>
@@ -93,21 +100,37 @@ const getSearchableText = (row) => {
     .toLowerCase()
 }
 
+const precomputedRows = computed(() => {
+  const withSearchText = (row) => ({
+    ...row,
+    __searchText: getSearchableText(row),
+  })
+
+  if (isGrouped.value) {
+    return props.rows.map((group) => ({
+      ...group,
+      rows: group.rows.map(withSearchText),
+    }))
+  }
+
+  return props.rows.map(withSearchText)
+})
+
 const filteredRows = computed(() => {
-  if (!search.value) return props.rows
+  if (!search.value) return precomputedRows.value
 
   const term = search.value.toLowerCase().trim()
 
   if (isGrouped.value) {
-    return props.rows
+    return precomputedRows.value
       .map((group) => ({
         ...group,
-        rows: group.rows.filter((row) => getSearchableText(row).includes(term)),
+        rows: group.rows.filter((row) => row.__searchText.includes(term)),
       }))
       .filter((group) => group.rows.length > 0)
   }
 
-  return props.rows.filter((row) => getSearchableText(row).includes(term))
+  return precomputedRows.value.filter((row) => row.__searchText.includes(term))
 })
 
 const totalCount = computed(() => {
