@@ -131,7 +131,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         if self.has_value_changed("map_link") or (self.map_link and not self.map_coordinate):
             lat, lng = extract_map_coordinates(self.map_link)
-            self.map_coordinate = f"{lat},{lng}"
+            self.map_coordinate = f"{lat},{lng}" if (lat and lng) else None
 
     def on_trash(self):
         self.delete_campaigns()
