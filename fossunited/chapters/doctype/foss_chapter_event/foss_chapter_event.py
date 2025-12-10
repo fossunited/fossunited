@@ -22,7 +22,6 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import is_user_team_member
 
 now = datetime.now()
 
@@ -243,31 +242,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
 
         return pagetitle, description, image
-
-    def get_navbar_items(self, speakers=None):
-        navbar_items = [
-            "event_information",
-            "speakers",
-            "rsvp",
-            "talk_proposal",
-            "livestreaming",
-        ]
-
-        if is_user_team_member(self.chapter, frappe.session.user):
-            return navbar_items
-
-        if speakers is None:
-            speakers, _ = self.get_speakers()
-        if not self.show_speakers or not speakers:
-            navbar_items.remove("speakers")
-        if not self.show_rsvp or self.is_paid_event:
-            navbar_items.remove("rsvp")
-        if not self.show_cfp:
-            navbar_items.remove("talk_proposal")
-        if self.livestream_embed_link is None:
-            navbar_items.remove("livestreaming")
-
-        return navbar_items
 
     def get_sponsors(self):
         # Get industry partners with joining_date (normalize company names, normalize dates)
@@ -594,11 +568,12 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
 
-        lat_str, lng_str = self.map_coordinate.split(",")
-        context.map_lat, context.map_lng = (
-            None if lat_str == "None" else float(lat_str),
-            None if lng_str == "None" else float(lng_str),
-        )
+        if self.map_coordinate:
+            lat_str, lng_str = self.map_coordinate.split(",")
+            context.map_lat = None if lat_str == "None" else float(lat_str)
+            context.map_lng = None if lng_str == "None" else float(lng_str)
+        else:
+            context.map_lat, context.map_lng = None, None
 
         context.no_cache = 1
 
