@@ -59,9 +59,10 @@ def insert_user_profile(email=None):
         ).insert(ignore_permissions=True)
         frappe_user.reload()
 
-    # User Profile gets created automatically via hooks/validation
-    # Just retrieve it after user creation
+    # User Profile gets created automatically via hooks "create_profile_on_user_create"
     profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
+    if not profile:
+        raise ValueError(f"User Profile was not auto-created for {email}")
 
     return profile
 
@@ -135,11 +136,11 @@ def insert_test_chapter(**kwargs):
                 )
 
             except Exception as member_error:
-                frappe.log_error(f"Error processing member {member_email}: {str(member_error)}")
+                frappe.log_error(f"Error processing member {member_email}: {member_error}")
                 raise
 
         chapter.insert(ignore_permissions=True)
-        frappe.db.commit()
+        chapter.save()
         chapter.reload()
 
         return chapter
@@ -397,8 +398,7 @@ def insert_rsvp_form(event: str, **kwargs):
 
         return rsvp
 
-    except Exception as e:
-        frappe.log_error(f"Error generating RSVP: {str(e)}")
+    except Exception:
         raise
 
 
