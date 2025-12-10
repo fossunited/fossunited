@@ -200,7 +200,7 @@ const attendeeExportColumns = computed(() => {
   if (!data) return []
   return Object.keys(data)
     .filter(
-      (key) => key !== 'name' && !(key === 'status' && rsvp_form.data?.requires_host_approval),
+      (key) => key !== 'name' && !(key === 'status' && !rsvp_form.data?.requires_host_approval),
     )
     .map((key) => ({
       label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
