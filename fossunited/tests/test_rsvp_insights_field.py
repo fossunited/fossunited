@@ -59,14 +59,14 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
 
     def test_event_core_team_full_email(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(self.event.name)["submissions"]
         self.assertTrue(result)
         self.assertIn("@", result[0]["email"])
         self.assertEqual(result[0]["email"], "alicewonderland@example.com")
 
     def test_event_core_team_gets_full_answers(self):
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(self.event.name)["submissions"]
         self.assertIn("What’s your goal?", result[0])
         self.assertEqual(
             result[0]["What’s your goal?"],
@@ -77,7 +77,7 @@ class TestGetSubmissionsWithAnswersAPI(FrappeTestCase):
         # Simulate a user who is part of the chapter (member)
         frappe.set_user(self.core_team_email)
 
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(self.event.name)["submissions"]
         for submission in result:
             self.assertIn("name1", submission)
             self.assertIn("email", submission)
