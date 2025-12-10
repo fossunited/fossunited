@@ -154,7 +154,7 @@ def generate_ics(event_ids):
 
 
 @frappe.whitelist()
-def get_submissions_with_answers(event_id: str) -> list[dict]:
+def get_submissions_with_answers(event_id: str) -> dict:
     """
     Get all RSVP submissions with their custom field answers.
 
@@ -162,7 +162,7 @@ def get_submissions_with_answers(event_id: str) -> list[dict]:
         event_id (str): Event ID
 
     Returns:
-        list[dict]: List of submissions with custom answers as dynamic fields
+        dict: Dictionary of submissions list and custom field names
     """
     if not check_if_chapter_or_event_core_member(event_id):
         frappe.throw("Not permitted", frappe.PermissionError)
@@ -191,6 +191,7 @@ def get_submissions_with_answers(event_id: str) -> list[dict]:
         fields=["parent", "question", "response"],
         order_by="parent asc, idx asc",
     )
+    custom_field_names = list(dict.fromkeys([f["question"] for f in answers]))
 
     # Group answers by parent (submission)
     answers_map = {}
@@ -209,7 +210,7 @@ def get_submissions_with_answers(event_id: str) -> list[dict]:
         if submission_id in answers_map:
             submission.update(answers_map[submission_id])
 
-    return submissions
+    return {"submissions": submissions, "custom_fields": custom_field_names}
 
 
 @frappe.whitelist()
