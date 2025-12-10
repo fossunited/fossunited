@@ -28,6 +28,45 @@ from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
 fake = Faker()
 
 
+def insert_user_profile(email=None):
+    """
+    Create a test user and their profile.
+
+    Args:
+        email (str, optional): Email for the user. If not provided, generates a fake email.
+
+    Returns:
+        str: Name of the created User Profile
+    """
+    if not email:
+        email = fake.email()
+
+    # Check if profile already exists
+    profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
+    if profile:
+        return profile
+
+    # Create Frappe User if it doesn't exist
+    if not frappe.db.exists("User", email):
+        name_parts = email.split("@")[0].title()
+        frappe_user = frappe.get_doc(
+            {
+                "doctype": "User",
+                "email": email,
+                "first_name": name_parts,
+                "full_name": name_parts,
+            }
+        ).insert(ignore_permissions=True)
+        frappe_user.reload()
+
+    # User Profile gets created automatically via hooks "create_profile_on_user_create"
+    profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
+    if not profile:
+        raise ValueError(f"User Profile was not auto-created for {email}")
+
+    return profile
+
+
 def insert_test_chapter(**kwargs):
     """
     Generate a test chapter with flexible configuration options.
@@ -57,7 +96,12 @@ def insert_test_chapter(**kwargs):
     ```
     """
     try:
-        # Validate and set default values
+        # Create Role if it doesn't exist
+        if not frappe.db.exists("Role", "Chapter Team Member"):
+            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
+                ignore_permissions=True
+            )
+
         chapter_data = {
             "doctype": CHAPTER,
             "chapter_name": kwargs.get("chapter_name", fake.text(max_nb_chars=40).strip()),
@@ -75,30 +119,13 @@ def insert_test_chapter(**kwargs):
             "x": kwargs.get("x", fake.url()),
         }
 
-        # Create chapter document
         chapter = frappe.get_doc(chapter_data)
-        chapter.insert()
 
-        if not frappe.db.exists("Role", "Chapter Team Member"):
-            frappe.get_doc({"doctype": "Role", "role_name": "Chapter Team Member"}).insert(
-                ignore_permissions=True
-            )
-        # Add additional members
+        # Add members using the helper function
         members = kwargs.get("members", [])
-        for member in members:
+        for member_email in members:
             try:
-                profile = frappe.db.get_value(USER_PROFILE, {"user": member}, "name")
-                if not profile:
-                    # Create User and User Profile
-                    user_profile = frappe.get_doc(
-                        {
-                            "doctype": USER_PROFILE,
-                            "user": member,
-                            "full_name": member.split("@")[0].title(),
-                        }
-                    ).insert(ignore_permissions=True)
-
-                    profile = user_profile.name
+                profile = insert_user_profile(member_email)
 
                 chapter.append(
                     "chapter_members",
@@ -107,17 +134,19 @@ def insert_test_chapter(**kwargs):
                         "role": "Core Team Member",
                     },
                 )
-            except Exception as member_error:
-                frappe.log_error(f"Error processing member {member}: {str(member_error)}")
 
-        # Save and reload chapter
+            except Exception as member_error:
+                frappe.log_error(f"Error processing member {member_email}: {member_error}")
+                raise
+
+        chapter.insert(ignore_permissions=True)
         chapter.save()
         chapter.reload()
 
         return chapter
 
     except Exception:
-        # Re-raise the exception to maintain original error handling
+        frappe.db.rollback()
         raise
 
 
@@ -369,8 +398,7 @@ def insert_rsvp_form(event: str, **kwargs):
 
         return rsvp
 
-    except Exception as e:
-        frappe.log_error(f"Error generating RSVP: {str(e)}")
+    except Exception:
         raise
 
 

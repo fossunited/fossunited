@@ -10,37 +10,19 @@ from fossunited.doctype_ids import USER_PROFILE
 from fossunited.foss_profiles.doctype.foss_user_profile.foss_user_profile import (
     PrivateProfileError,
 )
+from fossunited.tests.utils import insert_user_profile
 
 fake = Faker()
 
 
 class TestFOSSUserProfile(FrappeTestCase):
     def test_add_profile(self):
-        # Given a user that does not have a FOSSUnitedProfile
-        inserted_username = fake.user_name()
-        inserted_name = fake.name()
-        inserted_email = fake.email()
-        profile_exists = frappe.db.exists(USER_PROFILE, {"username": inserted_username})
-        self.assertFalse(profile_exists)
-
         # When a FOSSUnitedProfile is created for the user
-        # Note that a Frappe User needs to exist before a Profile can be created
-        # Verify that only required values are provided below
-        frappe_user = frappe.get_doc(
-            {
-                "doctype": "User",
-                # Create a unique email address as it is used as a database key
-                "email": inserted_email,
-                "first_name": inserted_name.split(" ")[0],
-                "full_name": inserted_name,
-            },
-        ).insert()
-        frappe_user.reload()
+        inserted_email = fake.email()
+        insert_user_profile(inserted_email)
 
         # Then verify that the Profile has been stored as expected
-        profile_exists = frappe.db.exists(USER_PROFILE, {"user": frappe_user.name})
-
-        self.assertTrue(profile_exists)
+        self.assertTrue(frappe.db.exists(USER_PROFILE, {"user": inserted_email}))
 
     def test_private_profile_access(self):
         test_name = fake.name()
