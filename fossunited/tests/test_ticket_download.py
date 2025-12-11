@@ -26,11 +26,11 @@ class TestTicketAPI(FrappeTestCase):
     def tearDown(self):
         """Clean up test data after each test"""
         frappe.set_user("Administrator")
-        frappe.db.rollback()
         frappe.delete_doc(EVENT, self.event.name, force=True)
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.delete_doc(EVENT_TICKET, self.ticket.name, force=True)
         frappe.delete_doc(FREE_TICKET_CODE, self.coupon.name, force=True)
+        frappe.db.rollback()
 
     def test_search_tickets_with_empty_term(self):
         """Should throw error for empty search term"""
@@ -143,7 +143,8 @@ class TestTicketAPIIntegration(FrappeTestCase):
         insert_test_coupon_application(coupon1.name, event.name, email="random@example.com")
         insert_test_coupon_application(coupon2.name, event.name, email="random@example.com")
 
-        # Search with both coupons should return the same ticket
+        # the catch is we can only match by their email as common field
+        # so we get two same tickets from each coupon actually.
         results1 = search_tickets(coupon1.name)
         results2 = search_tickets(coupon2.name)
 

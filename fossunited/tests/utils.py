@@ -696,7 +696,6 @@ def insert_test_coupon(event: str, **kwargs):
     coupon_data = {
         "doctype": FREE_TICKET_CODE,
         "event": event,
-        "name": kwargs.get("name", fake.uuid4()[:8].upper()),
         "mapped_email": kwargs.get("mapped_email", fake.email()),
         "full_name": kwargs.get("full_name", fake.name()),
         "max_count": kwargs.get("max_count", 10),

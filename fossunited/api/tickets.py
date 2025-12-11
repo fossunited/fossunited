@@ -492,7 +492,7 @@ def search_tickets(search_term, event=None):
     """
     Search tickets by ticket_id or coupon_id.
 
-    Rate limit: 10 requests per 3 hours seconds per IP
+    Rate limit: 10 requests per 3 hours per IP
 
     Args:
         search_term (str): Ticket ID or coupon code to search
@@ -544,7 +544,7 @@ def download_ticket(ticket_id):
     """
     Download single ticket PDF.
 
-    Rate limit: 5 requests per 5 hour per IP
+    Rate limit: 5 requests per 5 hours per IP
 
     Args:
         ticket_id (str): ID of the ticket to download
