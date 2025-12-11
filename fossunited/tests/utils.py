@@ -10,6 +10,8 @@ from fossunited.doctype_ids import (
     EVENT_CFP,
     EVENT_RSVP,
     EVENT_TICKET,
+    FREE_TICKET_APPLY,
+    FREE_TICKET_CODE,
     HACKATHON,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
@@ -678,3 +680,61 @@ def insert_test_hackathon_localhost(parent_hackathon: str, **kwargs):
     localhost.insert()
     localhost.reload()
     return localhost
+
+
+def insert_test_coupon(event: str, **kwargs):
+    """
+    Generate a test free ticket coupon/code.
+
+    Args:
+        event (str): ID of linked event
+        **kwargs: Additional fields to set on the coupon
+
+    Returns:
+        coupon doc: Created coupon document
+    """
+    coupon_data = {
+        "doctype": FREE_TICKET_CODE,
+        "event": event,
+        "name": kwargs.get("name", fake.uuid4()[:8].upper()),
+        "mapped_email": kwargs.get("mapped_email", fake.email()),
+        "full_name": kwargs.get("full_name", fake.name()),
+        "max_count": kwargs.get("max_count", 10),
+        "tier": kwargs.get("tier", "Volunteer"),
+    }
+
+    coupon = frappe.get_doc(coupon_data)
+    coupon.flags.ignore_permissions = True
+    coupon.insert()
+    coupon.reload()
+
+    return coupon
+
+
+def insert_test_coupon_application(coupon_id: str, event: str, **kwargs):
+    """
+    Generate a test coupon application linking a user to a coupon.
+
+    Args:
+        coupon_id (str): ID of the coupon being applied
+        event (str): ID of the event
+        email (str): Email of the person applying the coupon
+        **kwargs: Additional fields to set on the application
+
+    Returns:
+        application doc: Created coupon application document
+    """
+    application_data = {
+        "doctype": FREE_TICKET_APPLY,
+        "coupon_id": coupon_id,
+        "email": kwargs.get("email", fake.email()),
+        "full_name": kwargs.get("full_name", fake.name()),
+        "event": event,
+    }
+
+    application = frappe.get_doc(application_data)
+    application.flags.ignore_permissions = True
+    application.insert()
+    application.reload()
+
+    return application
