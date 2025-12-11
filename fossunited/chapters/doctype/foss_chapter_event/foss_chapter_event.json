@@ -495,15 +495,25 @@
   {
    "group": "RSVP",
    "link_doctype": "FOSS Event RSVP Submission",
-   "link_fieldname": "chapter"
+   "link_fieldname": "event"
   },
   {
    "group": "Tickets",
    "link_doctype": "FOSS Event Ticket",
    "link_fieldname": "event"
+  },
+  {
+   "group": "Tickets",
+   "link_doctype": "Event Free Ticket Code",
+   "link_fieldname": "event"
+  },
+  {
+   "group": "Tickets",
+   "link_doctype": "Event Free Ticket Applications",
+   "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-09 23:06:56.568909",
+ "modified": "2025-12-11 12:50:27.937795",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
