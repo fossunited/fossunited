@@ -1,25 +1,24 @@
 <template>
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
     <!-- Check-In Section -->
-    <div v-if="checkedInData.data?.show_checkins" class="flex flex-col gap-4 mt-1">
+    <div v-if="showCheckins" class="flex flex-col gap-4 mt-1">
       <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div class="font-semibold text-gray-800">
           Event Check-Ins
           <span class="ml-2 text-sm font-normal text-gray-600">
-            ({{ checkedInData.data.total_checked_in }} / {{ checkedInData.data.total_accepted }}
-            confirmed attendees)
+            ({{ uniqueCheckedInCount }} / {{ eventStats.data?.total_accepted || 0 }} confirmed
+            attendees)
           </span>
         </div>
-        <Button size="md" icon-left="refresh-cw" @click="checkedInData.reload()"> Refresh </Button>
+        <Button size="md" icon-left="refresh-cw" @click="refreshCheckins"> Refresh </Button>
       </div>
 
       <SearchListView
         class="h-[500px]"
         :rows="checkinGroups"
         :columns="checkinColumns"
-        row-key="name"
         search-placeholder="Search check-in attendees..."
-        item-label="attendees"
+        item-label="check-ins"
         :export-filename="`event-checkins-${route.params.id}`"
         :export-columns="checkinExportColumns"
         :options="listOptions"
@@ -52,7 +51,6 @@
         class="h-[500px]"
         :rows="attendeeGroups"
         :columns="attendeeColumns"
-        row-key="name"
         search-placeholder="Search attendees..."
         item-label="attendees"
         :export-filename="`rsvp-submissions-${route.params.id}`"
@@ -107,7 +105,7 @@ import { toast } from 'vue-sonner'
 
 const route = useRoute()
 
-// Reactive group states
+// Reactive states for collapse
 const checkinGroups = ref([])
 const attendeeGroups = ref([])
 
@@ -116,25 +114,44 @@ const rsvp_form = createResource({
   url: 'frappe.client.get',
   params: {
     doctype: 'FOSS Event RSVP',
-    fields: ['*'],
+    fields: ['requires_host_approval', 'custom_questions'],
     filters: { event: route.params.id },
   },
   auto: true,
 })
 
 const submissions = createResource({
-  url: 'fossunited.api.chapter.get_submissions_with_answers',
+  url: 'fossunited.api.rsvp.get_submissions_with_answers',
   params: { event_id: route.params.id },
   auto: true,
 })
 
-const checkedInData = createResource({
-  url: 'fossunited.api.chapter.get_checked_in_attendees',
+const checkins = createResource({
+  url: 'fossunited.api.rsvp.get_rsvp_checkins',
   params: { event_id: route.params.id },
   auto: true,
 })
 
-// Shared list options
+const shouldShowCheckins = createResource({
+  url: 'fossunited.api.rsvp.if_rsvp_show_checkins',
+  params: { event_id: route.params.id },
+  auto: true,
+})
+
+const eventStats = createResource({
+  url: 'fossunited.api.rsvp.get_rsvp_checkin_stats',
+  params: { event_id: route.params.id },
+  auto: true,
+})
+
+const showCheckins = computed(() => shouldShowCheckins.data === true)
+
+const uniqueCheckedInCount = computed(() => {
+  const list = checkins.data || []
+  const unique = new Set(list.map((c) => c.email))
+  return unique.size
+})
+
 const listOptions = {
   selectable: false,
   showTooltip: true,
@@ -145,7 +162,7 @@ const listOptions = {
   },
 }
 
-// Check-in columns & groups
+// Check-in columns
 const checkinColumns = [
   { key: 'name1', label: 'Name' },
   { key: 'email', label: 'Email' },
@@ -155,22 +172,27 @@ const checkinColumns = [
 
 const checkinExportColumns = [{ key: 'date', label: 'Date' }, ...checkinColumns]
 
-// Build check-in groups reactively (preserves collapsed state)
+// Group check-ins by date
 watchEffect(() => {
-  const byDate = checkedInData.data?.by_date || {}
-  const dates = Object.keys(byDate)
+  const list = checkins.data || []
+  const byDate = {}
 
-  // Preserve existing collapsed states
+  list.forEach((checkin) => {
+    const date = new Date(checkin.check_in_time).toISOString().split('T')[0]
+    if (!byDate[date]) byDate[date] = []
+    byDate[date].push({ ...checkin, date })
+  })
+
+  const dates = Object.keys(byDate).sort().reverse()
   const existingStates = Object.fromEntries(checkinGroups.value.map((g) => [g.group, g.collapsed]))
 
   checkinGroups.value = dates.map((date) => ({
     group: date,
     collapsed: existingStates[date] ?? false,
-    rows: byDate[date].attendees.map((a) => ({ date, ...a })),
+    rows: byDate[date],
   }))
 })
 
-// Attendee columns & groups
 const attendeeColumns = computed(() => {
   const baseColumns = [
     { label: 'Name', key: 'name1', width: '200px' },
@@ -179,24 +201,24 @@ const attendeeColumns = computed(() => {
     { label: 'Confirmed', key: 'confirm_attendance', width: '120px' },
   ]
 
-  const customFields = submissions.data?.custom_fields || []
-  const customColumns = customFields.map((field) => ({
-    label: truncate(field, 20),
-    key: field,
-    width: '300px',
-  }))
-
-  const columns = [...baseColumns, ...customColumns]
-
+  // Get custom field names from rsvp_form
+  const cq = rsvp_form.data?.custom_questions || []
+  cq.forEach((q) => {
+    baseColumns.push({
+      label: q.question,
+      key: q.question,
+      width: '300px',
+    })
+  })
   if (rsvp_form.data?.requires_host_approval) {
-    columns.push({ label: 'Actions', key: 'actions', width: '200px' })
+    baseColumns.push({ label: 'Actions', key: 'actions', width: '200px' })
   }
 
-  return columns
+  return baseColumns
 })
 
 const attendeeExportColumns = computed(() => {
-  const data = submissions.data?.submissions?.[0]
+  const data = submissions.data?.[0]
   if (!data) return []
   return Object.keys(data)
     .filter(
@@ -208,9 +230,9 @@ const attendeeExportColumns = computed(() => {
     }))
 })
 
-// Build attendee groups reactively (preserves collapsed state)
+// Group attendees by status
 watchEffect(() => {
-  const rows = submissions.data?.submissions || []
+  const rows = submissions.data || []
   const requiresApproval = rsvp_form.data?.requires_host_approval
 
   const pending = []
@@ -300,7 +322,12 @@ const formatTime = (datetime) => {
   })
 }
 
-// RSVP Actions
+// Actions
+const refreshCheckins = () => {
+  checkins.reload()
+  eventStats.reload()
+}
+
 const updateRsvpStatus = (row, status) => {
   if (!row?.name) {
     toast.error('Invalid row')
