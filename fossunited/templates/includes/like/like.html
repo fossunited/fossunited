@@ -44,8 +44,8 @@
           in_queue = false
 
           // If server indicates it didn't create/delete (duplicate or error), reconcile
-          const data = r && r.message ? r.message : null
-          if (!data) {
+          const data = r && r.message !== undefined ? r.message : null
+          if (data === null) {
             // server didn't respond properly; revert UI
             toggle_like_icon(like)
             $('.like-count').text(like_count)
@@ -57,11 +57,11 @@
           if (data.liked) {
             if (data.created === false) {
               like = true
-              like_count = Math.max(like_count, new_count)
               $('.like-count').text(like_count)
             } else {
               like = true
               like_count = new_count
+              $('.like-count').text(like_count)
             }
           } else {
             if (data.deleted === false) {

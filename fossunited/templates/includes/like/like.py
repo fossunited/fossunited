@@ -32,7 +32,6 @@ def like_filters(reference_doctype, reference_name):
     return filters
 
 
-@rate_limit(limit=10, seconds=60 * 60 * 12)
 def add_like(reference_doctype, reference_name):
     """
     Return True if a like was created, False if it already existed.
@@ -62,7 +61,6 @@ def add_like(reference_doctype, reference_name):
     return True
 
 
-@rate_limit(limit=10, seconds=60 * 60 * 12)
 def delete_like(reference_doctype, reference_name):
     """
     Return True if a like was deleted, False if none found.
