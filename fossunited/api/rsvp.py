@@ -19,7 +19,7 @@ def get_submissions_with_answers(event_id: str) -> list:
     Returns: list of dicts with dynamic custom field keys
     """
     if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("Not permitted", frappe.PermissionError)
+        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
 
     rsvp = DocType(RSVP_RESPONSE)
     custom = DocType(RSVP_CUSTOM_FIELD)
@@ -57,6 +57,7 @@ def get_submissions_with_answers(event_id: str) -> list:
         sub_id = row["name"]
         if sub_id not in submissions_map:
             submissions_map[sub_id] = {
+                "name": row["name"],
                 "confirm_attendance": row["confirm_attendance"],
                 "status": row["status"],
                 "name1": row["name1"],
@@ -76,7 +77,7 @@ def get_rsvp_checkins(event_id: str) -> list:
     Returns: list of check-in records with attendee details
     """
     if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("Not permitted", frappe.PermissionError)
+        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
 
     Submission = DocType(RSVP_RESPONSE)
     CheckIn = DocType(EVENT_CHECKIN)
@@ -109,6 +110,8 @@ def if_rsvp_show_checkins(event_id: str) -> bool:
     Check if check-ins should be shown (event has started).
     Returns: boolean
     """
+    if not check_if_chapter_or_event_core_member(event_id):
+        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
     event_start = frappe.db.get_value(EVENT, event_id, "event_start_date")
     if not event_start:
         return False
@@ -123,6 +126,8 @@ def get_rsvp_checkin_stats(event_id: str) -> dict:
     Get event statistics.
     Returns: dict with counts
     """
+    if not check_if_chapter_or_event_core_member(event_id):
+        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
     total_accepted = frappe.db.count(
         RSVP_RESPONSE,
         filters={"event": event_id, "status": "Accepted", "confirm_attendance": 1},
