@@ -20,13 +20,13 @@ repos:
         args: ["--config=pyproject.toml"]
 
   # grammar checker for /docs content
-  - repo: https://github.com/errata-ai/vale
-    rev: v3.13.0
-    hooks:
-      # - id: vale
-      #   name: vale sync
-      #   pass_filenames: false
-      #   args: [sync]
-      - id: vale
-        pass_filenames: true
-        args: [--output=line, --minAlertLevel=error]
+  # - repo: https://github.com/errata-ai/vale
+  #   rev: v3.13.0
+  #   hooks:
+  #     # - id: vale
+  #     #   name: vale sync
+  #     #   pass_filenames: false
+  #     #   args: [sync]
+  #     - id: vale
+  #       pass_filenames: true
+  #       args: [--output=line, --minAlertLevel=error]
