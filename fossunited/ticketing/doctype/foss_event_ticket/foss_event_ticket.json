@@ -165,7 +165,7 @@
   }
  ],
  "links": [],
- "modified": "2025-12-08 21:17:03.458231",
+ "modified": "2025-12-11 13:23:11.242154",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
@@ -188,5 +188,6 @@
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": [],
- "title_field": "full_name"
+ "title_field": "full_name",
+ "track_changes": 1
 }
