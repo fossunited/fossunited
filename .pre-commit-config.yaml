@@ -12,7 +12,7 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.13.2
+    rev: v0.14.8
     hooks:
       - id: ruff
         args: ["--fix", "--config=pyproject.toml"]
@@ -21,12 +21,12 @@ repos:
 
   # grammar checker for /docs content
   - repo: https://github.com/errata-ai/vale
-    rev: v3.12.0
+    rev: v3.13.0
     hooks:
-      - id: vale
-        name: vale sync
-        pass_filenames: false
-        args: [sync]
+      # - id: vale
+      #   name: vale sync
+      #   pass_filenames: false
+      #   args: [sync]
       - id: vale
         pass_filenames: true
         args: [--output=line, --minAlertLevel=error]
