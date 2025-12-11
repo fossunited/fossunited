@@ -91,3 +91,50 @@ class TestFOSSChapterEvent(FrappeTestCase):
                 "document_type": EVENT,
             },
         )
+
+    def test_map_link_extracts_coordinates(self):
+        """Test that a new event with map_link extracts and stores coordinates."""
+        map_coord = "12.9716,77.5946"
+        map_link = "https://maps.google.com/?q=12.9716,77.5946"
+
+        event = insert_test_event(
+            chapter=self.chapter,
+            map_link=map_link,
+        )
+        self.assertIsNotNone(event.map_coordinate)
+        self.assertEqual(event.map_coordinate, map_coord)
+
+        frappe.delete_doc(EVENT, event.name, force=True)
+
+    def test_map_link_updates_coordinates(self):
+        """Test that changing map_link triggers coordinate re-extraction."""
+        event = insert_test_event(
+            chapter=self.chapter,
+            map_link="https://osmapp.org/node/abcdedfg/#69/12.9716/77.5946",
+        )
+        initial_coordinate = event.map_coordinate
+
+        event = frappe.get_doc(EVENT, event.name)
+        event.map_link = "https://maps.google.com/?q=69.007,420.911"
+        event.save()
+
+        self.assertEqual(initial_coordinate, "12.9716,77.5946")
+        self.assertEqual(event.map_coordinate, "69.007,420.911")
+
+        frappe.delete_doc(EVENT, event.name, force=True)
+
+    def test_event_without_map_link_has_no_coordinates(self):
+        """Test that events created without map_link have no coordinates."""
+        event = insert_test_event(chapter=self.chapter)
+        self.assertIsNone(event.map_coordinate)
+        frappe.delete_doc(EVENT, event.name, force=True)
+
+    def test_invalid_map_link_sets_none(self):
+        """Test that invalid map links result in None coordinates."""
+        event = insert_test_event(
+            chapter=self.chapter,
+            map_link="https://invalid-url.com",
+        )
+
+        self.assertIsNone(event.map_coordinate)
+        frappe.delete_doc(EVENT, event.name, force=True)

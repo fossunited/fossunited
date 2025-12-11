@@ -129,9 +129,12 @@ class FOSSChapterEvent(WebsiteGenerator):
             self.update_published_status()
         self.set_route()
 
-        if self.has_value_changed("map_link") or (self.map_link and not self.map_coordinate):
-            lat, lng = extract_map_coordinates(self.map_link)
-            self.map_coordinate = f"{lat},{lng}" if (lat and lng) else None
+        if self.has_value_changed("map_link"):
+            if self.map_link:
+                lat, lng = extract_map_coordinates(self.map_link)
+                self.map_coordinate = f"{lat},{lng}" if (lat and lng) else None
+            else:
+                self.map_coordinate = None
 
     def on_trash(self):
         self.delete_campaigns()
@@ -568,12 +571,16 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
 
-        if self.map_coordinate:
-            lat_str, lng_str = self.map_coordinate.split(",")
-            context.map_lat = None if lat_str == "None" else float(lat_str)
-            context.map_lng = None if lng_str == "None" else float(lng_str)
-        else:
-            context.map_lat, context.map_lng = None, None
+        context.map_lat = None
+        context.map_lng = None
+
+        if self.map_coordinate and self.map_coordinate not in ["None,None", ",", ""]:
+            try:
+                lat_str, lng_str = self.map_coordinate.split(",")
+                context.map_lat = float(lat_str) if lat_str and lat_str != "None" else None
+                context.map_lng = float(lng_str) if lng_str and lng_str != "None" else None
+            except (ValueError, AttributeError):
+                pass
 
         context.no_cache = 1
 
