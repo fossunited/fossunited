@@ -24,8 +24,8 @@ class TestScheduledTasks(FrappeTestCase):
         self.event1 = insert_test_event(
             chapter=self.chapter,
             status="Live",
-            start_date=today.replace(hour=9, minute=00),
-            end_date=today.replace(hour=15, minute=30),
+            event_start_date=today.replace(hour=9, minute=00),
+            event_end_date=today.replace(hour=15, minute=30),
         )
 
         self.event1_cfp = insert_cfp_form(event=self.event1.name, status="Live")
@@ -35,8 +35,8 @@ class TestScheduledTasks(FrappeTestCase):
         self.event2 = insert_test_event(
             chapter=self.chapter,
             status="Cancelled",
-            start_date=today.replace(hour=9, minute=00),
-            end_date=today.replace(hour=15, minute=30),
+            event_start_date=today.replace(hour=9, minute=00),
+            event_end_date=today.replace(hour=15, minute=30),
         )
         self.event2_cfp = insert_cfp_form(event=self.event2.name, status="Live")
         self.event2_rsvp = insert_rsvp_form(event=self.event2.name, is_published=1)
@@ -44,8 +44,8 @@ class TestScheduledTasks(FrappeTestCase):
         # Event 3 starts tomorrow, and ends the day-after tomorrow
         self.event3 = insert_test_event(
             chapter=self.chapter,
-            start_date=today.replace(hour=9, minute=00) + timedelta(days=1),
-            end_date=today.replace(hour=14, minute=00) + timedelta(days=2),
+            event_start_date=today.replace(hour=9, minute=00) + timedelta(days=1),
+            event_end_date=today.replace(hour=14, minute=00) + timedelta(days=2),
         )
         self.event3_cfp = insert_cfp_form(event=self.event3.name, status="Live")
         self.event3_rsvp = insert_rsvp_form(event=self.event3.name, is_published=1)
