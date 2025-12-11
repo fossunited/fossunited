@@ -203,8 +203,10 @@ def insert_test_event(chapter: dict, **kwargs):
             "event_permalink": kwargs.get("event_permalink", fake.slug().replace("-", "_")),
             "status": kwargs.get("status", "Live"),
             "event_type": kwargs.get("event_type", "Hackathon"),
-            "event_start_date": kwargs.get("start_date", datetime.today() + timedelta(days=1)),
-            "event_end_date": kwargs.get("end_date", datetime.today() + timedelta(days=2)),
+            "event_start_date": kwargs.get(
+                "event_start_date", datetime.today() + timedelta(days=1)
+            ),
+            "event_end_date": kwargs.get("event_end_date", datetime.today() + timedelta(days=2)),
             "event_description": kwargs.get(
                 "description", f"Test event for {chapter.chapter_name}"
             ),

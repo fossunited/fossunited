@@ -97,7 +97,7 @@ def get_rsvp_checkins(event_id: str) -> list:
         .where(Submission.confirm_attendance == 1)
         .where(CheckIn.parenttype == RSVP_RESPONSE)
         .where(CheckIn.parentfield == "check_ins")
-        .orderby(CheckIn.check_in_time, Order.desc)
+        .orderby(CheckIn.check_in_time, order=Order.desc)
         .run(as_dict=True)
     )
 
