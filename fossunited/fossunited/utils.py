@@ -4,7 +4,7 @@ from datetime import datetime
 
 import frappe
 from frappe import qb
-from frappe.query_builder.functions import Count, Max
+from frappe.query_builder.functions import Max
 from frappe.utils import add_to_date, get_datetime, nowdate
 from frappe.utils.data import now_datetime
 
@@ -524,24 +524,25 @@ def get_volunteers_stats():
     Chapter = qb.DocType(CHAPTER)
     Event = qb.DocType(EVENT)
 
-    active_count = Count(ChapterMember.chapter_member).distinct().as_("active_count")
-    communities_count = Count(Chapter.name).distinct().as_("communities_count")
-
     query = (
         frappe.qb.from_(ChapterMember)
         .inner_join(Chapter)
         .on(ChapterMember.parent == Chapter.name)
         .left_join(Event)
         .on(Event.chapter == Chapter.name)
-        .select(active_count, communities_count)
+        .select(ChapterMember.chapter_member, Chapter.name.as_("chapter_name"))
         .where(ChapterMember.chapter_member.isnotnull())
-        .groupby(Chapter.name)
+        .groupby(ChapterMember.chapter_member, Chapter.name)
         .having(Max(Event.event_start_date) >= one_year_ago)
     )
 
     rows = query.run(as_dict=True)
 
+    # Count unique members and chapters (we can use email also)
+    unique_members = {row["chapter_member"] for row in rows}
+    unique_chapters = {row["chapter_name"] for row in rows}
+
     return {
-        "active_count": sum(r.active_count for r in rows),
-        "communities_count": len(rows),
+        "active_count": len(unique_members),
+        "communities_count": len(unique_chapters),
     }
