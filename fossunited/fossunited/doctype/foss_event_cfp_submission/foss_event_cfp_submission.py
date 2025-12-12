@@ -201,9 +201,19 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.reference_doctype = self.doctype
         context.reference_name = self.name
         context.likes = self.get_likes()
-        context.like = 1 if frappe.session.user in context.likes else 0
-        context.like_count = len(context.likes)
+        context.likes = likes
+        context.like_count = len(likes)
+        user = frappe.session.user
+        if user == "Guest":
+            # Check by IP address for guests
+            current_ip = frappe.local.request_ip
+            context.like = 1 if any(lik.get("ip_address") == current_ip for lik in likes) else 0
+        else:
+            # Check by email for logged-in users
+            context.like = 1 if any(lik.get("comment_email") == user for lik in likes) else 0
+
         context.talk_video = self.cfp_get_talk_video()
+        context.no_cache = 1
 
     def get_meta(self, context):
         pagetitle = self.talk_title
@@ -258,14 +268,15 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         }
 
     def get_likes(self) -> list:
+        """Returns list of dicts with comment_email and ip_address for proper guest handling"""
         return frappe.db.get_all(
             "Comment",
-            {
+            filters={
                 "comment_type": "Like",
                 "reference_doctype": self.doctype,
                 "reference_name": self.name,
             },
-            pluck="comment_email",
+            fields=["comment_email", "ip_address"],
             page_length=9999,
         )
 
