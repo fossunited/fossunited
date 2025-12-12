@@ -28,7 +28,7 @@ from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
 fake = Faker()
 
 
-def insert_user_profile(email=None):
+def insert_user_profile(email=None, **kwargs):
     """
     Create a test user and their profile.
 
@@ -49,14 +49,17 @@ def insert_user_profile(email=None):
     # Create Frappe User if it doesn't exist
     if not frappe.db.exists("User", email):
         name_parts = email.split("@")[0].title()
-        frappe_user = frappe.get_doc(
-            {
-                "doctype": "User",
-                "email": email,
-                "first_name": name_parts,
-                "full_name": name_parts,
-            }
-        ).insert(ignore_permissions=True)
+        user_data = {
+            "doctype": "User",
+            "email": email,
+            "first_name": kwargs.get("first_name", name_parts),
+            "last_name": kwargs.get("last_name", name_parts),
+        }
+        for key, value in kwargs.items():
+            if key not in user_data:
+                user_data[key] = value
+
+        frappe_user = frappe.get_doc(user_data).insert(ignore_permissions=True)
         frappe_user.reload()
 
     # User Profile gets created automatically via hooks "create_profile_on_user_create"
@@ -125,7 +128,9 @@ def insert_test_chapter(**kwargs):
         members = kwargs.get("members", [])
         for member_email in members:
             try:
-                profile = insert_user_profile(member_email)
+                profile = frappe.db.get_value(USER_PROFILE, {"user": member_email}, "name")
+                if not profile:
+                    profile = insert_user_profile(member_email)
 
                 chapter.append(
                     "chapter_members",
