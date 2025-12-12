@@ -4,7 +4,7 @@
     <p class="text-sm">List of attendees for this event.</p>
   </div>
   <SearchListView
-    v-if="attendeesList.data?.tickets"
+    v-if="attendeesList.data"
     :rows="groupedRows"
     :columns="columns"
     row-key="id"
@@ -59,17 +59,29 @@ const attendeesList = createResource({
   onError: (e) => toast.error(e.message),
 })
 
-const customFields = computed(() => attendeesList.data?.custom_fields || [])
+const ticket_form = createResource({
+  url: 'frappe.client.get',
+  params: {
+    doctype: 'FOSS Chapter Event',
+    name: props.event.data.name,
+    fields: ['custom_fields'],
+  },
+  auto: true,
+})
 
-const tickets = computed(() => attendeesList.data?.tickets || [])
-
+const tickets = computed(() => attendeesList.data || [])
 const columns = computed(() => [
   { label: 'Name', key: 'full_name' },
   { label: 'Designation', key: 'designation' },
   { label: 'Organization', key: 'organization' },
-  { label: 'T-shirt Addon', key: 'wants_tshirt', width: 1 / 4 },
-  { label: 'Tshirt Size', key: 'tshirt_size', width: 1 / 4 },
-  ...customFields.value.map((f) => ({ label: f, key: `custom_field_${f}` })),
+  { label: 'T-shirt Addon', key: 'wants_tshirt' },
+  { label: 'Tshirt Size', key: 'tshirt_size' },
+
+  // append custom fields from Doctype (edgecase: first person might miss this?)
+  ...(ticket_form.data?.custom_fields || []).map((f) => ({
+    label: f.label,
+    key: f.label,
+  })),
 ])
 
 watchEffect(() => {
