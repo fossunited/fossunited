@@ -201,16 +201,19 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.reference_doctype = self.doctype
         context.reference_name = self.name
         context.likes = self.get_likes()
-        context.likes = likes
-        context.like_count = len(likes)
+        context.like_count = len(context.likes)
         user = frappe.session.user
         if user == "Guest":
             # Check by IP address for guests
             current_ip = frappe.local.request_ip
-            context.like = 1 if any(lik.get("ip_address") == current_ip for lik in likes) else 0
+            context.like = (
+                1 if any(lik.get("ip_address") == current_ip for lik in context.likes) else 0
+            )
         else:
             # Check by email for logged-in users
-            context.like = 1 if any(lik.get("comment_email") == user for lik in likes) else 0
+            context.like = (
+                1 if any(lik.get("comment_email") == user for lik in context.likes) else 0
+            )
 
         context.talk_video = self.cfp_get_talk_video()
         context.no_cache = 1
