@@ -170,3 +170,57 @@ class TestLikeOnProposal(FrappeTestCase):
         # cleanup guest state
         frappe.local.request_ip = None
         frappe.set_user(CoreTeam)
+
+    def test_get_likes_unique_guest_by_ip(self):
+        """
+        Multiple guests with different IPs should be counted separately,
+        and get_likes() should properly identify each guest's like.
+        """
+        # Guest 1 likes
+        frappe.set_user("Guest")
+        frappe.local.request_ip = "203.0.113.10"
+        add_like(PROPOSAL, self.submission.name)
+
+        # Guest 2 likes (different IP)
+        frappe.local.request_ip = "203.0.113.20"
+        add_like(PROPOSAL, self.submission.name)
+
+        likes = self.submission.get_likes()
+
+        # Should return 2 distinct likes
+        self.assertEqual(len(likes), 2)
+
+        # Both should have comment_email = "Guest" but different ip_address
+        guest_likes = [lik for lik in likes if lik.get("comment_email") == "Guest"]
+        self.assertEqual(len(guest_likes), 2)
+
+        ips = {lik.get("ip_address") for lik in guest_likes}
+        self.assertEqual(ips, {"203.0.113.10", "203.0.113.20"})
+
+        frappe.local.request_ip = None
+        frappe.set_user(CoreTeam)
+
+    def test_context_like_flag_per_guest_ip(self):
+        """
+        Context should show like=1 only for the guest with matching IP,
+        not for all guests.
+        """
+        # Guest 1 likes
+        frappe.set_user("Guest")
+        frappe.local.request_ip = "203.0.113.10"
+        add_like(PROPOSAL, self.submission.name)
+
+        # Simulate context building for Guest 1
+        likes = self.submission.get_likes()
+        current_ip = frappe.local.request_ip
+        like_flag = 1 if any(lik.get("ip_address") == current_ip for lik in likes) else 0
+        self.assertEqual(like_flag, 1, "Guest 1 should see like=1")
+
+        # Simulate context building for Guest 2 (different IP, hasn't liked)
+        frappe.local.request_ip = "203.0.113.99"
+        current_ip = frappe.local.request_ip
+        like_flag = 1 if any(lik.get("ip_address") == current_ip for lik in likes) else 0
+        self.assertEqual(like_flag, 0, "Guest 2 should see like=0")
+
+        frappe.local.request_ip = None
+        frappe.set_user(CoreTeam)
