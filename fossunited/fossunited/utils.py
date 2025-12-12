@@ -479,10 +479,10 @@ def get_volunteers_data():
     """
     Get all volunteers data - returns flat list of members
     """
-    Member = qb.DocType("FOSS Chapter Lead Team Member")
-    Profile = qb.DocType("FOSS User Profile")
-    Chapter = qb.DocType("FOSS Chapter")
-    Event = qb.DocType("FOSS Chapter Event")
+    Member = qb.DocType(CHAPTER_MEMBER)
+    Profile = qb.DocType(USER_PROFILE)
+    Chapter = qb.DocType(CHAPTER)
+    Event = qb.DocType(EVENT)
 
     results = (
         qb.from_(Member)
