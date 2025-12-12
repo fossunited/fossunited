@@ -147,7 +147,6 @@ def generate_ics(event_ids):
     return c.serialize()
 
 
-@frappe.whitelist()
 def get_chapter_members_email(chapter):
     return frappe.db.get_all(
         CHAPTER_MEMBER,

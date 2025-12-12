@@ -3,11 +3,14 @@ from collections import defaultdict
 from datetime import datetime
 
 import frappe
+from frappe import qb
+from frappe.query_builder.functions import Max
 from frappe.utils import add_to_date, get_datetime, nowdate
 from frappe.utils.data import now_datetime
 
 from fossunited.doctype_ids import (
     CHAPTER,
+    CHAPTER_MEMBER,
     CITY_COMMUNITY,
     CONFERENCE,
     EVENT,
@@ -472,119 +475,74 @@ def get_select_field_options(doctype_name, fieldname):
     return options
 
 
-@frappe.whitelist(allow_guest=True)
 def get_volunteers_data():
     """
     Get all volunteers data - returns flat list of members
-    Frontend handles grouping and sorting via JavaScript
-
-    Returns:
-        dict: Contains members list and stats
     """
+    Member = qb.DocType(CHAPTER_MEMBER)
+    Profile = qb.DocType(USER_PROFILE)
+    Chapter = qb.DocType(CHAPTER)
+    Event = qb.DocType(EVENT)
 
-    # Calculate one year ago date
-    one_year_ago = add_to_date(nowdate(), years=-1)
-    one_year_ago_dt = get_datetime(one_year_ago)
+    results = (
+        qb.from_(Member)
+        .inner_join(Profile)
+        .on(Member.chapter_member == Profile.name)
+        .inner_join(Chapter)
+        .on(Member.parent == Chapter.name)
+        .left_join(Event)
+        .on(Event.chapter == Chapter.name)
+        .select(
+            Member.chapter_member,
+            Profile.route,
+            Profile.full_name,
+            Profile.profile_photo,
+            Profile.show_activity,
+            Profile.current_city,
+            Chapter.chapter_name,
+            Chapter.chapter_logo,
+            Chapter.route.as_("chapter_route"),
+            Max(Event.event_start_date).as_("latest_event"),
+        )
+        .where(Member.chapter_member.isnotnull())
+        .groupby(Member.chapter_member, Member.parent)
+    ).run(as_dict=True)
 
-    # Get all chapters with their latest event date in one query
-    chapters_data = frappe.db.sql(
-        """
-        SELECT
-            c.name as chapter_id,
-            c.chapter_name,
-            c.chapter_logo,
-            MAX(e.event_start_date) as latest_event_date
-        FROM `tabFOSS Chapter` c
-        LEFT JOIN `tabFOSS Chapter Event` e ON e.chapter = c.name
-        GROUP BY c.name, c.chapter_name, c.chapter_logo
-    """,
-        as_dict=True,
+    # Convert datetime to string for JSON serialization
+    for row in results:
+        if row.get("latest_event"):
+            row["latest_event"] = row["latest_event"].isoformat()
+
+    return results
+
+
+def get_volunteers_stats():
+    """Just get the stats for active volunteers. For page initial load."""
+    one_year_ago = get_datetime(add_to_date(nowdate(), years=-1))
+
+    ChapterMember = qb.DocType(CHAPTER_MEMBER)
+    Chapter = qb.DocType(CHAPTER)
+    Event = qb.DocType(EVENT)
+
+    query = (
+        frappe.qb.from_(ChapterMember)
+        .inner_join(Chapter)
+        .on(ChapterMember.parent == Chapter.name)
+        .left_join(Event)
+        .on(Event.chapter == Chapter.name)
+        .select(ChapterMember.chapter_member, Chapter.name.as_("chapter_name"))
+        .where(ChapterMember.chapter_member.isnotnull())
+        .groupby(ChapterMember.chapter_member, Chapter.name)
+        .having(Max(Event.event_start_date) >= one_year_ago)
     )
 
-    # Build chapter lookup maps
-    active_chapters = set()
-    chapter_info = {}
+    rows = query.run(as_dict=True)
 
-    for chapter in chapters_data:
-        chapter_info[chapter.chapter_id] = {
-            "name": chapter.chapter_name,
-            "logo": chapter.chapter_logo
-            or "/assets/fossunited/images/chapter/foss_club_profile.svg",
-        }
-
-        if chapter.latest_event_date and chapter.latest_event_date >= one_year_ago_dt:
-            active_chapters.add(chapter.chapter_id)
-
-    # Get all chapter members with profile data in single query
-    members_raw = frappe.db.sql(
-        """
-        SELECT DISTINCT
-            cm.chapter_member,
-            cm.parent as chapter_id,
-            p.route as username,
-            p.full_name,
-            p.profile_photo,
-            p.show_activity,
-            p.current_city
-        FROM `tabFOSS Chapter Lead Team Member` cm
-        LEFT JOIN `tabFOSS User Profile` p ON cm.chapter_member = p.name
-        WHERE cm.chapter_member IS NOT NULL
-        AND cm.chapter_member != ''
-        AND p.name IS NOT NULL
-    """,
-        as_dict=True,
-    )
-
-    # Build member data structure
-    members_map = {}
-    active_member_ids = set()
-
-    for row in members_raw:
-        member_id = row.chapter_member
-        chapter_id = row.chapter_id
-        is_active_chapter = chapter_id in active_chapters
-
-        # Initialize member if not exists
-        if member_id not in members_map:
-            members_map[member_id] = {
-                "id": member_id,
-                "username": row.username,
-                "name": row.full_name,
-                "photo": row.profile_photo
-                or "/assets/fossunited/images/defaults/user_profile_image.png",
-                "activity": 1 if row.show_activity else 0,
-                "city": row.current_city or "Unknown",
-                "chapters": [],
-                "is_active": 0,
-            }
-
-        # Add chapter info
-        if chapter_id in chapter_info:
-            members_map[member_id]["chapters"].append(
-                {
-                    "id": chapter_id,
-                    "name": chapter_info[chapter_id]["name"],
-                    "logo": chapter_info[chapter_id]["logo"],
-                    "active": 1 if is_active_chapter else 0,
-                }
-            )
-
-            # Mark member as active if in any active chapter
-            if is_active_chapter:
-                members_map[member_id]["is_active"] = 1
-                active_member_ids.add(member_id)
-
-    # Convert to list and separate active/past
-    all_members = list(members_map.values())
-    active_members = [m for m in all_members if m["is_active"]]
-    past_members = [m for m in all_members if not m["is_active"]]
+    # Count unique members and chapters (we can use email also)
+    unique_members = {row["chapter_member"] for row in rows}
+    unique_chapters = {row["chapter_name"] for row in rows}
 
     return {
-        "active": active_members,
-        "past": past_members,
-        "stats": {
-            "active_count": len(active_members),
-            "past_count": len(past_members),
-            "communities_count": len(active_chapters),
-        },
+        "active_count": len(unique_members),
+        "communities_count": len(unique_chapters),
     }

@@ -49,11 +49,11 @@ jinja = {
         "fossunited.fossunited.utils.get_signup_optin_checks",
         "fossunited.fossunited.utils.get_grouped_events_by_chapter_type",
         "fossunited.fossunited.utils.get_volunteers_data",
+        "fossunited.fossunited.utils.get_volunteers_stats",
         "fossunited.fossunited.utils.get_chapter_details",
         "fossunited.stack.utils.get_stack_dict",
         "fossunited.fossunited.utils.get_main_foss_events",
         "fossunited.fossunited.utils.get_all_city_names",
-        "fossunited.api.chapter.get_chapter_members_email",
     ],
     "filters": [
         "fossunited.fossunited.utils.make_badge",
