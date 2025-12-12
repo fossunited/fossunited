@@ -1,554 +1,408 @@
 {% block foss_base %}
-<link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
-/>
-<style>
-  {% include "public/css/custom.css" %}
-</style>
-<script>
-  {% include "public/js/common_functions.js" %}
-</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>{% include "public/css/custom.css" %}</style>
+<script>{% include "public/js/common_functions.js" %}</script>
 {% endblock %}
 
-
 {% block head_include %}
-  <meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />
+<meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />
 {% endblock %}
 
 {% block page_content %}
-  {% set volunteers_data = get_volunteers_data() %}
-  {% set active_members = volunteers_data.active %}
-  {% set past_members = volunteers_data.past %}
-  {% set stats = volunteers_data.stats %}
-  {% set v_title = v_title | default("Over " ~ stats.active_count ~ " people,<br />United by FOSS") %}
-  {% set v_description = v_description | default("We campaign, convene, and occasionally convert sceptics, all powered by volunteers.") %}
-  {% set docs_text = docs_text | default("Start Volunteering") %}
-  {% set docs_link = docs_link | default("https://docs.fossunited.org/volunteering") %}
-  {% set docs_description = docs_description | default("Be part of the push to make FOSS common sense in India's tech and policy worlds.<br>Join us today.") %}
-  {% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
+{% set volunteers_raw = get_volunteers_data() %}
+{% set stats = get_volunteers_stats() %}
+{% set v_title = v_title | default("Over " ~ stats.active_count ~ " people,<br />United by FOSS") %}
+{% set v_description = v_description | default("We campaign, convene, and occasionally convert sceptics, all powered by volunteers.") %}
+{% set docs_text = docs_text | default("Start Volunteering") %}
+{% set docs_link = docs_link | default("https://docs.fossunited.org/volunteering") %}
+{% set docs_description = docs_description | default("Be part of the push to make FOSS common sense in India's tech and policy worlds.<br>Join us today.") %}
+{% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
 
-  <style>
-    body { background: var(--v3-main-bg); }
+<style>
+  body { background: var(--v3-main-bg); }
 
-    .vol-page {
-      font-family: 'Inter', sans-serif;
-      padding: 1em 0;
-    }
+  .vol-hero-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 1.5rem;
+  }
 
-    .vol-page * {
-      font-family: inherit;
-    }
+  .vol-hero-banner {
+    margin-bottom: 1rem;
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--v3-card-bg);
+  }
 
-    .vol-hero-section {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 1.5rem;
-    }
+  .vol-hero-banner img {
+    aspect-ratio: 4/1;
+    width: 100%;
+    border-radius: 8px;
+  }
 
-    .vol-hero-banner {
-      width: 100%;
-      margin-bottom: 1rem;
-      border-radius: 16px;
-      overflow: hidden;
-      background: var(--v3-card-bg);
-    }
+  .vol-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    position: relative;
+    text-align: center;
+  }
 
-    .vol-hero-banner img {
-      aspect-ratio: 4 / 1;
-      width: 100%;
-      border-radius: 8px;
-    }
+  .vol-stats::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 1px;
+    background: var(--v3-button-border);
+  }
 
-    .vol-hero-card {
-      color: var(--v3-text-color);
-    }
+  .vol-stat-num {
+    color: var(--v3-primary-button);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
 
-    .vol-stats {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      position: relative;
-      text-align: center;
-    }
+  .vol-stats p {
+    color: var(--v3-text-color2);
+    font-size: 14px;
+  }
 
-    .vol-stats > div {
-      padding: 2px 0;
-      position: relative;
-    }
+  .vol-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
 
-    .vol-stats::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1px;
-      background-color: var(--v3-button-border);
-    }
+  .vol-search-group {
+    display: flex;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
 
-    .vol-stat-num {
-      color: var(--v3-primary-button);
-      font-size: 1.25rem;
-      font-weight: 600;
-      line-height: 124%;
-      letter-spacing: -0.025rem;
-    }
+  .vol-search-bar {
+    background: var(--v3-card-bg);
+    border: 1px solid var(--v3-button-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    max-width: 352px;
+  }
 
-    .vol-stats p {
-      color: var(--v3-text-color2);
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 150%;
-    }
+  .vol-search-bar input {
+    flex: 1;
+    border: none;
+    background: none;
+    font-size: 14px;
+    outline: none;
+    color: var(--v3-text-color3);
+  }
 
-    .vol-controls {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 2rem;
-    }
+  .vol-sort-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
 
-    .vol-search-group {
-      display: flex;
-      gap: 12px;
-      flex: 1;
-      min-width: 0;
-    }
+  .vol-sort-select {
+    background: var(--v3-card-bg);
+    color: var(--v3-text-color3);
+    border: 1px solid var(--v3-button-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+  }
 
-    .vol-search-bar {
-      background: var(--v3-card-bg);
-      border: 1px solid var(--v3-button-border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex: 1;
-      max-width: 352px;
-    }
+  .vol-group-logo {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
 
-    .vol-search-bar input {
-      flex: 1;
-      border: none;
-      background: none;
-      font-size: 14px;
-      outline: none;
-      color: var(--v3-text-color3);
-      min-width: 0;
-    }
+  .vol-member-avatar {
+    position: relative;
+    width: 64px;
+    height: 64px;
+  }
 
-    .vol-sort-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+  .vol-member-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    background: var(--v3-button-border);
+    object-fit: cover;
+  }
 
-    .vol-sort-label {
-      color: var(--v3-text-color3);
-      font-size: 14px;
-      white-space: nowrap;
-    }
+  .v3-clickable:hover .vol-member-avatar img {
+    transform: scale(1.05);
+  }
 
-    .vol-sort-select {
-      background: var(--v3-card-bg);
-      color: var(--v3-text-color3);
-      border: 1px solid var(--v3-button-border);
-      border-radius: 8px;
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
-      height: 36px;
-      align-items: center;
-    }
+  .vol-activity-badge {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+  }
 
-    .vol-group-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin: 2rem 0 1.25rem 0;
-    }
+  @media (max-width: 750px) {
+    .vol-hero-section { grid-template-columns: 1fr; }
+    .vol-controls { flex-direction: column; }
+    .vol-search-group { flex-direction: column; width: 100%; }
+    .vol-search-bar { max-width: 100%; }
+    .vol-sort-group { justify-content: space-between; }
+  }
 
-    .vol-group-logo {
-      width: 36px;
-      height: 36px;
-      background: var(--v3-button-border);
-      border-radius: 8px;
-      object-fit: cover;
-      flex-shrink: 0;
-    }
+  .hidden { display: none !important; }
+</style>
 
-    .vol-member-avatar {
-      position: relative;
-      width: 64px;
-      height: 64px;
-    }
+<div class="v3-page">
+  <div class="v3-container">
+    <div class="d-flex justify-content-between align-items-center">
+      <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="">Volunteers</a></nav>
+      <button class="v3-theme-toggle" id="theme-toggle"><i class="ti ti-moon"></i></button>
+    </div>
 
-    .vol-member-avatar img {
-      width: 100%;
-      height: 100%;
-      border-radius: 8px;
-      background: var(--v3-button-border);
-      object-fit: cover;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-
-    .v3-clickable:hover .vol-member-avatar img {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .vol-activity-badge {
-      position: absolute;
-      bottom: -3px;
-      right: -3px;
-    }
-
-    .vol-group-title {
-      font-size: 14px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1.12px;
-      margin: 0;
-      color: var(--v3-text-color2);
-    }
-
-    .vol-title-hr {
-      flex-grow: 1;
-      border: none;
-      border-top: 1px solid var(--v3-text-color2);
-      margin-left: 10px;
-    }
-
-    .vol-theme-toggle i {
-      font-size: 18px;
-    }
-
-    @media (max-width: 750px) {
-      .vol-hero-section {
-        grid-template-columns: 1fr;
-      }
-
-      .vol-controls {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .vol-search-group {
-        flex-direction: column;
-        width: 100%;
-      }
-
-      .vol-search-bar {
-        max-width: 100%;
-      }
-
-      .vol-sort-group {
-        justify-content: space-between;
-      }
-      .hidden {
-        display: none !important;
-      }
-    }
-  </style>
-
-  <div class="v3-page vol-page">
-    <div class="v3-container">
-      <div class="d-flex justify-content-between align-items-center">
-
-        <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="">Volunteers</a></nav>
-        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
-          <i class="ti ti-moon"></i>
-        </button>
+    <div class="vol-hero-section">
+      <div>
+        <div class="vol-hero-banner mb-3">
+          <img src="{{ banner_image }}" alt="Volunteers" loading="lazy" />
+        </div>
+        <div style="padding-top: 16px;">
+          <h1 style="font-size: 2rem; color: var(--v3-text-color);">{{ v_title }}</h1>
+          <p class="v3-text-primary">{{ v_description }}</p>
+        </div>
       </div>
 
-
-      <div class="vol-hero-section">
+      <div class="v3-card">
         <div>
-          <div class="vol-hero-banner mb-3">
-            <img src="{{ banner_image }}" alt="Volunteers workforce" loading="lazy" />
-          </div>
-          <div style="padding-top: 16px;">
-            <h1 class="vol-hero-card" style="font-size: 2rem;">{{ v_title }}</h1>
-            <p class="v3-text-primary">{{ v_description }}</p>
-          </div>
+          <p style="font-size: 14px; color: var(--v3-text-color);">{{ docs_description }}</p>
+          <a href="{{ docs_link }}" class="v3-btn v3-btn-primary" style="margin: 24px 0;">
+            {{ docs_text }}<i class="ti ti-arrow-up-right"></i>
+          </a>
         </div>
-
-        <div class="v3-card">
+        <div class="vol-stats">
           <div>
-            <p class="vol-hero-card" style="font-size: 14px;">{{ docs_description }}</p>
-            <a href="{{ docs_link }}" class="v3-btn v3-btn-primary" style="margin: 24px 0px;">
-              {{ docs_text }}<i class="ti ti-arrow-up-right"></i>
-            </a>
+            <h3 class="vol-stat-num">{{ stats.active_count }}</h3>
+            <p>Active Volunteers</p>
           </div>
-          <div class="vol-stats">
-            <div>
-              <h3 class="vol-stat-num">{{ stats.active_count }}</h3>
-              <p>Active Volunteers</p>
-            </div>
-            <div>
-              <h3 class="vol-stat-num">{{ stats.communities_count }}</h3>
-              <p>Active Communities</p>
-            </div>
+          <div>
+            <h3 class="vol-stat-num">{{ stats.communities_count }}</h3>
+            <p>Active Communities</p>
           </div>
         </div>
       </div>
+    </div>
 
-      <div class="vol-controls">
-        <div class="vol-search-group">
-          <div class="vol-search-bar">
-            <input type="text" placeholder="Search" id="search" />
-            <i class="ti ti-search"></i>
-          </div>
-          <div class="d-flex align-items-center">
-            <button class="v3-btn v3-btn-dark mr-1" id="surprise">Surprise Me</button>
-            <a href="https://docs.fossunited.org/volunteering-perks/#whats-surprise-me" target="_blank" class="help-icon" title="What's the surprise?">
-              <i class="ti ti-help"></i>
-            </a>
-            <span class="tooltip">What's the surprise?</span>
-          </div>
+    <div class="vol-controls">
+      <div class="vol-search-group">
+        <div class="vol-search-bar">
+          <input type="text" placeholder="Search" id="search" />
+          <i class="ti ti-search"></i>
         </div>
-
-        <div class="vol-sort-group">
-          <div>
-            <span class="vol-sort-label">Sort by:</span>
-            <select class="vol-sort-select" id="sort">
-              <option value="alpha">Alphabetical</option>
-              <option value="chapter">Chapter</option>
-              <option value="city">City</option>
-            </select>
-          </div>
-        </div>
+        <button class="v3-btn v3-btn-dark" id="surprise">Surprise Me</button>
       </div>
 
-      <div id="members-container">{# Members will be rendered here by JavaScript #}</div>
+      <div class="vol-sort-group">
+        <span style="color: var(--v3-text-color3); font-size: 14px;">Sort by:</span>
+        <select class="vol-sort-select" id="sort">
+          <option value="alpha">Alphabetical</option>
+          <option value="chapter">Chapter</option>
+          <option value="city">City</option>
+        </select>
+      </div>
+    </div>
 
-      {# Past members section #}
-      {% if past_members %}
-        <div id="past-section" style="display:none;">
-          <div class="vol-group-header">
-            <h2 class="vol-group-title">Past Volunteers</h2>
-            <hr class="vol-title-hr" />
-          </div>
-          <div class="v3-volunteers-card" id="past-grid"></div>
-        </div>
-      {% endif %}
+    <div id="members-container"></div>
+    <div id="past-section" style="display:none;">
+      <div class="v3-section-header">
+        <h2 class="v3-section-title">Past Volunteers</h2> <hr />
+      </div>
+      <div class="v3-volunteers-card" id="past-grid"></div>
     </div>
   </div>
+</div>
 
-  <script>
-    // Store data globally
-    window.volunteersData = {
-      active: {{ active_members | tojson }},
-      past: {{ past_members | tojson }}
+<script>
+(function() {
+  const oneYearAgo = new Date(Date.now() - 365*24*60*60*1000);
+  const rawData = {{ volunteers_raw | tojson }};
+
+  let data = { active: [], past: [] };
+  let currentSort = 'alpha';
+  let searchQuery = '';
+
+  const members = {};
+
+  rawData.forEach(row => {
+    const mid = row.chapter_member;
+    const isActive = row.latest_event && new Date(row.latest_event) >= oneYearAgo;
+
+    if (!members[mid]) {
+      members[mid] = {
+        id: mid,
+        username: row.route,
+        name: row.full_name,
+        photo: row.profile_photo || '/assets/fossunited/images/defaults/user_profile_image.png',
+        activity: row.show_activity ? 1 : 0,
+        city: row.current_city || 'Unknown',
+        chapters: [],
+        is_active: 0
+      };
     }
-    ;(function () {
-      const data = window.volunteersData
-      let currentSort = 'alpha'
-      let searchQuery = ''
 
-      // Render a single member
-      function renderMember(m) {
-        return `
-      <div class="v3-clickable" onclick="window.location.href='/${m.username}'" data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}" data-chapters="${m.chapters
-        .map((c) => c.name)
-        .join('|')
-        .toLowerCase()}">
-      <div class="v3-volunteer-item">
-      <div class="vol-member-avatar">
-      <img src="/assets/fossunited/images/defaults/user_profile_image.png"
-      data-src="${m.photo}"
-      alt="${m.name}"
-      loading="lazy"
-      class="lazy-img" />
-${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-filled" style="font-size: 1rem; color: var(--v3-text-color); background-color: var(--v3-main-bg); border: 1px solid var(--v3-main-bg); border-radius: 50%;"></i></div>' : ''}
-</div>
-<div class="v3-volunteer-name">${m.name}</div>
-</div>
-</div>
-    `
-      }
+    members[mid].chapters.push({
+      name: row.chapter_name,
+      logo: row.chapter_logo || '/assets/fossunited/images/chapter/foss_club_profile.svg',
+      route: row.chapter_route,
+      active: isActive ? 1 : 0
+    });
 
-      // Render members by grouping
-      function renderMembers() {
-        const container = document.getElementById('members-container')
-        const pastSection = document.getElementById('past-section')
-        const pastGrid = document.getElementById('past-grid')
-        let html = ''
+    if (isActive) members[mid].is_active = 1;
+  });
 
-        if (currentSort === 'alpha') {
-          // Alphabetical - single list
-          const sorted = [...data.active].sort((a, b) => a.name.localeCompare(b.name))
-          html = '<div class="v3-volunteers-card">' + sorted.map(renderMember).join('') + '</div>'
-        } else if (currentSort === 'city') {
-          // Group by city
-          const groups = {}
-          data.active.forEach((m) => {
-            const city = m.city
-            if (!groups[city]) groups[city] = []
-            groups[city].push(m)
-          })
+  const all = Object.values(members);
+  data.active = all.filter(m => m.is_active);
+  data.past = all.filter(m => !m.is_active);
 
-          const sortedCities = Object.keys(groups).sort((a, b) => {
-              if (a === 'Unknown') return 1
-              if (b === 'Unknown') return -1
-              return a.localeCompare(b)
-          })
+  function renderMember(m) {
+    return `
+      <a class="v3-clickable" href="/${m.username}" aria-label="${m.name}"
+           data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}">
+        <div class="v3-volunteer-item">
+          <div class="vol-member-avatar">
+            <img src="/assets/fossunited/images/defaults/user_profile_image.png"
+                 data-src="${m.photo}" alt="${m.name}" loading="lazy" class="lazy-img" />
+            ${m.activity ? '<div class="vol-activity-badge"><i class="ti ti-circle-check-filled" style="font-size:1rem;color:var(--v3-text-color);background:var(--v3-main-bg);border:1px solid var(--v3-main-bg);border-radius:50%;"></i></div>' : ''}
+          </div>
+          <div class="v3-volunteer-name">${m.name}</div>
+        </div>
+      </a>`;
+  }
 
-          sortedCities.forEach((city) => {
-            const members = groups[city].sort((a, b) => a.name.localeCompare(b.name))
-            html += `
-              <div class="member-section" data-group="${city}">
-              <div class="vol-group-header">
-              <h2 class="vol-group-title">${city}</h2>
-              <hr class="vol-title-hr" />
-              </div>
-              <div class="v3-volunteers-card">
-              ${members.map(renderMember).join('')}
-              </div>
-              </div>
-        `
-          })
-        } else if (currentSort === 'chapter') {
-          // Group by chapter - members can appear multiple times
-          const groups = {}
-          data.active.forEach((m) => {
-            m.chapters
-              .filter((c) => c.active)
-              .forEach((chapter) => {
-                if (!groups[chapter.name]) {
-                  groups[chapter.name] = {
-                    logo: chapter.logo,
-                    members: [],
-                  }
-                }
-                groups[chapter.name].members.push(m)
-              })
-          })
+  function renderMembers() {
+    const container = document.getElementById('members-container');
+    let html = '';
 
-          const sortedChapters = Object.keys(groups).sort()
-          sortedChapters.forEach((chapterName) => {
-            const group = groups[chapterName]
-            const members = group.members.sort((a, b) => a.name.localeCompare(b.name))
-            html += `
-              <div class="member-section" data-group="${chapterName}">
-              <div class="vol-group-header">
-              <img src="${group.logo}" alt="${chapterName}" class="vol-group-logo" />
-              <h2 class="vol-group-title">${chapterName}</h2>
-              <hr class="vol-title-hr" />
-              </div>
-              <div class="v3-volunteers-card">
-              ${members.map(renderMember).join('')}
-              </div>
-              </div>
-        `
-          })
-        }
-
-        container.innerHTML = html
-
-        // Render past members
-        if (data.past.length > 0) {
-          const sortedPast = [...data.past].sort((a, b) => a.name.localeCompare(b.name))
-          pastGrid.innerHTML = sortedPast.map(renderMember).join('')
-          pastSection.style.display = 'block'
-        }
-
-        // Initialize lazy loading
-        lazyLoadImages()
-        filterMembers()
-      }
-
-      // Lazy load images
-      function lazyLoadImages() {
-        const images = document.querySelectorAll('img.lazy-img')
-
-        const imageObserver = new IntersectionObserver(
-          (entries, observer) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                const img = entry.target
-                img.src = img.dataset.src
-                img.classList.remove('lazy-img')
-                observer.unobserve(img)
-              }
-            })
-          },
-          {
-            rootMargin: '50px',
-          },
-        )
-
-        images.forEach((img) => imageObserver.observe(img))
-      }
-
-      // Filter members based on search
-      function filterMembers() {
-        const query = searchQuery.toLowerCase()
-        const members = document.querySelectorAll('.v3-clickable[data-name]')
-        const sections = document.querySelectorAll('.member-section')
-
-        members.forEach((member) => {
-          const visible = member.dataset.name.includes(query)
-        member.classList.toggle('hidden', !visible)
-        })
-
-        sections.forEach((section) => {
-        const visibleMembers = section.querySelectorAll('.v3-clickable[data-name]:not(.hidden)')
-          const header = section.querySelector('.vol-group-header')
-        const hasVisible = visibleMembers.length > 0 || query === ''
-        header?.classList.toggle('hidden', !hasVisible)
-        section.classList.toggle('hidden', !hasVisible)
-        })
-
-        // Handle past section
-        const pastSection = document.getElementById('past-section')
-        if (pastSection) {
-          const pastMembers = pastSection.querySelectorAll('.v3-clickable[data-name]')
-        const visiblePast = pastSection.querySelectorAll('.v3-clickable[data-name]:not(.hidden)')
-        pastSection.classList.toggle('hidden', visiblePast.length === 0 && query !== '')
-        }
-      }
-
-      // Surprise me functionality
-      function surpriseMe() {
-        const visible = Array.from(document.querySelectorAll('.v3-clickable[data-name]')).filter(member => member.querySelector('.vol-activity-badge'));
-        if (visible.length > 0) {
-          const random = visible[Math.floor(Math.random() * visible.length)]
-          const onclickAttr = random.getAttribute('onclick')
-          if (onclickAttr) {
-            const href = onclickAttr.match(/'([^']+)'/)[1]
-            window.location.href = href
-          }
-        }
-      }
-
-      // Event listeners
-      document.getElementById('search').addEventListener('input', (e) => {
-        searchQuery = e.target.value
-        filterMembers()
-      })
-
-      document.getElementById('sort').addEventListener('change', (e) => {
-        currentSort = e.target.value
-        renderMembers()
-      })
-
-      document.getElementById('surprise').addEventListener('click', surpriseMe)
-
-      // Initial render
-      currentSort = document.getElementById('sort').value
-      document.getElementById('search').value = ''
-      searchQuery = ''
-      renderMembers()
-
-      document.addEventListener('DOMContentLoaded', function() {
-          initThemeToggle('theme-toggle');
+    if (currentSort === 'alpha') {
+      const sorted = [...data.active].sort((a,b) => a.name.localeCompare(b.name));
+      html = '<div class="v3-volunteers-card">' + sorted.map(renderMember).join('') + '</div>';
+    } else if (currentSort === 'city') {
+      const groups = {};
+      data.active.forEach(m => {
+        if (!groups[m.city]) groups[m.city] = [];
+        groups[m.city].push(m);
       });
-    })()
-  </script>
+
+      Object.keys(groups).sort((a,b) => {
+        if (a === 'Unknown') return 1;
+        if (b === 'Unknown') return -1;
+        return a.localeCompare(b);
+      }).forEach(city => {
+        const members = groups[city].sort((a,b) => a.name.localeCompare(b.name));
+        html += `
+          <div class="member-section">
+            <div class="v3-section-header">
+              <h2 class="v3-section-title">${city}</h2> <hr />
+            </div>
+            <div class="v3-volunteers-card">${members.map(renderMember).join('')}</div>
+          </div>`;
+      });
+    } else if (currentSort === 'chapter') {
+      const groups = {};
+      data.active.forEach(m => {
+        m.chapters.filter(c => c.active).forEach(ch => {
+          if (!groups[ch.name]) groups[ch.name] = { logo: ch.logo, route: ch.route, members: [] };
+          groups[ch.name].members.push(m);
+        });
+      });
+
+      Object.keys(groups).sort().forEach(name => {
+        const g = groups[name];
+        const members = g.members.sort((a,b) => a.name.localeCompare(b.name));
+        html += `
+          <div class="member-section">
+            <a href="${g.route}" class="v3-section-header">
+              <img src="${g.logo}" alt="${name}" class="vol-group-logo" />
+              <h2 class="v3-section-title">${name}</h2> <hr />
+            </a>
+            <div class="v3-volunteers-card">${members.map(renderMember).join('')}</div>
+          </div>`;
+      });
+    }
+
+    container.innerHTML = html;
+
+    if (data.past.length > 0) {
+      const sorted = [...data.past].sort((a,b) => a.name.localeCompare(b.name));
+      document.getElementById('past-grid').innerHTML = sorted.map(renderMember).join('');
+      document.getElementById('past-section').style.display = '';
+    }
+
+    // Lazy load images
+    const imgs = document.querySelectorAll('img.lazy-img');
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.src = e.target.dataset.src;
+          e.target.classList.remove('lazy-img');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { rootMargin: '50px' });
+    imgs.forEach(img => obs.observe(img));
+
+    filterMembers();
+  }
+
+  function filterMembers() {
+    const q = searchQuery.toLowerCase();
+    document.querySelectorAll('.v3-clickable[data-name]').forEach(m => {
+      m.classList.toggle('hidden', !m.dataset.name.includes(q));
+    });
+
+    document.querySelectorAll('.member-section').forEach(s => {
+      const visible = s.querySelectorAll('.v3-clickable:not(.hidden)').length > 0;
+      s.classList.toggle('hidden', !visible);
+    });
+    document.getElementById('past-section').classList.toggle('hidden',
+      document.querySelectorAll('#past-section .v3-clickable:not(.hidden)').length === 0
+    );
+  }
+
+  function surpriseMe() {
+    const active = Array.from(document.querySelectorAll('.v3-clickable[data-name]'))
+      .filter(m => m.querySelector('.vol-activity-badge'));
+    if (active.length > 0) {
+      const rand = active[Math.floor(Math.random() * active.length)];
+      window.location.href = rand.getAttribute('href');
+    }
+  }
+
+  document.getElementById('search').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    filterMembers();
+  });
+
+  document.getElementById('sort').addEventListener('change', e => {
+    currentSort = e.target.value;
+    renderMembers();
+  });
+
+  document.getElementById('surprise').addEventListener('click', surpriseMe);
+
+  document.addEventListener('DOMContentLoaded', () => initThemeToggle('theme-toggle'));
+
+  // Initial render
+  renderMembers();
+})();
+</script>
 {% endblock %}
