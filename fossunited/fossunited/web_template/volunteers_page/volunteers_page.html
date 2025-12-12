@@ -275,7 +275,7 @@
 
   function renderMember(m) {
     return `
-      <a class="v3-clickable" href='/${m.username}' aria-label="${m.name}""
+      <a class="v3-clickable" href="/${m.username}" aria-label="${m.name}"
            data-name="${m.name.toLowerCase()}" data-city="${m.city.toLowerCase()}">
         <div class="v3-volunteer-item">
           <div class="vol-member-avatar">
@@ -383,8 +383,7 @@
       .filter(m => m.querySelector('.vol-activity-badge'));
     if (active.length > 0) {
       const rand = active[Math.floor(Math.random() * active.length)];
-      const href = rand.getAttribute('onclick').match(/'([^']+)'/)[1];
-      window.location.href = href;
+      window.location.href = rand.getAttribute('href');
     }
   }
 
