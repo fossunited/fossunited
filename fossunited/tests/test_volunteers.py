@@ -18,6 +18,9 @@ class TestVolunteersPage(FrappeTestCase):
     """Test cases for volunteers page data functions."""
 
     def setUp(self):
+        frappe.db.delete("FOSS Chapter Lead Team Member", {"email": "test1@example.com"})
+        frappe.db.delete("FOSS Chapter Lead Team Member", {"email": "core1@example.com"})
+
         self.member1_email = "luffy@example.com"
         self.member2_email = "zoro@example.com"
         self.member3_email = "xebec@example.com"

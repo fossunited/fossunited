@@ -10,9 +10,11 @@ from fossunited.api.rsvp import (
 )
 from fossunited.doctype_ids import (
     CHAPTER,
+    CHAPTER_MEMBER,
     EVENT,
     EVENT_RSVP,
     RSVP_RESPONSE,
+    USER_PROFILE,
 )
 from fossunited.tests.utils import (
     insert_rsvp_form,
@@ -51,6 +53,8 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         frappe.delete_doc(EVENT, self.event.name, force=True)
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.delete_doc(CHAPTER, self.other_chapter.name, force=True)
+        frappe.db.delete(USER_PROFILE, {"email": self.core_team_email})
+        frappe.db.delete(CHAPTER_MEMBER, {"email": self.core_team_email})
 
     def test_get_submissions_guest_denied(self):
         """Guest users should not access RSVP submissions."""

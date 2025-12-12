@@ -21,6 +21,7 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
+from fossunited.fossunited.user_utils import create_profile_on_user_create
 from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
     FOSSTicketTier,
 )
@@ -64,8 +65,24 @@ def insert_user_profile(email=None, **kwargs):
 
     # User Profile gets created automatically via hooks "create_profile_on_user_create"
     profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
+    user = None
+    try:
+        user = frappe.get_doc("User", email)
+    except Exception:
+        user = None
+
     if not profile:
-        raise ValueError(f"User Profile was not auto-created for {email}")
+        if user:
+            # attempt to create the profile via hook, then re-query
+            create_profile_on_user_create(user, None)
+            # re-query the DB to fetch the newly created profile
+            profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
+            if not profile:
+                raise ValueError(f"User Profile was not auto-created for {email} after hook call.")
+        else:
+            raise ValueError(
+                f"User Profile was not auto-created for {email} and User doc not found"
+            )
 
     return profile
 

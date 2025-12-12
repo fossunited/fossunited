@@ -2,7 +2,7 @@ import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import PROPOSAL
+from fossunited.doctype_ids import PROPOSAL, USER_PROFILE
 
 # Import the like functions from your module (adjust path if your module path differs)
 from fossunited.templates.includes.like.like import add_like, delete_like, like
@@ -58,7 +58,7 @@ class TestLikeOnProposal(FrappeTestCase):
         submissions = frappe.get_all(PROPOSAL, {"event": self.event.name}, pluck="name")
         for submission in submissions:
             frappe.delete_doc(PROPOSAL, submission, force=True)
-
+        frappe.db.delete(USER_PROFILE, {"email": CoreTeam})
         self.cfp.delete(force=True)
         self.event.delete(force=True)
         self.chapter.delete(force=True)
