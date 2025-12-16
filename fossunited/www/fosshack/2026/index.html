@@ -1,0 +1,400 @@
+{% extends "templates/foss_base.html" %}
+
+{% block title %}{{ hackathon.name }} - FOSS United{% endblock %}
+
+{% macro tier_badge(label, bars=3) %}
+  <svg width="196" height="40" viewBox="0 0 196 40" fill="none" class="tier-badge">
+    <rect width="196" height="40" fill="none" />
+
+    {# Left bars #}
+    {% if bars >= 3 %}<rect width="4" height="21" x="8" y="9.5" fill="#4B4B4B" />{% endif %}
+    {% if bars >= 2 %}<rect width="6" height="29" x="14" y="5.5" fill="#4B4B4B" />{% endif %}
+    {% if bars >= 1 %}<rect width="8" height="37" x="22" y="1.5" fill="#4B4B4B" />{% endif %}
+
+    {# Center #}
+    <rect x="32" width="132" height="40" fill="#4B4B4B" />
+    <text
+      x="98"
+      y="26"
+      text-anchor="middle"
+      font-size="14"
+      font-weight="700"
+      fill="#e5e5e5"
+      style="letter-spacing: 0.05em;"
+    >
+      {{ label | upper }}
+    </text>
+
+    {# Right bars #}
+    {% if bars >= 1 %}<rect width="8" height="37" x="166" y="1.5" fill="#4B4B4B" />{% endif %}
+    {% if bars >= 2 %}<rect width="6" height="29" x="176" y="5.5" fill="#4B4B4B" />{% endif %}
+    {% if bars >= 3 %}<rect width="4" height="21" x="184" y="9.5" fill="#4B4B4B" />{% endif %}
+  </svg>
+{% endmacro %}
+
+{% macro logo_grid(items, grid_class, logo_class, tier_index) %}
+  <div
+    class="fh-sponsor-grid {{ grid_class }}"
+    style="
+    --grid-gap: calc(var(--desktop-gap-base) - ({{ tier_index }} * 4px));
+    --grid-gap-mobile: calc(var(--mobile-gap-base) - ({{ tier_index }} * 2px));
+  "
+  >
+    {% for item in items %}
+      <a href="{{ item.link }}" target="_blank">
+        <img
+          src="{{ item.image or item.logo }}"
+          alt="{{ item.sponsor_name or item.org_name }}"
+          class="fh-sponsor-logo {{ logo_class }}"
+        />
+      </a>
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{# ============================================
+   HEAD INCLUDE
+   ============================================ #}
+
+{% block head_include %}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+  />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="index.css" />
+{% endblock %}
+
+{# ============================================
+   CONTENT
+   ============================================ #}
+
+{% block content %}
+  <div class="container p-2" style="max-width: 1024px;">
+    <div class="d-flex justify-content-end">
+      <button class="theme-toggle rounded" onclick="toggleTheme()">
+        <svg id="theme-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M11 10H16M11 13H15M11 16H12M11 7H15M11 4H12M1 10C1 11.1819 1.23279 12.3522 1.68508 13.4442 2.13738 14.5361 2.80031 15.5282 3.63604 16.364 4.47177 17.1997 5.46392 17.8626 6.55585 18.3149 7.64778 18.7672 8.8181 19 10 19 11.1819 19 12.3522 18.7672 13.4442 18.3149 14.5361 17.8626 15.5282 17.1997 16.364 16.364 17.1997 15.5282 17.8626 14.5361 18.3149 13.4442 18.7672 12.3522 19 11.1819 19 10 19 8.8181 18.7672 7.64778 18.3149 6.55585 17.8626 5.46392 17.1997 4.47177 16.364 3.63604 15.5282 2.80031 14.5361 2.13738 13.4442 1.68508 12.3522 1.23279 11.1819 1 10 1 8.8181 1 7.64778 1.23279 6.55585 1.68508 5.46392 2.13738 4.47177 2.80031 3.63604 3.63604 2.80031 4.47177 2.13738 5.46392 1.68508 6.55585 1.23279 7.64778 1 8.8181 1 10Z"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+    </div>
+
+    {# hero section #}
+    <div class="grid-2col mb-4">
+      <div>
+        <div class="v3-card v3-fh-card h-100 d-flex flex-column">
+          <div
+            class="text-center v3-border border p-3 text-uppercase font-weight-semibold v3-text-muted"
+            style="font-size: 0.875rem; letter-spacing: 0.05em;"
+          >
+            {{ hackathon.tagline }}
+          </div>
+
+          <div
+            class="d-flex flex-column align-items-center v3-border border py-5 px-4"
+            style="gap: 2rem;"
+          >
+            <img
+              src="{{ doc.hackathon_logo }}"
+              style="width: 100%; max-width: 372px;"
+              alt="{{ hackathon.name }}"
+            />
+            <div
+              class="v3-border border px-3 py-2 v3-text-muted text-uppercase font-weight-semibold"
+              style="font-size: 0.875rem; letter-spacing: 1.12px;"
+            >
+              {{ hackathon.date }} | {{ hackathon.mode }}
+            </div>
+          </div>
+
+          <div
+            class="text-center flex-grow-1 d-flex flex-column justify-content-center"
+            style="padding: 40px;"
+          >
+            <p class="v3-text-muted mb-4">{{ hackathon.description }}</p>
+            <div
+              class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-8"
+              style="gap: 1rem;"
+            >
+              <a
+                href="{{ hackathon.register_url }}"
+                class="btn v3-bg-dark text-uppercase font-weight-semibold rounded-0"
+                style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px;"
+                >Register</a
+              >
+              <a
+                href="{{ hackathon.event_page_url }}"
+                class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
+                style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px; border: 1px solid var(--v3-text)"
+                >Project Ideas</a
+              >
+            </div>
+            <a
+              href="{{ hackathon.event_page_url }}"
+              class="v3-text text-uppercase font-weight-semibold"
+              style="text-decoration: underline; font-size: 0.875rem;"
+            >
+              Go to Event Page <i class="ti ti-arrow-up-right"></i>
+            </a>
+          </div>
+
+          <div class="deco-blocks">
+            <img src="/files/fh-26-block-left.svg" alt="" />
+            <img src="/files/fosshack-26-block.svg" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="stats-col">
+          <div class="stat-card">
+            <i class="ti ti-award"></i>
+            <h5 class="v3-text">{{ stats.prize_pool }}</h5>
+            <p>Prize pool</p>
+          </div>
+
+          <div class="stat-card">
+            <i class="ti ti-building-skyscraper"></i>
+            <h5 class="v3-text">{{ stats.local_hosts }}</h5>
+            <p>Local hosts</p>
+          </div>
+
+          <div class="stat-card">
+            <i class="ti ti-users-group"></i>
+            <div class="participants-split">
+              <div>
+                <h5 class="v3-text">{{ stats.participants }}</h5>
+                <small>Participants</small>
+              </div>
+              <div>
+                <h5 class="v3-text">{{ stats.teams }}</h5>
+                <small>Teams</small>
+              </div>
+            </div>
+            <span class="badge-live">
+              <span class="ping-dot mr-1"></span>
+              {{ hackathon.status }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# TIMELINE & EDITIONS #}
+    <div class="grid-2col mb-4">
+      <div>
+        <div class="v3-card p-4">
+          <h2 class="h4 font-weight-semibold v3-text mb-4">Timeline</h2>
+          {% for item in timeline %}
+            <div class="timeline-item">
+              <div class="timeline-header" onclick="toggleTimeline(this)">
+                <span class="font-weight-bold v3-text-muted" style="font-size: 0.875rem;"
+                  >{{ item.date }}</span
+                >
+                <div class="d-flex align-items-center">
+                  <span class="v3-text-muted" style="font-size: 0.875rem;">{{ item.event }}</span>
+                  <i class="ti ti-chevron-down timeline-icon"></i>
+                </div>
+              </div>
+              <div class="timeline-content">
+                <p class="v3-text-muted mb-0" style="font-size: 0.875rem;">
+                  Additional details about {{ item.event }} will be announced soon.
+                </p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div>
+        <div class="grid-3col mb-3">
+          {% for edition in previous_editions %}
+            <a
+              href="{{ edition.route }}"
+              class="v3-card p-3 text-center d-block"
+              style="text-decoration: none;"
+            >
+              <p class="v3-text-muted mb-1 small">FOSSHack</p>
+              <h7 class="v3-text mb-0">{{ edition.year }}</h7>
+            </a>
+          {% endfor %}
+        </div>
+
+        <div class="v3-bg-dark p-4 rounded">
+          <h3 class="h5 mb-3" style="color: var(--v3-main-bg)">Partner Projects Programme</h3>
+          <p class="mb-4" style="font-size: 0.875rem; opacity: 0.9;">
+            An effort to provide FOSS Hack participants with time and mentorship to be able to
+            contribute to curated open-source projects.
+          </p>
+          <a
+            href="/fosshack/2026/partner-projects"
+            class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
+            style="font-size: 0.875rem; padding: 8px 12px;"
+          >
+            Know More →
+          </a>
+        </div>
+      </div>
+    </div>
+
+    {# WHY PARTICIPATE & RULES #}
+    <div class="grid-2col grid-sidebar mb-4">
+      <div class="side-deco">
+        <img src="/files/fh-26-sideblock.svg" alt="" />
+      </div>
+
+      <div class="v3-card v3-fh-card h-100 d-flex flex-column">
+        <div class="p-5 v3-border border">
+          <h2 class="h4 font-weight-semibold v3-text mb-4">Why Participate?</h2>
+          <ul class="v3-text-muted pl-4">
+            {% for reason in why_participate %}
+              <li class="mb-2">{{ reason }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <div class="p-5 v3-border border flex-grow-1">
+          <h2 class="h4 font-weight-semibold v3-text mb-4">Rules in a nutshell</h2>
+          <ul class="v3-text-muted pl-4">
+            {% for rule in rules %}
+              <li class="mb-2">{{ rule }}</li>
+            {% endfor %}
+            <li class="mb-2">
+              <a href="/fosshack/rules" style="color: var(--v3-blue);">Check full rules →</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    {# localhosts #}
+    {% if localhosts_by_city %}
+      <div class="mb-5">
+        <h2 class="h4 font-weight-semibold v3-text mb-3">Localhosts</h2>
+        <p class="v3-text-muted mb-4">
+          FOSS Hack Localhosts are localized, in-person editions of the broader hybrid version.
+          Hackers can choose to hack at a localhost in your region.
+        </p>
+
+        <div class="row">
+          {% for city_group in localhosts_by_city %}
+            <div class="col-lg-6 mb-4">
+              <div class="localhost-group">
+                <div class="localhost-header-wrap">
+                  <div class="localhost-header">localhost:{{ city_group.city|lower }}</div>
+                </div>
+
+                <ul class="localhost-items">
+                  {% for localhost in city_group.localhosts %}
+                    <li class="localhost-item">
+                      <a href="{{ localhost.route }}" class="localhost-card">
+                        <div class="localhost-title v3-text">{{ localhost.localhost_name }}</div>
+
+                        <div class="d-flex justify-content-between align-items-center">
+                          <small class="v3-text-light">{{ localhost.location }}</small>
+                          <div class="text-end">
+                            {% if localhost.attending > 0 %}
+                              <small class="text-success d-block">
+                                {{ localhost.attending }} attending
+                              </small>
+                            {% endif %}
+                            {% if localhost.interested > 0 %}
+                              <small class="v3-text-light d-block">
+                                {{ localhost.interested }} interested
+                              </small>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if sponsors %}
+      <div class="mb-5">
+        <h2 class="h4 font-weight-semibold v3-text mb-4">Sponsors</h2>
+
+        {% for tier in sponsors %}
+          {% set tier_name = tier.tier | lower %}
+          {% if tier_name == 'platinum' %}
+            {% set bars = 3 %}
+            {% set tier_index = 0 %}
+            {% set logo_class = 'fh-logo-plat' %}
+          {% elif tier_name == 'gold' %}
+            {% set bars = 2 %}
+            {% set tier_index = 1 %}
+            {% set logo_class = 'fh-logo-gold' %}
+          {% else %}
+            {% set bars = 1 %}
+            {% set tier_index = 2 %}
+            {% set logo_class = 'fh-logo-silv' %}
+          {% endif %}
+
+          <div class="tier-section">
+            <div class="tier-badge-wrap">{{ tier_badge(tier.tier, bars) }}</div>
+            <div class="tier-content" style="--badge-gap: 200px;">
+              {{ logo_grid(tier.sponsor_list, 'fh-sponsor-grid-3', logo_class, tier_index) }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {# community partners #}
+    {% if partners %}
+      <div class="mb-5">
+        <h2 class="h4 font-weight-semibold v3-text mb-4">Community Partners</h2>
+        <div class="tier-content">
+          {{ logo_grid(partners, 'fh-sponsor-grid-5', 'fh-logo-partner', 7) }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- TODO: Add previous foss hack winners -->
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement
+      const currentTheme = html.getAttribute('data-theme')
+
+      if (currentTheme === 'dark') {
+        html.removeAttribute('data-theme')
+        localStorage.setItem('theme', 'light')
+      } else {
+        html.setAttribute('data-theme', 'dark')
+        localStorage.setItem('theme', 'dark')
+      }
+    }
+
+    function toggleTimeline(header) {
+      const content = header.nextElementSibling
+      const icon = header.querySelector('.timeline-icon')
+      content.classList.toggle('show')
+      icon.classList.toggle('rotate')
+    }
+
+    // Load saved theme
+    document.addEventListener('DOMContentLoaded', function () {
+      const savedTheme = localStorage.getItem('theme')
+      if (savedTheme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark')
+      }
+    })
+  </script>
+{% endblock %}
