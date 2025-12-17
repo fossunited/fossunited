@@ -83,14 +83,14 @@ def get_context(context):
     # Process LocalHosts and group by city
     cities_dict = {}
     for host in localhosts:
-        host["route"] = f"/{l.route}"
+        host["route"] = f"/{host.route}"
         host["attending"] = attending_dict.get(host.name, 0)
         host["interested"] = pending_dict.get(host.name, 0) + likes_dict.get(host.name, 0)
 
         city = host.get("city", "Other")
         if city not in cities_dict:
             cities_dict[city] = []
-        cities_dict[city].append(l)
+        cities_dict[city].append(host)
 
     context.localhosts_by_city = [
         {"city": city, "localhosts": hosts} for city, hosts in sorted(cities_dict.items())

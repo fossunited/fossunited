@@ -52,10 +52,6 @@
   </div>
 {% endmacro %}
 
-{# ============================================
-   HEAD INCLUDE
-   ============================================ #}
-
 {% block head_include %}
   <link
     rel="stylesheet"
@@ -68,12 +64,9 @@
   <link rel="stylesheet" href="index.css" />
 {% endblock %}
 
-{# ============================================
-   CONTENT
-   ============================================ #}
 
 {% block content %}
-  <div class="container p-2" style="max-width: 1024px;">
+  <div class="container" style="max-width: 1024px;">
     <div class="d-flex justify-content-end">
       <button class="theme-toggle rounded" onclick="toggleTheme()">
         <svg id="theme-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">

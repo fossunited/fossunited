@@ -464,7 +464,7 @@ svg {
   color: var(--v3-main-bg);
 }
 
-/* RESPONSIVE */
+/* responsive */
 @media (max-width: 991px) {
   .deco-blocks {
     margin-top: -60px;
@@ -477,11 +477,8 @@ svg {
     height: auto;
   }
 
-  .deco-blocks img:first-child {
-    margin-right: -10px;
-  }
   .deco-blocks img:last-child {
-    margin-left: -10px;
+    transform: scale(1.02);
   }
 }
 
