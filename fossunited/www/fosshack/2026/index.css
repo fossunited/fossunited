@@ -1,4 +1,4 @@
-  /* FOSS HACK 2026 */
+/* FOSS HACK 2026 */
 :root {
   --v3-card-bg: hsl(0, 0%, 98%);
   --v3-main-bg: hsl(0, 0%, 94%);
@@ -258,14 +258,13 @@ body {
   margin-bottom: 1rem;
 }
 .localhost-header-wrap::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0px;
   top: 1rem;
   height: 2rem;
   border-left: 1.5px solid var(--v3-text);
 }
-
 
 .localhost-header {
   background: var(--v3-text-color);
@@ -279,7 +278,7 @@ body {
 
 /* header horizontal line */
 .localhost-header::before {
-  content: "";
+  content: '';
   position: absolute;
   left: -24px;
   top: 50%;
@@ -303,7 +302,7 @@ body {
 
 /* vertical line */
 .localhost-item::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: -0.5rem;
@@ -313,7 +312,7 @@ body {
 
 /* horizontal connector */
 .localhost-item::before {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   top: 50%;

@@ -59,7 +59,7 @@
 {% block content %}
   <div class="container" style="max-width: 1024px;">
 
-    <div class="d-flex justify-content-between align-items-center my-5">
+    <nav class="d-flex justify-content-between align-items-center my-5">
       <a href="/" >
         <svg href="/" width="60" viewBox="0 0 144 113" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M26.578 58.0099H18.1069V16.2534H38.9385V24.784H26.578V32.8498H38.9385V41.3803H26.578V58.0099Z" fill="currentColor"/>
@@ -87,7 +87,7 @@
           />
         </svg>
       </button>
-    </div>
+    </nav>
 
     {# hero section #}
     <div class="grid-2col mb-4">
@@ -130,12 +130,14 @@
                 href="{{ hackathon.register_url }}"
                 class="btn v3-bg-dark text-uppercase font-weight-semibold rounded-0"
                 style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px;"
+                aria-label="Register for {{hackathon.name}}"
                 >Register</a
               >
               <a
                 href="{{ hackathon.event_page_url }}"
                 class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
                 style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px; border: 1px solid var(--v3-text)"
+                aria-label="Project ideas for {{hackathon.name}}"
                 >Project Ideas</a
               >
             </div>
@@ -143,6 +145,7 @@
               href="{{ hackathon.event_page_url }}"
               class="v3-text text-uppercase font-weight-semibold"
               style="text-decoration: underline; font-size: 0.875rem;"
+              aria-label="Goto {{hackathon.name}} event page"
             >
               Go to Event Page <i class="ti ti-arrow-up-right"></i>
             </a>
@@ -197,13 +200,13 @@
           <h2 class="h4 font-weight-semibold v3-text mb-4">Timeline</h2>
           {% for item in timeline %}
             <div class="timeline-item">
-              <div class="timeline-header" onclick="toggleTimeline(this)">
+              <div class="timeline-header" onclick="toggleTimeline(this)" aria-label="Click to Know about {{item.event}} details">
                 <span class="font-weight-bold v3-text-muted" style="font-size: 0.875rem;"
                   >{{ item.date }}</span
                 >
                 <div class="d-flex align-items-center">
                   <span class="v3-text-muted" style="font-size: 0.875rem;">{{ item.event }}</span>
-                  <i class="ti ti-chevron-down timeline-icon"></i>
+                  <i class="ti ti-chevron-down timeline-icon" style="margin-left: 0px;"></i>
                 </div>
               </div>
               <div class="timeline-content">
