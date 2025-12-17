@@ -151,7 +151,7 @@ const saveProposal = () => {
 
   if (errors.length) {
     errorMessages.value = errors.join('\n')
-    toast.error(errorMessages)
+    toast.error(errorMessages.value)
     return
   }
 

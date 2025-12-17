@@ -319,9 +319,15 @@ export const validateReferences = (references) => {
       errors.push(`Reference #${index + 1} is missing a link`)
     }
 
+    const short_url = truncateStr(item.link, 20)
     if (!isValidUrl(item.link)) {
       errors.push(
-        `Reference #${index + 1} (${truncateStr(item.link, 20)}) link is invalid. Only https links are allowed.`,
+        `Reference #${index + 1} (${short_url}) link is invalid. Only https links are allowed.`,
+      )
+    }
+    if (item.link.length > 250) {
+      errors.push(
+        `Reference #${index + 1} (${short_url}) link is longer than 250 characters. Please use URL shortner or add clean links.`,
       )
     }
   })
