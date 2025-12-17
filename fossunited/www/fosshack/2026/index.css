@@ -21,6 +21,7 @@
   --v3-text-muted: hsl(0, 0%, 90%);
   --v3-text-light: hsl(0, 0%, 80%);
   --v3-green: hsl(144, 92%, 60%);
+  --v3-green-light: hsla(144, 92%, 60%, 0.2);
 }
 
 body {
@@ -226,9 +227,7 @@ body {
 .timeline-content {
   max-height: 0;
   overflow: hidden;
-  transition:
-    grid-template-rows 0.35s ease,
-    opacity 0.25s ease;
+  transition: padding 0.15s ease;
   padding: 0 1rem;
 }
 
@@ -448,8 +447,8 @@ a:hover,
   justify-content: center;
 }
 
-svg {
-  color: var(--v3-text);
+.container svg {
+  color: inherit;
 }
 
 .side-deco img {

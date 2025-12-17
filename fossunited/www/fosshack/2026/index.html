@@ -104,11 +104,13 @@
             class="d-flex flex-column align-items-center v3-border border py-5 px-4"
             style="gap: 2rem;"
           >
-            <img
-              src="{{ doc.hackathon_logo }}"
-              style="width: 100%; max-width: 372px;"
-              alt="{{ hackathon.name }}"
-            />
+            <span
+              aria-label="FOSS United"
+              style="display: block; width: 100%; max-width: 372px;"
+            >
+              {% include "fossunited/public/images/fosshack/foss-hack-26.svg" %}
+            </span>
+
             <div
               class="v3-border border px-3 py-2 v3-text-muted text-uppercase font-weight-semibold"
               style="font-size: 0.875rem; letter-spacing: 1.12px;"
@@ -152,8 +154,8 @@
           </div>
 
           <div class="deco-blocks">
-            <img src="/files/fh-26-block-left.svg" alt="" />
-            <img src="/files/fosshack-26-block.svg" alt="" />
+            <img src="/assets/fossunited/images/fosshack/fh-26-block-left.svg" alt="" />
+            <img src="/assets/fossunited/images/fosshack/fh-26-block-right.svg" alt="" />
           </div>
         </div>
       </div>
@@ -252,8 +254,8 @@
 
     {# why participate & rules #}
     <div class="grid-2col grid-sidebar mb-4">
-      <div class="side-deco">
-        <img src="/files/fh-26-sideblock.svg" alt="" />
+      <div class="side-deco v3-card v3-fh-card">
+        <img src="/assets/fossunited/images/fosshack/fh-26-sideblock.svg" alt="" />
       </div>
 
       <div class="v3-card v3-fh-card h-100 d-flex flex-column">
