@@ -336,12 +336,20 @@ body {
   text-decoration: none;
   color: inherit;
 }
-
+.localhost-card:hover {
+  text-decoration: none;
+}
 
 /* SPONSOR TIER SECTION */
 .tier-section {
   position: relative;
   margin: 2.5rem 0;
+}
+
+a.btn {
+  position: relative;
+  z-index: 10;
+  cursor: pointer;
 }
 
 a:hover,
