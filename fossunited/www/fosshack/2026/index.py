@@ -22,8 +22,10 @@ def get_context(context):
         to build or extend FOSS projects""",
         "prize_pool": "₹10,00,000+",
         "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
-        "event_page_url": f"/hack/{hackathon.route}",
-        "status": "Registrations Open" if hackathon.is_registration_live else "CLosed",
+        "event_page_url": f"/{hackathon.route}",
+        "status": "Registrations Open"
+        if hackathon.is_registration_live
+        else "Opening on Jan 2026",
     }
 
     # Timeline
@@ -39,8 +41,8 @@ def get_context(context):
     context.stats = {
         "prize_pool": "₹ TBA",
         "local_hosts": "10",
-        "participants": "...",
-        "teams": "...",
+        "participants": "TBA",
+        "teams": "TBA",
     }
 
     # Get all LocalHosts
@@ -97,73 +99,28 @@ def get_context(context):
     ]
 
     # Fetch Sponsors
-    sponsors = frappe.db.get_all(
-        "FOSS Event Sponsor",
-        filters={"parent": hackathon_id, "parenttype": "FOSS Hackathon"},
-        fields=["tier", "custom_tier", "sponsor_name", "link", "image"],
-        page_length=99,
-    )
-
-    # Organize Sponsors by Tier
-    sort_order = {"Platinum": 0, "Gold": 1, "Silver": 2, "Bronze": 3}
-    sponsors_dict = {}
-    for sponsor in sponsors:
-        tier = sponsor.custom_tier if sponsor.tier == "Custom" else sponsor.tier
-        sponsors_dict.setdefault(tier, []).append(sponsor)
-
     context.sponsors = [
-        {"tier": tier, "sponsor_list": sponsors_list}
-        for tier, sponsors_list in sorted(
-            sponsors_dict.items(), key=lambda x: sort_order.get(x[0], float("inf"))
-        )
+        {"tier": tier, "sponsor_list": sponsor_list}
+        for tier, sponsor_list in hackathon.get_sponsors().items()
     ]
 
     # Fetch Partners
-    context.partners = frappe.db.get_all(
-        "FOSS Event Community Partner",
-        filters={"parent": hackathon_id, "parenttype": "FOSS Hackathon"},
-        fields=["org_name", "link", "logo"],
-        page_length=99,
-    )
+    context.partners = hackathon.community_partners
 
     # Volunteers
-    volunteers = frappe.db.get_all(
-        "FOSS Chapter Event Member",
-        filters={"parent": hackathon_id, "parenttype": "FOSS Hackathon"},
-        pluck="member",
-        page_length=999,
-    )
-
-    volunteer_profiles = frappe.db.get_all(
-        "FOSS User Profile",
-        filters={"name": ["in", volunteers]},
-        fields=["name", "profile_photo", "bio", "full_name", "route"],
-    )
-
-    profile_dict = {profile["name"]: profile for profile in volunteer_profiles}
-
-    context.volunteers = [
-        {
-            "full_name": profile.get("full_name"),
-            "profile_photo": profile.get("profile_photo"),
-            "bio": profile.get("bio"),
-            "route": f"/{profile.get('route')}",
-        }
-        for member in volunteers
-        if (profile := profile_dict.get(member))
-    ]
+    context.volunteers = hackathon.get_volunteers()
 
     # Previous editions (for archive links)
     context.previous_editions = [
         {"year": "2025", "route": "/fosshack/2025"},
         {"year": "2024", "route": "/fosshack/2024"},
-        {"year": "2022", "route": "/fosshack/2022"},
+        {"year": "2022", "route": "/fosshack/2023"},
         {"year": "2021", "route": "/fosshack/2021"},
         {"year": "2020", "route": "/fosshack/2020"},
     ]
 
     context.why_participate = [
-        "Win up to ₹10 lakhs in cash",
+        "Win up to ₹TBA lakhs in cash",
         "Build your reputation as a hacker",
         "Get recognized by recruiters",
         "Grants for your FOSS project",
@@ -176,5 +133,8 @@ def get_context(context):
         "Cash prize split at jury's discretion",
         "No blockchain/web3/crypto projects",
     ]
+
+    context.hide_nav = True
+    context.hide_footer = True
 
     return context
