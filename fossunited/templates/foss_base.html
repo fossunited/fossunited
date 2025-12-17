@@ -6,6 +6,25 @@
 />
 {% endblock %}
 
+{% set layout = layout | default("standard") %}
+
+{% set hide_nav = hide_nav | default(layout == "blank") %}
+
+{% set hide_footer = hide_footer | default(layout == "blank") %}
+
+{% block navbar %}
+  {% if not hide_nav %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+{% block footer %}
+  {% if not hide_footer %}
+    {{ super() }}
+  {% endif %}
+{% endblock %}
+
+
 <!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
 {% block style %} {{ super() }}
 <style>
