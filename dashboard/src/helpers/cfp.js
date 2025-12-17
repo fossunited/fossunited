@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { isValidUrl } from './utils'
+import { isValidUrl, truncateStr } from './utils'
 import { createResource } from 'frappe-ui'
 
 export const getProposalFormFields = (cfpData) => {
@@ -320,7 +320,9 @@ export const validateReferences = (references) => {
     }
 
     if (!isValidUrl(item.link)) {
-      errors.push(`Reference #${index + 1} link is invalid`)
+      errors.push(
+        `Reference #${index + 1} (${truncateStr(item.link, 20)}) link is invalid. Only https links are allowed.`,
+      )
     }
   })
 
