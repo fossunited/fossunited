@@ -3128,8 +3128,8 @@ h6 {
 /* mobile first cfp layout */
 .cfp-card-v3-desktop { display: none; }
 
-/* ===== Tablet (≥ 48rem) ===== */
-@media (min-width: 48rem) {
+/* ===== Tablet ===== */
+@media (min-width: 768px) {
   .v3-btn-group { flex-direction: row; }
   .v3-header { flex-direction: row; }
 
@@ -3137,8 +3137,8 @@ h6 {
   .v3-banner { width: 17.5rem; height: 17.5rem; }
 }
 
-/* ===== Desktop (≥ 52.5rem) ===== */
-@media (min-width: 52.5rem) {
+/* ===== Desktop ===== */
+@media (min-width: 840px) {
   .v3-grid {
     display: grid;
     grid-template-columns: 1fr 20rem;
@@ -3150,7 +3150,7 @@ h6 {
 }
 
 /* ===== Small screens only ===== */
-@media (max-width: 48rem) {
+@media (max-width: 768px) {
   .v3-card { padding: 1.2rem; }
   .v3-section-title { margin-bottom: 0.8rem; }
 
