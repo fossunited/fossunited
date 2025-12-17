@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { isValidUrl } from './utils'
+import { isValidUrl, truncateStr } from './utils'
 import { createResource } from 'frappe-ui'
 
 export const getProposalFormFields = (cfpData) => {
@@ -319,8 +319,16 @@ export const validateReferences = (references) => {
       errors.push(`Reference #${index + 1} is missing a link`)
     }
 
+    const short_url = truncateStr(item.link, 20)
     if (!isValidUrl(item.link)) {
-      errors.push(`Reference #${index + 1} link is invalid`)
+      errors.push(
+        `Reference #${index + 1} (${short_url}) link is invalid. Only https links are allowed.`,
+      )
+    }
+    if (item.link.length > 250) {
+      errors.push(
+        `Reference #${index + 1} (${short_url}) link is longer than 250 characters. Please use URL shortner or add clean links.`,
+      )
     }
   })
 

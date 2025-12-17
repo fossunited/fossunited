@@ -151,6 +151,7 @@ const saveProposal = () => {
 
   if (errors.length) {
     errorMessages.value = errors.join('\n')
+    toast.error(errorMessages.value)
     return
   }
 
@@ -167,7 +168,9 @@ const saveProposal = () => {
       toast.success('Proposal Updated Successfully!')
     })
     .catch((err) => {
-      toast.error(err)
+      toast.error('Failed to update your proposal', {
+        description: err.message,
+      })
     })
 }
 </script>
