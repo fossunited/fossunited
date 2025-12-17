@@ -1,6 +1,11 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 
 {% block title %}{{ hackathon.name }} - FOSS United{% endblock %}
+{% block meta_block %}
+  {{ meta_tags(pagetitle, description, image) }}
+{% endblock %}
+
 
 {% macro tier_badge(label, bars=3) %}
   <svg width="196" height="40" viewBox="0 0 196 40" fill="none" class="tier-badge">
@@ -230,7 +235,7 @@
               style="text-decoration: none;"
             >
               <p class="v3-text-muted mb-1 small">FOSSHack</p>
-              <h7 class="v3-text mb-0">{{ edition.year }}</h7>
+              <h3 class="v3-text h6 mb-0">{{ edition.year }}</h3>
             </a>
           {% endfor %}
         </div>
@@ -406,7 +411,7 @@
 {% endblock %}
 
 {% block footer %}
-<footer class="v3-bg-dark py-5">
+<footer class="py-5">
   <div class="container" style="max-width: 1024px; padding: 2rem 7rem;">
 
     <div class="row">

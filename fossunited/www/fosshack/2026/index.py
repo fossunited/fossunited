@@ -10,6 +10,7 @@ def get_context(context):
     hackathon = frappe.get_doc("FOSS Hackathon", hackathon_id)
 
     context.doc = hackathon
+    context.pagetitle, context.description, context.image = hackathon.get_meta()
 
     context.hackathon = {
         "name": hackathon.hackathon_name,

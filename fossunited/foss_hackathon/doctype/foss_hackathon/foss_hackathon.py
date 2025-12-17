@@ -226,3 +226,42 @@ class FOSSHackathon(WebsiteGenerator):
             if cfp.designation and cfp.organization
             else (cfp.designation or cfp.organization or "")
         )
+
+    def get_meta(self):
+        import re
+        import textwrap
+
+        pagetitle = self.hackathon_name
+
+        desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.hackathon_description), width=150)
+
+        start_date = self.start_date.strftime("%A, %-d %B %Y")
+        end_date = self.end_date.strftime("%-d %B %Y")
+
+        chapter_name = frappe.db.get_value(CHAPTER, self.chapter, "chapter_name")
+
+        hackathon_type_text = ""
+        if self.hackathon_type:
+            hackathon_type_text = f"This is a {self.hackathon_type.lower()} hackathon. "
+
+        description = "{hackathon_name} is a hackathon organized by {chapter_name} Community from {start_date} to {end_date}. {type_text}{desc_short}".format(  # noqa: E501
+            hackathon_name=self.hackathon_name,
+            chapter_name=chapter_name,
+            start_date=start_date,
+            end_date=end_date,
+            type_text=hackathon_type_text,
+            desc_short=desc_short,
+        )
+
+        og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
+
+        image = "{og_url}/gen/hackathons?hackathon_name={hackathon_name}&start_date={start_date}&end_date={end_date}&hackathon_type={hackathon_type}&chapter={chapter_name}".format(  # noqa: E501
+            og_url=og_url,
+            hackathon_name=self.hackathon_name,
+            start_date=self.start_date.strftime("%-d %B %Y"),
+            end_date=self.end_date.strftime("%-d %B %Y"),
+            hackathon_type=self.hackathon_type or "",
+            chapter_name=chapter_name,
+        )
+
+        return pagetitle, description, image
