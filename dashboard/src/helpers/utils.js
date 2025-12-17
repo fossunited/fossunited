@@ -36,9 +36,9 @@ export const cleanedHTML = (htmlData) => {
 
 export const isValidUrl = (link) => {
   try {
-    new URL(link)
-    return true
-  } catch (e) {
+    const url = new URL(link)
+    return url.protocol === 'https:'
+  } catch {
     return false
   }
 }
