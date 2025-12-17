@@ -79,7 +79,9 @@ const toggleWithdrawCFP = () => {
       toast.success('Proposal Withdrawal Status Changed!')
     })
     .catch((err) => {
-      toast.error(err)
+      toast.error('Failed to withdraw your proposal', {
+        description: err.message,
+      })
     })
   showConfirmDialog.value = false
 }
