@@ -466,7 +466,9 @@ svg {
   cursor: pointer;
   padding: 0.5rem;
 }
-
+.theme-toggle svg {
+  color: inherit;
+}
 .theme-toggle:hover {
   background: var(--v3-text);
   color: var(--v3-main-bg);
