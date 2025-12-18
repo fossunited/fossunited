@@ -31,7 +31,7 @@ def get_context(context):
                     "name": grant.project_name,
                     "url": grant.project_website,
                     "description": grant.about_project,
-                    "year": grant.date_of_provision.year,
+                    "year": year,
                     "amount": grant.grant_amount or "N/A",
                     "co_sponsor": grant.co_sponsor,
                 }
