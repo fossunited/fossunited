@@ -408,9 +408,9 @@ a:hover,
 
 .fh-sponsor-logo {
   display: block;
-  object-fit: cover;
-  aspect-ratio: 2/1;
+  width: auto;
 }
+
 
 /* Logo sizes by tier */
 .fh-logo-plat {
