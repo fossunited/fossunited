@@ -17,11 +17,10 @@
         </button>
       </div>
 
-      <div class="v3-card v3-main-card">
+      <div class="v3-card mb-4">
         <div class="mb-4">
           <div class="d-flex flex-column flex-md-row justify-content-between">
-            <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">FOSS Grants & Funding</h1>
-
+            <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">Grants Directory</h1>
             <div
               id="count"
               class="v3-gradient-text text-nowrap mt-2 mt-md-0"
@@ -40,7 +39,7 @@
         </div>
 
         <!-- Search + Sort -->
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.25rem;">
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
           <input
             id="search"
             placeholder="Search by name..."
@@ -58,8 +57,10 @@
             <option value="name-desc">Name Z–A</option>
           </select>
         </div>
+        </div>
 
         <!-- List -->
+      <div>
         <div id="grants-list" style="display:flex; flex-direction:column; gap:0.75rem;">
           {% for it in items %}
             <a

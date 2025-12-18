@@ -628,7 +628,6 @@ h6 {
   box-shadow: inset 0px 0px 0px 3px #4ba306;
 }
 
-
 .event-start-date {
   font-size: 18px;
   font-weight: 600;
@@ -1467,7 +1466,6 @@ h6 {
   object-fit: contain;
 }
 
-
 /* FIXME: Can be removed since v3 events page changed */
 .submission-status-block {
   display: flex;
@@ -1514,8 +1512,6 @@ h6 {
   flex-direction: column;
   gap: 1rem;
 }
-
-
 
 .schedule-grid {
   display: grid;
@@ -2397,7 +2393,8 @@ h6 {
 }
 
 /* V3 Base Typography - Inter font for all v3 pages */
-.v3-page, body:has(.v3-page) {
+.v3-page,
+body:has(.v3-page) {
   background: var(--v3-main-bg);
   font-family: 'Inter', sans-serif;
 }
@@ -2584,7 +2581,6 @@ h6 {
   flex-direction: column;
   gap: 1.5rem;
 }
-
 
 .v3-section-header {
   display: flex;
@@ -3097,6 +3093,13 @@ h6 {
   opacity: 0.8;
 }
 
+.v3-toggle-icon {
+  transition: transform 0.2s ease;
+}
+.v3-toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
 .navbar-toggler {
   /* not able to get hamburger icon cause they use svg */
   background: #fafafa !important;
@@ -3126,15 +3129,128 @@ h6 {
 }
 
 /* mobile first cfp layout */
-.cfp-card-v3-desktop { display: none; }
+.cfp-card-v3-desktop {
+  display: none;
+}
+
+/* Grants page */
+.v3-grant-icon {
+  font-size: 3rem;
+  color: var(--v3-primary-button);
+}
+
+.v3-grant-icon-sm {
+  font-size: 1.5rem;
+}
+
+.v3-grant-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.v3-grant-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.v3-grant-description {
+  font-size: 0.875rem;
+}
+
+.v3-grant-stat-number {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--v3-primary-button);
+}
+
+.v3-grant-stat-label {
+  font-size: 0.875rem;
+}
+
+.v3-grant-stat-divider {
+  height: 3.75rem;
+  width: 1px;
+  background: var(--v3-button-border);
+}
+
+.v3-grant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+.v3-grant-card-gap {
+  gap: 0.5rem;
+}
+.v3-grant-content-gap {
+  gap: 1rem;
+}
+.v3-grant-meta-gap {
+  gap: 2.5rem;
+}
+.v3-grant-btn-gap {
+  gap: 1.25rem;
+}
+
+
+.v3-grant-meta-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05625rem;
+}
+
+.v3-grant-meta-value {
+  font-size: 1rem;
+}
+
+.v3-grant-year-section {
+  margin-bottom: 2.5rem;
+}
+
+.v3-grant-year-content {
+  gap: 1.5rem;
+}
+
+.v3-grant-year-content.hidden {
+  display: none !important;
+}
+
+.v3-container-wide {
+  max-width: 1007px;
+}
+
+.mb-8 {
+  margin-bottom: 2.5rem;
+}
+
+.p-5 {
+  padding: 1.5rem;
+}
+
+.pr-8 {
+  padding-right: 2rem;
+}
+
+/* bootstrap v5 has this as: text-decoration-underline*/
+a.underline {
+  text-decoration: underline;
+}
 
 /* ===== Tablet ===== */
 @media (min-width: 768px) {
-  .v3-btn-group { flex-direction: row; }
-  .v3-header { flex-direction: row; }
+  .v3-btn-group {
+    flex-direction: row;
+  }
+  .v3-header {
+    flex-direction: row;
+  }
 
-  .v3-banner-wrap { width: 18rem; }
-  .v3-banner { width: 17.5rem; height: 17.5rem; }
+  .v3-banner-wrap {
+    width: 18rem;
+  }
+  .v3-banner {
+    width: 17.5rem;
+    height: 17.5rem;
+  }
 }
 
 /* ===== Desktop ===== */
@@ -3145,14 +3261,22 @@ h6 {
     gap: 2rem;
   }
 
-  .cfp-card-v3-mobile { display: none; }
-  .cfp-card-v3-desktop { display: block; }
+  .cfp-card-v3-mobile {
+    display: none;
+  }
+  .cfp-card-v3-desktop {
+    display: block;
+  }
 }
 
 /* ===== Small screens only ===== */
 @media (max-width: 768px) {
-  .v3-card { padding: 1.2rem; }
-  .v3-section-title { margin-bottom: 0.8rem; }
+  .v3-card {
+    padding: 1.2rem;
+  }
+  .v3-section-title {
+    margin-bottom: 0.8rem;
+  }
 
   .v3-content-main .v3-card,
   .v3-content-sidebar .v3-card,
