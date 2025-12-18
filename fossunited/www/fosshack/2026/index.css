@@ -491,6 +491,10 @@ footer a:hover {
 }
 
 @media (max-width: 768px) {
+  .container {
+    padding: 0px 10px;
+    overflow-x: clip;
+  }
   .stat-card {
     min-width: 100%;
   }
