@@ -409,8 +409,9 @@ a:hover,
 .fh-sponsor-logo {
   display: block;
   width: auto;
+  aspect-ratio: 2/1;
+  background: hsl(0, 0%, 94%);
 }
-
 
 /* Logo sizes by tier */
 .fh-logo-plat {

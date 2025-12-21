@@ -80,7 +80,7 @@ const columns = computed(() => [
   // append custom fields from Doctype (edgecase: first person might miss this?)
   ...(ticket_form.data?.custom_fields || []).map((f) => ({
     label: f.label,
-    key: f.label,
+    key: f.field_name,
   })),
 ])
 
