@@ -16,6 +16,9 @@
         {{ option.label }}
       </div>
     </div>
+    <div v-if="required && (!model || model.length === 0)" class="mt-1 text-sm text-red-500">
+      Please select at least one option
+    </div>
   </div>
 </template>
 <script setup>
@@ -38,19 +41,20 @@ const props = defineProps({
 })
 
 const model = defineModel({ type: Array, required: true })
-const isSelected = (value) => {
-  if (!model.value) {
-    return false
-  }
 
-  return model.value.includes(value)
+const isSelected = (value) => {
+  return model.value?.includes(value)
 }
 
 const toggleSelected = (value) => {
+  if (!model.value) {
+    model.value = []
+  }
+
   if (isSelected(value)) {
     model.value = model.value.filter((item) => item !== value)
   } else {
-    model.value.push(value)
+    model.value = [...model.value, value]
   }
 }
 </script>
