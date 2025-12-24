@@ -34,6 +34,18 @@ class JobBoard(WebsiteGenerator):
         if not self.route or self.has_value_changed("name"):
             self.route = f"jobs/{self.name}"
 
+        self.handle_publish_status()
+
+    def handle_publish_status(self):
+        """
+        automatically publish/unpublish job based on status changes.
+        """
+        if self.has_value_changed("status"):
+            if self.status in ["Approved", "Expired"]:
+                self.is_published = 1
+            elif self.status in ["Rejected", "Received"]:
+                self.is_published = 0
+
     def get_context(self, context):
         """Context for rendering job detail page"""
         context.title = f"{self.job_title} at {self.company_name}"
