@@ -318,7 +318,6 @@
    "label": "Categories Preview"
   },
   {
-   "depends_on": "eval:doc.session_categories == null",
    "description": "Each category goes on a new line",
    "fieldname": "session_categories",
    "fieldtype": "Text",
@@ -346,7 +345,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-11-10 18:27:38.862779",
+ "modified": "2025-12-24 20:53:47.253272",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
