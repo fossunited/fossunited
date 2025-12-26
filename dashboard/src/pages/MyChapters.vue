@@ -46,11 +46,13 @@ import EventCard from '@/components/EventCard.vue'
 
 const session = inject('$session')
 
+const today = () => new Date().toISOString().split('T')[0]
+
 const concluded_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: ['name', 'event_name', 'event_type', 'chapter_name', 'status', 'event_start_date'],
   filters: {
-    event_end_date: ['<=', new Date()],
+    event_end_date: ['<=', today()],
     status: ['in', ['Concluded', 'Cancelled']],
   },
   orderBy: 'event_start_date desc',
@@ -61,7 +63,7 @@ const scheduled_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: ['name', 'event_name', 'event_type', 'chapter_name', 'status', 'event_start_date'],
   filters: {
-    event_end_date: ['>', new Date()],
+    event_end_date: ['>', today()],
     status: ['in', ['Draft', 'Live']],
   },
   orderBy: 'event_start_date',
