@@ -49,6 +49,7 @@ const chapter = createDocumentResource({
   auto: true,
 })
 
+// Use ISO date string format for Frappe date filters
 const today = () => new Date().toISOString().split('T')[0]
 
 const upcoming_events = createListResource({

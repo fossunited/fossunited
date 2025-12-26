@@ -46,6 +46,7 @@ import EventCard from '@/components/EventCard.vue'
 
 const session = inject('$session')
 
+// Use ISO date string format for Frappe date filters
 const today = () => new Date().toISOString().split('T')[0]
 
 const concluded_events = createListResource({
