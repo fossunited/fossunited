@@ -483,6 +483,17 @@
                       <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
                     </a>
                   {% endif %}
+
+                  {% if can_manage_event %}
+                    <a
+                      href="{{ event_dashboard_url }}"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="Edit event details"
+                    >
+                      <i class="ti ti-edit" aria-hidden="true"></i>
+                      <span>Edit Event</span>
+                    </a>
+                  {% endif %}
                 </div>
               </div>
             </div>
