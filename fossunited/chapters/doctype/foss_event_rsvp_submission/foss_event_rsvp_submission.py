@@ -177,7 +177,6 @@ class FOSSEventRSVPSubmission(Document):
             document_type_event=EVENT,
         )
 
-    @frappe.whitelist()
     def add_check_in(self):
         """Add a check-in record for this submission"""
         # Check if event allows check-in (between start and end date)
@@ -217,6 +216,18 @@ class FOSSEventRSVPSubmission(Document):
                 return True
         return False
 
+    def remove_todays_checkin(self):
+        """Remove today's check-in record for this submission"""
+        today = getdate()
+
+        for i, check_in in enumerate(self.check_ins):
+            if getdate(check_in.check_in_time) == today:
+                self.remove(check_in)
+                self.save()
+                return {"success": True, "message": "Check-in removed successfully"}
+
+        frappe.throw("No check-in found for today")
+
 
 @frappe.whitelist()
 def self_check_in(submission_name):
@@ -226,3 +237,13 @@ def self_check_in(submission_name):
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
     return doc.add_check_in()
+
+
+@frappe.whitelist()
+def remove_checkin_for_today(submission_name):
+    """API endpoint to remove today's check-in"""
+    if not frappe.session.user or frappe.session.user == "Guest":
+        frappe.throw("Not permitted", frappe.PermissionError)
+
+    doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
+    return doc.remove_todays_checkin()
