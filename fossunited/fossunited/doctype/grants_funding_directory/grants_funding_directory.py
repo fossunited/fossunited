@@ -3,7 +3,6 @@
 
 import json
 import re
-from email.utils import parsedate_to_datetime
 from typing import Dict, List, Tuple
 
 import frappe
@@ -41,6 +40,9 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
         if not self.email:
             self.extract_email_from_json()
+
+    def onload(self):
+        self.refresh_if_stale()
 
     def fetch_and_validate_json(self):
         """Fetch and validate funding JSON from URL."""
@@ -126,7 +128,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
     def get_context(self, context):
         """Prepare context for rendering the page."""
-        self.refresh_manifest_json()
+        self.refresh_if_stale()
         try:
             data = json.loads(self.json_data or "{}")
         except json.JSONDecodeError:
@@ -175,43 +177,54 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
         return normalized_channels, channels_dict
 
-    def refresh_manifest_json(self):
+    def refresh_if_stale(self):
         """
-        Alternative to scheduler, so every page visit leads to re-fetching of data within a week.
+        Check and refresh manifest if stale (>7 days old).
+        Called on page visit, keeps it simple and automatic.
         """
-        if not self.last_updated:
-            return
-
-        if get_datetime(self.last_updated) > add_days(now_datetime(), -7):
+        if not self.last_updated or (
+            get_datetime(self.last_updated) > add_days(now_datetime(), -7)
+        ):
             return
 
         try:
             r = requests.head(self.funding_json, timeout=5, allow_redirects=True)
-            if not r.ok:
+            if r.status_code == 429 or not r.ok:
                 return
 
-            last_modified = r.headers.get("last-modified")
-            local_dt = get_datetime(self.last_updated)
-
-            if not last_modified:
-                self.fetch_and_validate_json()
-                self.save(ignore_permissions=True)
+            last_modified_header = r.headers.get("last-modified")
+            needs_fetch = False
+            if not last_modified_header:
+                needs_fetch = True
             else:
-                remote_dt = parsedate_to_datetime(last_modified)
+                from email.utils import parsedate_to_datetime
 
-                if remote_dt > local_dt:
-                    self.fetch_and_validate_json()
-                    self.save(ignore_permissions=True)
+                remote_dt = parsedate_to_datetime(last_modified_header)
+                local_dt = get_datetime(self.last_updated)
+                if remote_dt.tzinfo is not None:
+                    remote_dt = remote_dt.replace(tzinfo=None)
+                needs_fetch = remote_dt > local_dt
 
-            # Update timestamp so we don't recheck for another week
-            self.last_updated = now_datetime()
-            self.save(ignore_permissions=True)
+            if needs_fetch:
+                # Actually fetch and update
+                self.fetch_and_validate_json()
+                self.save(ignore_permissions=True, ignore_version=True)
+            else:
+                # Just bump timestamp to avoid rechecking for another week
+                frappe.db.set_value(
+                    self.doctype,
+                    self.name,
+                    "last_updated",
+                    now_datetime(),
+                    update_modified=False,
+                )
+
             frappe.db.commit()
 
         except Exception as e:
             frappe.log_error(
-                title="Manifest refresh failed",
-                message=(f"URL: {self.funding_json}\n{repr(e)}"),
+                title=f"Manifest refresh failed for {self.name}",
+                message=f"Doc: {self.name}\nURL: {self.funding_json}\n{str(e)}",
             )
 
 
