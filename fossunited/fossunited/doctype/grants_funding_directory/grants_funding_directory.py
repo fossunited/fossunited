@@ -3,11 +3,12 @@
 
 import json
 import re
+from email.utils import parsedate_to_datetime
 from typing import Dict, List, Tuple
 
 import frappe
 import requests
-from frappe.utils import now_datetime
+from frappe.utils import add_days, get_datetime, now_datetime
 from frappe.website.website_generator import WebsiteGenerator
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -125,6 +126,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
     def get_context(self, context):
         """Prepare context for rendering the page."""
+        self.refresh_manifest_json()
         try:
             data = json.loads(self.json_data or "{}")
         except json.JSONDecodeError:
@@ -171,6 +173,45 @@ class GrantsFundingDirectory(WebsiteGenerator):
         channels_dict = {ch["guid"]: ch for ch in normalized_channels if ch.get("guid")}
 
         return normalized_channels, channels_dict
+
+    def refresh_manifest_json(self):
+        """
+        Alternative to scheduler, so every page visit leads to re-fetching of data within a week.
+        """
+        if not self.last_updated:
+            return
+
+        if get_datetime(self.last_updated) > add_days(now_datetime(), -7):
+            return
+
+        try:
+            r = requests.head(self.funding_json, timeout=5, allow_redirects=True)
+            if not r.ok:
+                return
+
+            last_modified = r.headers.get("last-modified")
+            local_dt = get_datetime(self.last_updated)
+
+            if not last_modified:
+                self.fetch_and_validate_json()
+                self.save(ignore_permissions=True)
+            else:
+                remote_dt = parsedate_to_datetime(last_modified)
+
+                if remote_dt > local_dt:
+                    self.fetch_and_validate_json()
+                    self.save(ignore_permissions=True)
+
+            # Update timestamp so we don't recheck for another week
+            self.last_updated = now_datetime()
+            self.save(ignore_permissions=True)
+            frappe.db.commit()
+
+        except Exception as e:
+            frappe.log_error(
+                title="Manifest refresh failed",
+                message=(f"URL: {self.funding_json}\n{repr(e)}"),
+            )
 
 
 @frappe.whitelist()
