@@ -25,13 +25,13 @@
       >
         <template #group-header="{ group }">
           <span class="text-base font-medium leading-6 text-ink-gray-9">
-            {{ formatDate(group.group) }} - {{ group.rows.length }} check-ins
+            {{ formatFullDate(group.group) }} - {{ group.rows.length }} check-ins
           </span>
         </template>
 
         <template #cell="{ item, row, column }">
           <span v-if="column.key === 'check_in_time'" class="text-sm text-gray-700">
-            {{ formatTime(item) }}
+            {{ formatTimeOnly(item) }}
           </span>
           <span v-else class="text-base">{{ item }}</span>
         </template>
@@ -72,6 +72,24 @@
             {{ item ? 'Yes' : 'No' }}
           </span>
 
+          <div v-else-if="column.key === 'checkin_action'" class="flex gap-2">
+            <Button
+              v-if="!row.has_checked_in_today"
+              size="sm"
+              label="Check-in"
+              variant="solid"
+              @click="checkInAttendee(row)"
+            />
+            <Button
+              v-else
+              size="sm"
+              label="Checked-in today"
+              theme="green"
+              variant="outline"
+              @click="confirmUndoCheckIn(row)"
+            />
+          </div>
+
           <div v-else-if="column.key === 'actions'" class="flex gap-2">
             <Button
               size="sm"
@@ -89,7 +107,7 @@
             />
           </div>
 
-          <span v-else class="text-base" :title="item">{{ truncate(item, 30) }}</span>
+          <span v-else class="text-base" :title="item">{{ truncateStr(item, 30) }}</span>
         </template>
       </SearchListView>
     </div>
@@ -102,6 +120,7 @@ import { computed, ref, watchEffect } from 'vue'
 import { createResource, Button } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import { toast } from 'vue-sonner'
+import { truncateStr, formatFullDate, formatTimeOnly } from '@/helpers/utils'
 
 const route = useRoute()
 
@@ -210,6 +229,9 @@ const attendeeColumns = computed(() => {
       width: '300px',
     })
   })
+  if (showCheckins.value) {
+    baseColumns.push({ label: 'Check-in', key: 'checkin_action', width: '180px' })
+  }
   if (rsvp_form.data?.requires_host_approval) {
     baseColumns.push({ label: 'Actions', key: 'actions', width: '200px' })
   }
@@ -222,23 +244,39 @@ const attendeeExportColumns = computed(() => {
   if (!data) return []
   return Object.keys(data)
     .filter(
-      (key) => key !== 'name' && !(key === 'status' && !rsvp_form.data?.requires_host_approval),
+      (key) =>
+        key !== 'name' &&
+        key !== 'has_checked_in_today' &&
+        !(key === 'status' && !rsvp_form.data?.requires_host_approval),
     )
     .map((key) => ({
       label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
       key,
     }))
 })
-
 // Group attendees by status
 watchEffect(() => {
   const rows = submissions.data || []
   const requiresApproval = rsvp_form.data?.requires_host_approval
+  const checkedInSubmissions = new Set()
+  const today = new Date().toISOString().split('T')[0]
 
   const pending = []
   const accepted = []
   const rejected = []
   const notAttending = []
+
+  ;(checkins.data || []).forEach((c) => {
+    const date = new Date(c.check_in_time).toISOString().split('T')[0]
+    if (date === today) {
+      checkedInSubmissions.add(c.parent)
+    }
+  })
+
+  // Update all rows with check-in status
+  rows.forEach((row) => {
+    row.has_checked_in_today = checkedInSubmissions.has(row.name)
+  })
 
   rows.forEach((row) => {
     const confirmed = Boolean(row.confirm_attendance)
@@ -296,32 +334,6 @@ watchEffect(() => {
       ]
 })
 
-// Utilities
-const truncate = (text, maxLength = 30) => {
-  if (!text) return ''
-  const str = String(text).trim()
-  return str.length > maxLength ? str.substring(0, maxLength) + '…' : str
-}
-
-const formatDate = (dateStr) => {
-  if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-const formatTime = (datetime) => {
-  if (!datetime) return ''
-  return new Date(datetime).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-}
-
 // Actions
 const refreshCheckins = () => {
   checkins.reload()
@@ -358,5 +370,45 @@ const confirmReject = (row) => {
   if (confirm(`Are you sure you want to reject ${row.name1 || 'this attendee'}?`)) {
     updateRsvpStatus(row, 'Rejected')
   }
+}
+
+const checkInAttendee = (row) => {
+  createResource({
+    url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
+    params: { submission_name: row.name },
+    onSuccess() {
+      toast.success('Checked in successfully')
+      submissions.fetch()
+      checkins.reload()
+      eventStats.reload()
+    },
+    onError(err) {
+      toast.error(err.message || 'Check-in failed')
+    },
+  }).fetch()
+}
+
+const confirmUndoCheckIn = (row) => {
+  if (confirm(`Remove today's check-in for ${row.name1 || 'this attendee'}?`)) {
+    undoCheckIn(row)
+  }
+}
+
+const undoCheckIn = (row) => {
+  createResource({
+    url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.remove_checkin_for_today',
+    params: {
+      submission_name: row.name,
+    },
+    onSuccess() {
+      toast.success('Check-in removed')
+      submissions.reload()
+      checkins.reload()
+      eventStats.reload()
+    },
+    onError(err) {
+      toast.error(err.message || 'Failed to remove check-in')
+    },
+  }).fetch()
 }
 </script>

@@ -91,6 +91,7 @@ def get_rsvp_checkins(event_id: str) -> list:
             Submission.email,
             Submission.im_a,
             CheckIn.check_in_time,
+            CheckIn.parent,
         )
         .where(Submission.event == event_id)
         .where(Submission.status == "Accepted")
