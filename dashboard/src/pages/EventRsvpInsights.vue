@@ -396,36 +396,18 @@ const confirmUndoCheckIn = (row) => {
 
 const undoCheckIn = (row) => {
   createResource({
-    url: 'frappe.client.get',
+    url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.remove_checkin_for_today',
     params: {
-      doctype: 'FOSS Event RSVP Submission',
-      name: row.name,
-      fields: ['check_ins'],
+      submission_name: row.name,
     },
-    onSuccess(data) {
-      const today = new Date().toISOString().split('T')[0]
-      const updatedCheckIns = (data.check_ins || []).filter((c) => {
-        const checkInDate = new Date(c.check_in_time).toISOString().split('T')[0]
-        return checkInDate !== today
-      })
-
-      createResource({
-        url: 'frappe.client.set_value',
-        params: {
-          doctype: 'FOSS Event RSVP Submission',
-          name: row.name,
-          fieldname: { check_ins: updatedCheckIns },
-        },
-        onSuccess() {
-          toast.success('Check-in removed')
-          submissions.fetch()
-          checkins.reload()
-          eventStats.reload()
-        },
-        onError(err) {
-          toast.error(err.message || 'Failed to remove check-in')
-        },
-      }).fetch()
+    onSuccess() {
+      toast.success('Check-in removed')
+      submissions.reload()
+      checkins.reload()
+      eventStats.reload()
+    },
+    onError(err) {
+      toast.error(err.message || 'Failed to remove check-in')
     },
   }).fetch()
 }
