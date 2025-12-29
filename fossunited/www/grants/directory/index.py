@@ -29,7 +29,7 @@ def get_context(context):
         short_desc = (description[:150] + "…") if len(description) > 150 else description
 
         # inline date formatting (converted to datetime by frappe)
-        dt = d.get("last_updated") or d.get("modified")
+        dt = d.get("modified")
         dt_fmt = dt.strftime("%d %b %Y") if dt else ""
 
         items.append(
