@@ -147,6 +147,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
         context.page_title = f"{entity_name} – Funding Profile"
         context.doctype_name = self.doctype
         context.doc_name = self.name
+        context.no_cache = 1
 
         return context
 
