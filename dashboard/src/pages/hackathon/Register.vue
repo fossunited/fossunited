@@ -196,6 +196,7 @@ let participant = reactive({
   organization: '',
   wants_to_attend_locally: '',
   localhost: '',
+  subscribe_chapter_mailing: 1,
 })
 
 const hackathonId = ref(null)
