@@ -1,4 +1,5 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/grants_card.html" import grant_item_card %}
 
 {% block title %}{{ grant_type }} Grants | FOSS United{% endblock %}
 
@@ -23,21 +24,9 @@
         <p class="v3-text-primary mb-4">{{ grant_description }}</p>
 
         <div class="d-flex flex-wrap v3-grant-btn-gap">
-          <a href="/grants/thesis" class="v3-btn v3-btn-primary" aria-label="View grants thesis"
-            >grants thesis</a
-          >
-          <a
-            href="/grants/directory"
-            class="v3-btn v3-btn-secondary"
-            aria-label="Open grants directory"
-            >Directory</a
-          >
-          <a
-            href="https://floss.fund"
-            class="v3-btn v3-btn-secondary"
-            aria-label="Visit FLOSS Fund website (opens in a new tab)"
-            target="_blank"
-          >
+          <a href="/grants/thesis" class="v3-btn v3-btn-primary">grants thesis</a>
+          <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
+          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
             FLOSS FUND
             <i class="ti ti-arrow-up-right"></i>
           </a>
@@ -52,8 +41,9 @@
               role="button"
               tabindex="0"
               aria-expanded="true"
-              onclick="toggleYear(this)"
-              onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear(this)"
+              onclick="toggleYear('year-content-{{ year }}')"
+              onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear('year-content-{{ year }}')"
+              style="cursor:pointer;"
             >
               <div class="v3-section-title">
                 <span>{{ year }}</span>
@@ -62,64 +52,9 @@
               <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
             </div>
 
-            <div class="v3-grant-year-content d-flex flex-column">
+            <div class="v3-grant-year-content d-flex flex-column" id="year-content-{{ year }}">
               {% for grant in grants_by_year[year] %}
-                <div class="v3-card p-5">
-                  <div class="d-flex flex-column v3-grant-content-gap">
-                    <div class="d-flex justify-content-between align-items-center">
-                      {% if grant.url %}
-                        <a
-                          href="{{ grant.url }}"
-                          class="v3-text-primary flex-fill d-flex justify-content-between align-items-center"
-                          target="_blank"
-                        >
-                          <span style="text-decoration: underline;">{{ grant.name }}</span>
-                          <i class="ti ti-arrow-up-right v3-text-primary v3-grant-icon-sm"></i>
-                        </a>
-                      {% else %}
-                        <div class="v3-text-primary flex-fill">{{ grant.name }}</div>
-                      {% endif %}
-                    </div>
-
-                    <p class="v3-text-primary mb-0">{{ grant.description }}</p>
-
-                    <div class="d-flex flex-wrap align-items-center v3-grant-meta-gap">
-                      {% if grant_type == 'Event' %}
-                        <div class="d-flex flex-column v3-grant-card-gap">
-                          <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">
-                            DATE
-                          </div>
-                          <div class="v3-text-primary v3-grant-meta-value">{{ grant.date }}</div>
-                        </div>
-                      {% else %}
-                        <div class="d-flex flex-column v3-grant-card-gap">
-                          <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">
-                            YEAR
-                          </div>
-                          <div class="v3-text-primary v3-grant-meta-value">{{ grant.year }}</div>
-                        </div>
-                      {% endif %}
-
-                      <div class="d-flex flex-column v3-grant-card-gap">
-                        <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">
-                          AMOUNT
-                        </div>
-                        <div class="v3-text-primary v3-grant-meta-value">{{ grant.amount }}</div>
-                      </div>
-
-                      {% if grant.co_sponsor %}
-                        <div class="d-flex flex-column v3-grant-card-gap">
-                          <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">
-                            CO-SPONSOR
-                          </div>
-                          <div class="v3-text-primary v3-grant-meta-value">
-                            {{ grant.co_sponsor }}
-                          </div>
-                        </div>
-                      {% endif %}
-                    </div>
-                  </div>
-                </div>
+                {{ grant_item_card(grant, grant_type) }}
               {% endfor %}
             </div>
           </div>
@@ -133,15 +68,19 @@
       if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
     })
 
-    function toggleYear(header) {
-      const content = header.nextElementSibling
-      if (!content) return
+  function toggleYear(id) {
+      const content = document.getElementById(id)
+      const header = content ? content.previousElementSibling : null
       content.classList.toggle('hidden')
-      const icon = header.querySelector('.v3-toggle-icon')
-      if (icon) {
-        icon.classList.toggle('rotated')
+
+      if (header) {
+        const icon = header.querySelector('.v3-toggle-icon')
+        if (icon) {
+          icon.classList.toggle('rotated')
+        }
+        const isHidden = content.classList.contains('hidden')
+        header.setAttribute('aria-expanded', !isHidden)
       }
-      header.setAttribute('aria-expanded', !content.classList.contains('hidden'))
     }
   </script>
 {% endblock %}
