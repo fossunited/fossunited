@@ -2464,7 +2464,7 @@ body:has(.v3-page) {
   text-transform: uppercase;
   letter-spacing: 0.07rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -3094,7 +3094,7 @@ body:has(.v3-page) {
 }
 
 .v3-toggle-icon {
-  transition: transform 0.2s ease;
+  transition: transform 0.3s ease;
 }
 .v3-toggle-icon.rotated {
   transform: rotate(180deg);
@@ -3188,9 +3188,8 @@ body:has(.v3-page) {
   gap: 2.5rem;
 }
 .v3-grant-btn-gap {
-  gap: 1.25rem;
+  gap: 1rem;
 }
-
 
 .v3-grant-meta-label {
   font-size: 0.625rem;
