@@ -8,6 +8,152 @@
 
 <br>
 
+## December 2025
+
+| Metric        | Count |
+|---------------|-------|
+| Issues Closed | 10    |
+| PRs merged    | 37    |
+
+Hi everyone,
+
+December was a quieter but productive month as we wrapped up the year amidst holidays and year-end slowdowns. This month focus has been early groundwork for upcoming **FOSS Hack 2026**, ensuring the platform enters the New Year in a more stable and maintainable state.
+
+---
+
+### PR Highlights
+
+#### New Page & Announcement
+
+- [#1337](https://github.com/fossunited/fossunited/pull/1337) **FOSS Hack 2026 page**
+  Introduced the initial FOSS Hack 2026 landing page directly in the codebase.
+  - Designed to be fully open for community contributions
+  Visit: https://fossunited.org/fosshack/2026
+
+#### Tickets
+
+- [#1300](https://github.com/fossunited/fossunited/pull/1300) Redirect /tickets to buy-ticket page or RSVP page.
+  In fossunited platform typical event page link is in the format of `https://fossunited.org/chapter/event`
+  - Now, `https://fossunited.org/chapter/event/tickets` -> redirects to buy-ticket page if its an paid event or else send you to rsvp page. /rsvp, /cfp and /schedule works over the permalink.
+
+- [#1301](https://github.com/fossunited/fossunited/pull/1301) Apply custom field to each attendee in buying ticket
+  Previously we had custom field applied to all attendees ticket, but these custom field data can act as survey to collect preferred choice. Given a switch toggle this can apply to all or each ticket.
+
+<!-- - [#1307](https://github.com/fossunited/fossunited/pull/1307) Grab your tickets page -->
+<!--   A dedicated page to download tickets for an event. Input by ticket ID or email. Coupon ID (organization) can also be provided to download all tickets claimed from it in single PDF. -->
+<!--   Refer: https://fossunited.org/get-tickets -->
+
+- [#1310](https://github.com/fossunited/fossunited/pull/1310) Ticket insights with Custom fields
+  Ticket insights in dashboard will now also show custom fields data. Now ListView is grouped based on tier and whole data can be downloaded as CSV.
+
+- [#1319](https://github.com/fossunited/fossunited/pull/1319) Searchable ticket insights list
+  Ticket insights dashboard now uses the shared searchable ListView component.
+  - Faster filtering for large events
+  - Cleaner UI and reduced redundant code
+
+- API refactor simplified ticket insight data retrieval using query builder for better maintainability.
+  refer: https://frappe.io/blog/engineering/evolving-frappes-orm-for-security-and-flexibility
+
+#### Events
+
+- Added missing projects showcase and community partner cards just like sponsor cards.
+- [#1304](https://github.com/fossunited/fossunited/pull/1304) Hide markdown format comments in description
+  Using `<!-- Some text -->` will now be hidden via CSS rule in event description.
+  Note: It still might appear in page SEO (meta).
+
+- [#1304](https://github.com/fossunited/fossunited/pull/1304) Show OSM preview for event map link
+  Show map preview for the `map_link` provided. Works with gmaps (maps.app.goo.gl) and OSM links.
+  We use [Leaflet via CDN](https://leafletjs.com/) to show the preview image.
+
+- [#1321](https://github.com/fossunited/fossunited/pull/1321) Event map preview improvements
+  Introduced `map_coordinate` field for events.
+  - Cleaner handling of empty or invalid map links
+  - Enables consistent preview rendering without repeated parsing
+
+#### RSVP
+
+- [#1302](https://github.com/fossunited/fossunited/pull/1302) Refactor getting RSVP data
+  Was kinda over-complicated before, now made simplified to just work as intended.
+
+#### RSVP Insights
+
+- [#1327](https://github.com/fossunited/fossunited/pull/1327) Simplified RSVP insights API
+  Refactored RSVP insights backend to use a flat, deterministic data structure.
+
+- [#1328](https://github.com/fossunited/fossunited/pull/1328) Searchable RSVP insights with CSV export
+  Reused the generic `searchListView` component to:
+  - Client-side search RSVP responses
+  - Export filtered data directly as CSV
+
+- [#1343](https://github.com/fossunited/fossunited/pull/1343) Event check-in via attendee list view
+  Organizers can now **manually check-in attendees** directly from the RSVP insights dashboard.
+  - Useful for bulk or assisted check-ins
+  - Complements self check-in flow without backend changes
+  - Includes undo option for same-day check-ins
+
+#### CFP & Reviews
+
+- [#1309](https://github.com/fossunited/fossunited/pull/1309) Notify Chapter members if an approved proposal has been withdrawn
+  A nudge email is sent to notify if only an approved proposal was withdrawn by the proposers.
+  Note: Email is only sent to chapter members, proposer is not involved.
+
+- [#1312](https://github.com/fossunited/fossunited/pull/1312) Proposal review notifications
+  Introduced email notifications when a proposal receives a **new review or updated remarks**.
+  - Notifies proposers and CCs speaker emails
+  Credits: Aryak for previous work (#982)
+
+- [#1339](https://github.com/fossunited/fossunited/pull/1339) Increase reference link length for CFP submissions
+  Long reference links (Google Docs, slides, blogs) are now fully supported.
+  - Increased limit to 250 characters
+
+- Desk improvement: CFP submissions without session categories can now be edited via desk UI
+
+#### Grants
+
+- [#1344](https://github.com/fossunited/fossunited/pull/1344) Optimised Grants Directory manifest updates
+  Reduced server load by updating grant manifests only when changes are detected.
+  - Removed scheduler dependency
+  - Uses lightweight triggers on page visit
+  - Clear distinction between `last_updated` and actual manifest changes
+
+- [#1340](https://github.com/fossunited/fossunited/pull/1340) Complete redesign of Suite of Grants pages
+  - New Grants page design with more structural and uniform design
+
+#### Performance & UI Components
+
+- Searchable ListView optimisations:
+  - Added debounced search
+  - Cached rows using `WeakMap` for faster filtering on large datasets (>2000 rows)
+
+- Multi-select component now handles empty data gracefully and improves required-field error visibility.
+
+#### Accessibility
+
+- [#1308](https://github.com/fossunited/fossunited/pull/1308): Improved keyboard navigation and ARIA labelling across:
+  - Proposal lists
+  - Dashboard sidebar navigation
+  - My Proposals page
+  Credits: @grittyuffy (Keerthana)
+
+- [#1306](https://github.com/fossunited/fossunited/pull/1306): Added missing `alt` text to images across dashboard and main site, improving screen reader support.
+  Credits: @ig-imanish (Manish Kumar)
+
+
+### New Contributor Spotlight
+
+- [@RuchikaByte](https://github.com/RuchikaByte) made their first contribution:
+  - [#1275](https://github.com/fossunited/fossunited/pull/1275): docs: add information on event mailing functionality
+
+- [@grittypuffy](https://github.com/grittypuffy) made their first contribution:
+  - [#1308](https://github.com/fossunited/fossunited/pull/1308): a11y: Improve keyboard navigation for proposals in dashboard and sidebar navigation
+  - Continued accessibility improvements across dashboard and proposal flows.
+
+- [@Praneel7015](https://github.com/Praneel7015)
+  - [#1314](https://github.com/fossunited/fossunited/pull/1314): Added speaker support and online event options for chapter events
+
+- [@ig-imanish](https://github.com/ig-imanish) made their first contribution:
+  - [#1306](https://github.com/fossunited/fossunited/pull/1306): Improve accessibility: Add missing alt text to all images across dashboard and main site
+
 ## November 2025
 
 | Metric        | Count |
