@@ -69,3 +69,5 @@ FREE_TICKET_APPLY = "Event Free Ticket Applications"
 
 # Grants
 GRANTS_DIR = "Grants Funding Directory"
+PROJ_GRANTS = "FOSS Project Grant"
+EVENT_GRANTS = "FOSS Event Grant"

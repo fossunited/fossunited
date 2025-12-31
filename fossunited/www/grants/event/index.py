@@ -2,13 +2,15 @@ from collections import defaultdict
 
 import frappe
 
+from fossunited.doctype_ids import EVENT_GRANTS
+
 
 def get_context(context):
     """Event grants detail page"""
 
     # Fetch all approved event grants
     grants = frappe.db.get_all(
-        "FOSS Event Grant",
+        EVENT_GRANTS,
         filters={"grant_status": "Approved"},
         fields=[
             "event_name",
