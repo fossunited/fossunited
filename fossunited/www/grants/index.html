@@ -1,4 +1,5 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/grants_card.html" import grant_section %}
 
 {% block title %}Funding and Grants | FOSS United{% endblock %}
 
@@ -62,23 +63,14 @@
           </p>
         </div>
 
-        <div class="d-flex flex-wrap v3-grant-btn-gap">
-          <a href="/grants/thesis" class="v3-btn v3-btn-primary" aria-label="View grants thesis">
-            grants thesis</a
-          >
-          <a
-            href="/grants/directory"
-            class="v3-btn v3-btn-secondary"
-            aria-label="Open grants directory"
-          >
-            Directory</a
-          >
-          <a
-            href="https://floss.fund"
-            class="v3-btn v3-btn-secondary"
-            aria-label="Visit FLOSS Fund website (opens in a new tab)"
-            target="_blank"
-          >
+        <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap" style="row-gap: 1.25rem;">
+          <div class="d-flex flex-wrap v3-grant-btn-gap">
+            <a href="/grants/apply/new" class="v3-btn v3-btn-primary">Apply Now</a>
+            <a href="/grants/thesis" class="v3-btn v3-btn-secondary">Grants Thesis</a>
+            <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
+          </div>
+
+          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
             FLOSS FUND
             <i class="ti ti-arrow-up-right"></i>
           </a>
@@ -108,6 +100,44 @@
         </div>
 
         {{ grant_cards_grid(grant_types) }}
+
+      {% if recent_project_grants or recent_event_grants or recent_fellowship_grants %}
+          <div class="mt-5">
+            <h2 class="v3-text-primary mb-4 v3-grant-title">Recent Grants</h2>
+
+            {% if recent_project_grants %}
+              {{ grant_section(
+                title='Project Grants',
+                icon='ti ti-device-imac-code',
+                grants=recent_project_grants,
+                grant_type='Project',
+                view_all_url='/grants/project'
+              ) }}
+            {% endif %}
+
+            {% if recent_event_grants %}
+              {{ grant_section(
+                title='Event Grants',
+                icon='ti ti-building-circus',
+                grants=recent_event_grants,
+                grant_type='Event',
+                view_all_url='/grants/event'
+              ) }}
+            {% endif %}
+
+            {% if recent_fellowship_grants %}
+              {{ grant_section(
+                title='Fellowship Grants',
+                icon='ti ti-heart-handshake',
+                grants=recent_fellowship_grants,
+                grant_type='Fellowship',
+                view_all_url='/grants/fellowship'
+              ) }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+
       </div>
     </div>
   </div>
