@@ -60,4 +60,81 @@ def get_context(context):
         },
     ]
 
+    project_grants = frappe.db.get_all(
+        "FOSS Project Grant",
+        filters={"grant_status": "Approved", "grant_type": "Project"},
+        fields=[
+            "project_name",
+            "project_website",
+            "about_project",
+            "date_of_provision",
+            "grant_amount",
+            "co_sponsor",
+        ],
+        order_by="date_of_provision desc",
+        limit=3,
+    )
+
+    event_grants = frappe.db.get_all(
+        "FOSS Event Grant",
+        filters={"grant_status": "Approved"},
+        fields=[
+            "event_name",
+            "event_website",
+            "application_details",
+            "event_start_date",
+            "grant_amount",
+            "custom_amount",
+            "event_organiser",
+        ],
+        order_by="event_start_date desc",
+        limit=3,
+    )
+
+    fellowship_grants = frappe.db.get_all(
+        "FOSS Project Grant",
+        filters={"grant_status": "Approved", "grant_type": "Fellowship"},
+        fields=[
+            "project_name",
+            "project_website",
+            "about_project",
+            "date_of_provision",
+            "grant_amount",
+            "co_sponsor",
+        ],
+        order_by="date_of_provision desc",
+        limit=3,
+    )
+
+    context.recent_project_grants = [format_project_grant(g) for g in project_grants]
+    context.recent_event_grants = [format_event_grant(g) for g in event_grants]
+    context.recent_fellowship_grants = [format_project_grant(g) for g in fellowship_grants]
+
     return context
+
+
+def format_project_grant(grant):
+    """Format project/fellowship grant for render"""
+    return {
+        "name": grant.project_name,
+        "url": grant.project_website,
+        "description": grant.about_project,
+        "year": grant.date_of_provision.year if grant.date_of_provision else None,
+        "amount": grant.grant_amount or "N/A",
+        "co_sponsor": grant.co_sponsor,
+    }
+
+
+def format_event_grant(grant):
+    """Format event grant for render"""
+    return {
+        "name": grant.event_name,
+        "url": grant.event_website,
+        "description": grant.application_details or "Event grant for FOSS community.",
+        "year": grant.event_start_date.year if grant.event_start_date else None,
+        "date": grant.event_start_date.strftime("%d %b %Y") if grant.event_start_date else None,
+        "amount": grant.custom_amount
+        if grant.grant_amount == "Custom"
+        else grant.grant_amount or "N/A",
+        "co_sponsor": grant.event_organiser,
+    }
