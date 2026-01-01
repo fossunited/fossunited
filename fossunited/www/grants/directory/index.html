@@ -5,151 +5,242 @@
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container mb-5">
-      <div
-        style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;"
-      >
+      <div class="d-flex justify-content-between align-items-center mb-3">
         <nav class="v3-breadcrumb">
-          <a href="/">Home</a> > <a href="/grants/">Grants</a> >
-          <a href="">Directory</a>
+          <a href="/">Home</a> > <a href="/grants/">Grants</a> > <a href="">Directory</a>
         </nav>
         <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
           <i class="ti ti-moon"></i>
         </button>
       </div>
 
-      <div class="v3-card v3-main-card">
-        <div class="mb-4">
-          <div class="d-flex flex-column flex-md-row justify-content-between">
-            <h1 class="v3-gradient-text mb-1" style="font-size:2.4rem;">FOSS Grants & Funding</h1>
-
-            <div
-              id="count"
-              class="v3-gradient-text text-nowrap mt-2 mt-md-0"
-              style="font-size:2rem; font-weight:600;"
-            >
-              {{ items|length }} Projects
-            </div>
+      <div class="v3-card mb-4">
+        <!-- Header: Title, Description, Count -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start mb-4">
+          <div class="flex-fill mb-3 mb-lg-0">
+            <h1 class="v3-text-primary v3-grant-title mb-2">Grants Directory</h1>
+            <p class="v3-text-secondary mb-0">
+              Explore projects from Funding JSON manifests. Inspired by
+              <a href="https://dir.floss.fund" class="text-decoration-underline">floss.fund</a>.
+              To add your project apply
+              <a href="/grants/apply" class="text-decoration-underline">here</a>.
+            </p>
           </div>
 
-          <p class="v3-text-secondary mt-2 mb-0">
-            Explore projects from Funding JSON manifests. Inspired by
-            <a href="https://dir.floss.fund" style="text-decoration:underline;">floss.fund</a>. To
-            add your project apply
-            <a href="/grants/apply" style="text-decoration:underline;">here</a>.
-          </p>
+          <div class="v3-grant-count-box">
+            <div class="v3-grant-stat-number" id="project-count">{{ items|length }}</div>
+            <div class="v3-grant-stat-label v3-text-secondary">Projects</div>
+          </div>
         </div>
 
-        <!-- Search + Sort -->
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.25rem;">
-          <input
-            id="search"
-            placeholder="Search by name..."
-            class="v3-text-primary"
-            style="flex:1; min-width:200px; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
-          />
-          <select
-            id="sort"
-            class="v3-text-primary"
-            style="padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
-          >
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap mb-4" style="row-gap:1.25rem;">
+          <div class="d-flex flex-wrap gap-3">
+            <a href="/grants/apply/new" class="v3-btn v3-btn-primary">Apply Now</a>
+            <a href="/grants/" class="v3-btn v3-btn-secondary">Grants</a>
+          </div>
+          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
+            FLOSS FUND <i class="ti ti-arrow-up-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="v3-controls">
+        <div class="v3-controls-left">
+          <div class="v3-search-input">
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by name or tags"
+            />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
+        </div>
+
+        <!-- Right -->
+        <div class="v3-controls-right">
+          <span class="v3-text-tertiary" style="font-size:0.875rem;">
+            Sort by:
+          </span>
+          <select id="sort" class="v3-select">
+            <option value="created-desc">Recently added</option>
             <option value="modified-desc">Recently updated</option>
-            <option value="modified-asc">Oldest first</option>
             <option value="name-asc">Name A–Z</option>
             <option value="name-desc">Name Z–A</option>
           </select>
+
+          <span
+            id="toggle-tags"
+            class="d-flex v3-text-secondary align-items-center gap-1"
+          >
+            <span>Filter by tags</span>
+            <i class="ti ti-adjustments-filled"></i>
+          </span>
         </div>
+      </div>
 
-        <!-- List -->
-        <div id="grants-list" style="display:flex; flex-direction:column; gap:0.75rem;">
-          {% for it in items %}
-            <a
-              class="grant-row v3-card v3-clickable align-items-center d-flex"
-              data-datetime="{{ it.last_updated_iso or '' }}"
-              data-title="{{ it.entity_name|lower }}"
-              href="/{{ it.route }}"
-            >
-              <div style="flex:1; margin-right:1rem;">
-                <h3 class="v3-text-primary mb-1" style="font-size:1.1rem;">
-                  {{ it.entity_name }}
-                </h3>
 
-                {% if it.description_short %}
-                  <p class="v3-text-secondary mb-0" style="font-size:0.95rem;">
-                    {{ it.description_short }}
-                  </p>
-                {% endif %}
-              </div>
+        <!-- Tags Panel -->
+      <div id="tags-panel" class="v3-grant-tags v3-card my-3" style="display:none;"></div>
 
-              <div
-                class="text-end v3-text-tertiary"
-                style="white-space:nowrap; font-size:0.85rem;"
-              >
-                {{ it.last_updated_fmt }}
-              </div>
-            </a>
-          {% endfor %}
-        </div>
+      <!-- Grants List -->
+      <div id="grants-list" class="d-flex flex-column v3-grant-year-content"></div>
 
-        <!-- Empty state -->
-        <div id="empty" style="display:none; text-align:center; padding:2.5rem 1rem;">
-          <i
-            class="ti ti-folder-open v3-text-tertiary"
-            style="font-size:2.5rem; margin-bottom:0.75rem;"
-          ></i>
-          <p class="v3-text-secondary">No funding profiles found.</p>
-        </div>
+      <!-- Empty State -->
+      <div id="empty" class="text-center py-5" style="display:none;">
+        <i class="ti ti-folder-open v3-text-tertiary" style="font-size:2.5rem;"></i>
+        <p class="v3-text-secondary mt-3">No funding profiles found.</p>
       </div>
     </div>
   </div>
 
-  <style>
-    .grant-row.hidden {
-      display: none !important;
-    }
-  </style>
-
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
+
       const search = document.getElementById('search')
       const sort = document.getElementById('sort')
       const list = document.getElementById('grants-list')
       const empty = document.getElementById('empty')
-      const count = document.getElementById('count')
+      const count = document.getElementById('project-count')
+      const toggleBtn = document.getElementById('toggle-tags')
+      const tagsPanel = document.getElementById('tags-panel')
 
-      const dateOf = (r) => (r.dataset.datetime ? new Date(r.dataset.datetime).getTime() : 0)
-      const titleOf = (r) =>
-        (r.dataset.title || r.querySelector('h3')?.textContent || '').toLowerCase()
+      const activeTags = new Set()
+      const allTags = new Set()
+
+      // Initial data from template
+      const grants = [
+        {% for it in items %}
+        {
+          name: {{ it.entity_name|tojson }},
+          route: {{ it.route|tojson }},
+          description: {{ it.description_short|tojson }},
+          tags: {{ it.tags|tojson }},
+          projectsCount: {{ it.projects_count or 0 }},
+          created: {{ it.created_iso|tojson }},
+          updated: {{ it.last_updated_iso|tojson }},
+          createdFmt: {{ it.created_fmt|tojson }},
+          updatedFmt: {{ it.last_updated_fmt|tojson }}
+        },
+        {% endfor %}
+      ]
+
+      // Extract all unique tags
+      grants.forEach(g => {
+        if (g.tags) g.tags.forEach(t => allTags.add(t))
+      })
+
+      // Render tags panel
+      allTags.forEach(tag => {
+        const span = document.createElement('span')
+        span.className = 'v3-grant-tag'
+        span.textContent = tag
+        span.dataset.tag = tag.toLowerCase()
+        span.onclick = (e) => {
+          e.preventDefault()
+          span.classList.toggle('active')
+          span.classList.contains('active')
+            ? activeTags.add(span.dataset.tag)
+            : activeTags.delete(span.dataset.tag)
+          render()
+        }
+        tagsPanel.appendChild(span)
+      })
+
+      // Toggle tags panel
+      toggleBtn.onclick = () => {
+        const isHidden = tagsPanel.style.display === 'none'
+        tagsPanel.style.display = isHidden ? 'flex' : 'none'
+      }
+
+      function matchesSearch(grant, query) {
+        if (!query) return true
+        const q = query.toLowerCase()
+        const nameMatch = grant.name.toLowerCase().includes(q)
+        const tagMatch = grant.tags && grant.tags.some(t => t.toLowerCase().includes(q))
+        return nameMatch || tagMatch
+      }
+
+      function matchesTags(grant) {
+        if (activeTags.size === 0) return true
+        if (!grant.tags) return false
+        const grantTags = grant.tags.map(t => t.toLowerCase())
+        return [...activeTags].every(t => grantTags.includes(t))
+      }
+
+      function sortGrants(a, b) {
+        const mode = sort.value
+        if (mode === 'created-desc') return new Date(b.created) - new Date(a.created)
+        if (mode === 'modified-desc') return new Date(b.updated) - new Date(a.updated)
+        if (mode === 'name-asc') return a.name.localeCompare(b.name)
+        if (mode === 'name-desc') return b.name.localeCompare(a.name)
+        return 0
+      }
 
       function render() {
-        const q = (search.value || '').toLowerCase()
-        const rows = Array.from(list.querySelectorAll('.grant-row'))
-        let visible = 0
-        rows.forEach((r) => {
-          const match = q === '' || titleOf(r).includes(q)
-          r.classList.toggle('hidden', !match)
-          if (match) visible++
-        })
+        const query = search.value
+        const showUpdated = sort.value === 'modified-desc'
 
-        rows
-          .filter((r) => !r.classList.contains('hidden'))
-          .sort((a, b) => {
-            const mode = sort.value
-            if (mode === 'modified-desc') return dateOf(b) - dateOf(a)
-            if (mode === 'modified-asc') return dateOf(a) - dateOf(b)
-            if (mode === 'name-asc') return titleOf(a).localeCompare(titleOf(b))
-            if (mode === 'name-desc') return titleOf(b).localeCompare(titleOf(a))
-            return 0
-          })
-          .forEach((r) => list.appendChild(r))
+        const filtered = grants
+          .filter(g => matchesSearch(g, query) && matchesTags(g))
+          .sort(sortGrants)
 
-        empty.style.display = visible ? 'none' : 'block'
-        count.textContent = visible + ' Projects'
+        list.innerHTML = filtered.map(g => `
+          <a href="/${g.route}" class="v3-card v3-clickable d-flex flex-column gap-1">
+            <div class="d-flex justify-content-between align-items-start flex-wrap" style="gap:0.5rem;">
+              <h3 class="v3-text-primary mb-0 d-flex align-items-center flex-wrap gap-1" style="font-size:1.1rem;">
+                ${g.name}
+                <span class="v3-grant-tag">${g.projectsCount} Projects</span>
+              </h3>
+              <div class="v3-text-tertiary d-flex align-items-center gap-1" style="font-size:0.8rem;">
+                ${showUpdated && g.updated && g.updatedFmt !== g.createdFmt ? `
+                  <span class="align-items-center gap-1">
+                    <i class="ti ti-refresh"></i>
+                    ${g.updatedFmt}
+                  </span>
+                ` : `
+                  <span class="align-items-center gap-1">
+                    <i class="ti ti-calendar-plus"></i>
+                    ${g.createdFmt}
+                  </span>
+                `}
+              </div>
+            </div>
+            ${g.description ? `<p class="v3-text-secondary mb-0">${g.description}</p>` : ''}
+            ${g.tags && g.tags.length ? `
+            <div class="v3-grant-tags">
+              ${g.tags.map(t =>
+                  `<span class="v3-grant-tag ${activeTags.has(t.toLowerCase()) ? 'active' : ''}"
+                  onclick="filterByTag(event, '${t.toLowerCase()}')"
+                  > ${t} </span>`
+              ).join('')}
+            </div>
+            ` : ''}
+          </a>
+        `).join('')
+
+        empty.style.display = filtered.length ? 'none' : 'block'
+        count.textContent = filtered.length
       }
 
       search.addEventListener('input', render)
       sort.addEventListener('change', render)
       render()
+      window.filterByTag = function(event, tag) {
+          event.preventDefault()
+          event.stopPropagation()
+
+          const tagEl = [...tagsPanel.children]
+                .find(el => el.dataset.tag === tag)
+
+          if (!tagEl) return
+
+          const isActive = tagEl.classList.toggle('active')
+
+          isActive ? activeTags.add(tag) : activeTags.delete(tag)
+          render()
+      }
     })
   </script>
 {% endblock %}
