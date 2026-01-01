@@ -38,12 +38,28 @@ def get_context(context):
         {"date": "TBA", "event": "Results"},
     ]
 
+    teams = frappe.get_all(
+        "FOSS Hackathon Team",
+        filters={"hackathon": hackathon_id},
+        pluck="name",
+    )
+
+    teams_count = len(teams)
+
+    member_count = frappe.db.count(
+        "FOSS Hackathon Team Member",
+        {
+            "parenttype": "FOSS Hackathon Team",
+            "parent": ["in", teams],
+        },
+    )
+
     # Stats
     context.stats = {
-        "prize_pool": "₹ TBA",
+        "prize_pool": "₹ 10,00,000+",
         "local_hosts": "10",
-        "participants": "TBA",
-        "teams": "TBA",
+        "participants": member_count,
+        "teams": teams_count,
     }
 
     # Get all LocalHosts
@@ -115,7 +131,7 @@ def get_context(context):
     context.previous_editions = [
         {"year": "2025", "route": "/fosshack/2025"},
         {"year": "2024", "route": "/fosshack/2024"},
-        {"year": "2022", "route": "/fosshack/2023"},
+        {"year": "2023", "route": "/fosshack/2023"},
         {"year": "2021", "route": "/fosshack/2021"},
         {"year": "2020", "route": "/fosshack/2020"},
     ]
@@ -137,5 +153,6 @@ def get_context(context):
 
     context.hide_nav = True
     context.hide_footer = True
+    context.no_cache = 1
 
     return context
