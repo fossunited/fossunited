@@ -1,0 +1,86 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/grants_card.html" import grant_item_card %}
+
+{% block title %}{{ grant_type }} Grants | FOSS United{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <nav class="v3-breadcrumb">
+          <a href="/">Home</a> > <a href="/grants/">Grants</a> > <a href="">{{ grant_type }}</a>
+        </nav>
+        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="v3-card">
+        <div class="mb-4 d-flex align-items-center gap-2">
+          <i class="{{ grant_icon }} v3-grant-icon"></i>
+          <h1 class="v3-text-primary mb-0 v3-grant-title">{{ grant_type }} Grants</h1>
+        </div>
+
+        <p class="v3-text-primary mb-4">{{ grant_description }}</p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="/grants/thesis" class="v3-btn v3-btn-primary">grants thesis</a>
+          <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
+          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
+            FLOSS FUND
+            <i class="ti ti-arrow-up-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        {% for year in grants_by_year.keys() %}
+          <div class="v3-grant-year-section">
+            <div
+              class="v3-section-header d-flex justify-content-between align-items-center"
+              role="button"
+              tabindex="0"
+              aria-expanded="true"
+              onclick="toggleYear('year-content-{{ year }}')"
+              onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear('year-content-{{ year }}')"
+              style="cursor:pointer;"
+            >
+              <div class="v3-section-title">
+                <span>{{ year }}</span>
+              </div>
+              <hr />
+              <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
+            </div>
+
+            <div class="v3-grant-year-content d-flex flex-column" id="year-content-{{ year }}">
+              {% for grant in grants_by_year[year] %}
+                {{ grant_item_card(grant, grant_type) }}
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
+    })
+
+  function toggleYear(id) {
+      const content = document.getElementById(id)
+      const header = content ? content.previousElementSibling : null
+      content.classList.toggle('hidden')
+
+      if (header) {
+        const icon = header.querySelector('.v3-toggle-icon')
+        if (icon) {
+          icon.classList.toggle('rotated')
+        }
+        const isHidden = content.classList.contains('hidden')
+        header.setAttribute('aria-expanded', !isHidden)
+      }
+    }
+  </script>
+{% endblock %}
