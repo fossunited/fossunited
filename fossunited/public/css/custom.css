@@ -628,7 +628,6 @@ h6 {
   box-shadow: inset 0px 0px 0px 3px #4ba306;
 }
 
-
 .event-start-date {
   font-size: 18px;
   font-weight: 600;
@@ -1467,7 +1466,6 @@ h6 {
   object-fit: contain;
 }
 
-
 /* FIXME: Can be removed since v3 events page changed */
 .submission-status-block {
   display: flex;
@@ -1514,8 +1512,6 @@ h6 {
   flex-direction: column;
   gap: 1rem;
 }
-
-
 
 .schedule-grid {
   display: grid;
@@ -2397,7 +2393,8 @@ h6 {
 }
 
 /* V3 Base Typography - Inter font for all v3 pages */
-.v3-page, body:has(.v3-page) {
+.v3-page,
+body:has(.v3-page) {
   background: var(--v3-main-bg);
   font-family: 'Inter', sans-serif;
 }
@@ -2467,7 +2464,7 @@ h6 {
   text-transform: uppercase;
   letter-spacing: 0.07rem;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
@@ -2584,7 +2581,6 @@ h6 {
   flex-direction: column;
   gap: 1.5rem;
 }
-
 
 .v3-section-header {
   display: flex;
@@ -3126,15 +3122,258 @@ h6 {
 }
 
 /* mobile first cfp layout */
-.cfp-card-v3-desktop { display: none; }
+.cfp-card-v3-desktop {
+  display: none;
+}
+
+/* Grants page */
+.v3-grant-icon {
+  font-size: 3rem;
+  color: var(--v3-primary-button);
+}
+
+.v3-grant-icon-sm {
+  font-size: 1.5rem;
+}
+
+.v3-grant-title {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.v3-grant-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.v3-grant-description {
+  font-size: 0.875rem;
+}
+
+.v3-grant-stat-number {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--v3-primary-button);
+}
+
+.v3-grant-stat-label {
+  font-size: 0.875rem;
+}
+
+.v3-grant-stat-divider {
+  height: 3.75rem;
+  width: 1px;
+  background: var(--v3-button-border);
+}
+
+.v3-grant-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.v3-grant-meta-label {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.05625rem;
+}
+
+.v3-grant-meta-value {
+  font-size: 1rem;
+}
+
+.v3-grant-year-section {
+  margin-bottom: 2.5rem;
+}
+
+.v3-grant-year-content {
+  gap: 1.5rem;
+}
+
+.v3-grant-year-content.hidden {
+  display: none !important;
+}
+
+.v3-grant-count-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--v3-button-border);
+  background: var(--v3-card-bg);
+  text-align: center;
+  min-width: 120px;
+}
+
+.v3-grant-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.v3-grant-tag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 16px;
+  background: var(--v3-button-border);
+  color: var(--v3-text-color);
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.v3-grant-tag.active {
+  background: var(--v3-text-color2);
+  color: var(--v3-main-bg);
+}
+
+/* Toggle Icon */
+.v3-toggle-icon {
+  transition: transform 0.3s ease;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.v3-toggle-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* Search Input */
+.v3-search-input {
+  background: var(--v3-card-bg);
+  border: 1px solid var(--v3-button-border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 352px;
+  height: 36px;
+}
+
+.v3-search-input input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 14px;
+  outline: none;
+  color: var(--v3-text-color3);
+}
+
+.v3-search-input input:focus {
+  border-color: var(--v3-text-color3);
+}
+
+/* Select Dropdown */
+.v3-select {
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  background: var(--v3-card-bg);
+  color: var(--v3-text-color3);
+  border: 1px solid var(--v3-button-border);
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.8535 4.64648C11.0488 4.84175 11.0488 5.15825 10.8535 5.35352C10.6583 5.54878 10.3417 5.54878 10.1465 5.35352L8 3.20703L5.85352 5.35352C5.65825 5.54878 5.34175 5.54878 5.14648 5.35352C4.95122 5.15825 4.95122 4.84175 5.14648 4.64648L7.64648 2.14648C7.84175 1.95122 8.15825 1.95122 8.35352 2.14648L10.8535 4.64648ZM10.8535 10.6465C11.0488 10.8417 11.0488 11.1583 10.8535 11.3535L8.35352 13.8535C8.15825 14.0488 7.84175 14.0488 7.64648 13.8535L5.14648 11.3535C4.95122 11.1583 4.95122 10.8417 5.14648 10.6465C5.34175 10.4512 5.65825 10.4512 5.85352 10.6465L8 12.793L10.1465 10.6465C10.3417 10.4512 10.6583 10.4512 10.8535 10.6465Z' fill='%23666666'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+}
+
+.v3-select:focus {
+  border-color: var(--v3-text-color3);
+}
+
+[data-theme='dark'] .v3-select {
+  background-image: url("data:image/svg+xml,%3Csvg width='16' height='16' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10.8535 4.64648C11.0488 4.84175 11.0488 5.15825 10.8535 5.35352C10.6583 5.54878 10.3417 5.54878 10.1465 5.35352L8 3.20703L5.85352 5.35352C5.65825 5.54878 5.34175 5.54878 5.14648 5.35352C4.95122 5.15825 4.95122 4.84175 5.14648 4.64648L7.64648 2.14648C7.84175 1.95122 8.15825 1.95122 8.35352 2.14648L10.8535 4.64648ZM10.8535 10.6465C11.0488 10.8417 11.0488 11.1583 10.8535 11.3535L8.35352 13.8535C8.15825 14.0488 7.84175 14.0488 7.64648 13.8535L5.14648 11.3535C4.95122 11.1583 4.95122 10.8417 5.14648 10.6465C5.34175 10.4512 5.65825 10.4512 5.85352 10.6465L8 12.793L10.1465 10.6465C10.3417 10.4512 10.6583 10.4512 10.8535 10.6465Z' fill='%23CCCCCC'/%3E%3C/svg%3E");
+}
+
+.v3-container-wide {
+  max-width: 1024px;
+}
+
+.mb-8 {
+  margin-bottom: 2.5rem;
+}
+
+.p-5 {
+  padding: 1.5rem;
+}
+.pr-8 {
+  padding-right: 2rem;
+}
+
+/* gaps. Why cant bootstrap v4 do gaps? */
+.gap-1 {
+  gap: 0.5rem;
+}
+.gap-2 {
+  gap: 1rem;
+}
+.gap-3 {
+  gap: 1.25rem;
+}
+.gap-4 {
+  gap: 2.5rem;
+}
+
+/* bootstrap v5 has this as: text-decoration-underline*/
+a.underline {
+  text-decoration: underline;
+}
+
+/* Controls wrapper */
+.v3-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Left group (search + actions) */
+.v3-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Right group (sort) */
+.v3-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+/* Wider search on desktop */
+.v3-search-wide {
+  max-width: 360px;
+  flex: 1;
+}
 
 /* ===== Tablet ===== */
 @media (min-width: 768px) {
-  .v3-btn-group { flex-direction: row; }
-  .v3-header { flex-direction: row; }
+  .v3-btn-group {
+    flex-direction: row;
+  }
+  .v3-header {
+    flex-direction: row;
+  }
 
-  .v3-banner-wrap { width: 18rem; }
-  .v3-banner { width: 17.5rem; height: 17.5rem; }
+  .v3-banner-wrap {
+    width: 18rem;
+  }
+  .v3-banner {
+    width: 17.5rem;
+    height: 17.5rem;
+  }
 }
 
 /* ===== Desktop ===== */
@@ -3145,19 +3384,41 @@ h6 {
     gap: 2rem;
   }
 
-  .cfp-card-v3-mobile { display: none; }
-  .cfp-card-v3-desktop { display: block; }
+  .cfp-card-v3-mobile {
+    display: none;
+  }
+  .cfp-card-v3-desktop {
+    display: block;
+  }
 }
 
 /* ===== Small screens only ===== */
 @media (max-width: 768px) {
-  .v3-card { padding: 1.2rem; }
-  .v3-section-title { margin-bottom: 0.8rem; }
+  .v3-card {
+    padding: 1.2rem;
+  }
+  .v3-section-title {
+    margin-bottom: 0.8rem;
+  }
 
   .v3-content-main .v3-card,
   .v3-content-sidebar .v3-card,
   .cfp-card-v3 {
     margin-bottom: 0.5rem;
+  }
+  .v3-controls {
+    align-items: stretch;
+  }
+  .v3-controls-left {
+    width: 100%;
+  }
+  .v3-search-wide {
+    max-width: none;
+  }
+  .v3-controls-right {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
   }
 }
 

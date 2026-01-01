@@ -1,0 +1,150 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/grants_card.html" import grant_section %}
+
+{% block title %}Funding and Grants | FOSS United{% endblock %}
+
+{% macro grant_card(title, icon, description, route, completed, pending) %}
+  <a href="{{ route }}" class="v3-card v3-clickable d-flex flex-column gap-1 p-3">
+    <i class="{{ icon }} v3-grant-icon"></i>
+
+    <div class="d-flex align-items-center gap-1">
+      <h3 class="v3-text-primary mb-0 v3-grant-card-title">{{ title }}</h3>
+      <i class="ti ti-chevron-right v3-text-primary v3-grant-icon-sm"></i>
+    </div>
+
+    <p class="v3-text-tertiary mb-2 v3-grant-description">{{ description }}</p>
+
+    <div class="d-flex align-items-center gap-3">
+      <div class="flex-fill text-center">
+        <div class="v3-grant-stat-number">{{ completed or 0 }}</div>
+        <div class="v3-text-secondary v3-grant-stat-label">Completed</div>
+      </div>
+      <div class="v3-grant-stat-divider"></div>
+      <div class="flex-fill text-center">
+        <div class="v3-grant-stat-number">{{ pending or 0 }}</div>
+        <div class="v3-text-secondary v3-grant-stat-label">Pending</div>
+      </div>
+    </div>
+  </a>
+{% endmacro %}
+
+{% macro grant_cards_grid(grant_types) %}
+  <div class="v3-grant-grid">
+    {% for grant in grant_types %}
+      {{
+        grant_card(
+          title=grant.title,
+          icon=grant.icon,
+          description=grant.description,
+          route=grant.route,
+          completed=grant.completed,
+          pending=grant.pending
+        )
+      }}
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container v3-container-wide mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="">Grants</a></nav>
+        <button class="v3-theme-toggle" id="theme-toggle">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="v3-card mb-8">
+        <div class="mb-4">
+          <h1 class="v3-text-primary mb-2 v3-grant-title">Funding and Grants</h1>
+          <p class="v3-text-primary mb-0 v3-grant-meta-value">
+            Support by monetary means for initiatives that foster FOSS culture in India.
+          </p>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap" style="row-gap: 1.25rem;">
+          <div class="d-flex flex-wrap gap-3">
+            <a href="/grants/apply/new" class="v3-btn v3-btn-primary">Apply Now</a>
+            <a href="/grants/thesis" class="v3-btn v3-btn-secondary">Grants Thesis</a>
+            <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
+          </div>
+
+          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
+            FLOSS FUND
+            <i class="ti ti-arrow-up-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <div>
+        <div class="v3-text-primary mb-5">
+          <p class="mb-3">
+            The grants program was initiated with the vision to provide financial support to FOSS
+            projects and events across the country.
+          </p>
+          <p class="mb-3">
+            If you have a FOSS specific project or initiative and in need of monetary support, you
+            can start a conversation with us at
+            <a class="underline" href="mailto:grants@fossunited.org">grants@fossunited.org</a
+            >.<br />
+            We fund FOSS projects by raising funds from the tech industry, either through our
+            Industry Partnership Program or by reaching out to them upon receiving requests from
+            FOSS projects/organizations.
+          </p>
+          <p class="mb-0">
+            Our grants program also provide financial support to FOSS events. To avail an event
+            grant, write to us with a proposal on the event specifics like goals, target audience,
+            support links and documents etc.
+          </p>
+        </div>
+
+        {{ grant_cards_grid(grant_types) }}
+
+      {% if recent_project_grants or recent_event_grants or recent_fellowship_grants %}
+          <div class="mt-5">
+            <h2 class="v3-text-primary mb-4 v3-grant-title">Recent Grants</h2>
+
+            {% if recent_project_grants %}
+              {{ grant_section(
+                title='Project Grants',
+                icon='ti ti-device-imac-code',
+                grants=recent_project_grants,
+                grant_type='Project',
+                view_all_url='/grants/project'
+              ) }}
+            {% endif %}
+
+            {% if recent_event_grants %}
+              {{ grant_section(
+                title='Event Grants',
+                icon='ti ti-building-circus',
+                grants=recent_event_grants,
+                grant_type='Event',
+                view_all_url='/grants/event'
+              ) }}
+            {% endif %}
+
+            {% if recent_fellowship_grants %}
+              {{ grant_section(
+                title='Fellowship Grants',
+                icon='ti ti-heart-handshake',
+                grants=recent_fellowship_grants,
+                grant_type='Fellowship',
+                view_all_url='/grants/fellowship'
+              ) }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
+    })
+  </script>
+{% endblock %}
