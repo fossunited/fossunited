@@ -72,6 +72,7 @@
           <span
             id="toggle-tags"
             class="d-flex v3-text-secondary align-items-center gap-1"
+            style="cursor: pointer;"
           >
             <span>Filter by tags</span>
             <i class="ti ti-adjustments-filled"></i>
@@ -79,12 +80,22 @@
         </div>
       </div>
 
-
-        <!-- Tags Panel -->
+      <!-- Tags Panel -->
       <div id="tags-panel" class="v3-grant-tags v3-card my-3" style="display:none;"></div>
 
       <!-- Grants List -->
       <div id="grants-list" class="d-flex flex-column v3-grant-year-content"></div>
+
+      <!-- Pagination -->
+      <div id="pagination" class="justify-content-center align-items-center gap-2 mt-4" style="display:none;">
+        <button id="prev-btn" class="v3-btn v3-btn-secondary" disabled>
+          <i class="ti ti-chevron-left"></i> Previous
+        </button>
+        <div id="page-numbers" class="d-flex gap-2"></div>
+        <button id="next-btn" class="v3-btn v3-btn-secondary">
+          Next <i class="ti ti-chevron-right"></i>
+        </button>
+      </div>
 
       <!-- Empty State -->
       <div id="empty" class="text-center py-5" style="display:none;">
@@ -94,153 +105,7 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
-
-      const search = document.getElementById('search')
-      const sort = document.getElementById('sort')
-      const list = document.getElementById('grants-list')
-      const empty = document.getElementById('empty')
-      const count = document.getElementById('project-count')
-      const toggleBtn = document.getElementById('toggle-tags')
-      const tagsPanel = document.getElementById('tags-panel')
-
-      const activeTags = new Set()
-      const allTags = new Set()
-
-      // Initial data from template
-      const grants = [
-        {% for it in items %}
-        {
-          name: {{ it.entity_name|tojson }},
-          route: {{ it.route|tojson }},
-          description: {{ it.description_short|tojson }},
-          tags: {{ it.tags|tojson }},
-          projectsCount: {{ it.projects_count or 0 }},
-          created: {{ it.created_iso|tojson }},
-          updated: {{ it.last_updated_iso|tojson }},
-          createdFmt: {{ it.created_fmt|tojson }},
-          updatedFmt: {{ it.last_updated_fmt|tojson }}
-        },
-        {% endfor %}
-      ]
-
-      // Extract all unique tags
-      grants.forEach(g => {
-        if (g.tags) g.tags.forEach(t => allTags.add(t))
-      })
-
-      // Render tags panel
-      allTags.forEach(tag => {
-        const span = document.createElement('span')
-        span.className = 'v3-grant-tag'
-        span.textContent = tag
-        span.dataset.tag = tag.toLowerCase()
-        span.onclick = (e) => {
-          e.preventDefault()
-          span.classList.toggle('active')
-          span.classList.contains('active')
-            ? activeTags.add(span.dataset.tag)
-            : activeTags.delete(span.dataset.tag)
-          render()
-        }
-        tagsPanel.appendChild(span)
-      })
-
-      // Toggle tags panel
-      toggleBtn.onclick = () => {
-        const isHidden = tagsPanel.style.display === 'none'
-        tagsPanel.style.display = isHidden ? 'flex' : 'none'
-      }
-
-      function matchesSearch(grant, query) {
-        if (!query) return true
-        const q = query.toLowerCase()
-        const nameMatch = grant.name.toLowerCase().includes(q)
-        const tagMatch = grant.tags && grant.tags.some(t => t.toLowerCase().includes(q))
-        return nameMatch || tagMatch
-      }
-
-      function matchesTags(grant) {
-        if (activeTags.size === 0) return true
-        if (!grant.tags) return false
-        const grantTags = grant.tags.map(t => t.toLowerCase())
-        return [...activeTags].every(t => grantTags.includes(t))
-      }
-
-      function sortGrants(a, b) {
-        const mode = sort.value
-        if (mode === 'created-desc') return new Date(b.created) - new Date(a.created)
-        if (mode === 'modified-desc') return new Date(b.updated) - new Date(a.updated)
-        if (mode === 'name-asc') return a.name.localeCompare(b.name)
-        if (mode === 'name-desc') return b.name.localeCompare(a.name)
-        return 0
-      }
-
-      function render() {
-        const query = search.value
-        const showUpdated = sort.value === 'modified-desc'
-
-        const filtered = grants
-          .filter(g => matchesSearch(g, query) && matchesTags(g))
-          .sort(sortGrants)
-
-        list.innerHTML = filtered.map(g => `
-          <a href="/${g.route}" class="v3-card v3-clickable d-flex flex-column gap-1">
-            <div class="d-flex justify-content-between align-items-start flex-wrap" style="gap:0.5rem;">
-              <h3 class="v3-text-primary mb-0 d-flex align-items-center flex-wrap gap-1" style="font-size:1.1rem;">
-                ${g.name}
-                <span class="v3-grant-tag">${g.projectsCount} Projects</span>
-              </h3>
-              <div class="v3-text-tertiary d-flex align-items-center gap-1" style="font-size:0.8rem;">
-                ${showUpdated && g.updated && g.updatedFmt !== g.createdFmt ? `
-                  <span class="align-items-center gap-1">
-                    <i class="ti ti-refresh"></i>
-                    ${g.updatedFmt}
-                  </span>
-                ` : `
-                  <span class="align-items-center gap-1">
-                    <i class="ti ti-calendar-plus"></i>
-                    ${g.createdFmt}
-                  </span>
-                `}
-              </div>
-            </div>
-            ${g.description ? `<p class="v3-text-secondary mb-0">${g.description}</p>` : ''}
-            ${g.tags && g.tags.length ? `
-            <div class="v3-grant-tags">
-              ${g.tags.map(t =>
-                  `<span class="v3-grant-tag ${activeTags.has(t.toLowerCase()) ? 'active' : ''}"
-                  onclick="filterByTag(event, '${t.toLowerCase()}')"
-                  > ${t} </span>`
-              ).join('')}
-            </div>
-            ` : ''}
-          </a>
-        `).join('')
-
-        empty.style.display = filtered.length ? 'none' : 'block'
-        count.textContent = filtered.length
-      }
-
-      search.addEventListener('input', render)
-      sort.addEventListener('change', render)
-      render()
-      window.filterByTag = function(event, tag) {
-          event.preventDefault()
-          event.stopPropagation()
-
-          const tagEl = [...tagsPanel.children]
-                .find(el => el.dataset.tag === tag)
-
-          if (!tagEl) return
-
-          const isActive = tagEl.classList.toggle('active')
-
-          isActive ? activeTags.add(tag) : activeTags.delete(tag)
-          render()
-      }
-    })
-  </script>
+<script id="grants-data" type="application/json">
+  {{ items | tojson }}
+</script>
 {% endblock %}
