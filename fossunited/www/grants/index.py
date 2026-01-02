@@ -16,9 +16,10 @@ def get_context(context):
         {
             "title": "Project Grants",
             "icon": "ti ti-device-imac-code",
-            "description": """We fund FOSS projects by raising funds from the tech industry,
-            either through our Industry Partnership Program or
-            by reaching out to them upon receiving requests from FOSS projects/organizations.""",
+            "description": """Project grants are largely “non-thematic”.
+            In the past, we have funded developer tools,
+            consumer apps, non-profit foundations, FOSS mirrors, Open Hardware projects,
+            individual contributors, and even new programming languages! """,
             "route": "/grants/project",
             "completed": project_counts["Project"]["completed"],
             "pending": project_counts["Project"]["pending"],
@@ -26,19 +27,20 @@ def get_context(context):
         {
             "title": "Event Grants",
             "icon": "ti ti-building-circus",
-            "description": """Our grants program provide financial support to FOSS events.
-            To avail an event grant, write to us with a proposal on the event specifics like goals,
-            target audience, support links and documents etc.""",
+            "description": """Our approach towards funding events has evolved to support
+            events that directly benefit the FOSS community.
+            To apply for a FOSS event grant,
+            please send us a detailed proposal at grants@fossunited.org""",
             "route": "/grants/event",
             "completed": event_counts["completed"],
             "pending": event_counts["pending"],
         },
         {
-            "title": "Fellowship Grants",
+            "title": "Fellowships",
             "icon": "ti ti-heart-handshake",
-            "description": """Fellowship grants support individuals contributing to
+            "description": """We provide grants to individuals contributing to
             FOSS projects and communities. These grants help developers, students,
-            and community organizers dedicate time to open source work.""",
+            and community organizers dedicate time to FOSS work.""",
             "route": "/grants/fellowship",
             "completed": project_counts["Fellowship"]["completed"],
             "pending": project_counts["Fellowship"]["pending"],

@@ -4,7 +4,11 @@
 {% block title %}Funding and Grants | FOSS United{% endblock %}
 
 {% macro grant_card(title, icon, description, route, completed, pending) %}
-  <a href="{{ route }}" class="v3-card v3-clickable d-flex flex-column gap-1 p-3">
+  <div
+    href="{{ route }}"
+    class="v3-card v3-clickable position-relative d-flex flex-column gap-1 p-3"
+  >
+    <a href="{{ route }}" class="stretched-link"></a>
     <i class="{{ icon }} v3-grant-icon"></i>
 
     <div class="d-flex align-items-center gap-1">
@@ -12,7 +16,9 @@
       <i class="ti ti-chevron-right v3-text-primary v3-grant-icon-sm"></i>
     </div>
 
-    <p class="v3-text-tertiary mb-2 v3-grant-description">{{ description }}</p>
+    <p class="v3-text-tertiary mb-2 v3-grant-description d-flex" style="flex: 1;">
+      {{ description }}
+    </p>
 
     <div class="d-flex align-items-center gap-3">
       <div class="flex-fill text-center">
@@ -25,7 +31,7 @@
         <div class="v3-text-secondary v3-grant-stat-label">Pending</div>
       </div>
     </div>
-  </a>
+  </div>
 {% endmacro %}
 
 {% macro grant_cards_grid(grant_types) %}
@@ -63,7 +69,10 @@
           </p>
         </div>
 
-        <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap" style="row-gap: 1.25rem;">
+        <div
+          class="d-flex justify-content-between align-items-center align-content-center flex-wrap"
+          style="row-gap: 1.25rem;"
+        >
           <div class="d-flex flex-wrap gap-3">
             <a href="/grants/apply/new" class="v3-btn v3-btn-primary">Apply Now</a>
             <a href="/grants/thesis" class="v3-btn v3-btn-secondary">Grants Thesis</a>
@@ -80,64 +89,68 @@
       <div>
         <div class="v3-text-primary mb-5">
           <p class="mb-3">
-            The grants program was initiated with the vision to provide financial support to FOSS
-            projects and events across the country.
+            The FOSS United grants program aims to provide financial support to FOSS creators,
+            maintainers, projects and events all over India. To date, we have disbursed over INR 3
+            crores towards Indian FOSS projects and maintainers. All FOSS United grantees are
+            listed [here]. We fund FOSS projects by raising funds from the tech industry,
+            either through our Industry Partnership Program, individual donations, or by reaching
+            out to companies that might be interested in co-sponsoring certain projects or
+            organizations.
           </p>
           <p class="mb-3">
-            If you have a FOSS specific project or initiative and in need of monetary support, you
-            can start a conversation with us at
-            <a class="underline" href="mailto:grants@fossunited.org">grants@fossunited.org</a
-            >.<br />
-            We fund FOSS projects by raising funds from the tech industry, either through our
-            Industry Partnership Program or by reaching out to them upon receiving requests from
-            FOSS projects/organizations.
+            To read more about the structure of the grants program, evaluation criteria and more,
+            please go through our <a class="underline" href="https://fossunited.org/grants/thesis">grants thesis</a>.
           </p>
-          <p class="mb-0">
-            Our grants program also provide financial support to FOSS events. To avail an event
-            grant, write to us with a proposal on the event specifics like goals, target audience,
-            support links and documents etc.
+          <p>
+            If you're a FOSS project or developer in need of financial support, please
+            <a class="underline" href="https://fossunited.org/grants/apply/new">apply</a>. For any questions, please reach out
+            to us at <a class="underline" href="mailto:grants@fossunited.org">grants@fossunited.org</a>.
           </p>
         </div>
 
         {{ grant_cards_grid(grant_types) }}
 
-      {% if recent_project_grants or recent_event_grants or recent_fellowship_grants %}
+        {% if recent_project_grants or recent_event_grants or recent_fellowship_grants %}
           <div class="mt-5">
             <h2 class="v3-text-primary mb-4 v3-grant-title">Recent Grants</h2>
 
             {% if recent_project_grants %}
-              {{ grant_section(
-                title='Project Grants',
-                icon='ti ti-device-imac-code',
-                grants=recent_project_grants,
-                grant_type='Project',
-                view_all_url='/grants/project'
-              ) }}
+              {{
+                grant_section(
+                  title='Project Grants',
+                  icon='ti ti-device-imac-code',
+                  grants=recent_project_grants,
+                  grant_type='Project',
+                  view_all_url='/grants/project'
+                )
+              }}
             {% endif %}
 
             {% if recent_event_grants %}
-              {{ grant_section(
-                title='Event Grants',
-                icon='ti ti-building-circus',
-                grants=recent_event_grants,
-                grant_type='Event',
-                view_all_url='/grants/event'
-              ) }}
+              {{
+                grant_section(
+                  title='Event Grants',
+                  icon='ti ti-building-circus',
+                  grants=recent_event_grants,
+                  grant_type='Event',
+                  view_all_url='/grants/event'
+                )
+              }}
             {% endif %}
 
             {% if recent_fellowship_grants %}
-              {{ grant_section(
-                title='Fellowship Grants',
-                icon='ti ti-heart-handshake',
-                grants=recent_fellowship_grants,
-                grant_type='Fellowship',
-                view_all_url='/grants/fellowship'
-              ) }}
+              {{
+                grant_section(
+                  title='Fellowship Grants',
+                  icon='ti ti-heart-handshake',
+                  grants=recent_fellowship_grants,
+                  grant_type='Fellowship',
+                  view_all_url='/grants/fellowship'
+                )
+              }}
             {% endif %}
           </div>
         {% endif %}
-
-
       </div>
     </div>
   </div>

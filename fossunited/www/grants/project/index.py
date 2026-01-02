@@ -43,7 +43,7 @@ def get_context(context):
     context.grants_by_year = dict(sorted(grants_by_year.items(), reverse=True))
 
     # Page metadata
-    context.grant_type = "Project"
+    context.grant_type = "Project Grants"
     context.grant_icon = "ti ti-device-imac-code"
     context.grant_description = """We fund FOSS projects by raising funds from the tech industry,
     either through our Industry Partnership Program or

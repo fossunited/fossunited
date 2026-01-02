@@ -43,7 +43,7 @@ def get_context(context):
     context.grants_by_year = dict(sorted(grants_by_year.items(), reverse=True))
 
     # Page metadata
-    context.grant_type = "Fellowship"
+    context.grant_type = "Fellowships"
     context.grant_icon = "ti ti-heart-handshake"
     context.grant_description = """Fellowship grants support individuals contributing to
     FOSS projects and communities. These grants help developers, students,

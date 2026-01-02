@@ -52,7 +52,7 @@ def get_context(context):
     context.grants_by_year = dict(sorted(grants_by_year.items(), reverse=True))
 
     # Page metadata
-    context.grant_type = "Event"
+    context.grant_type = "Event Grants"
     context.grant_icon = "ti ti-building-circus"
     context.grant_description = """Our grants program provide financial support to FOSS events.
     To avail an event grant, write to us with a proposal on the event specifics like goals,
