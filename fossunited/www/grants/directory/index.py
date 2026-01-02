@@ -9,6 +9,7 @@ def get_context(context):
     docs = frappe.get_all(
         GRANTS_DIR,
         fields=["name", "route", "json_data", "last_updated", "modified", "creation"],
+        filters={"is_published": 1},
         order_by="modified desc",
         limit_page_length=500,
     )

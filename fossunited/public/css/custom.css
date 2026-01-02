@@ -3425,6 +3425,9 @@ a.underline {
     justify-content: flex-start;
     flex-wrap: wrap;
   }
+  .v3-grant-count-box {
+    width: 100%;
+  }
 }
 
 .hidden-html-comment {
