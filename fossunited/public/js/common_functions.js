@@ -250,3 +250,49 @@ window.initThemeToggle = function (toggleButtonId) {
     themeIcon.className = theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'
   }
 }
+
+// "2025-12-29" -> "Monday, December 29, 2025"
+function formatFullDate(dateInput, locale = 'en-IN') {
+  if (!dateInput) return ''
+
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput)
+  if (isNaN(date)) return ''
+
+  return date.toLocaleDateString(locale, {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+}
+
+// "2025-12-29T14:30:45" -> "02:30:45 PM"
+function formatTimeOnly(dateInput, locale = 'en-IN') {
+  if (!dateInput) return ''
+
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput)
+  if (isNaN(date)) return ''
+
+  return date.toLocaleTimeString(locale, {
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+}
+
+function formatShortDate(dateInput, locale = 'en-IN') {
+  if (!dateInput) return ''
+
+  const date = dateInput instanceof Date ? dateInput : new Date(dateInput)
+  if (isNaN(date)) return ''
+
+  return date.toLocaleDateString(locale, {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+}
+
+function truncateStr(title, len) {
+  return title.length > len ? title.substring(0, len) + '...' : title
+}

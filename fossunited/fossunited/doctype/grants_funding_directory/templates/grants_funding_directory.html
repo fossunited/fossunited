@@ -50,7 +50,7 @@
       {# main card #}
       <div class="v3-card v3-main-card">
         <div class="d-flex justify-content-between align-items-center">
-          <h1 class="v3-text-primary" style="font-size:2rem; font-weight:700; margin-bottom:1rem;">
+          <h1 class="v3-text-primary v3-grant-title">
             {{ entity.name }}
           </h1>
 
@@ -66,15 +66,14 @@
 
         {% if entity.description %}
           <p
-            class="v3-text-secondary"
-            style="font-size:1rem; line-height:1.6; margin-bottom:1.5rem;"
+            class="v3-text-secondary mb-2"
           >
             {{ entity.description }}
           </p>
         {% endif %}
 
-        <div class="d-flex justify-content-between flex-column flex-md-row" style="gap: 1rem;">
-          <div class="v3-btn-group d-flex" style="gap:1rem;">
+        <div class="d-flex justify-content-between flex-column flex-md-row gap-2">
+          <div class="v3-btn-group d-flex">
             {% set website_url = entity.webpageUrl.url if entity.webpageUrl else None %}
             {{ external_link(website_url, "v3-btn v3-btn-primary", "ti ti-external-link", "Visit Website") }}
 
@@ -85,7 +84,7 @@
             {% endif %}
           </div>
 
-          <div class="v3-btn-group d-flex" style="gap:1rem;">
+          <div class="v3-btn-group d-flex">
             {{ external_link(funding_json, "v3-btn v3-btn-dark", "ti ti-braces", "Manifest") }}
           </div>
         </div>
@@ -100,15 +99,16 @@
           </div>
 
           <div
-            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr)); gap: 1rem;"
+            class="v3-grant-grid"
           >
             {% for project in projects %}
               <div
-                style="padding: 1.25rem; background: var(--v3-main-bg); border-radius: 0.5rem; display: flex; flex-direction: column;"
+                class="d-flex flex-column p-4 gap-1"
+                style="background: var(--v3-main-bg);"
               >
                 <h3
                   class="v3-text-primary"
-                  style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;"
+                  style="font-size: 1.125rem; font-weight: 600;"
                 >
                   {{ project.name }}
                 </h3>
@@ -116,16 +116,31 @@
                 {% if project.licenses %}
                   <div
                     class="v3-text-tertiary"
-                    style="font-size: 0.875rem; margin-bottom: 0.75rem;"
+                    style="font-size: 0.875rem;"
                   >
                     {{ project.licenses | join(', ') }}
                   </div>
                 {% endif %}
 
+                {% if project.tags %}
+                <div class="v3-grant-tags">
+                  {% for tag in project.tags %}
+                  <a
+                    href="/grants/directory?tags={{ tag | lower | urlencode }}"
+                    target="_blank"
+                    rel="noopener"
+                    class="v3-grant-tag active"
+                  >
+                    {{ tag }}
+                  </a>
+                  {% endfor %}
+                </div>
+                {% endif %}
+
                 {% if project.description %}
                   <p
                     class="v3-text-secondary"
-                    style="font-size: 0.9375rem; line-height: 1.5; margin-bottom: 1rem; flex: 1;"
+                    style="font-size: 0.9375rem; line-height: 1.5; flex: 1;"
                   >
                     {{ project.description }}
                   </p>

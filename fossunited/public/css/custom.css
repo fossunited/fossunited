@@ -3229,6 +3229,11 @@ body:has(.v3-page) {
   background: var(--v3-text-color2);
   color: var(--v3-main-bg);
 }
+.v3-grant-tag:hover {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+}
+
 
 /* Toggle Icon */
 .v3-toggle-icon {
@@ -3419,6 +3424,9 @@ a.underline {
     width: 100%;
     justify-content: flex-start;
     flex-wrap: wrap;
+  }
+  .v3-grant-count-box {
+    width: 100%;
   }
 }
 
