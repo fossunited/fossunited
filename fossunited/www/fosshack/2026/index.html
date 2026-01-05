@@ -338,7 +338,7 @@
 
         {% for tier in sponsors %}
           {% set tier_name = tier.tier | lower %}
-          {% if tier_name == 'platinum' %}
+          {% if tier_name == 'platinum' or 'Patrons' %}
             {% set bars = 3 %}
             {% set tier_index = 0 %}
             {% set logo_class = 'fh-logo-plat' %}
