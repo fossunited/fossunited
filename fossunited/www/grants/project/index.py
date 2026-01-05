@@ -1,8 +1,7 @@
-from collections import defaultdict
-
 import frappe
 
 from fossunited.doctype_ids import PROJ_GRANTS
+from fossunited.www.grants.index import format_project_grant, group_grants_by_year
 
 
 def get_context(context):
@@ -23,24 +22,10 @@ def get_context(context):
         order_by="date_of_provision desc",
     )
 
-    # Group by year
-    grants_by_year = defaultdict(list)
-    for grant in grants:
-        if grant.date_of_provision:
-            year = grant.date_of_provision.year
-            grants_by_year[year].append(
-                {
-                    "name": grant.project_name,
-                    "url": grant.project_website,
-                    "description": grant.about_project,
-                    "year": year,
-                    "amount": grant.grant_amount or "N/A",
-                    "co_sponsor": grant.co_sponsor,
-                }
-            )
-
-    # Convert defaultdict to regular dict and sort by year
-    context.grants_by_year = dict(sorted(grants_by_year.items(), reverse=True))
+    context.grants_by_year = group_grants_by_year(
+        grants,
+        formatter=format_project_grant,
+    )
 
     # Page metadata
     context.grant_type = "Project Grants"
