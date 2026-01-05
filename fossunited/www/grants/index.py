@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 import frappe
 
 from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
@@ -151,7 +153,7 @@ def get_recent_event_grants():
     return [format_event_grant(g) for g in grants]
 
 
-def format_project_grant(grant):
+def format_project_grant(grant, grant_type=None):
     return {
         "name": grant.project_name,
         "url": grant.project_website,
@@ -159,10 +161,11 @@ def format_project_grant(grant):
         "year": grant.date_of_provision.year if grant.date_of_provision else None,
         "amount": grant.grant_amount or "N/A",
         "co_sponsor": grant.co_sponsor,
+        "grant_type": grant_type,
     }
 
 
-def format_event_grant(grant):
+def format_event_grant(grant, grant_type=None):
     return {
         "name": grant.event_name,
         "url": grant.event_website,
@@ -173,4 +176,23 @@ def format_event_grant(grant):
             grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount or "N/A"
         ),
         "co_sponsor": grant.event_organiser,
+        "grant_type": grant_type,
     }
+
+
+def group_grants_by_year(grants, formatter):
+    """
+    Groups formatted grant items by year.
+    """
+    grouped = defaultdict(list)
+
+    for grant in grants:
+        item = formatter(grant)
+        year = item.get("year")
+
+        if not year:
+            continue
+
+        grouped[year].append(item)
+
+    return dict(sorted(grouped.items(), reverse=True))
