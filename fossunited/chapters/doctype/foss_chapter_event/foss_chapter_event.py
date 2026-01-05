@@ -22,6 +22,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
+from fossunited.fossunited.utils import get_event_sponsors
 
 now = datetime.now()
 
@@ -245,57 +246,6 @@ class FOSSChapterEvent(WebsiteGenerator):
         )
 
         return pagetitle, description, image
-
-    def get_sponsors(self):
-        # Get industry partners with joining_date (normalize company names, normalize dates)
-        ip_records = frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
-        ip_lookup = {
-            (ip.get("company") or "").strip().lower(): frappe.utils.getdate(ip.get("joining_date"))
-            if ip.get("joining_date")
-            else None
-            for ip in ip_records
-        }
-        # Define tier sort order (include Venue Partner per spec)
-        sort_order = {
-            "Platinum": 0,
-            "Gold": 1,
-            "Silver": 2,
-            "Bronze": 3,
-            "Venue Partner": 4,
-        }
-
-        # Group sponsors by tier (do not mutate persisted fields like `tier`)
-        sponsors_by_tier = {}
-        for s in self.sponsor_list:
-            tier_key = (s.custom_tier or "Custom").strip() if s.tier == "Custom" else s.tier
-            sponsor_key = (s.sponsor_name or "").strip().lower()
-            s.is_ip = sponsor_key in ip_lookup
-            s.sort_date = (
-                ip_lookup.get(sponsor_key)
-                if s.is_ip
-                else (frappe.utils.getdate(s.date_of_confirm) if s.date_of_confirm else None)
-            )
-            sponsors_by_tier.setdefault(tier_key, []).append(s)
-
-        # Sort sponsors within each tier
-        fallback_date = frappe.utils.getdate(frappe.utils.today())
-        for sponsor_group in sponsors_by_tier.values():
-            sponsor_group.sort(
-                key=lambda s: (
-                    not s.is_ip,
-                    s.sort_date is None,
-                    s.sort_date or fallback_date,
-                    (s.sponsor_name or "").lower(),
-                )
-            )
-
-        # Return sponsors_by_tier dict in sorted tier order
-        return dict(
-            sorted(
-                sponsors_by_tier.items(),
-                key=lambda x: sort_order.get(x[0], float("inf")),
-            )
-        )
 
     def get_volunteers(self):
         """Get volunteers with profile information. Batch fetch profiles for performance."""
@@ -547,7 +497,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
-        context.sponsors_dict = self.get_sponsors()
+        context.sponsors_dict = get_event_sponsors(self)
         context.volunteers = self.get_volunteers()
         context.speakers, context.submissions = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()

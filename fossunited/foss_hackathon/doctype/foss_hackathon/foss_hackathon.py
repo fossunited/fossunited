@@ -13,8 +13,7 @@ from fossunited.doctype_ids import (
     PROPOSAL,
     USER_PROFILE,
 )
-
-no_cache = 1
+from fossunited.fossunited.utils import get_event_sponsors
 
 BASE_DATE = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -96,7 +95,7 @@ class FOSSHackathon(WebsiteGenerator):
             context.chapter = frappe.get_doc(CHAPTER, self.chapter)
 
         context.nav_items = self.get_nav_items()
-        context.sponsors_dict = self.get_sponsors()
+        context.sponsors_dict = get_event_sponsors(self)
         context.tag_icon = {
             "Remote": "world",
             "In-person": "building",
@@ -111,6 +110,7 @@ class FOSSHackathon(WebsiteGenerator):
         )
 
         context.volunteers = self.get_volunteers()
+        context.no_cache = 1
 
     def get_nav_items(self):
         nav_items = ["information", "submissions"]
@@ -118,57 +118,6 @@ class FOSSHackathon(WebsiteGenerator):
             nav_items.append("schedule")
 
         return nav_items
-
-    def get_sponsors(self):
-        # Get industry partners with joining_date (normalize company names, normalize dates)
-        ip_records = frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
-        ip_lookup = {
-            (ip.get("company") or "").strip().lower(): frappe.utils.getdate(ip.get("joining_date"))
-            if ip.get("joining_date")
-            else None
-            for ip in ip_records
-        }
-        # Define tier sort order (include Venue Partner per spec)
-        sort_order = {
-            "Platinum": 0,
-            "Gold": 1,
-            "Silver": 2,
-            "Bronze": 3,
-            "Venue Partner": 4,
-        }
-
-        # Group sponsors by tier (do not mutate persisted fields like `tier`)
-        sponsors_by_tier = {}
-        for s in self.sponsor_list:
-            tier_key = (s.custom_tier or "Custom").strip() if s.tier == "Custom" else s.tier
-            sponsor_key = (s.sponsor_name or "").strip().lower()
-            s.is_ip = sponsor_key in ip_lookup
-            s.sort_date = (
-                ip_lookup.get(sponsor_key)
-                if s.is_ip
-                else (frappe.utils.getdate(s.date_of_confirm) if s.date_of_confirm else None)
-            )
-            sponsors_by_tier.setdefault(tier_key, []).append(s)
-
-        # Sort sponsors within each tier
-        fallback_date = frappe.utils.getdate(frappe.utils.today())
-        for sponsor_group in sponsors_by_tier.values():
-            sponsor_group.sort(
-                key=lambda s: (
-                    not s.is_ip,
-                    s.sort_date is None,
-                    s.sort_date or fallback_date,
-                    (s.sponsor_name or "").lower(),
-                )
-            )
-
-        # Return sponsors_by_tier dict in sorted tier order
-        return dict(
-            sorted(
-                sponsors_by_tier.items(),
-                key=lambda x: sort_order.get(x[0], float("inf")),
-            )
-        )
 
     def get_schedule_dict(self):
         schedule_dict = {}

@@ -546,3 +546,52 @@ def get_volunteers_stats():
         "active_count": len(unique_members),
         "communities_count": len(unique_chapters),
     }
+
+
+def get_event_sponsors(self):
+    """
+    Get event sponsors in sorted order (date of confirm).
+    """
+    # Get IP dates
+    ip_dates = {
+        ip["company"].strip().lower(): ip["joining_date"]
+        for ip in frappe.db.get_all("Industry Partners", fields=["company", "joining_date"])
+        if ip.get("company") and ip.get("joining_date")
+    }
+
+    # Tier order
+    tier_rank = {
+        "Patrons": 0,
+        "Platinum": 1,
+        "Gold": 2,
+        "Silver": 3,
+        "Bronze": 4,
+        "Venue Partner": 5,
+    }
+
+    # Group by tier
+    groups = {}
+    for sponsor in self.sponsor_list:
+        # Get tier name
+        tier = sponsor.custom_tier.strip() if sponsor.tier == "Custom" else sponsor.tier
+
+        # Get sort date (confirm date first, then IP date)
+        name_key = (sponsor.sponsor_name or "").strip().lower()
+        sponsor.sort_date = sponsor.date_of_confirm or ip_dates.get(name_key)
+        sponsor.is_ip = name_key in ip_dates
+
+        groups.setdefault(tier, []).append(sponsor)
+
+    # Sort within each tier
+    for sponsors in groups.values():
+        sponsors.sort(
+            key=lambda s: (
+                s.sort_date is None,  # No date last
+                s.sort_date,  # Sort by date
+                not s.is_ip,  # IP first
+                (s.sponsor_name or "").lower(),  # Then by name
+            )
+        )
+
+    # Sort tiers
+    return dict(sorted(groups.items(), key=lambda x: tier_rank.get(x[0], 999)))

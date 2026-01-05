@@ -1,5 +1,7 @@
 import frappe
 
+from fossunited.fossunited.utils import get_event_sponsors
+
 
 def get_context(context):
     """Context for FOSS Hack 2026 page"""
@@ -118,7 +120,7 @@ def get_context(context):
     # Fetch Sponsors
     context.sponsors = [
         {"tier": tier, "sponsor_list": sponsor_list}
-        for tier, sponsor_list in hackathon.get_sponsors().items()
+        for tier, sponsor_list in get_event_sponsors(hackathon).items()
     ]
 
     # Fetch Partners
