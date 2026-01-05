@@ -70,58 +70,6 @@
     font-size: 14px;
   }
 
-  .vol-controls {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-  }
-
-  .vol-search-group {
-    display: flex;
-    gap: 12px;
-    flex: 1;
-    min-width: 0;
-  }
-
-  .vol-search-bar {
-    background: var(--v3-card-bg);
-    border: 1px solid var(--v3-button-border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    max-width: 352px;
-  }
-
-  .vol-search-bar input {
-    flex: 1;
-    border: none;
-    background: none;
-    font-size: 14px;
-    outline: none;
-    color: var(--v3-text-color3);
-  }
-
-  .vol-sort-group {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .vol-sort-select {
-    background: var(--v3-card-bg);
-    color: var(--v3-text-color3);
-    border: 1px solid var(--v3-button-border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 14px;
-    cursor: pointer;
-  }
-
   .vol-group-logo {
     width: 36px;
     height: 36px;
@@ -155,10 +103,6 @@
 
   @media (max-width: 750px) {
     .vol-hero-section { grid-template-columns: 1fr; }
-    .vol-controls { flex-direction: column; }
-    .vol-search-group { flex-direction: column; width: 100%; }
-    .vol-search-bar { max-width: 100%; }
-    .vol-sort-group { justify-content: space-between; }
   }
 
   .hidden { display: none !important; }
@@ -185,7 +129,7 @@
       <div class="v3-card">
         <div>
           <p style="font-size: 14px; color: var(--v3-text-color);">{{ docs_description }}</p>
-          <a href="{{ docs_link }}" class="v3-btn v3-btn-primary" style="margin: 24px 0;">
+          <a href="{{ docs_link }}" class="v3-btn v3-btn-primary w-100" style="margin: 24px 0;">
             {{ docs_text }}<i class="ti ti-arrow-up-right"></i>
           </a>
         </div>
@@ -202,9 +146,9 @@
       </div>
     </div>
 
-    <div class="vol-controls">
-      <div class="vol-search-group">
-        <div class="vol-search-bar">
+    <div class="v3-controls">
+      <div class="v3-controls-left flex-wrap">
+        <div class="v3-search-input">
           <input type="text" placeholder="Search" id="search" />
           <i class="ti ti-search"></i>
         </div>
@@ -217,9 +161,9 @@
         </div>
       </div>
 
-      <div class="vol-sort-group">
+      <div class="v3-controls-right">
         <span style="color: var(--v3-text-color3); font-size: 14px;">Sort by:</span>
-        <select class="vol-sort-select" id="sort">
+        <select class="v3-select" id="sort">
           <option value="alpha">Alphabetical</option>
           <option value="chapter">Chapter</option>
           <option value="city">City</option>
