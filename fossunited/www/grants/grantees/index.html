@@ -1,0 +1,265 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/grants_card.html" import grant_item_card %}
+
+{% block title %}Grants Directory | FOSS United{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container mb-5">
+      <div class="d-flex justify-content-between align-items-center">
+        <nav class="v3-breadcrumb">
+          <a href="/">Home</a> > <a href="/grants/">Grants</a> > <a href="">Grantees</a>
+        </nav>
+        <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
+          <i class="ti ti-moon"></i>
+        </button>
+      </div>
+
+      <div class="v3-card mb-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-center mb-2">
+        <div class="d-flex align-items-center gap-2">
+          <i class="{{ grant_icon }} v3-grant-icon"></i>
+          <h1 class="v3-text-primary mb-0 v3-grant-title">{{ grant_type }}</h1>
+        </div>
+          <div class="v3-grant-count-box">
+            <div class="v3-grant-stat-number">{{ all_grants|length }}</div>
+            <div class="v3-grant-stat-label v3-text-secondary">Total Grantees</div>
+          </div>
+        </div>
+
+        <p class="v3-text-primary mb-4">{{ grant_description }}</p>
+
+        <div class="d-flex flex-wrap gap-3">
+          <a href="/grants/projects" class="v3-btn v3-btn-secondary">Project Grants</a>
+          <a href="/grants/events" class="v3-btn v3-btn-secondary">Event Grants</a>
+          <a href="/grants/fellowships" class="v3-btn v3-btn-secondary">Fellowships</a>
+        </div>
+      </div>
+
+      <!-- Search and Filter Controls -->
+      <div class="v3-controls mb-4">
+        <div class="v3-controls-left">
+          <div class="v3-search-input">
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by name, description, or sponsor"
+            />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
+        </div>
+
+        <div class="v3-controls-right">
+          <span class="v3-text-tertiary" style="font-size:0.875rem;">
+            Filter by type:
+          </span>
+          <select id="filter-type" class="v3-select">
+            <option value="all">All Types</option>
+            <option value="Project">Projects</option>
+            <option value="Event">Events</option>
+            <option value="Fellowship">Fellowships</option>
+          </select>
+
+          <span class="v3-text-tertiary" style="font-size:0.875rem;">
+            Sort by:
+          </span>
+          <select id="sort" class="v3-select">
+            <option value="date-desc">Most Recent</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="mb-3">
+        <span id="results-count" class="v3-text-secondary" style="font-size:0.875rem;"></span>
+      </div>
+
+      <!-- Grants Display -->
+      <div id="grants-container">
+        {% for year in grants_by_year.keys() %}
+          <div class="v3-grant-year-section" data-year="{{ year }}">
+            <div
+              class="v3-section-header d-flex justify-content-between align-items-center"
+              role="button"
+              tabindex="0"
+              aria-expanded="true"
+              onclick="toggleYear('year-content-{{ year }}')"
+              onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear('year-content-{{ year }}')"
+              style="cursor:pointer;"
+            >
+              <div class="v3-section-title">
+                <span>{{ year }}</span>
+                <span class="v3-text-tertiary" style="font-size:0.875rem;" id="count-{{ year }}">
+                  ({{ grants_by_year[year]|length }})
+                </span>
+              </div>
+              <hr />
+              <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
+            </div>
+
+            <div class="v3-grant-year-content d-flex flex-column" id="year-content-{{ year }}">
+              {% for grant in grants_by_year[year] %}
+                <div class="grant-item"
+                     data-name="{{ grant.name|lower }}"
+                     data-description="{{ grant.description|lower }}"
+                     data-sponsor="{{ grant.co_sponsor|lower if grant.co_sponsor else '' }}"
+                     data-url="{{ grant.url|lower if grant.url else '' }}"
+                     data-type="{{ grant.grant_type }}"
+                     data-date="{{ grant.date }}"
+                     data-year="{{ grant.year }}">
+                  {{ grant_item_card(grant, grant.grant_type) }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="v3-card text-center" style="display:none;padding:3rem;">
+        <i class="ti ti-search" style="font-size:3rem;opacity:0.3;"></i>
+        <p class="v3-text-secondary mt-3">No grants found matching your search.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const allGrants = {{ all_grants_json|safe }};
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle');
+
+      const searchInput = document.getElementById('search');
+      const filterType = document.getElementById('filter-type');
+      const sortSelect = document.getElementById('sort');
+
+      // Debounce search to avoid too many updates
+      let searchTimeout;
+      searchInput.addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(filterAndSort, 300);
+      });
+
+      filterType.addEventListener('change', filterAndSort);
+      sortSelect.addEventListener('change', filterAndSort);
+
+      updateResultsCount();
+    });
+
+    function toggleYear(id) {
+      const content = document.getElementById(id);
+      const header = content ? content.previousElementSibling : null;
+      content.classList.toggle('hidden');
+
+      if (header) {
+        const icon = header.querySelector('.v3-toggle-icon');
+        if (icon) {
+          icon.classList.toggle('rotated');
+        }
+        const isHidden = content.classList.contains('hidden');
+        header.setAttribute('aria-expanded', !isHidden);
+      }
+    }
+
+    function filterAndSort() {
+      const searchTerm = document.getElementById('search').value.toLowerCase();
+      const filterType = document.getElementById('filter-type').value;
+      const sortBy = document.getElementById('sort').value;
+
+      const allItems = document.querySelectorAll('.grant-item');
+      let visibleCount = 0;
+
+      // First pass: filter items
+      allItems.forEach(item => {
+        const name = item.dataset.name;
+        const description = item.dataset.description;
+        const sponsor = item.dataset.sponsor;
+        const url = item.dataset.url;
+        const type = item.dataset.type;
+
+        const matchesSearch = !searchTerm ||
+          name.includes(searchTerm) ||
+          description.includes(searchTerm) ||
+          sponsor.includes(searchTerm) ||
+          url.includes(searchTerm);
+
+        const matchesType = filterType === 'all' || type === filterType;
+
+        if (matchesSearch && matchesType) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      // Second pass: sort visible items
+      if (sortBy !== 'date-desc') {
+        const yearSections = document.querySelectorAll('.v3-grant-year-section');
+        yearSections.forEach(section => {
+          const content = section.querySelector('.v3-grant-year-content');
+          const items = Array.from(content.querySelectorAll('.grant-item'));
+          const visibleItems = items.filter(item => item.style.display !== 'none');
+
+          visibleItems.sort((a, b) => {
+            if (sortBy === 'name-asc') {
+              return a.dataset.name.localeCompare(b.dataset.name);
+            } else if (sortBy === 'name-desc') {
+              return b.dataset.name.localeCompare(a.dataset.name);
+            } else if (sortBy === 'date-asc') {
+              return new Date(a.dataset.date) - new Date(b.dataset.date);
+            }
+            return 0;
+          });
+
+          visibleItems.forEach(item => content.appendChild(item));
+        });
+      }
+
+      // Update year section visibility and counts
+      const yearSections = document.querySelectorAll('.v3-grant-year-section');
+      yearSections.forEach(section => {
+        const year = section.dataset.year;
+        const content = section.querySelector('.v3-grant-year-content');
+        const visibleInYear = Array.from(content.querySelectorAll('.grant-item'))
+          .filter(item => item.style.display !== 'none').length;
+
+        const countSpan = document.getElementById(`count-${year}`);
+        if (countSpan) {
+          countSpan.textContent = `(${visibleInYear})`;
+        }
+
+        if (visibleInYear === 0) {
+          section.style.display = 'none';
+        } else {
+          section.style.display = '';
+        }
+      });
+
+      // Show/hide no results message
+      const noResults = document.getElementById('no-results');
+      const container = document.getElementById('grants-container');
+      if (visibleCount === 0) {
+        noResults.style.display = '';
+        container.style.display = 'none';
+      } else {
+        noResults.style.display = 'none';
+        container.style.display = '';
+      }
+
+      updateResultsCount(visibleCount);
+    }
+
+    function updateResultsCount(count) {
+      const resultsCount = document.getElementById('results-count');
+      if (count === undefined) {
+        const allItems = document.querySelectorAll('.grant-item');
+        count = allItems.length;
+      }
+      resultsCount.textContent = `${count}`;
+    }
+  </script>
+{% endblock %}
