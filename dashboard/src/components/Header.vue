@@ -2,9 +2,14 @@
   <header
     class="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-5 py-2.5"
   >
-    <div class="flex gap-1">
-      <FossUnitedLogo class="w-auto h-8" fill="black"></FossUnitedLogo>
-    </div>
+    <router-link
+      to="/"
+      aria-label="Go to homepage"
+      class="flex gap-1 items-center focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <FossUnitedLogo class="w-auto h-8" fill="black" />
+    </router-link>
+
     <div v-if="session.isLoggedIn" class="flex items-center">
       <Dropdown
         :options="[
