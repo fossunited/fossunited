@@ -413,6 +413,10 @@ a:hover,
   background: hsl(0, 0%, 94%);
 }
 
+.margin-10 {
+  margin: 4rem 0rem 1rem 0rem;
+}
+
 /* Logo sizes by tier */
 .fh-logo-plat {
   width: 240px;
