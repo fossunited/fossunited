@@ -1,0 +1,22 @@
+{% extends "templates/grants_details.html" %}
+
+{% set show_count = true %}
+
+{% block action_buttons %}
+  <a href="/grants/thesis" class="v3-btn v3-btn-primary">grants thesis</a>
+  <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
+  <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
+    FLOSS FUND
+    <i class="ti ti-arrow-up-right"></i>
+  </a>
+{% endblock %}
+
+{% block group_options %}
+  <option value="year" selected>Year</option>
+  <option value="amount">Amount Range</option>
+  <option value="flat">No Grouping</option>
+{% endblock %}
+
+{% block script %}
+  <script src="/grants/grantees/index.js"></script>
+{% endblock %}

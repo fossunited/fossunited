@@ -1,0 +1,15 @@
+{% extends "templates/grants_details.html" %}
+
+{% set show_count = true %}
+
+{% block action_buttons %}
+  <a href="/grants/project" class="v3-btn v3-btn-secondary">
+    <i class="ti ti-device-imac-code"></i> Project Grants
+  </a>
+  <a href="/grants/event" class="v3-btn v3-btn-secondary">
+    <i class="ti ti-building-circus"></i> Event Grants
+  </a>
+  <a href="/grants/fellowship" class="v3-btn v3-btn-secondary">
+    <i class="ti ti-heart-handshake"></i> Fellowships
+  </a>
+{% endblock %}

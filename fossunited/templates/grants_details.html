@@ -1,41 +1,93 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/grants_card.html" import grant_item_card %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
 
-{% block title %}{{ grant_type }} Grants | FOSS United{% endblock %}
+{% block title %}{{ page_title }} | FOSS United{% endblock %}
 
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container mb-5">
       <div class="d-flex justify-content-between align-items-center">
-        <nav class="v3-breadcrumb">
-          <a href="/">Home</a> > <a href="/grants/">Grants</a> > <a href="">{{ grant_type }}</a>
-        </nav>
+        {{ breadcrumb(breadcrumbs) }}
         <button class="v3-theme-toggle" id="theme-toggle" title="Toggle theme">
           <i class="ti ti-moon"></i>
         </button>
       </div>
 
-      <div class="v3-card">
-        <div class="mb-4 d-flex align-items-center gap-2">
-          <i class="{{ grant_icon }} v3-grant-icon"></i>
-          <h1 class="v3-text-primary mb-0 v3-grant-title">{{ grant_type }}</h1>
+      <div class="v3-card mb-4">
+        <!-- Header: Title, Description, Count -->
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start mb-4">
+          <div class="flex-fill mb-3 mb-lg-0">
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <i class="{{ grant_icon }} v3-grant-icon"></i>
+              <h1 class="v3-text-primary mb-0 v3-grant-title">{{ grant_type }}</h1>
+            </div>
+            <p class="v3-text-secondary mb-0">{{ grant_description }}</p>
+          </div>
+
+          {% if show_count %}
+          <div class="v3-grant-count-box">
+            <div class="v3-grant-stat-number">{{ total_grants }}</div>
+            <div class="v3-grant-stat-label v3-text-secondary">{{ count_label|default("Total Grantees") }}</div>
+          </div>
+          {% endif %}
         </div>
 
-        <p class="v3-text-primary mb-4">{{ grant_description }}</p>
-
-        <div class="d-flex flex-wrap gap-3">
-          <a href="/grants/thesis" class="v3-btn v3-btn-primary">grants thesis</a>
-          <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
-          <a href="https://floss.fund" class="v3-btn v3-btn-secondary" target="_blank">
-            FLOSS FUND
-            <i class="ti ti-arrow-up-right"></i>
-          </a>
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap gap-2">
+          <div class="d-flex flex-wrap gap-3">
+            {% block action_buttons %}
+            {# We add button in each page grantees or projects #}
+            {% endblock %}
+          </div>
         </div>
       </div>
 
-      <div>
+      <!-- Search and Filter Controls -->
+      <div class="v3-controls {% if show_count %}mb-4{% else %}my-4{% endif %}">
+        <div class="v3-controls-left">
+          <div class="v3-search-input">
+            <input id="search" type="text" placeholder="Search by name, description, or sponsor" />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
+        </div>
+
+        <div class="v3-controls-right">
+          <span class="v3-text-tertiary" style="font-size:0.875rem;"> Group by: </span>
+          <select id="group-by" class="v3-select">
+            {% block group_options %}
+              <option value="type">Grant Type</option>
+              <option value="year">Year</option>
+              <option value="amount">Amount Range</option>
+              <option value="flat">No Grouping</option>
+            {% endblock %}
+          </select>
+
+          <span class="v3-text-tertiary" style="font-size:0.875rem;"> Sort by: </span>
+          <select id="sort" class="v3-select">
+            <option value="date-desc">Most Recent</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="name-asc">Name A–Z</option>
+            <option value="name-desc">Name Z–A</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Results Count -->
+      <div class="mb-3" id="results-count-container" style="display:none;">
+        <span id="results-count" class="v3-text-secondary" style="font-size:0.875rem;"></span>
+      </div>
+
+      <!-- No Results Message -->
+      <div id="no-results" class="v3-card text-center" style="display:none;padding:3rem;">
+        <i class="ti ti-search" style="font-size:3rem;opacity:0.3;"></i>
+        <p class="v3-text-secondary mt-3">No grants found matching your search.</p>
+      </div>
+
+      <!-- Grants Display -->
+      <div id="grants-container">
         {% for year in grants_by_year.keys() %}
-          <div class="v3-grant-year-section">
+          <div class="v3-grant-year-section" data-year="{{ year }}">
             <div
               class="v3-section-header d-flex justify-content-between align-items-center"
               role="button"
@@ -47,6 +99,9 @@
             >
               <div class="v3-section-title">
                 <span>{{ year }}</span>
+                <span class="v3-text-tertiary" style="font-size:0.875rem;margin-left:0.5rem;">
+                  ({{ grants_by_year[year]|length }})
+                </span>
               </div>
               <hr />
               <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
@@ -54,7 +109,19 @@
 
             <div class="v3-grant-year-content d-flex flex-column" id="year-content-{{ year }}">
               {% for grant in grants_by_year[year] %}
-                {{ grant_item_card(grant, grant_type) }}
+                <div
+                  class="grant-item"
+                  data-name="{{ grant.name|lower }}"
+                  data-description="{{ grant.description|lower }}"
+                  data-sponsor="{{ grant.co_sponsor|lower if grant.co_sponsor else '' }}"
+                  data-url="{{ grant.url|lower if grant.url else '' }}"
+                  data-type="{{ grant.grant_type }}"
+                  data-date="{{ grant.date }}"
+                  data-year="{{ grant.year }}"
+                  data-amount="{{ grant.amount }}"
+                >
+                  {{ grant_item_card(grant, grant.grant_type) }}
+                </div>
               {% endfor %}
             </div>
           </div>
@@ -63,24 +130,4 @@
     </div>
   </div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
-    })
-
-  function toggleYear(id) {
-      const content = document.getElementById(id)
-      const header = content ? content.previousElementSibling : null
-      content.classList.toggle('hidden')
-
-      if (header) {
-        const icon = header.querySelector('.v3-toggle-icon')
-        if (icon) {
-          icon.classList.toggle('rotated')
-        }
-        const isHidden = content.classList.contains('hidden')
-        header.setAttribute('aria-expanded', !isHidden)
-      }
-    }
-  </script>
 {% endblock %}

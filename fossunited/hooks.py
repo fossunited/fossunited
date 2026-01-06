@@ -93,6 +93,10 @@ website_redirects = [
         "source": r"c/(.+)/tickets",
         "target": r"/api/method/fossunited.api.pages.buy_tickets_page?route=c/\1",
     },
+    {"source": r"^grants/projects(/.*)?$", "target": r"/grants/project\1"},
+    {"source": r"^grants/events(/.*)?$", "target": r"/grants/event\1"},
+    {"source": r"^grants/fellowships(/.*)?$", "target": r"/grants/fellowship\1"},
+    {"source": r"^grants/grantee(/.*)?$", "target": r"/grants/grantees\1"},
 ]
 
 # Installation

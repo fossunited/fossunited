@@ -1,8 +1,7 @@
-from collections import defaultdict
-
 import frappe
 
 from fossunited.doctype_ids import EVENT_GRANTS
+from fossunited.www.grants.index import format_event_grant, group_grants_by_year
 
 
 def get_context(context):
@@ -24,32 +23,11 @@ def get_context(context):
         order_by="event_start_date desc",
     )
 
-    # Group by year
-    grants_by_year = defaultdict(list)
-    for grant in grants:
-        if grant.event_start_date:
-            year = grant.event_start_date.year
-
-            # Determine actual grant amount
-            amount = grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount
-
-            # Format date as "DD Mon YYYY" (e.g., "15 Dec 2025")
-            formatted_date = grant.event_start_date.strftime("%d %b %Y")
-
-            grants_by_year[year].append(
-                {
-                    "name": grant.event_name,
-                    "url": grant.event_website,
-                    "description": grant.application_details or "Event grant for FOSS community.",
-                    "year": year,
-                    "date": formatted_date,  # Add formatted date
-                    "amount": amount or "N/A",
-                    "co_sponsor": grant.event_organiser,
-                }
-            )
-
-    # Convert defaultdict to regular dict and sort by year
-    context.grants_by_year = dict(sorted(grants_by_year.items(), reverse=True))
+    context.grants_by_year = group_grants_by_year(
+        grants,
+        formatter=format_event_grant,
+    )
+    context.total_grants = len(grants)
 
     # Page metadata
     context.grant_type = "Event Grants"
