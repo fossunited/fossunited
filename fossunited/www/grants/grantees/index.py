@@ -97,12 +97,12 @@ def get_context(context):
             "label": "Grants",
         },
         {
-            "label": "All Grants",
+            "label": "All Grantees",
         },
     ]
-    context.grant_type = "All Grants"
+    context.grant_type = "All Grantees"
     context.grant_icon = "ti ti-list-search"
     context.grant_description = """
-    Browse all FOSS United grants disbursed for Projects, Events, and Fellowships."""
+    Browse all FOSS United grantees disbursed for Projects, Events, and Fellowships."""
 
     return context
