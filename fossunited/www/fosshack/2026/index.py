@@ -139,7 +139,7 @@ def get_context(context):
     ]
 
     context.why_participate = [
-        "Win up to ₹5,00,000 lakhs in cash",
+        "Win up to ₹5,00,000 in cash",
         "Build your reputation as a hacker",
         "Get recognized by recruiters",
         "Grants for your FOSS project",
