@@ -1,15 +1,29 @@
-{% macro breadcrumb(path) %}
-<nav aria-label="Breadcrumb" class="breadcrumb my-2">
-  <ol class="flex flex-wrap">
-    {% for item in path %}
-      <li class="breadcrumb-item text-sm text-gray-500 last:text-gray-800">
-        {% if item.route %}
-          <a href="{{ item.route }}" class="hover:cursor-pointer">{{ item.label }}</a>
+{% macro breadcrumb(items=None) %}
+  <nav class="v3-breadcrumb">
+    {% if items %}
+      {# Use provided items #}
+      {% for item in items %}
+        {% if loop.last %}
+          <span>{{ item.label }}</span>
         {% else %}
-          {{ item.label }}
+          <a class="hover:cursor-pointer" href="{{ item.route }}">{{ item.label }}</a>
+          {% if not loop.last %}<span class="px-1">></span>{% endif %}
         {% endif %}
-      </li>
-    {% endfor %}
-  </ol>
-</nav>
+      {% endfor %}
+    {% else %}
+      {# build from current path #}
+      {% set path_parts = frappe.request.path.strip('/').split('/') %}
+      <a class="hover:cursor-pointer" href="/">Home</a>
+      {% for part in path_parts %}
+        <span class="px-1">></span>
+        {% if loop.last %}
+          <span>{{ part.replace('-', ' ').replace('_', ' ').title() }}</span>
+        {% else %}
+          <a class="hover:cursor-pointer" href="/{{ path_parts[:loop.index]|join('/') }}">
+            {{ part.replace('-', ' ').replace('_', ' ').title() }}
+          </a>
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  </nav>
 {% endmacro %}
