@@ -80,12 +80,12 @@ def get_context(context):
             )
         )
 
-    all_grants.sort(key=lambda x: x["year"], reverse=True)
     context.grants_by_year = group_grants_by_year(
         all_grants,
         formatter=lambda x: x,
     )
     context.all_grants = all_grants
+    context.total_grants = len(all_grants)
     # Page metadata
     context.breadcrumbs = [
         {

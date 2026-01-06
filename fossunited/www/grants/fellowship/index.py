@@ -27,6 +27,8 @@ def get_context(context):
         formatter=format_project_grant,
     )
 
+    context.total_grants = len(grants)
+
     # Page metadata
     context.grant_type = "Fellowships"
     context.grant_icon = "ti ti-heart-handshake"

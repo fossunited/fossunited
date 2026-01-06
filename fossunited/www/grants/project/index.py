@@ -26,6 +26,7 @@ def get_context(context):
         grants,
         formatter=format_project_grant,
     )
+    context.total_grants = len(grants)
 
     # Page metadata
     context.grant_type = "Project Grants"

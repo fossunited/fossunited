@@ -27,7 +27,7 @@
 
           {% if show_count %}
           <div class="v3-grant-count-box">
-            <div class="v3-grant-stat-number">{{ all_grants|length or grants_by_year|length }}</div>
+            <div class="v3-grant-stat-number">{{ total_grants }}</div>
             <div class="v3-grant-stat-label v3-text-secondary">{{ count_label|default("Total Grantees") }}</div>
           </div>
           {% endif %}
