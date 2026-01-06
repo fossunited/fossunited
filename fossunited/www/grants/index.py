@@ -159,6 +159,9 @@ def format_project_grant(grant, grant_type=None):
         "url": grant.project_website,
         "description": grant.about_project,
         "year": grant.date_of_provision.year if grant.date_of_provision else None,
+        "date": (
+            grant.date_of_provision.strftime("%Y-%m-%d") if grant.date_of_provision else None
+        ),
         "amount": grant.grant_amount or "N/A",
         "co_sponsor": grant.co_sponsor,
         "grant_type": grant_type,
@@ -171,7 +174,8 @@ def format_event_grant(grant, grant_type=None):
         "url": grant.event_website,
         "description": grant.application_details or "Event grant for FOSS community.",
         "year": grant.event_start_date.year if grant.event_start_date else None,
-        "date": (grant.event_start_date.strftime("%d %b %Y") if grant.event_start_date else None),
+        "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
+        "date_display": grant.event_start_date.strftime("%d %b %Y"),
         "amount": (
             grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount or "N/A"
         ),
