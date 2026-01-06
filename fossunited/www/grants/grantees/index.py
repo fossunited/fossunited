@@ -80,19 +80,29 @@ def get_context(context):
             )
         )
 
+    all_grants.sort(key=lambda x: x["year"], reverse=True)
     context.grants_by_year = group_grants_by_year(
         all_grants,
         formatter=lambda x: x,
     )
-
     context.all_grants = all_grants
-    context.all_grants_json = frappe.as_json(all_grants)
-
     # Page metadata
+    context.breadcrumbs = [
+        {
+            "route": "/",
+            "label": "Home",
+        },
+        {
+            "route": "/grants",
+            "label": "Grants",
+        },
+        {
+            "label": "All Grants",
+        },
+    ]
     context.grant_type = "All Grants"
     context.grant_icon = "ti ti-list-search"
-    context.grant_description = (
-        """Browse all FOSS United grantees disbursed for Projects, Events, and Fellowships."""
-    )
+    context.grant_description = """
+    Browse all FOSS United grants disbursed for Projects, Events, and Fellowships."""
 
     return context
