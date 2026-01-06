@@ -5,7 +5,9 @@
     alt="Hackathon banner"
     class="w-full h-32 md:h-full md:max-h-72 object-cover rounded-sm"
   />
-  <img :src="hackathon.data.hackathon_logo" alt="Logo" class="h-10 md:h-14 mt-6 mb-4" />
+  <a :href="hackathon.data.external_website_url" target="_blank" rel="noopener noreferrer">
+    <img :src="hackathon.data.hackathon_logo" alt="Logo" class="h-10 md:h-14 mt-6 mb-4" />
+  </a>
   <div
     class="flex gap-4 items-center rounded-sm w-fit py-2 mt-4 font-medium text-base text-gray-900 stroke-gray-900"
   >
