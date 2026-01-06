@@ -17,6 +17,7 @@
           organizers due to limited on-site availability.
         </p>
       </div>
+
       <FormControl
         v-model="attendanceMode"
         label="Mode of Attendance"
@@ -24,6 +25,7 @@
         class="mt-4"
         :options="attendanceModeOptions"
       />
+
       <FormControl
         v-if="attendanceMode == 'local'"
         v-model="participant_localhost.data.localhost_name"
@@ -32,6 +34,17 @@
         class="mt-4"
       />
       <div v-if="attendanceMode == 'local-pending'">
+        <div
+          v-if="localhosts.data.length <= 9"
+          class="flex flex-col p-3 mt-4 items-center text-center rounded w-full bg-blue-50 text-blue-600 border-2 border-dashed border-blue-600 text-xs"
+        >
+          <p>
+            <b>Note:</b> This hackathon has a total of
+            <b>10 local host slots</b> available.<br /><br />
+            All localhosts will be added shortly.
+          </p>
+        </div>
+
         <FormControl
           v-if="localhosts.data.length > 0"
           v-model="selectedLocalhost"
@@ -40,7 +53,7 @@
           class="mt-4"
           :options="
             localhosts.data.map((localhost) => ({
-              label: `${localhost.localhost_name}`,
+              label: `${localhost.city} - ${localhost.localhost_name}`,
               value: localhost.name,
             }))
           "
