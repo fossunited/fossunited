@@ -38,7 +38,7 @@
   <span class="z-10 absolute top-3 left-3 p-2 font-mono text-base font-semibold lowercase text-white bg-gray-900">localhost:{{ doc.city }}</span>
   {% set src = doc.image or "/assets/fossunited/images/localhost_placeholder.svg" %}
   <img
-    class="!border-gray-800 border w-96 h-auto aspect-square"
+    class="!border-gray-800 border w-full h-auto aspect-square"
     src="{{ src }}"
     alt="Localhost Image"
   />
@@ -46,8 +46,10 @@
 {% endmacro %}
 
 {% macro hero_section() %}
-  <div class="flex flex-col md:flex-row gap-6">
-    {{ hero_image() }}
+<div class="flex flex-col md:flex-row gap-6">
+    <div class="max-w-96 w-full shrink pr-md-8 pr-0">
+      {{ hero_image() }}
+    </div>
     <div class="flex flex-col justify-between gap-2 w-full">
       <div class="flex flex-col gap-2 w-full items-start">
         {% if hackathon.hackathon_logo %}
@@ -99,7 +101,8 @@
 {% endmacro %}
 
 {% macro primary_button(label, link) %}
-<a class="text-sm text-center basis-2/3 uppercase font-semibold bg-gray-900 hover:bg-gray-800 text-white py-3 px-4 hover:no-underline" href="{{ link }}" target="_blank">
+<a class="text-sm text-center uppercase font-semibold bg-gray-900 hover:bg-gray-800 text-white py-3 px-4 hover:no-underline" href="{{ link }}" target="_blank"
+style="width: 200px;">
   {{ label }}
 </a>
 {% endmacro %}

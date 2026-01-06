@@ -23,9 +23,9 @@ def get_context(context):
         FOSS Hack 2026 is the sixth edition of FOSS Hack, a hybrid hackathon to promote
         Free and Open Source Software by bringing together students and professionals
         to build or extend FOSS projects""",
-        "prize_pool": "₹10,00,000+",
+        "prize_pool": "₹5,00,000",
         "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
-        "event_page_url": f"/{hackathon.route}",
+        "event_page_url": "https://forum.fossunited.org/t/hackathon-ideas/159",
         "status": "Registrations Open"
         if hackathon.is_registration_live
         else "Opening on Jan 2026",
@@ -58,7 +58,7 @@ def get_context(context):
 
     # Stats
     context.stats = {
-        "prize_pool": "₹ 10,00,000+",
+        "prize_pool": "₹ 5,00,000",
         "local_hosts": "10",
         "participants": member_count,
         "teams": teams_count,
@@ -139,7 +139,7 @@ def get_context(context):
     ]
 
     context.why_participate = [
-        "Win up to ₹TBA lakhs in cash",
+        "Win up to ₹5,00,000 in cash",
         "Build your reputation as a hacker",
         "Get recognized by recruiters",
         "Grants for your FOSS project",

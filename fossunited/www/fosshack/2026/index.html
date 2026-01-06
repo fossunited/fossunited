@@ -138,6 +138,7 @@
               >
               <a
                 href="{{ hackathon.event_page_url }}"
+                target="_blank"
                 class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
                 style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px; border: 1px solid var(--v3-text)"
                 aria-label="Project ideas for {{hackathon.name}}"
@@ -200,7 +201,7 @@
     <div class="grid-2col mb-4">
       <div>
         <div class="v3-card p-4">
-          <h2 class="h4 font-weight-semibold v3-text mb-4">Timeline</h2>
+          <h2 class="h3 font-weight-semibold v3-text mb-4">Timeline</h2>
           {% for item in timeline %}
             <div class="timeline-item">
               <div class="timeline-header" onclick="toggleTimeline(this)" aria-label="Click to Know about {{item.event}} details">
@@ -261,7 +262,7 @@
 
       <div class="v3-card v3-fh-card h-100 d-flex flex-column">
         <div class="p-5 v3-border border">
-          <h2 class="h4 font-weight-semibold v3-text mb-4">Why Participate?</h2>
+          <h2 class="h3 font-weight-semibold v3-text mb-4">Why Participate?</h2>
           <ul class="v3-text-muted pl-4">
             {% for reason in why_participate %}
               <li class="mb-2">{{ reason }}</li>
@@ -270,7 +271,7 @@
         </div>
 
         <div class="p-5 v3-border border flex-grow-1">
-          <h2 class="h4 font-weight-semibold v3-text mb-4">Rules in a nutshell</h2>
+          <h2 class="h3 font-weight-semibold v3-text mb-4">Rules in a nutshell</h2>
           <ul class="v3-text-muted pl-4">
             {% for rule in rules %}
               <li class="mb-2">{{ rule }}</li>
@@ -286,7 +287,7 @@
     {# localhosts #}
     {% if localhosts_by_city %}
       <div class="mb-5">
-        <h2 class="h4 font-weight-semibold v3-text mb-3">Localhosts</h2>
+        <h1 class="h1 font-weight-bold v3-text margin-10">Localhosts</h1>
         <p class="v3-text-muted mb-4">
           FOSS Hack Localhosts are localized, in-person editions of the broader hybrid version.
           Hackers can choose to hack at a localhost in your region.
@@ -307,7 +308,7 @@
                         <div class="localhost-title v3-text">{{ localhost.localhost_name }}</div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                          <small class="v3-text-light">{{ localhost.location }}</small>
+                          <small class="v3-text-light">{{ localhost.location or "" }}</small>
                           <div class="text-end">
                             {% if localhost.attending > 0 %}
                               <small class="text-success d-block">
@@ -334,7 +335,7 @@
 
     {% if sponsors %}
       <div class="mb-5">
-        <h2 class="h4 font-weight-semibold v3-text mb-4">Sponsors</h2>
+        <h1 class="h1 font-weight-bold v3-text margin-10">Sponsors</h1>
 
         {% for tier in sponsors %}
           {% set tier_name = tier.tier | lower %}
@@ -365,7 +366,7 @@
     {# community partners #}
     {% if partners %}
       <div class="mb-5">
-        <h2 class="h4 font-weight-semibold v3-text mb-4">Community Partners</h2>
+        <h1 class="h1 font-weight-bold v3-text margin-10">Community Partners</h1>
         <div class="tier-content">
           {{ logo_grid(partners, 'fh-sponsor-grid-5', 'fh-logo-partner', 7) }}
         </div>
@@ -446,6 +447,7 @@
         <ul class="list-unstyled text-start">
           <li class="mb-2"><a href="https://fossunited.org/code-of-conduct" target="_blank" class="text-decoration-none">Code of Conduct</a></li>
           <li class="mb-2"><a href="https://fossunited.org/fosshack/rules" target="_blank" class="text-decoration-none">Rules</a></li>
+          <li class="mb-2"><a href="https://forum.fossunited.org/t/hackathon-ideas/159" target="_blank" class="text-decoration-none">Project Ideas</a></li>
           <li class="mb-2"><a href="https://forum.fossunited.org/t/foss-hack-rules-guidelines-faq/3334" target="_blank" class="text-decoration-none">Guidelines & FAQ</a></li>
         </ul>
       </div>
