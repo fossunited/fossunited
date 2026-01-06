@@ -308,7 +308,7 @@
                         <div class="localhost-title v3-text">{{ localhost.localhost_name }}</div>
 
                         <div class="d-flex justify-content-between align-items-center">
-                          <small class="v3-text-light">{{ localhost.location }}</small>
+                          <small class="v3-text-light">{{ localhost.location or "" }}</small>
                           <div class="text-end">
                             {% if localhost.attending > 0 %}
                               <small class="text-success d-block">
