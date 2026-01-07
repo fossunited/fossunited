@@ -1,4 +1,58 @@
-<div>
-  <a href="{{ doc.route }}">{{ doc.title or doc.name }}</a>
-</div>
-<!-- this is a sample default list template -->
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+/>
+
+<a
+  href="{{ doc.route }}"
+  class="v3-card v3-clickable"
+  style="text-decoration:none;display:block;transition:transform 0.2s;margin-bottom:1rem;"
+>
+  <div class="d-flex align-items-center gap-3">
+    <img
+      src="{{
+        doc.chapter_logo or
+        '/assets/fossunited/images/chapter/foss_club_profile.svg'
+        if doc.chapter_type == 'FOSS Club'
+        else '/assets/fossunited/images/chapter/city_community_profile.svg'
+      }}"
+      alt="{{ doc.chapter_name }} logo"
+      style="width:56px;height:56px;border-radius:8px;object-fit:cover;flex-shrink:0;"
+    />
+
+    <div class="flex-fill" style="min-width:0;">
+      <div class="d-flex align-items-center gap-2 flex-wrap mb-2">
+        <h3 class="v3-text-primary mb-1" style="font-size:1.25rem;font-weight:700;">
+          {{ doc.chapter_name }}
+        </h3>
+
+        {% if doc.chapter_status %}
+          <span
+            style="padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:500;
+          {% if doc.chapter_status == 'Active' %}
+              background:#e8f5e9;color:#2e7d32;
+            {% elif doc.chapter_status == 'New' %}
+              background:#e3f2fd;color:#1565c0;
+            {% else %}
+              background:#f5f5f5;color:#757575;
+            {% endif %}"
+          >
+            {{ doc.chapter_status }}
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="d-flex align-items-center gap-2 flex-wrap" style="font-size:0.875rem;">
+        <span class="v3-text-tertiary">{{ doc.chapter_type }}</span>
+
+        {% if doc.city or doc.state %}
+          <span class="v3-text-secondary">
+            <i class="ti ti-map-pin"></i>
+            {% if doc.city %}{{ doc.city }}{% if doc.state %},{% endif %}{% endif %}
+            {% if doc.state %}{{ doc.state }}{% endif %}
+          </span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</a>

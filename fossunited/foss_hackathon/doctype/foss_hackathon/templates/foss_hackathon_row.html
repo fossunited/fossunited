@@ -1,4 +1,67 @@
-<div>
-  <a href="{{ doc.route }}">{{ doc.title or doc.name }}</a>
-</div>
-<!-- this is a sample default list template -->
+<a
+  href="{{ doc.route }}"
+  class="v3-card v3-clickable"
+  style="text-decoration:none;display:block;transition:transform 0.2s;margin-bottom:1rem;"
+>
+  <div class="d-flex align-items-start gap-3">
+    <!-- Hackathon Logo/Banner -->
+    {% if doc.hackathon_logo or doc.hackathon_banner %}
+      <img
+        src="{{ doc.hackathon_logo or doc.hackathon_banner }}"
+        alt="{{ doc.hackathon_name }}"
+        style="width:80px;height:80px;border-radius:8px;object-fit:cover;flex-shrink:0;"
+      />
+    {% endif %}
+
+    <div class="flex-fill" style="min-width:0;">
+      <div class="d-flex align-items-start justify-content-between gap-2 mb-2">
+        <h3 class="v3-text-primary mb-0" style="font-size:1.25rem;font-weight:700;">
+          {{ doc.hackathon_name }}
+        </h3>
+
+        {% if doc.hackathon_type %}
+          <span
+            style="padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:500;flex-shrink:0;
+          {% if doc.hackathon_type == 'Hybrid' %}
+              background:#e3f2fd;color:#1565c0;
+            {% elif doc.hackathon_type == 'In-person' %}
+              background:#e8f5e9;color:#2e7d32;
+            {% elif doc.hackathon_type == 'Remote' %}
+              background:#fff3e0;color:#e65100;
+            {% endif %}"
+          >
+            {{ doc.hackathon_type }}
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="d-flex align-items-center gap-3 flex-wrap" style="font-size:0.875rem;">
+        <span class="v3-text-secondary">
+          <i class="ti ti-calendar"></i>
+          {{ frappe.utils.formatdate(doc.start_date, "dd MMM yyyy") }}
+          {% if doc.end_date %}
+            - {{ frappe.utils.formatdate(doc.end_date, "dd MMM yyyy") }}
+          {% endif %}
+        </span>
+
+        {% if doc.chapter %}
+          <span class="v3-text-secondary">
+            <i class="ti ti-users"></i>
+            {{ doc.chapter }}
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
+        {% if doc.is_registration_live %}
+          <span
+            style="padding:0.25rem 0.75rem;border-radius:12px;font-size:0.75rem;font-weight:500;background:#e8f5e9;color:#2e7d32;"
+          >
+            <i class="ti ti-check"></i> Registration Open
+          </span>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</a>
