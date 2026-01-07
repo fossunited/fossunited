@@ -290,6 +290,11 @@ const routes = [
         name: 'ManageLocalhost',
         component: () => import('@/pages/localhost/ManageLocalhost.vue'),
       },
+      {
+        path: 'edit',
+        name: 'LocalhostEdit',
+        component: () => import('@/pages/localhost/LocalhostEdit.vue'),
+      },
     ],
   },
   {
