@@ -68,4 +68,14 @@ Attendees are expected to do self check-in via their [Edit RSVP form](./attend-e
 
 This will reflect on the dashboard insights in ListView based on date and this information can also be download as CSV.
 
-![RSVP Check-in](./assets/rsvp-checkin.png)
+![RSVP Event Check-in Data](./assets/rsvp-checkin.png)
+
+As of [Jan 2026] Organizers can also Check-in under RSVP Insights tab
+
+- Click the "Check-in" button to checkin the attendee for that day of the event (if its multiple days event)
+- Note: Check-in button will only work during the day of event (start to end date), same for self-checkin. Nobody can be checked in early or later on
+- An attendee can be checked-in only once a day.
+- Check-in button acts a toggle, so you can undo a check-in by clicking the same "Checked-in today" button.
+
+![RSVP Check-in via Insights Dashboard](./assets/rsvp-insights-checkin.png)
+PS: the accept or reject is a feature available when you enable [restrictive access](#restrictive-access-to-event) to the event as informed above.

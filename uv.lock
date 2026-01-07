@@ -508,7 +508,7 @@ docs = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "fossunited", extra = ["dev"] },
+    { name = "fossunited", extra = ["dev", "docs"] },
 ]
 
 [package.metadata]
@@ -534,7 +534,7 @@ requires-dist = [
 provides-extras = ["dev", "docs"]
 
 [package.metadata.requires-dev]
-dev = [{ name = "fossunited", extras = ["dev"], editable = "." }]
+dev = [{ name = "fossunited", extras = ["dev", "docs"], editable = "." }]
 
 [[package]]
 name = "frappe-bench"
