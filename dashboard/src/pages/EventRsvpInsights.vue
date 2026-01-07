@@ -40,10 +40,17 @@
 
     <!-- Attendance Status Section -->
     <div class="flex flex-col gap-4 mt-1">
-      <div v-if="rsvp_form.data?.requires_host_approval" class="text-sm text-gray-600">
-        Note: Host approval is enabled, attendees will receive an email notification when you
-        accept or reject their RSVP.
-      </div>
+      <DocsInfo
+        v-if="rsvp_form.data?.requires_host_approval"
+        message="Host approval is enabled, attendees will receive an email notification when you
+        accept or reject their RSVP."
+        docs-url="https://docs.fossunited.org/event-rsvp/#restrictive-access-to-event"
+      />
+
+      <DocsInfo
+        message="You can check-in attendees once the event starts."
+        docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
+      />
 
       <div class="font-semibold text-gray-800">Attendance Status</div>
 
