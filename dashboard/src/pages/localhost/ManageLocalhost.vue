@@ -1,17 +1,10 @@
 <template>
-  <Dialog
-    v-model="showDialog"
-    class="z-50"
-    :options="{
-      title: 'Error',
-      message: dialogMessage,
-    }"
-  />
-  <Header />
-  <div v-if="localhost.data && requests.data" class="w-full p-4 flex items-center justify-center">
-    <div class="max-w-screen-xl w-full">
-      <div class="text-base font-medium mt-4">Manage LocalHost</div>
-      <LocalhostHeader :localhost="localhost.data" />
+  <LocalhostLayout
+    :is-validated="isValidated"
+    v-model:show-dialog="showDialog"
+    :dialog-message="dialogMessage"
+  >
+    <div v-if="localhost.data && requests.data">
       <div class="flex items-center justify-between mt-4">
         <div class="text-base font-medium">Manage Localhost</div>
 
@@ -19,6 +12,8 @@
           <Button label="Edit Details" icon-left="edit" />
         </RouterLink>
       </div>
+
+      <LocalhostHeader :localhost="localhost.data" />
 
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="rounded-sm border-2 border-dashed border-gray-400 p-4 my-2">
@@ -49,7 +44,8 @@
           </div>
         </div>
       </div>
-      <div v-if="requests.data" class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4">
+
+      <div class="grid grid-cols-1 sm:grid-cols-5 mt-6 mb-4 gap-4">
         <div class="flex flex-col gap-2 bg-gray-50 w-full p-4 rounded border">
           <div class="text-base font-medium">Total Requests</div>
           <div class="text-2xl">
@@ -81,26 +77,24 @@
           </div>
         </div>
       </div>
+
       <hr />
+
       <div class="flex flex-col gap-2 py-4">
         <AttendeeRequestList :localhost="localhost" @update-request="requests.reload()" />
       </div>
     </div>
-  </div>
+  </LocalhostLayout>
 </template>
+
 <script setup>
 import { useRoute } from 'vue-router'
-import {
-  createDocumentResource,
-  createListResource,
-  createResource,
-  usePageMeta,
-  Dialog,
-} from 'frappe-ui'
-import { onMounted, ref } from 'vue'
+import { createListResource, createResource, usePageMeta } from 'frappe-ui'
+import { onMounted } from 'vue'
 import AttendeeRequestList from '@/components/localhost/AttendeeRequestList.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
-import Header from '@/components/Header.vue'
+import LocalhostLayout from '@/components/localhost/LocalhostLayout.vue'
+import { LocalhostValidation } from '@/components/localhost/LocalhostValidation'
 
 const route = useRoute()
 
@@ -110,33 +104,10 @@ usePageMeta(() => {
   }
 })
 
-onMounted(() => {
-  validateSessionUser()
-})
-
-const dialogMessage = ref('')
-const showDialog = ref(false)
-
-const validateSessionUser = () => {
-  createResource({
-    url: 'fossunited.api.hackathon.validate_user_as_localhost_member',
-    params: {
-      localhost_id: route.params.id,
-    },
-    auto: true,
-    onSuccess(data) {
-      localhost.fetch()
-      requests.fetch()
-    },
-    onError(error) {
-      dialogMessage.value = error.messages
-      showDialog.value = true
-      setTimeout(() => {
-        window.location.href = '/dashboard'
-      }, 2000)
-    },
-  })
-}
+const { isValidated, dialogMessage, showDialog, validateSessionUser } = LocalhostValidation(
+  route.params.id,
+  'MyLocalhosts',
+)
 
 const requests = createListResource({
   doctype: 'FOSS Hackathon Participant',
@@ -152,18 +123,10 @@ const requests = createListResource({
       acc[curr.localhost_request_status].push(curr)
       return acc
     }, {})
-    if (!data['Pending']) {
-      data['Pending'] = []
-    }
-    if (!data['Accepted']) {
-      data['Accepted'] = []
-    }
-    if (!data['Rejected']) {
-      data['Rejected'] = []
-    }
-    if (!data['Pending Confirmation']) {
-      data['Pending Confirmation'] = []
-    }
+    if (!data['Pending']) data['Pending'] = []
+    if (!data['Accepted']) data['Accepted'] = []
+    if (!data['Rejected']) data['Rejected'] = []
+    if (!data['Pending Confirmation']) data['Pending Confirmation'] = []
     return data
   },
   pageLength: 99999,
@@ -195,4 +158,11 @@ const toggleAcceptingAttendees = () => {
     auto: true,
   })
 }
+
+onMounted(() => {
+  validateSessionUser(() => {
+    localhost.fetch()
+    requests.fetch()
+  })
+})
 </script>

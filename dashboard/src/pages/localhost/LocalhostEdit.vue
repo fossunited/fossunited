@@ -1,8 +1,10 @@
 <template>
-  <Header />
-
-  <div v-if="localhost.doc" class="w-full p-4 flex justify-center">
-    <div class="max-w-screen-xl w-full">
+  <LocalhostLayout
+    :is-validated="isValidated"
+    v-model:show-dialog="showDialog"
+    :dialog-message="dialogMessage"
+  >
+    <div v-if="localhost.doc">
       <!-- Page Header -->
       <div class="flex flex-col md:flex-row justify-between gap-2 mt-4">
         <div>
@@ -136,29 +138,42 @@
         </div>
       </div>
     </div>
-  </div>
+  </LocalhostLayout>
 </template>
 
 <script setup>
 import { createDocumentResource, FileUploader, FormControl, Button, Switch } from 'frappe-ui'
-import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { ref, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 
-import Header from '@/components/Header.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
+import LocalhostLayout from '@/components/localhost/LocalhostLayout.vue'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
+import { LocalhostValidation } from '@/components/localhost/LocalhostValidation'
 
 const route = useRoute()
+const router = useRouter()
 const wholeRoute = ref('')
+
+const { isValidated, dialogMessage, showDialog, validateSessionUser } = LocalhostValidation(
+  route.params.id,
+  'MyLocalhosts',
+)
 
 const localhost = createDocumentResource({
   doctype: 'FOSS Hackathon LocalHost',
   name: route.params.id,
   fields: ['*'],
-  auto: true,
+  auto: false,
   onSuccess(doc) {
     wholeRoute.value = `${window.location.origin}/${doc.route}`
+  },
+  onError(error) {
+    toast.error('Failed to load localhost', { description: error.message })
+    setTimeout(() => {
+      router.push({ name: 'MyLocalhosts' })
+    }, 2000)
   },
 })
 
@@ -192,4 +207,10 @@ const updateLocalhost = () => {
     .then(() => toast.success('Localhost updated successfully'))
     .catch((err) => toast.error('Failed to update localhost', { description: err.message }))
 }
+
+onMounted(() => {
+  validateSessionUser(() => {
+    localhost.reload()
+  })
+})
 </script>
