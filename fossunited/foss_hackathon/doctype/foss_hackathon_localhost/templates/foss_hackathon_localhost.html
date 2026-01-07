@@ -52,18 +52,21 @@
     </div>
     <div class="flex flex-col justify-between gap-2 w-full">
       <div class="flex flex-col gap-2 w-full items-start">
-        {% if hackathon.hackathon_logo %}
+        <a href="{{ hackathon.external_website_url or '/' + hackathon.route }}" class="inline-block">
+          {% if hackathon.hackathon_logo %}
           <img
             class="h-8"
             src="{{ hackathon.hackathon_logo }}"
             alt="{{ hackathon.hackathon_name }}"
           />
-        {% else %}
+          {% else %}
           <h4 class="text-sm font-medium">{{ hackathon.hackathon_name }}</h4>
-        {% endif %}
+          {% endif %}
+        </a>
         <div class="flex w-full justify-between gap-2 md:gap-4">
-          <div class="flex flex-col">
-            <h2 class="text-xl md:text-3xl font-semibold mb-1">{{ doc.localhost_name }}</h2>
+          <div class="flex flex-col mb-1">
+            <h2 class="text-xl md:text-3xl font-semibold">{{ doc.localhost_name }}</h2>
+            <p class="text-sm">{{doc.city}}, {{doc.state}}</p>
           </div>
           <div id="stats" class="flex flex-col items-end shrink-0">
             {% if attending %}
@@ -77,13 +80,14 @@
           </div>
         </div>
         <div class="flex flex-col gap-2 !text-gray-700">
+          {% if doc.map_link %}
           <div class="flex gap-1 items-center">
             <i class="ti ti-map-pin text-lg"></i>
             <a class="text-sm hover:cursor-pointer hover:underline" href="{{ doc.map_link }}" target="_blank" rel="noopener noreferrer">
-              {{ doc.location }}
-            </a>
-            </a>
+              {{ doc.location or doc.localhost_name }}
+              </a>
           </div>
+          {% endif %}
           <div class="flex gap-1 items-center">
             <i class="ti ti-calendar text-lg"></i>
             <p class="text-sm">{{ hackathon_format_date }}</p>
@@ -91,7 +95,9 @@
         </div>
       </div>
       <div class="flex gap-2">
+        {% if hackathon.is_registration_live %}
         {{ primary_button("Register", registration_link) }}
+        {% endif %}
         {% if frappe.session.user != 'Guest' %}
         {{ like_button() }}
         {% endif %}
