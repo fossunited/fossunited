@@ -72,7 +72,10 @@
             {{ item ? 'Yes' : 'No' }}
           </span>
 
-          <div v-else-if="column.key === 'checkin_action'" class="flex gap-2">
+          <div
+            v-else-if="column.key === 'checkin_action' && row.is_attending === true"
+            class="flex gap-2"
+          >
             <Button
               v-if="!row.has_checked_in_today"
               size="sm"
@@ -121,6 +124,7 @@ import { createResource, Button } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import { toast } from 'vue-sonner'
 import { truncateStr, formatFullDate, formatTimeOnly } from '@/helpers/utils'
+import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
 
@@ -281,6 +285,7 @@ watchEffect(() => {
   rows.forEach((row) => {
     const confirmed = Boolean(row.confirm_attendance)
     const status = row.status || ''
+    row.is_attending = requiresApproval ? row.status === 'Accepted' && confirmed : confirmed
 
     if (requiresApproval) {
       if (status === 'Pending') pending.push(row)
@@ -361,7 +366,8 @@ const updateRsvpStatus = (row, status) => {
       submissions.fetch()
     },
     onError(err) {
-      toast.error(err.message || 'Update failed')
+      const message = err?.messages?.[0] || err?.message || 'RSVP status Update failed'
+      toast.error(message)
     },
   }).fetch()
 }
@@ -377,13 +383,14 @@ const checkInAttendee = (row) => {
     url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
     params: { submission_name: row.name },
     onSuccess() {
-      toast.success('Checked in successfully')
+      toast.success(`Checked in ${row.name1} successfully`)
       submissions.fetch()
       checkins.reload()
       eventStats.reload()
     },
     onError(err) {
-      toast.error(err.message || 'Check-in failed')
+      const message = err?.messages?.[0] || err?.message || 'Check-in failed'
+      toast.error(message)
     },
   }).fetch()
 }
@@ -407,7 +414,8 @@ const undoCheckIn = (row) => {
       eventStats.reload()
     },
     onError(err) {
-      toast.error(err.message || 'Failed to remove check-in')
+      const message = err?.messages?.[0] || err?.message || 'Failed to remove check-in'
+      toast.error(message)
     },
   }).fetch()
 }
