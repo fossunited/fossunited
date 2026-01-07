@@ -2481,6 +2481,11 @@ body:has(.v3-page) {
   display: grid;
   gap: 1.25rem;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  align-items: stretch;
+}
+
+.v3-btn-group > .v3-btn-icon-only {
+  justify-self: start;
 }
 
 .v3-btn-primary {

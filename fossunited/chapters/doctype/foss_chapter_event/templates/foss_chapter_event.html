@@ -429,7 +429,7 @@
             <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
             <!-- </div> -->
             <!-- Buttons -->
-            <div>
+          <div>
               <div class="v3-btn-group" role="group" aria-label="Event actions">
                   {% if status_concluded and doc.livestream_embed_link %}
                     <a
@@ -484,17 +484,18 @@
                     </a>
                   {% endif %}
 
+
                   {% if can_manage_event %}
-                    <a
-                      href="{{ event_dashboard_url }}"
-                      class="v3-btn v3-btn-secondary"
-                      aria-label="Edit event details"
-                    >
-                      <i class="ti ti-edit" aria-hidden="true"></i>
-                      <span>Edit Event</span>
-                    </a>
+                <a
+                  href="{{ event_dashboard_url }}"
+                  class="v3-btn v3-btn-secondary v3-btn-icon-only"
+                  aria-label="Edit event details"
+                >
+                  <i class="ti ti-edit" aria-hidden="true"></i>
+                </a>
                   {% endif %}
                 </div>
+
               </div>
             </div>
 
@@ -520,7 +521,7 @@
                   href="{{ doc.livestream_link }}"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="v3-btn v3-btn-dark mb-3"
+                  class="v3-btn v3-btn-dark mb-3 w-100"
                   aria-label="Join livestream"
                 >
                   <i class="ti ti-video" style="font-size: 1.1rem;" aria-hidden="true"></i>
