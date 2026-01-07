@@ -7,150 +7,97 @@
     @accept-request="acceptRequest($event)"
     @reject-request="rejectRequest($event)"
   />
-  <div class="prose">
+
+  <div class="prose mb-4">
     <h4>Requests</h4>
   </div>
-  <div class="flex gap-3 flex-wrap items-center">
-    <div class="flex gap-1">
-      <IconFilter class="w-4 h-4" />
-      <span class="text-sm font-medium">Filter:</span>
-    </div>
-    <select
-      v-model="selectedListFilter"
-      class="border-none text-sm px-4 rounded w-44 h-fit items-center flex flex-col bg-gray-100 border-2"
-    >
-      <option v-for="(_, label) in FILTERS" :key="label">
-        {{ label }}
-      </option>
-    </select>
+
+  <div v-if="requests.loading" class="w-full p-8 flex justify-center">
+    <LoadingIndicator class="w-6" />
   </div>
-  <div class="w-full place-items-center">
-    <div v-if="requestByGroup.data" class="my-2 w-full">
-      <ListView
-        class="h-[440px]"
-        :columns="[
-          {
-            label: 'Name',
-            key: 'full_name',
-          },
-          {
-            label: 'Status',
-            key: 'localhost_request_status',
-            width: 1,
-          },
-          {
-            label: 'Is Student',
-            key: 'is_student',
-            width: 1 / 2,
-          },
-          {
-            label: 'Organization / Institute',
-            key: 'organization',
-          },
-          {
-            label: 'Project',
-            key: 'project_title',
-          },
-          {
-            label: 'Git Profile',
-            key: 'git_profile',
-          },
-          {
-            label: 'Actions',
-            key: 'actions',
-          },
-        ]"
-        :rows="requestByGroup.data"
-        :options="{
-          selectable: false,
-          showTooltip: true,
-          resizeColumn: true,
-          onRowClick: (row) => {
-            selectedRequest = row
-            showDialog = true
-          },
-          emptyState: {
-            title: FILTERS[selectedListFilter].emptyStateText,
-          },
-        }"
-        row-key="name"
-      >
-        <template #cell="{ item, row, column }">
-          <div v-if="column.label == 'Status'">
-            <Badge
-              :theme="
-                row[column.key] === 'Pending'
-                  ? 'orange'
-                  : row[column.key] === 'Accepted'
-                    ? 'green'
-                    : row[column.key] === 'Pending Confirmation'
-                      ? 'blue'
-                      : 'red'
-              "
-              :label="row[column.key]"
-              size="lg"
-            />
-          </div>
-          <div v-else-if="column.label == 'Git Profile'">
-            <a
-              v-if="row.git_profile"
-              :href="row.git_profile"
-              target="_blank"
-              class="text-sm flex font-semibold hover:underline"
-            >
-              <span>Open</span>
-              <IconArrowUpRight class="w-4 h-4" />
-            </a>
-            <div v-else class="text-sm">No Git Profile</div>
-          </div>
-          <div v-else-if="column.label == 'Is Student'" class="ml-4">
-            <span class="text-sm text-gray-600">{{ row.is_student ? 'Yes' : 'No' }}</span>
-          </div>
-          <div v-else-if="column.label == 'Actions'">
-            <div v-if="row.localhost_request_status == 'Pending'" class="flex gap-2">
-              <Button
-                icon="check"
-                :label="'Accept'"
-                :theme="'green'"
-                @click.stop="acceptRequest(row)"
-              />
-              <Button icon="x" :label="'Reject'" :theme="'red'" @click.stop="rejectRequest(row)" />
-            </div>
-          </div>
-          <div v-else-if="column.label == 'Project'" class="flex">
-            <a
-              v-if="row.project_route"
-              class="text-sm flex font-semibold hover:underline"
-              @click="redirectRoute(row.project_route)"
-            >
-              <span>{{ truncateStr(row.project_title, 20) }}</span>
-              <IconArrowUpRight class="w-4 h-4" />
-            </a>
-            <div v-else class="text-sm">No Project Yet</div>
-          </div>
-          <div v-else class="text-base">{{ item }}</div>
-        </template>
-      </ListView>
-    </div>
-    <div v-else class="text-sm font-medium text-gray-700 w-full my-5 uppercase">
-      <p>No Requests</p>
-    </div>
-    <div v-if="requestByGroup.loading" class="w-full p-4 flex justify-center">
-      <LoadingIndicator class="w-5" />
-    </div>
+
+  <SearchListView
+    v-else-if="groupedRequests.length > 0"
+    class="h-[440px]"
+    :columns="columns"
+    :rows="groupedRequests"
+    row-key="name"
+    :options="{
+      selectable: false,
+      showTooltip: true,
+      resizeColumn: true,
+      onRowClick: (row) => {
+        selectedRequest = row
+        showDialog = true
+      },
+    }"
+    search-placeholder="Search requests..."
+    :search-fields="['full_name', 'team_name', 'organization', 'project_title']"
+    export-filename="localhost_requests"
+    item-label="requests"
+  >
+    <template #cell="{ item, row, column }">
+      <div v-if="column.key === 'localhost_request_status'">
+        <Badge
+          :theme="getStatusTheme(row.localhost_request_status)"
+          :label="row.localhost_request_status"
+          size="lg"
+        />
+      </div>
+
+      <div v-else-if="column.key === 'is_student'" class="ml-4">
+        <span class="text-sm text-gray-600">{{ row.is_student ? 'Yes' : 'No' }}</span>
+      </div>
+
+      <div v-else-if="column.key === 'git_profile'">
+        <a
+          v-if="row.git_profile"
+          :href="row.git_profile"
+          target="_blank"
+          class="text-sm flex items-center font-semibold hover:underline"
+        >
+          <span>Open</span>
+          <IconArrowUpRight class="w-4 h-4" />
+        </a>
+        <span v-else class="text-sm text-gray-500">—</span>
+      </div>
+
+      <div v-else-if="column.key === 'project_title'">
+        <a
+          v-if="row.project_route"
+          class="text-sm flex items-center font-semibold hover:underline cursor-pointer"
+          @click="redirectRoute(row.project_route)"
+        >
+          <span>{{ truncateStr(row.project_title, 25) }}</span>
+          <IconArrowUpRight class="w-4 h-4" />
+        </a>
+        <span v-else class="text-sm text-gray-500">—</span>
+      </div>
+
+      <div v-else-if="column.key === 'actions'">
+        <div v-if="row.localhost_request_status === 'Pending'" class="flex gap-2">
+          <Button icon="check" label="Accept" theme="green" @click.stop="acceptRequest(row)" />
+          <Button icon="x" label="Reject" theme="red" @click.stop="rejectRequest(row)" />
+        </div>
+      </div>
+
+      <div v-else class="text-sm">{{ item || '—' }}</div>
+    </template>
+  </SearchListView>
+
+  <div v-else class="text-center py-12 text-gray-500">
+    <p class="text-lg font-medium">No Requests</p>
+    <p class="text-sm mt-1">There are no localhost requests yet.</p>
   </div>
 </template>
 
 <script setup>
-import { defineProps, defineEmits, watch, ref } from 'vue'
-import { LoadingIndicator, createResource, Badge, Button, ListView } from 'frappe-ui'
-import { truncateStr } from '@/helpers/utils'
-import { redirectRoute } from '@/helpers/utils'
+import { ref, computed, watchEffect } from 'vue'
+import { LoadingIndicator, createResource, Button, Badge } from 'frappe-ui'
+import { truncateStr, redirectRoute } from '@/helpers/utils'
 import RequestDetailDialog from '@/components/localhost/RequestDetailDialog.vue'
-import { IconArrowUpRight, IconFilter } from '@tabler/icons-vue'
-
-const showDialog = ref(false)
-const selectedRequest = ref({})
+import SearchListView from '@/components/ui/SearchListView.vue'
+import { IconArrowUpRight } from '@tabler/icons-vue'
 
 const props = defineProps({
   localhost: {
@@ -159,58 +106,91 @@ const props = defineProps({
   },
 })
 
-// Filters for status checks
-const FILTERS = {
-  'All Requests': {
-    emptyStateText: 'No requests found',
-    filters: ['Pending', 'Rejected', 'Accepted', 'Pending Confirmation'],
-  },
-  Pending: {
-    emptyStateText: 'No pending requests',
-    filters: ['Pending'],
-  },
-  Accepted: {
-    emptyStateText: 'No accepted requests',
-    filters: ['Accepted'],
-  },
-  Rejected: {
-    emptyStateText: 'No rejected requests',
-    filters: ['Rejected'],
-  },
-
-  'Pending Confirmation': {
-    emptyStateText: 'No pending confirmations',
-    filters: ['Pending Confirmation'],
-  },
-}
-
-const selectedListFilter = ref('All Requests')
 const emit = defineEmits(['updateRequest'])
 
-const requestByGroup = createResource({
+const showDialog = ref(false)
+const selectedRequest = ref({})
+const groupedRequests = ref([])
+
+const columns = [
+  { label: 'Name', key: 'full_name' },
+  { label: 'Status', key: 'localhost_request_status', width: 1 },
+  { label: 'Team', key: 'team_name' },
+  { label: 'Student', key: 'is_student', width: 1 / 2 },
+  { label: 'Organization', key: 'organization' },
+  { label: 'Project', key: 'project_title' },
+  { label: 'Git Profile', key: 'git_profile' },
+  { label: 'Actions', key: 'actions' },
+]
+
+const STATUS_ORDER = {
+  Pending: 0,
+  'Pending Confirmation': 1,
+  Accepted: 2,
+  Rejected: 3,
+}
+
+const getStatusTheme = (status) => {
+  const themes = {
+    Pending: 'orange',
+    'Pending Confirmation': 'blue',
+    Accepted: 'green',
+    Rejected: 'red',
+  }
+  return themes[status] || 'gray'
+}
+
+const requests = createResource({
   url: 'fossunited.api.hackathon.get_localhost_requests_by_team',
   params: {
     hackathon: props.localhost.data.parent_hackathon,
     localhost: props.localhost.data.name,
   },
   auto: true,
-  transform(data) {
-    if (!data) return []
-    let rows = []
-    if (data) {
-      Object.entries(data).forEach((key) => {
-        rows.push({
-          group: key[1][0].team.team_name,
-          collapsed: false,
-          rows: key[1],
-        })
-      })
-    }
-    return rows
-  },
 })
 
-const changeLocalhostRequestStatus = (id, status) => {
+watchEffect(() => {
+  if (!requests.data) {
+    groupedRequests.value = []
+    return
+  }
+  // Flatten the dict structure into a single array
+  const allRequests = []
+  Object.entries(requests.data).forEach(([teamId, teamRequests]) => {
+    teamRequests.forEach((request) => {
+      allRequests.push({
+        ...request,
+        team_name: request.team?.team_name || 'Unknown Team',
+      })
+    })
+  })
+  // Group by status
+  const groups = {}
+  allRequests.forEach((request) => {
+    const status = request.localhost_request_status || 'Pending'
+    if (!groups[status]) {
+      groups[status] = []
+    }
+    groups[status].push(request)
+  })
+
+  // Convert to array of groups, sorted by status order
+  groupedRequests.value = Object.entries(groups)
+    .sort(([a], [b]) => (STATUS_ORDER[a] ?? 99) - (STATUS_ORDER[b] ?? 99))
+    .filter(([_, rows]) => rows.length > 0)
+    .map(([status, rows]) => ({
+      group: `${status} (${rows.length})`,
+      collapsed: status === 'Accepted' || status === 'Rejected',
+      rows: rows.sort((a, b) => {
+        // Sort by team name, then by full name
+        const teamCompare = (a.team_name || '').localeCompare(b.team_name || '')
+        if (teamCompare !== 0) return teamCompare
+        return (a.full_name || '').localeCompare(b.full_name || '')
+      }),
+    }))
+})
+
+const updateRequestStatus = (id, status) => {
   return createResource({
     url: 'frappe.client.set_value',
     params: {
@@ -219,30 +199,18 @@ const changeLocalhostRequestStatus = (id, status) => {
       fieldname: 'localhost_request_status',
       value: status,
     },
-    onSuccess(data) {
-      requestByGroup.fetch()
+    onSuccess() {
+      requests.fetch()
       emit('updateRequest')
     },
   })
 }
 
 const acceptRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Pending Confirmation').fetch()
+  updateRequestStatus(member.name, 'Pending Confirmation').fetch()
 }
 
 const rejectRequest = (member) => {
-  changeLocalhostRequestStatus(member.name, 'Rejected').fetch()
+  updateRequestStatus(member.name, 'Rejected').fetch()
 }
-
-watch(selectedListFilter, (newFilter) => {
-  requestByGroup.update({
-    params: {
-      hackathon: props.localhost.data.parent_hackathon,
-      localhost: props.localhost.data.name,
-      status: FILTERS[newFilter].filters,
-    },
-  })
-  requestByGroup.fetch()
-  emit('updateRequest')
-})
 </script>
