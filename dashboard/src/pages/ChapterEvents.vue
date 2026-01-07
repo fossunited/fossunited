@@ -49,12 +49,15 @@ const chapter = createDocumentResource({
   auto: true,
 })
 
+// Use ISO date string format for Frappe date filters
+const today = () => new Date().toISOString().split('T')[0]
+
 const upcoming_events = createListResource({
   doctype: 'FOSS Chapter Event',
   fields: ['*'],
   filters: [
     ['chapter', '=', route.params.id],
-    ['event_end_date', '>', new Date()],
+    ['event_end_date', '>', today()],
     ['status', 'in', ['Live', 'Draft', 'Cancelled']],
   ],
   orderBy: 'event_start_date asc',
@@ -66,7 +69,7 @@ const past_events = createListResource({
   fields: ['*'],
   filters: [
     ['chapter', '=', route.params.id],
-    ['event_start_date', '<', new Date()],
+    ['event_start_date', '<', today()],
     ['status', 'in', ['Concluded', 'Cancelled']],
   ],
   orderBy: 'event_start_date desc',
