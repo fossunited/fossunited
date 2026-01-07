@@ -1,0 +1,40 @@
+<template>
+  <div
+    class="inline-flex self-start items-center gap-1 p-2 rounded bg-blue-50 border-2 border-dashed border-blue-600 text-sm"
+  >
+    <IconBook2 class="w-6 h-6 flex-shrink-0" />
+
+    <slot>
+      {{ message }}
+    </slot>
+
+    <a
+      v-if="docsUrl"
+      :href="docsUrl"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-blue-600 hover:underline ml-1"
+    >
+      {{ docsLabel }}
+    </a>
+  </div>
+</template>
+
+<script setup>
+import { IconBook2 } from '@tabler/icons-vue'
+
+defineProps({
+  message: {
+    type: String,
+    default: '',
+  },
+  docsUrl: {
+    type: String,
+    default: 'https://docs.fossunited.org/',
+  },
+  docsLabel: {
+    type: String,
+    default: 'Read more',
+  },
+})
+</script>
