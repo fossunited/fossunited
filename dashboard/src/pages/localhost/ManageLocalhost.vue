@@ -12,6 +12,14 @@
     <div class="max-w-screen-xl w-full">
       <div class="text-base font-medium mt-4">Manage LocalHost</div>
       <LocalhostHeader :localhost="localhost.data" />
+      <div class="flex items-center justify-between mt-4">
+        <div class="text-base font-medium">Manage Localhost</div>
+
+        <RouterLink :to="{ name: 'LocalhostEdit', params: { id: route.params.id } }">
+          <Button label="Edit Details" icon-left="edit" />
+        </RouterLink>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2">
         <div class="rounded-sm border-2 border-dashed border-gray-400 p-4 my-2">
           <div class="text-sm uppercase font-medium">Current Status</div>
