@@ -64,6 +64,7 @@ declare module 'vue' {
     LikesIcon: typeof import('./src/components/icons/LikesIcon.vue')['default']
     LivePing: typeof import('./src/components/animation/LivePing.vue')['default']
     LocalhostHeader: typeof import('./src/components/localhost/LocalhostHeader.vue')['default']
+    LocalhostLayout: typeof import('./src/components/localhost/LocalhostLayout.vue')['default']
     ManageActions: typeof import('./src/components/mailing/ManageActions.vue')['default']
     ManageCampaignDrawer: typeof import('./src/components/mailing/ManageCampaignDrawer.vue')['default']
     ManageDates: typeof import('./src/components/event/schedule/ManageDates.vue')['default']
