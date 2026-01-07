@@ -58,20 +58,9 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
     def get_context(self, context):
         context.no_cache = 1
         context.breadcrumbs = self.get_breadcrumb()
-        context.hackathon = frappe.db.get_value(
+        context.hackathon = frappe.get_doc(
             HACKATHON,
             self.parent_hackathon,
-            [
-                "hackathon_name",
-                "route",
-                "hackathon_logo",
-                "hackathon_rules",
-                "hackathon_faq",
-                "start_date",
-                "end_date",
-                "hackathon_description",
-            ],
-            as_dict=True,
         )
         context.hackathon_format_date = self.get_formatted_date(context.hackathon)
         context.registration_link = f"/dashboard/register-for-hackathon?id={self.parent_hackathon}"
