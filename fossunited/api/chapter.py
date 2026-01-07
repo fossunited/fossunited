@@ -2,6 +2,7 @@ import ast
 from zoneinfo import ZoneInfo
 
 import frappe
+from frappe.utils import add_days, now_datetime
 from ics import Calendar, Event
 
 from fossunited.doctype_ids import (
@@ -156,3 +157,53 @@ def get_chapter_members_email(chapter):
         },
         pluck="email",
     )
+
+
+def get_my_chapters(user):
+    return frappe.get_all(
+        CHAPTER_MEMBER,
+        filters={"email": user},
+        pluck="parent",
+    )
+
+
+@frappe.whitelist()
+def get_my_chapter_dashboard():
+    """
+    '/dashboard/chapter' to show events+chapters belonging to the user.
+    """
+    user = frappe.session.user
+    since_3w = add_days(now_datetime(), -21)
+
+    chapter_names = get_my_chapters(user)
+
+    if not chapter_names:
+        return {
+            "chapters": [],
+            "scheduled": [],
+            "recent_concluded": [],
+        }
+
+    chapters = frappe.get_all(
+        CHAPTER,
+        filters={"name": ["in", chapter_names]},
+        fields=["*"],
+    )
+
+    scheduled = []
+    recent_concluded = []
+
+    for chapter in chapters:
+        doc = frappe.get_doc(CHAPTER, chapter.name)
+
+        scheduled.extend(doc.get_upcoming_events())
+
+        # past events to last 3 weeks only
+        recent = [e for e in doc.get_past_events() if e.event_end_date >= since_3w]
+        recent_concluded.extend(recent)
+
+    return {
+        "chapters": chapters,
+        "scheduled": scheduled,
+        "recent_concluded": recent_concluded,
+    }
