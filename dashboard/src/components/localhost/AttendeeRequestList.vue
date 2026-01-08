@@ -32,9 +32,12 @@
       },
     }"
     search-placeholder="Search requests..."
-    :search-fields="['full_name', 'team_name', 'organization', 'project_title']"
+    :search-fields="['full_name', 'team_name', 'organization', 'project_title', 'status']"
     export-filename="localhost_requests"
-    item-label="requests"
+    item-label="participant requests"
+    :export-columns="exportColumns"
+    filter-field="localhost_request_status"
+    :filter-options="['All', 'Pending', 'Pending Confirmation', 'Accepted', 'Rejected']"
   >
     <template #cell="{ item, row, column }">
       <div v-if="column.key === 'localhost_request_status'">
@@ -115,7 +118,7 @@ const groupedRequests = ref([])
 const columns = [
   { label: 'Name', key: 'full_name' },
   { label: 'Status', key: 'localhost_request_status', width: 1 },
-  { label: 'Team', key: 'team_name' },
+  { label: 'Email', key: 'email' },
   { label: 'Student', key: 'is_student', width: 1 / 2 },
   { label: 'Organization', key: 'organization' },
   { label: 'Project', key: 'project_title' },
@@ -123,12 +126,17 @@ const columns = [
   { label: 'Actions', key: 'actions' },
 ]
 
-const STATUS_ORDER = {
-  Pending: 0,
-  'Pending Confirmation': 1,
-  Accepted: 2,
-  Rejected: 3,
-}
+// Export columns include team_name and exclude actions
+const exportColumns = [
+  { label: 'Name', key: 'full_name' },
+  { label: 'Email', key: 'email' },
+  { label: 'Team', key: 'team_name' },
+  { label: 'Status', key: 'localhost_request_status' },
+  { label: 'Student', key: 'is_student' },
+  { label: 'Organization', key: 'organization' },
+  { label: 'Project', key: 'project_title' },
+  { label: 'Git Profile', key: 'git_profile' },
+]
 
 const getStatusTheme = (status) => {
   const themes = {
@@ -154,7 +162,8 @@ watchEffect(() => {
     groupedRequests.value = []
     return
   }
-  // Flatten the dict structure into a single array
+
+  // Flatten the dict structure into a single array with team info
   const allRequests = []
   Object.entries(requests.data).forEach(([teamId, teamRequests]) => {
     teamRequests.forEach((request) => {
@@ -164,30 +173,37 @@ watchEffect(() => {
       })
     })
   })
-  // Group by status
-  const groups = {}
+
+  // Group by team name
+  const teamGroups = {}
   allRequests.forEach((request) => {
-    const status = request.localhost_request_status || 'Pending'
-    if (!groups[status]) {
-      groups[status] = []
+    const teamName = request.team_name
+    if (!teamGroups[teamName]) {
+      teamGroups[teamName] = []
     }
-    groups[status].push(request)
+    teamGroups[teamName].push(request)
   })
 
-  // Convert to array of groups, sorted by status order
-  groupedRequests.value = Object.entries(groups)
-    .sort(([a], [b]) => (STATUS_ORDER[a] ?? 99) - (STATUS_ORDER[b] ?? 99))
-    .filter(([_, rows]) => rows.length > 0)
-    .map(([status, rows]) => ({
-      group: `${status} (${rows.length})`,
-      collapsed: status === 'Accepted' || status === 'Rejected',
-      rows: rows.sort((a, b) => {
-        // Sort by team name, then by full name
-        const teamCompare = (a.team_name || '').localeCompare(b.team_name || '')
-        if (teamCompare !== 0) return teamCompare
-        return (a.full_name || '').localeCompare(b.full_name || '')
-      }),
-    }))
+  // Convert to array of groups, sorted alphabetically by team name
+  groupedRequests.value = Object.entries(teamGroups)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([teamName, rows]) => {
+      // Count statuses in this team
+      const hasPending = rows.some((r) => r.localhost_request_status === 'Pending')
+      const hasPendingConfirmation = rows.some(
+        (r) => r.localhost_request_status === 'Pending Confirmation',
+      )
+
+      return {
+        group: `${teamName} (${rows.length})`,
+        // Collapse groups that have no pending or pending confirmation requests
+        collapsed: !hasPending && !hasPendingConfirmation,
+        rows: rows.sort((a, b) => {
+          // Sort by full name within each team
+          return (a.full_name || '').localeCompare(b.full_name || '')
+        }),
+      }
+    })
 })
 
 const updateRequestStatus = (id, status) => {

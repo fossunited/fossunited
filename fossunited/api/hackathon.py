@@ -288,6 +288,7 @@ def get_localhost_requests_by_team(
         },
         fields=[
             "name",
+            "email",
             "full_name",
             "hackathon",
             "user_profile",

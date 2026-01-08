@@ -10,6 +10,14 @@
         :class="searchClass"
       />
 
+      <FormControl
+        v-if="filterField && filterOptions"
+        v-model="selectedFilter"
+        type="select"
+        :options="filterOptions"
+        class="max-w-xs"
+      />
+
       <slot name="actions" :filtered-rows="filteredRows" :search="search">
         <Button
           v-if="exportable"
@@ -21,7 +29,7 @@
       </slot>
     </div>
 
-    <div v-if="search && showCount" class="text-sm text-ink-gray-5 mb-2">
+    <div v-if="(search || activeFilterApplied) && showCount" class="text-sm text-ink-gray-5 mb-2">
       {{ filteredCount }} of {{ totalCount }} {{ itemLabel }}
     </div>
 
@@ -62,6 +70,9 @@ const props = defineProps({
   exportLabel: { type: String, default: 'Download CSV' },
   exportFilename: { type: String, default: 'export' },
   exportColumns: { type: Array, default: null },
+
+  filterField: { type: String, default: null }, // eg: "status"
+  filterOptions: { type: Array, default: null }, // eg: ["yes", "no"]
 })
 
 defineOptions({ inheritAttrs: false })
@@ -72,6 +83,16 @@ const search = computed({
   set: debounce((v) => {
     searchRaw.value = v
   }, 400),
+})
+
+const selectedFilter = ref(props.filterOptions?.[0] || 'All')
+
+const activeFilterApplied = computed(() => {
+  return (
+    selectedFilter.value &&
+    selectedFilter.value !== 'All' &&
+    selectedFilter.value !== props.filterOptions?.[0]
+  )
 })
 
 const isGrouped = computed(
@@ -110,20 +131,49 @@ const getSearchText = (row) => {
 }
 
 const filteredRows = computed(() => {
-  if (!search.value) return props.rows
+  const term = search.value ? search.value.toLowerCase().trim() : ''
+  const hasSearch = !!term
+  const hasFilter = props.filterField && selectedFilter.value && selectedFilter.value !== 'All'
 
-  const term = search.value.toLowerCase().trim()
+  // No filters applied, return original rows
+  if (!hasSearch && !hasFilter) {
+    return props.rows
+  }
 
   if (isGrouped.value) {
     return props.rows
-      .map((group) => ({
-        ...group,
-        rows: group.rows.filter((row) => getSearchText(row).includes(term)),
-      }))
+      .map((group) => {
+        const filtered = group.rows.filter((row) => {
+          // Apply search filter
+          if (hasSearch && !getSearchText(row).includes(term)) {
+            return false
+          }
+          // Apply status filter
+          if (hasFilter && row[props.filterField] !== selectedFilter.value) {
+            return false
+          }
+          return true
+        })
+
+        return {
+          ...group,
+          rows: filtered,
+        }
+      })
       .filter((group) => group.rows.length > 0)
   }
 
-  return props.rows.filter((row) => getSearchText(row).includes(term))
+  return props.rows.filter((row) => {
+    // Apply search filter
+    if (hasSearch && !getSearchText(row).includes(term)) {
+      return false
+    }
+    // Apply status filter
+    if (hasFilter && row[props.filterField] !== selectedFilter.value) {
+      return false
+    }
+    return true
+  })
 })
 
 const totalCount = computed(() => {
@@ -142,13 +192,14 @@ const filteredCount = computed(() => {
 
 const mergedOptions = computed(() => ({
   ...props.options,
-  emptyState: search.value
-    ? {
-        title: 'No matching results',
-        description: 'Try adjusting your search term.',
-        ...props.options.emptyState,
-      }
-    : props.options.emptyState,
+  emptyState:
+    search.value || activeFilterApplied.value
+      ? {
+          title: 'No matching results',
+          description: 'Try adjusting your filters.',
+          ...props.options.emptyState,
+        }
+      : props.options.emptyState,
 }))
 
 const escapeCSV = (str) => {
@@ -171,9 +222,7 @@ const handleExport = () => {
     return
   }
 
-  // Use exportColumns if provided, otherwise use all columns
   const columnsToExport = props.exportColumns || props.columns
-
   const headers = columnsToExport.map((col) => col.label || col.key)
 
   const rows = flatRows.map((row) =>
@@ -199,5 +248,5 @@ const handleExport = () => {
   toast.success('CSV downloaded successfully')
 }
 
-defineExpose({ search, filteredRows, filteredCount, totalCount, handleExport })
+defineExpose({ search, selectedFilter, filteredRows, filteredCount, totalCount, handleExport })
 </script>
