@@ -226,30 +226,32 @@ function resetTooltip() {
   $('.tooltip-text').html('Copy Link')
 }
 
-window.initThemeToggle = function (toggleButtonId) {
-  const themeToggle = document.getElementById(toggleButtonId)
-  const themeIcon = themeToggle.querySelector('i')
-  let savedTheme = localStorage.getItem('theme')
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('theme-toggle')
+  if (!toggle) return
 
+  const icon = toggle.querySelector('i')
+  const lightIcon = toggle.dataset.lightIcon || 'ti-moon'
+  const darkIcon = toggle.dataset.darkIcon || 'ti-sun'
+
+  let savedTheme = localStorage.getItem('theme')
   if (!savedTheme) {
     savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
   }
 
-  document.documentElement.setAttribute('data-theme', savedTheme)
-  updateThemeIcon(savedTheme)
+  apply(savedTheme)
 
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme')
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-    document.documentElement.setAttribute('data-theme', newTheme)
-    localStorage.setItem('theme', newTheme)
-    updateThemeIcon(newTheme)
+  toggle.addEventListener('click', () => {
+    savedTheme = savedTheme === 'dark' ? 'light' : 'dark'
+    localStorage.setItem('theme', savedTheme)
+    apply(savedTheme)
   })
 
-  function updateThemeIcon(theme) {
-    themeIcon.className = theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'
+  function apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme)
+    icon.className = `ti ${theme === 'dark' ? darkIcon : lightIcon}`
   }
-}
+})
 
 // "2025-12-29" -> "Monday, December 29, 2025"
 function formatFullDate(dateInput, locale = 'en-IN') {

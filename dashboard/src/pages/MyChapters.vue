@@ -29,7 +29,7 @@
           <EventCard v-for="event in concluded_events" :key="event.name" :event="event" />
         </div>
         <div v-else class="text-base mt-6 text-gray-800">
-          <div>No concluded events found.</div>
+          <div>No recently concluded events found.</div>
         </div>
       </div>
     </div>

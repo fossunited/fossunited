@@ -1,8 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof initThemeToggle === 'function') {
-    initThemeToggle('theme-toggle')
-  }
-
   const searchInput = document.getElementById('search')
   const sortSelect = document.getElementById('sort')
   const listEl = document.getElementById('grants-list')

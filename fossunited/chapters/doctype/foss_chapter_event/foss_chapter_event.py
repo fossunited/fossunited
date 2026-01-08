@@ -509,6 +509,15 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         return check_if_chapter_or_event_core_member(self.name)
 
+    def get_breadcrumb(self):
+        crumbs = [
+            {"route": "/", "label": "Home"},
+            {"route": "/events/timeline", "label": "Events"},
+            {"label": self.event_name},
+        ]
+
+        return crumbs
+
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
         context.sponsors_dict = get_event_sponsors(self)
@@ -549,6 +558,8 @@ class FOSSChapterEvent(WebsiteGenerator):
                 context.map_lng = float(lng_str) if lng_str and lng_str != "None" else None
             except (ValueError, AttributeError):
                 pass
+
+        context.breadcrumbs = self.get_breadcrumb()
 
         context.no_cache = 1
 
