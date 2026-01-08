@@ -27,3 +27,22 @@
     {% endif %}
   </nav>
 {% endmacro %}
+
+{% macro theme_toggle(dark_icon="ti-sun", light_icon="ti-moon") %}
+  <button
+    class="v3-theme-toggle"
+    id="theme-toggle"
+    data-dark-icon="{{dark_icon}}"
+    data-light-icon="{{light_icon}}"
+    title="Toggle theme"
+  >
+    <i class="ti"></i>
+  </button>
+{% endmacro %}
+
+{% macro v3_navbar(class) %}
+  <div class="d-flex justify-content-between align-items-center {{ class }}">
+    {{ breadcrumb() }}
+    {{ theme_toggle() }}
+  </div>
+{% endmacro %}
