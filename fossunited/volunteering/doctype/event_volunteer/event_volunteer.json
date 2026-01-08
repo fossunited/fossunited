@@ -6,6 +6,7 @@
   "engine": "InnoDB",
   "field_order": [
     "status_info_section",
+    "chapter",
     "event_linked_field",
     "event_name",
     "volunteer_status",
@@ -89,7 +90,7 @@
     },
     {
       "fieldname": "past_experience",
-      "fieldtype": "Small Text",
+      "fieldtype": "Long Text",
       "label": "Past Experience"
     },
     {
@@ -120,11 +121,17 @@
       "fieldname": "other_volunteering_options",
       "fieldtype": "Data",
       "label": "Other volunteering options"
+    },
+    {
+      "fieldname": "chapter",
+      "fieldtype": "Link",
+      "label": "Chapter",
+      "options": "FOSS Chapter"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-04-24 13:31:01.108708",
+  "modified": "2026-01-08 15:15:59.120443",
   "modified_by": "Administrator",
   "module": "Volunteering",
   "name": "Event Volunteer",
@@ -143,6 +150,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []
