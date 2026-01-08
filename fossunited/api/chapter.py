@@ -199,7 +199,9 @@ def get_my_chapter_dashboard():
         scheduled.extend(doc.get_upcoming_events())
 
         # past events to last 3 weeks only
-        recent = [e for e in doc.get_past_events() if e.event_end_date >= since_3w]
+        recent = [
+            e for e in doc.get_past_events() if e.event_end_date and (e.event_end_date >= since_3w)
+        ]
         recent_concluded.extend(recent)
 
     return {
