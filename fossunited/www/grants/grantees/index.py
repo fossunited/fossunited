@@ -87,19 +87,6 @@ def get_context(context):
     context.all_grants = all_grants
     context.total_grants = len(all_grants)
     # Page metadata
-    context.breadcrumbs = [
-        {
-            "route": "/",
-            "label": "Home",
-        },
-        {
-            "route": "/grants",
-            "label": "Grants",
-        },
-        {
-            "label": "All Grantees",
-        },
-    ]
     context.grant_type = "All Grantees"
     context.grant_icon = "ti ti-list-search"
     context.grant_description = """
