@@ -4,6 +4,7 @@
 {% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
 {% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
 {% from "fossunited/templates/macros/projects_card.html" import projects_card %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
   {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
@@ -315,21 +316,8 @@
   <div class="v3-page ev-page">
     <div class="v3-container">
       <div class="d-flex justify-content-between align-items-center">
-        <nav class="v3-breadcrumb" aria-label="Breadcrumb navigation">
-          <a href="/">Home</a> > <a href="/events/timeline">Events</a> >
-          <a href="" aria-current="page">{{ doc.event_name }}</a>
-        </nav>
-
-        <div>
-          <button
-            class="v3-theme-toggle"
-            id="theme-toggle"
-            title="Toggle theme"
-            aria-label="Toggle dark/light theme"
-          >
-            <i class="ti ti-moon" aria-hidden="true"></i>
-          </button>
-        </div>
+        {{ breadcrumb(breadcrumbs) }}
+        {{ theme_toggle() }}
       </div>
 
       <!-- Main Event Card - Fixed 840px -->
@@ -716,9 +704,6 @@
         })
       }
 
-      document.addEventListener('DOMContentLoaded', function () {
-        initThemeToggle('theme-toggle')
-      })
     </script>
   </div>
 {% endblock %}
