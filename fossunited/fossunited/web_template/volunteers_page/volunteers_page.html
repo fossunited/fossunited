@@ -1,3 +1,5 @@
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+
 {% block foss_base %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>{% include "public/css/custom.css" %}</style>
@@ -110,10 +112,7 @@
 
 <div class="v3-page">
   <div class="v3-container">
-    <div class="d-flex justify-content-between align-items-center">
-      <nav class="v3-breadcrumb"><a href="/">Home</a> > <a href="">Volunteers</a></nav>
-      <button class="v3-theme-toggle" id="theme-toggle"><i class="ti ti-moon"></i></button>
-    </div>
+    {{ v3_navbar() }}
 
     <div class="vol-hero-section">
       <div>
@@ -348,8 +347,6 @@
   });
 
   document.getElementById('surprise').addEventListener('click', surpriseMe);
-
-  document.addEventListener('DOMContentLoaded', () => initThemeToggle('theme-toggle'));
 
   // Initial render
   renderMembers();
