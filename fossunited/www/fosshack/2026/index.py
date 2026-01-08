@@ -25,7 +25,8 @@ def get_context(context):
         to build or extend FOSS projects""",
         "prize_pool": "₹5,00,000",
         "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
-        "event_page_url": "https://forum.fossunited.org/t/hackathon-ideas/159",
+        "event_page_url": f"/{hackathon.route}",
+        "projects_idea_url": "https://forum.fossunited.org/t/hackathon-ideas/159",
         "status": "Registrations Open"
         if hackathon.is_registration_live
         else "Opening on Jan 2026",
@@ -55,6 +56,10 @@ def get_context(context):
             "parent": ["in", teams],
         },
     )
+    projects_count = frappe.db.count(
+        "FOSS Hackathon Project",
+        filters={"hackathon": hackathon_id, "is_published": 1},
+    )
 
     # Stats
     context.stats = {
@@ -62,6 +67,8 @@ def get_context(context):
         "local_hosts": "10",
         "participants": member_count,
         "teams": teams_count,
+        "projects": projects_count,
+        "projects_url": f"/{hackathon.route}/projects/all",
     }
 
     # Get all LocalHosts

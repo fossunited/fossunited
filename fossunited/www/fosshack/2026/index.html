@@ -6,7 +6,6 @@
   {{ meta_tags(pagetitle, description, image) }}
 {% endblock %}
 
-
 {% macro tier_badge(label, bars=3) %}
   <svg width="196" height="40" viewBox="0 0 196 40" fill="none" class="tier-badge">
     <rect width="196" height="40" fill="none" />
@@ -105,10 +104,7 @@
             class="d-flex flex-column align-items-center v3-border border py-5 px-4"
             style="gap: 2rem;"
           >
-            <span
-              aria-label="FOSS United"
-              style="display: block; width: 100%; max-width: 372px;"
-            >
+            <span aria-label="FOSS United" style="display: block; width: 100%; max-width: 372px;">
               {% include "fossunited/public/images/fosshack/foss-hack-26.svg" %}
             </span>
 
@@ -133,26 +129,36 @@
                 href="{{ hackathon.register_url }}"
                 class="btn v3-bg-dark text-uppercase font-weight-semibold rounded-0"
                 style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px;"
-                aria-label="Register for {{hackathon.name}}"
+                aria-label="Register for {{ hackathon.name }}"
                 >Register</a
               >
               <a
-                href="{{ hackathon.event_page_url }}"
+                href="{{ hackathon.projects_idea_url }}"
                 target="_blank"
                 class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
                 style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px; border: 1px solid var(--v3-text)"
-                aria-label="Project ideas for {{hackathon.name}}"
+                aria-label="Project ideas for {{ hackathon.name }}"
                 >Project Ideas</a
               >
             </div>
-            <a
-              href="{{ hackathon.event_page_url }}"
-              class="v3-text text-uppercase font-weight-semibold"
-              style="text-decoration: underline; font-size: 0.875rem; z-index: 10;"
-              aria-label="Goto {{hackathon.name}} event page"
-            >
-              Go to Event Page <i class="ti ti-arrow-up-right"></i>
-            </a>
+            <div style="z-index: 10;">
+              <a
+                href="{{ hackathon.event_page_url }}"
+                class="v3-text text-uppercase font-weight-semibold pr-4"
+                style="text-decoration: underline; font-size: 0.875rem; z-index: 10;"
+                aria-label="Goto {{ hackathon.name }} event page"
+              >
+                Go to Event Page <i class="ti ti-arrow-up-right"></i>
+              </a>
+              <a
+                href="{{ stats.projects_url }}"
+                class="v3-text text-uppercase font-weight-semibold"
+                style="text-decoration: underline; font-size: 0.875rem; z-index: 10;"
+                aria-label="Goto projects page for this hackathon"
+              >
+                View all Projects <i class="ti ti-arrow-up-right"></i>
+              </a>
+            </div>
           </div>
 
           <div class="deco-blocks">
@@ -187,6 +193,13 @@
                 <h5 class="v3-text">{{ stats.teams }}</h5>
                 <small>Teams</small>
               </div>
+              <a href="{{ stats.projects_url }}">
+                <h5 class="v3-text">
+                  {{ stats.projects }}
+                  <i class="ti ti-arrow-up-right stat-icon"></i>
+                </h5>
+                <small>Projects</small>
+              </a>
             </div>
             <span class="badge-live">
               <span class="ping-dot mr-1"></span>
@@ -204,7 +217,11 @@
           <h2 class="h3 font-weight-semibold v3-text mb-4">Timeline</h2>
           {% for item in timeline %}
             <div class="timeline-item">
-              <div class="timeline-header" onclick="toggleTimeline(this)" aria-label="Click to Know about {{item.event}} details">
+              <div
+                class="timeline-header"
+                onclick="toggleTimeline(this)"
+                aria-label="Click to Know about {{ item.event }} details"
+              >
                 <span class="font-weight-bold v3-text-muted" style="font-size: 0.875rem;"
                   >{{ item.date }}</span
                 >
@@ -408,52 +425,86 @@
 {% endblock %}
 
 {% block footer %}
-<footer class="py-5">
-  <div class="container" style="max-width: 1024px; padding: 2rem 7rem;">
+  <footer class="py-5">
+    <div class="container" style="max-width: 1024px; padding: 2rem 7rem;">
+      <div class="row">
+        <div class="col-12 col-md-4 d-flex justify-content-center">
+          <div class="text-start">
+            <div class="mb-3">
+              <a href="https://github.com/fossunited/fossunited">
+                <i class="ti ti-brand-github"></i>
+                <span>View Source Code</span>
+              </a>
+            </div>
 
-    <div class="row">
-
-      <div class="col-12 col-md-4 d-flex justify-content-center">
-        <div class="text-start">
-          <div class="mb-3">
-            <a href="https://github.com/fossunited/fossunited">
-              <i class="ti ti-brand-github"></i>
-              <span>View Source Code</span>
-            </a>
-          </div>
-
-          <div class="social-icons">
-            <a href="https://t.me/fossunited" target="_blank" aria-label="Telegram" class="me-3">
-              <i class="ti ti-brand-telegram"></i>
-            </a>
-            <a href="https://forum.fossunited.org" target="_blank" aria-label="Fossunited Forum">
-              <i class="ti ti-message-2-share"></i>
-            </a>
+            <div class="social-icons">
+              <a href="https://t.me/fossunited" target="_blank" aria-label="Telegram" class="me-3">
+                <i class="ti ti-brand-telegram"></i>
+              </a>
+              <a href="https://forum.fossunited.org" target="_blank" aria-label="Fossunited Forum">
+                <i class="ti ti-message-2-share"></i>
+              </a>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="col-12 col-md-4 d-flex justify-content-center">
-        <ul class="list-unstyled text-start">
-          <li class="mb-2"><a href="/fosshack/2025" class="text-decoration-none">FOSS Hack 2025</a></li>
-          <li class="mb-2"><a href="/fosshack/2024" class="text-decoration-none">FOSS Hack 2024</a></li>
-          <li class="mb-2"><a href="/fosshack/2023" class="text-decoration-none">FOSS Hack 2023</a></li>
-          <li class="mb-2"><a href="/fosshack/2021" class="text-decoration-none">FOSS Hack 2021</a></li>
-          <li class="mb-2"><a href="/fosshack/2020" class="text-decoration-none">FOSS Hack 2020</a></li>
-        </ul>
-      </div>
+        <div class="col-12 col-md-4 d-flex justify-content-center">
+          <ul class="list-unstyled text-start">
+            <li class="mb-2">
+              <a href="/fosshack/2025" class="text-decoration-none">FOSS Hack 2025</a>
+            </li>
+            <li class="mb-2">
+              <a href="/fosshack/2024" class="text-decoration-none">FOSS Hack 2024</a>
+            </li>
+            <li class="mb-2">
+              <a href="/fosshack/2023" class="text-decoration-none">FOSS Hack 2023</a>
+            </li>
+            <li class="mb-2">
+              <a href="/fosshack/2021" class="text-decoration-none">FOSS Hack 2021</a>
+            </li>
+            <li class="mb-2">
+              <a href="/fosshack/2020" class="text-decoration-none">FOSS Hack 2020</a>
+            </li>
+          </ul>
+        </div>
 
-      <div class="col-12 col-md-4 d-flex justify-content-center">
-        <ul class="list-unstyled text-start">
-          <li class="mb-2"><a href="https://fossunited.org/code-of-conduct" target="_blank" class="text-decoration-none">Code of Conduct</a></li>
-          <li class="mb-2"><a href="https://fossunited.org/fosshack/rules" target="_blank" class="text-decoration-none">Rules</a></li>
-          <li class="mb-2"><a href="https://forum.fossunited.org/t/hackathon-ideas/159" target="_blank" class="text-decoration-none">Project Ideas</a></li>
-          <li class="mb-2"><a href="https://forum.fossunited.org/t/foss-hack-rules-guidelines-faq/3334" target="_blank" class="text-decoration-none">Guidelines & FAQ</a></li>
-        </ul>
+        <div class="col-12 col-md-4 d-flex justify-content-center">
+          <ul class="list-unstyled text-start">
+            <li class="mb-2">
+              <a
+                href="https://fossunited.org/code-of-conduct"
+                target="_blank"
+                class="text-decoration-none"
+                >Code of Conduct</a
+              >
+            </li>
+            <li class="mb-2">
+              <a
+                href="https://fossunited.org/fosshack/rules"
+                target="_blank"
+                class="text-decoration-none"
+                >Rules</a
+              >
+            </li>
+            <li class="mb-2">
+              <a
+                href="https://forum.fossunited.org/t/hackathon-ideas/159"
+                target="_blank"
+                class="text-decoration-none"
+                >Project Ideas</a
+              >
+            </li>
+            <li class="mb-2">
+              <a
+                href="https://forum.fossunited.org/t/foss-hack-rules-guidelines-faq/3334"
+                target="_blank"
+                class="text-decoration-none"
+                >Guidelines & FAQ</a
+              >
+            </li>
+          </ul>
+        </div>
       </div>
-
     </div>
-
-  </div>
-</footer>
+  </footer>
 {% endblock %}

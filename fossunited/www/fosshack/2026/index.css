@@ -124,7 +124,7 @@ body {
 
 .participants-split {
   display: flex;
-  gap: 3rem;
+  gap: 2rem;
   margin-bottom: 0.75rem;
   width: 100%;
   justify-content: center;
@@ -459,6 +459,11 @@ footer a:hover {
   text-decoration: none;
 }
 
+.stat-icon {
+  position: absolute;
+  font-size: 1rem !important;
+}
+
 /* THEME TOGGLE */
 .theme-toggle {
   border: none;
@@ -508,7 +513,10 @@ footer a:hover {
     grid-template-columns: repeat(2, max-content) !important;
     gap: var(--grid-gap-mobile, var(--grid-gap));
   }
-
+  .fh-sponsor-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+  }
   .fh-logo-plat {
     width: 144px;
     height: 72px;
