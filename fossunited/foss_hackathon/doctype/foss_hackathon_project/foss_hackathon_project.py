@@ -6,6 +6,7 @@ from frappe.website.website_generator import WebsiteGenerator
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTICIPANT,
+    HACKATHON_PARTNER_PROJECT,
     HACKATHON_TEAM,
     USER_PROFILE,
 )
@@ -51,16 +52,16 @@ class FOSSHackathonProject(WebsiteGenerator):
     def get_context(self, context):
         context.no_cache = 1
         context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
-        context.nav_items = [
-            "description",
-            "issue_pr",
-            "team_members",
-        ]
 
         context.team = frappe.get_doc(HACKATHON_TEAM, self.team)
         context.team_members = get_team_members(context.team)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
+
+        if self.is_partner_project:
+            context.partner_project = frappe.get_doc(
+                HACKATHON_PARTNER_PROJECT, self.partner_project
+            )
 
 
 def get_team_members(team):
