@@ -128,7 +128,8 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
 
     def test_valid_json_api_validation(self):
         """floss.fund validate API using uploaded valid JSON."""
-        url = self.upload_temp(self.valid_json)
+        # url = self.upload_temp(self.valid_json)
+        url = "https://fossunited.org/files/grant-dir-valid.json"
         # .https://0x0.st/KOKA.json
         doc = frappe.get_doc(
             {
@@ -152,7 +153,8 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad = copy.deepcopy(self.valid_json)
         bad["projects"] = []
 
-        url = self.upload_temp(bad)
+        # url = self.upload_temp(bad)
+        url = "https://fossunited.org/files/grant-dir-invalid.json"
         # https://0x0.st/KOKb.json
         doc = frappe.get_doc(
             {
@@ -173,7 +175,8 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad = copy.deepcopy(self.valid_json)
         bad["entity"]["name"] = None
 
-        url = self.upload_temp(bad)
+        # url = self.upload_temp(bad)
+        url = "https://fossunited.org/files/grant-dir-invalid-entity.json"
         # .https://0x0.st/KOKT.json
         doc = frappe.get_doc(
             {
@@ -191,7 +194,8 @@ class TestGrantsFundingDirectoryRealValidation(FrappeTestCase):
         bad = copy.deepcopy(self.valid_json)
         bad["entity"]["email"] = ""
 
-        url = self.upload_temp(bad)
+        # url = self.upload_temp(bad)
+        url = "https://fossunited.org/files/grant-dir-invalid-email.json"
         # .https://0x0.st/KOKc.json
         doc = frappe.get_doc(
             {
