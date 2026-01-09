@@ -47,6 +47,12 @@ class FOSSHackathonParticipant(Document):
             self.update_request_status()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_add_to_email_group()
+        if (
+            self.has_value_changed("localhost_request_status")
+            and self.localhost_request_status == "Accepted"
+            and self.localhost
+        ):
+            self.subscribe_to_localhost_email_group()
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
@@ -74,6 +80,18 @@ class FOSSHackathonParticipant(Document):
             subscribe_to_chapter=self.subscribe_chapter_mailing,
             subscribe_to_event=self.subscribe_chapter_mailing,
             document_type_event=HACKATHON,
+        )
+
+    def subscribe_to_localhost_email_group(self):
+        event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+
+        handle_email_group_subscription(
+            emails=[self.email],
+            chapter=event_doc.chapter,
+            event=self.localhost,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
+            subscribe_to_event=True,
+            document_type_event=HACKATHON_LOCALHOST,
         )
 
     def update_request_status(self):
