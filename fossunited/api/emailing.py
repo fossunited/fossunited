@@ -10,6 +10,8 @@ from fossunited.doctype_ids import (
     EMAIL_GROUP,
     EMAIL_MEMBER,
     EVENT,
+    HACKATHON,
+    HACKATHON_LOCALHOST,
     STUDENT_CLUB,
 )
 
@@ -23,11 +25,19 @@ EMAIL_GROUP_TYPES = Literal[
     "Other",
 ]
 
+EMAIL_GROUP_SUFFIX_BY_DOCTYPE = {
+    CHAPTER: "",
+    EVENT: "-Event",
+    HACKATHON: "-Hackathon",
+    HACKATHON_LOCALHOST: "-Localhost",
+}
+
 
 def create_email_group(
     type: EMAIL_GROUP_TYPES,
     reference_document: str,
     document_type: str = EVENT,
+    chapter: Optional[str] = None,
 ):
     """
     Ensure an email group exists for the given document.
@@ -40,40 +50,41 @@ def create_email_group(
     """
     try:
         _doc = frappe.get_doc(document_type, reference_document)
-        _chapter = _doc.get("chapter") or _doc.get("name")
+        if not chapter:
+            chapter = _doc.get("chapter") or _doc.get("name")
     except Exception:
         frappe.log_error(
             frappe.get_traceback(), "Error fetching reference document for email group"
         )
         return None
 
-    existing_group = frappe.get_value(
-        EMAIL_GROUP,
-        {
-            "reference_document": reference_document,
-            "document_type": document_type,
-            "chapter": _chapter,
-            "group_type": type,
-        },
-        "name",
-    )
+    filters = {
+        "reference_document": reference_document,
+        "document_type": document_type,
+        "group_type": type,
+    }
+    if chapter:
+        filters["chapter"] = chapter
+
+    existing_group = frappe.get_value(EMAIL_GROUP, filters, "name")
+
     if existing_group:
         return frappe.get_doc(EMAIL_GROUP, existing_group)
 
-    if document_type == CHAPTER:
-        group_title = f"{type}-{reference_document}"
-    elif document_type == EVENT:
-        group_title = f"{type}-{reference_document}-Event"
-    else:
-        group_title = f"{type}-{reference_document}-Hackathon"
+    suffix = EMAIL_GROUP_SUFFIX_BY_DOCTYPE.get(document_type)
+    if suffix is None:
+        frappe.throw(
+            f"Unsupported document type: {document_type}",
+            frappe.ValidationError,
+        )
 
-    group_title = group_title[:140]
+    group_title = f"{type}-{reference_document}{suffix}"
 
     group = frappe.get_doc(
         {
             "doctype": EMAIL_GROUP,
             "title": group_title,
-            "chapter": _chapter,
+            "chapter": chapter,
             "reference_document": reference_document,
             "document_type": document_type,
             "group_type": type,
@@ -82,12 +93,10 @@ def create_email_group(
 
     try:
         group.insert(ignore_permissions=True)
+        return group
     except Exception:
         frappe.log_error(frappe.get_traceback(), "Error while creating email group")
         return None
-
-    group.reload()
-    return group
 
 
 def add_to_email_group(email_group: str, email: str):
@@ -167,6 +176,7 @@ def handle_email_group_subscription(
             type=chapter_type,
             reference_document=chapter,
             document_type=document_type_chapter,
+            chapter=chapter,
         )
 
         if not chapter_group:
@@ -178,6 +188,7 @@ def handle_email_group_subscription(
                 type=event_type,
                 reference_document=event,
                 document_type=document_type_event,
+                chapter=chapter,
             )
 
         for email in emails:
