@@ -232,7 +232,7 @@
               </div>
               <div class="timeline-content">
                 <p class="v3-text-muted mb-0" style="font-size: 0.875rem;">
-                  Additional details about {{ item.event }} will be announced soon.
+                  <!-- TODO: FIXME: Additional details about {{ item.event }} will be announced soon. -->
                 </p>
               </div>
             </div>
@@ -294,7 +294,7 @@
               <li class="mb-2">{{ rule }}</li>
             {% endfor %}
             <li class="mb-2">
-              <a href="/fosshack/rules" style="color: var(--v3-blue);">Check full rules →</a>
+              <a href="https://fossunited.org/fosshack/rules" style="color: var(--v3-blue);">Check full rules →</a>
             </li>
           </ul>
         </div>
@@ -383,7 +383,15 @@
     {# community partners #}
     {% if partners %}
       <div class="mb-5">
-        <h1 class="h1 font-weight-bold v3-text margin-10">Community Partners</h1>
+        <a
+          href="https://fossunited.org/fosshack/community-partners"
+          target="_blank"
+          >
+          <h1 class="h1 font-weight-bold v3-text mb-5">
+            Community Partners
+          <i class="ti ti-arrow-up-right small"></i>
+          </h1>
+        </a>
         <div class="tier-content">
           {{ logo_grid(partners, 'fh-sponsor-grid-5', 'fh-logo-partner', 7) }}
         </div>

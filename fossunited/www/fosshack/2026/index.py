@@ -34,11 +34,10 @@ def get_context(context):
 
     # Timeline
     context.timeline = [
-        {"date": "TBA", "event": "Registrations Closing"},
-        {"date": "TBA", "event": "Planning and team formation"},
-        {"date": "TBA", "event": "Development"},
-        {"date": "TBA", "event": "Wrapping up"},
-        {"date": "TBA", "event": "Results"},
+        {"date": "20 Feb", "event": "Registrations Closing"},
+        {"date": "1-31 Mar", "event": "Development"},
+        {"date": "31 Mar", "event": "Submission & Demo Prep"},
+        {"date": "30 Apr (Tentative)", "event": "Results"},
     ]
 
     teams = frappe.get_all(
