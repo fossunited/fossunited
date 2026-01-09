@@ -125,7 +125,7 @@
 
 <script setup>
 import { createDocumentResource, FileUploader, FormControl, Button, Switch } from 'frappe-ui'
-import { ref, computed } from 'vue'
+import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 

@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute, useRouter, RouterView } from 'vue-router'
 import { Dialog, createResource } from 'frappe-ui'
 import SideNavbar from '@/components/NewAppSidebar.vue'
@@ -28,14 +28,13 @@ import { LocalhostValidation } from '@/components/localhost/LocalhostValidation'
 
 const route = useRoute()
 const router = useRouter()
-const session = inject('$session')
 
 const { isValidated, dialogMessage, showDialog, validateSessionUser } = LocalhostValidation(
   route.params.id,
   'MyLocalhosts',
 )
 
-const sidebarMenuItems = [
+const sidebarMenuItems = computed(() => [
   {
     items: [
       {
@@ -61,7 +60,7 @@ const sidebarMenuItems = [
       },
     ],
   },
-]
+])
 
 onMounted(() => {
   validateSessionUser()
