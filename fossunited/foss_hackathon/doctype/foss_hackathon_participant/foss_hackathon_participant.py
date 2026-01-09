@@ -50,6 +50,7 @@ class FOSSHackathonParticipant(Document):
         if (
             self.has_value_changed("localhost_request_status")
             and self.localhost_request_status == "Accepted"
+            and self.localhost
         ):
             self.subscribe_to_localhost_email_group()
 
@@ -88,7 +89,7 @@ class FOSSHackathonParticipant(Document):
             emails=[self.email],
             chapter=event_doc.chapter,
             event=self.localhost,
-            subscribe_to_chapter=False,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
             subscribe_to_event=True,
             document_type_event=HACKATHON_LOCALHOST,
         )
