@@ -296,6 +296,11 @@ const routes = [
         name: 'LocalhostEdit',
         component: () => import('@/pages/localhost/LocalhostEdit.vue'),
       },
+      {
+        path: 'mailing',
+        name: 'LocalhostMailing',
+        component: () => import('@/pages/mailing/LocalhostMailing.vue'),
+      },
     ],
   },
   {
