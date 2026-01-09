@@ -73,6 +73,23 @@ const showCreateDrawer = ref(false)
 const selectedCampaign = ref('')
 const showManageDrawer = ref(false)
 
+const campaignParams = computed(() => {
+  if (props.getCampaignParams && document.doc) {
+    return props.getCampaignParams(document.doc)
+  }
+
+  const chapter =
+    document.doc.doctype === 'FOSS Chapter'
+      ? document.doc.name
+      : document.doc.chapter || document.doc.name
+
+  return {
+    document_type: document.doc.doctype,
+    reference_document: document.doc.name,
+    chapter,
+  }
+})
+
 const document = createDocumentResource({
   doctype: props.doctype,
   name: route.params.id,
@@ -84,11 +101,7 @@ const campaigns = reactive(
   createResource({
     url: 'fossunited.api.emailing.get_newsletter_campaigns',
     makeParams() {
-      return {
-        document_type: document.doc.doctype,
-        reference_document: document.doc.name,
-        chapter: document.doc.chapter || '',
-      }
+      return campaignParams.value
     },
   }),
 )
@@ -123,7 +136,7 @@ watch(
 // Computed props for header component
 const headerProps = computed(() => {
   const propsMap = {
-    'FOSS Chapter': { chapter: document.doc },
+    'FOSS Chapter': { chapter: document },
     'FOSS Chapter Event': { event: document.doc },
     'FOSS Hackathon LocalHost': { localhost: document.doc },
   }
@@ -131,23 +144,14 @@ const headerProps = computed(() => {
   return propsMap[props.doctype] || { doc: document.doc }
 })
 
-// Computed props for campaign drawers
 const campaignProps = computed(() => {
-  const baseProps = {
-    event: document.doc.name,
-    document_type: props.documentType,
-  }
+  const ctx = campaignParams.value
+  if (!ctx.reference_document) return {}
 
-  // Add chapter if available
-  if (document.doc.chapter) {
-    baseProps.chapter = document.doc.chapter
-  } else if (props.chapter) {
-    baseProps.chapter = props.chapter
-  } else if (props.doctype === 'FOSS Chapter') {
-    baseProps.chapter = document.doc.name
+  return {
+    event: ctx.reference_document,
+    chapter: ctx.chapter,
+    document_type: ctx.document_type,
   }
-
-    console.log("chap:", props.chapter)
-  return baseProps
 })
 </script>
