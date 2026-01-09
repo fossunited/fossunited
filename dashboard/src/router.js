@@ -284,6 +284,7 @@ const routes = [
   },
   {
     path: '/localhost/:id',
+    component: () => import('@/components/localhost/LocalhostLayout.vue'),
     children: [
       {
         path: '',
