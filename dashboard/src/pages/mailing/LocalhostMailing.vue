@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { ref, watch, computed } from 'vue'
+import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { createDocumentResource, createResource } from 'frappe-ui'
 import MailingPage from '@/components/mailing/MailingPage.vue'
