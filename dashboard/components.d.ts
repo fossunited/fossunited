@@ -38,6 +38,7 @@ declare module 'vue' {
     EventLogo: typeof import('./src/components/event/EventLogo.vue')['default']
     FileUploaderArea: typeof import('./src/components/ui/FileUploaderArea.vue')['default']
     Filter: typeof import('./src/components/ui/Filter.vue')['default']
+    FormActionBar: typeof import('./src/components/FormActionBar.vue')['default']
     FormCard: typeof import('./src/components/cfp-public/FormCard.vue')['default']
     FormClosedSection: typeof import('./src/components/cfp-public/FormClosedSection.vue')['default']
     FormHeader: typeof import('./src/components/cfp-public/FormHeader.vue')['default']
