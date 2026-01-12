@@ -2,7 +2,7 @@
   <Transition name="slide-up">
     <div
       v-if="hasChanges"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-4 py-3 z-50"
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-4 z-50"
       style="height: 56px"
     >
       <div
@@ -89,18 +89,20 @@ const handleSave = () => {
     if (props.documentResource.doc) {
       originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
     }
-  }, 100)
+  }, 300)
 }
 
 const handleCancel = () => {
-  // Reset original data first
-  originalData.value = {}
-
-  // Reload the document resource
-  props.documentResource.reload().then(() => {
-    toast.info('Changes discarded')
-    emit('cancel')
-  })
+  props.documentResource
+    .reload()
+    .then(() => {
+      originalData.value = {}
+      toast.info('Changes discarded')
+      emit('cancel')
+    })
+    .catch((error) => {
+      toast.error('Failed to discard changes ' + error)
+    })
 }
 </script>
 
