@@ -1,5 +1,5 @@
 <template>
-  <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
+  <div v-if="event.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen pb-24">
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <EventHeader
         :event="event.doc"
@@ -139,6 +139,7 @@
           :type="'checkbox'"
           size="md"
           label="Show Speakers Tab"
+          description="Show speakers (added in event schedule) profile linked to their proposals."
         />
         <TextEditor
           label="Event Description"
@@ -201,19 +202,21 @@
         />
       </div>
     </div>
+
+    <FormActionBar
+      :document-resource="event"
+      :is-saving="event.save.loading"
+      @save="updateDetails"
+    />
   </div>
 </template>
+
 <script setup>
 import EventHeader from '@/components/EventHeader.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import CopyToClipboardButton from '@/components/CopyToClipboardButton.vue'
-import {
-  createDocumentResource,
-  createListResource,
-  createResource,
-  FileUploader,
-  FormControl,
-} from 'frappe-ui'
+import FormActionBar from '@/components/FormActionBar.vue'
+import { createDocumentResource, createResource, FileUploader, FormControl } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
