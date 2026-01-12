@@ -37,7 +37,7 @@
                 <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
                   insights
                 </RouterLink>
-                tab to confirm them via mail.
+                tab to confirm them. They will receive email based on rejection or acceptance.
               </span>
             </div>
 
@@ -207,6 +207,12 @@
         </div>
       </template>
     </Dialog>
+
+    <FormActionBar
+      :document-resource="rsvp"
+      :is-saving="rsvp.save.loading"
+      @save="updateRsvpForm"
+    />
   </div>
 </template>
 <script setup>
@@ -223,6 +229,7 @@ import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboardComponent from '../components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
+import FormActionBar from '@/components/FormActionBar.vue'
 
 const route = useRoute()
 
