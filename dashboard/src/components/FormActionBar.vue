@@ -34,6 +34,7 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
 import { Button } from 'frappe-ui'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
   documentResource: {
@@ -58,9 +59,11 @@ const originalData = ref({})
 watch(
   () => props.documentResource.doc,
   (newDoc) => {
-    if (newDoc && Object.keys(originalData.value).length === 0) {
-      // Store initial values
-      originalData.value = JSON.parse(JSON.stringify(newDoc))
+    if (newDoc) {
+      // Update original values when doc changes (includes after reload)
+      if (Object.keys(originalData.value).length === 0) {
+        originalData.value = JSON.parse(JSON.stringify(newDoc))
+      }
     }
   },
   { immediate: true, deep: true },
@@ -90,11 +93,14 @@ const handleSave = () => {
 }
 
 const handleCancel = () => {
-  // Reload the document to discard changes
-  props.documentResource.reload()
-  // Reset original data
+  // Reset original data first
   originalData.value = {}
-  emit('cancel')
+
+  // Reload the document resource
+  props.documentResource.reload().then(() => {
+    toast.info('Changes discarded')
+    emit('cancel')
+  })
 }
 </script>
 
