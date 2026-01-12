@@ -1,8 +1,8 @@
 <template>
   <Transition name="slide-up">
     <div
-      v-if="showActions"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-4 py-3 z-50"
+      v-if="hasChanges"
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg p-4 z-50"
       style="height: 56px"
     >
       <div
@@ -32,30 +32,77 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Button } from 'frappe-ui'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
-  hasChanges: {
-    type: Boolean,
-    required: true,
+  documentResource: {
+    type: Object,
+    required: true, // only DocumentResource
   },
   isSaving: {
     type: Boolean,
     default: false,
   },
+  fieldsToWatch: {
+    type: Array,
+    default: null, // If null, watch all fields
+  },
 })
 
 const emit = defineEmits(['save', 'cancel'])
 
-const showActions = computed(() => props.hasChanges)
+const originalData = ref({})
+
+// Watch the document and store original values
+watch(
+  () => props.documentResource.doc,
+  (newDoc) => {
+    if (newDoc) {
+      // Update original values when doc changes (includes after reload)
+      if (Object.keys(originalData.value).length === 0) {
+        originalData.value = JSON.parse(JSON.stringify(newDoc))
+      }
+    }
+  },
+  { immediate: true, deep: true },
+)
+
+// Detect changes
+const hasChanges = computed(() => {
+  if (!props.documentResource.doc || !originalData.value) return false
+
+  const fieldsToCheck = props.fieldsToWatch || Object.keys(originalData.value)
+
+  return fieldsToCheck.some((key) => {
+    return (
+      JSON.stringify(props.documentResource.doc[key]) !== JSON.stringify(originalData.value[key])
+    )
+  })
+})
 
 const handleSave = () => {
   emit('save')
+  // Reset original data after save
+  setTimeout(() => {
+    if (props.documentResource.doc) {
+      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
+    }
+  }, 300)
 }
 
 const handleCancel = () => {
-  emit('cancel')
+  props.documentResource
+    .reload()
+    .then(() => {
+      originalData.value = {}
+      toast.info('Changes discarded')
+      emit('cancel')
+    })
+    .catch((error) => {
+      toast.error('Failed to discard changes ' + error)
+    })
 }
 </script>
 

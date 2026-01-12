@@ -155,7 +155,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
-import { defineProps, defineEmits, ref, reactive } from 'vue'
+import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
 import {
   IconBold,
   IconItalic,
@@ -245,6 +245,18 @@ const editor = useEditor({
     }),
   ],
 })
+
+watch(
+  () => props.modelValue,
+  (newValue) => {
+    if (editor.value) {
+      const currentContent = editor.value.getHTML()
+      if (currentContent !== newValue) {
+        editor.value.commands.setContent(newValue || '', false)
+      }
+    }
+  },
+)
 
 const handleToggleLink = (editor) => {
   const selectedText = getSelectionText(editor)

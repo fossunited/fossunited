@@ -198,6 +198,8 @@
         </div>
       </template>
     </Dialog>
+
+    <FormActionBar :document-resource="cfp" :is-saving="cfp.save.loading" @save="updateCfpForm" />
   </div>
 </template>
 <script setup>
@@ -207,6 +209,7 @@ import { useRoute } from 'vue-router'
 import { toast } from 'vue-sonner'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
+import FormActionBar from '@/components/FormActionBar.vue'
 
 const route = useRoute()
 

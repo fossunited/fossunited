@@ -232,6 +232,13 @@
         </FormControl>
       </div>
     </div>
+
+    <FormActionBar
+      :document-resource="chapter"
+      :is-saving="chapter.save.loading"
+      @save="updateDetails"
+    />
+
   </div>
 </template>
 <script setup>
@@ -255,6 +262,8 @@ import {
   IconBrandWhatsapp,
   IconBrandDiscord,
 } from '@tabler/icons-vue'
+import FormActionBar from '@/components/FormActionBar.vue'
+
 
 const route = useRoute()
 
