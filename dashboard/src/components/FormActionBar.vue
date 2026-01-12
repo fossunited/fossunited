@@ -1,7 +1,7 @@
 <template>
   <Transition name="slide-up">
     <div
-      v-if="showActions"
+      v-if="hasChanges"
       class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg px-4 py-3 z-50"
       style="height: 56px"
     >
@@ -32,29 +32,68 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { Button } from 'frappe-ui'
 
 const props = defineProps({
-  hasChanges: {
-    type: Boolean,
-    required: true,
+  documentResource: {
+    type: Object,
+    required: true, // only DocumentResource
   },
   isSaving: {
     type: Boolean,
     default: false,
   },
+  fieldsToWatch: {
+    type: Array,
+    default: null, // If null, watch all fields
+  },
 })
 
 const emit = defineEmits(['save', 'cancel'])
 
-const showActions = computed(() => props.hasChanges)
+const originalData = ref({})
+
+// Watch the document and store original values
+watch(
+  () => props.documentResource.doc,
+  (newDoc) => {
+    if (newDoc && Object.keys(originalData.value).length === 0) {
+      // Store initial values
+      originalData.value = JSON.parse(JSON.stringify(newDoc))
+    }
+  },
+  { immediate: true, deep: true },
+)
+
+// Detect changes
+const hasChanges = computed(() => {
+  if (!props.documentResource.doc || !originalData.value) return false
+
+  const fieldsToCheck = props.fieldsToWatch || Object.keys(originalData.value)
+
+  return fieldsToCheck.some((key) => {
+    return (
+      JSON.stringify(props.documentResource.doc[key]) !== JSON.stringify(originalData.value[key])
+    )
+  })
+})
 
 const handleSave = () => {
   emit('save')
+  // Reset original data after save
+  setTimeout(() => {
+    if (props.documentResource.doc) {
+      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
+    }
+  }, 100)
 }
 
 const handleCancel = () => {
+  // Reload the document to discard changes
+  props.documentResource.reload()
+  // Reset original data
+  originalData.value = {}
   emit('cancel')
 }
 </script>
