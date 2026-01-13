@@ -30,7 +30,6 @@
     </div>
   </div>
   <DocsInfo
-    class="my-4"
     message="Please find platform docs for hackathon participation"
     docs-url="https://docs.fossunited.org/fosshack"
   />
@@ -40,7 +39,6 @@
 import { IconMapPinCode, IconWorld } from '@tabler/icons-vue'
 import { defineProps } from 'vue'
 import DocsInfo from '@/components/DocsInfo.vue'
-
 
 defineProps({
   hackathon: {

@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col md:flex-row">
     <SideNavbar title="Manage Event" :menu-items="sidebarMenuItems" />
-    <div class="w-full md:ml-[220px]">
+    <div class="w-full md:ml-[220px] overflow-x-hidden">
       <RouterView />
     </div>
   </div>

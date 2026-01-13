@@ -10,6 +10,7 @@ import ModifyScheduleItem from '@/components/event/schedule/ModifyScheduleItem.v
 import ManageHallOptions from '@/components/event/schedule/ManageHallOptions.vue'
 import ModifyScheduleDrawer from '@/components/event/schedule/ModifyScheduleDrawer.vue'
 import dayjs from 'dayjs'
+import DocsInfo from '@/components/DocsInfo.vue'
 
 // Constants for default schedule times
 const DEFAULT_START_TIME = '10:00'
@@ -164,6 +165,12 @@ const showModifyScheduleItemDrawer = ref(false)
       <div class="prose">
         <h2 class="font-bold mb-4">Event Schedule</h2>
       </div>
+
+      <DocsInfo
+        message="Please find platform docs for adding event schedule"
+        docs-url="https://docs.fossunited.org/event-schedule"
+      />
+
       <div class="flex flex-col gap-4 my-4">
         <Switch
           v-model="event.doc.show_schedule"

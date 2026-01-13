@@ -12,7 +12,6 @@
   </div>
 
   <DocsInfo
-    class="my-4"
     message="Please find platform docs for localhost management"
     docs-url="https://docs.fossunited.org/localhost"
   />

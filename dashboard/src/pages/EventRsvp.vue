@@ -6,7 +6,14 @@
       :form-exists="Boolean(has_rsvp.data)"
       :form="event_rsvp"
     />
+    <DocsInfo
+      class="ml-4"
+      message="Please find docs for knowing how RSVP works"
+      docs-url="https://docs.fossunited.org/event-rsvp"
+    />
+
     <TabsWithRoute :tabs="tabs.options" />
+
     <RouterView :event_rsvp="event_rsvp" @rsvp-created="rsvpCreated" />
   </div>
 </template>
@@ -16,6 +23,7 @@ import EventHeader from '@/components/EventHeader.vue'
 import { createDocumentResource, createResource } from 'frappe-ui'
 import { useRoute, useRouter } from 'vue-router'
 import { reactive, ref, watch } from 'vue'
+import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
 const router = useRouter()
