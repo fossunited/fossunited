@@ -483,7 +483,7 @@ footer a:hover {
 /* responsive */
 @media (max-width: 991px) {
   .deco-blocks {
-    margin-top: -100px;
+    margin-top: -120px;
     justify-content: center;
   }
 
@@ -540,5 +540,40 @@ footer a:hover {
 
   .grid-3col {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.footer-container {
+  max-width: 1024px;
+  padding: 2rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .footer-container {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .footer-container {
+    padding: 1rem 2rem;
+  }
+}
+
+footer a {
+  padding: 0.25rem 0;
+}
+
+footer a:hover {
+  text-decoration: underline !important;
+}
+
+footer ul {
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 767px) {
+  footer .col-12 {
+    margin-bottom: 1.75rem;
   }
 }

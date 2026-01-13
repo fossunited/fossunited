@@ -141,7 +141,7 @@
                 >Project Ideas</a
               >
             </div>
-            <div style="z-index: 10;">
+            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-2" style="z-index: 10;">
               <a
                 href="{{ hackathon.event_page_url }}"
                 class="v3-text text-uppercase font-weight-semibold pr-4"
@@ -434,9 +434,9 @@
 
 {% block footer %}
   <footer class="py-5">
-    <div class="container" style="max-width: 1024px; padding: 2rem 7rem;">
+    <div class="container footer-container">
       <div class="row">
-        <div class="col-12 col-md-4 d-flex justify-content-center">
+        <div class="col-12 col-md-4 d-flex justify-content-start justify-content-md-center">
           <div class="text-start">
             <div class="mb-3">
               <a href="https://github.com/fossunited/fossunited">
@@ -456,7 +456,7 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-4 d-flex justify-content-center">
+        <div class="col-12 col-md-4 d-flex justify-content-start justify-content-md-center">
           <ul class="list-unstyled text-start">
             <li class="mb-2">
               <a href="/fosshack/2025" class="text-decoration-none">FOSS Hack 2025</a>
@@ -476,7 +476,7 @@
           </ul>
         </div>
 
-        <div class="col-12 col-md-4 d-flex justify-content-center">
+        <div class="col-12 col-md-4 d-flex justify-content-start justify-content-md-center">
           <ul class="list-unstyled text-start">
             <li class="mb-2">
               <a
