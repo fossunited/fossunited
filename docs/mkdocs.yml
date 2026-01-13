@@ -25,6 +25,10 @@ nav:
       - Event Attendees Communication: event-attendees.md
       - What to Do at the Event: event.md
 
+  - FOSS Hackathon:
+      - Participanting: fosshack.md
+      - Managing Localhost: localhost.md
+
   - Volunteering:
       - Volunteering Overview: volunteering.md
       - Volunteering Perks: volunteering-perks.md

@@ -9,6 +9,8 @@ First, log in to [fossunited.org](https://fossunited.org). Once you're in, click
 
 On the left side of your dashboard, you'll see several options. Look for "Organisers Dashboard" and click on "Manage Chapter".
 
+<img src="/assets/mailing-sidebar.png" alt="Mailing in Sidebar" width="200">
+
 You can send emails to two types of people:
 - People who RSVPed to a specific scheduled event
 - Chapter subscribers who signed up for updates about upcoming events
@@ -17,12 +19,16 @@ Pick the chapter you want to send emails for. Once you're in, you'll see a menu 
 
 ## Creating your email campaign
 
+![Create Email Campaign](assets/mailing-page.png)
+
 Click the "Create Campaign" button. You'll see a dropdown menu asking who you want to send the email to. You can choose from:
+
 - CFP proposers
 - Event participants (people who RSVPed)
 - Accepted proposers
 - Rejected proposers
 
+<img src="/assets/mailing-email.png" alt="Create Email" width="700">
 
 Pick the group you need, then write your subject line and type out your message.
 
@@ -33,6 +39,7 @@ If you need to attach files, click the "+ Attachment" button below the message b
 ## Sending your campaign
 
 After creating the campaign, it won't send automatically. Click on the campaign you just made, and you'll see options on the right side:
+
 - **Send Test Email** - Try it out first to see how it looks
 - **Schedule** - Pick a date and time to send it later
 - **Send Now** - Send it immediately to everyone
