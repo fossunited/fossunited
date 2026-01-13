@@ -1,6 +1,9 @@
 <template>
-  <div
-    class="inline-flex self-start items-center gap-1 p-2 rounded bg-blue-50 border-2 border-dashed border-blue-600 text-sm"
+  <a
+    :href="docsUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="inline-flex self-start items-center gap-1 p-2 rounded bg-blue-50 border-2 border-dashed border-blue-600 text-sm hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
   >
     <IconBook2 class="w-6 h-6 flex-shrink-0" />
 
@@ -8,16 +11,10 @@
       {{ message }}
     </slot>
 
-    <a
-      v-if="docsUrl"
-      :href="docsUrl"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="text-blue-600 hover:underline ml-1"
-    >
+    <span class="text-blue-600 ml-1">
       {{ docsLabel }}
-    </a>
-  </div>
+    </span>
+  </a>
 </template>
 
 <script setup>

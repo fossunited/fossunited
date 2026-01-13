@@ -10,10 +10,17 @@
       </span>
     </div>
   </div>
+
+  <DocsInfo
+    class="my-4"
+    message="Please find platform docs for localhost management"
+    docs-url="https://docs.fossunited.org/localhost"
+  />
 </template>
 <script setup>
 import { IconMapPin } from '@tabler/icons-vue'
 import { defineProps } from 'vue'
+import DocsInfo from '@/components/DocsInfo.vue'
 
 const props = defineProps({
   localhost: {
