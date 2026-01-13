@@ -91,5 +91,6 @@ def get_context(context):
     context.grant_icon = "ti ti-list-search"
     context.grant_description = """
     Browse all FOSS United grantees disbursed for Projects, Events, and Fellowships."""
+    context.no_cache = 1
 
     return context

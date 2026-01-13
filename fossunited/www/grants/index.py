@@ -52,6 +52,7 @@ def get_context(context):
     context.recent_project_grants = get_recent_project_grants("Project")
     context.recent_fellowship_grants = get_recent_project_grants("Fellowship")
     context.recent_event_grants = get_recent_event_grants()
+    context.no_cache = 1
 
     return context
 

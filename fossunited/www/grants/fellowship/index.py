@@ -35,4 +35,6 @@ def get_context(context):
     context.grant_description = """Fellowship grants support individuals contributing to
     FOSS projects and communities. These grants help developers, students,
     and community organizers dedicate time to open source work."""
+    context.no_cache = 1
+
     return context

@@ -35,5 +35,6 @@ def get_context(context):
     context.grant_description = """Our grants program provide financial support to FOSS events.
     To avail an event grant, write to us with a proposal on the event specifics like goals,
     target audience, support links and documents etc."""
+    context.no_cache = 1
 
     return context

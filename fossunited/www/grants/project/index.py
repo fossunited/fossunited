@@ -34,5 +34,6 @@ def get_context(context):
     context.grant_description = """We fund FOSS projects by raising funds from the tech industry,
     either through our Industry Partnership Program or
     by reaching out to them upon receiving requests from FOSS projects/organizations."""
+    context.no_cache = 1
 
     return context
