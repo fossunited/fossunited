@@ -662,6 +662,7 @@ function createOrder() {
       state: checkoutInfo.state,
       billing_address: checkoutInfo.billing_address,
     },
+    event.data.event_name,
   )
 }
 const showDialog = ref(false)

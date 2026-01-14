@@ -10,6 +10,8 @@ import { createResource } from 'frappe-ui'
 const router = useRouter()
 
 const CHECKOUT_JS_SRC = 'https://checkout.razorpay.com/v1/checkout.js'
+let currentEventName = ''
+let currentEventID = ''
 
 onMounted(() => {
   if (!isRazorpayCheckoutJSLoaded()) {
@@ -61,7 +63,7 @@ const createRazorpayOrderResource = createResource({
     const options = {
       key: razorpayKey,
       name: 'FOSS United',
-      description: 'FOSS United Event',
+      description: `FOSS United Event - ${currentEventName} (${currentEventID})`,
       order_id: orderId,
       handler: handlePaymentSuccess,
       theme: {
@@ -100,7 +102,10 @@ const createRazorpayOrder = (
   refDocType = null,
   refDocName = null,
   taxDetails = {},
+  eventName,
 ) => {
+  currentEventName = eventName
+  currentEventID = refDocName
   createRazorpayOrderResource.fetch({
     checkout_info: {
       amount,

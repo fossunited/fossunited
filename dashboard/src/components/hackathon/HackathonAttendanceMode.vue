@@ -152,7 +152,9 @@ const participant = createResource({
   auto: true,
   onSuccess(data) {
     setAttendanceMode(data)
-    participant_localhost.fetch()
+    if (data?.localhost) {
+      participant_localhost.fetch()
+    }
   },
 })
 
