@@ -22,7 +22,7 @@ def get_context(context):
             In the past, we have funded developer tools,
             consumer apps, non-profit foundations, FOSS mirrors, Open Hardware projects,
             individual contributors, and even new programming languages! """,
-            "route": "/grants/project",
+            "route": "/grants/projects",
             "completed": project_counts["Project"]["completed"],
             "pending": project_counts["Project"]["pending"],
         },
@@ -33,7 +33,7 @@ def get_context(context):
             events that directly benefit the FOSS community.
             To apply for a FOSS event grant,
             please send us a detailed proposal at grants@fossunited.org""",
-            "route": "/grants/event",
+            "route": "/grants/events",
             "completed": event_counts["completed"],
             "pending": event_counts["pending"],
         },
@@ -43,7 +43,7 @@ def get_context(context):
             "description": """We provide grants to individuals contributing to
             FOSS projects and communities. These grants help developers, students,
             and community organizers dedicate time to FOSS work.""",
-            "route": "/grants/fellowship",
+            "route": "/grants/fellowships",
             "completed": project_counts["Fellowship"]["completed"],
             "pending": project_counts["Fellowship"]["pending"],
         },

@@ -24,12 +24,24 @@
     <div class="d-flex align-items-center gap-3">
       <div class="flex-fill text-center">
         <div class="v3-grant-stat-number">{{ completed or 0 }}</div>
-        <div class="v3-text-secondary v3-grant-stat-label">Completed</div>
+        <div class="v3-text-secondary v3-grant-stat-label">
+          {% if route == "/grants/events" %}
+          Approved
+          {% else %}
+          Disbursed
+          {% endif %}
+        </div>
       </div>
       <div class="v3-grant-stat-divider"></div>
       <div class="flex-fill text-center">
         <div class="v3-grant-stat-number">{{ pending or 0 }}</div>
-        <div class="v3-text-secondary v3-grant-stat-label">Pending</div>
+        <div class="v3-text-secondary v3-grant-stat-label">
+          {% if route == "/grants/events" %}
+          Under Review
+          {% else %}
+          Ongoining
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
