@@ -161,6 +161,13 @@
           />
           <div v-if="project.is_partner_project" class="flex flex-col gap-2">
             <div class="text-base mt-4">Select Partner Project</div>
+            <DocsInfo
+              v-if="partner_projects.data.length <= 3"
+              message="Note: More Parter projects will be added shortly"
+              docs-url="/fosshack/partner-projects"
+              docs-label=""
+            />
+
             <RadioGroup
               v-model="project.partner_project"
               class="grid grid-cols-2 md:grid-cols-3 gap-2 my-2"
@@ -274,6 +281,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
 import { IconBrandGithub } from '@tabler/icons-vue'
+import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
 const router = useRouter()

@@ -23,7 +23,7 @@ import { IconBook2 } from '@tabler/icons-vue'
 defineProps({
   message: {
     type: String,
-    default: '',
+    default: 'Please find platform docs this page',
   },
   docsUrl: {
     type: String,
