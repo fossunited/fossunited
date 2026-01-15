@@ -17,8 +17,10 @@ class FOSSProjectGrant(Document):
         co_sponsor: DF.Data | None
         date_of_provision: DF.Date | None
         grant_amount: DF.Data | None
-        grant_status: DF.Literal["Open", "Approved", "Under Review", "Rejected"]  # noqa: F722, F821
-        grant_type: DF.Literal["Project", "Fellowship"]  # noqa: F722, F821
+        grant_status: DF.Literal[
+            "Open", "Approved", "Under Review", "Rejected", "Disbursed", "Ongoing"
+        ]
+        grant_type: DF.Literal["Project", "Fellowship"]
         project_logo: DF.AttachImage | None
         project_name: DF.Data
         project_website: DF.Data | None

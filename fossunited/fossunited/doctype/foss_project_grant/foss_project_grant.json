@@ -32,7 +32,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Grant Status",
-   "options": "Open\nApproved\nUnder Review\nRejected",
+   "options": "Open\nApproved\nUnder Review\nRejected\nDisbursed\nOngoing",
    "reqd": 1
   },
   {
@@ -95,7 +95,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-28 22:54:22.096609",
+ "modified": "2026-01-15 17:47:56.345940",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",
