@@ -8,17 +8,17 @@
 
 {% macro cfp_block(cfp_status_block, doc) %}
   {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
-    {% set badge_class = "ev-live--live" %}
-    {% set badge_icon = "<div class='ev-live-dot'></div>" %}
+    {% set badge_class = "v3-status--success" %}
     {% set badge_text = "Live" %}
+    {% set badge_type = "dot" %}
   {% elif cfp_status_block.closing_soon %}
-    {% set badge_class = "ev-live--closing" %}
-    {% set badge_icon = "<div class='ev-live-dot'></div>" %}
+    {% set badge_class = "v3-status--warning" %}
     {% set badge_text = "Closing Soon" %}
+    {% set badge_type = "dot" %}
   {% else %}
-    {% set badge_class = "ev-live--closed" %}
-    {% set badge_icon = "<i class='ti ti-ban ev-live-ban-icon'></i>" %}
+    {% set badge_class = "v3-status--error" %}
     {% set badge_text = "Closed" %}
+    {% set badge_type = "icon" %}
   {% endif %}
 
   <div
@@ -31,9 +31,14 @@
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
-      <div class="ev-live {{ badge_class }}" role="status" aria-live="polite">
-        {{ badge_icon | safe }}
-        <span class="ev-live-text">{{ badge_text }}</span>
+
+      <div class="v3-status {{ badge_class }}" role="status" aria-live="polite">
+        {% if badge_type == "dot" %}
+          <span class="v3-status-dot" aria-hidden="true"></span>
+        {% else %}
+          <i class="ti ti-ban v3-status-ban-icon" aria-hidden="true"></i>
+        {% endif %}
+        <span>{{ badge_text }}</span>
       </div>
     </div>
 
@@ -80,12 +85,25 @@
       </div>
     {% endif %}
 
-    {% if user_has_registered %}
-      <div class="ev-registered" role="status" aria-live="polite">
-        <i class="ti ti-discount-check-filled" aria-hidden="true"></i>
-        You've Registered for this Event
-      </div>
+{% if registration_status in ["accepted", "ticket"] %}
+    <div class="v3-status v3-status--success" role="status" aria-live="polite">
+      <i class="ti ti-discount-check-filled" aria-hidden="true"></i>
+      You've registered for this event
+    </div>
+
+    {% elif registration_status == "pending" %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-clock-filled" aria-hidden="true"></i>
+      You're on the waiting list for this event
+    </div>
+
+    {% elif registration_status == "rejected" %}
+    <div class="v3-status v3-status--error" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      Your registration was not accepted for this event
+    </div>
     {% endif %}
+
   </div>
 {% endmacro %}
 
@@ -187,18 +205,6 @@
       color: var(--v3-text-color3);
     }
 
-    .ev-registered {
-      padding: 0.25rem 0.5rem;
-      background: var(--v3-primary-button);
-      border-radius: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--v3-card-bg);
-    }
-
     .ev-cfp-header {
       display: flex;
       align-items: center;
@@ -211,46 +217,6 @@
       font-size: 1rem;
       font-weight: 600;
     }
-
-.ev-live {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-/* live */
-.ev-live--live {
-  background: rgba(16, 185, 129, 0.15); /* greenish */
-  color: rgba(16, 185, 129, 1);
-}
-
-/* closing soon */
-.ev-live--closing {
-  background: hsla(41, 88%, 45%, 0.15);
-  color: hsla(41, 88%, 46%, 1);
-}
-
-/* closed */
-.ev-live--closed {
-  background: hsla(0, 53%, 52%, 0.15);
-  color: hsla(0, 53%, 52%, 1);
-}
-
-.ev-live-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-}
-
-.ev-live-ban-icon {
-  font-size: 1rem;
-  line-height: 1;
-}
 
     .ev-cfp-desc {
       font-size: 0.875rem;
@@ -268,6 +234,9 @@
       display: flex;
       gap: 0.25rem;
       font-size: 0.75rem;
+    }
+    .ev-cfp-deadline:empty {
+      visibility: hidden;
     }
 
     .ev-contact {
@@ -441,7 +410,7 @@
                         Buy Ticket
                       </a>
                     {% elif doc.show_rsvp %}
-                      {% if user_has_registered %}
+                      {% if registration_status %}
                         <a
                           href="/{{ rsvp_status_block.form_route }}"
                           class="v3-btn v3-btn-primary"
