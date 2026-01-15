@@ -411,43 +411,41 @@ class FOSSChapterEvent(WebsiteGenerator):
             cfp_status_block["show_primary_cta"] = False
         return cfp_status_block
 
-    def check_user_registration(self):
-        """Check if the current user has registered for this event via RSVP or ticket purchase"""
-        if frappe.session.user == "Guest":
-            return False
+    def get_user_registration_status(self):
+        """Return the current user's registration status for this event"""
 
-        # Check for RSVP
-        rsvp_exists = frappe.db.exists(
+        user = frappe.session.user
+        if user == "Guest":
+            return None
+
+        # Check RSVP first
+        rsvp = frappe.db.get_value(
             RSVP_RESPONSE,
             {
                 "event": self.name,
-                "submitted_by": frappe.session.user,
+                "submitted_by": user,
             },
+            "status",
         )
 
-        if rsvp_exists:
-            return True
+        if rsvp:
+            return rsvp.lower()  # "accepted", "pending", "rejected"
 
-        # Check for ticket purchase (if ticketing is enabled)
-        if self.is_paid_event:
-            ticket_exists = frappe.db.exists(
-                EVENT_TICKET,
-                {
-                    "event": self.name,
-                    "email": frappe.session.user,
-                },
-            )
-            if ticket_exists:
-                return True
+        # Check ticket purchase if paid event
+        if self.is_paid_event and frappe.db.exists(
+            EVENT_TICKET,
+            {"event": self.name, "email": user},
+        ):
+            return "ticket"
 
-        return False
+        return None
 
     def get_event_stats(self):
         """Get attendance and proposal statistics for the event"""
         stats = {"attending": 0, "proposals": 0}
 
         # Count RSVP responses
-        rsvp_count = frappe.db.count(RSVP_RESPONSE, {"event": self.name})
+        rsvp_count = frappe.db.count(RSVP_RESPONSE, {"event": self.name, "status": "Accepted"})
         stats["attending"] = rsvp_count
 
         # Add ticket holders if paid event
@@ -528,7 +526,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.all_cfp_link = f"/dashboard/cfp/all/{self.route.split('c/')[1]}"
 
         # Add user registration status
-        context.user_has_registered = self.check_user_registration()
+        context.registration_status = self.get_user_registration_status()
 
         # Add event statistics
         context.event_stats = self.get_event_stats()
