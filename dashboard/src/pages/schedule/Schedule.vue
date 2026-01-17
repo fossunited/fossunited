@@ -56,6 +56,7 @@ import SearchSession from '@/components/schedule/SearchSession.vue'
 import { ref, computed, watch, provide } from 'vue'
 import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
+import dayjs from 'dayjs'
 
 const route = useRoute()
 
@@ -97,7 +98,11 @@ const schedule = createResource({
   loading: true,
   onSuccess(data) {
     eventDays.value = Object.keys(data)
-    selectedDay.value = eventDays.value[0]
+    // Set to today's date if it exists, otherwise first date
+    // FIXME: use ISO for dates while redesign
+    const today = dayjs().format('DD/MM/YYYY')
+    const todayIndex = eventDays.value.findIndex((date) => date === today)
+    selectedDay.value = todayIndex !== -1 ? eventDays.value[todayIndex] : eventDays.value[0]
   },
 })
 
