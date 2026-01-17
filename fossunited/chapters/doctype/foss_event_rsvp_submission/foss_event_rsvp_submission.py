@@ -1,6 +1,6 @@
 import frappe
 from frappe.model.document import Document
-from frappe.utils import get_datetime, getdate, now_datetime
+from frappe.utils import getdate, now_datetime, nowdate
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.api.emailing import handle_email_group_subscription
@@ -197,15 +197,15 @@ class FOSSEventRSVPSubmission(Document):
         return {"success": True, "message": "Checked in successfully"}
 
     def can_check_in(self, event_start_date, event_end_date):
-        """Check if check-in is allowed (between event start and end dates)"""
+        """Check if check-in is allowed based on date only (no time)."""
         if not event_start_date or not event_end_date:
             return False
 
-        now = get_datetime()
-        start = get_datetime(event_start_date)
-        end = get_datetime(event_end_date)
+        today = getdate(nowdate())
+        start_date = getdate(event_start_date)
+        end_date = getdate(event_end_date)
 
-        return start <= now <= end
+        return start_date <= today <= end_date
 
     def has_checked_in_today(self):
         """Check if user has already checked in today"""

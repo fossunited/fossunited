@@ -1,7 +1,7 @@
 import frappe
 from frappe.query_builder import DocType, Order
 from frappe.query_builder.functions import Coalesce
-from frappe.utils import get_datetime
+from frappe.utils import add_days, getdate, nowdate
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.doctype_ids import (
@@ -117,8 +117,8 @@ def if_rsvp_show_checkins(event_id: str) -> bool:
     if not event_start:
         return False
 
-    now = get_datetime()
-    return get_datetime(event_start) <= now
+    event_prep = add_days(event_start, -2)
+    return getdate(event_prep) <= getdate(nowdate())
 
 
 @frappe.whitelist()
