@@ -108,7 +108,7 @@ def get_rsvp_checkins(event_id: str) -> list:
 @frappe.whitelist()
 def if_rsvp_show_checkins(event_id: str) -> bool:
     """
-    Check if check-ins should be shown (event has started).
+    Check if check-ins should be shown (shown before event days as buffer).
     Returns: boolean
     """
     if not check_if_chapter_or_event_core_member(event_id):

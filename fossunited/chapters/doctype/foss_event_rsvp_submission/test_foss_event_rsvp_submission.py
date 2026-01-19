@@ -1,6 +1,7 @@
 import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import add_days, nowdate
 
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP
 from fossunited.tests.utils import (
@@ -19,7 +20,11 @@ CORE_TEAM = "test1@example.com"
 class TestFOSSEventRSVPSubmission(FrappeTestCase):
     def setUp(self):
         self.chapter = insert_test_chapter(members=[CORE_TEAM])
-        self.event = insert_test_event(chapter=self.chapter)
+        self.event = insert_test_event(
+            chapter=self.chapter,
+            event_start_date=add_days(nowdate(), -1),
+            event_end_date=add_days(nowdate(), 1),
+        )
         self.rsvp = insert_rsvp_form(event=self.event.name)
         self.email_group = frappe.db.get_value(
             "Email Group",
@@ -316,4 +321,77 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
                 {"email": "unsubscribe@example.com", "email_group": self.email_group},
             )
         )
+        submission.delete(force=True, ignore_permissions=True)
+
+    def test_successful_checkin(self):
+        frappe.set_user(CORE_TEAM)
+
+        submission = insert_rsvp_submission(linked_rsvp=self.rsvp.name)
+
+        result = submission.add_check_in()
+
+        self.assertTrue(result["success"])
+        self.assertEqual(len(submission.check_ins), 1)
+        self.assertTrue(submission.has_checked_in_today())
+
+        submission.delete(force=True, ignore_permissions=True)
+
+    def test_double_checkin_same_day_fails(self):
+        frappe.set_user(CORE_TEAM)
+
+        submission = insert_rsvp_submission(linked_rsvp=self.rsvp.name)
+
+        submission.add_check_in()
+
+        with self.assertRaises(frappe.ValidationError):
+            submission.add_check_in()
+
+        submission.delete(force=True, ignore_permissions=True)
+
+    def test_checkin_outside_event_dates_fails(self):
+        frappe.set_user(CORE_TEAM)
+
+        # Event is in the past
+        event = frappe.get_doc(EVENT, self.event.name)
+        event.event_start_date = add_days(nowdate(), -10)
+        event.event_end_date = add_days(nowdate(), -5)
+        event.save()
+
+        submission = insert_rsvp_submission(linked_rsvp=self.rsvp.name)
+
+        with self.assertRaises(frappe.ValidationError):
+            submission.add_check_in()
+
+        submission.delete(force=True, ignore_permissions=True)
+
+    def test_has_checked_in_today_initially_false(self):
+        frappe.set_user(CORE_TEAM)
+
+        submission = insert_rsvp_submission(linked_rsvp=self.rsvp.name)
+
+        self.assertFalse(submission.has_checked_in_today())
+
+        submission.delete(force=True, ignore_permissions=True)
+
+    def test_can_check_in_only_during_event_days(self):
+        frappe.set_user(CORE_TEAM)
+
+        submission = insert_rsvp_submission(linked_rsvp=self.rsvp.name)
+
+        # --- Case 1: Before event starts (should be False) ---
+        event = frappe.get_doc(EVENT, self.event.name)
+        event.event_start_date = add_days(nowdate(), 1)  # starts tomorrow
+        event.event_end_date = add_days(nowdate(), 2)
+        event.save()
+
+        self.assertFalse(submission.can_check_in(event.event_start_date, event.event_end_date))
+
+        # --- Case 2: During event (should be True) ---
+        event = frappe.get_doc(EVENT, self.event.name)
+        event.event_start_date = add_days(nowdate(), -1)
+        event.event_end_date = add_days(nowdate(), 1)
+        event.save()
+
+        self.assertTrue(submission.can_check_in(event.event_start_date, event.event_end_date))
+
         submission.delete(force=True, ignore_permissions=True)

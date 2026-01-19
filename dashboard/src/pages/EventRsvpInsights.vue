@@ -48,7 +48,7 @@
       />
 
       <DocsInfo
-        message="You can check-in attendees once the event starts."
+        message="You can check-in attendees during the event days."
         docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
       />
 
