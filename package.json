@@ -29,7 +29,7 @@
     "@tailwindcss/typography": "^0.5.16",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-vue": "^10.7.0",
     "globals": "^17.0.0",
     "prettier": "^3.8.0",
