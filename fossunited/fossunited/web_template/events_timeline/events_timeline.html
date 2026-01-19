@@ -1,301 +1,331 @@
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
-{% from "fossunited/templates/macros/hackathon_card.html" import hackathon_card %}
-{% set grouped_events = get_grouped_events_by_chapter_type() %}
-{% macro render_event_groups(grouped_events, chapter="default") %}
-    {% for group, events in (grouped_events.get(chapter) or {}).items() %}
-        {% set is_past = group.startswith('Past ') %}
-        {% if is_past %}
-            <details role="region">
-                <summary class="select-theme mt-5 mb-10">Show Past Events</summary>
-            {% endif %}
-            <div class="event-group" role="region">
-                <h3>{{ group }}</h3>
-                {% for month, month_events in events.items() %}
-                    <h4 class="event-month"
-                        v-show="(mustAttendOnly, searchText, selectedCity, $el?.nextElementSibling?.style?.display !== 'none')">
-                        {{ month }}
-                    </h4>
-                    <div class="events-grid-4"
-                         role="group"
-                         v-show="(mustAttendOnly, searchText, selectedCity, $el?.children.length > 0)">
-                        {% for event in month_events %}
-                            {% set raw_date = event.event_start_date or event.start_date %}
-                            {% set event_date_text = frappe.utils.formatdate(raw_date, "d MMM yyyy") %}
-                            {% if event.event_name %}
-                                <div class="event-card-holder {{ group | replace(' ', '') }}"
-                                     id="{{ event.name }}"
-                                     role="listitem"
-                                     v-if="canShow('{{ event.event_name }}', '{{ event_date_text }}', !!{{ event.must_attend }}, '{{ event.chapter }}', '{{ event.event_type }}')">
-                                    {{ event_card(event) }}
-                                </div>
-                            {% else %}
-                                <div class="event-card-holder {{ group | replace(' ', '') }}"
-                                     id="{{ event.name }}"
-                                     role="listitem"
-                                     v-if="canShow('{{ event.hackathon_name }}', '{{ event_date_text }}', true, '{{ event.chapter }}', '{{ event.hackathon_type }}')">
-                                    {{ hackathon_card(event) }}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
-            {% if is_past %}</details>{% endif %}
-    {% endfor %}
-{% endmacro %}
-<link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-<style>
-  .events-timeline {
-    padding-top: 7rem;
-    padding-bottom: 7rem;
-    display: flex;
-    flex-direction: column;
-    gap: 4rem;
-  }
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
 
-  .events-search {
-    display: flex;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    border: 1px solid var(--Gray-200, #eaecf0);
-    background-color: white;
-    min-width: 40%;
-    align-items: center;
-  }
+{% block page_content %}
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+  />
 
-  #events-search {
-    border-color: transparent;
-    width: 100%;
-  }
+  <div class="v3-page py-5">
+    <div class="v3-container v3-container-wide">
+      <!-- Header -->
+      {{ v3_navbar() }}
 
-  #events-search::placeholder {
-    color: var(--Gray-500, #667085);
-  }
+      <div class="mb-5">
+        <h1 class="v3-text-primary font-weight-bold">Events Timeline</h1>
+        <p class="v3-text-secondary">
+          <span id="event-count" class="font-weight-bold">0</span> Events
+        </p>
+      </div>
 
-  #events-search:focus,
-  .must-attend-checkbox input:focus + label {
-    outline: 2px solid var(--Gray-500, #667085);
-    outline-offset: 2px;
-  }
+      <!-- Controls -->
+      <div class="v3-controls mb-4">
+        <div class="v3-controls-left">
+          <div class="v3-search-input v3-search-wide">
+            <input id="search" type="text" placeholder="Search events..." />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
 
-  .must-attend-checkbox {
-    display: flex;
-    align-items: center;
-    flex-direction: row-reverse;
-    border-radius: 8px;
-    background: #fff;
-    padding: 0.7rem;
-    gap: 0.5rem;
-  }
-
-  .must-attend-checkbox label {
-    margin: 0;
-  }
-
-  .search-filter-controlpanel {
-    display: flex;
-    gap: 0.8rem;
-  }
-
-  .event-group {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .select-theme {
-    border-radius: var(--radius-4, 8px);
-    background: #1a1a1a;
-    color: #fff;
-    padding: 8px;
-    text-align: center;
-  }
-
-  .ics-button {
-    display: flex;
-    height: 44px;
-    width: 230px;
-    padding: 12px 20px;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    flex: 1 0 0;
-    border-radius: var(--radius-4, 8px);
-    background: #1a1a1a;
-    color: #fafafa;
-    /* text/base/medium */
-    font-family: Inter;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 115%; /* 16.1px */
-    letter-spacing: 1.12px;
-    text-transform: uppercase;
-  }
-  .ics-button:hover {
-    background: #2b2b2b;
-  }
-
-  #events-search::placeholder {
-      font-size: 0.9rem;
-      color: #888;
-      font-weight: 400;
-      opacity: 1;
-  }
-
-  .event-card-holder { width: 100%; }
-
-  @media screen and (max-width: 1440px) {
-  .events-grid-4 {
-  width: 100%;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  row-gap: 24px;
-  }
-  }
-
-  @media (max-width: 768px) {
-    .search-filter-controlpanel {
-      flex-direction: column;
-    }
-
-    .must-attend-checkbox {
-      flex-direction: row;
-      width: fit-content;
-    }
-  }
-</style>
-<div v-scope>
-    <div class="container events-timeline">
-        <!--Search filter panel-->
-        <div class="search-filter-controlpanel"
-             role="search"
-             aria-labelledby="search-panel-label">
-            <h2 id="search-panel-label" class="sr-only">Search and Filter Events</h2>
-            <!-- Search Input -->
-            <div class="events-search">
-                <label for="events-search" class="sr-only">Search Events</label>
-                <input v-model="searchText"
-                       type="text"
-                       id="events-search"
-                       placeholder="Search by event, chapter name or date or event type"
-                       aria-label="Search events by name or date" />
-            </div>
-            <!-- Must Attend Checkbox -->
-            <div class="must-attend-checkbox">
-                <label for="must-attend-checkbox">Must Attend</label>
-                <input type="checkbox"
-                       v-model="mustAttendOnly"
-                       id="must-attend-checkbox"
-                       title="Show only must-attend events"
-                       aria-describedby="must-attend-desc" />
-            </div>
-            <p id="must-attend-desc" class="sr-only">Filter the events to show only those marked as must-attend.</p>
-            <div class="must-attend-checkbox">
-                <label for="show-fossclub-checkbox">Show Club Events</label>
-                <input type="checkbox"
-                       id="show-fossclub-checkbox"
-                       v-model="showFossClub"
-                       aria-describedby="show-fossclub-desc" />
-            </div>
-            <p id="show-fossclub-desc" class="sr-only">Toggle to view FOSS Club events. When off, shows rest all Events.</p>
-            <div class="must-attend-checkbox">
-                <select id="citySelect"
-                        v-model="selectedCity"
-                        class="select-theme"
-                        aria-describedby="city-select-desc">
-                    <option value="All Cities" selected>All Cities</option>
-                    {% set cities = get_all_city_names() %}
-                    {% for city in cities %}<option value="{{ city.name }}">{{ city.name }}</option>{% endfor %}
-                </select>
-            </div>
-            <p id="city-select-desc" class="sr-only">Filter the events to show only those in your city.</p>
+          <button id="filter-toggle" class="v3-btn v3-btn-secondary">
+            <i class="ti ti-filter"></i>
+            Filters
+          </button>
         </div>
-        <button onclick="downloadEventIcs()"
-                class="child-container--subtext ics-button">
-            Download ICS File
+
+        <div class="v3-controls-right">
+          <button id="download-ics" class="v3-btn v3-btn-dark">
             <i class="ti ti-download"></i>
-        </button>
-        <div v-show="!showFossClub">{{ render_event_groups(grouped_events, "default") }}</div>
-        <div v-show="showFossClub">{{ render_event_groups(grouped_events, "club") }}</div>
-        <script>
- const chapterCityMap = {
- {% set chapter_details = get_chapter_details() %}
-    {% for chapter in chapter_details %}"{{ chapter.name }}": "{{ chapter.city or '' }}",{% endfor %}
-  };
+            Download ICS
+          </button>
+        </div>
+      </div>
 
-      PetiteVue.createApp({
-        searchText: '',
-        mustAttendOnly: false,
-        selectedCity: 'All Cities',
-        showFossClub: false,
-        canShow(eventName, eventDate, eventMustAttend, eventCityChapter, eventType) {
-          if (this.mustAttendOnly && !eventMustAttend) {
-            return false
-          }
+      <!-- Filters panel -->
+      <div id="filters-panel" class="v3-card mb-4 d-none">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label class="v3-text-secondary">City</label>
+            <select id="city-filter" class="v3-select w-100">
+              <option value="">All Cities</option>
+            </select>
+          </div>
 
-        const chapterCity = chapterCityMap[eventCityChapter];
-        if (this.selectedCity !== 'All Cities' &&
-            chapterCity !== undefined &&
-            chapterCity !== this.selectedCity) {
-                return false;
-        }
-          if (this.searchText.length == 0) {
-            return true
-          }
+          <div class="col-md-3 mb-3">
+            <label class="v3-text-secondary">Start date</label>
+            <input id="start-date" type="date" class="v3-select w-100" />
+          </div>
 
-          return (
-            eventName.toLowerCase().includes(this.searchText.toLowerCase()) ||
-            eventDate.toLowerCase().includes(this.searchText.toLowerCase()) ||
-            eventCityChapter.toLowerCase().includes(this.searchText.toLowerCase()) ||
-            eventType.toLowerCase().includes(this.searchText.toLowerCase())
-          )
-        },
-      }).mount()
+          <div class="col-md-3 mb-3">
+            <label class="v3-text-secondary">End date</label>
+            <input id="end-date" type="date" class="v3-select w-100" />
+          </div>
 
-      function downloadEventIcs() {
-        let event_ids = []
-        const visibleCards = Array.from(document.querySelectorAll('div.event-card-holder'))
-          // visible if not display:none in any ancestor
-          .filter((el) => el.offsetParent !== null)
-        visibleCards.forEach((el) => {
-          if (el.id) event_ids.push(el.id)
-        })
-        if (event_ids.length === 0) {
-          alert('No visible events to export for the current filters.')
-          return
-        }
+          <div class="col-md-3 d-flex align-items-end mb-3">
+            <label class="d-flex align-items-center mb-0">
+              <input id="must-attend-filter" type="checkbox" class="mr-2" />
+              <span class="v3-text-primary">Must attend only</span>
+            </label>
+          </div>
+        </div>
+      </div>
 
-        // Call your backend method to generate ICS file
-        frappe.call({
-          method: 'fossunited.api.chapter.generate_ics',
-          args: {
-            event_ids: event_ids,
-          },
-          callback: (r) => {
-            if (r.message) {
-              const blob = new Blob([r.message], { type: 'text/calendar' })
-              const url = URL.createObjectURL(blob)
-              const a = document.createElement('a')
-              a.href = url
-              a.download = `events.ics`
-              a.click()
-              URL.revokeObjectURL(url)
-            }
-          },
-        })
-      }
-        </script>
+      <!-- Category toggle -->
+      <div class="v3-card btn-group w-100 mb-4 p-2">
+        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">City Events</button>
+        <button id="toggle-club" class="v3-btn v3-text-primary w-50">Club Events</button>
+      </div>
+
+      <div id="no-upcoming-message" class="v3-text-secondary text-center my-4 d-none">
+        No more upcoming events listed
+      </div>
+      <!-- Timeline -->
+      <div id="timeline-container"></div>
+
+      <!-- Show past -->
+      <div id="show-past-wrapper" class="text-center my-4 d-none">
+        <button id="show-past-btn" class="v3-btn v3-btn-dark">Show Past Events ↓</button>
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="text-center py-5 d-none">
+        <div class="display-4 opacity-25">🔍</div>
+        <h4 class="v3-text-secondary mt-3">No events found</h4>
+      </div>
+
+      <!-- Flat event data (hidden) -->
+      {% set all_events = get_all_events_timeline() %}
+      <div class="d-none">
+        {% for event in all_events %}
+          {% set name = event.event_name or event.hackathon_name %}
+          {% set location = event.event_location or event.location or "Virtual" %}
+          <div
+            class="timeline-event-wrapper"
+            data-name="{{ name }}"
+            data-location="{{ location }}"
+            data-start="{{ event._start }}"
+            data-end="{{ event._end }}"
+            data-is-past="{{ 'true' if event._is_past else 'false' }}"
+            data-must-attend="{{ 'true' if event.must_attend else 'false' }}"
+            data-chapter-type="{{ event._chapter_type }}"
+          >
+            {{ event_card(event) }}
+          </div>
+        {% endfor %}
+      </div>
     </div>
-</div>
+  </div>
+
+  <script>
+    let currentCategory = 'city' // city | club
+    let showPastEvents = false
+
+    const filters = {
+      search: '',
+      city: '',
+      start: '',
+      end: '',
+      mustAttend: false,
+    }
+
+    const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
+
+    const citySelect = document.getElementById('city-filter')
+    ;[...new Set(wrappers.map((w) => w.dataset.location))]
+      .filter(Boolean)
+      .sort()
+      .forEach((city) => {
+        const o = document.createElement('option')
+        o.value = city
+        o.textContent = city
+        citySelect.appendChild(o)
+      })
+
+    document.getElementById('search').oninput = (e) => {
+      filters.search = e.target.value.toLowerCase()
+      render()
+    }
+
+    citySelect.onchange = (e) => {
+      filters.city = e.target.value
+      render()
+    }
+
+    document.getElementById('start-date').onchange = (e) => {
+      filters.start = e.target.value
+      render()
+    }
+
+    document.getElementById('end-date').onchange = (e) => {
+      filters.end = e.target.value
+      render()
+    }
+
+    document.getElementById('must-attend-filter').onchange = (e) => {
+      filters.mustAttend = e.target.checked
+      render()
+    }
+
+    document.getElementById('filter-toggle').onclick = () => {
+      document.getElementById('filters-panel').classList.toggle('d-none')
+    }
+
+    document.getElementById('toggle-city').onclick = () => {
+      currentCategory = 'city'
+      showPastEvents = false
+      toggleButtons()
+      render()
+    }
+
+    document.getElementById('toggle-club').onclick = () => {
+      currentCategory = 'club'
+      showPastEvents = false
+      toggleButtons()
+      render()
+    }
+
+    document.getElementById('show-past-btn').onclick = () => {
+      showPastEvents = true
+      render()
+    }
+
+    function toggleButtons() {
+      const cityBtn = document.getElementById('toggle-city')
+      const clubBtn = document.getElementById('toggle-club')
+
+      // Reset
+      cityBtn.classList.remove('v3-btn-secondary')
+      clubBtn.classList.remove('v3-btn-secondary')
+
+      // Activate current
+      if (currentCategory === 'city') {
+        cityBtn.classList.add('v3-btn-secondary')
+      } else {
+        clubBtn.classList.add('v3-btn-secondary')
+      }
+    }
+
+    function passesFilters(w) {
+      if (currentCategory === 'club' && w.dataset.chapterType !== 'FOSS Club') return false
+      if (currentCategory === 'city' && w.dataset.chapterType === 'FOSS Club') return false
+
+      if (filters.search) {
+        const hay = (w.dataset.name + ' ' + w.dataset.location).toLowerCase()
+        if (!hay.includes(filters.search)) return false
+      }
+
+      if (filters.city && w.dataset.location !== filters.city) return false
+
+      if (filters.mustAttend && w.dataset.mustAttend !== 'true') return false
+
+      if (filters.start && new Date(w.dataset.end) < new Date(filters.start)) return false
+      if (filters.end && new Date(w.dataset.start) > new Date(filters.end)) return false
+
+      return true
+    }
+
+    function groupByMonth(items) {
+      const g = {}
+      items.forEach((w) => {
+        const d = new Date(w.dataset.start)
+        const key = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+        g[key] = g[key] || []
+        g[key].push({ w, d })
+      })
+      return g
+    }
+
+    function render() {
+      const container = document.getElementById('timeline-container')
+      const empty = document.getElementById('empty-state')
+      const showPast = document.getElementById('show-past-wrapper')
+      const count = document.getElementById('event-count')
+
+      container.innerHTML = ''
+
+      const visible = wrappers.filter(passesFilters)
+      const upcoming = visible.filter((w) => w.dataset.isPast !== 'true')
+      const past = visible.filter((w) => w.dataset.isPast === 'true')
+      const noUpcomingMsg = document.getElementById('no-upcoming-message')
+      noUpcomingMsg.classList.add('d-none')
+
+      if (!upcoming.length && past.length) {
+        noUpcomingMsg.classList.remove('d-none')
+      }
+
+      count.textContent = visible.length
+
+      if (!visible.length) {
+        empty.classList.remove('d-none')
+        showPast.classList.add('d-none')
+        noUpcomingMsg.classList.add('d-none')
+        return
+      }
+
+      empty.classList.add('d-none')
+
+      renderGroups(upcoming, false).forEach((g) => container.appendChild(g))
+
+      if (past.length && !showPastEvents) {
+        showPast.classList.remove('d-none')
+      } else {
+        showPast.classList.add('d-none')
+      }
+
+      if (showPastEvents) {
+        renderGroups(past, true).forEach((g) => container.appendChild(g))
+      }
+    }
+
+    function renderGroups(items, reverse) {
+      const groups = groupByMonth(items)
+      return Object.entries(groups).map(([month, list]) => {
+        const group = document.createElement('div')
+        group.className = 'mb-5'
+
+        group.innerHTML = `
+      <div class="d-flex align-items-center mb-3">
+        <i class="ti ti-circle-filled mr-2" style="color: var(--v3-primary-button);"></i>
+        <h5 class="v3-text-primary mb-0">${month}</h5>
+      </div>
+      <div class="row"></div>
+    `
+
+        const row = group.querySelector('.row')
+        list
+          .sort((a, b) => (reverse ? b.d - a.d : a.d - b.d))
+          .forEach(({ w }) => {
+            const col = document.createElement('div')
+            col.className = 'col-md-4 mb-4'
+            col.appendChild(w.cloneNode(true))
+            row.appendChild(col)
+          })
+
+        return group
+      })
+    }
+
+    document.getElementById('download-ics').onclick = () => {
+      const ids = wrappers
+        .filter(passesFilters)
+        .map((w) => w.querySelector('a')?.href.split('/').pop())
+        .filter(Boolean)
+
+      if (!ids.length) return alert('No events to export')
+
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: { event_ids: ids },
+        callback: (r) => {
+          const blob = new Blob([r.message], { type: 'text/calendar' })
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(blob)
+          a.download = 'events.ics'
+          a.click()
+        },
+      })
+    }
+
+    render()
+  </script>
+{% endblock %}
