@@ -184,8 +184,8 @@
     `
 
       cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
-        opt.onmouseenter = () => (opt.style.background = '#f5f5f5')
-        opt.onmouseleave = () => (opt.style.background = 'white')
+        opt.onmouseenter = () => (opt.style.background = 'var(--v3-button-border)')
+        opt.onmouseleave = () => (opt.style.background = 'var(--v3-card-bg)')
         opt.onclick = () => {
           filters.city = opt.dataset.value
           citySearch.value = opt.dataset.value || ''
@@ -233,8 +233,10 @@
 
             case 'date':
               if (/^\d{4}-\d{2}$/.test(value)) {
+                const [year, month] = value.split('-').map(Number)
+                const lastDay = new Date(year, month, 0).getDate()
                 result.start = `${value}-01`
-                result.end = `${value}-31`
+                result.end = `${value}-${String(lastDay).padStart(2, '0')}`
               } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
                 result.start = value
                 result.end = value
@@ -449,6 +451,9 @@
         method: 'fossunited.api.chapter.generate_ics',
         args: { event_ids: ids },
         callback: (r) => {
+          if (!r.message) {
+            return alert('Failed to generate ICS file')
+          }
           const blob = new Blob([r.message], { type: 'text/calendar' })
           const a = document.createElement('a')
           a.href = URL.createObjectURL(blob)
