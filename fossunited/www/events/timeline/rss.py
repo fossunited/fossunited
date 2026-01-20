@@ -3,7 +3,7 @@ from email.utils import format_datetime
 from urllib.parse import urljoin
 
 import frappe
-from frappe.utils import escape_html, get_request_site_address
+from frappe.utils import escape_html, get_request_site_address, sanitize_html
 
 from fossunited.doctype_ids import EVENT, HACKATHON
 
@@ -84,13 +84,6 @@ def get_context(context):
         event.end_date_formatted = end_date.strftime("%d %B %Y, %I:%M %p")
         event.published_date = format_datetime(start_date)
 
-        # Process description
-        description = event.event_description or ""
-        # Convert HTML to text for RSS
-        from frappe.utils import strip_html
-
-        description_text = strip_html(description)
-
         # Build RSS description with event details
         event_details = f"""
         <![CDATA[
@@ -110,8 +103,9 @@ def get_context(context):
             event_details += f"""<p><img src="{banner_url}" alt="{event.event_name}"
             style="max-width: 600px; height: auto;"/></p>"""
 
-        if description_text:
-            event_details += f"<div>{description}</div>"
+        if event_description:
+            description_html = sanitize_html(description)
+            event_details += f"<div>{description_html}</div>"
 
         event_details += f'<p><a href="{event.link}">View Event Details →</a></p>'
         event_details += "]]>"
