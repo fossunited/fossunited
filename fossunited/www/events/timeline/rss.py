@@ -83,6 +83,7 @@ def get_context(context):
         event.start_date_formatted = start_date.strftime("%d %B %Y, %I:%M %p")
         event.end_date_formatted = end_date.strftime("%d %B %Y, %I:%M %p")
         event.published_date = format_datetime(start_date)
+        location = event.location or ("Online" if event.event_type == "Online" else "TBA")
 
         # Build RSS description with event details
         event_details = f"""
@@ -90,7 +91,7 @@ def get_context(context):
         <h3>{event.event_name}</h3>
         <p><strong>Type:</strong> {event.event_type_display}</p>
         <p><strong>Chapter:</strong> {event.chapter_name}</p>
-        <p><strong>Location:</strong> {event.location}</p>
+        <p><strong>Location:</strong> {location}</p>
         <p><strong>Start:</strong> {event.start_date_formatted}</p>
         <p><strong>End:</strong> {event.end_date_formatted}</p>
         """
@@ -103,8 +104,8 @@ def get_context(context):
             event_details += f"""<p><img src="{banner_url}" alt="{event.event_name}"
             style="max-width: 600px; height: auto;"/></p>"""
 
-        if event_description:
-            description_html = sanitize_html(description)
+        if event.event_description:
+            description_html = sanitize_html(event.event_description)
             event_details += f"<div>{description_html}</div>"
 
         event_details += f'<p><a href="{event.link}">View Event Details →</a></p>'
