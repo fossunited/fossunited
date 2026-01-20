@@ -6,190 +6,337 @@
   "doctype": "DocType",
   "engine": "InnoDB",
   "field_order": [
-    "meta_info_section",
-    "grant_status",
-    "event_type",
-    "event_details_section",
+    "event_basics_section",
     "event_name",
-    "event_organiser",
-    "communication_email",
-    "event_website",
-    "column_break_iove",
+    "event_type",
+    "event_schedule_section",
     "event_start_date",
     "event_end_date",
+    "column_break_dates",
     "event_location",
-    "application_details_section",
+    "event_count",
+    "foss_alignment_section",
+    "is_foss_event",
+    "foss_relation",
+    "if_foss_creation",
+    "foss_creation",
+    "agree_fosshack_rule",
+    "if_license_cc",
+    "event_history_section",
+    "if_recurring_event",
+    "event_edition",
+    "prev_edition_details",
+    "organizer_section",
+    "event_organiser",
+    "organizer_type",
+    "organizer_type_other",
     "poc_name",
-    "application_details",
+    "communication_email",
+    "poc_phone",
+    "event_website",
+    "grant_section",
+    "total_event_budget",
+    "amount_requested",
+    "sponsor_request",
+    "custom_sponsor_request",
+    "sponsorship_desk",
     "support_document",
-    "column_break_obrx",
-    "checked_guidelines",
+    "declaration_section",
+    "read_thesis",
     "source_of_info",
-    "approvalrejection_stats_tab",
-    "approval_stats_section",
+    "review_tab",
+    "review_status_section",
+    "grant_status",
     "grant_amount",
     "custom_amount",
     "post_event_report_received",
     "post_event_report",
-    "rejection_stats_section",
+    "rejection_section",
     "reason_for_rejection"
   ],
   "fields": [
     {
-      "fieldname": "meta_info_section",
+      "fieldname": "event_basics_section",
       "fieldtype": "Section Break",
-      "label": "Meta Info"
+      "label": "Event Basics"
     },
     {
-      "default": "Open",
-      "fieldname": "grant_status",
-      "fieldtype": "Select",
+      "fieldname": "event_name",
+      "fieldtype": "Data",
       "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "Grant Status",
-      "options": "Open\nApproved\nRejected\nUnder Review",
+      "label": "Event Name",
       "reqd": 1
     },
     {
       "fieldname": "event_type",
       "fieldtype": "Select",
-      "in_standard_filter": 1,
+      "in_list_view": 1,
       "label": "Event Type",
-      "options": "Hackathon\nMeetup\nConference",
+      "options": "Hackathon\nMeetup\nConference\nWorkshop\nDevsprint\nOther",
       "reqd": 1
     },
     {
-      "fieldname": "event_details_section",
+      "fieldname": "event_schedule_section",
       "fieldtype": "Section Break",
-      "label": "Event Details"
-    },
-    {
-      "fieldname": "event_name",
-      "fieldtype": "Data",
-      "in_standard_filter": 1,
-      "label": "Event Name"
-    },
-    {
-      "fieldname": "event_organiser",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "Event Organiser"
-    },
-    {
-      "fieldname": "communication_email",
-      "fieldtype": "Data",
-      "label": "Communication Email",
-      "options": "Email"
-    },
-    {
-      "fieldname": "event_website",
-      "fieldtype": "Data",
-      "label": "Event Website",
-      "options": "URL"
-    },
-    {
-      "fieldname": "column_break_iove",
-      "fieldtype": "Column Break"
+      "label": "Event Schedule & Location"
     },
     {
       "fieldname": "event_start_date",
       "fieldtype": "Date",
-      "label": "Event Start Date"
+      "in_list_view": 1,
+      "label": "Event Start Date",
+      "reqd": 1
     },
     {
       "fieldname": "event_end_date",
       "fieldtype": "Date",
-      "label": "Event End Date"
+      "in_list_view": 1,
+      "label": "Event End Date",
+      "reqd": 1
     },
     {
-      "fieldname": "application_details_section",
-      "fieldtype": "Section Break",
-      "label": "Application Details"
-    },
-    {
-      "fieldname": "poc_name",
-      "fieldtype": "Data",
-      "label": "POC Name"
-    },
-    {
-      "fieldname": "application_details",
-      "fieldtype": "Small Text",
-      "label": "Application Details"
-    },
-    {
-      "fieldname": "support_document",
-      "fieldtype": "Attach",
-      "label": "Support document"
-    },
-    {
-      "fieldname": "column_break_obrx",
+      "fieldname": "column_break_dates",
       "fieldtype": "Column Break"
-    },
-    {
-      "default": "0",
-      "fieldname": "checked_guidelines",
-      "fieldtype": "Check",
-      "label": "Checked Guidelines"
     },
     {
       "fieldname": "event_location",
       "fieldtype": "Data",
-      "label": "Event location"
+      "label": "Event Location (City, State)"
+    },
+    {
+      "fieldname": "event_count",
+      "fieldtype": "Data",
+      "label": "Expected Number of Participants"
+    },
+    {
+      "fieldname": "foss_alignment_section",
+      "fieldtype": "Section Break",
+      "label": "FOSS Alignment"
+    },
+    {
+      "fieldname": "is_foss_event",
+      "fieldtype": "Select",
+      "label": "Is this an exclusively FOSS event?",
+      "options": "Yes\nNo",
+      "reqd": 1
+    },
+    {
+      "depends_on": "eval: doc.is_foss_event == 'No'",
+      "fieldname": "foss_relation",
+      "fieldtype": "Small Text",
+      "label": "How is this event FOSS-related?"
+    },
+    {
+      "fieldname": "if_foss_creation",
+      "fieldtype": "Select",
+      "label": "Does this event lead to creation of FOSS?",
+      "options": "Yes\nNo"
+    },
+    {
+      "depends_on": "eval: doc.if_foss_creation == 'Yes'",
+      "fieldname": "foss_creation",
+      "fieldtype": "Small Text",
+      "label": "Explain expected FOSS outcomes"
+    },
+    {
+      "depends_on": "eval: doc.event_type == 'Hackathon'",
+      "description": "Agree to: https://fossunited.org/fosshack/rules",
+      "fieldname": "agree_fosshack_rule",
+      "fieldtype": "Select",
+      "label": "Accept FOSS Hackathon rules?",
+      "options": "Yes\nNo\nNot applicable"
+    },
+    {
+      "fieldname": "if_license_cc",
+      "fieldtype": "Select",
+      "label": "Publish event content under a Creative Commons license?",
+      "options": "Yes\nNo"
+    },
+    {
+      "fieldname": "event_history_section",
+      "fieldtype": "Section Break",
+      "label": "Event History"
+    },
+    {
+      "fieldname": "if_recurring_event",
+      "fieldtype": "Select",
+      "label": "Is this a recurring event?",
+      "options": "Yes\nNo"
+    },
+    {
+      "depends_on": "eval: doc.if_recurring_event == 'Yes'",
+      "fieldname": "event_edition",
+      "fieldtype": "Data",
+      "label": "Edition Number"
+    },
+    {
+      "depends_on": "eval: doc.if_recurring_event == 'Yes'",
+      "fieldname": "prev_edition_details",
+      "fieldtype": "Small Text",
+      "label": "Outcomes from previous editions"
+    },
+    {
+      "fieldname": "organizer_section",
+      "fieldtype": "Section Break",
+      "label": "Organizer & Contact Details"
+    },
+    {
+      "fieldname": "event_organiser",
+      "fieldtype": "Data",
+      "label": "Organizer Name",
+      "reqd": 1
+    },
+    {
+      "fieldname": "organizer_type",
+      "fieldtype": "Select",
+      "label": "Organizer Type",
+      "options": "Student community\nProfessional community\nIndividual\nNon-profit organization\nOther",
+      "reqd": 1
+    },
+    {
+      "depends_on": "eval: doc.organizer_type == 'Other'",
+      "fieldname": "organizer_type_other",
+      "fieldtype": "Data",
+      "label": "Specify Organizer Type"
+    },
+    {
+      "fieldname": "poc_name",
+      "fieldtype": "Data",
+      "label": "Primary Contact Person",
+      "reqd": 1
+    },
+    {
+      "fieldname": "communication_email",
+      "fieldtype": "Data",
+      "label": "Contact Email",
+      "options": "Email",
+      "reqd": 1
+    },
+    {
+      "fieldname": "event_website",
+      "fieldtype": "Data",
+      "label": "Website / Social Media",
+      "options": "URL"
+    },
+    {
+      "fieldname": "grant_section",
+      "fieldtype": "Section Break",
+      "label": "Grant & Budget Details"
+    },
+    {
+      "fieldname": "total_event_budget",
+      "fieldtype": "Currency",
+      "label": "Total Event Budget",
+      "options": "INR",
+      "reqd": 1
+    },
+    {
+      "fieldname": "amount_requested",
+      "fieldtype": "Currency",
+      "label": "Amount Requested from FOSS United",
+      "options": "INR",
+      "reqd": 1
+    },
+    {
+      "fieldname": "sponsor_request",
+      "fieldtype": "Select",
+      "label": "Type of Support Requested",
+      "options": "Monetary grant\nDiversity sponsorship\nCustom sponsorship"
+    },
+    {
+      "depends_on": "eval: doc.sponsor_request == 'Custom sponsorship'",
+      "fieldname": "custom_sponsor_request",
+      "fieldtype": "Data",
+      "label": "Describe Custom Sponsorship Request"
+    },
+    {
+      "fieldname": "sponsorship_desk",
+      "fieldtype": "Attach",
+      "label": "Sponsorship Deck"
+    },
+    {
+      "fieldname": "support_document",
+      "fieldtype": "Attach",
+      "label": "Supporting Documents"
+    },
+    {
+      "fieldname": "declaration_section",
+      "fieldtype": "Section Break",
+      "label": "Declarations"
+    },
+    {
+      "default": "0",
+      "description": "Read: https://fossunited.org/grants/thesis",
+      "fieldname": "read_thesis",
+      "fieldtype": "Check",
+      "label": "I have read and understood the FOSS United Grants Thesis",
+      "reqd": 1
     },
     {
       "fieldname": "source_of_info",
       "fieldtype": "Data",
-      "label": "Source of Info"
+      "label": "How did you hear about this grant?"
     },
     {
-      "fieldname": "approvalrejection_stats_tab",
+      "fieldname": "review_tab",
       "fieldtype": "Tab Break",
-      "label": "Approval/Rejection Stats"
+      "label": "Review & Decision"
     },
     {
-      "fieldname": "approval_stats_section",
+      "fieldname": "review_status_section",
       "fieldtype": "Section Break",
-      "label": "Approval Stats"
+      "label": "Grant Review"
+    },
+    {
+      "default": "Open",
+      "fieldname": "grant_status",
+      "fieldtype": "Select",
+      "label": "Grant Status",
+      "options": "Open\nUnder Review\nApproved\nRejected",
+      "reqd": 1
     },
     {
       "fieldname": "grant_amount",
       "fieldtype": "Select",
-      "in_standard_filter": 1,
-      "label": "Grant amount",
-      "options": "\nRs. 10,000\nRs. 25,000\nRs. 50,000\nCustom"
+      "label": "Approved Grant Amount",
+      "options": "Rs. 10,000\nRs. 25,000\nRs. 50,000\nCustom"
+    },
+    {
+      "depends_on": "eval: doc.grant_amount == 'Custom'",
+      "fieldname": "custom_amount",
+      "fieldtype": "Data",
+      "label": "Custom Approved Amount"
     },
     {
       "default": "0",
       "fieldname": "post_event_report_received",
       "fieldtype": "Check",
-      "label": "Post event report received"
+      "label": "Post-event report received"
     },
     {
       "fieldname": "post_event_report",
       "fieldtype": "Attach",
-      "label": "Post Event Report",
-      "options": "URL"
+      "label": "Post-event Report"
     },
     {
-      "fieldname": "rejection_stats_section",
+      "fieldname": "rejection_section",
       "fieldtype": "Section Break",
-      "label": "Rejection Stats"
+      "label": "Rejection Details"
     },
     {
       "fieldname": "reason_for_rejection",
       "fieldtype": "Small Text",
-      "label": "Reason for rejection"
+      "label": "Reason for Rejection"
     },
     {
-      "depends_on": "eval: doc.grant_amount==\"Custom\"",
-      "fieldname": "custom_amount",
+      "fieldname": "poc_phone",
       "fieldtype": "Data",
-      "label": "Custom Amount"
+      "label": "Contact Phone (+91)"
     }
   ],
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-05-13 13:38:30.198431",
+  "modified": "2026-01-20 17:08:02.000260",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event Grant",
@@ -218,6 +365,7 @@
       "share": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],

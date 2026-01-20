@@ -13,25 +13,52 @@ class FOSSEventGrant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        application_details: DF.SmallText | None
-        checked_guidelines: DF.Check
-        communication_email: DF.Data | None
+        agree_fosshack_rule: DF.Literal["Yes", "No", "Not applicable"]
+        amount_requested: DF.Currency
+        communication_email: DF.Data
         custom_amount: DF.Data | None
-        event_end_date: DF.Date | None
+        custom_sponsor_request: DF.Data | None
+        event_count: DF.Data | None
+        event_edition: DF.Data | None
+        event_end_date: DF.Date
         event_location: DF.Data | None
-        event_name: DF.Data | None
-        event_organiser: DF.Data | None
-        event_start_date: DF.Date | None
-        event_type: DF.Literal["Hackathon", "Meetup", "Conference"]  # noqa: F821
+        event_name: DF.Data
+        event_organiser: DF.Data
+        event_start_date: DF.Date
+        event_type: DF.Literal[
+            "Hackathon", "Meetup", "Conference", "Workshop", "Devsprint", "Other"
+        ]
         event_website: DF.Data | None
-        grant_amount: DF.Literal["", "Rs. 10,000", "Rs. 25,000", "Rs. 50,000", "Custom"]  # noqa: F722, F821
-        grant_status: DF.Literal["Open", "Approved", "Rejected", "Under Review"]  # noqa: F722, F821
-        poc_name: DF.Data | None
+        foss_creation: DF.SmallText | None
+        foss_relation: DF.SmallText | None
+        grant_amount: DF.Literal["Rs. 10,000", "Rs. 25,000", "Rs. 50,000", "Custom"]
+        grant_status: DF.Literal["Open", "Under Review", "Approved", "Rejected"]
+        if_foss_creation: DF.Literal["Yes", "No"]
+        if_license_cc: DF.Literal["Yes", "No"]
+        if_recurring_event: DF.Literal["Yes", "No"]
+        is_foss_event: DF.Literal["Yes", "No"]
+        organizer_type: DF.Literal[
+            "Student community",
+            "Professional community",
+            "Individual",
+            "Non-profit organization",
+            "Other",
+        ]
+        organizer_type_other: DF.Data | None
+        poc_name: DF.Data
+        poc_phone: DF.Data | None
         post_event_report: DF.Attach | None
         post_event_report_received: DF.Check
+        prev_edition_details: DF.SmallText | None
+        read_thesis: DF.Check
         reason_for_rejection: DF.SmallText | None
         source_of_info: DF.Data | None
+        sponsor_request: DF.Literal[
+            "Monetary grant", "Diversity sponsorship", "Custom sponsorship"
+        ]
+        sponsorship_desk: DF.Attach | None
         support_document: DF.Attach | None
+        total_event_budget: DF.Currency
     # end: auto-generated types
 
     pass
