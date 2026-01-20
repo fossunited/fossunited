@@ -31,11 +31,8 @@ def get_context(context):
     timeline = []
 
     for e in events:
-        start = e.get("event_start_date")
-        end = e.get("event_end_date") or start
-
-        start_dt = get_datetime(start)
-        end_dt = get_datetime(end)
+        start_dt = get_datetime(e.get("event_start_date"))
+        end_dt = get_datetime(e.get("event_end_date"))
 
         row = {
             **{k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in e.items()},
@@ -49,11 +46,8 @@ def get_context(context):
         timeline.append(row)
 
     for h in hackathons:
-        start = h.get("start_date")
-        end = h.get("end_date") or start
-
-        start_dt = get_datetime(start)
-        end_dt = get_datetime(end)
+        start_dt = get_datetime(h.get("start_date"))
+        end_dt = get_datetime(h.get("end_date"))
 
         row = {
             **{k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in h.items()},

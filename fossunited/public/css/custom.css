@@ -3414,7 +3414,7 @@ a.underline {
 
 /* Wider search on desktop */
 .v3-search-wide {
-  max-width: 360px;
+  max-width: 450px;
   flex: 1;
 }
 

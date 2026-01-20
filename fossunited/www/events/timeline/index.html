@@ -31,7 +31,11 @@
       <div class="v3-controls mb-4">
         <div class="v3-controls-left">
           <div class="v3-search-input v3-search-wide">
-            <input id="search" type="text" placeholder="Search events..." />
+            <input
+              id="search"
+              type="text"
+              placeholder="Search… event:meetup, location:samagata, date:2026-01"
+            />
             <i class="ti ti-search v3-text-tertiary"></i>
           </div>
         </div>
@@ -52,7 +56,6 @@
       <div id="filters-panel" class="v3-card mb-4 d-none">
         <div class="v3-controls">
           <div class="v3-controls-left gap-2 flex-wrap">
-
             <div class="d-flex flex-column" style="min-width: 220px;">
               <label class="v3-text-secondary">City</label>
 
@@ -74,7 +77,6 @@
                 </div>
               </div>
             </div>
-
 
             <div class="d-flex flex-column">
               <label class="v3-text-secondary">Start date</label>
@@ -131,7 +133,7 @@
       <div class="d-none">
         {% for event in all_events %}
           {% set name = event.event_name or event.hackathon_name %}
-          {% set location = event.event_location or event.location or "Virtual" %}
+          {% set location = event.event_location or "" %}
           <div
             class="timeline-event-wrapper"
             data-name="{{ name }}"
@@ -158,6 +160,7 @@
       city: '',
       start: '',
       end: '',
+      location: '',
       mustAttend: false,
     }
 
@@ -195,6 +198,60 @@
       })
     }
 
+    function parseSearchBangs(input) {
+      const result = {
+        search: '',
+        city: '',
+        start: '',
+        end: '',
+        loc: '',
+      }
+
+      input
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .forEach((part) => {
+          if (!part.includes(':')) {
+            result.search += part + ' '
+            return
+          }
+
+          const [key, ...rest] = part.split(':')
+          const value = rest.join(':').trim()
+
+          switch (key.toLowerCase()) {
+            case 'event':
+            case 'title':
+            case 'name':
+              result.search += value + ' '
+              break
+
+            case 'place':
+            case 'location':
+            case 'loc':
+              result.location = value.toLowerCase()
+              break
+
+            case 'date':
+              if (/^\d{4}-\d{2}$/.test(value)) {
+                result.start = `${value}-01`
+                result.end = `${value}-31`
+              } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                result.start = value
+                result.end = value
+              }
+              break
+
+            default:
+              result.search += part + ' '
+          }
+        })
+
+      result.search = result.search.trim().toLowerCase()
+      return result
+    }
+
     citySearch.onfocus = () => {
       populateCityDropdown(citySearch.value)
       cityDropdown.style.display = 'block'
@@ -212,7 +269,16 @@
     })
 
     document.getElementById('search').oninput = (e) => {
-      filters.search = e.target.value.toLowerCase()
+      const parsed = parseSearchBangs(e.target.value)
+
+      filters.search = parsed.search
+      filters.location = parsed.location
+      filters.start = parsed.start
+      filters.end = parsed.end
+
+      document.getElementById('start-date').value = parsed.start
+      document.getElementById('end-date').value = parsed.end
+
       render()
     }
 
@@ -282,6 +348,11 @@
       if (filters.city && w.dataset.location !== filters.city) return false
 
       if (filters.mustAttend && w.dataset.mustAttend !== 'true') return false
+
+      if (filters.location) {
+        const loc = (w.dataset.location || '').toLowerCase()
+        if (!loc.includes(filters.location)) return false
+      }
 
       if (filters.start && new Date(w.dataset.end) < new Date(filters.start)) return false
       if (filters.end && new Date(w.dataset.start) > new Date(filters.end)) return false
