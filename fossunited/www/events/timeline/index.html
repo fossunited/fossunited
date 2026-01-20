@@ -172,7 +172,7 @@
             data-must-attend="{{ 'true' if event.must_attend else 'false' }}"
             data-chapter-type="{{ event._chapter_type }}"
           >
-            {{ event_card(event) }}
+            {{ event_card(event, lazy=true) }}
           </div>
         {% endfor %}
       </div>

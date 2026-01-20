@@ -1,4 +1,4 @@
-{% macro event_card(event) %}
+{% macro event_card(event, lazy=false) %}
   {% set event_name = event.event_name or event.hackathon_name %}
   {% set start_date = event.event_start_date or event.start_date %}
   {% set end_date = event.event_end_date or event.end_date %}
@@ -11,10 +11,14 @@
     <div class="timeline-card-inner">
       <!-- Banner as full background with lazy loading -->
       <img
-        data-src="{{ banner }}"
-        class="timeline-card-bg lazy-img"
+        {% if lazy %}
+          data-src="{{ banner }}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 400 300'%3E%3Crect fill='%23f0f0f0' width='400' height='300'/%3E%3C/svg%3E"
+          class="timeline-card-bg lazy-img"
+        {% else %}
+          src="{{ banner }}" class="timeline-card-bg" loading="eager" fetchpriority="high"
+        {% endif %}
         alt="{{ event_name }}"
-        src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Crect fill='%23f0f0f0' width='400' height='300'/%3E%3C/svg%3E"
       />
 
       <!-- Gradient overlay -->
