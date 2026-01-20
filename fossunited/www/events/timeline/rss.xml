@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>{{ title }}</title>
+    <description>{{ description }}</description>
+    <link>{{ link }}</link>
+    <language>en-us</language>
+    <lastBuildDate>{{ modified }}</lastBuildDate>
+    <pubDate>{{ modified }}</pubDate>
+    <ttl>3600</ttl>
+    <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
+    {% for event in items %}
+    <item>
+      <title>{{ event.title }} - {{ event.location }}</title>
+      <description>{{ event.content }}</description>
+      <dc:creator>{{ event.chapter_name }}</dc:creator>
+      <link>{{ event.link }}</link>
+      <guid>{{ event.link }}</guid>
+      <pubDate>{{ event.published_date }}</pubDate>
+      <category>{{ event.event_type_display }}</category>
+    </item>
+    {% endfor %}
+  </channel>
+</rss>

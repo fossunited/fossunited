@@ -33,10 +33,6 @@ website_route_rules = [
         "from_route": "/hack/<permalink>/projects/all",
         "to_route": "/hackathon/projects",
     },
-    {
-        "from_route": "/blog/rss.xml",
-        "to_route": "/rss.xml",
-    },
 ]
 
 # add methods and filters to jinja environment
@@ -92,10 +88,16 @@ website_redirects = [
         "source": r"c/(.+)/tickets",
         "target": r"/api/method/fossunited.api.pages.buy_tickets_page?route=c/\1",
     },
+    # grants pages
     {"source": r"^grants/project(/.*)?$", "target": r"/grants/projects\1"},
     {"source": r"^grants/event(/.*)?$", "target": r"/grants/events\1"},
     {"source": r"^grants/fellowship(/.*)?$", "target": r"/grants/fellowships\1"},
     {"source": r"^grants/grantee(/.*)?$", "target": r"/grants/grantees\1"},
+    # rss feeds
+    {"source": r"^blog/rss\.xml$", "target": r"/rss.xml"},
+    {"source": r"^blog/rss$", "target": r"/rss.xml"},
+    {"source": r"^rss$", "target": r"/rss.xml"},
+    {"source": r"^(?!.*\.xml$)(.*)/rss$", "target": r"/\1/rss.xml"},
 ]
 
 # Installation
