@@ -1,12 +1,8 @@
+{% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
 {% from "fossunited/templates/macros/event_card.html" import event_card %}
 
 {% block page_content %}
-  <link
-    rel="stylesheet"
-    href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
-  />
-
   <div class="v3-page py-5">
     <div class="v3-container v3-container-wide">
       <!-- Header -->
@@ -35,7 +31,11 @@
       <div class="v3-controls mb-4">
         <div class="v3-controls-left">
           <div class="v3-search-input v3-search-wide">
-            <input id="search" type="text" placeholder="Search events..." />
+            <input
+              id="search"
+              type="text"
+              placeholder="Search… event:meetup, location:samagata, date:2026-01"
+            />
             <i class="ti ti-search v3-text-tertiary"></i>
           </div>
         </div>
@@ -56,11 +56,26 @@
       <div id="filters-panel" class="v3-card mb-4 d-none">
         <div class="v3-controls">
           <div class="v3-controls-left gap-2 flex-wrap">
-            <div class="d-flex flex-column">
+            <div class="d-flex flex-column" style="min-width: 220px;">
               <label class="v3-text-secondary">City</label>
-              <select id="city-filter" class="v3-select">
-                <option value="">All Cities</option>
-              </select>
+
+              <div class="position-relative w-100">
+                <input
+                  id="city-search"
+                  type="text"
+                  class="v3-select w-100"
+                  placeholder="Search cities..."
+                  autocomplete="off"
+                />
+
+                <div
+                  id="city-dropdown"
+                  class="dropdown-menu w-100 mt-1 p-0"
+                  style="max-height: 200px; overflow-y: auto; display: none;"
+                >
+                  <!-- options -->
+                </div>
+              </div>
             </div>
 
             <div class="d-flex flex-column">
@@ -114,15 +129,13 @@
       </div>
 
       <!-- Flat event data (hidden) -->
-      {% set all_events = get_all_events_timeline() %}
+      {% set all_events = timeline_events %}
       <div class="d-none">
         {% for event in all_events %}
-          {% set name = event.event_name or event.hackathon_name %}
-          {% set location = event.event_location or event.location or "Virtual" %}
           <div
             class="timeline-event-wrapper"
-            data-name="{{ name }}"
-            data-location="{{ location }}"
+            data-name="{{ event.event_name }}"
+            data-location="{{ event.event_location }}"
             data-start="{{ event._start }}"
             data-end="{{ event._end }}"
             data-is-past="{{ 'true' if event._is_past else 'false' }}"
@@ -145,29 +158,123 @@
       city: '',
       start: '',
       end: '',
+      location: '',
       mustAttend: false,
     }
 
     const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
 
-    const citySelect = document.getElementById('city-filter')
-    ;[...new Set(wrappers.map((w) => w.dataset.location))]
-      .filter(Boolean)
-      .sort()
-      .forEach((city) => {
-        const o = document.createElement('option')
-        o.value = city
-        o.textContent = city
-        citySelect.appendChild(o)
-      })
+    const citySearch = document.getElementById('city-search')
+    const cityDropdown = document.getElementById('city-dropdown')
+    const allCities = [...new Set(wrappers.map((w) => w.dataset.location))].filter(Boolean).sort()
 
-    document.getElementById('search').oninput = (e) => {
-      filters.search = e.target.value.toLowerCase()
-      render()
+    function populateCityDropdown(searchTerm = '') {
+      const filtered = allCities.filter((city) =>
+        city.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+
+      cityDropdown.innerHTML = `
+      <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
+      ${filtered
+        .map(
+          (city) => `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`,
+        )
+        .join('')}`
+
+      cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
+        opt.onclick = () => {
+          filters.city = opt.dataset.value
+          citySearch.value = opt.dataset.value || ''
+          citySearch.placeholder = opt.dataset.value ? opt.dataset.value : 'Search cities...'
+          cityDropdown.style.display = 'none'
+          render()
+        }
+      })
     }
 
-    citySelect.onchange = (e) => {
-      filters.city = e.target.value
+    function parseSearchBangs(input) {
+      const result = {
+        search: '',
+        city: '',
+        start: '',
+        end: '',
+        loc: '',
+      }
+
+      input
+        .split(',')
+        .map((p) => p.trim())
+        .filter(Boolean)
+        .forEach((part) => {
+          if (!part.includes(':')) {
+            result.search += part + ' '
+            return
+          }
+
+          const [key, ...rest] = part.split(':')
+          const value = rest.join(':').trim()
+
+          switch (key.toLowerCase()) {
+            case 'event':
+            case 'title':
+            case 'name':
+              result.search += value + ' '
+              break
+
+            case 'place':
+            case 'location':
+            case 'loc':
+              result.location = value.toLowerCase()
+              break
+
+            case 'date':
+              if (/^\d{4}-\d{2}$/.test(value)) {
+                const [year, month] = value.split('-').map(Number)
+                const lastDay = new Date(year, month, 0).getDate()
+                result.start = `${value}-01`
+                result.end = `${value}-${String(lastDay).padStart(2, '0')}`
+              } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                result.start = value
+                result.end = value
+              }
+              break
+
+            default:
+              result.search += part + ' '
+          }
+        })
+
+      result.search = result.search.trim().toLowerCase()
+      return result
+    }
+
+    citySearch.onfocus = () => {
+      populateCityDropdown(citySearch.value)
+      cityDropdown.style.display = 'block'
+    }
+
+    citySearch.oninput = (e) => {
+      populateCityDropdown(e.target.value)
+      cityDropdown.style.display = 'block'
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#city-search') && !e.target.closest('#city-dropdown')) {
+        cityDropdown.style.display = 'none'
+      }
+    })
+
+    document.getElementById('search').oninput = (e) => {
+      const parsed = parseSearchBangs(e.target.value)
+
+      filters.search = parsed.search
+      filters.location = parsed.location
+      filters.start = parsed.start
+      filters.end = parsed.end
+
+      document.getElementById('start-date').value = parsed.start
+      document.getElementById('end-date').value = parsed.end
+
       render()
     }
 
@@ -238,6 +345,11 @@
 
       if (filters.mustAttend && w.dataset.mustAttend !== 'true') return false
 
+      if (filters.location) {
+        const loc = (w.dataset.location || '').toLowerCase()
+        if (!loc.includes(filters.location)) return false
+      }
+
       if (filters.start && new Date(w.dataset.end) < new Date(filters.start)) return false
       if (filters.end && new Date(w.dataset.start) > new Date(filters.end)) return false
 
@@ -248,9 +360,11 @@
       const g = {}
       items.forEach((w) => {
         const d = new Date(w.dataset.start)
-        const key = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
-        g[key] = g[key] || []
-        g[key].push({ w, d })
+        // Use YYYY-MM format for sortable keys
+        const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+        const displayKey = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+        g[sortKey] = g[sortKey] || { display: displayKey, items: [] }
+        g[sortKey].items.push({ w, d })
       })
       return g
     }
@@ -298,7 +412,11 @@
 
     function renderGroups(items, reverse, isUpcoming) {
       const groups = groupByMonth(items)
-      return Object.entries(groups).map(([month, list]) => {
+      const sortedKeys = Object.keys(groups).sort((a, b) =>
+        reverse ? b.localeCompare(a) : a.localeCompare(b),
+      )
+      return sortedKeys.map((key) => {
+        const { display: month, items: list } = groups[key]
         const group = document.createElement('div')
         group.className = 'mb-5'
 
@@ -335,6 +453,9 @@
         method: 'fossunited.api.chapter.generate_ics',
         args: { event_ids: ids },
         callback: (r) => {
+          if (!r.message) {
+            return alert('Failed to generate ICS file')
+          }
           const blob = new Blob([r.message], { type: 'text/calendar' })
           const a = document.createElement('a')
           a.href = URL.createObjectURL(blob)

@@ -1093,7 +1093,7 @@ h6 {
 .events-grid-4 {
   padding: 1rem 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(16rem, 1fr));
+  grid-template-columns: repeat(3, minmax(310px, 1fr));
   gap: 1.5rem;
 }
 
@@ -2513,7 +2513,10 @@ body:has(.v3-page) {
   justify-content: center;
   gap: 0.5rem;
   text-decoration: none;
-  z-index: 9999;
+  z-index: 999;
+}
+.v3-btn:hover {
+  background: var(--v3-button-border);
 }
 
 .v3-btn i {
@@ -2563,6 +2566,10 @@ body:has(.v3-page) {
   opacity: 0.8;
   background: var(--v3-text-color);
   color: var(--v3-main-bg);
+}
+
+.v3-text-success {
+  color: var(--v3-primary-button);
 }
 
 /* V3 Typography - Inherit font from parent */
@@ -3407,7 +3414,7 @@ a.underline {
 
 /* Wider search on desktop */
 .v3-search-wide {
-  max-width: 360px;
+  max-width: 450px;
   flex: 1;
 }
 
@@ -3463,6 +3470,202 @@ a.underline {
     transform: scale(2);
     opacity: 0;
   }
+}
+
+/* Timeline Event Card */
+.timeline-event-card {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  height: 310px;
+  display: block;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.timeline-event-card:hover {
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06) !important;
+  text-decoration: none;
+  border: none;
+}
+[data-theme='dark'] .timeline-event-card:hover {
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7) !important;
+}
+
+.timeline-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* Banner as full background */
+.timeline-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+
+/* Gradient overlay */
+.timeline-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(0deg, rgba(20, 20, 20, 0.10) 0%, rgba(20, 20, 20, 0.10) 100%);
+  box-shadow: 0px 4px 12px rgba(20, 20, 20, 0.25) inset;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+.timeline-event-card:hover .timeline-card-overlay {
+  opacity: 0;
+}
+
+/* Must Attend Badge - inside banner area */
+.timeline-must-attend {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+  padding: 5px 10px;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  display: inline-flex;
+  width: fit-content;
+  align-items: center;
+  gap: 4px;
+  z-index: 3;
+}
+
+/* Bottom content - sticks to bottom */
+.timeline-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chapter badge wrapper - aligned to right */
+.timeline-chapter-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.timeline-corner-svg {
+  position: relative;
+}
+
+.timeline-chapter-badge {
+  padding: 12px 12px 0px 12px;
+  background: var(--v3-main-bg) !important;
+  border-top-left-radius: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.timeline-chapter-inner {
+  height: 32px;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  background: var(--v3-text-color);
+  padding: 8px 6.4px;
+  justify-content: center;
+}
+
+.timeline-chapter-name {
+  color: var(--v3-card-bg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11.20px;
+  font-family: 'FFF Forward', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  line-height: 15.68px;
+  letter-spacing: 0.67px;
+  padding: 4px;
+}
+
+/* Event details section */
+.timeline-details {
+  background: var(--v3-main-bg) !important;
+  padding: 8px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.timeline-title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22.32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+}
+
+.timeline-meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+}
+
+/* Grid with vertical line */
+.timeline-month-grid {
+  border-left: 1px solid var(--v3-text-color);
+  padding-left: 0.5rem;
+  margin-left: 0.4rem;
+}
+
+.v3-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  background: var(--v3-main-bg);
+  color: var(--v3-text-color2);
+}
+
+.v3-dropdown-item:hover {
+  background: var(--v3-button-border);
+}
+
+[data-theme='dark'] .timeline-month-grid {
+  border-left-color: var(--v3-button-border);
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .timeline-chapter-badge,
+[data-theme='dark'] .timeline-details {
+  background: var(--v3-card-bg);
+}
+
+[data-theme='dark'] .timeline-corner-svg path {
+  fill: var(--v3-card-bg);
+}
+
+[data-theme='dark'] .timeline-chapter-inner {
+  background: var(--v3-text-color);
+}
+
+[data-theme='dark'] .timeline-chapter-name {
+  color: var(--v3-card-bg);
 }
 
 
