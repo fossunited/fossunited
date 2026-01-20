@@ -176,7 +176,9 @@
       cityDropdown.innerHTML = `
       <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
       ${filtered
-        .map((city) => `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`)
+        .map(
+          (city) => `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`,
+        )
         .join('')}`
 
       cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
@@ -358,9 +360,11 @@
       const g = {}
       items.forEach((w) => {
         const d = new Date(w.dataset.start)
-        const key = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
-        g[key] = g[key] || []
-        g[key].push({ w, d })
+        // Use YYYY-MM format for sortable keys
+        const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+        const displayKey = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+        g[sortKey] = g[sortKey] || { display: displayKey, items: [] }
+        g[sortKey].items.push({ w, d })
       })
       return g
     }
@@ -408,7 +412,11 @@
 
     function renderGroups(items, reverse, isUpcoming) {
       const groups = groupByMonth(items)
-      return Object.entries(groups).map(([month, list]) => {
+      const sortedKeys = Object.keys(groups).sort((a, b) =>
+        reverse ? b.localeCompare(a) : a.localeCompare(b),
+      )
+      return sortedKeys.map((key) => {
+        const { display: month, items: list } = groups[key]
         const group = document.createElement('div')
         group.className = 'mb-5'
 
