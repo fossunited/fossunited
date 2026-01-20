@@ -1,0 +1,394 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+{% from "fossunited/templates/macros/event_card.html" import event_card %}
+
+{% block page_content %}
+  <div class="v3-page py-5">
+    <div class="v3-container v3-container-wide">
+      <!-- Header -->
+      {{ v3_navbar() }}
+
+      <div class="v3-grid mb-5 p-0">
+        <div class="v3-card d-flex align-items-center p-0">
+          <div class="flex-shrink-0">
+            {% include "fossunited/public/icons/upcoming-event.svg" %}
+          </div>
+
+          <div class="flex-grow-1 px-3">
+            <h1 class="v3-grant-title mb-1">Upcoming Events</h1>
+
+            <div class="d-flex align-items-center">
+              <div id="upcoming-count" class="v3-grant-stat-number mr-1"></div>
+              <div class="v3-text-secondary">Upcoming</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO: carousel for must attend or trending events (more registration or tickets) -->
+      </div>
+
+      <!-- Controls -->
+      <div class="v3-controls mb-4">
+        <div class="v3-controls-left">
+          <div class="v3-search-input v3-search-wide">
+            <input id="search" type="text" placeholder="Search events..." />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
+        </div>
+
+        <div class="v3-controls-right">
+          <span
+            id="filter-toggle"
+            class="d-flex v3-text-secondary align-items-center gap-1"
+            style="cursor: pointer;"
+          >
+            <span>Filter</span>
+            <i class="ti ti-adjustments-filled"></i>
+          </span>
+        </div>
+      </div>
+
+      <!-- Filters panel -->
+      <div id="filters-panel" class="v3-card mb-4 d-none">
+        <div class="v3-controls">
+          <div class="v3-controls-left gap-2 flex-wrap">
+
+            <div class="d-flex flex-column" style="min-width: 220px;">
+              <label class="v3-text-secondary">City</label>
+
+              <div class="position-relative w-100">
+                <input
+                  id="city-search"
+                  type="text"
+                  class="v3-select w-100"
+                  placeholder="Search cities..."
+                  autocomplete="off"
+                />
+
+                <div
+                  id="city-dropdown"
+                  class="dropdown-menu w-100 mt-1 shadow"
+                  style="max-height: 200px; overflow-y: auto; display: none;"
+                >
+                  <!-- options -->
+                </div>
+              </div>
+            </div>
+
+
+            <div class="d-flex flex-column">
+              <label class="v3-text-secondary">Start date</label>
+              <input id="start-date" type="date" class="v3-select" />
+            </div>
+
+            <div class="d-flex flex-column">
+              <label class="v3-text-secondary">End date</label>
+              <input id="end-date" type="date" class="v3-select" />
+            </div>
+
+            <label class="d-flex align-items-center mb-0">
+              <input id="must-attend-filter" type="checkbox" class="mr-2" />
+              <span class="v3-text-primary">Must attend only</span>
+            </label>
+          </div>
+
+          <div class="v3-controls-right">
+            <button id="download-ics" class="v3-btn v3-btn-dark">
+              <i class="ti ti-download"></i>
+              Download ICS
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Category toggle -->
+      <div class="v3-card btn-group w-100 mb-4 p-2">
+        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">
+          City Events
+        </button>
+        <button id="toggle-club" class="v3-btn v3-text-primary w-50">Club Events</button>
+      </div>
+
+      <div id="no-upcoming-message" class="v3-text-secondary text-center my-4 d-none">
+        No more upcoming events listed
+      </div>
+      <!-- Timeline -->
+      <div id="timeline-container"></div>
+
+      <!-- Show past -->
+      <div id="show-past-wrapper" class="text-center my-4 d-none">
+        <button id="show-past-btn" class="v3-btn v3-btn-dark">Show Past Events ↓</button>
+      </div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="text-center py-5 d-none">
+        <div class="display-4 opacity-25">🔍</div>
+        <h4 class="v3-text-secondary mt-3">No events found</h4>
+      </div>
+
+      <!-- Flat event data (hidden) -->
+      {% set all_events = timeline_events %}
+      <div class="d-none">
+        {% for event in all_events %}
+          {% set name = event.event_name or event.hackathon_name %}
+          {% set location = event.event_location or event.location or "Virtual" %}
+          <div
+            class="timeline-event-wrapper"
+            data-name="{{ name }}"
+            data-location="{{ location }}"
+            data-start="{{ event._start }}"
+            data-end="{{ event._end }}"
+            data-is-past="{{ 'true' if event._is_past else 'false' }}"
+            data-must-attend="{{ 'true' if event.must_attend else 'false' }}"
+            data-chapter-type="{{ event._chapter_type }}"
+          >
+            {{ event_card(event) }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentCategory = 'city' // city | club
+    let showPastEvents = false
+
+    const filters = {
+      search: '',
+      city: '',
+      start: '',
+      end: '',
+      mustAttend: false,
+    }
+
+    const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
+
+    const citySearch = document.getElementById('city-search')
+    const cityDropdown = document.getElementById('city-dropdown')
+    const allCities = [...new Set(wrappers.map((w) => w.dataset.location))].filter(Boolean).sort()
+
+    function populateCityDropdown(searchTerm = '') {
+      const filtered = allCities.filter((city) =>
+        city.toLowerCase().includes(searchTerm.toLowerCase()),
+      )
+
+      cityDropdown.innerHTML = `
+      <div class="city-option" data-value="" style="padding: 8px 12px; cursor: pointer;">All Cities</div>
+      ${filtered
+        .map(
+          (city) =>
+            `<div class="city-option" data-value="${city}" style="padding: 8px 12px; cursor: pointer;">${city}</div>`,
+        )
+        .join('')}
+    `
+
+      cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
+        opt.onmouseenter = () => (opt.style.background = '#f5f5f5')
+        opt.onmouseleave = () => (opt.style.background = 'white')
+        opt.onclick = () => {
+          filters.city = opt.dataset.value
+          citySearch.value = opt.dataset.value || ''
+          citySearch.placeholder = opt.dataset.value ? opt.dataset.value : 'Search cities...'
+          cityDropdown.style.display = 'none'
+          render()
+        }
+      })
+    }
+
+    citySearch.onfocus = () => {
+      populateCityDropdown(citySearch.value)
+      cityDropdown.style.display = 'block'
+    }
+
+    citySearch.oninput = (e) => {
+      populateCityDropdown(e.target.value)
+      cityDropdown.style.display = 'block'
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#city-search') && !e.target.closest('#city-dropdown')) {
+        cityDropdown.style.display = 'none'
+      }
+    })
+
+    document.getElementById('search').oninput = (e) => {
+      filters.search = e.target.value.toLowerCase()
+      render()
+    }
+
+    document.getElementById('start-date').onchange = (e) => {
+      filters.start = e.target.value
+      render()
+    }
+
+    document.getElementById('end-date').onchange = (e) => {
+      filters.end = e.target.value
+      render()
+    }
+
+    document.getElementById('must-attend-filter').onchange = (e) => {
+      filters.mustAttend = e.target.checked
+      render()
+    }
+
+    document.getElementById('filter-toggle').onclick = () => {
+      document.getElementById('filters-panel').classList.toggle('d-none')
+    }
+
+    document.getElementById('toggle-city').onclick = () => {
+      currentCategory = 'city'
+      showPastEvents = false
+      toggleButtons()
+      render()
+    }
+
+    document.getElementById('toggle-club').onclick = () => {
+      currentCategory = 'club'
+      showPastEvents = false
+      toggleButtons()
+      render()
+    }
+
+    document.getElementById('show-past-btn').onclick = () => {
+      showPastEvents = true
+      render()
+    }
+
+    function toggleButtons() {
+      const cityBtn = document.getElementById('toggle-city')
+      const clubBtn = document.getElementById('toggle-club')
+
+      // Reset
+      cityBtn.classList.remove('v3-btn-secondary')
+      clubBtn.classList.remove('v3-btn-secondary')
+
+      // Activate current
+      if (currentCategory === 'city') {
+        cityBtn.classList.add('v3-btn-secondary')
+      } else {
+        clubBtn.classList.add('v3-btn-secondary')
+      }
+    }
+
+    function passesFilters(w) {
+      if (currentCategory === 'club' && w.dataset.chapterType !== 'FOSS Club') return false
+      if (currentCategory === 'city' && w.dataset.chapterType === 'FOSS Club') return false
+
+      if (filters.search) {
+        const hay = (w.dataset.name + ' ' + w.dataset.location).toLowerCase()
+        if (!hay.includes(filters.search)) return false
+      }
+
+      if (filters.city && w.dataset.location !== filters.city) return false
+
+      if (filters.mustAttend && w.dataset.mustAttend !== 'true') return false
+
+      if (filters.start && new Date(w.dataset.end) < new Date(filters.start)) return false
+      if (filters.end && new Date(w.dataset.start) > new Date(filters.end)) return false
+
+      return true
+    }
+
+    function groupByMonth(items) {
+      const g = {}
+      items.forEach((w) => {
+        const d = new Date(w.dataset.start)
+        const key = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+        g[key] = g[key] || []
+        g[key].push({ w, d })
+      })
+      return g
+    }
+
+    function render() {
+      const container = document.getElementById('timeline-container')
+      const empty = document.getElementById('empty-state')
+      const showPast = document.getElementById('show-past-wrapper')
+      const countUpcoming = document.getElementById('upcoming-count')
+
+      container.innerHTML = ''
+
+      const visible = wrappers.filter(passesFilters)
+      const upcoming = visible.filter((w) => w.dataset.isPast !== 'true')
+      const past = visible.filter((w) => w.dataset.isPast === 'true')
+      const noUpcomingMsg = document.getElementById('no-upcoming-message')
+      noUpcomingMsg.classList.add('d-none')
+
+      if (!upcoming.length && past.length) {
+        noUpcomingMsg.classList.remove('d-none')
+      }
+
+      if (!visible.length) {
+        empty.classList.remove('d-none')
+        showPast.classList.add('d-none')
+        noUpcomingMsg.classList.add('d-none')
+        return
+      }
+
+      empty.classList.add('d-none')
+
+      countUpcoming.textContent = upcoming.length
+      renderGroups(upcoming, false, true).forEach((g) => container.appendChild(g))
+
+      if (past.length && !showPastEvents) {
+        showPast.classList.remove('d-none')
+      } else {
+        showPast.classList.add('d-none')
+      }
+
+      if (showPastEvents) {
+        renderGroups(past, true, false).forEach((g) => container.appendChild(g))
+      }
+    }
+
+    function renderGroups(items, reverse, isUpcoming) {
+      const groups = groupByMonth(items)
+      return Object.entries(groups).map(([month, list]) => {
+        const group = document.createElement('div')
+        group.className = 'mb-5'
+
+        group.innerHTML = `
+          <div class="d-flex align-items-center mb-3 timeline-month-header">
+          <i class="ti ti-circle-filled mr-2 v3-grant-stat-label ${isUpcoming ? 'v3-text-success' : 'v3-text-tertiary'}"></i>
+          <h5 class="v3-text-primary mb-0">${month}</h5>
+          </div>
+          <div class="row timeline-month-grid"></div>`
+
+        const row = group.querySelector('.row')
+        list
+          .sort((a, b) => (reverse ? b.d - a.d : a.d - b.d))
+          .forEach(({ w }) => {
+            const col = document.createElement('div')
+            col.className = 'col-md-4 mb-4'
+            col.appendChild(w.cloneNode(true))
+            row.appendChild(col)
+          })
+
+        return group
+      })
+    }
+
+    document.getElementById('download-ics').onclick = () => {
+      const ids = wrappers
+        .filter(passesFilters)
+        .map((w) => w.querySelector('a')?.href.split('/').pop())
+        .filter(Boolean)
+
+      if (!ids.length) return alert('No events to export')
+
+      frappe.call({
+        method: 'fossunited.api.chapter.generate_ics',
+        args: { event_ids: ids },
+        callback: (r) => {
+          const blob = new Blob([r.message], { type: 'text/calendar' })
+          const a = document.createElement('a')
+          a.href = URL.createObjectURL(blob)
+          a.download = 'events.ics'
+          a.click()
+        },
+      })
+    }
+
+    render()
+  </script>
+{% endblock %}
