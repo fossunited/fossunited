@@ -12,11 +12,23 @@
       <!-- Header -->
       {{ v3_navbar() }}
 
-      <div class="mb-5">
-        <h1 class="v3-text-primary font-weight-bold">Events Timeline</h1>
-        <p class="v3-text-secondary">
-          <span id="event-count" class="font-weight-bold">0</span> Events
-        </p>
+      <div class="v3-grid mb-5 p-0">
+        <div class="v3-card d-flex align-items-center p-0">
+          <div class="flex-shrink-0">
+            {% include "fossunited/public/icons/upcoming-event.svg" %}
+          </div>
+
+          <div class="flex-grow-1 px-3">
+            <h1 class="v3-grant-title mb-1">Upcoming Events</h1>
+
+            <div class="d-flex align-items-center">
+              <div id="upcoming-count" class="v3-grant-stat-number mr-1"></div>
+              <div class="v3-text-secondary">Upcoming</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODO: carousel for must attend or trending events (more registration or tickets) -->
       </div>
 
       <!-- Controls -->
@@ -26,53 +38,61 @@
             <input id="search" type="text" placeholder="Search events..." />
             <i class="ti ti-search v3-text-tertiary"></i>
           </div>
-
-          <button id="filter-toggle" class="v3-btn v3-btn-secondary">
-            <i class="ti ti-filter"></i>
-            Filters
-          </button>
         </div>
 
         <div class="v3-controls-right">
-          <button id="download-ics" class="v3-btn v3-btn-dark">
-            <i class="ti ti-download"></i>
-            Download ICS
-          </button>
+          <span
+            id="filter-toggle"
+            class="d-flex v3-text-secondary align-items-center gap-1"
+            style="cursor: pointer;"
+          >
+            <span>Filter</span>
+            <i class="ti ti-adjustments-filled"></i>
+          </span>
         </div>
       </div>
 
       <!-- Filters panel -->
       <div id="filters-panel" class="v3-card mb-4 d-none">
-        <div class="row">
-          <div class="col-md-3 mb-3">
-            <label class="v3-text-secondary">City</label>
-            <select id="city-filter" class="v3-select w-100">
-              <option value="">All Cities</option>
-            </select>
-          </div>
+        <div class="v3-controls">
+          <div class="v3-controls-left gap-2 flex-wrap">
+            <div class="d-flex flex-column">
+              <label class="v3-text-secondary">City</label>
+              <select id="city-filter" class="v3-select">
+                <option value="">All Cities</option>
+              </select>
+            </div>
 
-          <div class="col-md-3 mb-3">
-            <label class="v3-text-secondary">Start date</label>
-            <input id="start-date" type="date" class="v3-select w-100" />
-          </div>
+            <div class="d-flex flex-column">
+              <label class="v3-text-secondary">Start date</label>
+              <input id="start-date" type="date" class="v3-select" />
+            </div>
 
-          <div class="col-md-3 mb-3">
-            <label class="v3-text-secondary">End date</label>
-            <input id="end-date" type="date" class="v3-select w-100" />
-          </div>
+            <div class="d-flex flex-column">
+              <label class="v3-text-secondary">End date</label>
+              <input id="end-date" type="date" class="v3-select" />
+            </div>
 
-          <div class="col-md-3 d-flex align-items-end mb-3">
             <label class="d-flex align-items-center mb-0">
               <input id="must-attend-filter" type="checkbox" class="mr-2" />
               <span class="v3-text-primary">Must attend only</span>
             </label>
+          </div>
+
+          <div class="v3-controls-right">
+            <button id="download-ics" class="v3-btn v3-btn-dark">
+              <i class="ti ti-download"></i>
+              Download ICS
+            </button>
           </div>
         </div>
       </div>
 
       <!-- Category toggle -->
       <div class="v3-card btn-group w-100 mb-4 p-2">
-        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">City Events</button>
+        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">
+          City Events
+        </button>
         <button id="toggle-club" class="v3-btn v3-text-primary w-50">Club Events</button>
       </div>
 
@@ -239,7 +259,7 @@
       const container = document.getElementById('timeline-container')
       const empty = document.getElementById('empty-state')
       const showPast = document.getElementById('show-past-wrapper')
-      const count = document.getElementById('event-count')
+      const countUpcoming = document.getElementById('upcoming-count')
 
       container.innerHTML = ''
 
@@ -253,8 +273,6 @@
         noUpcomingMsg.classList.remove('d-none')
       }
 
-      count.textContent = visible.length
-
       if (!visible.length) {
         empty.classList.remove('d-none')
         showPast.classList.add('d-none')
@@ -264,7 +282,8 @@
 
       empty.classList.add('d-none')
 
-      renderGroups(upcoming, false).forEach((g) => container.appendChild(g))
+      countUpcoming.textContent = upcoming.length
+      renderGroups(upcoming, false, true).forEach((g) => container.appendChild(g))
 
       if (past.length && !showPastEvents) {
         showPast.classList.remove('d-none')
@@ -273,23 +292,22 @@
       }
 
       if (showPastEvents) {
-        renderGroups(past, true).forEach((g) => container.appendChild(g))
+        renderGroups(past, true, false).forEach((g) => container.appendChild(g))
       }
     }
 
-    function renderGroups(items, reverse) {
+    function renderGroups(items, reverse, isUpcoming) {
       const groups = groupByMonth(items)
       return Object.entries(groups).map(([month, list]) => {
         const group = document.createElement('div')
         group.className = 'mb-5'
 
         group.innerHTML = `
-      <div class="d-flex align-items-center mb-3">
-        <i class="ti ti-circle-filled mr-2" style="color: var(--v3-primary-button);"></i>
-        <h5 class="v3-text-primary mb-0">${month}</h5>
-      </div>
-      <div class="row"></div>
-    `
+          <div class="d-flex align-items-center mb-3 timeline-month-header">
+          <i class="ti ti-circle-filled mr-2 v3-grant-stat-label ${isUpcoming ? 'v3-text-success' : 'v3-text-tertiary'}"></i>
+          <h5 class="v3-text-primary mb-0">${month}</h5>
+          </div>
+          <div class="row timeline-month-grid"></div>`
 
         const row = group.querySelector('.row')
         list
