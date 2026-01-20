@@ -70,7 +70,7 @@
 
                 <div
                   id="city-dropdown"
-                  class="dropdown-menu w-100 mt-1 shadow"
+                  class="dropdown-menu w-100 mt-1 p-0"
                   style="max-height: 200px; overflow-y: auto; display: none;"
                 >
                   <!-- options -->
@@ -174,18 +174,12 @@
       )
 
       cityDropdown.innerHTML = `
-      <div class="city-option" data-value="" style="padding: 8px 12px; cursor: pointer;">All Cities</div>
+      <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
       ${filtered
-        .map(
-          (city) =>
-            `<div class="city-option" data-value="${city}" style="padding: 8px 12px; cursor: pointer;">${city}</div>`,
-        )
-        .join('')}
-    `
+        .map((city) => `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`)
+        .join('')}`
 
       cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
-        opt.onmouseenter = () => (opt.style.background = 'var(--v3-button-border)')
-        opt.onmouseleave = () => (opt.style.background = 'var(--v3-card-bg)')
         opt.onclick = () => {
           filters.city = opt.dataset.value
           citySearch.value = opt.dataset.value || ''
