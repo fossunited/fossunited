@@ -47,7 +47,6 @@ jinja = {
         "fossunited.fossunited.utils.get_user_socials",
         "fossunited.fossunited.utils.get_user_editable_doctype_fields",
         "fossunited.fossunited.utils.get_signup_optin_checks",
-        "fossunited.fossunited.utils.get_all_events_timeline",
         "fossunited.fossunited.utils.get_volunteers_data",
         "fossunited.fossunited.utils.get_volunteers_stats",
         "fossunited.fossunited.utils.get_chapter_details",

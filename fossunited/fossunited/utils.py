@@ -1,10 +1,7 @@
-from datetime import datetime
-
 import frappe
 from frappe import qb
 from frappe.query_builder.functions import Max
 from frappe.utils import add_to_date, get_datetime, nowdate
-from frappe.utils.data import now_datetime
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -12,7 +9,6 @@ from fossunited.doctype_ids import (
     CITY_COMMUNITY,
     CONFERENCE,
     EVENT,
-    HACKATHON,
     USER_PROFILE,
     VIRTUAL,
 )
@@ -254,68 +250,6 @@ def get_main_foss_events():
             filtered_events.append(event)
 
     return filtered_events[:12]
-
-
-def get_all_events_timeline():
-    """
-    Get flat list of all events published to show in timeline.
-    Returns properly serialized data for Jinja template.
-    """
-    now = now_datetime()
-
-    events = frappe.get_all(
-        EVENT,
-        fields=["*"],
-        filters={"is_published": 1},
-    )
-
-    hackathons = frappe.get_all(
-        HACKATHON,
-        fields=["*"],
-        filters={"is_published": 1},
-    )
-
-    chapter_type_map = {
-        c.name: c.chapter_type for c in frappe.get_all(CHAPTER, fields=["name", "chapter_type"])
-    }
-
-    def normalize(e, kind):
-        start = e.get("event_start_date") or e.get("start_date")
-        end = e.get("event_end_date") or e.get("end_date") or start
-
-        start_dt = frappe.utils.get_datetime(start)
-        end_dt = frappe.utils.get_datetime(end)
-
-        # Create a clean dict without datetime objects
-        result = {}
-
-        # Copy all fields, converting datetime objects to ISO strings
-        for key, value in e.items():
-            if isinstance(value, datetime):
-                result[key] = value.isoformat()
-            else:
-                result[key] = value
-
-        # Add computed fields
-        result.update(
-            {
-                "_kind": kind,  # event | hackathon
-                "_start": start_dt.isoformat(),
-                "_end": end_dt.isoformat(),
-                "_is_past": end_dt < now,
-                "_chapter_type": chapter_type_map.get(e.get("chapter")),
-            }
-        )
-
-        return result
-
-    data = []
-    for e in events:
-        data.append(normalize(e, "event"))
-    for h in hackathons:
-        data.append(normalize(h, "hackathon"))
-
-    return data
 
 
 def get_chapter_details():
