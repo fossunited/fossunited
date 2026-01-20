@@ -4,8 +4,8 @@ import frappe
 
 from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 
-OPEN_STATUSES = ["Open", "Under Review", "Ongoing"]
-APPROVED_STATUS = ["Approved", "Disbursed"]
+OPEN_STATUSES = ["Open", "Under Review"]
+APPROVED_STATUS = ["Approved", "Disbursed", "Ongoing"]
 
 
 def get_context(context):
