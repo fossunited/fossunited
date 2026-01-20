@@ -1093,7 +1093,7 @@ h6 {
 .events-grid-4 {
   padding: 1rem 0;
   display: grid;
-  grid-template-columns: repeat(4, minmax(16rem, 1fr));
+  grid-template-columns: repeat(3, minmax(310px, 1fr));
   gap: 1.5rem;
 }
 
