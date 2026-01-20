@@ -15,14 +15,40 @@ def get_context(context):
     events = frappe.get_all(
         EVENT,
         filters={"is_published": 1},
-        fields=["*"],
+        fields=[
+            "name",
+            "route",
+            "event_name",
+            "event_start_date",
+            "event_end_date",
+            "event_location",
+            "banner_image",
+            "chapter",
+            "must_attend",
+        ],
     )
 
     hackathons = frappe.get_all(
         HACKATHON,
         filters={"is_published": 1},
-        fields=["*"],
+        fields=[
+            "name",
+            "route",
+            "hackathon_name as event_name",
+            "start_date as event_start_date",
+            "end_date as event_end_date",
+            "hackathon_banner as banner_image",
+            "hackathon_type as event_location",
+            "chapter",
+        ],
     )
+
+    for h in hackathons:
+        h["must_attend"] = 1
+        h["_kind"] = "hackathon"
+
+    for e in events:
+        e["_kind"] = "event"
 
     chapter_type_map = {
         c.name: c.chapter_type for c in frappe.get_all(CHAPTER, fields=["name", "chapter_type"])
@@ -30,32 +56,16 @@ def get_context(context):
 
     timeline = []
 
-    for e in events:
-        start_dt = get_datetime(e.get("event_start_date"))
-        end_dt = get_datetime(e.get("event_end_date"))
+    for item in events + hackathons:
+        start_dt = get_datetime(item.get("event_start_date"))
+        end_dt = get_datetime(item.get("event_end_date"))
 
         row = {
-            **{k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in e.items()},
-            "_kind": "event",
+            **{k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in item.items()},
             "_start": start_dt.isoformat(),
             "_end": end_dt.isoformat(),
             "_is_past": end_dt < now,
-            "_chapter_type": chapter_type_map.get(e.get("chapter")),
-        }
-
-        timeline.append(row)
-
-    for h in hackathons:
-        start_dt = get_datetime(h.get("start_date"))
-        end_dt = get_datetime(h.get("end_date"))
-
-        row = {
-            **{k: (v.isoformat() if isinstance(v, datetime) else v) for k, v in h.items()},
-            "_kind": "hackathon",
-            "_start": start_dt.isoformat(),
-            "_end": end_dt.isoformat(),
-            "_is_past": end_dt < now,
-            "_chapter_type": chapter_type_map.get(h.get("chapter")),
+            "_chapter_type": chapter_type_map.get(item.get("chapter")),
         }
 
         timeline.append(row)

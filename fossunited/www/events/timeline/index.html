@@ -132,12 +132,10 @@
       {% set all_events = timeline_events %}
       <div class="d-none">
         {% for event in all_events %}
-          {% set name = event.event_name or event.hackathon_name %}
-          {% set location = event.event_location or "" %}
           <div
             class="timeline-event-wrapper"
-            data-name="{{ name }}"
-            data-location="{{ location }}"
+            data-name="{{ event.event_name }}"
+            data-location="{{ event.event_location }}"
             data-start="{{ event._start }}"
             data-end="{{ event._end }}"
             data-is-past="{{ 'true' if event._is_past else 'false' }}"
