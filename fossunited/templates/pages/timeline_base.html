@@ -63,14 +63,10 @@
               <i class="ti ti-rss"></i>
             </a>
           {% endif %}
-          <span
-            id="filter-toggle"
-            class="d-flex v3-text-secondary align-items-center gap-1"
-            style="cursor: pointer;"
-          >
-            <span>Filter</span>
+          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false">
+            Filter
             <i class="ti ti-adjustments-filled"></i>
-          </span>
+          </button>
         </div>
       </div>
 
@@ -203,6 +199,8 @@
           location: '',
           mustAttend: false,
           year: null,
+          _parsedStart: null, // cache
+          _parsedEnd: null,
         },
       }
 
@@ -352,10 +350,8 @@
           if (!loc.includes(state.filters.location)) return false
         }
 
-        if (state.filters.start && new Date(w.dataset.end) < new Date(state.filters.start))
-          return false
-        if (state.filters.end && new Date(w.dataset.start) > new Date(state.filters.end))
-          return false
+        if (state._parsedStart && new Date(w.dataset.end) < state._parsedStart) return false
+        if (state._parsedEnd && new Date(w.dataset.start) > state._parsedEnd) return false
 
         // Year/quarter filter (past events only)
         if (PAGE_TYPE === 'completed') {
@@ -528,8 +524,9 @@
       }
 
       dom.startDate.onchange = (e) => {
-        state.filters.start = e.target.value
-        render()
+          state.filters.start = e.target.value
+          state._parsedStart = e.target.value ? new Date(e.target.value) : null
+          render()
       }
 
       dom.endDate.onchange = (e) => {
@@ -544,6 +541,8 @@
 
       dom.filterToggle.onclick = () => {
         dom.filtersPanel.classList.toggle('d-none')
+        const expanded = !dom.filtersPanel.classList.contains('d-none')
+        dom.filterToggle.setAttribute('aria-expanded', expanded)
       }
 
       dom.toggleCity.onclick = () => {

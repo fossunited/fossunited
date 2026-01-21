@@ -3,44 +3,41 @@
     set chapter =
       chapter_or_id
       if chapter_or_id and chapter_or_id.doctype == "FOSS Chapter"
-      else frappe.get_doc("FOSS Chapter", chapter_or_id)
+      else (frappe.get_doc("FOSS Chapter", chapter_or_id) if chapter_or_id else None)
   %}
-
-  {% set foss_club = (chapter.chapter_type == 'FOSS Club') %}
-
-  {% if as_link %}
-    <a
-      href="/{{ chapter.route }}"
-      class="chapter-brand-block {% if foss_club %}club-brand{% endif %}"
-      aria-label="{{ chapter.chapter_name }} chapter page"
-      title="{{ chapter.chapter_name }}"
-    >
-  {% else %}
-    <span
-      class="chapter-brand-block {% if foss_club %}club-brand{% endif %}"
-      title="{{ chapter.chapter_name }}"
-    >
-  {% endif %}
-
-      {% if chapter.chapter_type == 'FOSS Club' %}
-        <img
-          src="/assets/fossunited/images/chapter/fossclub_logo.svg"
-          alt="FOSS Club Logo"
-          aria-hidden="true"
-        />
-      {% endif %}
-
-      <span class="{% if not foss_club %}no-font-inherit fff-forward {% endif %}">
-        {{
-          chapter.chapter_name
-          | truncate(truncate_length, True, '…', 0)
-          if truncate_length else chapter.chapter_name
-        }}
+  {% if chapter %}
+    {% set foss_club = (chapter.chapter_type == 'FOSS Club') %}
+    {% if as_link %}
+      <a
+        href="/{{ chapter.route }}"
+        class="chapter-brand-block {% if foss_club %}club-brand{% endif %}"
+        aria-label="{{ chapter.chapter_name }} chapter page"
+        title="{{ chapter.chapter_name }}"
+      >
+    {% else %}
+      <span
+        class="chapter-brand-block {% if foss_club %}club-brand{% endif %}"
+        title="{{ chapter.chapter_name }}"
+      >
+    {% endif %}
+        {% if chapter.chapter_type == 'FOSS Club' %}
+          <img
+            src="/assets/fossunited/images/chapter/fossclub_logo.svg"
+            alt="FOSS Club Logo"
+            aria-hidden="true"
+          />
+        {% endif %}
+        <span class="{% if not foss_club %}no-font-inherit fff-forward {% endif %}">
+          {{
+            chapter.chapter_name
+            | truncate(truncate_length, True, '…', 0)
+            if truncate_length else chapter.chapter_name
+          }}
+        </span>
+    {% if as_link %}
+      </a>
+    {% else %}
       </span>
-
-  {% if as_link %}
-    </a>
-  {% else %}
-    </span>
+    {% endif %}
   {% endif %}
 {% endmacro %}

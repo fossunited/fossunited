@@ -302,6 +302,7 @@ function truncateStr(title, len) {
 // Global toggle function for sections
 window.toggleSection = function (id) {
   const content = document.getElementById(id)
+  if (!content) return
   const header = content?.previousElementSibling
   content.classList.toggle('hidden')
   header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')

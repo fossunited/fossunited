@@ -1013,10 +1013,8 @@ h6 {
   color: hsl(var(--clr-code-night-800));
   font-size: var(--text-base);
   font-weight: var(--fw-semibold);
-    &:hover {
-      color: inherit;
-    }
 }
+.club-brand:hover {color: inherit };
 
 .club-brand > img {
   height: 1.5rem;
@@ -3722,9 +3720,9 @@ a.underline {
   background: var(--v3-text-color2);
   color: var(--v3-main-bg);
   border-color: var(--v3-text-color2);
-    &:hover {
-        color: var(--v3-text-color);
-    }
+}
+.v3-pagination__btn--active:hover {
+  color: var(--v3-text-color);
 }
 
 .v3-pagination__divider {
