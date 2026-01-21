@@ -147,11 +147,10 @@
         </a>
       </div>
 
-      <!-- Year/Quarter pagination (Past events only) -->
+      <!-- Year pagination (Past events only) -->
       {% if page_type == "completed" %}
         <div class="p-2 mb-4">
           <div class="v3-pagination mb-4" id="year-pagination"></div>
-          <div class="v3-pagination" id="quarter-pagination"></div>
         </div>
       {% endif %}
 
@@ -204,7 +203,6 @@
           location: '',
           mustAttend: false,
           year: null,
-          quarter: null,
         },
       }
 
@@ -225,7 +223,6 @@
         toggleClub: document.getElementById('toggle-club'),
         downloadIcs: document.getElementById('download-ics'),
         yearPagination: document.getElementById('year-pagination'),
-        quarterPagination: document.getElementById('quarter-pagination'),
       }
 
       const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
@@ -244,7 +241,7 @@
             }
           })
         },
-        { rootMargin: '100px' },
+      {root: dom.container, rootMargin: '100px 0px', threshold: 0.01,},
       )
 
       function initLazyLoading() {
@@ -364,10 +361,8 @@
         if (PAGE_TYPE === 'completed') {
           const eventDate = new Date(w.dataset.start)
           const eventYear = eventDate.getFullYear()
-          const eventQuarter = Math.floor(eventDate.getMonth() / 3) + 1
 
           if (state.filters.year && eventYear !== state.filters.year) return false
-          if (state.filters.quarter && eventQuarter !== state.filters.quarter) return false
         }
 
         return true
@@ -465,11 +460,8 @@
           ...new Set(wrappers.map((w) => new Date(w.dataset.start).getFullYear())),
         ].sort((a, b) => b - a)
 
-        const latestYear = years[0] // default year + quarter
-        const currentQuarter = Math.floor(new Date().getMonth() / 3) + 1
-
+        const latestYear = years[0] // default year
         state.filters.year = latestYear
-        state.filters.quarter = currentQuarter
 
         // YEAR PAGINATION
         dom.yearPagination.innerHTML = `
@@ -484,23 +476,6 @@
       )
       .join('')}
   `
-
-        // QUARTER PAGINATION
-        dom.quarterPagination.innerHTML = `
-    <button class="v3-pagination__btn" data-quarter="">All Quarters</button>
-    ${[1, 2, 3, 4]
-      .map(
-        (q) => `
-        <button
-          class="v3-pagination__btn ${q === currentQuarter ? 'v3-pagination__btn--active' : ''}"
-          data-quarter="${q}"
-        >
-          Q${q} (${q === 1 ? 'Jan-Mar' : q === 2 ? 'Apr-Jun' : q === 3 ? 'Jul-Sep' : 'Oct-Dec'})
-        </button>`,
-      )
-      .join('')}
-  `
-
         // Click handlers (unchanged logic, just cleaned)
         dom.yearPagination.querySelectorAll('.v3-pagination__btn').forEach((btn) => {
           btn.onclick = () => {
@@ -510,18 +485,6 @@
 
             btn.classList.add('v3-pagination__btn--active')
             state.filters.year = btn.dataset.year ? parseInt(btn.dataset.year) : null
-            render()
-          }
-        })
-
-        dom.quarterPagination.querySelectorAll('.v3-pagination__btn').forEach((btn) => {
-          btn.onclick = () => {
-            dom.quarterPagination
-              .querySelectorAll('.v3-pagination__btn')
-              .forEach((b) => b.classList.remove('v3-pagination__btn--active'))
-
-            btn.classList.add('v3-pagination__btn--active')
-            state.filters.quarter = btn.dataset.quarter ? parseInt(btn.dataset.quarter) : null
             render()
           }
         })
