@@ -1,79 +1,82 @@
+{% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+
+{% macro event_must_attend_tag() %}
+  <div class="v3-tag v3-tag--must">
+    <svg width="9" height="8" viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+      <path
+        d="M3.68016 0.233312C3.86755 -0.078065 4.31898 -0.0780654 4.50637 0.233312L5.65071 2.13481L7.81276 2.63555C8.16681 2.71755 8.30631 3.14688 8.06808 3.42132L6.61326 5.09725L6.80515 7.30823C6.83657 7.67028 6.47135 7.93562 6.13673 7.79386L4.09326 6.92814L2.04979 7.79386C1.71517 7.93562 1.34996 7.67028 1.38138 7.30823L1.57326 5.09725L0.118447 3.42132C-0.119784 3.14688 0.0197142 2.71755 0.373759 2.63555L2.53582 2.13481L3.68016 0.233312Z"
+        fill="var(--v3-main-bg)"
+      />
+    </svg>
+    Must Attend
+  </div>
+{% endmacro %}
+
+{% macro event_category_tag(category) %}
+  {% if category %}
+    <div class="v3-tag v3-tag--category">{{ category }}</div>
+  {% endif %}
+{% endmacro %}
+
 {% macro event_card(event, lazy=false) %}
   {% set event_name = event.event_name or event.hackathon_name %}
   {% set start_date = event.event_start_date or event.start_date %}
-  {% set end_date = event.event_end_date or event.end_date %}
+  {% set end_date = event.event_end_date or event.end_date or start_date %}
   {% set location = event.event_location or event.location or "Virtual" %}
   {% set banner = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
-  {% set event_type = "Event" if event.event_name else "Hackathon" %}
   {% set chapter_name = event.chapter %}
 
-  <a href="/{{ event.route }}" class="timeline-event-card">
-    <div class="timeline-card-inner">
-      <!-- Banner as full background with lazy loading -->
+  <a href="/{{ event.route }}" class="v3-event-card">
+    <div class="v3-event-card__inner">
+      {# Banner #}
       <img
         {% if lazy %}
           data-src="{{ banner }}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 400 300'%3E%3Crect fill='%23f0f0f0' width='400' height='300'/%3E%3C/svg%3E"
-          class="timeline-card-bg lazy-img"
+          class="v3-event-card__banner lazy-img"
         {% else %}
-          src="{{ banner }}" class="timeline-card-bg" loading="eager" fetchpriority="high"
+          src="{{ banner }}" class="v3-event-card__banner" loading="eager" fetchpriority="high"
         {% endif %}
         alt="{{ event_name }}"
       />
 
-      <!-- Gradient overlay -->
-      <div class="timeline-card-overlay"></div>
+      {# Gradient overlay #}
+      <div class="v3-event-card__overlay"></div>
 
-      <!-- Bottom content -->
-      <div class="timeline-card-content">
-        <!-- Chapter badge with curved corner -->
-        <div class="timeline-chapter-wrapper">
+      {# Bottom content #}
+      <div class="v3-event-card__content">
+        {# Chapter badge #}
+        <div class="v3-event-card__chapter-wrap">
           <svg
             width="16"
             height="16"
             viewBox="0 0 16 16"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            class="timeline-corner-svg"
+            class="v3-event-card__corner-svg"
           >
-            <path d="M16 0C16 8.83655 8.83656 16 0 16H16V0Z" fill="var(--v3-card-bg)" />
+            <path d="M16 0C16 8.83655 8.83656 16 0 16H16V0Z" fill="var(--v3-main-bg)" />
           </svg>
-
-          <div class="timeline-chapter-badge">
-            <div class="timeline-chapter-inner">
-              <span class="timeline-chapter-name no-font-inherit">{{ chapter_name }}</span>
+          <div class="v3-event-card__chapter-badge">
+            <div class="v3-event-card__chapter-inner">
+              {{ chapter_branding_block(chapter_name, as_link=false) }}
             </div>
           </div>
         </div>
 
-        <!-- Event details section -->
-        <div class="timeline-details">
-          <div class="timeline-title v3-text-primary">{{ event_name }}</div>
+        {# Event details #}
+        <div class="v3-event-card__details">
+          <div class="v3-event-card__title">{{ event_name }}</div>
 
-          <!-- Must Attend Badge (if applicable) -->
+          {# Must Attend Badge #}
           {% if event.must_attend %}
-            <div class="timeline-must-attend">
-              <svg
-                width="9"
-                height="8"
-                viewBox="0 0 9 8"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M3.68016 0.233312C3.86755 -0.078065 4.31898 -0.0780654 4.50637 0.233312L5.65071 2.13481L7.81276 2.63555C8.16681 2.71755 8.30631 3.14688 8.06808 3.42132L6.61326 5.09725L6.80515 7.30823C6.83657 7.67028 6.47135 7.93562 6.13673 7.79386L4.09326 6.92814L2.04979 7.79386C1.71517 7.93562 1.34996 7.67028 1.38138 7.30823L1.57326 5.09725L0.118447 3.42132C-0.119784 3.14688 0.0197142 2.71755 0.373759 2.63555L2.53582 2.13481L3.68016 0.233312Z"
-                  fill="var(--v3-main-bg)"
-                />
-              </svg>
-              Must Attend
-            </div>
+            {{ event_must_attend_tag() }}
           {% endif %}
 
-          <div class="timeline-meta v3-text-secondary">
+          <div class="v3-event-card__meta">
             <span>
               {% set sd = frappe.utils.get_datetime(start_date) %}
-              {% set ed = frappe.utils.get_datetime(end_date) %}
-
+              {% set ed = frappe.utils.get_datetime(end_date or start_date) %}
               {% set same_day = sd.date() == ed.date() %}
               {% set same_month = sd.strftime("%Y-%m") == ed.strftime("%Y-%m") %}
               {% set same_year = sd.year == ed.year %}
@@ -91,7 +94,6 @@
                 – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
               {% endif %}
             </span>
-
             <span>|</span>
             <span>{{ location }}</span>
           </div>

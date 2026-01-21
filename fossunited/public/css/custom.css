@@ -994,15 +994,15 @@ h6 {
 .chapter-brand-block {
   display: block;
   padding: 0.5rem;
-  background: hsl(var(--clr-code-night-900));
-  color: white;
+  background: var(--v3-text-color, hsl(var(--clr-code-night-900)));
+  color: var(--v3-main-bg, white);
   width: fit-content;
   border-radius: 0.3rem;
   font-size: var(--text-xs);
 }
 
 .chapter-brand-block:hover {
-  color: white !important;
+  color: var(--v3-main-bg, white);
 }
 
 .club-brand {
@@ -1014,6 +1014,7 @@ h6 {
   font-size: var(--text-base);
   font-weight: var(--fw-semibold);
 }
+.club-brand:hover {color: inherit };
 
 .club-brand > img {
   height: 1.5rem;
@@ -1094,9 +1095,12 @@ h6 {
   padding: 1rem 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(310px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
+  min-width: 0;
+  width: 100%;
 }
 
+/* TODO: Remove with v3 timeline design */
 .event-card {
   display: flex;
   flex-direction: column;
@@ -1141,17 +1145,6 @@ h6 {
   align-items: center;
   border-radius: 0.5rem;
   background: hsl(var(--clr-gray-100));
-}
-
-.event-card--must-attend {
-  display: flex;
-  padding: 0.25rem 0.5rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.3125rem;
-  border-radius: 0.5rem;
-  background: hsl(var(--clr-foss-mint-100));
-  color: hsl(var(--clr-foss-mint-600));
 }
 
 .event-card--logo {
@@ -2359,8 +2352,7 @@ h6 {
   border-width: 0;
 }
 
-:is(article.blog-content, article.web-page-content, .from-markdown)
-  :is(h1, h2, h3, h4, h5, h6) {
+:is(article.blog-content, article.web-page-content, .from-markdown) :is(h1, h2, h3, h4, h5, h6) {
   padding: 2.5rem 0 1.5rem 0;
 }
 
@@ -2393,7 +2385,6 @@ h6 {
   font-size: clamp(1rem, 1.5vw, 1.2rem);
   line-height: 1.4;
 }
-
 
 /* ============================================
    V3 Design Language Styles
@@ -3472,169 +3463,6 @@ a.underline {
   }
 }
 
-/* Timeline Event Card */
-.timeline-event-card {
-  position: relative;
-  width: 100%;
-  max-width: 310px;
-  height: 310px;
-  display: block;
-  text-decoration: none;
-  transition: transform 0.2s ease;
-}
-
-.timeline-event-card:hover {
-  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06) !important;
-  text-decoration: none;
-  border: none;
-}
-[data-theme='dark'] .timeline-event-card:hover {
-  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7) !important;
-}
-
-.timeline-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-/* Banner as full background */
-.timeline-card-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 1;
-}
-
-/* Gradient overlay */
-.timeline-card-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(0deg, rgba(20, 20, 20, 0.10) 0%, rgba(20, 20, 20, 0.10) 100%);
-  box-shadow: 0px 4px 12px rgba(20, 20, 20, 0.25) inset;
-  z-index: 2;
-  transition: opacity 0.3s ease;
-}
-
-.timeline-event-card:hover .timeline-card-overlay {
-  opacity: 0;
-}
-
-/* Must Attend Badge - inside banner area */
-.timeline-must-attend {
-  background: var(--v3-text-color);
-  color: var(--v3-main-bg);
-  padding: 5px 10px;
-  border-radius: 1rem;
-  font-size: 0.875rem;
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 4px;
-  z-index: 3;
-}
-
-/* Bottom content - sticks to bottom */
-.timeline-card-content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Chapter badge wrapper - aligned to right */
-.timeline-chapter-wrapper {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-}
-
-.timeline-corner-svg {
-  position: relative;
-}
-
-.timeline-chapter-badge {
-  padding: 12px 12px 0px 12px;
-  background: var(--v3-main-bg) !important;
-  border-top-left-radius: 8px;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 90%;
-}
-
-.timeline-chapter-inner {
-  height: 32px;
-  overflow: hidden;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  background: var(--v3-text-color);
-  padding: 8px 6.4px;
-  justify-content: center;
-}
-
-.timeline-chapter-name {
-  color: var(--v3-card-bg);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11.20px;
-  font-family: 'FFF Forward', sans-serif;
-  font-weight: 400;
-  text-transform: uppercase;
-  line-height: 15.68px;
-  letter-spacing: 0.67px;
-  padding: 4px;
-}
-
-/* Event details section */
-.timeline-details {
-  background: var(--v3-main-bg) !important;
-  padding: 8px 12px 12px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.timeline-title {
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 22.32px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.timeline-meta {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 21px;
-}
-
-/* Grid with vertical line */
-.timeline-month-grid {
-  border-left: 1px solid var(--v3-text-color);
-  padding-left: 0.5rem;
-  margin-left: 0.4rem;
-}
-
 .v3-dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
@@ -3646,28 +3474,263 @@ a.underline {
   background: var(--v3-button-border);
 }
 
-[data-theme='dark'] .timeline-month-grid {
-  border-left-color: var(--v3-button-border);
+
+/* Base Event Card - Used everywhere */
+.v3-event-card {
+  position: relative;
+  width: 100%;
+  max-width: 310px;
+  height: 310px;
+  display: block;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease;
+  border-radius: 16px;
 }
 
-/* Dark theme adjustments */
-[data-theme='dark'] .timeline-chapter-badge,
-[data-theme='dark'] .timeline-details {
-  background: var(--v3-card-bg);
+.v3-event-card:hover {
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06);
+  text-decoration: none;
 }
 
-[data-theme='dark'] .timeline-corner-svg path {
-  fill: var(--v3-card-bg);
+[data-theme='dark'] .v3-event-card:hover {
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7);
 }
 
-[data-theme='dark'] .timeline-chapter-inner {
+.v3-event-card__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  clip-path: inset(0 round 16px);
+}
+
+.v3-event-card__banner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+  border-radius: 16px;
+}
+
+.v3-event-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(20, 20, 20, 0.35) 0%,
+    rgba(20, 20, 20, 0.15) 40%,
+    rgba(20, 20, 20, 0) 100%
+  );
+  z-index: 2;
+  transition: opacity 0.3s ease;
+  border-radius: 20px;
+  box-shadow: none;
+}
+
+.v3-event-card:hover .v3-event-card__overlay {
+  opacity: 0;
+}
+
+.v3-event-card__content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chapter badge with curved corner */
+.v3-event-card__chapter-wrap {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.v3-event-card__corner-svg {
+  position: relative;
+  fill: var(--v3-main-bg);
+}
+
+.v3-event-card__chapter-badge {
+  padding: 12px 12px 0 12px;
+  background: var(--v3-main-bg);
+  border-top-left-radius: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 90%;
+}
+
+.v3-event-card__chapter-inner {
+  height: 32px;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
   background: var(--v3-text-color);
+  padding: 8px 6.4px;
+  justify-content: center;
 }
 
-[data-theme='dark'] .timeline-chapter-name {
+.v3-event-card__chapter-inner:has(.club-brand) {
+  background: none;
+}
+
+.v3-event-card__details {
+  background: var(--v3-main-bg);
+  padding: 8px 12px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.v3-event-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 22.32px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  color: var(--v3-text-color);
+}
+
+.v3-event-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  color: var(--v3-text-color2);
+}
+
+.v3-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  line-height: 1;
+  width: fit-content;
+}
+
+.v3-tag svg {
+  width: 9px;
+  height: 8px;
+}
+
+/* Tag variants */
+.v3-tag--must {
+  background: var(--v3-text-color2);
   color: var(--v3-card-bg);
 }
 
+.v3-tag--category {
+  background: var(--v3-button-border);
+  color: var(--v3-text-color3);
+}
+
+.v3-tag--success {
+  background: var(--v3-live-button);
+  color: var(--v3-primary-button);
+}
+
+.v3-tag--clickable {
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.v3-tag--clickable:hover {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+}
+
+.v3-tag--clickable.active {
+  background: var(--v3-text-color2);
+  color: var(--v3-main-bg);
+}
+
+/* Tag groups */
+/* TODO: Use this for all tags used in pages? */
+.v3-tags {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Timeline grid with vertical line */
+.v3-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+  gap: 1.5rem;
+  border-left: 1px solid var(--v3-text-color2);
+  padding-left: 0.8rem;
+  margin-left: 0.4rem;
+}
+
+.lazy-img {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: v3-shimmer 1.5s infinite;
+}
+
+[data-theme='dark'] .lazy-img {
+  background: linear-gradient(90deg, #2a2a2a 25%, #1a1a1a 50%, #2a2a2a 75%);
+}
+
+@keyframes v3-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.v3-pagination {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.v3-pagination__btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--v3-button-border);
+  background: var(--v3-card-bg);
+  color: var(--v3-text-color2);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.v3-pagination__btn:hover {
+  background: var(--v3-button-border);
+}
+
+.v3-pagination__btn--active {
+  background: var(--v3-text-color2);
+  color: var(--v3-main-bg);
+  border-color: var(--v3-text-color2);
+}
+.v3-pagination__btn--active:hover {
+  color: var(--v3-text-color);
+}
+
+.v3-pagination__divider {
+  width: 100%;
+  height: 1px;
+  background: var(--v3-button-border);
+  margin: 1rem 0;
+}
 
 /* ===== Tablet ===== */
 @media (min-width: 768px) {
@@ -3734,8 +3797,43 @@ a.underline {
   .v3-grant-count-box {
     width: 100%;
   }
+  .v3-container {
+    padding: 0 0.5rem;
+  }
+  .v3-pagination {
+    justify-content: left;
+  }
 }
 
 .hidden-html-comment {
   display: none !important;
+}
+
+/* TODO: Replace .events-grid-4, .members-grid-6, etc. */
+.v3-grid-auto {
+  display: grid;
+  gap: 1.5rem;
+}
+
+/* Responsive grid variants */
+.v3-grid-auto--events {
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
+}
+
+.v3-grid-auto--members {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+
+.v3-grid-auto--projects {
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+
+.v3-grid-auto--sponsors-lg {
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.25rem;
+}
+
+.v3-grid-auto--sponsors-md {
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.8rem;
 }

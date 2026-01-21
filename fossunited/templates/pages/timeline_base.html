@@ -1,0 +1,592 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+{% from "fossunited/templates/macros/event_card.html" import event_card %}
+
+{% block head %}
+  {{ super() }}
+  {% if page_type == "upcoming" %}
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Upcoming Events – Foss United"
+      href="/events/timeline/rss.xml"
+    />
+  {% endif %}
+{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container v3-container-wide">
+      {{ v3_navbar() }}
+
+      <div class="v3-grid mb-5 p-0">
+        <div class="v3-card d-flex align-items-center p-0 overflow-hidden rounded">
+          <div class="flex-shrink-0 overflow-hidden rounded-start">
+            {% include "fossunited/public/icons/upcoming-event.svg" %}
+          </div>
+
+          <div class="flex-grow-1 px-3">
+            <h1 class="v3-grant-title mb-1">
+              {% if page_type == "upcoming" %}Upcoming Events{% else %}Completed Events{% endif %}
+            </h1>
+
+            <div class="d-flex align-items-center">
+              <div id="event-count" class="v3-grant-stat-number mr-1"></div>
+              <div class="v3-text-secondary">
+                {% if page_type == "upcoming" %}Upcoming{% else %}Completed{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="v3-controls mb-4">
+        <div class="v3-controls-left">
+          <div class="v3-search-input v3-search-wide">
+            <input
+              id="search"
+              type="text"
+              placeholder="Search… event:meetup, location:samagata, date:2026-01"
+            />
+            <i class="ti ti-search v3-text-tertiary"></i>
+          </div>
+        </div>
+
+        <div class="v3-controls-right">
+          {% if page_type == "upcoming" %}
+            <a
+              href="/events/timeline/rss.xml"
+              class="v3-text-secondary mr-4"
+              title="Subscribe to Upcoming Events"
+            >
+              <i class="ti ti-rss"></i>
+            </a>
+          {% endif %}
+          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false">
+            Filter
+            <i class="ti ti-adjustments-filled"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters panel -->
+      <div id="filters-panel" class="v3-card mb-4 d-none">
+        <div class="v3-controls">
+          <div class="v3-controls-left gap-2 flex-wrap align-items-end">
+            <div class="d-flex flex-column" style="flex: 0 0 200px;">
+              <label class="v3-text-secondary">City</label>
+              <div class="position-relative w-100">
+                <input
+                  id="city-search"
+                  type="text"
+                  class="v3-select w-100"
+                  placeholder="Search cities..."
+                  autocomplete="off"
+                />
+                <div
+                  id="city-dropdown"
+                  class="dropdown-menu w-100 mt-1 p-0"
+                  style="max-height: 200px; overflow-y: auto; display: none;"
+                ></div>
+              </div>
+            </div>
+
+            <div class="d-flex flex-column" style="flex: 0 0 140px;">
+              <label class="v3-text-secondary">Start date</label>
+              <input id="start-date" type="date" class="v3-select" />
+            </div>
+
+            <div class="d-flex flex-column" style="flex: 0 0 140px;">
+              <label class="v3-text-secondary">End date</label>
+              <input id="end-date" type="date" class="v3-select" />
+            </div>
+
+            <label class="d-flex align-items-center mb-0" style="padding-bottom: 8px;">
+              <input id="must-attend-filter" type="checkbox" class="mr-2" />
+              <span class="v3-text-primary">Must attend</span>
+            </label>
+          </div>
+
+          {% if page_type == "upcoming" %}
+            <div class="v3-controls-right">
+              <button id="download-ics" class="v3-btn v3-btn-dark">
+                <i class="ti ti-download"></i>
+                Download ICS
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Category toggle -->
+      <div class="v3-card btn-group w-100 mb-4 p-2">
+        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">
+          City Events
+        </button>
+        <button id="toggle-club" class="v3-btn v3-text-primary w-50">Club Events</button>
+      </div>
+
+      <!-- Page navigation -->
+      <div class="d-flex justify-content-center gap-3 mb-4">
+        <a
+          href="/events/timeline"
+          class="v3-btn {% if page_type == 'upcoming' %}v3-btn-dark{% else %}v3-btn-secondary{% endif %}"
+        >
+          Upcoming Events
+        </a>
+        <a
+          href="/events/timeline/completed"
+          class="v3-btn {% if page_type == 'completed' %}v3-btn-dark{% else %}v3-btn-secondary{% endif %}"
+        >
+          Completed Events
+        </a>
+      </div>
+
+      <!-- Year pagination (Past events only) -->
+      {% if page_type == "completed" %}
+        <div class="p-2 mb-4">
+          <div class="v3-pagination mb-4" id="year-pagination"></div>
+        </div>
+      {% endif %}
+
+      <!-- Timeline -->
+      <div id="timeline-container"></div>
+
+      <!-- Empty state -->
+      <div id="empty-state" class="text-center py-5 d-none">
+        <div class="display-4 opacity-25">🔍</div>
+        <h4 class="v3-text-secondary mt-3">No {{ page_type }} events found</h4>
+      </div>
+
+      <!-- Event cards (hidden) -->
+      {% set all_events = timeline_events %}
+      <div id="event-cards-template" class="d-none">
+        {% for event in all_events %}
+          <div
+            class="timeline-event-wrapper"
+            data-name="{{ event.event_name }}"
+            data-location="{{ event.event_location }}"
+            data-city="{{ event._chapter_city or '' }}"
+            data-start="{{ event._start }}"
+            data-end="{{ event._end }}"
+            data-is-past="{{ 'true' if event._is_past else 'false' }}"
+            data-must-attend="{{ 'true' if event.must_attend else 'false' }}"
+            data-chapter-type="{{ event._chapter_type }}"
+          >
+            {{ event_card(event, lazy=true) }}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    ;(function () {
+      'use strict'
+
+      const PAGE_TYPE = '{{ page_type }}'
+      const ALL_CITIES = {{ all_cities | tojson }}
+
+      // State
+      const state = {
+        category: 'city',
+        filters: {
+          search: '',
+          city: '',
+          start: '',
+          end: '',
+          location: '',
+          mustAttend: false,
+          year: null,
+          _parsedStart: null, // cache
+          _parsedEnd: null,
+        },
+      }
+
+      // Cache DOM
+      const dom = {
+        container: document.getElementById('timeline-container'),
+        empty: document.getElementById('empty-state'),
+        eventCount: document.getElementById('event-count'),
+        citySearch: document.getElementById('city-search'),
+        cityDropdown: document.getElementById('city-dropdown'),
+        searchInput: document.getElementById('search'),
+        startDate: document.getElementById('start-date'),
+        endDate: document.getElementById('end-date'),
+        mustAttendFilter: document.getElementById('must-attend-filter'),
+        filterToggle: document.getElementById('filter-toggle'),
+        filtersPanel: document.getElementById('filters-panel'),
+        toggleCity: document.getElementById('toggle-city'),
+        toggleClub: document.getElementById('toggle-club'),
+        downloadIcs: document.getElementById('download-ics'),
+        yearPagination: document.getElementById('year-pagination'),
+      }
+
+      const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
+
+      // Lazy loading observer
+      const lazyImageObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const img = entry.target
+              if (img.dataset.src) {
+                img.src = img.dataset.src
+                img.classList.remove('lazy-img')
+                lazyImageObserver.unobserve(img)
+              }
+            }
+          })
+        },
+      {root: dom.container, rootMargin: '100px 0px', threshold: 0.01,},
+      )
+
+      function initLazyLoading() {
+        const lazyImages = dom.container.querySelectorAll('img.lazy-img')
+        lazyImages.forEach((img) => lazyImageObserver.observe(img))
+      }
+
+      // City dropdown - use chapter cities
+      function populateCityDropdown(searchTerm = '') {
+        const filtered = ALL_CITIES.filter((city) =>
+          city.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+
+        dom.cityDropdown.innerHTML = `
+          <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
+          ${filtered
+            .map(
+              (city) =>
+                `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`,
+            )
+            .join('')}`
+
+        dom.cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
+          opt.onclick = () => {
+            const value = opt.dataset.value
+            if (state.filters.city === value) {
+              // deselect
+              state.filters.city = ''
+              dom.citySearch.value = ''
+              dom.citySearch.placeholder = 'Search cities...'
+            } else {
+              state.filters.city = value
+              dom.citySearch.value = value || ''
+              dom.citySearch.placeholder = value || 'Search cities...'
+            }
+            dom.cityDropdown.style.display = 'none'
+            render()
+          }
+        })
+      }
+
+      // Parse search bangs
+      function parseSearchBangs(input) {
+        const result = { search: '', city: '', start: '', end: '', location: '' }
+
+        input
+          .split(',')
+          .map((p) => p.trim())
+          .filter(Boolean)
+          .forEach((part) => {
+            if (!part.includes(':')) {
+              result.search += part + ' '
+              return
+            }
+
+            const [key, ...rest] = part.split(':')
+            const value = rest.join(':').trim()
+
+            switch (key.toLowerCase()) {
+              case 'event':
+              case 'title':
+              case 'name':
+                result.search += value + ' '
+                break
+              case 'place':
+              case 'location':
+              case 'loc':
+                result.location = value.toLowerCase()
+                break
+              case 'date':
+                if (/^\d{4}-\d{2}$/.test(value)) {
+                  const [year, month] = value.split('-').map(Number)
+                  const lastDay = new Date(year, month, 0).getDate()
+                  result.start = `${value}-01`
+                  result.end = `${value}-${String(lastDay).padStart(2, '0')}`
+                } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+                  result.start = value
+                  result.end = value
+                }
+                break
+              default:
+                result.search += part + ' '
+            }
+          })
+
+        result.search = result.search.trim().toLowerCase()
+        return result
+      }
+
+      // Filter logic
+      function passesFilters(w) {
+        if (state.category === 'club' && w.dataset.chapterType !== 'FOSS Club') return false
+        if (state.category === 'city' && w.dataset.chapterType === 'FOSS Club') return false
+
+        if (state.filters.search) {
+          const hay = `${w.dataset.name} ${w.dataset.location}`.toLowerCase()
+          if (!hay.includes(state.filters.search)) return false
+        }
+
+        // Use chapter city for dropdown filter
+        if (state.filters.city && w.dataset.city !== state.filters.city) return false
+
+        if (state.filters.mustAttend && w.dataset.mustAttend !== 'true') return false
+
+        // Use event location for text search
+        if (state.filters.location) {
+          const loc = (w.dataset.location || '').toLowerCase()
+          if (!loc.includes(state.filters.location)) return false
+        }
+
+        if (state._parsedStart && new Date(w.dataset.end) < state._parsedStart) return false
+        if (state._parsedEnd && new Date(w.dataset.start) > state._parsedEnd) return false
+
+        // Year/quarter filter (past events only)
+        if (PAGE_TYPE === 'completed') {
+          const eventDate = new Date(w.dataset.start)
+          const eventYear = eventDate.getFullYear()
+
+          if (state.filters.year && eventYear !== state.filters.year) return false
+        }
+
+        return true
+      }
+
+      // Group by month
+      function groupByMonth(items) {
+        const groups = {}
+        items.forEach((w) => {
+          const d = new Date(w.dataset.start)
+          const sortKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`
+          const displayKey = d.toLocaleString('en-US', { month: 'long', year: 'numeric' })
+
+          if (!groups[sortKey]) {
+            groups[sortKey] = { display: displayKey, items: [] }
+          }
+          groups[sortKey].items.push({ w, d })
+        })
+        return groups
+      }
+
+      // Render groups
+      function renderGroups(items, reverse, isUpcoming) {
+        const groups = groupByMonth(items)
+        const sortedKeys = Object.keys(groups).sort((a, b) =>
+          reverse ? b.localeCompare(a) : a.localeCompare(b),
+        )
+
+        return sortedKeys.map((key) => {
+          const { display: month, items: list } = groups[key]
+          const group = document.createElement('div')
+          group.className = 'mb-5'
+
+          const sectionId = `month-${key}`
+          const statusClass = isUpcoming ? 'v3-text-success' : 'v3-text-tertiary'
+          group.innerHTML = `
+           <div
+             class="d-flex align-items-center mb-3 timeline-month-header"
+             role="button"
+             tabindex="0"
+             aria-expanded="true"
+             onclick="toggleSection('${sectionId}')"
+           >
+             <i class="ti ti-circle-filled  mr-2 v3-grant-stat-label ${statusClass}"></i>
+             <h5 class="v3-text-primary mb-2">${month}</h5>
+             <i class="ti ti-chevron-down v3-toggle-icon transition"></i>
+           </div>
+
+           <div id="${sectionId}">
+             <div class="row v3-timeline-grid"></div>
+           </div>
+         `
+
+          const row = group.querySelector('.v3-timeline-grid')
+          list
+            .sort((a, b) => (reverse ? b.d - a.d : a.d - b.d))
+            .forEach(({ w }) => {
+              const col = document.createElement('div')
+              col.className = 'mb-4'
+              col.appendChild(w.cloneNode(true))
+              row.appendChild(col)
+            })
+
+          return group
+        })
+      }
+
+      // Main render
+      function render() {
+        dom.container.innerHTML = ''
+
+        const visible = wrappers.filter(passesFilters)
+
+        if (!visible.length) {
+          dom.empty.classList.remove('d-none')
+          dom.eventCount.textContent = 0
+          return
+        }
+
+        dom.empty.classList.add('d-none')
+        dom.eventCount.textContent = visible.length
+
+        const isUpcoming = PAGE_TYPE === 'upcoming'
+        renderGroups(visible, !isUpcoming, isUpcoming).forEach((g) => dom.container.appendChild(g))
+
+        // Initialize lazy loading after render
+        requestAnimationFrame(initLazyLoading)
+      }
+
+      // Year/Quarter pagination
+      function setupPagination() {
+        if (PAGE_TYPE !== 'completed') return
+
+        const years = [
+          ...new Set(wrappers.map((w) => new Date(w.dataset.start).getFullYear())),
+        ].sort((a, b) => b - a)
+
+        const latestYear = years[0] // default year
+        state.filters.year = latestYear
+
+        // YEAR PAGINATION
+        dom.yearPagination.innerHTML = `
+    <button class="v3-pagination__btn" data-year="">All Years</button>
+    ${years
+      .map(
+        (y) => `
+        <button
+          class="v3-pagination__btn ${y === latestYear ? 'v3-pagination__btn--active' : ''}"
+          data-year="${y}"
+        >${y}</button>`,
+      )
+      .join('')}
+  `
+        // Click handlers (unchanged logic, just cleaned)
+        dom.yearPagination.querySelectorAll('.v3-pagination__btn').forEach((btn) => {
+          btn.onclick = () => {
+            dom.yearPagination
+              .querySelectorAll('.v3-pagination__btn')
+              .forEach((b) => b.classList.remove('v3-pagination__btn--active'))
+
+            btn.classList.add('v3-pagination__btn--active')
+            state.filters.year = btn.dataset.year ? parseInt(btn.dataset.year) : null
+            render()
+          }
+        })
+      }
+
+      // Event handlers
+      dom.citySearch.onfocus = () => {
+        if (state.filters.city) {
+          // clear selection when re-opening
+          state.filters.city = ''
+          dom.citySearch.value = ''
+          dom.citySearch.placeholder = 'Search cities...'
+        }
+        populateCityDropdown(dom.citySearch.value)
+        dom.cityDropdown.style.display = 'block'
+      }
+
+      dom.citySearch.oninput = (e) => {
+        populateCityDropdown(e.target.value)
+        dom.cityDropdown.style.display = 'block'
+      }
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('#city-search') && !e.target.closest('#city-dropdown')) {
+          dom.cityDropdown.style.display = 'none'
+        }
+      })
+
+      dom.searchInput.oninput = (e) => {
+        const parsed = parseSearchBangs(e.target.value)
+        Object.assign(state.filters, {
+          search: parsed.search,
+          location: parsed.location,
+          start: parsed.start,
+          end: parsed.end,
+        })
+
+        dom.startDate.value = parsed.start
+        dom.endDate.value = parsed.end
+        render()
+      }
+
+      dom.startDate.onchange = (e) => {
+          state.filters.start = e.target.value
+          state._parsedStart = e.target.value ? new Date(e.target.value) : null
+          render()
+      }
+
+      dom.endDate.onchange = (e) => {
+        state.filters.end = e.target.value
+        render()
+      }
+
+      dom.mustAttendFilter.onchange = (e) => {
+        state.filters.mustAttend = e.target.checked
+        render()
+      }
+
+      dom.filterToggle.onclick = () => {
+        dom.filtersPanel.classList.toggle('d-none')
+        const expanded = !dom.filtersPanel.classList.contains('d-none')
+        dom.filterToggle.setAttribute('aria-expanded', expanded)
+      }
+
+      dom.toggleCity.onclick = () => {
+        state.category = 'city'
+        dom.toggleCity.classList.add('v3-btn-secondary')
+        dom.toggleClub.classList.remove('v3-btn-secondary')
+        render()
+      }
+
+      dom.toggleClub.onclick = () => {
+        state.category = 'club'
+        dom.toggleClub.classList.add('v3-btn-secondary')
+        dom.toggleCity.classList.remove('v3-btn-secondary')
+        render()
+      }
+
+      if (dom.downloadIcs) {
+        dom.downloadIcs.onclick = () => {
+          const ids = wrappers
+            .filter(passesFilters)
+            .map((w) => w.querySelector('a')?.href.split('/').pop())
+            .filter(Boolean)
+
+          if (!ids.length) return alert('No events to export')
+
+          frappe.call({
+            method: 'fossunited.api.chapter.generate_ics',
+            args: { event_ids: ids },
+            callback: (r) => {
+              if (!r.message) return alert('Failed to generate ICS file')
+
+              const blob = new Blob([r.message], { type: 'text/calendar' })
+              const a = document.createElement('a')
+              a.href = URL.createObjectURL(blob)
+              a.download = 'events.ics'
+              a.click()
+            },
+          })
+        }
+      }
+
+      // Initialize
+      setupPagination()
+      render()
+    })()
+  </script>
+{% endblock %}

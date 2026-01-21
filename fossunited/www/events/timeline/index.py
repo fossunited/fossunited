@@ -6,15 +6,37 @@ from frappe.utils import get_datetime, now_datetime
 from fossunited.doctype_ids import CHAPTER, EVENT, HACKATHON
 
 
-def get_context(context):
+def get_context(context, page_type="upcoming"):
     context.no_cache = 1
-    context.title = "Events Timeline - FOSS United"
+
+    context.page_type = page_type
 
     now = get_datetime(now_datetime())
 
+    if page_type == "upcoming":
+        context.title = "Upcoming Events - FOSS United"
+        event_filters = {
+            "is_published": 1,
+            "event_end_date": [">=", now],
+        }
+        hackathon_filters = {
+            "is_published": 1,
+            "end_date": [">=", now],
+        }
+    else:
+        context.title = "Past Events - FOSS United"
+        event_filters = {
+            "is_published": 1,
+            "event_end_date": ["<", now],
+        }
+        hackathon_filters = {
+            "is_published": 1,
+            "end_date": ["<", now],
+        }
+
     events = frappe.get_all(
         EVENT,
-        filters={"is_published": 1},
+        filters=event_filters,
         fields=[
             "name",
             "route",
@@ -30,7 +52,7 @@ def get_context(context):
 
     hackathons = frappe.get_all(
         HACKATHON,
-        filters={"is_published": 1},
+        filters=hackathon_filters,
         fields=[
             "name",
             "route",
@@ -50,9 +72,13 @@ def get_context(context):
     for e in events:
         e["_kind"] = "event"
 
-    chapter_type_map = {
-        c.name: c.chapter_type for c in frappe.get_all(CHAPTER, fields=["name", "chapter_type"])
-    }
+    chapter_data = frappe.get_all(CHAPTER, fields=["name", "chapter_type", "city"])
+
+    chapter_type_map = {c.name: c.chapter_type for c in chapter_data}
+    chapter_city_map = {c.name: c.city for c in chapter_data}
+
+    # Get unique cities for filter dropdown
+    context.all_cities = sorted(list(set(c.city for c in chapter_data if c.city)))
 
     timeline = []
 
@@ -66,8 +92,12 @@ def get_context(context):
             "_end": end_dt.isoformat(),
             "_is_past": end_dt < now,
             "_chapter_type": chapter_type_map.get(item.get("chapter")),
+            "_chapter_city": chapter_city_map.get(item.get("chapter")),
         }
 
         timeline.append(row)
+
+    # Sort: upcoming = chronological, past = reverse chronological
+    timeline.sort(key=lambda x: x["_start"], reverse=(page_type == "completed"))
 
     context.timeline_events = timeline

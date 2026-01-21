@@ -161,6 +161,7 @@ class FOSSUserProfile(WebsiteGenerator):
                         "route",
                         "chapter",
                         "event_start_date",
+                        "event_end_date",
                         "event_name",
                         "banner_image",
                         "must_attend",
