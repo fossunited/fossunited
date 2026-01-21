@@ -1,3 +1,5 @@
+{% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+
 {% macro event_card(event, lazy=false) %}
   {% set event_name = event.event_name or event.hackathon_name %}
   {% set start_date = event.event_start_date or event.start_date %}
@@ -40,9 +42,7 @@
           </svg>
 
           <div class="timeline-chapter-badge">
-            <div class="timeline-chapter-inner">
-              <span class="timeline-chapter-name no-font-inherit">{{ chapter_name }}</span>
-            </div>
+            <div class="timeline-chapter-inner">{{ chapter_branding_block(chapter_name, as_link=false) }}</div>
           </div>
         </div>
 
