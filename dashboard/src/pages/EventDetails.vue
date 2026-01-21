@@ -11,13 +11,23 @@
           },
         }"
       />
-      <Button
-        class="w-fit"
-        size="md"
-        label="Update Details"
-        icon-left="edit"
-        @click="updateDetails()"
-      ></Button>
+      <div class="flex items-center gap-2">
+        <Button
+          class="w-fit"
+          size="md"
+          :theme="event.doc.is_published ? 'red' : 'green'"
+          :icon-left="event.doc.is_published ? 'slash' : 'eye'"
+          :label="event.doc.is_published ? 'Unpublish Event' : 'Publish Event'"
+          @click="togglePublishEvent"
+        />
+        <Button
+          class="w-fit"
+          size="md"
+          label="Update Details"
+          icon-left="edit"
+          @click="updateDetails()"
+        ></Button>
+      </div>
     </div>
     <div class="flex flex-col gap-3 my-6">
       <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
@@ -296,6 +306,23 @@ const sluggify = (text) => {
 const onPermalinkInput = (eventInput) => {
   const input = eventInput.target?.value ?? ''
   event.doc.event_permalink = sluggify(input)
+}
+
+const togglePublishEvent = async () => {
+  try {
+    if (event.doc.is_published) {
+      if (!confirm('Are you sure you want to unpublish this event?')) return
+    }
+    await event.setValue.submit({
+      is_published: !event.doc.is_published,
+    })
+
+    toast.success(event.doc.is_published ? 'Event published successfully' : 'Event unpublished')
+  } catch (err) {
+    toast.error('Failed to update publish status', {
+      description: err.message,
+    })
+  }
 }
 
 const getEventLink = () => {
