@@ -6,6 +6,7 @@
 {% from "fossunited/templates/macros/projects_card.html" import projects_card %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+{% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
   {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
@@ -130,32 +131,6 @@
       font-weight: 600;
       line-height: 2.1rem;
       margin: 0.5rem 0;
-    }
-
-    .ev-tags {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .ev-tag {
-      padding: 0.25rem 0.5rem;
-      border-radius: 0.5rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .ev-tag-must {
-      background: var(--v3-text-color2);
-      color: var(--v3-card-bg);
-    }
-
-    .ev-tag-cat {
-      background: var(--v3-button-border);
-      color: var(--v3-text-color3);
     }
 
     .ev-detail-row {
@@ -301,16 +276,11 @@
                 {{ chapter_branding_block(chapter) }}
 
                 <h1 class="ev-title">{{ doc.event_name }}</h1>
-                <div class="ev-tags" role="list" aria-label="Event tags">
+                <div class="v3-event-tags" role="list" aria-label="Event tags">
                   {% if doc.must_attend %}
-                    <div class="ev-tag ev-tag-must" role="listitem">
-                      <i class="ti ti-star-filled" aria-hidden="true"></i>
-                      Must Attend
-                    </div>
+                    {{ event_must_attend_tag() }}
                   {% endif %}
-                  {% if doc.event_type %}
-                    <div class="ev-tag ev-tag-cat" role="listitem">{{ doc.event_type }}</div>
-                  {% endif %}
+                  {{ event_category_tag(doc.event_type) }}
                 </div>
               </div>
             </div>
