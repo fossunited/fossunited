@@ -298,3 +298,12 @@ function formatShortDate(dateInput, locale = 'en-IN') {
 function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
+
+// Global toggle function for sections
+window.toggleSection = function (id) {
+  const content = document.getElementById(id)
+  const header = content?.previousElementSibling
+  content.classList.toggle('hidden')
+  header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
+  header?.setAttribute('aria-expanded', !content.classList.contains('hidden'))
+}
