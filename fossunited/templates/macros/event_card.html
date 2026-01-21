@@ -33,7 +33,7 @@
         {% if lazy %}
           data-src="{{ banner }}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 400 300'%3E%3Crect fill='%23f0f0f0' width='400' height='300'/%3E%3C/svg%3E"
-          class="v3-event-card__banner v3-lazy-img"
+          class="v3-event-card__banner lazy-img"
         {% else %}
           src="{{ banner }}" class="v3-event-card__banner" loading="eager" fetchpriority="high"
         {% endif %}
