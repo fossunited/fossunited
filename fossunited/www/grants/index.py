@@ -165,7 +165,11 @@ def format_project_grant(grant, grant_type=None):
         "date": (
             grant.date_of_provision.strftime("%Y-%m-%d") if grant.date_of_provision else None
         ),
-        "amount": fmt_money(grant.grant_amount, precision=0, currency="INR") or "N/A",
+        "amount": (
+            fmt_money(grant.grant_amount, precision=0, currency="INR")
+            if grant.grant_amount is not None
+            else "N/A"
+        ),
         "co_sponsor": grant.co_sponsor,
         "grant_type": grant_type,
     }
@@ -179,7 +183,11 @@ def format_event_grant(grant, grant_type=None):
         "year": grant.event_start_date.year if grant.event_start_date else None,
         "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
         "date_display": grant.event_start_date.strftime("%d %b %Y"),
-        "amount": fmt_money(grant.grant_amount, precision=0, currency="INR") or "N/A",
+        "amount": (
+            fmt_money(grant.grant_amount, precision=0, currency="INR")
+            if grant.grant_amount is not None
+            else "N/A"
+        ),
         "co_sponsor": grant.event_organiser,
         "grant_type": grant_type,
     }
