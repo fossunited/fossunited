@@ -17,7 +17,7 @@
     "feather-icons": "^4.29.2",
     "frappe-ui": "^0.1.160",
     "ics": "^3.7.6",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "quill": "^2.0.0",
     "vue": "^3.5.17",
     "vue-qrcode-reader": ">=5.7.3",
