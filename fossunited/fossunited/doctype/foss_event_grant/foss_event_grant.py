@@ -19,12 +19,13 @@ class FOSSEventGrant(Document):
         custom_amount: DF.Data | None
         custom_sponsor_request: DF.Data | None
         event_count: DF.Data | None
+        event_description: DF.SmallText | None
         event_edition: DF.Data | None
-        event_end_date: DF.Date
+        event_end_date: DF.Date | None
         event_location: DF.Data | None
         event_name: DF.Data
         event_organiser: DF.Data
-        event_start_date: DF.Date
+        event_start_date: DF.Date | None
         event_type: DF.Literal[
             "Hackathon", "Meetup", "Conference", "Workshop", "Devsprint", "Other"
         ]
@@ -45,6 +46,7 @@ class FOSSEventGrant(Document):
             "Other",
         ]
         organizer_type_other: DF.Data | None
+        other_event_type: DF.Data | None
         poc_name: DF.Data
         poc_phone: DF.Data | None
         post_event_report: DF.Attach | None
