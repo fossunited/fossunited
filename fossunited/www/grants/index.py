@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 import frappe
+from frappe.utils import fmt_money
 
 from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 
@@ -146,7 +147,6 @@ def get_recent_event_grants():
             "application_details",
             "event_start_date",
             "grant_amount",
-            "custom_amount",
             "event_organiser",
         ],
         order_by="event_start_date desc",
@@ -165,7 +165,7 @@ def format_project_grant(grant, grant_type=None):
         "date": (
             grant.date_of_provision.strftime("%Y-%m-%d") if grant.date_of_provision else None
         ),
-        "amount": grant.grant_amount or "N/A",
+        "amount": fmt_money(grant.grant_amount, precision=0, currency="INR") or "N/A",
         "co_sponsor": grant.co_sponsor,
         "grant_type": grant_type,
     }
@@ -179,9 +179,7 @@ def format_event_grant(grant, grant_type=None):
         "year": grant.event_start_date.year if grant.event_start_date else None,
         "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
         "date_display": grant.event_start_date.strftime("%d %b %Y"),
-        "amount": (
-            grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount or "N/A"
-        ),
+        "amount": fmt_money(grant.grant_amount, precision=0, currency="INR") or "N/A",
         "co_sponsor": grant.event_organiser,
         "grant_type": grant_type,
     }
