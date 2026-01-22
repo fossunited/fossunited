@@ -16,7 +16,6 @@ class FOSSEventGrant(Document):
         agree_fosshack_rule: DF.Literal["Yes", "No", "Not applicable"]
         amount_requested: DF.Currency
         communication_email: DF.Data
-        custom_amount: DF.Data | None
         custom_sponsor_request: DF.Data | None
         event_count: DF.Data | None
         event_description: DF.SmallText | None
@@ -32,7 +31,7 @@ class FOSSEventGrant(Document):
         event_website: DF.Data | None
         foss_creation: DF.SmallText | None
         foss_relation: DF.SmallText | None
-        grant_amount: DF.Literal["Rs. 10,000", "Rs. 25,000", "Rs. 50,000", "Custom"]
+        grant_amount: DF.Currency
         grant_status: DF.Literal["Open", "Under Review", "Approved", "Rejected"]
         if_foss_creation: DF.Literal["Yes", "No"]
         if_license_cc: DF.Literal["Yes", "No"]
