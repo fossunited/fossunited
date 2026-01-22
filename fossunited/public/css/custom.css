@@ -1014,7 +1014,7 @@ h6 {
   font-size: var(--text-base);
   font-weight: var(--fw-semibold);
 }
-.club-brand:hover {color: inherit };
+.club-brand:hover { color: inherit; }
 
 .club-brand > img {
   height: 1.5rem;
@@ -3251,7 +3251,7 @@ body:has(.v3-page) {
   border: 1px solid var(--v3-button-border);
   background: var(--v3-card-bg);
   text-align: center;
-  min-width: 120px;
+  min-width: auto;
 }
 
 .v3-grant-tags {
@@ -3566,7 +3566,14 @@ a.underline {
   max-width: 90%;
 }
 
+.v3-event-card__chapter-badge {
+  display: inline-flex;
+  max-width: 90%;
+}
+
 .v3-event-card__chapter-inner {
+  min-width: 0;
+  max-width: 100%;
   height: 32px;
   overflow: hidden;
   border-radius: 8px;
@@ -3574,7 +3581,24 @@ a.underline {
   align-items: center;
   background: var(--v3-text-color);
   padding: 8px 6.4px;
-  justify-content: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/* Allow the brand block to shrink */
+.v3-event-card__chapter-inner .chapter-brand-block {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.v3-event-card__chapter-inner .chapter-brand-block > span {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .v3-event-card__chapter-inner:has(.club-brand) {
