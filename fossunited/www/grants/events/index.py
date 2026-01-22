@@ -18,7 +18,6 @@ def get_context(context):
             "event_description",
             "event_start_date",
             "grant_amount",
-            "custom_amount",
             "event_organiser",
         ],
         order_by="event_start_date desc",
