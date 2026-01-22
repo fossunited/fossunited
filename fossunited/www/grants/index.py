@@ -82,7 +82,7 @@ def get_project_grant_counts():
 
     for row in rows:
         if row.grant_status in DISBURSED_STATUS:
-            counts[row.grant_type]["completed"] = row.count
+            counts[row.grant_type]["completed"] += row.count
         else:
             counts[row.grant_type]["pending"] += row.count
 
@@ -107,7 +107,7 @@ def get_event_grant_counts():
 
     for row in rows:
         if row.grant_status in DISBURSED_STATUS:
-            completed = row.count
+            completed += row.count
         else:
             pending += row.count
 
