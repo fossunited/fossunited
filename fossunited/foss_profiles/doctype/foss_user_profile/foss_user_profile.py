@@ -159,6 +159,7 @@ class FOSSUserProfile(WebsiteGenerator):
                     fieldname=[
                         "name",
                         "route",
+                        "external_event_url",
                         "chapter",
                         "event_start_date",
                         "event_end_date",

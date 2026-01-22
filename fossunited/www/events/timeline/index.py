@@ -40,6 +40,8 @@ def get_context(context, page_type="upcoming"):
         fields=[
             "name",
             "route",
+            "external_event_url",
+            "is_external_event",
             "event_name",
             "event_start_date",
             "event_end_date",
