@@ -25,27 +25,6 @@ def search_foss_club(query):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_more_grants(start=0, limit=30):
-    grants = frappe.get_all(
-        "FOSS Event Grant",
-        fields=[
-            "event_name",
-            "event_start_date",
-            "event_location",
-            "event_website",
-            "grant_amount",
-            "custom_amount",
-        ],
-        filters={"grant_status": "Approved"},
-        order_by="event_start_date desc",
-        start=int(start),
-        page_length=int(limit),
-    )
-
-    return {"grants": grants}
-
-
-@frappe.whitelist(allow_guest=True)
 def buy_tickets_page(route):
     event = frappe.db.get_value(
         EVENT,

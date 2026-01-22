@@ -1,11 +1,14 @@
 from collections import defaultdict
 
 import frappe
+from frappe.utils import fmt_money
 
 from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 
 OPEN_STATUSES = ["Open", "Under Review"]
 APPROVED_STATUS = ["Approved", "Disbursed", "Ongoing"]
+DISBURSED_STATUS = [*APPROVED_STATUS]
+DISBURSED_STATUS.remove("Ongoing")
 
 
 def get_context(context):
@@ -79,8 +82,8 @@ def get_project_grant_counts():
     }
 
     for row in rows:
-        if row.grant_status in APPROVED_STATUS:
-            counts[row.grant_type]["completed"] = row.count
+        if row.grant_status in DISBURSED_STATUS:
+            counts[row.grant_type]["completed"] += row.count
         else:
             counts[row.grant_type]["pending"] += row.count
 
@@ -104,8 +107,8 @@ def get_event_grant_counts():
     pending = 0
 
     for row in rows:
-        if row.grant_status in APPROVED_STATUS:
-            completed = row.count
+        if row.grant_status in DISBURSED_STATUS:
+            completed += row.count
         else:
             pending += row.count
 
@@ -144,7 +147,6 @@ def get_recent_event_grants():
             "application_details",
             "event_start_date",
             "grant_amount",
-            "custom_amount",
             "event_organiser",
         ],
         order_by="event_start_date desc",
@@ -163,7 +165,11 @@ def format_project_grant(grant, grant_type=None):
         "date": (
             grant.date_of_provision.strftime("%Y-%m-%d") if grant.date_of_provision else None
         ),
-        "amount": grant.grant_amount or "N/A",
+        "amount": (
+            fmt_money(grant.grant_amount, precision=0, currency="INR")
+            if grant.grant_amount is not None
+            else "N/A"
+        ),
         "co_sponsor": grant.co_sponsor,
         "grant_type": grant_type,
     }
@@ -178,7 +184,9 @@ def format_event_grant(grant, grant_type=None):
         "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
         "date_display": grant.event_start_date.strftime("%d %b %Y"),
         "amount": (
-            grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount or "N/A"
+            fmt_money(grant.grant_amount, precision=0, currency="INR")
+            if grant.grant_amount is not None
+            else "N/A"
         ),
         "co_sponsor": grant.event_organiser,
         "grant_type": grant_type,
