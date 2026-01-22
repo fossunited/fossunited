@@ -16,7 +16,6 @@ def get_context(context, page_type="upcoming"):
     if page_type == "upcoming":
         context.title = "Upcoming Events - FOSS United"
         event_filters = {
-            "is_published": 1,
             "event_end_date": [">=", now],
         }
         hackathon_filters = {
@@ -26,7 +25,6 @@ def get_context(context, page_type="upcoming"):
     else:
         context.title = "Past Events - FOSS United"
         event_filters = {
-            "is_published": 1,
             "event_end_date": ["<", now],
         }
         hackathon_filters = {
@@ -37,6 +35,10 @@ def get_context(context, page_type="upcoming"):
     events = frappe.get_all(
         EVENT,
         filters=event_filters,
+        or_filters={
+            "is_published": 1,
+            "is_external_event": 1,
+        },
         fields=[
             "name",
             "route",
