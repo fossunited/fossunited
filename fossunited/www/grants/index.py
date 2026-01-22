@@ -6,6 +6,8 @@ from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 
 OPEN_STATUSES = ["Open", "Under Review"]
 APPROVED_STATUS = ["Approved", "Disbursed", "Ongoing"]
+DISBURSED_STATUS = [*APPROVED_STATUS]
+DISBURSED_STATUS.remove("Ongoing")
 
 
 def get_context(context):
@@ -79,7 +81,7 @@ def get_project_grant_counts():
     }
 
     for row in rows:
-        if row.grant_status in APPROVED_STATUS:
+        if row.grant_status in DISBURSED_STATUS:
             counts[row.grant_type]["completed"] = row.count
         else:
             counts[row.grant_type]["pending"] += row.count
@@ -104,7 +106,7 @@ def get_event_grant_counts():
     pending = 0
 
     for row in rows:
-        if row.grant_status in APPROVED_STATUS:
+        if row.grant_status in DISBURSED_STATUS:
             completed = row.count
         else:
             pending += row.count

@@ -1,5 +1,3 @@
-import re
-
 import frappe
 from frappe.utils import flt, fmt_money
 
@@ -32,18 +30,7 @@ def get_context(context):
     )
     context.total_grants = len(grants)
 
-    total_amount = sum(
-        flt(
-            re.sub(
-                r"[^\d]",
-                "",
-                (grant.custom_amount if grant.grant_amount == "Custom" else grant.grant_amount)
-                or "0",
-            )
-        )
-        for grant in grants
-    )
-
+    total_amount = sum(flt(grant.grant_amount or 0) for grant in grants)
     context.total_amount = fmt_money(total_amount, precision=0, currency="INR")
 
     # Page metadata
