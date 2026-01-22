@@ -11,22 +11,39 @@
 
       <div class="v3-card mb-4">
         <!-- Header: Title, Description, Count -->
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start mb-4">
-          <div class="flex-fill mb-3 mb-lg-0">
+        <div class="row align-items-start mb-4">
+          <div class="col-lg-9 mb-3 mb-lg-0">
             <div class="d-flex align-items-center gap-2 mb-2">
               <i class="{{ grant_icon }} v3-grant-icon"></i>
               <h1 class="v3-text-primary mb-0 v3-grant-title">{{ grant_type }}</h1>
             </div>
-            <p class="v3-text-secondary mb-0">{{ grant_description }}</p>
+            <p class="v3-text-secondary mb-0">
+              {{ grant_description }}
+            </p>
           </div>
 
           {% if show_count %}
-          <div class="v3-grant-count-box">
-            <div class="v3-grant-stat-number">{{ total_grants }}</div>
-            <div class="v3-grant-stat-label v3-text-secondary">{{ count_label|default("Total Grantees") }}</div>
+          <div class="col-lg-3">
+            <div class="d-flex flex-column gap-3">
+              <div class="v3-grant-count-box">
+                <div class="v3-grant-stat-number">{{ total_grants }}</div>
+                <div class="v3-grant-stat-label v3-text-secondary">
+                  {{ count_label|default("Total Grantees") }}
+                </div>
+              </div>
+
+              <div class="v3-grant-count-box">
+                <div class="v3-grant-stat-number">{{ total_amount }}</div>
+                <div class="v3-grant-stat-label v3-text-secondary">
+                  Total Grants Disbursed
+                </div>
+              </div>
+            </div>
           </div>
           {% endif %}
         </div>
+
+
 
         <!-- Buttons -->
         <div class="d-flex justify-content-between align-items-center align-content-center flex-wrap gap-2">
