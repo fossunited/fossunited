@@ -173,7 +173,7 @@ def format_event_grant(grant, grant_type=None):
     return {
         "name": grant.event_name,
         "url": grant.event_website,
-        "description": grant.application_details or "Event grant for FOSS community.",
+        "description": grant.event_description or "FOSS event grant",
         "year": grant.event_start_date.year if grant.event_start_date else None,
         "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
         "date_display": grant.event_start_date.strftime("%d %b %Y"),
