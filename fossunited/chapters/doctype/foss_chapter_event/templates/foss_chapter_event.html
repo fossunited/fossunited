@@ -106,6 +106,14 @@
     </div>
     {% endif %}
 
+    {% if status_live and event_stats.attending > 0 and (not rsvp_status_block.is_published) and not doc.is_paid_event %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      Registration is closed for the event
+    </div>
+    {% endif %}
+
+
   </div>
 {% endmacro %}
 
@@ -363,7 +371,7 @@
                       >
                         Buy Ticket
                       </a>
-                    {% elif doc.show_rsvp %}
+                    {% elif doc.show_rsvp and rsvp_status_block.is_published %}
                       {% if registration_status %}
                         <a
                           href="/{{ rsvp_status_block.form_route }}"
