@@ -301,7 +301,7 @@
   "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-09-08 18:12:00.000000",
+  "modified": "2026-01-23 19:41:04.017697",
   "modified_by": "Administrator",
   "module": "FOSS Profiles",
   "name": "FOSS User Profile",
@@ -321,12 +321,15 @@
       "write": 1
     },
     {
+      "create": 1,
       "delete": 1,
       "email": 1,
       "export": 1,
       "read": 1,
       "report": 1,
-      "role": "System Manager"
+      "role": "System Manager",
+      "select": 1,
+      "write": 1
     }
   ],
   "quick_entry": 1,
