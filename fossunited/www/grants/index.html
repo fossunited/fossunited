@@ -82,7 +82,21 @@
           style="row-gap: 1.25rem;"
         >
           <div class="d-flex flex-wrap gap-3">
-            <a href="/grants/apply/new" class="v3-btn v3-btn-primary">Apply Now</a>
+
+          <div class="dropdown d-inline-block">
+            <a href="#" class="v3-btn v3-btn-primary dropdown-toggle" data-toggle="dropdown">
+              Apply Now
+            </a>
+            <div class="dropdown-menu v3-card p-2">
+              <a href="/grants/projects/apply" class="btn v3-btn-primary btn-block mb-4">
+                Project Grants
+              </a>
+              <a href="/grants/events/apply" class="btn v3-btn-primary btn-block">
+                Event Grants
+              </a>
+            </div>
+          </div>
+
             <a href="/grants/thesis" class="v3-btn v3-btn-secondary">Grants Thesis</a>
             <a href="/grants/directory" class="v3-btn v3-btn-secondary">Directory</a>
           </div>
