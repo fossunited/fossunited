@@ -66,9 +66,10 @@
   },
   {
    "fieldname": "grant_amount",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Grant amount"
+   "label": "Grant amount",
+   "options": "INR"
   },
   {
    "fieldname": "co_sponsor",
@@ -95,7 +96,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-15 17:47:56.345940",
+ "modified": "2026-01-23 15:46:47.265615",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Project Grant",

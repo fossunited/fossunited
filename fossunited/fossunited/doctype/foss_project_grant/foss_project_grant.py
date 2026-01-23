@@ -16,7 +16,7 @@ class FOSSProjectGrant(Document):
         about_project: DF.SmallText
         co_sponsor: DF.Data | None
         date_of_provision: DF.Date | None
-        grant_amount: DF.Data | None
+        grant_amount: DF.Currency
         grant_status: DF.Literal[
             "Open", "Approved", "Under Review", "Rejected", "Disbursed", "Ongoing"
         ]
