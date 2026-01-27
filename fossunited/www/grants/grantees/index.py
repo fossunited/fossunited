@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import fmt_money
 
 from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 from fossunited.www.grants.index import (
@@ -85,6 +86,9 @@ def get_context(context):
     )
     context.all_grants = all_grants
     context.total_grants = len(all_grants)
+    total_amount = sum(grant["grant_amount"] for grant in all_grants)
+    context.total_amount = fmt_money(total_amount, precision=0, currency="INR")
+
     # Page metadata
     context.grant_type = "All Grantees"
     context.grant_icon = "ti ti-list-search"
