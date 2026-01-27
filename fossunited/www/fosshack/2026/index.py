@@ -34,10 +34,37 @@ def get_context(context):
 
     # Timeline
     context.timeline = [
-        {"date": "20 Feb", "event": "Registrations Closing"},
-        {"date": "1-31 Mar", "event": "Development"},
-        {"date": "31 Mar", "event": "Submission & Demo Prep"},
-        {"date": "30 Apr (Tentative)", "event": "Results"},
+        {
+            "date": "20 February",
+            "event": "Registration",
+            "desc": """Register to express your interest in participating in the hackathon. Please
+            register at the earliest if you are interested in participating at a localhost as we
+            have limited space available.""",
+        },
+        {
+            "date": "1-31 March",
+            "event": "Create. Contribute. Hack",
+            "desc": """Make progress towards your project,
+            whether it's a project you're building or an existing project you're contributing to,
+            whether you're coding, designing, documenting, testing, etc.<br>
+            During this time,
+            you can also seek out mentorship and expert advice regarding your work!""",
+        },
+        {
+            "date": "31 March",
+            "event": "Last Call",
+            "desc": """Wrap up your work in a neat bow - make sure that your project
+            has an appropriate description and a demo video.
+            If you're writing code,
+            make sure to add a link to the source code repository, e.g., GitHub repo.""",
+        },
+        {
+            "date": "4 May",
+            "event": "Results",
+            "desc": """After multiple rounds of elimination,
+            we will be sharing the results on Monday, the 4th of May. Projects will be evaluated
+            for novelty, completeness, and relevance. For additional details, please see FAQs.""",
+        },
     ]
 
     teams = frappe.get_all(
@@ -117,7 +144,7 @@ def get_context(context):
         city = host.get("city", "Other")
         if city not in cities_dict:
             cities_dict[city] = []
-        cities_dict[city].append(host)
+            cities_dict[city].append(host)
 
     context.localhosts_by_city = [
         {"city": city, "localhosts": hosts} for city, hosts in sorted(cities_dict.items())
@@ -145,15 +172,16 @@ def get_context(context):
     ]
 
     context.why_participate = [
-        "Win up to ₹5,00,000 in cash",
-        "Build your reputation as a hacker",
-        "Get recognized by recruiters",
-        "Grants for your FOSS project",
+        "Begin your journey into the FOSS ecosystem",
+        "Solve real-world problems with mentorship and support",
+        "Contribute to the Digital Commons",
+        "Win upto 5 Lakh INR in cash prizes",
+        "Future support to continue building",
     ]
 
     context.rules = [
-        "Evaluation based on code commits during the event",
-        "No external APIs as core feature",
+        "Evaluation based on contributions made during the event duration",
+        "Core functionality shouldn't depend on closed-source software or closed/proprietary APIs",
         "Must have valid FOSS license",
         "Cash prize split at jury's discretion",
         "No blockchain/web3/crypto projects",

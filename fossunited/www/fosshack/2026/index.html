@@ -141,7 +141,10 @@
                 >Project Ideas</a
               >
             </div>
-            <div class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-2" style="z-index: 10;">
+            <div
+              class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-2"
+              style="z-index: 10;"
+            >
               <a
                 href="{{ hackathon.event_page_url }}"
                 class="v3-text text-uppercase font-weight-semibold pr-4"
@@ -231,9 +234,7 @@
                 </div>
               </div>
               <div class="timeline-content">
-                <p class="v3-text-muted mb-0" style="font-size: 0.875rem;">
-                  <!-- TODO: FIXME: Additional details about {{ item.event }} will be announced soon. -->
-                </p>
+                <p class="v3-text-muted mb-0" style="font-size: 0.8rem;">{{ item.desc }}</p>
               </div>
             </div>
           {% endfor %}
@@ -248,7 +249,7 @@
               class="v3-card p-3 text-center d-block"
               style="text-decoration: none;"
             >
-              <p class="v3-text-muted mb-1 small">FOSSHack</p>
+              <p class="v3-text-muted mb-1 text-xs text-nowrap">FOSS Hack</p>
               <h3 class="v3-text h6 mb-0">{{ edition.year }}</h3>
             </a>
           {% endfor %}
@@ -257,8 +258,9 @@
         <div class="v3-bg-dark p-4">
           <h3 class="h5 mb-3" style="color: var(--v3-main-bg)">Partner Projects Programme</h3>
           <p class="mb-4" style="font-size: 0.875rem; opacity: 0.9;">
-            An effort to provide FOSS Hack participants with time and mentorship to be able to
-            contribute to curated open-source projects.
+            Contribute to existing Free & Open Source Software projects from India - design, code,
+            document, test, and more - as part of FOSS Hack 2026 and begin your journey into the
+            FOSS ecosystem!
           </p>
           <a
             href="/fosshack/2026/partner-projects"
@@ -294,7 +296,9 @@
               <li class="mb-2">{{ rule }}</li>
             {% endfor %}
             <li class="mb-2">
-              <a href="https://fossunited.org/fosshack/rules" style="color: var(--v3-blue);">Check full rules →</a>
+              <a href="https://fossunited.org/fosshack/rules" style="color: var(--v3-blue);"
+                >Check full rules →</a
+              >
             </li>
           </ul>
         </div>
@@ -383,13 +387,10 @@
     {# community partners #}
     {% if partners %}
       <div class="mb-5">
-        <a
-          href="https://fossunited.org/fosshack/community-partners"
-          target="_blank"
-          >
+        <a href="https://fossunited.org/fosshack/community-partners" target="_blank">
           <h1 class="h1 font-weight-bold v3-text mb-5">
             Community Partners
-          <i class="ti ti-arrow-up-right small"></i>
+            <i class="ti ti-arrow-up-right small"></i>
           </h1>
         </a>
         <div class="tier-content">
