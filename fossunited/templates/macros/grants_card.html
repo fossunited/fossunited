@@ -36,10 +36,10 @@
           <div class="v3-text-primary v3-grant-meta-value">{{ grant.amount }}</div>
         </div>
 
-        {% if grant.co_sponsor %}
+        {% if grant.co_sponsor or grant.organizer %}
           <div class="d-flex flex-column gap-1">
-            <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">CO-SPONSOR</div>
-            <div class="v3-text-primary v3-grant-meta-value">{{ grant.co_sponsor }}</div>
+            <div class="v3-text-tertiary text-uppercase v3-grant-meta-label">{{ 'Organized by' if grant.organizer else 'CO-SPONSOR'}}</div>
+            <div class="v3-text-primary v3-grant-meta-value">{{ grant.organizer or grant.co_sponsor }}</div>
           </div>
         {% endif %}
       </div>

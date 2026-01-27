@@ -188,7 +188,7 @@ def format_event_grant(grant, grant_type=None):
             if grant.grant_amount is not None
             else "N/A"
         ),
-        "co_sponsor": grant.event_organiser,
+        "organizer": grant.event_organiser,
         "grant_type": grant_type,
     }
 
