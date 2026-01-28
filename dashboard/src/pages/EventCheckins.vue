@@ -30,8 +30,8 @@
           :rows="groupedAttendees"
           :columns="columns"
           row-key="name"
-          :search-fields="['full_name', 'email', 'name']"
-          search-placeholder="Search by name, email, or ticket ID…"
+          :search-fields="['full_name', 'name']"
+          search-placeholder="Search by name or ticket ID…"
           :filter-field="filterField"
           :filter-options="filterOptions"
           :exportable="true"
@@ -115,11 +115,13 @@
     v-model="showConfirmDialog"
     :selected-attendee="selectedAttendee"
     :attendees="attendees"
+    @updated="attendees.fetch()"
   />
   <CheckinManageDialog
     v-model="showManageDialog"
     :selected-attendee="selectedAttendee"
     :attendees="attendees"
+    @updated="attendees.fetch()"
   />
 </template>
 
@@ -264,17 +266,15 @@ watchEffect(() => {
 
 const columns = [
   { label: 'Name', key: 'full_name' },
-  { label: 'Email', key: 'email' },
   { label: 'Ticket ID', key: 'name' },
-  { label: 'Bought T-shirt?', key: 'wants_tshirt', width: '150px' },
-  { label: 'T-shirt Delivered?', key: 'tshirt_delivered', width: '150px' },
-  { label: 'Check-in Status', key: 'checkin_status', width: 1.5 },
+  { label: 'Bought T-shirt?', key: 'wants_tshirt', width: '100px' },
+  { label: 'T-shirt Delivered?', key: 'tshirt_delivered', width: '100px' },
+  { label: 'Check-in Status', key: 'checkin_status', width: '200px' },
   { label: 'Actions', key: 'action' },
 ]
 
 const exportColumns = [
   { label: 'Name', key: 'full_name' },
-  { label: 'Email', key: 'email' },
   { label: 'Ticket ID', key: 'name' },
   {
     label: 'Bought T-shirt',
@@ -324,13 +324,6 @@ const handleScan = (scannedId) => {
 
 watch(showScanner, (val) => {
   if (val) {
-    attendees.fetch()
-  }
-})
-
-// Refresh attendees data when dialogs close
-watch([showConfirmDialog, showManageDialog], ([confirm, manage]) => {
-  if (!confirm && !manage) {
     attendees.fetch()
   }
 })

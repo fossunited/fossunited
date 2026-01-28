@@ -102,6 +102,7 @@ const props = defineProps({
 const session = inject('$session')
 const route = inject('route')
 const isCheckedInToday = inject('isCheckedInToday')
+const emit = defineEmits(['updated'])
 
 const showDialog = defineModel({
   type: Boolean,
@@ -121,6 +122,7 @@ const assignTshirt = createResource({
       (data) => data.name === props.selectedAttendee.name,
     )
     props.attendees.data[index].tshirt_delivered = true
+    emit('updated')
   },
 })
 
@@ -139,6 +141,7 @@ const undoAttendeeCheckin = createResource({
     props.attendees.data[index].checkin_data.pop()
     props.selectedAttendee = null
     showDialog.value = false
+    emit('updated')
   },
 })
 </script>
