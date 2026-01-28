@@ -13,19 +13,27 @@
       <Button variant="solid" label="Create Free Coupon" icon-left="plus" @click="handleCreate" />
     </div>
 
-    <ListView
+    <SearchListView
       v-if="freeCodes.data && freeCodes.data.length > 0"
-      v-model:rows="groupedRows"
+      :rows="groupedRows"
       class="mt-4 min-h-[300px]"
       :columns="[
         { label: 'Full Name', key: 'full_name', icon: 'user' },
         { label: 'Coupon ID', key: 'name' },
         { label: 'Email', key: 'mapped_email', icon: 'at-sign' },
-        { label: 'Used / Max', key: 'usage', icon: 'check-circle' },
+        {
+          label: 'Used / Max',
+          key: 'usage',
+          icon: 'check-circle',
+          exportValue: (row) => `${row.used_count ?? 0} / ${row.max_count ?? 0}`,
+        },
         { label: 'Tier', key: 'tier', icon: 'award' },
         { label: 'Organization', key: 'company', icon: 'briefcase' },
       ]"
       row-key="name"
+      search-placeholder="Search free coupons…"
+      item-label="free coupons"
+      export-filename="event_coupons"
       :options="{
         emptyState: {
           title: 'No Free Codes',
@@ -54,15 +62,16 @@
           <span class="text-base">{{ item }}</span>
         </div>
       </template>
-    </ListView>
+    </SearchListView>
   </div>
 </template>
 
 <script setup>
 import { defineProps, ref, watchEffect } from 'vue'
-import { createResource, ListView, Button } from 'frappe-ui'
+import { createResource, Button } from 'frappe-ui'
 import FreeTicketCodeDialog from '@/components/event/FreeTicketCodeDialog.vue'
 import { useRoute } from 'vue-router'
+import SearchListView from '@/components/ui/SearchListView.vue'
 
 const props = defineProps({
   event: {
