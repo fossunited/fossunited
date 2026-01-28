@@ -20,9 +20,10 @@ def get_context(context):
         "date": "March 2026",
         "mode": "Hybrid",
         "description": """
-        FOSS Hack 2026 is the sixth edition of FOSS Hack, a hybrid hackathon to promote
-        Free and Open Source Software by bringing together students and professionals
-        to build or extend FOSS projects""",
+        FOSS Hack is back for its sixth edition! With the month-long hybrid hackathon,
+        we bring together students, professionals and communities to contribute better
+        to Free and Open Source software projects. Dive right in!
+        """,
         "prize_pool": "₹5,00,000",
         "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
         "event_page_url": f"/{hackathon.route}",
@@ -37,9 +38,8 @@ def get_context(context):
         {
             "date": "20 February",
             "event": "Registration",
-            "desc": """Register to express your interest in participating in the hackathon. Please
-            register at the earliest if you are interested in participating at a localhost as we
-            have limited space available.""",
+            "desc": """Register now to express your interest in participating!
+            If you are interested in hacking at a localhost, hurry up, because limited spots!""",
         },
         {
             "date": "1-31 March",
@@ -172,11 +172,10 @@ def get_context(context):
     ]
 
     context.why_participate = [
-        "Begin your journey into the FOSS ecosystem",
-        "Solve real-world problems with mentorship and support",
-        "Contribute to the Digital Commons",
-        "Win upto 5 Lakh INR in cash prizes",
-        "Future support to continue building",
+        "Kickstart your journey into the FOSS ecosystem.",
+        "Figure out how you can contribute to the Digital Commons",
+        "Access meaningful mentorship and support as you try to solve real-world problems.",
+        "All this with a chance to win upto 5 Lakh INR in cash prizes :)",
     ]
 
     context.rules = [
