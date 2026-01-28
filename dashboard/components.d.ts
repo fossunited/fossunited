@@ -19,7 +19,6 @@ declare module 'vue' {
     CampaignList: typeof import('./src/components/mailing/CampaignList.vue')['default']
     ChapterCard: typeof import('./src/components/ChapterCard.vue')['default']
     ChapterHeader: typeof import('./src/components/ChapterHeader.vue')['default']
-    CheckinAttendeeList: typeof import('./src/components/event/CheckinAttendeeList.vue')['default']
     CheckinConfirmationDialog: typeof import('./src/components/event/CheckinConfirmationDialog.vue')['default']
     CheckinManageDialog: typeof import('./src/components/event/CheckinManageDialog.vue')['default']
     ChevronDown: typeof import('./src/components/icons/ChevronDown.vue')['default']
