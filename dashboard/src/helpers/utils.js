@@ -44,24 +44,3 @@ export const isValidUrl = (link) => {
 }
 
 export const isSmallScreen = computed(() => window.innerWidth < 768)
-
-// "2025-12-29" -> "Monday, December 29, 2025"
-export const formatFullDate = (dateStr) => {
-  if (!dateStr) return ''
-  return new Date(dateStr).toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
-
-// "2025-12-29T14:30:45" -> "02:30:45 PM"
-export const formatTimeOnly = (datetime) => {
-  if (!datetime) return ''
-  return new Date(datetime).toLocaleTimeString('en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  })
-}

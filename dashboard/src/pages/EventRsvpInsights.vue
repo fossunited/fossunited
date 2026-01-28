@@ -130,7 +130,8 @@ import { computed, ref, watchEffect } from 'vue'
 import { createResource, Button } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import { toast } from 'vue-sonner'
-import { truncateStr, formatFullDate, formatTimeOnly } from '@/helpers/utils'
+import { truncateStr } from '@/helpers/utils'
+import { formatFullDate, formatTimeOnly } from '@/helpers/date'
 import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
