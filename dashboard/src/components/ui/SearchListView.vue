@@ -227,8 +227,13 @@ const handleExport = () => {
 
   const rows = flatRows.map((row) =>
     columnsToExport.map((col) => {
+      if (typeof col.exportValue === 'function') {
+        return col.exportValue(row)
+      }
+
       const value = row[col.key]
       if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+      if (typeof value === 'object' && value !== null) return ''
       return value ?? ''
     }),
   )
