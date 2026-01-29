@@ -2,12 +2,15 @@
 APIs for Tickets and Transfer Tickets
 """
 
+from datetime import timedelta
+
 import frappe
 from frappe.utils import add_days, now_datetime
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import (
     EVENT,
+    EVENT_CHECKIN,
     EVENT_TICKET,
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
@@ -156,6 +159,54 @@ def get_tickets_insights(event_id: str) -> dict:
         "total_percentage_change": percentage_change,
         "tier_data": combined_tier_data,
     }
+
+
+@frappe.whitelist()
+def get_checkin_insights(event_id: str) -> dict:
+    """
+    Get check-in counts for each day from event start to end date
+
+    Returns:
+        dict: {"daily_data": [{"title": date, "total_sold": count, "tickets_sold_today": 0}, ...]}
+    """
+    event_start_date, event_end_date = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"]
+    )
+
+    # Get all tickets for this event
+    tickets = frappe.get_all(EVENT_TICKET, filters={"event": event_id}, pluck="name")
+
+    if not tickets:
+        return {"daily_data": []}
+
+    start_date = frappe.utils.get_datetime(event_start_date).date()
+    end_date = frappe.utils.get_datetime(event_end_date).date()
+
+    daily_data = []
+    current_date = start_date
+    while current_date <= end_date:
+        date_str = current_date.strftime("%Y-%m-%d")
+        count = frappe.db.count(
+            EVENT_CHECKIN,
+            filters={
+                "parent": ["in", tickets],
+                "parenttype": EVENT_TICKET,
+                "parentfield": "check_ins",
+                "check_in_time": [
+                    "between",
+                    [f"{date_str} 00:00:00", f"{date_str} 23:59:59"],
+                ],
+            },
+        )
+        daily_data.append(
+            {
+                "title": frappe.utils.formatdate(date_str, "dd MMM"),
+                "total_sold": count,  # Using total_sold to match checked-in
+            }
+        )
+        current_date += timedelta(days=1)
+
+    return {"daily_data": daily_data}
 
 
 def get_tshirt_insights(event_id: str) -> dict:

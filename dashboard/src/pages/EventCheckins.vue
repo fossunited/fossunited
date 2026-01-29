@@ -4,6 +4,19 @@
     <EventHeader :event="event.data" class="p-4 md:p-8" />
     <hr />
     <div class="p-4 md:px-8 md:py-6">
+      <div v-if="ticket_checkin_insights.data?.daily_data?.length" class="flex flex-col gap-4 my-2">
+        <div class="prose">
+          <h4>Daily Check-in Insights</h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <TicketTierInsightCard
+            v-for="day in ticket_checkin_insights.data.daily_data"
+            :key="day.title"
+            :tier="day"
+          />
+        </div>
+      </div>
+
       <div class="prose">
         <h2 class="mb-1">Attendee Check-Ins</h2>
         <p class="text-sm">Check in attendees as they arrive at the event.</p>
@@ -144,6 +157,7 @@ import { useRoute } from 'vue-router'
 import { inject, provide, ref, computed, watch, watchEffect } from 'vue'
 import { IconChecks } from '@tabler/icons-vue'
 import dayjs, { formatCheckinDateTime, getRelativeTime, isCheckedInToday } from '@/helpers/date'
+import { toast } from 'vue-sonner'
 
 const session = inject('$session')
 const route = useRoute()
@@ -183,6 +197,20 @@ const attendees = createResource({
     }
   },
   auto: true,
+})
+
+const ticket_checkin_insights = createResource({
+  url: 'fossunited.api.tickets.get_checkin_insights',
+  makeParams() {
+    return {
+      event_id: route.params.id,
+    }
+  },
+  loading: true,
+  auto: true,
+  onError(error) {
+    toast.error(error.message)
+  },
 })
 
 const loading = computed(() => attendees.loading || !attendees.data)

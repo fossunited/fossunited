@@ -19,6 +19,23 @@
           :tier="tier"
         />
       </div>
+
+      <div
+        v-if="ticket_checkin_insights.data?.daily_data?.length"
+        class="flex flex-col gap-4 my-2"
+      >
+        <div class="prose">
+          <h4>Daily Check-in Insights</h4>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <TicketTierInsightCard
+            v-for="day in ticket_checkin_insights.data.daily_data"
+            :key="day.title"
+            :tier="day"
+          />
+        </div>
+      </div>
+
       <div class="flex flex-col gap-4">
         <TicketList :event="event" />
       </div>
@@ -63,6 +80,20 @@ const ticket_insights = createResource({
     today_stats.total_sold = data.total_sold
     today_stats.tickets_sold_today = data.tickets_sold_today
   },
+  onError(error) {
+    toast.error(error.message)
+  },
+})
+
+const ticket_checkin_insights = createResource({
+  url: 'fossunited.api.tickets.get_checkin_insights',
+  makeParams() {
+    return {
+      event_id: props.event.data.name,
+    }
+  },
+  loading: true,
+  auto: true,
   onError(error) {
     toast.error(error.message)
   },

@@ -96,9 +96,7 @@ const activeFilterApplied = computed(() => {
 })
 
 const isGrouped = computed(
-  () =>
-    props.rows.length > 0 &&
-    props.rows.every((row) => row.group && row.rows && Array.isArray(row.rows)),
+  () => props.rows.length > 0 && props.rows.every((row) => row && Array.isArray(row.rows)),
 )
 
 const getSearchableText = (row) => {
