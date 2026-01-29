@@ -1,4 +1,11 @@
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
 {% extends "templates/foss_base.html" %}
+
+{% block meta_block %}
+  {{ meta_tags(pagetitle, description, image) }}
+{% endblock %}
+
 {% block page_content %}
   <div class="profile-container">
     {{ profile_header() }}

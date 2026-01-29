@@ -345,8 +345,19 @@ class FOSSUserProfile(WebsiteGenerator):
 
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
-        image = "{og_url}/gen/profile?username={self.username}&full_name={self.full_name}&designation={self.bio}&image={self.profile_photo}".format(  # noqa: E501
-            self=self, og_url=og_url
+        image = (
+            "{og_url}/gen/profile?"
+            "username={username}&"
+            "full_name={full_name}&"
+            "designation={designation}&"
+            "image={image}"
+        ).format(
+            og_url=og_url,
+            username=self.username,
+            full_name=self.full_name,
+            designation=self.bio or "FOSS United User",
+            image=self.profile_photo
+            or "/assets/fossunited/images/defaults/user_profile_image.png",
         )
 
         return pagetitle, description, image
