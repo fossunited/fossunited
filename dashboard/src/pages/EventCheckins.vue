@@ -4,7 +4,7 @@
     <EventHeader :event="event.data" class="p-4 md:p-8" />
     <hr />
     <div class="p-4 md:px-8 md:py-6">
-      <div v-if="ticket_checkin_insights.data?.daily_data" class="flex flex-col gap-4 my-2">
+      <div v-if="ticket_checkin_insights.data?.daily_data?.length" class="flex flex-col gap-4 my-2">
         <div class="prose">
           <h4>Daily Check-in Insights</h4>
         </div>

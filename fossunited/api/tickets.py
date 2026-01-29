@@ -169,8 +169,9 @@ def get_checkin_insights(event_id: str) -> dict:
     Returns:
         dict: {"daily_data": [{"title": date, "total_sold": count, "tickets_sold_today": 0}, ...]}
     """
-    # Get event details
-    event = frappe.get_doc(EVENT, event_id)
+    event_start_date, event_end_date = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"]
+    )
 
     # Get all tickets for this event
     tickets = frappe.get_all(EVENT_TICKET, filters={"event": event_id}, pluck="name")
@@ -178,8 +179,8 @@ def get_checkin_insights(event_id: str) -> dict:
     if not tickets:
         return {"daily_data": []}
 
-    start_date = frappe.utils.get_datetime(event.event_start_date).date()
-    end_date = frappe.utils.get_datetime(event.event_end_date).date()
+    start_date = frappe.utils.get_datetime(event_start_date).date()
+    end_date = frappe.utils.get_datetime(event_end_date).date()
 
     daily_data = []
     current_date = start_date
@@ -189,6 +190,8 @@ def get_checkin_insights(event_id: str) -> dict:
             EVENT_CHECKIN,
             filters={
                 "parent": ["in", tickets],
+                "parenttype": EVENT_TICKET,
+                "parentfield": "check_ins",
                 "check_in_time": [
                     "between",
                     [f"{date_str} 00:00:00", f"{date_str} 23:59:59"],
