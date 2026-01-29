@@ -11,6 +11,7 @@
         >
       </div>
       <div
+        v-if="tier.tickets_sold_today !== undefined && tier.tickets_sold_today !== null"
         class="flex items-center gap-1 text-sm mt-1 font-medium p-1 w-fit rounded-sm px-2"
         :class="
           tier.tickets_sold_today === 0
