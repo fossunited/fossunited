@@ -11,8 +11,8 @@
 
       <div class="v3-card mb-4">
         <!-- Header: Title, Description, Count -->
-        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start mb-4">
-          <div class="flex-fill mb-3 mb-lg-0">
+        <div class="row align-items-start mb-4">
+          <div class="col-12 col-md-10 mb-3 mb-md-0">
             <h1 class="v3-text-primary v3-grant-title mb-2">Grants Directory</h1>
             <p class="v3-text-secondary mb-0">
               Explore projects from Funding JSON manifests. Inspired by
@@ -22,9 +22,11 @@
             </p>
           </div>
 
-          <div class="v3-grant-count-box">
-            <div class="v3-grant-stat-number" id="project-count">{{ items|length }}</div>
-            <div class="v3-grant-stat-label v3-text-secondary">Projects</div>
+          <div class="col-12 col-md-2 v3-grant-count-box">
+            <div class="v3-grant-stat-number">{{ items|length }}</div>
+            <div class="v3-grant-stat-label v3-text-secondary">
+              Projects
+            </div>
           </div>
         </div>
 
