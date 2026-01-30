@@ -10,7 +10,7 @@ from fossunited.doctype_ids import (
     HACKATHON_TEAM,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_doc_likes
+from fossunited.fossunited.utils import get_doc_likes, sanitize_text_content
 
 
 class FOSSHackathonProject(WebsiteGenerator):
@@ -42,6 +42,9 @@ class FOSSHackathonProject(WebsiteGenerator):
         title: DF.Data
 
     # end: auto-generated types
+    def validate(self):
+        self.description = sanitize_text_content(self.description)
+
     def before_save(self):
         self.set_route()
 

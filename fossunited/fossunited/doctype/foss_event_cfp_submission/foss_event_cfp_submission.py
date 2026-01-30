@@ -17,6 +17,7 @@ from fossunited.doctype_ids import (
     EVENT_SCHEDULE,
     PROPOSAL,
 )
+from fossunited.fossunited.utils import sanitize_text_content
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -84,6 +85,11 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         talk_title: DF.Data
         unsure_reviews: DF.Data | None
     # end: auto-generated types
+
+    def validate(self):
+        self.bio = sanitize_text_content(self.bio)
+        self.talk_description = sanitize_text_content(self.talk_description)
+        self.key_takeaways = sanitize_text_content(self.key_takeaways)
 
     def before_insert(self):
         self.check_status()

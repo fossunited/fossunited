@@ -3218,6 +3218,9 @@ body:has(.v3-page) {
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
+.v3-grant-grid > :only-child {
+  grid-column: 1 / -1;
+}
 
 .v3-grant-meta-label {
   font-size: 0.625rem;
