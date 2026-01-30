@@ -3,29 +3,29 @@
   <div class="flex flex-col md:grid md:grid-cols-2 mb-4 gap-4 md:items-center">
     <div class="flex flex-col py-1">
       <div class="text-xs text-gray-600">Project's Public Page</div>
-      <CopyToClipboard :route="getRoute(project.data.route)" />
+      <CopyToClipboard :route="getRoute(projectDoc.doc.route)" />
     </div>
     <FormControl
-      v-model="project.data.short_description"
+      v-model="projectDoc.doc.short_description"
       label="Short Description"
       placeholder="Enter a short description of the project"
     />
     <FormControl
-      v-model="project.data.repo_link"
+      v-model="projectDoc.doc.repo_link"
       label="Repository Link"
-      :disabled="project.data.is_partner_project"
+      :disabled="projectDoc.doc.is_partner_project"
     >
       <template #prefix>
         <IconBrandGithub class="w-4" />
       </template>
     </FormControl>
-    <FormControl v-model="project.data.demo_link" label="Demo Link" />
+    <FormControl v-model="projectDoc.doc.demo_link" label="Demo Link" />
     <TextEditor
       class="col-span-2 mt-2"
       label="Project Description"
-      :model-value="project.data.description"
+      :model-value="projectDoc.doc.description"
       placeholder="Enter a detailed description of the project"
-      @update:model-value="($event) => (project.data.description = $event)"
+      @update:model-value="($event) => (projectDoc.doc.description = $event)"
     />
   </div>
   <div>
@@ -46,7 +46,7 @@
 import CopyToClipboard from '@/components/CopyToClipboardComponent.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { defineProps, defineEmits, ref } from 'vue'
-import { FormControl, ErrorMessage, createResource } from 'frappe-ui'
+import { FormControl, ErrorMessage, createDocumentResource } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import { IconBrandGithub } from '@tabler/icons-vue'
 
@@ -55,6 +55,13 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+})
+
+const projectDoc = createDocumentResource({
+  doctype: 'FOSS Hackathon Project',
+  name: props.project.data.name,
+  fields: ['*'],
+  auto: true,
 })
 
 const getRoute = (route) => {
@@ -66,16 +73,16 @@ const errorMessage = ref('')
 const updateProjectErrors = () => {
   const errors = []
 
-  if (!props.project.data.short_description) {
+  if (!projectDoc.doc.short_description) {
     errors.push('Short description cannot be empty')
   }
-  if (!props.project.data.description) {
+  if (!projectDoc.doc.description) {
     errors.push('Description cannot be empty')
   }
-  if (!props.project.data.repo_link) {
+  if (!projectDoc.doc.repo_link) {
     errors.push('Repository link cannot be empty')
   }
-  if (props.project.data.repo_link && !props.project.data.repo_link.startsWith('https://')) {
+  if (projectDoc.doc.repo_link && !projectDoc.doc.repo_link.startsWith('https://')) {
     errors.push('Enter a valid repo link')
   }
 
@@ -83,34 +90,20 @@ const updateProjectErrors = () => {
 }
 
 const handleProjectUpdate = () => {
-  if (updateProjectErrors().length) {
-    errorMessage.value = updateProjectErrors().join(', ')
+  const errors = updateProjectErrors()
+  if (errors.length) {
+    errorMessage.value = errors.join(', ')
     return
-  } else {
-    errorMessage.value = ''
   }
-
-  createResource({
-    url: 'frappe.client.set_value',
-    makeParams() {
-      return {
-        doctype: 'FOSS Hackathon Project',
-        name: props.project.data.name,
-        fieldname: {
-          short_description: props.project.data.short_description,
-          description: props.project.data.description,
-          repo_link: props.project.data.repo_link,
-          demo_link: props.project.data.demo_link,
-        },
-      }
-    },
-    auto: true,
-    onSuccess(data) {
+  errorMessage.value = ''
+  projectDoc.save
+    .submit()
+    .then(() => {
       toast.success('Project updated successfully')
-    },
-    onError(error) {
-      toast.error('Failed to update project' + error.message)
-    },
-  })
+    })
+    .catch((err) => {
+      const message = err?.messages?.[0] || err?.message || 'Project update failed'
+      toast.error(message)
+    })
 }
 </script>

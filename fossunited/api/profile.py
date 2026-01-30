@@ -6,6 +6,7 @@ from PIL import Image
 
 from fossunited.api.dashboard import get_session_user_profile
 from fossunited.doctype_ids import CHAPTER, RESTRICTED_USERNAME, USER_PROFILE
+from fossunited.fossunited.utils import sanitize_text_content
 
 
 def convert_image_to_webp(image_content: bytes) -> bytes:
@@ -39,7 +40,11 @@ def set_profile_image(file_url: str) -> bool:
         filename = f"profile_{user_doc.name}.webp"
 
         saved_file = save_file(
-            fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
+            fname=filename,
+            content=webp_image,
+            dt=USER_PROFILE,
+            dn=user_doc.name,
+            is_private=False,
         )
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "profile_photo", saved_file.file_url)
@@ -69,7 +74,11 @@ def set_cover_image(file_url: str) -> bool:
         filename = f"cover_{user_doc.name}.webp"
 
         saved_file = save_file(
-            fname=filename, content=webp_image, dt=USER_PROFILE, dn=user_doc.name, is_private=False
+            fname=filename,
+            content=webp_image,
+            dt=USER_PROFILE,
+            dn=user_doc.name,
+            is_private=False,
         )
 
         frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", saved_file.file_url)
@@ -114,7 +123,7 @@ def update_profile(fields_dict):
             "bio": fields_dict.get("bio"),
             "cfp_visibility": fields_dict.get("cfp_visibility"),
             "current_city": fields_dict.get("current_city"),
-            "about": fields_dict.get("about"),
+            "about": sanitize_text_content(fields_dict.get("about")),
             "website": fields_dict.get("website"),
             "x": fields_dict.get("x"),
             "linkedin": fields_dict.get("linkedin"),
