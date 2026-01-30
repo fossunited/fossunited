@@ -6,7 +6,178 @@
 
 📌 **Project Board**: [FOSS United GitHub Project](https://github.com/orgs/fossunited/projects/3/views/1)
 
+Please find the TLDR reports for each blog in blog posts and forum thread:
+- Blog post: https://fossunited.org/blog/tech-report
+- Forum thread: https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431
+
 <br>
+
+## January 2026
+
+| Metric        | Count |
+|---------------|-------|
+| Issues Closed | 14    |
+| PRs merged    | 42    |
+
+Hey everyone,
+
+January kicked off with significant improvements focused on **FOSS Hack 2026** preparation, **Events Timeline redesign** (much needed), and **Grants page overhaul**. We've also enhanced the dashboard with better **localhost management**.
+
+---
+
+### PR Highlights
+
+#### Events Timeline Redesign
+
+- [#1375](https://github.com/fossunited/fossunited/pull/1375) **Events Timeline Redesign**
+  Complete redesign of the events timeline page with v3.0 design language.
+  Visit: [Events Timeline](https://fossunited.org/events/timeline)
+
+- [#1383](https://github.com/fossunited/fossunited/pull/1383) **Split Timeline into Upcoming & Completed**
+  Timeline page now splits events into two clear sections - Upcoming and Completed events. Some filters are shown only for completed events.
+
+- [#1380](https://github.com/fossunited/fossunited/pull/1380) **RSS Feed for Events Timeline**
+  Added RSS feed support for upcoming events on the timeline page for easy subscription and tracking.
+  Feed: [Events Timeline RSS](https://fossunited.org/events/timeline/rss.xml)
+  More [to be added](https://github.com/fossunited/fossunited/issues/1357) for other pages.
+
+- Lazy loading implemented for event banner images to improve page load performance.
+
+#### Grants Page
+
+- [#1347](https://github.com/fossunited/fossunited/pull/1347) **Grants Landing Page Redesign**
+  Complete redesign of the main grants page with updated content and v3 styling.
+  Visit: [Grants](https://fossunited.org/grants)
+
+- [#1348](https://github.com/fossunited/fossunited/pull/1348) **Individual Grants Details Page**
+  New dedicated page for each grant type (Project Grants & Event Grants) with detailed information and filters.
+
+- [#1349](https://github.com/fossunited/fossunited/pull/1349) **Grants Directory Redesign**
+  Redesigned grants directory page for better discoverability and filtering via project tags.
+
+- [#1350](https://github.com/fossunited/fossunited/pull/1350) **Improved Grant Directory Listing**
+  Enhanced listing page with better sorting and categorization via pagination of 50 items per page.
+
+- [#1356](https://github.com/fossunited/fossunited/pull/1356) **Grantees Page**
+  New page showing all grant recipients across different grant types indicating total amount disbursed.
+  Visit: [Grantees](https://fossunited.org/grantees)
+
+- [#1379](https://github.com/fossunited/fossunited/pull/1379) **Event Grant Doctype Updates**
+  Added new fields (`event_description`, status options like "Ongoing" and "Disbursed") to Event Grant doctype for better tracking via web forms.
+
+- [#1387](https://github.com/fossunited/fossunited/pull/1387) **Event Grant Amount Migration**
+  Migrated grant amount field from Data to Currency type for proper formatting and calculations.
+
+#### Hackathon & Localhost Management
+
+- [#1345](https://github.com/fossunited/fossunited/pull/1345) **Hackathon Participant Counts**
+  Added team and participant count display on hackathon index pages.
+
+- [#1358](https://github.com/fossunited/fossunited/pull/1358) **Hackathon Dashboard Layout Fix**
+  Fixed layout issues in hackathon dashboard pages for better UX.
+
+- [#1360](https://github.com/fossunited/fossunited/pull/1360) **Localhost Attendees with SearchListView**
+  Hackathon localhost attendee acceptance now uses SearchListView component with team-based grouping for better organisation.
+
+- [#1361](https://github.com/fossunited/fossunited/pull/1361) **Edit Localhost Page**
+  Added dedicated page to edit localhost hackathon data with proper validation ensuring only organisers can access.
+
+- [#1365](https://github.com/fossunited/fossunited/pull/1365) **Localhost Layout as Parent**
+  Localhost hackathon pages now use consistent parent layout for better navigation.
+
+- [#1366](https://github.com/fossunited/fossunited/pull/1366) **Localhost Email Group Integration**
+  Accepted hackathon participants are automatically added to localhost email groups for communications.
+
+- [#1368](https://github.com/fossunited/fossunited/pull/1368), [#1369](https://github.com/fossunited/fossunited/pull/1369) **Common Mailing Component**
+  Refactored mailing functionality into reusable component. Added mailing feature for localhost hackathons.
+
+- [commit 4c0698163efa228cc4a568e2b6a5146fbfc47034](4c0698163efa228cc4a568e2b6a5146fbfc47034): Redesigned hackathon project page in v3 style.
+
+#### Event Check-ins & RSVP Improvements
+
+- [#1359](https://github.com/fossunited/fossunited/pull/1359) **RSVP Insights Error Messages & Docs**
+  Added error message display and documentation info component to help organisers troubleshoot issues.
+
+- [#1374](https://github.com/fossunited/fossunited/pull/1374) **Waiting List Info**
+  Events page now shows waiting list information. Attending counts only show accepted RSVPs.
+
+- [#1392](https://github.com/fossunited/fossunited/pull/1392) **Ticket Check-ins SearchListView**
+  Ticket check-in dashboard now uses SearchListView for faster searching and better performance.
+
+- [#1393](https://github.com/fossunited/fossunited/pull/1393) **Ticket Check-in Insights by Event Days**
+  Ticket check-in insights now show data grouped by event days, similar to RSVP check-ins.
+
+- [commit 8a9a74](8a9a7424c711c7fba7f2e47d78be46e53e778b5c): RSVP page now shows "RSVP Closed" message if form is unpublished and removed RSVP button to avoid 404 page.
+- Added docs link to event RSVP pages for user guidance.
+- Schedule page now defaults to current day's date for better UX.
+
+#### Event Management
+
+- [#1342](https://github.com/fossunited/fossunited/pull/1342) **Edit Event Button for Concluded Events**
+  Added "Edit Event" button visible to organisers even for concluded events. Uses proper permission checks via `check_if_chapter_or_event_core_member`.
+  Credits: [@Pranav1921](https://github.com/Pranav1921)
+
+- [#1382](https://github.com/fossunited/fossunited/pull/1382) **Event Publishing Toggle**
+  Dashboard now has toggle button to publish/unpublish events directly from event details page.
+  This has been added akin to [#1364](https://github.com/fossunited/fossunited/issues/1364) to allow deleting event.
+
+- [#1354](https://github.com/fossunited/fossunited/pull/1354) **Sponsor Sorting Enhancement**
+  Event sponsors now sorted with Industry Partners (patrons) appearing first, then by date of confirmation within each tier, or alphabetically.
+
+- MyChapters component now ignores events without end dates to prevent display issues.
+- MyChapters now uses API function to show events for better data consistency.
+
+#### Dashboard UI Components
+
+- [#1370](https://github.com/fossunited/fossunited/pull/1370) **Common Save Action Bar**
+  Multiple dashboard pages now use unified sticky save action bar at bottom for consistent UX across:
+  - Event details editing
+  - Chapter details
+  - RSVP forms
+  - Hackathon configuration
+
+- SearchListView component enhancements:
+  - Added support for preferred export columns for CSV download.
+  - Used across ticket insights, free coupons, RSVP insights, and check-ins.
+  - Improved performance and code reusability.
+
+#### Payment & Tickets
+
+- Razorpay payment capture now includes event name and ID in description for easier filtering in razorpay dashboard.
+
+#### User Profiles
+
+- **OpenGraph Support for FOSS Profiles**
+  Added meta_block for user profiles to generate OG images for better social media sharing.
+
+#### Templates & Macros
+
+- [#1362](https://github.com/fossunited/fossunited/pull/1362) **Common V3 Navbar & Theme Toggle**
+  Introduced reusable `v3_navbar` macro with theme toggle for consistent navigation across redesigned pages.
+  - Breadcrumb macro now builds crumbs automatically if not passed (useful for simplified paths)
+  - Applied across grants, events, volunteers, and other v3 pages
+
+#### Documentation
+
+- Added [FOSS Hackathon information](https://docs.fossunited.org/fosshack/) to docs.
+- Updated docs with event check-in system information for RSVP insights dashboard.
+- Added screenshots for check-in insights workflow.
+- Dashboard pages now include DocsInfo component with help links.
+
+#### Performance
+
+- Lazy loading implemented for event timeline banner images.
+- Event cards now use lazy loading for better initial page load.
+- Reduced unnecessary API calls via refactored functions.
+
+---
+
+### New Contributor Spotlight
+
+- [@Pranav1921](https://github.com/Pranav1921) made their first contribution:
+  - [#1342](https://github.com/fossunited/fossunited/pull/1342): Added edit event button for concluded events with proper permission checks
+
+---
 
 ## December 2025
 
@@ -40,7 +211,7 @@ December was a quieter but productive month as we wrapped up the year amidst hol
   Previously we had custom field applied to all attendees ticket, but these custom field data can act as survey to collect preferred choice. Given a switch toggle this can apply to all or each ticket.
 
 <!-- - [#1307](https://github.com/fossunited/fossunited/pull/1307) Grab your tickets page -->
-<!--   A dedicated page to download tickets for an event. Input by ticket ID or email. Coupon ID (organization) can also be provided to download all tickets claimed from it in single PDF. -->
+<!--   A dedicated page to download tickets for an event. Input by ticket ID or email. Coupon ID (organisation) can also be provided to download all tickets claimed from it in single PDF. -->
 <!--   Refer: https://fossunited.org/get-tickets -->
 
 - [#1310](https://github.com/fossunited/fossunited/pull/1310) Ticket insights with Custom fields
@@ -86,7 +257,7 @@ December was a quieter but productive month as we wrapped up the year amidst hol
   - Export filtered data directly as CSV
 
 - [#1343](https://github.com/fossunited/fossunited/pull/1343) Event check-in via attendee list view
-  Organizers can now **manually check-in attendees** directly from the RSVP insights dashboard.
+  Organisers can now **manually check-in attendees** directly from the RSVP insights dashboard.
   - Useful for bulk or assisted check-ins
   - Complements self check-in flow without backend changes
   - Includes undo option for same-day check-ins
@@ -163,7 +334,7 @@ December was a quieter but productive month as we wrapped up the year amidst hol
 
 Hi everyone,
 
-November brought some major additions to the platform! We've introduced a **Grants Funding Directory** inspired by floss.fund, implemented **RSVP Check-ins** for better event management, and launched **Host Approval workflow** for RSVPs. The new **Events Page redesign** with v3.0 design is now live, alongside the [**First Commit**](https://fossunited.org/first-commit) initiative page. We've also added comprehensive **Free Ticket management** for organizers.
+November brought some major additions to the platform! We've introduced a **Grants Funding Directory** inspired by floss.fund, implemented **RSVP Check-ins** for better event management, and launched **Host Approval workflow** for RSVPs. The new **Events Page redesign** with v3.0 design is now live, alongside the [**First Commit**](https://fossunited.org/first-commit) initiative page. We've also added comprehensive **Free Ticket management** for organisers.
 
 ---
 
@@ -205,12 +376,12 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
   [Documentation](https://docs.fossunited.org/attend-event/)
 
 - [#1288](https://github.com/fossunited/fossunited/pull/1288) **Check-in Insights Dashboard**
-  Event organizers can view check-in data grouped by dates in a dedicated insights page with download functionality.
+  Event organisers can view check-in data grouped by dates in a dedicated insights page with download functionality.
 
 #### RSVP Host Approval
 
 - [#1282](https://github.com/fossunited/fossunited/pull/1282) **Host Approval Workflow**
-  Added host-requires-approval feature for RSVP forms. Organizers can approve or reject RSVPs directly from insights page with email notifications. Includes confirmation dialog for rejections.
+  Added host-requires-approval feature for RSVP forms. Organisers can approve or reject RSVPs directly from insights page with email notifications. Includes confirmation dialog for rejections.
   Related issue: [#676](https://github.com/fossunited/fossunited/issues/676)
 
 #### Free Ticket Management
@@ -219,7 +390,7 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
   Imported free ticket code and application doctype from desk into codebase. Includes validation, count tracking, and server-side checks for coupon redemption. Added comprehensive unit tests.
 
 - [#1260](https://github.com/fossunited/fossunited/pull/1260) **Free Ticket Dashboard**
-  Event organizers can now manage free ticket codes directly from dashboard. Create, edit, delete, and view coupon IDs for distribution to organizations.
+  Event organisers can now manage free ticket codes directly from dashboard. Create, edit, delete, and view coupon IDs for distribution to organisations.
 
 - [#1261](https://github.com/fossunited/fossunited/pull/1261) **Permission Controls**
   Only chapter team members can modify their event's free ticket codes, preventing cross-injection attacks.
@@ -243,7 +414,7 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
   Added `talk_video` field to link recorded talks in schedule and CFP pages. Shows video links for past sessions and "Add to calendar" only for upcoming sessions. This video link will be shown in schedule page as well as in CFP linked page.
 
 - [#1270](https://github.com/fossunited/fossunited/pull/1270) **CSV Download for Proposals**
-  Reviewers and organizers can now download all proposals in CSV format for analysis. Includes custom answers if marked public.
+  Reviewers and organisers can now download all proposals in CSV format for analysis. Includes custom answers if marked public.
   [#1274](https://github.com/fossunited/fossunited/pull/1274) Moved CSV generation to frontend to reduce backend load, properly escaping content to avoid CSV injection.
 
 - [#1269](https://github.com/fossunited/fossunited/pull/1269) **Schedule Management Filters**
@@ -357,9 +528,9 @@ We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with in
 #### Event & RSVP Management
 
 - [#1213](https://github.com/fossunited/fossunited/pull/1213) RSVP toggle improvements
-  Users can now toggle RSVP/Un-RSVP directly with updated UI states to let Organizer know that they are "not attending".
+  Users can now toggle RSVP/Un-RSVP directly with updated UI states to let Organiser know that they are "not attending".
 - [#1214](https://github.com/fossunited/fossunited/pull/1214) RSVP insights grouping
-  Dashboard enhancements now group RSVP data by attendance, improving analytics for event organizers. Shows two groups "Attending" and "Not attending" (not shown by default)
+  Dashboard enhancements now group RSVP data by attendance, improving analytics for event organisers. Shows two groups "Attending" and "Not attending" (not shown by default)
 
 #### Documentation & Developer Tools
 
@@ -496,7 +667,7 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 
 - [#1099](https://github.com/fossunited/fossunited/pull/1099) Updated Teams page with new Governing Board members
   Refreshed the macro logic and added profiles for the newly elected board.
-  Announcement: [Meet the first-ever elected community governance board](https://fossunited.org/blog/organization/meet-the-first-ever-elected-community-governance-board-foss-united)
+  Announcement: [Meet the first-ever elected community governance board](https://fossunited.org/blog/organisation/meet-the-first-ever-elected-community-governance-board-foss-united)
 
 #### Event Metadata Enhancements
 
