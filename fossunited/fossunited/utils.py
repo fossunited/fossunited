@@ -1,7 +1,7 @@
 import frappe
 from frappe import qb
 from frappe.query_builder.functions import Max
-from frappe.utils import add_to_date, get_datetime, nowdate
+from frappe.utils import add_to_date, get_datetime, nowdate, sanitize_html
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -441,3 +441,26 @@ def get_event_sponsors(self):
 
     # Sort tiers
     return dict(sorted(groups.items(), key=lambda x: tier_rank.get(x[0], 999)))
+
+
+def sanitize_text_content(value: str | None, fallback=""):
+    from bs4 import BeautifulSoup
+
+    if not value:
+        return fallback
+
+    cleaned = sanitize_html(value, always_sanitize=True)
+
+    soup = BeautifulSoup(cleaned, "html.parser")
+
+    for tag in soup.find_all(["img", "svg", "math", "style", "script", "iframe", "object"]):
+        tag.decompose()
+
+    for tag in soup.find_all(True):
+        tag.attrs = {
+            k: v
+            for k, v in tag.attrs.items()
+            if not k.lower().startswith("on") and k.lower() not in ("style",)
+        }
+
+    return str(soup)

@@ -21,6 +21,7 @@ from fossunited.doctype_ids import (
     PROPOSAL,
     RSVP_RESPONSE,
 )
+from fossunited.fossunited.utils import sanitize_text_content
 
 
 class PrivateProfileError(PermissionError):
@@ -86,6 +87,8 @@ class FOSSUserProfile(WebsiteGenerator):
     def validate(self):
         self.validate_username()
         self.set_route()
+        self.about = sanitize_text_content(self.about)
+        self.bio = sanitize_text_content(self.bio)
 
     def after_insert(self):
         self.share_user_with_self()
