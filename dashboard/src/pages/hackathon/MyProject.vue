@@ -177,38 +177,6 @@ const project = createResource({
     newProjectName.value = data.title
   },
   transform(data) {
-    let issue_prs = [
-      {
-        group: 'Issues',
-        collapsed: false,
-        rows: [],
-      },
-      {
-        group: 'Pull Requests',
-        collapsed: false,
-        rows: [],
-      },
-      {
-        group: 'Discussions',
-        collapsed: false,
-        rows: [],
-      },
-    ]
-    data.issue_pr_table.forEach((element) => {
-      if (element.type === 'Issue') {
-        issue_prs[0].rows.push(element)
-      } else if (element.type === 'Pull Request') {
-        issue_prs[1].rows.push(element)
-      } else {
-        issue_prs[2].rows.push(element)
-      }
-    })
-    issue_prs.forEach((element) => {
-      if (element.rows.length === 0) {
-        issue_prs = issue_prs.filter((item) => item.group !== element.group)
-      }
-    })
-    data.issue_pr_table = issue_prs
     return data
   },
 })

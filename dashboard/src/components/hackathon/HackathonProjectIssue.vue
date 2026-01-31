@@ -13,7 +13,7 @@
           v-model="newIssuePr.link"
           type="url"
           label="Link &ast;"
-          @input="getPrIssueTitle.fetch()"
+          @blur="getPrIssueTitle.fetch()"
         />
         <div v-if="getPrIssueTitle.loading" class="flex gap-1">
           <LoadingIndicator class="w-4 h-4" />
@@ -47,12 +47,7 @@
     </template>
     <template #actions>
       <div class="grid w-full grid-cols-2 gap-4">
-        <Button
-          label="Add"
-          variant="solid"
-          :loading="addIssuePr.loading"
-          @click="handleAddIssuePr"
-        />
+        <Button label="Add" variant="solid" @click="handleAddIssuePr" />
         <Button
           label="Cancel"
           theme="gray"
@@ -70,7 +65,10 @@
   </Dialog>
 
   <!-- Issue / PR ListView -->
-  <div v-if="project.data.issue_pr_table.length > 0" class="flex flex-row-reverse w-full p-2 mb-2">
+  <div
+    v-if="projectDoc.doc.issue_pr_table.length > 0"
+    class="flex flex-row-reverse w-full p-2 mb-2"
+  >
     <Button
       class="w-full md:w-fit"
       label="Link Issue / PR / Discussion"
@@ -91,12 +89,16 @@
         key: 'link',
       },
       {
+        label: 'Type',
+        key: 'type',
+      },
+      {
         label: '',
         key: 'actions',
         width: 1 / 4,
       },
     ]"
-    :rows="project.data.issue_pr_table"
+    :rows="groupedIssuePrs"
     :options="{
       selectable: false,
       showTooltip: false,
@@ -136,13 +138,14 @@
   </ListView>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, reactive } from 'vue'
+import { computed, ref, defineProps, defineEmits, reactive } from 'vue'
 import {
   ErrorMessage,
   FormControl,
   ListView,
   Dialog,
   createResource,
+  createDocumentResource,
   LoadingIndicator,
 } from 'frappe-ui'
 import { toast } from 'vue-sonner'
@@ -164,25 +167,90 @@ const newIssuePr = reactive({
 })
 
 const showAddDialog = ref(false)
-const addIssueErrors = ref('')
 
-const addIssuePrErrors = () => {
+const projectDoc = createDocumentResource({
+  doctype: 'FOSS Hackathon Project',
+  name: props.project.data.name,
+  auto: true,
+})
+
+const groupedIssuePrs = computed(() => {
+  if (!projectDoc.doc) return []
+
+  const groups = {
+    Issue: {
+      group: 'Issues',
+      collapsed: false,
+      rows: [],
+    },
+    'Pull Request': {
+      group: 'Pull Requests',
+      collapsed: false,
+      rows: [],
+    },
+    Discussion: {
+      group: 'Discussions',
+      collapsed: false,
+      rows: [],
+    },
+  }
+
+  projectDoc.doc.issue_pr_table.forEach((row) => {
+    groups[row.type]?.rows.push(row)
+  })
+
+  return Object.values(groups).filter((g) => g.rows.length)
+})
+
+const addIssueErrors = ref([])
+
+const validateIssuePr = () => {
   const errors = []
 
   if (!newIssuePr.link) {
     errors.push('Link cannot be empty')
-  }
-  if (newIssuePr.link && !newIssuePr.link.startsWith('https://')) {
+  } else if (!newIssuePr.link.startsWith('https://')) {
     errors.push('Enter a valid link')
   }
+
   if (!newIssuePr.title) {
     errors.push('Title cannot be empty')
   }
+
   if (!newIssuePr.type) {
     errors.push('Type cannot be empty')
   }
 
   return errors
+}
+
+const handleAddIssuePr = async () => {
+  addIssueErrors.value = validateIssuePr()
+
+  if (addIssueErrors.value.length) {
+    return
+  }
+
+  projectDoc.doc.issue_pr_table.push({
+    title: newIssuePr.title,
+    link: newIssuePr.link,
+    type: newIssuePr.type,
+  })
+
+  try {
+    await projectDoc.save.submit()
+    await projectDoc.reload()
+
+    toast.success('Issue / PR added')
+
+    newIssuePr.title = ''
+    newIssuePr.link = ''
+    newIssuePr.type = ''
+    addIssueErrors.value = []
+    showAddDialog.value = false
+  } catch (err) {
+    addIssueErrors.value = err.messages || [err.message]
+  }
 }
 
 const fetchTitleError = ref('')
@@ -211,52 +279,12 @@ const getPrIssueTitle = createResource({
   },
 })
 
-const addIssuePr = createResource({
-  url: 'fossunited.api.hackathon.add_pr_issue_to_project',
-  makeParams() {
-    return {
-      project: props.project.data.name,
-      details: newIssuePr,
-    }
-  },
-  onSuccess() {
-    showAddDialog.value = false
-    emits('fetch-project')
-    newIssuePr.title = ''
-    newIssuePr.link = ''
-    newIssuePr.type = ''
-  },
-  onError(err) {
-    addIssueErrors.value = 'Failed to add issue / PR : \n' + err.message
-  },
-})
-
-const handleAddIssuePr = () => {
-  let errors = addIssuePrErrors()
-  if (errors.length) {
-    addIssueErrors.value = errors.join(', ')
-    return
-  }
-  addIssueErrors.value = ''
-  addIssuePr.fetch()
-}
-
 const deleteIssuePr = (row) => {
-  createResource({
-    url: 'fossunited.api.hackathon.remove_pr_issue_from_project',
-    makeParams() {
-      return {
-        project: props.project.data.name,
-        issue_pr: row.name,
-      }
-    },
-    onSuccess() {
-      toast.info('Issue / PR deleted successfully')
-      emits('fetch-project')
-    },
-    onError(err) {
-      toast.error('Failed to delete issue / PR : \n' + err.message)
-    },
-  }).fetch()
+  projectDoc.doc.issue_pr_table = projectDoc.doc.issue_pr_table.filter((r) => r.name !== row.name)
+
+  projectDoc.save
+    .submit()
+    .then(() => toast.success(`Deleted the ${row.type}`))
+    .catch((err) => toast.error(err.message))
 }
 </script>
