@@ -49,6 +49,8 @@
             type="email"
             label="Email &ast;"
             placeholder="john@fossunited.org"
+            :disabled="true"
+            class="bg-gray-50"
           />
           <FormControl v-model="participant.is_student" type="checkbox" label="I am a student" />
           <FormControl
@@ -196,7 +198,6 @@ let participant = reactive({
   organization: '',
   wants_to_attend_locally: '',
   localhost: '',
-  subscribe_chapter_mailing: 1,
 })
 
 const hackathonId = ref(null)
@@ -286,6 +287,7 @@ onMounted(() => {
   }
   if (session.user != 'Administrator' && session.user != 'Guest') {
     participant.user = session.user
+    participant.email = session.user
     user_profile.update({
       params: {
         email: session.user,
@@ -313,9 +315,6 @@ const registrationErrors = computed(() => {
 
   if (!participant.full_name) {
     errors.push('Name is required.')
-  }
-  if (!participant.email) {
-    errors.push('Email is required.')
   }
   if (!participant.organization) {
     errors.push('Organization / Institute is required.')
