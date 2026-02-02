@@ -19,6 +19,7 @@ from fossunited.doctype_ids import (
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=5, seconds=60 * 60 * 12)
 def check_ticket_validity(ticket_id: str):
     """
     Check if the ticket is valid or not
@@ -29,6 +30,7 @@ def check_ticket_validity(ticket_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
     """
     Get the event for the ticket
@@ -43,6 +45,7 @@ def get_ticket_details(ticket_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_transfer_request(ticket: str, receiver_details: dict):
     """
     Create a transfer request for the ticket
@@ -75,6 +78,7 @@ def get_transfer_doc_validity(transfer_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=4, seconds=60 * 60 * 12)
 def get_transfer_details(id: str):
     """
     Get the transfer doc
@@ -89,11 +93,23 @@ def get_transfer_details(id: str):
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
 def change_transfer_status(transfer_id: str, status: str):
     """
     Change the status of the transfer request
     """
     doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
+    ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
+    current_user = frappe.session.user
+    if current_user not in [ticket.email, doc.receiver_email]:
+        frappe.throw(
+            "Unauthorized to modify this transfer, please login with fossunited account proceed",
+            frappe.PermissionError,
+        )
+
+    if status not in ["Approved", "Rejected"]:
+        frappe.throw("Invalid status")
+
     doc.status = status
     doc.save()
     return True
