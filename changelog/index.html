@@ -1,0 +1,4380 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Comprehensive documentation and resources for the FOSS United platform and community.">
+      
+      
+      
+      
+        <link rel="prev" href="../architecture/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/fossunited-white.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Changelog - FOSS United Knowledge Base</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&amp;display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/custom.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  <link href="../assets/stylesheets/glightbox.min.css" rel="stylesheet"><script src="../assets/javascripts/glightbox.min.js"></script><style id="glightbox-style">
+            html.glightbox-open { overflow: initial; height: 100%; }
+            .gslide-title { margin-top: 0px; user-select: text; }
+            .gslide-desc { color: #666; user-select: text; }
+            .gslide-image img { background: white; }
+            .gscrollbar-fixer { padding-right: 15px; }
+            .gdesc-inner { font-size: 0.75rem; }
+            body[data-md-color-scheme="slate"] .gdesc-inner { background: var(--md-default-bg-color); }
+            body[data-md-color-scheme="slate"] .gslide-title { color: var(--md-default-fg-color); }
+            body[data-md-color-scheme="slate"] .gslide-desc { color: var(--md-default-fg-color); }
+        </style></head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="teal">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tech-reports-for-foss-united-platform" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="FOSS United Knowledge Base" class="md-header__button md-logo" aria-label="FOSS United Knowledge Base" data-md-component="logo">
+      
+  <img src="../assets/fossunited-white.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"></path></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            FOSS United Knowledge Base
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="green" data-md-color-accent="teal" aria-label="Switch to dark mode" type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"></path></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="green" data-md-color-accent="light-green" aria-label="Switch to light mode" type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"></path></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"></path></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/fossunited/fossunited" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="FOSS United Knowledge Base" class="md-nav__button md-logo" aria-label="FOSS United Knowledge Base" data-md-component="logo">
+      
+  <img src="../assets/fossunited-white.svg" alt="logo">
+
+    </a>
+    FOSS United Knowledge Base
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/fossunited/fossunited" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"></path></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2">
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your Profile
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Your Profile
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../create-profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Create Your Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../manage-profile/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Manage Your Profile
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../request-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Request Personal Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../delete-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Delete Personal Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3">
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events &amp; Participation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events &amp; Participation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../create-event/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating an Event
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-rsvp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event RSVPs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../attend-event/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Attending Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-proposals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Call for Proposals (CFP)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-cfp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing Event Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reviewing-proposals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reviewing Proposals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event-schedule/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Creating Event Schedule
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event_mailing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Event Mailing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../event/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What to Do at the Event
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4">
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOSS Hackathon
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    FOSS Hackathon
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fosshack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Participanting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../localhost/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing Localhost
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5">
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volunteering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Volunteering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volunteering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volunteering Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../volunteering-perks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Volunteering Perks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../social-media/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Marketing Events on Social Media
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../telegram/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Telegram &amp; Communication Channels
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6">
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What We Do
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What We Do
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../initiative/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Initiatives Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../club/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOSS Clubs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../grants/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Grants Program
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../people/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    People Behind FOSS United
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../principles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Principles &amp; Values
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FOSS Philosophy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../speech/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Speech &amp; Presentations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rss/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RSS &amp; News
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Development &amp; Documentation
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Development &amp; Documentation
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Platform Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../documentation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Documentation Guide
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../project-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../code-contributions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Contributions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Changelog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#january-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        January 2026
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="January 2026">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-timeline-redesign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events Timeline Redesign
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants Page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hackathon-localhost-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hackathon &amp; Localhost Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-check-ins-rsvp-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Check-ins &amp; RSVP Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payment-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payment &amp; Tickets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#templates-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates &amp; Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#december-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        December 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="December 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-page-announcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Page &amp; Announcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tickets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-reviews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Reviews
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance &amp; UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#november-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        November 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="November 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-page-redesign-first-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events Page Redesign &amp; First Commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants-funding-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants Funding Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-self-check-in-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Self Check-in System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-host-approval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Host Approval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#free-ticket-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Free Ticket Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-schedule-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Schedule Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uiux-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI/UX Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refund-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refund Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#october-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        October 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="October 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theme-ui-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme &amp; UI Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-review-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Review System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jobs-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs &amp; Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chapter-mailing-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter &amp; Mailing System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-rsvp-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event &amp; RSVP Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-developer-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation &amp; Developer Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-improvements-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Improvements &amp; Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#september-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        September 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="September 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-management_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ticket-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ticket Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#august-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        August 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="August 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jobs-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs &amp; Scheduling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles &amp; Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-management_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blog-rss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blog &amp; RSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline Fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-page-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Page &amp; Governance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-metadata-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Metadata Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frappe-desk-office-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frappe Desk / Office related
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#july-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        July 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="July 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-with-nixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup with NixOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#job-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc">
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#january-2026" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        January 2026
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="January 2026">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-timeline-redesign" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events Timeline Redesign
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants Page
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hackathon-localhost-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hackathon &amp; Localhost Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-check-ins-rsvp-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Check-ins &amp; RSVP Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dashboard-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dashboard UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payment-tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payment &amp; Tickets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profiles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Profiles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#templates-macros" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Templates &amp; Macros
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#december-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        December 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="December 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#new-page-announcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Page &amp; Announcement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tickets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tickets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-reviews" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Reviews
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance &amp; UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accessibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#november-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        November 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="November 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#events-page-redesign-first-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events Page Redesign &amp; First Commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#grants-funding-directory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grants Funding Directory
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-self-check-in-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Self Check-in System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rsvp-host-approval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RSVP Host Approval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#free-ticket-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Free Ticket Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-schedule-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Schedule Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uiux-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI/UX Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#refund-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Refund Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#user-profile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User Profile
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#october-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        October 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="October 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#theme-ui-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Theme &amp; UI Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cfp-review-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CFP &amp; Review System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#jobs-grants" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs &amp; Grants
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chapter-mailing-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chapter &amp; Mailing System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-rsvp-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event &amp; RSVP Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#documentation-developer-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation &amp; Developer Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-improvements-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal Improvements &amp; Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#september-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        September 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="September 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-management_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ticket-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ticket Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Schedule
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#august-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        August 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="August 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#jobs-scheduling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Jobs &amp; Scheduling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#roles-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roles &amp; Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-management_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blog-rss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blog &amp; RSS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeline-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeline Fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#team-page-governance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Team Page &amp; Governance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#event-metadata-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event Metadata Enhancements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frappe-desk-office-related" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frappe Desk / Office related
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-contributor-spotlight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Contributor Spotlight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#july-2025" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        July 2025
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="July 2025">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pr-highlights_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR Highlights
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR Highlights">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#setup-with-nixos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup with NixOS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#job-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Job Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="tech-reports-for-foss-united-platform">Tech Reports for FOSS United Platform</h1>
+<!-- URLs for reference -->
+<!-- https://github.com/fossunited/fossunited/pull/ -->
+<!-- https://github.com/fossunited/fossunited/issues -->
+
+<p>📌 <strong>Project Board</strong>: <a href="https://github.com/orgs/fossunited/projects/3/views/1">FOSS United GitHub Project</a></p>
+<p>Please find the TLDR reports for each blog in blog posts and forum thread:</p>
+<ul>
+<li>Blog post: <a href="https://fossunited.org/blog/tech-report">https://fossunited.org/blog/tech-report</a></li>
+<li>Forum thread: <a href="https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431">https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431</a></li>
+</ul>
+<p><br></p>
+<h2 id="january-2026">January 2026</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>14</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>42</td>
+</tr>
+</tbody>
+</table>
+<p>Hey everyone,</p>
+<p>January kicked off with significant improvements focused on <strong>FOSS Hack 2026</strong> preparation, <strong>Events Timeline redesign</strong> (much needed), and <strong>Grants page overhaul</strong>. We've also enhanced the dashboard with better <strong>localhost management</strong>.</p>
+<hr>
+<h3 id="pr-highlights">PR Highlights</h3>
+<h4 id="events-timeline-redesign">Events Timeline Redesign</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1375">#1375</a> <strong>Events Timeline Redesign</strong>
+  Complete redesign of the events timeline page with v3.0 design language.
+  Visit: <a href="https://fossunited.org/events/timeline">Events Timeline</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1383">#1383</a> <strong>Split Timeline into Upcoming &amp; Completed</strong>
+  Timeline page now splits events into two clear sections - Upcoming and Completed events. Some filters are shown only for completed events.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1380">#1380</a> <strong>RSS Feed for Events Timeline</strong>
+  Added RSS feed support for upcoming events on the timeline page for easy subscription and tracking.
+  Feed: <a href="https://fossunited.org/events/timeline/rss.xml">Events Timeline RSS</a>
+  More <a href="https://github.com/fossunited/fossunited/issues/1357">to be added</a> for other pages.</p>
+</li>
+<li>
+<p>Lazy loading implemented for event banner images to improve page load performance.</p>
+</li>
+</ul>
+<h4 id="grants-page">Grants Page</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1347">#1347</a> <strong>Grants Landing Page Redesign</strong>
+  Complete redesign of the main grants page with updated content and v3 styling.
+  Visit: <a href="https://fossunited.org/grants">Grants</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1348">#1348</a> <strong>Individual Grants Details Page</strong>
+  New dedicated page for each grant type (Project Grants &amp; Event Grants) with detailed information and filters.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1349">#1349</a> <strong>Grants Directory Redesign</strong>
+  Redesigned grants directory page for better discoverability and filtering via project tags.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1350">#1350</a> <strong>Improved Grant Directory Listing</strong>
+  Enhanced listing page with better sorting and categorization via pagination of 50 items per page.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1356">#1356</a> <strong>Grantees Page</strong>
+  New page showing all grant recipients across different grant types indicating total amount disbursed.
+  Visit: <a href="https://fossunited.org/grantees">Grantees</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1379">#1379</a> <strong>Event Grant Doctype Updates</strong>
+  Added new fields (<code>event_description</code>, status options like "Ongoing" and "Disbursed") to Event Grant doctype for better tracking via web forms.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1387">#1387</a> <strong>Event Grant Amount Migration</strong>
+  Migrated grant amount field from Data to Currency type for proper formatting and calculations.</p>
+</li>
+</ul>
+<h4 id="hackathon-localhost-management">Hackathon &amp; Localhost Management</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1345">#1345</a> <strong>Hackathon Participant Counts</strong>
+  Added team and participant count display on hackathon index pages.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1358">#1358</a> <strong>Hackathon Dashboard Layout Fix</strong>
+  Fixed layout issues in hackathon dashboard pages for better UX.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1360">#1360</a> <strong>Localhost Attendees with SearchListView</strong>
+  Hackathon localhost attendee acceptance now uses SearchListView component with team-based grouping for better organisation.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1361">#1361</a> <strong>Edit Localhost Page</strong>
+  Added dedicated page to edit localhost hackathon data with proper validation ensuring only organisers can access.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1365">#1365</a> <strong>Localhost Layout as Parent</strong>
+  Localhost hackathon pages now use consistent parent layout for better navigation.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1366">#1366</a> <strong>Localhost Email Group Integration</strong>
+  Accepted hackathon participants are automatically added to localhost email groups for communications.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1368">#1368</a>, <a href="https://github.com/fossunited/fossunited/pull/1369">#1369</a> <strong>Common Mailing Component</strong>
+  Refactored mailing functionality into reusable component. Added mailing feature for localhost hackathons.</p>
+</li>
+<li>
+<p><a href="4c0698163efa228cc4a568e2b6a5146fbfc47034">commit 4c0698163efa228cc4a568e2b6a5146fbfc47034</a>: Redesigned hackathon project page in v3 style.</p>
+</li>
+</ul>
+<h4 id="event-check-ins-rsvp-improvements">Event Check-ins &amp; RSVP Improvements</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1359">#1359</a> <strong>RSVP Insights Error Messages &amp; Docs</strong>
+  Added error message display and documentation info component to help organisers troubleshoot issues.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1374">#1374</a> <strong>Waiting List Info</strong>
+  Events page now shows waiting list information. Attending counts only show accepted RSVPs.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1392">#1392</a> <strong>Ticket Check-ins SearchListView</strong>
+  Ticket check-in dashboard now uses SearchListView for faster searching and better performance.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1393">#1393</a> <strong>Ticket Check-in Insights by Event Days</strong>
+  Ticket check-in insights now show data grouped by event days, similar to RSVP check-ins.</p>
+</li>
+<li>
+<p><a href="8a9a7424c711c7fba7f2e47d78be46e53e778b5c">commit 8a9a74</a>: RSVP page now shows "RSVP Closed" message if form is unpublished and removed RSVP button to avoid 404 page.</p>
+</li>
+<li>Added docs link to event RSVP pages for user guidance.</li>
+<li>Schedule page now defaults to current day's date for better UX.</li>
+</ul>
+<h4 id="event-management">Event Management</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1342">#1342</a> <strong>Edit Event Button for Concluded Events</strong>
+  Added "Edit Event" button visible to organisers even for concluded events. Uses proper permission checks via <code>check_if_chapter_or_event_core_member</code>.
+  Credits: <a href="https://github.com/Pranav1921">@Pranav1921</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1382">#1382</a> <strong>Event Publishing Toggle</strong>
+  Dashboard now has toggle button to publish/unpublish events directly from event details page.
+  This has been added akin to <a href="https://github.com/fossunited/fossunited/issues/1364">#1364</a> to allow deleting event.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1354">#1354</a> <strong>Sponsor Sorting Enhancement</strong>
+  Event sponsors now sorted with Industry Partners (patrons) appearing first, then by date of confirmation within each tier, or alphabetically.</p>
+</li>
+<li>
+<p>MyChapters component now ignores events without end dates to prevent display issues.</p>
+</li>
+<li>MyChapters now uses API function to show events for better data consistency.</li>
+</ul>
+<h4 id="dashboard-ui-components">Dashboard UI Components</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1370">#1370</a> <strong>Common Save Action Bar</strong>
+  Multiple dashboard pages now use unified sticky save action bar at bottom for consistent UX across:</li>
+<li>Event details editing</li>
+<li>Chapter details</li>
+<li>RSVP forms</li>
+<li>
+<p>Hackathon configuration</p>
+</li>
+<li>
+<p>SearchListView component enhancements:</p>
+</li>
+<li>Added support for preferred export columns for CSV download.</li>
+<li>Used across ticket insights, free coupons, RSVP insights, and check-ins.</li>
+<li>Improved performance and code reusability.</li>
+</ul>
+<h4 id="payment-tickets">Payment &amp; Tickets</h4>
+<ul>
+<li>Razorpay payment capture now includes event name and ID in description for easier filtering in razorpay dashboard.</li>
+</ul>
+<h4 id="user-profiles">User Profiles</h4>
+<ul>
+<li><strong>OpenGraph Support for FOSS Profiles</strong>
+  Added meta_block for user profiles to generate OG images for better social media sharing.</li>
+</ul>
+<h4 id="templates-macros">Templates &amp; Macros</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1362">#1362</a> <strong>Common V3 Navbar &amp; Theme Toggle</strong>
+  Introduced reusable <code>v3_navbar</code> macro with theme toggle for consistent navigation across redesigned pages.</li>
+<li>Breadcrumb macro now builds crumbs automatically if not passed (useful for simplified paths)</li>
+<li>Applied across grants, events, volunteers, and other v3 pages</li>
+</ul>
+<h4 id="documentation">Documentation</h4>
+<ul>
+<li>Added <a href="https://docs.fossunited.org/fosshack/">FOSS Hackathon information</a> to docs.</li>
+<li>Updated docs with event check-in system information for RSVP insights dashboard.</li>
+<li>Added screenshots for check-in insights workflow.</li>
+<li>Dashboard pages now include DocsInfo component with help links.</li>
+</ul>
+<h4 id="performance">Performance</h4>
+<ul>
+<li>Lazy loading implemented for event timeline banner images.</li>
+<li>Event cards now use lazy loading for better initial page load.</li>
+<li>Reduced unnecessary API calls via refactored functions.</li>
+</ul>
+<hr>
+<h3 id="new-contributor-spotlight">New Contributor Spotlight</h3>
+<ul>
+<li><a href="https://github.com/Pranav1921">@Pranav1921</a> made their first contribution:</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1342">#1342</a>: Added edit event button for concluded events with proper permission checks</li>
+</ul>
+<hr>
+<h2 id="december-2025">December 2025</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>10</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>37</td>
+</tr>
+</tbody>
+</table>
+<p>Hi everyone,</p>
+<p>December was a quieter but productive month as we wrapped up the year amidst holidays and year-end slowdowns. This month focus has been early groundwork for upcoming <strong>FOSS Hack 2026</strong>, ensuring the platform enters the New Year in a more stable and maintainable state.</p>
+<hr>
+<h3 id="pr-highlights_1">PR Highlights</h3>
+<h4 id="new-page-announcement">New Page &amp; Announcement</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1337">#1337</a> <strong>FOSS Hack 2026 page</strong>
+  Introduced the initial FOSS Hack 2026 landing page directly in the codebase.</li>
+<li>Designed to be fully open for community contributions
+  Visit: https://fossunited.org/fosshack/2026</li>
+</ul>
+<h4 id="tickets">Tickets</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1300">#1300</a> Redirect /tickets to buy-ticket page or RSVP page.
+  In fossunited platform typical event page link is in the format of <code>https://fossunited.org/chapter/event</code></li>
+<li>
+<p>Now, <code>https://fossunited.org/chapter/event/tickets</code> -&gt; redirects to buy-ticket page if its an paid event or else send you to rsvp page. /rsvp, /cfp and /schedule works over the permalink.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1301">#1301</a> Apply custom field to each attendee in buying ticket
+  Previously we had custom field applied to all attendees ticket, but these custom field data can act as survey to collect preferred choice. Given a switch toggle this can apply to all or each ticket.</p>
+</li>
+</ul>
+<!-- - [#1307](https://github.com/fossunited/fossunited/pull/1307) Grab your tickets page -->
+<!--   A dedicated page to download tickets for an event. Input by ticket ID or email. Coupon ID (organisation) can also be provided to download all tickets claimed from it in single PDF. -->
+<!--   Refer: https://fossunited.org/get-tickets -->
+
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1310">#1310</a> Ticket insights with Custom fields
+  Ticket insights in dashboard will now also show custom fields data. Now ListView is grouped based on tier and whole data can be downloaded as CSV.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1319">#1319</a> Searchable ticket insights list
+  Ticket insights dashboard now uses the shared searchable ListView component.</p>
+</li>
+<li>Faster filtering for large events</li>
+<li>
+<p>Cleaner UI and reduced redundant code</p>
+</li>
+<li>
+<p>API refactor simplified ticket insight data retrieval using query builder for better maintainability.
+  refer: https://frappe.io/blog/engineering/evolving-frappes-orm-for-security-and-flexibility</p>
+</li>
+</ul>
+<h4 id="events">Events</h4>
+<ul>
+<li>Added missing projects showcase and community partner cards just like sponsor cards.</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1304">#1304</a> Hide markdown format comments in description
+  Using <code>&lt;!-- Some text --&gt;</code> will now be hidden via CSS rule in event description.
+  Note: It still might appear in page SEO (meta).</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1304">#1304</a> Show OSM preview for event map link
+  Show map preview for the <code>map_link</code> provided. Works with gmaps (maps.app.goo.gl) and OSM links.
+  We use <a href="https://leafletjs.com/">Leaflet via CDN</a> to show the preview image.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1321">#1321</a> Event map preview improvements
+  Introduced <code>map_coordinate</code> field for events.</p>
+</li>
+<li>Cleaner handling of empty or invalid map links</li>
+<li>Enables consistent preview rendering without repeated parsing</li>
+</ul>
+<h4 id="rsvp">RSVP</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1302">#1302</a> Refactor getting RSVP data
+  Was kinda over-complicated before, now made simplified to just work as intended.</li>
+</ul>
+<h4 id="rsvp-insights">RSVP Insights</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1327">#1327</a> Simplified RSVP insights API
+  Refactored RSVP insights backend to use a flat, deterministic data structure.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1328">#1328</a> Searchable RSVP insights with CSV export
+  Reused the generic <code>searchListView</code> component to:</p>
+</li>
+<li>Client-side search RSVP responses</li>
+<li>
+<p>Export filtered data directly as CSV</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1343">#1343</a> Event check-in via attendee list view
+  Organisers can now <strong>manually check-in attendees</strong> directly from the RSVP insights dashboard.</p>
+</li>
+<li>Useful for bulk or assisted check-ins</li>
+<li>Complements self check-in flow without backend changes</li>
+<li>Includes undo option for same-day check-ins</li>
+</ul>
+<h4 id="cfp-reviews">CFP &amp; Reviews</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1309">#1309</a> Notify Chapter members if an approved proposal has been withdrawn
+  A nudge email is sent to notify if only an approved proposal was withdrawn by the proposers.
+  Note: Email is only sent to chapter members, proposer is not involved.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1312">#1312</a> Proposal review notifications
+  Introduced email notifications when a proposal receives a <strong>new review or updated remarks</strong>.</p>
+</li>
+<li>
+<p>Notifies proposers and CCs speaker emails
+  Credits: Aryak for previous work (#982)</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1339">#1339</a> Increase reference link length for CFP submissions
+  Long reference links (Google Docs, slides, blogs) are now fully supported.</p>
+</li>
+<li>
+<p>Increased limit to 250 characters</p>
+</li>
+<li>
+<p>Desk improvement: CFP submissions without session categories can now be edited via desk UI</p>
+</li>
+</ul>
+<h4 id="grants">Grants</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1344">#1344</a> Optimised Grants Directory manifest updates
+  Reduced server load by updating grant manifests only when changes are detected.</li>
+<li>Removed scheduler dependency</li>
+<li>Uses lightweight triggers on page visit</li>
+<li>
+<p>Clear distinction between <code>last_updated</code> and actual manifest changes</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1340">#1340</a> Complete redesign of Suite of Grants pages</p>
+</li>
+<li>New Grants page design with more structural and uniform design</li>
+</ul>
+<h4 id="performance-ui-components">Performance &amp; UI Components</h4>
+<ul>
+<li>Searchable ListView optimisations:</li>
+<li>Added debounced search</li>
+<li>
+<p>Cached rows using <code>WeakMap</code> for faster filtering on large datasets (&gt;2000 rows)</p>
+</li>
+<li>
+<p>Multi-select component now handles empty data gracefully and improves required-field error visibility.</p>
+</li>
+</ul>
+<h4 id="accessibility">Accessibility</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1308">#1308</a>: Improved keyboard navigation and ARIA labelling across:</li>
+<li>Proposal lists</li>
+<li>Dashboard sidebar navigation</li>
+<li>
+<p>My Proposals page
+  Credits: @grittyuffy (Keerthana)</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1306">#1306</a>: Added missing <code>alt</code> text to images across dashboard and main site, improving screen reader support.
+  Credits: @ig-imanish (Manish Kumar)</p>
+</li>
+</ul>
+<h3 id="new-contributor-spotlight_1">New Contributor Spotlight</h3>
+<ul>
+<li><a href="https://github.com/RuchikaByte">@RuchikaByte</a> made their first contribution:</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1275">#1275</a>: docs: add information on event mailing functionality</p>
+</li>
+<li>
+<p><a href="https://github.com/grittypuffy">@grittypuffy</a> made their first contribution:</p>
+</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1308">#1308</a>: a11y: Improve keyboard navigation for proposals in dashboard and sidebar navigation</li>
+<li>
+<p>Continued accessibility improvements across dashboard and proposal flows.</p>
+</li>
+<li>
+<p><a href="https://github.com/Praneel7015">@Praneel7015</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1314">#1314</a>: Added speaker support and online event options for chapter events</p>
+</li>
+<li>
+<p><a href="https://github.com/ig-imanish">@ig-imanish</a> made their first contribution:</p>
+</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1306">#1306</a>: Improve accessibility: Add missing alt text to all images across dashboard and main site</li>
+</ul>
+<h2 id="november-2025">November 2025</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>19</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>40</td>
+</tr>
+</tbody>
+</table>
+<p>Hi everyone,</p>
+<p>November brought some major additions to the platform! We've introduced a <strong>Grants Funding Directory</strong> inspired by floss.fund, implemented <strong>RSVP Check-ins</strong> for better event management, and launched <strong>Host Approval workflow</strong> for RSVPs. The new <strong>Events Page redesign</strong> with v3.0 design is now live, alongside the <a href="https://fossunited.org/first-commit"><strong>First Commit</strong></a> initiative page. We've also added comprehensive <strong>Free Ticket management</strong> for organisers.</p>
+<hr>
+<h3 id="pr-highlights_2">PR Highlights</h3>
+<h4 id="events-page-redesign-first-commit">Events Page Redesign &amp; First Commit</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1265">#1265</a> <strong>Events Page Redesign</strong>
+  Complete redesign of events page with v3.0 design language, dark mode support, and better visual hierarchy. Features improved event cards, sponsor display, speaker sections, and social links.
+  Note: From now on event banner will be in aspect ratio of 1:1 only. Suggested resolution is 280×280px</li>
+</ul>
+<p>Eg: https://fossunited.org/c/mumbai/minidebconf2025</p>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1271">#1271</a> <strong>First Commit Page</strong>
+  Added dedicated page for First Commit initiative.
+  https://fossunited.org/first-commit</li>
+</ul>
+<p>Credits: <a href="https://github.com/jeswinjosu">@jeswinjosu</a></p>
+<h4 id="grants-funding-directory">Grants Funding Directory</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1283">#1283</a> <strong>Grants Funding Directory</strong>
+  Introduced funding directory inspired by floss.fund using <code>funding.json</code> manifest schema. Projects can submit their funding information via JSON schema validation.
+  <a href="https://fossunited.org/grants/directory">Explore Grants Directory</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1284">#1284</a> <strong>Grants JSON Schema Validation</strong>
+  Added unit tests to ensure robust validation of funding.json against the schema using <code>floss.fund/api/validate</code> endpoint.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1294">#1294</a> <strong>Grants Thesis Page</strong>
+  Added grants thesis template page with v3 design for detailed project information.</p>
+</li>
+</ul>
+<h4 id="rsvp-self-check-in-system">RSVP Self Check-in System</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1286">#1286</a> <strong>RSVP Check-in doctype</strong>
+  Added check-in table to RSVP submissions allowing attendees to check-in during event timeline.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1287">#1287</a> <strong>Self Check-in Frontend</strong>
+  Attendees can now check-in via their RSVP edit page during event hours. Shows "Checked for today" status after check-in. Includes automatic handling of custom questions added after initial RSVP.
+  <a href="https://docs.fossunited.org/attend-event/">Documentation</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1288">#1288</a> <strong>Check-in Insights Dashboard</strong>
+  Event organisers can view check-in data grouped by dates in a dedicated insights page with download functionality.</p>
+</li>
+</ul>
+<h4 id="rsvp-host-approval">RSVP Host Approval</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1282">#1282</a> <strong>Host Approval Workflow</strong>
+  Added host-requires-approval feature for RSVP forms. Organisers can approve or reject RSVPs directly from insights page with email notifications. Includes confirmation dialog for rejections.
+  Related issue: <a href="https://github.com/fossunited/fossunited/issues/676">#676</a></li>
+</ul>
+<h4 id="free-ticket-management">Free Ticket Management</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1259">#1259</a> <strong>Free Ticket doctype</strong>
+  Imported free ticket code and application doctype from desk into codebase. Includes validation, count tracking, and server-side checks for coupon redemption. Added comprehensive unit tests.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1260">#1260</a> <strong>Free Ticket Dashboard</strong>
+  Event organisers can now manage free ticket codes directly from dashboard. Create, edit, delete, and view coupon IDs for distribution to organisations.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1261">#1261</a> <strong>Permission Controls</strong>
+  Only chapter team members can modify their event's free ticket codes, preventing cross-injection attacks.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1262">#1262</a> <strong>Auto-set Event</strong>
+  Free ticket form now automatically sets event based on coupon code, making it generic for all events.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1258">#1258</a> <strong>Free Pass Insights</strong>
+  Ticket insights now show free pass holders in attendee list and counts.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1257">#1257</a> <strong>Ticket Transparency</strong>
+  Buy ticket page now shows disabled and expired tickets for transparency. Added proper validity checks for date and count.
+  Closes: <a href="https://github.com/fossunited/fossunited/issues/1183">#1183</a></p>
+</li>
+</ul>
+<h4 id="cfp-schedule-enhancements">CFP &amp; Schedule Enhancements</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1268">#1268</a> <strong>Talk Licensing</strong>
+  Added license field to CFP submissions with acknowledgment checkbox. Proposers can specify talk licenses upfront.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1266">#1266</a> <strong>Talk Video Links</strong>
+  Added <code>talk_video</code> field to link recorded talks in schedule and CFP pages. Shows video links for past sessions and "Add to calendar" only for upcoming sessions. This video link will be shown in schedule page as well as in CFP linked page.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1270">#1270</a> <strong>CSV Download for Proposals</strong>
+  Reviewers and organisers can now download all proposals in CSV format for analysis. Includes custom answers if marked public.
+  <a href="https://github.com/fossunited/fossunited/pull/1274">#1274</a> Moved CSV generation to frontend to reduce backend load, properly escaping content to avoid CSV injection.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1269">#1269</a> <strong>Schedule Management Filters</strong>
+  Enhanced event schedule modification page with better filtering options to reduce cognitive load (especially useful for large events like IndiaFOSS).</p>
+</li>
+</ul>
+<h4 id="uiux-improvements">UI/UX Improvements</h4>
+<ul>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1281">#1281</a> <strong>Web Accessibility</strong>
+  Improved accessibility with proper ARIA labels for events page and render fields. Replaced div with nav for breadcrumb items.
+  Partially addresses: <a href="https://github.com/fossunited/fossunited/issues/788">#788</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1293">#1293</a> <strong>Mobile Responsiveness</strong>
+  Adjusted mobile adaptiveness for grants directory, RSVP insights, drawer components, and comment box icons.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1292">#1292</a> <strong>Events Grid CSS</strong>
+  Fixed events card grid to display uniformly without breaking.
+  Thanks to Nihal for reporting in telegram.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1280">#1280</a> <strong>Comment Review Retention</strong>
+  Review comments are now retained locally even after page reload using localStorage.
+  Closes: <a href="https://github.com/fossunited/fossunited/issues/968">#968</a></p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1276">#1276</a> <strong>Email Drawer UX</strong>
+  Fixed opacity issues and improved UX for email dialog and scheduling components.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1273">#1273</a> <strong>Text Wrapping</strong>
+  Fixed word-wrap for long links and text content. Added livestream link to event about section.</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1272">#1272</a> <strong>V3 CSS Standardization</strong>
+  Applied v3 design CSS across multiple pages. Updated event banner to 1:1 aspect ratio (280×280px).</p>
+</li>
+<li>
+<p><a href="https://github.com/fossunited/fossunited/pull/1263">#1263</a> <strong>Profile Activity Placement</strong>
+  Moved profile activity card below "about" section for better prominence. Hid work tab temporarily.</p>
+</li>
+</ul>
+<h4 id="documentation_1">Documentation</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1289">#1289</a> <strong>RSVP &amp; Event Docs</strong>
+  Added comprehensive documentation for RSVP check-ins, event schedule, and related features with screenshots.</li>
+</ul>
+<h4 id="refund-policy">Refund Policy</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/935">#935</a> <strong>Refund Policy Acceptance</strong>
+  Users must now accept refund policy before purchasing tickets.
+  Closes: <a href="https://github.com/fossunited/fossunited/issues/898">#898</a></li>
+</ul>
+<h4 id="user-profile">User Profile</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/issues/1278">#1278</a> Temporarily hid the <strong>Projects</strong>, <strong>Education</strong>, and <strong>Resume</strong> tabs on user profiles until we redesigned profile page. For now, only the <strong>About</strong> and <strong>Activity</strong> sections will be shown.</li>
+</ul>
+<hr>
+<h2 id="october-2025">October 2025</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>28</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>31</td>
+</tr>
+</tbody>
+</table>
+<p>Hey folks,</p>
+<p>It was Hack-tober month!
+We've a new <a href="https://fossunited.org/volunteers"><strong>Volunteers Page</strong></a> and with initiation of <strong>Dark Theme</strong> support was introduced to it, alongside several UI refinements and <a href="https://docs.fossunited.org">documentation</a> upgrades. Moving on next month, we will be focusing more on IndiaFOSS related issues and hey if you did not know there are many important (Big) events lined up like MangaloreFOSS, MumbaiFOSS, ChennaiFOSS and <a href="https://fossunited.org/events/timeline">more</a>.</p>
+<hr>
+<h3 id="pr-highlights_3">PR Highlights</h3>
+<h4 id="theme-ui-enhancements">Theme &amp; UI Enhancements</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1244">#1244</a> New <strong>Volunteers Page</strong>
+  Added a “Wall of Fame” for active Volunteers with filter and sorting by chapter or user's city.
+  Credits: <a href="https://github.com/jeswinjosu">@jeswinjosu</a></li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1247">#1247</a> Add dark theme support for Volunteers page
+  Introduced system-based dark/light mode toggling and persistent theme preference using local storage.
+  Note: Its currently only for Volunteers page (initiation of redesign 3.0)</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1243">#1243</a> Fix popover z-index for <code>AutoComplete</code> in EmailFormTemplate
+  Which did not show recipients popup before in events mailing page.</li>
+</ul>
+<h4 id="cfp-review-system">CFP &amp; Review System</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1246">#1246</a> Hide others reviews in CFP review tab
+  Prevents reviewer bias by showing only the user’s own reviews, reducing cross-influence while keeping public visibility unchanged.
+  Related issue: <a href="https://github.com/fossunited/fossunited/issues/1004">#1004</a></li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1239">#1239</a> Format CFP review content
+  Enabled <code>tailwindcss</code> typography for better rendering of review text within CFP details page; WYSIWYG!.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1237">#1237</a> Add CFP Status Filter
+  Added dropdown filters and clickable insight grids for CFP proposals, improving reviewer workflows.
+  for example: <a href="https://fossunited.org/dashboard/cfp/all/indiafoss/2025">IndiaFOSS 2025 CFP</a> (click on those grid cards)</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1236">#1236</a> Show CFP reviewer's review status
+  Introduced color-coded reviewer status ("Reviewed") and filtering toggles.</li>
+</ul>
+<h4 id="jobs-grants">Jobs &amp; Grants</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1227">#1227</a> Import Job Board from Desk to Codebase
+  Migrated job management from the Frappe Desk interface into the platform’s code for better version control and transparency.
+  <a href="https://fossunited.org/jobs">Explore Jobs</a></li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1234">#1234</a> Project Grants enhancements
+  Introduced logo and grant type fields to the "Project Grants" doctype, enabling categorization of fellowships and year-based grouping.
+  refer: <a href="https://fossunited.org/grants">Grants page</a></li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1240">#1240</a> Auto "Show Speaker" visibility in events page.
+  Show speakers tab only if populated and display speaker info by default for past events.</li>
+</ul>
+<h4 id="chapter-mailing-system">Chapter &amp; Mailing System</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1215">#1215</a> Chapter Mailing Page
+  Added support for chapter-level mailing and campaign tracking, mirroring event mailing capabilities with Chapter level email groups.
+  Users have choice to either "Subscribe to mailing list" or not via their RSVP forms. They can edit their preference in <a href="https://docs.fossunited.org/attend-event/">Edit RSVP</a> to update and remove.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1206">#1206</a> Email Group Subscription via RSVP
+  Added <code>subscribe to chapter mailing</code> checkboxes on RSVP and ticket forms, ensuring attendees are properly linked to event/chapter mailing groups.</li>
+</ul>
+<h4 id="event-rsvp-management">Event &amp; RSVP Management</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1213">#1213</a> RSVP toggle improvements
+  Users can now toggle RSVP/Un-RSVP directly with updated UI states to let Organiser know that they are "not attending".</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1214">#1214</a> RSVP insights grouping
+  Dashboard enhancements now group RSVP data by attendance, improving analytics for event organisers. Shows two groups "Attending" and "Not attending" (not shown by default)</li>
+</ul>
+<h4 id="documentation-developer-tools">Documentation &amp; Developer Tools</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1216">#1216</a> Major Docs overhaul
+  Merged and enhanced documentation from the frappe Wiki, now with improved navigation, Docker setup guide, search functionality, and content for volunteering, clubs, and events.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1189">#1189</a> Vale Docs Linting
+  Integrated Vale for consistent doc style and vocabulary validation.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1204">#1204</a> Simplified RSS feed
+  Cleaned up RSS feed to include only blog posts, removing newsletters for better content focus.</li>
+</ul>
+<p>Stay nerdy: https://fossunited.org/rss.xml</p>
+<h4 id="internal-improvements-dependencies">Internal Improvements &amp; Dependencies</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1230">#1230</a> Bump <code>prettier-plugin-jinja-template</code> to v2.1.0</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1233">#1233</a> Bump <code>globals</code> from 15.9.0 → 16.4.0</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1235">#1235</a> Batch dependency upgrades (<code>vite</code>, <code>esbuild</code>, <code>rollup</code>, <code>postcss</code>, etc.)</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1186">#1186</a> Yarn lock bump</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1202">#1202</a> Expose user fields in <code>get_session_user_profile</code> API</li>
+</ul>
+<hr>
+<h3 id="new-contributor-spotlight_2">New Contributor Spotlight</h3>
+<ul>
+<li><a href="https://github.com/dependabot">@dependabot[bot]</a> Yea, for Automation of package updates!</li>
+</ul>
+<hr>
+<h2 id="september-2025">September 2025</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>10</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>32</td>
+</tr>
+</tbody>
+</table>
+<p>Hi again,
+We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept. This month had most focus on Schedule page.</p>
+<hr>
+<h3 id="pr-highlights_4">PR Highlights</h3>
+<h4 id="event-management_1">Event Management</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1125">#1125</a> De-clutter the Events timeline page
+  Provided filter to choose Chapter type (City | Club | Conference) and made City filter to show only Cities
+  /events pages takes preference to show Only City and Conference, hiding FOSS Club events
+  Related issue <a href="https://github.com/fossunited/fossunited/issues/1144">#1144</a> and PR <a href="https://github.com/fossunited/fossunited/pull/1145">#1145</a></li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1128">#1128</a> Small Doc on purpose of <code>event_permalink</code>
+  Some users might confuse with the term permalink, so added some doc to give info that it means page 'route' (alias)</li>
+</ul>
+<h4 id="ticket-management">Ticket Management</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1118">#1118</a> Make ticket transfer page public
+  We noticed that not everyone who bought ticket had FossUnited account, so with added security tests, we made Ticket transfer page public to avoid exploits.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1147">#1147</a> Added QR code scanner for Ticket Check-ins
+  Implemented a QR code based quick check-in scanner to log check-in details. Both pages <code>/dashboard/event/.../quick-checkin</code> and <code>/dashboard/event/.../checkins</code> use this component to scan QR.</li>
+</ul>
+<h4 id="event-schedule">Event Schedule</h4>
+<p>Could not complete the Schedule re-design, so added some features to enhance UX.</p>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1126">#1126</a> Search by Speaker in proposal (CFP) page
+  Although it has a frappe filter to narrow, it would be convenient to just type and search by speaker name.</li>
+<li><a href="https://github.com/fossunited/fossunited/issues/1132">#1132</a> Fix Event Schedule ICS download
+  Due to some events having end <code>datetime</code> &gt; start <code>datetime</code>, the API was throwing an error.</li>
+<li><a href="https://github.com/fossunited/fossunited/issues/1158">#1158</a> Search support in Schedule page
+  Search whole Event schedule in flat List based on Talk Title, Speaker name, Designation and category. Also card shows Hall and Date as Indicator</li>
+<li><a href="https://github.com/fossunited/fossunited/issues/1151">#1151</a> Schedule Download formats
+  Schedule can be downloaded in various formats now. CSV | ICS | Orgmode | Markdown and so on.
+  Further plan is to make PDF generation in FOSS theme using <code>Typst</code></li>
+</ul>
+<hr>
+<h3 id="new-contributor-spotlight_3">New Contributor Spotlight</h3>
+<ul>
+<li><a href="https://github.com/agriyakhetarpal">@agriyakhetarpal</a> made their first contribution:</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1142">#1142</a>: Added Zulip logo for chapters
+    With merge of Zulip into svgl, we now have Zulip support into socials link for Chapter Info.</li>
+<li>
+<p>Related <a href="https://github.com/fossunited/fossunited/pull/1146">PR</a> on adding Bluesky and dev.to logo for FOSS user profile page</p>
+</li>
+<li>
+<p><a href="https://github.com/arunppsg">@arunppsg</a> made their first contribution:</p>
+</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1167">#1167</a>: Added more docs
+    Complementing to <a href="https://github.com/fossunited/fossunited/issues/1150">#1150</a>, Arun added some missing docs for events, social media and more.</li>
+</ul>
+<p><br></p>
+<h2 id="august-2025">August 2025</h2>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th>Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues Closed</td>
+<td>13</td>
+</tr>
+<tr>
+<td>PRs merged</td>
+<td>19</td>
+</tr>
+</tbody>
+</table>
+<p>Hi everyone,</p>
+<p>I'm <strong>Dilip G</strong> (also known as <em>Zororg</em> on Telegram, or with username <code>@idlip</code>), the new Developer for FOSS United. First month on board, after Harsh Tandiya as Developer.
+This is my first monthly tech report as part of the FOSS United team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.</p>
+<hr>
+<h3 id="pr-highlights_5">PR Highlights</h3>
+<h4 id="jobs-scheduling">Jobs &amp; Scheduling</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1080">#1080</a> Scheduled expiry for job posts older than 90 days
+  Implemented a background scheduler that automatically marks job listings as <em>expired</em> after 90 days.
+  🔗 Visit: <a href="https://fossunited.org/jobs">FOSS United Jobs</a></li>
+</ul>
+<h4 id="roles-permissions">Roles &amp; Permissions</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1087">#1087</a> Removed <code>Lead</code> role, consolidated under <code>Core Team Member</code>.
+  Simplified the roles for Chapters and Events. Now, <code>Core Team Member</code> has full permissions to manage events and pages.</li>
+</ul>
+<h4 id="event-management_2">Event Management</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1088">#1088</a> Fixed routing to event schedule pages
+  Resolved navigation issues schedule pages now route correctly from both the dashboard and event views.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1102">#1102</a> Auto-close RSVP and CFP forms after event ends
+  Extended the event scheduler to automatically close RSVP and Call-for-Proposal forms once the event has concluded.</li>
+</ul>
+<h4 id="blog-rss">Blog &amp; RSS</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1091">#1091</a> RSS feed fixed and enhanced
+  The blog's RSS feed is now valid and includes newsletters.
+  Thanks to <a href="https://github.com/captn3m0">@captn3m0</a> for reporting the issue: <a href="https://github.com/fossunited/fossunited/issues/1001">#1001</a></li>
+</ul>
+<h4 id="timeline-fixes">Timeline Fixes</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1094">#1094</a> Prevented crash on <code>events/timeline</code> when dates are missing
+  Fixed error where events without a start or end date would break the timeline view.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1109">#1109</a> Made event schedule page layout more compact
+  Cleaned up visual clutter on the schedule view for easier readability.</li>
+</ul>
+<h4 id="team-page-governance">Team Page &amp; Governance</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1099">#1099</a> Updated Teams page with new Governing Board members
+  Refreshed the macro logic and added profiles for the newly elected board.
+  Announcement: <a href="https://fossunited.org/blog/organisation/meet-the-first-ever-elected-community-governance-board-foss-united">Meet the first-ever elected community governance board</a></li>
+</ul>
+<h4 id="event-metadata-enhancements">Event Metadata Enhancements</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1100">#1100</a> Added City and State info for events
+  Also reordered social media links to prioritize FOSS and decentralized platforms.</li>
+</ul>
+<h4 id="frappe-desk-office-related">Frappe Desk / Office related</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1108">#1108</a> Added a scrollbar to long schedule sections
+  Improves usability when navigating long lists of proposals.</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1101">#1101</a> Introduced "Invited Talk" as a session type
+  Enables better support for data related to IndiaFOSS sessions.</li>
+</ul>
+<hr>
+<h3 id="new-contributor-spotlight_4">New Contributor Spotlight</h3>
+<ul>
+<li><a href="https://github.com/HarshPatel5940">@HarshPatel5940</a> made their first contribution:</li>
+<li><a href="https://github.com/fossunited/fossunited/pull/1010">#1010</a>: Dynamic user search in Chapter/Events member dashboard</li>
+</ul>
+<p><br></p>
+<h2 id="july-2025">July 2025</h2>
+<p>The FOSS United platform was mostly under maintenance mode during this period. This was mostly my scrutiny period with some given tasks for two weeks.</p>
+<hr>
+<h3 id="pr-highlights_6">PR Highlights</h3>
+<h4 id="setup-with-nixos">Setup with NixOS</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/issues/1068">#1068</a> Doc and guide on setting up FossUnited platform with NixOS. I plan to extend this further more.</li>
+</ul>
+<h4 id="job-management">Job Management</h4>
+<ul>
+<li><a href="https://github.com/fossunited/fossunited/pull/1077">#1077</a> Added date of posting for each job card and closing for expired ones</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"></path></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer">
+        
+          
+          <a href="../architecture/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Architecture Overview">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"></path></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Architecture Overview
+              </div>
+            </div>
+          </a>
+        
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright © 2021 - 2025 FOSS United Foundation
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://forum.fossunited.org/" target="_blank" rel="noopener" title="forum.fossunited.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M225.9 32C103.3 32 0 130.5 0 252.1 0 256 .1 480 .1 480l225.8-.2c122.7 0 222.1-102.3 222.1-223.9S348.6 32 225.9 32M224 384c-19.4 0-37.9-4.3-54.4-12.1L88.5 392l22.9-75c-9.8-18.1-15.4-38.9-15.4-61 0-70.7 57.3-128 128-128s128 57.3 128 128-57.3 128-128 128"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://t.me/fossunited" target="_blank" rel="noopener" title="t.me" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M256 8a248 248 0 1 0 0 496 248 248 0 1 0 0-496m115 168.7c-3.7 39.2-19.9 134.4-28.1 178.3-3.5 18.6-10.3 24.8-16.9 25.4-14.4 1.3-25.3-9.5-39.3-18.7-21.8-14.3-34.2-23.2-55.3-37.2-24.5-16.1-8.6-25 5.3-39.5 3.7-3.8 67.1-61.5 68.3-66.7.2-.7.3-3.1-1.2-4.4s-3.6-.8-5.1-.5c-2.2.5-37.1 23.5-104.6 69.1-9.9 6.8-18.9 10.1-26.9 9.9-8.9-.2-25.9-5-38.6-9.1-15.5-5-27.9-7.7-26.8-16.3.6-4.5 6.7-9 18.4-13.7 72.3-31.5 120.5-52.3 144.6-62.3 68.9-28.6 83.2-33.6 92.5-33.8 2.1 0 6.6.5 9.6 2.9 2 1.7 3.2 4.1 3.5 6.7.5 3.2.6 6.5.4 9.8z"></path></svg>
+    </a>
+  
+    
+    
+      
+    
+    
+    
+      
+      
+    
+    <a href="https://mas.to/@fossunited" target="_blank" rel="noopener me" title="mas.to" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M433 179.1c0-97.2-63.7-125.7-63.7-125.7-62.5-28.7-228.6-28.4-290.5 0 0 0-63.7 28.5-63.7 125.7 0 115.7-6.6 259.4 105.6 289.1 40.5 10.7 75.3 13 103.3 11.4 50.8-2.8 79.3-18.1 79.3-18.1l-1.7-36.9s-36.3 11.4-77.1 10.1c-40.4-1.4-83-4.4-89.6-54-.6-4.6-.9-9.3-.9-13.9 85.6 20.9 158.7 9.1 178.7 6.7 56.1-6.7 105-41.3 111.2-72.9 9.8-49.8 9-121.5 9-121.5zm-75.1 125.2h-46.6V190.1c0-49.7-64-51.6-64 6.9v62.5H201V197c0-58.5-64-56.6-64-6.9v114.2H90.3c0-122.1-5.2-147.9 18.4-175 25.9-28.9 79.8-30.8 103.8 6.1l11.6 19.5 11.6-19.5c24.1-37.1 78.1-34.8 103.8-6.1 23.7 27.3 18.4 53 18.4 175"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://bsky.app/profile/fossunited.mas.to.ap.brid.gy" target="_blank" rel="noopener" title="bsky.app" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M407.8 294.7c-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3M288 227.1c-26.1-50.7-97.1-145.2-163.1-191.8C61.6-9.4 37.5-1.7 21.6 5.5 3.3 13.8 0 41.9 0 58.4S9.1 194 15 213.9c19.5 65.7 89.1 87.9 153.2 80.7 3.3-.5 6.6-.9 10-1.4-3.3.5-6.6 1-10 1.4-93.9 14-177.3 48.2-67.9 169.9C220.6 589.1 265.1 437.8 288 361.1c22.9 76.7 49.2 222.5 185.6 103.4 102.4-103.4 28.1-156-65.8-169.9-3.3-.4-6.7-.8-10-1.3 3.4.4 6.7.9 10 1.3 64.1 7.1 133.6-15.1 153.2-80.7C566.9 194 576 75 576 58.4s-3.3-44.7-21.6-52.9c-15.8-7.1-40-14.9-103.2 29.8C385.1 81.9 314.1 176.4 288 227.1"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="http://x.com/fossunited" target="_blank" rel="noopener" title="x.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M459.4 151.7c.3 4.5.3 9.1.3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53C87.4 130.8 165 172.4 252.1 176.9c-1.6-7.8-2.6-15.9-2.6-24C249.5 95.1 296.3 48 354.4 48c30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/c/fossunited" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M549.7 124.1c-6.2-23.7-24.8-42.3-48.3-48.6C458.9 64 288.1 64 288.1 64S117.3 64 74.7 75.5c-23.5 6.3-42 24.9-48.3 48.6C15 167 15 256.4 15 256.4s0 89.4 11.4 132.3c6.3 23.6 24.8 41.5 48.3 47.8C117.3 448 288.1 448 288.1 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zM232.2 337.6V175.2l142.7 81.2z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://in.linkedin.com/company/fossunited" target="_blank" rel="noopener" title="in.linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://instagram.com/fossunited" target="_blank" rel="noopener" title="instagram.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M224.3 141a115 115 0 1 0-.6 230 115 115 0 1 0 .6-230m-.6 40.4a74.6 74.6 0 1 1 .6 149.2 74.6 74.6 0 1 1-.6-149.2m93.4-45.1a26.8 26.8 0 1 1 53.6 0 26.8 26.8 0 1 1-53.6 0m129.7 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8M399 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://reddit.com/r/fossunited" target="_blank" rel="noopener" title="reddit.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M0 256C0 114.6 114.6 0 256 0s256 114.6 256 256-114.6 256-256 256H37.1c-13.7 0-20.5-16.5-10.9-26.2L75 437C28.7 390.7 0 326.7 0 256m349.6-102.4c23.6 0 42.7-19.1 42.7-42.7s-19.1-42.7-42.7-42.7c-20.6 0-37.8 14.6-41.8 34-34.5 3.7-61.4 33-61.4 68.4v.2c-37.5 1.6-71.8 12.3-99 29.1-10.1-7.8-22.8-12.5-36.5-12.5-33 0-59.8 26.8-59.8 59.8 0 24 14.1 44.6 34.4 54.1 2 69.4 77.6 125.2 170.6 125.2s168.7-55.9 170.6-125.3c20.2-9.6 34.1-30.2 34.1-54 0-33-26.8-59.8-59.8-59.8-13.7 0-26.3 4.6-36.4 12.4-27.4-17-62.1-27.7-100-29.1v-.2c0-25.4 18.9-46.5 43.4-49.9 4.4 18.8 21.3 32.8 41.5 32.8zm-172.5 93.3c16.7 0 29.5 17.6 28.5 39.3s-13.5 29.6-30.3 29.6-31.4-8.8-30.4-30.5S160.3 247 177 247zm190.1 38.3c1 21.7-13.7 30.5-30.4 30.5s-29.3-7.9-30.3-29.6 11.8-39.3 28.5-39.3 31.2 16.6 32.1 38.3zm-48.1 56.7c-10.3 24.6-34.6 41.9-63 41.9s-52.7-17.3-63-41.9c-1.2-2.9.8-6.2 3.9-6.5 18.4-1.9 38.3-2.9 59.1-2.9s40.7 1 59.1 2.9c3.1.3 5.1 3.6 3.9 6.5"></path></svg>
+    </a>
+  
+    
+    
+    
+    
+    <a href="mailto:developers@fossunited.org" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M48 64C21.5 64 0 85.5 0 112c0 15.1 7.1 29.3 19.2 38.4l208 156a48 48 0 0 0 57.6 0l208-156c12.1-9.1 19.2-23.3 19.2-38.4 0-26.5-21.5-48-48-48zM0 196v188c0 35.3 28.7 64 64 64h384c35.3 0 64-28.7 64-64V196L313.6 344.8c-34.1 25.6-81.1 25.6-115.2 0z"></path></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.top", "search.suggest", "search.highlight", "content.tabs.link", "content.code.annotation", "content.code.copy", "content.diagram", "navigation.footer"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  
+<script id="init-glightbox">const lightbox = GLightbox({"touchNavigation": true, "loop": false, "zoomable": true, "draggable": true, "openEffect": "zoom", "closeEffect": "zoom", "slideEffect": "slide"});
+document$.subscribe(()=>{ lightbox.reload(); });
+</script></body></html>
