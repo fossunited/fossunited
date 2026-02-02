@@ -50,9 +50,14 @@
           <div class="card h-100">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title">{{ job.job_title }}</h5>
-              <small class="text-muted">Posted on {{ job.creation.strftime("%B %d, %Y") }}</small>
-              <small class="text-muted d-block">Closed on {{ job.modified.strftime("%B %d, %Y") }}</small>
-
+              {% set posted_on = job.publish_date or job.creation %}
+              {% set closed_on = frappe.utils.add_days(posted_on, 90) %}
+              <small class="text-muted">
+                Posted on {{ frappe.utils.format_date(posted_on, "MMMM dd, yyyy") }}
+              </small>
+              <small class="text-muted d-block">
+                Closed on {{ frappe.utils.format_date(closed_on, "MMMM dd, yyyy") }}
+              </small>
               <div class="d-flex align-items-center mb-1 mt-2">
                 <i class="ti ti-building mr-2"></i>
                 <a href="{{ job.company_website }}" target="_blank">{{ job.company_name }}</a>

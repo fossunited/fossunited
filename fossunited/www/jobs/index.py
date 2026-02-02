@@ -1,11 +1,17 @@
 import frappe
 
+from fossunited.doctype_ids import (
+    JOB,
+    JOB_STATUS_APPROVED,
+    JOB_STATUS_EXPIRED,
+)
+
 
 def get_context(context):
     context.no_cache = 1
     context.active_jobs = frappe.get_all(
-        "Job Board",
-        filters={"status": "Approved", "is_published": 1},
+        JOB,
+        filters={"status": JOB_STATUS_APPROVED, "is_published": 1},
         fields=[
             "name",
             "job_title",
@@ -18,8 +24,8 @@ def get_context(context):
         order_by="creation desc",
     )
     context.expired_jobs = frappe.get_all(
-        "Job Board",
-        filters={"status": "Expired", "is_published": 1},
+        JOB,
+        filters={"status": JOB_STATUS_EXPIRED, "is_published": 1},
         fields=[
             "name",
             "job_title",

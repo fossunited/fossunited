@@ -25,12 +25,13 @@
     <!-- Job Dates -->
     <div class="mb-4">
       <small class="text-muted">
-        Posted on {{ frappe.utils.format_date(doc.creation, "MMMM dd, yyyy") }}
+        Posted on {{ frappe.utils.format_date(posted_on, "MMMM dd, yyyy") }}
+
         {% if doc.status == 'Expired' %}
           |
-          <span class="text-danger"
-            >Closed on {{ frappe.utils.format_date(doc.modified, "MMMM dd, yyyy") }}</span
-          >
+          <span class="text-danger">
+            Closed on {{ frappe.utils.format_date(closed_on, "MMMM dd, yyyy") }}
+          </span>
         {% endif %}
       </small>
     </div>
@@ -74,9 +75,12 @@
   </div>
 
   <style>
-    h1, h2, h3, h4, h5 {
-        font-size: 1.3em;
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+      font-size: 1.3em;
     }
   </style>
-
 {% endblock %}
