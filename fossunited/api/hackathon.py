@@ -44,7 +44,8 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
     return frappe.get_doc(HACKATHON, {"permalink": permalink})
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
+@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_participant(hackathon, participant):
     """
     This method is used to create a participant for a hackathon.
@@ -56,21 +57,41 @@ def create_participant(hackathon, participant):
     return:
         dict: participant doc object
     """
+    current_user = frappe.session.user
+    if current_user == "Guest":
+        frappe.throw("Authentication required", frappe.PermissionError)
+
+    hackathon_name = hackathon.get("data", {}).get("name")
+    if not hackathon_name:
+        frappe.throw("Invalid hackathon")
+
+    if frappe.db.exists(
+        HACKATHON_PARTICIPANT, {"hackathon": hackathon_name, "user": current_user}
+    ):
+        frappe.throw("You have already registered for this hackathon")
+
+    user_profile_data = frappe.db.get_value(
+        USER_PROFILE,
+        {"user": current_user},
+        ["name", "full_name"],
+        as_dict=True,
+    )
 
     participant_doc = frappe.get_doc(
         {
             "doctype": HACKATHON_PARTICIPANT,
-            "hackathon": hackathon.get("data").get("name"),
-            "user": participant.get("user"),
-            "user_profile": participant.get("user_profile"),
-            "full_name": participant.get("full_name"),
-            "email": participant.get("email"),
-            "is_student": participant.get("is_student"),
-            "organization": participant.get("organization"),
-            "git_profile": participant.get("git_profile"),
-            "wants_to_attend_locally": participant.get("wants_to_attend_locally"),
-            "localhost": participant.get("localhost"),
-            "subscribe_chapter_mailing": participant.get("subscribe_chapter_mailing"),
+            "hackathon": hackathon_name,
+            "user": current_user,
+            "user_profile": user_profile_data.get("name") if user_profile_data else "",
+            "full_name": participant.get("full_name")
+            or (user_profile_data.get("full_name") if user_profile_data else ""),
+            "email": current_user,
+            "is_student": participant.get("is_student", 0),
+            "organization": participant.get("organization", ""),
+            "git_profile": participant.get("git_profile", ""),
+            "wants_to_attend_locally": participant.get("wants_to_attend_locally", 0),
+            "localhost": participant.get("localhost", ""),
+            "subscribe_chapter_mailing": participant.get("subscribe_chapter_mailing", 0),
         }
     )
     participant_doc.insert(ignore_permissions=True)
