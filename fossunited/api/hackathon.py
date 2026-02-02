@@ -82,9 +82,8 @@ def create_participant(hackathon, participant):
             "doctype": HACKATHON_PARTICIPANT,
             "hackathon": hackathon_name,
             "user": current_user,
-            "user_profile": user_profile_data.get("name") if user_profile_data else "",
-            "full_name": participant.get("full_name")
-            or (user_profile_data.get("full_name") if user_profile_data else ""),
+            "user_profile": user_profile_data.get("name"),
+            "full_name": participant.get("full_name") or (user_profile_data.get("full_name")),
             "email": current_user,
             "is_student": participant.get("is_student", 0),
             "organization": participant.get("organization", ""),
