@@ -114,7 +114,7 @@ def generate_ics(event_ids):
             frappe.throw("event_ids must be a list", frappe.ValidationError)
 
         if len(ids) > 30:
-            frappe.throw("Maximum 20 events allowed per request", frappe.ValidationError)
+            frappe.throw("Maximum 30 events allowed per request", frappe.ValidationError)
 
         for event_id in ids:
             if not isinstance(event_id, str) or len(event_id) > 140:

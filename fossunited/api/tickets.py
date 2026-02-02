@@ -107,8 +107,8 @@ def change_transfer_status(transfer_id: str, status: str):
             frappe.PermissionError,
         )
 
-    if status not in ["Approved", "Rejected"]:
-        frappe.throw("Invalid status")
+    if status not in ["Completed", "Cancelled"]:
+        frappe.throw("Invalid status provided for ticket transfer")
 
     doc.status = status
     doc.save()

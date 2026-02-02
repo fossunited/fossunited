@@ -568,6 +568,9 @@
           .filter(Boolean)
 
           if (!ids.length) return alert('No events to export')
+        if (ids.length > 30) {
+          return alert('Please narrow filters to 30 events or fewer to export.')
+        }
 
           frappe.call({
             method: 'fossunited.api.chapter.generate_ics',
