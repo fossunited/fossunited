@@ -49,7 +49,7 @@ class JobBoard(WebsiteGenerator):
             if not self.publish_date:
                 self.publish_date = now_datetime()
 
-        elif self.status in ["Expired", "Rejected", "Received"]:
+        elif self.status in ["Rejected", "Received"]:
             self.is_published = 0
 
     def get_context(self, context):
