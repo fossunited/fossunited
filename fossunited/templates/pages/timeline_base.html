@@ -165,6 +165,7 @@
         {% for event in all_events %}
           <div
             class="timeline-event-wrapper"
+            data-event-id="{{ event.name }}"
             data-name="{{ event.event_name }}"
             data-location="{{ event.event_location }}"
             data-city="{{ event._chapter_city or '' }}"
@@ -561,16 +562,16 @@
 
       if (dom.downloadIcs) {
         dom.downloadIcs.onclick = () => {
-          const ids = wrappers
-            .filter(passesFilters)
-            .map((w) => w.querySelector('a')?.href.split('/').pop())
-            .filter(Boolean)
+        const ids = wrappers
+          .filter(passesFilters)
+          .map((w) => w.dataset.eventId)
+          .filter(Boolean)
 
           if (!ids.length) return alert('No events to export')
 
           frappe.call({
             method: 'fossunited.api.chapter.generate_ics',
-            args: { event_ids: ids },
+            args: { event_ids: JSON.stringify(ids) },
             callback: (r) => {
               if (!r.message) return alert('Failed to generate ICS file')
 
