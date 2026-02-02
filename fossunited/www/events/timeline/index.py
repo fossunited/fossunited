@@ -17,6 +17,7 @@ def get_context(context, page_type="upcoming"):
         context.title = "Upcoming Events - FOSS United"
         event_filters = {
             "event_end_date": [">=", now],
+            "status": "Live",
         }
         hackathon_filters = {
             "is_published": 1,
@@ -26,6 +27,7 @@ def get_context(context, page_type="upcoming"):
         context.title = "Past Events - FOSS United"
         event_filters = {
             "event_end_date": ["<", now],
+            "status": "Concluded",
         }
         hackathon_filters = {
             "is_published": 1,

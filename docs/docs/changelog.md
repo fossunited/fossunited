@@ -7,8 +7,9 @@
 📌 **Project Board**: [FOSS United GitHub Project](https://github.com/orgs/fossunited/projects/3/views/1)
 
 Please find the TLDR reports for each blog in blog posts and forum thread:
-- Blog post: https://fossunited.org/blog/tech-report
-- Forum thread: https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431
+
+- Blog post: [https://fossunited.org/blog/tech-report](https://fossunited.org/blog/tech-report)
+- Forum thread: [https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431](https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431)
 
 <br>
 
