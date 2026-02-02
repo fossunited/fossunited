@@ -1,4 +1,4 @@
-import ast
+import json
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -93,6 +93,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
+@frappe.rate_limiter.rate_limit(limit=5, seconds=60 * 60 * 6)
 def generate_ics(event_ids):
     """
     Return ICS event for the event ids provided
@@ -103,9 +104,26 @@ def generate_ics(event_ids):
     Returns:
         str: ICS data
     """
+    try:
+        if isinstance(event_ids, str) and len(event_ids) > 10000:
+            frappe.throw("Input too large", frappe.ValidationError)
+
+        ids = json.loads(event_ids) if isinstance(event_ids, str) else event_ids
+
+        if not isinstance(ids, list):
+            frappe.throw("event_ids must be a list", frappe.ValidationError)
+
+        if len(ids) > 30:
+            frappe.throw("Maximum 20 events allowed per request", frappe.ValidationError)
+
+        for event_id in ids:
+            if not isinstance(event_id, str) or len(event_id) > 140:
+                frappe.throw("Invalid event ID format", frappe.ValidationError)
+
+    except (json.JSONDecodeError, ValueError):
+        frappe.throw("Invalid JSON format", frappe.ValidationError)
 
     c = Calendar()
-    ids = ast.literal_eval(event_ids)
 
     events = frappe.db.get_all(
         EVENT,
