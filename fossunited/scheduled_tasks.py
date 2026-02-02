@@ -1,7 +1,5 @@
-from datetime import datetime, timedelta
-
 import frappe
-from frappe.utils import now_datetime
+from frappe.utils import add_days, now_datetime
 
 from fossunited.doctype_ids import (
     EVENT,
@@ -55,51 +53,47 @@ def conclude_events():
 
 def update_past_job_status():
     """
-    Updates the job status to Expired, if they are Approved (active) and
-    were last modified more than 3 months ago (90 days).
+    Expire jobs that were published more than 90 days ago.
     """
-    cutoff_date = datetime.now() - timedelta(days=90)
+    cutoff_date = add_days(now_datetime(), -90)
+
     past_active_jobs = frappe.get_all(
         JOB,
-        filters={"status": JOB_STATUS_APPROVED, "modified": ["<", cutoff_date]},
+        filters=[
+            ["status", "=", JOB_STATUS_APPROVED],
+            ["publish_date", "is", "set"],
+            ["publish_date", "<=", cutoff_date],
+        ],
         fields=["name"],
     )
 
-    for jobs in past_active_jobs:
+    for job in past_active_jobs:
         try:
-            # Get the actual document object
-            job_doc = frappe.get_doc(JOB, jobs.name)
+            job_doc = frappe.get_doc(JOB, job.name)
             job_doc.status = JOB_STATUS_EXPIRED
             job_doc.save(ignore_permissions=True)
 
-            # Send notification email after successful update
             if job_doc.email:
-                cc_email = ["foundation@fossunited.org"]
-                subject = (
-                    f"Job Posting Auto-Expiry Notice: "
-                    f"{frappe.utils.escape_html(job_doc.name)} | "
-                    f"{frappe.utils.escape_html(job_doc.job_title)}"
-                )
-
-                message = (
-                    f"<p>Dear {frappe.utils.escape_html(job_doc.company_name)},</p>"
-                    f"<p>Your job posting titled"
-                    f"<strong>{frappe.utils.escape_html(job_doc.job_title)}</strong> "
-                    f"has been up for 90 days and "
-                    f"will now be automatically marked as "
-                    f"<strong>Expired</strong>.</p>"
-                    f"<p>If you wish to keep this job open, please reply over this email.</p>"
-                    f"<p>Regards,<br>FOSS United Team</p>"
-                )
                 frappe.sendmail(
                     recipients=[job_doc.email],
-                    cc=cc_email,
-                    subject=subject,
-                    message=message,
+                    cc=["foundation@fossunited.org"],
+                    subject=(
+                        f"Job Posting Auto-Expiry Notice: "
+                        f"{frappe.utils.escape_html(job_doc.job_title)}"
+                    ),
+                    message=(
+                        f"<p>Dear {frappe.utils.escape_html(job_doc.company_name)},</p>"
+                        f"<p>Your job posting "
+                        f"<strong>{frappe.utils.escape_html(job_doc.job_title)}</strong> "
+                        f"has been live for 90 days and is now marked "
+                        f"<strong>Expired</strong>.</p>"
+                        f"<p>If you wish to keep it open, please reply to this email.</p>"
+                        f"<p>Regards,<br>FOSS United Team</p>"
+                    ),
                 )
-        except Exception as e:
+
+        except Exception:
             frappe.log_error(
                 frappe.get_traceback(),
-                f"Error updating job status - ID:{job_doc.name}\nError:{str(e)}",
+                f"Error updating job status - ID:{job.name}",
             )
-            continue
