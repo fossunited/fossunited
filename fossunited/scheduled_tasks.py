@@ -76,7 +76,7 @@ def update_past_job_status():
             if job_doc.email:
                 frappe.sendmail(
                     recipients=[job_doc.email],
-                    cc=["foundation@fossunited.org"],
+                    cc=["team@fossunited.org"],
                     subject=(
                         f"Job Posting Auto-Expiry Notice: "
                         f"{frappe.utils.escape_html(job_doc.job_title)}"
