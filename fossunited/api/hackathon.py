@@ -219,6 +219,25 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     Returns:
         dict: Project document as a dictionary
     """
+    team_doc = frappe.get_doc(HACKATHON_TEAM, team)
+    
+    is_member = False
+    user_email = frappe.session.user
+    
+    for member in team_doc.members:
+        if member.email == user_email:
+            is_member = True
+            break
+            
+        if member.member:
+            participant_email = frappe.db.get_value(HACKATHON_PARTICIPANT, member.member, "user")
+            if participant_email == user_email:
+                is_member = True
+                break
+
+    if not is_member:
+        frappe.throw("You are not authorized to create a project for this team", frappe.PermissionError)
+
     project_doc = frappe.get_doc(
         {
             "doctype": HACKATHON_PROJECT,
