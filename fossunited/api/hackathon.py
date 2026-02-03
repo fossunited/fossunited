@@ -207,6 +207,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
 
 
 @frappe.whitelist()
+@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document
