@@ -427,9 +427,9 @@ const updateRsvpStatus = async (row, status) => {
         },
       },
     })
-
     toast.success(`RSVP ${status}`)
     submissions.fetch()
+    eventStats.reload()
   } catch (err) {
     toast.error(err.messages?.[0] || err.message)
   }
