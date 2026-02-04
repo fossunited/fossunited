@@ -1,7 +1,7 @@
 import frappe
 from frappe.query_builder import DocType, Order
 from frappe.query_builder.functions import Coalesce
-from frappe.utils import add_days, getdate, nowdate
+from frappe.utils import getdate, nowdate
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.doctype_ids import (
@@ -108,17 +108,21 @@ def get_rsvp_checkins(event_id: str) -> list:
 @frappe.whitelist()
 def if_rsvp_show_checkins(event_id: str) -> bool:
     """
-    Check if check-ins should be shown (shown before event days as buffer).
+    Check if check-ins should be shown (event has started).
     Returns: boolean
     """
     if not check_if_chapter_or_event_core_member(event_id):
         frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
-    event_start = frappe.db.get_value(EVENT, event_id, "event_start_date")
-    if not event_start:
+    event_start_date, event_end_date = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"]
+    )
+    if not event_start_date or not event_end_date:
         return False
+    today = getdate(nowdate())
+    start_date = getdate(event_start_date)
+    end_date = getdate(event_end_date)
 
-    event_prep = add_days(event_start, -2)
-    return getdate(event_prep) <= getdate(nowdate())
+    return start_date <= today <= end_date
 
 
 @frappe.whitelist()

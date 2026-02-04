@@ -1,93 +1,129 @@
 <template>
   <div v-if="submissions.data && rsvp_form.data" class="px-4 py-8 md:p-8 flex flex-col gap-4">
-    <!-- Check-In Section -->
-    <div v-if="showCheckins" class="flex flex-col gap-4 mt-1">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div class="font-semibold text-gray-800">
-          Event Check-Ins
-          <span class="ml-2 text-sm font-normal text-gray-600">
-            ({{ uniqueCheckedInCount }} / {{ eventStats.data?.total_accepted || 0 }} confirmed
-            attendees)
-          </span>
-        </div>
-        <Button size="md" icon-left="refresh-cw" @click="refreshCheckins"> Refresh </Button>
+    <DocsInfo
+      v-if="rsvp_form.data?.requires_host_approval"
+      message="Host approval is enabled, attendees will receive an email notification when you accept or reject their RSVP."
+      docs-url="https://docs.fossunited.org/event-rsvp/#restrictive-access-to-event"
+    />
+
+    <!-- Main Section Header -->
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      <div class="font-semibold text-gray-800">
+        {{ sectionTitle }}
+        <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-gray-600">
+          ({{ checkins.data?.length || 0 }} / {{ eventStats.data?.total_accepted || 0 }} confirmed
+          attendees)
+        </span>
       </div>
 
-      <SearchListView
-        class="h-[500px]"
-        :rows="checkinGroups"
-        :columns="checkinColumns"
-        search-placeholder="Search check-in attendees..."
-        item-label="check-ins"
-        :export-filename="`event-checkins-${route.params.id}`"
-        :export-columns="checkinExportColumns"
-        :options="listOptions"
-      >
-        <template #group-header="{ group }">
-          <span class="text-base font-medium leading-6 text-ink-gray-9">
-            {{ formatFullDate(group.group) }} - {{ group.rows.length }} check-ins
-          </span>
-        </template>
+      <div class="flex items-center gap-2">
+        <!-- View Toggle - Only show when check-ins are available -->
+        <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+          <button
+            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            :class="
+              currentView === 'attendees'
+                ? 'bg-white text-gray-900 font-medium shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            "
+            @click="currentView = 'attendees'"
+          >
+            Attendees
+          </button>
+          <button
+            class="px-3 py-1.5 text-sm rounded-md transition-colors"
+            :class="
+              currentView === 'checkins'
+                ? 'bg-white text-gray-900 font-medium shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+            "
+            @click="currentView = 'checkins'"
+          >
+            Check-ins
+          </button>
+        </div>
 
-        <template #cell="{ item, row, column }">
-          <span v-if="column.key === 'check_in_time'" class="text-sm text-gray-700">
-            {{ formatTimeOnly(item) }}
-          </span>
-          <span v-else class="text-base">{{ item }}</span>
-        </template>
-      </SearchListView>
+        <Button
+          v-if="currentView === 'checkins'"
+          size="md"
+          icon-left="refresh-cw"
+          @click="refreshCheckins"
+        >
+          Refresh
+        </Button>
+      </div>
     </div>
 
-    <!-- Attendance Status Section -->
-    <div class="flex flex-col gap-4 mt-1">
-      <DocsInfo
-        v-if="rsvp_form.data?.requires_host_approval"
-        message="Host approval is enabled, attendees will receive an email notification when you
-        accept or reject their RSVP."
-        docs-url="https://docs.fossunited.org/event-rsvp/#restrictive-access-to-event"
-      />
+    <DocsInfo
+      v-if="!showCheckins && currentView === 'checkins'"
+      message="You can check-in attendees during the event days."
+      docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
+    />
+    <!-- Check-Ins View -->
+    <SearchListView
+      v-if="currentView === 'checkins'"
+      class="h-[600px]"
+      :rows="checkinGroups"
+      :columns="checkinColumns"
+      search-placeholder="Search check-in attendees..."
+      item-label="check-ins"
+      :export-filename="`event-checkins-${route.params.id}`"
+      :export-columns="checkinExportColumns"
+      :options="listOptions"
+    >
+      <template #group-header="{ group }">
+        <span class="text-base font-medium leading-6 text-ink-gray-9">
+          {{ formatFullDate(group.group) }} - {{ group.rows.length }} check-ins
+        </span>
+      </template>
 
-      <DocsInfo
-        message="You can check-in attendees during the event days."
-        docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
-      />
+      <template #cell="{ item, row, column }">
+        <span v-if="column.key === 'check_in_time'" class="text-sm text-gray-700">
+          {{ formatTimeOnly(item) }}
+        </span>
+        <span v-else class="text-base">{{ item }}</span>
+      </template>
+    </SearchListView>
 
-      <div class="font-semibold text-gray-800">Attendance Status</div>
+    <!-- Attendees View -->
+    <SearchListView
+      v-else
+      class="h-[600px]"
+      :rows="attendeeGroups"
+      :columns="attendeeColumns"
+      search-placeholder="Search attendees..."
+      item-label="attendees"
+      :export-filename="`rsvp-submissions-${route.params.id}`"
+      :export-columns="attendeeExportColumns"
+      :options="listOptions"
+    >
+      <template #group-header="{ group }">
+        <span class="text-base font-medium leading-6 text-ink-gray-9">
+          {{ group.group }} ({{ group.rows.length }})
+        </span>
+      </template>
 
-      <SearchListView
-        class="h-[500px]"
-        :rows="attendeeGroups"
-        :columns="attendeeColumns"
-        search-placeholder="Search attendees..."
-        item-label="attendees"
-        :export-filename="`rsvp-submissions-${route.params.id}`"
-        :export-columns="attendeeExportColumns"
-        :options="listOptions"
-      >
-        <template #group-header="{ group }">
-          <span class="text-base font-medium leading-6 text-ink-gray-9">
-            {{ group.group }} ({{ group.rows.length }})
-          </span>
-        </template>
+      <template #cell="{ item, row, column }">
+        <span
+          v-if="column.key === 'confirm_attendance'"
+          class="px-2 py-1 rounded text-sm font-medium"
+          :class="item ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+        >
+          {{ item ? 'Yes' : 'No' }}
+        </span>
 
-        <template #cell="{ item, row, column }">
-          <span
-            v-if="column.key === 'confirm_attendance'"
-            class="px-2 py-1 rounded text-sm font-medium"
-            :class="item ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
-          >
-            {{ item ? 'Yes' : 'No' }}
-          </span>
-
-          <div
-            v-else-if="column.key === 'checkin_action' && row.is_attending === true"
-            class="flex gap-2"
-          >
+        <div
+          v-else-if="column.key === 'checkin_action' && row.is_attending === true"
+          class="flex gap-2"
+        >
+          <!-- Check-in button - disabled before event with tooltip -->
+          <div class="relative group">
             <Button
               v-if="!row.has_checked_in_today"
               size="sm"
               label="Check-in"
               variant="solid"
+              :disabled="!showCheckins"
               @click="checkInAttendee(row)"
             />
             <Button
@@ -96,38 +132,50 @@
               label="Checked-in today"
               theme="green"
               variant="outline"
+              :disabled="!showCheckins"
               @click="confirmUndoCheckIn(row)"
             />
-          </div>
 
-          <div v-else-if="column.key === 'actions'" class="flex gap-2">
-            <Button
-              size="sm"
-              label="Accept"
-              variant="solid"
-              :disabled="row.status === 'Accepted'"
-              @click="updateRsvpStatus(row, 'Accepted')"
-            />
-            <Button
-              size="sm"
-              label="Reject"
-              theme="red"
-              :disabled="row.status === 'Rejected'"
-              @click="confirmReject(row)"
-            />
+            <!-- Tooltip for disabled state -->
+            <div
+              v-if="!showCheckins"
+              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+            >
+              Check-in will be available during event days
+              <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"
+              ></div>
+            </div>
           </div>
+        </div>
 
-          <span v-else class="text-base" :title="item">{{ truncateStr(item, 30) }}</span>
-        </template>
-      </SearchListView>
-    </div>
+        <div v-else-if="column.key === 'actions'" class="flex gap-2">
+          <Button
+            size="sm"
+            label="Accept"
+            variant="solid"
+            :disabled="row.status === 'Accepted'"
+            @click="updateRsvpStatus(row, 'Accepted')"
+          />
+          <Button
+            size="sm"
+            label="Reject"
+            theme="red"
+            :disabled="row.status === 'Rejected'"
+            @click="confirmReject(row)"
+          />
+        </div>
+
+        <span v-else class="text-base" :title="item">{{ truncateStr(item, 30) }}</span>
+      </template>
+    </SearchListView>
   </div>
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router'
 import { computed, ref, watchEffect } from 'vue'
-import { createResource, Button } from 'frappe-ui'
+import { createResource, Button, frappeRequest } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import { toast } from 'vue-sonner'
 import { truncateStr } from '@/helpers/utils'
@@ -136,7 +184,9 @@ import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
 
-// Reactive states for collapse
+// Current view toggle
+const currentView = ref('attendees')
+
 const checkinGroups = ref([])
 const attendeeGroups = ref([])
 
@@ -175,12 +225,20 @@ const eventStats = createResource({
   auto: true,
 })
 
+// Show check-ins tab and enable buttons only during event dates
 const showCheckins = computed(() => shouldShowCheckins.data === true)
 
-const uniqueCheckedInCount = computed(() => {
-  const list = checkins.data || []
-  const unique = new Set(list.map((c) => c.email))
-  return unique.size
+// Dynamic section title
+const sectionTitle = computed(() => {
+  if (currentView.value === 'checkins') {
+    return 'Event Check-Ins'
+  }
+
+  if (rsvp_form.data?.requires_host_approval) {
+    return 'Attendee Requests'
+  }
+
+  return 'Attendees List'
 })
 
 const listOptions = {
@@ -241,9 +299,9 @@ const attendeeColumns = computed(() => {
       width: '300px',
     })
   })
-  if (showCheckins.value) {
-    baseColumns.push({ label: 'Check-in', key: 'checkin_action', width: '180px' })
-  }
+
+  baseColumns.push({ label: 'Check-in', key: 'checkin_action', width: '180px' })
+
   if (rsvp_form.data?.requires_host_approval) {
     baseColumns.push({ label: 'Actions', key: 'actions', width: '200px' })
   }
@@ -266,6 +324,7 @@ const attendeeExportColumns = computed(() => {
       key,
     }))
 })
+
 // Group attendees by status
 watchEffect(() => {
   const rows = submissions.data || []
@@ -353,31 +412,27 @@ const refreshCheckins = () => {
   eventStats.reload()
 }
 
-const updateRsvpStatus = (row, status) => {
-  if (!row?.name) {
-    toast.error('Invalid row')
-    return
-  }
+const updateRsvpStatus = async (row, status) => {
+  if (!row?.name) return
 
-  createResource({
-    url: 'frappe.client.set_value',
-    params: {
-      doctype: 'FOSS Event RSVP Submission',
-      name: row.name,
-      fieldname: {
-        status,
-        confirm_attendance: status === 'Accepted' ? 1 : 0,
+  try {
+    await frappeRequest({
+      url: 'frappe.client.set_value',
+      params: {
+        doctype: 'FOSS Event RSVP Submission',
+        name: row.name,
+        fieldname: {
+          status,
+          confirm_attendance: status === 'Accepted' ? 1 : 0,
+        },
       },
-    },
-    onSuccess() {
-      toast.success(`RSVP ${status}`)
-      submissions.fetch()
-    },
-    onError(err) {
-      const message = err?.messages?.[0] || err?.message || 'RSVP status Update failed'
-      toast.error(message)
-    },
-  }).fetch()
+    })
+    toast.success(`RSVP ${status}`)
+    submissions.fetch()
+    eventStats.reload()
+  } catch (err) {
+    toast.error(err.messages?.[0] || err.message)
+  }
 }
 
 const confirmReject = (row) => {
@@ -386,21 +441,19 @@ const confirmReject = (row) => {
   }
 }
 
-const checkInAttendee = (row) => {
-  createResource({
-    url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
-    params: { submission_name: row.name },
-    onSuccess() {
-      toast.success(`Checked in ${row.name1} successfully`)
-      submissions.fetch()
-      checkins.reload()
-      eventStats.reload()
-    },
-    onError(err) {
-      const message = err?.messages?.[0] || err?.message || 'Check-in failed'
-      toast.error(message)
-    },
-  }).fetch()
+const checkInAttendee = async (row) => {
+  try {
+    await frappeRequest({
+      url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
+      params: { submission_name: row.name },
+    })
+    toast.success(`Checked in ${row.name1}`)
+    submissions.fetch()
+    checkins.reload()
+    eventStats.reload()
+  } catch (err) {
+    toast.error(err.messages?.[0] || err.message)
+  }
 }
 
 const confirmUndoCheckIn = (row) => {
@@ -409,22 +462,19 @@ const confirmUndoCheckIn = (row) => {
   }
 }
 
-const undoCheckIn = (row) => {
-  createResource({
-    url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.remove_checkin_for_today',
-    params: {
-      submission_name: row.name,
-    },
-    onSuccess() {
-      toast.success('Check-in removed')
-      submissions.reload()
-      checkins.reload()
-      eventStats.reload()
-    },
-    onError(err) {
-      const message = err?.messages?.[0] || err?.message || 'Failed to remove check-in'
-      toast.error(message)
-    },
-  }).fetch()
+const undoCheckIn = async (row) => {
+  try {
+    await frappeRequest({
+      url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.remove_checkin_for_today',
+      params: { submission_name: row.name },
+    })
+
+    toast.success('Check-in removed')
+    submissions.reload()
+    checkins.reload()
+    eventStats.reload()
+  } catch (err) {
+    toast.error(err.messages?.[0] || err.message)
+  }
 }
 </script>
