@@ -15,6 +15,7 @@ from fossunited.doctype_ids import (
     CHAPTER_MEMBER,
     EVENT,
     EVENT_TICKET,
+    EVENT_VOLUNTEER,
     HACKATHON,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
@@ -148,14 +149,19 @@ class FOSSUserProfile(WebsiteGenerator):
             filters={"email": self.email},
             page_length=9999,
         )
-
         rsvpd_event_ids = frappe.db.get_all(
             RSVP_RESPONSE,
             pluck="event",
             filters={"email": self.email},
             page_length=9999,
         )
-        for val in rsvpd_event_ids + paid_event_ids:
+        event_volunteer_ids = frappe.get_all(
+            EVENT_VOLUNTEER,  # populated from chap volunteers by default
+            filters={"member": self.name},
+            pluck="parent",
+        )
+        attended_event_ids = list(set(rsvpd_event_ids + paid_event_ids + event_volunteer_ids))
+        for val in attended_event_ids:
             attended.append(
                 frappe.db.get_value(
                     EVENT,
@@ -171,7 +177,7 @@ class FOSSUserProfile(WebsiteGenerator):
                         "must_attend",
                         "event_location",
                     ],
-                    filters={"name": val},
+                    filters={"name": val, "is_published": 1},
                     as_dict=1,
                 )
             )
@@ -200,7 +206,7 @@ class FOSSUserProfile(WebsiteGenerator):
                         "only_show_logo",
                         "hackathon_name",
                     ],
-                    filters={"name": val.hackathon},
+                    filters={"name": val.hackathon, "is_published": 1},
                     as_dict=1,
                 )
                 or {}
@@ -214,7 +220,7 @@ class FOSSUserProfile(WebsiteGenerator):
                         "localhost_name",
                         "location",
                     ],
-                    filters={"name": val.localhost},
+                    filters={"name": val.localhost, "is_published": 1},
                     as_dict=1,
                 )
                 if val.localhost
@@ -251,7 +257,7 @@ class FOSSUserProfile(WebsiteGenerator):
                             "must_attend",
                             "event_location",
                         ],
-                        filters={"name": val.event},
+                        filters={"name": val.event, "is_published": 1},
                         as_dict=1,
                     )
                     | val
@@ -269,7 +275,7 @@ class FOSSUserProfile(WebsiteGenerator):
                             "must_attend",
                             "event_location",
                         ],
-                        filters={"name": val.event},
+                        filters={"name": val.event, "is_published": 1},
                         as_dict=1,
                     )
                     | val
@@ -296,7 +302,7 @@ class FOSSUserProfile(WebsiteGenerator):
                         "chapter_name",
                         "chapter_status",
                     ],
-                    filters={"name": val.parent},
+                    filters={"name": val.parent, "is_published": 1},
                     as_dict=1,
                 )
                 | val
