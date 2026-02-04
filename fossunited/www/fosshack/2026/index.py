@@ -144,7 +144,8 @@ def get_context(context):
         city = host.get("city", "Other")
         if city not in cities_dict:
             cities_dict[city] = []
-            cities_dict[city].append(host)
+
+        cities_dict[city].append(host)
 
     context.localhosts_by_city = [
         {"city": city, "localhosts": hosts} for city, hosts in sorted(cities_dict.items())
