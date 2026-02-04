@@ -5,6 +5,7 @@ APIs for Tickets and Transfer Tickets
 from datetime import timedelta
 
 import frappe
+from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 
 from fossunited.api.chapter import check_if_chapter_member
@@ -19,7 +20,7 @@ from fossunited.doctype_ids import (
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=5, seconds=60 * 60 * 12)
+@rate_limit(limit=5, seconds=60 * 60 * 12)
 def check_ticket_validity(ticket_id: str):
     """
     Check if the ticket is valid or not
@@ -30,7 +31,7 @@ def check_ticket_validity(ticket_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=2, seconds=60 * 60 * 12)
+@rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
     """
     Get the event for the ticket
@@ -45,7 +46,7 @@ def get_ticket_details(ticket_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
+@rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_transfer_request(ticket: str, receiver_details: dict):
     """
     Create a transfer request for the ticket
@@ -78,7 +79,7 @@ def get_transfer_doc_validity(transfer_id: str):
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=4, seconds=60 * 60 * 12)
+@rate_limit(limit=4, seconds=60 * 60 * 12)
 def get_transfer_details(id: str):
     """
     Get the transfer doc
@@ -93,7 +94,7 @@ def get_transfer_details(id: str):
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
+@rate_limit(limit=3, seconds=60 * 60 * 12)
 def change_transfer_status(transfer_id: str, status: str):
     """
     Change the status of the transfer request

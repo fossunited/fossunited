@@ -2,6 +2,7 @@ import json
 from zoneinfo import ZoneInfo
 
 import frappe
+from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 from ics import Calendar, Event
 
@@ -93,7 +94,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
-@frappe.rate_limiter.rate_limit(limit=5, seconds=60 * 60 * 6)
+@rate_limit(limit=5, seconds=60 * 60 * 6)
 def generate_ics(event_ids):
     """
     Return ICS event for the event ids provided

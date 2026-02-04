@@ -3,6 +3,7 @@ APIs used for Hackathon based operations
 """
 
 import frappe
+from frappe.rate_limiter import rate_limit
 
 from fossunited.doctype_ids import (
     HACKATHON,
@@ -45,7 +46,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
 
 
 @frappe.whitelist()
-@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
+@rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_participant(hackathon, participant):
     """
     This method is used to create a participant for a hackathon.
@@ -207,7 +208,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
 
 
 @frappe.whitelist()
-@frappe.rate_limiter.rate_limit(limit=3, seconds=60 * 60 * 12)
+@rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document
@@ -238,7 +239,8 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
 
     if not is_member:
         frappe.throw(
-            "You are not authorized to create a project for this team", frappe.PermissionError
+            "You are not authorized to create a project for this team",
+            frappe.PermissionError,
         )
 
     project_doc = frappe.get_doc(
