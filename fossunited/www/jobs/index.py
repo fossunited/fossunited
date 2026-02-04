@@ -20,6 +20,7 @@ def get_context(context):
             "company_website",
             "job_type",
             "creation",
+            "publish_date",
         ],
         order_by="creation desc",
     )
@@ -35,6 +36,7 @@ def get_context(context):
             "job_type",
             "creation",
             "modified",
+            "publish_date",
         ],
         order_by="modified desc",
     )
