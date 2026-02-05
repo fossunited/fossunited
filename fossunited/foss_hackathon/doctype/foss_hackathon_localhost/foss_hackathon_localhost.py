@@ -11,6 +11,7 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
+from fossunited.fossunited.utils import sanitize_text_content
 
 
 class FOSSHackathonLocalHost(WebsiteGenerator):
@@ -42,7 +43,8 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         state: DF.Link | None
     # end: auto-generated types
 
-    pass
+    def validate(self):
+        self.description = sanitize_text_content(self.description)
 
     def before_insert(self):
         member_profiles = [member.profile for member in self.organizers]
