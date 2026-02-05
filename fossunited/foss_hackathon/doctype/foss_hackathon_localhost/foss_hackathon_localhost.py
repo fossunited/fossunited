@@ -27,6 +27,7 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         )
 
         city: DF.Link | None
+        description: DF.TextEditor | None
         email: DF.Data | None
         image: DF.AttachImage | None
         is_accepting_attendees: DF.Check
