@@ -162,25 +162,25 @@ class FOSSUserProfile(WebsiteGenerator):
         )
         attended_event_ids = list(set(rsvpd_event_ids + paid_event_ids + event_volunteer_ids))
         for val in attended_event_ids:
-            attended.append(
-                frappe.db.get_value(
-                    EVENT,
-                    fieldname=[
-                        "name",
-                        "route",
-                        "external_event_url",
-                        "chapter",
-                        "event_start_date",
-                        "event_end_date",
-                        "event_name",
-                        "banner_image",
-                        "must_attend",
-                        "event_location",
-                    ],
-                    filters={"name": val, "is_published": 1},
-                    as_dict=1,
-                )
+            event = frappe.db.get_value(
+                EVENT,
+                fieldname=[
+                    "name",
+                    "route",
+                    "external_event_url",
+                    "chapter",
+                    "event_start_date",
+                    "event_end_date",
+                    "event_name",
+                    "banner_image",
+                    "must_attend",
+                    "event_location",
+                ],
+                filters={"name": val, "is_published": 1, "status": "Concluded"},
+                as_dict=1,
             )
+            if event:
+                attended.append(event)
 
         # Hackathons the user has attended
         attended_hack = []
@@ -257,7 +257,11 @@ class FOSSUserProfile(WebsiteGenerator):
                             "must_attend",
                             "event_location",
                         ],
-                        filters={"name": val.event, "is_published": 1},
+                        filters={
+                            "name": val.event,
+                            "is_published": 1,
+                            "status": ["in", ["Live", "Concluded"]],
+                        },
                         as_dict=1,
                     )
                     | val
@@ -275,7 +279,11 @@ class FOSSUserProfile(WebsiteGenerator):
                             "must_attend",
                             "event_location",
                         ],
-                        filters={"name": val.event, "is_published": 1},
+                        filters={
+                            "name": val.event,
+                            "is_published": 1,
+                            "status": "Concluded",
+                        },
                         as_dict=1,
                     )
                     | val
