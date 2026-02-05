@@ -32,6 +32,7 @@ class EventFreeTicketApplications(Document):
                 frappe.throw("Selected coupon has no linked event. Please contact organizers")
             self.event = event
 
+        self.validate_email_not_used()
         coupon_data = self.validate_coupon()
         ticket_tier = self.get_ticket_tier(coupon_data)
         self.create_free_ticket(ticket_tier)
@@ -95,3 +96,14 @@ class EventFreeTicketApplications(Document):
 
         if new_used_count >= int(coupon_data.max_count):
             frappe.db.set_value(FREE_TICKET_CODE, self.coupon_id, "is_used", 1)
+
+    def validate_email_not_used(self):
+        """Ensure the email has not already claimed a free ticket for this event."""
+        if frappe.db.exists(
+            EVENT_TICKET,
+            {
+                "event": self.event,
+                "email": self.email,
+            },
+        ):
+            frappe.throw("This email already has a ticket for this event!")
