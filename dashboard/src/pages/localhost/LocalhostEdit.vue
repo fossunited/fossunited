@@ -121,16 +121,18 @@
     </div>
     <!-- Description -->
     <div class="rounded-sm border p-4 my-6">
-      <div class="text-sm uppercase font-medium mb-3">Localhost Description</div>
-
       <TextEditor
         label="Localhost Description"
-        class="col-span-2"
         :model-value="localhost.doc.description"
         @update:model-value="($event) => (localhost.doc.description = $event)"
         placeholder="Write about this Localhost… schedule, venue details, what to expect…"
       />
     </div>
+    <FormActionBar
+      :document-resource="localhost"
+      :is-saving="localhost.save.loading"
+      @save="updateLocalhost"
+    />
   </div>
 </template>
 
@@ -140,7 +142,7 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import TextEditor from '@/components/ui/TextEditor.vue'
-
+import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 
