@@ -59,6 +59,18 @@
 
         <!-- Right: Meta -->
         <div class="flex flex-col gap-4">
+          <!-- Accepting Attendees -->
+          <div class="md:col-span-2">
+            <div class="flex items-center justify-between p-3 border rounded-md">
+              <div class="flex flex-col">
+                <span class="font-medium text-gray-800"> Accepting Attendees </span>
+                <span class="text-sm text-gray-600">
+                  Allow attendees to register for this localhost.
+                </span>
+              </div>
+              <Switch v-model="localhost.doc.is_accepting_attendees" />
+            </div>
+          </div>
           <div class="grid grid-cols-2 gap-4">
             <div class="flex flex-col gap-1">
               <label class="text-sm font-medium text-gray-700">State</label>
@@ -105,21 +117,22 @@
         />
 
         <FormControl v-model="localhost.doc.map_link" type="url" label="Map Link" size="md" />
-
-        <!-- Accepting Attendees -->
-        <div class="md:col-span-2">
-          <div class="flex items-center justify-between p-3 border rounded-md">
-            <div class="flex flex-col">
-              <span class="font-medium text-gray-800"> Accepting Attendees </span>
-              <span class="text-sm text-gray-600">
-                Allow attendees to register for this localhost.
-              </span>
-            </div>
-            <Switch v-model="localhost.doc.is_accepting_attendees" />
-          </div>
-        </div>
       </div>
     </div>
+    <!-- Description -->
+    <div class="rounded-sm border p-4 my-6">
+      <TextEditor
+        label="Localhost Description"
+        :model-value="localhost.doc.description"
+        @update:model-value="($event) => (localhost.doc.description = $event)"
+        placeholder="Write about this Localhost… schedule, venue details, what to expect…"
+      />
+    </div>
+    <FormActionBar
+      :document-resource="localhost"
+      :is-saving="localhost.save.loading"
+      @save="updateLocalhost"
+    />
   </div>
 </template>
 
@@ -128,7 +141,8 @@ import { createDocumentResource, FileUploader, FormControl, Button, Switch } fro
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
-
+import TextEditor from '@/components/ui/TextEditor.vue'
+import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
 

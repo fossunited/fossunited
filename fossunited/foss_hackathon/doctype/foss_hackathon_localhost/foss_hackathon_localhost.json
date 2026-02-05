@@ -26,6 +26,8 @@
     "location",
     "column_break_sikv",
     "map_link",
+    "section_break_vvfj",
+    "description",
     "organizer_details_section",
     "organizers"
   ],
@@ -144,12 +146,21 @@
       "fieldtype": "Data",
       "label": "Email",
       "options": "Email"
+    },
+    {
+      "fieldname": "section_break_vvfj",
+      "fieldtype": "Section Break"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Text Editor",
+      "label": "Localhost Description"
     }
   ],
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2025-01-28 10:43:38.977099",
+  "modified": "2026-02-05 11:17:43.823399",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon LocalHost",
@@ -180,6 +191,8 @@
       "select": 1
     }
   ],
+  "route": "host",
+  "row_format": "Dynamic",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",
