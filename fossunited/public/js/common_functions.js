@@ -295,6 +295,7 @@ function formatShortDate(dateInput, locale = 'en-IN') {
 }
 window.formatShortDate = formatShortDate
 function truncateStr(title, len) {
+  if (!title) return ''
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 window.truncateStr = truncateStr
