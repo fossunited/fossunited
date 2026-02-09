@@ -71,12 +71,18 @@
               <div class="sponsor--tier-heading">{{ k }}</div>
               <div class="sponsor--flex">
                 {% for sponsor in v %}
-                  <a href="{{ sponsor.link }}" target="_blank" class="sponsor--block">
+                  <a href="{{ sponsor.link }}" target="_blank" rel="noopener noreferrer" class="sponsor--block">
+                  {% if sponsor.image %}
                     <img
                       src="{{ sponsor.image }}"
                       alt="{{ sponsor.sponsor_name }}"
                       class="sponsor--image"
                     />
+                  {% else %}
+                    <span class="sponsor--image d-flex align-items-center justify-content-center">
+                      {{ sponsor.sponsor_name }}
+                    </span>
+                  {% endif %}
                   </a>
                 {% endfor %}
               </div>
