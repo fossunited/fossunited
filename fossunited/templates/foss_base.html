@@ -45,4 +45,9 @@
   page_script" in your page.
 </div>
 {% endblock %} {% endblock %}
+
+{%- block script -%}
+   {{ super() }}
+   {% block page_script %}{% endblock %}
+{%- endblock -%}
 <!-- prettier-ignore-end -->
