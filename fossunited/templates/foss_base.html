@@ -1,5 +1,12 @@
 <!-- prettier-ignore-start -->
 {% extends "templates/base.html" %} {% block head_include %} {{ super() }}
+<script> // Apply theme immediately before page renders
+  (function() {
+    const savedTheme = localStorage.getItem('theme') ||
+      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  })();
+</script>
 <link
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
@@ -39,10 +46,8 @@
 </div>
 {% endblock %} {% endblock %}
 
-<!-- Can write js functions in common_functions.js in public/js -->
-{%- block script -%} {{ super() }}
-<script>
-  {% include "public/js/common_functions.js" %}
-</script>
-{% block page_script %}{% endblock %} {%- endblock -%}
+{%- block script -%}
+   {{ super() }}
+   {% block page_script %}{% endblock %}
+{%- endblock -%}
 <!-- prettier-ignore-end -->

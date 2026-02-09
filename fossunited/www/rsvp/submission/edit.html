@@ -217,7 +217,6 @@
 
       submission = Object.fromEntries(Object.entries(submission).filter(([k, v]) => k !== ''))
       submission = { ...submission, ...override_fields }
-      console.log("ans", custom_answers)
 
       frappe.call({
         method: 'fossunited.fossunited.forms.update_submission',

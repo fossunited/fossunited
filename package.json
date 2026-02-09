@@ -21,8 +21,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@knadh/autocomp": "^1.2.0",
-    "petite-vue": "^0.4.1"
+    "@knadh/autocomp": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.0",

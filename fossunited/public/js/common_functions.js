@@ -1,3 +1,5 @@
+// file bundled directly in website.bundle.js
+
 $(document).ready(function () {
   // Onclick event for Event Cards (not needed anymore)
   // $(".event-card").click(function () {
@@ -234,21 +236,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightIcon = toggle.dataset.lightIcon || 'ti-moon'
   const darkIcon = toggle.dataset.darkIcon || 'ti-sun'
 
-  let savedTheme = localStorage.getItem('theme')
-  if (!savedTheme) {
-    savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  }
-
-  apply(savedTheme)
+  updateIcon()
 
   toggle.addEventListener('click', () => {
-    savedTheme = savedTheme === 'dark' ? 'light' : 'dark'
-    localStorage.setItem('theme', savedTheme)
-    apply(savedTheme)
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+
+    localStorage.setItem('theme', newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+    updateIcon()
   })
 
-  function apply(theme) {
-    document.documentElement.setAttribute('data-theme', theme)
+  function updateIcon() {
+    const theme = document.documentElement.getAttribute('data-theme')
     icon.className = `ti ${theme === 'dark' ? darkIcon : lightIcon}`
   }
 })
@@ -296,11 +296,11 @@ function formatShortDate(dateInput, locale = 'en-IN') {
 }
 
 function truncateStr(title, len) {
+  if (!title) return ''
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 
-// Global toggle function for sections
-window.toggleSection = function (id) {
+function toggleSection(id) {
   const content = document.getElementById(id)
   if (!content) return
   const header = content?.previousElementSibling
@@ -308,3 +308,23 @@ window.toggleSection = function (id) {
   header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
   header?.setAttribute('aria-expanded', !content.classList.contains('hidden'))
 }
+
+// expose all globally via window
+Object.assign(window, {
+  makeQuill,
+  setNavbarControl,
+  publish_form,
+  tab_navigation,
+  unpublish_form,
+  validate_mandatory_fields,
+  check_if_logged_in,
+  check_if_profile_complete,
+  set_mandatory_asterisk,
+  copyLinkToClipboard,
+  resetTooltip,
+  formatFullDate,
+  formatTimeOnly,
+  formatShortDate,
+  truncateStr,
+  toggleSection,
+})
