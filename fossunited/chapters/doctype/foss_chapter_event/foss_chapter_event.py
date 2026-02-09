@@ -518,7 +518,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
     def get_context(self, context):
         context.chapter = frappe.get_doc(CHAPTER, self.chapter)
-        context.sponsors_dict = get_event_sponsors(self)
+        context.sponsors_dict = get_event_sponsors(self.sponsor_list)
         context.volunteers = self.get_volunteers()
         context.speakers, context.submissions = self.get_speakers()
         context.rsvp_status_block = self.get_rsvp_status_block()

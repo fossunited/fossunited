@@ -11,7 +11,7 @@ from fossunited.doctype_ids import (
     LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import sanitize_text_content
+from fossunited.fossunited.utils import get_event_sponsors, sanitize_text_content
 
 
 class FOSSHackathonLocalHost(WebsiteGenerator):
@@ -25,6 +25,9 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
 
         from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (  # noqa: E501
             FOSSHackathonLocalHostOrganizer,
+        )
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+            FOSSEventSponsor,
         )
 
         city: DF.Link | None
@@ -40,6 +43,7 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         parent_hackathon: DF.Link
         route: DF.Data | None
         slug: DF.Data | None
+        sponsor_list: DF.Table[FOSSEventSponsor]
         state: DF.Link | None
     # end: auto-generated types
 
@@ -71,6 +75,8 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         context.interested = self.get_interested_stat()
         context.organizers = self.get_organizers()
         context.has_liked = frappe.session.user in self.get_liked_by()
+
+        context.sponsors_dict = get_event_sponsors(self.sponsor_list)
 
     def set_route(self):
         hackathon_route = frappe.db.get_value(HACKATHON, self.parent_hackathon, "route")

@@ -95,7 +95,7 @@ class FOSSHackathon(WebsiteGenerator):
             context.chapter = frappe.get_doc(CHAPTER, self.chapter)
 
         context.nav_items = self.get_nav_items()
-        context.sponsors_dict = get_event_sponsors(self)
+        context.sponsors_dict = get_event_sponsors(self.sponsor_list)
         context.tag_icon = {
             "Remote": "world",
             "In-person": "building",

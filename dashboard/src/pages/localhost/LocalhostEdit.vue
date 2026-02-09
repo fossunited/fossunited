@@ -128,6 +128,9 @@
         placeholder="Write about this Localhost… schedule, venue details, what to expect…"
       />
     </div>
+
+    <ManageSponsorView />
+
     <FormActionBar
       :document-resource="localhost"
       :is-saving="localhost.save.loading"
@@ -138,13 +141,14 @@
 
 <script setup>
 import { createDocumentResource, FileUploader, FormControl, Button, Switch } from 'frappe-ui'
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import FormActionBar from '@/components/FormActionBar.vue'
 import LocalhostHeader from '@/components/localhost/LocalhostHeader.vue'
 import CopyToClipboardComponent from '@/components/CopyToClipboardComponent.vue'
+import ManageSponsorView from '@/layout/event/ManageSponsorView.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -165,6 +169,8 @@ const wholeRoute = computed(() => {
   if (!localhost.doc?.route) return ''
   return `${window.location.origin}/${localhost.doc.route}`
 })
+
+provide('event', localhost)
 
 const validateImage = (file) => {
   const ext = file.name.split('.').pop().toLowerCase()

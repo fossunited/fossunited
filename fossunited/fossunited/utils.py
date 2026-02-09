@@ -394,7 +394,7 @@ def get_volunteers_stats():
     }
 
 
-def get_event_sponsors(self):
+def get_event_sponsors(sponsor_list):
     """
     Get event sponsors in sorted order (date of confirm).
     """
@@ -417,7 +417,7 @@ def get_event_sponsors(self):
 
     # Group by tier
     groups = {}
-    for sponsor in self.sponsor_list:
+    for sponsor in sponsor_list:
         # Get tier name
         tier = sponsor.custom_tier.strip() if sponsor.tier == "Custom" else sponsor.tier
 
