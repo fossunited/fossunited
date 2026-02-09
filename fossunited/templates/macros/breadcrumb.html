@@ -1,4 +1,4 @@
-{% macro breadcrumb(items=None) %}
+{% macro breadcrumb(items=None, ignore_segments=None, rename_map=None, ignore_indices=None) %}
   <nav class="v3-breadcrumb">
     {% if items %}
       {# Use provided items #}
@@ -11,16 +11,41 @@
         {% endif %}
       {% endfor %}
     {% else %}
-      {# build from current path #}
+      {# Build from current path with filtering and renaming #}
+      {% set ignore_segments = ignore_segments or [] %}
+      {% set rename_map = rename_map or {} %}
+      {% set ignore_indices = ignore_indices or [] %}
       {% set path_parts = frappe.request.path.strip('/').split('/') %}
-      <a class="hover:cursor-pointer" href="/">Home</a>
+
+      {# Filter out ignored segments and indices #}
+      {% set filtered_parts = [] %}
+      {% set filtered_indices = [] %}
       {% for part in path_parts %}
+        {% if part not in ignore_segments and loop.index0 not in ignore_indices %}
+          {% set _ = filtered_parts.append(part) %}
+          {% set _ = filtered_indices.append(loop.index0) %}
+        {% endif %}
+      {% endfor %}
+
+      <a class="hover:cursor-pointer" href="/">Home</a>
+
+      {% for part in filtered_parts %}
         <span class="px-1">></span>
+
+        {# Determine display label - check rename_map first, then format #}
+        {% set display_label = rename_map.get(part, part.replace('-', ' ').replace('_', ' ').title()) %}
+
         {% if loop.last %}
-          <span>{{ part.replace('-', ' ').replace('_', ' ').title() }}</span>
+          <span>{{ display_label }}</span>
         {% else %}
-          <a class="hover:cursor-pointer" href="/{{ path_parts[:loop.index]|join('/') }}">
-            {{ part.replace('-', ' ').replace('_', ' ').title() }}
+          {# Build URL using original indices up to current filtered position #}
+          {% set url_parts = [] %}
+          {% for i in range(loop.index) %}
+            {% set original_idx = filtered_indices[i] %}
+            {% set _ = url_parts.append(path_parts[original_idx]) %}
+          {% endfor %}
+          <a class="hover:cursor-pointer" href="/{{ url_parts|join('/') }}">
+            {{ display_label }}
           </a>
         {% endif %}
       {% endfor %}
@@ -40,9 +65,9 @@
   </button>
 {% endmacro %}
 
-{% macro v3_navbar(class) %}
+{% macro v3_navbar(class, ignore_index) %}
   <div class="d-flex justify-content-between align-items-center {{ class }}">
-    {{ breadcrumb() }}
+    {{ breadcrumb(ignore_index) }}
     {{ theme_toggle() }}
   </div>
 {% endmacro %}
