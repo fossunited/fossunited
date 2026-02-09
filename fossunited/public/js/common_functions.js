@@ -300,6 +300,15 @@ function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 
+function toggleSection(id) {
+  const content = document.getElementById(id)
+  if (!content) return
+  const header = content?.previousElementSibling
+  content.classList.toggle('hidden')
+  header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
+  header?.setAttribute('aria-expanded', !content.classList.contains('hidden'))
+}
+
 // expose all globally via window
 Object.assign(window, {
   makeQuill,
@@ -317,4 +326,5 @@ Object.assign(window, {
   formatTimeOnly,
   formatShortDate,
   truncateStr,
+  toggleSection,
 })

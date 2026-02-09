@@ -1,8 +1,6 @@
 let originalItems = []
 
 document.addEventListener('DOMContentLoaded', () => {
-  if (typeof initThemeToggle === 'function') initThemeToggle('theme-toggle')
-
   // Store original items once
   originalItems = Array.from(document.querySelectorAll('.grant-item')).map((item) =>
     item.cloneNode(true),
