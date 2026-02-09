@@ -1,4 +1,6 @@
 {% extends 'templates/foss_base.html' %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+
 {% block meta_block %}
   <meta name="title" content="{{ event.event_name }}" />
   {% if doc.is_published %}
@@ -29,67 +31,43 @@
   {% endif %}
 
   <meta property="og:image" content="https://fossunited.org/files/og-image.png" />
-  <meta property="”og:image:width”" content="”1200″" />
-  <meta property="”og:image:height”" content="”630″" />
+  <meta property=""og:image:width"" content=""1200″" />
+  <meta property=""og:image:height"" content=""630″" />
 {% endblock %}
-{% block title %}{{ _("RSVP Form Submission") }}{% endblock %}
-{% block page_content %}
-  <div class="container">
-    <div class="backlink mt-5">
-      <a href="/{{ event.route }}">
-        <i class="ti ti-arrow-left"></i>
-        {{ _("Go to this event page") }}
-      </a>
-    </div>
-    <div class="foss-form-wrapper">
-      {% if already_rsvp %}
-        {{ render_complete_section() }}
-      {% else %}
-        <div class="form-container">
-          {{ form_header() }}
-          <hr />
-          <form class="foss-form-body">
-            {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
-            {%
-              for field
-              in form_fields
-            %}
-              {{ renderfield(field) }}
-            {% endfor %}
 
-          </form>
-          <div class="foss-form-buttons">
-            <button class="primary-button" type="submit" id="submit-rsvp">
-              {{ _("RSVP for this event") }}
-            </button>
-          </div>
-          <div class="text-right text-base pt-2">
-            <p>
-              By submitting this form, you agree to our
-              <a
-                style="color: hsl(var(--clr-foss-mint-700)); font-style: italic"
-                href="https://fossunited.org/privacy-policy"
-                alt="privacy-policy"
-                >privacy policy.</a
-              >
-            </p>
-          </div>
-        </div>
-      {% endif %}
+{% block title %}{{ _("RSVP Form Submission") }}{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container mb-5">
+
+      <div class="d-flex justify-content-between align-items-center">
+        {{ breadcrumb(ignore_indices=[0]) }}
+        {{ theme_toggle() }}
+      </div>
+
+          {% if already_rsvp %}
+            {{ render_complete_section() }}
+          {% else %}
+            {{ render_form() }}
+          {% endif %}
+
     </div>
   </div>
 {% endblock %}
+
 {% macro render_complete_section() %}
-  <div class="form-container my-5">
-    <div class="foss-form-header submitted-container">
-      <h3 class="foss-form-heading-3xl">
+  <div class="v3-card my-5">
+    <div class="text-center" style="padding: 2rem 1rem;">
+      <h3 class="v3-text-primary mb-4" style="font-size: 1.75rem; font-weight: 600;">
         {% if doc.requires_host_approval %}
           {{ _("RSVP Submitted for Approval") }}
         {% else %}
           {{ _("You have successfully RSVP'd for this event!") }} <i class="ti ti-rocket"></i>
         {% endif %}
       </h3>
-      <div class="foss-form-description">
+
+      <p class="v3-text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
         {% if doc.requires_host_approval %}
           {{ _("Your RSVP has been submitted for approval. You will receive an email once your RSVP has been approved.") }}
         {% else %}
@@ -98,31 +76,83 @@
             edit the rsvp form.")
           }}
         {% endif %}
-      </div>
-      <button onclick="window.location.pathname+='/{{ submission }}/edit'">
+      </p>
+
+      <button
+        class="v3-btn v3-btn-primary mt-3"
+        onclick="window.location.pathname+='/{{ submission }}/edit'"
+      >
         Edit RSVP Response
       </button>
     </div>
   </div>
 {% endmacro %}
-{% macro form_header() %}
-  <div class="foss-form-header">
-    <h3 class="foss-form-heading-3xl">{{ _("RSVP for the event!") }}</h3>
-    <div class="event-details my-2">
-      {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
-      <div class="py-2">{{ chapter_branding_block(event.chapter) }}</div>
-      <div class="event-title my-1">
-        <span><strong>Event:</strong></span>
-        {{ event_name }}
+
+{% macro render_form() %}
+  <div class="v3-card">
+    {{ form_header() }}
+
+    <hr class="my-4" style="border-color: var(--v3-button-border);" />
+
+    <form>
+      {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+      <div class="d-flex flex-column">
+        {% for field in form_fields %}
+          {{ renderfield(field) }}
+        {% endfor %}
       </div>
-      <div class="event-date my-1">
-        <span><strong>Date:</strong></span>
-        {{ event_date }}
-      </div>
+    </form>
+
+    <div class="mt-4 pt-3">
+      <button class="v3-btn v3-btn-primary w-100" type="submit" id="submit-rsvp">
+        {{ _("RSVP for this event") }}
+      </button>
     </div>
-    <div class="foss-form-description">{{ doc.rsvp_description }}</div>
+
+    <div class="text-right mt-3">
+      <p class="v3-text-tertiary mb-0" style="font-size: 0.875rem;">
+        By submitting this form, you agree to our
+        <a
+          href="https://fossunited.org/privacy-policy"
+          alt="privacy-policy"
+          style="color: var(--v3-primary-button); text-decoration: underline;"
+        >privacy policy.</a>
+      </p>
+    </div>
   </div>
 {% endmacro %}
+
+{% macro form_header() %}
+  <div>
+    <h3 class="v3-text-primary mb-4" style="font-size: 1.75rem; font-weight: 600;">
+      {{ _("RSVP for the event!") }}
+    </h3>
+
+    <div class="mb-4">
+      {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+
+      <div class="mb-3">
+        {{ chapter_branding_block(event.chapter) }}
+      </div>
+
+      <div class="d-flex flex-column" style="gap: 0.75rem;">
+        <div class="v3-text-secondary" style="font-size: 0.95rem;">
+          <span class="font-weight-bold">Event:</span> {{ event_name }}
+        </div>
+        <div class="v3-text-secondary" style="font-size: 0.95rem;">
+          <span class="font-weight-bold">Date:</span> {{ event_date }}
+        </div>
+      </div>
+    </div>
+
+    {% if doc.rsvp_description %}
+      <p class="v3-text-primary mb-0" style="font-size: 1rem; line-height: 1.6;">
+        {{ doc.rsvp_description }}
+      </p>
+    {% endif %}
+  </div>
+{% endmacro %}
+
 {% block page_script %}
   <script>
     $(document).ready(() => {
@@ -137,9 +167,8 @@
           return emailRegex.test(email)
         }
 
-        const formData = $('.foss-form-body').serializeArray()
+        const formData = $('form').serializeArray()
         const data = {}
-
 
         data['linked_rsvp'] = '{{ doc.name }}'
         data['confirm_attendance'] = '1' // if they fill, its understood that they confirm
@@ -180,4 +209,14 @@
       })
     })
   </script>
+
+  <style>
+    /* Button full width on mobile, auto on desktop */
+    @media (min-width: 768px) {
+      .v3-btn.w-100 {
+        width: auto !important;
+        min-width: 200px;
+      }
+    }
+  </style>
 {% endblock %}

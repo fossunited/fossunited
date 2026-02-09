@@ -499,23 +499,22 @@ h6 {
 }
 
 .text-xs {
-  font-size: 12px;
+  font-size: 0.75rem; /* 12px */
 }
 .text-sm {
-  font-size: 14px;
+  font-size: 0.875rem; /* 14px */
 }
 .text-base {
-  font-size: 16px;
+  font-size: 1rem; /* 16px */
 }
 .text-lg {
-  font-size: 18px;
+  font-size: 1.125rem; /* 18px */
 }
 .text-xl {
-  font-size: 20px;
+  font-size: 1.25rem; /* 20px */
 }
-
 .text-2xl {
-  font-size: 24px;
+  font-size: 1.5rem; /* 24px */
 }
 
 .medium {
@@ -1687,7 +1686,11 @@ h6 {
 .foss-form-question {
   font-size: var(--text-base);
   font-weight: var(--fw-medium);
-  color: hsl(var(--clr-code-night-600));
+  color: var(--v3-text-color, hsl(var(--clr-code-night-600)));
+}
+.form-control {
+  color: var(--v3-text-color2);
+  background: var(--v3-button-border);
 }
 
 .foss-form-buttons {

@@ -1,15 +1,15 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+
 {% block title %}Edit RSVP Submission{% endblock %}
 
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container" style="margin-bottom: 3rem;">
       <!-- Breadcrumb -->
-      <div class="v3-breadcrumb">
-        <a href="/{{ event.route }}">
-          <i class="ti ti-arrow-left"></i>
-          {{ _("Back to Event Page") }}
-        </a>
+      <div class="d-flex justify-content-between align-items-center">
+        {{ breadcrumb(ignore_indices=[0, 3, 4]) }}
+        {{ theme_toggle() }}
       </div>
 
       <!-- Main Card -->
