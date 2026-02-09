@@ -1,3 +1,5 @@
+// file bundled directly in website.bundle.js
+
 $(document).ready(function () {
   // Onclick event for Event Cards (not needed anymore)
   // $(".event-card").click(function () {
@@ -265,7 +267,6 @@ function formatFullDate(dateInput, locale = 'en-IN') {
     day: 'numeric',
   })
 }
-window.formatFullDate = formatFullDate
 
 // "2025-12-29T14:30:45" -> "02:30:45 PM"
 function formatTimeOnly(dateInput, locale = 'en-IN') {
@@ -280,7 +281,7 @@ function formatTimeOnly(dateInput, locale = 'en-IN') {
     second: '2-digit',
   })
 }
-window.formatTimeOnly = formatTimeOnly
+
 function formatShortDate(dateInput, locale = 'en-IN') {
   if (!dateInput) return ''
 
@@ -293,9 +294,27 @@ function formatShortDate(dateInput, locale = 'en-IN') {
     year: 'numeric',
   })
 }
-window.formatShortDate = formatShortDate
+
 function truncateStr(title, len) {
   if (!title) return ''
   return title.length > len ? title.substring(0, len) + '...' : title
 }
-window.truncateStr = truncateStr
+
+// expose all globally via window
+Object.assign(window, {
+  makeQuill,
+  setNavbarControl,
+  publish_form,
+  tab_navigation,
+  unpublish_form,
+  validate_mandatory_fields,
+  check_if_logged_in,
+  check_if_profile_complete,
+  set_mandatory_asterisk,
+  copyLinkToClipboard,
+  resetTooltip,
+  formatFullDate,
+  formatTimeOnly,
+  formatShortDate,
+  truncateStr,
+})
