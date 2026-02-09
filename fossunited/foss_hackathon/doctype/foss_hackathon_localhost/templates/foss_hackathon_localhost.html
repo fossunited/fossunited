@@ -10,88 +10,92 @@
     <div class="v3-container">
       {{ breadcrumb(breadcrumbs) }}
 
-      <div class="flex flex-col gap-6 mt-5">
-        <div class="flex flex-col md:flex-row gap-6 md:gap-8 mb-5">
-          <div class="md:w-1/2 w-full flex flex-col gap-2">
-            {{ hero_image() }}
+      <!-- Mobile Order: Banner, Tag, Details, Buttons, Organizers, Contact, Description -->
+      <div class="row mt-4">
+        <!-- Banner (shows first on mobile) -->
+        <div class="col-12 col-md-5 mb-4 order-1 order-md-1">
+          {{ hero_image() }}
 
-            <div class="v3-tag v3-tag--must">
-              {% if attending %}
-                <span> {{ attending }} out of {{ interested }} attending here </span>
-              {% elif interested and interested > 0 %}
-                <span>
-                  {{ interested }} {{ "person is" if interested == 1 else "people are" }}
-                  interested here
-                </span>
-              {% endif %}
-            </div>
+          <div class="v3-tag v3-tag--must mt-3">
+            {% if attending %}
+              <span>{{ attending }} out of {{ interested }} attending here</span>
+            {% elif interested and interested > 0 %}
+              <span>
+                {{ interested }} {{ "person is" if interested == 1 else "people are" }}
+                interested here
+              </span>
+            {% endif %}
           </div>
+        </div>
 
-          <div class="md:w-1/2 w-full flex flex-col justify-between gap-4">
-            {{ hero_section() }}
+        <!-- Hero Details & Buttons (shows second on mobile) -->
+        <div class="col-12 col-md-7 mb-4 order-2 order-md-2">
+          {{ hero_section() }}
 
-            <div
-              class="d-flex flex-column flex-md-row justify-content-center justify-content-md-start align-items-stretch
-                     gap-2 md:px-0 w-full"
+          <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center mt-4" style="gap: 0.75rem;">
+            {% if hackathon.is_registration_live %}
+              {{ primary_button("Register", registration_link) }}
+            {% endif %}
+
+            <a
+              href="{{ hackathon.external_website_url or '/' + hackathon.route }}"
+              class="v3-btn v3-btn-secondary w-100"
+              style="width: 100%;"
+              aria-label="Goto {{ hackathon.hackathon_name }} event page"
             >
-              {% if hackathon.is_registration_live %}
-                {{ primary_button("Register", registration_link) }}
-              {% endif %}
+              Go to Event Page
+            </a>
 
-              <a
-                href="{{ hackathon.external_website_url or '/' + hackathon.route }}"
-                class="w-full md:w-auto text-xs text-center uppercase font-semibold bg-gray-50 hover:bg-gray-200 text-black py-3 px-4 hover:no-underline "
-                aria-label="Goto {{ hackathon.hackathon_name }} event page"
-              >
-                Go to Event Page
-              </a>
-
-              {% if frappe.session.user != 'Guest' %}
-                {{ like_button() }}
-              {% endif %}
-            </div>
+            {% if frappe.session.user != 'Guest' %}
+              {{ like_button() }}
+            {% endif %}
           </div>
         </div>
 
-        <div class="flex flex-col md:flex-row gap-6 md:gap-8">
-          <div class="md:w-1/2 w-full min-w-0">{{ organizers_section() }}</div>
-          <div class="md:w-1/2 w-full min-w-0">{{ about_section() }}</div>
+        <!-- Organizers & Contact (shows third on mobile, stays left on desktop) -->
+        <div class="col-12 col-md-5 mb-4 order-3 order-md-3">
+          {{ organizers_section() }}
         </div>
 
-        {% if doc.sponsor_list %}
-          <div class="sponsors-section my-3">
-            <h5 class="mt-3 mb-1">Sponsors</h5>
-            {% for k,v in sponsors_dict.items() %}
-              <div class="sponsor--tier-block">
-                <div class="sponsor--tier-heading">{{ k }}</div>
-                <div class="sponsor--flex">
-                  {% for sponsor in v %}
-                    <a href="{{ sponsor.link }}" target="_blank" class="sponsor--block">
-                      <img
-                        src="{{ sponsor.image }}"
-                        alt="{{ sponsor.sponsor_name }}"
-                        class="sponsor--image"
-                      />
-                    </a>
-                  {% endfor %}
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-
+        <!-- Description (shows fourth on mobile, stays right on desktop) -->
+        <div class="col-12 col-md-7 mb-4 order-4 order-md-4">
+          {{ about_section() }}
+        </div>
       </div>
+
+      {% if doc.sponsor_list %}
+        <div class="sponsors-section mt-5">
+          <h5 class="mb-3">Sponsors</h5>
+          {% for k,v in sponsors_dict.items() %}
+            <div class="sponsor--tier-block mb-4">
+              <div class="sponsor--tier-heading">{{ k }}</div>
+              <div class="sponsor--flex">
+                {% for sponsor in v %}
+                  <a href="{{ sponsor.link }}" target="_blank" class="sponsor--block">
+                    <img
+                      src="{{ sponsor.image }}"
+                      alt="{{ sponsor.sponsor_name }}"
+                      class="sponsor--image"
+                    />
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
     </div>
   </div>
 {% endblock %}
 
 {% macro breadcrumb(path) %}
-  <nav aria-label="Breadcrumb" class="breadcrumb my-2">
-    <ol class="flex flex-wrap">
+  <nav aria-label="Breadcrumb" class="v3-breadcrumb my-2">
+    <ol class="d-flex flex-wrap">
       {% for item in path %}
-        <li class="breadcrumb-item text-sm">
+        <li class="breadcrumb-item">
           {% if item.route %}
-            <a href="{{ item.route }}" class="hover:cursor-pointer">{{ item.label }}</a>
+            <a href="{{ item.route }}">{{ item.label }}</a>
           {% else %}
             {{ item.label }}
           {% endif %}
@@ -104,8 +108,8 @@
 {% macro hero_image() %}
   <div class="position-relative">
     <span
-      class="z-10 position-absolute text-white font-weight-bold text-lowercase px-3 py-2 bg-dark "
-      style="top: 12px; left: 12px; font-family: 'Space Mono', monospace;"
+      class="position-absolute text-white font-weight-bold text-lowercase px-3 py-2 bg-dark"
+      style="top: 12px; left: 12px; font-family: 'Space Mono', monospace; z-index: 10;"
     >
       localhost:{{ doc.city }}
     </span>
@@ -125,58 +129,62 @@
       width: 100%;
       height: 160px;
       object-fit: cover;
+      border-radius: 0.5rem;
     }
 
     @media (min-width: 768px) {
       .localhost-hero-img {
-        width: 300px;
         height: 300px;
+      }
+
+      /* Make buttons auto-width on desktop */
+      .v3-btn.w-100 {
+        width: auto !important;
       }
     }
   </style>
 {% endmacro %}
 
 {% macro hero_section() %}
-  <div class="flex flex-col justify-between gap-4 w-full px-2 px-md-0">
-    <div class="flex flex-col gap-2">
-      <a href="{{ hackathon.external_website_url or '/' + hackathon.route }}" class="inline-block">
-        {% if hackathon.hackathon_logo %}
-          <img
-            class="h-8"
-            src="{{ hackathon.hackathon_logo }}"
-            alt="{{ hackathon.hackathon_name }}"
-          />
-        {% else %}
-          <h4 class="text-sm font-medium">{{ hackathon.hackathon_name }}</h4>
-        {% endif %}
-      </a>
+  <div class="mb-3">
+    <a href="{{ hackathon.external_website_url or '/' + hackathon.route }}" class="d-inline-block mb-3">
+      {% if hackathon.hackathon_logo %}
+        <img
+          style="height: 2rem;"
+          src="{{ hackathon.hackathon_logo }}"
+          alt="{{ hackathon.hackathon_name }}"
+        />
+      {% else %}
+        <h4 class="v3-text-secondary mb-0">{{ hackathon.hackathon_name }}</h4>
+      {% endif %}
+    </a>
 
-      <div class="flex justify-between gap-4">
-        <div>
-          <h2 class="text-xl md:text-3xl font-semibold">{{ doc.localhost_name }}</h2>
-          <p class="text-sm">{{ doc.city }}, {{ doc.state }}</p>
+    <div class="mb-4">
+      <h2 class="v3-text-primary mb-2" style="font-size: 1.75rem; font-weight: 600;">
+        {{ doc.localhost_name }}
+      </h2>
+      <p class="v3-text-secondary mb-0" style="font-size: 1rem;">{{ doc.city }}, {{ doc.state }}</p>
+    </div>
+
+    <div class="v3-text-secondary" style="font-size: 0.95rem;">
+      {% if doc.map_link %}
+        <div class="d-flex align-items-center mb-2" style="gap: 0.5rem;">
+          <i class="ti ti-map-pin" style="font-size: 1.25rem;"></i>
+          <a
+            href="{{ doc.map_link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="v3-text-secondary"
+            style="text-decoration: underline;"
+          >
+            {{ doc.location or doc.localhost_name }}
+          </a>
         </div>
-      </div>
+      {% endif %}
 
-      <div class="flex flex-col gap-2 text-gray-700">
-        {% if doc.map_link %}
-          <div class="flex gap-1 items-center">
-            <i class="ti ti-map-pin text-lg"></i>
-            <a
-              href="{{ doc.map_link }}"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-sm hover:underline"
-            >
-              {{ doc.location or doc.localhost_name }}
-            </a>
-          </div>
-        {% endif %}
-
-        <div class="flex gap-1 items-center">
-          <i class="ti ti-calendar text-lg"></i>
-          <p class="text-sm">{{ hackathon_format_date }}</p>
-        </div>
+      <div class="d-flex align-items-center" style="gap: 0.5rem;">
+        <i class="ti ti-calendar" style="font-size: 1.25rem;"></i>
+        <p class="mb-0">{{ hackathon_format_date }}</p>
       </div>
     </div>
   </div>
@@ -184,7 +192,8 @@
 
 {% macro primary_button(label, link) %}
   <a
-    class=" w-full md:w-auto text-sm text-center uppercase font-semibold bg-gray-900 hover:bg-gray-800 text-white py-3 px-4 hover:no-underline "
+    class="v3-btn v3-btn-dark w-100"
+    style="width: 100%;"
     href="{{ link }}"
     target="_blank"
   >
@@ -197,61 +206,72 @@
     data-liked="{{ has_liked }}"
     id="like-button"
     onclick="toggle_like()"
-    class="rounded-none w-10 h-auto p-2 border border-gray-700 bg-gray-50 hover:bg-green-50 flex items-center justify-center "
+    class="v3-btn v3-btn-secondary d-flex align-items-center justify-content-center"
+    style="width: 3rem; height: 3rem; padding: 0.5rem;"
   >
     {% if has_liked %}
-      <i class="ti ti-heart-filled text-green-600 text-xl"></i>
+      <i class="ti ti-heart-filled" style="color: var(--v3-primary-button); font-size: 1.375rem;"></i>
     {% else %}
-      <i class="ti ti-heart text-xl"></i>
+      <i class="ti ti-heart" style="font-size: 1.375rem;"></i>
     {% endif %}
   </button>
 {% endmacro %}
 
 {% macro organizers_section() %}
-  <div class="flex flex-col gap-2 max-w-96 w-full shrink">
-    <h4 class="text-base font-semibold">Organizers</h4>
-    <div class="flex flex-col gap-2">
+  <div>
+    <h4 class="v3-text-primary mb-3" style="font-size: 1.125rem; font-weight: 600;">Organizers</h4>
+    <div class="d-flex flex-column" style="gap: 0.75rem;">
       {% for organizer in organizers %}
         {{ organizer_card(organizer.profile_photo, organizer.full_name, organizer.route) }}
       {% endfor %}
     </div>
-    <div class="flex flex-col gap-1 mt-5">
-      <h5 class="text-sm font-medium text-gray-500">Contact Localhost</h5>
-      <div class="flex gap-1 items-center">
-        <i class="ti ti-mail"></i>
-        <a class="text-sm text-gray-800" href="mailto:{{ doc.email }}">{{ doc.email }}</a>
+
+    <div class="mt-5">
+      <h5 class="v3-text-tertiary mb-3" style="font-size: 0.95rem; font-weight: 600;">
+        Contact Localhost
+      </h5>
+      <div class="d-flex align-items-center" style="gap: 0.5rem;">
+        <i class="ti ti-mail" style="font-size: 1.125rem;"></i>
+        <a class="v3-text-secondary" href="mailto:{{ doc.email }}" style="font-size: 0.95rem;">
+          {{ doc.email }}
+        </a>
       </div>
     </div>
   </div>
 {% endmacro %}
 
 {% macro organizer_card(image, name, route) %}
-  <a href="/{{ route }}" target="_blank" class="flex gap-2 items-center">
+  <a href="/{{ route }}" target="_blank" class="d-flex align-items-center v3-clickable" style="gap: 0.625rem;">
     {% set organizer_image = image or '/assets/fossunited/images/defaults/user_profile_image.png' %}
     <img
-      class="w-10 h-10 aspect-square border border-black"
+      class="border border-dark"
       src="{{ organizer_image }}"
       alt="{{ name }}"
+      style="width: 2.75rem; height: 2.75rem; border-radius: 0.5rem; object-fit: cover;"
     />
-    <span class="text-sm text-gray-800">{{ name }}</span>
+    <span class="v3-text-secondary" style="font-size: 0.95rem;">{{ name }}</span>
   </a>
 {% endmacro %}
 
 {% macro about_section() %}
-  <div class="d-flex flex-column mt-3 mt-md-0">
+  <div>
     {% if doc.description %}
-      <h1 class="text-2xl font-semibold mb-4">Localhost Description</h1>
-      <span class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
+      <h1 class="v3-text-primary mb-4" style="font-size: 1.5rem; font-weight: 600;">
+        Localhost Description
+      </h1>
+      <div class="v3-text-primary prose">
         {{ doc.description }}
-      </span>
+      </div>
     {% else %}
-      <div>
-        <h2 class="text-base font-semibold">About the Event</h2>
-        <p>{{ hackathon.hackathon_description }}</p>
+      <div class="mb-5">
+        <h2 class="v3-text-primary mb-3" style="font-size: 1.125rem; font-weight: 600;">
+          About the Event
+        </h2>
+        <p class="v3-text-primary" style="line-height: 1.6;">{{ hackathon.hackathon_description }}</p>
       </div>
       <div>
-        <h2 class="text-base font-semibold">Rules</h2>
-        <p>{{ hackathon.hackathon_rules }}</p>
+        <h2 class="v3-text-primary mb-3" style="font-size: 1.125rem; font-weight: 600;">Rules</h2>
+        <p class="v3-text-primary" style="line-height: 1.6;">{{ hackathon.hackathon_rules }}</p>
       </div>
     {% endif %}
   </div>
