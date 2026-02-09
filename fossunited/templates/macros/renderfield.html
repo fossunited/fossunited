@@ -27,6 +27,7 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         value="{{ submission[field.fieldname] or field.value or '' }}"
+        {% if field.reqd %}required{% endif %}
         {% if field.read_only %}readonly aria-readonly="true"{% endif %}
         {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       />
@@ -45,6 +46,7 @@
           name="{{ field.fieldname }}"
           id="{{ field.fieldname }}"
           class="form-select form-control custom-select text-sm rounded-input w-100 px-3 py-1"
+          {% if field.reqd %}required{% endif %}
           {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
         >
           {% set field_value = field.get('value') if field else '' %}
@@ -70,6 +72,7 @@
           type="checkbox"
           class="form-control form-check-input text-sm"
           id="{{ field.fieldname }}"
+          {% if field.reqd %}required{% endif %}
           {% if field.value == '1' or submission[field.fieldname] == 1 %}checked{% endif %}
           {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
         />
@@ -96,6 +99,7 @@
         id="{{ field.fieldname }}"
         class="ql-editor-custom"
         type="text-editor"
+        {% if field.reqd %}required{% endif %}
         role="textbox"
         aria-multiline="true"
         {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
@@ -136,6 +140,7 @@
         class="form-control text-sm rounded-input"
         id="{{ field.fieldname }}"
         rows="3"
+        {% if field.reqd %}required{% endif %}
         {% if field.description %}aria-describedby="{{ field.fieldname }}-description"{% endif %}
       >{{ submission[field.fieldname] or field.value or '' }}</textarea>
     {% elif field.fieldtype == 'Long Text' %}
