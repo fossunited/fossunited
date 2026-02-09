@@ -29,7 +29,8 @@
     "section_break_vvfj",
     "description",
     "organizer_details_section",
-    "organizers"
+    "organizers",
+    "sponsor_list"
   ],
   "fields": [
     {
@@ -155,12 +156,18 @@
       "fieldname": "description",
       "fieldtype": "Text Editor",
       "label": "Localhost Description"
+    },
+    {
+      "fieldname": "sponsor_list",
+      "fieldtype": "Table",
+      "label": "Localhost sponsors",
+      "options": "FOSS Event Sponsor"
     }
   ],
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2026-02-05 11:17:43.823399",
+  "modified": "2026-02-09 12:12:21.225554",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon LocalHost",
