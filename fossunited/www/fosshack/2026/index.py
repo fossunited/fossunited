@@ -154,7 +154,7 @@ def get_context(context):
     # Fetch Sponsors
     context.sponsors = [
         {"tier": tier, "sponsor_list": sponsor_list}
-        for tier, sponsor_list in get_event_sponsors(hackathon).items()
+        for tier, sponsor_list in get_event_sponsors(hackathon.sponsor_list).items()
     ]
 
     # Fetch Partners
