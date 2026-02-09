@@ -26,6 +26,9 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (  # noqa: E501
             FOSSHackathonLocalHostOrganizer,
         )
+        from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+            FOSSEventSponsor,
+        )
 
         city: DF.Link | None
         description: DF.TextEditor | None

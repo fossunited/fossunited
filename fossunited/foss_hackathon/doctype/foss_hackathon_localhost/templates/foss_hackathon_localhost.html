@@ -226,6 +226,7 @@
       {% endfor %}
     </div>
 
+    {% if doc.email %}
     <div class="mt-5">
       <h5 class="v3-text-tertiary mb-3" style="font-size: 0.95rem; font-weight: 600;">
         Contact Localhost
@@ -237,6 +238,7 @@
         </a>
       </div>
     </div>
+    {% endif %}
   </div>
 {% endmacro %}
 
