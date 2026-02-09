@@ -234,21 +234,19 @@ document.addEventListener('DOMContentLoaded', () => {
   const lightIcon = toggle.dataset.lightIcon || 'ti-moon'
   const darkIcon = toggle.dataset.darkIcon || 'ti-sun'
 
-  let savedTheme = localStorage.getItem('theme')
-  if (!savedTheme) {
-    savedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-  }
-
-  apply(savedTheme)
+  updateIcon()
 
   toggle.addEventListener('click', () => {
-    savedTheme = savedTheme === 'dark' ? 'light' : 'dark'
-    localStorage.setItem('theme', savedTheme)
-    apply(savedTheme)
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+
+    localStorage.setItem('theme', newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+    updateIcon()
   })
 
-  function apply(theme) {
-    document.documentElement.setAttribute('data-theme', theme)
+  function updateIcon() {
+    const theme = document.documentElement.getAttribute('data-theme')
     icon.className = `ti ${theme === 'dark' ? darkIcon : lightIcon}`
   }
 })
@@ -267,6 +265,7 @@ function formatFullDate(dateInput, locale = 'en-IN') {
     day: 'numeric',
   })
 }
+window.formatFullDate = formatFullDate
 
 // "2025-12-29T14:30:45" -> "02:30:45 PM"
 function formatTimeOnly(dateInput, locale = 'en-IN') {
@@ -281,7 +280,7 @@ function formatTimeOnly(dateInput, locale = 'en-IN') {
     second: '2-digit',
   })
 }
-
+window.formatTimeOnly = formatTimeOnly
 function formatShortDate(dateInput, locale = 'en-IN') {
   if (!dateInput) return ''
 
@@ -294,17 +293,8 @@ function formatShortDate(dateInput, locale = 'en-IN') {
     year: 'numeric',
   })
 }
-
+window.formatShortDate = formatShortDate
 function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
-
-// Global toggle function for sections
-window.toggleSection = function (id) {
-  const content = document.getElementById(id)
-  if (!content) return
-  const header = content?.previousElementSibling
-  content.classList.toggle('hidden')
-  header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
-  header?.setAttribute('aria-expanded', !content.classList.contains('hidden'))
-}
+window.truncateStr = truncateStr
