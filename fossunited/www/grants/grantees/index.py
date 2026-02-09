@@ -91,7 +91,7 @@ def get_context(context):
 
     # Page metadata
     context.grant_type = "All Grantees"
-    context.grant_icon = "ti ti-list-search"
+    context.grant_icon = "ti ti-report-search"
     context.grant_description = """
     Browse all FOSS United grantees disbursed for Projects, Events, and Fellowships."""
     context.no_cache = 1
