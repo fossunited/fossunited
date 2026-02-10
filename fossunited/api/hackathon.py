@@ -104,7 +104,7 @@ def create_participant(hackathon, participant):
 
 
 @frappe.whitelist()
-def get_participant(hackathon: str, user: str) -> dict:
+def get_participant(hackathon: str) -> dict:
     """
     Get participant details
 
@@ -117,7 +117,7 @@ def get_participant(hackathon: str, user: str) -> dict:
     """
     return frappe.get_doc(
         HACKATHON_PARTICIPANT,
-        {"hackathon": hackathon, "user": user},
+        {"hackathon": hackathon, "user": frappe.session.user},
     )
 
 
@@ -144,11 +144,15 @@ def create_team(hackathon: str, team: dict) -> dict:
 
     # Check if user is already in a team for this hackathon
     existing_team = frappe.db.exists(
-        HACKATHON_TEAM,
-        [
-            [HACKATHON_TEAM_MEMBER, "member", "=", participant],
-            ["hackathon", "=", hackathon],
-        ],
+        HACKATHON_TEAM_MEMBER,
+        {
+            "member": participant,
+            "parenttype": HACKATHON_TEAM,
+            "parent": [
+                "in",
+                frappe.get_all(HACKATHON_TEAM, filters={"hackathon": hackathon}, pluck="name"),
+            ],
+        },
     )
 
     if existing_team:
@@ -159,7 +163,6 @@ def create_team(hackathon: str, team: dict) -> dict:
             "doctype": HACKATHON_TEAM,
             "team_name": team.get("team_name"),
             "hackathon": hackathon,
-            "team_lead": participant,
             "members": team.get("members", []),
         }
     )
@@ -168,7 +171,7 @@ def create_team(hackathon: str, team: dict) -> dict:
 
 
 @frappe.whitelist()
-def get_team_by_member_email(hackathon: str, email: str) -> dict:
+def get_team_by_member_email(hackathon: str) -> dict:
     """
     Get team details
 
@@ -179,7 +182,7 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
     Returns:
         dict: Team document as a dictionary
     """
-    participant = get_participant(hackathon, email)
+    participant = get_participant(hackathon)
 
     try:
         team = frappe.get_doc(
@@ -295,7 +298,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
 
 
 @frappe.whitelist()
-def get_project_by_email(hackathon: str, email: str):
+def get_project_by_email(hackathon: str):
     """
     Get project details by email
 
@@ -306,7 +309,7 @@ def get_project_by_email(hackathon: str, email: str):
     Returns:
         dict: Project document as a dictionary
     """
-    team = get_team_by_member_email(hackathon, email)
+    team = get_team_by_member_email(hackathon)
     return get_project_by_team(hackathon, team.get("name"))
 
 
@@ -405,8 +408,6 @@ def join_team_via_code(team_code: str, hackathon: str):
     Returns:
         dict: Team document as a dictionary
     """
-    current_user = frappe.session.user
-
     try:
         team = frappe.get_doc(HACKATHON_TEAM, team_code)
     except frappe.exceptions.DoesNotExistError:
@@ -416,17 +417,21 @@ def join_team_via_code(team_code: str, hackathon: str):
     if team.hackathon != hackathon:
         frappe.throw("Team does not belong to this hackathon")
 
-    participant = get_participant(hackathon, current_user)
+    participant = get_participant(hackathon)
     if not participant:
         frappe.throw("Participant not found.")
 
     # Check if user is already in a team
     existing_team = frappe.db.exists(
-        HACKATHON_TEAM,
-        [
-            [HACKATHON_TEAM_MEMBER, "member", "=", participant.name],
-            ["hackathon", "=", hackathon],
-        ],
+        HACKATHON_TEAM_MEMBER,
+        {
+            "member": participant.name,
+            "parenttype": HACKATHON_TEAM,
+            "parent": [
+                "in",
+                frappe.get_all(HACKATHON_TEAM, filters={"hackathon": hackathon}, pluck="name"),
+            ],
+        },
     )
 
     if existing_team:
