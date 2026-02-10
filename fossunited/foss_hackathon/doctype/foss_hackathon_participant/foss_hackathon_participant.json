@@ -136,7 +136,7 @@
   }
  ],
  "links": [],
- "modified": "2025-10-14 16:06:43.666875",
+ "modified": "2026-02-10 14:29:00.719548",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
@@ -157,6 +157,7 @@
   },
   {
    "create": 1,
+   "if_owner": 1,
    "read": 1,
    "role": "All",
    "write": 1
