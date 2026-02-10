@@ -98,13 +98,6 @@
           <h3 class="text-md font-semibold">Hackathon Rules</h3>
           <div class="prose leading-normal" v-html="hackathon.data.hackathon_rules"></div>
         </div>
-        <div
-          v-if="hackathon.data.hackathon_faq"
-          class="w-full bg-gray-50 text-gray-800 rounded p-4"
-        >
-          <h3 class="text-md font-semibold">Hackathon FAQs</h3>
-          <div class="prose leading-normal" v-html="hackathon.data.hackathon_faq"></div>
-        </div>
       </div>
     </div>
   </div>

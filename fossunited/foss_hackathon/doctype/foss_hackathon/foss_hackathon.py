@@ -49,11 +49,10 @@ class FOSSHackathon(WebsiteGenerator):
         external_website_url: DF.Data | None
         hackathon_banner: DF.AttachImage | None
         hackathon_description: DF.TextEditor
-        hackathon_faq: DF.TextEditor | None
         hackathon_logo: DF.AttachImage | None
         hackathon_name: DF.Data
         hackathon_rules: DF.TextEditor | None
-        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]  # noqa: F722, F821
+        hackathon_type: DF.Literal["", "Remote", "In-person", "Hybrid"]
         has_external_website: DF.Check
         has_localhosts: DF.Check
         has_partner_projects: DF.Check

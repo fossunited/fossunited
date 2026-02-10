@@ -27,10 +27,8 @@
     "hackathon_details_section",
     "only_show_logo",
     "hackathon_logo",
-    "hackathon_rules",
-    "column_break_frpz",
     "hackathon_banner",
-    "hackathon_faq",
+    "hackathon_rules",
     "hackathon_sponsors_section",
     "sponsor_list",
     "community_partners",
@@ -38,22 +36,21 @@
     "volunteers",
     "team_set_up_tab",
     "is_registration_live",
+    "has_localhosts",
     "registration_page_setup_section",
     "registration_description",
-    "projects_setup_section",
-    "enable_oss_contributon_projects",
-    "contribution_project_guidelines",
-    "is_contribution_project_coming_soon",
-    "contribution_coming_soon_description",
     "team_setup_details_section",
     "is_team_mandatory",
     "column_break_yeth",
     "max_team_members",
+    "projects_setup_section",
+    "enable_oss_contributon_projects",
+    "is_contribution_project_coming_soon",
+    "contribution_project_guidelines",
+    "contribution_coming_soon_description",
     "schedule_tab",
     "show_schedule_tab",
     "schedule",
-    "localhost_tab",
-    "has_localhosts",
     "partner_projects_tab",
     "has_partner_projects",
     "partner_project_guidelines"
@@ -136,18 +133,9 @@
       "label": "Hackathon Rules"
     },
     {
-      "fieldname": "column_break_frpz",
-      "fieldtype": "Column Break"
-    },
-    {
       "fieldname": "hackathon_banner",
       "fieldtype": "Attach Image",
       "label": "Hackathon Banner"
-    },
-    {
-      "fieldname": "hackathon_faq",
-      "fieldtype": "Text Editor",
-      "label": "Hackathon FAQ"
     },
     {
       "fieldname": "hackathon_sponsors_section",
@@ -209,11 +197,6 @@
       "fieldtype": "Table",
       "label": "Schedule",
       "options": "FOSS Event Schedule"
-    },
-    {
-      "fieldname": "localhost_tab",
-      "fieldtype": "Tab Break",
-      "label": "LocalHost"
     },
     {
       "default": "0",
@@ -361,7 +344,7 @@
       "link_fieldname": "parent_hackathon"
     }
   ],
-  "modified": "2025-02-19 12:55:26.241990",
+  "modified": "2026-02-10 12:15:32.910928",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon",
@@ -392,6 +375,7 @@
     }
   ],
   "route": "hack",
+  "row_format": "Dynamic",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",
