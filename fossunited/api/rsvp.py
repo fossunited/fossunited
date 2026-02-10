@@ -3,24 +3,22 @@ from frappe.query_builder import DocType, Order
 from frappe.query_builder.functions import Coalesce
 from frappe.utils import getdate, nowdate
 
-from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.doctype_ids import (
     EVENT,
     EVENT_CHECKIN,
     RSVP_CUSTOM_FIELD,
     RSVP_RESPONSE,
 )
+from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_submissions_with_answers(event_id: str) -> list:
     """
     Get all RSVP submissions with custom field answers as flat records.
     Returns: list of dicts with dynamic custom field keys
     """
-    if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
-
     rsvp = DocType(RSVP_RESPONSE)
     custom = DocType(RSVP_CUSTOM_FIELD)
 
@@ -71,14 +69,12 @@ def get_submissions_with_answers(event_id: str) -> list:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_rsvp_checkins(event_id: str) -> list:
     """
     Get all check-ins for an event.
     Returns: list of check-in records with attendee details
     """
-    if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
-
     Submission = DocType(RSVP_RESPONSE)
     CheckIn = DocType(EVENT_CHECKIN)
 
@@ -106,13 +102,12 @@ def get_rsvp_checkins(event_id: str) -> list:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def if_rsvp_show_checkins(event_id: str) -> bool:
     """
     Check if check-ins should be shown (event has started).
     Returns: boolean
     """
-    if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
     event_start_date, event_end_date = frappe.db.get_value(
         EVENT, event_id, ["event_start_date", "event_end_date"]
     )
@@ -126,13 +121,12 @@ def if_rsvp_show_checkins(event_id: str) -> bool:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_rsvp_checkin_stats(event_id: str) -> dict:
     """
     Get event statistics.
     Returns: dict with counts
     """
-    if not check_if_chapter_or_event_core_member(event_id):
-        frappe.throw("RSVP insights Not permitted", frappe.PermissionError)
     total_accepted = frappe.db.count(
         RSVP_RESPONSE,
         filters={"event": event_id, "status": "Accepted", "confirm_attendance": 1},

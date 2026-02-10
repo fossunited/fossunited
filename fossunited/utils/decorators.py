@@ -177,7 +177,7 @@ def require_chapter_or_event_member(event_id="event"):
 
             event = kwargs.get(event_id)
             if not event:
-                frappe.throw("Event parameter required", frappe.ValidationError)
+                frappe.throw("Event ID is not provided", frappe.ValidationError)
 
             # Reuse existing function directly
             if not check_if_chapter_or_event_core_member(event):
