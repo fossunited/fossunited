@@ -67,7 +67,7 @@
 
 {% macro v3_navbar(class, ignore_index) %}
   <div class="d-flex justify-content-between align-items-center {{ class }}">
-    {{ breadcrumb(ignore_index) }}
+    {{ breadcrumb(ignore_indices=ignore_index) }}
     {{ theme_toggle() }}
   </div>
 {% endmacro %}

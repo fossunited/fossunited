@@ -1,4 +1,5 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
 
 {% block head_include %}
   {{ super() }}
@@ -8,7 +9,7 @@
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container">
-      {{ breadcrumb(breadcrumbs) }}
+      {{ v3_navbar(ignore_index=[2]) }}
 
       <!-- Mobile Order: Banner, Tag, Details, Buttons, Organizers, Contact, Description -->
       <div class="row mt-4">
@@ -94,22 +95,6 @@
     </div>
   </div>
 {% endblock %}
-
-{% macro breadcrumb(path) %}
-  <nav aria-label="Breadcrumb" class="v3-breadcrumb my-2">
-    <ol class="d-flex flex-wrap">
-      {% for item in path %}
-        <li class="breadcrumb-item">
-          {% if item.route %}
-            <a href="{{ item.route }}">{{ item.label }}</a>
-          {% else %}
-            {{ item.label }}
-          {% endif %}
-        </li>
-      {% endfor %}
-    </ol>
-  </nav>
-{% endmacro %}
 
 {% macro hero_image() %}
   <div class="position-relative">
