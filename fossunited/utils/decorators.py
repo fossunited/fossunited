@@ -123,7 +123,7 @@ def require_chapter_member(chapter_id="chapter"):
             if not chapter:
                 frappe.throw("Chapter data is required", frappe.ValidationError)
 
-            if not check_if_chapter_member(chapter_id, frappe.session.user):
+            if not check_if_chapter_member(chapter, frappe.session.user):
                 frappe.throw("You are not a member of this chapter", frappe.PermissionError)
 
             return func(*args, **kwargs)
@@ -151,7 +151,7 @@ def require_event_member(event_id="event"):
             if not event:
                 frappe.throw("Event data is required", frappe.ValidationError)
 
-            if not check_if_event_member(event_id):
+            if not check_if_event_member(event):
                 frappe.throw("You are not an event volunteer", frappe.PermissionError)
 
             return func(*args, **kwargs)

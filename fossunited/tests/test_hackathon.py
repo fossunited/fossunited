@@ -29,10 +29,9 @@ from fossunited.tests.utils import (
 )
 
 
-class TestHackathonPermissions(FrappeTestCase):
+class TestHackathonAPI(FrappeTestCase):
     """Test suite for hackathon permission decorators and security"""
 
-    @classmethod
     def setUp(self):
         """Set up before each test"""
         frappe.set_user("Administrator")
@@ -57,13 +56,14 @@ class TestHackathonPermissions(FrappeTestCase):
         frappe.set_user("Administrator")
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.delete_doc(HACKATHON, self.hackathon.name, force=True)
-        frappe.delete_doc(USER_PROFILE, {"email": self.user1}, force=True)
-        frappe.delete_doc(USER_PROFILE, {"email": self.user2}, force=True)
-        frappe.delete_doc(USER_PROFILE, {"email": self.user3}, force=True)
+        frappe.db.delete(
+            USER_PROFILE,
+            {"email": ["in", [self.user1, self.user2, self.user3]]},
+            force=True,
+        )
         frappe.delete_doc(HACKATHON_PROJECT, {"hackathon": self.hackathon.name})
         frappe.delete_doc(HACKATHON_TEAM, {"hackathon": self.hackathon.name})
         frappe.delete_doc(HACKATHON_PARTICIPANT, {"hackathon": self.hackathon.name})
-        frappe.db.commit()
 
     def test_create_participant_success(self):
         """Test that a logged-in user can create participant"""
