@@ -49,7 +49,7 @@ def check_if_chapter_member(chapter: str, user: str) -> bool:
 
 
 @frappe.whitelist(allow_guest=True)
-def check_if_event_lead(event: str) -> bool:
+def check_if_event_member(event: str) -> bool:
     """
     Check if the user is an event lead
 
@@ -62,7 +62,7 @@ def check_if_event_lead(event: str) -> bool:
     """
     profile = frappe.db.get_value(USER_PROFILE, {"user": frappe.session.user}, ["name"])
 
-    is_lead = bool(
+    is_volunteer = bool(
         frappe.db.exists(
             EVENT_VOLUNTEER,
             {
@@ -70,12 +70,11 @@ def check_if_event_lead(event: str) -> bool:
                 "parenttype": EVENT,
                 "member": profile,
                 "parentfield": "event_members",
-                "role": "Core Team Member",
             },
         )
     )
 
-    return is_lead
+    return is_volunteer
 
 
 @frappe.whitelist(allow_guest=True)
@@ -88,7 +87,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     event_doc = frappe.get_doc(EVENT, event, ["name"])
     chapter_id = event_doc.chapter
     is_team = bool(
-        check_if_event_lead(event) or check_if_chapter_member(chapter_id, frappe.session.user)
+        check_if_event_member(event) or check_if_chapter_member(chapter_id, frappe.session.user)
     )
     return is_team
 
