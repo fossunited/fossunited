@@ -12,9 +12,14 @@ from fossunited.doctype_ids import (
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
     HACKATHON_TEAM_MEMBER,
+    LOCALHOST_ORGANIZER,
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper
+from fossunited.utils.decorators import (
+    require_hackathon_participant,
+    require_hackathon_team,
+)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -100,7 +105,7 @@ def create_participant(hackathon, participant):
 
 
 @frappe.whitelist()
-def get_participant(hackathon: str, user: str) -> dict:
+def get_participant(hackathon: str) -> dict:
     """
     Get participant details
 
@@ -113,11 +118,13 @@ def get_participant(hackathon: str, user: str) -> dict:
     """
     return frappe.get_doc(
         HACKATHON_PARTICIPANT,
-        {"hackathon": hackathon, "user": user},
+        {"hackathon": hackathon, "user": frappe.session.user},
     )
 
 
 @frappe.whitelist()
+@require_hackathon_participant(hackathon_id="hackathon")
+@rate_limit(limit=3, seconds=60 * 60)
 def create_team(hackathon: str, team: dict) -> dict:
     """
     Create a team document
@@ -134,16 +141,15 @@ def create_team(hackathon: str, team: dict) -> dict:
             "doctype": HACKATHON_TEAM,
             "team_name": team.get("team_name"),
             "hackathon": hackathon,
-            "team_lead": team.get("team_lead"),
-            "members": team.get("members"),
+            "members": team.get("members", []),
         }
     )
-    team_doc.insert(ignore_permissions=True)
+    team_doc.insert()
     return team_doc
 
 
 @frappe.whitelist()
-def get_team_by_member_email(hackathon: str, email: str) -> dict:
+def get_team_by_member_email(hackathon: str) -> dict:
     """
     Get team details
 
@@ -154,7 +160,7 @@ def get_team_by_member_email(hackathon: str, email: str) -> dict:
     Returns:
         dict: Team document as a dictionary
     """
-    participant = get_participant(hackathon, email)
+    participant = get_participant(hackathon)
 
     try:
         team = frappe.get_doc(
@@ -208,6 +214,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
 
 
 @frappe.whitelist()
+@require_hackathon_team(team_id="team", hackathon_id="hackathon")
 @rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
@@ -221,28 +228,6 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     Returns:
         dict: Project document as a dictionary
     """
-    team_doc = frappe.get_doc(HACKATHON_TEAM, team)
-
-    is_member = False
-    user_email = frappe.session.user
-
-    for member in team_doc.members:
-        if member.email == user_email:
-            is_member = True
-            break
-
-        if member.member:
-            participant_email = frappe.db.get_value(HACKATHON_PARTICIPANT, member.member, "user")
-            if participant_email == user_email:
-                is_member = True
-                break
-
-    if not is_member:
-        frappe.throw(
-            "You are not authorized to create a project for this team",
-            frappe.PermissionError,
-        )
-
     project_doc = frappe.get_doc(
         {
             "doctype": HACKATHON_PROJECT,
@@ -285,7 +270,7 @@ def get_project_by_team(hackathon: str, team: str) -> dict:
 
 
 @frappe.whitelist()
-def get_project_by_email(hackathon: str, email: str):
+def get_project_by_email(hackathon: str):
     """
     Get project details by email
 
@@ -296,7 +281,7 @@ def get_project_by_email(hackathon: str, email: str):
     Returns:
         dict: Project document as a dictionary
     """
-    team = get_team_by_member_email(hackathon, email)
+    team = get_team_by_member_email(hackathon)
     return get_project_by_team(hackathon, team.get("name"))
 
 
@@ -382,30 +367,29 @@ def get_localhost_requests_by_team(
 
 
 @frappe.whitelist()
-def join_team_via_code(team_code: str, user: str):
+@require_hackathon_participant(hackathon_id="hackathon")
+@rate_limit(limit=5, seconds=60 * 60)
+def join_team_via_code(team_code: str, hackathon: str):
     """
-    Join a team using a team code
-
-    Args:
-        code (str): Team code
-        user (str): User email
-
-    Returns:
-        dict: Team document as a dictionary
+    Join a team - validation happens in controller.
     """
-    try:
-        team = frappe.get_doc(HACKATHON_TEAM, team_code)
-    except frappe.exceptions.DoesNotExistError:
-        frappe.throw("Team not found")
-        return "Invalid Code. Team with this code does not exist."
+    current_user = frappe.session.user
 
-    participant = get_participant(team.hackathon, user)
-    if not participant:
-        frappe.throw("Participant not found")
-        return "Participant not found."
+    team = frappe.get_doc(HACKATHON_TEAM, team_code)
 
+    # Verify team belongs to hackathon
+    if team.hackathon != hackathon:
+        frappe.throw("Team does not belong to this hackathon")
+
+    participant = frappe.get_doc(
+        HACKATHON_PARTICIPANT, {"hackathon": hackathon, "user": current_user}
+    )
+
+    # Add member - controller will validate everything
     team.append("members", {"member": participant.name})
     team.save()
+
+    return team
 
 
 @frappe.whitelist()
@@ -447,7 +431,7 @@ def get_session_user_localhosts():
         HACKATHON_LOCALHOST,
         filters=[
             [
-                "FOSS Hackathon LocalHost Organizer",
+                LOCALHOST_ORGANIZER,
                 "profile",
                 "=",
                 profile,
@@ -493,6 +477,7 @@ def get_session_participant(hackathon: str) -> dict:
 
 
 @frappe.whitelist()
+@require_hackathon_team(team_id="team", hackathon_id="hackathon")
 def delete_project(hackathon: str, team: str):
     """
     Delete team project
@@ -501,18 +486,9 @@ def delete_project(hackathon: str, team: str):
         hackathon (str): Hackathon ID
         team (str): Team ID
     """
-    team_doc = frappe.get_doc(HACKATHON_TEAM, team)
-    if frappe.session.user not in [member.email for member in team_doc.members]:
-        frappe.throw("You are not authorized to delete this project")
-
-    project = get_project_by_team(hackathon, team)
-
-    try:
-        frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
-        frappe.db.delete(HACKATHON_PROJECT, project.name)
-        return True
-    except Exception:
-        frappe.throw("Error deleting project")
+    project = frappe.get_doc(HACKATHON_PROJECT, {"hackathon": hackathon, "team": team})
+    project.delete()  # controller has_permission checks authorization
+    return True
 
 
 @frappe.whitelist()
@@ -587,7 +563,7 @@ def validate_user_as_localhost_member(localhost_id: str):
         frappe.throw("You are not a Localhost Organizer. You are not authorized to view this page")
 
     if not frappe.db.exists(
-        "FOSS Hackathon LocalHost Organizer",
+        LOCALHOST_ORGANIZER,
         {
             "parent": localhost_id,
             "profile": frappe.db.get_value(
@@ -602,24 +578,6 @@ def validate_user_as_localhost_member(localhost_id: str):
         )
 
     return True
-
-
-@frappe.whitelist()
-def remove_pr_issue_from_project(project: str, issue_pr: str) -> None:
-    """
-    Remove a PR/Issue from a project
-
-    Args:
-        project (str): Project ID
-        issue_pr (str): Issue/PR ID
-    """
-    if not frappe.db.exists(HACKATHON_PROJECT, project):
-        frappe.throw("Project does not exist")
-
-    if not frappe.db.exists("Hackathon Project Issue PR", issue_pr):
-        frappe.throw("Issue/PR does not exist")
-
-    frappe.db.delete("Hackathon Project Issue PR", issue_pr)
 
 
 @frappe.whitelist()
