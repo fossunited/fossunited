@@ -15,7 +15,10 @@ from fossunited.doctype_ids import (
     USER_PROFILE,
 )
 from fossunited.integrations.github import GithubHelper
-from fossunited.utils import require_hackathon_participant, require_hackathon_team
+from fossunited.utils.decorators import (
+    require_hackathon_participant,
+    require_hackathon_team,
+)
 
 
 @frappe.whitelist(allow_guest=True)
