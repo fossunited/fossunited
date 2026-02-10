@@ -135,29 +135,6 @@ def create_team(hackathon: str, team: dict) -> dict:
     Returns:
         dict: Team document as a dictionary
     """
-    current_user = frappe.session.user
-
-    # Get current user's participant ID
-    participant = frappe.db.get_value(
-        HACKATHON_PARTICIPANT, {"hackathon": hackathon, "user": current_user}, "name"
-    )
-
-    # Check if user is already in a team for this hackathon
-    existing_team = frappe.db.exists(
-        HACKATHON_TEAM_MEMBER,
-        {
-            "member": participant,
-            "parenttype": HACKATHON_TEAM,
-            "parent": [
-                "in",
-                frappe.get_all(HACKATHON_TEAM, filters={"hackathon": hackathon}, pluck="name"),
-            ],
-        },
-    )
-
-    if existing_team:
-        frappe.throw("You are already part of a team in this hackathon")
-
     team_doc = frappe.get_doc(
         {
             "doctype": HACKATHON_TEAM,
@@ -166,7 +143,7 @@ def create_team(hackathon: str, team: dict) -> dict:
             "members": team.get("members", []),
         }
     )
-    team_doc.insert(ignore_permissions=True)
+    team_doc.insert()
     return team_doc
 
 
@@ -250,12 +227,6 @@ def create_project(hackathon: str, team: str, project: dict) -> dict:
     Returns:
         dict: Project document as a dictionary
     """
-    # Check if project already exists for this team
-    existing_project = frappe.db.exists(HACKATHON_PROJECT, {"hackathon": hackathon, "team": team})
-
-    if existing_project:
-        frappe.throw("A project already exists for this team")
-
     project_doc = frappe.get_doc(
         {
             "doctype": HACKATHON_PROJECT,
@@ -399,51 +370,23 @@ def get_localhost_requests_by_team(
 @rate_limit(limit=5, seconds=60 * 60)
 def join_team_via_code(team_code: str, hackathon: str):
     """
-    Join a team using a team code
-
-    Args:
-        team_code (str): Team code (team ID)
-        hackathon (str): Hackathon ID for validation
-
-    Returns:
-        dict: Team document as a dictionary
+    Join a team - validation happens in controller.
     """
-    try:
-        team = frappe.get_doc(HACKATHON_TEAM, team_code)
-    except frappe.exceptions.DoesNotExistError:
-        frappe.throw("Invalid Code. Team with this code does not exist.")
+    current_user = frappe.session.user
 
-    # Verify team belongs to the hackathon
+    team = frappe.get_doc(HACKATHON_TEAM, team_code)
+
+    # Verify team belongs to hackathon
     if team.hackathon != hackathon:
         frappe.throw("Team does not belong to this hackathon")
 
-    participant = get_participant(hackathon)
-    if not participant:
-        frappe.throw("Participant not found.")
-
-    # Check if user is already in a team
-    existing_team = frappe.db.exists(
-        HACKATHON_TEAM_MEMBER,
-        {
-            "member": participant.name,
-            "parenttype": HACKATHON_TEAM,
-            "parent": [
-                "in",
-                frappe.get_all(HACKATHON_TEAM, filters={"hackathon": hackathon}, pluck="name"),
-            ],
-        },
+    participant = frappe.get_doc(
+        HACKATHON_PARTICIPANT, {"hackathon": hackathon, "user": current_user}
     )
 
-    if existing_team:
-        frappe.throw("You are already part of a team in this hackathon")
-
-    # Check team size limit
-    team_count = get_count_team_members_and_max_count(hackathon, team_code)
-    if team_count["team_members_count"] >= team_count["max_team_size"]:
-        frappe.throw(f"Team has reached maximum size of {team_count['max_team_size']} members")
-
+    # Add member - controller will validate everything
     team.append("members", {"member": participant.name})
-    team.save(ignore_permissions=True)
+    team.save()
 
     return team
 
@@ -542,19 +485,9 @@ def delete_project(hackathon: str, team: str):
         hackathon (str): Hackathon ID
         team (str): Team ID
     """
-    project = get_project_by_team(hackathon, team)
-
-    if not project:
-        frappe.throw("No project found for this team")
-
-    try:
-        frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
-        frappe.db.delete(HACKATHON_PROJECT, project.name)
-        frappe.db.commit()
-        return True
-    except Exception as e:
-        frappe.log_error(f"Error deleting project: {str(e)}")
-        frappe.throw("Error deleting project")
+    project = frappe.get_doc(HACKATHON_PROJECT, {"hackathon": hackathon, "team": team})
+    project.delete()  # controller has_permission checks authorization
+    return True
 
 
 @frappe.whitelist()
