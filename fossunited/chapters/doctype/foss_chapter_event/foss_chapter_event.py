@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
+from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.api.emailing import create_email_group
 from fossunited.doctype_ids import (
     CAMPAIGN,
@@ -493,20 +494,6 @@ class FOSSChapterEvent(WebsiteGenerator):
                 ]
         return formatted
 
-    def can_user_manage_event(self):
-        """Check if the current user can manage this event.
-        Returns True if user is a Core Team Member of the event or a chapter member.
-        Uses the existing API function to maintain consistency with the organization's patterns.
-        """
-        if frappe.session.user == "Guest":
-            return False
-
-        # Use the existing API function that checks both event lead and chapter membership
-        # This ensures consistency with other parts of the platform
-        from fossunited.api.chapter import check_if_chapter_or_event_core_member
-
-        return check_if_chapter_or_event_core_member(self.name)
-
     def get_breadcrumb(self):
         crumbs = [
             {"route": "/", "label": "Home"},
@@ -543,7 +530,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.status_live = self.status == "Live"
 
         # Add permission check for managing event
-        context.can_manage_event = self.can_user_manage_event()
+        context.can_manage_event = check_if_chapter_or_event_core_member(self.name)
         context.event_dashboard_url = f"/dashboard/event/{self.name}"
 
         context.map_lat = None
