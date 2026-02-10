@@ -27,7 +27,7 @@ class FOSSHackathonParticipant(Document):
         is_student: DF.Check
         localhost: DF.Link | None
         localhost_request_status: DF.Literal[
-            "Pending", "Pending Confirmation", "Accepted", "Rejected"  # noqa: F722, F821
+            "Pending", "Pending Confirmation", "Accepted", "Rejected"
         ]
         organization: DF.Data | None
         subscribe_chapter_mailing: DF.Check
