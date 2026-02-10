@@ -126,3 +126,22 @@ class FOSSHackathonParticipant(Document):
             )
 
         self.localhost_request_status = "Pending"
+
+    def has_permission(self, ptype="read", user=None):
+        """Participants can only edit their own record"""
+        # note: we already has "if owner" perm, but safer side to have this.
+        user = user or frappe.session.user
+
+        if ptype == "read":
+            return True
+
+        if user == "Guest":
+            return False
+
+        if self.user:
+            return self.user == user
+
+        if self.email:
+            return self.email == user
+
+        return False

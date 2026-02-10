@@ -28,14 +28,17 @@ class FOSSHackathonTeam(Document):
         team_name: DF.Data
         working_on_partner_project: DF.Check
     # end: auto-generated types
-    pass
+
+    def validate(self):
+        """Validate runs on both insert and save"""
+        self.validate_team_size()
+        self.validate_no_duplicate_members()
+        self.validate_new_members_not_in_other_teams()
 
     def before_save(self):
-        # Handle the case for a newly created team
-        if self.is_new():
-            return
-
-        if self.has_value_changed("members"):
+        """Runs on both insert and save"""
+        # Your existing code for team size check
+        if not self.is_new() and self.has_value_changed("members"):
             team_count = get_count_team_members_and_max_count(self.hackathon, self.name)
             current_members = len(self.members)
             max_size = team_count["max_team_size"]
@@ -44,3 +47,72 @@ class FOSSHackathonTeam(Document):
                 frappe.throw(
                     f"Maximum team size of {max_size} members reached. Cannot add more members."
                 )
+
+    def validate_team_size(self):
+        """Check team size limits"""
+        max_size = frappe.db.get_value("FOSS Hackathon", self.hackathon, "max_team_members")
+        if len(self.members) > max_size:
+            frappe.throw(f"Team cannot have more than {max_size} members")
+
+    def validate_no_duplicate_members(self):
+        """Ensure no duplicate members in this team"""
+        member_ids = [m.member for m in self.members if m.member]
+        if len(member_ids) != len(set(member_ids)):
+            frappe.throw("Cannot add the same member twice to a team")
+
+    def check_member_not_in_other_team(self, member_id):
+        """Check if member is already in another team for this hackathon"""
+        other_team = frappe.db.exists(
+            "FOSS Hackathon Team",
+            [
+                ["FOSS Hackathon Team Member", "member", "=", member_id],
+                ["hackathon", "=", self.hackathon],
+                ["name", "!=", self.name],
+            ],
+        )
+
+        if other_team:
+            member_email = frappe.db.get_value("FOSS Hackathon Participant", member_id, "email")
+            other_team = frappe.db.get_value("FOSS Hackathon Team", other_team, "team_name")
+            frappe.throw(
+                f"Member {member_email} is already part of team '{other_team}' in this hackathon"
+            )
+
+    def validate_new_members_not_in_other_teams(self):
+        """Only validate newly added members"""
+        old_doc = self.get_doc_before_save()
+
+        if self.is_new() or not old_doc:
+            members_to_check = [m.member for m in self.members if m.member]
+        else:
+            old_member_ids = {m.member for m in old_doc.members if m.member}
+            members_to_check = [
+                m.member for m in self.members if m.member and m.member not in old_member_ids
+            ]
+
+        for member_id in members_to_check:
+            self.check_member_not_in_other_team(member_id)
+
+    def has_permission(self, ptype="read", user=None):
+        """Only team members can edit"""
+
+        user = user or frappe.session.user
+
+        if ptype != "write":
+            return True
+
+        team_emails = {m.email for m in self.members if m.email}
+        if user in team_emails:
+            return True
+
+        participant_ids = [m.member for m in self.members if m.member]
+        if not participant_ids:
+            return False
+
+        participant_users = frappe.get_all(
+            "FOSS Hackathon Participant",
+            filters={"name": ["in", participant_ids]},
+            pluck="user",
+        )
+
+        return user in participant_users

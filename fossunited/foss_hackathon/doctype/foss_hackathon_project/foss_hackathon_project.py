@@ -43,7 +43,10 @@ class FOSSHackathonProject(WebsiteGenerator):
 
     # end: auto-generated types
     def validate(self):
+        """Validate project data"""
         self.description = sanitize_text_content(self.description)
+        self.validate_one_project_per_team()
+        self.validate_team_belongs_to_hackathon()
 
     def before_save(self):
         self.set_route()
@@ -51,6 +54,54 @@ class FOSSHackathonProject(WebsiteGenerator):
     def set_route(self):
         hackathon = frappe.get_doc(HACKATHON, self.hackathon)
         self.route = f"{hackathon.route}/p/{self.name}"
+
+    def validate_one_project_per_team(self):
+        """Ensure only one project per team"""
+        if self.is_new():
+            existing = frappe.db.exists(
+                "FOSS Hackathon Project",
+                {
+                    "hackathon": self.hackathon,
+                    "team": self.team,
+                    "name": ["!=", self.name],
+                },
+            )
+            if existing:
+                frappe.throw("This team already has a project for this hackathon")
+
+    def validate_team_belongs_to_hackathon(self):
+        """Ensure team belongs to the same hackathon"""
+        team_hackathon = frappe.db.get_value("FOSS Hackathon Team", self.team, "hackathon")
+        if team_hackathon != self.hackathon:
+            frappe.throw("Team does not belong to this hackathon")
+
+    def has_permission(self, ptype="read", user=None):
+        """Only team members can edit/delete project"""
+        user = user or frappe.session.user
+        # everyone can read
+        if ptype not in ["write", "delete"]:
+            return True
+
+        if not self.team:
+            return False
+
+        team_doc = frappe.get_doc("FOSS Hackathon Team", self.team)
+
+        team_emails = {m.email for m in team_doc.members if m.email}
+        if user in team_emails:
+            return True
+
+        participant_ids = [m.member for m in team_doc.members if m.member]
+        if not participant_ids:
+            return False
+
+        participant_users = frappe.get_all(
+            "FOSS Hackathon Participant",
+            filters={"name": ["in", participant_ids]},
+            pluck="user",
+        )
+
+        return user in participant_users
 
     def get_context(self, context):
         context.no_cache = 1
