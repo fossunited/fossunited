@@ -60,13 +60,13 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         """Guest users should not access RSVP submissions."""
         frappe.set_user("Guest")
         with self.assertRaises(frappe.PermissionError):
-            get_submissions_with_answers(self.event.name)
+            get_submissions_with_answers(event_id=self.event.name)
 
     def test_get_submissions_other_chapter_core_denied(self):
         """Core members from other chapters should not access submissions."""
         frappe.set_user(self.other_chapter_core)
         with self.assertRaises(frappe.PermissionError):
-            get_submissions_with_answers(self.event.name)
+            get_submissions_with_answers(event_id=self.event.name)
 
     def test_get_submissions_chapter_core_allowed(self):
         """Chapter core team should access submissions."""
@@ -80,7 +80,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.append(sub)
 
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(event_id=self.event.name)
 
         self.assertIsInstance(result, list)
         self.assertEqual(len(result), 1)
@@ -102,7 +102,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.append(sub)
 
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(event_id=self.event.name)
 
         self.assertEqual(len(result), 1)
         self.assertIn("What's your goal?", result[0])
@@ -124,7 +124,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.append(sub)
 
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(event_id=self.event.name)
 
         self.assertIn("Optional question?", result[0])
         self.assertEqual(result[0]["Optional question?"], "")
@@ -146,7 +146,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.extend([sub1, sub2])
 
         frappe.set_user(self.core_team_email)
-        result = get_submissions_with_answers(self.event.name)
+        result = get_submissions_with_answers(event_id=self.event.name)
 
         self.assertEqual(len(result), 2)
         names = {r["name1"] for r in result}
@@ -156,13 +156,13 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         """Guest users should not access check-ins."""
         frappe.set_user("Guest")
         with self.assertRaises(frappe.PermissionError):
-            get_rsvp_checkins(self.event.name)
+            get_rsvp_checkins(event_id=self.event.name)
 
     def test_get_checkins_other_chapter_core_denied(self):
         """Core members from other chapters should not access check-ins."""
         frappe.set_user(self.other_chapter_core)
         with self.assertRaises(frappe.PermissionError):
-            get_rsvp_checkins(self.event.name)
+            get_rsvp_checkins(event_id=self.event.name)
 
     def test_get_checkins_returns_accepted_attendees_only(self):
         """Should only return check-ins for accepted attendees."""
@@ -191,7 +191,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.extend([accepted_sub, rejected_sub])
 
         frappe.set_user(self.core_team_email)
-        result = get_rsvp_checkins(self.event.name)
+        result = get_rsvp_checkins(event_id=self.event.name)
 
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0]["name1"], "Checked In User")
@@ -225,7 +225,7 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.extend([sub1, sub2])
 
         frappe.set_user(self.core_team_email)
-        result = get_rsvp_checkins(self.event.name)
+        result = get_rsvp_checkins(event_id=self.event.name)
 
         # Most recent should be first
         self.assertEqual(result[0]["name1"], "Recent Check-in")
@@ -234,14 +234,14 @@ class TestRSVPInsightsAPI(FrappeTestCase):
     def test_show_checkins_returns_true_for_started_event(self):
         """Should return True if event has started."""
         frappe.set_user(self.core_team_email)
-        result = if_rsvp_show_checkins(self.event.name)
+        result = if_rsvp_show_checkins(event_id=self.event.name)
         self.assertTrue(result)
 
     def test_get_stats_guest_denied(self):
         """Guest users should not access stats."""
         frappe.set_user("Guest")
         with self.assertRaises(frappe.PermissionError):
-            get_rsvp_checkin_stats(self.event.name)
+            get_rsvp_checkin_stats(event_id=self.event.name)
 
     def test_get_stats_counts_accepted_confirmed_only(self):
         """Should only count accepted submissions with confirmed attendance."""
@@ -276,11 +276,11 @@ class TestRSVPInsightsAPI(FrappeTestCase):
         self._submissions.extend([accepted1, accepted2, not_confirmed])
 
         frappe.set_user(self.core_team_email)
-        result = get_rsvp_checkin_stats(self.event.name)
+        result = get_rsvp_checkin_stats(event_id=self.event.name)
         self.assertEqual(result["total_accepted"], 2)
 
     def test_get_stats_returns_zero_for_no_submissions(self):
         """Should return 0 when no accepted submissions exist."""
         frappe.set_user(self.core_team_email)
-        result = get_rsvp_checkin_stats(self.event.name)
+        result = get_rsvp_checkin_stats(event_id=self.event.name)
         self.assertEqual(result["total_accepted"], 0)

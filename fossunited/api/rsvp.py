@@ -1,5 +1,4 @@
 import frappe
-from fossunited.utils.decorators import require_chapter_or_event_member
 from frappe.query_builder import DocType, Order
 from frappe.query_builder.functions import Coalesce
 from frappe.utils import getdate, nowdate
@@ -10,6 +9,7 @@ from fossunited.doctype_ids import (
     RSVP_CUSTOM_FIELD,
     RSVP_RESPONSE,
 )
+from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 @frappe.whitelist()

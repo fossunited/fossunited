@@ -21,7 +21,6 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     USER_PROFILE,
 )
-from fossunited.fossunited.user_utils import create_profile_on_user_create
 from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
     FOSSTicketTier,
 )
@@ -30,61 +29,39 @@ fake = Faker()
 
 
 def insert_user_profile(email=None, **kwargs):
-    """
-    Create a test user and their profile.
+    """Ensure User + User Profile exist for tests. Return User Profile doc."""
 
-    Args:
-        email (str, optional): Email for the user. If not provided, generates a fake email.
-
-    Returns:
-        str: Name of the created User Profile
-    """
     if not email:
         email = fake.email()
 
-    # Check if profile already exists
-    profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
-    if profile:
-        return profile
-
-    # Create Frappe User if it doesn't exist
     if not frappe.db.exists("User", email):
         name_parts = email.split("@")[0].title()
-        user_data = {
-            "doctype": "User",
-            "email": email,
-            "first_name": kwargs.get("first_name", name_parts),
-            "last_name": kwargs.get("last_name", name_parts),
-        }
-        for key, value in kwargs.items():
-            if key not in user_data:
-                user_data[key] = value
+        frappe.get_doc(
+            {
+                "doctype": "User",
+                "email": email,
+                "first_name": kwargs.get("first_name", name_parts),
+                "last_name": kwargs.get("last_name", name_parts),
+                "enabled": 1,
+            }
+        ).insert(ignore_permissions=True)
 
-        frappe_user = frappe.get_doc(user_data).insert(ignore_permissions=True)
-        frappe_user.reload()
+    profile_name = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
 
-    # User Profile gets created automatically via hooks "create_profile_on_user_create"
-    profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
-    user = None
-    try:
-        user = frappe.get_doc("User", email)
-    except Exception:
-        user = None
+    if not profile_name:
+        profile_doc = frappe.get_doc(
+            {
+                "doctype": USER_PROFILE,
+                "user": email,
+                "full_name": email.split("@")[0].title(),
+                "username": email.split("@")[0],
+                "is_published": 1,
+            }
+        ).insert(ignore_permissions=True)
+    else:
+        profile_doc = frappe.get_doc(USER_PROFILE, profile_name)
 
-    if not profile:
-        if user:
-            # attempt to create the profile via hook, then re-query
-            create_profile_on_user_create(user, None)
-            # re-query the DB to fetch the newly created profile
-            profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
-            if not profile:
-                raise ValueError(f"User Profile was not auto-created for {email} after hook call.")
-        else:
-            raise ValueError(
-                f"User Profile was not auto-created for {email} and User doc not found"
-            )
-
-    return profile
+    return profile_doc.name
 
 
 def insert_test_chapter(**kwargs):

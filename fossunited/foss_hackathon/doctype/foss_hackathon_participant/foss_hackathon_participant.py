@@ -27,7 +27,7 @@ class FOSSHackathonParticipant(Document):
         is_student: DF.Check
         localhost: DF.Link | None
         localhost_request_status: DF.Literal[
-            "Pending", "Pending Confirmation", "Accepted", "Rejected"  # noqa: F722, F821
+            "Pending", "Pending Confirmation", "Accepted", "Rejected"
         ]
         organization: DF.Data | None
         subscribe_chapter_mailing: DF.Check
@@ -126,3 +126,20 @@ class FOSSHackathonParticipant(Document):
             )
 
         self.localhost_request_status = "Pending"
+
+    def has_permission(self, ptype="read", user=None):
+        """Participants can only edit their own record"""
+        # note: we already set "if owner" perm, but safer side to have this.
+        user = user or frappe.session.user
+
+        if user == "Administrator":
+            return True
+        if {"System Manager", "Localhost Organizer"} & set(frappe.get_roles(user)):
+            return True
+        if ptype == "read":
+            return True
+        if user == "Guest":
+            return False
+        if ptype == "create":
+            return True
+        return user in {self.user, self.email}
