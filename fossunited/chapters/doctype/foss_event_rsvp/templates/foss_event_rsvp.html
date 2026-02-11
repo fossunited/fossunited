@@ -244,8 +244,8 @@
             } catch (err) {
                 isSubmitting = false
                 btn.prop('disabled', false)
-                btn.html('RSVP for this event')
-                frappe.msgprint('Failed to submit RSVP. Please try again.')
+                btn.html(__('RSVP for this event'))
+                frappe.msgprint(__('Failed to submit RSVP. Please try again.'))
             }
         })
     })
