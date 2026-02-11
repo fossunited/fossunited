@@ -128,3 +128,20 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         team.team_name = "Hacked name"
         with self.assertRaises(frappe.PermissionError):
             team.save()
+
+    def test_team_deleted_only_when_empty(self):
+        participant = self.participants[0]
+
+        self.team.append("members", {"member": participant.name})
+        self.team.save()
+
+        team_name = self.team.name
+        self.assertTrue(frappe.db.exists(HACKATHON_TEAM, team_name))
+
+        team = frappe.get_doc(HACKATHON_TEAM, team_name)
+        team.project = None
+        team.partner_project = None
+        team.members = []
+        team.save()
+
+        self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
