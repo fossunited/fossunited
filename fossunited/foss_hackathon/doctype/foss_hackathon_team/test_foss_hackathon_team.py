@@ -1,7 +1,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import HACKATHON_TEAM_MEMBER
+from fossunited.doctype_ids import HACKATHON_TEAM, HACKATHON_TEAM_MEMBER, USER_PROFILE
 from fossunited.tests.utils import (
     insert_test_chapter,
     insert_test_hackathon,
@@ -43,9 +43,9 @@ class TestFOSSHackathonTeam(FrappeTestCase):
 
         for i in range(4):
             email = f"team_user_{i}@test.com"
-            profile = frappe.db.get_value("User Profile", {"user": email}, "name")
+            profile = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
             if profile:
-                frappe.delete_doc("User Profile", profile, force=True)
+                frappe.delete_doc(USER_PROFILE, profile, force=True)
             if frappe.db.exists("User", email):
                 frappe.delete_doc("User", email, force=True)
 
@@ -124,7 +124,7 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         self.team.save()
 
         frappe.set_user(other_participant.user)
-        team = frappe.get_doc("FOSS Hackathon Team", self.team.name)
+        team = frappe.get_doc(HACKATHON_TEAM, self.team.name)
         team.team_name = "Hacked name"
         with self.assertRaises(frappe.PermissionError):
             team.save()
