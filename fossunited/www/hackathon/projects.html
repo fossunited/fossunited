@@ -12,7 +12,7 @@
         {{ theme_toggle() }}
       </div>
 
-      <div class="v3-text-primary mt-6 p-0">
+      <div class="v3-text-primary p-0">
         <div>
           {% if hackathon.chapter and not hackathon.hackathon_logo %}
             {%
@@ -21,17 +21,21 @@
             %}
             {{ chapter_branding_block(hackathon.chapter) }}
           {% endif %}
-          <div class="hackathon-name--header align-items-end my-2">
+          <div class="hackathon-name--header align-items-end">
             {% if hackathon.hackathon_logo %}
-              <img
-                src="{{ hackathon.hackathon_logo }}"
-                alt="Hackathon Logo"
-                style="height: 4rem; width: auto"
-                class="mr-4"
-              />
+              <div class="d-inline-block p-2 bg-white rounded">
+                <img
+                  src="{{ hackathon.hackathon_logo }}"
+                  alt="Hackathon Logo"
+                  style="width: 150px"
+                />
+              </div>
             {% endif %}
           </div>
-          <h1 class="my-4">{{ hackathon.hackathon_name }} - Project Submissions</h1>
+          <h1 class="my-4">
+            {{ hackathon.hackathon_name }} - Project Submissions
+            <span class="v3-text-tertiary">({{ projects|length }})</span>
+          </h1>
         </div>
       </div>
 
@@ -50,8 +54,10 @@
           <span style="color: var(--v3-text-color3); font-size: 14px;">Sort by:</span>
           <select class="v3-select" id="sort">
             <option value="alpha">Alphabetical</option>
-            <option value="chapter">Chapter</option>
-            <option value="city">City</option>
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="updated">Recently Updated</option>
+            <option value="contributions">Most Contributions</option>
           </select>
         </div>
       </div>
@@ -61,21 +67,35 @@
           <h3>No projects found</h3>
         </div>
       {% endif %}
-      <div class="projects-grid">
+      <div class="projects-grid mt-6">
         {% for project in projects %}
-          <div class="v3-card project-card v3-text-primary" onClick="window.location.href='/{{ project.route }}'">
-            <h3>{{ project.title }}</h3>
-            <p class="v3-text-secondary">
-              {{ project.short_description | truncate(150, true) }}
-            </p>
-            <span class="v3-text-secondary">{{ project.team_name }}</span>
+          <div
+            class="v3-card project-card v3-text-primary"
+            onClick="window.location.href='/{{ project.route }}'"
+            data-title="{{ project.title }}"
+            data-created="{{ project.creation }}"
+            data-modified="{{ project.modified }}"
+            data-contributions="{{ project.issue_pr_table|length if project.issue_pr_table else 0 }}"
+          >
+            <div class="d-flex justify-content-between align-items-start">
+              <h3 class="project-card--title p-0">{{ project.title }}</h3>
+              <span class="badge badge-secondary contribution-badge" style="display: none;">
+                {{ project.issue_pr_table|length if project.issue_pr_table else 0 }} contributions
+              </span>
+            </div>
+            <p class="v3-text-secondary">{{ project.short_description | truncate(150, true) }}</p>
+            <span class="v3-text-secondary project-card--team">{{ project.team_name }}</span>
           </div>
         {% endfor %}
+      </div>
+      <div class="text-center mt-4 no-project" style="display: none;">
+        <h6>No project or team found</h6>
       </div>
     </div>
   </div>
 
   <script>
+    // Search functionality
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const searchTerm = e.target.value.toLowerCase()
       let projectSearch = false
@@ -91,25 +111,65 @@
         }
       })
 
-      // Add empty state in project search
-
-      const searchInputBox = document.querySelector('.search-box')
-      let emptyState = document.querySelector('.no-project')
-      if (!projectSearch) {
-        if (!emptyState) {
-          emptyState = document.createElement('h6')
-          emptyState.classList.add('no-project')
-          emptyState.appendChild(document.createTextNode('No project or team found'))
-
-          // Styles for emptyState element
-          emptyState.style.marginTop = '1rem'
-          emptyState.style.paddingLeft = '0.5rem'
-          searchInputBox.insertAdjacentElement('afterend', emptyState)
-        }
+      // Show/hide empty state
+      const emptyState = document.querySelector('.no-project')
+      if (!projectSearch && searchTerm.length > 0) {
+        emptyState.style.display = 'block'
       } else {
-        if (emptyState) {
-          emptyState.remove()
+        emptyState.style.display = 'none'
+      }
+    })
+
+    // Sort
+    document.getElementById('sort').addEventListener('change', (e) => {
+      const sortBy = e.target.value
+      const projectsGrid = document.querySelector('.projects-grid')
+      const cards = Array.from(document.querySelectorAll('.project-card'))
+      const contributionBadges = document.querySelectorAll('.contribution-badge')
+
+      // Show/hide contribution badges
+      if (sortBy === 'contributions') {
+        contributionBadges.forEach((badge) => (badge.style.display = 'block'))
+      } else {
+        contributionBadges.forEach((badge) => (badge.style.display = 'none'))
+      }
+
+      cards.sort((a, b) => {
+        switch (sortBy) {
+          case 'alpha':
+            const titleA = a.dataset.title.toLowerCase()
+            const titleB = b.dataset.title.toLowerCase()
+            return titleA.localeCompare(titleB)
+
+          case 'newest':
+            return new Date(b.dataset.created) - new Date(a.dataset.created)
+
+          case 'oldest':
+            return new Date(a.dataset.created) - new Date(b.dataset.created)
+
+          case 'updated':
+            return new Date(b.dataset.modified) - new Date(a.dataset.modified)
+
+          case 'contributions':
+            return parseInt(b.dataset.contributions) - parseInt(a.dataset.contributions)
+
+          default:
+            return 0
         }
+      })
+
+      // Clear and re-append sorted cards
+      projectsGrid.innerHTML = ''
+      cards.forEach((card) => projectsGrid.appendChild(card))
+    })
+
+    // surprise me to show random project
+    document.getElementById('surprise').addEventListener('click', () => {
+      const cards = Array.from(document.querySelectorAll('.project-card'))
+      const visibleCards = cards.filter((card) => card.style.display !== 'none')
+      if (visibleCards.length > 0) {
+        const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)]
+        randomCard.click()
       }
     })
   </script>
