@@ -1,56 +1,77 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle, breadcrumb %}
+
 {% block page_content %}
-  <div class="container">
-    <div class="backlink d-flex align-items-end mt-5">
-      <a href="/{{ hackathon.route }}" class="fw-bolder"> {{ hackathon.hackathon_name }} </a>
-      <span class="mx-2">></span>
-      <span style="font-weight: var(--fw-normal)">All Projects</span>
-    </div>
-    <div class="header--title-cta-parent mt-6 p-0">
-      <div>
-        {% if hackathon.chapter and not hackathon.hackathon_logo %}
-          {%
-            from
-            'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block
-          %}
-          {{ chapter_branding_block(hackathon.chapter) }}
-        {% endif %}
-        <div class="hackathon-name--header align-items-end my-2">
-          {% if hackathon.hackathon_logo %}
-            <img
-              src="{{ hackathon.hackathon_logo }}"
-              alt="Hackathon Logo"
-              style="height: 4rem; width: auto"
-              class="mr-4"
-            />
+  <div class="v3-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center my-2">
+        {{
+          breadcrumb(items=[{"route": (hackathon.external_website_url or '/' + hackathon.route), "label": hackathon.hackathon_name},
+          {"route": "", "label": "All Projects"}])
+        }}
+        {{ theme_toggle() }}
+      </div>
+
+      <div class="v3-text-primary mt-6 p-0">
+        <div>
+          {% if hackathon.chapter and not hackathon.hackathon_logo %}
+            {%
+              from
+              'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block
+            %}
+            {{ chapter_branding_block(hackathon.chapter) }}
           {% endif %}
-          <h1 class="header--event-title pt-2">{{ hackathon.hackathon_name }}</h1>
-        </div>
-      </div>
-    </div>
-    <h5 class="mt-6">All Projects</h5>
-
-    <div class="search-box">
-      <div class="flex items-center p-2 rounded border border-gray-200 bg-white min-w-[50%]">
-        <input type="text" id="searchInput" placeholder="Search by project or team name" />
-      </div>
-    </div>
-
-    {% if not projects %}
-      <div class="text-center mt-5">
-        <h3>No projects found</h3>
-      </div>
-    {% endif %}
-    <div class="projects-grid">
-      {% for project in projects %}
-        <div class="project-card" onClick="window.location.href='/{{ project.route }}'">
-          <div class="project-card--title">{{ project.title }}</div>
-          <div class="project-card--short-bio">
-            {{ project.short_description | truncate(150, true) }}
+          <div class="hackathon-name--header align-items-end my-2">
+            {% if hackathon.hackathon_logo %}
+              <img
+                src="{{ hackathon.hackathon_logo }}"
+                alt="Hackathon Logo"
+                style="height: 4rem; width: auto"
+                class="mr-4"
+              />
+            {% endif %}
           </div>
-          <div class="project-card--team">{{ project.team_name }}</div>
+          <h1 class="my-4">{{ hackathon.hackathon_name }} - Project Submissions</h1>
         </div>
-      {% endfor %}
+      </div>
+
+      <div class="v3-controls">
+        <div class="v3-controls-left flex-wrap">
+          <div class="v3-search-input">
+            <input type="text" placeholder="Search by project or team name" id="searchInput" />
+            <i class="ti ti-search"></i>
+          </div>
+          <div class="d-flex align-items-center">
+            <button class="v3-btn v3-btn-dark mr-2" id="surprise">Surprise Me</button>
+          </div>
+        </div>
+
+        <div class="v3-controls-right">
+          <span style="color: var(--v3-text-color3); font-size: 14px;">Sort by:</span>
+          <select class="v3-select" id="sort">
+            <option value="alpha">Alphabetical</option>
+            <option value="chapter">Chapter</option>
+            <option value="city">City</option>
+          </select>
+        </div>
+      </div>
+
+      {% if not projects %}
+        <div class="text-center mt-5">
+          <h3>No projects found</h3>
+        </div>
+      {% endif %}
+      <div class="projects-grid">
+        {% for project in projects %}
+          <div class="v3-card project-card v3-text-primary" onClick="window.location.href='/{{ project.route }}'">
+            <h3>{{ project.title }}</h3>
+            <p class="v3-text-secondary">
+              {{ project.short_description | truncate(150, true) }}
+            </p>
+            <span class="v3-text-secondary">{{ project.team_name }}</span>
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
