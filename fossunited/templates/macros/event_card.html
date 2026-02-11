@@ -30,7 +30,7 @@
   {% set event_name = event.event_name or event.hackathon_name %}
   {% set start_date = event.event_start_date or event.start_date %}
   {% set end_date = event.event_end_date or event.end_date or start_date %}
-  {% set location = event.event_location or event.location or "Virtual" %}
+  {% set location = event.event_location or event.location or "TBA" %}
   {% set banner = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
   {% set chapter_name = event.chapter %}
 
