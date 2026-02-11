@@ -89,37 +89,59 @@
 {% endmacro %}
 
 {% macro render_form() %}
-  <div class="v3-card">
-    {{ form_header() }}
+<div class="v3-card" id="rsvp-form-card">
+  {{ form_header() }}
 
-    <hr class="my-4" style="border-color: var(--v3-button-border);" />
+  <hr class="my-4" style="border-color: var(--v3-button-border);" />
 
-    <form>
-      {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
-      <div class="d-flex flex-column">
-        {% for field in form_fields %}
+  <form>
+    {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
+    <div class="d-flex flex-column">
+      {% for field in form_fields %}
           {{ renderfield(field) }}
         {% endfor %}
-      </div>
-    </form>
-
-    <div class="mt-4 pt-3">
-      <button class="v3-btn v3-btn-primary w-100" type="submit" id="submit-rsvp">
-        {{ _("RSVP for this event") }}
-      </button>
     </div>
+  </form>
 
-    <div class="text-right mt-3">
-      <p class="v3-text-tertiary mb-0" style="font-size: 0.875rem;">
-        By submitting this form, you agree to our
-        <a
-          href="https://fossunited.org/privacy-policy"
-          alt="privacy-policy"
-          style="color: var(--v3-primary-button); text-decoration: underline;"
-        >privacy policy.</a>
+  <div class="mt-4 pt-3">
+    <button class="v3-btn v3-btn-primary w-100" type="submit" id="submit-rsvp">
+      {{ _("RSVP for this event") }}
+    </button>
+  </div>
+
+  <div class="text-right mt-3">
+    <p class="v3-text-tertiary mb-0" style="font-size: 0.875rem;">
+      By submitting this form, you agree to our
+      <a
+        href="https://fossunited.org/privacy-policy"
+        alt="privacy-policy"
+        style="color: var(--v3-primary-button); text-decoration: underline;"
+      >privacy policy.</a>
+    </p>
+  </div>
+</div>
+<div id="rsvp-success" style="display:none">
+  <div class="v3-card my-5">
+    <div class="text-center p-2">
+      <h3 class="v3-text-primary mb-4">
+        🎉 Successfully RSVP’d!
+      </h3>
+
+      <p class="v3-text-secondary mb-4">
+        You're all set. Stay updated on the event page for more details.
+      </p>
+
+      <a href="/{{ event.route }}" class="v3-btn v3-btn-primary">
+        Go to Event Page
+      </a>
+
+      <p class="v3-text-tertiary mt-3">
+        Redirecting automatically in a few seconds...
       </p>
     </div>
   </div>
+</div>
+
 {% endmacro %}
 
 {% macro form_header() %}
@@ -156,58 +178,81 @@
 {% block page_script %}
   <script>
     $(document).ready(() => {
-      set_mandatory_asterisk()
+        set_mandatory_asterisk()
+        let isSubmitting = false
 
-      $('#submit-rsvp').on('click', (e) => {
-        e.preventDefault()
-        let email_field = $('[data-label="Email"]').val()
+        $('#submit-rsvp').on('click', async (e) => {
+            e.preventDefault()
 
-        function isValidEmail(email) {
-          let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-          return emailRegex.test(email)
-        }
+            if (isSubmitting) return
+            isSubmitting = true
 
-        const formData = $('form').serializeArray()
-        const data = {}
+            const btn = $('#submit-rsvp')
+            btn.prop('disabled', true)
+            btn.html('<i class="fa fa-spinner fa-spin"></i> Submitting...')
 
-        data['linked_rsvp'] = '{{ doc.name }}'
-        data['confirm_attendance'] = '1' // if they fill, its understood that they confirm
-        formData.forEach((field) => {
-          data[field.name] = field.value
-        })
-        $('.ql-editor-custom').each((idx, element) => {
-          data[element.id] = $(element).find('.ql-editor').html()
-        })
+            try {
+                const formData = $('form').serializeArray()
+                const data = {}
 
-        const custom_answers = []
-        for (const key in data) {
-          if (key.includes('custom_question')) {
-            const label = $(`[name="${key}"]`).attr('data-label')
-            const type = $(`[name="${key}"]`).data('type')
-            custom_answers.push({ question: label, response: data[key], type: type })
-            delete data[key]
-          }
-        }
-        data['custom_answers'] = custom_answers
-        frappe
-          .call({
-            method: 'fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp.create_rsvp',
-            args: {
-              fields: JSON.stringify(data),
-            },
-          })
-          .then((response) => {
-            if (response.message) {
-              frappe.msgprint("You have successfully RSVP'd for the event!", 'Success!')
-              setTimeout(() => {
-                window.location.reload()
-              }, 5000)
-            } else {
-              frappe.throw('Failed to submit RSVP. Please try again.')
+                data['linked_rsvp'] = '{{ doc.name }}'
+                data['confirm_attendance'] = '1'
+
+                formData.forEach((field) => {
+                    data[field.name] = field.value
+                })
+
+                $('.ql-editor-custom').each((idx, element) => {
+                    data[element.id] = $(element).find('.ql-editor').html()
+                })
+
+                const custom_answers = []
+                for (const key in data) {
+                    if (key.includes('custom_question')) {
+                        const label = $(`[name="${key}"]`).attr('data-label')
+                        const type = $(`[name="${key}"]`).data('type')
+                        custom_answers.push({ question: label, response: data[key], type: type })
+                        delete data[key]
+                    }
+                }
+                data['custom_answers'] = custom_answers
+
+                const response = await frappe.call({
+                    method:
+                    'fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp.create_rsvp',
+                    args: {
+                        fields: JSON.stringify(data),
+                    },
+                    freeze: true,
+                    freeze_message: 'Submitting RSVP...'
+                })
+
+                if (response.message) {
+                    if (response.message) {
+                        $('#rsvp-form-card').hide()
+                        $('#rsvp-success').fadeIn()
+                        frappe.show_alert({
+                            message: "RSVP successful!",
+                            indicator: "green"
+                        })
+
+                        setTimeout(() => {
+                            window.location.href = "/{{ event.route }}"
+                        }, 4000)
+                    }
+                } else {
+                    throw new Error('Failed to submit RSVP')
+                }
+
+            } catch (err) {
+                isSubmitting = false
+                btn.prop('disabled', false)
+                btn.html('RSVP for this event')
+                frappe.msgprint('Failed to submit RSVP. Please try again.')
             }
-          })
-      })
+        })
     })
+
   </script>
 
   <style>
