@@ -1,12 +1,11 @@
 <!-- prettier-ignore-start -->
 {% extends "templates/base.html" %} {% block head_include %} {{ super() }}
-<script>
- document.addEventListener('DOMContentLoaded', function() {
-    if (!document.querySelector('.v3-theme-toggle#theme-toggle')) return;
+<script> // Apply theme immediately before page renders
+  (function() {
     const savedTheme = localStorage.getItem('theme') ||
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', savedTheme);
-  });
+  })();
 </script>
 <link
   rel="stylesheet"

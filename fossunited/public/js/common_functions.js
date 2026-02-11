@@ -230,7 +230,10 @@ function resetTooltip() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.getElementById('theme-toggle')
-  if (!toggle) return
+  if (!toggle) {
+    document.documentElement.setAttribute('data-theme', 'light')
+    return
+  }
 
   const icon = toggle.querySelector('i')
   const lightIcon = toggle.dataset.lightIcon || 'ti-moon'

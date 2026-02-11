@@ -57,7 +57,6 @@
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
             <option value="updated">Recently Updated</option>
-            <option value="contributions">Most Contributions</option>
           </select>
         </div>
       </div>
@@ -77,14 +76,8 @@
             data-title="{{ project.title }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
-            data-contributions="{{ project.issue_pr_table|length if project.issue_pr_table else 0 }}"
           >
-            <div class="d-flex justify-content-between align-items-start">
-              <h3 class="project-card--title p-0">{{ project.title }}</h3>
-              <span class="badge badge-secondary contribution-badge" style="display: none;">
-                {{ project.issue_pr_table|length if project.issue_pr_table else 0 }} contributions
-              </span>
-            </div>
+            <h3 class="project-card--title p-0">{{ project.title }}</h3>
             <p class="v3-text-secondary">{{ project.short_description | truncate(150, true) }}</p>
             <span class="v3-text-secondary project-card--team">{{ project.team_name }}</span>
           </div>
@@ -140,14 +133,6 @@
       const sortBy = e.target.value
       const projectsGrid = document.querySelector('.projects-grid')
       const cards = Array.from(document.querySelectorAll('.project-card'))
-      const contributionBadges = document.querySelectorAll('.contribution-badge')
-
-      // Show/hide contribution badges
-      if (sortBy === 'contributions') {
-        contributionBadges.forEach((badge) => (badge.style.display = 'block'))
-      } else {
-        contributionBadges.forEach((badge) => (badge.style.display = 'none'))
-      }
 
       cards.sort((a, b) => {
         switch (sortBy) {
@@ -164,9 +149,6 @@
 
           case 'updated':
             return new Date(b.dataset.modified) - new Date(a.dataset.modified)
-
-          case 'contributions':
-            return parseInt(b.dataset.contributions) - parseInt(a.dataset.contributions)
 
           default:
             return 0
