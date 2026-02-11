@@ -82,6 +82,8 @@ class FOSSHackathonProject(WebsiteGenerator):
         # everyone can read
         if ptype not in ["write", "delete"]:
             return True
+        if user == "Administrator" or "System Manager" in frappe.get_roles(user):
+            return True
 
         if not self.team:
             return False

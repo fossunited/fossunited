@@ -129,19 +129,17 @@ class FOSSHackathonParticipant(Document):
 
     def has_permission(self, ptype="read", user=None):
         """Participants can only edit their own record"""
-        # note: we already has "if owner" perm, but safer side to have this.
+        # note: we already set "if owner" perm, but safer side to have this.
         user = user or frappe.session.user
 
+        if user == "Administrator":
+            return True
+        if {"System Manager", "Localhost Organizer"} & set(frappe.get_roles(user)):
+            return True
         if ptype == "read":
             return True
-
         if user == "Guest":
             return False
-
-        if self.user:
-            return self.user == user
-
-        if self.email:
-            return self.email == user
-
-        return False
+        if ptype == "create":
+            return True
+        return user in {self.user, self.email}

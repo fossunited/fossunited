@@ -111,7 +111,6 @@ def get_participant(hackathon: str) -> dict:
 
     Args:
         hackathon (str): Hackathon ID
-        user (str): User email
 
     Returns:
         dict: Participant document as a dictionary
@@ -276,12 +275,13 @@ def get_project_by_email(hackathon: str):
 
     Args:
         hackathon (str): Hackathon ID
-        email (str): Email of the person
 
     Returns:
         dict: Project document as a dictionary
     """
     team = get_team_by_member_email(hackathon)
+    if not team:
+        return None
     return get_project_by_team(hackathon, team.get("name"))
 
 
