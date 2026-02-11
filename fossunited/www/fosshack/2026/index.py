@@ -1,15 +1,24 @@
 import frappe
 
+from fossunited.doctype_ids import (
+    HACKATHON,
+    HACKATHON_PROJECT,
+    HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
+)
 from fossunited.fossunited.utils import get_event_sponsors
+
+# TODO: Make this into template to serve data for future hackathon pages?
+# same for Indiafoss if we are not using builder for it
 
 
 def get_context(context):
     """Context for FOSS Hack 2026 page"""
 
-    hackathon_id = frappe.db.get_value("FOSS Hackathon", {"hackathon_name": "FOSS Hack 2026"})
+    hackathon_id = frappe.db.get_value(HACKATHON, {"hackathon_name": "FOSS Hack 2026"})
 
     # Fetch hackathon details
-    hackathon = frappe.get_doc("FOSS Hackathon", hackathon_id)
+    hackathon = frappe.get_doc(HACKATHON, hackathon_id)
 
     context.doc = hackathon
     context.pagetitle, context.description, context.image = hackathon.get_meta()
@@ -67,24 +76,41 @@ def get_context(context):
         },
     ]
 
-    teams = frappe.get_all(
-        "FOSS Hackathon Team",
-        filters={"hackathon": hackathon_id},
-        pluck="name",
+    # Teams that have at least one member in this hackathon
+    teams_with_members = frappe.get_all(
+        HACKATHON_TEAM_MEMBER,
+        filters={
+            "parenttype": HACKATHON_TEAM,
+            "parent": [
+                "in",
+                frappe.get_all(
+                    HACKATHON_TEAM,
+                    filters={"hackathon": hackathon_id},
+                    pluck="name",
+                ),
+            ],
+        },
+        fields=["DISTINCT parent as team"],
+        pluck="team",
     )
 
-    teams_count = len(teams)
+    teams_count = len(teams_with_members)
 
     member_count = frappe.db.count(
-        "FOSS Hackathon Team Member",
+        HACKATHON_TEAM_MEMBER,
         {
-            "parenttype": "FOSS Hackathon Team",
-            "parent": ["in", teams],
+            "parenttype": HACKATHON_TEAM,
+            "parent": ["in", teams_with_members],
         },
     )
+
     projects_count = frappe.db.count(
-        "FOSS Hackathon Project",
-        filters={"hackathon": hackathon_id, "is_published": 1},
+        HACKATHON_PROJECT,
+        {
+            "hackathon": hackathon_id,
+            "team": ["in", teams_with_members],
+            "is_published": 1,
+        },
     )
 
     # Stats
