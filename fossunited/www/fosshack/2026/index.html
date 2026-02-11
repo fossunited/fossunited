@@ -328,18 +328,21 @@
                       <a href="{{ localhost.route }}" class="localhost-card">
                         <div class="localhost-title v3-text">{{ localhost.localhost_name }}</div>
 
-                        <div class="d-flex justify-content-between align-items-center">
-                          <small class="v3-text-light">{{ localhost.location or "" }}</small>
-                          <div class="text-end">
+                        <div class="d-flex align-items-center">
+                          <small class="v3-text-light flex-grow-1 overflow-hidden">
+                            {{ localhost.location or "" }}
+                          </small>
+
+                          <div class="text-end flex-shrink-0 text-nowrap ml-3">
                             {% if localhost.attending > 0 %}
-                              <small class="text-success d-block">
-                                {{ localhost.attending }} attending
-                              </small>
+                            <small class="text-success d-block">
+                              {{ localhost.attending }} attending
+                            </small>
                             {% endif %}
                             {% if localhost.interested > 0 %}
-                              <small class="v3-text-light d-block">
-                                {{ localhost.interested }} interested
-                              </small>
+                            <small class="v3-text-light d-block">
+                              {{ localhost.interested }} interested
+                            </small>
                             {% endif %}
                           </div>
                         </div>
