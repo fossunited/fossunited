@@ -2,7 +2,6 @@
 {% extends "templates/base.html" %} {% block head_include %} {{ super() }}
 <script> // Apply theme immediately before page renders
   (function() {
-    if (!document.querySelector('.v3-theme-toggle#theme-toggle')) return;
     const savedTheme = localStorage.getItem('theme') ||
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
     document.documentElement.setAttribute('data-theme', savedTheme);

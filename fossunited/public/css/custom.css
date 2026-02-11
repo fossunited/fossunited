@@ -911,13 +911,6 @@ h6 {
   gap: 0.5rem;
 }
 
-.projects-grid {
-  display: grid;
-  padding: 1rem 0rem;
-  grid-template-columns: repeat(3, minmax(300px, 1fr));
-  gap: 1rem;
-}
-
 .project-container {
   display: flex;
   flex-direction: column;
@@ -1354,13 +1347,6 @@ h6 {
   color: hsl(var(--clr-foss-mint-500));
 }
 
-.header--event-title {
-  padding-top: 1rem;
-  font-size: var(--text-3xl);
-  font-weight: var(--fw-bold);
-  color: hsl(var(--clr-code-night-800));
-}
-
 .header--tags {
   display: flex;
   gap: 0.94rem;
@@ -1768,7 +1754,7 @@ h6 {
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(200px, 1fr));
+  grid-template-columns: repeat(2, minmax(360px, 1fr));
   gap: 1rem;
   margin: 1rem 0 3rem 0;
 }
