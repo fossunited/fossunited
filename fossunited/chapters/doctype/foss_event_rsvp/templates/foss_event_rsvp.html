@@ -114,7 +114,6 @@
       By submitting this form, you agree to our
       <a
         href="https://fossunited.org/privacy-policy"
-        alt="privacy-policy"
         style="color: var(--v3-primary-button); text-decoration: underline;"
       >privacy policy.</a>
     </p>
@@ -228,18 +227,16 @@
                 })
 
                 if (response.message) {
-                    if (response.message) {
-                        $('#rsvp-form-card').hide()
-                        $('#rsvp-success').fadeIn()
-                        frappe.show_alert({
-                            message: "RSVP successful!",
-                            indicator: "green"
-                        })
+                    $('#rsvp-form-card').hide()
+                    $('#rsvp-success').fadeIn()
+                    frappe.show_alert({
+                        message: "RSVP successful!",
+                        indicator: "green"
+                    })
 
-                        setTimeout(() => {
-                            window.location.href = "/{{ event.route }}"
-                        }, 4000)
-                    }
+                    setTimeout(() => {
+                        window.location.href = "/{{ event.route }}"
+                    }, 4000)
                 } else {
                     throw new Error('Failed to submit RSVP')
                 }
