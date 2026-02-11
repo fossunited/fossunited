@@ -8,6 +8,7 @@ from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTICIPANT,
     HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
 )
 
 
@@ -53,9 +54,14 @@ class FOSSHackathonTeam(Document):
                     f"Maximum team size of {max_size} members reached. Cannot add more members."
                 )
 
+    def on_update(self):
+        self.delete_if_empty_team()
+
     def validate_team_size(self):
         """Check team size limits"""
         max_size = frappe.db.get_value(HACKATHON, self.hackathon, "max_team_members")
+        if not max_size:
+            return
         if len(self.members) > max_size:
             frappe.throw(f"Team cannot have more than {max_size} members")
 
@@ -102,8 +108,10 @@ class FOSSHackathonTeam(Document):
         """Only team members can edit"""
 
         user = user or frappe.session.user
+        if user == "Administrator" or "System Manager" in frappe.get_roles(user):
+            return True
 
-        if ptype != "write":
+        if ptype not in ("write", "delete"):
             return True
 
         team_emails = {m.email for m in self.members if m.email}
@@ -121,3 +129,27 @@ class FOSSHackathonTeam(Document):
         )
 
         return user in participant_users
+
+    def delete_if_empty_team(self):
+        """Auto-delete team if it becomes empty after having content."""
+        prev_doc = self.get_doc_before_save()
+
+        if not prev_doc:
+            return
+        # Only delete if team had members before
+        previously_had_content = bool(
+            prev_doc.members or prev_doc.project or prev_doc.partner_project
+        )
+
+        if not previously_had_content:
+            return
+
+        is_now_empty = not (self.members or self.project or self.partner_project)
+
+        if is_now_empty:
+            frappe.delete_doc(
+                HACKATHON_TEAM,
+                self.name,
+                ignore_permissions=True,
+                force=True,
+            )
