@@ -62,6 +62,8 @@
         </div>
       </div>
 
+      <small class="mt-2 v3-text-secondary" id="projectCount" style="display: none;"></small>
+
       {% if not projects %}
         <div class="text-center mt-5">
           <h3>No projects found</h3>
@@ -117,6 +119,19 @@
         emptyState.style.display = 'block'
       } else {
         emptyState.style.display = 'none'
+      }
+      // Update project count
+      // Update project count
+      const projectCountEl = document.getElementById('projectCount')
+      if (searchTerm.length > 0) {
+        const visibleCount = document.querySelectorAll(
+          '.project-card[style*="display: flex"], .project-card:not([style*="display: none"])',
+        ).length
+        const totalCount = document.querySelectorAll('.project-card').length
+        projectCountEl.textContent = `Showing ${visibleCount} projects out of ${totalCount}`
+        projectCountEl.style.display = 'block'
+      } else {
+        projectCountEl.style.display = 'none'
       }
     })
 
