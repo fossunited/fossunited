@@ -1426,7 +1426,7 @@ h6 {
 .sponsor--tier-heading {
   font-size: var(--text-xl);
   font-weight: var(--fw-semibold);
-  color: hsl(var(--clr-code-night-800));
+  color: var(--v3-text-color, hsl(var(--clr-code-night-800)));
 }
 
 .sponsor--block {
