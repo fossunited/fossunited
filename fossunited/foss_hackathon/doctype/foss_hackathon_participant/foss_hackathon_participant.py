@@ -60,14 +60,10 @@ class FOSSHackathonParticipant(Document):
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_add_to_email_group()
 
-        if self.has_value_changed("localhost") and self.localhost and self.wants_to_attend_locally:
+        if self.has_value_changed("localhost") and self.localhost:
             # Localhost changed — just add to new group
             self.sync_localhost_status_groups()
-        elif (
-            self.has_value_changed("localhost_request_status")
-            and self.localhost
-            and self.wants_to_attend_locally
-        ):
+        elif self.has_value_changed("localhost_request_status") and self.localhost:
             # Only status changed within the same localhost
             self.sync_localhost_status_groups(old_status=self._get_old_status())
 
