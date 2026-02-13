@@ -84,6 +84,21 @@ const campaign = createResource({
   },
   onSuccess(data) {
     data.status = getStatus
+    // Transform email group labels for localhost
+    if (data.email_group) {
+      data.email_group = data.email_group.map((group) => {
+        let label = group.label
+        // For localhost groups, extract status from value (group name)
+        if (group.value && group.value.endsWith('-Localhost')) {
+          const status = group.value.split('-')[0]
+          label = `${status} Participants`
+        }
+        return {
+          ...group,
+          label: label,
+        }
+      })
+    }
     campaignData.value = cloneDeep(data)
     return data
   },
