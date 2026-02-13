@@ -387,7 +387,7 @@ def join_team_via_code(team_code: str, hackathon: str):
 
     # Add member - controller will validate everything
     team.append("members", {"member": participant.name})
-    team.save()
+    team.save(ignore_permissions=True)
 
     return team
 

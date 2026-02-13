@@ -106,7 +106,7 @@ const joinThroughCode = () => {
     url: 'fossunited.api.hackathon.join_team_via_code',
     params: {
       team_code: teamCode.value,
-      user: session.user,
+      hackathon: props.hackathon.data.name,
     },
     auto: true,
     onSuccess(data) {

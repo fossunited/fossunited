@@ -114,8 +114,16 @@ class FOSSHackathonTeam(Document):
         if ptype not in ("write", "delete"):
             return True
 
-        team_emails = {m.email for m in self.members if m.email}
-        if user in team_emails:
+        team_name = self.name
+
+        email_member = frappe.db.exists(
+            HACKATHON_TEAM_MEMBER,
+            {
+                "parent": team_name,
+                "email": user,
+            },
+        )
+        if email_member:
             return True
 
         participant_ids = [m.member for m in self.members if m.member]
