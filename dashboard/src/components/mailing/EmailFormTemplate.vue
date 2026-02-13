@@ -122,8 +122,15 @@ const emailGroups = createResource({
   transform(data) {
     let d = []
     data.forEach((item) => {
+      let label = item.group_type
+
+      // For localhost groups, extract status from title
+      if (item.name && item.name.endsWith('-Localhost')) {
+        const status = item.name.split('-')[0]
+        label = `${status} Participants`
+      }
       d.push({
-        label: item.group_type,
+        label: label,
         value: item.name,
         description: `${item.total_subscribers} subscribers`,
       })

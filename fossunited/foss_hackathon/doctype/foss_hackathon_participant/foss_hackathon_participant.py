@@ -38,21 +38,38 @@ class FOSSHackathonParticipant(Document):
 
     def after_insert(self):
         self.handle_add_to_email_group()
+        # Add to status-based localhost group if applicable
+        if self.wants_to_attend_locally and self.localhost:
+            self.sync_localhost_status_groups()
 
     def before_save(self):
         if self.has_value_changed("wants_to_attend_locally"):
             self.handle_localhost_request()
+
         self.handle_localhost_rejection()
+
         if self.has_value_changed("localhost"):
+            # Remove from old localhost groups before changing
+            old_localhost = (
+                self.get_doc_before_save().localhost if self.get_doc_before_save() else None
+            )
+            if old_localhost:
+                self.remove_from_all_localhost_groups(old_localhost)
             self.update_request_status()
+
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_add_to_email_group()
-        if (
+
+        if self.has_value_changed("localhost") and self.localhost and self.wants_to_attend_locally:
+            # Localhost changed — just add to new group
+            self.sync_localhost_status_groups()
+        elif (
             self.has_value_changed("localhost_request_status")
-            and self.localhost_request_status == "Accepted"
             and self.localhost
+            and self.wants_to_attend_locally
         ):
-            self.subscribe_to_localhost_email_group()
+            # Only status changed within the same localhost
+            self.sync_localhost_status_groups(old_status=self._get_old_status())
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
@@ -60,9 +77,13 @@ class FOSSHackathonParticipant(Document):
 
     def on_trash(self):
         try:
-            # remove from mailing group as well
+            # Remove from all email groups
             self.subscribe_chapter_mailing = 0
             self.handle_add_to_email_group()
+
+            # Remove from status-based localhost groups
+            if self.localhost:
+                self.remove_from_all_localhost_groups()
         except Exception:
             frappe.log_error(
                 frappe.get_traceback(),
@@ -70,7 +91,7 @@ class FOSSHackathonParticipant(Document):
             )
 
     def handle_add_to_email_group(self):
-        # Check if user should be subscribed
+        """Handle chapter and hackathon event subscription"""
         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
 
         handle_email_group_subscription(
@@ -82,22 +103,81 @@ class FOSSHackathonParticipant(Document):
             document_type_event=HACKATHON,
         )
 
-    def subscribe_to_localhost_email_group(self):
-        event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+    def sync_localhost_status_groups(self, old_status=None):
+        """
+        Add/remove participant from localhost email groups based on status.
+        Args:
+            old_status: Previous status to remove from that group
+        """
+        if not self.localhost:
+            return
 
+        event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+        current_status = self.localhost_request_status
+
+        # REMOVE from old status group first
+        if old_status and old_status != current_status:
+            handle_email_group_subscription(
+                emails=[self.email],
+                chapter=event_doc.chapter,
+                event=self.localhost,
+                event_type="Event Participants",
+                custom_group_title=f"{old_status}-{self.localhost}-Localhost",
+                subscribe_to_chapter=False,
+                subscribe_to_event=False,  # Remove
+                document_type_event=HACKATHON_LOCALHOST,
+            )
+
+        # ADD to current status group
         handle_email_group_subscription(
             emails=[self.email],
             chapter=event_doc.chapter,
             event=self.localhost,
+            event_type="Event Participants",
+            custom_group_title=f"{current_status}-{self.localhost}-Localhost",
             subscribe_to_chapter=self.subscribe_chapter_mailing,
             subscribe_to_event=True,
             document_type_event=HACKATHON_LOCALHOST,
         )
 
+    def remove_from_all_localhost_groups(self, localhost_id=None):
+        """Remove participant from all localhost status groups
+
+        Args:
+            localhost_id: Specific localhost to remove from. If None, uses self.localhost
+        """
+        target_localhost = localhost_id or self.localhost
+
+        if not target_localhost:
+            return
+
+        event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+        all_statuses = ["Pending", "Pending Confirmation", "Accepted", "Rejected"]
+
+        for status in all_statuses:
+            try:
+                handle_email_group_subscription(
+                    emails=[self.email],
+                    chapter=event_doc.chapter,
+                    event=target_localhost,
+                    event_type="Event Participants",
+                    custom_group_title=f"{status}-{target_localhost}-Localhost",
+                    subscribe_to_chapter=False,
+                    subscribe_to_event=False,
+                    document_type_event=HACKATHON_LOCALHOST,
+                )
+            except Exception:
+                frappe.log_error(
+                    frappe.get_traceback(),
+                    f"Error removing from {status} group of localhost {target_localhost}",
+                )
+
     def update_request_status(self):
+        """Reset status to Pending when localhost changes"""
         self.localhost_request_status = "Pending"
 
     def handle_localhost_rejection(self):
+        """Handle rejection by adding comment and resetting wants_to_attend_locally"""
         if not self.has_value_changed("localhost") and self.localhost_request_status == "Rejected":
             localhost_name = frappe.db.get_value(
                 HACKATHON_LOCALHOST, self.localhost, "localhost_name"
@@ -109,6 +189,7 @@ class FOSSHackathonParticipant(Document):
             self.wants_to_attend_locally = False
 
     def handle_localhost_request(self):
+        """Validate localhost request changes"""
         prev_doc = self.get_doc_before_save()
         if not prev_doc:
             return
@@ -127,9 +208,13 @@ class FOSSHackathonParticipant(Document):
 
         self.localhost_request_status = "Pending"
 
+    def _get_old_status(self):
+        """Get previous status value"""
+        prev_doc = self.get_doc_before_save()
+        return prev_doc.localhost_request_status if prev_doc else None
+
     def has_permission(self, ptype="read", user=None):
         """Participants can only edit their own record"""
-        # note: we already set "if owner" perm, but safer side to have this.
         user = user or frappe.session.user
 
         if user == "Administrator":
