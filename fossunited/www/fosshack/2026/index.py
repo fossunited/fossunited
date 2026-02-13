@@ -36,7 +36,7 @@ def get_context(context):
         "prize_pool": "₹5,00,000",
         "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
         "event_page_url": f"/{hackathon.route}",
-        "projects_idea_url": "https://forum.fossunited.org/t/hackathon-ideas/159",
+        "projects_idea_url": "https://forum.fossunited.org/t/problem-statements-and-ideas-fosshack-2026/7186",
         "status": "Registrations Open"
         if hackathon.is_registration_live
         else "Opening on Jan 2026",
