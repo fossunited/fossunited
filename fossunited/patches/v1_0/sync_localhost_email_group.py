@@ -14,7 +14,7 @@ def execute():
             "wants_to_attend_locally",
         ],
         filters={
-            "hackathon": "1hdcnkbtmk",
+            "hackathon": "1hdcnkbtmk",  # FOSS Hack 2026
             "localhost": ["is", "set"],
         },
     )
@@ -37,6 +37,9 @@ def execute():
             doc.handle_add_to_email_group()
 
             success_count += 1
+            if success_count % 100 == 0:
+                frappe.db.commit()
+                print(f"Progress: {success_count}/{total}")
 
         except Exception as e:
             error_count += 1
