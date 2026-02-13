@@ -116,14 +116,13 @@ class FOSSHackathonParticipant(Document):
             )
 
         # ADD to current status group
-        subscribe_chapter = self.subscribe_chapter_mailing
         handle_email_group_subscription(
             emails=[self.email],
             chapter=event_doc.chapter,
             event=self.localhost,
             event_type="Event Participants",
             custom_group_title=f"{current_status}-{self.localhost}-Localhost",
-            subscribe_to_chapter=subscribe_chapter,
+            subscribe_to_chapter=self.subscribe_chapter_mailing,
             subscribe_to_event=True,
             document_type_event=HACKATHON_LOCALHOST,
         )
@@ -145,7 +144,7 @@ class FOSSHackathonParticipant(Document):
                     chapter=event_doc.chapter,
                     event=self.localhost,
                     event_type="Event Participants",
-                    custom_event_title=f"{status}-{self.localhost}-Localhost",
+                    custom_group_title=f"{status}-{self.localhost}-Localhost",
                     subscribe_to_chapter=False,
                     subscribe_to_event=False,
                     document_type_event=HACKATHON_LOCALHOST,

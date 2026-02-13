@@ -60,19 +60,6 @@ def create_email_group(
         )
         return None
 
-    filters = {
-        "reference_document": reference_document,
-        "document_type": document_type,
-        "group_type": type,
-    }
-    if chapter:
-        filters["chapter"] = chapter
-
-    existing_group = frappe.get_value(EMAIL_GROUP, filters, "name")
-
-    if existing_group:
-        return frappe.get_doc(EMAIL_GROUP, existing_group)
-
     suffix = EMAIL_GROUP_SUFFIX_BY_DOCTYPE.get(document_type)
     if suffix is None:
         frappe.throw(
@@ -81,6 +68,20 @@ def create_email_group(
         )
 
     group_title = custom_title if custom_title else f"{type}-{reference_document}{suffix}"
+
+    filters = {
+        "reference_document": reference_document,
+        "document_type": document_type,
+        "group_type": type,
+        "title": group_title,
+    }
+    if chapter:
+        filters["chapter"] = chapter
+
+    existing_group = frappe.get_value(EMAIL_GROUP, filters, "name")
+
+    if existing_group:
+        return frappe.get_doc(EMAIL_GROUP, existing_group)
 
     group = frappe.get_doc(
         {
