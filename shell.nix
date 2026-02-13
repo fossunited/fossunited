@@ -14,7 +14,7 @@ in
 	  # pypkgs
 	  # ruff black
 	  # ty # basedpyright
-	  uv nodePackages.eslint nodePackages.prettier html-tidy nodePackages.yarn
+	  uv nodePackages.eslint nodePackages.prettier html-tidy nodePackages.yarn semgrep
 	  vale harper
 	];
 
