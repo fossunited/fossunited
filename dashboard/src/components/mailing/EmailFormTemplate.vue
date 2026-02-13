@@ -122,8 +122,23 @@ const emailGroups = createResource({
   transform(data) {
     let d = []
     data.forEach((item) => {
+      let label = item.group_type
+
+      // For localhost groups with custom titles, extract status from title
+      if (
+        props.document_type === 'FOSS Hackathon LocalHost' &&
+        item.group_type === 'Event Participants'
+      ) {
+        // Title format: "Pending-abc123-Localhost" or "Accepted-abc123-Localhost"
+        const titleParts = item.name.split('-')
+        if (titleParts.length >= 3 && titleParts[titleParts.length - 1] === 'Localhost') {
+          const status = titleParts[0] // "Pending", "Accepted", etc.
+          label = `${status} Participants`
+        }
+      }
+
       d.push({
-        label: item.group_type,
+        label: label,
         value: item.name,
         description: `${item.total_subscribers} subscribers`,
       })
