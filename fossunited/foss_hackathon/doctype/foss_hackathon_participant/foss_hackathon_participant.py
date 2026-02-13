@@ -49,14 +49,23 @@ class FOSSHackathonParticipant(Document):
         self.handle_localhost_rejection()
 
         if self.has_value_changed("localhost"):
+            # Remove from old localhost groups before changing
+            old_localhost = (
+                self.get_doc_before_save().localhost if self.get_doc_before_save() else None
+            )
+            if old_localhost:
+                self.remove_from_all_localhost_groups(old_localhost)
             self.update_request_status()
 
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_add_to_email_group()
 
-        # Handle status-based email group changes
         if self.has_value_changed("localhost_request_status") and self.localhost:
             self.sync_localhost_status_groups(old_status=self._get_old_status())
+
+        # Add to new localhost group after localhost change
+        if self.has_value_changed("localhost") and self.localhost:
+            self.sync_localhost_status_groups()
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
@@ -127,14 +136,18 @@ class FOSSHackathonParticipant(Document):
             document_type_event=HACKATHON_LOCALHOST,
         )
 
-    def remove_from_all_localhost_groups(self):
-        """Remove participant from all localhost status groups"""
-        if not self.localhost:
+    def remove_from_all_localhost_groups(self, localhost_id=None):
+        """Remove participant from all localhost status groups
+
+        Args:
+            localhost_id: Specific localhost to remove from. If None, uses self.localhost
+        """
+        target_localhost = localhost_id or self.localhost
+
+        if not target_localhost:
             return
 
         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
-
-        # All possible statuses
         all_statuses = ["Pending", "Pending Confirmation", "Accepted", "Rejected"]
 
         for status in all_statuses:
@@ -142,18 +155,17 @@ class FOSSHackathonParticipant(Document):
                 handle_email_group_subscription(
                     emails=[self.email],
                     chapter=event_doc.chapter,
-                    event=self.localhost,
+                    event=target_localhost,
                     event_type="Event Participants",
-                    custom_group_title=f"{status}-{self.localhost}-Localhost",
+                    custom_group_title=f"{status}-{target_localhost}-Localhost",
                     subscribe_to_chapter=False,
                     subscribe_to_event=False,
                     document_type_event=HACKATHON_LOCALHOST,
                 )
             except Exception:
-                # Continue removing from other groups even if one fails
                 frappe.log_error(
                     frappe.get_traceback(),
-                    f"Error removing from {status} group",
+                    f"Error removing from {status} group of localhost {target_localhost}",
                 )
 
     def update_request_status(self):
