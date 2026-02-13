@@ -83,14 +83,17 @@
       {
         label: 'Title',
         key: 'title',
+        width: 2 / 5,
       },
       {
         label: 'Link',
         key: 'link',
+        width: 1 / 2,
       },
       {
         label: 'Type',
         key: 'type',
+        width: 1 / 4,
       },
       {
         label: '',
