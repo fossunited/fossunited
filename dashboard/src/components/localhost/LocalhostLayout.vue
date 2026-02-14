@@ -12,7 +12,7 @@
     <SideNavbar title="Manage Localhost" :menu-items="sidebarMenuItems" />
 
     <div class="flex-1 p-4 md:ml-[220px] min-w-0">
-      <div class="max-w-screen-xl mx-auto min-w-0">
+      <div class="w-full min-w-0">
         <RouterView />
       </div>
     </div>

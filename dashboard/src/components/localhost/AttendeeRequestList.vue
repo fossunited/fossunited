@@ -116,14 +116,14 @@ const selectedRequest = ref({})
 const groupedRequests = ref([])
 
 const columns = [
-  { label: 'Name', key: 'full_name' },
-  { label: 'Status', key: 'localhost_request_status', width: 1 },
-  { label: 'Email', key: 'email' },
-  { label: 'Student', key: 'is_student', width: 1 / 2 },
-  { label: 'Organization', key: 'organization' },
-  { label: 'Project', key: 'project_title' },
-  { label: 'Git Profile', key: 'git_profile' },
-  { label: 'Actions', key: 'actions' },
+  { label: 'Name', key: 'full_name', width: '200px' },
+  { label: 'Status', key: 'localhost_request_status', width: '200px' },
+  { label: 'Email', key: 'email', width: '200px' },
+  { label: 'Student', key: 'is_student', width: '100px' },
+  { label: 'Organization', key: 'organization', width: '150px' },
+  { label: 'Project', key: 'project_title', width: '100px' },
+  { label: 'Git Profile', key: 'git_profile', width: '100px' },
+  { label: 'Actions', key: 'actions', width: '100px' },
 ]
 
 // Export columns include team_name and exclude actions
