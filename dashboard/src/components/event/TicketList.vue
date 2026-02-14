@@ -71,16 +71,17 @@ const ticket_form = createResource({
 
 const tickets = computed(() => attendeesList.data || [])
 const columns = computed(() => [
-  { label: 'Name', key: 'full_name' },
-  { label: 'Designation', key: 'designation' },
-  { label: 'Organization', key: 'organization' },
-  { label: 'T-shirt Addon', key: 'wants_tshirt' },
-  { label: 'Tshirt Size', key: 'tshirt_size' },
+  { label: 'Name', key: 'full_name', width: '200px' },
+  { label: 'Designation', key: 'designation', width: '200px' },
+  { label: 'Organization', key: 'organization', width: '200px' },
+  { label: 'T-shirt Addon', key: 'wants_tshirt', width: '100px' },
+  { label: 'Tshirt Size', key: 'tshirt_size', width: '100px' },
 
   // append custom fields from Doctype (edgecase: first person might miss this?)
   ...(ticket_form.data?.custom_fields || []).map((f) => ({
     label: f.label,
     key: f.field_name,
+    width: '200px',
   })),
 ])
 

@@ -253,10 +253,10 @@ const listOptions = {
 
 // Check-in columns
 const checkinColumns = [
-  { key: 'name1', label: 'Name' },
-  { key: 'email', label: 'Email' },
-  { key: 'im_a', label: 'Im a' },
-  { key: 'check_in_time', label: 'Checked-in Time' },
+  { key: 'name1', label: 'Name', width: '250px' },
+  { key: 'email', label: 'Email', width: '250px' },
+  { key: 'im_a', label: 'Im a', width: '200px' },
+  { key: 'check_in_time', label: 'Checked-in Time', width: '1fr' },
 ]
 
 const checkinExportColumns = [{ key: 'date', label: 'Date' }, ...checkinColumns]

@@ -5,14 +5,17 @@
       {
         label: 'Subject',
         key: 'subject',
+        width: 1,
       },
       {
         label: 'Status',
         key: 'status',
+        width: '100px',
       },
       {
         label: 'Last Modified',
         key: 'modified',
+        width: '150px',
       },
     ]"
     :rows="campaigns"

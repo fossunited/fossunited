@@ -83,22 +83,22 @@
       {
         label: 'Title',
         key: 'title',
-        width: 2 / 5,
+        width: '300px',
       },
       {
         label: 'Link',
         key: 'link',
-        width: 1 / 2,
+        width: '250px',
       },
       {
         label: 'Type',
         key: 'type',
-        width: 1 / 4,
+        width: '100px',
       },
       {
         label: '',
         key: 'actions',
-        width: 1 / 4,
+        width: '100px',
       },
     ]"
     :rows="groupedIssuePrs"

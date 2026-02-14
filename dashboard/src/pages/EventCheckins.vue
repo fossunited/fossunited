@@ -4,7 +4,10 @@
     <EventHeader :event="event.data" class="p-4 md:p-8" />
     <hr />
     <div class="p-4 md:px-8 md:py-6">
-      <div v-if="ticket_checkin_insights.data?.daily_data?.length" class="flex flex-col gap-4 my-2">
+      <div
+        v-if="ticket_checkin_insights.data?.daily_data?.length"
+        class="flex flex-col gap-4 my-2"
+      >
         <div class="prose">
           <h4>Daily Check-in Insights</h4>
         </div>
@@ -293,12 +296,12 @@ watchEffect(() => {
 })
 
 const columns = [
-  { label: 'Name', key: 'full_name' },
-  { label: 'Ticket ID', key: 'name' },
+  { label: 'Name', key: 'full_name', width: '200px' },
+  { label: 'Ticket ID', key: 'name', width: '100px' },
   { label: 'Bought T-shirt?', key: 'wants_tshirt', width: '100px' },
   { label: 'T-shirt Delivered?', key: 'tshirt_delivered', width: '100px' },
   { label: 'Check-in Status', key: 'checkin_status', width: '200px' },
-  { label: 'Actions', key: 'action' },
+  { label: 'Actions', key: 'action', width: '100px' },
 ]
 
 const exportColumns = [
