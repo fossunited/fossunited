@@ -256,6 +256,18 @@ def create_newsletter_campaign(
         chapter_dict.chapter_name = f"FOSS United {chapter_dict.chapter_name}"
     if chapter_dict.chapter_type == STUDENT_CLUB:
         chapter_dict.chapter_name = f"FOSS Club {chapter_dict.chapter_name}"
+    if document_type == HACKATHON_LOCALHOST:
+        localhost_doc = frappe.db.get_value(
+            HACKATHON_LOCALHOST,
+            _reference_document,
+            ["localhost_name", "email"],
+            as_dict=1,
+        )
+
+        chapter_dict = {
+            "chapter_name": f"LocalHost - {localhost_doc.localhost_name}",
+            "email": localhost_doc.email or "fosshack@fossunited.org",
+        }
 
     recipient_groups = get_formatted_email_group(data.get("email_group"))
     attachments = get_formatted_attachment_list(data.get("attachments"))
@@ -266,8 +278,8 @@ def create_newsletter_campaign(
             "document_type": document_type,
             "reference_document": reference_document,
             "chapter": _chapter,
-            "sender_name": chapter_dict.chapter_name,
-            "sender_email": chapter_dict.email,
+            "sender_name": chapter_dict["chapter_name"],
+            "sender_email": chapter_dict["email"],
             "email_group": recipient_groups,
             "subject": data.get("subject"),
             "content_type": data.get("content_type"),
