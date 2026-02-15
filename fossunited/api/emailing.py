@@ -543,8 +543,7 @@ def send_campaign(campaign_id: str):
     else:
         chapter = campaign.chapter
 
-    if not check_if_chapter_member(chapter, frappe.session.user):
-        frappe.throw("You are not authorised for this action", frappe.PermissionError)
+    ensure_mailing_access(chapter)
 
     campaign.flags.ignore_permissions = 1
     campaign.send_emails()
@@ -572,8 +571,7 @@ def send_test_email(campaign_id: str, email: str):
     else:
         chapter = campaign.chapter
 
-    if not check_if_chapter_member(chapter, frappe.session.user):
-        frappe.throw("You are not authorised for this action", frappe.PermissionError)
+    ensure_mailing_access(chapter)
 
     campaign.flags.ignore_permissions = 1
     try:
@@ -614,11 +612,21 @@ def get_sending_status(campaign_id: str) -> dict:
     else:
         chapter = campaign.chapter
 
-    if not check_if_chapter_member(chapter, frappe.session.user):
-        frappe.throw("You are not authorised for this action", frappe.PermissionError)
+    ensure_mailing_access(chapter)
 
     campaign.flags.ignore_permissions = 1
 
     stats = campaign.get_sending_status()
 
     return stats
+
+
+def ensure_mailing_access(chapter):
+    """Make sure user is chapter member or localhost organizer"""
+    user = frappe.session.user
+
+    if {"System Manager", "Localhost Organizer"} & set(frappe.get_roles(user)):
+        return
+
+    if not check_if_chapter_member(chapter, user):
+        frappe.throw("You are not chapter member to send email", frappe.PermissionError)
