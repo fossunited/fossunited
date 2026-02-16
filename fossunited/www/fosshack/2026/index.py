@@ -2,9 +2,10 @@ import frappe
 
 from fossunited.doctype_ids import (
     HACKATHON,
+    HACKATHON_PARTICIPANT,
+    HACKATHON_PARTNER_PROJECT,
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
-    HACKATHON_TEAM_MEMBER,
 )
 from fossunited.fossunited.utils import get_event_sponsors
 
@@ -45,7 +46,7 @@ def get_context(context):
     # Timeline
     context.timeline = [
         {
-            "date": "20 February",
+            "date": "28 February",
             "event": "Registration",
             "desc": """Register now to express your interest in participating!
             If you are interested in hacking at a localhost, hurry up, because limited spots!""",
@@ -76,31 +77,17 @@ def get_context(context):
         },
     ]
 
-    # Teams that have at least one member in this hackathon
-    teams_with_members = frappe.get_all(
-        HACKATHON_TEAM_MEMBER,
-        filters={
-            "parenttype": HACKATHON_TEAM,
-            "parent": [
-                "in",
-                frappe.get_all(
-                    HACKATHON_TEAM,
-                    filters={"hackathon": hackathon_id},
-                    pluck="name",
-                ),
-            ],
+    member_count = frappe.db.count(
+        HACKATHON_PARTICIPANT,
+        {
+            "hackathon": hackathon_id,
         },
-        fields=["DISTINCT parent as team"],
-        pluck="team",
     )
 
-    teams_count = len(teams_with_members)
-
-    member_count = frappe.db.count(
-        HACKATHON_TEAM_MEMBER,
+    teams_count = frappe.db.count(
+        HACKATHON_TEAM,
         {
-            "parenttype": HACKATHON_TEAM,
-            "parent": ["in", teams_with_members],
+            "hackathon": hackathon_id,
         },
     )
 
@@ -108,7 +95,6 @@ def get_context(context):
         HACKATHON_PROJECT,
         {
             "hackathon": hackathon_id,
-            "team": ["in", teams_with_members],
             "is_published": 1,
         },
     )
@@ -185,6 +171,12 @@ def get_context(context):
 
     # Fetch Partners
     context.partners = hackathon.community_partners
+
+    context.partner_projects = frappe.get_all(
+        HACKATHON_PARTNER_PROJECT,
+        {"hackathon": hackathon_id},
+        ["repo_link as link", "project_name as sponsor_name", "logo as image"],
+    )
 
     # Volunteers
     context.volunteers = hackathon.get_volunteers()
