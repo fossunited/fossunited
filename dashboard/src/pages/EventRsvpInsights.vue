@@ -81,7 +81,7 @@
         <span v-if="column.key === 'check_in_time'" class="text-sm text-gray-700">
           {{ formatTimeOnly(item) }}
         </span>
-        <span v-else class="text-base">{{ item }}</span>
+        <span v-else class="text-base truncate text-wrap">{{ item }}</span>
       </template>
     </SearchListView>
 
@@ -166,7 +166,7 @@
           />
         </div>
 
-        <span v-else class="text-base" :title="item">{{ truncateStr(item, 30) }}</span>
+        <span v-else class="text-base truncate text-wrap" :title="item">{{ item }}</span>
       </template>
     </SearchListView>
   </div>
@@ -178,7 +178,6 @@ import { computed, ref, watchEffect } from 'vue'
 import { createResource, Button, frappeRequest } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import { toast } from 'vue-sonner'
-import { truncateStr } from '@/helpers/utils'
 import { formatFullDate, formatTimeOnly } from '@/helpers/date'
 import DocsInfo from '@/components/DocsInfo.vue'
 
@@ -254,7 +253,7 @@ const listOptions = {
 // Check-in columns
 const checkinColumns = [
   { key: 'name1', label: 'Name', width: '250px' },
-  { key: 'email', label: 'Email', width: '250px' },
+  { key: 'email', label: 'Email', width: '200px' },
   { key: 'im_a', label: 'Im a', width: '200px' },
   { key: 'check_in_time', label: 'Checked-in Time', width: '1fr' },
 ]
@@ -284,8 +283,8 @@ watchEffect(() => {
 
 const attendeeColumns = computed(() => {
   const baseColumns = [
-    { label: 'Name', key: 'name1', width: '200px' },
-    { label: 'Email', key: 'email', width: '250px' },
+    { label: 'Name', key: 'name1', width: '250px' },
+    { label: 'Email', key: 'email', width: '200px' },
     { label: 'Im a', key: 'im_a', width: '150px' },
     { label: 'Confirmed', key: 'confirm_attendance', width: '120px' },
   ]
@@ -296,7 +295,7 @@ const attendeeColumns = computed(() => {
     baseColumns.push({
       label: q.question,
       key: q.question,
-      width: '300px',
+      width: '200px',
     })
   })
 

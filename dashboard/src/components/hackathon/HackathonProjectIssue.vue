@@ -134,7 +134,7 @@
       <div v-else-if="column.key == 'actions'">
         <Button icon="trash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
       </div>
-      <div v-else class="text-base">
+      <div v-else class="text-base truncate text-wrap">
         {{ item }}
       </div>
     </template>

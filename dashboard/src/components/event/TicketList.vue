@@ -26,7 +26,7 @@
 
     <template #cell="{ item, row, column }">
       <Checkbox v-if="column.key === 'wants_tshirt'" :model-value="item" disabled />
-      <div v-else>{{ item || '-' }}</div>
+      <div v-else class="text-sm truncate text-wrap">{{ item || '-' }}</div>
     </template>
   </SearchListView>
   <div v-if="attendeesList.loading" class="w-full h-[220px] flex items-center justify-center">

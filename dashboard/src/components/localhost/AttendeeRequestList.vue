@@ -71,7 +71,7 @@
           class="text-sm flex items-center font-semibold hover:underline cursor-pointer"
           @click="redirectRoute(row.project_route)"
         >
-          <span>{{ truncateStr(row.project_title, 25) }}</span>
+          <span>{{ row.project_title }}</span>
           <IconArrowUpRight class="w-4 h-4" />
         </a>
         <span v-else class="text-sm text-gray-500">—</span>
@@ -84,7 +84,9 @@
         </div>
       </div>
 
-      <div v-else class="text-sm">{{ item || '—' }}</div>
+      <div v-else class="text-sm truncate text-wrap" :title="item || '—'">
+        {{ item || '—' }}
+      </div>
     </template>
   </SearchListView>
 
@@ -117,12 +119,12 @@ const groupedRequests = ref([])
 
 const columns = [
   { label: 'Name', key: 'full_name', width: '200px' },
-  { label: 'Status', key: 'localhost_request_status', width: '200px' },
+  { label: 'Status', key: 'localhost_request_status', width: '180px' },
   { label: 'Email', key: 'email', width: '200px' },
-  { label: 'Student', key: 'is_student', width: '100px' },
-  { label: 'Organization', key: 'organization', width: '150px' },
-  { label: 'Project', key: 'project_title', width: '100px' },
-  { label: 'Git Profile', key: 'git_profile', width: '100px' },
+  { label: 'Student', key: 'is_student', width: '80px' },
+  { label: 'Organization', key: 'organization', width: '200px' },
+  { label: 'Project', key: 'project_title', width: '150px' },
+  { label: 'Git Profile', key: 'git_profile', width: '90px' },
   { label: 'Actions', key: 'actions', width: '100px' },
 ]
 

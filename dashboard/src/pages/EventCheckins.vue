@@ -113,7 +113,7 @@
               </div>
             </template>
             <template v-else>
-              <span class="text-base">
+              <span class="text-base truncate text-wrap">
                 {{ item }}
               </span>
             </template>

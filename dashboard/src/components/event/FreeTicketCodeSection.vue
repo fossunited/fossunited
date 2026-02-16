@@ -18,7 +18,7 @@
       :rows="groupedRows"
       class="mt-4 min-h-[300px]"
       :columns="[
-        { label: 'Full Name', key: 'full_name', icon: 'user', width: '200px' },
+        { label: 'Full Name', key: 'full_name', icon: 'user' },
         { label: 'Coupon ID', key: 'name', width: '100px' },
         { label: 'Email', key: 'mapped_email', icon: 'at-sign' },
         {
@@ -29,7 +29,7 @@
           exportValue: (row) => `${row.used_count ?? 0} / ${row.max_count ?? 0}`,
         },
         { label: 'Tier', key: 'tier', icon: 'award', width: '200px' },
-        { label: 'Organization', key: 'company', icon: 'briefcase', width: '200px' },
+        { label: 'Organization', key: 'company', icon: 'briefcase' },
       ]"
       row-key="name"
       search-placeholder="Search free coupons…"
