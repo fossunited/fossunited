@@ -77,7 +77,7 @@
                     <img
                       src="{{ sponsor.image }}"
                       alt="{{ sponsor.sponsor_name }}"
-                      class="sponsor--image"
+                      class="sponsor--image bg-white"
                     />
                   {% else %}
                     <span class="sponsor--image d-flex align-items-center justify-content-center">
@@ -138,7 +138,7 @@
 
 {% macro hero_section() %}
   <div class="mb-3">
-    <a href="{{ hackathon.external_website_url or '/' + hackathon.route }}" class="d-inline-block mb-3">
+    <a href="{{ hackathon.external_website_url or '/' + hackathon.route }}" class="d-inline-block mb-3 p-2 bg-white rounded">
       {% if hackathon.hackathon_logo %}
         <img
           style="height: 2rem;"
@@ -150,11 +150,11 @@
       {% endif %}
     </a>
 
-    <div class="mb-4">
-      <h2 class="v3-text-primary mb-2" style="font-size: 1.75rem; font-weight: 600;">
+    <div class="mb-4 v3-text-primary">
+      <h2 class="mb-2" style="font-size: 1.75rem; font-weight: 600;">
         {{ doc.localhost_name }}
       </h2>
-      <p class="v3-text-secondary mb-0" style="font-size: 1rem;">{{ doc.city }}, {{ doc.state }}</p>
+      <p class="v3-text-secondary mb-0">{{ doc.city }}, {{ doc.state }}</p>
     </div>
 
     <div class="v3-text-secondary" style="font-size: 0.95rem;">
@@ -223,8 +223,8 @@
         Contact Localhost
       </h5>
       <div class="d-flex align-items-center" style="gap: 0.5rem;">
-        <i class="ti ti-mail" style="font-size: 1.125rem;"></i>
-        <a class="v3-text-secondary" href="mailto:{{ doc.email }}" style="font-size: 0.95rem;">
+        <i class="ti ti-mail" style="font-size: 1.25rem;"></i>
+        <a class="v3-text-secondary" href="mailto:{{ doc.email }}">
           {{ doc.email }}
         </a>
       </div>
@@ -247,24 +247,24 @@
 {% endmacro %}
 
 {% macro about_section() %}
-  <div>
+  <div class="v3-text-primary">
     {% if doc.description %}
-      <h1 class="v3-text-primary mb-4" style="font-size: 1.5rem; font-weight: 600;">
+      <h1 class="mb-4" style="font-size: 1.5rem; font-weight: 600;">
         Localhost Description
       </h1>
-      <div class="v3-text-primary prose">
+      <div class="prose">
         {{ doc.description }}
       </div>
     {% else %}
       <div class="mb-5">
-        <h2 class="v3-text-primary mb-3" style="font-size: 1.125rem; font-weight: 600;">
+        <h2 class=" mb-3" style="font-size: 1.125rem; font-weight: 600;">
           About the Event
         </h2>
-        <p class="v3-text-primary" style="line-height: 1.6;">{{ hackathon.hackathon_description }}</p>
+        <p style="line-height: 1.6;">{{ hackathon.hackathon_description }}</p>
       </div>
       <div>
-        <h2 class="v3-text-primary mb-3" style="font-size: 1.125rem; font-weight: 600;">Rules</h2>
-        <p class="v3-text-primary" style="line-height: 1.6;">{{ hackathon.hackathon_rules }}</p>
+        <h2 class="mb-3" style="font-size: 1.125rem; font-weight: 600;">Rules</h2>
+        <p style="line-height: 1.6;">{{ hackathon.hackathon_rules }}</p>
       </div>
     {% endif %}
   </div>
