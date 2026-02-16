@@ -171,6 +171,7 @@
               class="d-flex flex-column flex-md-row align-items-center justify-content-center mb-8"
               style="gap: 1rem;"
             >
+              {% if doc.is_registration_live %}
               <a
                 href="{{ hackathon.register_url }}"
                 class="btn v3-bg-dark text-uppercase font-weight-semibold rounded-0"
@@ -178,6 +179,7 @@
                 aria-label="Register for {{ hackathon.name }}"
                 >Register</a
               >
+              {% endif %}
               <a
                 href="{{ hackathon.projects_idea_url }}"
                 target="_blank"
@@ -250,8 +252,20 @@
                 <small>Projects</small>
               </a>
             </div>
-            <span class="badge-live">
-              <span class="ping-dot mr-1"></span>
+            {% if doc.is_registration_live %}
+              {% set badge_class = "badge-live" %}
+              {% set badge_type = "dot" %}
+            {% else %}
+              {% set badge_class = "v3-status--warning p-2 rounded" %}
+              {% set badge_type = "icon" %}
+            {% endif %}
+
+            <span class="{{ badge_class }}">
+              {% if badge_type == "dot" %}
+                <span class="ping-dot" aria-hidden="true"></span>
+              {% else %}
+                <i class="ti ti-ban" style="font-size: inherit" aria-hidden="true"></i>
+              {% endif %}
               {{ hackathon.status }}
             </span>
           </div>
@@ -335,18 +349,9 @@
           </ul>
         </div>
 
-        <div class="p-5 v3-border border flex-grow-1">
-          <h2 class="h3 font-weight-semibold v3-text mb-4">Rules in a nutshell</h2>
-          <ul class="v3-text-muted pl-4">
-            {% for rule in rules %}
-              <li class="mb-2">{{ rule }}</li>
-            {% endfor %}
-            <li class="mb-2">
-              <a href="https://fossunited.org/fosshack/rules" style="color: var(--v3-blue);"
-                >Check full rules →</a
-              >
-            </li>
-          </ul>
+        <div class="p-5 v3-border border flex-grow-1 p-0">
+          <h2 class="h3 rules font-weight-semibold v3-text mb-4">Rules in a nutshell</h2>
+          {{ rules }}
         </div>
       </div>
     </div>
