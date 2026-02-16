@@ -47,11 +47,19 @@
     {% for item in items %}
       <div class="col-auto fh-sponsor-col">
         <a href="{{ item.link }}" target="_blank">
-          <img
-            src="{{ item.image or item.logo }}"
-            alt="{{ item.sponsor_name or item.org_name }}"
-            class="fh-sponsor-logo {{ logo_class }}"
-          />
+          {% if item.image or item.logo %}
+            <img
+              src="{{ item.image or item.logo }}"
+              alt="{{ item.sponsor_name or item.org_name }}"
+              class="fh-sponsor-logo {{ logo_class }}"
+            />
+          {% else %}
+            <div
+              class="fh-sponsor-logo {{ logo_class }} d-flex align-items-center justify-content-center text-center font-weight-bold p-2"
+            >
+              {{ item.sponsor_name or item.org_name }}
+            </div>
+          {% endif %}
         </a>
       </div>
     {% endfor %}
@@ -436,6 +444,20 @@
         </a>
         <div class="tier-content">
           {{ logo_grid(partners, 'fh-sponsor-grid-5', 'fh-logo-partner', 8) }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if partner_projects %}
+      <div class="mb-5">
+        <a href="/fosshack/2026/partner-projects" target="_blank">
+          <h1 class="h1 font-weight-bold v3-text mb-5">
+            Partner Projects
+            <i class="ti ti-arrow-up-right small"></i>
+          </h1>
+        </a>
+        <div class="tier-content">
+          {{ logo_grid(partner_projects, 'fh-sponsor-grid-5', 'fh-logo-partner', 8) }}
         </div>
       </div>
     {% endif %}
