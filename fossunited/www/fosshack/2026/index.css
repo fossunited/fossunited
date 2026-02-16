@@ -148,7 +148,6 @@ body {
   font-weight: 600;
   font-size: 0.875rem;
 }
-
 /* ping animation */
 .ping-dot {
   position: relative;
@@ -407,6 +406,9 @@ a:hover,
   object-fit: contain;
 }
 
+.ql-editor > ol {
+    padding: 0;
+}
 .margin-10 {
   margin: 4rem 0rem 1rem 0rem;
 }

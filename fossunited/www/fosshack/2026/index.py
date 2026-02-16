@@ -2,6 +2,7 @@ import frappe
 
 from fossunited.doctype_ids import (
     HACKATHON,
+    HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
     HACKATHON_PARTNER_PROJECT,
     HACKATHON_PROJECT,
@@ -40,7 +41,7 @@ def get_context(context):
         "projects_idea_url": "https://forum.fossunited.org/t/problem-statements-and-ideas-fosshack-2026/7186",
         "status": "Registrations Open"
         if hackathon.is_registration_live
-        else "Opening on Jan 2026",
+        else "Registrations Closed",
     }
 
     # Timeline
@@ -99,19 +100,9 @@ def get_context(context):
         },
     )
 
-    # Stats
-    context.stats = {
-        "prize_pool": "₹ 5,00,000",
-        "local_hosts": "10",
-        "participants": member_count,
-        "teams": teams_count,
-        "projects": projects_count,
-        "projects_url": f"/{hackathon.route}/projects/all",
-    }
-
     # Get all LocalHosts
     localhosts = frappe.db.get_all(
-        "FOSS Hackathon LocalHost",
+        HACKATHON_LOCALHOST,
         filters={"parent_hackathon": hackathon_id},
         fields=["name", "localhost_name", "route", "city", "state", "location"],
         order_by="city, localhost_name",
@@ -120,13 +111,13 @@ def get_context(context):
 
     # Bulk Fetch Counts
     attending_counts = frappe.db.get_all(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         filters={"localhost_request_status": "Accepted"},
         fields=["localhost", "count(name) as count"],
         group_by="localhost",
     )
     pending_counts = frappe.db.get_all(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         filters={"localhost_request_status": "Pending"},
         fields=["localhost", "count(name) as count"],
         group_by="localhost",
@@ -135,7 +126,7 @@ def get_context(context):
         "Comment",
         filters={
             "comment_type": "Like",
-            "reference_doctype": "FOSS Hackathon LocalHost",
+            "reference_doctype": HACKATHON_LOCALHOST,
         },
         fields=["reference_name as localhost", "count(name) as count"],
         group_by="reference_name",
@@ -181,6 +172,16 @@ def get_context(context):
     # Volunteers
     context.volunteers = hackathon.get_volunteers()
 
+    # Stats
+    context.stats = {
+        "prize_pool": "₹ 5,00,000",
+        "local_hosts": len(localhosts),
+        "participants": member_count,
+        "teams": teams_count,
+        "projects": projects_count,
+        "projects_url": f"/{hackathon.route}/projects/all",
+    }
+
     # Previous editions (for archive links)
     context.previous_editions = [
         {"year": "2025", "route": "/fosshack/2025"},
@@ -197,13 +198,7 @@ def get_context(context):
         "All this with a chance to win upto 5 Lakh INR in cash prizes :)",
     ]
 
-    context.rules = [
-        "Evaluation based on contributions made during the event duration",
-        "Core functionality shouldn't depend on closed-source software or closed/proprietary APIs",
-        "Must have valid FOSS license",
-        "Cash prize split at jury's discretion",
-        "No blockchain/web3/crypto projects",
-    ]
+    context.rules = hackathon.hackathon_rules
 
     context.hide_nav = True
     context.hide_footer = True
