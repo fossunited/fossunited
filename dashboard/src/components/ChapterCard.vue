@@ -5,7 +5,7 @@
     @click="goToChapter"
     @keyup.enter="goToChapter"
     @keyup.space.prevent="goToChapter"
-    class="border-2 border-transparent rounded-[8px] hover:border-gray-500 transition-colors hover:cursor-pointer"
+    class="border-2 border-transparent rounded-[8px] hover:border-outline-gray-4 transition-colors hover:cursor-pointer"
   >
     <template #actions-left>
       <FossClubLogo

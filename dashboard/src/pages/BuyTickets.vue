@@ -10,7 +10,7 @@
       message: dialogError,
     }"
   ></Dialog>
-  <div v-if="event.data" class="bg-gray-50 mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div v-if="event.data" class="bg-surface-gray-1 mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex gap-2 mb-6 items-center">
       <a :href="redirectToEvent" class="font-semibold text-base hover:underline">{{
         event.data.event_name
@@ -28,16 +28,16 @@
       <span class="text-base">Book Tickets</span>
     </div>
     <div class="flex gap-6">
-      <div class="p-4 lg:px-8 md:py-8 border border-gray-300 rounded-md bg-white md:w-3/4">
+      <div class="p-4 lg:px-8 md:py-8 border border-outline-gray-2 rounded-md bg-surface-white md:w-3/4">
         <h1 class="text-[2rem] font-bold">
           Book Conference Tickets for {{ event.data.event_name }}
         </h1>
         <div
-          class="my-2 text-gray-700"
+          class="my-2 text-ink-gray-6"
           v-html="markdown.render(event.data.ticket_form_description || '')"
         ></div>
         <RadioGroup v-model="checkoutInfo.tier" class="py-4">
-          <RadioGroupLabel class="text-lg font-semibold leading-6 text-gray-800">
+          <RadioGroupLabel class="text-lg font-semibold leading-6 text-ink-gray-8">
             Select a tier
           </RadioGroupLabel>
           <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]">
@@ -51,19 +51,19 @@
             >
               <div
                 :class="[
-                  checked ? 'border-gray-800 ring-1 ring-gray-800' : 'border-gray-300',
-                  'relative flex cursor-pointer rounded-lg border bg-white p-4 shadow-sm focus:outline-none min-w-36',
+                  checked ? 'border-outline-gray-5 ring-1 ring-gray-800' : 'border-outline-gray-2',
+                  'relative flex cursor-pointer rounded-lg border bg-surface-white p-4 shadow-sm focus:outline-none min-w-36',
                 ]"
               >
                 <span class="flex flex-1">
                   <span class="flex flex-col justify-between">
                     <span class="flex flex-col gap-2">
-                      <RadioGroupLabel as="span" class="block text-xl font-bold text-gray-900">{{
+                      <RadioGroupLabel as="span" class="block text-xl font-bold text-ink-gray-9">{{
                         tier.title
                       }}</RadioGroupLabel>
                       <RadioGroupDescription
                         as="span"
-                        class="mt-2 text-sm text-gray-500"
+                        class="mt-2 text-sm text-ink-gray-4"
                         :innerHTML="markdown.render(tier.description || '')"
                       >
                       </RadioGroupDescription>
@@ -72,7 +72,7 @@
                       <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
                         >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
                       >
-                      <RadioGroupDescription as="span" class="text-xl font-medium text-gray-900"
+                      <RadioGroupDescription as="span" class="text-xl font-medium text-ink-gray-9"
                         >₹{{ tier.price }}</RadioGroupDescription
                       >
                     </span>
@@ -82,7 +82,7 @@
                 <span
                   :class="[
                     active ? 'border' : 'border-2',
-                    checked ? 'border-gray-800' : 'border-transparent',
+                    checked ? 'border-outline-gray-5' : 'border-transparent',
                     'pointer-events-none absolute -inset-px rounded-lg',
                   ]"
                   aria-hidden="true"
@@ -95,15 +95,15 @@
               v-for="tier in inactiveTiers"
               :key="tier.name"
               :class="[
-                'relative flex rounded-lg border border-gray-200 bg-gray-50 p-4 shadow-sm min-w-36 opacity-60 cursor-not-allowed',
+                'relative flex rounded-lg border border-outline-gray-1 bg-surface-gray-1 p-4 shadow-sm min-w-36 opacity-60 cursor-not-allowed',
               ]"
             >
               <span class="flex flex-1">
                 <span class="flex flex-col justify-between">
                   <span class="flex flex-col gap-2">
-                    <span class="block text-xl font-bold text-gray-500">{{ tier.title }}</span>
+                    <span class="block text-xl font-bold text-ink-gray-4">{{ tier.title }}</span>
                     <span
-                      class="mt-2 text-sm text-gray-400"
+                      class="mt-2 text-sm text-ink-gray-3"
                       v-html="markdown.render(tier.description || '')"
                     >
                     </span>
@@ -120,18 +120,18 @@
                     >
                       Expired on {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}
                     </Badge>
-                    <span class="text-xl font-medium text-gray-500">₹{{ tier.price }}</span>
+                    <span class="text-xl font-medium text-ink-gray-4">₹{{ tier.price }}</span>
                   </span>
                 </span>
               </span>
-              <IconTicketOff class="h-6 w-6 text-gray-600" />
+              <IconTicketOff class="h-6 w-6 text-ink-gray-5" />
             </div>
           </div>
         </RadioGroup>
 
         <div>
           <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold leading-6 text-gray-800">No. of Tickets</span>
+            <span class="text-lg font-semibold leading-6 text-ink-gray-8">No. of Tickets</span>
             <FormControl
               v-model="checkoutInfo.numSeats"
               class="w-1/4"
@@ -145,7 +145,7 @@
           <!-- custom fields section -->
           <div v-if="event.data.custom_fields.length > 0">
             <div class="flex-row mb-2">
-              <h2 class="text-base font-semibold text-gray-800 mt-4">Additional Details</h2>
+              <h2 class="text-base font-semibold text-ink-gray-8 mt-4">Additional Details</h2>
               <Switch
                 v-model="customFieldsApplyToAll"
                 class="w-fit text-xs"
@@ -172,14 +172,14 @@
           </div>
 
           <!-- attendee details -->
-          <h2 class="text-lg font-semibold leading-6 text-gray-800 mt-4">Attendees</h2>
+          <h2 class="text-lg font-semibold leading-6 text-ink-gray-8 mt-4">Attendees</h2>
           <div>
             <div
               v-for="(attendee, index) in checkoutInfo.attendees"
               :key="index"
               class="px-4 py-4 my-4 border rounded-sm"
             >
-              <p class="text-base text-gray-600 font-medium mb-1">#{{ index + 1 }}</p>
+              <p class="text-base text-ink-gray-5 font-medium mb-1">#{{ index + 1 }}</p>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
                 <div class="flex flex-col gap-7">
                   <FormControl
@@ -231,7 +231,7 @@
                 v-if="!customFieldsApplyToAll && event.data.custom_fields.length > 0"
                 class="mt-4 border-t pt-4"
               >
-                <h3 class="text-sm font-medium text-gray-700 mb-2">Additional Details</h3>
+                <h3 class="text-sm font-medium text-ink-gray-6 mb-2">Additional Details</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
                   <FormControl
                     v-for="field in event.data.custom_fields"
@@ -388,14 +388,14 @@
       </Card>
     </div>
   </div>
-  <div class="p-5 bg-gray-50">
+  <div class="p-5 bg-surface-gray-1">
     <Button v-if="Boolean(event.loading)" :loading="true" loading-text="Loading" />
-    <p v-else-if="!eventName" class="text-gray-800 font-medium">Event not found</p>
+    <p v-else-if="!eventName" class="text-ink-gray-8 font-medium">Event not found</p>
     <p v-else-if="event.error">Error loading event</p>
   </div>
   <div
     v-if="event.data"
-    class="md:hidden sticky bottom-0 z-50 pb-8 h-fit bg-white rounded-t-lg border-gray-800 px-5 py-3 border"
+    class="md:hidden sticky bottom-0 z-50 pb-8 h-fit bg-surface-white rounded-t-lg border-outline-gray-5 px-5 py-3 border"
   >
     <div class="mb-4 flex justify-between items-center">
       <h3 class="text-lg font-medium">Ticket Summary</h3>

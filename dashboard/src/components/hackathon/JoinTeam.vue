@@ -23,7 +23,7 @@
         <div
           v-for="invite in invitations.data"
           :key="invite"
-          class="p-2 even:bg-gray-50 flex items-center justify-between"
+          class="p-2 even:bg-surface-gray-1 flex items-center justify-between"
         >
           <div class="flex flex-col gap-1">
             <div

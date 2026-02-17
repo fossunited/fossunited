@@ -8,7 +8,7 @@
       <div class="flex justify-between items-center">
         <div class="text-base font-semibold mb-1">
           T-Shirts add-on is
-          <span :class="event.data.paid_tshirts_available ? 'text-green-600' : 'text-gray-600'">{{
+          <span :class="event.data.paid_tshirts_available ? 'text-ink-green-3' : 'text-ink-gray-5'">{{
             event.data.paid_tshirts_available ? 'Available' : 'Unavailable'
           }}</span>
         </div>

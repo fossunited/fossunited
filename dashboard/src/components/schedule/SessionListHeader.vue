@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="w-full flex justify-between px-7 py-3 bg-gray-900 text-white"
+    class="w-full flex justify-between px-7 py-3 bg-surface-gray-7 text-ink-white"
     :class="[
       'sticky z-30',
       view === 'vertical' ? 'top-12' : 'top-0',

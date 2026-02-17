@@ -1,12 +1,12 @@
 <template>
-  <div class="border rounded p-4 bg-white w-full">
+  <div class="border rounded p-4 bg-surface-white w-full">
     <EditorContent :editor="editor" />
     <div class="flex justify-between items-center pt-2 mt-4">
       <div class="flex gap-1">
         <button
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
-          :class="{ 'bg-gray-200': editor.isActive('bold') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('bold') }"
           @click="editor.chain().focus().toggleBold().run()"
         >
           <IconBold class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -14,7 +14,7 @@
         <button
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleItalic().run()"
-          :class="{ 'bg-gray-200': editor.isActive('italic') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('italic') }"
           @click="editor.chain().focus().toggleItalic().run()"
         >
           <IconItalic class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -22,7 +22,7 @@
         <button
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleUnderline().run()"
-          :class="{ 'bg-gray-200': editor.isActive('underline') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('underline') }"
           @click="editor.chain().focus().toggleUnderline().run()"
         >
           <IconUnderline class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -30,28 +30,28 @@
         <button
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleStrike().run()"
-          :class="{ 'bg-gray-200': editor.isActive('strike') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('strike') }"
           @click="editor.chain().focus().toggleStrike().run()"
         >
           <IconStrikethrough class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
-          :class="{ 'bg-gray-200': editor.isActive('bulletList') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
           @click="editor.chain().focus().toggleBulletList().run()"
         >
           <IconList class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
-          :class="{ 'bg-gray-200': editor.isActive('orderedList') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('orderedList') }"
           @click="editor.chain().focus().toggleOrderedList().run()"
         >
           <IconListNumbers class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
-          :class="{ 'bg-gray-200': editor.isActive('blockquote') }"
+          :class="{ 'bg-surface-gray-3': editor.isActive('blockquote') }"
           @click="editor.chain().focus().toggleBlockquote().run()"
         >
           <IconBlockquote class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -177,5 +177,5 @@ const defaultCommentAction = () => {
 }
 
 const buttonClass = (isActive) =>
-  `px-2 py-1 text-sm rounded ${isActive ? 'bg-gray-200' : 'hover:bg-gray-100'}`
+  `px-2 py-1 text-sm rounded ${isActive ? 'bg-surface-gray-3' : 'hover:bg-surface-gray-2'}`
 </script>

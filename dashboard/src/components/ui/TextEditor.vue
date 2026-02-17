@@ -11,12 +11,12 @@
       <span v-if="required" class="text-red-500">*</span>
     </div>
     <section
-      class="flex flex-wrap items-center gap-x-4 border-t border-l border-r border-gray-200 buttons font-mono p-2"
+      class="flex flex-wrap items-center gap-x-4 border-t border-l border-r border-outline-gray-1 buttons font-mono p-2"
     >
       <button
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleBold().run()"
-        :class="{ 'bg-gray-200': editor.isActive('bold') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('bold') }"
         @click="editor.chain().focus().toggleBold().run()"
       >
         <IconBold class="w-5 h-5" />
@@ -24,7 +24,7 @@
       <button
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleItalic().run()"
-        :class="{ 'bg-gray-200': editor.isActive('italic') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('italic') }"
         @click="editor.chain().focus().toggleItalic().run()"
       >
         <IconItalic class="w-5 h-5" />
@@ -32,7 +32,7 @@
       <button
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleUnderline().run()"
-        :class="{ 'bg-gray-200': editor.isActive('underline') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('underline') }"
         @click="editor.chain().focus().toggleUnderline().run()"
       >
         <IconUnderline class="w-5 h-5" />
@@ -40,21 +40,21 @@
       <button
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleStrike().run()"
-        :class="{ 'bg-gray-200': editor.isActive('strike') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('strike') }"
         @click="editor.chain().focus().toggleStrike().run()"
       >
         <IconStrikethrough class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('paragraph') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('paragraph') }"
         @click="editor.chain().focus().setParagraph().run()"
       >
         <IconPilcrow class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('link') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('link') }"
         @click="handleToggleLink(editor)"
       >
         <IconLink class="w-5 h-5" />
@@ -62,7 +62,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 1 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 1 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
       >
@@ -71,7 +71,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 2 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 2 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
       >
@@ -80,7 +80,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 3 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 3 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
       >
@@ -89,7 +89,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 4 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 4 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
       >
@@ -98,7 +98,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 5 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 5 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
       >
@@ -107,7 +107,7 @@
       <button
         class="p-1 rounded-sm"
         :class="{
-          'bg-gray-200': editor.isActive('heading', { level: 6 }),
+          'bg-surface-gray-3': editor.isActive('heading', { level: 6 }),
         }"
         @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
       >
@@ -115,28 +115,28 @@
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('bulletList') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
         @click="editor.chain().focus().toggleBulletList().run()"
       >
         <IconList class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('orderedList') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('orderedList') }"
         @click="editor.chain().focus().toggleOrderedList().run()"
       >
         <IconListNumbers class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('codeBlock') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('codeBlock') }"
         @click="editor.chain().focus().toggleCodeBlock().run()"
       >
         <IconCode class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
-        :class="{ 'bg-gray-200': editor.isActive('blockquote') }"
+        :class="{ 'bg-surface-gray-3': editor.isActive('blockquote') }"
         @click="editor.chain().focus().toggleBlockquote().run()"
       >
         <IconBlockquote class="w-5 h-5" />
@@ -224,7 +224,7 @@ const editor = useEditor({
   editorProps: {
     attributes: {
       class:
-        'border border-gray-200 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[48rem] overflow-y-auto focus:border-gray-400 prose text-base resize-y',
+        'border border-outline-gray-1 rounded-sm max-w-none p-2 focus:outline-none min-h-[12rem] max-h-[48rem] overflow-y-auto focus:border-outline-gray-3 prose text-base resize-y',
       style: 'resize: vertical;',
     },
   },

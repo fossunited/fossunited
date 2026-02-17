@@ -34,7 +34,7 @@
           class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:border-r-2 md:pt-4"
         >
           <div
-            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
             @click="$router.push(`/hack/${hackathonPermalink}/create-team`)"
           >
             Create team
@@ -47,7 +47,7 @@
         <div class="md:hidden w-full text-center font-medium">OR</div>
         <div class="w-full md:h-40 flex flex-col gap-4 items-center justify-start md:pt-4">
           <div
-            class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            class="px-4 py-2 uppercase w-3/4 flex items-start justify-center -space-x-1 text-center border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
             @click="inJoinTeam = true"
           >
             <span> Join team </span>

@@ -112,7 +112,7 @@ const newItemsCount = computed(() => schedule_items.value.filter((item) => item.
 <template>
   <div class="flex flex-col gap-4">
     <!-- Filters and Controls -->
-    <div class="bg-gray-50 p-4 rounded-lg border">
+    <div class="bg-surface-gray-1 p-4 rounded-lg border">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <FormControl
           v-model="groupBy"
@@ -138,13 +138,13 @@ const newItemsCount = computed(() => schedule_items.value.filter((item) => item.
       </div>
 
       <!-- Summary -->
-      <div class="mt-3 pt-3 border-t text-sm text-gray-600">
+      <div class="mt-3 pt-3 border-t text-sm text-ink-gray-5">
         Showing {{ filteredItems.length }} of {{ schedule_items.length }} items
       </div>
     </div>
 
     <!-- Grouped Schedule Items -->
-    <div v-if="filteredItems.length === 0" class="text-center py-8 text-gray-500">
+    <div v-if="filteredItems.length === 0" class="text-center py-8 text-ink-gray-4">
       <p v-if="showOnlyNewItems">No new schedule items</p>
       <p v-else>No schedule items to display</p>
       <p v-if="showOnlyNewItems && newItemsCount === 0" class="text-sm mt-2">
@@ -156,10 +156,10 @@ const newItemsCount = computed(() => schedule_items.value.filter((item) => item.
       <div v-for="group in groupedItems" :key="group.key" class="flex flex-col gap-3">
         <!-- Group Header -->
         <div v-if="group.label" class="flex items-center gap-2 pb-2 border-b">
-          <h4 class="text-sm font-semibold text-gray-700 uppercase tracking-wide">
+          <h4 class="text-sm font-semibold text-ink-gray-6 uppercase tracking-wide">
             {{ group.label }}
           </h4>
-          <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+          <span class="text-xs text-ink-gray-4 bg-surface-gray-2 px-2 py-1 rounded-full">
             {{ group.items.length }}
           </span>
         </div>

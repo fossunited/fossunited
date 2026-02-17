@@ -14,3 +14,9 @@
 .dialog-content {
   z-index: 999 !important;
 }
+
+[data-theme="dark"] body,
+[data-theme="dark"] #app {
+  background-color: var(--surface-menu-bar);
+  color: var(--ink-gray-8);
+}

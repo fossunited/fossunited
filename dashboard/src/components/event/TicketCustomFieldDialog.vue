@@ -22,7 +22,7 @@
         />
         <div class="my-1 flex flex-col gap-1">
           <FormControl v-model="question.mandatory" label="Is Mandatory" type="checkbox" />
-          <small class="text-gray-600">Whether the question is mandatory or not.</small>
+          <small class="text-ink-gray-5">Whether the question is mandatory or not.</small>
         </div>
         <FormControl
           v-model="question.field_name"

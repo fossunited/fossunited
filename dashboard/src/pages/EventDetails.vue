@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="flex flex-col gap-3 my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Banner Image</div>
       <div>
         <img
           :src="getBannerImage()"
@@ -67,13 +67,13 @@
             @click="() => setBannerImage({ file_url: '' })"
           />
         </div>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-ink-gray-5">
           The ideal dimensions for a banner image are: 280px x 280px (WxH) (1:1)
         </div>
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Details</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Event Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           v-model="event.doc.event_permalink"
@@ -160,7 +160,7 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Event Timeline</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Event Timeline</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           v-model="event.doc.event_start_date"
@@ -177,7 +177,7 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Livestreaming</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Livestreaming</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           v-model="event.doc.livestream_link"
@@ -195,7 +195,7 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Location Details</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Location Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
         <FormControl
           v-model="event.doc.event_location"

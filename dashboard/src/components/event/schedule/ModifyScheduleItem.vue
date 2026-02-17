@@ -280,7 +280,7 @@ onUnmounted(() => window.removeEventListener('keydown', saveShortcut))
     <div class="flex flex-col gap-4">
       <ErrorMessage v-if="errorMessages" class="mt-2" :message="errorMessages" />
 
-      <div class="bg-white flex gap-2 items-center">
+      <div class="bg-surface-white flex gap-2 items-center">
         <Button
           icon="trash"
           theme="red"

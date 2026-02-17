@@ -52,8 +52,8 @@
             class="px-2 py-1 rounded text-sm font-medium"
             :class="
               row.used_count >= row.max_count
-                ? 'bg-red-100 text-red-700'
-                : 'bg-green-100 text-green-700'
+                ? 'bg-surface-red-2 text-ink-red-3'
+                : 'bg-surface-green-2 text-ink-green-3'
             "
           >
             {{ row.used_count }} / {{ row.max_count }}

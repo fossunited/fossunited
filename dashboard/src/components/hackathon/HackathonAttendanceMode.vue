@@ -8,7 +8,7 @@
   >
     <template #body-content>
       <div
-        class="flex flex-col gap-2 items-center text-center p-3 rounded w-full bg-orange-50 text-orange-600 border-2 border-dashed border-orange-600 text-xs"
+        class="flex flex-col gap-2 items-center text-center p-3 rounded w-full bg-surface-orange-1 text-ink-amber-3 border-2 border-dashed border-outline-orange-1 text-xs"
       >
         <IconAlertCircle />
         <p>
@@ -36,7 +36,7 @@
       <div v-if="attendanceMode == 'local-pending'">
         <div
           v-if="localhosts.data.length <= 9"
-          class="flex flex-col p-3 mt-4 items-center text-center rounded w-full bg-blue-50 text-blue-600 border-2 border-dashed border-blue-600 text-xs"
+          class="flex flex-col p-3 mt-4 items-center text-center rounded w-full bg-surface-blue-1 text-ink-blue-2 border-2 border-dashed border-outline-blue-1 text-xs"
         >
           <p>
             <b>Note:</b> This hackathon has a total of
@@ -78,13 +78,13 @@
     </template>
   </Dialog>
   <div
-    class="flex flex-col gap-1 border-2 rounded border-gray-500 border-dashed min-w-[220px] p-4"
+    class="flex flex-col gap-1 border-2 rounded border-outline-gray-4 border-dashed min-w-[220px] p-4"
   >
-    <h5 class="text-xs text-gray-700 uppercase font-medium">Your Mode of attendance</h5>
+    <h5 class="text-xs text-ink-gray-6 uppercase font-medium">Your Mode of attendance</h5>
     <div class="flex w-full items-center justify-between">
       <div
         class="text-base font-medium"
-        :class="attendanceMode == 'local-pending' ? 'text-orange-600' : ''"
+        :class="attendanceMode == 'local-pending' ? 'text-ink-amber-3' : ''"
       >
         {{
           attendanceMode == 'remote'

@@ -38,12 +38,12 @@ const eventDetailItems = computed(() => {
       </slot>
       <div class="flex flex-col gap-3 flex-grow w-full">
         <div
-          class="flex flex-row p-3 rounded border gap-4 bg-[#F5F5F5] w-full h-fit justify-between items-center"
+          class="flex flex-row p-3 rounded border gap-4 bg-surface-gray-2 w-full h-fit justify-between items-center"
         >
           <h2 class="font-semibold">{{ event.event_name }}</h2>
           <a
             :href="'/' + event.route"
-            class="text-sm md:text-base text-gray-500 flex items-center gap-1 underline"
+            class="text-sm md:text-base text-ink-gray-4 flex items-center gap-1 underline"
           >
             Go to event page
             <IconArrowUpRight class="w-4 h-4" />
@@ -54,7 +54,7 @@ const eventDetailItems = computed(() => {
           <div
             v-for="(item, index) in eventDetailItems"
             :key="index"
-            class="flex items-center gap-2 text-base text-gray-600"
+            class="flex items-center gap-2 text-base text-ink-gray-5"
           >
             <component :is="item.icon" class="w-5 h-5" />
             <span>{{ item.label }}</span>

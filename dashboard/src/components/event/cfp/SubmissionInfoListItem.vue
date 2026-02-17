@@ -12,7 +12,7 @@ defineProps({
 </script>
 <template>
   <div class="flex items-center gap-4 text-sm">
-    <div class="basis-1/5 text-gray-600 flex items-center pl-0 p-2">
+    <div class="basis-1/5 text-ink-gray-5 flex items-center pl-0 p-2">
       <slot name="label-prefix"></slot>
       <slot name="label">
         <span> {{ label }} </span>

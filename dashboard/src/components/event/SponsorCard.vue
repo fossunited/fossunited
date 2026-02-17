@@ -35,7 +35,7 @@
       />
     </div>
     <h4 class="text-md font-medium">{{ sponsor.sponsor_name }}</h4>
-    <p class="text-base text-gray-700">
+    <p class="text-base text-ink-gray-6">
       {{ sponsor.tier == 'Custom' ? sponsor.custom_tier : sponsor.tier }}
     </p>
   </div>

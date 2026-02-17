@@ -99,7 +99,7 @@ const changeStatus = createResource({
   <br />
   <SelectRoot v-model="newStatus">
     <SelectTrigger
-      class="inline-flex min-w-32 items-center rounded text-sm leading-none h-8 gap-2 bg-white"
+      class="inline-flex min-w-32 items-center rounded text-sm leading-none h-8 gap-2 bg-surface-white"
       aria-label="Customise options"
     >
       <SelectValue>
@@ -107,21 +107,21 @@ const changeStatus = createResource({
           {{ submission.data.status }}
         </Badge>
       </SelectValue>
-      <IconChevronDown class="w-4 h-4 text-gray-600" />
+      <IconChevronDown class="w-4 h-4 text-ink-gray-5" />
     </SelectTrigger>
 
     <SelectPortal>
-      <SelectContent class="bg-white border shadow-xl rounded p-4 px-2 z-[100]">
+      <SelectContent class="bg-surface-white border shadow-xl rounded p-4 px-2 z-[100]">
         <SelectViewport>
           <SelectGroup>
-            <SelectLabel class="text-gray-700 text-sm">Options</SelectLabel>
+            <SelectLabel class="text-ink-gray-6 text-sm">Options</SelectLabel>
             <SelectSeparator class="h-px bg-gray-400 my-2" />
             <div class="flex flex-col gap-2">
               <SelectItem
                 v-for="option in options"
                 :key="option"
                 :value="option"
-                class="flex items-center gap-2 p-1 text-sm cursor-pointer hover:bg-gray-100 rounded"
+                class="flex items-center gap-2 p-1 text-sm cursor-pointer hover:bg-surface-gray-2 rounded"
               >
                 <SelectItemText>
                   <Badge :theme="getStatusBadgeTheme(option)">{{ option }}</Badge>

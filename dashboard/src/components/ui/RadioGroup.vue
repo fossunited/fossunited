@@ -1,6 +1,6 @@
 <template>
   <RadioGroup v-model="value" class="flex flex-col gap-2">
-    <RadioGroupLabel class="text-base text-gray-500">
+    <RadioGroupLabel class="text-base text-ink-gray-4">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </RadioGroupLabel>
@@ -12,10 +12,10 @@
         v-slot="{ active, checked }"
         tabindex="0"
         :value="option.value"
-        class="flex p-4 gap-2 items-center rounded border border-gray-200 text-gray-600 cursor-pointer hover:border-gray-400 transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
+        class="flex p-4 gap-2 items-center rounded border border-outline-gray-1 text-ink-gray-5 cursor-pointer hover:border-outline-gray-3 transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
         :class="{
-          'bg-gray-100': active,
-          'bg-gray-50 !border-gray-900 !text-gray-900': checked,
+          'bg-surface-gray-2': active,
+          'bg-surface-gray-1 !border-outline-gray-5 !text-ink-gray-9': checked,
         }"
       >
         <component

@@ -32,17 +32,17 @@ const props = defineProps({
 const themeClasses = computed(() => {
   switch (props.variant) {
     case 'info':
-      return 'border-blue-600 bg-blue-50 text-blue-600'
+      return 'border-outline-blue-1 bg-surface-blue-1 text-ink-blue-2'
     case 'success':
-      return 'border-green-600 bg-green-50 text-green-600'
+      return 'border-green-600 bg-surface-green-1 text-ink-green-3'
     case 'warning':
-      return 'border-yellow-600 bg-yellow-50 text-yellow-600'
+      return 'border-yellow-600 bg-surface-amber-1 text-yellow-600'
     case 'error':
-      return 'border-red-600 bg-red-50 text-red-600'
+      return 'border-red-600 bg-surface-red-1 text-ink-red-4'
     case 'simple':
-      return 'border-gray-300 bg-gray-50 text-gray-600'
+      return 'border-outline-gray-2 bg-surface-gray-1 text-ink-gray-5'
     case 'dark':
-      return 'border-gray-700 bg-gray-800 text-gray-50'
+      return 'border-gray-700 bg-surface-gray-6 text-gray-50'
     default:
       return ''
   }

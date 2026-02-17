@@ -1,6 +1,6 @@
 <template>
   <div
-    class="py-6 border-l border-gray-500 flex flex-col gap-6"
+    class="py-6 border-l border-outline-gray-4 flex flex-col gap-6"
     :class="{
       'h-full': view === 'horizontal',
     }"
@@ -18,7 +18,7 @@
         }"
       >
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full h-px bg-gray-500"></div>
+          <div class="w-full h-px bg-surface-gray-10"></div>
         </div>
         <SessionTimeComponent :session="session" class="z-20 invisible md:visible shrink-0" />
       </div>

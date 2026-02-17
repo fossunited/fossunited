@@ -61,10 +61,10 @@ const isIncomplete = computed(() => {
 
 <template>
   <div
-    class="p-4 rounded-lg border bg-white hover:border-gray-400 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
+    class="p-4 rounded-lg border bg-surface-white hover:border-outline-gray-3 hover:shadow-sm transition-all cursor-pointer relative overflow-hidden"
     :class="{
       stripes: schedule_item.is_new,
-      'border-amber-300 bg-amber-50/30': isIncomplete && !schedule_item.is_new,
+      'border-outline-amber-1 bg-surface-amber-1/30': isIncomplete && !schedule_item.is_new,
     }"
   >
     <!-- Status Indicator -->
@@ -72,8 +72,8 @@ const isIncomplete = computed(() => {
       class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
       :class="{
         'bg-gray-400': schedule_item.is_new,
-        'bg-amber-500': isIncomplete && !schedule_item.is_new,
-        'bg-green-500': !isIncomplete && !schedule_item.is_new,
+        'bg-surface-amber-10': isIncomplete && !schedule_item.is_new,
+        'bg-surface-green-10': !isIncomplete && !schedule_item.is_new,
       }"
     />
 
@@ -92,7 +92,7 @@ const isIncomplete = computed(() => {
       </div>
 
       <!-- Time, Duration, and Hall -->
-      <div class="flex flex-wrap items-center gap-2 text-sm text-gray-600">
+      <div class="flex flex-wrap items-center gap-2 text-sm text-ink-gray-5">
         <div class="flex items-center gap-1.5">
           <IconClock class="h-4 w-4" />
           <span>{{ formatTime(schedule_item.start_time) }}</span>
@@ -100,7 +100,7 @@ const isIncomplete = computed(() => {
           <span>{{ formatTime(schedule_item.end_time) }}</span>
         </div>
 
-        <span v-if="duration" class="text-xs bg-gray-100 px-2 py-0.5 rounded-full">
+        <span v-if="duration" class="text-xs bg-surface-gray-2 px-2 py-0.5 rounded-full">
           {{ duration }}
         </span>
 
@@ -113,7 +113,7 @@ const isIncomplete = computed(() => {
       <!-- Warnings for incomplete items -->
       <div
         v-if="isIncomplete"
-        class="flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 px-2 py-1 rounded"
+        class="flex items-center gap-1.5 text-xs text-ink-amber-3 bg-surface-amber-1 px-2 py-1 rounded"
       >
         <IconAlertTriangleFilled class="h-6 w-6" />
         <span>Incomplete information</span>
@@ -122,7 +122,7 @@ const isIncomplete = computed(() => {
       <!-- New item indicator -->
       <div
         v-if="schedule_item.is_new"
-        class="flex items-center gap-1.5 text-xs text-gray-600 bg-gray-50 px-2 py-1 rounded"
+        class="flex items-center gap-1.5 text-xs text-ink-gray-5 bg-surface-gray-1 px-2 py-1 rounded"
       >
         <IconInfoCircleFilled class="h-4 w-4" />
         <span>New item - click to complete</span>

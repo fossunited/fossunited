@@ -13,10 +13,10 @@
           class="col-span-2 flex items-end justify-between border border-gray-600 p-3 border-dashed rounded-sm"
         >
           <div class="flex flex-col gap-2">
-            <div class="text-sm text-gray-600">Status</div>
+            <div class="text-sm text-ink-gray-5">Status</div>
             <div
               class="font-medium text-sm flex items-center gap-2"
-              :class="tier.enabled ? 'text-green-600' : ''"
+              :class="tier.enabled ? 'text-ink-green-3' : ''"
             >
               <LivePing v-if="tier.enabled" />
               <span>
@@ -45,11 +45,11 @@
           </template>
         </Input>
         <div>
-          <div class="text-sm text-gray-600 mb-1">Closes On</div>
+          <div class="text-sm text-ink-gray-5 mb-1">Closes On</div>
           <DatePicker
             v-model="modifyTier.valid_till"
             variant="subtle"
-            input-class="bg-white border-none hover:bg-white px-0"
+            input-class="bg-surface-white border-none hover:bg-surface-white px-0"
           />
         </div>
         <Input
@@ -60,14 +60,14 @@
           required
         />
         <div class="col-span-2">
-          <div class="text-sm text-gray-600 mb-1">Description</div>
+          <div class="text-sm text-ink-gray-5 mb-1">Description</div>
           <textarea
             v-model="modifyTier.description"
-            class="w-full border border-gray-300 rounded-sm p-2 text-base"
+            class="w-full border border-outline-gray-2 rounded-sm p-2 text-base"
             rows="4"
             placeholder="Add a description"
           ></textarea>
-          <small class="text-gray-700">You can use <code>Markdown</code>.</small>
+          <small class="text-ink-gray-6">You can use <code>Markdown</code>.</small>
         </div>
       </div>
       <ErrorMessage class="mt-2" :message="errorMessages" />

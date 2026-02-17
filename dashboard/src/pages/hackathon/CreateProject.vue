@@ -25,7 +25,7 @@
           "
         >
           <button
-            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            class="px-4 py-2 w-3/4 text-center uppercase border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
             @click="
               () => {
                 inSelectProjectType = false
@@ -54,10 +54,10 @@
             theme="gray"
           />
           <button
-            class="px-4 py-2 uppercase w-3/4 text-center border-2 border-gray-900 md:w-fit font-semibold bg-white hover:bg-gray-900 hover:text-white transition-colors cursor-pointer"
+            class="px-4 py-2 uppercase w-3/4 text-center border-2 border-outline-gray-5 md:w-fit font-semibold bg-surface-white hover:bg-surface-gray-7 hover:text-ink-white transition-colors cursor-pointer"
             :class="
               hackathon.data.is_contribution_project_coming_soon
-                ? 'text-gray-500 border-gray-500 hover:bg-white hover:text-gray-500 hover:cursor-not-allowed'
+                ? 'text-ink-gray-4 border-outline-gray-4 hover:bg-surface-white hover:text-ink-gray-4 hover:cursor-not-allowed'
                 : ''
             "
             :disabled="hackathon.data.is_contribution_project_coming_soon"
@@ -130,7 +130,7 @@
         >
           <div
             v-if="hackathon.data.contribution_project_guidelines"
-            class="w-full bg-gray-50 text-gray-800 rounded p-4"
+            class="w-full bg-surface-gray-1 text-ink-gray-8 rounded p-4"
           >
             <h3 class="text-md font-semibold">Contribution Guidelines</h3>
             <div
@@ -140,11 +140,11 @@
           </div>
           <div
             v-if="hackathon.data.partner_project_guidelines && hackathon.data.has_partner_projects"
-            class="w-full bg-blue-50 text-blue-800 rounded p-4"
+            class="w-full bg-surface-blue-1 text-ink-blue-3 rounded p-4"
           >
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
-              class="prose leading-normal text-blue-800"
+              class="prose leading-normal text-ink-blue-3"
               v-html="markdown.render(hackathon.data.partner_project_guidelines || '')"
             ></div>
           </div>
@@ -185,7 +185,7 @@
                 "
               >
                 <div
-                  :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
+                  :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
                   class="relative flex cursor-pointer rounded-sm p-4 border focus:outline-none transition-[border]"
                 >
                   <div class="flex w-full items-center justify-between">
@@ -207,7 +207,7 @@
                       </div>
                       <a
                         :href="partner_project.repo_link"
-                        class="flex items-center gap-1 mt-3 text-xs text-gray-600 text-center hover:text-gray-800"
+                        class="flex items-center gap-1 mt-3 text-xs text-ink-gray-5 text-center hover:text-ink-gray-8"
                         target="_blank"
                       >
                         <IconBrandGithub class="w-4" />
@@ -246,7 +246,7 @@
             description="Demo link for the project. Can be a URL to a video demo, hosted app/website link etc. This can be added later."
           />
           <div class="flex flex-col gap-2 col-span-2">
-            <div class="text-xs text-gray-600">Project Description &ast;</div>
+            <div class="text-xs text-ink-gray-5">Project Description &ast;</div>
             <TextEditor
               :placeholder="'Write a detailed description of your project'"
               :model-value="project.description"

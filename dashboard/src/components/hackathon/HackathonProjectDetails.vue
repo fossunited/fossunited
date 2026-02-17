@@ -2,7 +2,7 @@
 <template>
   <div class="flex flex-col md:grid md:grid-cols-2 mb-4 gap-4 md:items-center">
     <div class="flex flex-col py-1">
-      <div class="text-xs text-gray-600">Project's Public Page</div>
+      <div class="text-xs text-ink-gray-5">Project's Public Page</div>
       <CopyToClipboard :route="getRoute(projectDoc.doc.route)" />
     </div>
     <FormControl

@@ -1,7 +1,7 @@
 <template>
   <Card
     :title="event.event_name"
-    class="border-2 border-transparent hover:border-gray-500 transition-colors hover:cursor-pointer"
+    class="border-2 border-transparent hover:border-outline-gray-4 transition-colors hover:cursor-pointer"
     @click="
       () =>
         $router.push({

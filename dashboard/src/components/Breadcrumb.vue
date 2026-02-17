@@ -4,16 +4,16 @@
       v-for="(item, index) in items"
       :key="index"
       class="text-base flex gap-1 items-center"
-      :class="index == items.length - 1 ? 'font-medium text-gray-800' : 'text-gray-600 '"
+      :class="index == items.length - 1 ? 'font-medium text-ink-gray-8' : 'text-ink-gray-5 '"
     >
       <router-link
         v-if="item.route"
-        class="hover:text-gray-700 transition-colors"
+        class="hover:text-ink-gray-6 transition-colors"
         :to="item.route"
       >
         {{ item.label }}
       </router-link>
-      <a v-else-if="item.link" :href="item.link" class="hover:text-gray-700 transition-colors">
+      <a v-else-if="item.link" :href="item.link" class="hover:text-ink-gray-6 transition-colors">
         {{ item.label }}
       </a>
       <span v-else>

@@ -1,14 +1,14 @@
 <template>
   <Drawer v-model="open" title="Create Email Campaign">
     <div class="space-y-4 h-full">
-      <p class="text-sm text-gray-600 -mt-4">Create email campaigns to be sent to users.</p>
+      <p class="text-sm text-ink-gray-5 -mt-4">Create email campaigns to be sent to users.</p>
       <EmailFormTemplate
         v-model="data"
         :event="event"
         :chapter="chapter"
         :document_type="document_type"
       />
-      <div class="w-full pt-4 space-y-2 border-t bg-white sticky bottom-0 z-50 -mb-2">
+      <div class="w-full pt-4 space-y-2 border-t bg-surface-white sticky bottom-0 z-50 -mb-2">
         <ErrorMessage :message="errorMessages" />
         <Button label="Create" class="w-full" variant="solid" @click="handleCampaignCreate" />
       </div>

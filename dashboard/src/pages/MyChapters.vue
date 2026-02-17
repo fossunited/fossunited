@@ -17,7 +17,7 @@
       <div v-if="scheduled_events.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <EventCard v-for="event in scheduled_events" :key="event.name" :event="event" />
       </div>
-      <div v-else class="text-base mt-6 text-gray-800">
+      <div v-else class="text-base mt-6 text-ink-gray-8">
         <div>There are no scheduled events.</div>
       </div>
       <div class="mt-8">
@@ -28,7 +28,7 @@
         <div v-if="concluded_events.length > 0" class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
           <EventCard v-for="event in concluded_events" :key="event.name" :event="event" />
         </div>
-        <div v-else class="text-base mt-6 text-gray-800">
+        <div v-else class="text-base mt-6 text-ink-gray-8">
           <div>No recently concluded events found.</div>
         </div>
       </div>

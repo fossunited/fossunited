@@ -12,7 +12,7 @@
         <h2>Sponsors</h2>
       </div>
       <Button label="Add Sponsor" class="w-fit mb-1" @click="handleAddNew" />
-      <div v-if="event.doc.sponsor_list.length == 0" class="text-sm text-gray-800">
+      <div v-if="event.doc.sponsor_list.length == 0" class="text-sm text-ink-gray-8">
         No sponsors added for this event.
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">

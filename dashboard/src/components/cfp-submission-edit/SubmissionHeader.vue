@@ -1,6 +1,6 @@
 <template>
   <div class="p-6 space-y-3">
-    <h4 class="text-base font-medium text-gray-600 uppercase mb-2">Edit Your Proposal</h4>
+    <h4 class="text-base font-medium text-ink-gray-5 uppercase mb-2">Edit Your Proposal</h4>
     <div class="prose max-w-full">
       <h2>{{ submission.talk_title }}</h2>
     </div>

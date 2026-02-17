@@ -22,7 +22,7 @@
       ],
     }"
   />
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-white">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 class="flex gap-2 items-center font-semibold">
       <span>Actions</span>
     </h4>
@@ -46,7 +46,7 @@
             <h5 class="font-semibold">
               The proposal is currently <span class="text-red-500">withdrawn</span>
             </h5>
-            <p class="text-base text-gray-600">
+            <p class="text-base text-ink-gray-5">
               You can un-withdraw the proposal to make it visible to the reviewers.
             </p>
           </div>

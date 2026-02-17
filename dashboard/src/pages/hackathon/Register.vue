@@ -50,7 +50,7 @@
             label="Email &ast;"
             placeholder="john@fossunited.org"
             :disabled="true"
-            class="bg-gray-50"
+            class="bg-surface-gray-1"
           />
           <FormControl v-model="participant.is_student" type="checkbox" label="I am a student" />
           <FormControl
@@ -60,7 +60,7 @@
           />
         </div>
         <div class="mt-6">
-          <h5 class="text-base font-medium text-gray-800">Link your Git Profile &ast;</h5>
+          <h5 class="text-base font-medium text-ink-gray-8">Link your Git Profile &ast;</h5>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2">
           <FormControl
@@ -72,7 +72,7 @@
           </FormControl>
         </div>
         <div v-if="localhost.data" class="mt-6">
-          <h5 class="text-base font-medium text-gray-800">How will you participate?</h5>
+          <h5 class="text-base font-medium text-ink-gray-8">How will you participate?</h5>
           <RadioGroup
             v-model="selected_attendance"
             class="grid sm:grid-cols-3 lg:grid-cols-5 gap-2 my-3"
@@ -85,8 +85,8 @@
               :value="option"
             >
               <div
-                :class="[checked ? 'bg-gray-50 border-gray-700' : 'bg-white ']"
-                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-gray-500 transition-[border]"
+                :class="[checked ? 'bg-surface-gray-1 border-gray-700' : 'bg-surface-white ']"
+                class="relative flex cursor-pointer rounded-sm px-5 py-3 border focus:outline-none hover:border-outline-gray-4 transition-[border]"
               >
                 <div class="flex w-full items-center justify-center">
                   <div class="flex flex-col gap-2 items-center">
@@ -118,7 +118,7 @@
           </div>
 
           <div
-            class="flex flex-col items-center sm:flex-row gap-3 bg-yellow-50 w-full p-4 text-sm rounded-sm my-4 text-yellow-700 outline-2 outline-dashed"
+            class="flex flex-col items-center sm:flex-row gap-3 bg-surface-amber-1 w-full p-4 text-sm rounded-sm my-4 text-ink-amber-3 outline-2 outline-dashed"
           >
             <IconAlertCircle class="w-6 h-6 shrink-0 stroke-yellow-700" />
             <p class="leading-normal text-center sm:text-left">

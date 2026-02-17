@@ -3,7 +3,7 @@
   <div v-if="event.data && schedule.data" class="w-full flex flex-col items-center p-4">
     <div class="max-w-screen-xl w-full">
       <Breadcrumb class="mt-2" :items="breadcrumb_items" />
-      <EventHeader :event="event.data" class="my-4 border-b border-gray-900 pb-4" />
+      <EventHeader :event="event.data" class="my-4 border-b border-outline-gray-5 pb-4" />
       <ScheduleHeader :event="event.data" class="py-2" />
       <div
         class="flex justify-between items-end gap-4 flex-wrap"
@@ -23,7 +23,7 @@
           enterkeyhint="search"
           spellcheck="false"
           placeholder="Search sessions..."
-          class="border border-gray-700 rounded text-sm px-3 py-2 w-full sm:max-w-sm focus:ring-gray-800 focus:border-gray-900"
+          class="border border-gray-700 rounded text-sm px-3 py-2 w-full sm:max-w-sm focus:ring-gray-800 focus:border-outline-gray-5"
         />
         <ScheduleDownload :schedule="schedule.data" :event="event.data" />
       </div>

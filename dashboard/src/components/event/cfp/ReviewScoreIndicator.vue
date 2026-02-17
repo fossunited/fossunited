@@ -57,10 +57,10 @@ const hasScores = computed(() => {
           <div :style="{ width: `${submission.unsure_percent}%` }" class="bg-orange-400"></div>
         </div>
       </div>
-      <span v-else class="text-gray-600 ml-2">Not yet reviewed</span>
+      <span v-else class="text-ink-gray-5 ml-2">Not yet reviewed</span>
     </template>
     <template #body-main>
-      <div class="p-4 bg-white rounded flex flex-col gap-2">
+      <div class="p-4 bg-surface-white rounded flex flex-col gap-2">
         <div
           v-for="scoreItem in scoreTableItems"
           :key="scoreItem.label"

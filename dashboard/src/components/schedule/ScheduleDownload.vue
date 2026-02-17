@@ -2,7 +2,7 @@
   <div>
     <!-- Open Modal Button -->
     <button
-      class="flex bg-black text-white px-4 py-2 rounded text-sm"
+      class="flex bg-surface-gray-7 text-ink-white px-4 py-2 rounded text-sm"
       @click="showModal = true"
       aria-label="Download schedule"
     >
@@ -13,9 +13,9 @@
     <!-- Modal -->
     <div
       v-if="showModal"
-      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+      class="fixed inset-0 bg-surface-gray-7 bg-opacity-50 flex justify-center items-center z-50"
     >
-      <div class="bg-white p-6 rounded w-full max-w-lg">
+      <div class="bg-surface-white p-6 rounded w-full max-w-lg">
         <h2 class="text-lg font-semibold mb-4">Download Options</h2>
 
         <!-- Format Selector -->
@@ -25,10 +25,10 @@
             <label
               v-for="format in ['ics', 'orgmode', 'markdown', 'csv', 'txt', 'pdf', 'json']"
               :key="format"
-              class="cursor-pointer px-4 py-2 rounded border border-gray-300 text-sm select-none hover:bg-black hover:text-white transition-colors duration-200"
+              class="cursor-pointer px-4 py-2 rounded border border-outline-gray-2 text-sm select-none hover:bg-surface-gray-7 hover:text-ink-white transition-colors duration-200"
               :class="{
-                'bg-black text-white border-black': selectedFormat === format,
-                'bg-white text-gray-700': selectedFormat !== format,
+                'bg-surface-gray-7 text-ink-white border-black': selectedFormat === format,
+                'bg-surface-white text-ink-gray-6': selectedFormat !== format,
               }"
               @click="selectedFormat = format"
             >
@@ -44,10 +44,10 @@
             <label
               v-for="day in allDates"
               :key="day.value"
-              class="cursor-pointer px-3 py-1 rounded border border-gray-300 select-none transition-colors duration-200"
+              class="cursor-pointer px-3 py-1 rounded border border-outline-gray-2 select-none transition-colors duration-200"
               :class="{
-                'bg-black text-white border-black': selectedDays.includes(day.value),
-                'bg-white text-gray-700': !selectedDays.includes(day.value),
+                'bg-surface-gray-7 text-ink-white border-black': selectedDays.includes(day.value),
+                'bg-surface-white text-ink-gray-6': !selectedDays.includes(day.value),
               }"
             >
               <input v-model="selectedDays" type="checkbox" :value="day.value" class="hidden" />
@@ -63,10 +63,10 @@
             <label
               v-for="hall in allHalls"
               :key="hall"
-              class="cursor-pointer px-3 py-1 rounded border border-gray-300 select-none transition-colors duration-200"
+              class="cursor-pointer px-3 py-1 rounded border border-outline-gray-2 select-none transition-colors duration-200"
               :class="{
-                'bg-black text-white border-black': selectedHalls.includes(hall),
-                'bg-white text-gray-700': !selectedHalls.includes(hall),
+                'bg-surface-gray-7 text-ink-white border-black': selectedHalls.includes(hall),
+                'bg-surface-white text-ink-gray-6': !selectedHalls.includes(hall),
               }"
             >
               <input v-model="selectedHalls" type="checkbox" :value="hall" class="hidden" />
@@ -77,11 +77,11 @@
 
         <!-- Buttons -->
         <div class="flex justify-end gap-3 mt-4">
-          <button class="text-sm text-gray-600 hover:underline" @click="showModal = false">
+          <button class="text-sm text-ink-gray-5 hover:underline" @click="showModal = false">
             Cancel
           </button>
           <button
-            class="bg-black text-white px-4 py-2 rounded text-sm hover:bg-gray-800 transition-colors duration-200"
+            class="bg-surface-gray-7 text-ink-white px-4 py-2 rounded text-sm hover:bg-surface-gray-6 transition-colors duration-200"
             @click="downloadSchedule"
           >
             Download

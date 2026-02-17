@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 bg-white w-full p-8 border rounded items-center">
+  <div class="flex flex-col gap-4 bg-surface-white w-full p-8 border rounded items-center">
     <IconCircleCheckFilled class="w-16 h-16 fill-green-500" />
 
     <div class="prose-sm text-center">

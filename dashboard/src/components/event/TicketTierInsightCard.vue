@@ -6,7 +6,7 @@
         <div class="prose">
           <h2 class="">{{ tier.total_sold }}</h2>
         </div>
-        <span v-if="tier.tier_capacity" class="text-sm text-gray-600 mb-1"
+        <span v-if="tier.tier_capacity" class="text-sm text-ink-gray-5 mb-1"
           >out of {{ tier.tier_capacity }}</span
         >
       </div>
@@ -15,8 +15,8 @@
         class="flex items-center gap-1 text-sm mt-1 font-medium p-1 w-fit rounded-sm px-2"
         :class="
           tier.tickets_sold_today === 0
-            ? 'bg-gray-100 text-gray-600'
-            : 'bg-green-100 text-green-600'
+            ? 'bg-surface-gray-2 text-ink-gray-5'
+            : 'bg-surface-green-2 text-ink-green-3'
         "
       >
         <IconArrowNarrowUp v-if="tier.tickets_sold_today" class="w-4 h-4 -mx-1" />

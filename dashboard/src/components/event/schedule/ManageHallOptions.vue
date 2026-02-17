@@ -51,12 +51,12 @@ const addHallOption = () => {
       <IconHomeFilled class="w-4 h-4" />
       <span class="text-sm font-semibold">Hall Options</span>
     </div>
-    <div class="flex flex-col gap-2 p-2 bg-white border rounded-sm">
+    <div class="flex flex-col gap-2 p-2 bg-surface-white border rounded-sm">
       <div class="flex gap-2 flex-wrap">
         <div
           v-for="option in hall_options_list"
           :key="option"
-          class="flex items-center gap-2 text-sm border p-1 rounded-xs bg-gray-50"
+          class="flex items-center gap-2 text-sm border p-1 rounded-xs bg-surface-gray-1"
         >
           {{ option }}
           <button @click.prevent="handleDeleteHall(option)"><IconX class="w-3 h-3" /></button>
@@ -68,6 +68,6 @@ const addHallOption = () => {
         class="border-0 text-sm focus:!outline-none focus:ring-0 focus-visible:outline-none resize-none"
       ></textarea>
     </div>
-    <small class="text-gray-600">Separate each option with a new line</small>
+    <small class="text-ink-gray-5">Separate each option with a new line</small>
   </div>
 </template>

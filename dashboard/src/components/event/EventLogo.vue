@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-36 h-36 aspect-square border rounded p-3 flex items-center justify-center bg-white"
+    class="w-36 h-36 aspect-square border rounded p-3 flex items-center justify-center bg-surface-white"
   >
     <img :src="logoPath" alt="Event Logo" class="object-contain" />
   </div>

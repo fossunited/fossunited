@@ -4,14 +4,14 @@
       <h3 class="text-xl font-semibold">
         <a
           :href="createAbsoluteUrlFromRoute(proposal.route)"
-          class="hover:text-green-500 transition-colors duration-300 cursor-pointer"
+          class="hover:text-ink-green-2 transition-colors duration-300 cursor-pointer"
         >
           {{ proposal.talk_title }}
         </a>
       </h3>
       <div class="flex flex-col gap-3 items-start mt-1 md:flex-row md:items-center">
         <div class="flex items-center text-xs font-semibold">
-          <span class="bg-gray-200 px-2 py-1 text-gray-600 rounded-sm mr-2">{{
+          <span class="bg-surface-gray-3 px-2 py-1 text-ink-gray-5 rounded-sm mr-2">{{
             proposal.session_type.toUpperCase()
           }}</span>
           <div>
@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="flex flex-col gap-3 items-end">
-      <div class="flex items-center gap-1 bg-gray-200 px-1.5 py-1 rounded-sm">
+      <div class="flex items-center gap-1 bg-surface-gray-3 px-1.5 py-1 rounded-sm">
         <LikesIcon />
         <span class="text-xs font-semibold">{{ proposal.likes }}</span>
       </div>
@@ -62,15 +62,15 @@ const props = defineProps({
 const getStatusClass = (status) => {
   switch (status) {
     case 'Approved':
-      return 'bg-green-100 text-green-800'
+      return 'bg-surface-green-2 text-ink-green-3'
     case 'Rejected':
-      return 'bg-red-100 text-red-800'
+      return 'bg-surface-red-2 text-ink-red-4'
     case 'Withdrawn':
-      return 'bg-red-100 text-red-800'
+      return 'bg-surface-red-2 text-ink-red-4'
     case 'Screening':
-      return 'bg-blue-100 text-blue-800'
+      return 'bg-surface-blue-2 text-ink-blue-3'
     default:
-      return 'bg-yellow-100 text-yellow-800'
+      return 'bg-surface-amber-2 text-ink-amber-3'
   }
 }
 </script>

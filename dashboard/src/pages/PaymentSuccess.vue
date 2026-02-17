@@ -1,14 +1,14 @@
 <template>
   <Header />
-  <div class="w-full h-screen bg-gray-50 flex justify-center">
+  <div class="w-full h-screen bg-surface-gray-1 flex justify-center">
     <div
-      class="bg-white min-h-60 md:min-w-60 border h-fit mt-10 px-10 py-6 rounded-md flex flex-col gap-4 items-center justify-center"
+      class="bg-surface-white min-h-60 md:min-w-60 border h-fit mt-10 px-10 py-6 rounded-md flex flex-col gap-4 items-center justify-center"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
         fill="currentColor"
-        class="w-12 h-12 text-green-500"
+        class="w-12 h-12 text-ink-green-2"
       >
         <path
           fill-rule="evenodd"

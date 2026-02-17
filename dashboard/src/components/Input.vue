@@ -1,10 +1,10 @@
 <template>
   <div
-    class="border-b pb-1 flex flex-col gap-1 group focus-within:border-gray-800 transition-colors"
+    class="border-b pb-1 flex flex-col gap-1 group focus-within:border-outline-gray-5 transition-colors"
   >
     <div class="flex gap-1">
       <slot name="label-prefix"></slot>
-      <div v-if="label" class="text-sm text-gray-600">
+      <div v-if="label" class="text-sm text-ink-gray-5">
         <span>
           {{ label }}
         </span>
@@ -21,7 +21,7 @@
         :class="inputClasses"
       />
     </div>
-    <small v-if="description" class="text-gray-600">
+    <small v-if="description" class="text-ink-gray-5">
       {{ description }}
     </small>
   </div>

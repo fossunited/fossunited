@@ -29,7 +29,7 @@
         <div class="mb-4">
           <button
             type="button"
-            class="w-[150px] btn btn-primary bg-gray-800 text-white rounded py-1"
+            class="w-[150px] btn btn-primary bg-surface-gray-6 text-ink-white rounded py-1"
             :aria-expanded="!!showScanner"
             aria-controls="qr-ticket-scanner"
             @click="showScanner = !showScanner"
@@ -86,7 +86,7 @@
               <Checkbox :model-value="Boolean(item)" :disabled="true" class="w-4 h-4" />
             </template>
             <template v-else-if="column.key === 'name'">
-              <span class="font-mono text-sm font-semibold text-gray-800">{{ item }}</span>
+              <span class="font-mono text-sm font-semibold text-ink-gray-8">{{ item }}</span>
             </template>
             <template v-else-if="column.key === 'checkin_status'">
               <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
@@ -97,7 +97,7 @@
                 >
                   <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
                     <template #body>
-                      <span class="text-xs bg-gray-900 text-white px-2 py-1 rounded-full">
+                      <span class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full">
                         {{ formatCheckinDateTime(data.check_in_time) }}
                       </span>
                     </template>

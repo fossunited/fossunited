@@ -21,7 +21,7 @@
       </div>
       <div
         v-if="campaign.data.status !== 'Sent'"
-        class="w-full pt-4 space-y-2 border-t bg-white sticky bottom-0 z-50 -mb-2"
+        class="w-full pt-4 space-y-2 border-t bg-surface-white sticky bottom-0 z-50 -mb-2"
       >
         <ErrorMessage :message="errorMessages" />
         <ManageActions

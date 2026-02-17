@@ -38,7 +38,7 @@
                   <div class="absolute left-0 top-0 -ml-0 sm:-ml-8 flex pr-2 pt-2 sm:pr-4 pl-2 sm:pl-0">
                     <button
                       type="button"
-                      class="relative rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                      class="relative rounded-md text-ink-gray-2 hover:text-ink-white focus:outline-none focus:ring-2 focus:ring-white"
                       @click="open = false"
                     >
                       <span class="absolute -inset-2.5" />
@@ -47,10 +47,10 @@
                     </button>
                   </div>
                 </TransitionChild>
-                <div class="flex h-full flex-col overflow-y-scroll bg-white py-10 shadow-xl">
+                <div class="flex h-full flex-col overflow-y-scroll bg-surface-white py-10 shadow-xl">
                   <div class="px-4 sm:px-6 flex gap-2">
                     <slot name="pre-title"></slot>
-                    <DialogTitle class="text-2xl font-semibold text-gray-900">
+                    <DialogTitle class="text-2xl font-semibold text-ink-gray-9">
                       <slot name="dialog-title">{{ title }}</slot>
                     </DialogTitle>
                     <slot name="post-title"></slot>

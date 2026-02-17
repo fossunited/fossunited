@@ -14,7 +14,7 @@
             description=""
             size="md"
           />
-          <span class="text-sm text-gray-600"
+          <span class="text-sm text-ink-gray-5"
             >Allow users to edit their proposals after submission.</span
           >
         </div>
@@ -26,7 +26,7 @@
             description=""
             size="md"
           />
-          <span class="text-sm text-gray-600"
+          <span class="text-sm text-ink-gray-5"
             >The proposals will not show the name of the proposer.</span
           >
         </div>
@@ -39,7 +39,7 @@
             size="md"
             @change="validateOnlyOneType"
           />
-          <span class="text-sm text-gray-600">Only accept workshop proposals.</span>
+          <span class="text-sm text-ink-gray-5">Only accept workshop proposals.</span>
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
@@ -50,7 +50,7 @@
             size="md"
             @change="validateOnlyOneType"
           />
-          <span class="text-sm text-gray-600">Only accept talk proposals.</span>
+          <span class="text-sm text-ink-gray-5">Only accept talk proposals.</span>
         </div>
         <TextEditor
           class="col-span-2"
@@ -62,7 +62,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Standard Fields</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Standard Fields</div>
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <FormControl
           v-for="(field, index) in standard_fields"
@@ -76,7 +76,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Custom Fields</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
       <Button
         class="mt-3"
         size="md"
@@ -128,7 +128,7 @@
               label="Is Mandatory"
               description="Whether the question is mandatory or not."
             />
-            <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
+            <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
             v-model="custom_field.type"

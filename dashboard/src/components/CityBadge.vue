@@ -1,6 +1,6 @@
 <template>
-  <div class="pl-1 pr-2 py-1 bg-gray-900 text-white flex gap-2 items-center">
-    <FossUnitedLogo class="h-8 w-8 p-1 bg-white" />
+  <div class="pl-1 pr-2 py-1 bg-surface-gray-7 text-ink-white flex gap-2 items-center">
+    <FossUnitedLogo class="h-8 w-8 p-1 bg-surface-white" />
     <span class="font-fff text-xs uppercase">{{ name }}</span>
   </div>
 </template>

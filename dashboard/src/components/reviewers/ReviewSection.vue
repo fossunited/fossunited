@@ -41,7 +41,7 @@
               class="prose prose-sm max-w-full"
               v-html="review.remarks"
             ></div>
-            <span v-else class="text-sm text-gray-600">No Remarks</span>
+            <span v-else class="text-sm text-ink-gray-5">No Remarks</span>
             <div class="flex items-center gap-2">
               <Button label="Edit" @click="editReview(review)" />
               <Button icon="trash" theme="red" @click="deleteReview(review.name)" />

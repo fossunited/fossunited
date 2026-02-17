@@ -3,8 +3,8 @@
     v-if="modelValue"
     :class="[
       isFullscreen
-        ? 'fixed inset-0 z-50 bg-black/90 flex items-center justify-center overflow-hidden p-4 md:p-8'
-        : 'relative my-4 mx-auto border border-gray-300 w-full max-w-md',
+        ? 'fixed inset-0 z-50 bg-surface-gray-7/90 flex items-center justify-center overflow-hidden p-4 md:p-8'
+        : 'relative my-4 mx-auto border border-outline-gray-2 w-full max-w-md',
     ]"
   >
     <!-- Close Button -->
@@ -13,7 +13,7 @@
       aria-label="Close scanner"
       title="Close"
       @click="emit('update:modelValue', false)"
-      class="absolute top-3 right-3 z-50 grid place-items-center w-10 h-10 rounded-full bg-red-600/60 text-white text-xl hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-white/70"
+      class="absolute top-3 right-3 z-50 grid place-items-center w-10 h-10 rounded-full bg-red-600/60 text-ink-white text-xl hover:bg-surface-gray-7/70 focus:outline-none focus:ring-2 focus:ring-white/70"
     >
       <span aria-hidden="true">✕</span>
     </button>
@@ -25,7 +25,7 @@
           ? 'w-[80vw] h-[80vh] max-w-[864px] aspect-video rounded-2xl'
           : 'w-full aspect-video rounded-xl',
       ]"
-      class="relative bg-black"
+      class="relative bg-surface-gray-7"
     >
       <qrcode-stream
         :constraints="{ facingMode: 'environment' }"

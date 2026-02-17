@@ -14,12 +14,12 @@
           :label="submission.data.hasReviewed ? 'Reviewed' : submission.data.status"
           :theme="getStatusBadgeTheme(submission.data.hasReviewed ? 'Yes' : 'No')"
         />
-        <span class="text-sm text-gray-600">
+        <span class="text-sm text-ink-gray-5">
           Submitted {{ dayjs(submission.data.creation).fromNow() }}
         </span>
       </div>
       <a
-        class="flex gap-1 items-center text-sm text-gray-600 hover:cursor-pointer hover:text-gray-800 transition-colors"
+        class="flex gap-1 items-center text-sm text-ink-gray-5 hover:cursor-pointer hover:text-ink-gray-8 transition-colors"
         :href="createAbsoluteUrlFromRoute(submission.data.route)"
         target="_blank"
       >

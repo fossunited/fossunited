@@ -12,7 +12,7 @@
         <h2>Community Partners</h2>
       </div>
       <Button label="Add Partner" class="w-fit mb-1" @click="handleAddNew" />
-      <div v-if="event.doc.community_partners.length == 0" class="text-sm text-gray-800">
+      <div v-if="event.doc.community_partners.length == 0" class="text-sm text-ink-gray-8">
         No partners added for this event.
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">

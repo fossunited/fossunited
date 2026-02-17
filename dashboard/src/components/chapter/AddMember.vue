@@ -6,7 +6,7 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-2">
-        <div class="text-p-base text-gray-700">
+        <div class="text-p-base text-ink-gray-6">
           Enter the username of the new member you want to add to the team.
         </div>
         <Autocomplete
@@ -21,12 +21,12 @@
             <Avatar shape="circle" :image="option.avatar" :label="option.label" size="lg" />
           </template>
         </Autocomplete>
-        <div v-if="memberOptions.error" class="text-sm text-red-600">
+        <div v-if="memberOptions.error" class="text-sm text-ink-red-4">
           Failed to load results. Please try again.
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <div class="text-p-base text-gray-700">
+        <div class="text-p-base text-ink-gray-6">
           Enter the role of the new members you just added
         </div>
         <Select

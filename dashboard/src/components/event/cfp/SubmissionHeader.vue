@@ -17,7 +17,7 @@ const submission = inject('curr_submission')
       <h2 class="font-semibold">{{ submission.data.talk_title }}</h2>
     </div>
     <a
-      class="flex gap-1 items-center text-sm text-gray-600 hover:cursor-pointer hover:text-gray-800 transition-colors"
+      class="flex gap-1 items-center text-sm text-ink-gray-5 hover:cursor-pointer hover:text-ink-gray-8 transition-colors"
       :href="createAbsoluteUrlFromRoute(submission.data.route)"
       target="_blank"
     >

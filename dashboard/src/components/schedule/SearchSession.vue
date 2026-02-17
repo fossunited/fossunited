@@ -7,7 +7,7 @@
       :view="'vertical'"
     />
     <SessionList :sessions="filteredSessions" :view="'vertical'" />
-    <div v-if="filteredSessions.length === 0" class="text-gray-500" aria-live="polite">
+    <div v-if="filteredSessions.length === 0" class="text-ink-gray-4" aria-live="polite">
       No sessions found matching <strong>{{ query }}</strong
       >.
     </div>

@@ -15,7 +15,7 @@ defineProps({
   <a
     :href="`/${submission.route}`"
     target="_blank"
-    class="p-6 bg-white rounded border flex gap-3 h-fit hover:border-gray-500 transition-colors ease-in-out duration-200"
+    class="p-6 bg-surface-white rounded border flex gap-3 h-fit hover:border-outline-gray-4 transition-colors ease-in-out duration-200"
   >
     <div
       class="h-full w-1 rounded-full"
@@ -29,7 +29,7 @@ defineProps({
           <div
             v-for="speaker in submission._speaker"
             :key="speaker.full_name"
-            class="text-sm flex items-center gap-2 text-gray-700"
+            class="text-sm flex items-center gap-2 text-ink-gray-6"
           >
             <Avatar :image="speaker.photo" :label="speaker.full_name" />
             <span>{{ speaker.full_name }}</span>

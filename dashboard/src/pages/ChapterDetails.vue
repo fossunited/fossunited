@@ -11,7 +11,7 @@
           @click="updateDetails()"
         ></Button>
         <Button
-          class="w-fit bg-green-600 text-black hover:bg-green-700 disabled:opacity-80 disabled:text-white disabled:cursor-not-allowed"
+          class="w-fit bg-green-600 text-ink-gray-9 hover:bg-green-700 disabled:opacity-80 disabled:text-ink-white disabled:cursor-not-allowed"
           size="md"
           label="See on website"
           icon-left="external-link"
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Banner Image</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Banner Image</div>
       <div class="p-2 my-1">
         <img
           :src="getBannerImage()"
@@ -58,11 +58,11 @@
             @click="() => setBannerImage({ file_url: '' })"
           />
         </div>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-ink-gray-5">
           The ideal dimensions for a banner image are: 1240 x 300 (WxH)
         </div>
       </div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Chapter Logo</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Chapter Logo</div>
       <div class="p-2 my-1">
         <img
           :src="getChapterLogo()"
@@ -99,13 +99,13 @@
             @click="() => setChapterLogo({ file_url: '' })"
           />
         </div>
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-ink-gray-5">
           The ideal dimensions for a chapter logo are: 120 x 120 (WxH)
         </div>
       </div>
     </div>
     <div class="flex flex-col my-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
       <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <FormControl
           v-model="chapter.doc.chapter_name"
@@ -131,7 +131,7 @@
         </div>
       </div>
       <div v-if="['City Community', 'FOSS Club'].includes(chapter.doc.chapter_type)">
-        <div class="font-semibold text-gray-800 border-b-2 pb-2">Location</div>
+        <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Location</div>
         <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormControl
             v-model="chapter.doc.city"
@@ -163,8 +163,8 @@
           />
         </div>
       </div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Socials</div>
-      <p class="mt-2 text-base text-gray-600 leading-normal">
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Socials</div>
+      <p class="mt-2 text-base text-ink-gray-5 leading-normal">
         Add your social media links to help people connect with you.
         <br />Please enter the whole url of your social media profile.
         <i>Eg: https://twitter.com/fossunited</i>
@@ -172,62 +172,62 @@
       <div class="p-2 my-1 grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormControl v-model="chapter.doc.email" :type="'email'" size="md" label="Email">
           <template #prefix>
-            <IconAt class="w-5 text-gray-800" />
+            <IconAt class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.x" :type="'url'" size="md" label="Twitter">
           <template #prefix>
-            <IconBrandX class="w-5 text-gray-800" />
+            <IconBrandX class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.facebook" :type="'url'" size="md" label="Facebook">
           <template #prefix>
-            <IconBrandFacebook class="w-5 text-gray-800" />
+            <IconBrandFacebook class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.linkedin" :type="'url'" size="md" label="LinkedIn">
           <template #prefix>
-            <IconBrandLinkedin class="w-5 text-gray-800" />
+            <IconBrandLinkedin class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.instagram" :type="'url'" size="md" label="Instagram">
           <template #prefix>
-            <IconBrandInstagram class="w-5 text-gray-800" />
+            <IconBrandInstagram class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.mastodon" :type="'url'" size="md" label="Mastodon">
           <template #prefix>
-            <IconBrandMastodon class="w-5 text-gray-800" />
+            <IconBrandMastodon class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.telegram" :type="'url'" size="md" label="Telegram">
           <template #prefix>
-            <IconBrandTelegram class="w-5 text-gray-800" />
+            <IconBrandTelegram class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.zulip" :type="'url'" size="md" label="Zulip">
           <template #prefix>
-            <IconBrandZulip class="w-5 text-gray-800" />
+            <IconBrandZulip class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.bluesky" :type="'url'" size="md" label="Bluesky">
           <template #prefix>
-            <IconBrandBluesky class="w-5 text-gray-800" />
+            <IconBrandBluesky class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.matrix" :type="'url'" size="md" label="Matrix">
           <template #prefix>
-            <IconBrandMatrix class="w-5 text-gray-800" />
+            <IconBrandMatrix class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.whatsapp" :type="'url'" size="md" label="Whatsapp">
           <template #prefix>
-            <IconBrandWhatsapp class="w-5 text-gray-800" />
+            <IconBrandWhatsapp class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
         <FormControl v-model="chapter.doc.discord" :type="'url'" size="md" label="Discord">
           <template #prefix>
-            <IconBrandDiscord class="w-5 text-gray-800" />
+            <IconBrandDiscord class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
       </div>
