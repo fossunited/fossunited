@@ -128,6 +128,7 @@ const getSearchText = (row) => {
   return searchTextCache.get(row)
 }
 
+const originalGroupRows = new WeakMap()
 const filteredRows = computed(() => {
   const term = search.value ? search.value.toLowerCase().trim() : ''
   const hasSearch = !!term
@@ -139,26 +140,26 @@ const filteredRows = computed(() => {
   }
 
   if (isGrouped.value) {
-    return props.rows
-      .map((group) => {
-        const filtered = group.rows.filter((row) => {
-          // Apply search filter
-          if (hasSearch && !getSearchText(row).includes(term)) {
-            return false
-          }
-          // Apply status filter
-          if (hasFilter && row[props.filterField] !== selectedFilter.value) {
-            return false
-          }
-          return true
-        })
+    return props.rows.reduce((acc, group) => {
+      // store original rows once
+      if (!originalGroupRows.has(group)) {
+        originalGroupRows.set(group, group.rows)
+      }
+      const sourceRows = originalGroupRows.get(group)
 
-        return {
-          ...group,
-          rows: filtered,
-        }
+      const filtered = sourceRows.filter((row) => {
+        if (hasSearch && !getSearchText(row).includes(term)) return false
+        if (hasFilter && row[props.filterField] !== selectedFilter.value) return false
+        return true
       })
-      .filter((group) => group.rows.length > 0)
+
+      if (filtered.length > 0) {
+        group.rows = filtered
+        acc.push(group)
+      }
+
+      return acc
+    }, [])
   }
 
   return props.rows.filter((row) => {
