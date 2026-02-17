@@ -15,6 +15,7 @@
               <div class="font-fff text-gray-900 uppercase">FOSS United</div>
               <div class="text-sm mt-2 tracking-wider text-gray-700 uppercase">Dashboard</div>
             </div>
+            <Button :label="currentTheme === 'dark' ? 'Light' : 'Dark'" @click="toggleTheme" />
             <Button
               class="block md:hidden -mr-8 !rounded-full w-8 h-8"
               variant="outline"
@@ -182,7 +183,7 @@
   ></div>
 </template>
 <script setup>
-import { createResource, FeatherIcon, Popover } from 'frappe-ui'
+import { createResource, FeatherIcon, Popover, useTheme } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, defineProps, inject } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
@@ -191,6 +192,7 @@ import { IconExternalLink } from '@tabler/icons-vue'
 const route = useRoute()
 const session = inject('$session')
 const toggleSidebar = ref(false)
+const { currentTheme, toggleTheme } = useTheme()
 
 const props = defineProps({
   title: {
