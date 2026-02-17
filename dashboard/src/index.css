@@ -20,3 +20,9 @@
   background-color: var(--surface-menu-bar);
   color: var(--ink-gray-8);
 }
+
+/* frappe-ui Card dark mode override */
+[data-theme="dark"] .rounded-lg.border.bg-white.px-6.py-5.shadow {
+  background-color: rgb(var(--surface-cards)) !important;
+  border-color: rgb(var(--outline-gray-2));
+}

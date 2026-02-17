@@ -15,7 +15,14 @@
               <div class="font-fff text-ink-gray-9 uppercase">FOSS United</div>
               <div class="text-sm mt-2 tracking-wider text-ink-gray-6 uppercase">Dashboard</div>
             </div>
-            <Button :label="currentTheme === 'dark' ? 'Light' : 'Dark'" @click="toggleTheme" />
+            <button
+              class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
+              :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
+              @click="toggleTheme"
+            >
+              <IconSunHighFilled v-if="currentTheme === 'dark'" :size="18" :stroke="1.5" />
+              <IconMoonStars v-else :size="18" :stroke="1.5" />
+            </button>
             <Button
               class="block md:hidden -mr-8 !rounded-full w-8 h-8"
               variant="outline"
@@ -187,7 +194,7 @@ import { createResource, FeatherIcon, Popover, useTheme } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, defineProps, inject } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { IconExternalLink } from '@tabler/icons-vue'
+import { IconExternalLink, IconSunHighFilled, IconMoonStars } from '@tabler/icons-vue'
 
 const route = useRoute()
 const session = inject('$session')
