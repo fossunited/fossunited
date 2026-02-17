@@ -59,7 +59,7 @@
         <div v-else-if="column.key === 'options' && key != null">
           <span class="text-sm">
             <span v-for="option in item.split('\n')" :key="option">
-              <span class="px-1 py-0.5 bg-gray-200 rounded-sm mr-1">
+              <span class="px-1 py-0.5 bg-surface-gray-3 rounded-sm mr-1">
                 {{ option }}
               </span>
             </span>

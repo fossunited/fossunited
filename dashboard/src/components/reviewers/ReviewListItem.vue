@@ -1,6 +1,6 @@
 <template>
   <div
-    class="p-4 border-b first:border-t border-gray-500 w-full flex flex-col gap-2 hover:cursor-pointer hover:bg-gray-50"
+    class="p-4 border-b first:border-t border-outline-gray-4 w-full flex flex-col gap-2 hover:cursor-pointer hover:bg-surface-gray-1"
     @click="router.push({ name: 'ReviewPage', params: { id: event.event } })"
   >
     <div class="flex flex-col gap-1 mb-2">
@@ -12,8 +12,8 @@
     </div>
     <div class="flex flex-col md:flex-row gap-2 justify-between">
       <div class="flex flex-col md:flex-row gap-2 font-medium md:divide-x-2 divide-gray-300">
-        <span class="text-sm text-gray-800">Submissions: {{ event.submission_count }}</span>
-        <span class="text-sm md:pl-2 text-green-800">Reviewed: {{ event.reviewed_count }}</span>
+        <span class="text-sm text-ink-gray-8">Submissions: {{ event.submission_count }}</span>
+        <span class="text-sm md:pl-2 text-ink-green-3">Reviewed: {{ event.reviewed_count }}</span>
         <span class="text-sm md:pl-2 text-orange-800"
           >Pending Review: {{ event.not_reviewed_count }}</span
         >

@@ -14,3 +14,15 @@
 .dialog-content {
   z-index: 999 !important;
 }
+
+[data-theme="dark"] body,
+[data-theme="dark"] #app {
+  background-color: var(--surface-menu-bar);
+  color: var(--ink-gray-8);
+}
+
+/* frappe-ui Card dark mode override */
+[data-theme="dark"] .frappeui-card {
+  background-color: rgb(var(--surface-cards)) !important;
+  border-color: rgb(var(--outline-gray-2));
+}

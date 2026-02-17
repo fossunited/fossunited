@@ -198,7 +198,7 @@ const showModifyScheduleItemDrawer = ref(false)
         @reset:selected-schedule="selectedScheduleItemIndex = null"
       />
       <div v-if="!selectedDate" class="flex flex-col gap-2 text-base items-center mt-12">
-        <p class="text-gray-600">Select a date to add a schedule</p>
+        <p class="text-ink-gray-5">Select a date to add a schedule</p>
       </div>
       <div v-if="selectedDate" class="flex flex-col gap-2">
         <div class="prose">

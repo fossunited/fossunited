@@ -1,6 +1,6 @@
 <template>
   <header
-    class="sticky top-0 z-50 flex items-center justify-between border-b bg-white px-5 py-2.5"
+    class="sticky top-0 z-50 flex items-center justify-between border-b bg-surface-white px-5 py-2.5"
   >
     <router-link
       to="/"
@@ -46,7 +46,7 @@
       </Dropdown>
     </div>
     <div v-else>
-      <a href="/login" class="text-black font-medium text-base hover:text-gray-800">Login</a>
+      <a href="/login" class="text-ink-gray-9 font-medium text-base hover:text-ink-gray-8">Login</a>
     </div>
   </header>
 </template>

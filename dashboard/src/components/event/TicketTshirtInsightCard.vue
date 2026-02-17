@@ -15,7 +15,7 @@
         <p class="mb-2">T-shirts sold for this event.</p>
       </div>
       <table class="w-3/4 table-fixed text-center" role="table" aria-describedby="dialog-title">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <thead class="text-xs text-ink-gray-6 uppercase bg-surface-gray-1">
           <tr role="row">
             <th class="p-2 border" role="columnheader" scope="col">Size</th>
             <th class="p-2 border" role="columnheader" scope="col">Quantity</th>

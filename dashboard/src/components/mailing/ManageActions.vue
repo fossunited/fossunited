@@ -30,7 +30,7 @@
         <Button variant="solid" label="Send" class="w-full" @click="togglePopover()" />
       </template>
       <template #body-main="{ togglePopover }">
-        <div class="p-2 text-white rounded-sm flex flex-col gap-2 items-center">
+        <div class="p-2 text-ink-white rounded-sm flex flex-col gap-2 items-center">
           <Button
             v-for="(option, key) in sendOptions"
             :key="key"

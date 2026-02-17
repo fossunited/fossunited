@@ -9,8 +9,8 @@
           variant="ghost"
           route="/review"
         />
-        <h4 class="text-sm uppercase font-medium text-gray-700">Proposal Review</h4>
-        <p class="text-sm text-gray-600">Review the session proposals for this event.</p>
+        <h4 class="text-sm uppercase font-medium text-ink-gray-6">Proposal Review</h4>
+        <p class="text-sm text-ink-gray-5">Review the session proposals for this event.</p>
       </template>
     </Sidebar>
     <div class="w-full md:ml-[220px] flex">
@@ -23,7 +23,7 @@
           <div class="prose">
             <h2>{{ event.data.event_name }}</h2>
           </div>
-          <span class="text-sm text-gray-700">
+          <span class="text-sm text-ink-gray-6">
             {{ dayjs(event.data.event_start_date).format('D MMM YYYY') }}
           </span>
         </div>
@@ -36,7 +36,7 @@
       </div>
       <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
         <ProposalDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" />
-        <div v-else class="w-full h-svh flex items-center justify-center text-base text-gray-600">
+        <div v-else class="w-full h-svh flex items-center justify-center text-base text-ink-gray-5">
           Select a submission to view details.
         </div>
       </div>

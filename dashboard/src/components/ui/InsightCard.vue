@@ -19,10 +19,10 @@ defineProps({
 })
 </script>
 <template>
-  <div class="bg-white flex flex-col gap-4 justify-between border rounded p-4">
+  <div class="bg-surface-white flex flex-col gap-4 justify-between border rounded p-4">
     <div class="flex flex-col gap-4">
       <slot name="title">
-        <span class="text-sm font-normal text-gray-600">{{ title }}</span>
+        <span class="text-sm font-normal text-ink-gray-5">{{ title }}</span>
       </slot>
       <slot name="value">
         <div class="flex gap-2 items-end">
@@ -32,7 +32,7 @@ defineProps({
       </slot>
     </div>
     <slot name="description">
-      <span v-if="description" class="text-sm text-gray-600">{{ description }}</span>
+      <span v-if="description" class="text-sm text-ink-gray-5">{{ description }}</span>
     </slot>
   </div>
 </template>

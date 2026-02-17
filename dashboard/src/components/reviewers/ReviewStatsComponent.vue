@@ -10,7 +10,7 @@
       <div class="flex gap-1 items-center text-xl font-medium first:px-0" :class="getColor(key)">
         {{ value }} <span v-if="key == 'Approvability'">%</span>
       </div>
-      <span class="text-sm text-gray-500">{{ key }}</span>
+      <span class="text-sm text-ink-gray-4">{{ key }}</span>
     </div>
   </div>
 </template>
@@ -54,15 +54,15 @@ const stats = computed(() => {
 const getColor = (key) => {
   switch (key) {
     case 'Approvals':
-      return 'text-green-600'
+      return 'text-ink-green-3'
     case 'Rejections':
-      return 'text-red-600'
+      return 'text-ink-red-4'
     case 'Not Sure':
-      return 'text-orange-600'
+      return 'text-ink-amber-3'
     case 'Approvability':
-      return 'text-blue-600'
+      return 'text-ink-blue-2'
     default:
-      return 'text-gray-600'
+      return 'text-ink-gray-5'
   }
 }
 </script>

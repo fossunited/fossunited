@@ -1,13 +1,13 @@
 <template>
   <Button
-    class="block md:hidden absolute bg-white top-14 left-4 z-40 p-4"
+    class="block md:hidden absolute bg-surface-white top-14 left-4 z-40 p-4"
     icon="menu"
     theme="subtle"
     @click="toggleSidebar"
   />
   <div
     id="sidebar"
-    class="hidden w-80 z-10 h-screen absolute md:relative md:flex px-4 py-6 md:h-fill md:w-1/5 bg-white border-r flex-col transition-all duration-300 ease-in-out"
+    class="hidden w-80 z-10 h-screen absolute md:relative md:flex px-4 py-6 md:h-fill md:w-1/5 bg-surface-white border-r flex-col transition-all duration-300 ease-in-out"
     :class="smallScreen ? 'hidden w-80 z-30 absolute' : ''"
   >
     <div class="font-fff text-sm leading-relaxed mt-5 md:mt-0">
@@ -16,7 +16,7 @@
     <div class="my-4">
       <router-link
         to="/chapter"
-        class="p-2 flex font-medium gap-2 text-base rounded-sm text-gray-800 hover:underline hover:text-gray-900"
+        class="p-2 flex font-medium gap-2 text-base rounded-sm text-ink-gray-8 hover:underline hover:text-ink-gray-9"
       >
         <FeatherIcon name="arrow-left" class="h-4" />
         <span> Go to Home </span>
@@ -28,9 +28,9 @@
         :key="index"
         :to="menuItem.route"
         :class="
-          isMenuItemActive(menuItem.route, index) ? 'font-semibold text-gray-900 bg-gray-100' : ''
+          isMenuItemActive(menuItem.route, index) ? 'font-semibold text-ink-gray-9 bg-surface-gray-2' : ''
         "
-        class="block p-2 text-base rounded-sm text-gray-800 hover:bg-gray-200 hover:text-gray-900"
+        class="block p-2 text-base rounded-sm text-ink-gray-8 hover:bg-surface-gray-3 hover:text-ink-gray-9"
       >
         {{ menuItem.label }}
       </router-link>

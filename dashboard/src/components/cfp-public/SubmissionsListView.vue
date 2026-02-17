@@ -207,7 +207,7 @@ watch(filteredSubmissions, (val) => {
           <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
 
           <button
-            class="flex bg-black text-white px-3 py-2 rounded text-sm hover:bg-gray-800"
+            class="flex bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6"
             @click="downloadCSV"
           >
             <IconDownload class="w-4 h-4 mr-1" />
@@ -221,7 +221,7 @@ watch(filteredSubmissions, (val) => {
       />
       <div
         v-if="submissions.data?.length === 0"
-        class="w-full flex justify-center items-center text-base text-gray-600"
+        class="w-full flex justify-center items-center text-base text-ink-gray-5"
       >
         No proposals found
       </div>

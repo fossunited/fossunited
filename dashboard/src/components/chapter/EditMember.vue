@@ -6,7 +6,7 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-2">
-        <div class="text-p-base text-gray-700">Enter the new role of the member</div>
+        <div class="text-p-base text-ink-gray-6">Enter the new role of the member</div>
         <Select
           v-model="role"
           :options="[

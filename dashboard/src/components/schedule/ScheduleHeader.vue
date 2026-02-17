@@ -5,7 +5,7 @@
       <div class="prose">
         <h1 class="font-bond">Schedule</h1>
       </div>
-      <div class="text-base text-gray-700" v-html="sanitizedScheduleDesc"></div>
+      <div class="text-base text-ink-gray-6" v-html="sanitizedScheduleDesc"></div>
     </div>
   </div>
 </template>

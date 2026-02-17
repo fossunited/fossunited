@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label class="text-base text-gray-500">
+    <label class="text-base text-ink-gray-4">
       {{ label }}
       <span v-if="required" class="text-red-500">*</span>
     </label>
@@ -8,8 +8,8 @@
       <div
         v-for="(option, index) in options"
         :key="index"
-        class="p-2 flex gap-2 items-center text-sm rounded border text-ink-gray-5 hover:text-ink-gray-6 hover:cursor-pointer hover:border-gray-400 transition-all"
-        :class="{ 'text-ink-gray-8 border-gray-800 bg-gray-50': isSelected(option.value) }"
+        class="p-2 flex gap-2 items-center text-sm rounded border text-ink-gray-5 hover:text-ink-gray-6 hover:cursor-pointer hover:border-outline-gray-3 transition-all"
+        :class="{ 'text-ink-gray-8 border-outline-gray-5 bg-surface-gray-1': isSelected(option.value) }"
         @click="toggleSelected(option.value)"
       >
         <IconCheck v-if="isSelected(option.value)" size="16" />

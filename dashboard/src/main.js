@@ -1,14 +1,25 @@
 import './index.css'
 
-import { createApp, provide } from 'vue'
+import { createApp, h } from 'vue'
 import router from './router'
 import App from './App.vue'
 import { session } from './data/session'
 import dayjs from 'dayjs'
 
-import { Button, Card, Input, setConfig, frappeRequest, resourcesPlugin } from 'frappe-ui'
+import {
+  Button,
+  Card as FrappeCard,
+  Input,
+  setConfig,
+  frappeRequest,
+  resourcesPlugin,
+  useTheme,
+} from 'frappe-ui'
 
-let app = createApp(App)
+const { initializeTheme } = useTheme()
+initializeTheme()
+
+const app = createApp(App)
 
 setConfig('resourceFetcher', frappeRequest)
 
@@ -17,8 +28,24 @@ app.use(resourcesPlugin)
 
 app.provide('$session', session)
 app.provide('$dayjs', dayjs)
+
 app.component('Button', Button)
-app.component('Card', Card)
 app.component('Input', Input)
+
+app.component('Card', {
+  name: 'AppCard',
+  inheritAttrs: false,
+  setup(props, { attrs, slots }) {
+    return () =>
+      h(
+        FrappeCard,
+        {
+          ...attrs,
+          class: ['frappeui-card', attrs.class],
+        },
+        slots,
+      )
+  },
+})
 
 app.mount('#app')

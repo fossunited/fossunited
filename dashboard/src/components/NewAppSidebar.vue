@@ -4,7 +4,7 @@
     :class="toggleSidebar ? '!block' : ''"
   >
     <div
-      class="fixed flex justify-between min-h-screen w-[220px] flex-col border-r bg-gray-50 p-4 z-50 transform transition-transform duration-500 ease-in-out"
+      class="fixed flex justify-between min-h-screen w-[220px] flex-col border-r bg-surface-gray-1 p-4 z-50 transform transition-transform duration-500 ease-in-out"
       :class="toggleSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
     >
       <div class="flex flex-col gap-4">
@@ -12,9 +12,17 @@
         <slot name="branding">
           <div class="mb-3 flex justify-between items-center">
             <div>
-              <div class="font-fff text-gray-900 uppercase">FOSS United</div>
-              <div class="text-sm mt-2 tracking-wider text-gray-700 uppercase">Dashboard</div>
+              <div class="font-fff text-ink-gray-9 uppercase">FOSS United</div>
+              <div class="text-sm mt-2 tracking-wider text-ink-gray-6 uppercase">Dashboard</div>
             </div>
+            <button
+              class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
+              :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
+              @click="toggleTheme"
+            >
+              <IconSunHighFilled v-if="currentTheme === 'dark'" :size="18" :stroke="1.5" />
+              <IconMoonStars v-else :size="18" :stroke="1.5" />
+            </button>
             <Button
               class="block md:hidden -mr-8 !rounded-full w-8 h-8"
               variant="outline"
@@ -32,19 +40,19 @@
             <div v-for="(group, groupIndex) in menuItems" :key="groupIndex" class="my-1">
               <div
                 v-if="group.parent_label"
-                class="text-xs text-gray-600 font-medium uppercase tracking-wide"
+                class="text-xs text-ink-gray-5 font-medium uppercase tracking-wide"
               >
                 {{ group.parent_label }}
               </div>
-              <div class="flex flex-col my-1 gap-1 text-gray-700">
+              <div class="flex flex-col my-1 gap-1 text-ink-gray-6">
                 <router-link
                   v-for="(item, index) in group.items"
                   :key="item.label"
                   :to="item.route"
-                  class="w-full text-sm flex items-center gap-1 rounded-sm p-2 hover:bg-gray-100 transition-colors"
+                  class="w-full text-sm flex items-center gap-1 rounded-sm p-2 hover:bg-surface-gray-2 transition-colors"
                   :class="
                     isMenuItemActive(item.route, index)
-                      ? 'font-medium text-gray-900 bg-gray-100'
+                      ? 'font-medium text-ink-gray-9 bg-surface-gray-2'
                       : ''
                   "
                   @click="handleClick()"
@@ -60,7 +68,7 @@
       </div>
       <div>
         <slot name="pre-user-actions">
-          <p class="text-sm leading-normal tracking-tight font-medium text-gray-600">
+          <p class="text-sm leading-normal tracking-tight font-medium text-ink-gray-5">
             Need Help? Check out our
             <a
               class="underline flex gap-1 items-center"
@@ -73,7 +81,7 @@
           </p>
         </slot>
         <slot name="user-actions">
-          <div class="hidden md:flex items-center justify-between text-gray-800 py-2 my-1">
+          <div class="hidden md:flex items-center justify-between text-ink-gray-8 py-2 my-1">
             <div class="flex items-center gap-2">
               <img
                 v-if="user_profile.data?.profile_photo"
@@ -121,7 +129,7 @@
           </div>
         </slot>
         <slot name="footer">
-          <p class="text-gray-700 text-xs leading-snug">
+          <p class="text-ink-gray-6 text-xs leading-snug">
             FOSS United Foundation.
             <br />CC-BY-SA.
           </p>
@@ -131,9 +139,9 @@
   </div>
 
   <!-- For mobile screens -->
-  <div class="md:hidden px-4 py-3 flex justify-between bg-white">
+  <div class="md:hidden px-4 py-3 flex justify-between bg-surface-white">
     <div class="flex items-center gap-2">
-      <Button icon="menu" class="text-black" variant="ghost" @click="toggleSidebar = true" />
+      <Button icon="menu" class="text-ink-gray-9" variant="ghost" @click="toggleSidebar = true" />
     </div>
     <div class="flex items-center gap-2">
       <Popover>
@@ -177,20 +185,21 @@
   <!-- Dark background overlay -->
   <div
     v-if="toggleSidebar"
-    class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity duration-500 md:hidden"
+    class="fixed inset-0 bg-surface-gray-7 bg-opacity-50 z-40 transition-opacity duration-500 md:hidden"
     @click="toggleSidebar = false"
   ></div>
 </template>
 <script setup>
-import { createResource, FeatherIcon, Popover } from 'frappe-ui'
+import { createResource, FeatherIcon, Popover, useTheme } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { ref, defineProps, inject } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { IconExternalLink } from '@tabler/icons-vue'
+import { IconExternalLink, IconSunHighFilled, IconMoonStars } from '@tabler/icons-vue'
 
 const route = useRoute()
 const session = inject('$session')
 const toggleSidebar = ref(false)
+const { currentTheme, toggleTheme } = useTheme()
 
 const props = defineProps({
   title: {

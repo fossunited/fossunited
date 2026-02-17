@@ -47,7 +47,7 @@ const getTheme = (status) => {
             class="prose prose-sm"
             v-html="cleanedHTML(review.remarks)"
           ></div>
-          <span v-else class="text-base text-gray-600">No Remarks</span>
+          <span v-else class="text-base text-ink-gray-5">No Remarks</span>
         </div>
         <div class="flex gap-2 items-center">
           <span class="text-sm">Reviewer #{{ review.idx }}</span>

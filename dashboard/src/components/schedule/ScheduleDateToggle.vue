@@ -12,13 +12,13 @@
         class="focus-visible:outline-none"
       >
         <div class="flex flex-col">
-          <div class="bg-gray-100 text-gray-700 text-sm px-2 py-1 tracking-wider">
+          <div class="bg-surface-gray-2 text-ink-gray-6 text-sm px-2 py-1 tracking-wider">
             {{ date }}
           </div>
         </div>
         <div
-          class="border border-gray-900 flex items-center justify-center p-2 text-base font-medium hover:bg-gray-100 transition-colors"
-          :class="{ 'bg-gray-900 text-white hover:bg-gray-800': selected }"
+          class="border border-outline-gray-5 flex items-center justify-center p-2 text-base font-medium hover:bg-surface-gray-2 transition-colors"
+          :class="{ 'bg-surface-gray-7 text-ink-white hover:bg-surface-gray-6': selected }"
         >
           Day {{ index + 1 }}
         </div>

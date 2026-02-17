@@ -20,7 +20,7 @@
           <small>Fetching details...</small>
         </div>
         <div v-if="fetchTitleError">
-          <small class="text-gray-700">{{ fetchTitleError }}</small>
+          <small class="text-ink-gray-6">{{ fetchTitleError }}</small>
         </div>
         <FormControl v-model="newIssuePr.title" label="Title &ast;" />
         <FormControl
@@ -124,7 +124,7 @@
   >
     <template #cell="{ item, row, column }">
       <div v-if="column.label == 'Link'">
-        <a :href="item" target="_blank" class="text-gray-900 text-base underline flex gap-1">
+        <a :href="item" target="_blank" class="text-ink-gray-9 text-base underline flex gap-1">
           <span>
             {{ item }}
           </span>

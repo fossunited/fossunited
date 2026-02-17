@@ -8,7 +8,7 @@
       <LoadingText />
     </div>
     <div v-if="proposals.data" class="px-4">
-      <p v-if="!proposals.data.length" class="text-sm text-gray-600">No submissions yet.</p>
+      <p v-if="!proposals.data.length" class="text-sm text-ink-gray-5">No submissions yet.</p>
       <SubmissionListItem
         v-for="(proposal, key) in proposals.data"
         :key="key"

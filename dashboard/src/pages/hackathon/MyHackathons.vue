@@ -19,7 +19,7 @@
             v-for="hackathon in ongoing_hackathons"
             :key="hackathon.name"
             :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            class="border-2 border-transparent hover:border-outline-gray-4 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
@@ -33,7 +33,7 @@
             v-for="hackathon in upcoming_hackathons"
             :key="hackathon.name"
             :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            class="border-2 border-transparent hover:border-outline-gray-4 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
@@ -47,15 +47,15 @@
             v-for="hackathon in past_hackathons"
             :key="hackathon.name"
             :title="hackathon.hackathon_name"
-            class="border-2 border-transparent hover:border-gray-500 transition-colors rounded-[8px] hover:cursor-pointer"
+            class="border-2 border-transparent hover:border-outline-gray-4 transition-colors rounded-[8px] hover:cursor-pointer"
             @click="$router.push('/hack/' + hackathon.permalink)"
           />
         </div>
       </div>
     </div>
-    <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-gray-50">
-      <div class="text-sm font-medium uppercase text-gray-800">No Hackathons</div>
-      <div class="text-xs text-gray-600">You have not participated in any hackathons yet.</div>
+    <div v-else class="flex flex-col gap-2 rounded-sm p-4 border bg-surface-gray-1">
+      <div class="text-sm font-medium uppercase text-ink-gray-8">No Hackathons</div>
+      <div class="text-xs text-ink-gray-5">You have not participated in any hackathons yet.</div>
     </div>
   </div>
 </template>

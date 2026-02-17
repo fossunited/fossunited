@@ -2,7 +2,7 @@
   <ErrorMessage :message="errorMessages" class="text-sm -mb-4" /><br />
   <div>
     <div class="flex gap-2 items-center px-4 pt-4 border border-b-0 rounded-t">
-      <span class="text-base text-gray-600">Review: </span>
+      <span class="text-base text-ink-gray-5">Review: </span>
       <Button
         v-for="option in reviewOptions"
         :key="option.value"

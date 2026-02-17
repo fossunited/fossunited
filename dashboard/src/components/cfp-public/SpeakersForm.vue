@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full p-4 md:p-8 border rounded bg-white">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconUserCircle />
       <span>Speaker Information</span>
@@ -7,11 +7,11 @@
     <div
       v-for="(speaker, index) in speakers"
       :key="index"
-      class="flex flex-col gap-4 p-6 border rounded border-gray-300"
+      class="flex flex-col gap-4 p-6 border rounded border-outline-gray-2"
     >
       <div
         v-if="speakers.length > 1"
-        class="border-b border-gray-500 pb-2 col-span-2 flex justify-between"
+        class="border-b border-outline-gray-4 pb-2 col-span-2 flex justify-between"
       >
         <h5 class="font-medium text-base">Speaker #{{ index + 1 }}</h5>
         <Button icon="trash" theme="red" @click="deleteSpeaker(index)" />

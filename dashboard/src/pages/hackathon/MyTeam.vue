@@ -18,7 +18,7 @@
         <input
           v-model="newTeamName"
           type="text"
-          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-gray-900 active:outline-none focus:outline-none"
+          class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-ink-gray-9 active:outline-none focus:outline-none"
         />
         <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
           <Button label="Discard" @click="inNameEdit = false" />
@@ -36,7 +36,7 @@
       <div class="py-4 my-4 gap-6 grid grid-cols-1 md:grid-cols-2">
         <div
           v-if="hasProject.data == 0"
-          class="rounded border-2 text-gray-700 border-gray-700 bg-gray-50 border-dashed flex flex-col justify-between p-5 gap-8"
+          class="rounded border-2 text-ink-gray-6 border-gray-700 bg-surface-gray-1 border-dashed flex flex-col justify-between p-5 gap-8"
         >
           <div class="text-base font-semibold uppercase">Project</div>
           <div class="flex justify-between items-end">
@@ -59,7 +59,7 @@
         </div>
         <div
           v-else
-          class="rounded bg-gray-50 border border-gray-400 flex flex-col justify-between p-5 gap-8"
+          class="rounded bg-surface-gray-1 border border-outline-gray-3 flex flex-col justify-between p-5 gap-8"
         >
           <div class="text-base font-semibold uppercase">Project</div>
           <div class="flex justify-between items-end">
@@ -93,7 +93,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-2">
         <div
           v-if="hackathon.data.hackathon_rules"
-          class="w-full bg-gray-50 text-gray-800 rounded p-4"
+          class="w-full bg-surface-gray-1 text-ink-gray-8 rounded p-4"
         >
           <h3 class="text-md font-semibold">Hackathon Rules</h3>
           <div class="prose leading-normal" v-html="hackathon.data.hackathon_rules"></div>

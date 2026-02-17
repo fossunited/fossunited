@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 bg-white w-full p-8 border rounded items-center">
+  <div class="flex flex-col gap-4 bg-surface-white w-full p-8 border rounded items-center">
     <IconFileSad size="40" stroke="1.6" />
     <div class="prose-sm text-center">
       <h3>Proposal form is closed!</h3>

@@ -10,7 +10,7 @@
       <div class="flex flex-col gap-4">
         <div class="space-y-2">
           <div class="text-sm uppercase font-medium">Details</div>
-          <div class="bg-gray-50 text-sm p-2 rounded-sm font-mono">
+          <div class="bg-surface-gray-1 text-sm p-2 rounded-sm font-mono">
             <p class="leading-5">
               Name: {{ selectedAttendee.full_name }}
               <br />
@@ -28,7 +28,7 @@
               <span
                 >Tshirt Assigned:
                 <span
-                  :class="selectedAttendee.tshirt_delivered ? 'text-green-600' : 'text-red-600'"
+                  :class="selectedAttendee.tshirt_delivered ? 'text-ink-green-3' : 'text-ink-red-4'"
                 >
                   {{ selectedAttendee.tshirt_delivered ? 'Yes' : 'No' }}
                 </span>
@@ -51,7 +51,7 @@
           </div>
           <Button
             v-if="isCheckedInToday(selectedAttendee)"
-            class="!text-sm border-orange-600 hover:border-orange-400 text-orange-600"
+            class="!text-sm border-outline-orange-1 hover:border-orange-400 text-ink-amber-3"
             icon-left="alert-triangle"
             label="Undo Check-In for Today"
             size="sm"
@@ -63,7 +63,7 @@
           <hr class="mb-4" />
           <div class="text-sm uppercase font-medium">Assign T-shirt</div>
           <p class="text-sm leading-5 mt-1">
-            <span class="text-orange-600">Pending</span> T-shirt assignment.
+            <span class="text-ink-amber-3">Pending</span> T-shirt assignment.
             <br />
             Click the button below when you have assigned a T-shirt to the attendee.
           </p>

@@ -1,5 +1,5 @@
 <template>
-  <header class="sticky top-0 z-40 flex items-center justify-between border-b bg-white px-5 py-2">
+  <header class="sticky top-0 z-40 flex items-center justify-between border-b bg-surface-white px-5 py-2">
     <div>
       <button class="block md:hidden" @click="handleToggleSidebar()">
         <IconMenu2 class="w-5 h-5" />
@@ -41,11 +41,11 @@
       </Dropdown>
     </div>
     <div v-else>
-      <a href="/login" class="text-black font-medium text-base hover:text-gray-800">Login</a>
+      <a href="/login" class="text-ink-gray-9 font-medium text-base hover:text-ink-gray-8">Login</a>
     </div>
     <div
       v-if="showNav"
-      class="block md:hidden fixed inset-0 bg-black opacity-20 z-30 mt-[55px]"
+      class="block md:hidden fixed inset-0 bg-surface-gray-7 opacity-20 z-30 mt-[55px]"
       @click="handleToggleSidebar"
     ></div>
   </header>

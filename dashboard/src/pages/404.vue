@@ -2,7 +2,7 @@
   <div class="h-svh flex flex-col items-center justify-center">
     <component
       :is="getIcon()"
-      class="m-2 w-12 h-12 bg-gray-200 text-gray-800 p-2 rounded-full"
+      class="m-2 w-12 h-12 bg-surface-gray-3 text-ink-gray-8 p-2 rounded-full"
     ></component>
     <h1 class="text-2xl font-bold">{{ getTitle() }}</h1>
     <p class="mb-2">{{ getMessage() }}</p>

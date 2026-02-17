@@ -3,7 +3,7 @@
     <EventHeader :event="event.doc" />
 
     <div class="flex flex-col mt-4 gap-3 w-fit">
-      <div class="text-base text-gray-600">Manage volunteers of the event.</div>
+      <div class="text-base text-ink-gray-5">Manage volunteers of the event.</div>
       <Button
         class="w-fit"
         label="Add Volunteer"
@@ -27,7 +27,7 @@
         </template>
         <div class="flex justify-between">
           <div class="flex flex-col gap-2">
-            <div class="text-base text-gray-600">{{ member.email }}</div>
+            <div class="text-base text-ink-gray-5">{{ member.email }}</div>
             <Badge
               class="w-fit"
               :label="member.role"

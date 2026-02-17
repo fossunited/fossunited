@@ -13,7 +13,7 @@
     <template #body>
       <!-- Filters for small screens -->
       <template v-if="isSmallScreen">
-        <div class="my-2 rounded-lg border border-gray-100 bg-surface-white shadow-xl">
+        <div class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl">
           <div class="min-w-[300px] p-2">
             <div v-if="filters.length">
               <div
@@ -112,7 +112,7 @@
       </template>
       <!-- Filters for large screens -->
       <template v-else>
-        <div class="my-2 rounded-lg border border-gray-100 bg-surface-white shadow-xl">
+        <div class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl">
           <div class="min-w-[400px] p-2">
             <div v-if="filters.length">
               <div

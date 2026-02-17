@@ -44,7 +44,7 @@
         </div>
       </div>
       <div
-        class="flex flex-col p-4 w-full rounded-sm my-4 border-2 bg-gray-100 border-gray-800 border-dashed text-gray-800"
+        class="flex flex-col p-4 w-full rounded-sm my-4 border-2 bg-surface-gray-2 border-outline-gray-5 border-dashed text-ink-gray-8"
       >
         <div class="text-base font-semibold mb-2">Team Members</div>
         <p class="text-sm">You can add members after team creation</p>

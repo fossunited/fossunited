@@ -13,10 +13,10 @@
           ><span
             :class="
               {
-                Pending: 'text-orange-600',
-                Accepted: 'text-green-600',
-                Rejected: 'text-red-600',
-                'Pending Confirmation': 'text-blue-600',
+                Pending: 'text-ink-amber-3',
+                Accepted: 'text-ink-green-3',
+                Rejected: 'text-ink-red-4',
+                'Pending Confirmation': 'text-ink-blue-2',
               }[participant.localhost_request_status]
             "
             >{{ participant.localhost_request_status }}</span
@@ -32,7 +32,7 @@
             <div class="text-base font-medium">{{ participant.full_name }}</div>
             <div
               v-if="participant.profile_username"
-              class="text-sm text-green-600 hover:underline hover:cursor-pointer"
+              class="text-sm text-ink-green-3 hover:underline hover:cursor-pointer"
               @click="redirectRoute(participant.profile_route)"
             >
               {{ participant.profile_username }}

@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-4">
       <div class="space-y-3">
         <h5 class="text-base font-semibold mb-1">Email Group</h5>
-        <label class="text-sm text-gray-600">Audience&ast;</label>
+        <label class="text-sm text-ink-gray-5">Audience&ast;</label>
         <Autocomplete
           v-model="data.email_group"
           :disabled="data.status == 'Sent'"
@@ -50,7 +50,7 @@
             />
             <div v-if="uploading" class="text-sm">Uploading {{ progress }}%</div>
             <div v-if="message" class="text-sm">{{ message }}</div>
-            <div v-if="error" class="text-red-600 text-sm">{{ error }}</div>
+            <div v-if="error" class="text-ink-red-4 text-sm">{{ error }}</div>
           </template>
         </FileUploader>
         <div v-if="data.attachments" class="flex flex-col gap-2 py-1">
@@ -68,7 +68,7 @@
       </div>
       <div
         v-if="data.schedule_sending"
-        class="space-y-3 bg-blue-50 border border-blue-500 border-dashed p-4 rounded"
+        class="space-y-3 bg-surface-blue-1 border border-outline-blue-1 border-dashed p-4 rounded"
       >
         <h5 class="text-base font-semibold mb-1">Scheduled Sending</h5>
         <FormControl

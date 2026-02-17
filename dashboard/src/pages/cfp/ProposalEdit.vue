@@ -7,7 +7,7 @@
         </div>
       </template>
       <template #post-nav-items>
-        <p class="text-base text-gray-600">Edit your talk proposal</p>
+        <p class="text-base text-ink-gray-5">Edit your talk proposal</p>
       </template>
     </SideNavbar>
     <div v-if="cfpForm.data" class="w-full md:ml-[220px]">
@@ -31,7 +31,7 @@
       <ActionsForm v-show="selectedTab === 2" v-model:cfpid="route.params.id" />
       <div
         v-if="selectedTab !== 2"
-        class="sticky bottom-0 w-full flex flex-col-reverse md:flex-row-reverse justify-between items-end gap-2 p-4 border-t bg-white"
+        class="sticky bottom-0 w-full flex flex-col-reverse md:flex-row-reverse justify-between items-end gap-2 p-4 border-t bg-surface-white"
       >
         <Button label="Save" variant="solid" class="w-full md:w-1/3" @click="saveProposal" />
         <ErrorMessage class="w-full" :message="errorMessages" />

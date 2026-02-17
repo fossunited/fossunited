@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex md:items-center justify-center bg-white">
+  <div class="min-h-screen flex md:items-center justify-center bg-surface-white">
     <div class="w-full max-w-md p-4 md:p-6">
       <!-- Header Section -->
       <div v-if="event.data" class="mb-10">
@@ -7,7 +7,7 @@
       </div>
 
       <h1 class="text-[2em] font-bold mb-2 text-center">Quick Check-In</h1>
-      <p class="text-sm text-gray-600 mb-10 text-center">
+      <p class="text-sm text-ink-gray-5 mb-10 text-center">
         Scan or enter a ticket to check in attendee.
       </p>
 
@@ -25,7 +25,7 @@
           />
           <button
             type="button"
-            class="absolute right-2 top-[17px] bg-gray-800 text-white rounded py-2 px-2 hover:bg-red-500 text-lg"
+            class="absolute right-2 top-[17px] bg-surface-gray-6 text-ink-white rounded py-2 px-2 hover:bg-surface-red-10 text-lg"
             title="Clear"
             aria-label="Clear ticket ID"
             :disabled="!ticketId"
@@ -38,7 +38,7 @@
         <!-- Manual Check-In Button -->
         <button
           type="button"
-          class="btn btn-primary bg-green-500 text-white rounded py-2 px-4 w-full"
+          class="btn btn-primary bg-surface-green-10 text-ink-white rounded py-2 px-4 w-full"
           :disabled="loading || !ticketId.trim()"
           @click="handleTicketInput"
         >
@@ -48,7 +48,7 @@
         <!-- Scan QR button -->
         <button
           type="button"
-          class="btn btn-primary bg-gray-800 text-white rounded py-2 px-4 w-full"
+          class="btn btn-primary bg-surface-gray-6 text-ink-white rounded py-2 px-4 w-full"
           :disabled="loading || showConfirmDialog"
           @click="showScanner = !showScanner"
         >
@@ -62,7 +62,7 @@
       <!-- Error message -->
       <div
         v-if="message"
-        class="mt-4 text-sm font-medium text-red-600"
+        class="mt-4 text-sm font-medium text-ink-red-4"
         role="alert"
         aria-live="polite"
       >

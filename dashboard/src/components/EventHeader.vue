@@ -22,7 +22,7 @@
         </div>
       </Badge>
     </div>
-    <div class="flex gap-2 items-center text-base text-gray-700">
+    <div class="flex gap-2 items-center text-base text-ink-gray-6">
       <div>
         {{ event.event_type }}
       </div>

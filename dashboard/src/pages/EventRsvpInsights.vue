@@ -8,9 +8,9 @@
 
     <!-- Main Section Header -->
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div class="font-semibold text-gray-800">
+      <div class="font-semibold text-ink-gray-8">
         {{ sectionTitle }}
-        <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-gray-600">
+        <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-ink-gray-5">
           ({{ checkins.data?.length || 0 }} / {{ eventStats.data?.total_accepted || 0 }} confirmed
           attendees)
         </span>
@@ -18,13 +18,13 @@
 
       <div class="flex items-center gap-2">
         <!-- View Toggle - Only show when check-ins are available -->
-        <div class="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+        <div class="flex items-center gap-1 bg-surface-gray-2 rounded-lg p-1">
           <button
             class="px-3 py-1.5 text-sm rounded-md transition-colors"
             :class="
               currentView === 'attendees'
-                ? 'bg-white text-gray-900 font-medium shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+                : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'attendees'"
           >
@@ -34,8 +34,8 @@
             class="px-3 py-1.5 text-sm rounded-md transition-colors"
             :class="
               currentView === 'checkins'
-                ? 'bg-white text-gray-900 font-medium shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-surface-white text-ink-gray-9 font-medium shadow-sm'
+                : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'checkins'"
           >
@@ -78,7 +78,7 @@
       </template>
 
       <template #cell="{ item, row, column }">
-        <span v-if="column.key === 'check_in_time'" class="text-sm text-gray-700">
+        <span v-if="column.key === 'check_in_time'" class="text-sm text-ink-gray-6">
           {{ formatTimeOnly(item) }}
         </span>
         <span v-else class="text-base truncate text-wrap">{{ item }}</span>
@@ -107,7 +107,7 @@
         <span
           v-if="column.key === 'confirm_attendance'"
           class="px-2 py-1 rounded text-sm font-medium"
-          :class="item ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'"
+          :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
         >
           {{ item ? 'Yes' : 'No' }}
         </span>
@@ -139,7 +139,7 @@
             <!-- Tooltip for disabled state -->
             <div
               v-if="!showCheckins"
-              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
             >
               Check-in will be available during event days
               <div

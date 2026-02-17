@@ -49,7 +49,7 @@
       </div>
 
       <div v-else-if="column.key === 'is_student'" class="ml-4">
-        <span class="text-sm text-gray-600">{{ row.is_student ? 'Yes' : 'No' }}</span>
+        <span class="text-sm text-ink-gray-5">{{ row.is_student ? 'Yes' : 'No' }}</span>
       </div>
 
       <div v-else-if="column.key === 'git_profile'">
@@ -62,7 +62,7 @@
           <span>Open</span>
           <IconArrowUpRight class="w-4 h-4" />
         </a>
-        <span v-else class="text-sm text-gray-500">—</span>
+        <span v-else class="text-sm text-ink-gray-4">—</span>
       </div>
 
       <div v-else-if="column.key === 'project_title'">
@@ -74,7 +74,7 @@
           <span>{{ row.project_title }}</span>
           <IconArrowUpRight class="w-4 h-4" />
         </a>
-        <span v-else class="text-sm text-gray-500">—</span>
+        <span v-else class="text-sm text-ink-gray-4">—</span>
       </div>
 
       <div v-else-if="column.key === 'actions'">
@@ -90,7 +90,7 @@
     </template>
   </SearchListView>
 
-  <div v-else class="text-center py-12 text-gray-500">
+  <div v-else class="text-center py-12 text-ink-gray-4">
     <p class="text-lg font-medium">No Requests</p>
     <p class="text-sm mt-1">There are no localhost requests yet.</p>
   </div>

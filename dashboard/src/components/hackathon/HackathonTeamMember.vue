@@ -6,8 +6,8 @@
       class="p-1 cursor-pointer transition-colors text-base"
       :class="
         inInvite == section.value
-          ? 'text-gray-900 border-b-2 border-gray-900 font-medium'
-          : ' text-gray-600'
+          ? 'text-ink-gray-9 border-b-2 border-outline-gray-5 font-medium'
+          : ' text-ink-gray-5'
       "
       @click="inInvite = section.value"
     >
@@ -43,9 +43,9 @@
           <div
             v-for="invite in outgoingInvites.data"
             :key="invite.name"
-            class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-gray-50"
+            class="flex items-center flex-wrap w-full gap-2 justify-between p-2 rounded-sm even:bg-surface-gray-1"
           >
-            <div class="text-sm text-gray-600">
+            <div class="text-sm text-ink-gray-5">
               {{ invite.reciever_email }}
             </div>
             <Badge
@@ -55,7 +55,7 @@
           </div>
         </div>
       </div>
-      <div v-else class="text-sm text-red-600">
+      <div v-else class="text-sm text-ink-red-4">
         Reached maximum count of {{ teamMemberCount.max_team_size }} members in team
       </div>
     </div>
@@ -74,7 +74,7 @@
             />
             <div>
               <div class="text-base font-medium">{{ member.full_name }}</div>
-              <div class="text-sm text-gray-600">{{ member.email }}</div>
+              <div class="text-sm text-ink-gray-5">{{ member.email }}</div>
             </div>
           </div>
           <Button

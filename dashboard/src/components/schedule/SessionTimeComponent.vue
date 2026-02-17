@@ -1,11 +1,11 @@
 <template>
-  <div class="px-3 py-2 flex flex-col items-center gap-1 border border-gray-500 bg-white h-fit">
+  <div class="px-3 py-2 flex flex-col items-center gap-1 border border-outline-gray-4 bg-surface-white h-fit">
     <div class="flex gap-1 text-sm font-semibold">
       <span>{{ getFormattedTime(session.start_time) }}</span>
     </div>
     <div
       v-if="session.category !== 'Break'"
-      class="flex text-[10px] items-center gap-1 uppercase text-gray-600 divide-x divide-gray-400"
+      class="flex text-[10px] items-center gap-1 uppercase text-ink-gray-5 divide-x divide-gray-400"
     ></div>
   </div>
 </template>

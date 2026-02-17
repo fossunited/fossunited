@@ -18,21 +18,21 @@
         <div class="flex flex-col gap-3">
           <div class="text-lg font-semibold">
             <span>RSVP Form is </span>
-            <span v-if="rsvp.doc.is_published" class="text-green-600">Live</span>
+            <span v-if="rsvp.doc.is_published" class="text-ink-green-3">Live</span>
             <span v-else class="text-red-500">Unpublished</span>
           </div>
 
-          <span v-if="rsvp.doc.is_published" class="text-sm text-gray-600">
+          <span v-if="rsvp.doc.is_published" class="text-sm text-ink-gray-5">
             Unpublishing the form will make it unaccessible to users.
           </span>
-          <span v-else class="text-sm text-gray-600">
+          <span v-else class="text-sm text-ink-gray-5">
             Publish this form to make it accessible to public.
           </span>
 
           <div class="flex items-center justify-between mt-2 p-3 border rounded-md">
             <div class="flex flex-col">
-              <span class="font-medium text-gray-800">Requires organizer approval</span>
-              <span class="text-sm text-gray-600">
+              <span class="font-medium text-ink-gray-8">Requires organizer approval</span>
+              <span class="text-sm text-ink-gray-5">
                 When enabled, Attendees must be accepted or denied via
                 <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
                   insights
@@ -55,7 +55,7 @@
     </div>
 
     <div class="flex flex-col my-4 gap-6">
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Edit Details</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
           <FormControl
@@ -65,7 +65,7 @@
             description=""
             size="md"
           />
-          <span class="text-sm text-gray-600"
+          <span class="text-sm text-ink-gray-5"
             >Allow users to edit their RSVP after submission.</span
           >
         </div>
@@ -86,7 +86,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Standard Fields</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Standard Fields</div>
       <div class="py-4 grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <FormControl
           v-for="(field, index) in standard_fields"
@@ -100,7 +100,7 @@
       </div>
     </div>
     <div>
-      <div class="font-semibold text-gray-800 border-b-2 pb-2">Custom Fields</div>
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
       <Button
         class="mt-3"
         size="md"
@@ -158,7 +158,7 @@
               label="Is Mandatory"
               description="Whether the question is mandatory or not."
             />
-            <div class="text-sm text-gray-600">Whether the question is mandatory or not.</div>
+            <div class="text-sm text-ink-gray-5">Whether the question is mandatory or not.</div>
           </div>
           <FormControl
             v-model="custom_field.type"

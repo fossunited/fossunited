@@ -8,7 +8,7 @@
       <ChapterHeader :chapter="chapter" />
     </div>
     <div class="flex flex-col mt-4 gap-3 w-fit">
-      <div class="text-base text-gray-600">Manage team members of your chapter.</div>
+      <div class="text-base text-ink-gray-5">Manage team members of your chapter.</div>
       <Button
         class="w-fit"
         label="Add New Member"
@@ -34,7 +34,7 @@
         </template>
         <div class="flex justify-between">
           <div class="flex flex-col gap-2">
-            <div class="text-base text-gray-600">{{ member.email }}</div>
+            <div class="text-base text-ink-gray-5">{{ member.email }}</div>
             <Badge
               class="w-fit"
               :label="member.role"

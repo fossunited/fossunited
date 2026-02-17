@@ -1,6 +1,6 @@
 <template>
   <Header />
-  <div class="w-full flex flex-col items-center bg-[#FAFAFA] mb-20 min-h-screen">
+  <div class="w-full flex flex-col items-center bg-surface-gray-1 mb-20 min-h-screen">
     <div v-if="cfpData.data" class="max-w-[800px] w-full flex flex-col gap-6 md:gap-10 my-4 px-4">
       <Breadcrumb :items="breadcrumb_items" />
       <FormHeader />
@@ -37,7 +37,7 @@
         <ErrorMessage :message="errorMessages" />
         <MessageBanner
           v-if="isGuestUser"
-          class="justify-center !text-base gap-4 bg-gray-100"
+          class="justify-center !text-base gap-4 bg-surface-gray-2"
           variant="subtle"
           message="Please login to submit your proposal."
         >

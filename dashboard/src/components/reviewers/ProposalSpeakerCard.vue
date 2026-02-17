@@ -3,8 +3,8 @@
     <div class="flex gap-6 justify-between">
       <div class="flex flex-col gap-2 justify-between">
         <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-semibold text-gray-900">{{ speaker.full_name }}</h5>
-          <div class="flex flex-col text-sm text-gray-600">
+          <h5 class="text-lg font-semibold text-ink-gray-9">{{ speaker.full_name }}</h5>
+          <div class="flex flex-col text-sm text-ink-gray-5">
             <span>{{ speaker.designation }}</span>
             <span class="font-semibold">{{ speaker.organization }}</span>
           </div>

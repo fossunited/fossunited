@@ -1,7 +1,7 @@
 <template>
   <Card
     :title="event.event_name"
-    class="border-2 border-transparent hover:border-gray-500 transition-colors hover:cursor-pointer"
+    class="border-2 border-transparent hover:border-outline-gray-4 transition-colors hover:cursor-pointer"
     @click="
       () =>
         $router.push({
@@ -28,7 +28,7 @@
   </Card>
 </template>
 <script setup>
-import { Card, Badge } from 'frappe-ui'
+import { Badge } from 'frappe-ui'
 
 const badgeColors = {
   Draft: 'orange',

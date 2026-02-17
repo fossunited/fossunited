@@ -2,23 +2,23 @@
   <a
     v-bind="session.cfp_route ? { href: createAbsoluteUrlFromRoute(session.cfp_route) } : {}"
     target="_blank"
-    class="pt-12 pb-6 px-6 md:p-6 bg-white border border-gray-500 flex flex-col gap-3 w-full hover:bg-gray-50"
+    class="pt-12 pb-6 px-6 md:p-6 bg-surface-white border border-outline-gray-4 flex flex-col gap-3 w-full hover:bg-surface-gray-1"
   >
     <div class="flex justify-between">
       <div class="flex gap-3 md:gap-4">
         <div
-          class="px-2 py-1 bg-green-100 text-green-600 text-xs font-medium rounded-[2px] flex items-center"
+          class="px-2 py-1 bg-surface-green-2 text-ink-green-3 text-xs font-medium rounded-[2px] flex items-center"
         >
           {{ session.category != 'Other' ? session.category : session.other_category }}
         </div>
         <div
-          class="px-2 py-1 bg-gray-100 text-gray-900 text-xs font-medium rounded-[2px] flex items-center"
+          class="px-2 py-1 bg-surface-gray-2 text-ink-gray-9 text-xs font-medium rounded-[2px] flex items-center"
         >
           {{ getDuration() }}
         </div>
         <div
           v-if="session._date"
-          class="px-2 py-1 bg-blue-100 text-blue-900 text-xs font-medium rounded-[2px] flex items-center"
+          class="px-2 py-1 bg-surface-blue-2 text-ink-blue-3 text-xs font-medium rounded-[2px] flex items-center"
         >
           {{ session._date }}
         </div>
@@ -37,7 +37,7 @@
           :href="session.talk_video"
           target="_blank"
           rel="noopener noreferrer"
-          class="text-gray-600 hover:text-gray-900 flex items-center justify-center"
+          class="text-ink-gray-5 hover:text-ink-gray-9 flex items-center justify-center"
           title="Watch on YouTube"
         >
           <IconBrandYoutubeFilled class="w-6 h-6" />
@@ -45,7 +45,7 @@
 
         <button
           v-else-if="!PastSession"
-          class="px-2 py-1 bg-gray-900 text-white text-xs font-medium rounded-[2px] flex items-center gap-2"
+          class="px-2 py-1 bg-surface-gray-7 text-ink-white text-xs font-medium rounded-[2px] flex items-center gap-2"
           title="Add to calendar"
           @click="downloadSessionIcs()"
         >
@@ -67,7 +67,7 @@
           />
           <div class="flex flex-col gap-1">
             <h4 class="text-base font-medium">{{ speaker.full_name }}</h4>
-            <p class="text-xs text-gray-600">
+            <p class="text-xs text-ink-gray-5">
               {{ speaker.designation }} | {{ speaker.organization }}
             </p>
           </div>

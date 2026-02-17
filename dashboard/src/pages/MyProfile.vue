@@ -115,9 +115,9 @@
               />
               <div class="mt-2 flex items-center">
                 <div v-if="isValidUsername.loading">
-                  <span class="text-sm text-gray-500 mr-2"> Checking availability... </span>
+                  <span class="text-sm text-ink-gray-4 mr-2"> Checking availability... </span>
                   <span
-                    class="animate-spin h-4 w-4 border-2 border-gray-500 rounded-full border-t-transparent"
+                    class="animate-spin h-4 w-4 border-2 border-outline-gray-4 rounded-full border-t-transparent"
                   ></span>
                 </div>
                 <div
@@ -128,10 +128,10 @@
                   "
                   class="flex"
                 >
-                  <span class="text-sm text-green-500 mr-1 font-semibold">
+                  <span class="text-sm text-ink-green-2 mr-1 font-semibold">
                     Username is available
                   </span>
-                  <IconCheck class="h-4 w-4 text-green-500" />
+                  <IconCheck class="h-4 w-4 text-ink-green-2" />
                 </div>
               </div>
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
@@ -172,7 +172,7 @@
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">SOCIAL Links</h4>
             </div>
-            <div class="col-span-2 text-sm text-gray-600">
+            <div class="col-span-2 text-sm text-ink-gray-5">
               Enter the complete links to your social, including
               <code>http(s)://</code>
             </div>

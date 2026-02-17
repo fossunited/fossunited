@@ -2,9 +2,9 @@
   <div class="flex flex-col gap-4">
     <div class="space-y-2">
       <h3 class="text-2xl font-semibold">Preview Submission</h3>
-      <p class="text-sm text-gray-600">Review the details of your proposal before submitting.</p>
+      <p class="text-sm text-ink-gray-5">Review the details of your proposal before submitting.</p>
     </div>
-    <div class="border p-4 md:p-8 bg-white rounded">
+    <div class="border p-4 md:p-8 bg-surface-white rounded">
       <div class="flex flex-col gap-3">
         <h4 class="text-xl font-medium">
           {{ getValueFromProposal('talk_title') }}
@@ -29,14 +29,14 @@
         </div>
         <RenderSessionCategories :categories="getValueFromProposal('session_categories')" />
         <div class="space-y-2">
-          <label class="text-base font-medium text-gray-600">Session Description</label>
+          <label class="text-base font-medium text-ink-gray-5">Session Description</label>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
             v-html="getValueFromProposal('talk_description')"
           ></div>
         </div>
         <div v-if="getValueFromProposal('key_takeaways')" class="space-y-2">
-          <label class="text-base font-medium text-gray-600">Key Takeaways</label>
+          <label class="text-base font-medium text-ink-gray-5">Key Takeaways</label>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
             v-html="getValueFromProposal('key_takeaways')"
@@ -44,7 +44,7 @@
         </div>
         <RenderReferences :references="proposalReferences" />
         <div class="space-y-2">
-          <label class="text-base font-medium text-gray-600">Speakers</label>
+          <label class="text-base font-medium text-ink-gray-5">Speakers</label>
           <div class="flex flex-col gap-2">
             <SpeakerCard
               v-for="(speaker, index) in proposalSpeakers"

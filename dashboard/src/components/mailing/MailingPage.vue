@@ -2,7 +2,7 @@
   <div v-if="document.doc" class="px-4 py-8 md:p-8 w-full z-0 min-h-screen">
     <component :is="headerComponent" v-bind="headerProps" />
     <div class="prose my-4">
-      <p class="text-base text-gray-600">{{ infoText }}</p>
+      <p class="text-base text-ink-gray-5">{{ infoText }}</p>
     </div>
     <hr />
     <div class="flex flex-col gap-2 mt-2">

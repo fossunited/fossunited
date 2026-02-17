@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-white">
+  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
       <IconClipboardText />
       <span>Submission Form</span>

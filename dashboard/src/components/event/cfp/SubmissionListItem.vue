@@ -24,7 +24,7 @@ defineEmits(['open:submission'])
   <div
     role="button"
     tabindex="0"
-    class="border-t border-b py-4 px-2 flex justify-between items-center gap-4 hover:bg-gray-50 focus:bg-gray-50 hover:cursor-pointer transition-colors duration-300"
+    class="border-t border-b py-4 px-2 flex justify-between items-center gap-4 hover:bg-surface-gray-1 focus:bg-surface-gray-1 hover:cursor-pointer transition-colors duration-300"
     @click="$emit('open:submission', submission)"
     @keydown.enter="$emit('open:submission', submission)"
     @keydown.space.prevent="$emit('open:submission', submission)"
@@ -40,12 +40,12 @@ defineEmits(['open:submission'])
       </h4>
       <div class="flex gap-2 items-center !text-sm">
         <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
-        <Badge :label="submission._likes_count" variant="ghost" class="!text-gray-500" :aria-label="`${submission._likes_count} people like this proposal`">
+        <Badge :label="submission._likes_count" variant="ghost" class="!text-ink-gray-4" :aria-label="`${submission._likes_count} people like this proposal`">
           <template #prefix>
             <IconHeart size="14" aria-hidden="true"/>
           </template>
         </Badge>
-        <span class="text-gray-600">{{ dayjs(submission.creation).fromNow() }} </span>
+        <span class="text-ink-gray-5">{{ dayjs(submission.creation).fromNow() }} </span>
         <ReviewScoreIndicator :submission="submission" />
       </div>
     </div>

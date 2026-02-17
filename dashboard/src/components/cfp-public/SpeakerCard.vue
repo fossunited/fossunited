@@ -33,7 +33,7 @@
       <img class="w-24 h-24 border rounded" :src="getValue('photo')" alt="Speaker Image" />
     </div>
     <div class="space-y-1 p-2">
-      <label class="text-base font-medium text-gray-600">Bio</label>
+      <label class="text-base font-medium text-ink-gray-5">Bio</label>
       <div
         class="prose prose-sm border-l pl-2 border-outline-gray-3"
         v-html="getValue('bio')"

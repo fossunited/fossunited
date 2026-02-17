@@ -75,7 +75,7 @@
           <input
             v-model="newProjectName"
             type="text"
-            class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-gray-900 active:outline-none focus:outline-none"
+            class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-ink-gray-9 active:outline-none focus:outline-none"
           />
           <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
             <Button
@@ -100,20 +100,20 @@
 
       <!-- Tabs -->
       <TabsRoot v-model="activeTab" :default-value="tabs[0].value">
-        <TabsList class="relative shrink-0 flex border-b border-gray-300">
+        <TabsList class="relative shrink-0 flex border-b border-outline-gray-2">
           <TabsIndicator
             class="absolute px-8 left-0 h-[2px] bottom-0 w-[--radix-tabs-indicator-size] translate-x-[--radix-tabs-indicator-position] rounded-full transition-[width,transform] duration-300"
           >
-            <div class="bg-gray-900 w-full h-full" />
+            <div class="bg-surface-gray-7 w-full h-full" />
           </TabsIndicator>
           <TabsTrigger
             v-for="tab in tabs"
             :key="tab.value"
             :value="tab.value"
-            class="px-4 pb-2 mx-2 leading-none bg-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
+            class="px-4 pb-2 mx-2 leading-none bg-surface-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
             :class="{
-              'text-gray-800 border-b border-gray-800 font-medium': activeTab === tab.value,
-              'text-gray-600 hover:text-gray-800 hover:border-b hover:border-gray-400':
+              'text-ink-gray-8 border-b border-outline-gray-5 font-medium': activeTab === tab.value,
+              'text-ink-gray-5 hover:text-ink-gray-8 hover:border-b hover:border-outline-gray-3':
                 activeTab !== tab.value,
             }"
             >{{ tab.label }}</TabsTrigger

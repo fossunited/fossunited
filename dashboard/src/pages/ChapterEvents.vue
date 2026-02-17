@@ -4,7 +4,7 @@
       <ChapterHeader :chapter="chapter" />
     </div>
     <div class="flex flex-col mt-4 gap-3 w-fit">
-      <div class="text-base text-gray-600">View and Create events for your chapter.</div>
+      <div class="text-base text-ink-gray-5">View and Create events for your chapter.</div>
       <Button
         class="w-fit"
         label="Create New Event"
@@ -20,7 +20,7 @@
           <EventCard v-for="event in upcoming_events.data" :key="event.name" :event="event" />
         </div>
         <div v-if="upcoming_events.data.length == 0">
-          <div class="text-base text-gray-600">No events scheduled yet.</div>
+          <div class="text-base text-ink-gray-5">No events scheduled yet.</div>
         </div>
       </div>
       <div v-if="past_events.data" class="flex flex-col gap-3">
@@ -29,7 +29,7 @@
           <EventCard v-for="event in past_events.data" :key="event.name" :event="event" />
         </div>
         <div v-if="past_events.data.length === 0">
-          <div class="text-base text-gray-600">No events history.</div>
+          <div class="text-base text-ink-gray-5">No events history.</div>
         </div>
       </div>
     </div>
