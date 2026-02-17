@@ -154,8 +154,7 @@ const filteredRows = computed(() => {
       })
 
       if (filtered.length > 0) {
-        group.rows = filtered
-        acc.push(group)
+        acc.push({ ...group, rows: filtered })
       }
 
       return acc

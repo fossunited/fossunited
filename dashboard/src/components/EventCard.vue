@@ -28,7 +28,7 @@
   </Card>
 </template>
 <script setup>
-import { Card, Badge } from 'frappe-ui'
+import { Badge } from 'frappe-ui'
 
 const badgeColors = {
   Draft: 'orange',
