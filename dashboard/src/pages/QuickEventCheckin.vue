@@ -25,7 +25,7 @@
           />
           <button
             type="button"
-            class="absolute right-2 top-[17px] bg-surface-gray-6 text-ink-white rounded py-2 px-2 hover:bg-surface-red-10 text-lg"
+            class="absolute right-2 top-[17px] bg-surface-gray-6 text-ink-white rounded py-2 px-2 hover:bg-surface-red-5 text-lg"
             title="Clear"
             aria-label="Clear ticket ID"
             :disabled="!ticketId"
@@ -38,7 +38,7 @@
         <!-- Manual Check-In Button -->
         <button
           type="button"
-          class="btn btn-primary bg-surface-green-10 text-ink-white rounded py-2 px-4 w-full"
+          class="btn btn-primary bg-surface-green-3 text-ink-white rounded py-2 px-4 w-full"
           :disabled="loading || !ticketId.trim()"
           @click="handleTicketInput"
         >

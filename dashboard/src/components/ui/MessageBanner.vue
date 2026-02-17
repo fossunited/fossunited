@@ -34,15 +34,15 @@ const themeClasses = computed(() => {
     case 'info':
       return 'border-outline-blue-1 bg-surface-blue-1 text-ink-blue-2'
     case 'success':
-      return 'border-green-600 bg-surface-green-1 text-ink-green-3'
+      return 'border-outline-green-1 bg-surface-green-1 text-ink-green-3'
     case 'warning':
-      return 'border-yellow-600 bg-surface-amber-1 text-yellow-600'
+      return 'border-outline-amber-1 bg-surface-amber-1 text-yellow-600'
     case 'error':
-      return 'border-red-600 bg-surface-red-1 text-ink-red-4'
+      return 'border-outline-red-1 bg-surface-red-1 text-ink-red-4'
     case 'simple':
       return 'border-outline-gray-2 bg-surface-gray-1 text-ink-gray-5'
     case 'dark':
-      return 'border-gray-700 bg-surface-gray-6 text-gray-50'
+      return 'border-outline-gray-5 bg-surface-gray-6 text-ink-white'
     default:
       return ''
   }

@@ -18,7 +18,7 @@
         }"
       >
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full h-px bg-surface-gray-10"></div>
+          <div class="w-full h-px bg-surface-gray-4"></div>
         </div>
         <SessionTimeComponent :session="session" class="z-20 invisible md:visible shrink-0" />
       </div>

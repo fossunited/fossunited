@@ -52,7 +52,7 @@
             <div v-if="uploading" class="flex flex-col items-center gap-2">
               <div class="w-full h-2 bg-surface-gray-3 rounded-full overflow-hidden">
                 <div
-                  class="h-full bg-surface-blue-10 transition-all duration-200"
+                  class="h-full bg-surface-blue-3 transition-all duration-200"
                   :style="{ width: `${progress}%` }"
                 />
               </div>

@@ -115,7 +115,7 @@ const changeStatus = createResource({
         <SelectViewport>
           <SelectGroup>
             <SelectLabel class="text-ink-gray-6 text-sm">Options</SelectLabel>
-            <SelectSeparator class="h-px bg-gray-400 my-2" />
+            <SelectSeparator class="h-px bg-surface-gray-4 my-2" />
             <div class="flex flex-col gap-2">
               <SelectItem
                 v-for="option in options"

@@ -71,9 +71,9 @@ const isIncomplete = computed(() => {
     <div
       class="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg"
       :class="{
-        'bg-gray-400': schedule_item.is_new,
-        'bg-surface-amber-10': isIncomplete && !schedule_item.is_new,
-        'bg-surface-green-10': !isIncomplete && !schedule_item.is_new,
+        'bg-surface-gray-4': schedule_item.is_new,
+        'bg-surface-amber-3': isIncomplete && !schedule_item.is_new,
+        'bg-surface-green-3': !isIncomplete && !schedule_item.is_new,
       }"
     />
 
