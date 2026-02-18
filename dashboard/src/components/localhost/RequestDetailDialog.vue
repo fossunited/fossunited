@@ -57,10 +57,10 @@
           <div class="font-medium">Project</div>
           <div
             v-if="participant.project_title"
-            class="hover:underline hover:cursor-pointer flex items-center gap-1"
+            class="text-wrap truncate hover:underline hover:cursor-pointer flex items-center gap-1"
             @click="redirectRoute(participant.project_route)"
           >
-            {{ truncateStr(participant.project_title, 20)
+            {{ participant.project_title
             }}<FeatherIcon name="external-link" class="w-4 h-4 inline-block" />
           </div>
           <div v-else>No Project Yet</div>
@@ -71,7 +71,7 @@
         </div>
         <div class="flex flex-col gap-1">
           <div class="font-medium">Organization/Institute</div>
-          <div>{{ participant.organization }}</div>
+          <div class="text-wrap truncate">{{ participant.organization }}</div>
         </div>
       </div>
     </template>
@@ -106,7 +106,6 @@
 <script setup>
 import { defineProps, defineEmits } from 'vue'
 import { Dialog, FeatherIcon } from 'frappe-ui'
-import { truncateStr } from '@/helpers/utils'
 import { redirectRoute } from '@/helpers/utils'
 
 const props = defineProps({

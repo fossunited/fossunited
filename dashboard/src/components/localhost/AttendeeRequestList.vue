@@ -71,7 +71,7 @@
           class="text-sm flex items-center font-semibold hover:underline cursor-pointer"
           @click="redirectRoute(row.project_route)"
         >
-          <span>{{ row.project_title }}</span>
+          <span class="truncate">{{ row.project_title }}</span>
           <IconArrowUpRight class="w-4 h-4" />
         </a>
         <span v-else class="text-sm text-ink-gray-4">—</span>
@@ -123,7 +123,7 @@ const columns = [
   { label: 'Email', key: 'email', width: '200px' },
   { label: 'Student', key: 'is_student', width: '80px' },
   { label: 'Organization', key: 'organization', width: '200px' },
-  { label: 'Project', key: 'project_title', width: '150px' },
+  { label: 'Project', key: 'project_title', width: '250px' },
   { label: 'Git Profile', key: 'git_profile', width: '90px' },
   { label: 'Actions', key: 'actions', width: '100px' },
 ]
