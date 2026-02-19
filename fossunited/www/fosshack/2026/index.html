@@ -1,5 +1,6 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+{% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle %}
 
 {% block title %}{{ hackathon.name }} - FOSS United{% endblock %}
 {% block meta_block %}
@@ -122,17 +123,7 @@
         </svg>
       </a>
 
-      <button class="theme-toggle rounded" onclick="toggleTheme()">
-        <svg id="theme-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-          <path
-            d="M11 10H16M11 13H15M11 16H12M11 7H15M11 4H12M1 10C1 11.1819 1.23279 12.3522 1.68508 13.4442 2.13738 14.5361 2.80031 15.5282 3.63604 16.364 4.47177 17.1997 5.46392 17.8626 6.55585 18.3149 7.64778 18.7672 8.8181 19 10 19 11.1819 19 12.3522 18.7672 13.4442 18.3149 14.5361 17.8626 15.5282 17.1997 16.364 16.364 17.1997 15.5282 17.8626 14.5361 18.3149 13.4442 18.7672 12.3522 19 11.1819 19 10 19 8.8181 18.7672 7.64778 18.3149 6.55585 17.8626 5.46392 17.1997 4.47177 16.364 3.63604 15.5282 2.80031 14.5361 2.13738 13.4442 1.68508 12.3522 1.23279 11.1819 1 10 1 8.8181 1 7.64778 1.23279 6.55585 1.68508 5.46392 2.13738 4.47177 2.80031 3.63604 3.63604 2.80031 4.47177 2.13738 5.46392 1.68508 6.55585 1.23279 7.64778 1 8.8181 1 10Z"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-      </button>
+      {{ theme_toggle() }}
     </nav>
 
     {# hero section #}
@@ -276,8 +267,8 @@
     {# timeline & editions #}
     <div class="grid-2col mb-4">
       <div>
-        <div class="v3-card p-4">
-          <h2 class="h3 font-weight-semibold v3-text mb-4">Timeline</h2>
+        <div class="v3-card p-4 h-100">
+          <h2 class="h3 font-weight-bold v3-text mb-4">Timeline</h2>
           {% for item in timeline %}
             <div class="timeline-item">
               <div
@@ -316,8 +307,8 @@
         <!-- </div> -->
 
         <div class="v3-bg-dark p-4">
-          <h3 class="h5 mb-3" style="color: var(--v3-main-bg)">Partner Projects Programme</h3>
-          <p class="mb-4" style="font-size: 0.875rem; opacity: 0.9;">
+          <h3 class="h5 mb-3 font-weight-bold" style="color: var(--v3-main-bg)">Partner Projects Programme</h3>
+          <p class="mb-4 small">
             An effort to provide FOSS Hack participants with time and mentorship to be able to contribute to curated open-source projects.
           </p>
 
@@ -343,7 +334,7 @@
             href="/fosshack/2026/partner-projects"
             class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0 small d-inline-flex align-items-center justify-content-center"
           >
-            <span class="mr-1">View All</span>
+            <span class="mr-1 small">View All</span>
             <i class="ti ti-chevron-right"></i>
           </a>
         </div>
