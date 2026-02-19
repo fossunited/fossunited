@@ -167,6 +167,7 @@ def get_context(context):
         HACKATHON_PARTNER_PROJECT,
         {"hackathon": hackathon_id},
         ["repo_link as link", "project_name as sponsor_name", "logo as image"],
+        limit_page_length=7,
     )
 
     # Volunteers
