@@ -35,12 +35,12 @@
       />
       <div v-if="attendanceMode == 'local-pending'">
         <div
-          v-if="localhosts.data.length <= 9"
+          v-if="localhosts.data.length <= 7"
           class="flex flex-col p-3 mt-4 items-center text-center rounded w-full bg-surface-blue-1 text-ink-blue-2 border-2 border-dashed border-outline-blue-1 text-xs"
         >
           <p>
             <b>Note:</b> This hackathon has a total of
-            <b>10 local host slots</b> available.<br /><br />
+            <b>8 local host slots</b> available.<br /><br />
             All localhosts will be added shortly.
           </p>
         </div>
