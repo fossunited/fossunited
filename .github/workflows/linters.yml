@@ -5,10 +5,14 @@ on:
     branches:
       - develop
   pull_request:
+    types: [opened, reopened, synchronize, edited]
+
+permissions:
+  pull-requests: read
 
 jobs:
-  linters:
-    name: Formatter and Linters
+  precommit-linters:
+    name: pre-commit Linters + frappe semgrep
     runs-on: ubuntu-latest
 
     steps:
@@ -21,3 +25,80 @@ jobs:
 
       - name: Install and Run Pre-commit
         uses: pre-commit/action@v3.0.1
+
+      - name: Install Semgrep
+        if: github.event_name == 'pull_request'
+        run: pip install semgrep
+
+      - name: Download Frappe Semgrep rules
+        if: github.event_name == 'pull_request'
+        run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
+
+      - name: Run Semgrep
+        if: github.event_name == 'pull_request'
+        run: semgrep ci --config ./frappe-semgrep-rules/rules
+
+
+  # credits: https://github.com/BuildWithHussain/forms_pro/blob/develop/.github/workflows/pr-title-check.yml
+  validate-pr-title:
+    name: Validate PR title
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate PR title
+        id: validate
+        uses: amannn/action-semantic-pull-request@v6.1.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+        with:
+          requireScope: false
+          wip: false
+
+      - name: Print Failure Documentation
+        if: steps.validate.outcome == 'failure'
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "## ❌ PR Title Validation Failed"
+          echo ""
+          echo "**Current title:** \`$PR_TITLE\`"
+          echo ""
+          echo "Use a conventional commit style so we can keep a clear history. Fix it like this:"
+          echo ""
+          echo "### 📋 Format"
+          echo ""
+          echo "\`type: description\`  or  \`type(scope): description\`"
+          echo ""
+          echo "### 🏷️ Allowed types"
+          echo ""
+          echo "| Type     | Use for |"
+          echo "|----------|--------|"
+          echo "| feat     | New feature or user-facing change |"
+          echo "| fix      | Bug fix |"
+          echo "| docs     | Documentation only |"
+          echo "| style    | Formatting, no logic change |"
+          echo "| refactor | Code change (no new feature or bug fix) |"
+          echo "| perf     | Performance improvement |"
+          echo "| test     | Adding or updating tests |"
+          echo "| build    | Build system or dependencies |"
+          echo "| ci       | CI configuration |"
+          echo "| chore    | Other (maintenance, tooling) |"
+          echo ""
+          echo "### 🎯 Examples"
+          echo ""
+          echo "- \`feat: add user authentication\`"
+          echo "- \`feat(api): add payment endpoint\`"
+          echo "- \`fix: resolve login timeout\`"
+          echo "- \`chore: update Python dependencies\`"
+          echo ""
+          echo "### ❌ Fix these mistakes"
+          echo ""
+          echo "- \`Add user login\` → \`feat: add user authentication\`"
+          echo "- \`Fixed the bug\` → \`fix: resolve checkout error\`"
+          echo "- \`feat:add feature\` → \`feat: add feature\` (space after colon)"
+          echo ""
+          echo "---"
+          echo "Edit the PR title and this check will re-run automatically."
+          exit 1

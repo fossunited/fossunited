@@ -26,6 +26,7 @@ dev = [
   "python-lsp-server>=1.13.0",
   "djlint>=1.36.4",
   "ty>=0.0.1a25",
+  "semgrep>=1.121.0",
 ]
 docs = [
     "mkdocs~=1.6.1",
