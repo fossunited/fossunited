@@ -220,7 +220,7 @@ const ticket_checkin_insights = createResource({
   },
 })
 
-const loading = computed(() => attendees.loading || !attendees.data)
+const loading = computed(() => !attendees.data)
 
 // Filter options with available groups
 const filterOptions = computed(() => {

@@ -12,13 +12,12 @@
     <h4>Requests</h4>
   </div>
 
-  <div v-if="requests.loading" class="w-full p-8 flex justify-center">
+  <div v-if="requests.loading && !groupedRequests.length" class="w-full p-8 flex justify-center">
     <LoadingIndicator class="w-6" />
   </div>
 
   <SearchListView
     v-else-if="groupedRequests.length > 0"
-    class="h-[440px]"
     :columns="columns"
     :rows="groupedRequests"
     row-key="name"
@@ -44,7 +43,7 @@
         <Badge
           :theme="getStatusTheme(row.localhost_request_status)"
           :label="row.localhost_request_status"
-          size="lg"
+          size="sm"
         />
       </div>
 
@@ -118,12 +117,12 @@ const selectedRequest = ref({})
 const groupedRequests = ref([])
 
 const columns = [
-  { label: 'Name', key: 'full_name', width: '200px' },
-  { label: 'Status', key: 'localhost_request_status', width: '180px' },
+  { label: 'Name', key: 'full_name', width: '180px' },
+  { label: 'Status', key: 'localhost_request_status', width: '150px' },
   { label: 'Email', key: 'email', width: '200px' },
   { label: 'Student', key: 'is_student', width: '80px' },
   { label: 'Organization', key: 'organization', width: '200px' },
-  { label: 'Project', key: 'project_title', width: '250px' },
+  { label: 'Project', key: 'project_title', width: '220px' },
   { label: 'Git Profile', key: 'git_profile', width: '90px' },
   { label: 'Actions', key: 'actions', width: '100px' },
 ]
