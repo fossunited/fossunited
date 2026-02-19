@@ -167,6 +167,7 @@ def get_context(context):
         HACKATHON_PARTNER_PROJECT,
         {"hackathon": hackathon_id},
         ["repo_link as link", "project_name as sponsor_name", "logo as image"],
+        limit_page_length=7,
     )
 
     # Volunteers
@@ -199,6 +200,32 @@ def get_context(context):
     ]
 
     context.rules = hackathon.hackathon_rules
+
+    context.carousel_items = [
+        {
+            "image": "/assets/fossunited/images/fosshack/doc-img.svg",
+            "title": "Documentation",
+            "desc": """Help improve documentation for open-source projects — write guides,
+            tutorials, READMEs, or API references.""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/data-img.svg",
+            "title": "Data",
+            "desc": """Contribute datasets (OSMaps), data pipelines, or data analysis
+            to open-source projects.""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/design-img.svg",
+            "title": "Design",
+            "desc": """Improve the user experience and visual design of open-source projects —
+            create logos, UI/UX improvements, or design systems.""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/code-img.svg",
+            "title": "Code",
+            "desc": """Solve issues and make PRs contribution to OSS repositories.""",
+        },
+    ]
 
     context.hide_nav = True
     context.hide_footer = True

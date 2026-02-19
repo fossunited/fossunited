@@ -431,20 +431,26 @@ a:hover,
   height: 90px;
 }
 
-/* SIDE DECORATION */
-.side-deco {
-  display: none;
-  align-items: center;
-  justify-content: center;
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  filter: invert(0.4);
+}
+.carousel-indicators li {
+  background-color: var(--v3-text-light);
+}
+.carousel-indicators .active {
+  background-color: var(--v3-text);
+}
+/* create space for indicators */
+#infoCarousel {
+  padding-bottom: 40px;
+}
+#infoCarousel .carousel-indicators {
+  bottom: -10px;
 }
 
 .container svg {
   color: inherit;
-}
-
-.side-deco img {
-  width: 100%;
-  max-width: 354px;
 }
 
 footer {
@@ -490,11 +496,6 @@ footer a:hover {
   }
 }
 
-@media (min-width: 992px) {
-  .side-deco {
-    display: flex;
-  }
-}
 
 @media (max-width: 768px) {
   .container {
