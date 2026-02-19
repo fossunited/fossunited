@@ -487,6 +487,7 @@ def delete_project(hackathon: str, team: str):
         team (str): Team ID
     """
     project = frappe.get_doc(HACKATHON_PROJECT, {"hackathon": hackathon, "team": team})
+    frappe.db.set_value(HACKATHON_TEAM, team, "project", None)
     project.delete()  # controller has_permission checks authorization
     return True
 
