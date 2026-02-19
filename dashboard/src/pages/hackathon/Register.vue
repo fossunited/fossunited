@@ -110,7 +110,7 @@
               placeholder="-- Select In-Person Venue --"
               :options="
                 localhost.data.map((item) => ({
-                  label: item.localhost_name,
+                  label: `${item.city} - ${item.localhost_name}`,
                   value: item.name,
                 }))
               "
