@@ -205,28 +205,25 @@ def get_context(context):
         {
             "image": "/assets/fossunited/images/fosshack/doc-img.svg",
             "title": "Documentation",
-            "desc": """Evaluation will be done on basis of code commit during the course of the
-            event.You cannot use external APIs as the core feature. Your project must have a valid
-            FOSS license""",
+            "desc": """Help improve documentation for open-source projects — write guides,
+            tutorials, READMEs, or API references.""",
         },
         {
             "image": "/assets/fossunited/images/fosshack/data-img.svg",
             "title": "Data",
-            "desc": """Evaluation will be done on basis of code commit during the course of the
-            event.You cannot use external APIs as the core feature. Your project must have a valid
-            FOSS license""",
+            "desc": """Contribute datasets (OSMaps), data pipelines, or data analysis
+            to open-source projects.""",
         },
         {
             "image": "/assets/fossunited/images/fosshack/design-img.svg",
             "title": "Design",
-            "desc": """Evaluation will be done on basis of code commit during the course of the
-            event.You cannot use external APIs as the core feature. Your project must have a valid
-            FOSS license""",
+            "desc": """Improve the user experience and visual design of open-source projects —
+            create logos, UI/UX improvements, or design systems.""",
         },
         {
             "image": "/assets/fossunited/images/fosshack/code-img.svg",
             "title": "Code",
-            "desc": "We value unique ideas and creative problem solving.",
+            "desc": """Solve issues and make PRs contribution to OSS repositories.""",
         },
     ]
 
