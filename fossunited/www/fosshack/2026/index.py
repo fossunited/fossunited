@@ -201,6 +201,35 @@ def get_context(context):
 
     context.rules = hackathon.hackathon_rules
 
+    context.carousel_items = [
+        {
+            "image": "/assets/fossunited/images/fosshack/doc-img.svg",
+            "title": "Documentation",
+            "desc": """Evaluation will be done on basis of code commit during the course of the
+            event.You cannot use external APIs as the core feature. Your project must have a valid
+            FOSS license""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/data-img.svg",
+            "title": "Data",
+            "desc": """Evaluation will be done on basis of code commit during the course of the
+            event.You cannot use external APIs as the core feature. Your project must have a valid
+            FOSS license""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/design-img.svg",
+            "title": "Design",
+            "desc": """Evaluation will be done on basis of code commit during the course of the
+            event.You cannot use external APIs as the core feature. Your project must have a valid
+            FOSS license""",
+        },
+        {
+            "image": "/assets/fossunited/images/fosshack/code-img.svg",
+            "title": "Code",
+            "desc": "We value unique ideas and creative problem solving.",
+        },
+    ]
+
     context.hide_nav = True
     context.hide_footer = True
     context.no_cache = 1
