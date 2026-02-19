@@ -88,7 +88,6 @@
       {
         label: 'Link',
         key: 'link',
-        width: '250px',
       },
       {
         label: 'Type',
@@ -124,7 +123,11 @@
   >
     <template #cell="{ item, row, column }">
       <div v-if="column.label == 'Link'">
-        <a :href="item" target="_blank" class="text-ink-gray-9 text-base underline flex gap-1">
+        <a
+          :href="item"
+          target="_blank"
+          class="text-ink-gray-9 text-base underline flex gap-1 truncate"
+        >
           <span>
             {{ item }}
           </span>

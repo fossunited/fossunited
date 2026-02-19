@@ -60,7 +60,7 @@
           </span>
         </div>
         <div v-else>
-          <span class="text-base">{{ item }}</span>
+          <span class="text-base truncate text-wrap">{{ item }}</span>
         </div>
       </template>
     </SearchListView>

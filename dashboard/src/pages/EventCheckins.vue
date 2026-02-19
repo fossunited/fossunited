@@ -86,7 +86,9 @@
               <Checkbox :model-value="Boolean(item)" :disabled="true" class="w-4 h-4" />
             </template>
             <template v-else-if="column.key === 'name'">
-              <span class="font-mono text-sm font-semibold text-ink-gray-8">{{ item }}</span>
+              <span class="font-mono text-sm font-semibold text-ink-gray-8 truncate text-wrap">{{
+                item
+              }}</span>
             </template>
             <template v-else-if="column.key === 'checkin_status'">
               <div class="flex items-center overflow-hidden overflow-x-visible flex-wrap">
@@ -97,7 +99,9 @@
                 >
                   <Tooltip arrow-class="fill-black" :placement="'top'" :hover-delay="0.5">
                     <template #body>
-                      <span class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full">
+                      <span
+                        class="text-xs bg-surface-gray-7 text-ink-white px-2 py-1 rounded-full"
+                      >
                         {{ formatCheckinDateTime(data.check_in_time) }}
                       </span>
                     </template>
