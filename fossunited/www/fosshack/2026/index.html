@@ -352,13 +352,46 @@
 
     {# why participate & rules #}
     <div class="grid-2col grid-sidebar mb-4">
-      <div class="side-deco v3-card v3-fh-card">
-        <img src="/assets/fossunited/images/fosshack/fh-26-sideblock.svg" alt="" />
+      <div class="v3-card v3-fh-card">
+        <section class="text-center v3-text-primary p-4">
+          <h3 class="font-weight-bold h3 my-6">It’s not just code...</h3>
+
+          <div id="infoCarousel" class="carousel slide" data-ride="carousel" data-interval="3500">
+            <!-- indicators -->
+            <ol class="carousel-indicators">
+              {% for item in carousel_items %}
+              <li data-target="#infoCarousel" data-slide-to="{{ loop.index0 }}"
+                class="{% if loop.first %}active{% endif %}"></li>
+              {% endfor %}
+            </ol>
+
+            <!-- slides -->
+            <div class="carousel-inner">
+              {% for item in carousel_items %}
+              <div class="carousel-item {% if loop.first %}active{% endif %}">
+                <img src="{{ item.image }}" class="mb-4">
+                <h4 class="font-weight-bold mb-4">{{ item.title }}</h4>
+                <p class="text-muted mx-4">
+                  {{ item.desc }}
+                </p>
+              </div>
+              {% endfor %}
+            </div>
+
+            <!-- arrows -->
+            <a class="carousel-control-prev" href="#infoCarousel" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#infoCarousel" role="button" data-slide="next">
+              <span class="carousel-control-next-icon"></span>
+            </a>
+          </div>
+        </section>
       </div>
 
       <div class="v3-card v3-fh-card h-100 d-flex flex-column">
         <div class="p-5 v3-border border">
-          <h2 class="h3 font-weight-semibold v3-text mb-4">Why Participate?</h2>
+          <h2 class="h3 font-weight-bold v3-text mb-4">Why Participate?</h2>
           <ul class="v3-text-muted pl-4">
             {% for reason in why_participate %}
               <li class="mb-2">{{ reason }}</li>
@@ -470,19 +503,6 @@
       </div>
     {% endif %}
 
-    {% if partner_projects %}
-      <div class="mb-5">
-        <a href="/fosshack/2026/partner-projects" target="_blank">
-          <h1 class="h1 font-weight-bold v3-text mb-5">
-            Partner Projects
-            <i class="ti ti-arrow-up-right small"></i>
-          </h1>
-        </a>
-        <div class="tier-content">
-          {{ logo_grid(partner_projects, 'fh-sponsor-grid-5', 'fh-logo-partner', 8) }}
-        </div>
-      </div>
-    {% endif %}
   </div>
 
   <!-- TODO: Add previous foss hack winners -->
@@ -507,6 +527,21 @@
       content.classList.toggle('show')
       icon.classList.toggle('rotate')
     }
+
+$('.carousel').on('touchstart', function(event){
+  const xClick = event.originalEvent.touches[0].pageX;
+  $(this).one('touchmove', function(event){
+    const xMove = event.originalEvent.touches[0].pageX;
+    if(Math.floor(xClick - xMove) > 5){
+      $(this).carousel('next');
+    } else if(Math.floor(xClick - xMove) < -5){
+      $(this).carousel('prev');
+    }
+  });
+  $('.carousel').on('touchend', function(){
+    $(this).off('touchmove');
+  });
+});
 
     // Load saved theme
     document.addEventListener('DOMContentLoaded', function () {
