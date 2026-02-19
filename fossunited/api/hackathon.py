@@ -51,7 +51,6 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
 
 
 @frappe.whitelist()
-@rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_participant(hackathon, participant):
     """
     This method is used to create a participant for a hackathon.

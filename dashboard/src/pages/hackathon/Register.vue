@@ -138,6 +138,7 @@
           class="w-full md:w-2/5 font-medium"
           label="Register"
           :loading="registerForHackathon.loading"
+          :disabled="registerForHackathon.loading"
           @click="handleRegistration"
         />
       </div>
@@ -349,7 +350,13 @@ const registerForHackathon = createResource({
   },
   onError(error) {
     dialog_content.title = 'Error'
-    dialog_content.message = error.message
+
+    if (error?.response?.status === 429) {
+      dialog_content.message = 'Too many attempts. Please wait a few minutes before trying again.'
+    } else {
+      dialog_content.message = error.message || 'Something went wrong'
+    }
+
     show_dialog.value = true
   },
 })
@@ -357,6 +364,7 @@ const registerForHackathon = createResource({
 const errorsMessage = ref('')
 
 const handleRegistration = () => {
+  if (registerForHackathon.loading) return
   if (registrationErrors.value.length) {
     errorsMessage.value = registrationErrors.value.join(', ')
     return
