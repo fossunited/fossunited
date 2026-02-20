@@ -13,8 +13,9 @@ from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import (
 from fossunited.doctype_ids import (
     CHAPTER,
     HACKATHON,
-    HACKATHON_PROJECT,
-    PROPOSAL,
+    HACKATHON_LOCALHOST,
+    HACKATHON_PARTICIPANT,
+    HACKATHON_PARTNER_PROJECT,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_event_sponsors
@@ -97,49 +98,30 @@ class FOSSHackathon(WebsiteGenerator):
         if self.chapter:
             context.chapter = frappe.get_doc(CHAPTER, self.chapter)
 
-        context.nav_items = self.get_nav_items()
         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
-        context.tag_icon = {
-            "Remote": "world",
-            "In-person": "building",
-            "Hybrid": "world",
-        }
-
-        context.schedule_dict = self.get_schedule_dict()
-        context.recent_projects = frappe.get_all(
-            HACKATHON_PROJECT,
-            filters={"hackathon": self.name},
-            fields=["*"],
-        )
 
         schedule_dict = get_event_schedule(self.name, self.doctype)
         context.schedule_data = FOSSChapterEvent.format_schedule_for_template(self, schedule_dict)
 
+        context.event_stats = frappe.db.count(HACKATHON_PARTICIPANT, {"hackathon": self.name})
+
+        cities_dict = self.get_localhosts()
+        context.localhosts_by_city = [
+            {"city": city, "localhosts": hosts} for city, hosts in sorted(cities_dict.items())
+        ]
+
         context.volunteers = self.get_volunteers()
+        context.partner_projects = frappe.get_all(
+            HACKATHON_PARTNER_PROJECT,
+            {"hackathon": self.name},
+            ["repo_link as link", "project_name as sponsor_name", "logo as image"],
+        )
+        context.status_live = self.end_date > frappe.utils.now_datetime()
+        context.registration_status = frappe.db.exists(
+            HACKATHON_PARTICIPANT, {"user": frappe.session.user}
+        )
+        context.event_year = str(self.start_date.year)
         context.no_cache = 1
-
-    def get_nav_items(self):
-        nav_items = ["information", "submissions"]
-        if self.show_schedule_tab:
-            nav_items.append("schedule")
-
-        return nav_items
-
-    def get_schedule_dict(self):
-        schedule_dict = {}
-        for schedule in self.schedule:
-            date = schedule.scheduled_date.strftime("%-d %B")
-            if date not in schedule_dict:
-                schedule_dict[date] = []
-            self.get_speakers(schedule)
-            if schedule.start_time:
-                schedule.start_time = BASE_DATE + schedule.start_time
-            if schedule.end_time:
-                schedule.end_time = BASE_DATE + schedule.end_time
-            schedule_dict[date].append(schedule)
-
-        schedule_dict["days"] = list(schedule_dict.keys())
-        return schedule_dict
 
     def get_volunteers(self):
         members = []
@@ -165,22 +147,6 @@ class FOSSHackathon(WebsiteGenerator):
                 }
             )
         return members
-
-    def get_speakers(self, schedule):
-        if not schedule.linked_cfp:
-            schedule.no_speaker = True
-            return
-
-        cfp = frappe.get_doc(PROPOSAL, schedule.linked_cfp)
-        user = frappe.get_doc(USER_PROFILE, {"email": cfp.submitted_by})
-        schedule.cfp_route = cfp.route
-        schedule.speaker_route = user.route
-        schedule.speaker_full_name = user.full_name
-        schedule.speaker_designation_company = (
-            f"{cfp.designation} at {cfp.organization}"
-            if cfp.designation and cfp.organization
-            else (cfp.designation or cfp.organization or "")
-        )
 
     def get_meta(self):
         import re
@@ -220,3 +186,55 @@ class FOSSHackathon(WebsiteGenerator):
         )
 
         return pagetitle, description, image
+
+    def get_localhosts(self):
+        localhosts = frappe.db.get_all(
+            HACKATHON_LOCALHOST,
+            filters={"parent_hackathon": self.name},
+            fields=["name", "localhost_name", "route", "city", "state", "location"],
+            order_by="city, localhost_name",
+            page_length=99,
+        )
+
+        # Bulk Fetch Counts
+        attending_counts = frappe.db.get_all(
+            HACKATHON_PARTICIPANT,
+            filters={"localhost_request_status": "Accepted", "hackathon": self.name},
+            fields=["localhost", "count(name) as count"],
+            group_by="localhost",
+        )
+        applied_counts = frappe.db.get_all(
+            HACKATHON_PARTICIPANT,
+            filters={"hackathon": self.name},
+            fields=["localhost", "count(name) as count"],
+            group_by="localhost",
+        )
+        likes_counts = frappe.db.get_all(
+            "Comment",
+            filters={
+                "comment_type": "Like",
+                "reference_doctype": HACKATHON_LOCALHOST,
+            },
+            fields=["reference_name as localhost", "count(name) as count"],
+            group_by="reference_name",
+        )
+
+        # Convert to dicts
+        attending_dict = {item["localhost"]: item["count"] for item in attending_counts}
+        applied_dict = {item["localhost"]: item["count"] for item in applied_counts}
+        likes_dict = {item["localhost"]: item["count"] for item in likes_counts}
+
+        # Process LocalHosts and group by city
+        cities_dict = {}
+        for host in localhosts:
+            host["route"] = f"/{host.route}"
+            host["attending"] = attending_dict.get(host.name, 0)
+            host["interested"] = applied_dict.get(host.name, 0) + likes_dict.get(host.name, 0)
+
+            city = host.get("city", "Other")
+            if city not in cities_dict:
+                cities_dict[city] = []
+
+            cities_dict[city].append(host)
+
+        return cities_dict
