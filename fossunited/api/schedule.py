@@ -47,6 +47,8 @@ def safe_speaker_name(sp):
     return str(sp or "").strip()
 
 
+# nosemgrep: frappe-semgrep-rules.rules.security.guest-whitelisted-method
+# Only published event data is returned. No sensitive fields exposed.
 @frappe.whitelist(allow_guest=True)
 def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
     """

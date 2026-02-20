@@ -101,7 +101,7 @@ class FOSSHackathon(WebsiteGenerator):
         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
 
         schedule_dict = get_event_schedule(self.name, self.doctype)
-        context.schedule_data = FOSSChapterEvent.format_schedule_for_template(self, schedule_dict)
+        context.schedule_data = FOSSChapterEvent.format_schedule_for_template(schedule_dict)
 
         context.event_stats = frappe.db.count(HACKATHON_PARTICIPANT, {"hackathon": self.name})
 
@@ -119,9 +119,10 @@ class FOSSHackathon(WebsiteGenerator):
         )
         context.status_live = self.end_date > frappe.utils.now_datetime()
         context.registration_status = frappe.db.exists(
-            HACKATHON_PARTICIPANT, {"user": frappe.session.user}
+            HACKATHON_PARTICIPANT, {"user": frappe.session.user, "hackathon": self.name}
         )
         context.event_year = str(self.start_date.year)
+        context.pagetitle, context.description, context.image = self.get_meta()
         context.no_cache = 1
 
     def get_volunteers(self):
@@ -210,11 +211,13 @@ class FOSSHackathon(WebsiteGenerator):
             fields=["localhost", "count(name) as count"],
             group_by="localhost",
         )
+        localhost_names = [h["name"] for h in localhosts]
         likes_counts = frappe.db.get_all(
             "Comment",
             filters={
                 "comment_type": "Like",
                 "reference_doctype": HACKATHON_LOCALHOST,
+                "reference_name": ("in", localhost_names),
             },
             fields=["reference_name as localhost", "count(name) as count"],
             group_by="reference_name",

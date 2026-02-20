@@ -463,7 +463,8 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         return stats
 
-    def format_schedule_for_template(self, schedule_dict):
+    @staticmethod
+    def format_schedule_for_template(schedule_dict):
         """Format schedule dict with time display for template rendering.
         Returns nested structure: {date: {hall: [items]}} with start_time_display added.
         """

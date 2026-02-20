@@ -221,7 +221,11 @@
                 <div class="ev-detail-text">
                   <div class="ev-detail-primary">
                     {% if doc.start_date.strftime("%Y-%m-%d") != doc.end_date.strftime("%Y-%m-%d") %}
-                      {{ doc.start_date.strftime("%-d - ") }}{{ doc.end_date.strftime("%-d %B %Y") }}
+                      {% if doc.start_date.strftime("%B") != doc.end_date.strftime("%B") %}
+                        {{ doc.start_date.strftime("%-d %B") }} - {{ doc.end_date.strftime("%-d %B %Y") }}
+                      {% else %}
+                        {{ doc.start_date.strftime("%-d") }} - {{ doc.end_date.strftime("%-d %B %Y") }}
+                      {% endif %}
                     {% else %}
                       {{ doc.end_date.strftime("%-d %B %Y") }}
                     {% endif %}
@@ -327,7 +331,7 @@
                 <div class="col-12 mb-4">
                   <div class="v3-card p-4">
                     <!-- City Heading -->
-                    <h5 class="localhost-header font-weight-bold mb-3">
+                    <h5 class="localhost-header no-font-inherit font-weight-bold mb-3">
                       localhost:{{ city_group.city|lower }}
                     </h5>
 
