@@ -197,7 +197,6 @@ class FOSSHackathon(WebsiteGenerator):
             filters={"parent_hackathon": self.name},
             fields=["name", "localhost_name", "route", "city", "state", "location"],
             order_by="city, localhost_name",
-            page_length=99,
         )
 
         # Bulk Fetch Counts

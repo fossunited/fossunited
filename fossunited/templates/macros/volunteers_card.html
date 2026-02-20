@@ -1,11 +1,11 @@
-{% macro people_card(items, type, submissions=None) %}
+{% macro people_card(items, type, submissions=None, icon="empathize") %}
   {# type can be 'volunteers' or 'speakers' #}
   {% set show_view_all = items|length >= 4 %}
   {% set unique_id = type + '_' + range(1000, 9999) | random | string %}
 
   <div class="v3-card {% if show_view_all %}has-view-all{% endif %}">
     <div class="v3-section-title">
-      <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' }}"></i>
+      <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' if type == 'speakers' else icon }}"></i>
       <span>{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}</span>
     </div>
 

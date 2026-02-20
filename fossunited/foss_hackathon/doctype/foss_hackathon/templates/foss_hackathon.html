@@ -343,7 +343,7 @@
           {% if sponsors_dict %}
             <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
               <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
-              {{ sponsor_card(sponsors_dict, doc.deck_link) }}
+              {{ sponsor_card(sponsors_dict, None) }}
             </section>
           {% endif %}
 
@@ -403,7 +403,7 @@
           {% if mentors %}
             <section class="ev-speakers-section" aria-labelledby="speakers-heading">
               <h2 id="speakers-heading" class="sr-only">Mentors</h2>
-              {{ people_card(mentors, 'Mentors') }}
+              {{ people_card(mentors, 'Mentors', icon="school") }}
             </section>
           {% endif %}
 
