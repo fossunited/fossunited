@@ -147,9 +147,9 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
         return attending_count
 
     def get_interested_stat(self):
-        pending_participants = frappe.db.count(
+        applied_participants = frappe.db.count(
             HACKATHON_PARTICIPANT,
-            {"localhost": self.name, "localhost_request_status": "Pending"},
+            {"localhost": self.name},
         )
         localhost_likes = frappe.db.count(
             "Comment",
@@ -160,7 +160,7 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
             },
         )
 
-        return int(pending_participants + localhost_likes)
+        return int(applied_participants + localhost_likes)
 
     def get_formatted_date(self, hackathon):
         start_date = hackathon.start_date

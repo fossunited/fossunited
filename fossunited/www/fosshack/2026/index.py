@@ -112,13 +112,13 @@ def get_context(context):
     # Bulk Fetch Counts
     attending_counts = frappe.db.get_all(
         HACKATHON_PARTICIPANT,
-        filters={"localhost_request_status": "Accepted"},
+        filters={"localhost_request_status": "Accepted", "hackathon": hackathon_id},
         fields=["localhost", "count(name) as count"],
         group_by="localhost",
     )
-    pending_counts = frappe.db.get_all(
+    applied_counts = frappe.db.get_all(
         HACKATHON_PARTICIPANT,
-        filters={"localhost_request_status": "Pending"},
+        filters={"hackathon": hackathon_id},
         fields=["localhost", "count(name) as count"],
         group_by="localhost",
     )
@@ -134,7 +134,7 @@ def get_context(context):
 
     # Convert to dicts
     attending_dict = {item["localhost"]: item["count"] for item in attending_counts}
-    pending_dict = {item["localhost"]: item["count"] for item in pending_counts}
+    applied_dict = {item["localhost"]: item["count"] for item in applied_counts}
     likes_dict = {item["localhost"]: item["count"] for item in likes_counts}
 
     # Process LocalHosts and group by city
@@ -142,7 +142,7 @@ def get_context(context):
     for host in localhosts:
         host["route"] = f"/{host.route}"
         host["attending"] = attending_dict.get(host.name, 0)
-        host["interested"] = pending_dict.get(host.name, 0) + likes_dict.get(host.name, 0)
+        host["interested"] = applied_dict.get(host.name, 0) + likes_dict.get(host.name, 0)
 
         city = host.get("city", "Other")
         if city not in cities_dict:
