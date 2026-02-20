@@ -6,6 +6,10 @@ import frappe
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import create_email_group
+from fossunited.api.schedule import get_event_schedule
+from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import (
+    FOSSChapterEvent,
+)
 from fossunited.doctype_ids import (
     CHAPTER,
     HACKATHON,
@@ -107,6 +111,9 @@ class FOSSHackathon(WebsiteGenerator):
             filters={"hackathon": self.name},
             fields=["*"],
         )
+
+        schedule_dict = get_event_schedule(self.name, self.doctype)
+        context.schedule_data = FOSSChapterEvent.format_schedule_for_template(self, schedule_dict)
 
         context.volunteers = self.get_volunteers()
         context.no_cache = 1

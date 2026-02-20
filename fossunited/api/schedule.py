@@ -48,7 +48,7 @@ def safe_speaker_name(sp):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_event_schedule(event_id: str) -> dict:
+def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
     """
     Get the schedule for the event, grouped by date and hall.
     For each schedule item with a linked_cfp, also fetch the proposal route and speakers.
@@ -61,7 +61,7 @@ def get_event_schedule(event_id: str) -> dict:
     """
     schedule = frappe.db.get_all(
         EVENT_SCHEDULE,
-        {"parent": event_id, "parenttype": EVENT},
+        {"parent": event_id, "parenttype": doctype},
         ["*"],
         order_by="scheduled_date asc, start_time asc",
     )
