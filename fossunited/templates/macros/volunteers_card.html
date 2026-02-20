@@ -1,60 +1,66 @@
-{% macro people_card(items, type, submissions=None) %}
-{# type can be 'volunteers' or 'speakers' #}
-{% set show_view_all = items|length >= 4 %}
-{% set unique_id = type + '_' + range(1000, 9999) | random | string %}
+{% macro people_card(items, type, submissions=None, icon="empathize") %}
+  {# type can be 'volunteers' or 'speakers' #}
+  {% set show_view_all = items|length >= 4 %}
+  {% set unique_id = type + '_' + range(1000, 9999) | random | string %}
 
-<div class="v3-card {% if show_view_all %}has-view-all{% endif %}">
-  <div class="v3-section-title">
-    <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' }}"></i>
-    <span>{{ 'Volunteers' if type == 'volunteers' else 'Speakers' }}</span>
-  </div>
-
-  <div class="v3-people-container" id="container_{{ unique_id }}" data-expanded="false">
-    <div class="v3-people-list">
-      {% if type == 'volunteers' %}
-        {% for volunteer in items %}
-        <div class="v3-clickable v3-people-item" onclick="window.location.href='/{{ volunteer.route }}'">
-          <img src="{{ volunteer.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-               alt="{{ volunteer.full_name }}"
-               class="v3-people-avatar">
-          <div class="v3-people-name">{{ volunteer.full_name }}</div>
-        </div>
-        {% endfor %}
-      {% else %}
-        {% for speaker in items %}
-        {% for submission in submissions %}
-        {% if submission.name == speaker.parent %}
-        <div class="v3-clickable v3-people-item" onclick="window.location.href='/{{ submission.route }}'">
-        <img src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}" alt="{{ speaker.full_name }}" class="v3-people-avatar">
-          <div class="v3-people-name">{{ speaker.full_name }}</div>
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endfor %}
-      {% endif %}
+  <div class="v3-card {% if show_view_all %}has-view-all{% endif %}">
+    <div class="v3-section-title">
+      <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' if type == 'speakers' else icon }}"></i>
+      <span>{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}</span>
     </div>
+
+    <div class="v3-people-container" id="container_{{ unique_id }}" data-expanded="false">
+      <div class="v3-people-list">
+        {% if type != 'speakers' %}
+          {% for volunteer in items %}
+            <a class="v3-clickable v3-people-item" href="/{{ volunteer.route }}">
+              <img
+                src="{{ volunteer.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                alt="{{ volunteer.full_name }}"
+                class="v3-people-avatar"
+              />
+              <div class="v3-people-name">{{ volunteer.full_name }}</div>
+            </a>
+          {% endfor %}
+        {% else %}
+          {% for speaker in items %}
+            {% for submission in submissions %}
+              {% if submission.name == speaker.parent %}
+                <a class="v3-clickable v3-people-item" href="/{{ submission.route }}">
+                  <img
+                    src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                    alt="{{ speaker.full_name }}"
+                    class="v3-people-avatar"
+                  />
+                  <div class="v3-people-name">{{ speaker.full_name }}</div>
+                </a>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      </div>
+    </div>
+
+    {% if show_view_all %}
+      <div class="v3-view-all-link" onclick="togglePeopleView('{{ unique_id }}')">
+        <span id="btn_text_{{ unique_id }}">View All</span>
+      </div>
+    {% endif %}
   </div>
 
-  {% if show_view_all %}
-  <div class="v3-view-all-link" onclick="togglePeopleView('{{ unique_id }}')">
-    <span id="btn_text_{{ unique_id }}">View All</span>
-  </div>
-  {% endif %}
-</div>
+  <script>
+    function togglePeopleView(uniqueId) {
+      const container = document.getElementById('container_' + uniqueId)
+      const btnText = document.getElementById('btn_text_' + uniqueId)
+      const isExpanded = container.getAttribute('data-expanded') === 'true'
 
-<script>
-function togglePeopleView(uniqueId) {
-  const container = document.getElementById('container_' + uniqueId);
-  const btnText = document.getElementById('btn_text_' + uniqueId);
-  const isExpanded = container.getAttribute('data-expanded') === 'true';
-
-  if (isExpanded) {
-    container.setAttribute('data-expanded', 'false');
-    btnText.textContent = 'View All';
-  } else {
-    container.setAttribute('data-expanded', 'true');
-    btnText.textContent = 'Show Less';
-  }
-}
-</script>
+      if (isExpanded) {
+        container.setAttribute('data-expanded', 'false')
+        btnText.textContent = 'View All'
+      } else {
+        container.setAttribute('data-expanded', 'true')
+        btnText.textContent = 'Show Less'
+      }
+    }
+  </script>
 {% endmacro %}

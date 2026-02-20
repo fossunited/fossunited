@@ -1,253 +1,436 @@
-{% extends "templates/foss_base.html" %}
-{% block page_content %}
-  <div class="container header-section-parent">
-    <div class="header-section event-header">
-      <img
-        src="{{ doc.hackathon_banner or '/assets/fossunited/images/defaults/event_banner.png' }}"
-        alt="Cover Image"
-        class="foss-banner-image header--banner"
-      />
-      <div class="header--title-cta-parent">
-        <div>
-          {% if doc.chapter %}
-            {%
-              from
-              'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block
-            %}
-            <a href="/{{ chapter.route }}"> {{ chapter_branding_block(doc.chapter) }} </a>
-          {% endif %}
-          <h1 class="header--event-title">{{ doc.hackathon_name }}</h1>
-        </div>
-        {% if doc.is_registration_live %}
-          <button
-            class="primary-button ticket-button"
-            onClick="window.location.href='/dashboard/register-for-hackathon?id={{ doc.name }}'"
-          >
-            <span>Register</span>
-          </button>
+{% extends 'templates/foss_base.html' %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+{% from "fossunited/templates/macros/volunteers_card.html" import people_card %}
+{% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
+{% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
+{% from "fossunited/templates/macros/projects_card.html" import projects_card %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+{% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
+
+{% macro event_cover() %}
+  <div class="v3-banner-wrap">
+    <img
+      src="{{ doc.hackathon_banner or '/assets/fossunited/images/defaults/event_logo.png' }}"
+      alt="{{ doc.hackathon_name }} banner"
+      class="v3-banner bg-white"
+    />
+
+    {% if hackathon_stats %}
+      <div class="ev-stats" role="region" aria-label="Hackathon statistics">
+        {% if hackathon_stats.members > 0 %}
+          <span> {{ hackathon_stats.members }} Attend{{ "ing" if status_live else "ed" }} </span>
+        {% endif %}
+
+        {% if hackathon_stats.members > 0 and hackathon_stats.teams > 0 %}
+          <span aria-hidden="true">•</span>
+        {% endif %}
+
+        {% if hackathon_stats.teams > 0 %}
+          <span> {{ hackathon_stats.teams }} Teams </span>
+        {% endif %}
+
+        {%
+          if (hackathon_stats.members > 0 or hackathon_stats.teams > 0)
+          and hackathon_stats.projects > 0
+        %}
+          <span aria-hidden="true">•</span>
+        {% endif %}
+
+        {% if hackathon_stats.projects > 0 %}
+          <span> {{ hackathon_stats.projects }} Projects </span>
         {% endif %}
       </div>
-      <div class="header--tags">
-        {% from 'fossunited/templates/macros/foss_tags.html' import tag %}
-        {{
-          tag(doc.hackathon_type,
-          icon=tag_icon[doc.hackathon_type])
-        }}
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="time-location-parent">
-      <div class="event-date-parent time-location--child-container">
-        <i
-          class="ti ti-calendar-event"
-          style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
-        ></i>
-        <div class="d-flex flex-column">
-          <div class="event-start-date child-container--heading">
-            {{ doc.start_date.strftime("%A, %-d %B %Y") }}
-          </div>
-          <div class="event-end-date child-container--subtext">
-            {{ doc.end_date.strftime("%A, %-d %B %Y") }}
-          </div>
-        </div>
-      </div>
-      <div class="event-time-parent time-location--child-container">
-        <i
-          class="ti ti-clock"
-          style="font-size: var(--text-2xl); font-weight: var(--fw-semibold)"
-        ></i>
-        <div class="d-flex flex-column">
-          <div class="event-start-time child-container--heading">
-            Starts at {{ doc.start_date.strftime("%-I:%M %p") }}
-          </div>
-          <div class="event-end-time child-container--subtext">
-            Ends at {{ doc.end_date.strftime("%-I:%M %p") }}
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+    {% endif %}
 
-  {% from 'fossunited/templates/macros/horizontal_navbar.html' import horizontal_navbar %}
-  <div class="horizontal-navbar-parent">
-    <div class="container">{{ horizontal_navbar(nav_items) }}</div>
-  </div>
-  <div>{{ render_information() }} {{ render_schedule() }} {{ render_submissions() }}</div>
-{% endblock %}
-{% macro render_information() %}
-  <div class="container event-content-div content-div" id="information">
-    <div class="description-section my-3">
-      <h5>Description</h5>
-      <div class="event--description-block mt-2">
-        {{ doc.hackathon_description or 'No Description Available for this event' }}
+    {% if registration_status %}
+      <div class="v3-status v3-status--success" role="status" aria-live="polite">
+        <i class="ti ti-discount-check-filled" aria-hidden="true"></i>
+        {% if status_live %} You've registered for this hackathon
+        {% else %} You had attended this hackathon {% endif %}
       </div>
-    </div>
 
-    {% if doc.hackathon_rules %}
-      <div class="description-section my-3">
-        <h5>Hackathon Rules</h5>
-        <div class="event--description-block mt-2">{{ doc.hackathon_rules }}</div>
-      </div>
-    {% endif %}
-    {% if doc.sponsor_list %}
-      <div class="sponsors-section my-3">
-        <h5 class="mt-3 mb-1">Sponsors</h5>
-        {% for k,v in sponsors_dict.items() %}
-          <div class="sponsor--tier-block">
-            <div class="sponsor--tier-heading">{{ k }}</div>
-            <div class="sponsor--flex">
-              {% for sponsor in v %}
-                <a href="{{ sponsor.link }}" target="_blank" class="sponsor--block">
-                  <img
-                    src="{{ sponsor.image }}"
-                    alt="{{ sponsor.sponsor_name }}"
-                    class="sponsor--image"
-                  />
-                </a>
-              {% endfor %}
-            </div>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-    {% if doc.community_partners %}
-      <div class="community-partners-sections my-3">
-        <div class="sponsor--tier-block">
-          <h5>Community Partners</h5>
-          <div class="sponsor--flex">
-            {% for partner in doc.community_partners %}
-              <a href="{{ partner.link }}" target="_blank" class="sponsor--block">
-                <img
-                  src="{{ partner.logo }}"
-                  alt="{{ partner.org_name }}"
-                  class="sponsor--image"
-                />
-              </a>
-            {% endfor %}
-          </div>
+      {% if status_live and not doc.is_registration_live %}
+        <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+          <i class="ti ti-ban" aria-hidden="true"></i>
+          Registration is closed for the hackathon
         </div>
-      </div>
-    {% endif %}
-    {% if doc.volunteers %}
-      <div class="event-members-section my-3">
-        <h5>Event Members</h5>
-        <div class="event--members-block">
-          {% from 'fossunited/templates/macros/member_card.html' import member_card %}
-          <div class="members-grid-6">
-            {% for volunteer in volunteers %}{{ member_card(volunteer) }}{% endfor %}
-          </div>
-        </div>
-      </div>
+      {% endif %}
     {% endif %}
   </div>
 {% endmacro %}
-{% macro render_schedule() %}
-  <div class="container event-content-div content-div" id="schedule">
-    <div class="schedule-section my-3">
-      <h5>Schedule</h5>
-      <div class="my-3">
-        <div class="buttons-group">
-          {% for day in schedule_dict.days %}
-            <button
-              class="button {% if loop.first %}dark-button active{% endif %}"
-              data-day="{{ day }}"
-              onclick="showScheduleByDate()"
-            >
-              {{ day }}
-            </button>
-          {% endfor %}
-        </div>
+{% macro hackathon_resources() %}
+  <div class="v3-card p-5">
+    <a href="/{{ doc.route }}/projects/all" class="v3-btn v3-btn-secondary w-100 mb-4"
+      >View Submissions</a
+    >
+    <a
+      href="/fosshack/{{ event_year }}/partner-projects"
+      class="v3-btn v3-btn-secondary w-100 mb-4"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Partner Projects</a
+    >
+    <a
+      href="https://forum.fossunited.org/t/hackathon-ideas/159"
+      class="v3-btn v3-btn-secondary w-100"
+      target="_blank"
+      rel="noopener noreferrer"
+      >Projects Ideas</a
+    >
+  </div>
+{% endmacro %}
+{% block meta_block %}
+  {{ meta_tags(pagetitle, description, image) }}
+{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      background: var(--v3-main-bg);
+    }
+
+    .ev-main-card {
+      width: 100%;
+      max-width: 840px;
+      margin-bottom: 2rem;
+    }
+
+    .ev-title {
+      color: var(--v3-text-color);
+      font-size: 1.75rem;
+      font-weight: 600;
+      line-height: 2.1rem;
+      margin: 0.5rem 0;
+    }
+
+    .ev-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .ql-editor > ol {
+      padding: 0;
+    }
+
+    .ev-icon {
+      width: 2.875rem;
+      height: 2.875rem;
+      background: var(--v3-main-bg);
+      border-radius: 0.5rem;
+      border: 1px solid var(--v3-button-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ev-icon:hover {
+      opacity: 0.9;
+    }
+
+    .ev-icon i {
+      font-size: 1.5rem;
+      color: var(--v3-text-color3);
+    }
+
+    .ev-detail-primary {
+      color: var(--v3-text-color3);
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    .ev-detail-secondary {
+      color: var(--v3-text-color2);
+      font-size: 0.875rem;
+    }
+
+    .ev-stats {
+      padding: 0.25rem 0.5rem;
+      background: var(--v3-main-bg);
+      border-radius: 0.5rem;
+      display: flex;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--v3-text-color3);
+    }
+
+    .ev-contact {
+      padding: 1.5rem;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .ev-contact i {
+      font-size: 1rem;
+      color: var(--v3-text-color);
+    }
+
+    .ev-contact-email {
+      color: var(--v3-text-color);
+      font-size: 1rem;
+      padding-left: 0.5rem;
+    }
+
+    /* Visibility helpers */
+    .show-mobile-only {
+      display: block;
+    }
+
+    .show-desktop-only {
+      display: none;
+    }
+
+    @media (min-width: 48rem) {
+      .ev-title {
+        font-size: 2rem;
+        line-height: 2.4rem;
+      }
+
+      /* Visibility helpers */
+      .show-mobile-only {
+        display: none;
+      }
+
+      .show-desktop-only {
+        display: block;
+      }
+    }
+  </style>
+
+  <div class="v3-page ev-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center">
+        {{ breadcrumb(breadcrumbs) }}
+        {{ theme_toggle() }}
       </div>
-      <div class="my-3">
-        {% for k,schedule_list in schedule_dict.items() %}{% if k != 'days' %}
-          <div class="schedule-grid" data-date="{{ k }}">
-            {% for schedule in schedule_list %}
-              <div
-                class="schedule-card {% if not schedule.linked_cfp %}no-hover{% endif %}"
-                {%
-                  if
-                  schedule.cfp_route
-                %}
-                  onclick="window.location.href='/{{ schedule.cfp_route }}'"
-                {% endif %}
-              >
-                <div class="schedule--title-time-section">
-                  <div class="schedule--title">{{ schedule.talk_title }}</div>
-                  {% if schedule.end_time == None %}
-                    <div class="schedule--time">
-                      Starts at {{ schedule.start_time.strftime('%I:%M %p') }}
-                    </div>
-                  {% endif %}
-                  {% if schedule.start_time == None %}
-                    <div class="schedule--time">
-                      Ends at {{ schedule.end_time.strftime('%I:%M %p') }}
-                    </div>
-                  {% endif %}
-                  {% if schedule.start_time and schedule.end_time %}
-                    <div class="schedule--time">
-                      {{ schedule.start_time.strftime('%I:%M %p') }} -
-                      {{
-                        schedule.end_time.strftime('%I:%M
-                        %p')
-                      }}
-                    </div>
-                  {% endif %}
+
+      <!-- Main Event Card - Fixed 840px -->
+      <div class="v3-card ev-main-card">
+        <div class="v3-header">
+          <div class="show-mobile-only">{{ event_cover() }}</div>
+          <div
+            style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;"
+          >
+            <!-- Header Info -->
+            <div style="display: flex; flex-direction: column;">
+              <div style="display: flex; flex-direction: column;">
+                {{ chapter_branding_block(chapter) }}
+
+                <h1 class="ev-title">{{ doc.hackathon_name }}</h1>
+                <div class="v3-event-tags" aria-label="Event tags">
+                  {{ event_must_attend_tag() }}
+                  {{ event_category_tag(doc.hackathon_type) }}
                 </div>
-                {% if not schedule.no_speaker %}
-                  <div class="schedule--speakers-section">
-                    <a
-                      target="_blank"
-                      href="/{{ schedule.speaker_route }}"
-                      class="schedule--speaker-container"
-                      onclick="event.stopPropagation();"
-                    >
-                      <div class="schedule--speaker-name">{{ schedule.speaker_full_name }}</div>
-                      <div class="speaker-designation-company">
-                        {{ schedule.speaker_designation_company }}
-                      </div>
-                    </a>
+              </div>
+            </div>
+
+            <!-- Date/Time/Location -->
+            <div style="margin-top: 3px;">
+              <div class="ev-detail-row">
+                <div
+                  class="ev-icon"
+                  type="button"
+                  aria-label="Add event to calendar"
+                  title="Download to calendar"
+                >
+                  <i class="ti ti-calendar-plus" aria-hidden="true"></i>
+                </div>
+                <div class="ev-detail-text">
+                  <div class="ev-detail-primary">
+                    {% if doc.start_date.strftime("%Y-%m-%d") != doc.end_date.strftime("%Y-%m-%d") %}
+                      {% if doc.start_date.strftime("%B") != doc.end_date.strftime("%B") %}
+                        {{ doc.start_date.strftime("%-d %B") }}
+                        - {{ doc.end_date.strftime("%-d %B %Y") }}
+                      {% else %}
+                        {{ doc.start_date.strftime("%-d") }}
+                        - {{ doc.end_date.strftime("%-d %B %Y") }}
+                      {% endif %}
+                    {% else %}
+                      {{ doc.end_date.strftime("%-d %B %Y") }}
+                    {% endif %}
                   </div>
+                  <div class="ev-detail-secondary">
+                    <time datetime="{{ doc.start_date.isoformat() }}">
+                      {{ doc.start_date.strftime("%-I:%M %p") }}
+                    </time>
+                    -
+                    <time datetime="{{ doc.end_date.isoformat() }}">
+                      {{ doc.end_date.strftime("%-I:%M %p") }}
+                    </time>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ev-detail-row">
+                <div class="ev-icon" aria-hidden="true"><i class="ti ti-map-pin"></i></div>
+                <div class="ev-detail-secondary">{{ doc.hackathon_type }}</div>
+              </div>
+            </div>
+
+            <div>
+              <div class="v3-btn-group" role="group" aria-label="Event actions">
+                {% if doc.is_registration_live and status_live %}
+                  <a
+                    href="/dashboard/register-for-hackathon?id={{ doc.name }}"
+                    class="v3-btn v3-btn-primary"
+                    aria-label="Register for {{ doc.hackathon_name }}"
+                  >
+                    Register
+                  </a>
+                {% endif %}
+                <a
+                  href="/fosshack/{{ event_year }}"
+                  class="v3-btn v3-btn-secondary"
+                  aria-label="Goto Event Landing Page"
+                >
+                  Event Page
+                  <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+                </a>
+
+                {% if registration_status %}
+                  <a
+                    href="/dashboard/my-hackathons"
+                    class="v3-btn v3-btn-secondary v3-btn-icon-only"
+                    aria-label="Goto hackathon dashboard"
+                  >
+                    <i class="ti ti-edit" aria-hidden="true"></i>
+                  </a>
                 {% endif %}
               </div>
-            {% endfor %}
+            </div>
           </div>
-        {% endif %}{% endfor %}
-      </div>
-    </div>
-  </div>
-{% endmacro %}
-{% macro render_submissions() %}
-  <div class="container event-content-div content-div" id="submissions">
-    <div class="submissions-section my-3">
-      <div class="d-flex align-items-center justify-content-between">
-        <h5>Recent Submissions</h5>
-        <a href="/{{ doc.route }}/projects/all">View All</a>
-      </div>
-      <div class="projects-grid">
-        {% for project in recent_projects %}
-          <div class="project-card" onClick="window.location.href='/{{ project.route }}'">
-            <div class="project-card--title">{{ project.title }}</div>
-            <div class="project-card--short-bio">{{ project.short_description }}</div>
-            <div class="project-card--team">{{ project.team_name }}</div>
-          </div>
-        {% endfor %}
-      </div>
-    </div>
-  </div>
-{% endmacro %}
-{% block page_script %}
-  <script>
-    $(document).ready(function () {
-      $('.schedule-grid').hide()
-      $('.schedule-grid[data-date="{{schedule_dict.days[0]}}"]').show()
-    })
 
-    function showScheduleByDate() {
-      $('.buttons-group button').removeClass('dark-button active')
-      $(event.target).addClass('dark-button active')
-      $('.schedule-grid').hide()
-      $('.schedule-grid[data-date="' + $(event.target).data('day') + '"]').show()
-    }
-  </script>
+          <!-- Banner -->
+          <div class="show-desktop-only">{{ event_cover() }}</div>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="v3-grid">
+        <!-- Main Column -->
+        <main class="v3-content-main">
+          <!-- About -->
+          {% if doc.hackathon_description %}
+            <section class="v3-card ev-about-section" aria-labelledby="about-heading">
+              <h2 class="v3-section-title" id="about-heading">
+                <i class="ti ti-info-square" aria-hidden="true"></i>
+                <span>About</span>
+              </h2>
+
+              <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
+                {{ doc.hackathon_description }}
+
+                <div class="font-weight-bold my-4">Hackathon Rules</div>
+                {{ doc.hackathon_rules }}
+              </div>
+            </section>
+          {% endif %}
+
+          <div class="show-mobile-only">{{ hackathon_resources() }}</div>
+
+          <!-- Schedule -->
+          {% if doc.show_schedule_tab and schedule_data %}
+            <section class="ev-agenda-section" aria-labelledby="schedule-heading">
+              <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
+              {{ agenda_card(schedule_data, show_limit=30) }}
+            </section>
+          {% endif %}
+
+          <!-- Sponsors -->
+          {% if sponsors_dict %}
+            <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
+              <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
+              {{ sponsor_card(sponsors_dict, None) }}
+            </section>
+          {% endif %}
+
+          {% if localhosts_by_city %}
+            <div class="row">
+              {% for city_group in localhosts_by_city %}
+                <div class="col-12 mb-4">
+                  <div class="v3-card p-4">
+                    <!-- City Heading -->
+                    <h5 class="localhost-header no-font-inherit font-weight-bold mb-3">
+                      localhost:{{ city_group.city|lower }}
+                    </h5>
+
+                    <!-- Localhosts -->
+                    {% for localhost in city_group.localhosts %}
+                      <a href="{{ localhost.route }}" class="d-block py-2 text-decoration-none">
+                        <div class="font-weight-600 v3-text-primary mb-1">
+                          {{ localhost.localhost_name }}
+                        </div>
+
+                        <small>
+                          <span class="v3-text-success"> {{ localhost.attending or 0 }} </span>
+                          <span class="v3-text-secondary"> attending </span>
+                          |
+                          <span class="v3-text-success"> {{ localhost.interested or 0 }} </span>
+                          <span class="v3-text-secondary"> interested </span>
+                        </small>
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if doc.has_partner_projects and partner_projects %}
+            <section aria-labelledby="projects-heading">
+              <h2 id="projects-heading" class="sr-only">Partner Projects</h2>
+              {{ projects_card(partner_projects, "Partner Projects", "ti-code") }}
+            </section>
+          {% endif %}
+
+          {% if doc.community_partners %}
+            <section aria-labelledby="partners-heading">
+              <h2 id="partners-heading" class="sr-only">Community Partners</h2>
+              {{ projects_card(doc.community_partners, "Community Partners", "ti-users") }}
+            </section>
+          {% endif %}
+        </main>
+
+        <!-- Sidebar -->
+        <div class="v3-content-sidebar" aria-label="Event information sidebar">
+          <!-- (Desktop) -->
+          <div class="show-desktop-only">{{ hackathon_resources() }}</div>
+
+          <!-- mentors -->
+          {% if mentors %}
+            <section class="ev-speakers-section" aria-labelledby="speakers-heading">
+              <h2 id="speakers-heading" class="sr-only">Mentors</h2>
+              {{ people_card(mentors, 'Mentors', icon="school") }}
+            </section>
+          {% endif %}
+
+          <!-- Volunteers -->
+          {% if volunteers %}
+            <section class="ev-volunteers-section" aria-labelledby="volunteers-heading">
+              <h2 id="volunteers-heading" class="sr-only">Volunteers</h2>
+              {{ people_card(volunteers, 'volunteers') }}
+            </section>
+          {% endif %}
+
+          <!-- Contact -->
+          <section class="v3-card ev-contact" aria-labelledby="contact-heading">
+            <h2 id="contact-heading" class="sr-only">Contact Information</h2>
+            {% if chapter.email %}
+              <div class="d-flex align-items-center pb-2">
+                <i class="ti ti-mail" aria-hidden="true"></i>
+                <div class="ev-contact-email">
+                  <a href="mailto:{{ chapter.email }}" aria-label="Email {{ chapter.email }}">
+                    {{ chapter.email }}
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}

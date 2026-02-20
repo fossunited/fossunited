@@ -1733,6 +1733,16 @@ h6 {
   display: flex;
 }
 
+.localhost-header {
+  background: var(--v3-text-color);
+  color: var(--v3-card-bg);
+  padding: 0.5rem 1rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
 .search-box {
   padding-top: 1rem;
   margin-bottom: 0;
