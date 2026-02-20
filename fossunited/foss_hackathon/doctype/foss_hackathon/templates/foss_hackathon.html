@@ -1,4 +1,6 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
+
 {% block page_content %}
   <div class="container header-section-parent">
     <div class="header-section event-header">
@@ -144,77 +146,9 @@
 {% endmacro %}
 {% macro render_schedule() %}
   <div class="container event-content-div content-div" id="schedule">
-    <div class="schedule-section my-3">
-      <h5>Schedule</h5>
-      <div class="my-3">
-        <div class="buttons-group">
-          {% for day in schedule_dict.days %}
-            <button
-              class="button {% if loop.first %}dark-button active{% endif %}"
-              data-day="{{ day }}"
-              onclick="showScheduleByDate()"
-            >
-              {{ day }}
-            </button>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="my-3">
-        {% for k,schedule_list in schedule_dict.items() %}{% if k != 'days' %}
-          <div class="schedule-grid" data-date="{{ k }}">
-            {% for schedule in schedule_list %}
-              <div
-                class="schedule-card {% if not schedule.linked_cfp %}no-hover{% endif %}"
-                {%
-                  if
-                  schedule.cfp_route
-                %}
-                  onclick="window.location.href='/{{ schedule.cfp_route }}'"
-                {% endif %}
-              >
-                <div class="schedule--title-time-section">
-                  <div class="schedule--title">{{ schedule.talk_title }}</div>
-                  {% if schedule.end_time == None %}
-                    <div class="schedule--time">
-                      Starts at {{ schedule.start_time.strftime('%I:%M %p') }}
-                    </div>
-                  {% endif %}
-                  {% if schedule.start_time == None %}
-                    <div class="schedule--time">
-                      Ends at {{ schedule.end_time.strftime('%I:%M %p') }}
-                    </div>
-                  {% endif %}
-                  {% if schedule.start_time and schedule.end_time %}
-                    <div class="schedule--time">
-                      {{ schedule.start_time.strftime('%I:%M %p') }} -
-                      {{
-                        schedule.end_time.strftime('%I:%M
-                        %p')
-                      }}
-                    </div>
-                  {% endif %}
-                </div>
-                {% if not schedule.no_speaker %}
-                  <div class="schedule--speakers-section">
-                    <a
-                      target="_blank"
-                      href="/{{ schedule.speaker_route }}"
-                      class="schedule--speaker-container"
-                      onclick="event.stopPropagation();"
-                    >
-                      <div class="schedule--speaker-name">{{ schedule.speaker_full_name }}</div>
-                      <div class="speaker-designation-company">
-                        {{ schedule.speaker_designation_company }}
-                      </div>
-                    </a>
-                  </div>
-                {% endif %}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}{% endfor %}
-      </div>
-    </div>
+    <section class="ev-agenda-section" aria-labelledby="schedule-heading">
+      {{ agenda_card(schedule_data, show_limit=30) }}
+    </section>
   </div>
 {% endmacro %}
 {% macro render_submissions() %}
