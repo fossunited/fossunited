@@ -2,11 +2,7 @@ import frappe
 
 from fossunited.doctype_ids import (
     HACKATHON,
-    HACKATHON_LOCALHOST,
-    HACKATHON_PARTICIPANT,
     HACKATHON_PARTNER_PROJECT,
-    HACKATHON_PROJECT,
-    HACKATHON_TEAM,
 )
 from fossunited.fossunited.utils import get_event_sponsors
 
@@ -21,6 +17,8 @@ def get_context(context):
 
     # Fetch hackathon details
     hackathon = frappe.get_doc(HACKATHON, hackathon_id)
+    cities_dict = hackathon.get_localhosts()
+    hackathon_stats = hackathon.get_hackathon_stats()
 
     context.doc = hackathon
     context.pagetitle, context.description, context.image = hackathon.get_meta()
@@ -78,78 +76,6 @@ def get_context(context):
         },
     ]
 
-    member_count = frappe.db.count(
-        HACKATHON_PARTICIPANT,
-        {
-            "hackathon": hackathon_id,
-        },
-    )
-
-    teams_count = frappe.db.count(
-        HACKATHON_TEAM,
-        {
-            "hackathon": hackathon_id,
-        },
-    )
-
-    projects_count = frappe.db.count(
-        HACKATHON_PROJECT,
-        {
-            "hackathon": hackathon_id,
-            "is_published": 1,
-        },
-    )
-
-    # Get all LocalHosts
-    localhosts = frappe.db.get_all(
-        HACKATHON_LOCALHOST,
-        filters={"parent_hackathon": hackathon_id},
-        fields=["name", "localhost_name", "route", "city", "state", "location"],
-        order_by="city, localhost_name",
-        page_length=99,
-    )
-
-    # Bulk Fetch Counts
-    attending_counts = frappe.db.get_all(
-        HACKATHON_PARTICIPANT,
-        filters={"localhost_request_status": "Accepted", "hackathon": hackathon_id},
-        fields=["localhost", "count(name) as count"],
-        group_by="localhost",
-    )
-    applied_counts = frappe.db.get_all(
-        HACKATHON_PARTICIPANT,
-        filters={"hackathon": hackathon_id},
-        fields=["localhost", "count(name) as count"],
-        group_by="localhost",
-    )
-    likes_counts = frappe.db.get_all(
-        "Comment",
-        filters={
-            "comment_type": "Like",
-            "reference_doctype": HACKATHON_LOCALHOST,
-        },
-        fields=["reference_name as localhost", "count(name) as count"],
-        group_by="reference_name",
-    )
-
-    # Convert to dicts
-    attending_dict = {item["localhost"]: item["count"] for item in attending_counts}
-    applied_dict = {item["localhost"]: item["count"] for item in applied_counts}
-    likes_dict = {item["localhost"]: item["count"] for item in likes_counts}
-
-    # Process LocalHosts and group by city
-    cities_dict = {}
-    for host in localhosts:
-        host["route"] = f"/{host.route}"
-        host["attending"] = attending_dict.get(host.name, 0)
-        host["interested"] = applied_dict.get(host.name, 0) + likes_dict.get(host.name, 0)
-
-        city = host.get("city", "Other")
-        if city not in cities_dict:
-            cities_dict[city] = []
-
-        cities_dict[city].append(host)
-
     context.localhosts_by_city = [
         {"city": city, "localhosts": hosts} for city, hosts in sorted(cities_dict.items())
     ]
@@ -176,10 +102,10 @@ def get_context(context):
     # Stats
     context.stats = {
         "prize_pool": "₹ 5,00,000",
-        "local_hosts": len(localhosts),
-        "participants": member_count,
-        "teams": teams_count,
-        "projects": projects_count,
+        "local_hosts": sum(len(hosts) for hosts in cities_dict.values()),
+        "participants": hackathon_stats["members"],
+        "teams": hackathon_stats["teams"],
+        "projects": hackathon_stats["projects"],
         "projects_url": f"/{hackathon.route}/projects/all",
     }
 

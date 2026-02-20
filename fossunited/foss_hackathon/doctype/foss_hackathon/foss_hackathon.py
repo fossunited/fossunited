@@ -16,6 +16,8 @@ from fossunited.doctype_ids import (
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
     HACKATHON_PARTNER_PROJECT,
+    HACKATHON_PROJECT,
+    HACKATHON_TEAM,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_event_sponsors
@@ -103,7 +105,7 @@ class FOSSHackathon(WebsiteGenerator):
         schedule_dict = get_event_schedule(self.name, self.doctype)
         context.schedule_data = FOSSChapterEvent.format_schedule_for_template(schedule_dict)
 
-        context.event_stats = frappe.db.count(HACKATHON_PARTICIPANT, {"hackathon": self.name})
+        context.hackathon_stats = self.get_hackathon_stats()
 
         cities_dict = self.get_localhosts()
         context.localhosts_by_city = [
@@ -261,3 +263,31 @@ class FOSSHackathon(WebsiteGenerator):
                 m["route"] = f"u/{m['username']}"
 
         return mentors
+
+    def get_hackathon_stats(self):
+        member_count = frappe.db.count(
+            HACKATHON_PARTICIPANT,
+            {
+                "hackathon": self.name,
+            },
+        )
+
+        teams_count = frappe.db.count(
+            HACKATHON_TEAM,
+            {
+                "hackathon": self.name,
+            },
+        )
+
+        projects_count = frappe.db.count(
+            HACKATHON_PROJECT,
+            {
+                "hackathon": self.name,
+                "is_published": 1,
+            },
+        )
+        return {
+            "members": member_count,
+            "teams": teams_count,
+            "projects": projects_count,
+        }
