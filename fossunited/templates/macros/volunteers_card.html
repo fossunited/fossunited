@@ -6,7 +6,7 @@
   <div class="v3-card {% if show_view_all %}has-view-all{% endif %}">
     <div class="v3-section-title">
       <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' }}"></i>
-      <span>{{ 'Volunteers' if type == 'volunteers' else type.upper() }}</span>
+      <span>{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}</span>
     </div>
 
     <div class="v3-people-container" id="container_{{ unique_id }}" data-expanded="false">
