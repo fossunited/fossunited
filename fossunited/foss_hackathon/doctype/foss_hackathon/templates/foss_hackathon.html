@@ -306,7 +306,7 @@
           <div class="show-mobile-only">{{ hackathon_resources() }}</div>
 
           <!-- Schedule -->
-          {% if schedule_data %}
+          {% if doc.show_schedule_tab and schedule_data %}
             <section class="ev-agenda-section" aria-labelledby="schedule-heading">
               <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
               {{ agenda_card(schedule_data, show_limit=30) }}
@@ -377,7 +377,7 @@
           {% if mentors %}
             <section class="ev-speakers-section" aria-labelledby="speakers-heading">
               <h2 id="speakers-heading" class="sr-only">Mentors</h2>
-              {{ people_card(mentors, 'speakers', submissions) }}
+              {{ people_card(mentors, 'Mentors') }}
             </section>
           {% endif %}
 

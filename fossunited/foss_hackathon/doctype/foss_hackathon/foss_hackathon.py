@@ -111,6 +111,7 @@ class FOSSHackathon(WebsiteGenerator):
         ]
 
         context.volunteers = self.get_volunteers()
+        context.mentors = self.get_mentors()
         context.partner_projects = frappe.get_all(
             HACKATHON_PARTNER_PROJECT,
             {"hackathon": self.name},
@@ -238,3 +239,22 @@ class FOSSHackathon(WebsiteGenerator):
             cities_dict[city].append(host)
 
         return cities_dict
+
+    def get_mentors(self):
+        mentors = frappe.get_all(
+            "FOSS Hackathon Mentor",
+            filters={"hackathon": self.name},
+            fields=[
+                "name",
+                "mentor",
+                "full_name",
+                "mentor.user_image as profile_picture",
+                "mentor.username as username",
+            ],
+        )
+
+        for m in mentors:
+            if m.get("username"):
+                m["route"] = f"u/{m['username']}"
+
+        return mentors
