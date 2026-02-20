@@ -441,12 +441,25 @@ a:hover,
 .carousel-indicators .active {
   background-color: var(--v3-text);
 }
-/* create space for indicators */
 #infoCarousel {
-  padding-bottom: 40px;
+  position: relative;
+  height: 420px;
 }
+/* Center slide content vertically */
+#infoCarousel .slide-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 30px;
+}
+
+/* Fix indicators at bottom */
 #infoCarousel .carousel-indicators {
-  bottom: -10px;
+  position: absolute;
+  bottom: 30px;
 }
 
 .container svg {

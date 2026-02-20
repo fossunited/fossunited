@@ -317,10 +317,19 @@
             <a href="{{ project.link }}" target="_blank"
               class="d-flex align-items-center text-decoration-none py-2">
 
-              <img src="{{ project.image or '/assets/fossunited/images/fosshack/partner-project-logo.png' }}"
-                alt="{{ project.sponsor_name }}"
-                class="mr-2"
-                style="width:40px;height:40px;object-fit:contain;">
+              {% if project.image %}
+              <span class="mr-2 d-inline-flex align-items-center justify-content-center bg-white rounded"
+                style="width:40px;height:40px;">
+                <img src="{{ project.image }}"
+                  alt="{{ project.sponsor_name }}"
+                  style="max-width:100%;max-height:100%;object-fit:contain;">
+              </span>
+              {% else %}
+              <span class="mr-2 d-inline-flex align-items-center justify-content-center rounded bg-white"
+                style="width:40px;height:40px;">
+                <i class="ti ti-rocket text-dark" style="font-size:22px;"></i>
+              </span>
+              {% endif %}
 
               <span class="font-weight-bold">
                 {{ project.sponsor_name }}
@@ -332,7 +341,7 @@
 
           <a
             href="/fosshack/2026/partner-projects"
-            class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0 small d-inline-flex align-items-center justify-content-center"
+            class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0 small d-inline-flex align-items-center justify-content-center mt-2"
           >
             <span class="mr-1 small">View All</span>
             <i class="ti ti-chevron-right"></i>
@@ -360,11 +369,15 @@
             <div class="carousel-inner">
               {% for item in carousel_items %}
               <div class="carousel-item {% if loop.first %}active{% endif %}">
-                <img src="{{ item.image }}" alt="{{ item.title }}" class="mb-4">
-                <h4 class="font-weight-bold mb-4">{{ item.title }}</h4>
-                <p class="text-muted mx-4">
-                  {{ item.desc }}
-                </p>
+
+                <div class="slide-content">
+                  <img src="{{ item.image }}" alt="{{ item.title }}" class="mb-4">
+                  <h4 class="font-weight-bold mb-4">{{ item.title }}</h4>
+                  <p class="text-muted mx-4">
+                    {{ item.desc }}
+                  </p>
+                </div>
+
               </div>
               {% endfor %}
             </div>
