@@ -8,8 +8,9 @@
   />
   <div class="flex flex-col gap-4 my-6">
     <div class="flex flex-col gap-2">
-      <div class="prose">
+      <div class="prose flex items-baseline gap-2">
         <h2>Sponsors</h2>
+        <small class="text-ink-gray-5">(Recommended to keep logo in 2:1 aspect ratio)</small>
       </div>
       <Button label="Add Sponsor" class="w-fit mb-1" @click="handleAddNew" />
       <div v-if="event.doc.sponsor_list.length == 0" class="text-sm text-ink-gray-8">

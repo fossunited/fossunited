@@ -24,13 +24,13 @@
   />
   <div class="border p-4 flex flex-col gap-2 rounded items-center">
     <div class="relative w-full">
-      <div v-if="editable" class="top-0 right-0 absolute flex flex-row-reverse gap-2 w-full">
+      <div v-if="editable" class="top-0 right-0 absolute flex flex-row-reverse gap-2 z-10">
         <Button icon="trash" theme="red" @click="showConfimation = true" />
         <Button icon="edit" @click="emit('edit-sponsor')" />
       </div>
       <img
         :src="sponsor.image"
-        class="w-full h-20 px-5 object-contain"
+        class="w-auto mx-auto h-20 px-5 object-contain"
         :alt="label || 'Image preview'"
       />
     </div>
