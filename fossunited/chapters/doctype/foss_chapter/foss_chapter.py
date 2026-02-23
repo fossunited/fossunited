@@ -9,6 +9,7 @@ from fossunited.doctype_ids import (
     CHAPTER,
     CITY_COMMUNITY,
     EVENT,
+    HACKATHON,
     STUDENT_CLUB,
     USER_PROFILE,
 )
@@ -211,6 +212,13 @@ class FOSSChapter(WebsiteGenerator):
             fields=["*"],
             order_by="event_start_date asc",
             page_length=6,
+        ) + frappe.get_all(
+            HACKATHON,
+            filters={
+                "chapter": self.name,
+                "end_date": (">=", frappe.utils.now()),
+            },
+            fields=["*"],
         )
 
     def get_past_events(self):
@@ -224,6 +232,13 @@ class FOSSChapter(WebsiteGenerator):
             fields=["*"],
             order_by="event_end_date desc",
             page_length=999,
+        ) + frappe.get_all(
+            HACKATHON,
+            filters={
+                "chapter": self.name,
+                "end_date": ("<", frappe.utils.now()),
+            },
+            fields=["*"],
         )
 
     def get_members(self):
