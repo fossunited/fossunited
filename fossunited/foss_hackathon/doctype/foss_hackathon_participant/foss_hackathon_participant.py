@@ -36,6 +36,32 @@ class FOSSHackathonParticipant(Document):
         wants_to_attend_locally: DF.Check
     # end: auto-generated types
 
+    def before_insert(self):
+        hackathon = frappe.db.get_value(
+            HACKATHON,
+            {"name": self.hackathon},
+            ["is_registration_live", "start_date", "end_date"],
+            as_dict=True,
+        )
+
+        if not hackathon:
+            frappe.throw("Invalid Hackathon selected")
+
+        today = frappe.utils.nowdate()
+
+        # Registration closed manually
+        if not hackathon.is_registration_live:
+            frappe.throw(
+                "Registrations have been closed for this hackathon!",
+                frappe.PermissionError,
+            )
+
+        if hackathon.end_date and hackathon.end_date < today:
+            frappe.throw(
+                "This event has already ended. Registration is no longer allowed.",
+                frappe.PermissionError,
+            )
+
     def after_insert(self):
         self.handle_add_to_email_group()
         # Add to status-based localhost group if applicable
