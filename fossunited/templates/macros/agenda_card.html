@@ -27,48 +27,89 @@
               {% endif %}
               {% for item in items %}
                 {% if item_count.value < show_limit %}
-                  <div
-                    class="v3-clickable"
-                    {% if item.cfp_route %}
-                      data-route="{{ item.cfp_route }}"
-                      onclick="window.location.href='/{{ item.cfp_route }}'"
+                  {# Determine link strategy #}
+                  {% set has_cfp = item.cfp_route %}
+                  {% set has_video = item.talk_video %}
+                  {% set has_both = has_cfp and has_video %}
+                  {% set wrap_whole_card = (has_cfp or has_video) and not has_both %}
+
+                  {# Icon mapping with video detection #}
+                  {% set icon_map = {
+                    "Talk": "microphone",
+                    "Lightning Talk": "bolt",
+                    "Workshop": "settings",
+                    "Panel Discussion": "users-group",
+                    "Opening Note": "presentation",
+                    "Break": "coffee",
+                    "Other": "calendar-event"
+                  } %}
+
+                  {# Determine if this is an online meeting #}
+                  {% set is_online = (not item.hall and item.other_category and
+                                      item.other_category|lower in ["meeting", "online"]) or has_video %}
+                  {% set icon = "video" if is_online else icon_map.get(item.category, "calendar-event") %}
+
+                  <div class="mb-2">
+                    {# Wrap entire card if only one link type exists #}
+                    {% if wrap_whole_card %}
+                    {% set single_link = ("/" ~ item.cfp_route) if has_cfp else item.talk_video %}
+                      <a class="v3-clickable" href="{{ single_link }}">
                     {% endif %}
-                  >
-                    <div class="v3-schedule-item">
-                      <div class="v3-schedule-header">
-                        <div class="v3-schedule-time">{{ item.start_time_display }}</div>
-                        <div
-                          style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"
-                        ></div>
-                        <div class="v3-schedule-badge">{{ item.category }}</div>
-                      </div>
-                      <div class="v3-schedule-content">
-                        {% if item.cfp_speakers %}
-                          <div
-                            class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}"
-                          >
-                            {% for speaker in item.cfp_speakers[:4] %}
-                              <img
-                                src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                                alt="{{ speaker.full_name }}"
-                                class="v3-speaker-img"
-                              />
-                            {% endfor %}
-                          </div>
-                        {% endif %}
-                        <div class="v3-schedule-details">
-                          <div class="v3-schedule-title">{{ item.title }}</div>
-                          {% if item.cfp_speakers %}
-                            <div class="v3-speaker-names">
-                              {% for speaker in item.cfp_speakers %}
-                                <div class="v3-speaker-name">{{ speaker.full_name }}</div>
-                              {% endfor %}
+                      <div class="v3-schedule-item">
+                        <div class="v3-schedule-header">
+                          <div class="v3-schedule-time">{{ item.start_time_display }}</div>
+                          <div style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"></div>
+                          <div class="v3-schedule-badge">{{ item.category }}</div>
+                        </div>
+
+                        <div class="v3-schedule-content">
+                          {# Image/Icon section - links to video if both links exist #}
+                          {% if has_both %}
+                          <a href="{{ item.talk_video }}" class="v3-clickable">
+                          {% endif %}
+                            {% if item.cfp_speakers %}
+                              <div class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}">
+                                {% for speaker in item.cfp_speakers[:4] %}
+                                <img
+                                  src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                                  alt="{{ speaker.full_name }}"
+                                  class="v3-speaker-img"
+                                />
+                                {% endfor %}
+                              </div>
+                            {% else %}
+                              <div class="rounded align-items-center justify-content-center text-black bg-white p-2">
+                                <i class="ti ti-{{ icon }}" style="font-size: 1.5rem;"></i>
+                              </div>
+                            {% endif %}
+                          {% if has_both %}
+                          </a>
+                          {% endif %}
+
+                          {# Content section - links to CFP if both links exist #}
+                          {% if has_both %}
+                          <a href="/{{ item.cfp_route }}" class="v3-clickable" style="flex: 1;">
+                          {% endif %}
+                            <div class="v3-schedule-details">
+                              <div class="v3-schedule-title">{{ item.title }}</div>
+                              {% if item.cfp_speakers %}
+                                <div class="v3-speaker-names">
+                                  {% for speaker in item.cfp_speakers %}
+                                    <div class="v3-speaker-name">{{ speaker.full_name }}</div>
+                                  {% endfor %}
+                                </div>
+                              {% endif %}
                             </div>
+                          {% if has_both %}
+                          </a>
                           {% endif %}
                         </div>
                       </div>
-                    </div>
+                    {% if wrap_whole_card %}
+                    </a>
+                    {% endif %}
                   </div>
+
                   {% set item_count.value = item_count.value + 1 %}
                 {% endif %}
               {% endfor %}
@@ -78,6 +119,7 @@
       {% endfor %}
     </div>
 
+    {# Show "View Full Schedule" button if there are more items #}
     {% set total_items = namespace(value=0) %}
     {% for date_str, halls in schedule_data.items() %}
       {% for hall, items in halls.items() %}
@@ -86,12 +128,11 @@
     {% endfor %}
 
     {% if total_items.value > show_limit %}
-      <a
+
         href="/{{ route }}/schedule"
         class="v3-btn v3-btn-secondary"
         style="margin-top: 1rem; width: auto;"
-        >View Full Schedule</a
-      >
+      >View Full Schedule</a>
     {% endif %}
   </div>
 {% endmacro %}
