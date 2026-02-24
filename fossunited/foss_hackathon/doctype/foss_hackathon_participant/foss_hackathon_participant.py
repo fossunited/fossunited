@@ -47,7 +47,7 @@ class FOSSHackathonParticipant(Document):
         if not hackathon:
             frappe.throw("Invalid Hackathon selected")
 
-        today = frappe.utils.nowdate()
+        today = frappe.utils.now_datetime()
 
         # Registration closed manually
         if not hackathon.is_registration_live:
