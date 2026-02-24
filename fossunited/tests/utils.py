@@ -574,6 +574,7 @@ def insert_test_hackathon(chapter: str, **kwargs):
         "start_date": kwargs.get("start_date", datetime.today() + timedelta(days=1)),
         "end_date": kwargs.get("end_date", datetime.today() + timedelta(days=2)),
         "hackathon_description": kwargs.get("hackathon_description", "Test Hackathon"),
+        "is_registration_live": kwargs.get("is_registration_live", 1),
     }
 
     for key, value in kwargs.items():

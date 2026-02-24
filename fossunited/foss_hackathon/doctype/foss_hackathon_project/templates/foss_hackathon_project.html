@@ -1,13 +1,15 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-container">
-      <div class="v3-breadcrumb">
-        <a href="/{{ hackathon.route }}">{{ hackathon.hackathon_name }}</a>
-        <span class="mx-2">></span>
-        <a href="/{{ hackathon.route }}/projects/all">{{ _("All Projects") }}</a>
-        <span class="mx-2">></span>
-        <span>{{ doc.title }}</span>
+      <div class="d-flex justify-content-between align-items-center">
+        {{
+          breadcrumb(items=[{"route": ('/' + hackathon.route), "label": hackathon.hackathon_name},
+          {"route": ('/' + hackathon.route + '/projects/all'), "label": "All Projects"}, {"label": doc.title}])
+        }}
+        {{ theme_toggle() }}
       </div>
 
       <div class="v3-card mb-4">
