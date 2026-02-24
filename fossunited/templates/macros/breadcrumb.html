@@ -4,9 +4,9 @@
       {# Use provided items #}
       {% for item in items %}
         {% if loop.last %}
-          <span>{{ item.label }}</span>
+          <span>{{ _(item.label) }}</span>
         {% else %}
-          <a class="hover:cursor-pointer" href="{{ item.route }}">{{ item.label }}</a>
+          <a class="hover:cursor-pointer" href="{{ item.route }}">{{ _(item.label) }}</a>
           {% if not loop.last %}<span class="px-1">></span>{% endif %}
         {% endif %}
       {% endfor %}
@@ -33,7 +33,7 @@
         <span class="px-1">></span>
 
         {# Determine display label - check rename_map first, then format #}
-        {% set display_label = rename_map.get(part, part.replace('-', ' ').replace('_', ' ').title()) %}
+        {% set display_label = _(rename_map.get(part, part.replace('-', ' ').replace('_', ' ').title())) %}
 
         {% if loop.last %}
           <span>{{ display_label }}</span>
