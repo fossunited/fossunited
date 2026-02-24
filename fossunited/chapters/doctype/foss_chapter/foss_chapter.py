@@ -191,8 +191,8 @@ class FOSSChapter(WebsiteGenerator):
             context.default_chapter_logo = f"/files/{safe_type}_profile.svg"
             context.default_banner = f"/files/{safe_type}_banner.png"
 
-        context.upcoming_events = self.get_upcoming_events()
-        context.past_events = self.get_past_events()
+        context.upcoming_events = self.get_upcoming_events() + self.get_upcoming_hackathons()
+        context.past_events = self.get_past_events() + self.get_past_hackathons()
         context.members = self.get_members()
         context.social_links = self.get_social_links()
 
@@ -212,7 +212,10 @@ class FOSSChapter(WebsiteGenerator):
             fields=["*"],
             order_by="event_start_date asc",
             page_length=6,
-        ) + frappe.get_all(
+        )
+
+    def get_upcoming_hackathons(self):
+        return frappe.get_all(
             HACKATHON,
             filters={
                 "chapter": self.name,
@@ -231,8 +234,10 @@ class FOSSChapter(WebsiteGenerator):
             },
             fields=["*"],
             order_by="event_end_date desc",
-            page_length=999,
-        ) + frappe.get_all(
+        )
+
+    def get_past_hackathons(self):
+        return frappe.get_all(
             HACKATHON,
             filters={
                 "chapter": self.name,

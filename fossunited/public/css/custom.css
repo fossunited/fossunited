@@ -2785,7 +2785,7 @@ body:has(.v3-page) {
 .v3-schedule-list {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
 .v3-schedule-date-group {
@@ -2797,10 +2797,6 @@ body:has(.v3-page) {
   font-size: 1.125rem;
   font-weight: 600;
   margin-bottom: 1rem;
-}
-
-.v3-schedule-hall-group {
-  margin-bottom: 1.5rem;
 }
 
 .v3-schedule-hall-title {
