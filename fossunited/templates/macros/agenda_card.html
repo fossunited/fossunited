@@ -127,8 +127,8 @@
       {% endfor %}
     {% endfor %}
 
-    {% if total_items.value > show_limit %}
-
+    {% if total_items.value > show_limit and route %}
+      <a
         href="/{{ route }}/schedule"
         class="v3-btn v3-btn-secondary"
         style="margin-top: 1rem; width: auto;"
