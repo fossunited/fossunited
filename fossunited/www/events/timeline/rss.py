@@ -75,7 +75,6 @@ def get_context(context):
             "event_location",
             "event_type",
             "event_website as route",
-            "'FOSS Event Grants' as chapter",
             "grant_amount",
             "modified",
         ],
@@ -89,9 +88,13 @@ def get_context(context):
 
     for g in grants:
         g.route = g.route or "/grants/events"
+        g.chapter = "FOSS Event Grants"
         g.must_attend = (g.grant_amount or 0) > 10000
         g.event_start_date = frappe.utils.get_datetime(g.event_start_date)
         g.event_end_date = frappe.utils.get_datetime(g.event_end_date)
+
+    for h in hackathons:
+        h["must_attend"] = 1
 
     # Combine and process events
     all_events = events + hackathons + grants

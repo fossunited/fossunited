@@ -111,6 +111,7 @@ def get_context(context, page_type="upcoming"):
                 "is_external_event": 1,
                 "banner_image": None,
                 "chapter": frappe._dict({**GRANTS_CHAPTER_BASE, "city": city}),
+                "_chapter_type": "City Community",
                 "must_attend": (g.get("grant_amount") or 0) > 10000,
                 "_kind": "grant",
                 "_chapter_city": city,
