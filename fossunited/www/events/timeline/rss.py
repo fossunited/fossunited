@@ -90,15 +90,13 @@ def get_context(context):
         g.route = g.route or "/grants/events"
         g.chapter = "FOSS Event Grants"
         g.must_attend = (g.grant_amount or 0) > 10000
-        g.event_start_date = frappe.utils.get_datetime(g.event_start_date)
-        g.event_end_date = frappe.utils.get_datetime(g.event_end_date)
 
     for h in hackathons:
         h["must_attend"] = 1
 
     # Combine and process events
     all_events = events + hackathons + grants
-    all_events.sort(key=lambda x: x.event_start_date)
+    all_events.sort(key=lambda x: frappe.utils.get_datetime(x.event_start_date))
 
     for event in all_events:
         if event.route and event.route.startswith("http"):
