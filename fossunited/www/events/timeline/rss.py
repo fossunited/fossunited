@@ -64,13 +64,44 @@ def get_context(context):
         order_by="start_date asc",
         limit=10,
     )
+    grants = frappe.get_all(
+        "FOSS Event Grant",
+        fields=[
+            "name",
+            "event_name",
+            "event_description",
+            "event_start_date",
+            "event_end_date",
+            "event_location",
+            "event_type",
+            "event_website as route",
+            "'FOSS Event Grants' as chapter",
+            "grant_amount",
+            "modified",
+        ],
+        filters={
+            "grant_status": "Approved",
+            "event_end_date": (">=", now),
+        },
+        order_by="event_start_date asc",
+        limit=20,
+    )
+
+    for g in grants:
+        g.route = g.route or "/grants/events"
+        g.must_attend = (g.grant_amount or 0) > 10000
+        g.event_start_date = frappe.utils.get_datetime(g.event_start_date)
+        g.event_end_date = frappe.utils.get_datetime(g.event_end_date)
 
     # Combine and process events
-    all_events = events + hackathons
+    all_events = events + hackathons + grants
     all_events.sort(key=lambda x: x.event_start_date)
 
     for event in all_events:
-        event.link = urljoin(host, event.route)
+        if event.route and event.route.startswith("http"):
+            event.link = event.route
+        else:
+            event.link = urljoin(host, event.route or "")
         event.title = escape_html(event.event_name or "")
         event.chapter_name = escape_html(event.chapter or "")
         event.location = escape_html(event.event_location or "")
