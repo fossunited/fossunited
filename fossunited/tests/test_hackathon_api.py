@@ -12,6 +12,7 @@ from fossunited.api.hackathon import (
     delete_project,
     get_participant,
     join_team_via_code,
+    respond_to_join_team_request,
 )
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -19,12 +20,15 @@ from fossunited.doctype_ids import (
     HACKATHON_PARTICIPANT,
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
     USER_PROFILE,
 )
 from fossunited.tests.utils import (
     insert_test_chapter,
     insert_test_hackathon,
+    insert_test_hackathon_join_request,
     insert_test_hackathon_participant,
+    insert_test_hackathon_team,
     insert_user_profile,
 )
 
@@ -417,3 +421,101 @@ class TestHackathonAPI(FrappeTestCase):
 
         with self.assertRaises(frappe.PermissionError):
             delete_project(hackathon=self.hackathon.name, team=team.name)
+
+
+class TestRespondToJoinTeamRequest(FrappeTestCase):
+    """Tests for the respond_to_join_team_request API endpoint."""
+
+    def setUp(self):
+        frappe.set_user("Administrator")
+        self.sender = "invite_sender@example.com"
+        self.recipient = "invite_recipient@example.com"
+        self.outsider = "invite_outsider@example.com"
+
+        for email in [self.sender, self.recipient, self.outsider]:
+            insert_user_profile(email)
+
+        self.chapter = insert_test_chapter(chapter_name="Invite Test Chapter")
+        self.hackathon = insert_test_hackathon(
+            chapter=self.chapter.name,
+            hackathon_name="Invite Test Hackathon",
+        )
+
+        self.sender_participant = insert_test_hackathon_participant(
+            hackathon_id=self.hackathon.name,
+            user=self.sender,
+            email=self.sender,
+        )
+        self.recipient_participant = insert_test_hackathon_participant(
+            hackathon_id=self.hackathon.name,
+            user=self.recipient,
+            email=self.recipient,
+        )
+
+        self.team = insert_test_hackathon_team(hackathon=self.hackathon)
+        self.team.append(
+            "members",
+            {
+                "member": self.sender_participant.name,
+                "full_name": self.sender_participant.full_name,
+                "email": self.sender_participant.email,
+            },
+        )
+        self.team.save()
+
+        frappe.set_user(self.sender)
+        self.request = insert_test_hackathon_join_request(
+            hackathon_id=self.hackathon.name,
+            team_id=self.team.name,
+            requested_by=self.sender,
+            reciever_email=self.recipient,
+        )
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        self.chapter.delete(force=True)
+        self.hackathon.delete(force=True)
+        self.team.delete(force=True)
+
+    def test_recipient_can_accept_invite(self):
+        frappe.set_user(self.recipient)
+        result = respond_to_join_team_request(self.request.name, "Accepted")
+        self.assertTrue(result["success"])
+        self.assertEqual(result["status"], "Accepted")
+        self.request.reload()
+        self.assertEqual(self.request.status, "Accepted")
+        self.assertTrue(
+            frappe.db.exists(
+                HACKATHON_TEAM_MEMBER,
+                {"parent": self.team.name, "member": self.recipient_participant.name},
+            )
+        )
+
+    def test_recipient_can_reject_invite(self):
+        frappe.set_user(self.recipient)
+        result = respond_to_join_team_request(self.request.name, "Rejected")
+        self.assertTrue(result["success"])
+        self.assertEqual(result["status"], "Rejected")
+        self.request.reload()
+        self.assertEqual(self.request.status, "Rejected")
+
+    def test_non_recipient_cannot_respond(self):
+        frappe.set_user(self.outsider)
+        with self.assertRaises(frappe.PermissionError):
+            respond_to_join_team_request(self.request.name, "Accepted")
+
+    def test_guest_cannot_respond(self):
+        frappe.set_user("Guest")
+        with self.assertRaises(frappe.AuthenticationError):
+            respond_to_join_team_request(self.request.name, "Accepted")
+
+    def test_invalid_status_raises_validation_error(self):
+        frappe.set_user(self.recipient)
+        with self.assertRaises(frappe.ValidationError):
+            respond_to_join_team_request(self.request.name, "Pending")
+
+    def test_already_resolved_request_cannot_be_changed(self):
+        frappe.set_user(self.recipient)
+        respond_to_join_team_request(self.request.name, "Rejected")
+        with self.assertRaises(frappe.ValidationError):
+            respond_to_join_team_request(self.request.name, "Accepted")
