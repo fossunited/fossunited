@@ -1,0 +1,162 @@
+[project]
+site_name= "FOSS United Knowledge Base"
+site_description= "Comprehensive documentation and resources for the FOSS United platform and community."
+copyright= "Copyright &copy; 2021 - 2026 FOSS United Foundation"
+# site_url= "https://docs.fossunited.org"
+repo_url= "https://github.com/fossunited/fossunited"
+edit_uri= "edit/develop/docs/docs/"
+docs_dir = "docs"
+extra_css = ["assets/custom.css"]
+
+nav = [
+  {"Home" = "index.md"},
+
+  {"Your Profile" = [
+    {"Create Your Profile" = "create-profile.md"},
+    {"Manage Your Profile" = "manage-profile.md"},
+    {"Request Personal Data" = "request-data.md"},
+    {"Delete Personal Data" = "delete-data.md"}
+  ]},
+
+  {"Events & Participation" = [
+    {"Creating an Event" = "create-event.md"},
+    {"Event RSVPs" = "event-rsvp.md"},
+    {"Attending Events" = "attend-event.md"},
+    {"Event Call for Proposals (CFP)" = "event-proposals.md"},
+    {"Managing Event Proposals" = "event-cfp.md"},
+    {"Reviewing Proposals" = "reviewing-proposals.md"},
+    {"Creating Event Schedule" = "event-schedule.md"},
+    {"Event Mailing" = "event_mailing.md"},
+    {"What to Do at the Event" = "event.md"}
+  ]},
+
+  {"FOSS Hackathon" = [
+    {"Participanting" = "fosshack.md"},
+    {"Managing Localhost" = "localhost.md"}
+  ]},
+
+  {"Volunteering" = [
+    {"Volunteering Overview" = "volunteering.md"},
+    {"Volunteering Perks" = "volunteering-perks.md"},
+    {"Marketing Events on Social Media" = "social-media.md"},
+    {"Telegram & Communication Channels" = "telegram.md"}
+  ]},
+
+  {"What We Do" = [
+    {"Initiatives Overview" = "initiative.md"},
+    {"FOSS Clubs" = "club.md"},
+    {"Grants Program" = "grants.md"},
+    {"People Behind FOSS United" = "people.md"},
+    {"Principles & Values" = "principles.md"},
+    {"FOSS Philosophy" = "foss.md"},
+    {"Speech & Presentations" = "speech.md"},
+    {"RSS & News" = "rss.md"}
+  ]},
+
+  {"Development & Documentation" = [
+    {"Platform Development" = "development.md"},
+    {"Documentation Guide" = "documentation.md"},
+    {"Project Management" = "project-management.md"},
+    {"Code Contributions" = "code-contributions.md"},
+    {"Architecture Overview" = "architecture.md"},
+    {"Changelog" = "changelog.md"}
+  ]}
+]
+
+[project.theme]
+# variant = "classic"
+font.text = "Inter"
+font.code = "JetBrains Mono"
+logo = "./assets/fossunited-white.svg"
+favicon = "./assets/fossunited-white.svg"
+features = [
+  "search.highlight",
+  "content.action.edit",
+  "content.action.view"
+]
+
+[[project.theme.palette]]
+scheme = "default"
+media = "(prefers-color-scheme: light)"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+primary = "green"
+accent = "teal"
+
+[[project.theme.palette]]
+scheme = "slate"
+media = "(prefers-color-scheme: dark)"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+primary = "green"
+accent = "light-green"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/discourse"
+link = "https://forum.fossunited.org/"
+[[project.extra.social]]
+icon = "fontawesome/brands/telegram"
+link = "https://t.me/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/mastodon"
+link = "https://mas.to/@fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/bluesky"
+link = "https://bsky.app/profile/fossunited.mas.to.ap.brid.gy"
+[[project.extra.social]]
+icon = "fontawesome/brands/twitter"
+link = "http://x.com/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/youtube"
+link = "https://www.youtube.com/c/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/linkedin"
+link = "https://in.linkedin.com/company/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/instagram"
+link = "https://instagram.com/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/brands/reddit"
+link = "https://reddit.com/r/fossunited"
+[[project.extra.social]]
+icon = "fontawesome/solid/envelope"
+link = "mailto:developers@fossunited.org"
+
+[project.markdown_extensions.nl2br]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]
+
+[project.markdown_extensions.abbr]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+[project.markdown_extensions.pymdownx.betterem]
+smart_enable = "all"
+[project.markdown_extensions.pymdownx.caret]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.emoji]
+emoji_generator = "zensical.extensions.emoji.to_svg"
+emoji_index = "zensical.extensions.emoji.twemoji"
+[project.markdown_extensions.pymdownx.highlight]
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.keys]
+[project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.smartsymbols]
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
+[project.markdown_extensions.pymdownx.tilde]
+[project.markdown_extensions.pymdownx.magiclink]
+repo_url_shortener = "true"
+repo_url_shorthand = "true"
+user = "fossunited"
+repo = "fossunited"
