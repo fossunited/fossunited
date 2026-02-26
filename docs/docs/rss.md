@@ -43,6 +43,7 @@ We have extensive RSS feed support in our platforms.
     Go to this page [https://forum.fossunited.org/categories]() and choose any category and append `/rss` to the URL for RSS.
     for example: [https://forum.fossunited.org/c/organisation.rss]()
 
+5. Upcoming Events feed: https://fossunited.org/events/timeline/rss.xml
 
 ### Suggested RSS Readers
 
