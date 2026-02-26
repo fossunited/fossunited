@@ -55,7 +55,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - DocsInfo component now has a close button to hide help messages.
 - Applied proper color scales and theme-aware styling across all dashboard components importing frappe-ui method of doing things.
 
-    Related issue to address in future: [#1221](https://github.com/fossunited/fossunited/issues/1221)
+    Related issue to address in the future: [#1221](https://github.com/fossunited/fossunited/issues/1221)
 
 #### Security Improvements
 
@@ -81,7 +81,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1419](https://github.com/fossunited/fossunited/pull/1419) **RSVP Success Feedback for Guests**
   Guest users now get clear success feedback after RSVP submission. Submit button is disabled after click to prevent duplicate submissions.
 
-    Although should be taken care via DB level uniqueness [#1418](https://github.com/fossunited/fossunited/issues/1418)
+    Although should be taken care via DB-level uniqueness [#1418](https://github.com/fossunited/fossunited/issues/1418)
 
 - [#1405](https://github.com/fossunited/fossunited/pull/1405) **RSVP Insights Table Toggle**
   Added table view toggle in RSVP insights. Manual check-in button now only enabled during event days for better UX.
@@ -155,7 +155,7 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 - [#1423](https://github.com/fossunited/fossunited/pull/1423) **Frappe Semgrep & PR Linter**
   Added Frappe semgrep rules and conventional commit linter checks to CI pipeline for better code quality and consistency.
 
-    Credits: Harsh Tandiya for informing for best practise
+    Credits: Harsh Tandiya for informing for best practice
 
 #### UI/UX Polish
 

@@ -104,17 +104,8 @@ link = "https://mas.to/@fossunited"
 icon = "fontawesome/brands/bluesky"
 link = "https://bsky.app/profile/fossunited.mas.to.ap.brid.gy"
 [[project.extra.social]]
-icon = "fontawesome/brands/twitter"
-link = "https://x.com/fossunited"
-[[project.extra.social]]
 icon = "fontawesome/brands/youtube"
 link = "https://www.youtube.com/c/fossunited"
-[[project.extra.social]]
-icon = "fontawesome/brands/linkedin"
-link = "https://in.linkedin.com/company/fossunited"
-[[project.extra.social]]
-icon = "fontawesome/brands/instagram"
-link = "https://instagram.com/fossunited"
 [[project.extra.social]]
 icon = "fontawesome/brands/reddit"
 link = "https://reddit.com/r/fossunited"
