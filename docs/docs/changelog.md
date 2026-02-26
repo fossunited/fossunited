@@ -15,8 +15,8 @@ Please find the TLDR reports for each blog in blog posts and forum thread:
 
 | Metric        | Count |
 |---------------|-------|
-| Issues Closed | 12    |
-| PRs merged    | 38    |
+| Issues Closed | 8     |
+| PRs merged    | 32    |
 
 Hello,
 
