@@ -347,38 +347,6 @@
             </section>
           {% endif %}
 
-          {% if localhosts_by_city %}
-            <div class="row">
-              {% for city_group in localhosts_by_city %}
-                <div class="col-12 mb-4">
-                  <div class="v3-card p-4">
-                    <!-- City Heading -->
-                    <h5 class="localhost-header no-font-inherit font-weight-bold mb-3">
-                      localhost:{{ city_group.city|lower }}
-                    </h5>
-
-                    <!-- Localhosts -->
-                    {% for localhost in city_group.localhosts %}
-                      <a href="{{ localhost.route }}" class="d-block py-2 text-decoration-none">
-                        <div class="font-weight-600 v3-text-primary mb-1">
-                          {{ localhost.localhost_name }}
-                        </div>
-
-                        <small>
-                          <span class="v3-text-success"> {{ localhost.attending or 0 }} </span>
-                          <span class="v3-text-secondary"> attending </span>
-                          |
-                          <span class="v3-text-success"> {{ localhost.interested or 0 }} </span>
-                          <span class="v3-text-secondary"> interested </span>
-                        </small>
-                      </a>
-                    {% endfor %}
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% endif %}
-
           {% if doc.has_partner_projects and partner_projects %}
             <section aria-labelledby="projects-heading">
               <h2 id="projects-heading" class="sr-only">Partner Projects</h2>
@@ -429,6 +397,39 @@
               </div>
             {% endif %}
           </section>
+
+          {% if localhosts_by_city %}
+            <section class="row">
+              {% for city_group in localhosts_by_city %}
+                <div class="col-12 mb-4">
+                  <div class="v3-card p-4">
+                    <!-- City Heading -->
+                    <h5 class="localhost-header no-font-inherit font-weight-bold mb-3">
+                      localhost:{{ city_group.city|lower }}
+                    </h5>
+
+                    <!-- Localhosts -->
+                    {% for localhost in city_group.localhosts %}
+                      <a href="{{ localhost.route }}" class="d-block py-2 text-decoration-none">
+                        <div class="font-weight-600 v3-text-primary mb-1">
+                          {{ localhost.localhost_name }}
+                        </div>
+
+                        <small>
+                          <span class="v3-text-success"> {{ localhost.attending or 0 }} </span>
+                          <span class="v3-text-secondary"> attending </span>
+                          |
+                          <span class="v3-text-success"> {{ localhost.interested or 0 }} </span>
+                          <span class="v3-text-secondary"> interested </span>
+                        </small>
+                      </a>
+                    {% endfor %}
+                  </div>
+                </div>
+              {% endfor %}
+            </section>
+          {% endif %}
+
         </div>
       </div>
     </div>
