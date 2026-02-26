@@ -10,7 +10,13 @@
           class="grow"
           description="Enter the team code shared by your team leader."
         />
-        <Button variant="solid" label="Join" @click="joinThroughCode" />
+        <Button
+          variant="solid"
+          label="Join"
+          :loading="joinThroughCode.loading"
+          :disabled="joinThroughCode.loading"
+          @click="handleJoinThroughCode"
+        />
       </div>
     </div>
     <div v-if="invitations.data.length > 0">
@@ -101,21 +107,25 @@ onMounted(() => {
   }
 })
 
-const joinThroughCode = () => {
-  createResource({
-    url: 'fossunited.api.hackathon.join_team_via_code',
+const joinThroughCode = createResource({
+  url: 'fossunited.api.hackathon.join_team_via_code',
+  onSuccess(data) {
+    window.location.reload()
+  },
+  onError(error) {
+    toast.error('Invalid Team Code.' + error.message)
+  },
+})
+
+const handleJoinThroughCode = () => {
+  if (joinThroughCode.loading) return
+  joinThroughCode.update({
     params: {
       team_code: teamCode.value,
       hackathon: props.hackathon.data.name,
     },
-    auto: true,
-    onSuccess(data) {
-      window.location.reload()
-    },
-    onError(error) {
-      toast.error('Invalid Team Code.' + error.message)
-    },
   })
+  joinThroughCode.fetch()
 }
 
 const acceptInvite = (inviteId) => {
