@@ -254,6 +254,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "full_name",
                 "mentor.user_image as profile_picture",
                 "mentor.username as username",
+                "skills as info",
             ],
         )
 

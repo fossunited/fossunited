@@ -16,5 +16,6 @@ class FOSSHackathonMentor(Document):
         full_name: DF.Data | None
         hackathon: DF.Link
         mentor: DF.Link
+        skills: DF.Data | None
     # end: auto-generated types
     pass

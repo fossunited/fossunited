@@ -1,4 +1,4 @@
-{% macro people_card(items, type, submissions=None, icon="empathize") %}
+{% macro people_card(items, type, submissions=None, icon="empathize", show_info=False) %}
   {# type can be 'volunteers' or 'speakers' #}
   {% set show_view_all = items|length >= 4 %}
   {% set unique_id = type + '_' + range(1000, 9999) | random | string %}
@@ -19,7 +19,17 @@
                 alt="{{ volunteer.full_name }}"
                 class="v3-people-avatar"
               />
-              <div class="v3-people-name">{{ volunteer.full_name }}</div>
+              <div class="d-flex flex-column">
+                <div class="v3-people-name">
+                  {{ volunteer.full_name }}
+                </div>
+
+                {% if volunteer.info %}
+                <small class="v3-text-tertiary">
+                  {{ volunteer.info }}
+                </small>
+                {% endif %}
+              </div>
             </a>
           {% endfor %}
         {% else %}

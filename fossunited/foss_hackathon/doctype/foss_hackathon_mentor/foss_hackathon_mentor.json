@@ -9,7 +9,8 @@
     "mentor",
     "full_name",
     "column_break_qzrl",
-    "hackathon"
+    "hackathon",
+    "skills"
   ],
   "fields": [
     {
@@ -42,10 +43,15 @@
       "fieldname": "basic_details_section",
       "fieldtype": "Section Break",
       "label": "Basic Details"
+    },
+    {
+      "fieldname": "skills",
+      "fieldtype": "Data",
+      "label": "Skills"
     }
   ],
   "links": [],
-  "modified": "2024-06-25 13:12:38.595824",
+  "modified": "2026-02-26 21:06:43.454539",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Mentor",
@@ -74,6 +80,7 @@
       "share": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [],

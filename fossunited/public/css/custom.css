@@ -3053,8 +3053,7 @@ body:has(.v3-page) {
 
 .v3-people-name {
   flex: 1;
-  color: var(--v3-text-color3);
-  font-size: 1rem;
+  color: var(--v3-text-color);
   font-weight: 400;
   line-height: 1.1;
   overflow: hidden;
