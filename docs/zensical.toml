@@ -6,7 +6,7 @@ copyright= "Copyright &copy; 2021 - 2026 FOSS United Foundation"
 repo_url= "https://github.com/fossunited/fossunited"
 edit_uri= "edit/develop/docs/docs/"
 docs_dir = "docs"
-extra_css = ["assets/custom.css"]
+# extra_css = ["assets/custom.css"]
 
 nav = [
   {"Home" = "index.md"},
@@ -31,7 +31,7 @@ nav = [
   ]},
 
   {"FOSS Hackathon" = [
-    {"Participanting" = "fosshack.md"},
+    {"Participating" = "fosshack.md"},
     {"Managing Localhost" = "localhost.md"}
   ]},
 
@@ -105,7 +105,7 @@ icon = "fontawesome/brands/bluesky"
 link = "https://bsky.app/profile/fossunited.mas.to.ap.brid.gy"
 [[project.extra.social]]
 icon = "fontawesome/brands/twitter"
-link = "http://x.com/fossunited"
+link = "https://x.com/fossunited"
 [[project.extra.social]]
 icon = "fontawesome/brands/youtube"
 link = "https://www.youtube.com/c/fossunited"
@@ -156,7 +156,7 @@ alternate_style = true
 custom_checkbox = true
 [project.markdown_extensions.pymdownx.tilde]
 [project.markdown_extensions.pymdownx.magiclink]
-repo_url_shortener = "true"
-repo_url_shorthand = "true"
+repo_url_shortener = true
+repo_url_shorthand = true
 user = "fossunited"
 repo = "fossunited"

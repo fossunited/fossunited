@@ -24,8 +24,6 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
 
 ---
 
-[#1455]()
-
 ### PR Highlights
 
 #### Hackathon Page Redesign
