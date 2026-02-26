@@ -613,6 +613,79 @@ def get_issue_pr_title(url: str) -> dict:
 
 
 @frappe.whitelist()
+def respond_to_join_team_request(request_id: str, status: str) -> dict:
+    """
+    Accept or reject a join-team invitation.
+
+    This is the backend-safe alternative to calling ``frappe.client.set_value``
+    directly from the frontend.  ``frappe.client.set_value`` passes through
+    normal Frappe permission checks and may be rejected when the session user
+    (the invite *recipient*) does not hold a write-permission role on the
+    ``FOSS Hackathon Join Team Request`` DocType.  The ``before_save`` hook
+    also triggers side-effects (adding the member to the team, rejecting other
+    pending requests) that require elevated database access.
+
+    This method:
+
+    1. Ensures the caller is a logged-in user (not Guest).
+    2. Validates that ``status`` is one of the allowed transition values.
+    3. Fetches the request document and verifies that the session user is the
+       intended recipient.
+    4. Checks that the request is still in ``Pending`` state so that an already
+       resolved request cannot be changed again.
+    5. Updates the status with ``ignore_permissions=True`` so that the
+       controller's ``before_save`` side-effects can run without a permission
+       error, then commits the transaction.
+    6. Returns a success dict on completion.
+
+    Args:
+        request_id (str): Name (primary key) of the
+            ``FOSS Hackathon Join Team Request`` document.
+        status (str): New status – must be ``"Accepted"`` or ``"Rejected"``.
+
+    Returns:
+        dict: ``{"success": True, "status": <new status>}``
+
+    Raises:
+        frappe.AuthenticationError: If the caller is a guest.
+        frappe.ValidationError: If ``status`` is not a valid transition value,
+            if the session user is not the request recipient, or if the request
+            is no longer pending.
+        frappe.DoesNotExistError: If ``request_id`` does not exist.
+    """
+    current_user = frappe.session.user
+    if current_user == "Guest":
+        frappe.throw("Authentication required", frappe.AuthenticationError)
+
+    allowed_statuses = ("Accepted", "Rejected")
+    if status not in allowed_statuses:
+        frappe.throw(
+            f"Invalid status '{status}'. Allowed values: {', '.join(allowed_statuses)}",
+            frappe.ValidationError,
+        )
+
+    request_doc = frappe.get_doc(JOIN_TEAM_REQUEST, request_id)
+
+    if request_doc.reciever_email != current_user:
+        frappe.throw(
+            "You are not authorized to respond to this invitation",
+            frappe.PermissionError,
+        )
+
+    if request_doc.status != "Pending":
+        frappe.throw(
+            f"This invitation has already been {request_doc.status.lower()} and cannot be changed",
+            frappe.ValidationError,
+        )
+
+    request_doc.status = status
+    request_doc.save(ignore_permissions=True)
+    frappe.db.commit()
+
+    return {"success": True, "status": request_doc.status}
+
+
+@frappe.whitelist()
 def get_count_team_members_and_max_count(hackathon: str, team: str):
     """
     Get count of team members and maximum count of team members allowed

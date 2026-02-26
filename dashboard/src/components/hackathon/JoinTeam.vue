@@ -130,15 +130,13 @@ const handleJoinThroughCode = () => {
 
 const acceptInvite = (inviteId) => {
   createResource({
-    url: 'frappe.client.set_value',
+    url: 'fossunited.api.hackathon.respond_to_join_team_request',
     params: {
-      doctype: 'FOSS Hackathon Join Team Request',
-      name: inviteId,
-      fieldname: 'status',
-      value: 'Accepted',
+      request_id: inviteId,
+      status: 'Accepted',
     },
     auto: true,
-    onSuccess: (data) => {
+    onSuccess: () => {
       window.location.reload()
     },
     onError(error) {
@@ -149,15 +147,13 @@ const acceptInvite = (inviteId) => {
 
 const rejectInvite = (inviteId) => {
   createResource({
-    url: 'frappe.client.set_value',
+    url: 'fossunited.api.hackathon.respond_to_join_team_request',
     params: {
-      doctype: 'FOSS Hackathon Join Team Request',
-      name: inviteId,
-      fieldname: 'status',
-      value: 'Rejected',
+      request_id: inviteId,
+      status: 'Rejected',
     },
     auto: true,
-    onSuccess: (data) => {
+    onSuccess: () => {
       props.invitations.fetch()
     },
     onError(error) {
