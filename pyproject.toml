@@ -29,9 +29,7 @@ dev = [
   "semgrep>=1.121.0",
 ]
 docs = [
-    "mkdocs~=1.6.1",
-    "mkdocs-material~=9.5.36",
-    "mkdocs-glightbox>=0.5.1",
+    "zensical>=0.0.23",
 ]
 
 [build-system]

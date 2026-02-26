@@ -133,7 +133,7 @@ FOSS Hack events receive higher budgets due to their larger, often multi-college
 #### How do I apply for reimbursement?
 Reimbursement Process:
 
-- Log in or sign up to the FOSS United platform at [accounts.fossunited.org](accounts.fossunited.org)
+- Log in or sign up to the FOSS United platform at [https://accounts.fossunited.org](https://accounts.fossunited.org)
 - Complete the reimbursement form with all details
 - Upload clear photos or PDFs of receipts (Max file size is 25 MB)
 - Submit the application

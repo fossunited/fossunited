@@ -11,7 +11,208 @@ Please find the TLDR reports for each blog in blog posts and forum thread:
 - Blog post: [https://fossunited.org/blog/tech-report](https://fossunited.org/blog/tech-report)
 - Forum thread: [https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431](https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431)
 
-<br>
+## February 2026
+
+| Metric        | Count |
+|---------------|-------|
+| Issues Closed | 8     |
+| PRs merged    | 32    |
+
+Hello,
+
+February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon page, added dark mode support to the dashboard, implemented crucial security fixes, and polished the RSVP experience.
+
+---
+
+### PR Highlights
+
+#### Hackathon Page Redesign
+
+- [#1430](https://github.com/fossunited/fossunited/pull/1430) **Redesigned Default Hackathon Page**
+  Complete redesign of default hackathon pages to match the event page design with v3.0 styling. Better visual hierarchy, improved sponsor display, and cleaner navigation. Listing of localhosts, submissions button, mentors and so on.
+
+    Visit: [FOSS Hack 2026](https://fossunited.org/hack/fosshack26)
+
+- [#1429](https://github.com/fossunited/fossunited/pull/1429) **Project Contribution Carousel**
+  Added carousel cards showcasing project contributions on the FOSS Hack 2026 page. Highlights partner projects and informs open contribution to FOSS ecosystem.
+
+    Credits: Jeswin Josu for design.
+    View carousel: [FOSS Hack 2026 Landing](https://fossunited.org/fosshack)
+
+- [#1417](https://github.com/fossunited/fossunited/pull/1417) **Hackathon Projects Listing Page**
+  Enhanced hackathon projects listing page with improved layout and filtering.
+
+- Updated FOSS Hack 2026 content with partner projects, registration stats, localhost information, and carousel images.
+- Hackathon registration now shows proper validation when closed or past end date to avoid new participants.
+- Added city names for registration convenience.
+- Fixed localhost participant counts to show all applied as interested, balanced with accepted counts.
+
+#### Dashboard Dark Mode
+
+- [#1428](https://github.com/fossunited/fossunited/pull/1428) **Dashboard Dark Theme Support**
+  Added dark mode support to the entire dashboard using frappe-ui color system! The dashboard now respects system theme preferences and provides a consistent dark mode experience.
+
+- DocsInfo component now has a close button to hide help messages.
+- Applied proper color scales and theme-aware styling across all dashboard components importing frappe-ui method of doing things.
+
+    Related issue to address in the future: [#1221](https://github.com/fossunited/fossunited/issues/1221)
+
+#### Security Improvements
+
+- [#1398](https://github.com/fossunited/fossunited/pull/1398) **Rate Limiting & Ticket Transfer Validation**
+  Added rate limiting to prevent abuse and fixed ticket transfer validation vulnerabilities.
+  Credits: [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) and [@kewonit](https://github.com/kewonit) (Kartik Kulloli) for security research
+
+- [#1397](https://github.com/fossunited/fossunited/pull/1397) **Hackathon Participant API Security**
+  Hardened `create_participant` API to only act on session user requests, preventing email/profile manipulation.
+
+- [#1401](https://github.com/fossunited/fossunited/pull/1401) **Team Member Validation**
+  Implemented team member checks in project creation to prevent unauthorized access.
+  Credits: [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary)
+
+- **XSS Prevention**
+  Sanitized text editor content across user profiles, project descriptions, CFP submissions, and bio fields to prevent XSS attacks. Content is now cleaned before saving via `db.set_value`.
+
+- [cb1e74de318476e610f7c0d584d145bbade70419](https://github.com/fossunited/fossunited/commit/cb1e74de318476e610f7c0d584d145bbade70419) **Free Ticket Security**
+  Prevented same email from claiming multiple free passes.
+
+#### RSVP Improvements
+
+- [#1419](https://github.com/fossunited/fossunited/pull/1419) **RSVP Success Feedback for Guests**
+  Guest users now get clear success feedback after RSVP submission. Submit button is disabled after click to prevent duplicate submissions.
+
+    Although should be taken care via DB-level uniqueness [#1418](https://github.com/fossunited/fossunited/issues/1418)
+
+- [#1405](https://github.com/fossunited/fossunited/pull/1405) **RSVP Insights Table Toggle**
+  Added table view toggle in RSVP insights. Manual check-in button now only enabled during event days for better UX.
+
+    Related: [frappe-ui PR #488](https://github.com/frappe/frappe-ui/pull/488).
+    Credits to Harsh patel for reporting bad design.
+
+- Adapted RSVP pages to v3 design with improved forms and better visual consistency.
+- Simplified feedback messages - logged-in users can edit their responses directly.
+- Render field macro now supports required field indicators.
+
+#### Event & Timeline Enhancements
+
+- [#1436](https://github.com/fossunited/fossunited/pull/1436) **Event Grants in Timeline**
+  Accepted event grants now appear in the events timeline and RSS feed as upcoming events. Links to external website if provided, otherwise to grants page.
+
+    Visit: [Events Timeline](https://fossunited.org/events/timeline)
+
+- [#1435](https://github.com/fossunited/fossunited/pull/1435) **Compact Agenda with Icons**
+  Made event agenda more compact for halls/dates (especially useful for hackathon pages). Uses `talk_video` field for online meeting links when no linked CFP or hall is given.
+
+- Event cards now show "TBA" for location when not specified.
+- FOSS user profiles now only show published events and include events where user volunteered.
+
+#### Hackathon Management
+
+- [#1425](https://github.com/fossunited/fossunited/pull/1425) **Email Group Sync Unit Tests**
+  Added comprehensive unit tests for hackathon participant email group synchronization.
+
+- [#1424](https://github.com/fossunited/fossunited/pull/1424) **Localhost Email Group Sync**
+  Hackathon participants are now automatically synced to localhost email groups based on their localhost status.
+
+- [#1414](https://github.com/fossunited/fossunited/pull/1414) **Hackathon API Unit Tests**
+  Added unit tests for hackathon API endpoints to ensure deterministic behavior and catch regressions early.
+
+- [#1415](https://github.com/fossunited/fossunited/pull/1415) **Team & Project Stats**
+  Fixed landing page stats to show proper team and project counts with correct localhost attendance numbers.
+
+- [#1412](https://github.com/fossunited/fossunited/pull/1412) **Permission & Controller Updates**
+  Added controllers and permission checks for deterministic modification. Prevents participants from joining multiple teams simultaneously.
+
+- [#1411](https://github.com/fossunited/fossunited/pull/1411) **Permission Decorator**
+  Introduced decorator utility to wrap functions with permission checks for chapter members and hackathon team participants so we can reuse it for many API endpoints.
+
+- [#1407](https://github.com/fossunited/fossunited/pull/1407) **Localhost Sponsors**
+  Added event sponsors table to localhost hackathons for better sponsor management.
+
+- [#1406](https://github.com/fossunited/fossunited/pull/1406) **Localhost Description Field**
+  Added description field to localhost hackathons for additional information.
+
+- [#1438](https://github.com/fossunited/fossunited/pull/1438) **Hackathon Button Loading State**
+  Disabled buttons during API fetch to enable single request per click and prevent duplicate operations.
+
+- Fixed team join errors due to recent permission updates.
+- Localhost pages now use event sponsors for sponsor display.
+- Project issue/PR can now be added via frappe-ui documentResource.
+- Localhost now properly sets image background and text colors.
+- Registration rate limiting added to prevent spam.
+- Fixed hackathon test suite to allow registrations properly.
+
+#### Jobs & Grants
+
+- [#1396](https://github.com/fossunited/fossunited/pull/1396) **Job Board Publish Date**
+  Added `publish_date` field to job board for better tracking and scheduler handling. Jobs now use publish date consistently across pages.
+
+- Jobs now show publish date information on listing pages.
+- Auto-email notifications sent to team when jobs are posted.
+
+#### Code Quality & CI
+
+- [#1423](https://github.com/fossunited/fossunited/pull/1423) **Frappe Semgrep & PR Linter**
+  Added Frappe semgrep rules and conventional commit linter checks to CI pipeline for better code quality and consistency.
+
+    Credits: Harsh Tandiya for informing for best practice
+
+#### UI/UX Polish
+
+- [#1408](https://github.com/fossunited/fossunited/pull/1408) **Common Functions Bundle**
+  Removed redundant `common_functions.js` includes as it's already bundled in `website.bundle.js` after redesign.
+
+- SearchListView improvements:
+  - Set pixel width for columns for uniform display
+  - Added text truncation and wrapping for long content
+  - Reduced horizontal scrolling
+  - Applied consistent styling across ticket insights, project issues, attendee lists
+
+- Breadcrumb macro now:
+  - Controls ignoring items from auto-generation
+  - Builds dynamic breadcrumbs from macro for localhost pages
+  - Uses proper v3 theme colors
+
+- Theme toggle only initializes if present on page to avoid console errors.
+- Sponsor tier headings now use v3 text colors.
+- Fixed z-index for sponsor card edit buttons.
+- Applied v3 select and control themes from grants pages.
+- Icon improvements: using `report-search` icon for list search.
+
+#### Templates & Macros
+
+- Render field macro now supports required field indicators.
+- Web templates now properly include `custom.css` (fixed Firefox/Chromium compatibility).
+- Removed redundant `custom.css` and `common_functions.js` includes from HTML templates.
+
+#### Backend Improvements
+
+- Permission checks ensure only chapter members or localhost organizers can send emails.
+- Improved API calls with direct function calls for permission checks.
+- Better decorator-based permission validation.
+- Direct status filtering for events instead of complex queries.
+
+#### Dependency Updates
+
+- ESLint: 9.39.2 → 10.0.1
+- @eslint/js: 9.39.2 → 10.0.1
+- eslint-plugin-vue: 10.7.0 → 10.8.0
+- globals: 17.1.0 → 17.3.0
+- markdown-it: 14.1.0 → 14.1.1
+- cryptography: 46.0.3 → 46.0.5
+
+    Planning to bump other dependency manually via [#1437](https://github.com/fossunited/fossunited/issues/1437)
+
+---
+
+### New Contributor Spotlight
+
+- [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) made significant security contributions:
+  - [#1398](https://github.com/fossunited/fossunited/pull/1398): Rate limiting & ticket transfer validation fixes
+  - [#1401](https://github.com/fossunited/fossunited/pull/1401): Team member validation in project creation
+  Credits also to [@kewonit](https://github.com/kewonit) (Kartik Kulloli) for security research
+
+---
 
 ## January 2026
 
