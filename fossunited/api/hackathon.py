@@ -122,7 +122,7 @@ def get_participant(hackathon: str) -> dict:
 
 @frappe.whitelist()
 @require_hackathon_participant(hackathon_id="hackathon")
-@rate_limit(limit=3, seconds=60 * 60)
+@rate_limit(limit=5, seconds=60 * 60)
 def create_team(hackathon: str, team: dict) -> dict:
     """
     Create a team document
@@ -213,7 +213,7 @@ def get_team_from_participant_id(hackathon: str, id: str) -> dict:
 
 @frappe.whitelist()
 @require_hackathon_team(team_id="team", hackathon_id="hackathon")
-@rate_limit(limit=3, seconds=60 * 60 * 12)
+@rate_limit(limit=5, seconds=60 * 60)
 def create_project(hackathon: str, team: str, project: dict) -> dict:
     """
     Create a project document

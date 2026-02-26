@@ -59,6 +59,7 @@
           label="Create"
           class="font-semibold"
           :loading="createTeam.loading"
+          :disabled="createTeam.loading"
           @click="handleTeamCreation"
         />
       </div>
@@ -138,6 +139,7 @@ const createTeam = createResource({
 })
 
 const handleTeamCreation = () => {
+  if (createTeam.loading) return
   if (validateFields().length > 0) {
     errorMessage.value = validateFields().join(', ')
     return

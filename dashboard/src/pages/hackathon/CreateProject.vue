@@ -263,6 +263,7 @@
             class="w-full md:w-2/5"
             size="md"
             :loading="createProject.loading"
+            :disabled="createProject.loading"
             @click="handleCreateProject"
           />
         </div>
@@ -397,6 +398,7 @@ const createProject = createResource({
 })
 
 const handleCreateProject = () => {
+  if (createProject.loading) return
   const errors = validateCreateProject()
   if (errors.length) {
     errorMessage.value = errors.join(', ')

@@ -10,7 +10,13 @@
           class="grow"
           description="Enter the team code shared by your team leader."
         />
-        <Button variant="solid" label="Join" @click="joinThroughCode" />
+        <Button
+          variant="solid"
+          label="Join"
+          :loading="joinThroughCode.loading"
+          :disabled="joinThroughCode.loading"
+          @click="joinThroughCode"
+        />
       </div>
     </div>
     <div v-if="invitations.data.length > 0">
