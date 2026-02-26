@@ -64,7 +64,7 @@ As of October 2025 you can download the full RSVP responses (custom fields) in C
 
 ## Event Check-ins
 
-Attendees are expected to do self check-in via their [Edit RSVP form](./attend-event.md#Checkin-to-an-Event)
+Attendees are expected to do self check-in via their [Edit RSVP form](./attend-event.md#checkin-to-an-event)
 
 This will reflect on the dashboard insights in ListView based on date and this information can also be download as CSV.
 

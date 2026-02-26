@@ -137,7 +137,7 @@ The dashboard will be available at:
 To automatically run linters before commits:
 
 - We use [ruff](https://docs.astral.sh/ruff/) for linting python files. It is recommended to use [prettier](https://prettier.io/) for formatting HTML, CSS & Vue files.
-- [Vale]((https://vale.sh)) is used for spell check and grammar check for docs content.
+- [Vale](https://vale.sh) is used for spell check and grammar check for docs content.
 
 
 ```sh
