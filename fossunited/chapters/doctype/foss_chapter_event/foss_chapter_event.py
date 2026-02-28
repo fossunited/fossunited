@@ -570,6 +570,14 @@ def extract_map_coordinates(map_url):
         except requests.RequestException:
             return None, None
 
+    # domain.com/lat,lng or domain.com/path/lat,lng
+    match = re.search(r"/(-?\d+\.?\d*),(-?\d+\.?\d*)(?:[/#?]|$)", map_url)
+    if match:
+        lat, lng = float(match.group(1)), float(match.group(2))
+        # valid lat/lng ranges
+        if -90 <= lat <= 90 and -180 <= lng <= 180:
+            return lat, lng
+
     # OSM format: #zoom/lat/lng
     match = re.search(r"#[\d.]+/([-\d.]+)/([-\d.]+)", map_url)
     if match:
