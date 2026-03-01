@@ -211,7 +211,7 @@ class FOSSChapter(WebsiteGenerator):
             },
             fields=["*"],
             order_by="event_start_date asc",
-            page_length=6,
+            # page_length=6,
         )
 
     def get_upcoming_hackathons(self):
