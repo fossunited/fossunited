@@ -62,10 +62,7 @@
     docs-message="You can check-in participant during hackathon days"
     docs-url="https://docs.fossunited.org/localhost/#manage-attendees"
     :export-filename="`localhost-checkins-${props.localhost.data.name}`"
-    :additional-columns="[
-      { key: 'organization', label: 'Organization', width: '200px' },
-      { key: 'project_route', label: 'Project', width: '200px' },
-    ]"
+    :additional-columns="[{ key: 'organization', label: 'Organization', width: '200px' }]"
   />
 
   <div v-else>

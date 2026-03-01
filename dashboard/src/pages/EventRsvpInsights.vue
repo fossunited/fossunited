@@ -164,7 +164,6 @@ import { createResource, Button, frappeRequest } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
 import CheckInsTable from '@/components/ui/CheckInsTable.vue'
 import { toast } from 'vue-sonner'
-import { formatFullDate, formatTimeOnly } from '@/helpers/date'
 import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
