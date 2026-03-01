@@ -4,6 +4,11 @@
 import frappe
 from frappe.model.document import Document
 
+from fossunited.api.checkins import (
+    add_checkin,
+    has_checked_in_today,
+    remove_today_checkin,
+)
 from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import (
     HACKATHON,
@@ -20,7 +25,9 @@ class FOSSHackathonParticipant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
 
         check_ins: DF.Table[EventCheckIn]
         email: DF.Data
@@ -253,3 +260,15 @@ class FOSSHackathonParticipant(Document):
         if ptype == "create":
             return True
         return user in {self.user, self.email}
+
+    @frappe.whitelist()
+    def has_checked_in_today(self):
+        return has_checked_in_today(self)
+
+    @frappe.whitelist()
+    def add_check_in(self):
+        return add_checkin(self)
+
+    @frappe.whitelist()
+    def remove_today_check_in(self):
+        return remove_today_checkin(self)

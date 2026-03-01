@@ -14,6 +14,8 @@ from fossunited.api.chapter import (
 from fossunited.doctype_ids import (
     HACKATHON_PARTICIPANT,
     HACKATHON_TEAM,
+    LOCALHOST_ORGANIZER,
+    USER_PROFILE,
 )
 
 
@@ -183,6 +185,57 @@ def require_chapter_or_event_member(event_id="event"):
             if not check_if_chapter_or_event_core_member(event):
                 frappe.throw(
                     "You must be either a chapter member or event member",
+                    frappe.PermissionError,
+                )
+
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def require_localhost_organizer(localhost_param="localhost_id"):
+    """
+    Decorator to check if user is a localhost organizer or system manager.
+
+    Args:
+        localhost_param: name of the parameter containing localhost ID
+    """
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # System Manager bypass
+            if "System Manager" in frappe.get_roles():
+                return func(*args, **kwargs)
+
+            # Get localhost ID from kwargs
+            localhost_id = kwargs.get(localhost_param)
+            if not localhost_id:
+                frappe.throw("Localhost ID not provided", frappe.PermissionError)
+
+            # Get organizer profiles from child table
+            organizer_profiles = frappe.get_all(
+                LOCALHOST_ORGANIZER,
+                filters={"parent": localhost_id},
+                pluck="profile",
+            )
+
+            # Get users from profiles
+            if organizer_profiles:
+                organizer_users = frappe.get_all(
+                    USER_PROFILE,
+                    filters={"name": ["in", organizer_profiles]},
+                    pluck="user",
+                )
+            else:
+                organizer_users = []
+
+            # Check if current user is an organizer
+            if frappe.session.user not in organizer_users:
+                frappe.throw(
+                    "Only localhost organizers can access this resource",
                     frappe.PermissionError,
                 )
 

@@ -1,8 +1,13 @@
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate, now_datetime, nowdate
+from frappe.utils import getdate, nowdate
 
 from fossunited.api.chapter import check_if_chapter_member
+from fossunited.api.checkins import (
+    add_checkin,
+    has_checked_in_today,
+    remove_today_checkin,
+)
 from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
 
@@ -177,6 +182,11 @@ class FOSSEventRSVPSubmission(Document):
             document_type_event=EVENT,
         )
 
+    @frappe.whitelist()
+    def has_checked_in_today(self):
+        return has_checked_in_today(self)
+
+    @frappe.whitelist()
     def add_check_in(self):
         """Add a check-in record for this submission"""
         # Check if event allows check-in (between start and end date)
@@ -186,15 +196,11 @@ class FOSSEventRSVPSubmission(Document):
         if not self.can_check_in(event_start, event_end):
             frappe.throw("Check-in is only available during the event dates")
 
-        # Check if already checked in today
-        if self.has_checked_in_today():
-            frappe.throw("You have already checked in today")
+        return add_checkin(self)
 
-        # Add check-in record
-        self.append("check_ins", {"check_in_time": now_datetime()})
-        self.save()
-
-        return {"success": True, "message": "Checked in successfully"}
+    @frappe.whitelist()
+    def remove_today_check_in(self):
+        return remove_today_checkin(self)
 
     def can_check_in(self, event_start_date, event_end_date):
         """Check if check-in is allowed based on date only (no time)."""
@@ -206,27 +212,6 @@ class FOSSEventRSVPSubmission(Document):
         end_date = getdate(event_end_date)
 
         return start_date <= today <= end_date
-
-    def has_checked_in_today(self):
-        """Check if user has already checked in today"""
-
-        today = getdate()
-        for check_in in self.check_ins:
-            if getdate(check_in.check_in_time) == today:
-                return True
-        return False
-
-    def remove_todays_checkin(self):
-        """Remove today's check-in record for this submission"""
-        today = getdate()
-
-        for i, check_in in enumerate(self.check_ins):
-            if getdate(check_in.check_in_time) == today:
-                self.remove(check_in)
-                self.save()
-                return {"success": True, "message": "Check-in removed successfully"}
-
-        frappe.throw("No check-in found for today")
 
 
 @frappe.whitelist()

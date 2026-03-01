@@ -330,7 +330,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
 
         result = submission.add_check_in()
 
-        self.assertTrue(result["success"])
+        self.assertTrue(result)
         self.assertEqual(len(submission.check_ins), 1)
         self.assertTrue(submission.has_checked_in_today())
 
