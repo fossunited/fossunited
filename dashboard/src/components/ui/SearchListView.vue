@@ -190,6 +190,9 @@ const filteredCount = computed(() => {
 })
 
 const mergedOptions = computed(() => ({
+  selectable: false,
+  showTooltip: true,
+  resizeColumn: true,
   ...props.options,
   emptyState:
     search.value || activeFilterApplied.value

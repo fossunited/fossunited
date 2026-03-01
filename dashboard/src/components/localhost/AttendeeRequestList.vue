@@ -22,9 +22,6 @@
     :rows="groupedRequests"
     row-key="name"
     :options="{
-      selectable: false,
-      showTooltip: true,
-      resizeColumn: true,
       onRowClick: (row) => {
         selectedRequest = row
         showDialog = true
