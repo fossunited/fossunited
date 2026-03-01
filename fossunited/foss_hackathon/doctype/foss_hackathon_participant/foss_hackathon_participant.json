@@ -26,7 +26,7 @@
   "column_break_wclx",
   "localhost_request_status",
   "section_break_qptd",
-  "host_checkin"
+  "check_ins"
  ],
  "fields": [
   {
@@ -141,14 +141,14 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "host_checkin",
+   "fieldname": "check_ins",
    "fieldtype": "Table",
    "label": "Host Checkin",
    "options": "Event Check In"
   }
  ],
  "links": [],
- "modified": "2026-03-01 11:54:02.401714",
+ "modified": "2026-03-01 13:37:07.177860",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
