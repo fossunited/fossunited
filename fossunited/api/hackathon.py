@@ -6,6 +6,7 @@ import frappe
 from frappe.rate_limiter import rate_limit
 
 from fossunited.doctype_ids import (
+    EVENT_CHECKIN,
     HACKATHON,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
@@ -19,6 +20,7 @@ from fossunited.integrations.github import GithubHelper
 from fossunited.utils.decorators import (
     require_hackathon_participant,
     require_hackathon_team,
+    require_localhost_organizer,
 )
 
 
@@ -285,6 +287,7 @@ def get_project_by_email(hackathon: str):
 
 
 @frappe.whitelist()
+@require_localhost_organizer(localhost_param="localhost")
 def get_localhost_requests_by_team(
     hackathon: str,
     localhost: str,
@@ -628,3 +631,45 @@ def get_count_team_members_and_max_count(hackathon: str, team: str):
     max_team_size = frappe.db.get_value(HACKATHON, hackathon, "max_team_members")
     team_members_count = len(frappe.get_doc(HACKATHON_TEAM, team).members)
     return {"team_members_count": team_members_count, "max_team_size": max_team_size}
+
+
+@frappe.whitelist()
+@require_localhost_organizer(localhost_param="localhost_id")
+def get_localhost_checkins(localhost_id: str):
+    """Get all check-ins for a localhost"""
+    from frappe.query_builder import DocType, Order
+
+    Participant = DocType(HACKATHON_PARTICIPANT)
+    CheckIn = DocType(EVENT_CHECKIN)
+
+    checkins = (
+        frappe.qb.from_(CheckIn)
+        .join(Participant)
+        .on(CheckIn.parent == Participant.name)
+        .select(
+            Participant.full_name,
+            Participant.email,
+            Participant.organization,
+            Participant.is_student,
+            CheckIn.check_in_time,
+            CheckIn.parent,
+        )
+        .where(Participant.localhost == localhost_id)
+        .where(CheckIn.parenttype == HACKATHON_PARTICIPANT)
+        .where(CheckIn.parentfield == "check_ins")
+        .orderby(CheckIn.check_in_time, order=Order.desc)
+        .run(as_dict=True)
+    )
+
+    return checkins
+
+
+@frappe.whitelist()
+def get_localhost_checkin_stats(localhost_id: str):
+    """Get localhost statistics"""
+    total_accepted = frappe.db.count(
+        "FOSS Hackathon Participant",
+        filters={"localhost": localhost_id, "localhost_request_status": "Accepted"},
+    )
+
+    return {"total_accepted": total_accepted}
