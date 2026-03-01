@@ -20,7 +20,9 @@ class FOSSHackathonParticipant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
 
         check_ins: DF.Table[EventCheckIn]
         email: DF.Data
@@ -80,7 +82,9 @@ class FOSSHackathonParticipant(Document):
         if self.has_value_changed("localhost"):
             # Remove from old localhost groups before changing
             old_localhost = (
-                self.get_doc_before_save().localhost if self.get_doc_before_save() else None
+                self.get_doc_before_save().localhost
+                if self.get_doc_before_save()
+                else None
             )
             if old_localhost:
                 self.remove_from_all_localhost_groups(old_localhost)
@@ -203,7 +207,10 @@ class FOSSHackathonParticipant(Document):
 
     def handle_localhost_rejection(self):
         """Handle rejection by adding comment and resetting wants_to_attend_locally"""
-        if not self.has_value_changed("localhost") and self.localhost_request_status == "Rejected":
+        if (
+            not self.has_value_changed("localhost")
+            and self.localhost_request_status == "Rejected"
+        ):
             localhost_name = frappe.db.get_value(
                 HACKATHON_LOCALHOST, self.localhost, "localhost_name"
             )
@@ -219,13 +226,18 @@ class FOSSHackathonParticipant(Document):
         if not prev_doc:
             return
 
-        if frappe.db.get_value("User", frappe.session.user, "user_type") == "System User":
+        if (
+            frappe.db.get_value("User", frappe.session.user, "user_type")
+            == "System User"
+        ):
             return
 
         if not self.wants_to_attend_locally:
             return
 
-        if (self.localhost == prev_doc.localhost) and self.localhost_request_status == "Rejected":
+        if (
+            self.localhost == prev_doc.localhost
+        ) and self.localhost_request_status == "Rejected":
             frappe.throw(
                 "You have already been rejected from this localhost.",
                 frappe.PermissionError,
