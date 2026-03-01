@@ -24,7 +24,9 @@
   "section_break_pijd",
   "localhost",
   "column_break_wclx",
-  "localhost_request_status"
+  "localhost_request_status",
+  "section_break_qptd",
+  "check_ins"
  ],
  "fields": [
   {
@@ -133,10 +135,20 @@
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Chapter Mailing?"
+  },
+  {
+   "fieldname": "section_break_qptd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "check_ins",
+   "fieldtype": "Table",
+   "label": "Host Checkin",
+   "options": "Event Check In"
   }
  ],
  "links": [],
- "modified": "2026-02-10 14:29:00.719548",
+ "modified": "2026-03-01 13:37:07.177860",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
