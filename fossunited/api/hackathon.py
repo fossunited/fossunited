@@ -665,10 +665,11 @@ def get_localhost_checkins(localhost_id: str):
 
 
 @frappe.whitelist()
+@require_localhost_organizer(localhost_param="localhost_id")
 def get_localhost_checkin_stats(localhost_id: str):
     """Get localhost statistics"""
     total_accepted = frappe.db.count(
-        "FOSS Hackathon Participant",
+        HACKATHON_PARTICIPANT,
         filters={"localhost": localhost_id, "localhost_request_status": "Accepted"},
     )
 
