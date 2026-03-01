@@ -11,8 +11,8 @@
       <div class="font-semibold text-ink-gray-8">
         {{ sectionTitle }}
         <span v-if="currentView === 'checkins'" class="ml-2 text-sm font-normal text-ink-gray-5">
-          ({{ checkins.data?.length || 0 }} / {{ eventStats.data?.total_accepted || 0 }} confirmed
-          attendees)
+          ({{ checkins.data?.length || 0 }} checked-in out of
+          {{ eventStats.data?.total_accepted || 0 }} confirmed attendees)
         </span>
       </div>
 
@@ -59,31 +59,17 @@
       message="You can check-in attendees during the event days."
       docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
     />
-    <!-- Check-Ins View -->
-    <SearchListView
-      v-if="currentView === 'checkins'"
-      class="h-[600px]"
-      :rows="checkinGroups"
-      :columns="checkinColumns"
-      search-placeholder="Search check-in attendees..."
-      item-label="check-ins"
-      :export-filename="`event-checkins-${route.params.id}`"
-      :export-columns="checkinExportColumns"
-      :options="listOptions"
-    >
-      <template #group-header="{ group }">
-        <span class="text-base font-medium leading-6 text-ink-gray-9">
-          {{ formatFullDate(group.group) }} - {{ group.rows.length }} check-ins
-        </span>
-      </template>
 
-      <template #cell="{ item, row, column }">
-        <span v-if="column.key === 'check_in_time'" class="text-sm text-ink-gray-6">
-          {{ formatTimeOnly(item) }}
-        </span>
-        <span v-else class="text-base truncate text-wrap">{{ item }}</span>
-      </template>
-    </SearchListView>
+    <!-- Check-Ins View -->
+    <CheckInsTable
+      v-if="currentView === 'checkins'"
+      :checkins="checkins.data || []"
+      name-field="name1"
+      docs-message="You can check-in attendees during the event days"
+      docs-url="https://docs.fossunited.org/event-rsvp/#event-check-ins"
+      :export-filename="`event-checkins-${route.params.id}`"
+      :additional-columns="[{ key: 'im_a', label: 'Im a', width: '200px' }]"
+    />
 
     <!-- Attendees View -->
     <SearchListView
@@ -95,7 +81,6 @@
       item-label="attendees"
       :export-filename="`rsvp-submissions-${route.params.id}`"
       :export-columns="attendeeExportColumns"
-      :options="listOptions"
     >
       <template #group-header="{ group }">
         <span class="text-base font-medium leading-6 text-ink-gray-9">
@@ -177,6 +162,7 @@ import { useRoute } from 'vue-router'
 import { computed, ref, watchEffect } from 'vue'
 import { createResource, Button, frappeRequest } from 'frappe-ui'
 import SearchListView from '@/components/ui/SearchListView.vue'
+import CheckInsTable from '@/components/ui/CheckInsTable.vue'
 import { toast } from 'vue-sonner'
 import { formatFullDate, formatTimeOnly } from '@/helpers/date'
 import DocsInfo from '@/components/DocsInfo.vue'
@@ -186,7 +172,6 @@ const route = useRoute()
 // Current view toggle
 const currentView = ref('attendees')
 
-const checkinGroups = ref([])
 const attendeeGroups = ref([])
 
 // Resources
@@ -238,47 +223,6 @@ const sectionTitle = computed(() => {
   }
 
   return 'Attendees List'
-})
-
-const listOptions = {
-  selectable: false,
-  showTooltip: true,
-  resizeColumn: true,
-  emptyState: {
-    title: 'No data',
-    description: 'No records found.',
-  },
-}
-
-// Check-in columns
-const checkinColumns = [
-  { key: 'name1', label: 'Name', width: '250px' },
-  { key: 'email', label: 'Email', width: '200px' },
-  { key: 'im_a', label: 'Im a', width: '200px' },
-  { key: 'check_in_time', label: 'Checked-in Time', width: '1fr' },
-]
-
-const checkinExportColumns = [{ key: 'date', label: 'Date' }, ...checkinColumns]
-
-// Group check-ins by date
-watchEffect(() => {
-  const list = checkins.data || []
-  const byDate = {}
-
-  list.forEach((checkin) => {
-    const date = new Date(checkin.check_in_time).toISOString().split('T')[0]
-    if (!byDate[date]) byDate[date] = []
-    byDate[date].push({ ...checkin, date })
-  })
-
-  const dates = Object.keys(byDate).sort().reverse()
-  const existingStates = Object.fromEntries(checkinGroups.value.map((g) => [g.group, g.collapsed]))
-
-  checkinGroups.value = dates.map((date) => ({
-    group: date,
-    collapsed: existingStates[date] ?? false,
-    rows: byDate[date],
-  }))
 })
 
 const attendeeColumns = computed(() => {
