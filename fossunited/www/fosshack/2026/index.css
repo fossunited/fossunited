@@ -61,22 +61,6 @@ body {
   border-color: var(--v3-border) !important;
 }
 
-/* grids */
-.grid-2col {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 992px) {
-  .grid-2col {
-    grid-template-columns: 646px 1fr;
-  }
-  .grid-sidebar {
-    grid-template-columns: 354px 1fr;
-  }
-}
-
 .grid-3col {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
