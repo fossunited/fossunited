@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import frappe
+from frappe.utils import getdate, now_datetime
 
 from fossunited.api.tickets import has_valid_permission
 from fossunited.doctype_ids import EVENT_TICKET
@@ -158,3 +159,32 @@ def assign_tshirt(event_id: str, attendee: dict):
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)
+
+
+# for event checkins
+def has_checked_in_today(doc):
+    """Check if document has a check-in today"""
+    today = getdate()
+    for check_in in doc.check_ins:
+        if getdate(check_in.check_in_time) == today:
+            return True
+    return False
+
+
+def add_checkin(doc):
+    """Add a check-in to document"""
+    if has_checked_in_today(doc):
+        frappe.throw("Already checked in today")
+    doc.append("check_ins", {"check_in_time": now_datetime()})
+    doc.save()
+
+
+def remove_today_checkin(doc):
+    """Remove today's check-in from document"""
+    today = getdate()
+    for check_in in reversed(doc.check_ins):
+        if getdate(check_in.check_in_time) == today:
+            doc.remove(check_in)
+            doc.save()
+            return True
+    frappe.throw("No check-in found for today")
