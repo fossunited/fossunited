@@ -36,7 +36,7 @@
     <ListView
       v-bind="$attrs"
       :rows="filteredRows"
-      :columns="columns"
+      :columns="reactiveColumns"
       :row-key="rowKey"
       :options="mergedOptions"
     >
@@ -49,7 +49,7 @@
 
 <script setup>
 import { ListView, FormControl, Button } from 'frappe-ui'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import { toast } from 'vue-sonner'
 import { debounce } from 'lodash-es'
 
@@ -77,6 +77,7 @@ const props = defineProps({
 
 defineOptions({ inheritAttrs: false })
 
+const reactiveColumns = reactive(props.columns)
 const searchRaw = ref('')
 const search = computed({
   get: () => searchRaw.value,
