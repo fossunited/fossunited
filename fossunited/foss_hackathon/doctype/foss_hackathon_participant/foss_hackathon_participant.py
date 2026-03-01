@@ -20,10 +20,13 @@ class FOSSHackathonParticipant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+
         email: DF.Data
         full_name: DF.Data
         git_profile: DF.Data | None
         hackathon: DF.Link
+        host_checkin: DF.Table[EventCheckIn]
         is_student: DF.Check
         localhost: DF.Link | None
         localhost_request_status: DF.Literal[
