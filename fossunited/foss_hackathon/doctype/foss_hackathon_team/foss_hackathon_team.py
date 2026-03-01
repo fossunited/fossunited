@@ -43,13 +43,12 @@ class FOSSHackathonTeam(Document):
 
     def before_save(self):
         """Runs on both insert and save"""
-        # Your existing code for team size check
         if not self.is_new() and self.has_value_changed("members"):
             team_count = get_count_team_members_and_max_count(self.hackathon, self.name)
             current_members = len(self.members)
             max_size = team_count["max_team_size"]
 
-            if current_members > max_size:
+            if current_members >= max_size:
                 frappe.throw(
                     f"Maximum team size of {max_size} members reached. Cannot add more members."
                 )
@@ -62,7 +61,7 @@ class FOSSHackathonTeam(Document):
         max_size = frappe.db.get_value(HACKATHON, self.hackathon, "max_team_members")
         if not max_size:
             return
-        if len(self.members) > max_size:
+        if len(self.members) >= max_size:
             frappe.throw(f"Team cannot have more than {max_size} members")
 
     def validate_no_duplicate_members(self):
