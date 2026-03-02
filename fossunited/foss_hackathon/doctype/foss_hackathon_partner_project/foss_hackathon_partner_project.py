@@ -1,10 +1,10 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
 
 
-class FOSSHackathonPartnerProject(Document):
+class FOSSHackathonPartnerProject(WebsiteGenerator):
     # begin: auto-generated types
     # This code is auto-generated. Do not modify anything in this block.
 
@@ -20,10 +20,12 @@ class FOSSHackathonPartnerProject(Document):
         about: DF.SmallText | None
         description: DF.MarkdownEditor | None
         hackathon: DF.Link | None
+        is_published: DF.Check
         logo: DF.AttachImage | None
         poc_email: DF.Data | None
         project_name: DF.Data | None
         project_thread: DF.Table[HackathonProjectIssuePR]
         repo_link: DF.Data | None
+        route: DF.Data | None
     # end: auto-generated types
     pass

@@ -1,5 +1,6 @@
 {
   "actions": [],
+  "allow_guest_to_view": 1,
   "allow_rename": 1,
   "autoname": "hash",
   "creation": "2024-05-22 16:34:29.481357",
@@ -7,7 +8,9 @@
   "engine": "InnoDB",
   "field_order": [
     "meta_info_section",
+    "is_published",
     "hackathon",
+    "route",
     "project_details_section",
     "logo",
     "project_name",
@@ -88,15 +91,28 @@
       "fieldtype": "Table",
       "label": "project_thread",
       "options": "Hackathon Project Issue PR"
+    },
+    {
+      "default": "0",
+      "fieldname": "is_published",
+      "fieldtype": "Check",
+      "label": "Published?"
+    },
+    {
+      "fieldname": "route",
+      "fieldtype": "Data",
+      "label": "Route"
     }
   ],
+  "has_web_view": 1,
+  "is_published_field": "is_published",
   "links": [
     {
       "link_doctype": "FOSS Hackathon Team",
       "link_fieldname": "partner_project"
     }
   ],
-  "modified": "2026-03-02 14:12:11.573468",
+  "modified": "2026-03-02 14:16:09.606263",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Partner Project",
