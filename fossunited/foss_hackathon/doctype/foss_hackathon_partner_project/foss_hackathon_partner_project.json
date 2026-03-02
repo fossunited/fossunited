@@ -93,7 +93,7 @@
       "options": "Hackathon Project Issue PR"
     },
     {
-      "default": "0",
+      "default": "1",
       "fieldname": "is_published",
       "fieldtype": "Check",
       "label": "Published?"
@@ -112,7 +112,7 @@
       "link_fieldname": "partner_project"
     }
   ],
-  "modified": "2026-03-02 14:16:09.606263",
+  "modified": "2026-03-02 14:26:55.766336",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Partner Project",
