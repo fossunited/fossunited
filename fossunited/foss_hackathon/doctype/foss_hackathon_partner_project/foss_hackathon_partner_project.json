@@ -14,7 +14,11 @@
     "about",
     "column_break_qabl",
     "poc_email",
-    "repo_link"
+    "repo_link",
+    "section_break_tdld",
+    "description",
+    "section_break_ncvl",
+    "project_thread"
   ],
   "fields": [
     {
@@ -63,6 +67,27 @@
       "fieldname": "about",
       "fieldtype": "Small Text",
       "label": "About"
+    },
+    {
+      "fieldname": "section_break_tdld",
+      "fieldtype": "Section Break",
+      "label": "Project Guide"
+    },
+    {
+      "fieldname": "description",
+      "fieldtype": "Markdown Editor",
+      "label": "Description"
+    },
+    {
+      "fieldname": "section_break_ncvl",
+      "fieldtype": "Section Break",
+      "label": "Project Issue/Discussions"
+    },
+    {
+      "fieldname": "project_thread",
+      "fieldtype": "Table",
+      "label": "project_thread",
+      "options": "Hackathon Project Issue PR"
     }
   ],
   "links": [
@@ -71,7 +96,7 @@
       "link_fieldname": "partner_project"
     }
   ],
-  "modified": "2024-06-25 13:12:47.128606",
+  "modified": "2026-03-02 14:12:11.573468",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Partner Project",
@@ -113,6 +138,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "search_fields": "repo_link",
   "show_title_field_in_link": 1,
   "sort_field": "modified",
