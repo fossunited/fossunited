@@ -52,11 +52,15 @@ export const isSmallScreen = computed(() => window.innerWidth < 768)
  * @param {string} fallback - Fallback message (optional)
  */
 export function showError(error, fallback = 'An error occurred') {
-  const message = error.messages?.[0] || error.message || fallback
+  const isRateLimited = error?.response?.status === 429 || error?.status === 429
+  const message = isRateLimited
+    ? 'Too many requests/attempts. Please try again after 10 minutes.'
+    : error.messages?.[0] || error.message || fallback
+  const displayMessage = message === fallback ? fallback : `${fallback}: ${message}`
 
   console.error('API Error:', error)
 
-  toast.error(message, {
+  toast.error(displayMessage, {
     duration: 5000,
     action: {
       label: 'Details',
