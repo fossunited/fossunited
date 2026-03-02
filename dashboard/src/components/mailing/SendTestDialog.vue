@@ -106,7 +106,7 @@ const sendTest = createResource({
     inSuccess.value = true
   },
   onError(err) {
-    toast.error(err.messages)
+    showError(err, `Failed to send test mail.`)
   },
 })
 

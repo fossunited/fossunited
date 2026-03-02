@@ -114,6 +114,7 @@ export default [
         qz: 'readonly',
         localforage: 'readonly',
         extend_cscript: 'readonly',
+        showError: 'readonly',
       },
       parserOptions: { sourceType: 'module' },
     },

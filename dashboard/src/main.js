@@ -5,6 +5,7 @@ import router from './router'
 import App from './App.vue'
 import { session } from './data/session'
 import dayjs from 'dayjs'
+import { showError } from '@/helpers/utils'
 
 import {
   Button,
@@ -19,6 +20,7 @@ import {
 const { initializeTheme } = useTheme()
 initializeTheme()
 
+window.showError = showError
 const app = createApp(App)
 
 setConfig('resourceFetcher', frappeRequest)

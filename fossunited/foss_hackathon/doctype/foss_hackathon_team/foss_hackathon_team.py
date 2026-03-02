@@ -3,7 +3,6 @@
 import frappe
 from frappe.model.document import Document
 
-from fossunited.api.hackathon import get_count_team_members_and_max_count
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTICIPANT,
@@ -41,18 +40,6 @@ class FOSSHackathonTeam(Document):
         self.validate_no_duplicate_members()
         self.validate_new_members_not_in_other_teams()
 
-    def before_save(self):
-        """Runs on both insert and save"""
-        if not self.is_new() and self.has_value_changed("members"):
-            team_count = get_count_team_members_and_max_count(self.hackathon, self.name)
-            current_members = len(self.members)
-            max_size = team_count["max_team_size"]
-
-            if current_members >= max_size:
-                frappe.throw(
-                    f"Maximum team size of {max_size} members reached. Cannot add more members."
-                )
-
     def on_update(self):
         self.delete_if_empty_team()
 
@@ -61,7 +48,13 @@ class FOSSHackathonTeam(Document):
         max_size = frappe.db.get_value(HACKATHON, self.hackathon, "max_team_members")
         if not max_size:
             return
-        if len(self.members) >= max_size:
+
+        old_doc = self.get_doc_before_save()
+
+        if old_doc and len(self.members) <= len(old_doc.members):
+            return
+
+        if len(self.members) > max_size:
             frappe.throw(f"Team cannot have more than {max_size} members")
 
     def validate_no_duplicate_members(self):

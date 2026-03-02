@@ -172,7 +172,7 @@ const createJoinRequest = () => {
       toast.success('Invite sent successfully')
     },
     onError(error) {
-      toast.error('Failed to send invite' + error)
+      showError(error, `Failed to send invite.`)
     },
   })
   invite.fetch()
@@ -200,7 +200,7 @@ const removeTeamMember = (member) => {
       toast.success('Member removed successfully')
     },
     onError(error) {
-      toast.error('Failed to remove member' + error)
+      showError(error, `Failed to remove member.`)
     },
   })
   team.fetch()
