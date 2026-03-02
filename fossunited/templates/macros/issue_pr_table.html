@@ -1,0 +1,45 @@
+{% macro issue_pr_table(docfield, empty_message) %}
+  <div class="v3-card mb-4">
+    <div class="v3-section-title">
+      <i class="ti ti-git-pull-request"></i>
+      <span>Issues & Pull Requests Thread</span>
+    </div>
+
+    {% if docfield | len > 0 %}
+      <div class="d-flex flex-column gap-2">
+        {% for item in docfield %}
+          <a
+            href="{{ item.link }}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="v3-clickable d-flex flex-column p-3"
+            style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
+          >
+            <div
+              class="d-flex align-items-center gap-1 mb-2"
+              style="font-size:0.75rem;text-transform:uppercase;font-weight:600;"
+            >
+              {% if item.type == 'Pull Request' %}
+                <i class="ti ti-git-pull-request v3-text-secondary"></i>
+                <span class="v3-text-secondary">Pull Request</span>
+              {% elif item.type == 'Issue' %}
+                <i class="ti ti-circle-dot v3-text-secondary"></i>
+                <span class="v3-text-secondary">Issue</span>
+              {% else %}
+                <i class="ti ti-messages v3-text-secondary"></i>
+                <span class="v3-text-secondary">Discussion</span>
+              {% endif %}
+            </div>
+            <div class="v3-text-primary" style="font-family:'Courier New',Courier,monospace;">
+              {{ item.title }}
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="v3-text-tertiary text-center py-5">
+        {{ empty_message or "No issues or pull requests linked yet." }}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
