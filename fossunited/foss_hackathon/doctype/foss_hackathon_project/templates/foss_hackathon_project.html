@@ -1,5 +1,6 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -74,7 +75,7 @@
 
       {{ render_team() }}
       {{ render_description() }}
-      {{ render_issue_pr() }}
+      {{ issue_pr_table(doc.issue_pr_table, "No issues or pull requests added.") }}
     </div>
   </div>
 {% endblock %}
@@ -117,49 +118,6 @@
       <span>Description</span>
     </div>
     <div class="v3-text-secondary">{{ doc.description or 'No description added.' }}</div>
-  </div>
-{% endmacro %}
-
-{% macro render_issue_pr() %}
-  <div class="v3-card mb-4">
-    <div class="v3-section-title">
-      <i class="ti ti-git-pull-request"></i>
-      <span>Issues & PRs Linked</span>
-    </div>
-
-    {% if doc.issue_pr_table | len > 0 %}
-      <div class="d-flex flex-column gap-2">
-        {% for item in doc.issue_pr_table %}
-          <a
-            href="{{ item.link }}"
-            target="_blank"
-            class="v3-clickable d-flex flex-column p-3"
-            style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
-          >
-            <div
-              class="d-flex align-items-center gap-1 mb-2"
-              style="font-size:0.75rem;text-transform:uppercase;font-weight:600;"
-            >
-              {% if item.type == 'Pull Request' %}
-                <i class="ti ti-git-pull-request v3-text-secondary"></i>
-                <span class="v3-text-secondary">Pull Request</span>
-              {% elif item.type == 'Issue' %}
-                <i class="ti ti-circle-dot v3-text-secondary"></i>
-                <span class="v3-text-secondary">Issue</span>
-              {% else %}
-                <i class="ti ti-messages v3-text-secondary"></i>
-                <span class="v3-text-secondary">Discussion</span>
-              {% endif %}
-            </div>
-            <div class="v3-text-primary" style="font-family:'Courier New',Courier,monospace;">
-              {{ item.title }}
-            </div>
-          </a>
-        {% endfor %}
-      </div>
-    {% else %}
-      <div class="v3-text-tertiary text-center py-5">No Issues, PRs or Discussions added.</div>
-    {% endif %}
   </div>
 {% endmacro %}
 
