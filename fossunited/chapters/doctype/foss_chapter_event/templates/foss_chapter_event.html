@@ -517,7 +517,7 @@
             <section class="v3-card ev-contact" aria-labelledby="contact-heading">
               <h2 id="contact-heading" class="sr-only">Contact Information</h2>
               {% if chapter.email %}
-              <div class="d-flex align-items-center pb-2">
+              <div class="d-flex align-items-center">
                 <i class="ti ti-mail" aria-hidden="true"></i>
                 <div class="ev-contact-email">
                   <a
@@ -530,7 +530,8 @@
               </div>
               {% endif %}
 
-              <nav class="header-section--socials-event" aria-label="Social media links">
+              {% if social_links %}
+              <nav class="header-section--socials-event mt-2" aria-label="Social media links">
                 {% for (k,v) in social_links.items() %}
                 <a
                   href="{{ v }}"
@@ -545,6 +546,7 @@
                 </a>
                 {% endfor %}
               </nav>
+              {% endif %}
             </section>
 
             <!-- Map -->

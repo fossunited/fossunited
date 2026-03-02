@@ -96,7 +96,7 @@
               {% set same_year = sd.year == ed.year %}
 
               {% if same_day %}
-                {{ frappe.utils.formatdate(sd, "d MMM yyyy") }}
+                {{ frappe.utils.format_datetime(sd, "d MMM yyyy hh:mm a") }}
               {% elif same_month %}
                 {{ frappe.utils.formatdate(sd, "d") }}
                 – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
