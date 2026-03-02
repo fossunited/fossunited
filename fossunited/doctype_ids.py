@@ -13,6 +13,7 @@ HACKATHON_PARTNER_PROJECT = "FOSS Hackathon Partner Project"
 HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
+HACKATHON_ISSUE_PR = "Hackathon Project Issue PR"
 
 # Chapter-related identifiers
 CHAPTER = "FOSS Chapter"

@@ -29,10 +29,10 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
         description: DF.MarkdownEditor | None
         hackathon: DF.Link | None
         is_published: DF.Check
+        issue_pr_table: DF.Table[HackathonProjectIssuePR]
         logo: DF.AttachImage | None
         poc_email: DF.Data | None
         project_name: DF.Data | None
-        project_thread: DF.Table[HackathonProjectIssuePR]
         repo_link: DF.Data | None
         route: DF.Data | None
     # end: auto-generated types
