@@ -1,4 +1,5 @@
 import { computed } from 'vue'
+import { toast } from 'vue-sonner'
 
 export const truncateStr = (title, len) => {
   return title.length > len ? title.substring(0, len) + '...' : title
@@ -44,3 +45,27 @@ export const isValidUrl = (link) => {
 }
 
 export const isSmallScreen = computed(() => window.innerWidth < 768)
+
+/**
+ * Minimal error handler - shows error message with console hint
+ * @param {Error} error - Error from frappe-ui/api
+ * @param {string} fallback - Fallback message (optional)
+ */
+export function showError(error, fallback = 'An error occurred') {
+  const message = error.messages?.[0] || error.message || fallback
+
+  console.error('API Error:', error)
+
+  toast.error(message, {
+    duration: 5000,
+    action: {
+      label: 'Details',
+      onClick: () => {
+        console.group('🔍 Error Details')
+        console.error(error)
+        console.groupEnd()
+        toast.info('Check console (Press F12)')
+      },
+    },
+  })
+}
