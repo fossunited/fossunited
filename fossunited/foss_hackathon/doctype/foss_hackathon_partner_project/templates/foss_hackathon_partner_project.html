@@ -35,15 +35,15 @@
 
             <div class="d-flex flex-wrap gap-2 align-items-center">
               {% if doc.repo_link %}
-                <a class="v3-btn v3-btn-primary" href="{{ doc.repo_link }}" target="_blank">
+                <a class="v3-btn v3-btn-primary" href="{{ doc.repo_link }}" target="_blank" rel="noopener noreferrer">
                   <i class="ti ti-brand-github"></i>
                   <span>View Repository</span>
                 </a>
               {% endif %}
-              {% if doc.poc_email %}
-                <a class="v3-btn v3-btn-secondary" href="mailto:{{ doc.poc_email }}">
-                  <i class="ti ti-mail"></i>
-                  <span>Contact</span>
+              {% if doc.social_group %}
+                <a class="v3-btn v3-btn-secondary" href="{{ doc.social_group }}">
+                  <i class="ti ti-message"></i>
+                  <span>Chat</span>
                 </a>
               {% endif %}
             </div>
@@ -97,14 +97,18 @@
               </div>
             {% endif %}
             <div class="d-flex align-items-center gap-2 mt-2 text-sm">
-              <div class="v3-text-tertiary">
+              <span class="v3-text-tertiary">
+                <i class="ti ti-users-group"></i>
+                {{ project.team_name }}
+              </span>
+              <span class="v3-text-tertiary">
                 <i class="ti ti-users"></i>
                 {{ project.team_size }} member{{ 's' if project.team_size != 1 else '' }}
-              </div>
-              <div class="v3-text-tertiary">
+              </span>
+              <span class="v3-text-tertiary">
                 <i class="ti ti-git-pull-request"></i>
                 {{ project.contributions }} Issue/PR
-              </div>
+              </span>
             </div>
           </a>
         {% endfor %}

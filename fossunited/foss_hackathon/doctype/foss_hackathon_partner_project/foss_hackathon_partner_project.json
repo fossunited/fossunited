@@ -18,6 +18,7 @@
     "column_break_qabl",
     "poc_email",
     "repo_link",
+    "social_group",
     "section_break_tdld",
     "description",
     "section_break_ncvl",
@@ -102,6 +103,11 @@
       "fieldtype": "Table",
       "label": "Issue PR Table",
       "options": "Hackathon Project Issue PR"
+    },
+    {
+      "fieldname": "social_group",
+      "fieldtype": "Data",
+      "label": "Social Group"
     }
   ],
   "has_web_view": 1,
@@ -112,7 +118,7 @@
       "link_fieldname": "partner_project"
     }
   ],
-  "modified": "2026-03-02 16:34:32.769179",
+  "modified": "2026-03-02 16:55:06.446018",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Partner Project",

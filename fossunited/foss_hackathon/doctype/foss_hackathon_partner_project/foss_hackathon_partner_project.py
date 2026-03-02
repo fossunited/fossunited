@@ -35,6 +35,7 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
         project_name: DF.Data | None
         repo_link: DF.Data | None
         route: DF.Data | None
+        social_group: DF.Data | None
     # end: auto-generated types
 
     def before_save(self):
@@ -61,7 +62,7 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
                 "partner_project": self.name,
                 "is_published": 1,
             },
-            fields=["name", "title", "short_description", "route", "team"],
+            fields=["name", "title", "short_description", "route", "team", "team_name"],
             order_by="creation desc",
         )
 
