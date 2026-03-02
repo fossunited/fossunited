@@ -158,6 +158,7 @@ const updateCampaign = createResource({
     emit('update-campaigns')
   },
   onError(err) {
+    errorMessages.value = ''
     showError(err, `Failed to update campaign.`)
   },
 })
@@ -184,6 +185,7 @@ const sendCampaign = createResource({
     campaign.fetch()
   },
   onError(err) {
+    errorMessages.value = ''
     showError(err, `Failed to send campaign.`)
   },
 })

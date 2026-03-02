@@ -142,7 +142,7 @@ const acceptInvite = (inviteId) => {
       window.location.reload()
     },
     onError(error) {
-      showError(error, `Error accepting team invite. Please use ID directly: ${teamCode.value}`)
+      showError(error, `Error accepting team invite. Please use Team Code directly to join`)
     },
   })
 }
