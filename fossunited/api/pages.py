@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import CHAPTER, EVENT, STUDENT_CLUB
+from fossunited.doctype_ids import CHAPTER, EVENT, HACKATHON, STUDENT_CLUB
 
 
 @frappe.whitelist(allow_guest=True)
@@ -48,3 +48,30 @@ def buy_tickets_page(route):
 
     frappe.local.response["location"] = f"/{route}/rsvp"
     return
+
+
+@frappe.whitelist(allow_guest=True)
+def partner_projects_redirect(hack=None, project=None):
+    if not hack:
+        frappe.local.response["type"] = "redirect"
+        frappe.local.response["location"] = "/404"
+        return
+
+    hackathon = frappe.db.get_value(
+        HACKATHON,
+        {"route": f"hack/{hack}"},
+        ["start_date"],
+        as_dict=True,
+    )
+
+    if not hackathon or not hackathon.start_date:
+        frappe.local.response["type"] = "redirect"
+        frappe.local.response["location"] = "/404"
+        return
+
+    year = hackathon.start_date.year
+
+    project = project or ""
+
+    frappe.local.response["type"] = "redirect"
+    frappe.local.response["location"] = f"/fosshack/{year}/partner-projects{project}"

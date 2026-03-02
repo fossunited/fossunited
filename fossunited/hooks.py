@@ -99,6 +99,10 @@ website_redirects = [
     {"source": r"^blog/rss$", "target": r"/rss.xml"},
     {"source": r"^rss$", "target": r"/rss.xml"},
     {"source": r"^(?!.*\.xml$)(.*)/rss$", "target": r"/\1/rss.xml"},
+    {
+        "source": r"hack/(.+)/partner-projects(.*)",
+        "target": r"/api/method/fossunited.api.pages.partner_projects_redirect?hack=\1&project=\2",
+    },
 ]
 
 # Installation

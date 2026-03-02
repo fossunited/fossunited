@@ -43,6 +43,9 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
 
     def set_route(self):
         """route as /fosshack/year/partner-project/project_name"""
+        if self.route and not self.has_value_changed("project_name"):
+            return
+
         start_date = frappe.db.get_value(HACKATHON, self.hackathon, "start_date")
         event_year = str(start_date.year)
         self.route = f"fosshack/{event_year}/partner-projects/{frappe.scrub(self.project_name)}"
