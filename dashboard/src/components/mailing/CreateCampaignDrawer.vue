@@ -68,7 +68,7 @@ const newsletter = createResource({
     open.value = false
   },
   onError(err) {
-    toast.error('Error while creating campaign! ' + err.messages)
+    showError(err, `Error while creating campaign!`)
   },
 })
 

@@ -158,8 +158,7 @@ const updateCampaign = createResource({
     emit('update-campaigns')
   },
   onError(err) {
-    errorMessages.value = err.messages
-    toast.error(`Error: ${err.messages}`)
+    showError(err, `Failed to update campaign.`)
   },
 })
 
@@ -185,7 +184,7 @@ const sendCampaign = createResource({
     campaign.fetch()
   },
   onError(err) {
-    toast.error(`Error: ${err.messages}`)
+    showError(err, `Failed to send campaign.`)
   },
 })
 

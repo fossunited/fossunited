@@ -83,7 +83,10 @@ const updateProjectErrors = () => {
     errors.push('Repository link cannot be empty')
   }
   if (projectDoc.doc.repo_link && !projectDoc.doc.repo_link.startsWith('https://')) {
-    errors.push('Enter a valid repo link')
+    errors.push('Enter a valid repo link starting with https://')
+  }
+  if (projectDoc.doc.demo_link && !projectDoc.doc.demo_link.startsWith('https://')) {
+    errors.push('Enter a valid demo link starting with https://')
   }
 
   return errors
@@ -102,8 +105,7 @@ const handleProjectUpdate = () => {
       toast.success('Project updated successfully')
     })
     .catch((err) => {
-      const message = err?.messages?.[0] || err?.message || 'Project update failed'
-      toast.error(message)
+      showError(err, 'Failed to save project')
     })
 }
 </script>

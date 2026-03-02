@@ -113,7 +113,7 @@ const joinThroughCode = createResource({
     window.location.reload()
   },
   onError(error) {
-    toast.error('Invalid Team Code.' + error.message)
+    showError(error, `Invalid Team Code '${teamCode.value}'`)
   },
 })
 
@@ -142,7 +142,7 @@ const acceptInvite = (inviteId) => {
       window.location.reload()
     },
     onError(error) {
-      toast.error('An error occurred: ' + error.message)
+      showError(error, `Error accepting team invite. Please use ID directly: ${teamCode.value}`)
     },
   })
 }
@@ -161,7 +161,7 @@ const rejectInvite = (inviteId) => {
       props.invitations.fetch()
     },
     onError(error) {
-      toast.error('An error occurred: ' + error.message)
+      showError(error, `Error rejecting team invite.`)
     },
   })
 }

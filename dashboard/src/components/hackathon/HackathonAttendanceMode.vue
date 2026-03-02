@@ -234,7 +234,7 @@ const updateParticipantLocalhost = (localhost) => {
       toast.success('Attendance mode updated successfully!')
     },
     onError(err) {
-      toast.error('Failed to update attendance mode.' + err.message)
+      showError(err, `Failed to update attendance mode.`)
     },
   })
 }
@@ -257,7 +257,7 @@ const makeParticipantRemote = () => {
       toast.success('Attendance mode updated successfully!')
     },
     onError(err) {
-      toast.error('Failed to update attendance mode.' + err.message)
+      showError(err, `Failed to update attendance mode.`)
     },
   })
 }

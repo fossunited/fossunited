@@ -349,7 +349,7 @@ const checkInParticipant = async (row) => {
     requests.fetch()
     checkins.reload()
   } catch (err) {
-    toast.error(err.messages?.[0] || err.message)
+    showError(err, `Failed to checkin ${row.full_name}`)
   }
 }
 
@@ -374,7 +374,7 @@ const undoCheckIn = async (row) => {
     requests.fetch()
     checkins.reload()
   } catch (err) {
-    toast.error(err.messages?.[0] || err.message)
+    showError(err, `Failed to undo checkin ${row.full_name}`)
   }
 }
 </script>

@@ -256,6 +256,7 @@ const handleAddIssuePr = async () => {
     showAddDialog.value = false
   } catch (err) {
     addIssueErrors.value = err.messages || [err.message]
+    showError(err, `Failed to add item.`)
   }
 }
 
@@ -291,6 +292,6 @@ const deleteIssuePr = (row) => {
   projectDoc.save
     .submit()
     .then(() => toast.success(`Deleted the ${row.type}`))
-    .catch((err) => toast.error(err.message))
+    .catch((err) => showError(err, `Failed to delete item.`))
 }
 </script>

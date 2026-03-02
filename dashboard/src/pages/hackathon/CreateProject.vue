@@ -361,8 +361,12 @@ const validateCreateProject = () => {
     errors.push('Repository link is required')
   }
   if (project.repo_link && !project.repo_link.startsWith('https://')) {
-    errors.push('Enter a valid repo link')
+    errors.push('Enter a valid repo link starting with https://')
   }
+  if (project.demo_link && !project.demo_link.startsWith('https://')) {
+    errors.push('Enter a valid demo link starting with https://')
+  }
+
   return errors
 }
 
@@ -393,7 +397,7 @@ const createProject = createResource({
     })
   },
   onError(error) {
-    toast.error('Failed to create project')
+    showError(error, `Failed to create project`)
   },
 })
 
