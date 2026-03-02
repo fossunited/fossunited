@@ -74,7 +74,6 @@
     <!-- Attendees View -->
     <SearchListView
       v-else
-      class="h-[600px]"
       :rows="attendeeGroups"
       :columns="attendeeColumns"
       search-placeholder="Search attendees..."

@@ -1,40 +1,47 @@
 <template>
-  <div>
-    <div class="flex flex-col md:flex-row gap-2 my-2 md:items-end">
-      <FormControl
-        v-if="searchable"
-        v-model="search"
-        type="search"
-        :placeholder="searchPlaceholder"
-        class="max-w-xs"
-        :class="searchClass"
-      />
-
-      <FormControl
-        v-if="filterField && filterOptions"
-        v-model="selectedFilter"
-        type="select"
-        :options="filterOptions"
-        class="max-w-xs"
-      />
-
-      <slot name="actions" :filtered-rows="filteredRows" :search="search">
-        <Button
-          v-if="exportable"
-          icon-left="download"
-          :label="exportLabel"
-          class="h-10 px-3"
-          @click="handleExport"
+  <div class="flex flex-col h-full">
+    <div class="flex-shrink-0">
+      <div class="flex flex-col md:flex-row gap-2 my-2 md:items-end">
+        <FormControl
+          v-if="searchable"
+          v-model="search"
+          type="search"
+          :placeholder="searchPlaceholder"
+          class="max-w-xs"
+          :class="searchClass"
         />
-      </slot>
+
+        <FormControl
+          v-if="filterField && filterOptions"
+          v-model="selectedFilter"
+          type="select"
+          :options="filterOptions"
+          class="max-w-xs"
+        />
+
+        <slot name="actions" :filtered-rows="filteredRows" :search="search">
+          <Button
+            v-if="exportable"
+            icon-left="download"
+            :label="exportLabel"
+            class="h-10 px-3"
+            @click="handleExport"
+          />
+        </slot>
+      </div>
+
+      <div
+        v-if="(search || activeFilterApplied) && showCount"
+        class="text-sm text-ink-gray-5 mb-2"
+      >
+        {{ filteredCount }} of {{ totalCount }} {{ itemLabel }}
+      </div>
     </div>
 
-    <div v-if="(search || activeFilterApplied) && showCount" class="text-sm text-ink-gray-5 mb-2">
-      {{ filteredCount }} of {{ totalCount }} {{ itemLabel }}
-    </div>
-
+    <!-- fit viewport height -->
     <ListView
       v-bind="$attrs"
+      class="overflow-auto max-h-[calc(100vh-220px)]"
       :rows="filteredRows"
       :columns="reactiveColumns"
       :row-key="rowKey"
@@ -155,7 +162,8 @@ const filteredRows = computed(() => {
       })
 
       if (filtered.length > 0) {
-        acc.push({ ...group, rows: filtered })
+        group.rows = filtered
+        acc.push(group)
       }
 
       return acc

@@ -9,11 +9,6 @@
       :item-label="itemLabel"
       :export-filename="exportFilename"
       :export-columns="exportColumns"
-      :options="{
-        selectable: false,
-        showTooltip: true,
-        resizeColumn: true,
-      }"
     >
       <template #group-header="{ group }">
         <span class="text-base font-medium leading-6 text-ink-gray-9">

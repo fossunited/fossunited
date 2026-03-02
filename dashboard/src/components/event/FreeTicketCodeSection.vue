@@ -40,9 +40,6 @@
           title: 'No Free Codes',
           description: 'No free ticket codes have been added yet.',
         },
-        selectable: false,
-        showTooltip: true,
-        resizeColumn: true,
         onRowClick: (row) => handleEdit(row),
       }"
     >

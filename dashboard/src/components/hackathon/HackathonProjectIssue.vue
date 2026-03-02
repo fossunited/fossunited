@@ -103,8 +103,8 @@
     :rows="groupedIssuePrs"
     :options="{
       selectable: false,
-      showTooltip: false,
-      resizeColumn: false,
+      showTooltip: true,
+      resizeColumn: true,
       onRowClick: (row) => {},
       emptyState: {
         title: 'No issues or PRs linked to the project',

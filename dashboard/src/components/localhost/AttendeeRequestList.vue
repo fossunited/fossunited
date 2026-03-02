@@ -72,6 +72,7 @@
 
     <SearchListView
       v-else-if="groupedRequests.length > 0"
+      class="flex-1 min-h-0"
       :columns="columns"
       :rows="groupedRequests"
       row-key="name"

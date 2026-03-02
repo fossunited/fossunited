@@ -55,9 +55,6 @@
           :export-columns="exportColumns"
           item-label="attendees"
           :options="{
-            selectable: false,
-            showTooltip: false,
-            resizeColumn: true,
             emptyState: {
               title: 'No attendees found',
             },
