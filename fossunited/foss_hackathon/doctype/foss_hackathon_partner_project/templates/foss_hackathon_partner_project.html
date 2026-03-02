@@ -1,0 +1,114 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center">
+        {{
+          breadcrumb(items=[{"route": (hackathon.external_website_url), "label": hackathon.hackathon_name},
+          {"route": (hackathon.external_website_url + '/partner-projects'), "label": "Partner Projects"}, {"label": doc.project_name}])
+        }}
+        {{ theme_toggle() }}
+      </div>
+
+      <!-- Project Header -->
+      <div class="v3-card mb-4">
+        <div class="d-flex flex-column flex-lg-row gap-4">
+          {% if doc.logo %}
+            <div class="flex-shrink-0">
+              <img
+                src="{{ doc.logo }}"
+                alt="{{ doc.project_name }}"
+                style="width:120px;height:120px;border-radius:0.75rem;border:1px solid var(--v3-button-border);object-fit:cover;"
+              />
+            </div>
+          {% endif %}
+
+          <div class="flex-fill">
+            <h1 class="v3-text-primary mb-3 h3">{{ doc.project_name }}</h1>
+
+            {% if doc.about %}
+              <p class="v3-text-secondary mb-3">{{ doc.about }}</p>
+            {% endif %}
+
+            <div class="d-flex flex-wrap gap-2 align-items-center">
+              {% if doc.repo_link %}
+                <a class="v3-btn v3-btn-primary" href="{{ doc.repo_link }}" target="_blank">
+                  <i class="ti ti-brand-github"></i>
+                  <span>View Repository</span>
+                </a>
+              {% endif %}
+              {% if doc.poc_email %}
+                <a class="v3-btn v3-btn-secondary" href="mailto:{{ doc.poc_email }}">
+                  <i class="ti ti-mail"></i>
+                  <span>Contact</span>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{ render_description() }}
+      {{ issue_pr_table(doc.issue_pr_table, "No issues or pull requests linked yet. Check the repository discussion thread for contribution opportunities.") }}
+      {{ render_participant_projects() }}
+    </div>
+  </div>
+{% endblock %}
+
+{% macro render_description() %}
+  {% if doc.description %}
+    <div class="v3-card mb-4">
+      <div class="v3-section-title">
+        <i class="ti ti-book"></i>
+        <span>Description & Contribution Guidelines</span>
+      </div>
+      <div class="v3-text-secondary" style="line-height:1.75;">
+        {{ frappe.utils.md_to_html(doc.description) }}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro render_participant_projects() %}
+  {% if participant_projects and participant_projects | len > 0 %}
+    <div class="v3-card mb-4">
+      <div class="v3-section-title">
+        <i class="ti ti-code"></i>
+        <span>Participant Contributions</span>
+      </div>
+      <div class="v3-text-secondary mb-3">
+        Projects created by hackathon participants contributing to {{ doc.project_name }}
+      </div>
+
+      <div class="d-flex flex-column gap-2">
+        {% for project in participant_projects %}
+          <a
+            href="/{{ project.route }}"
+            class="v3-clickable d-flex flex-column p-3"
+            style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
+          >
+            <div class="v3-text-primary mb-1 text-xl">{{ project.title }}</div>
+            {% if project.short_description %}
+              <div class="v3-text-secondary">
+                {{ project.short_description | truncate(100, true) }}
+              </div>
+            {% endif %}
+            <div class="d-flex align-items-center gap-2 mt-2 text-sm">
+              <div class="v3-text-tertiary">
+                <i class="ti ti-users"></i>
+                {{ project.team_size }} member{{ 's' if project.team_size != 1 else '' }}
+              </div>
+              <div class="v3-text-tertiary">
+                <i class="ti ti-git-pull-request"></i>
+                {{ project.contributions }} Issue/PR
+              </div>
+            </div>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endmacro %}
