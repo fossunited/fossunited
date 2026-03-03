@@ -195,47 +195,85 @@ def require_chapter_or_event_member(event_id="event"):
     return decorator
 
 
-def require_localhost_organizer(localhost_param="localhost_id"):
-    """
-    Decorator to check if user is a localhost organizer or system manager.
+def is_localhost_organizer(localhost_id, user=None):
+    """Check if user is a localhost organizer"""
+    if not user:
+        user = frappe.session.user
 
-    Args:
-        localhost_param: name of the parameter containing localhost ID
-    """
+    # System Manager bypass
+    if "System Manager" in frappe.get_roles(user):
+        return True
+
+    # Get user's profile
+    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
+    if not profile:
+        return False
+
+    # Check if profile exists in localhost organizers
+    return frappe.db.exists(
+        LOCALHOST_ORGANIZER,
+        {
+            "parent": localhost_id,
+            "parenttype": HACKATHON_LOCALHOST,
+            "profile": profile,
+            "parentfield": "organizers",
+        },
+    )
+
+
+def require_localhost_organizer(localhost_param="localhost_id"):
+    """Decorator to check if user is a localhost organizer or system manager"""
 
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
-            # System Manager bypass
-            if "System Manager" in frappe.get_roles():
-                return func(*args, **kwargs)
-
-            # Get localhost ID from kwargs
             localhost_id = kwargs.get(localhost_param)
             if not localhost_id:
                 frappe.throw("Localhost ID not provided", frappe.PermissionError)
 
-            # Get organizer profiles from child table
-            organizer_profiles = frappe.get_all(
-                LOCALHOST_ORGANIZER,
-                filters={"parent": localhost_id},
-                pluck="profile",
-            )
-
-            # Get users from profiles
-            if organizer_profiles:
-                organizer_users = frappe.get_all(
-                    USER_PROFILE,
-                    filters={"name": ["in", organizer_profiles]},
-                    pluck="user",
-                )
-            else:
-                organizer_users = []
-
-            # Check if current user is an organizer
-            if frappe.session.user not in organizer_users:
+            if not is_localhost_organizer(localhost_id):
                 frappe.throw(
                     "Only localhost organizers can access this resource",
+                    frappe.PermissionError,
+                )
+
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def require_mailing_access(campaign_param="campaign_id"):
+    """Decorator to check if user has mailing access (chapter member or localhost organizer)"""
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            campaign_id = kwargs.get(campaign_param)
+            if not campaign_id:
+                frappe.throw("Campaign ID not provided", frappe.PermissionError)
+
+            user = frappe.session.user
+            campaign = frappe.get_doc(CAMPAIGN, campaign_id)
+
+            # Check if localhost organizer
+            if campaign.document_type == HACKATHON_LOCALHOST:
+                if is_localhost_organizer(campaign.reference_document, user):
+                    return func(*args, **kwargs)
+
+            # Otherwise check chapter membership
+            chapter = campaign.chapter
+            if not chapter:
+                chapter = frappe.db.get_value(
+                    campaign.document_type,
+                    campaign.reference_document,
+                    "chapter",
+                )
+
+            if not check_if_chapter_member(chapter, user):
+                frappe.throw(
+                    "You are not authorized organizer to send emails for this campaign",
                     frappe.PermissionError,
                 )
 
