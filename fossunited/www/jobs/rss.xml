@@ -7,7 +7,7 @@
     <language>en-us</language>
     <lastBuildDate>{{ modified }}</lastBuildDate>
     <pubDate>{{ modified }}</pubDate>
-    <ttl>3600</ttl>
+    <ttl>60</ttl>
     <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
     {% for job in items %}
     <item>
