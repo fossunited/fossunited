@@ -49,7 +49,7 @@ def get_context(context):
             {
                 "title": escape_html(f"{g.project_name} ({g.grant_type} Grant)"),
                 "link": escape_html(url) if url else host + "/grants/grantees",
-                "guid": f"{host}/grants/grantees#{g.name}",
+                "guid": f"{host}/grants/grantees?s={g.project_name}",
                 "author": "",
                 "published_date": format_datetime(frappe.utils.get_datetime(date)),
                 "modified": g.modified,
@@ -78,7 +78,7 @@ def get_context(context):
             {
                 "title": escape_html(f"{g.event_name} (Event Grant)"),
                 "link": escape_html(url) if url else host + "/grants/grantees",
-                "guid": f"{host}/grants/grantees#{g.name}",
+                "guid": f"{host}/grants/grantees?s={g.event_name}",
                 "author": escape_html(g.event_organiser or ""),
                 "published_date": format_datetime(frappe.utils.get_datetime(date)),
                 "modified": g.modified,

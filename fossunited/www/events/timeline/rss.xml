@@ -1,2 +1,2 @@
 {% extends "templates/rss.xml" %}
-{% block ttl %}3600{% endblock %}
+{% block ttl %}600{% endblock %}

@@ -32,6 +32,7 @@ def get_context(context):
             "content_html",
             "content_type",
             "blogger",
+            "blog_category",
         ],
         filters={"published": 1},
         order_by="published_on desc",
@@ -55,7 +56,7 @@ def get_context(context):
             blog_content = value
         blog.content = f"<![CDATA[{blog_content}]]>"
         blog.guid = blog.link
-        blog.category = ""
+        blog.category = blog.category or ""
 
     all_items = blog_list
     if all_items:

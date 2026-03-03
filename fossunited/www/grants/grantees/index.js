@@ -19,6 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
   groupBySelect.addEventListener('change', applyFilters)
   sortSelect.addEventListener('change', applyFilters)
 
+  const params = new URLSearchParams(window.location.search)
+  const searchFromURL = params.get('s') || params.get('search')
+
+  if (searchFromURL) {
+    document.getElementById('search').value = searchFromURL
+  }
+
   applyFilters()
 })
 

@@ -9,19 +9,7 @@
   >
     <template #body-content>
       <div class="flex flex-col gap-4">
-        <FormControl
-          v-model="newIssuePr.link"
-          type="url"
-          label="Link &ast;"
-          @blur="getPrIssueTitle.fetch()"
-        />
-        <div v-if="getPrIssueTitle.loading" class="flex gap-1">
-          <LoadingIndicator class="w-4 h-4" />
-          <small>Fetching details...</small>
-        </div>
-        <div v-if="fetchTitleError">
-          <small class="text-ink-gray-6">{{ fetchTitleError }}</small>
-        </div>
+        <FormControl v-model="newIssuePr.link" type="url" label="Link &ast;" />
         <FormControl v-model="newIssuePr.title" label="Title &ast;" />
         <FormControl
           v-model="newIssuePr.type"
@@ -262,6 +250,7 @@ const handleAddIssuePr = async () => {
 
 const fetchTitleError = ref('')
 
+// FIXME: remove if no need auto-fill for title 10d from 4th mar 26
 const getPrIssueTitle = createResource({
   url: 'fossunited.api.hackathon.get_issue_pr_title',
   makeParams() {

@@ -45,7 +45,7 @@ def get_context(context):
     # Timeline
     context.timeline = [
         {
-            "date": "28 February",
+            "date": "08 March",
             "event": "Registration",
             "desc": """Register now to express your interest in participating!
             If you are interested in hacking at a localhost, hurry up, because limited spots!""",
