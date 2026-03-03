@@ -39,6 +39,8 @@ class TestEmailing(FrappeTestCase):
             frappe.delete_doc("Email Group", group_name, force=True)
 
     def setup_campaign(self):
+        frappe.set_user(self.core_team_email)
+
         email_group = frappe.get_doc(
             EMAIL_GROUP,
             {

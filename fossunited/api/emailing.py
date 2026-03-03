@@ -1,6 +1,7 @@
 from typing import Literal, Optional
 
 import frappe
+from frappe import _
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import (
@@ -64,7 +65,7 @@ def create_email_group(
     suffix = EMAIL_GROUP_SUFFIX_BY_DOCTYPE.get(document_type)
     if suffix is None:
         frappe.throw(
-            f"Unsupported document type: {document_type}",
+            _(f"Unsupported document type: {document_type}"),
             frappe.ValidationError,
         )
 
@@ -114,7 +115,7 @@ def add_to_email_group(email_group: str, email: str):
     logger = frappe.logger("email_group")
 
     if not frappe.db.exists(EMAIL_GROUP, email_group):
-        frappe.throw("This email group does not exist", frappe.DoesNotExistError)
+        frappe.throw(_("This email group does not exist"), frappe.DoesNotExistError)
 
     if frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email}):
         logger.info(f"Email '{email}' already exists in group '{email_group}'")
@@ -132,7 +133,7 @@ def remove_from_email_group(email_group: str, email: str):
     logger = frappe.logger("email_group")
 
     if not frappe.db.exists(EMAIL_GROUP, email_group):
-        frappe.throw("This email group does not exist", frappe.DoesNotExistError)
+        frappe.throw(_("This email group does not exist"), frappe.DoesNotExistError)
 
     member_name = frappe.db.exists(EMAIL_MEMBER, {"email_group": email_group, "email": email})
     if not member_name:
@@ -240,7 +241,7 @@ def create_newsletter_campaign(
     _chapter = chapter
 
     if not _reference_document and not _chapter:
-        frappe.throw("Either reference_document or chapter need to be provided")
+        frappe.throw(_("Either reference_document or chapter need to be provided"))
 
     if not _chapter:
         # Get Chapter ID
@@ -554,6 +555,7 @@ def send_campaign(campaign_id: str):
     args:
         campaign: id of campaign / newsletter doctype
     """
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
     campaign.flags.ignore_permissions = 1
     campaign.send_emails()
     campaign.save()
@@ -569,12 +571,13 @@ def send_test_email(campaign_id: str, email: str):
         campaign_id : campaign / newsletter id
         email: email to send test email to
     """
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
     campaign.flags.ignore_permissions = 1
     try:
         campaign.send_test_email(email)
         campaign.save()
     except frappe.InvalidEmailAddressError as e:
-        frappe.throw(str(e))
+        frappe.throw(_(str(e)))
 
 
 @frappe.whitelist()
@@ -597,6 +600,7 @@ def get_sending_status(campaign_id: str) -> dict:
         }
         ```
     """
+    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
     campaign.flags.ignore_permissions = 1
 
     stats = campaign.get_sending_status()
@@ -615,10 +619,10 @@ def check_newsletter_permission(document_type, reference_document, chapter):
 
     # Otherwise check chapter membership
     if not chapter:
-        frappe.throw("Cannot determine chapter for permission check", frappe.PermissionError)
+        frappe.throw(_("Cannot determine chapter for permission check"), frappe.PermissionError)
 
     if not check_if_chapter_member(chapter, user):
         frappe.throw(
-            "You are not authorized to create newsletters for this chapter",
+            _("You are not authorized to create newsletters for this chapter"),
             frappe.PermissionError,
         )

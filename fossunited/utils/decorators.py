@@ -5,6 +5,7 @@ Permission check decorators for hackathon and chapter operations
 from functools import wraps
 
 import frappe
+from frappe import _
 
 from fossunited.api.chapter import (
     check_if_chapter_member,
@@ -12,6 +13,8 @@ from fossunited.api.chapter import (
     check_if_event_member,
 )
 from fossunited.doctype_ids import (
+    CAMPAIGN,
+    HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
     HACKATHON_TEAM,
     LOCALHOST_ORGANIZER,
@@ -31,18 +34,18 @@ def require_hackathon_participant(hackathon_id="hackathon"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if frappe.session.user == "Guest":
-                frappe.throw("Authentication required", frappe.PermissionError)
+                frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             hackathon = kwargs.get(hackathon_id)
             if not hackathon:
-                frappe.throw("Hackathon data is required", frappe.ValidationError)
+                frappe.throw(_("Hackathon data is required"), frappe.ValidationError)
 
             if not frappe.db.exists(
                 HACKATHON_PARTICIPANT,
                 {"hackathon": hackathon, "user": frappe.session.user},
             ):
                 frappe.throw(
-                    "You are not a participant of this hackathon",
+                    _("You are not a participant of this hackathon"),
                     frappe.PermissionError,
                 )
 
@@ -66,19 +69,19 @@ def require_hackathon_team(team_id="team", hackathon_id="hackathon"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if frappe.session.user == "Guest":
-                frappe.throw("Authentication required", frappe.PermissionError)
+                frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             team = kwargs.get(team_id)
             hackathon = kwargs.get(hackathon_id)
 
             if not team:
-                frappe.throw("Team data is not provided", frappe.ValidationError)
+                frappe.throw(_("Team data is not provided"), frappe.ValidationError)
 
             team_doc = frappe.get_doc(HACKATHON_TEAM, team)
 
             # Check if hackathon matches if provided
             if hackathon and team_doc.hackathon != hackathon:
-                frappe.throw("Team does not belong to this hackathon", frappe.ValidationError)
+                frappe.throw(_("Team does not belong to this hackathon"), frappe.ValidationError)
 
             # Check if user is a member
             is_member = False
@@ -98,7 +101,7 @@ def require_hackathon_team(team_id="team", hackathon_id="hackathon"):
                         break
 
             if not is_member:
-                frappe.throw("You are not a member of this team", frappe.PermissionError)
+                frappe.throw(_("You are not a member of this team"), frappe.PermissionError)
 
             return func(*args, **kwargs)
 
@@ -119,14 +122,14 @@ def require_chapter_member(chapter_id="chapter"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if frappe.session.user == "Guest":
-                frappe.throw("Authentication required", frappe.PermissionError)
+                frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             chapter = kwargs.get(chapter_id)
             if not chapter:
-                frappe.throw("Chapter data is required", frappe.ValidationError)
+                frappe.throw(_("Chapter data is required"), frappe.ValidationError)
 
             if not check_if_chapter_member(chapter, frappe.session.user):
-                frappe.throw("You are not a member of this chapter", frappe.PermissionError)
+                frappe.throw(_("You are not a member of this chapter"), frappe.PermissionError)
 
             return func(*args, **kwargs)
 
@@ -147,14 +150,14 @@ def require_event_member(event_id="event"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if frappe.session.user == "Guest":
-                frappe.throw("Authentication required", frappe.PermissionError)
+                frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             event = kwargs.get(event_id)
             if not event:
-                frappe.throw("Event data is required", frappe.ValidationError)
+                frappe.throw(_("Event data is required"), frappe.ValidationError)
 
             if not check_if_event_member(event):
-                frappe.throw("You are not an event volunteer", frappe.PermissionError)
+                frappe.throw(_("You are not an event volunteer"), frappe.PermissionError)
 
             return func(*args, **kwargs)
 
@@ -175,16 +178,16 @@ def require_chapter_or_event_member(event_id="event"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             if frappe.session.user == "Guest":
-                frappe.throw("Authentication required", frappe.PermissionError)
+                frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             event = kwargs.get(event_id)
             if not event:
-                frappe.throw("Event ID is not provided", frappe.ValidationError)
+                frappe.throw(_("Event ID is not provided"), frappe.ValidationError)
 
             # Reuse existing function directly
             if not check_if_chapter_or_event_core_member(event):
                 frappe.throw(
-                    "You must be either a chapter member or event member",
+                    _("You must be either a chapter member or event member"),
                     frappe.PermissionError,
                 )
 
@@ -229,11 +232,11 @@ def require_localhost_organizer(localhost_param="localhost_id"):
         def wrapper(*args, **kwargs):
             localhost_id = kwargs.get(localhost_param)
             if not localhost_id:
-                frappe.throw("Localhost ID not provided", frappe.PermissionError)
+                frappe.throw(_("Localhost ID not provided"), frappe.PermissionError)
 
             if not is_localhost_organizer(localhost_id):
                 frappe.throw(
-                    "Only localhost organizers can access this resource",
+                    _("Only localhost organizers can access this resource"),
                     frappe.PermissionError,
                 )
 
@@ -252,7 +255,7 @@ def require_mailing_access(campaign_param="campaign_id"):
         def wrapper(*args, **kwargs):
             campaign_id = kwargs.get(campaign_param)
             if not campaign_id:
-                frappe.throw("Campaign ID not provided", frappe.PermissionError)
+                frappe.throw(_("Campaign ID not provided"), frappe.PermissionError)
 
             user = frappe.session.user
             campaign = frappe.get_doc(CAMPAIGN, campaign_id)
@@ -273,7 +276,7 @@ def require_mailing_access(campaign_param="campaign_id"):
 
             if not check_if_chapter_member(chapter, user):
                 frappe.throw(
-                    "You are not authorized organizer to send emails for this campaign",
+                    _("You are not authorized organizer to send emails for this campaign"),
                     frappe.PermissionError,
                 )
 
