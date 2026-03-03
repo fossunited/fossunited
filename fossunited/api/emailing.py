@@ -14,6 +14,7 @@ from fossunited.doctype_ids import (
     HACKATHON_LOCALHOST,
     STUDENT_CLUB,
 )
+from fossunited.utils.decorators import is_localhost_organizer, require_mailing_access
 
 EMAIL_GROUP_TYPES = Literal[
     "Chapter Event Participants",
@@ -245,6 +246,7 @@ def create_newsletter_campaign(
         # Get Chapter ID
         _chapter = frappe.db.get_value(document_type, _reference_document, ["chapter"])
 
+    check_newsletter_permission(document_type, _reference_document, _chapter)
     chapter_dict = frappe.db.get_value(
         CHAPTER,
         _chapter,
@@ -444,6 +446,7 @@ def get_email_groups(
 
 
 @frappe.whitelist()
+@require_mailing_access(campaign_param="campaign_id")
 def update_campaign(campaign_id: str, data: dict):
     """
     Update an email campaign with new details(data)
@@ -541,6 +544,7 @@ def get_formatted_attachment_list(attachments: list) -> list:
 
 
 @frappe.whitelist()
+@require_mailing_access(campaign_param="campaign_id")
 def send_campaign(campaign_id: str):
     """
     Send the campaigns
@@ -548,21 +552,13 @@ def send_campaign(campaign_id: str):
     args:
         campaign: id of campaign / newsletter doctype
     """
-    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
-
-    if not campaign.chapter:
-        chapter = frappe.db.get_value(EVENT, campaign.event, ["chapter"])
-    else:
-        chapter = campaign.chapter
-
-    ensure_mailing_access(chapter)
-
     campaign.flags.ignore_permissions = 1
     campaign.send_emails()
     campaign.save()
 
 
 @frappe.whitelist()
+@require_mailing_access(campaign_param="campaign_id")
 def send_test_email(campaign_id: str, email: str):
     """
     Send out a test email for a campaign
@@ -571,20 +567,6 @@ def send_test_email(campaign_id: str, email: str):
         campaign_id : campaign / newsletter id
         email: email to send test email to
     """
-
-    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
-
-    if not campaign.chapter:
-        chapter = frappe.db.get_value(
-            campaign.document_type,
-            campaign.reference_document,
-            ["chapter"],
-        )
-    else:
-        chapter = campaign.chapter
-
-    ensure_mailing_access(chapter)
-
     campaign.flags.ignore_permissions = 1
     try:
         campaign.send_test_email(email)
@@ -594,6 +576,7 @@ def send_test_email(campaign_id: str, email: str):
 
 
 @frappe.whitelist()
+@require_mailing_access(campaign_param="campaign_id")
 def get_sending_status(campaign_id: str) -> dict:
     """
     Get sending stats related to a campaign
@@ -612,20 +595,6 @@ def get_sending_status(campaign_id: str) -> dict:
         }
         ```
     """
-
-    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
-
-    if not campaign.chapter:
-        chapter = frappe.db.get_value(
-            campaign.document_type,
-            campaign.reference_document,
-            ["chapter"],
-        )
-    else:
-        chapter = campaign.chapter
-
-    ensure_mailing_access(chapter)
-
     campaign.flags.ignore_permissions = 1
 
     stats = campaign.get_sending_status()
@@ -633,12 +602,21 @@ def get_sending_status(campaign_id: str) -> dict:
     return stats
 
 
-def ensure_mailing_access(chapter):
-    """Make sure user is chapter member or localhost organizer"""
+def check_newsletter_permission(document_type, reference_document, chapter):
+    """Check if user has permission to create newsletter"""
     user = frappe.session.user
 
-    if {"System Manager", "Localhost Organizer"} & set(frappe.get_roles(user)):
-        return
+    # Check if localhost organizer
+    if document_type == HACKATHON_LOCALHOST and reference_document:
+        if is_localhost_organizer(reference_document, user):
+            return
+
+    # Otherwise check chapter membership
+    if not chapter:
+        frappe.throw("Cannot determine chapter for permission check", frappe.PermissionError)
 
     if not check_if_chapter_member(chapter, user):
-        frappe.throw("You are not chapter member to send email", frappe.PermissionError)
+        frappe.throw(
+            "You are not authorized to create newsletters for this chapter",
+            frappe.PermissionError,
+        )
