@@ -86,7 +86,7 @@ def get_context(context):
                     f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
                     f"{description}"
                     + (f'<p><a href="{url}">Project Website →</a></p>' if url else "")
-                    + f"]]>"
+                    + "]]>"
                 ),
             }
         )
@@ -115,7 +115,7 @@ def get_context(context):
                     f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
                     f"{description}"
                     + (f'<p><a href="{url}">Event Website →</a></p>' if url else "")
-                    + f"]]>"
+                    + "]]>"
                 ),
             }
         )
@@ -129,7 +129,9 @@ def get_context(context):
 
     return {
         "title": "FOSS United Grantees",
-        "description": "New grantees funded by FOSS United across projects, events, and fellowships",
+        "description": (
+            "New grantees funded by FOSS United across projects, events, and fellowships"
+        ),
         "modified": modified,
         "items": items,
         "link": host + "/grants/grantees",
