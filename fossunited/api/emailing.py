@@ -314,6 +314,7 @@ def get_newsletter_campaigns(
         list : of all the email campaigns
     """
 
+    check_newsletter_permission(document_type, reference_document, chapter)
     campaigns = frappe.db.get_all(
         doctype=CAMPAIGN,
         filters={
@@ -351,6 +352,7 @@ def get_newsletter_campaigns(
 
 
 @frappe.whitelist()
+@require_mailing_access(campaign_param="id")
 def get_campaign_detail(id: str) -> dict:
     """
     Get campaign details and return it as dict
