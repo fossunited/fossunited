@@ -78,25 +78,23 @@
             data-modified="{{ project.modified }}"
             data-toggle="tooltip"
           >
-            <h3 class="text-xl p-0 d-flex align-items-start">
-              <span>{{ project.title }}</span>
+            <h3 class="text-xl p-0 mb-0">
+              <div class="d-flex align-items-start">
+                <span>{{ project.title }}</span>
 
-              <span class="ml-auto d-flex align-items-center">
                 {% if project.is_contribution_project %}
-                  <span class="mr-2" title="Contribution Project">
+                  <span class="ml-auto" title="Contribution Project">
                     <i class="ti ti-git-pull-request"></i>
                   </span>
                 {% endif %}
+              </div>
 
-                {% if project.is_partner_project %}
-                  <span class="d-flex align-items-center" title="Partner Project">
-                    <i class="ti ti-heart-handshake"></i>
-                    {% if project.partner_project %}
-                      <small class="ml-1 partner-name"> {{ project.partner_project_name }} </small>
-                    {% endif %}
-                  </span>
-                {% endif %}
-              </span>
+              {% if project.is_partner_project and project.partner_project %}
+                <div class="d-flex align-items-center mt-2 text-base" title="Partner Project">
+                  <i class="ti ti-heart-handshake"></i>
+                  <small class="ml-1 partner-name">{{ project.partner_project_name }}</small>
+                </div>
+              {% endif %}
             </h3>
 
             <p class="v3-text-secondary flex-grow-1">
@@ -117,7 +115,7 @@
 
   <script>
     $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="tooltip"]').tooltip()
     })
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', (e) => {

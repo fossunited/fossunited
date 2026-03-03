@@ -18,21 +18,23 @@
           class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-3"
         >
           <div class="flex-fill">
-            <div class="d-flex align-items-center mb-3">
-              <h1 class="v3-text-primary mb-0 text-2xl">
-                {{ doc.title }}
-              </h1>
+            <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
+              <h1 class="v3-text-primary mb-2 mb-md-0 text-2xl">{{ doc.title }}</h1>
 
-              <div class="ml-auto d-flex align-items-center">
-                {% if doc.is_contribution_project %}
-                  <span class="v3-tag v3-tag--must">
+              <div class="ml-md-auto d-flex align-items-center flex-wrap">
+                {% if doc.is_contribution_project and not doc.is_partner_project %}
+                  <span class="v3-tag v3-tag--must mr-2 mb-2 mb-md-0">
                     <i class="ti ti-git-pull-request mr-1"></i>
                     Contribution Project
                   </span>
                 {% endif %}
 
                 {% if doc.is_partner_project and partner_project %}
-                  <a href="/{{ partner_project.route }}" class="v3-btn v3-btn-secondary" title="Partner project details">
+                  <a
+                    href="/{{ partner_project.route }}"
+                    class="v3-btn v3-btn-secondary mb-2 mb-md-0"
+                    title="Partner project details"
+                  >
                     <i class="ti ti-heart-handshake mr-1"></i>
                     {{ partner_project.project_name }}
                   </a>

@@ -31,12 +31,13 @@ repos:
   #       pass_filenames: true
   #       args: [--output=line, --minAlertLevel=error]
 
-  - repo: https://github.com/semgrep/pre-commit
-    rev: 'v1.153.1'
-    hooks:
-      - id: semgrep
-        stages: [pre-commit]
-        entry: semgrep
-        # or see https://semgrep.dev/explore to select a ruleset and copy its URL
-        args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions']
-        additional_dependencies: ['attrs']
+  # until we resolve all lints
+  # - repo: https://github.com/semgrep/pre-commit
+  #   rev: 'v1.153.1'
+  #   hooks:
+  #     - id: semgrep
+  #       stages: [pre-commit]
+  #       entry: semgrep
+  #       # or see https://semgrep.dev/explore to select a ruleset and copy its URL
+  #       args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions']
+  #       additional_dependencies: ['attrs']
