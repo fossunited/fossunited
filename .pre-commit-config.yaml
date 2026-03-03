@@ -30,3 +30,12 @@ repos:
   #     - id: vale
   #       pass_filenames: true
   #       args: [--output=line, --minAlertLevel=error]
+
+  - repo: https://github.com/semgrep/pre-commit
+    rev: 'v1.153.1'
+    hooks:
+      - id: semgrep
+        entry: semgrep
+        # or see https://semgrep.dev/explore to select a ruleset and copy its URL
+        args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions']
+        additional_dependencies: ['attrs']
