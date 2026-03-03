@@ -17,7 +17,7 @@ def _safe_href(url):
     parsed = urlparse(url)
     if parsed.scheme not in ("http", "https"):
         return ""
-    return escape_html(quote(url, safe=":/?#[]@!$&'()*+,;=%"))
+    return quote(url, safe=":/?#[]@!$&'()*+,;=%")
 
 
 def _safe_cdata(text):
@@ -75,16 +75,17 @@ def get_context(context):
         items.append(
             {
                 "title": escape_html(f"{g.project_name} ({g.grant_type} Grant)"),
-                "link": url or host + "/grants/grantees",
+                "link": escape_html(url) if url else host + "/grants/grantees",
+                "guid": f"{host}/grants/grantees#{g.name}",
                 "author": "",
                 "published_date": format_datetime(frappe.utils.get_datetime(date)),
                 "modified": g.modified,
                 "category": escape_html(g.grant_type),
                 "content": (
-                    f"<![CDATA["
+                    "<![CDATA["
                     f"<p><strong>Grant Type:</strong> {escape_html(g.grant_type)}</p>"
                     f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
-                    f"{description}"
+                    f"<p>{description}</p>"
                     + (f'<p><a href="{url}">Project Website →</a></p>' if url else "")
                     + "]]>"
                 ),
@@ -103,17 +104,18 @@ def get_context(context):
         items.append(
             {
                 "title": escape_html(f"{g.event_name} (Event Grant)"),
-                "link": url or host + "/grants/grantees",
+                "link": escape_html(url) if url else host + "/grants/grantees",
+                "guid": f"{host}/grants/grantees#{g.name}",
                 "author": escape_html(g.event_organiser or ""),
                 "published_date": format_datetime(frappe.utils.get_datetime(date)),
                 "modified": g.modified,
                 "category": "Event",
                 "content": (
-                    f"<![CDATA["
-                    f"<p><strong>Grant Type:</strong> Event Grant</p>"
+                    "<![CDATA["
+                    "<p><strong>Grant Type:</strong> Event Grant</p>"
                     f"<p><strong>Organiser:</strong> {escape_html(g.event_organiser or '')}</p>"
                     f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
-                    f"{description}"
+                    f"<p>{description}</p>"
                     + (f'<p><a href="{url}">Event Website →</a></p>' if url else "")
                     + "]]>"
                 ),

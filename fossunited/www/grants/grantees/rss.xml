@@ -15,7 +15,7 @@
       <description>{{ item.content }}</description>
       <dc:creator>{{ item.author }}</dc:creator>
       <link>{{ item.link }}</link>
-      <guid>{{ item.link }}/{{ item.title }}</guid>
+      <guid isPermaLink="false">{{ item.guid }}</guid>
       <pubDate>{{ item.published_date }}</pubDate>
       <category>{{ item.category }}</category>
     </item>
