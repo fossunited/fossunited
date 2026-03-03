@@ -23,7 +23,7 @@
           {% endif %}
           <div class="hackathon-name--header align-items-end">
             {% if hackathon.hackathon_logo %}
-              <a href="/{{hackathon.route}}" class="d-inline-block p-2 bg-white rounded">
+              <a href="/{{ hackathon.route }}" class="d-inline-block p-2 bg-white rounded">
                 <img
                   src="{{ hackathon.hackathon_logo }}"
                   alt="Hackathon Logo"
@@ -76,10 +76,36 @@
             data-title="{{ project.title }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
+            data-toggle="tooltip"
           >
-            <h3 class="project-card--title p-0">{{ project.title }}</h3>
-            <p class="v3-text-secondary">{{ project.short_description | truncate(150, true) }}</p>
-            <span class="v3-text-secondary project-card--team">{{ project.team_name }}</span>
+            <h3 class="text-xl p-0 d-flex align-items-start">
+              <span>{{ project.title }}</span>
+
+              <span class="ml-auto d-flex align-items-center">
+                {% if project.is_contribution_project %}
+                  <span class="mr-2" title="Contribution Project">
+                    <i class="ti ti-git-pull-request"></i>
+                  </span>
+                {% endif %}
+
+                {% if project.is_partner_project %}
+                  <span class="d-flex align-items-center" title="Partner Project">
+                    <i class="ti ti-heart-handshake"></i>
+                    {% if project.partner_project %}
+                      <small class="ml-1 partner-name"> {{ project.partner_project_name }} </small>
+                    {% endif %}
+                  </span>
+                {% endif %}
+              </span>
+            </h3>
+
+            <p class="v3-text-secondary flex-grow-1">
+              {{ project.short_description | truncate(150, true) }}
+            </p>
+            <span class="v3-text-secondary">
+              <i class="ti ti-users-group"></i>
+              {{ project.team_name }}
+            </span>
           </div>
         {% endfor %}
       </div>
@@ -90,6 +116,9 @@
   </div>
 
   <script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const searchTerm = e.target.value.toLowerCase()

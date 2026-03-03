@@ -60,12 +60,12 @@
 
 {% macro render_description() %}
   {% if doc.description %}
-    <div class="v3-card mb-4">
+    <div class="v3-card mb-4 section-markdown">
       <div class="v3-section-title">
         <i class="ti ti-book"></i>
         <span>Description & Contribution Guidelines</span>
       </div>
-      <div class="v3-text-secondary" style="line-height:1.75;">
+      <div class="v3-text-primary from-markdown" style="line-height:1.75;">
         {{ frappe.utils.md_to_html(doc.description) }}
       </div>
     </div>

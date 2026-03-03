@@ -9,6 +9,6 @@ def get_context(context):
     context.projects = frappe.get_all(
         HACKATHON_PROJECT,
         {"hackathon": context.hackathon.name, "is_published": 1},
-        ["*"],
+        ["*", "partner_project.project_name as partner_project_name"],
         page_length=9999,
     )

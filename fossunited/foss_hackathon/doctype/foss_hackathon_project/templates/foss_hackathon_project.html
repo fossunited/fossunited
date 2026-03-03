@@ -18,9 +18,27 @@
           class="d-flex flex-column flex-lg-row justify-content-between align-items-start gap-3"
         >
           <div class="flex-fill">
-            <h1 class="v3-text-primary mb-3" style="font-size:2rem;font-weight:600;">
-              {{ doc.title }}
-            </h1>
+            <div class="d-flex align-items-center mb-3">
+              <h1 class="v3-text-primary mb-0 text-2xl">
+                {{ doc.title }}
+              </h1>
+
+              <div class="ml-auto d-flex align-items-center">
+                {% if doc.is_contribution_project %}
+                  <span class="v3-tag v3-tag--must">
+                    <i class="ti ti-git-pull-request mr-1"></i>
+                    Contribution Project
+                  </span>
+                {% endif %}
+
+                {% if doc.is_partner_project and partner_project %}
+                  <a href="/{{ partner_project.route }}" class="v3-btn v3-btn-secondary" title="Partner project details">
+                    <i class="ti ti-heart-handshake mr-1"></i>
+                    {{ partner_project.project_name }}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
             {% if doc.short_description %}
               <p class="v3-text-secondary mb-3">{{ doc.short_description }}</p>
             {% endif %}
@@ -55,20 +73,6 @@
                 </div>
               {% endif %}
             </div>
-
-            {% if partner_project %}
-              <div
-                class="mt-3 p-3"
-                style="background:var(--v3-button-border);border-radius:0.5rem;"
-              >
-                <p class="v3-text-secondary mb-0" style="font-size:0.875rem;">
-                  Note: This is a partner project linked to
-                  <a href="{{ partner_project.repo_link }}" style="color:var(--v3-link-blue);">
-                    {{ partner_project.project_name }}
-                  </a>
-                </p>
-              </div>
-            {% endif %}
           </div>
         </div>
       </div>
