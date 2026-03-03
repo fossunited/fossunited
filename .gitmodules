@@ -1,0 +1,3 @@
+[submodule "development/frappe-semgrep-rules"]
+	path = development/frappe-semgrep-rules
+	url = https://github.com/frappe/semgrep-rules
