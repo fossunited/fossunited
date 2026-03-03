@@ -1,4 +1,8 @@
 {% extends "templates/foss_base.html" %}
+{% block head_include %}
+{{ super() }}
+<link rel="alternate" type="application/rss+xml" title="FOSS United Job Board" href="/jobs/rss.xml" />
+{% endblock %}
 {% block page_content %}
 
 <div class="container">
@@ -9,7 +13,12 @@
   <div class="jobs-board py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h4>Job Board</h4>
-      <a href="/post-a-job" class="btn btn-success">Post a Job</a>
+      <div class="d-flex gap-2">
+        <a href="/jobs/rss.xml" class="btn btn-outline-secondary" title="RSS Feed">
+          <i class="ti ti-rss"></i> RSS
+        </a>
+        <a href="/post-a-job" class="btn btn-success">Post a Job</a>
+      </div>
     </div>
 
     <!-- Active Jobs -->
