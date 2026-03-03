@@ -35,6 +35,7 @@ repos:
     rev: 'v1.153.1'
     hooks:
       - id: semgrep
+        stages: [commit]
         entry: semgrep
         # or see https://semgrep.dev/explore to select a ruleset and copy its URL
         args: ['--config', 'development/frappe-semgrep-rules/rules', '--error', '--skip-unknown-extensions']
