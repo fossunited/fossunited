@@ -60,6 +60,7 @@ def get_context(context):
 
     return {
         "title": "FOSS United Job Board",
+        "description": "Latest job postings in the FOSS United job board",
         "modified": modified,
         "items": jobs,
         "link": host + "/jobs",
