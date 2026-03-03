@@ -66,3 +66,31 @@ class TestJobBoard(FrappeTestCase):
         job.save()
 
         self.assertEqual(job.is_published, 1)
+
+    def test_rss_feed_includes_approved_job(self):
+        """Test that an approved, published job appears in the RSS feed context"""
+        from fossunited.www.jobs.rss import get_context
+
+        job = frappe.get_doc(self.test_job_data)
+        job.status = "Approved"
+        job.is_published = 1
+        job.insert()
+
+        context = get_context({})
+
+        job_names = [j.name for j in context["items"]]
+        self.assertIn(job.name, job_names)
+
+    def test_rss_feed_excludes_unapproved_job(self):
+        """Test that a non-approved job does not appear in the RSS feed context"""
+        from fossunited.www.jobs.rss import get_context
+
+        job = frappe.get_doc(self.test_job_data)
+        job.status = "Received"
+        job.is_published = 0
+        job.insert()
+
+        context = get_context({})
+
+        job_names = [j.name for j in context["items"]]
+        self.assertNotIn(job.name, job_names)
