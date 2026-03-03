@@ -54,6 +54,8 @@ def get_context(context):
         else:
             blog_content = value
         blog.content = f"<![CDATA[{blog_content}]]>"
+        blog.guid = blog.link
+        blog.category = ""
 
     all_items = blog_list
     if all_items:

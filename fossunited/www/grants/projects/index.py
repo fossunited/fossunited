@@ -1,9 +1,7 @@
-import frappe
 from frappe.utils import fmt_money
 
-from fossunited.doctype_ids import PROJ_GRANTS
 from fossunited.www.grants.index import (
-    APPROVED_STATUS,
+    fetch_project_grants,
     format_project_grant,
     group_grants_by_year,
 )
@@ -13,19 +11,7 @@ def get_context(context):
     """Project grants detail page"""
 
     # Fetch all approved project grants
-    grants = frappe.db.get_all(
-        PROJ_GRANTS,
-        filters={"grant_status": ["in", APPROVED_STATUS], "grant_type": "Project"},
-        fields=[
-            "project_name",
-            "project_website",
-            "about_project",
-            "date_of_provision",
-            "grant_amount",
-            "co_sponsor",
-        ],
-        order_by="date_of_provision desc",
-    )
+    grants = fetch_project_grants()
 
     context.grants_by_year = group_grants_by_year(
         grants,

@@ -103,10 +103,16 @@ def get_context(context):
             event.link = event.route
         else:
             event.link = urljoin(host, event.route or "")
-        event.title = escape_html(event.event_name or "")
-        event.chapter_name = escape_html(event.chapter or "")
         event.location = escape_html(event.event_location or "")
+        event.chapter_name = escape_html(event.chapter or "")
         event.event_type_display = escape_html(event.event_type or "Event")
+        location = event.location or ("Online" if event.event_type == "Online" else "TBA")
+        event.title = escape_html(
+            f"{event.event_name} \u2013 {location}" if event.event_name else ""
+        )
+        event.author = event.chapter_name
+        event.category = event.event_type_display
+        event.guid = event.link
 
         # Format dates
         start_date = frappe.utils.get_datetime(event.event_start_date)
@@ -115,7 +121,6 @@ def get_context(context):
         event.start_date_formatted = start_date.strftime("%d %B %Y, %I:%M %p")
         event.end_date_formatted = end_date.strftime("%d %B %Y, %I:%M %p")
         event.published_date = format_datetime(start_date)
-        location = event.location or ("Online" if event.event_type == "Online" else "TBA")
 
         # Build RSS description with event details
         event_details = f"""

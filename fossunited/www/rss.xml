@@ -1,22 +1,2 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:dc="http://purl.org/dc/elements/1.1/">
-  <channel>
-    <title>{{ title }}</title>
-    <description>{{ description }}</description>
-    <link>{{ link }}</link>
-    <language>en-us</language>
-    <lastBuildDate>{{ modified }}</lastBuildDate>
-    <pubDate>{{ modified }}</pubDate>
-    <ttl>1800</ttl>
-    <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml" />
-	{% for i in items %}
-    <item>
-	  <title>{{ i.title }}</title>
-	  <description>{{ i.content }}</description>
-	  <dc:creator>{{ i.author }}</dc:creator>
-	  <link>{{ i.link }}</link>
-	  <guid>{{ i.link }}</guid>
-	  <pubDate>{{ i.published_date }}</pubDate>
-	</item>
-    {% endfor %}
-  </channel>
-</rss>
+{% extends "templates/rss.xml" %}
+{% block ttl %}1800{% endblock %}

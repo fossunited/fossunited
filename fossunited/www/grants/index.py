@@ -115,45 +115,79 @@ def get_event_grant_counts():
     return {"completed": completed, "pending": pending}
 
 
-def get_recent_project_grants(grant_type):
-    grants = frappe.db.get_all(
-        PROJ_GRANTS,
-        filters={
-            "grant_status": ["in", APPROVED_STATUS],
-            "grant_type": grant_type,
-        },
-        fields=[
-            "project_name",
-            "project_website",
-            "about_project",
-            "date_of_provision",
-            "grant_amount",
-            "co_sponsor",
-        ],
+_PROJ_GRANT_FIELDS = [
+    "name",
+    "project_name",
+    "project_website",
+    "about_project",
+    "date_of_provision",
+    "grant_amount",
+    "co_sponsor",
+    "grant_type",
+    "modified",
+]
+
+_EVENT_GRANT_FIELDS = [
+    "name",
+    "event_name",
+    "event_website",
+    "event_description",
+    "application_details",
+    "event_start_date",
+    "grant_amount",
+    "event_organiser",
+    "modified",
+]
+
+
+def fetch_project_grants(limit=None):
+    kwargs = dict(
+        filters={"grant_status": ["in", APPROVED_STATUS], "grant_type": "Project"},
+        fields=_PROJ_GRANT_FIELDS,
         order_by="date_of_provision desc",
-        limit=3,
+    )
+    if limit is not None:
+        kwargs["limit"] = limit
+    return frappe.db.get_all(PROJ_GRANTS, **kwargs)
+
+
+def fetch_fellowship_grants(limit=None):
+    kwargs = dict(
+        filters={"grant_status": ["in", APPROVED_STATUS], "grant_type": "Fellowship"},
+        fields=_PROJ_GRANT_FIELDS,
+        order_by="date_of_provision desc",
+    )
+    if limit is not None:
+        kwargs["limit"] = limit
+    return frappe.db.get_all(PROJ_GRANTS, **kwargs)
+
+
+def fetch_event_grants(limit=None):
+    kwargs = dict(
+        filters={"grant_status": ["in", APPROVED_STATUS]},
+        fields=_EVENT_GRANT_FIELDS,
+        order_by="event_start_date desc",
+    )
+    if limit is not None:
+        kwargs["limit"] = limit
+    return frappe.db.get_all(EVENT_GRANTS, **kwargs)
+
+
+def fetch_all_grants(limit=None):
+    return (
+        fetch_project_grants(limit=limit)
+        + fetch_fellowship_grants(limit=limit)
+        + fetch_event_grants(limit=limit)
     )
 
-    return [format_project_grant(g) for g in grants]
+
+def get_recent_project_grants(grant_type):
+    fetch = fetch_fellowship_grants if grant_type == "Fellowship" else fetch_project_grants
+    return [format_project_grant(g) for g in fetch(limit=3)]
 
 
 def get_recent_event_grants():
-    grants = frappe.db.get_all(
-        EVENT_GRANTS,
-        filters={"grant_status": ["in", APPROVED_STATUS]},
-        fields=[
-            "event_name",
-            "event_website",
-            "application_details",
-            "event_start_date",
-            "grant_amount",
-            "event_organiser",
-        ],
-        order_by="event_start_date desc",
-        limit=3,
-    )
-
-    return [format_event_grant(g) for g in grants]
+    return [format_event_grant(g) for g in fetch_event_grants(limit=3)]
 
 
 def format_project_grant(grant, grant_type=None):

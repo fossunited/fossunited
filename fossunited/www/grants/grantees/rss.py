@@ -5,7 +5,11 @@ from urllib.parse import quote, urlparse
 import frappe
 from frappe.utils import escape_html, fmt_money, get_request_site_address
 
-from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
+from fossunited.www.grants.index import (
+    fetch_event_grants,
+    fetch_fellowship_grants,
+    fetch_project_grants,
+)
 
 no_cache = 1
 base_template_path = "www/grants/grantees/rss.xml"
@@ -27,39 +31,8 @@ def _safe_cdata(text):
 def get_context(context):
     host = get_request_site_address()
 
-    project_grants = frappe.db.get_all(
-        PROJ_GRANTS,
-        filters={"grant_status": "Approved", "grant_type": ["in", ["Project", "Fellowship"]]},
-        fields=[
-            "name",
-            "project_name",
-            "project_website",
-            "about_project",
-            "grant_type",
-            "grant_amount",
-            "date_of_provision",
-            "modified",
-        ],
-        order_by="date_of_provision desc",
-        limit=50,
-    )
-
-    event_grants = frappe.db.get_all(
-        EVENT_GRANTS,
-        filters={"grant_status": "Approved"},
-        fields=[
-            "name",
-            "event_name",
-            "event_website",
-            "application_details",
-            "event_start_date",
-            "grant_amount",
-            "event_organiser",
-            "modified",
-        ],
-        order_by="event_start_date desc",
-        limit=50,
-    )
+    project_grants = fetch_project_grants(limit=50) + fetch_fellowship_grants(limit=50)
+    event_grants = fetch_event_grants(limit=50)
 
     items = []
 
