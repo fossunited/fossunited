@@ -2,6 +2,11 @@
 
 {% set show_count = true %}
 
+{% block head_include %}
+{{ super() }}
+<link rel="alternate" type="application/rss+xml" title="FOSS United Grantees" href="/grants/grantees/rss.xml" />
+{% endblock %}
+
 {% block action_buttons %}
   <a href="/grants/projects" class="v3-btn v3-btn-secondary">
     <i class="ti ti-device-imac-code"></i> Project Grants
@@ -11,5 +16,8 @@
   </a>
   <a href="/grants/fellowships" class="v3-btn v3-btn-secondary">
     <i class="ti ti-heart-handshake"></i> Fellowships
+  </a>
+  <a href="/grants/grantees/rss.xml" class="v3-btn v3-btn-secondary" title="RSS Feed">
+    <i class="ti ti-rss"></i> RSS
   </a>
 {% endblock %}

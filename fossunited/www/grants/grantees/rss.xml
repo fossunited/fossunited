@@ -1,2 +1,1 @@
 {% extends "templates/rss.xml" %}
-{% block ttl %}1800{% endblock %}

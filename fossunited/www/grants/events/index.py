@@ -1,27 +1,17 @@
-import frappe
 from frappe.utils import fmt_money
 
-from fossunited.doctype_ids import EVENT_GRANTS
-from fossunited.www.grants.index import format_event_grant, group_grants_by_year
+from fossunited.www.grants.index import (
+    fetch_event_grants,
+    format_event_grant,
+    group_grants_by_year,
+)
 
 
 def get_context(context):
     """Event grants detail page"""
 
     # Fetch all approved event grants
-    grants = frappe.db.get_all(
-        EVENT_GRANTS,
-        filters={"grant_status": "Approved"},
-        fields=[
-            "event_name",
-            "event_website",
-            "event_description",
-            "event_start_date",
-            "grant_amount",
-            "event_organiser",
-        ],
-        order_by="event_start_date desc",
-    )
+    grants = fetch_event_grants()
 
     context.grants_by_year = group_grants_by_year(
         grants,

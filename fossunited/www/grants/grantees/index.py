@@ -1,8 +1,9 @@
-import frappe
 from frappe.utils import fmt_money
 
-from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
 from fossunited.www.grants.index import (
+    fetch_event_grants,
+    fetch_fellowship_grants,
+    fetch_project_grants,
     format_event_grant,
     format_project_grant,
     group_grants_by_year,
@@ -14,47 +15,9 @@ def get_context(context):
 
     all_grants = []
 
-    project_grants = frappe.db.get_all(
-        PROJ_GRANTS,
-        filters={"grant_status": "Approved", "grant_type": "Project"},
-        fields=[
-            "project_name",
-            "project_website",
-            "about_project",
-            "date_of_provision",
-            "grant_amount",
-            "co_sponsor",
-        ],
-        order_by="date_of_provision desc",
-    )
-
-    fellowship_grants = frappe.db.get_all(
-        PROJ_GRANTS,
-        filters={"grant_status": "Approved", "grant_type": "Fellowship"},
-        fields=[
-            "project_name",
-            "project_website",
-            "about_project",
-            "date_of_provision",
-            "grant_amount",
-            "co_sponsor",
-        ],
-        order_by="date_of_provision desc",
-    )
-
-    event_grants = frappe.db.get_all(
-        EVENT_GRANTS,
-        filters={"grant_status": "Approved"},
-        fields=[
-            "event_name",
-            "event_website",
-            "application_details",
-            "event_start_date",
-            "grant_amount",
-            "event_organiser",
-        ],
-        order_by="event_start_date desc",
-    )
+    project_grants = fetch_project_grants()
+    fellowship_grants = fetch_fellowship_grants()
+    event_grants = fetch_event_grants()
 
     for grant in project_grants:
         all_grants.append(
