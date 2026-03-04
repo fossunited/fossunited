@@ -1,6 +1,6 @@
 <div id="likes" class="feedback-item likes mr-3">
-  <span class="like-icon"></span>
-  <span class="like-count"></span>
+  <button type="button" class="like-icon" aria-pressed="false" aria-label="Like"></button>
+  <span class="like-count" aria-live="polite" aria-atomic="true"></span>
 </div>
 
 <script type="text/javascript">
@@ -11,9 +11,11 @@
 
     let toggle_like_icon = function (active) {
       active ? $('.like-icon').addClass('liked') : $('.like-icon').removeClass('liked')
+      $('.like-icon').attr('aria-pressed', active ? 'true' : 'false')
+      $('.like-icon').attr('aria-label', active ? 'Unlike' : 'Like')
     }
 
-    $('.like-icon').append(`<svg class="icon icon-sm"><use href="#icon-heart"></use></svg>`)
+    $('.like-icon').append(`<svg class="icon icon-sm" aria-hidden="true" focusable="false"><use href="#icon-heart"></use></svg>`)
     toggle_like_icon(like)
     $('.like-count').text(like_count)
 
