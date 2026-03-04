@@ -178,7 +178,7 @@ class FOSSHackathon(WebsiteGenerator):
             desc_short=desc_short,
         )
 
-        image = self.hackathon_banner
+        image = frappe.utils.get_url(self.hackathon_banner)
 
         return pagetitle, description, image
 
