@@ -22,21 +22,22 @@
               role="tab"
               tabindex="0"
               aria-selected="true"
+              aria-controls="{{ item }}"
             >
               {{ item | capitalize }}
             </div>
           {% endfor %}
         </div>
-        <div class="content-div" id="about">
+        <div class="content-div" id="about" role="tabpanel" tabindex="0">
           <div class="profile-content-div">
             <h5>About</h5>
             <div class="about v3-text-primary">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
-        <div class="content-div" id="resume">
+        <div class="content-div" id="resume" role="tabpanel" tabindex="0">
           {{ render_experience() }} {{ render_education() }}
         </div>
-        <div class="content-div" id="projects">{{ render_projects() }}</div>
+        <div class="content-div" id="projects" role="tabpanel" tabindex="0">{{ render_projects() }}</div>
       </div>
 
       <div class="profile-content-section mt-10">
@@ -47,6 +48,7 @@
           <a
             href="https://docs.fossunited.org/manage-profile/#show-community-activity"
             target="_blank"
+            rel="noopener noreferrer"
             class="help-icon"
             title="What is the activity?"
             aria-label="Learn more about community activity"
@@ -94,7 +96,7 @@
                 <div class="collaborators-container"></div>
               </div>
               <a
-                rel="nofollow"
+                rel="noopener noreferrer nofollow"
                 href="{{ project.project_link }}"
                 style="color: hsl(var(--clr-foss-mint-500))"
                 class="project-link"
@@ -146,7 +148,7 @@
                   <div class="experience-item--company-location">
                     {# if values | len < 2 #}
                     <span style="color: hsl(var(--clr-foss-mint-500))">
-                      <a rel="nofollow" href="{{ value.company_website }}" target="_blank"
+                      <a rel="noopener noreferrer nofollow" href="{{ value.company_website }}" target="_blank"
                         >{{ value.company }}</a
                       >
                     </span>
@@ -407,7 +409,7 @@
       {% if user_socials %}
         <div class="header-section--socials" aria-label="Social media links">
           {% for (key,value) in user_socials.items() %}
-            <a rel="me nofollow" href="{{ value }}" aria-label="{{ key | title }} profile" target="_blank"
+            <a rel="me nofollow noopener noreferrer" href="{{ value }}" aria-label="{{ key | title }} profile" target="_blank"
               ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key | title }}"
             /></a>
           {% endfor %}
