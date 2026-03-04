@@ -147,7 +147,9 @@
       aria-controls="bio-{{ speaker.name }}"
       aria-label="Show bio for {{ speaker.full_name }}"
       onclick="
-        var panel = document.getElementById('bio-{{ speaker.name }}');
+        var controlId = this.getAttribute('aria-controls');
+        var panel = controlId ? document.getElementById(controlId) : null;
+        if (!panel) return;
         var expanded = panel.classList.contains('hidden');
         panel.classList.toggle('hidden');
         this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
