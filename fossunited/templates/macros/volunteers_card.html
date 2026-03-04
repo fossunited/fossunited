@@ -5,7 +5,7 @@
 
   <div class="v3-card {% if show_view_all %}has-view-all{% endif %}">
     <div class="v3-section-title">
-      <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' if type == 'speakers' else icon }}"></i>
+      <i class="ti ti-{{ 'empathize' if type == 'volunteers' else 'microphone' if type == 'speakers' else icon }}" aria-hidden="true"></i>
       <span>{{ 'Volunteers' if type == 'volunteers' else type.capitalize() }}</span>
     </div>
 
@@ -13,7 +13,7 @@
       <div class="v3-people-list">
         {% if type != 'speakers' %}
           {% for volunteer in items %}
-            <a class="v3-clickable v3-people-item" href="/{{ volunteer.route }}">
+            <a class="v3-clickable v3-people-item" href="/{{ volunteer.route }}" aria-label="{{ volunteer.full_name }}{{ ', ' + volunteer.info if volunteer.info else '' }}">
               <img
                 src="{{ volunteer.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                 alt="{{ volunteer.full_name }}"
@@ -36,7 +36,7 @@
           {% for speaker in items %}
             {% for submission in submissions %}
               {% if submission.name == speaker.parent %}
-                <a class="v3-clickable v3-people-item" href="/{{ submission.route }}">
+                <a class="v3-clickable v3-people-item" href="/{{ submission.route }}" aria-label="{{ speaker.full_name }}, speaker">
                   <img
                     src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                     alt="{{ speaker.full_name }}"
@@ -52,9 +52,16 @@
     </div>
 
     {% if show_view_all %}
-      <div class="v3-view-all-link" onclick="togglePeopleView('{{ unique_id }}')">
+      <button
+        type="button"
+        class="v3-view-all-link"
+        onclick="togglePeopleView('{{ unique_id }}')"
+        aria-expanded="false"
+        aria-controls="container_{{ unique_id }}"
+        id="btn_{{ unique_id }}"
+      >
         <span id="btn_text_{{ unique_id }}">View All</span>
-      </div>
+      </button>
     {% endif %}
   </div>
 
@@ -62,13 +69,16 @@
     function togglePeopleView(uniqueId) {
       const container = document.getElementById('container_' + uniqueId)
       const btnText = document.getElementById('btn_text_' + uniqueId)
+      const btn = document.getElementById('btn_' + uniqueId)
       const isExpanded = container.getAttribute('data-expanded') === 'true'
 
       if (isExpanded) {
         container.setAttribute('data-expanded', 'false')
+        btn.setAttribute('aria-expanded', 'false')
         btnText.textContent = 'View All'
       } else {
         container.setAttribute('data-expanded', 'true')
+        btn.setAttribute('aria-expanded', 'true')
         btnText.textContent = 'Show Less'
       }
     }
