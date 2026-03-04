@@ -70,9 +70,9 @@
 
 {% macro prose_container(label, content) %}
   <div class="flex flex-col">
-    <h3 class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
+    <h2 class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
       {{ label }}
-    </h3>
+    </h2>
     <div class="{{ prose_classes }} max-w-full p-4 border rounded border-gray-400">
       {{ content }}
     </div>
@@ -144,12 +144,20 @@
     <button
       class="p-2 text-sm outline-none border-0 w-fit"
       aria-expanded="false"
+      aria-controls="bio-{{ speaker.name }}"
       aria-label="Show bio for {{ speaker.full_name }}"
-      onclick="this.setAttribute('aria-expanded', this.nextElementSibling.classList.contains('hidden') ? 'true' : 'false'); this.nextElementSibling.classList.toggle('hidden'); this.innerText = this.nextElementSibling.classList.contains('hidden') ? 'Show Bio' : 'Hide Bio';"
+      onclick="
+        var panel = document.getElementById('bio-{{ speaker.name }}');
+        var expanded = panel.classList.contains('hidden');
+        panel.classList.toggle('hidden');
+        this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        this.setAttribute('aria-label', expanded ? 'Hide bio for {{ speaker.full_name }}' : 'Show bio for {{ speaker.full_name }}');
+        this.innerText = expanded ? 'Hide Bio' : 'Show Bio';
+      "
     >
       Show Bio
     </button>
-    <div class="space-y-1 p-2 hidden">
+    <div id="bio-{{ speaker.name }}" class="space-y-1 p-2 hidden">
       <div class="{{ prose_classes }} max-w-full">{{ speaker.bio }}</div>
     </div>
   </div>
