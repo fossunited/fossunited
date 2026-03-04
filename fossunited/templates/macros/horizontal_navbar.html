@@ -1,7 +1,13 @@
 {% macro horizontal_navbar(nav_items) %}
-  <div class="horizontal-navbar">
+  <div class="horizontal-navbar" role="tablist">
     {% for item in nav_items %}
-      <div class="horizontal-navbar--item" name="{{ item }}-nav-item" id="{{ item }}-nav-item">
+      <div
+        class="horizontal-navbar--item"
+        name="{{ item }}-nav-item"
+        id="{{ item }}-nav-item"
+        role="tab"
+        tabindex="0"
+      >
         {% if item in ['rsvp', 'cfp'] %}
           {{ item | replace('_', ' ') | upper }}
         {%
