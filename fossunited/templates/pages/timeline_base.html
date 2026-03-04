@@ -263,15 +263,15 @@
         )
 
         dom.cityDropdown.innerHTML = `
-          <div class="city-option v3-dropdown-item" role="option" aria-selected="${state.filters.city === '' ? 'true' : 'false'}" data-value="">All Cities</div>
+          <div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === '' ? 'true' : 'false'}" data-value="">All Cities</div>
                 ${filtered
             .map(
               (city) =>
-                `<div class="city-option v3-dropdown-item" role="option" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`,
+                `<div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`,
             .join('')}`
 
         dom.cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
-          opt.onclick = () => {
+          function selectOption() {
             const value = opt.dataset.value
             if (state.filters.city === value) {
               // deselect
@@ -287,7 +287,30 @@
               o.setAttribute('aria-selected', o.dataset.value === state.filters.city ? 'true' : 'false')
             })
             dom.cityDropdown.style.display = 'none'
+            dom.citySearch.focus()
             render()
+          }
+          opt.onclick = selectOption
+          opt.onkeydown = (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              selectOption()
+            } else if (e.key === 'ArrowDown') {
+              e.preventDefault()
+              const opts = Array.from(dom.cityDropdown.querySelectorAll('.city-option'))
+              const idx = opts.indexOf(opt)
+              if (idx < opts.length - 1) opts[idx + 1].focus()
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault()
+              const opts = Array.from(dom.cityDropdown.querySelectorAll('.city-option'))
+              const idx = opts.indexOf(opt)
+              if (idx > 0) opts[idx - 1].focus()
+              else dom.citySearch.focus()
+            } else if (e.key === 'Escape') {
+              e.preventDefault()
+              dom.cityDropdown.style.display = 'none'
+              dom.citySearch.focus()
+            }
           }
         })
       }
