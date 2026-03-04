@@ -1,14 +1,14 @@
 {% macro agenda_card(schedule_data, route, show_limit=10) %}
   <div class="v3-card">
     <div class="v3-section-title">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M14.3158 1.68421H1.68421L1.68421 14.3158H14.3158V1.68421ZM1.68421 0C0.754047 0 0 0.754047 0 1.68421V14.3158C0 15.246 0.754047 16 1.68421 16H14.3158C15.246 16 16 15.246 16 14.3158V1.68421C16 0.754047 15.246 0 14.3158 0H1.68421Z" fill="currentColor"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 5.05255C3.36823 4.58747 3.74525 4.21045 4.21033 4.21045H11.7893C12.2544 4.21045 12.6314 4.58747 12.6314 5.05255C12.6314 5.51764 12.2544 5.89466 11.7893 5.89466H4.21033C3.74525 5.89466 3.36823 5.51764 3.36823 5.05255Z" fill="currentColor"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 8.21051C3.36823 7.74543 3.74525 7.36841 4.21033 7.36841H11.7893C12.2544 7.36841 12.6314 7.74543 12.6314 8.21051C12.6314 8.6756 12.2544 9.05262 11.7893 9.05262H4.21033C3.74525 9.05262 3.36823 8.6756 3.36823 8.21051Z" fill="currentColor"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M3.36823 11.5789C3.36823 11.1138 3.74525 10.7368 4.21033 10.7368H8.42086C8.88594 10.7368 9.26296 11.1138 9.26296 11.5789C9.26296 12.044 8.88594 12.421 8.42086 12.421H4.21033C3.74525 12.421 3.36823 12.044 3.36823 11.5789Z" fill="currentColor"/>
       </svg>
       {% if route %}
-      <a href="/{{ route }}/schedule">Agenda</a>
+      <a href="/{{ route }}/schedule" aria-label="View full event agenda">Agenda</a>
       <i class="ti ti-arrow-up-right" style="font-size: 0.9rem;" aria-hidden="true"></i>
       {% else %}
       <span>Agenda</span>
@@ -53,19 +53,19 @@
                     {# Wrap entire card if only one link type exists #}
                     {% if wrap_whole_card %}
                     {% set single_link = ("/" ~ item.cfp_route) if has_cfp else item.talk_video %}
-                      <a class="v3-clickable" href="{{ single_link }}">
+                      <a class="v3-clickable" href="{{ single_link }}" aria-label="{{ item.title }}{% if item.cfp_speakers %} by {% for s in item.cfp_speakers %}{{ s.full_name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
                     {% endif %}
                       <div class="v3-schedule-item">
                         <div class="v3-schedule-header">
                           <div class="v3-schedule-time">{{ item.start_time_display }}</div>
-                          <div style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;"></div>
+                          <div style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.5rem;" aria-hidden="true"></div>
                           <div class="v3-schedule-badge">{{ item.category }}</div>
                         </div>
 
                         <div class="v3-schedule-content">
                           {# Image/Icon section - links to video if both links exist #}
                           {% if has_both %}
-                          <a href="{{ item.talk_video }}" class="v3-clickable">
+                          <a href="{{ item.talk_video }}" class="v3-clickable" aria-label="Watch video recording of {{ item.title }}">
                           {% endif %}
                             {% if item.cfp_speakers %}
                               <div class="v3-speaker-imgs cols-{{ [item.cfp_speakers|length, 4]|min }}">
@@ -78,7 +78,7 @@
                                 {% endfor %}
                               </div>
                             {% else %}
-                              <div class="rounded align-items-center justify-content-center text-black bg-white p-2">
+                              <div class="rounded align-items-center justify-content-center text-black bg-white p-2" aria-hidden="true">
                                 <i class="ti ti-{{ icon }}" style="font-size: 1.5rem;"></i>
                               </div>
                             {% endif %}
@@ -88,7 +88,7 @@
 
                           {# Content section - links to CFP if both links exist #}
                           {% if has_both %}
-                          <a href="/{{ item.cfp_route }}" class="v3-clickable" style="flex: 1;">
+                          <a href="/{{ item.cfp_route }}" class="v3-clickable" style="flex: 1;" aria-label="View proposal: {{ item.title }}">
                           {% endif %}
                             <div class="v3-schedule-details">
                               <div class="v3-schedule-title">{{ item.title }}</div>
@@ -132,6 +132,7 @@
         href="/{{ route }}/schedule"
         class="v3-btn v3-btn-secondary"
         style="margin-top: 1rem; width: auto;"
+        aria-label="View full schedule for this event"
       >View Full Schedule</a>
     {% endif %}
   </div>
