@@ -1,7 +1,7 @@
 <nav class="navbar" aria-label="Site navigation">
   <div class="container">
     <div class="navbar-brand">
-      <a href="{{ url_prefix }}{{ home_page or ' /' }}" aria-label="FOSS United home">
+        <a href="{{ url_prefix }}{{ home_page or '/' }}" aria-label="FOSS United home">
         {%- if brand_html -%}
           {{ brand_html }}
         {%- elif banner_image -%}

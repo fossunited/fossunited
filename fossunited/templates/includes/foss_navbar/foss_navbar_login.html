@@ -17,7 +17,7 @@
       >
         <span class="user-image-wrapper" aria-hidden="true"></span>
       </a>
-      <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-label="User actions">
+        <ul class="dropdown-menu dropdown-menu-right" aria-label="User actions">
         {%- for child in post_login -%}{%- if child.url -%}
           <a
             class="dropdown-item"
@@ -34,7 +34,7 @@
             {{ child.label }}
           </a>
         {%- endif -%}{%- endfor -%}
-        <a class="dropdown-item switch-to-desk hidden" role="menuitem" href="/app">{{ _('Switch To Desk') }}</a>
+          <a class="dropdown-item switch-to-desk hidden" href="/app">{{ _('Switch To Desk') }}</a>
       </ul>
     </li>
   {% endif %}
