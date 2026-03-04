@@ -59,13 +59,14 @@
       <div class="v3-controls {% if show_count %}mb-4{% else %}my-4{% endif %}">
         <div class="v3-controls-left">
           <div class="v3-search-input">
-            <input id="search" type="text" placeholder="Search by name, description, or sponsor" />
-            <i class="ti ti-search v3-text-tertiary"></i>
+            <label for="search" class="sr-only">Search grants</label>
+            <input id="search" type="text" placeholder="Search by name, description, or sponsor" aria-label="Search grants" />
+            <i class="ti ti-search v3-text-tertiary" aria-hidden="true"></i>
           </div>
         </div>
 
         <div class="v3-controls-right">
-          <span class="v3-text-tertiary" style="font-size:0.875rem;"> Group by: </span>
+          <label class="v3-text-tertiary" for="group-by" style="font-size:0.875rem;"> Group by: </label>
           <select id="group-by" class="v3-select">
             {% block group_options %}
               <option value="type">Grant Type</option>
@@ -75,7 +76,7 @@
             {% endblock %}
           </select>
 
-          <span class="v3-text-tertiary" style="font-size:0.875rem;"> Sort by: </span>
+          <label class="v3-text-tertiary" for="sort" style="font-size:0.875rem;"> Sort by: </label>
           <select id="sort" class="v3-select">
             <option value="date-desc">Most Recent</option>
             <option value="date-asc">Oldest First</option>
