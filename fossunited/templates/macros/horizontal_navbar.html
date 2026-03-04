@@ -7,8 +7,8 @@
         name="{{ item }}-nav-item"
         id="{{ item }}-nav-item"
         role="tab"
-        tabindex="-1"
-        aria-selected="false"
+        tabindex="{{ '0' if loop.first else '-1' }}"
+        aria-selected="{{ 'true' if loop.first else 'false' }}"
         aria-controls="{{ item }}"
       >
         {% if item in ['rsvp', 'cfp'] %}
