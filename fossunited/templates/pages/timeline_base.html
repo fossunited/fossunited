@@ -264,11 +264,7 @@
 
         dom.cityDropdown.innerHTML = `
           <div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === '' ? 'true' : 'false'}" data-value="">All Cities</div>
-                ${filtered
-            .map(
-              (city) =>
-                `<div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`,
-            .join('')}`
+                ${filtered.map((city) => `<div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`).join('')}`
 
         dom.cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
           function selectOption() {
