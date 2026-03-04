@@ -263,12 +263,11 @@
         )
 
         dom.cityDropdown.innerHTML = `
-          <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
-          ${filtered
+          <div class="city-option v3-dropdown-item" role="option" aria-selected="${state.filters.city === '' ? 'true' : 'false'}" data-value="">All Cities</div>
+                ${filtered
             .map(
               (city) =>
-                `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`,
-            )
+                `<div class="city-option v3-dropdown-item" role="option" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`,
             .join('')}`
 
         dom.cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
@@ -284,6 +283,9 @@
               dom.citySearch.value = value || ''
               dom.citySearch.placeholder = value || 'Search cities...'
             }
+            dom.cityDropdown.querySelectorAll('.city-option').forEach((o) => {
+              o.setAttribute('aria-selected', o.dataset.value === state.filters.city ? 'true' : 'false')
+            })
             dom.cityDropdown.style.display = 'none'
             render()
           }
@@ -558,6 +560,8 @@
         state.category = 'city'
         dom.toggleCity.classList.add('v3-btn-secondary')
         dom.toggleClub.classList.remove('v3-btn-secondary')
+        dom.toggleCity.setAttribute('aria-pressed', 'true')
+        dom.toggleClub.setAttribute('aria-pressed', 'false')
         render()
       }
 
@@ -565,6 +569,8 @@
         state.category = 'club'
         dom.toggleClub.classList.add('v3-btn-secondary')
         dom.toggleCity.classList.remove('v3-btn-secondary')
+        dom.toggleClub.setAttribute('aria-pressed', 'true')
+        dom.toggleCity.setAttribute('aria-pressed', 'false')
         render()
       }
 
