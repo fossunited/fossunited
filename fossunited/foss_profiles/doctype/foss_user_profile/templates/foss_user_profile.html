@@ -12,13 +12,16 @@
 
     <div class="container">
       <div class="profile-content-section">
-        <div class="horizontal-navbar px-8 pt-2">
+        <div class="horizontal-navbar px-8 pt-2" role="tablist" aria-label="Profile sections">
           {% set nav_items = ['about'] %}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
               name="{{ item }}-nav-item"
               id="{{ item }}-nav-item"
+              role="tab"
+              tabindex="0"
+              aria-selected="true"
             >
               {{ item | capitalize }}
             </div>
@@ -46,8 +49,9 @@
             target="_blank"
             class="help-icon"
             title="What is the activity?"
+            aria-label="Learn more about community activity"
           >
-            <i class="ti ti-help"></i>
+            <i class="ti ti-help" aria-hidden="true"></i>
           </a>
         </div>
         <div id="activity">{{ render_activity() }}</div>
@@ -258,7 +262,7 @@
     data-docname="{{ chapter.chapter_name }}"
     data-route="{{ chapter.route }}"
     href="/{{ chapter.route }}"
-    aria-description="{{ chapter.chapter_name }}"
+    aria-label="{{ chapter.chapter_name }}, {{ chapter.chapter_type }}, {{ chapter.role }}"
   >
     <div class="talk-card--container">
       <div class="talk-card--meta">
@@ -277,7 +281,7 @@
       </div>
       <div class="talk-card--title">{{ chapter.chapter_name }}</div>
       <div class="chapter-volunteer-card--type">
-        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
           <path
             d="M4.0869 0.906652C4.27429 0.595275 4.72571 0.595274 4.9131 0.906652L6.05745 2.80815L8.2195 3.30889C8.57355 3.39089 8.71305 3.82022 8.47482 4.09466L7.02 5.77059L7.21188 7.98157C7.2433 8.34362 6.87809 8.60896 6.54347 8.4672L4.5 7.60148L2.45653 8.4672C2.12191 8.60896 1.75669 8.34362 1.78812 7.98157L1.98 5.77059L0.525185 4.09466C0.286954 3.82022 0.426453 3.39089 0.780497 3.30889L2.94255 2.80815L4.0869 0.906652Z"
             fill="#08B74F"
@@ -298,7 +302,7 @@
     data-docname="{{ talk.name }}"
     data-route="{{ talk.route }}"
     href="/{{ talk.route }}"
-    aria-description="User is giving a talk about {{ talk.talk_title }} at {{ talk.event_name }} happening on {{ talk.event_start_date.strftime('%d %b %Y') }} at {{ talk.event_location or 'To Be Announced' }}. Click to learn more about the talk."
+    aria-label="{{ talk.talk_title }} at {{ talk.event_name }}, {{ talk.event_start_date.strftime('%d %b %Y') }}, {{ talk.event_location or 'location TBA' }}"
   >
     <div class="talk-card--container">
       <div class="talk-card--meta">
@@ -341,13 +345,13 @@
       <img
         class="header-cover-image"
         src="{{ doc.cover_image or '/assets/fossunited/images/defaults/user_profile_banner.png' }}"
-        alt="cover-image"
+        alt="{{ doc.full_name }}'s cover photo"
       />
       <div class="profile-detail-section">
         <img
           class="header-profile-image"
           src="{{ doc.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-          alt="profile-image"
+          alt="{{ doc.full_name }}'s profile photo"
         />
         <div class="header-content-edit-section">
           <div class="header--content-section">
@@ -367,16 +371,16 @@
               <div class="seperator-circle"></div>
               <span>Joined {{ doc.creation.strftime("%B %Y") }}</span>
               {% if doc.current_city %}
-                <div class="seperator-circle"></div>
+                <div class="seperator-circle" aria-hidden="true"></div>
                 <div>
-                  <i class="ti ti-map-pin" style="font-size: larger"></i>
+                  <i class="ti ti-map-pin" style="font-size: larger" aria-hidden="true"></i>
                   {{ doc.current_city }}
                 </div>
               {% endif %}
               {% if doc.website %}
-                <div class="seperator-circle"></div>
+                <div class="seperator-circle" aria-hidden="true"></div>
                 <div class="d-flex align-content-center justify-content-center">
-                  <i class="ti ti-link" style="font-size: larger"></i>
+                  <i class="ti ti-link" style="font-size: larger" aria-hidden="true"></i>
                   <a
                     class="ml-1"
                     style="font-weight: var(--fw-medium)"
@@ -391,8 +395,8 @@
         </div>
       </div>
       {% if doc.is_private %}
-        <div class="header-section--anonymous">
-          <i class="ti ti-eye-off"></i>
+        <div class="header-section--anonymous" role="status">
+          <i class="ti ti-eye-off" aria-hidden="true"></i>
           <span> Your profile is anonymous </span>
         </div>
       {% endif %}
@@ -401,10 +405,10 @@
       {% endif %}
       {% set user_socials = get_user_socials(doc.name) %}
       {% if user_socials %}
-        <div class="header-section--socials">
+        <div class="header-section--socials" aria-label="Social media links">
           {% for (key,value) in user_socials.items() %}
-            <a rel="me nofollow" href="{{ value }}"
-              ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key }}"
+            <a rel="me nofollow" href="{{ value }}" aria-label="{{ key | title }} profile" target="_blank"
+              ><img src="https://svgl.app/library/{{ key }}.svg" alt="{{ key | title }}"
             /></a>
           {% endfor %}
         </div>
