@@ -25,6 +25,7 @@ from datetime import datetime, timedelta
 
 import frappe
 import frappe.utils.password
+from frappe import _
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -294,7 +295,7 @@ def seed():
     is restored on exit regardless of success or failure.
     """
     if not frappe.conf.get("developer_mode"):
-        frappe.throw("Seed script can only be run in developer mode.")
+        frappe.throw(_("Seed script can only be run in developer mode."))
 
     prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
     frappe.flags.ignore_permissions = True
@@ -343,12 +344,17 @@ def _create_users():
     for user_cfg in SEED_USERS:
         email = user_cfg["email"]
 
+        is_new_user = not frappe.db.exists("User", email)
+
         insert_user_profile(
             email=email,
             first_name=user_cfg["first_name"],
             last_name=user_cfg["last_name"],
         )
-        frappe.utils.password.update_password(email, DEFAULT_PASSWORD)
+
+        if is_new_user:
+            frappe.utils.password.update_password(email, DEFAULT_PASSWORD)
+            logger.info("Set default password for new user: %s", email)
 
         if user_cfg["kind"] == "chapter":
             user_doc = frappe.get_doc("User", email)
@@ -358,7 +364,7 @@ def _create_users():
         else:
             result["normal"].append(email)
 
-    logger.info("Ensured %d users (password: '%s')", len(SEED_USERS), DEFAULT_PASSWORD)
+    logger.info("Ensured %d users from SEED_USERS", len(SEED_USERS))
     return result
 
 
