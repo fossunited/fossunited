@@ -296,6 +296,7 @@ def seed():
     if not frappe.conf.get("developer_mode"):
         frappe.throw("Seed script can only be run in developer mode.")
 
+    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
     frappe.flags.ignore_permissions = True
     try:
         logger.info("Seeding development data")
@@ -323,7 +324,7 @@ def seed():
         logger.exception("Seed script failed — transaction rolled back")
         raise
     finally:
-        frappe.flags.ignore_permissions = False
+        frappe.flags.ignore_permissions = prev_ignore_permissions
 
 
 # ---------------------------------------------------------------------------
