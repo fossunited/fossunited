@@ -57,10 +57,11 @@
           href="{{ talk_video }}"
           target="_blank"
           rel="noopener noreferrer"
+          aria-label="Watch {{ doc.talk_title }} on YouTube"
           title="Watch on YouTube"
           class="inline-flex items-center justify-center text-red-600 hover:text-gray-600 transition-colors"
         >
-          <i class="ti ti-brand-youtube-filled text-xl"></i>
+          <i class="ti ti-brand-youtube-filled text-xl" aria-hidden="true"></i>
         </a>
       {% endif %}
     </div>
@@ -69,9 +70,9 @@
 
 {% macro prose_container(label, content) %}
   <div class="flex flex-col">
-    <label class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
+    <h2 class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
       {{ label }}
-    </label>
+    </h2>
     <div class="{{ prose_classes }} max-w-full p-4 border rounded border-gray-400">
       {{ content }}
     </div>
@@ -80,12 +81,12 @@
 
 {% macro references() %}
   <div>
-    <label class="text-base font-medium text-gray-600"> References </label>
+    <h3 class="text-base font-medium text-gray-600">References</h3>
     <div class="flex flex-col gap-2">
       {% for reference in doc.references %}
         <div class="flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors">
-          <i class="ti ti-link text-lg"></i>
-          <a class="no-underline" href="{{ reference.link }}" target="_blank">
+          <i class="ti ti-link text-lg" aria-hidden="true"></i>
+          <a class="no-underline" href="{{ reference.link }}" target="_blank" rel="noopener noreferrer">
             {{ reference.link }}
           </a>
         </div>
@@ -96,7 +97,7 @@
 
 {% macro render_session_categories() %}
   <div>
-    <label class="text-base font-medium text-gray-600"> Session Categories </label>
+    <h3 class="text-base font-medium text-gray-600">Session Categories</h3>
     <div class="flex flex-wrap gap-2">
       {% for category in session_categories %}
         <div
@@ -112,7 +113,7 @@
 {% macro render_speakers() %}
   <hr />
   <div>
-    <label class="text-base font-medium text-gray-600"> Speakers </label>
+    <h3 class="text-base font-medium text-gray-600">Speakers</h3>
     <div class="flex flex-col gap-2">
       {% for speaker in doc.speakers %}
         {{ speaker_card(speaker) }}
@@ -133,20 +134,32 @@
           </div>
         </div>
         {% if speaker.social_link %}
-          <a href="{{ speaker.social_link }}" target="_blank">
-            {{ badge(label=speaker.social_link, variant="outline", prefix="<i class='ti ti-world'></i>", theme="gray") }}
+          <a href="{{ speaker.social_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ speaker.full_name }}'s social profile">
+            {{ badge(label=speaker.social_link, variant="outline", prefix="<i class='ti ti-world' aria-hidden='true'></i>", theme="gray") }}
           </a>
         {% endif %}
       </div>
-      <img class="w-24 h-24 border rounded" src="{{ speaker.photo }}" alt="Speaker Image" />
+      <img class="w-24 h-24 border rounded" src="{{ speaker.photo }}" alt="{{ speaker.full_name }}" />
     </div>
     <button
       class="p-2 text-sm outline-none border-0 w-fit"
-      onclick="this.nextElementSibling.classList.toggle('hidden'); this.innerText = this.nextElementSibling.classList.contains('hidden') ? 'Show Bio' : 'Hide Bio';"
+      aria-expanded="false"
+      aria-controls="bio-{{ speaker.name }}"
+      aria-label="Show bio for {{ speaker.full_name }}"
+      onclick="
+        var controlId = this.getAttribute('aria-controls');
+        var panel = controlId ? document.getElementById(controlId) : null;
+        if (!panel) return;
+        var expanded = panel.classList.contains('hidden');
+        panel.classList.toggle('hidden');
+        this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        this.setAttribute('aria-label', expanded ? 'Hide bio for {{ speaker.full_name }}' : 'Show bio for {{ speaker.full_name }}');
+        this.innerText = expanded ? 'Hide Bio' : 'Show Bio';
+      "
     >
       Show Bio
     </button>
-    <div class="space-y-1 p-2 hidden">
+    <div id="bio-{{ speaker.name }}" class="space-y-1 p-2 hidden">
       <div class="{{ prose_classes }} max-w-full">{{ speaker.bio }}</div>
     </div>
   </div>
@@ -165,7 +178,7 @@
 
 {% macro render_reviews() %}
   <div class="flex flex-col gap-3">
-    <label class="text-base font-medium text-gray-600"> Reviews </label>
+    <h3 class="text-base font-medium text-gray-600">Reviews</h3>
     <div
       class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6 "
     >
@@ -195,7 +208,7 @@
     <div class="prose prose-sm">{{ review.remarks }}</div>
     <div class="flex gap-2 items-center">
       <span class="text-sm">Reviewer #{{ review.idx }}</span>
-      <i class="ti ti-circle-filled text-[8px] text-gray-400"></i>
+      <i class="ti ti-circle-filled text-[8px] text-gray-400" aria-hidden="true"></i>
       {{ badge(label=review_badge[review.to_approve]["label"], theme=review_badge[review.to_approve]["theme"]) }}
     </div>
   </div>

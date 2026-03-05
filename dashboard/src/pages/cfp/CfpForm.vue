@@ -37,7 +37,7 @@
         <ErrorMessage :message="errorMessages" />
         <MessageBanner
           v-if="isGuestUser"
-          class="justify-center !text-base gap-4 bg-surface-gray-2"
+          class="justify-center gap-4 bg-surface-gray-2"
           variant="subtle"
           message="Please login to submit your proposal."
         >

@@ -7,13 +7,21 @@
       data-label="website-post-login"
       style="display: none"
     >
-      <a href="#" class="nav-link nav-avatar" data-toggle="dropdown">
-        <span class="user-image-wrapper"></span>
+      <a
+        href="#"
+        class="nav-link nav-avatar"
+        data-toggle="dropdown"
+        aria-label="User menu"
+        aria-haspopup="menu"
+        aria-expanded="false"
+      >
+        <span class="user-image-wrapper" aria-hidden="true"></span>
       </a>
-      <ul class="dropdown-menu dropdown-menu-right" role="menu">
+        <ul class="dropdown-menu dropdown-menu-right" aria-label="User actions">
         {%- for child in post_login -%}{%- if child.url -%}
           <a
             class="dropdown-item"
+            role="menuitem"
             href="{{ child.url | abs_url }}"
             {%
               if
@@ -26,13 +34,13 @@
             {{ child.label }}
           </a>
         {%- endif -%}{%- endfor -%}
-        <a class="dropdown-item switch-to-desk hidden" href="/app">{{ _('Switch To Desk') }}</a>
+          <a class="dropdown-item switch-to-desk hidden" href="/app">{{ _('Switch To Desk') }}</a>
       </ul>
     </li>
   {% endif %}
   {% if not hide_login %}
     <li class="nav-item">
-      <a class="nav-link btn-login-area" href="/login">{{ _("Login") }}</a>
+      <a class="nav-link btn-login-area" href="/login" aria-label="Log in to your account">{{ _("Login") }}</a>
     </li>
   {% endif %}
 {% endif %}

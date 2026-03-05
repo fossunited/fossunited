@@ -46,7 +46,9 @@
             <i class="ti ti-search"></i>
           </div>
           <div class="d-flex align-items-center">
-            <button class="v3-btn v3-btn-dark mr-2" id="surprise">Surprise Me</button>
+            <button class="v3-btn v3-btn-dark mr-2" id="surprise" title="Go to Random Project">
+              Surprise Me
+            </button>
           </div>
         </div>
 
@@ -56,7 +58,7 @@
             <option value="alpha">Alphabetical</option>
             <option value="newest">Newest First</option>
             <option value="oldest">Oldest First</option>
-            <option value="updated">Recently Updated</option>
+            <option value="updated" selected>Recently Updated</option>
           </select>
         </div>
       </div>
@@ -70,9 +72,9 @@
       {% endif %}
       <div class="projects-grid mt-6">
         {% for project in projects %}
-          <div
+          <a
             class="v3-card project-card v3-text-primary"
-            onClick="window.location.href='/{{ project.route }}'"
+            href="/{{ project.route }}"
             data-title="{{ project.title }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
@@ -80,7 +82,7 @@
           >
             <h3 class="text-xl p-0 mb-0">
               <div class="d-flex align-items-start">
-                <span>{{ project.title }}</span>
+                <span class="project-card--title">{{ project.title }}</span>
 
                 {% if project.is_contribution_project %}
                   <span class="ml-auto" title="Contribution Project">
@@ -92,7 +94,9 @@
               {% if project.is_partner_project and project.partner_project %}
                 <div class="d-flex align-items-center mt-2 text-base" title="Partner Project">
                   <i class="ti ti-heart-handshake"></i>
-                  <small class="ml-1 partner-name">{{ project.partner_project_name }}</small>
+                  <small class="ml-1 partner-name project-card--partner"
+                    >{{ project.partner_project_name }}</small
+                  >
                 </div>
               {% endif %}
             </h3>
@@ -100,11 +104,11 @@
             <p class="v3-text-secondary flex-grow-1">
               {{ project.short_description | truncate(150, true) }}
             </p>
-            <span class="v3-text-secondary">
+            <span class="v3-text-secondary project-card--team">
               <i class="ti ti-users-group"></i>
               {{ project.team_name }}
             </span>
-          </div>
+          </a>
         {% endfor %}
       </div>
       <div class="text-center mt-4 no-project" style="display: none;">
@@ -114,9 +118,13 @@
   </div>
 
   <script>
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    })
+    // Initialize tooltips if jQuery is available
+    if (typeof $ !== 'undefined') {
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      })
+    }
+
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const searchTerm = e.target.value.toLowerCase()
@@ -125,8 +133,16 @@
       document.querySelectorAll('.project-card').forEach((card) => {
         const projectName = card.querySelector('.project-card--title').innerText.toLowerCase()
         const teamName = card.querySelector('.project-card--team').innerText.toLowerCase()
-        if (projectName.includes(searchTerm) || teamName.includes(searchTerm)) {
-          card.style.display = 'flex'
+        const partnerElement = card.querySelector('.project-card--partner')
+        const partnerName = partnerElement ? partnerElement.innerText.toLowerCase() : ''
+
+        const matches =
+          projectName.includes(searchTerm) ||
+          teamName.includes(searchTerm) ||
+          partnerName.includes(searchTerm)
+
+        if (matches) {
+          card.style.display = '' // Reset to default
           projectSearch = true
         } else {
           card.style.display = 'none'
@@ -140,12 +156,12 @@
       } else {
         emptyState.style.display = 'none'
       }
-      // Update project count
+
       // Update project count
       const projectCountEl = document.getElementById('projectCount')
       if (searchTerm.length > 0) {
-        const visibleCount = document.querySelectorAll(
-          '.project-card[style*="display: flex"], .project-card:not([style*="display: none"])',
+        const visibleCount = Array.from(document.querySelectorAll('.project-card')).filter(
+          (card) => card.style.display !== 'none',
         ).length
         const totalCount = document.querySelectorAll('.project-card').length
         projectCountEl.textContent = `Showing ${visibleCount} projects out of ${totalCount}`
@@ -185,6 +201,11 @@
       // Clear and re-append sorted cards
       projectsGrid.innerHTML = ''
       cards.forEach((card) => projectsGrid.appendChild(card))
+    })
+
+    // Sort on page load - set dropdown to match default sort
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('sort').value = 'updated'
     })
 
     // surprise me to show random project

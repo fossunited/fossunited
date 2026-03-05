@@ -245,7 +245,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             og_url=og_url,
             start_date=self.event_start_date.strftime("%-d %B %Y"),
         )
-        image = self.banner_image or og_image
+        image = frappe.utils.get_url(self.banner_image) or og_image
 
         return pagetitle, description, image
 

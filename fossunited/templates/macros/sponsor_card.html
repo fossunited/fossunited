@@ -8,6 +8,8 @@
           viewBox="0 0 18 18"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+          focusable="false"
         >
           <g clip-path="url(#clip0_2639_7416)">
             <path
@@ -28,8 +30,8 @@
         <span>Sponsors</span>
       </div>
       {% if deck_link %}
-        <a href="{{ deck_link }}" target="_blank" class="v3-sponsor-link">
-          Sponsor this event <i class="ti ti-external-link"></i>
+        <a href="{{ deck_link }}" target="_blank" rel="noopener noreferrer" class="v3-sponsor-link" aria-label="Sponsor this event">
+          Sponsor this event <i class="ti ti-external-link" aria-hidden="true"></i>
         </a>
       {% endif %}
     </div>
@@ -39,6 +41,7 @@
           <div>{{ tier_name }}</div>
           <div
             style="flex: 1; height: 1px; background: var(--v3-text-color); margin: 0 0.1rem;"
+            aria-hidden="true"
           ></div>
         </div>
 
@@ -46,7 +49,7 @@
         {% set tier_class = 'tier-1' if loop.index == 1 else ('tier-2' if loop.index == 2 else 'tier-3') %}
         <div class="v3-sponsor-grid {{ tier_class }}">
           {% for sponsor in sponsors %}
-            <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank">
+            <a href="{{ sponsor.link }}" class="v3-sponsor {{ tier_class }}" target="_blank" rel="noopener noreferrer" aria-label="{{ sponsor.sponsor_name }}">
               {% if sponsor.image %}
                 <img src="{{ sponsor.image }}" alt="{{ sponsor.sponsor_name }}" />
               {% else %}

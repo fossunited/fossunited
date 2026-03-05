@@ -1,11 +1,11 @@
-<nav class="navbar">
+<nav class="navbar" aria-label="Site navigation">
   <div class="container">
     <div class="navbar-brand">
-      <a href="{{ url_prefix }}{{ home_page or ' /' }}">
+        <a href="{{ url_prefix }}{{ home_page or '/' }}" aria-label="FOSS United home">
         {%- if brand_html -%}
           {{ brand_html }}
         {%- elif banner_image -%}
-          <img src="{{ banner_image }}" alt="Site banner" />
+          <img src="{{ banner_image }}" alt="FOSS United" />
         {%- else -%}
           <span>{{ (frappe.get_hooks("brand_html") or [_("Home")])[0] }}</span>
         {%- endif -%}

@@ -1,7 +1,16 @@
 {% macro horizontal_navbar(nav_items) %}
-  <div class="horizontal-navbar">
+  <div class="horizontal-navbar" role="tablist" aria-label="Page sections">
     {% for item in nav_items %}
-      <div class="horizontal-navbar--item" name="{{ item }}-nav-item" id="{{ item }}-nav-item">
+      <button
+        type="button"
+        class="horizontal-navbar--item"
+        name="{{ item }}-nav-item"
+        id="{{ item }}-nav-item"
+        role="tab"
+        tabindex="{{ '0' if loop.first else '-1' }}"
+        aria-selected="{{ 'true' if loop.first else 'false' }}"
+        aria-controls="{{ item }}"
+      >
         {% if item in ['rsvp', 'cfp'] %}
           {{ item | replace('_', ' ') | upper }}
         {%
@@ -12,7 +21,7 @@
         {% else %}
           {{ item | replace('_', ' ') | title }}
         {% endif %}
-      </div>
+      </button>
     {% endfor %}
   </div>
 {% endmacro %}

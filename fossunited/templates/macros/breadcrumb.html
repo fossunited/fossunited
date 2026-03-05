@@ -1,23 +1,20 @@
 {% macro breadcrumb(items=None, ignore_segments=None, rename_map=None, ignore_indices=None) %}
-  <nav class="v3-breadcrumb">
+  <nav class="v3-breadcrumb" aria-label="Breadcrumb">
     {% if items %}
-      {# Use provided items #}
       {% for item in items %}
         {% if loop.last %}
-          <span>{{ _(item.label) }}</span>
+          <span aria-current="page">{{ _(item.label) }}</span>
         {% else %}
           <a class="hover:cursor-pointer" href="{{ item.route }}">{{ _(item.label) }}</a>
-          {% if not loop.last %}<span class="px-1">></span>{% endif %}
+          <span class="px-1" aria-hidden="true">></span>
         {% endif %}
       {% endfor %}
     {% else %}
-      {# Build from current path with filtering and renaming #}
       {% set ignore_segments = ignore_segments or [] %}
       {% set rename_map = rename_map or {} %}
       {% set ignore_indices = ignore_indices or [] %}
       {% set path_parts = frappe.request.path.strip('/').split('/') %}
 
-      {# Filter out ignored segments and indices #}
       {% set filtered_parts = [] %}
       {% set filtered_indices = [] %}
       {% for part in path_parts %}
@@ -30,15 +27,13 @@
       <a class="hover:cursor-pointer" href="/">Home</a>
 
       {% for part in filtered_parts %}
-        <span class="px-1">></span>
+        <span class="px-1" aria-hidden="true">></span>
 
-        {# Determine display label - check rename_map first, then format #}
         {% set display_label = _(rename_map.get(part, part.replace('-', ' ').replace('_', ' ').title())) %}
 
         {% if loop.last %}
-          <span>{{ display_label }}</span>
+          <span aria-current="page">{{ display_label }}</span>
         {% else %}
-          {# Build URL using original indices up to current filtered position #}
           {% set url_parts = [] %}
           {% for i in range(loop.index) %}
             {% set original_idx = filtered_indices[i] %}
@@ -59,9 +54,11 @@
     id="theme-toggle"
     data-dark-icon="{{dark_icon}}"
     data-light-icon="{{light_icon}}"
+    aria-label="Toggle theme"
     title="Toggle theme"
+    type="button"
   >
-    <i class="ti"></i>
+    <i class="ti" aria-hidden="true"></i>
   </button>
 {% endmacro %}
 
