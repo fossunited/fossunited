@@ -13,7 +13,9 @@
     <div class="container">
       <div class="profile-content-section">
         <div class="horizontal-navbar px-8 pt-2">
-          {% set nav_items = ['about'] %}
+          {%- set _has_resume = (doc.experience | length > 0) or (doc.education | length > 0) -%}
+          {%- set _has_projects = doc.projects | length > 0 -%}
+          {%- set nav_items = ['about'] + (['resume'] if _has_resume else []) + (['projects'] if _has_projects else []) -%}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
