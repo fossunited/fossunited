@@ -3,9 +3,9 @@
     <div class="status--icon-text-container">
       <div class="status-icon">
         {% if status_block_content.create_form %}
-          <i class="ti ti-file-plus"></i>
+          <i class="ti ti-file-plus" aria-hidden="true"></i>
         {% elif status_block_content.is_unpublished or not status_block_content.has_doc %}
-          <i class="ti ti-file"></i>
+          <i class="ti ti-file" aria-hidden="true"></i>
         {% else %}
           <lottie-player
             src="/assets/fossunited/animation/live-animation-blob.json"
@@ -33,12 +33,14 @@
             Share this form with the community!
             <button
               class="copy-to-clipboard"
+              type="button"
               data-url="{{ status_block_content.form_route }}"
               onclick="copyLinkToClipboard(this)"
               onmouseout="resetTooltip()"
+              aria-label="Copy form link to clipboard"
             >
-              <span class="tooltip-text">Copy Link</span>
-              <i class="ti ti-copy"></i>
+              <span class="tooltip-text" aria-hidden="true">Copy Link</span>
+              <i class="ti ti-copy" aria-hidden="true"></i>
             </button>
           </div>
         {% endif %}

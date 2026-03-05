@@ -44,12 +44,14 @@
       <div class="v3-controls mb-4">
         <div class="v3-controls-left">
           <div class="v3-search-input v3-search-wide">
+            <label for="search" class="sr-only">Search events</label>
             <input
               id="search"
               type="text"
               placeholder="Search… event:meetup, location:samagata, date:2026-01"
+              aria-label="Search events"
             />
-            <i class="ti ti-search v3-text-tertiary"></i>
+            <i class="ti ti-search v3-text-tertiary" aria-hidden="true"></i>
           </div>
         </div>
 
@@ -59,13 +61,14 @@
               href="/events/timeline/rss.xml"
               class="v3-text-secondary mr-4"
               title="Subscribe to Upcoming Events"
+              aria-label="Subscribe to Upcoming Events RSS feed"
             >
-              <i class="ti ti-rss"></i>
+              <i class="ti ti-rss" aria-hidden="true"></i>
             </a>
           {% endif %}
-          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false">
+          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false" aria-controls="filters-panel">
             Filter
-            <i class="ti ti-adjustments-filled"></i>
+            <i class="ti ti-adjustments-filled" aria-hidden="true"></i>
           </button>
         </div>
       </div>
@@ -75,7 +78,7 @@
         <div class="v3-controls">
           <div class="v3-controls-left gap-2 flex-wrap align-items-end">
             <div class="d-flex flex-column" style="flex: 0 0 200px;">
-              <label class="v3-text-secondary">City</label>
+              <label class="v3-text-secondary" for="city-search">City</label>
               <div class="position-relative w-100">
                 <input
                   id="city-search"
@@ -83,26 +86,31 @@
                   class="v3-select w-100"
                   placeholder="Search cities…"
                   autocomplete="off"
+                  aria-autocomplete="list"
+                  aria-controls="city-dropdown"
+                  aria-haspopup="listbox"
                 />
                 <div
                   id="city-dropdown"
                   class="dropdown-menu w-100 mt-1 p-0"
+                  role="listbox"
+                  aria-label="City suggestions"
                   style="max-height: 200px; overflow-y: auto; display: none;"
                 ></div>
               </div>
             </div>
 
             <div class="d-flex flex-column" style="flex: 0 0 140px;">
-              <label class="v3-text-secondary">Start date</label>
+              <label class="v3-text-secondary" for="start-date">Start date</label>
               <input id="start-date" type="date" class="v3-select" />
             </div>
 
             <div class="d-flex flex-column" style="flex: 0 0 140px;">
-              <label class="v3-text-secondary">End date</label>
+              <label class="v3-text-secondary" for="end-date">End date</label>
               <input id="end-date" type="date" class="v3-select" />
             </div>
 
-            <label class="d-flex align-items-center mb-0" style="padding-bottom: 8px;">
+            <label class="d-flex align-items-center mb-0" for="must-attend-filter" style="padding-bottom: 8px;">
               <input id="must-attend-filter" type="checkbox" class="mr-2" />
               <span class="v3-text-primary">Must attend</span>
             </label>
@@ -110,8 +118,8 @@
 
           {% if page_type == "upcoming" %}
             <div class="v3-controls-right">
-              <button id="download-ics" class="v3-btn v3-btn-dark">
-                <i class="ti ti-download"></i>
+              <button id="download-ics" class="v3-btn v3-btn-dark" aria-label="Download events as ICS calendar file">
+                <i class="ti ti-download" aria-hidden="true"></i>
                 Download ICS
               </button>
             </div>
@@ -120,11 +128,11 @@
       </div>
 
       <!-- Category toggle -->
-      <div class="v3-card btn-group w-100 mb-4 p-2">
-        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50">
+      <div class="v3-card btn-group w-100 mb-4 p-2" role="group" aria-label="Event category filter">
+        <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50" aria-pressed="true">
           City Events
         </button>
-        <button id="toggle-club" class="v3-btn v3-text-primary w-50">Club Events</button>
+        <button id="toggle-club" class="v3-btn v3-text-primary w-50" aria-pressed="false">Club Events</button>
       </div>
 
       <!-- Page navigation -->
@@ -255,16 +263,11 @@
         )
 
         dom.cityDropdown.innerHTML = `
-          <div class="city-option v3-dropdown-item" data-value="">All Cities</div>
-          ${filtered
-            .map(
-              (city) =>
-                `<div class="city-option v3-dropdown-item" data-value="${city}">${city}</div>`,
-            )
-            .join('')}`
+          <div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === '' ? 'true' : 'false'}" data-value="">All Cities</div>
+                ${filtered.map((city) => `<div class="city-option v3-dropdown-item" role="option" tabindex="0" aria-selected="${state.filters.city === city ? 'true' : 'false'}" data-value="${city}">${city}</div>`).join('')}`
 
         dom.cityDropdown.querySelectorAll('.city-option').forEach((opt) => {
-          opt.onclick = () => {
+          function selectOption() {
             const value = opt.dataset.value
             if (state.filters.city === value) {
               // deselect
@@ -276,8 +279,33 @@
               dom.citySearch.value = value || ''
               dom.citySearch.placeholder = value || 'Search cities...'
             }
+            dom.cityDropdown.querySelectorAll('.city-option').forEach((o) => {
+              o.setAttribute('aria-selected', o.dataset.value === state.filters.city ? 'true' : 'false')
+            })
             dom.cityDropdown.style.display = 'none'
             render()
+          }
+          opt.onclick = selectOption
+          opt.onkeydown = (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              selectOption()
+            } else if (e.key === 'ArrowDown') {
+              e.preventDefault()
+              const opts = Array.from(dom.cityDropdown.querySelectorAll('.city-option'))
+              const idx = opts.indexOf(opt)
+              if (idx < opts.length - 1) opts[idx + 1].focus()
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault()
+              const opts = Array.from(dom.cityDropdown.querySelectorAll('.city-option'))
+              const idx = opts.indexOf(opt)
+              if (idx > 0) opts[idx - 1].focus()
+              else dom.citySearch.focus()
+            } else if (e.key === 'Escape') {
+              e.preventDefault()
+              dom.cityDropdown.style.display = 'none'
+              dom.citySearch.focus()
+            }
           }
         })
       }
@@ -550,6 +578,8 @@
         state.category = 'city'
         dom.toggleCity.classList.add('v3-btn-secondary')
         dom.toggleClub.classList.remove('v3-btn-secondary')
+        dom.toggleCity.setAttribute('aria-pressed', 'true')
+        dom.toggleClub.setAttribute('aria-pressed', 'false')
         render()
       }
 
@@ -557,6 +587,8 @@
         state.category = 'club'
         dom.toggleClub.classList.add('v3-btn-secondary')
         dom.toggleCity.classList.remove('v3-btn-secondary')
+        dom.toggleClub.setAttribute('aria-pressed', 'true')
+        dom.toggleCity.setAttribute('aria-pressed', 'false')
         render()
       }
 
