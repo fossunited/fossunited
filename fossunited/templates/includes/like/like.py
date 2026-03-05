@@ -3,7 +3,7 @@ from frappe.rate_limiter import rate_limit
 
 
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=10, seconds=60 * 60 * 12)
+@rate_limit(key="reference_name", limit=10, seconds=60 * 60)
 def like(reference_doctype, reference_name, like):
     like = frappe.parse_json(like)
 

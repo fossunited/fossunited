@@ -1,22 +1,21 @@
 <div id="likes" class="feedback-item row likes mr-3">
   <button type="button" class="like-icon border-0" aria-pressed="false" aria-label="Like"></button>
-  <span class="like-count" aria-live="polite" aria-atomic="true"></span>
+  <span class="like-count"></span>
 </div>
 
 <script type="text/javascript">
   frappe.ready(() => {
-    let like = Boolean(parseInt('{{ like or 0 }}'))
+    let like = parseInt('{{ like or 0 }}')
     let like_count = parseInt('{{ like_count or 0 }}')
     let in_queue = false
 
     let toggle_like_icon = function (active) {
       active ? $('.like-icon').addClass('liked') : $('.like-icon').removeClass('liked')
-      $('.like-icon').attr('aria-pressed', active ? 'true' : 'false')
-      $('.like-icon').attr('aria-label', active ? 'Unlike' : 'Like')
     }
 
     $('.like-icon').append(`<svg class="icon icon-sm" aria-hidden="true" focusable="false"><use href="#icon-heart"></use></svg>`)
     toggle_like_icon(like)
+
     $('.like-count').text(like_count)
 
     $('.like-icon').click(() => {
@@ -27,11 +26,13 @@
     let update_like = function () {
       in_queue = true
 
-      // update likes on UI
-      const new_like = !like
-      const new_count = new_like ? like_count + 1 : like_count - 1
-      toggle_like_icon(new_like)
-      $('.like-count').text(new_count)
+      // Calculate intended state
+      const intended_like = !like
+      const intended_count = intended_like ? like_count + 1 : like_count - 1
+
+      // Update UI optimistically
+      toggle_like_icon(intended_like)
+      $('.like-count').text(intended_count)
 
       return frappe
         .call({
@@ -39,48 +40,21 @@
           args: {
             reference_doctype: '{{ reference_doctype or doctype }}',
             reference_name: '{{ reference_name or name }}',
-            like: new_like,
+            like: intended_like,
+            route: '{{ pathname }}',
           },
         })
         .then((r) => {
+          // Update actual state only after server confirms
+          like = intended_like
+          like_count = intended_count
           in_queue = false
-
-          // If server indicates it didn't create/delete (duplicate or error), reconcile
-          const data = r && r.message !== undefined ? r.message : null
-          if (data === null) {
-            // server didn't respond properly; revert UI
-            toggle_like_icon(like)
-            $('.like-count').text(like_count)
-            frappe.msgprint('Could not update like. Please try again.')
-            return
-          }
-
-          // server returns { liked: bool, created/deleted: bool }
-          if (data.liked) {
-            if (data.created === false) {
-              like = true
-              $('.like-count').text(like_count)
-            } else {
-              like = true
-              like_count = new_count
-              $('.like-count').text(like_count)
-            }
-          } else {
-            if (data.deleted === false) {
-              like = false
-              like_count = Math.max(0, like_count)
-              $('.like-count').text(like_count)
-            } else {
-              like = false
-              like_count = new_count
-            }
-          }
         })
         .catch((err) => {
-          in_queue = false
-          // revert UI on error
+          // Revert UI on error
           toggle_like_icon(like)
           $('.like-count').text(like_count)
+          in_queue = false
         })
     }
   })
