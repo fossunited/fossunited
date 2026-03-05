@@ -126,8 +126,8 @@ const emailGroups = createResource({
 
       // For localhost groups, extract status from title
       if (item.name && item.name.endsWith('-Localhost')) {
-        const status = item.name.split('-')[0]
-        label = `${status} Participants`
+        const name = item.name.replace(/-[^-]+-Localhost$/, '')
+        label = `${name} Participants`
       }
       d.push({
         label: label,
