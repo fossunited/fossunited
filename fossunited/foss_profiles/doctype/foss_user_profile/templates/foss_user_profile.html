@@ -71,23 +71,22 @@
     {% if doc.projects | len > 0 %}
       <div class="projects-grid">
         {% for project in doc.projects %}
-          <div class="project-container" data-docname="{{ project.name }}">
-            <div class="project-card-body">
-              <div class="project-card-info">
-                <div class="project-title">{{ project.project_name }}</div>
-                <div class="project-description">{{ project.tagline or "" | truncate(120) }}</div>
-              </div>
-              <a
-                rel="nofollow noopener"
-                href="{{ project.project_link }}"
-                class="project-link-icon"
-                target="_blank"
-                title="View {{ project.project_name }}"
-              >
-                <i class="ti ti-external-link"></i>
-              </a>
+          <a
+            class="project-container"
+            href="{{ project.project_link }}"
+            target="_blank"
+            rel="nofollow noopener"
+            data-docname="{{ project.name }}"
+          >
+            <div class="project-card-icon-wrap">
+              <i class="ti ti-folder-code"></i>
             </div>
-          </div>
+            <div class="project-title">{{ project.project_name }}</div>
+            <div class="project-description">{{ project.tagline or "" | truncate(120) }}</div>
+            <span class="project-link-text">
+              View Project <i class="ti ti-arrow-right"></i>
+            </span>
+          </a>
         {% endfor %}
       </div>
     {% else %}
