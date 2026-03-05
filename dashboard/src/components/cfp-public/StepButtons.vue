@@ -6,7 +6,7 @@
       size="lg"
       variant="subtle"
       icon-left="chevron-left"
-      class="uppercase !min-w-8 !text-base !font-medium !pr-4"
+      class="uppercase !min-w-8 !font-medium !pr-4"
       @click="$emit('back')"
     />
     <Button
@@ -14,7 +14,7 @@
       size="lg"
       variant="solid"
       :icon-right="!isLastStep ? 'chevron-right' : ''"
-      class="uppercase !min-w-8 !text-base !font-medium !px-4"
+      class="uppercase !min-w-8 !font-medium !px-4"
       @click="handleActionClick"
     />
   </div>

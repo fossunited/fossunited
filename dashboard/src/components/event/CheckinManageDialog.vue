@@ -28,7 +28,9 @@
               <span
                 >Tshirt Assigned:
                 <span
-                  :class="selectedAttendee.tshirt_delivered ? 'text-ink-green-3' : 'text-ink-red-4'"
+                  :class="
+                    selectedAttendee.tshirt_delivered ? 'text-ink-green-3' : 'text-ink-red-4'
+                  "
                 >
                   {{ selectedAttendee.tshirt_delivered ? 'Yes' : 'No' }}
                 </span>
