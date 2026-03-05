@@ -188,7 +188,9 @@ def get_profile_projects() -> list:
 
 
 @frappe.whitelist()
-def add_profile_project(project_name: str, project_link: str, tagline: str, cover_image: str = "") -> dict:
+def add_profile_project(
+    project_name: str, project_link: str, tagline: str, cover_image: str = ""
+) -> dict:
     """Add a new project to the logged-in user's profile."""
     user_doc = get_session_user_profile()
     profile = frappe.get_doc(USER_PROFILE, user_doc.name)
@@ -213,7 +215,9 @@ def add_profile_project(project_name: str, project_link: str, tagline: str, cove
 
 
 @frappe.whitelist()
-def update_profile_project(row_name: str, project_name: str, project_link: str, tagline: str, cover_image: str = "") -> bool:
+def update_profile_project(
+    row_name: str, project_name: str, project_link: str, tagline: str, cover_image: str = ""
+) -> bool:
     """Update an existing project row for the logged-in user's profile."""
     user_doc = get_session_user_profile()
     profile = frappe.get_doc(USER_PROFILE, user_doc.name)

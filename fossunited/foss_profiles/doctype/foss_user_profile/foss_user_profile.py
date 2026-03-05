@@ -380,7 +380,9 @@ class FOSSUserProfile(WebsiteGenerator):
                 or "/assets/fossunited/images/defaults/user_profile_image.png",
             )
         else:
-            image = self.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
+            image = (
+                self.profile_photo or "/assets/fossunited/images/defaults/user_profile_image.png"
+            )
 
         return pagetitle, description, image
 
