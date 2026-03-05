@@ -316,7 +316,7 @@ def seed():
         _create_cfps(events["live"])
         _create_hackathon(chapters)
 
-        frappe.db.commit()  # nosemgrep: frappe-db-commit; manual init
+        frappe.db.commit()  # nosemgrep: frappe-manual-commit - manual init
         frappe.clear_cache()
         logger.info("Seed data created successfully")
     except Exception:
