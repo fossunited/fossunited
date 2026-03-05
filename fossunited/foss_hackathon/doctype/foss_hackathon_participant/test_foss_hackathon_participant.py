@@ -97,7 +97,17 @@ class TestFOSSHackathonParticipant(FrappeTestCase):
             ["Pending Confirmation", "Accepted", "Rejected"], participant.email
         )
 
-        # Test 6: Delete participant - should remove from all groups
+        # Test 6a: Checkin group for the day
+        participant.add_check_in()
+        participant.save()
+        self._assert_in_group(f"Checkin-{frappe.utils.nowdate()}", participant.email)
+
+        # Test 6b: Checkin removed for the day
+        participant.remove_today_check_in()
+        participant.save()
+        self._assert_not_in_groups([f"Checkin-{frappe.utils.nowdate()}"], participant.email)
+
+        # Test 7: Delete participant - should remove from all groups
         participant.delete()
         self._assert_not_in_groups(
             ["Pending", "Pending Confirmation", "Accepted", "Rejected"],

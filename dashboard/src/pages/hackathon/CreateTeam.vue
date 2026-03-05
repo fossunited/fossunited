@@ -94,7 +94,7 @@ const userParticipantInfo = createResource({
     })
   },
   onError(error) {
-    toast.error('Error fetching user info' + error)
+    showError(error, `Error fetching user info`)
   },
 })
 
@@ -134,7 +134,7 @@ const createTeam = createResource({
     })
   },
   onError(error) {
-    toast.error('Error creating team' + error)
+    showError(error, `Error creating team`)
   },
 })
 

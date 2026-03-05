@@ -90,8 +90,8 @@ const campaign = createResource({
         let label = group.label
         // For localhost groups, extract status from value (group name)
         if (group.value && group.value.endsWith('-Localhost')) {
-          const status = group.value.split('-')[0]
-          label = `${status} Participants`
+          const name = group.value.replace(/-[^-]+-Localhost$/, '')
+          label = `${name} Participants`
         }
         return {
           ...group,
