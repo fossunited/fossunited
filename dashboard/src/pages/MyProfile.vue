@@ -631,35 +631,31 @@ const openAddProject = () => {
   showAddProject.value = true
 }
 
-const handleAddProject = async () => {
+const handleAddProject = () => {
   const err = validateProject(newProject)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
   isSavingProject.value = true
-  try {
-    await createResource({
-      url: 'fossunited.api.profile.add_profile_project',
-      makeParams() {
-        return {
-          project_name: newProject.project_name,
-          project_link: newProject.project_link,
-          tagline: newProject.tagline,
-          cover_image: newProject.cover_image,
-        }
-      },
-      auto: true,
-      onSuccess(data) {
-        projects.value.push(data)
-        showAddProject.value = false
-        toast.success('Project added')
-      },
-      onError(e) {
-        projectErrors.value = e?.messages?.[0] || 'Failed to add project'
-      },
-    })
-  } finally {
-    isSavingProject.value = false
-  }
+  createResource({
+    url: 'fossunited.api.profile.add_profile_project',
+    params: {
+      project_name: newProject.project_name,
+      project_link: newProject.project_link,
+      tagline: newProject.tagline,
+      cover_image: newProject.cover_image,
+    },
+    auto: true,
+    onSuccess(data) {
+      projects.value.push(data)
+      showAddProject.value = false
+      isSavingProject.value = false
+      toast.success('Project added')
+    },
+    onError(e) {
+      projectErrors.value = e?.messages?.[0] || 'Failed to add project'
+      isSavingProject.value = false
+    },
+  })
 }
 
 const startEditProject = (project) => {
@@ -672,54 +668,48 @@ const cancelEditProject = () => {
   projectErrors.value = ''
 }
 
-const saveEditProject = async () => {
+const saveEditProject = () => {
   const err = validateProject(editingProject.value)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
   isSavingProject.value = true
-  try {
-    await createResource({
-      url: 'fossunited.api.profile.update_profile_project',
-      makeParams() {
-        return {
-          row_name: editingProject.value.name,
-          project_name: editingProject.value.project_name,
-          project_link: editingProject.value.project_link,
-          tagline: editingProject.value.tagline,
-          cover_image: editingProject.value.cover_image,
-        }
-      },
-      auto: true,
-      onSuccess() {
-        const idx = projects.value.findIndex((p) => p.name === editingProject.value.name)
-        if (idx !== -1) projects.value[idx] = { ...editingProject.value }
-        editingProject.value = null
-        toast.success('Project updated')
-      },
-      onError(e) {
-        projectErrors.value = e?.messages?.[0] || 'Failed to update project'
-      },
-    })
-  } finally {
-    isSavingProject.value = false
-  }
+  createResource({
+    url: 'fossunited.api.profile.update_profile_project',
+    params: {
+      row_name: editingProject.value.name,
+      project_name: editingProject.value.project_name,
+      project_link: editingProject.value.project_link,
+      tagline: editingProject.value.tagline,
+      cover_image: editingProject.value.cover_image,
+    },
+    auto: true,
+    onSuccess() {
+      const idx = projects.value.findIndex((p) => p.name === editingProject.value.name)
+      if (idx !== -1) projects.value[idx] = { ...editingProject.value }
+      editingProject.value = null
+      isSavingProject.value = false
+      toast.success('Project updated')
+    },
+    onError(e) {
+      projectErrors.value = e?.messages?.[0] || 'Failed to update project'
+      isSavingProject.value = false
+    },
+  })
 }
 
-const deleteProject = async (rowName) => {
+const deleteProject = (rowName) => {
   if (!confirm('Delete this project?')) return
-  try {
-    await createResource({
-      url: 'fossunited.api.profile.delete_profile_project',
-      makeParams() { return { row_name: rowName } },
-      auto: true,
-      onSuccess() {
-        projects.value = projects.value.filter((p) => p.name !== rowName)
-        toast.success('Project deleted')
-      },
-      onError(e) {
-        toast.error(e?.messages?.[0] || 'Failed to delete project')
-      },
-    })
-  } catch (_) { /* handled in onError */ }
+  createResource({
+    url: 'fossunited.api.profile.delete_profile_project',
+    params: { row_name: rowName },
+    auto: true,
+    onSuccess() {
+      projects.value = projects.value.filter((p) => p.name !== rowName)
+      toast.success('Project deleted')
+    },
+    onError(e) {
+      toast.error(e?.messages?.[0] || 'Failed to delete project')
+    },
+  })
 }
 </script>
