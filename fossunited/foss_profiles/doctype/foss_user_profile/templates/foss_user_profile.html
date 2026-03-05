@@ -71,21 +71,19 @@
     {% if doc.projects | len > 0 %}
       <div class="projects-grid">
         {% for project in doc.projects %}
-          <div class="project-container edit-hover" data-docname="{{ project.name }}">
-            <div class="project-title">{{ project.project_name }}</div>
-            <div class="project-description">{{ project.tagline or "" | truncate(100) }}</div>
-            <div class="d-flex align-items-bottom justify-content-between mb-3 p-0">
-              <div class="collaborators-list">
-                <div class="collaborators-container"></div>
+          <div class="project-container" data-docname="{{ project.name }}">
+            <div class="project-card-body">
+              <div class="project-card-info">
+                <div class="project-title">{{ project.project_name }}</div>
+                <div class="project-description">{{ project.tagline or "" | truncate(120) }}</div>
               </div>
               <a
-                rel="nofollow"
+                rel="nofollow noopener"
                 href="{{ project.project_link }}"
-                style="color: hsl(var(--clr-foss-mint-500))"
-                class="project-link"
+                class="project-link-icon"
                 target="_blank"
+                title="View {{ project.project_name }}"
               >
-                View Project
                 <i class="ti ti-external-link"></i>
               </a>
             </div>
