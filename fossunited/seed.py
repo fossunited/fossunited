@@ -482,7 +482,7 @@ def _create_events(city_chapters):
                 event_start_date=now + timedelta(days=tpl["day_offset"]),
                 event_end_date=now
                 + timedelta(days=tpl["day_offset"], hours=tpl["duration_hours"]),
-                event_description=tpl["description"].format(**fmt),
+                description=tpl["description"].format(**fmt),
                 event_location=tpl["location"].format(**fmt),
                 **extra,
             )
