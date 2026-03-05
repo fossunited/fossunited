@@ -311,7 +311,7 @@ def seed():
         ]
         events = _create_events(city_chapters)
         _create_rsvps(events["live"], users)
-        _create_cfps(events["live"], users)
+        _create_cfps(events["live"])
         _create_hackathon(chapters)
 
         # nosemgrep: frappe-db-commit; one-off data initialization with manual transaction control
@@ -546,7 +546,7 @@ def _create_rsvps(live_events, users):
 # ---------------------------------------------------------------------------
 
 
-def _create_cfps(live_events, users):
+def _create_cfps(live_events):
     """Attach a CFP form with two sample talk submissions to each live event.
 
     Speaker emails are resolved by name from ``SEED_USERS`` rather than by
