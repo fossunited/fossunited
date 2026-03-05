@@ -199,6 +199,132 @@
                 @click="handleUpdateProfile()"
               />
             </div>
+
+            <!-- Projects -->
+            <div class="col-span-2 py-1 border-b mt-2">
+              <h4 class="text-md font-medium uppercase">Projects</h4>
+            </div>
+            <div class="col-span-2 text-sm text-ink-gray-5">
+              Add your open-source or personal projects to showcase on your profile.
+            </div>
+
+            <!-- existing project cards -->
+            <div
+              v-for="project in projects"
+              :key="project.name"
+              class="col-span-2 border rounded-lg p-4 flex flex-col gap-3"
+            >
+              <div v-if="editingProject?.name !== project.name" class="flex justify-between items-start gap-2">
+                <div class="flex-1 min-w-0">
+                  <p class="font-medium truncate">{{ project.project_name }}</p>
+                  <p class="text-sm text-ink-gray-5 truncate">{{ project.tagline }}</p>
+                  <a
+                    :href="project.project_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-ink-blue-3 hover:underline break-all"
+                  >{{ project.project_link }}</a>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                  <Button
+                    icon="edit-3"
+                    variant="ghost"
+                    size="sm"
+                    :title="`Edit ${project.project_name}`"
+                    @click="startEditProject(project)"
+                  />
+                  <Button
+                    icon="trash"
+                    variant="ghost"
+                    size="sm"
+                    theme="red"
+                    :title="`Delete ${project.project_name}`"
+                    @click="deleteProject(project.name)"
+                  />
+                </div>
+              </div>
+
+              <!-- inline edit form -->
+              <div v-else class="flex flex-col gap-3">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <FormControl
+                    v-model="editingProject.project_name"
+                    label="Project Name *"
+                    placeholder="My Awesome Project"
+                  />
+                  <FormControl
+                    v-model="editingProject.project_link"
+                    label="Project Link *"
+                    type="url"
+                    placeholder="https://github.com/..."
+                  />
+                  <FormControl
+                    v-model="editingProject.tagline"
+                    label="Tagline *"
+                    placeholder="A short description"
+                    class="md:col-span-2"
+                  />
+                </div>
+                <div class="flex gap-2 justify-end">
+                  <Button variant="outline" size="sm" label="Cancel" @click="cancelEditProject()" />
+                  <Button
+                    variant="solid"
+                    size="sm"
+                    theme="green"
+                    label="Save"
+                    :loading="isSavingProject"
+                    @click="saveEditProject()"
+                  />
+                </div>
+                <ErrorMessage :message="projectErrors" />
+              </div>
+            </div>
+
+            <!-- add new project form -->
+            <div v-if="showAddProject" class="col-span-2 border rounded-lg p-4 flex flex-col gap-3">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <FormControl
+                  v-model="newProject.project_name"
+                  label="Project Name *"
+                  placeholder="My Awesome Project"
+                />
+                <FormControl
+                  v-model="newProject.project_link"
+                  label="Project Link *"
+                  type="url"
+                  placeholder="https://github.com/..."
+                />
+                <FormControl
+                  v-model="newProject.tagline"
+                  label="Tagline *"
+                  placeholder="A short description"
+                  class="md:col-span-2"
+                />
+              </div>
+              <div class="flex gap-2 justify-end">
+                <Button variant="outline" size="sm" label="Cancel" @click="showAddProject = false" />
+                <Button
+                  variant="solid"
+                  size="sm"
+                  theme="green"
+                  label="Add Project"
+                  :loading="isSavingProject"
+                  @click="handleAddProject()"
+                />
+              </div>
+              <ErrorMessage :message="projectErrors" />
+            </div>
+
+            <div class="col-span-2">
+              <Button
+                v-if="!showAddProject"
+                variant="outline"
+                size="sm"
+                icon="plus"
+                label="Add Project"
+                @click="openAddProject()"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -212,7 +338,6 @@ import { createResource, FileUploader, Switch, FormControl, ErrorMessage } from 
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
-
 const profile_dict = reactive({
   full_name: '',
   user: '',
@@ -467,5 +592,134 @@ const handleUpdateProfile = () => {
     return
   }
   updateProfile.fetch()
+}
+
+
+const projects = ref([])
+const showAddProject = ref(false)
+const isSavingProject = ref(false)
+const projectErrors = ref('')
+
+const emptyProject = () => ({ project_name: '', project_link: '', tagline: '', cover_image: '' })
+const newProject = reactive(emptyProject())
+const editingProject = ref(null)
+
+const projectsResource = createResource({
+  url: 'fossunited.api.profile.get_profile_projects',
+  auto: true,
+  onSuccess(data) {
+    projects.value = data
+  },
+})
+
+const validateProject = (p) => {
+  if (!p.project_name?.trim()) return 'Project Name is required'
+  if (!p.project_link?.trim()) return 'Project Link is required'
+  if (!p.tagline?.trim()) return 'Tagline is required'
+  try {
+    const u = new URL(p.project_link)
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') throw new Error()
+  } catch {
+    return 'Project Link must be a valid URL'
+  }
+  return ''
+}
+
+const openAddProject = () => {
+  Object.assign(newProject, emptyProject())
+  projectErrors.value = ''
+  showAddProject.value = true
+}
+
+const handleAddProject = async () => {
+  const err = validateProject(newProject)
+  if (err) { projectErrors.value = err; return }
+  projectErrors.value = ''
+  isSavingProject.value = true
+  try {
+    await createResource({
+      url: 'fossunited.api.profile.add_profile_project',
+      makeParams() {
+        return {
+          project_name: newProject.project_name,
+          project_link: newProject.project_link,
+          tagline: newProject.tagline,
+          cover_image: newProject.cover_image,
+        }
+      },
+      auto: true,
+      onSuccess(data) {
+        projects.value.push(data)
+        showAddProject.value = false
+        toast.success('Project added')
+      },
+      onError(e) {
+        projectErrors.value = e?.messages?.[0] || 'Failed to add project'
+      },
+    })
+  } finally {
+    isSavingProject.value = false
+  }
+}
+
+const startEditProject = (project) => {
+  editingProject.value = { ...project }
+  projectErrors.value = ''
+}
+
+const cancelEditProject = () => {
+  editingProject.value = null
+  projectErrors.value = ''
+}
+
+const saveEditProject = async () => {
+  const err = validateProject(editingProject.value)
+  if (err) { projectErrors.value = err; return }
+  projectErrors.value = ''
+  isSavingProject.value = true
+  try {
+    await createResource({
+      url: 'fossunited.api.profile.update_profile_project',
+      makeParams() {
+        return {
+          row_name: editingProject.value.name,
+          project_name: editingProject.value.project_name,
+          project_link: editingProject.value.project_link,
+          tagline: editingProject.value.tagline,
+          cover_image: editingProject.value.cover_image,
+        }
+      },
+      auto: true,
+      onSuccess() {
+        const idx = projects.value.findIndex((p) => p.name === editingProject.value.name)
+        if (idx !== -1) projects.value[idx] = { ...editingProject.value }
+        editingProject.value = null
+        toast.success('Project updated')
+      },
+      onError(e) {
+        projectErrors.value = e?.messages?.[0] || 'Failed to update project'
+      },
+    })
+  } finally {
+    isSavingProject.value = false
+  }
+}
+
+const deleteProject = async (rowName) => {
+  if (!confirm('Delete this project?')) return
+  try {
+    await createResource({
+      url: 'fossunited.api.profile.delete_profile_project',
+      makeParams() { return { row_name: rowName } },
+      auto: true,
+      onSuccess() {
+        projects.value = projects.value.filter((p) => p.name !== rowName)
+        toast.success('Project deleted')
+      },
+      onError(e) {
+        toast.error(e?.messages?.[0] || 'Failed to delete project')
+      },
+    })
+  } catch (_) { /* handled in onError */ }
 }
 </script>
