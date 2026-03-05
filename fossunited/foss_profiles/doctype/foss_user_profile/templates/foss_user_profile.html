@@ -546,6 +546,12 @@
       // Initialize: activate first tab without stealing page focus
       if (navItems.length > 0) activateTab(navItems[0], false)
 
+      function focusTab(target) {
+        navItems.forEach((item) => item.setAttribute('tabindex', '-1'))
+        target.setAttribute('tabindex', '0')
+        target.focus()
+      }
+
       navItems.forEach((navItem, index) => {
         navItem.addEventListener('click', () => activateTab(navItem, true))
         navItem.addEventListener('keydown', (e) => {
@@ -554,16 +560,16 @@
             activateTab(navItem, true)
           } else if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
             e.preventDefault()
-            navItems[(index + 1) % navItems.length].focus()
+            focusTab(navItems[(index + 1) % navItems.length])
           } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
             e.preventDefault()
-            navItems[(index - 1 + navItems.length) % navItems.length].focus()
+            focusTab(navItems[(index - 1 + navItems.length) % navItems.length])
           } else if (e.key === 'Home') {
             e.preventDefault()
-            navItems[0].focus()
+            focusTab(navItems[0])
           } else if (e.key === 'End') {
             e.preventDefault()
-            navItems[navItems.length - 1].focus()
+            focusTab(navItems[navItems.length - 1])
           }
         })
       })
