@@ -76,7 +76,7 @@ class FOSSHackathonParticipant(Document):
         self.handle_add_to_email_group()
         # Add to status-based localhost group if applicable
         if self.wants_to_attend_locally and self.localhost:
-            self.sync_localhost_status_groups()
+            self.sync_localhost_status_groups(new_status=self.localhost_request_status)
 
     def before_save(self):
         if self.has_value_changed("wants_to_attend_locally"):
@@ -98,10 +98,13 @@ class FOSSHackathonParticipant(Document):
 
         if self.has_value_changed("localhost") and self.localhost:
             # Localhost changed — just add to new group
-            self.sync_localhost_status_groups()
+            self.sync_localhost_status_groups(new_status=self.localhost_request_status)
         elif self.has_value_changed("localhost_request_status") and self.localhost:
             # Only status changed within the same localhost
-            self.sync_localhost_status_groups(old_status=self._get_old_status())
+            self.sync_localhost_status_groups(
+                new_status=self.localhost_request_status,
+                old_status=self._get_old_status(),
+            )
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
@@ -135,42 +138,38 @@ class FOSSHackathonParticipant(Document):
             document_type_event=HACKATHON,
         )
 
-    def sync_localhost_status_groups(self, old_status=None):
-        """
-        Add/remove participant from localhost email groups based on status.
-        Args:
-            old_status: Previous status to remove from that group
-        """
+    def sync_localhost_status_groups(self, old_status=None, new_status=None):
         if not self.localhost:
             return
 
         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
-        current_status = self.localhost_request_status
 
-        # REMOVE from old status group first
-        if old_status and old_status != current_status:
+        # REMOVE from old group
+        if old_status:
+            # frappe.throw("for old")
             handle_email_group_subscription(
                 emails=[self.email],
                 chapter=event_doc.chapter,
                 event=self.localhost,
                 event_type="Event Participants",
                 custom_group_title=f"{old_status}-{self.localhost}-Localhost",
-                subscribe_to_chapter=False,
-                subscribe_to_event=False,  # Remove
+                subscribe_to_chapter=self.subscribe_chapter_mailing,
+                subscribe_to_event=False,
                 document_type_event=HACKATHON_LOCALHOST,
             )
 
-        # ADD to current status group
-        handle_email_group_subscription(
-            emails=[self.email],
-            chapter=event_doc.chapter,
-            event=self.localhost,
-            event_type="Event Participants",
-            custom_group_title=f"{current_status}-{self.localhost}-Localhost",
-            subscribe_to_chapter=self.subscribe_chapter_mailing,
-            subscribe_to_event=True,
-            document_type_event=HACKATHON_LOCALHOST,
-        )
+        # ADD to new group
+        if new_status:
+            handle_email_group_subscription(
+                emails=[self.email],
+                chapter=event_doc.chapter,
+                event=self.localhost,
+                event_type="Event Participants",
+                custom_group_title=f"{new_status}-{self.localhost}-Localhost",
+                subscribe_to_chapter=self.subscribe_chapter_mailing,
+                subscribe_to_event=True,
+                document_type_event=HACKATHON_LOCALHOST,
+            )
 
     def remove_from_all_localhost_groups(self, localhost_id=None):
         """Remove participant from all localhost status groups
@@ -194,7 +193,7 @@ class FOSSHackathonParticipant(Document):
                     event=target_localhost,
                     event_type="Event Participants",
                     custom_group_title=f"{status}-{target_localhost}-Localhost",
-                    subscribe_to_chapter=False,
+                    subscribe_to_chapter=self.subscribe_chapter_mailing,
                     subscribe_to_event=False,
                     document_type_event=HACKATHON_LOCALHOST,
                 )
@@ -267,8 +266,22 @@ class FOSSHackathonParticipant(Document):
 
     @frappe.whitelist()
     def add_check_in(self):
-        return add_checkin(self)
+        # Add to email group BEFORE saving
+        if self.localhost:
+            checkin_date = frappe.utils.nowdate()
+            self.sync_localhost_status_groups(new_status=f"Checkin-{checkin_date}")
+
+        # Then add the check-in
+        result = add_checkin(self)
+        return result
 
     @frappe.whitelist()
     def remove_today_check_in(self):
-        return remove_today_checkin(self)
+        # Remove from email group BEFORE saving
+        if self.localhost:
+            checkin_date = frappe.utils.nowdate()
+            self.sync_localhost_status_groups(old_status=f"Checkin-{checkin_date}")
+
+        # Then remove the check-in
+        result = remove_today_checkin(self)
+        return result
