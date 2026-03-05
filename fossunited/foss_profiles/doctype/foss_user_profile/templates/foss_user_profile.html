@@ -36,9 +36,11 @@
             <div class="about v3-text-primary">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
+        {% if has_resume %}
         <div class="content-div" id="resume" role="tabpanel" tabindex="0" aria-labelledby="resume-nav-item">
-          {% if has_resume %}{{ render_experience() }} {{ render_education() }}{% endif %}
+          {{ render_experience() }} {{ render_education() }}
         </div>
+        {% endif %}
         {% if has_projects %}
         <div class="content-div" id="projects" role="tabpanel" tabindex="0" aria-labelledby="projects-nav-item">{{ render_projects() }}</div>
         {% endif %}
