@@ -266,22 +266,18 @@ class FOSSHackathonParticipant(Document):
 
     @frappe.whitelist()
     def add_check_in(self):
-        # Add to email group BEFORE saving
+        # Add to email group and checkin
+        result = add_checkin(self)
         if self.localhost:
             checkin_date = frappe.utils.nowdate()
             self.sync_localhost_status_groups(new_status=f"Checkin-{checkin_date}")
-
-        # Then add the check-in
-        result = add_checkin(self)
         return result
 
     @frappe.whitelist()
     def remove_today_check_in(self):
-        # Remove from email group BEFORE saving
+        # Remove from email group
+        result = remove_today_checkin(self)
         if self.localhost:
             checkin_date = frappe.utils.nowdate()
             self.sync_localhost_status_groups(old_status=f"Checkin-{checkin_date}")
-
-        # Then remove the check-in
-        result = remove_today_checkin(self)
         return result
