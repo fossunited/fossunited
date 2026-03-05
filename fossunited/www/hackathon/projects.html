@@ -72,9 +72,9 @@
       {% endif %}
       <div class="projects-grid mt-6">
         {% for project in projects %}
-          <div
+          <a
             class="v3-card project-card v3-text-primary"
-            onClick="window.location.href='/{{ project.route }}'"
+            href="/{{ project.route }}"
             data-title="{{ project.title }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
@@ -108,7 +108,7 @@
               <i class="ti ti-users-group"></i>
               {{ project.team_name }}
             </span>
-          </div>
+          </a>
         {% endfor %}
       </div>
       <div class="text-center mt-4 no-project" style="display: none;">
