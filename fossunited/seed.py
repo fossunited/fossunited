@@ -293,6 +293,9 @@ def seed():
     All inserts run inside ``frappe.flags.ignore_permissions``; the flag
     is restored on exit regardless of success or failure.
     """
+    if not frappe.conf.get("developer_mode"):
+        frappe.throw("Seed script can only be run in developer mode.")
+
     frappe.flags.ignore_permissions = True
     try:
         logger.info("Seeding development data")
