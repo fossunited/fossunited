@@ -926,6 +926,10 @@ h6 {
   padding: 0 1rem;
 }
 
+.project-container *:first-child {
+  padding: 0.75rem 1rem 0;
+}
+
 .project-edit-button {
   z-index: 10;
   padding: 6px;

@@ -72,19 +72,6 @@
       <div class="projects-grid">
         {% for project in doc.projects %}
           <div class="project-container edit-hover" data-docname="{{ project.name }}">
-            <img
-              src="{{ project.cover_image }}"
-              alt="{{ project.project_name }}"
-              class="project-banner"
-            />
-            <button
-              class="hide edit-modal-button project-edit-button"
-              style="align-self: flex-end"
-              data-docname="{{ project.name }}"
-              data-doctype="{{ project.doctype }}"
-            >
-              <i class="ti ti-pencil"></i>
-            </button>
             <div class="project-title">{{ project.project_name }}</div>
             <div class="project-description">{{ project.tagline or "" | truncate(100) }}</div>
             <div class="d-flex align-items-bottom justify-content-between mb-3 p-0">
