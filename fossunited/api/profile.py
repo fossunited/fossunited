@@ -204,7 +204,6 @@ def add_profile_project(
         },
     )
     profile.save()
-    frappe.db.commit()
     return {
         "name": row.name,
         "project_name": row.project_name,
@@ -228,9 +227,8 @@ def update_profile_project(
             row.tagline = tagline
             row.cover_image = cover_image
             profile.save()
-            frappe.db.commit()
             return True
-    frappe.throw("Project not found")
+    frappe.throw(_("Project not found"))
 
 
 @frappe.whitelist()
@@ -242,9 +240,8 @@ def delete_profile_project(row_name: str) -> bool:
         if row.name == row_name:
             profile.remove(row)
             profile.save()
-            frappe.db.commit()
             return True
-    frappe.throw("Project not found")
+    frappe.throw(_("Project not found"))
 
 
 @frappe.whitelist()
