@@ -55,7 +55,7 @@ export function showError(error, fallback = 'An error occurred') {
   const isRateLimited = error?.response?.status === 429 || error?.status === 429
   const apiMessage = typeof error === 'string' ? error : error?.messages?.[0] || error?.message
   const message = isRateLimited
-    ? 'Too many requests/attempts. Please try again after 10 minutes.'
+    ? 'Too many requests/attempts. Take rest & Please try again after an hour.'
     : apiMessage || fallback
   const displayMessage = message === fallback ? fallback : `${fallback}: ${message}`
 
