@@ -1,6 +1,7 @@
 import io
 
 import frappe
+from frappe import _
 from frappe.utils.file_manager import save_file
 from PIL import Image
 
