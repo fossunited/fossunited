@@ -15,7 +15,7 @@
         <div class="horizontal-navbar px-8 pt-2" role="tablist" aria-label="Profile sections">
           {%- set _has_resume = (doc.experience | length > 0) or (doc.education | length > 0) -%}
           {%- set _has_projects = doc.projects | length > 0 -%}
-          {%- set nav_items = ['about'] + (['resume'] if _has_resume else []) + (['projects'] if _has_projects else []) -%}
+          {%- set nav_items = ['about'] + (['resume'] if _has_resume else []) + (['projects'] if (_has_projects or doc.user == frappe.session.user) else []) -%}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
@@ -41,7 +41,7 @@
           {{ render_experience() }} {{ render_education() }}
         </div>
         {% endif %}
-        {% if _has_projects %}
+        {% if _has_projects or doc.user == frappe.session.user %}
         <div class="content-div" id="projects" role="tabpanel" tabindex="0" aria-labelledby="projects-nav-item">{{ render_projects() }}</div>
         {% endif %}
       </div>
@@ -92,7 +92,7 @@
               <i class="ti ti-folder-code"></i>
             </div>
             <div class="project-title">{{ project.project_name }}</div>
-            <div class="project-description">{{ project.tagline or "" | truncate(120) }}</div>
+            <div class="project-description">{{ (project.tagline or "") | truncate(120) }}</div>
             <span class="project-link-text">
               View Project <i class="ti ti-arrow-right"></i>
             </span>

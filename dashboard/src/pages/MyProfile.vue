@@ -626,6 +626,7 @@ const openAddProject = () => {
 }
 
 const handleAddProject = () => {
+  if (!profileDoc.value?.doc) return
   const err = validateProject(newProject)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
@@ -655,6 +656,7 @@ const cancelEditProject = () => {
 }
 
 const saveEditProject = () => {
+  if (!profileDoc.value?.doc) return
   const err = validateProject(editingProject.value)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
@@ -673,6 +675,7 @@ const saveEditProject = () => {
 }
 
 const deleteProject = (rowName) => {
+  if (!profileDoc.value?.doc) return
   if (!confirm('Delete this project?')) return
   profileDoc.value.doc.projects = profileDoc.value.doc.projects.filter((p) => p.name !== rowName)
   profileDoc.value.save
