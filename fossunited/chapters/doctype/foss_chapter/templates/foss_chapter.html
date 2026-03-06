@@ -109,7 +109,7 @@
         <button
           id="download-ics-btn"
           class="btn btn-sm btn-secondary"
-          data-event-ids="{{ upcoming_events | map(attribute='name') | list | tojson | e }}"
+          data-event-ids="{{ upcoming_events | map(attribute='name') | list | tojson }}"
           aria-label="Download upcoming events as ICS calendar file"
         >
           <i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS
