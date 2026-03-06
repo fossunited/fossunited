@@ -94,7 +94,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
 
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 6)
-def generate_ics(event_ids, chapter=None):
+def generate_ics(event_ids: str | list, chapter: str | None = None):
     """
     Return ICS event for the event ids provided
 
@@ -129,7 +129,7 @@ def generate_ics(event_ids, chapter=None):
     filters = [["name", "IN", ids], ["status", "=", "Live"], ["is_published", "=", 1]]
     if chapter:
         if not isinstance(chapter, str) or len(chapter) > 140:
-            frappe.throw("Invalid chapter", frappe.ValidationError)
+            frappe.throw(_("Invalid chapter"), frappe.ValidationError)
         filters.append(["chapter", "=", chapter])
 
     events = frappe.db.get_all(
