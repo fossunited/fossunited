@@ -1,4 +1,8 @@
 {% extends "templates/foss_base.html" %}
+{% block head_include %}
+{{ super() }}
+<link rel="alternate" type="application/rss+xml" title="Upcoming Events \u2013 {{ doc.chapter_name }}" href="/c/{{ doc.slug }}/rss.xml" />
+{% endblock %}
 {% block page_content %}
   {{ header() }}
   {{ render_about() }}
@@ -66,6 +70,15 @@
           </a>
         {% endif %}
       {% endfor %}
+      <a
+        href="/c/{{ doc.slug }}/rss.xml"
+        aria-label="RSS feed for {{ doc.chapter_name }} upcoming events"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="RSS Feed"
+      >
+        <i class="ti ti-rss" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      </a>
     </div>
   </div>
 {% endmacro %}
@@ -80,8 +93,31 @@
     from
     'fossunited/templates/macros/event_card.html' import event_card
   %}
+  {%
+    from
+    'fossunited/templates/macros/ics_download.html' import ics_download
+  %}
   <div class="container my-5">
-    <h3 class="subtitle">Upcoming Events</h3>
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+      <h3 class="subtitle mb-0">Upcoming Events</h3>
+      <div class="d-flex gap-2">
+        <a
+          href="/c/{{ doc.slug }}/rss.xml"
+          class="btn btn-sm btn-secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="RSS feed for upcoming events"
+        >
+          <i class="ti ti-rss" aria-hidden="true"></i> RSS Feed
+        </a>
+        {{ ics_download(
+          event_ids=upcoming_events | map(attribute='name') | list,
+          filename=doc.slug + '-upcoming-events.ics',
+          chapter=doc.name,
+          btn_id='ics-download-btn',
+        ) }}
+      </div>
+    </div>
     <div class="events-grid-4">
       {% for event in upcoming_events %}{{ event_card(event) }}{% endfor %}
     </div>

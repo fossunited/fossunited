@@ -33,6 +33,10 @@ website_route_rules = [
         "from_route": "/hack/<permalink>/projects/all",
         "to_route": "/hackathon/projects",
     },
+    {
+        "from_route": "/c/<chapter>/rss.xml",
+        "to_route": "/c/rss.xml",
+    },
 ]
 
 # add methods and filters to jinja environment

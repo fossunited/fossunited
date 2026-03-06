@@ -2,6 +2,7 @@ import json
 from zoneinfo import ZoneInfo
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 from ics import Calendar, Event
@@ -92,14 +93,17 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     return is_team
 
 
+# Only published event data is returned. No sensitive fields exposed.
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 6)
-def generate_ics(event_ids):
+def generate_ics(event_ids: str | list, chapter: str | None = None):
     """
     Return ICS event for the event ids provided
 
     Args:
         event_ids (list): list of event ids (doc.name)
+        chapter (str, optional): chapter docname to restrict events to
 
     Returns:
         str: ICS data
@@ -125,9 +129,15 @@ def generate_ics(event_ids):
 
     c = Calendar()
 
+    filters = [["name", "IN", ids], ["status", "=", "Live"], ["is_published", "=", 1]]
+    if chapter:
+        if not isinstance(chapter, str) or len(chapter) > 140:
+            frappe.throw(_("Invalid chapter"), frappe.ValidationError)
+        filters.append(["chapter", "=", chapter])
+
     events = frappe.db.get_all(
         EVENT,
-        filters=[["name", "IN", ids]],
+        filters=filters,
         fields=[
             "event_name",
             "event_location",
