@@ -2,6 +2,7 @@ import json
 from zoneinfo import ZoneInfo
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 from ics import Calendar, Event
