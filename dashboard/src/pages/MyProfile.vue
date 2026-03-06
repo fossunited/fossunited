@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <div class="w-full">
-      <div v-if="profile.data" class="w-full">
+      <div v-if="profileDoc?.doc" class="w-full">
         <div class="prose p-4 pb-0">
           <h2 class="mb-1">My Profile</h2>
           <p class="text-sm mb-4">Edit your profile details</p>
@@ -11,7 +11,7 @@
             <img
               class="w-full aspect-[4.96/1]"
               :src="
-                profile.data.cover_image ||
+                profileDoc.doc.cover_image ||
                 '/assets/fossunited/images/defaults/user_profile_banner.png'
               "
               alt="Banner Image"
@@ -35,7 +35,7 @@
                 </template>
               </FileUploader>
               <Button
-                v-if="profile.data.cover_image"
+                v-if="profileDoc.doc.cover_image"
                 icon="trash"
                 variant="solid"
                 theme="red"
@@ -50,7 +50,7 @@
             <img
               class="aspect-square border-4 border-white rounded w-28"
               :src="
-                profile.data.profile_photo ||
+                profileDoc.doc.profile_photo ||
                 '/assets/fossunited/images/defaults/user_profile_image.png'
               "
               alt="Profile Photo"
@@ -76,7 +76,7 @@
           </div>
           <div class="flex flex-col md:grid md:grid-cols-2 gap-4 my-2 p-6">
             <Switch
-              v-model="profile.data.is_private"
+              v-model="profileDoc.doc.is_private"
               size="sm"
               label="Make Profile Private"
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
@@ -85,7 +85,7 @@
               @click="toggleProfilePrivacy()"
             />
             <Switch
-              v-model="profile.data.show_activity"
+              v-model="profileDoc.doc.show_activity"
               size="sm"
               label="Show Community Activity"
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
@@ -97,19 +97,19 @@
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
             </div>
             <FormControl
-              v-model="profile_dict.full_name"
+              v-model="profileDoc.doc.full_name"
               label="Full Name &ast;"
               placeholder="Enter your full name"
             />
             <FormControl
-              v-model="profile_dict.user"
+              v-model="profileDoc.doc.user"
               label="Email &ast;"
               placeholder="Enter your email"
               disabled
             />
             <div>
               <FormControl
-                v-model="profile_dict.username"
+              v-model="profileDoc.doc.username"
                 label="Username &ast;"
                 placeholder="Enter your username"
               />
@@ -122,9 +122,9 @@
                 </div>
                 <div
                   v-else-if="
-                    profile_dict.username &&
+                    profileDoc.doc.username &&
                     !usernameValidateErrors &&
-                    profile_dict.username !== initialUsername
+                    profileDoc.doc.username !== initialUsername
                   "
                   class="flex"
                 >
@@ -137,7 +137,7 @@
               <ErrorMessage :message="usernameValidateErrors" class="mt-2" />
             </div>
             <FormControl
-              v-model="profile_dict.cfp_visibility"
+              v-model="profileDoc.doc.cfp_visibility"
               type="select"
               :options="[
                 {
@@ -157,17 +157,17 @@
               description="Chose who all can see the CFP Proposals you have made till date"
             />
             <FormControl
-              v-model="profile_dict.bio"
+              v-model="profileDoc.doc.bio"
               label="Short Tagline"
               description="A short tagline about yourself"
             />
-            <FormControl v-model="profile_dict.current_city" label="Current City" />
+            <FormControl v-model="profileDoc.doc.current_city" label="Current City" />
             <TextEditor
               label="About"
               class="col-span-2"
               placeholder="Tell more about yourself here."
-              :model-value="profile_dict.about"
-              @update:model-value="profile_dict.about = $event"
+              :model-value="profileDoc.doc.about"
+              @update:model-value="profileDoc.doc.about = $event"
             />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">SOCIAL Links</h4>
@@ -176,17 +176,17 @@
               Enter the complete links to your social, including
               <code>http(s)://</code>
             </div>
-            <FormControl v-model="profile_dict.website" type="url" label="Website" />
-            <FormControl v-model="profile_dict.x" type="url" label="Twitter / X" />
-            <FormControl v-model="profile_dict.linkedin" type="url" label="LinkedIn" />
-            <FormControl v-model="profile_dict.github" type="url" label="GitHub" />
-            <FormControl v-model="profile_dict.gitlab" type="url" label="GitLab" />
-            <FormControl v-model="profile_dict.instagram" type="url" label="Instagram" />
-            <FormControl v-model="profile_dict.youtube" type="url" label="YouTube" />
-            <FormControl v-model="profile_dict.devto" type="url" label="Dev.to" />
-            <FormControl v-model="profile_dict.medium" type="url" label="Medium" />
-            <FormControl v-model="profile_dict.mastodon" type="url" label="Mastodon" />
-            <FormControl v-model="profile_dict.bluesky" type="url" label="Bluesky" />
+            <FormControl v-model="profileDoc.doc.website" type="url" label="Website" />
+            <FormControl v-model="profileDoc.doc.x" type="url" label="Twitter / X" />
+            <FormControl v-model="profileDoc.doc.linkedin" type="url" label="LinkedIn" />
+            <FormControl v-model="profileDoc.doc.github" type="url" label="GitHub" />
+            <FormControl v-model="profileDoc.doc.gitlab" type="url" label="GitLab" />
+            <FormControl v-model="profileDoc.doc.instagram" type="url" label="Instagram" />
+            <FormControl v-model="profileDoc.doc.youtube" type="url" label="YouTube" />
+            <FormControl v-model="profileDoc.doc.devto" type="url" label="Dev.to" />
+            <FormControl v-model="profileDoc.doc.medium" type="url" label="Medium" />
+            <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" />
+            <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -264,6 +264,12 @@
                     placeholder="A short description"
                     class="md:col-span-2"
                   />
+                  <FormControl
+                    v-model="editingProject.cover_image"
+                    label="Cover Image URL (optional)"
+                    placeholder="https://..."
+                    class="md:col-span-2"
+                  />
                 </div>
                 <div class="flex gap-2 justify-end">
                   <Button variant="outline" size="sm" label="Cancel" @click="cancelEditProject()" />
@@ -298,6 +304,12 @@
                   v-model="newProject.tagline"
                   label="Tagline *"
                   placeholder="A short description"
+                  class="md:col-span-2"
+                />
+                <FormControl
+                  v-model="newProject.cover_image"
+                  label="Cover Image URL (optional)"
+                  placeholder="https://..."
                   class="md:col-span-2"
                 />
               </div>
@@ -339,36 +351,12 @@ import { isValidUrl } from '@/helpers/utils'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
-const profile_dict = reactive({
-  full_name: '',
-  user: '',
-  username: '',
-  bio: '',
-  cfp_visibility: '',
-  current_city: '',
-  about: '',
-  website: '',
-  x: '',
-  linkedin: '',
-  github: '',
-  gitlab: '',
-  instagram: '',
-  youtube: '',
-  devto: '',
-  medium: '',
-  mastodon: '',
-  bluesky: '',
-})
-
 const profileDoc = ref(null)
 
 const profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
   auto: true,
   onSuccess(data) {
-    Object.keys(profile_dict).forEach((key) => {
-      profile_dict[key] = data[key]
-    })
     profileDoc.value = createDocumentResource({
       doctype: 'FOSS User Profile',
       name: data.name,
@@ -402,7 +390,7 @@ const setBannerImage = (_file) => {
       } else {
         toast.success('Banner Image Removed')
       }
-      profile.fetch()
+      profileDoc.value.get.submit()
     },
   })
 }
@@ -417,7 +405,7 @@ const setProfileImage = (_file) => {
     },
     auto: true,
     onSuccess() {
-      profile.fetch()
+      profileDoc.value.get.submit()
       toast.success('Profile Image Updated')
     },
     onError(err) {
@@ -428,14 +416,12 @@ const setProfileImage = (_file) => {
 
 const toggleProfilePrivacy = () => {
   profileDoc.value.setValue.submit({ is_private: !profileDoc.value.doc.is_private }).then(() => {
-    profile.fetch()
     toast.info(profileDoc.value.doc.is_private ? 'Profile is now private' : 'Profile is now public')
   })
 }
 
 const toggleShowActivity = () => {
   profileDoc.value.setValue.submit({ show_activity: !profileDoc.value.doc.show_activity }).then(() => {
-    profile.fetch()
     toast.info(
       profileDoc.value.doc.show_activity
         ? 'Community Activity will be shown on your profile page now'
@@ -448,25 +434,15 @@ const updateErrors = ref('')
 
 const updateProfileErrors = () => {
   const errors = []
-  if (!profile_dict.full_name.trim()) errors.push('\nFull Name is required')
-  if (!profile_dict.username.trim()) errors.push('\nUsername is required')
-  if (!profile_dict.user.trim()) errors.push('\nEmail is required')
+  const doc = profileDoc.value?.doc
+  if (!doc) return errors
+  if (!doc.full_name?.trim()) errors.push('\nFull Name is required')
+  if (!doc.username?.trim()) errors.push('\nUsername is required')
+  if (!doc.user?.trim()) errors.push('\nEmail is required')
 
-  const socials = {
-    website: profile_dict.website,
-    x: profile_dict.x,
-    linkedin: profile_dict.linkedin,
-    github: profile_dict.github,
-    gitlab: profile_dict.gitlab,
-    instagram: profile_dict.instagram,
-    youtube: profile_dict.youtube,
-    devto: profile_dict.devto,
-    medium: profile_dict.medium,
-    mastodon: profile_dict.mastodon,
-    bluesky: profile_dict.bluesky,
-  }
-  Object.keys(socials).forEach((key) => {
-    const url = socials[key]
+  const socials = ['website', 'x', 'linkedin', 'github', 'gitlab', 'instagram', 'youtube', 'devto', 'medium', 'mastodon', 'bluesky']
+  socials.forEach((key) => {
+    const url = doc[key]
     if (url && !isValidUrl(url)) {
       errors.push(`\n${key} is not a valid url`)
     }
@@ -474,7 +450,7 @@ const updateProfileErrors = () => {
   return errors
 }
 
-const initialUsername = computed(() => profile.data?.username ?? '')
+const initialUsername = computed(() => profileDoc.value?.doc?.username ?? '')
 const usernameValidateErrors = ref('')
 
 const getUsernameErrors = () => {
@@ -484,17 +460,18 @@ const getUsernameErrors = () => {
     'Username can only contain letters, numbers, underscores and dots.',
     'Username cannot end with extensions like .txt, .html, etc.',
   ]
-  if (!profile_dict.username) {
+  const username = profileDoc.value?.doc?.username
+  if (!username) {
     _errors.push('Username is required')
     return _errors
   }
-  if (profile_dict.username.length < 3 || profile_dict.username.length > 30) {
+  if (username.length < 3 || username.length > 30) {
     _errors.push(messages[0])
   }
-  if (!/^[a-zA-Z0-9_\.]+$/.test(profile_dict.username)) {
+  if (!/^[a-zA-Z0-9_\.]+$/.test(username)) {
     _errors.push(messages[1])
   }
-  if (/\.(txt|html|php|js|json|xml|css|htm)$/i.test(profile_dict.username)) {
+  if (/\.(txt|html|php|js|json|xml|css|htm)$/i.test(username)) {
     _errors.push(messages[2])
   }
   return _errors
@@ -505,7 +482,7 @@ const validateUsername = async () => {
 
   if (errors.length !== 0) {
     usernameValidateErrors.value = errors.join(', ')
-  } else if (profile_dict.username !== initialUsername.value) {
+  } else if (profileDoc.value?.doc?.username !== initialUsername.value) {
     usernameValidateErrors.value = ''
     try {
       await isValidUsername.fetch()
@@ -524,10 +501,10 @@ const validateUsername = async () => {
 }
 
 watch(
-  () => profile_dict.username,
+  () => profileDoc.value?.doc?.username,
   (newValue) => {
     usernameValidateErrors.value = ''
-    if (newValue.trim() !== '') {
+    if (newValue?.trim()) {
       validateUsername()
     }
   },
@@ -537,25 +514,9 @@ const isValidUsername = createResource({
   url: 'fossunited.api.profile.is_valid_username',
   makeParams() {
     return {
-      username: profile_dict.username,
-      id: profile.data.name,
+      username: profileDoc.value?.doc?.username,
+      id: profileDoc.value?.doc?.name,
     }
-  },
-})
-
-const updateProfile = createResource({
-  url: 'fossunited.api.profile.update_profile',
-  makeParams() {
-    return {
-      fields_dict: profile_dict,
-    }
-  },
-  onSuccess() {
-    toast.success('Profile Updated Successfully')
-    profile.fetch()
-  },
-  onError(err) {
-    toast.error('Error updating profile: ' + err.messages)
   },
 })
 
@@ -569,7 +530,10 @@ const handleUpdateProfile = () => {
   if (usernameValidateErrors.value) {
     return
   }
-  updateProfile.fetch()
+  profileDoc.value.save
+    .submit()
+    .then(() => toast.success('Profile Updated Successfully'))
+    .catch((err) => toast.error('Error updating profile: ' + (err?.message || '')))
 }
 
 
