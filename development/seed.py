@@ -5,7 +5,7 @@ can explore the application immediately after install.
 
 Usage::
 
-    bench --site <your-site> execute fossunited.seed.seed
+    bench --site <your-site> execute development.seed.seed
 
 Default credentials
 -------------------
@@ -316,12 +316,16 @@ def seed():
         _create_cfps(events["live"])
         _create_hackathon(chapters)
 
-        frappe.db.commit()  # nosemgrep: frappe-manual-commit - manual init
-        frappe.clear_cache()
+        # intentional manual commit for seed bootstrap
+        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
+        try:
+            frappe.clear_cache()
+        except Exception:
+            logger.warning("Seed data committed, but cache clear failed", exc_info=True)
         logger.info("Seed data created successfully")
     except Exception:
         frappe.db.rollback()
-        logger.exception("Seed script failed — transaction rolled back")
+        logger.exception("Seed script failed before commit — transaction rolled back")
         raise
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
