@@ -85,7 +85,28 @@
     'fossunited/templates/macros/event_card.html' import event_card
   %}
   <div class="container my-5">
-    <h3 class="subtitle">Upcoming Events</h3>
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+      <h3 class="subtitle mb-0">Upcoming Events</h3>
+      <div class="d-flex gap-2">
+        <a
+          href="/c/{{ doc.slug }}/rss.xml"
+          class="btn btn-sm btn-secondary"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="RSS feed for upcoming events"
+        >
+          <i class="ti ti-rss" aria-hidden="true"></i> RSS Feed
+        </a>
+        <button
+          id="download-ics-btn"
+          class="btn btn-sm btn-secondary"
+          data-event-ids="{{ upcoming_events | map(attribute='name') | list | tojson | e }}"
+          aria-label="Download upcoming events as ICS calendar file"
+        >
+          <i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS
+        </button>
+      </div>
+    </div>
     <div class="events-grid-4">
       {% for event in upcoming_events %}{{ event_card(event) }}{% endfor %}
     </div>
@@ -121,6 +142,34 @@
       if (window.innerWidth < 425 && '{{ doc.chapter_type }}' == 'City Community') {
         $('.header--banner').css('object-position', 'right')
       }
+
+      $('#download-ics-btn').on('click', function () {
+        var btn = $(this)
+        var eventIds = JSON.parse(btn.data('event-ids') || '[]')
+        if (!eventIds.length) return
+
+        btn.prop('disabled', true).text('Downloading…')
+        frappe.call({
+          method: 'fossunited.api.chapter.generate_ics',
+          args: { event_ids: JSON.stringify(eventIds) },
+          callback: function (r) {
+            if (r.message) {
+              var blob = new Blob([r.message], { type: 'text/calendar;charset=utf-8' })
+              var url = URL.createObjectURL(blob)
+              var a = document.createElement('a')
+              a.href = url
+              a.download = '{{ doc.slug }}-upcoming-events.ics'
+              document.body.appendChild(a)
+              a.click()
+              document.body.removeChild(a)
+              URL.revokeObjectURL(url)
+            }
+          },
+          always: function () {
+            btn.prop('disabled', false).html('<i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS')
+          },
+        })
+      })
     })
   </script>
 {% endblock %}
