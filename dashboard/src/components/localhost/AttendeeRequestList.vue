@@ -149,8 +149,17 @@
         </div>
 
         <div v-else-if="column.key === 'actions'">
-          <div v-if="row.localhost_request_status === 'Pending'" class="flex gap-2">
-            <Button icon="check" label="Accept" theme="green" @click.stop="acceptRequest(row)" />
+          <div
+            v-if="['Pending', 'Pending Confirmation'].includes(row.localhost_request_status)"
+            class="flex gap-2"
+          >
+            <Button
+              v-if="row.localhost_request_status === 'Pending'"
+              icon="check"
+              label="Accept"
+              theme="green"
+              @click.stop="acceptRequest(row)"
+            />
             <Button icon="x" label="Reject" theme="red" @click.stop="rejectRequest(row)" />
           </div>
         </div>
