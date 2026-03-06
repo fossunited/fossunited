@@ -1,3 +1,4 @@
+import html
 from datetime import datetime
 from email.utils import format_datetime
 from urllib.parse import urljoin
@@ -81,7 +82,7 @@ def get_context(context):
             content += "<p><strong>⭐ Must Attend</strong></p>"
         if description:
             content += f"<div>{description}</div>"
-        content += f'<p><a href="{link}">View Event →</a></p>'
+        content += f'<p><a href="{html.escape(link, quote=True)}">View Event →</a></p>'
         content += "]]>"
 
         items.append(
