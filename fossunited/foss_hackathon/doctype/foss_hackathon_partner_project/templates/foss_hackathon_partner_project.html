@@ -80,7 +80,7 @@
         <i class="ti ti-code"></i>
         <span>Participant Contributions</span>
       </div>
-      <div class="v3-text-secondary mb-3">
+      <div class="v3-text-secondary mb-5">
         Projects created by hackathon participants contributing to {{ doc.project_name }}
       </div>
 
@@ -91,13 +91,13 @@
             class="v3-clickable d-flex flex-column p-3"
             style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
           >
-            <div class="v3-text-primary mb-1 text-xl">{{ project.title }}</div>
+            <div class="v3-text-primary mb-1 text-lg">{{ project.title }}</div>
             {% if project.short_description %}
-              <div class="v3-text-secondary">
+              <div class="v3-text-secondary text-base">
                 {{ project.short_description | truncate(100, true) }}
               </div>
             {% endif %}
-            <div class="d-flex align-items-center gap-2 mt-2 text-sm">
+            <div class="d-flex align-items-center gap-2 mt-2 text-base">
               <span class="v3-text-tertiary">
                 <i class="ti ti-users-group"></i>
                 {{ project.team_name }}
