@@ -612,27 +612,11 @@
       </div>
     </div>
 
-    <script>
-      function downloadEventIcs() {
-        frappe.call({
-          method: 'fossunited.api.chapter.generate_ics',
-          args: {
-            event_ids: ['{{ doc.name }}'],
-          },
-          callback: (r) => {
-            if (r.message) {
-              const blob = new Blob([r.message], { type: 'text/calendar' })
-              const url = URL.createObjectURL(blob)
-              const a = document.createElement('a')
-              a.href = url
-              a.download = `{{ doc.event_name.replace(' ', '_') | replace(' ', '_') }}.ics`
-              a.click()
-              URL.revokeObjectURL(url)
-            }
-          },
-        })
-      }
-
-    </script>
+    {%- from 'fossunited/templates/macros/ics_download.html' import ics_download -%}
+    {{ ics_download(
+      event_ids=[doc.name],
+      filename=doc.event_name.replace(' ', '_') + '.ics',
+      fn_name='downloadEventIcs',
+    ) }}
   </div>
 {% endblock %}
