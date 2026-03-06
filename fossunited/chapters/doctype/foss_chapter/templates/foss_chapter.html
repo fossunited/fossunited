@@ -109,7 +109,6 @@
         <button
           id="download-ics-btn"
           class="btn btn-sm btn-secondary"
-          data-event-ids="{{ upcoming_events | map(attribute='name') | list | tojson }}"
           aria-label="Download upcoming events as ICS calendar file"
         >
           <i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS
@@ -147,6 +146,7 @@
 {% endmacro %}
 {% block page_script %}
   <script>
+    var _upcomingEventIds = {{ upcoming_events | map(attribute='name') | list | tojson }};
     $(document).ready(function () {
       if (window.innerWidth < 425 && '{{ doc.chapter_type }}' == 'City Community') {
         $('.header--banner').css('object-position', 'right')
@@ -154,8 +154,7 @@
 
       $('#download-ics-btn').on('click', function () {
         var btn = $(this)
-        var raw = btn.attr('data-event-ids') || '[]'
-        var eventIds = JSON.parse(raw)
+        var eventIds = _upcomingEventIds
         if (!eventIds.length) return
 
         btn.prop('disabled', true).text('Downloading…')
