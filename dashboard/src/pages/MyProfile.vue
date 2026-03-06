@@ -187,6 +187,19 @@
             <FormControl v-model="profileDoc.doc.medium" type="url" label="Medium" />
             <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" />
             <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" />
+            <ErrorMessage class="col-span-2" :message="updateErrors" />
+            <div class="hidden md:block"></div>
+            <div class="flex justify-end">
+              <Button
+                :variant="'solid'"
+                :size="'md'"
+                :theme="'green'"
+                label="Save"
+                class="w-full md:w-2/3"
+                @click="handleUpdateProfile()"
+              />
+            </div>
+
             <!-- Projects -->
             <div class="col-span-2 py-1 border-b mt-2 flex items-center justify-between">
               <h4 class="text-md font-medium uppercase">Projects</h4>
@@ -266,6 +279,7 @@
                     class="md:col-span-2"
                   />
                 </div>
+                <ErrorMessage :message="projectErrors" />
                 <div class="flex gap-2 justify-end">
                   <Button variant="outline" size="sm" label="Cancel" @click="cancelEditProject()" />
                   <Button
@@ -277,7 +291,6 @@
                     @click="saveEditProject()"
                   />
                 </div>
-                <ErrorMessage :message="projectErrors" />
               </div>
             </div>
 
@@ -308,6 +321,7 @@
                   class="md:col-span-2"
                 />
               </div>
+              <ErrorMessage :message="projectErrors" />
               <div class="flex gap-2 justify-end">
                 <Button variant="outline" size="sm" label="Cancel" @click="showAddProject = false" />
                 <Button
@@ -319,20 +333,9 @@
                   @click="handleAddProject()"
                 />
               </div>
-              <ErrorMessage :message="projectErrors" />
             </div>
 
-            <ErrorMessage class="col-span-2" :message="updateErrors" />
-            <div class="col-span-2 flex justify-end">
-              <Button
-                :variant="'solid'"
-                :size="'md'"
-                :theme="'green'"
-                label="Save"
-                class="w-full md:w-1/3"
-                @click="handleUpdateProfile()"
-              />
-            </div>
+            <!-- bottom of form: no lonely Add Project button needed here -->
           </div>
         </div>
       </div>
