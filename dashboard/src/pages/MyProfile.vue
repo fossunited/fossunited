@@ -82,7 +82,7 @@
               description="Enabling this will make your profile unavailable to others. You will still be able to do the tasks that require profile creation."
               aria-label="Make Profile Private"
               title="Make Profile Private"
-              @click="toggleProfilePrivacy()"
+              @update:model-value="toggleProfilePrivacy"
             />
             <Switch
               v-model="profileDoc.doc.show_activity"
@@ -91,7 +91,7 @@
               description="Enabling this will allow others to view which FOSS United events you have attended till date."
               aria-label="Show Community Activity"
               title="Show Community Activity"
-              @click="toggleShowActivity()"
+              @update:model-value="toggleShowActivity"
             />
             <div class="col-span-2 py-1 border-b">
               <h4 class="text-md font-medium uppercase">Basic Details</h4>
@@ -414,16 +414,16 @@ const setProfileImage = (_file) => {
   })
 }
 
-const toggleProfilePrivacy = () => {
-  profileDoc.value.setValue.submit({ is_private: !profileDoc.value.doc.is_private }).then(() => {
-    toast.info(profileDoc.value.doc.is_private ? 'Profile is now private' : 'Profile is now public')
+const toggleProfilePrivacy = (value) => {
+  profileDoc.value.setValue.submit({ is_private: value }).then(() => {
+    toast.info(value ? 'Profile is now private' : 'Profile is now public')
   })
 }
 
-const toggleShowActivity = () => {
-  profileDoc.value.setValue.submit({ show_activity: !profileDoc.value.doc.show_activity }).then(() => {
+const toggleShowActivity = (value) => {
+  profileDoc.value.setValue.submit({ show_activity: value }).then(() => {
     toast.info(
-      profileDoc.value.doc.show_activity
+      value
         ? 'Community Activity will be shown on your profile page now'
         : "Community Activity won't be shown on your profile page now",
     )

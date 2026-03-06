@@ -89,7 +89,11 @@
             data-docname="{{ project.name }}"
           >
             <div class="project-card-icon-wrap">
-              <i class="ti ti-folder-code"></i>
+              {% if project.cover_image %}
+                <img src="{{ project.cover_image }}" alt="{{ project.project_name }}" class="project-cover-icon" />
+              {% else %}
+                <i class="ti ti-folder-code"></i>
+              {% endif %}
             </div>
             <div class="project-title">{{ project.project_name }}</div>
             <div class="project-description">{{ (project.tagline or "") | truncate(120) }}</div>
