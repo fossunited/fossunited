@@ -613,6 +613,7 @@ const editingProject = ref(null)
 const validateProject = (p) => {
   if (!p.project_name?.trim()) return 'Project Name is required'
   if (!p.project_link?.trim()) return 'Project Link is required'
+  if (!isValidUrl(p.project_link)) return 'Project Link must be a valid HTTP(S) URL'
   if (!p.tagline?.trim()) return 'Tagline is required'
   return ''
 }
