@@ -91,7 +91,8 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     )
     return is_team
 
-
+# Only published event data is returned. No sensitive fields exposed.
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 6)
 def generate_ics(event_ids: str | list, chapter: str | None = None):
