@@ -85,6 +85,7 @@ website_redirects = [
     {"source": r"c/(.+)/cfp", "target": r"/dashboard/cfp/apply/\1"},
     {"source": r"c/(.+)/cfp/all", "target": r"/dashboard/cfp/all/\1"},
     {"source": r"c/(.+)/schedule", "target": r"/dashboard/schedule/\1"},
+    {"source": r"c/([^/]+)/rss\.xml", "target": r"/c/rss.xml?chapter=\1"},
     {
         "source": r"c/(.+)/tickets",
         "target": r"/api/method/fossunited.api.pages.buy_tickets_page?route=c/\1",

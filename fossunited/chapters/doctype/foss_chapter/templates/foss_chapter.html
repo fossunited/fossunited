@@ -1,4 +1,8 @@
 {% extends "templates/foss_base.html" %}
+{% block head_include %}
+{{ super() }}
+<link rel="alternate" type="application/rss+xml" title="Upcoming Events \u2013 {{ doc.chapter_name }}" href="/c/{{ doc.slug }}/rss.xml" />
+{% endblock %}
 {% block page_content %}
   {{ header() }}
   {{ render_about() }}
