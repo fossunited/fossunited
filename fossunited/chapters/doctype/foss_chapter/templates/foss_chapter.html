@@ -154,7 +154,8 @@
 
       $('#download-ics-btn').on('click', function () {
         var btn = $(this)
-        var eventIds = JSON.parse(btn.data('event-ids') || '[]')
+        var raw = btn.attr('data-event-ids') || '[]'
+        var eventIds = JSON.parse(raw)
         if (!eventIds.length) return
 
         btn.prop('disabled', true).text('Downloading…')
