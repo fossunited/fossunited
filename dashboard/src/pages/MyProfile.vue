@@ -413,20 +413,32 @@ const setProfileImage = (_file) => {
   })
 }
 
-const toggleProfilePrivacy = (value) => {
-  profileDoc.value.setValue.submit({ is_private: value }).then(() => {
+const toggleProfilePrivacy = async (value) => {
+  const previous = !value
+  try {
+    await profileDoc.value.setValue.submit({ is_private: value })
     toast.info(value ? 'Profile is now private' : 'Profile is now public')
-  })
+  } catch (err) {
+    profileDoc.value.doc.is_private = previous
+    toast.error('Failed to update privacy setting')
+    console.error(err)
+  }
 }
 
-const toggleShowActivity = (value) => {
-  profileDoc.value.setValue.submit({ show_activity: value }).then(() => {
+const toggleShowActivity = async (value) => {
+  const previous = !value
+  try {
+    await profileDoc.value.setValue.submit({ show_activity: value })
     toast.info(
       value
         ? 'Community Activity will be shown on your profile page now'
         : "Community Activity won't be shown on your profile page now",
     )
-  })
+  } catch (err) {
+    profileDoc.value.doc.show_activity = previous
+    toast.error('Failed to update activity setting')
+    console.error(err)
+  }
 }
 
 const updateErrors = ref('')
