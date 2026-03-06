@@ -3,6 +3,7 @@ from email.utils import format_datetime
 from urllib.parse import urljoin
 
 import frappe
+from frappe import _
 from frappe.utils import escape_html, get_request_site_address, sanitize_html
 
 from fossunited.doctype_ids import EVENT
@@ -18,7 +19,7 @@ def _safe_cdata(text):
 def get_context(context):
     slug = frappe.form_dict.get("chapter")
     if not slug:
-        frappe.throw("chapter parameter is required", frappe.InvalidRequestException)
+        frappe.throw(_("chapter parameter is required"), frappe.InvalidRequestException)
 
     chapter = frappe.db.get_value(
         "FOSS Chapter", {"slug": slug}, ["chapter_name", "route", "name", "slug"], as_dict=True
@@ -26,7 +27,7 @@ def get_context(context):
         "FOSS Chapter", slug, ["chapter_name", "route", "name", "slug"], as_dict=True
     )
     if not chapter:
-        frappe.throw("Chapter not found", frappe.DoesNotExistError)
+        frappe.throw(_("Chapter not found"), frappe.DoesNotExistError)
 
     host = get_request_site_address()
 
