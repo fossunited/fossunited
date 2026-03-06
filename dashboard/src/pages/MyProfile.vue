@@ -335,6 +335,7 @@
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck } from '@tabler/icons-vue'
 import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
+import { isValidUrl } from '@/helpers/utils'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
@@ -426,55 +427,24 @@ const setProfileImage = (_file) => {
 }
 
 const toggleProfilePrivacy = () => {
-  createResource({
-    url: 'fossunited.api.profile.toggle_profile_privacy',
-    makeParams() {
-      return {
-        value: profile.data.is_private,
-      }
-    },
-    auto: true,
-    onSuccess() {
-      if (profile.data.is_private) {
-        toast.info('Profile is now private')
-      } else {
-        toast.info('Profile is now public')
-      }
-      profile.fetch()
-    },
+  profileDoc.value.setValue.submit({ is_private: !profileDoc.value.doc.is_private }).then(() => {
+    profile.fetch()
+    toast.info(profileDoc.value.doc.is_private ? 'Profile is now private' : 'Profile is now public')
   })
 }
 
 const toggleShowActivity = () => {
-  createResource({
-    url: 'fossunited.api.profile.toggle_show_activity',
-    makeParams() {
-      return {
-        value: profile.data.show_activity,
-      }
-    },
-    auto: true,
-    onSuccess() {
-      if (profile.data.show_activity) {
-        toast.info('Community Activity will be shown on your profile page now')
-      } else {
-        toast.info("Community Activity won't be shown on your profile page now")
-      }
-      profile.fetch()
-    },
+  profileDoc.value.setValue.submit({ show_activity: !profileDoc.value.doc.show_activity }).then(() => {
+    profile.fetch()
+    toast.info(
+      profileDoc.value.doc.show_activity
+        ? 'Community Activity will be shown on your profile page now'
+        : "Community Activity won't be shown on your profile page now",
+    )
   })
 }
 
 const updateErrors = ref('')
-
-const isValidUrl = (url) => {
-  try {
-    const parsed = new URL(url)
-    return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-  } catch (_) {
-    return false
-  }
-}
 
 const updateProfileErrors = () => {
   const errors = []

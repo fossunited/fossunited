@@ -89,26 +89,6 @@ def set_cover_image(file_url: str) -> bool:
 
 
 @frappe.whitelist()
-def toggle_profile_privacy(value):
-    user_doc = get_session_user_profile()
-    try:
-        frappe.db.set_value(USER_PROFILE, user_doc.name, "is_private", value)
-        return True
-    except Exception as e:
-        frappe.throw(str(e))
-
-
-@frappe.whitelist()
-def toggle_show_activity(value):
-    user_doc = get_session_user_profile()
-    try:
-        frappe.db.set_value(USER_PROFILE, user_doc.name, "show_activity", value)
-        return True
-    except Exception as e:
-        frappe.throw(str(e))
-
-
-@frappe.whitelist()
 def update_profile(fields_dict):
     """
     Updates User Profile data.
