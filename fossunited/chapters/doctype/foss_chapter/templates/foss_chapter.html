@@ -160,7 +160,7 @@
         btn.prop('disabled', true).text('Downloading…')
         frappe.call({
           method: 'fossunited.api.chapter.generate_ics',
-          args: { event_ids: JSON.stringify(eventIds) },
+          args: { event_ids: JSON.stringify(eventIds), chapter: '{{ doc.name }}' },
           callback: function (r) {
             if (r.message) {
               var blob = new Blob([r.message], { type: 'text/calendar;charset=utf-8' })

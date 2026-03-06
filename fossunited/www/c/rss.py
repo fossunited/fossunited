@@ -1,3 +1,4 @@
+import html
 from datetime import datetime
 from email.utils import format_datetime
 from urllib.parse import urljoin
@@ -29,7 +30,7 @@ def get_context(context):
         if event.is_external_event and event.external_event_url:
             event.link = event.external_event_url
         else:
-            event.link = urljoin(host, event.route or "") or host + "/events/timeline"
+            event.link = urljoin(host, event.route) if event.route else host + "/events/timeline"
 
         location = escape_html(event.event_location or "")
         event.event_type_display = escape_html(event.event_type or "Event")
@@ -47,9 +48,12 @@ def get_context(context):
         event.end_date_formatted = end_date.strftime("%d %B %Y, %I:%M %p")
         event.published_date = format_datetime(start_date)
 
+        _name = html.escape(event.event_name or "", quote=True)
+        _link = html.escape(event.link, quote=True)
+
         event_details = f"""
         <![CDATA[
-        <h3>{event.event_name}</h3>
+        <h3>{_name}</h3>
         <p><strong>Type:</strong> {event.event_type_display}</p>
         <p><strong>Location:</strong> {location}</p>
         <p><strong>Start:</strong> {event.start_date_formatted}</p>
@@ -60,16 +64,16 @@ def get_context(context):
             event_details += "<p><strong>⭐ Must Attend Event</strong></p>"
 
         if event.banner_image:
-            banner_url = urljoin(host, event.banner_image)
+            banner_url = html.escape(urljoin(host, event.banner_image), quote=True)
             event_details += (
-                f'<p><img src="{banner_url}" alt="{event.event_name}"'
+                f'<p><img src="{banner_url}" alt="{_name}"'
                 ' style="max-width: 600px; height: auto;"/></p>'
             )
 
         if event.event_description:
             event_details += f"<div>{sanitize_html(event.event_description)}</div>"
 
-        event_details += f'<p><a href="{event.link}">View Event Details \u2192</a></p>'
+        event_details += f'<p><a href="{_link}">View Event Details \u2192</a></p>'
         event_details += "]]>"
 
         event.content = event_details
