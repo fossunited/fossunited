@@ -210,7 +210,7 @@
 
             <!-- existing project cards -->
             <div
-              v-for="project in projects"
+              v-for="project in (profileDoc?.doc?.projects ?? [])"
               :key="project.name"
               class="col-span-2 border rounded-lg p-4 flex flex-col gap-3"
             >
@@ -272,7 +272,7 @@
                     size="sm"
                     theme="green"
                     label="Save"
-                    :loading="isSavingProject"
+                    :loading="profileDoc?.save?.loading"
                     @click="saveEditProject()"
                   />
                 </div>
@@ -308,7 +308,7 @@
                   size="sm"
                   theme="green"
                   label="Add Project"
-                  :loading="isSavingProject"
+                  :loading="profileDoc?.save?.loading"
                   @click="handleAddProject()"
                 />
               </div>
@@ -334,7 +334,7 @@
 <script setup>
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck } from '@tabler/icons-vue'
-import { createResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
+import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
@@ -359,12 +359,20 @@ const profile_dict = reactive({
   bluesky: '',
 })
 
+const profileDoc = ref(null)
+
 const profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
   auto: true,
   onSuccess(data) {
     Object.keys(profile_dict).forEach((key) => {
       profile_dict[key] = data[key]
+    })
+    profileDoc.value = createDocumentResource({
+      doctype: 'FOSS User Profile',
+      name: data.name,
+      fields: ['*'],
+      auto: true,
     })
   },
 })
@@ -595,33 +603,17 @@ const handleUpdateProfile = () => {
 }
 
 
-const projects = ref([])
 const showAddProject = ref(false)
-const isSavingProject = ref(false)
 const projectErrors = ref('')
 
 const emptyProject = () => ({ project_name: '', project_link: '', tagline: '', cover_image: '' })
 const newProject = reactive(emptyProject())
 const editingProject = ref(null)
 
-const projectsResource = createResource({
-  url: 'fossunited.api.profile.get_profile_projects',
-  auto: true,
-  onSuccess(data) {
-    projects.value = data
-  },
-})
-
 const validateProject = (p) => {
   if (!p.project_name?.trim()) return 'Project Name is required'
   if (!p.project_link?.trim()) return 'Project Link is required'
   if (!p.tagline?.trim()) return 'Tagline is required'
-  try {
-    const u = new URL(p.project_link)
-    if (u.protocol !== 'http:' && u.protocol !== 'https:') throw new Error()
-  } catch {
-    return 'Project Link must be a valid URL'
-  }
   return ''
 }
 
@@ -635,27 +627,18 @@ const handleAddProject = () => {
   const err = validateProject(newProject)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
-  isSavingProject.value = true
-  createResource({
-    url: 'fossunited.api.profile.add_profile_project',
-    params: {
-      project_name: newProject.project_name,
-      project_link: newProject.project_link,
-      tagline: newProject.tagline,
-      cover_image: newProject.cover_image,
-    },
-    auto: true,
-    onSuccess(data) {
-      projects.value.push(data)
+  profileDoc.value.doc.projects.push({ ...newProject })
+  profileDoc.value.save
+    .submit()
+    .then(() => {
       showAddProject.value = false
-      isSavingProject.value = false
+      Object.assign(newProject, emptyProject())
       toast.success('Project added')
-    },
-    onError(e) {
-      projectErrors.value = e?.messages?.[0] || 'Failed to add project'
-      isSavingProject.value = false
-    },
-  })
+    })
+    .catch((e) => {
+      profileDoc.value.get.submit()
+      projectErrors.value = e?.message || 'Failed to add project'
+    })
 }
 
 const startEditProject = (project) => {
@@ -672,44 +655,31 @@ const saveEditProject = () => {
   const err = validateProject(editingProject.value)
   if (err) { projectErrors.value = err; return }
   projectErrors.value = ''
-  isSavingProject.value = true
-  createResource({
-    url: 'fossunited.api.profile.update_profile_project',
-    params: {
-      row_name: editingProject.value.name,
-      project_name: editingProject.value.project_name,
-      project_link: editingProject.value.project_link,
-      tagline: editingProject.value.tagline,
-      cover_image: editingProject.value.cover_image,
-    },
-    auto: true,
-    onSuccess() {
-      const idx = projects.value.findIndex((p) => p.name === editingProject.value.name)
-      if (idx !== -1) projects.value[idx] = { ...editingProject.value }
+  const idx = profileDoc.value.doc.projects.findIndex((p) => p.name === editingProject.value.name)
+  if (idx !== -1) Object.assign(profileDoc.value.doc.projects[idx], editingProject.value)
+  profileDoc.value.save
+    .submit()
+    .then(() => {
       editingProject.value = null
-      isSavingProject.value = false
       toast.success('Project updated')
-    },
-    onError(e) {
-      projectErrors.value = e?.messages?.[0] || 'Failed to update project'
-      isSavingProject.value = false
-    },
-  })
+    })
+    .catch((e) => {
+      profileDoc.value.get.submit()
+      projectErrors.value = e?.message || 'Failed to update project'
+    })
 }
 
 const deleteProject = (rowName) => {
   if (!confirm('Delete this project?')) return
-  createResource({
-    url: 'fossunited.api.profile.delete_profile_project',
-    params: { row_name: rowName },
-    auto: true,
-    onSuccess() {
-      projects.value = projects.value.filter((p) => p.name !== rowName)
+  profileDoc.value.doc.projects = profileDoc.value.doc.projects.filter((p) => p.name !== rowName)
+  profileDoc.value.save
+    .submit()
+    .then(() => {
       toast.success('Project deleted')
-    },
-    onError(e) {
-      toast.error(e?.messages?.[0] || 'Failed to delete project')
-    },
-  })
+    })
+    .catch((e) => {
+      profileDoc.value.get.submit()
+      toast.error(e?.message || 'Failed to delete project')
+    })
 }
 </script>

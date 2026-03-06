@@ -1,7 +1,6 @@
 import io
 
 import frappe
-from frappe import _
 from frappe.utils.file_manager import save_file
 from PIL import Image
 
@@ -169,80 +168,6 @@ def update_profile(fields_dict):
     except Exception as e:
         frappe.log_error(("Error updating profile: {0}").format(str(e)))
         frappe.throw(("An error occurred while updating the profile. Please try again."))
-
-
-@frappe.whitelist()
-def get_profile_projects() -> list:
-    """Return the projects child table for the logged-in user's profile."""
-    user_doc = get_session_user_profile()
-    profile = frappe.get_doc(USER_PROFILE, user_doc.name)
-    return [
-        {
-            "name": row.name,
-            "project_name": row.project_name,
-            "project_link": row.project_link,
-            "tagline": row.tagline,
-            "cover_image": row.cover_image,
-        }
-        for row in profile.get("projects", [])
-    ]
-
-
-@frappe.whitelist()
-def add_profile_project(
-    project_name: str, project_link: str, tagline: str, cover_image: str = ""
-) -> dict:
-    """Add a new project to the logged-in user's profile."""
-    user_doc = get_session_user_profile()
-    profile = frappe.get_doc(USER_PROFILE, user_doc.name)
-    row = profile.append(
-        "projects",
-        {
-            "project_name": project_name,
-            "project_link": project_link,
-            "tagline": tagline,
-            "cover_image": cover_image,
-        },
-    )
-    profile.save()
-    return {
-        "name": row.name,
-        "project_name": row.project_name,
-        "project_link": row.project_link,
-        "tagline": row.tagline,
-        "cover_image": row.cover_image,
-    }
-
-
-@frappe.whitelist()
-def update_profile_project(
-    row_name: str, project_name: str, project_link: str, tagline: str, cover_image: str = ""
-) -> bool:
-    """Update an existing project row for the logged-in user's profile."""
-    user_doc = get_session_user_profile()
-    profile = frappe.get_doc(USER_PROFILE, user_doc.name)
-    for row in profile.get("projects", []):
-        if row.name == row_name:
-            row.project_name = project_name
-            row.project_link = project_link
-            row.tagline = tagline
-            row.cover_image = cover_image
-            profile.save()
-            return True
-    frappe.throw(_("Project not found"))
-
-
-@frappe.whitelist()
-def delete_profile_project(row_name: str) -> bool:
-    """Delete a project row from the logged-in user's profile."""
-    user_doc = get_session_user_profile()
-    profile = frappe.get_doc(USER_PROFILE, user_doc.name)
-    for row in profile.get("projects", []):
-        if row.name == row_name:
-            profile.remove(row)
-            profile.save()
-            return True
-    frappe.throw(_("Project not found"))
 
 
 @frappe.whitelist()
