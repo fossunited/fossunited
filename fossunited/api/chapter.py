@@ -91,6 +91,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     )
     return is_team
 
+
 # Only published event data is returned. No sensitive fields exposed.
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
