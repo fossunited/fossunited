@@ -620,6 +620,7 @@ const validateProject = (p) => {
 
 const openAddProject = () => {
   Object.assign(newProject, emptyProject())
+  editingProject.value = null
   projectErrors.value = ''
   showAddProject.value = true
 }
@@ -643,6 +644,7 @@ const handleAddProject = () => {
 }
 
 const startEditProject = (project) => {
+  showAddProject.value = false
   editingProject.value = { ...project }
   projectErrors.value = ''
 }
