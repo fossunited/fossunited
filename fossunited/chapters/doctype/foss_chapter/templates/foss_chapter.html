@@ -70,6 +70,15 @@
           </a>
         {% endif %}
       {% endfor %}
+      <a
+        href="/c/{{ doc.slug }}/rss.xml"
+        aria-label="RSS feed for {{ doc.chapter_name }} upcoming events"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="RSS Feed"
+      >
+        <i class="ti ti-rss" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      </a>
     </div>
   </div>
 {% endmacro %}
