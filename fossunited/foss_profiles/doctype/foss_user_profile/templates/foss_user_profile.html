@@ -13,9 +13,9 @@
     <div class="container">
       <div class="profile-content-section">
         <div class="horizontal-navbar px-8 pt-2" role="tablist" aria-label="Profile sections">
-          {% set has_resume = experiences_dict or doc.education | length > 0 %}
-          {% set has_projects = doc.projects | length > 0 %}
-          {% set nav_items = ['about'] + (['resume'] if has_resume else []) + (['projects'] if has_projects else []) %}
+          {%- set _has_resume = (doc.experience | length > 0) or (doc.education | length > 0) -%}
+          {%- set _has_projects = doc.projects | length > 0 -%}
+          {%- set nav_items = ['about'] + (['resume'] if _has_resume else []) + (['projects'] if (_has_projects or doc.user == frappe.session.user) else []) -%}
           {% for item in nav_items %}
             <div
               class="horizontal-navbar--item"
@@ -36,12 +36,12 @@
             <div class="about v3-text-primary">{{ doc.about or "Nothing in about." }}</div>
           </div>
         </div>
-        {% if has_resume %}
+        {% if _has_resume %}
         <div class="content-div" id="resume" role="tabpanel" tabindex="0" aria-labelledby="resume-nav-item">
           {{ render_experience() }} {{ render_education() }}
         </div>
         {% endif %}
-        {% if has_projects %}
+        {% if _has_projects or doc.user == frappe.session.user %}
         <div class="content-div" id="projects" role="tabpanel" tabindex="0" aria-labelledby="projects-nav-item">{{ render_projects() }}</div>
         {% endif %}
       </div>
@@ -81,38 +81,26 @@
     {% if doc.projects | len > 0 %}
       <div class="projects-grid">
         {% for project in doc.projects %}
-          <div class="project-container edit-hover" data-docname="{{ project.name }}">
-            <img
-              src="{{ project.cover_image }}"
-              alt="{{ project.project_name }}"
-              class="project-banner"
-            />
-            <button
-              class="hide edit-modal-button project-edit-button"
-              style="align-self: flex-end"
-              data-docname="{{ project.name }}"
-              data-doctype="{{ project.doctype }}"
-            >
-              <i class="ti ti-pencil"></i>
-            </button>
-            <div class="project-title">{{ project.project_name }}</div>
-            <div class="project-description">{{ project.tagline or "" | truncate(100) }}</div>
-            <div class="d-flex align-items-bottom justify-content-between mb-3 p-0">
-              <div class="collaborators-list">
-                <div class="collaborators-container"></div>
-              </div>
-              <a
-                rel="noopener noreferrer nofollow"
-                href="{{ project.project_link }}"
-                style="color: hsl(var(--clr-foss-mint-500))"
-                class="project-link"
-                target="_blank"
-              >
-                View Project
-                <i class="ti ti-external-link"></i>
-              </a>
+          <a
+            class="project-container"
+            href="{{ project.project_link }}"
+            target="_blank"
+            rel="nofollow noopener"
+            data-docname="{{ project.name }}"
+          >
+            <div class="project-card-icon-wrap">
+              {% if project.cover_image %}
+                <img src="{{ project.cover_image }}" alt="{{ project.project_name }}" class="project-cover-icon" />
+              {% else %}
+                <i class="ti ti-folder-code"></i>
+              {% endif %}
             </div>
-          </div>
+            <div class="project-title">{{ project.project_name }}</div>
+            <div class="project-description">{{ (project.tagline or "") | truncate(120) }}</div>
+            <span class="project-link-text">
+              View Project <i class="ti ti-arrow-right"></i>
+            </span>
+          </a>
         {% endfor %}
       </div>
     {% else %}
@@ -579,8 +567,11 @@
       //for each header-with-button, find the section from its parent
       $('.header-with-button').each((index, element) => {
         let section = $(element).parent().attr('id').split('-')[0]
+        let onClickHandler = section === 'projects'
+          ? `window.location.href='/dashboard/me'`
+          : `addModal(this)`
         $(element).append(`
-                <button class="add-modal-button" name="add-${section}" onClick="addModal(this)">
+                <button class="add-modal-button" name="add-${section}" onClick="${onClickHandler}">
                     <i class="ti ti-plus"></i>
                     Add ${section}
                 </button>
