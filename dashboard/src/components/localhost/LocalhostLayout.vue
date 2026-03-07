@@ -11,7 +11,7 @@
   <div v-if="isValidated" class="w-full min-h-screen flex overflow-x-hidden">
     <SideNavbar title="Manage Localhost" :menu-items="sidebarMenuItems" />
 
-    <div class="flex-1 p-4 md:ml-[220px] min-w-0">
+    <div class="flex-1 p-4 min-w-0">
       <div class="w-full min-w-0">
         <RouterView />
       </div>

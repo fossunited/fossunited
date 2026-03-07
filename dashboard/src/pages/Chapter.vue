@@ -9,7 +9,7 @@
   />
   <div v-if="chapter.data" class="flex flex-col md:flex-row">
     <SideNavbar title="Manage Chapter" :menu-items="sidebarMenuItems" />
-    <div class="w-full md:ml-[220px]">
+    <div class="flex-1 min-w-0">
       <RouterView />
     </div>
   </div>
