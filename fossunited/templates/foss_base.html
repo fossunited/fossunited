@@ -11,18 +11,48 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
 />
+<style>
+  .skip-link {
+    background: #000;
+    color: #fff;
+    left: 50%;
+    padding: 8px;
+    position: absolute;
+    transform: translateY(-100%);
+    transition: transform 0.3s;
+    z-index: 1000;
+  }
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+  @media (max-width: 991.98px) {
+    #navbarSupportedContent ul.navbar-nav {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      flex-direction: row !important;
+    }
+    #navbarSupportedContent ul.navbar-nav > li {
+      width: 50% !important;
+    }
+  }
+</style>
 {% endblock %}
 
 {% set layout = layout | default("standard") %}
-
 {% set hide_nav = hide_nav | default(layout == "blank") %}
-
 {% set hide_footer = hide_footer | default(layout == "blank") %}
 
 {% block navbar %}
+  <a href="#content" class="skip-link">Skip to main content</a>
   {% if not hide_nav %}
     {{ super() }}
   {% endif %}
+{% endblock %}
+
+{% block content %}
+  <main id="content">
+    {{ super() }}
+  </main>
 {% endblock %}
 
 {% block footer %}
@@ -31,23 +61,5 @@
   {% endif %}
 {% endblock %}
 
-
-<!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
 {% block style %} {{ super() }}
-<style>
-  {% include "public/css/custom.css" %}
-</style>
-{% block page_style %}{% endblock %} {% endblock %} {% block content %} {% block page_content %}
-<div class="base-placeholder">
-  <h3>Your Content Goes Here.</h3>
-  <br />-> Change content inside "block page_content" in your page. <br />-> Include new style
-  inside inside "block page_style" in your page. <br />-> Include new script inside inside "block
-  page_script" in your page.
-</div>
-{% endblock %} {% endblock %}
-
-{%- block script -%}
-   {{ super() }}
-   {% block page_script %}{% endblock %}
-{%- endblock -%}
-<!-- prettier-ignore-end -->
+{% endblock %}
