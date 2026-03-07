@@ -81,7 +81,7 @@
 
       {{ render_team() }}
       {{ render_description() }}
-      {{ issue_pr_table(doc.issue_pr_table, "No issues or pull requests added.") }}
+      {{ issue_pr_table(doc.issue_pr_table, title="Issues & PRs Board", empty_message="No issues or pull requests added.") }}
     </div>
   </div>
 {% endblock %}

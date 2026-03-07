@@ -1,8 +1,8 @@
-{% macro issue_pr_table(docfield, empty_message) %}
+{% macro issue_pr_table(docfield, empty_message, title="Issues Board") %}
   <div class="v3-card mb-4">
     <div class="v3-section-title">
       <i class="ti ti-git-pull-request"></i>
-      <span>Issues & Pull Requests Thread</span>
+      <span>{{ title }}</span>
     </div>
 
     {% if docfield | len > 0 %}

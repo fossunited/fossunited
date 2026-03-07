@@ -53,7 +53,7 @@
       </div>
 
       {{ render_description() }}
-      {{ issue_pr_table(doc.issue_pr_table, "No issues or pull requests linked yet. Check the repository discussion thread for contribution opportunities.") }}
+      {{ issue_pr_table(doc.issue_pr_table, title="Issues Board", empty_message="No issues or pull requests linked yet. Check the repository discussion thread for contribution opportunities.") }}
       {{ render_participant_projects() }}
     </div>
   </div>
