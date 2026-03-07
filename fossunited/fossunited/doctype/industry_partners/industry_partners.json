@@ -120,9 +120,8 @@
       "options": "Platinum\nGold\nSilver\nBronze"
     }
   ],
-  "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-08-08 14:59:08.857648",
+  "modified": "2026-03-07 16:37:02.724136",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "Industry Partners",
@@ -152,6 +151,7 @@
       "share": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

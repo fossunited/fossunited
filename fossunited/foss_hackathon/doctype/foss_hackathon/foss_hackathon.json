@@ -320,7 +320,6 @@
     }
   ],
   "has_web_view": 1,
-  "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [
     {
@@ -344,7 +343,7 @@
       "link_fieldname": "parent_hackathon"
     }
   ],
-  "modified": "2026-02-10 12:15:32.910928",
+  "modified": "2026-03-07 16:41:35.054898",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon",

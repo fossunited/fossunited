@@ -6,7 +6,12 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["question", "type", "column_break_prxb", "response"],
+  "field_order": [
+    "question",
+    "type",
+    "column_break_prxb",
+    "response"
+  ],
   "fields": [
     {
       "fieldname": "question",
@@ -31,15 +36,15 @@
       "fieldtype": "Column Break"
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-03-02 13:35:59.565097",
+  "modified": "2026-03-07 16:37:04.446423",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Custom Answer",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

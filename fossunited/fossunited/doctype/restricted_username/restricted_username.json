@@ -5,7 +5,10 @@
   "creation": "2024-08-13 11:42:39.366690",
   "doctype": "DocType",
   "engine": "InnoDB",
-  "field_order": ["username_info_section", "username"],
+  "field_order": [
+    "username_info_section",
+    "username"
+  ],
   "fields": [
     {
       "fieldname": "username_info_section",
@@ -19,9 +22,8 @@
       "label": "Username"
     }
   ],
-  "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-08-13 11:54:50.053020",
+  "modified": "2026-03-07 16:37:02.422945",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "Restricted Username",
@@ -40,6 +42,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": [],
