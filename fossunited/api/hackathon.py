@@ -603,16 +603,20 @@ def get_issue_pr_title(url: str) -> dict:
     if len(parts) < 5:
         frappe.throw("Invalid URL")
 
-    if parts[5] == "issues":
-        issue = gh.get_issue_info("/".join(parts[3:5]), parts[-1])
-        return {"title": issue.title, "type": "Issue"}
-    elif parts[5] == "pull":
-        pr = gh.get_pr_info("/".join(parts[3:5]), parts[-1])
-        return {"title": pr.title, "type": "Pull Request"}
-    elif parts[5] == "discussions":
-        return {"title": "", "type": "Discussion"}
-    else:
-        frappe.throw("Invalid URL")
+    try:
+        if parts[5] == "issues":
+            issue = gh.get_issue_info("/".join(parts[3:5]), parts[-1])
+            return {"title": issue.title, "type": "Issue"}
+        elif parts[5] == "pull":
+            pr = gh.get_pr_info("/".join(parts[3:5]), parts[-1])
+            return {"title": pr.title, "type": "Pull Request"}
+        elif parts[5] == "discussions":
+            return {"title": "", "type": "Discussion"}
+        else:
+            frappe.throw("Invalid URL")
+    except Exception as e:
+        frappe.log_error(title="Failed to fetch PR Title", message=str(e))
+        frappe.throw(frappe._("Failed to fetch title from GitHub. Please enter it manually."))
 
 
 @frappe.whitelist()
