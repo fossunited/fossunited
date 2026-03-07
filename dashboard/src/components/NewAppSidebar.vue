@@ -10,6 +10,7 @@
           <button
             class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
             :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
+            :aria-label="currentTheme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
             @click="toggleTheme"
           >
             <IconSunHighFilled v-if="currentTheme === 'dark'" :size="18" :stroke="1.5" />
@@ -17,9 +18,8 @@
           </button>
         </div>
       </slot>
-      <slot name="pre-nav-items">
-        <div v-if="title" class="px-2 text-lg font-semibold uppercase mt-2">{{ title }}</div>
-      </slot>
+      <slot name="pre-nav-items" />
+      <div v-if="title" class="px-2 text-lg font-semibold uppercase mt-2">{{ title }}</div>
     </template>
 
     <template #footer-items>

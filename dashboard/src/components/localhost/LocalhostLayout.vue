@@ -8,7 +8,7 @@
     }"
   />
 
-  <div v-if="isValidated" class="w-full min-h-screen flex overflow-x-hidden">
+  <div v-if="isValidated" class="w-full min-h-screen flex flex-col md:flex-row overflow-x-hidden">
     <SideNavbar title="Manage Localhost" :menu-items="sidebarMenuItems" />
 
     <div class="flex-1 p-4 min-w-0">
