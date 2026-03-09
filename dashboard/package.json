@@ -13,7 +13,7 @@
     "@tabler/icons-vue": "^3.33.0",
     "@tiptap/extension-underline": "^2.4.0",
     "dayjs": "^1.11.11",
-    "dompurify": "^3.2.7",
+    "dompurify": "^3.3.2",
     "feather-icons": "^4.29.2",
     "frappe-ui": "^0.1.160",
     "ics": "^3.7.6",
