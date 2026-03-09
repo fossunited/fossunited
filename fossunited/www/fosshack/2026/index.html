@@ -172,26 +172,27 @@
               >
               {% endif %}
               <a
-                href="{{ hackathon.projects_idea_url }}"
-                target="_blank"
+                href="{{ hackathon.event_page_url }}"
                 class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
-                style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px; border: 1px solid var(--v3-text)"
-                aria-label="Project ideas for {{ hackathon.name }}"
-                >Project Ideas</a
+                style="letter-spacing: 1.12px; padding: 12px 16px; border: 1px solid var(--v3-text)"
+                aria-label="Goto {{ hackathon.name }} event page"
               >
+                Go to Event Page
+              </a>
             </div>
             <div
               class="d-flex flex-column flex-md-row align-items-center justify-content-center gap-2"
               style="z-index: 10;"
             >
               <a
-                href="{{ hackathon.event_page_url }}"
+                href="{{ hackathon.projects_idea_url }}"
+                target="_blank"
                 class="v3-text text-uppercase font-weight-semibold pr-4"
                 style="text-decoration: underline; font-size: 0.875rem; z-index: 10;"
-                aria-label="Goto {{ hackathon.name }} event page"
+                aria-label="Project ideas for {{ hackathon.name }}"
+              >Project Ideas  <i class="ti ti-arrow-up-right"></i>
+              </a
               >
-                Go to Event Page <i class="ti ti-arrow-up-right"></i>
-              </a>
               <a
                 href="{{ stats.projects_url }}"
                 class="v3-text text-uppercase font-weight-semibold"
