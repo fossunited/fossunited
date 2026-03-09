@@ -13,8 +13,6 @@
 :root {
   /* font-families */
   --ff-san-serif: 'Inter', sans-serif;
-  --ff-mono: 'Source Code Pro', monospace;
-  --ff-pixel: 'Press Start 2P', cursive;
 
   /* font-sizes */
   --text-xs: 0.75rem;
