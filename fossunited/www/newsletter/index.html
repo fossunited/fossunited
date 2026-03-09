@@ -1,7 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% block page_content %}
 
-<section class="py-5">
+<section id="header" class="py-5">
   <div class="container">
 
     <div class="mt-5 d-flex flex-column justify-content-center text-center">
@@ -22,9 +22,10 @@
 
     </div>
 
-    <div class="d-flex flex-column flex-md-row justify-content-center my-5">
+    <div id="subscribe-section" class="d-flex flex-column flex-md-row justify-content-center my-5">
 
       <input
+        id="email"
         class="form-control mr-md-2 mb-2 mb-md-0"
         style="max-width:360px"
         type="email"
@@ -32,7 +33,9 @@
         name="email_address"
       />
 
-      <button class="btn btn-success">Subscribe</button>
+      <button id="subscribe" class="btn btn-success">
+        Subscribe
+      </button>
 
     </div>
 
@@ -40,7 +43,7 @@
 </section>
 
 
-<section class="py-5">
+<section id="newsletters-list" class="py-5">
   <div class="container text-center" style="max-width:1000px">
 
     <h4 class="mb-4">Past Newsletters</h4>
@@ -64,7 +67,7 @@
 </section>
 
 
-<section class="py-5">
+<section id="footer-cta" class="py-5">
   <div class="container text-center bg-light p-5 rounded">
 
     <h4>Connect with us</h4>
@@ -81,7 +84,7 @@
 </section>
 
 
-<section id="subscribed-page" class="text-center d-none py-5">
+<section id="subscribed-page" class="text-center py-5" style="display:none;">
 
   <svg class="mb-4" width="100" height="100">
     <use href="#icon-solid-success"></use>
