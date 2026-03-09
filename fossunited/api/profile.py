@@ -1,12 +1,15 @@
 import io
 
 import frappe
+from frappe.rate_limiter import rate_limit
 from frappe.utils.file_manager import save_file
 from PIL import Image
 
 from fossunited.api.dashboard import get_session_user_profile
 from fossunited.doctype_ids import CHAPTER, RESTRICTED_USERNAME, USER_PROFILE
 from fossunited.fossunited.utils import sanitize_text_content
+
+MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024
 
 
 def convert_image_to_webp(image_content: bytes) -> bytes:
@@ -20,11 +23,14 @@ def convert_image_to_webp(image_content: bytes) -> bytes:
             webp_io = io.BytesIO()
             img.save(webp_io, format="WEBP", quality=80)
             return webp_io.getvalue()
+    except Image.DecompressionBombError:
+        frappe.throw(_("Image exceeds maximum allowed dimensions."))
     except Exception as e:
         frappe.throw(f"Failed to process image: {str(e)}")
 
 
 @frappe.whitelist()
+@rate_limit(key="user", limit=10, seconds=60)
 def set_profile_image(file_url: str) -> bool:
     """
     Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
@@ -35,6 +41,9 @@ def set_profile_image(file_url: str) -> bool:
         file_path = frappe.get_site_path("public", file_url.lstrip("/"))
         with open(file_path, "rb") as f:
             original_image = f.read()
+
+        if len(original_image) > MAX_IMAGE_SIZE_BYTES:
+            frappe.throw(_("Image file size must not exceed 10 MB."))
 
         webp_image = convert_image_to_webp(original_image)
         filename = f"profile_{user_doc.name}.webp"
@@ -56,6 +65,7 @@ def set_profile_image(file_url: str) -> bool:
 
 
 @frappe.whitelist()
+@rate_limit(key="user", limit=10, seconds=60)
 def set_cover_image(file_url: str) -> bool:
     """
     Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
@@ -69,6 +79,9 @@ def set_cover_image(file_url: str) -> bool:
         file_path = frappe.get_site_path("public", file_url.lstrip("/"))
         with open(file_path, "rb") as f:
             original_image = f.read()
+
+        if len(original_image) > MAX_IMAGE_SIZE_BYTES:
+            frappe.throw(_("Image file size must not exceed 10 MB."))
 
         webp_image = convert_image_to_webp(original_image)
         filename = f"cover_{user_doc.name}.webp"
