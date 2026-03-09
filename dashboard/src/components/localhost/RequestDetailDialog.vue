@@ -51,7 +51,7 @@
         </div>
         <div class="flex flex-col gap-1">
           <div class="text-base font-medium">Team</div>
-          <div>{{ participant.team.team_name }}</div>
+          <div>{{ participant.team_name }}</div>
         </div>
         <div class="flex flex-col gap-1">
           <div class="font-medium">Project</div>
