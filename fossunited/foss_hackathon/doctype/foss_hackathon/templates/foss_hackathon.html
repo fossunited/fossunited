@@ -96,14 +96,6 @@
       margin-bottom: 2rem;
     }
 
-    .ev-title {
-      color: var(--v3-text-color);
-      font-size: 1.75rem;
-      font-weight: 600;
-      line-height: 2.1rem;
-      margin: 0.5rem 0;
-    }
-
     .ev-detail-row {
       display: flex;
       align-items: center;
@@ -184,11 +176,6 @@
     }
 
     @media (min-width: 48rem) {
-      .ev-title {
-        font-size: 2rem;
-        line-height: 2.4rem;
-      }
-
       /* Visibility helpers */
       .show-mobile-only {
         display: none;
@@ -219,7 +206,12 @@
               <div style="display: flex; flex-direction: column;">
                 {{ chapter_branding_block(chapter) }}
 
-                <h1 class="ev-title">{{ doc.hackathon_name }}</h1>
+                <a href="/fosshack/{{ event_year }}" target="_blank" class="v3-text-primary my-2">
+                  <h1 class="h1 font-weight-bold d-inline-flex align-items-start w-100">
+                    {{ doc.hackathon_name }}
+                    <i class="ti ti-arrow-up-right ml-1 text-sm"></i>
+                  </h1>
+                </a>
                 <div class="v3-event-tags" aria-label="Event tags">
                   {{ event_must_attend_tag() }}
                   {{ event_category_tag(doc.hackathon_type) }}

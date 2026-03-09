@@ -414,6 +414,31 @@
       </div>
     </div>
 
+    <h1 class="h1 font-weight-bold v3-text margin-10">Mentors</h1>
+    <div class="row mt-3">
+      {% for mentor in doc.get_mentors() %}
+      <div class="col-12 col-md-4 mb-3">
+        <div class="v3-card p-3 h-100">
+          <a href="/{{ mentor.route }}" class="d-flex align-items-center text-decoration-none h-100">
+            <img
+              src="{{ mentor.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+              alt="{{ mentor.full_name }}"
+              class="mr-3 rounded flex-shrink-0"
+              style="width:40px;height:40px;object-fit:cover;">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="font-weight-bold v3-text mb-1">
+                {{ mentor.full_name }}
+              </div>
+              <div class="small v3-text-light">
+                {{ mentor.info }}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
     {# localhosts #}
     {% if localhosts_by_city %}
       <div class="mb-5">
