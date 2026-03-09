@@ -9,7 +9,7 @@ from fossunited.api.dashboard import get_session_user_profile
 from fossunited.doctype_ids import CHAPTER, RESTRICTED_USERNAME, USER_PROFILE
 from fossunited.fossunited.utils import sanitize_text_content
 
-MAX_IMAGE_SIZE_BYTES = 10 * 1024 * 1024
+MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024
 
 
 def convert_image_to_webp(image_content: bytes) -> bytes:
