@@ -30,7 +30,7 @@ def convert_image_to_webp(image_content: bytes) -> bytes:
 
 
 @frappe.whitelist()
-@rate_limit(key="user", limit=10, seconds=60)
+@rate_limit(key="user", limit=10, seconds=300)
 def set_profile_image(file_url: str) -> bool:
     """
     Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
@@ -65,7 +65,7 @@ def set_profile_image(file_url: str) -> bool:
 
 
 @frappe.whitelist()
-@rate_limit(key="user", limit=10, seconds=60)
+@rate_limit(key="user", limit=10, seconds=300)
 def set_cover_image(file_url: str) -> bool:
     """
     Download the image from file_url, convert it to WebP, save it using Frappe's file handling,
