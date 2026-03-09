@@ -31,10 +31,9 @@
       "label": "Webhook Secret"
     }
   ],
-  "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2024-04-28 13:03:38.512731",
+  "modified": "2026-03-09 14:36:59.848449",
   "modified_by": "Administrator",
   "module": "Payments",
   "name": "Razorpay Settings",
@@ -51,6 +50,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": []

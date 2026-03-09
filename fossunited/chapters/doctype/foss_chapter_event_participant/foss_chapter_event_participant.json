@@ -7,7 +7,12 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["chapter", "chapter_event", "event_name", "participant"],
+  "field_order": [
+    "chapter",
+    "chapter_event",
+    "event_name",
+    "participant"
+  ],
   "fields": [
     {
       "fieldname": "chapter",
@@ -41,9 +46,8 @@
       "read_only": 1
     }
   ],
-  "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2024-03-19 16:59:34.016947",
+  "modified": "2026-03-09 14:32:14.671770",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Chapter Event Participant",
@@ -63,6 +67,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

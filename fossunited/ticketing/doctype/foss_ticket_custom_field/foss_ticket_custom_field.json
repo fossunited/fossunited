@@ -5,7 +5,10 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["field_name", "data"],
+  "field_order": [
+    "field_name",
+    "data"
+  ],
   "fields": [
     {
       "fieldname": "field_name",
@@ -22,15 +25,15 @@
       "reqd": 1
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-05-01 00:49:31.785539",
+  "modified": "2026-03-09 14:32:39.621646",
   "modified_by": "Administrator",
   "module": "Ticketing",
   "name": "FOSS Ticket Custom Field",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "creation",
   "sort_order": "DESC",
   "states": []

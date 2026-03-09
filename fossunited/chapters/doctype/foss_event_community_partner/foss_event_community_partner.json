@@ -5,7 +5,11 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["org_name", "link", "logo"],
+  "field_order": [
+    "org_name",
+    "link",
+    "logo"
+  ],
   "fields": [
     {
       "fieldname": "org_name",
@@ -27,15 +31,15 @@
       "label": "Logo"
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2025-02-05 16:34:19.930395",
+  "modified": "2026-03-09 14:32:14.570331",
   "modified_by": "Administrator",
   "module": "Chapters",
   "name": "FOSS Event Community Partner",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []
