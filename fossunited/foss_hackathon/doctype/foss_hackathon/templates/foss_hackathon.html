@@ -50,7 +50,7 @@
         {% else %} You had attended this hackathon {% endif %}
       </div>
 
-      {% if status_live and not doc.is_registration_live %}
+      {% if status_live and (not doc.is_registration_live) and (not registration_status) %}
         <div class="v3-status v3-status--warning" role="status" aria-live="polite">
           <i class="ti ti-ban" aria-hidden="true"></i>
           Registration is closed for the hackathon
