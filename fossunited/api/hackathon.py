@@ -299,17 +299,9 @@ def get_localhost_requests_by_team(
     ],
 ):
     """
-    Get requests for a particular localhost grouped by team.
-
-    params:
-        hackathon(str): hackathon name
-        localhost(str): localhost name
-        status(list): status of the request
-
-    return:
-        dict: requests grouped by team
+    Get requests for a particular localhost with team and project info.
+    Returns a flat list.
     """
-
     requests = frappe.get_all(
         doctype=HACKATHON_PARTICIPANT,
         filters={
@@ -334,38 +326,51 @@ def get_localhost_requests_by_team(
         order_by="creation",
     )
 
+    # Enrich each request with profile, team, and project data
     for request in requests:
-        request["profile_route"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "route")
-        profile_photo = frappe.db.get_value(USER_PROFILE, request.user_profile, "profile_photo")
-        request["profile_photo"] = (
-            profile_photo
-            if profile_photo
-            else "/assets/fossunited/images/defaults/user_profile_image.png"
-        )
-        request["profile_username"] = frappe.db.get_value(
-            USER_PROFILE, request.user_profile, "username"
-        )
+        # Profile data
+        if request.user_profile:
+            profile = (
+                frappe.db.get_value(
+                    USER_PROFILE,
+                    request.user_profile,
+                    ["route", "profile_photo", "username"],
+                    as_dict=True,
+                )
+                or {}
+            )
+            request["profile_route"] = profile.get("route")
+            request["profile_photo"] = (
+                profile.get("profile_photo")
+                or "/assets/fossunited/images/defaults/user_profile_image.png"
+            )
+            request["profile_username"] = profile.get("username")
+        else:
+            request["profile_route"] = None
+            request["profile_photo"] = "/assets/fossunited/images/defaults/user_profile_image.png"
+            request["profile_username"] = None
 
-    requests_by_team = {}
-
-    for request in requests:
+        # Team data
         team = get_team_from_participant_id(hackathon, request.get("name"))
         if team:
+            request["team_id"] = team.name
+            request["team_name"] = team.team_name
+
+            # Project data
             project = get_project_by_team(hackathon, team.name)
             if project:
                 request["project_title"] = project.title
                 request["project_route"] = project.route
-            if team.name not in requests_by_team:
-                requests_by_team[team.name] = []
-            request["team"] = team
-            requests_by_team[team.name].append(request)
+            else:
+                request["project_title"] = None
+                request["project_route"] = None
         else:
-            request["team"] = {"team_name": "Individual Participants"}
-            if "Individual Participants" not in requests_by_team:
-                requests_by_team["Individual Participants"] = []
-            requests_by_team["Individual Participants"].append(request)
+            request["team_id"] = "individual"
+            request["team_name"] = "Individual Participants"
+            request["project_title"] = None
+            request["project_route"] = None
 
-    return requests_by_team or None
+    return requests
 
 
 @frappe.whitelist()
