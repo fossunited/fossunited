@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
+import DOMPurify from 'dompurify'
 
 export const truncateStr = (title, len) => {
   return title.length > len ? title.substring(0, len) + '...' : title
@@ -21,7 +22,7 @@ export const copyToClipboard = (text) => {
 export const cleanedHTML = (htmlData) => {
   const html = htmlData || ''
   const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = html
+  tempDiv.innerHTML = DOMPurify.sanitize(html)
 
   // Process each <p> tag
   tempDiv.querySelectorAll('p').forEach((p) => {
