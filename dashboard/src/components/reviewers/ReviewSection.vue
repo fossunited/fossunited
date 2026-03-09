@@ -39,7 +39,7 @@
             <div
               v-if="review.remarks"
               class="prose prose-sm max-w-full"
-              v-html="review.remarks"
+              v-html="cleanedHTML(review.remarks)"
             ></div>
             <span v-else class="text-sm text-ink-gray-5">No Remarks</span>
             <div class="flex items-center gap-2">
