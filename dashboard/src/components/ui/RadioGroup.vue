@@ -15,13 +15,13 @@
         class="flex p-4 gap-2 items-center rounded border border-outline-gray-1 text-ink-gray-5 cursor-pointer hover:border-outline-gray-3 transition-all focus:outline-none focus:ring-2 focus:ring-gray-500"
         :class="{
           'bg-surface-gray-2': active,
-          'bg-surface-gray-1 !border-outline-gray-5 !text-ink-gray-9': checked,
+          'bg-surface-gray-1 border-outline-gray-5 text-ink-gray-9': checked,
         }"
       >
         <component
           :is="checked ? IconCircleCheckFilled : IconCircle"
           class="shrink-0"
-          :class="{ 'fill-gray-900': checked }"
+          :class="{ 'text-ink-gray-9 ring-gray-500': checked }"
           size="20"
         />
         <div class="flex flex-col gap-1">
@@ -29,7 +29,7 @@
           <span v-if="option.description" class="text-sm">{{ option.description }}</span>
         </div>
         <Tooltip v-if="option.help" :text="option.help">
-          <IconHelpCircleFilled class="fill-gray-900" size="20" />
+          <IconHelp class="text-ink-gray-9" size="20" />
         </Tooltip>
       </RadioGroupOption>
     </div>
@@ -39,7 +39,7 @@
 <script setup>
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { defineProps } from 'vue'
-import { IconCircle, IconCircleCheckFilled, IconHelpCircleFilled } from '@tabler/icons-vue'
+import { IconCircle, IconCircleCheckFilled, IconHelp } from '@tabler/icons-vue'
 import { Tooltip } from 'frappe-ui'
 
 const props = defineProps({

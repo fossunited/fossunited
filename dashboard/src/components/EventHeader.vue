@@ -26,7 +26,7 @@
       <div>
         {{ event.event_type }}
       </div>
-      <IconCircleFilled class="w-3 h-3 fill-gray-600" />
+      <IconCircleFilled class="w-3 h-3 text-ink-gray-9" />
       <div>
         <span>
           {{ getFormattedDate(event.event_start_date) }}
