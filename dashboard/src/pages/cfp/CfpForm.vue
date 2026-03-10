@@ -54,6 +54,7 @@
             v-if="curr_section !== 'success'"
             :is-first-step="curr_section === 0"
             :is-last-step="curr_section === maxSectionIndex"
+            :loading="insertProposal.loading"
             @next="nextStep"
             @back="prevStep"
             @submit="submitForm"
@@ -231,45 +232,45 @@ function prevStep() {
   }
 }
 
-function submitForm() {
-  let errors = []
+const insertProposal = createResource({
+  url: 'frappe.client.insert',
+  makeParams() {
+    return {
+      doc: {
+        doctype: 'FOSS Event CFP Submission',
+        linked_cfp: cfpData.data.name,
+        submitted_by: session.user,
+        ...getTransformedSubmissionFields(
+          proposalFormFields.value,
+          proposalReferences.value,
+          proposalSpeakers.value,
+        ),
+      },
+    }
+  },
+  onSuccess() {
+    curr_section.value = 'success'
+    toast.success('Proposal submitted successfully!')
+  },
+  onError(err) {
+    errorMessages.value = err.message
+    showError(err, 'Error submitting the proposal')
+  },
+})
 
+function submitForm() {
+  if (insertProposal.loading) return
+
+  let errors = []
   if (curr_section.value == 3) {
     errors = errors.concat(validateRequiredFields(proposalConfirmationFields.value))
   }
-
   if (errors.length) {
-    errorMessages.value = errors.join('\n\n') // Each error on a new line
+    errorMessages.value = errors.join('\n\n')
     return
   }
-
-  let transformedFields = getTransformedSubmissionFields(
-    proposalFormFields.value,
-    proposalReferences.value,
-    proposalSpeakers.value,
-  )
   errorMessages.value = ''
 
-  createResource({
-    url: 'frappe.client.insert',
-    makeParams() {
-      return {
-        doc: {
-          doctype: 'FOSS Event CFP Submission',
-          linked_cfp: cfpData.data.name,
-          submitted_by: session.user,
-          ...transformedFields,
-        },
-      }
-    },
-    onSuccess() {
-      curr_section.value = 'success'
-      toast.success('Proposal submitted successfully!')
-    },
-    onError(err) {
-      errorMessages.value = err.message
-      toast.error('Error submitting the proposal: ' + err.message)
-    },
-  }).fetch()
+  insertProposal.fetch()
 }
 </script>
