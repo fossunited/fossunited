@@ -667,7 +667,7 @@ def check_participant_disqualification(hackathon_permalink: str):
     user = frappe.session.user
     hackathon = frappe.db.get_value(
         HACKATHON,
-        {"route": hackathon_permalink},
+        {"permalink": hackathon_permalink},
         ["name", "hackathon_name", "hackathon_rules"],
         as_dict=True,
     )
