@@ -97,7 +97,7 @@ def create_participant(hackathon, participant):
             "git_profile": participant.get("git_profile", ""),
             "wants_to_attend_locally": participant.get("wants_to_attend_locally", 0),
             "localhost": participant.get("localhost", ""),
-            "subscribe_chapter_mailing": participant.get("subscribe_chapter_mailing", 0),
+            "subscribe_chapter_mailing": 1,
         }
     )
     participant_doc.insert(ignore_permissions=True)
