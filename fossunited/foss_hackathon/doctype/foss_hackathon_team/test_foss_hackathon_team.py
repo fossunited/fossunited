@@ -148,8 +148,8 @@ class TestFOSSHackathonTeam(FrappeTestCase):
             team.partner_project = None
             team.members = []
             team.save()
-
-            frappe.db.commit()
+            # just to check if empty teams are deleted automatically
+            frappe.db.commit()  # nosemgrep
             self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
         finally:
             frappe.flags.in_test = True
