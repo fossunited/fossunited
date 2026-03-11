@@ -20,6 +20,7 @@
   "column_break_hkri",
   "organization",
   "git_profile",
+  "team",
   "localhost_tab",
   "wants_to_attend_locally",
   "section_break_pijd",
@@ -152,12 +153,19 @@
    "default": "0",
    "fieldname": "disqualified",
    "fieldtype": "Check",
-   "label": "User Disqualified?",
+   "label": "Participant Disqualified",
    "permlevel": 1
+  },
+  {
+   "fieldname": "team",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Team Joined",
+   "options": "FOSS Hackathon Team"
   }
  ],
  "links": [],
- "modified": "2026-03-11 13:26:05.214340",
+ "modified": "2026-03-11 14:19:26.627153",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
