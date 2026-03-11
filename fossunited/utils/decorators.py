@@ -222,7 +222,7 @@ def require_chapter_or_event_member(event_id="event"):
 
 
 @frappe.whitelist()
-def is_localhost_organizer(localhost_id: str, user=str | None) -> bool:
+def is_localhost_organizer(localhost_id: str, user: str | None = None) -> bool:
     """
     Check if user is a localhost organizer.
     """
