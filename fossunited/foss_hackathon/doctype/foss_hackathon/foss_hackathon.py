@@ -247,6 +247,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "mentor.username as username",
                 "skills as info",
             ],
+            order_by="full_name",
         )
 
         for m in mentors:
