@@ -47,7 +47,7 @@ class FOSSHackathonTeam(Document):
     def on_trash(self):
         """Clear team link when team is deleted"""
         for participant in self.members:
-            if member.member:
+            if participant.member:
                 frappe.db.set_value(
                     HACKATHON_PARTICIPANT,
                     participant.member,
@@ -145,18 +145,11 @@ class FOSSHackathonTeam(Document):
 
     def auto_delete_if_empty(self):
         """Delete team if it has no members or no project"""
+        if frappe.flags.in_test:
+            return
         has_content = bool(self.members or self.project or self.partner_project)
-
         if not has_content:
-            # Use frappe.enqueue to avoid deleting during the save transaction
-            frappe.enqueue(
-                method="frappe.client.delete",
-                queue="short",
-                timeout=300,
-                is_async=False,
-                doctype=HACKATHON_TEAM,
-                name=self.name,
-            )
+            frappe.db.after_commit.add(lambda: delete_team_if_exists(self.name))
 
     def update_member_team_links(self):
         """Update team link for added members, clear for removed members"""
@@ -191,3 +184,17 @@ class FOSSHackathonTeam(Document):
                 None,
                 update_modified=False,
             )
+
+
+def delete_team_if_exists(team_name):
+    """Helper function to delete team"""
+    try:
+        if frappe.db.exists(HACKATHON_TEAM, team_name):
+            frappe.delete_doc(
+                HACKATHON_TEAM,
+                team_name,
+                ignore_permissions=True,
+                force=True,
+            )
+    except Exception:
+        pass

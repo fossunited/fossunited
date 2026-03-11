@@ -36,7 +36,8 @@ class TestFOSSHackathonTeam(FrappeTestCase):
     def tearDown(self):
         frappe.set_user("Administrator")
         self.chapter.delete(force=True)
-        self.team.delete(force=True)
+        if frappe.db.exists(HACKATHON_TEAM, self.team.name):
+            self.team.delete(force=True)
         for participant in self.participants:
             participant.delete(force=True)
         self.hackathon.delete(force=True)
@@ -138,10 +139,17 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         team_name = self.team.name
         self.assertTrue(frappe.db.exists(HACKATHON_TEAM, team_name))
 
-        team = frappe.get_doc(HACKATHON_TEAM, team_name)
-        team.project = None
-        team.partner_project = None
-        team.members = []
-        team.save()
+        # Temporarily disable test flag to allow auto-delete
+        frappe.flags.in_test = False
 
-        self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
+        try:
+            team = frappe.get_doc(HACKATHON_TEAM, team_name)
+            team.project = None
+            team.partner_project = None
+            team.members = []
+            team.save()
+
+            frappe.db.commit()
+            self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
+        finally:
+            frappe.flags.in_test = True
