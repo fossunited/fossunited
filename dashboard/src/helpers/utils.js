@@ -14,6 +14,10 @@ export const createAbsoluteUrlFromRoute = (route) => {
   return window.location.origin + '/' + route
 }
 
+export const redirectToExternalUrl = (url) => {
+  window.open(url, '_blank')
+}
+
 export const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
 }

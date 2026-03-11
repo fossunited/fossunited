@@ -43,7 +43,7 @@
       <div class="text-center pt-4">
         <!-- an easter egg awaits.. -->
         <button
-          @click="() => window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
+          @click="redirectToExternalUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')"
           class="px-6 py-2.5 bg-surface-gray-7 text-ink-white rounded-lg font-medium hover:bg-surface-gray-6 transition-colors"
         >
           Better Luck Next Time!
@@ -74,6 +74,7 @@ import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { createResource } from 'frappe-ui'
 import { IconInfoCircle, IconHandStop, IconFileInvoice } from '@tabler/icons-vue'
+import { redirectToExternalUrl } from '@/helpers/utils'
 
 const route = useRoute()
 
