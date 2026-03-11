@@ -112,6 +112,12 @@
       Registration is closed for the event
     </div>
     {% endif %}
+    {% if status_concluded %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      This event has concluded.
+    </div>
+    {% endif %}
 
 
   </div>
@@ -284,9 +290,6 @@
                 {{ chapter_branding_block(chapter) }}
 
                 <h1 class="ev-title">{{ doc.event_name }}</h1>
-                {% if status_concluded %}
-                  <p class="v3-text-secondary">This event has concluded.</p>
-                {% endif %}
                 <div class="v3-event-tags" aria-label="Event tags">
                   {% if doc.must_attend %}
                     {{ event_must_attend_tag() }}
