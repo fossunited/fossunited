@@ -560,30 +560,34 @@ def validate_participant_for_localhost(participant_id: str):
 
 
 @frappe.whitelist()
-def validate_user_as_localhost_member(localhost_id: str):
-    if not frappe.db.exists(
-        "Has Role",
-        {
-            "parent": frappe.session.user,
-            "role": "Localhost Organizer",
-        },
-    ):
-        frappe.throw("You are not a Localhost Organizer. You are not authorized to view this page")
+def is_localhost_organizer(localhost_id: str, user=None) -> bool:
+    """
+    Check if user is a localhost organizer.
+    """
+    if not user:
+        user = frappe.session.user
 
-    if not frappe.db.exists(
+    # System Manager bypass
+    if "System Manager" in frappe.get_roles(user):
+        return True
+
+    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
+    # Check if profile exists in localhost organizers
+    is_member = frappe.db.exists(
         LOCALHOST_ORGANIZER,
         {
             "parent": localhost_id,
-            "profile": frappe.db.get_value(
-                USER_PROFILE,
-                {"user": frappe.session.user},
-                "name",
-            ),
+            "parenttype": HACKATHON_LOCALHOST,
+            "profile": profile,
+            "parentfield": "organizers",
         },
-    ):
+    )
+
+    if not is_member:
         frappe.throw(
             "You are not a member of this Localhost. You are not authorized to view this page"
         )
+        return False
 
     return True
 

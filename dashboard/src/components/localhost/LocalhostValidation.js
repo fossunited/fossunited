@@ -10,7 +10,7 @@ export function LocalhostValidation(localhostId, redirectRoute = 'MyLocalhosts')
 
   const validateSessionUser = (onSuccessCallback) => {
     createResource({
-      url: 'fossunited.api.hackathon.validate_user_as_localhost_member',
+      url: 'fossunited.api.hackathon.is_localhost_organizer',
       params: {
         localhost_id: localhostId,
       },

@@ -12,13 +12,12 @@ from fossunited.api.chapter import (
     check_if_chapter_or_event_core_member,
     check_if_event_member,
 )
+from fossunited.api.hackathon import is_localhost_organizer
 from fossunited.doctype_ids import (
     CAMPAIGN,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
     HACKATHON_TEAM,
-    LOCALHOST_ORGANIZER,
-    USER_PROFILE,
 )
 
 
@@ -196,32 +195,6 @@ def require_chapter_or_event_member(event_id="event"):
         return wrapper
 
     return decorator
-
-
-def is_localhost_organizer(localhost_id, user=None):
-    """Check if user is a localhost organizer"""
-    if not user:
-        user = frappe.session.user
-
-    # System Manager bypass
-    if "System Manager" in frappe.get_roles(user):
-        return True
-
-    # Get user's profile
-    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
-    if not profile:
-        return False
-
-    # Check if profile exists in localhost organizers
-    return frappe.db.exists(
-        LOCALHOST_ORGANIZER,
-        {
-            "parent": localhost_id,
-            "parenttype": HACKATHON_LOCALHOST,
-            "profile": profile,
-            "parentfield": "organizers",
-        },
-    )
 
 
 def require_localhost_organizer(localhost_param="localhost_id"):
