@@ -254,6 +254,7 @@ const routes = [
   },
   {
     path: '/hack/:permalink',
+    component: () => import('@/components/hackathon/HackathonLayout.vue'),
     children: [
       {
         path: '',

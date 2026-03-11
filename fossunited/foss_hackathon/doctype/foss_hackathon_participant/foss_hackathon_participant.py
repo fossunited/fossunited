@@ -13,6 +13,8 @@ from fossunited.api.emailing import handle_email_group_subscription
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_LOCALHOST,
+    HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
 )
 
 
@@ -30,6 +32,7 @@ class FOSSHackathonParticipant(Document):
         )
 
         check_ins: DF.Table[EventCheckIn]
+        disqualified: DF.Check
         email: DF.Data
         full_name: DF.Data
         git_profile: DF.Data | None
@@ -40,7 +43,9 @@ class FOSSHackathonParticipant(Document):
             "Pending", "Pending Confirmation", "Accepted", "Rejected"
         ]
         organization: DF.Data | None
+        project: DF.Link | None
         subscribe_chapter_mailing: DF.Check
+        team: DF.Link | None
         user: DF.Link | None
         user_profile: DF.Link | None
         wants_to_attend_locally: DF.Check
@@ -79,6 +84,7 @@ class FOSSHackathonParticipant(Document):
             self.sync_localhost_status_groups(new_status=self.localhost_request_status)
 
     def before_save(self):
+        self.update_team_link()
         if self.has_value_changed("wants_to_attend_locally"):
             self.handle_localhost_request()
 
@@ -134,7 +140,7 @@ class FOSSHackathonParticipant(Document):
             chapter=event_doc.chapter,
             event=self.hackathon,
             subscribe_to_chapter=self.subscribe_chapter_mailing,
-            subscribe_to_event=self.subscribe_chapter_mailing,
+            subscribe_to_event=True,
             document_type_event=HACKATHON,
         )
 
@@ -281,3 +287,12 @@ class FOSSHackathonParticipant(Document):
             checkin_date = frappe.utils.nowdate()
             self.sync_localhost_status_groups(old_status=f"Checkin-{checkin_date}")
         return result
+
+    def update_team_link(self):
+        """Find and link the team this participant belongs to"""
+        team = frappe.db.get_value(
+            HACKATHON_TEAM_MEMBER,
+            {"member": self.name, "parenttype": HACKATHON_TEAM},
+            "parent",
+        )
+        self.team = team if team else None

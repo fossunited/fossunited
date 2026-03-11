@@ -8,6 +8,7 @@
  "field_order": [
   "meta_section",
   "hackathon",
+  "disqualified",
   "column_break_pxgj",
   "user",
   "participant_details_section",
@@ -19,6 +20,8 @@
   "column_break_hkri",
   "organization",
   "git_profile",
+  "team",
+  "project",
   "localhost_tab",
   "wants_to_attend_locally",
   "section_break_pijd",
@@ -144,11 +147,33 @@
    "fieldname": "check_ins",
    "fieldtype": "Table",
    "label": "Host Checkin",
-   "options": "Event Check In"
+   "options": "Event Check In",
+   "permlevel": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disqualified",
+   "fieldtype": "Check",
+   "label": "Participant Disqualified",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "team",
+   "fieldtype": "Link",
+   "in_standard_filter": 1,
+   "label": "Team Joined",
+   "options": "FOSS Hackathon Team"
+  },
+  {
+   "fetch_from": "team.project",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "FOSS Hackathon Project"
   }
  ],
  "links": [],
- "modified": "2026-03-01 13:37:07.177860",
+ "modified": "2026-03-11 17:07:25.071724",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
@@ -160,6 +185,18 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 2,
    "print": 1,
    "read": 1,
    "report": 1,
