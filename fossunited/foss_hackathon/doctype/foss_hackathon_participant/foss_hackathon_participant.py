@@ -27,9 +27,7 @@ class FOSSHackathonParticipant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
-            EventCheckIn,
-        )
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
 
         check_ins: DF.Table[EventCheckIn]
         disqualified: DF.Check
@@ -43,6 +41,7 @@ class FOSSHackathonParticipant(Document):
             "Pending", "Pending Confirmation", "Accepted", "Rejected"
         ]
         organization: DF.Data | None
+        project: DF.Link | None
         subscribe_chapter_mailing: DF.Check
         team: DF.Link | None
         user: DF.Link | None

@@ -21,6 +21,7 @@
   "organization",
   "git_profile",
   "team",
+  "project",
   "localhost_tab",
   "wants_to_attend_locally",
   "section_break_pijd",
@@ -162,10 +163,17 @@
    "in_standard_filter": 1,
    "label": "Team Joined",
    "options": "FOSS Hackathon Team"
+  },
+  {
+   "fetch_from": "team.project",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "FOSS Hackathon Project"
   }
  ],
  "links": [],
- "modified": "2026-03-11 14:19:26.627153",
+ "modified": "2026-03-11 17:07:25.071724",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
