@@ -27,7 +27,9 @@ class FOSSHackathonParticipant(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
 
         check_ins: DF.Table[EventCheckIn]
         disqualified: DF.Check
@@ -158,7 +160,7 @@ class FOSSHackathonParticipant(Document):
                 event_type="Event Participants",
                 custom_group_title=f"{old_status}-{self.localhost}-Localhost",
                 subscribe_to_chapter=self.subscribe_chapter_mailing,
-                subscribe_to_event=True,
+                subscribe_to_event=False,
                 document_type_event=HACKATHON_LOCALHOST,
             )
 
@@ -198,7 +200,7 @@ class FOSSHackathonParticipant(Document):
                     event_type="Event Participants",
                     custom_group_title=f"{status}-{target_localhost}-Localhost",
                     subscribe_to_chapter=self.subscribe_chapter_mailing,
-                    subscribe_to_event=True,
+                    subscribe_to_event=False,
                     document_type_event=HACKATHON_LOCALHOST,
                 )
             except Exception:

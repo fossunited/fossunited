@@ -53,7 +53,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
 
 
 @frappe.whitelist()
-def create_participant(hackathon: str, participant: str) -> dict:
+def create_participant(hackathon: dict, participant: dict) -> dict:
     """
     This method is used to create a participant for a hackathon.
 

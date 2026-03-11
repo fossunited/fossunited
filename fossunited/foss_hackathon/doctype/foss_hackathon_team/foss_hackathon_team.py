@@ -197,4 +197,7 @@ def delete_team_if_exists(team_name):
                 force=True,
             )
     except Exception:
-        pass
+        frappe.log_error(
+            frappe.get_traceback(),
+            f"Failed to auto-delete team {team_name}",
+        )
