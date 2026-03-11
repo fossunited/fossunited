@@ -40,12 +40,22 @@ def require_hackathon_participant(hackathon_id="hackathon"):
             if not hackathon:
                 frappe.throw(_("Hackathon data is required"), frappe.ValidationError)
 
-            if not frappe.db.exists(
+            participant = frappe.db.get_value(
                 HACKATHON_PARTICIPANT,
                 {"hackathon": hackathon, "user": frappe.session.user},
-            ):
+                ["name", "disqualified"],
+                as_dict=True,
+            )
+
+            if not participant:
                 frappe.throw(
                     _("You are not a participant of this hackathon"),
+                    frappe.PermissionError,
+                )
+
+            if participant.disqualified:
+                frappe.throw(
+                    _("You have been disqualified from this hackathon"),
                     frappe.PermissionError,
                 )
 
@@ -83,13 +93,15 @@ def require_hackathon_team(team_id="team", hackathon_id="hackathon"):
             if hackathon and team_doc.hackathon != hackathon:
                 frappe.throw(_("Team does not belong to this hackathon"), frappe.ValidationError)
 
-            # Check if user is a member
+            # Check if user is a member and get participant ID
             is_member = False
+            participant_id = None
             user_email = frappe.session.user
 
             for member in team_doc.members:
                 if member.email == user_email:
                     is_member = True
+                    participant_id = member.member
                     break
 
                 if member.member:
@@ -98,10 +110,21 @@ def require_hackathon_team(team_id="team", hackathon_id="hackathon"):
                     )
                     if participant_email == user_email:
                         is_member = True
+                        participant_id = member.member
                         break
 
             if not is_member:
                 frappe.throw(_("You are not a member of this team"), frappe.PermissionError)
+
+            if participant_id:
+                is_disqualified = frappe.db.get_value(
+                    HACKATHON_PARTICIPANT, participant_id, "disqualified"
+                )
+                if is_disqualified:
+                    frappe.throw(
+                        _("You have been disqualified from this hackathon"),
+                        frappe.PermissionError,
+                    )
 
             return func(*args, **kwargs)
 
@@ -198,6 +221,7 @@ def require_chapter_or_event_member(event_id="event"):
     return decorator
 
 
+@frappe.whitelist()
 def is_localhost_organizer(localhost_id: str, user=None) -> bool:
     """
     Check if user is a localhost organizer.
