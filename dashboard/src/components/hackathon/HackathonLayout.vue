@@ -2,70 +2,65 @@
   <!-- Disqualification Message -->
   <div
     v-if="!isLoading && isDisqualified"
-    class="w-full min-h-screen flex items-center justify-center p-4 bg-gray-50 dark:bg-gray-900"
+    class="min-h-screen flex items-center justify-center p-4 bg-surface-gray-1"
   >
-    <div class="w-full max-w-2xl">
+    <div class="max-w-2xl w-full space-y-6">
+      <div class="text-center space-y-4">
+        <div class="flex justify-center">
+          <div class="h-16 w-16 rounded-full bg-surface-red-1 flex items-center justify-center">
+            <IconHandStop class="w-8 h-8 text-surface-red-5" />
+          </div>
+        </div>
+        <div>
+          <h2 class="text-2xl font-semibold text-ink-gray-7">Access Denied</h2>
+          <p class="mt-2 text-ink-gray-5">
+            You have been disqualified from {{ hackathonName }}. You won't be able to participate
+            anymore.
+          </p>
+        </div>
+      </div>
+
       <div
-        class="bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden"
+        v-if="rules"
+        class="border border-outline-gray-3 rounded-lg p-6 space-y-3 bg-surface-white"
       >
-        <div
-          class="bg-red-50 dark:bg-red-900/20 border-b border-red-100 dark:border-red-800 px-6 py-8"
+        <h4 class="font-semibold flex items-center gap-2 text-ink-gray-7">
+          <IconFileInvoice class="w-5 h-5 text-ink-gray-5" />
+          Hackathon Rules
+        </h4>
+        <div class="prose prose-sm max-w-none text-ink-gray-6" v-html="rules"></div>
+      </div>
+
+      <div class="border border-outline-gray-3 rounded-lg p-4 bg-surface-white">
+        <p class="text-sm flex items-start gap-2 text-ink-gray-6">
+          <IconInfoCircle class="w-5 h-5 flex-shrink-0 mt-0.5 text-surface-blue-3" />
+          <span>
+            If you believe this is an error, please write to us at fosshack@fossunited.org
+          </span>
+        </p>
+      </div>
+
+      <div class="text-center pt-4">
+        <!-- an easter egg awaits.. -->
+        <button
+          @click="() => window.location.href = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'"
+          class="px-6 py-2.5 bg-surface-gray-7 text-ink-white rounded-lg font-medium hover:bg-surface-gray-6 transition-colors"
         >
-          <div class="flex flex-col items-center text-center">
-            <div
-              class="flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/40 mb-4"
-            >
-              <IconHandStop class="w-5 h-5 text-red-500" />
-            </div>
-            <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">Access Denied</h2>
-            <p class="mt-2 text-base text-gray-600 dark:text-gray-400">
-              You have been disqualified from {{ hackathonName }}. You won't be able to participate
-              anymore.
-            </p>
-          </div>
-        </div>
-
-        <div class="px-6 py-6 space-y-6">
-          <div
-            v-if="rules"
-            class="bg-amber-50 dark:bg-amber-900/10 rounded-lg p-4 border border-amber-200 dark:border-amber-800"
-          >
-            <h4
-              class="text-sm font-semibold text-amber-900 dark:text-amber-300 mb-3 flex items-center gap-2"
-            >
-              <IconFileInvoice class="w-5 h-5 text-amber-500" />
-              Hackathon Rules
-            </h4>
-            <div
-              class="prose prose-sm dark:prose-invert max-w-none text-amber-900 dark:text-amber-200"
-              v-html="rules"
-            ></div>
-          </div>
-
-          <div
-            class="bg-blue-50 dark:bg-blue-900/10 rounded-lg p-4 border border-blue-200 dark:border-blue-800"
-          >
-            <p class="text-sm text-blue-900 dark:text-blue-300 flex items-start gap-2">
-              <IconInfoCircle class="w-5 h-5 text-blue-500" />
-              <span>
-                If you believe this is an error, please write to us at fosshack@fossunited.org
-              </span>
-            </p>
-          </div>
-        </div>
+          Better Luck Next Time!
+        </button>
       </div>
     </div>
   </div>
 
   <div
     v-else-if="isLoading"
-    class="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900"
+    class="min-h-screen flex items-center justify-center bg-surface-gray-1"
   >
-    <div class="text-center">
+    <div class="text-center space-y-4">
       <div
-        class="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-gray-100 mx-auto"
+        class="h-12 w-12 border-b-2 border-surface-gray-7 rounded-full animate-spin mx-auto"
       ></div>
-      <p class="mt-4 text-gray-600 dark:text-gray-400">Loading...</p>
+      <p class="text-ink-gray-5">Loading...</p>
     </div>
   </div>
 
