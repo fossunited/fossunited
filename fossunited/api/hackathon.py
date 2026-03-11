@@ -560,39 +560,6 @@ def validate_participant_for_localhost(participant_id: str):
 
 
 @frappe.whitelist()
-def is_localhost_organizer(localhost_id: str, user=None) -> bool:
-    """
-    Check if user is a localhost organizer.
-    """
-    if not user:
-        user = frappe.session.user
-
-    # System Manager bypass
-    if "System Manager" in frappe.get_roles(user):
-        return True
-
-    profile = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
-    # Check if profile exists in localhost organizers
-    is_member = frappe.db.exists(
-        LOCALHOST_ORGANIZER,
-        {
-            "parent": localhost_id,
-            "parenttype": HACKATHON_LOCALHOST,
-            "profile": profile,
-            "parentfield": "organizers",
-        },
-    )
-
-    if not is_member:
-        frappe.throw(
-            "You are not a member of this Localhost. You are not authorized to view this page"
-        )
-        return False
-
-    return True
-
-
-@frappe.whitelist()
 def get_issue_pr_title(url: str) -> dict:
     """
     Get title of the issue/PR/Discussion from the URL

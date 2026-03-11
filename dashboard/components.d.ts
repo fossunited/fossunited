@@ -52,6 +52,7 @@ declare module 'vue' {
     FreeTicketCodeSection: typeof import('./src/components/event/FreeTicketCodeSection.vue')['default']
     GuidelineSection: typeof import('./src/components/cfp-public/GuidelineSection.vue')['default']
     HackathonAttendanceMode: typeof import('./src/components/hackathon/HackathonAttendanceMode.vue')['default']
+    HackathonLayout: typeof import('./src/components/hackathon/HackathonLayout.vue')['default']
     HackathonParticipantHeader: typeof import('./src/components/hackathon/HackathonParticipantHeader.vue')['default']
     HackathonProjectDetails: typeof import('./src/components/hackathon/HackathonProjectDetails.vue')['default']
     HackathonProjectIssue: typeof import('./src/components/hackathon/HackathonProjectIssue.vue')['default']
