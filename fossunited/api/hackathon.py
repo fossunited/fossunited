@@ -53,7 +53,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
 
 
 @frappe.whitelist()
-def create_participant(hackathon, participant):
+def create_participant(hackathon: str, participant: str) -> dict:
     """
     This method is used to create a participant for a hackathon.
 
@@ -673,7 +673,7 @@ def check_participant_disqualification(hackathon_permalink: str):
     )
 
     if not hackathon:
-        frappe.throw("Hackathon not found")
+        frappe.throw(frappe._("Hackathon not found"))
 
     participant = frappe.db.get_value(
         HACKATHON_PARTICIPANT,

@@ -247,7 +247,7 @@ def is_localhost_organizer(localhost_id: str, user=None) -> bool:
 
     if not is_member:
         frappe.throw(
-            "You are not a member of this Localhost. You are not authorized to view this page"
+            _("You are not a member of this Localhost. You are not authorized to view this page")
         )
         return False
 
