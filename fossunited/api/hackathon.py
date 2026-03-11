@@ -683,3 +683,44 @@ def get_localhost_checkin_stats(localhost_id: str):
     )
 
     return {"total_accepted": total_accepted}
+
+
+@frappe.whitelist()
+def check_participant_disqualification(hackathon_permalink: str):
+    """
+    Check if current user is disqualified from a hackathon.
+
+    Returns:
+        dict: {
+            'is_disqualified': bool,
+            'hackathon_name': str,
+            'rules': str (HTML/markdown),
+        }
+    """
+    user = frappe.session.user
+    hackathon = frappe.db.get_value(
+        HACKATHON,
+        {"route": hackathon_permalink},
+        ["name", "hackathon_name", "hackathon_rules"],
+        as_dict=True,
+    )
+
+    if not hackathon:
+        frappe.throw("Hackathon not found")
+
+    participant = frappe.db.get_value(
+        HACKATHON_PARTICIPANT,
+        {"hackathon": hackathon.name, "user": user},
+        ["disqualified", "name"],
+        as_dict=True,
+    )
+
+    if not participant:
+        return {"is_disqualified": False, "registered": False}
+
+    return {
+        "is_disqualified": bool(participant.disqualified),
+        "registered": True,
+        "hackathon_name": hackathon.hackathon_name,
+        "rules": hackathon.hackathon_rules or "",
+    }
