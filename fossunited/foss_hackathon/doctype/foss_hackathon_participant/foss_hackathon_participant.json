@@ -8,6 +8,7 @@
  "field_order": [
   "meta_section",
   "hackathon",
+  "disqualified",
   "column_break_pxgj",
   "user",
   "participant_details_section",
@@ -144,11 +145,19 @@
    "fieldname": "check_ins",
    "fieldtype": "Table",
    "label": "Host Checkin",
-   "options": "Event Check In"
+   "options": "Event Check In",
+   "permlevel": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "disqualified",
+   "fieldtype": "Check",
+   "label": "User Disqualified?",
+   "permlevel": 1
   }
  ],
  "links": [],
- "modified": "2026-03-01 13:37:07.177860",
+ "modified": "2026-03-11 13:26:05.214340",
  "modified_by": "Administrator",
  "module": "FOSS Hackathon",
  "name": "FOSS Hackathon Participant",
@@ -160,6 +169,18 @@
    "delete": 1,
    "email": 1,
    "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 2,
    "print": 1,
    "read": 1,
    "report": 1,
