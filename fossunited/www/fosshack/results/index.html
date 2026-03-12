@@ -70,25 +70,25 @@
       {% if project.team_members %}
         <div class="row">
           {% for member in project.team_members %}
-            <div class="col-6 col-md-4 col-lg-3 mb-2">
-              <div class="d-flex align-items-center p-1 p-md-2 rounded">
-                <div
-                  class="bg-secondary mr-2 rounded"
-                  style="width: 32px; height: 32px; min-width: 32px;"
-                >
-                  <img
-                    src="{{ member.avatar or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ member.name }}"
-                    class="rounded w-100 h-100"
-                    style="object-fit: cover;"
-                    loading="lazy"
-                  />
+          <div class="col-12 col-md-4 mb-2">
+            <div class="d-flex align-items-center p-1 p-md-2 rounded">
+              <img
+                src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                alt="{{ member.full_name }}"
+                class="rounded"
+                style="max-width:40px;max-height:40px;object-fit:cover;"
+                loading="lazy"
+              />
+              <div class="d-flex flex-column ml-2 justify-content-center">
+                <div class="v3-text-primary">
+                  {{ member.full_name }}
                 </div>
-                <small class="text-truncate v3-text-secondary" style="font-size: 0.75rem;"
-                  >{{ member.name }}</small
-                >
+                {% if member.username %}
+                <div class="v3-text-secondary mt-1" style="font-size:0.75rem;">@{{ member.username }}</div>
+                {% endif %}
               </div>
             </div>
+          </div>
           {% endfor %}
         </div>
       {% endif %}

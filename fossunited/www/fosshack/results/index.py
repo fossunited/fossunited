@@ -36,7 +36,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹5,00,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Emil Soman", "avatar": ""},
+                    {"full_name": "Emil Soman", "profile_photo": ""},
                 ],
             },
             {
@@ -46,7 +46,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Akash Hamirwasia", "avatar": ""},
+                    {"full_name": "Akash Hamirwasia", "profile_photo": ""},
                 ],
             },
             {
@@ -56,8 +56,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Abhinav Singh", "avatar": ""},
-                    {"name": "Arjita Chaurasia", "avatar": ""},
+                    {"full_name": "Abhinav Singh", "profile_photo": ""},
+                    {"full_name": "Arjita Chaurasia", "profile_photo": ""},
                 ],
             },
             {
@@ -67,7 +67,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Akshit Garg", "avatar": ""},
+                    {"full_name": "Akshit Garg", "profile_photo": ""},
                 ],
             },
             {
@@ -77,8 +77,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Liyas Thomas", "avatar": ""},
-                    {"name": "Andrew Bastin", "avatar": ""},
+                    {"full_name": "Liyas Thomas", "profile_photo": ""},
+                    {"full_name": "Andrew Bastin", "profile_photo": ""},
                 ],
             },
             {
@@ -88,7 +88,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Nitish Gadangi", "avatar": ""},
+                    {"full_name": "Nitish Gadangi", "profile_photo": ""},
                 ],
             },
             {
@@ -98,9 +98,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Naresh Ramesh", "avatar": ""},
-                    {"name": "Mukul Chaware", "avatar": ""},
-                    {"name": "Shubham Jain", "avatar": ""},
+                    {"full_name": "Naresh Ramesh", "profile_photo": ""},
+                    {"full_name": "Mukul Chaware", "profile_photo": ""},
+                    {"full_name": "Shubham Jain", "profile_photo": ""},
                 ],
             },
             {
@@ -110,7 +110,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Ravi Teja", "avatar": ""},
+                    {"full_name": "Ravi Teja", "profile_photo": ""},
                 ],
             },
             {
@@ -120,9 +120,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Santhosh Nagaraj", "avatar": ""},
-                    {"name": "Nityananda Gohain", "avatar": ""},
-                    {"name": "Gnanesh Kunal", "avatar": ""},
+                    {"full_name": "Santhosh Nagaraj", "profile_photo": ""},
+                    {"full_name": "Nityananda Gohain", "profile_photo": ""},
+                    {"full_name": "Gnanesh Kunal", "profile_photo": ""},
                 ],
             },
             {
@@ -132,10 +132,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Rohan Rajpal", "avatar": ""},
-                    {"name": "Avi Garg", "avatar": ""},
-                    {"name": "Royal Tomar", "avatar": ""},
-                    {"name": "Srijan Jain", "avatar": ""},
+                    {"full_name": "Rohan Rajpal", "profile_photo": ""},
+                    {"full_name": "Avi Garg", "profile_photo": ""},
+                    {"full_name": "Royal Tomar", "profile_photo": ""},
+                    {"full_name": "Srijan Jain", "profile_photo": ""},
                 ],
             },
             {
@@ -145,8 +145,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Karan Sharma", "avatar": ""},
-                    {"name": "Sarat Chandra", "avatar": ""},
+                    {"full_name": "Karan Sharma", "profile_photo": ""},
+                    {"full_name": "Sarat Chandra", "profile_photo": ""},
                 ],
             },
             {
@@ -156,8 +156,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Aditya Hase", "avatar": ""},
-                    {"name": "Saqib Ansari", "avatar": ""},
+                    {"full_name": "Aditya Hase", "profile_photo": ""},
+                    {"full_name": "Saqib Ansari", "profile_photo": ""},
                 ],
             },
             {
@@ -167,10 +167,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Kumaraguru", "avatar": ""},
-                    {"name": "Emma Thomas", "avatar": ""},
-                    {"name": "Dhanush Vardhan Kalaiselvan", "avatar": ""},
-                    {"name": "Mridula Kalaiselvan", "avatar": ""},
+                    {"full_name": "Kumaraguru", "profile_photo": ""},
+                    {"full_name": "Emma Thomas", "profile_photo": ""},
+                    {"full_name": "Dhanush Vardhan Kalaiselvan", "profile_photo": ""},
+                    {"full_name": "Mridula Kalaiselvan", "profile_photo": ""},
                 ],
             },
             {
@@ -180,7 +180,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Shivam Mishra", "avatar": ""},
+                    {"full_name": "Shivam Mishra", "profile_photo": ""},
                 ],
             },
         ],
@@ -205,8 +205,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹1,00,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Abhik Jain", "avatar": ""},
-                    {"name": "Devdutt Shenoi", "avatar": ""},
+                    {"full_name": "Abhik Jain", "profile_photo": ""},
+                    {"full_name": "Devdutt Shenoi", "profile_photo": ""},
                 ],
             },
             {
@@ -216,7 +216,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹1,00,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Subin Siby", "avatar": ""},
+                    {"full_name": "Subin Siby", "profile_photo": ""},
                 ],
             },
             {
@@ -226,7 +226,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Akash Hamirwasia", "avatar": ""},
+                    {"full_name": "Akash Hamirwasia", "profile_photo": ""},
                 ],
             },
             {
@@ -236,7 +236,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Hussain Nagaria", "avatar": ""},
+                    {"full_name": "Hussain Nagaria", "profile_photo": ""},
                 ],
             },
             {
@@ -246,10 +246,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Pranit Chadda", "avatar": ""},
-                    {"name": "Aaryak Garg", "avatar": ""},
-                    {"name": "Arsh Kohli", "avatar": ""},
-                    {"name": "Paarth Chhabra", "avatar": ""},
+                    {"full_name": "Pranit Chadda", "profile_photo": ""},
+                    {"full_name": "Aaryak Garg", "profile_photo": ""},
+                    {"full_name": "Arsh Kohli", "profile_photo": ""},
+                    {"full_name": "Paarth Chhabra", "profile_photo": ""},
                 ],
             },
             {
@@ -259,10 +259,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Gigin Chandy George", "avatar": ""},
-                    {"name": "Vinu TV", "avatar": ""},
-                    {"name": "Vignesh Hari", "avatar": ""},
-                    {"name": "Bodhish Thomas", "avatar": ""},
+                    {"full_name": "Gigin Chandy George", "profile_photo": ""},
+                    {"full_name": "Vinu TV", "profile_photo": ""},
+                    {"full_name": "Vignesh Hari", "profile_photo": ""},
+                    {"full_name": "Bodhish Thomas", "profile_photo": ""},
                 ],
             },
             {
@@ -272,10 +272,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Allwin Raju", "avatar": ""},
-                    {"name": "Nihaal", "avatar": ""},
-                    {"name": "Aswin C", "avatar": ""},
-                    {"name": "Aravindhan Pugazhendhi", "avatar": ""},
+                    {"full_name": "Allwin Raju", "profile_photo": ""},
+                    {"full_name": "Nihaal", "profile_photo": ""},
+                    {"full_name": "Aswin C", "profile_photo": ""},
+                    {"full_name": "Aravindhan Pugazhendhi", "profile_photo": ""},
                 ],
             },
             {
@@ -285,7 +285,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Asmita Hase", "avatar": ""},
+                    {"full_name": "Asmita Hase", "profile_photo": ""},
                 ],
             },
             {
@@ -295,9 +295,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Vinod Deolal", "avatar": ""},
-                    {"name": "Vinay Venu", "avatar": ""},
-                    {"name": "Arjun Khandelwal", "avatar": ""},
+                    {"full_name": "Vinod Deolal", "profile_photo": ""},
+                    {"full_name": "Vinay Venu", "profile_photo": ""},
+                    {"full_name": "Arjun Khandelwal", "profile_photo": ""},
                 ],
             },
             {
@@ -307,7 +307,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Anushka Trivedi", "avatar": ""},
+                    {"full_name": "Anushka Trivedi", "profile_photo": ""},
                 ],
             },
             {
@@ -317,9 +317,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "sunithvs", "avatar": ""},
-                    {"name": "SANU MUHAMMED C", "avatar": ""},
-                    {"name": "Rohit T P", "avatar": ""},
+                    {"full_name": "sunithvs", "profile_photo": ""},
+                    {"full_name": "SANU MUHAMMED C", "profile_photo": ""},
+                    {"full_name": "Rohit T P", "profile_photo": ""},
                 ],
             },
             {
@@ -329,9 +329,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Adithya Menon S", "avatar": ""},
-                    {"name": "Bhuvanesh T G", "avatar": ""},
-                    {"name": "Kumaraguru", "avatar": ""},
+                    {"full_name": "Adithya Menon S", "profile_photo": ""},
+                    {"full_name": "Bhuvanesh T G", "profile_photo": ""},
+                    {"full_name": "Kumaraguru", "profile_photo": ""},
                 ],
             },
             {
@@ -341,9 +341,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Vignesh Palanisamy", "avatar": ""},
-                    {"name": "Omkar Pote", "avatar": ""},
-                    {"name": "Raghav Singhal", "avatar": ""},
+                    {"full_name": "Vignesh Palanisamy", "profile_photo": ""},
+                    {"full_name": "Omkar Pote", "profile_photo": ""},
+                    {"full_name": "Raghav Singhal", "profile_photo": ""},
                 ],
             },
             {
@@ -353,7 +353,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Anirudh Varma", "avatar": ""},
+                    {"full_name": "Anirudh Varma", "profile_photo": ""},
                 ],
             },
             {
@@ -363,7 +363,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": None,
                 "status": "Commendation",
                 "team_members": [
-                    {"name": "Julin Shaji", "avatar": ""},
+                    {"full_name": "Julin Shaji", "profile_photo": ""},
                 ],
             },
         ],
@@ -388,9 +388,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹1,00,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Ronan", "avatar": ""},
-                    {"name": "Darpan", "avatar": ""},
-                    {"name": "Ashwin", "avatar": ""},
+                    {"full_name": "Ronan", "profile_photo": ""},
+                    {"full_name": "Darpan", "profile_photo": ""},
+                    {"full_name": "Ashwin", "profile_photo": ""},
                 ],
             },
             {
@@ -400,9 +400,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹1,00,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Nikhil", "avatar": ""},
-                    {"name": "Aditya", "avatar": ""},
-                    {"name": "Janhvi", "avatar": ""},
+                    {"full_name": "Nikhil", "profile_photo": ""},
+                    {"full_name": "Aditya", "profile_photo": ""},
+                    {"full_name": "Janhvi", "profile_photo": ""},
                 ],
             },
             {
@@ -412,8 +412,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Ankit", "avatar": ""},
-                    {"name": "Ashita", "avatar": ""},
+                    {"full_name": "Ankit", "profile_photo": ""},
+                    {"full_name": "Ashita", "profile_photo": ""},
                 ],
             },
             {
@@ -423,9 +423,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹50,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Maheswaran", "avatar": ""},
-                    {"name": "Avinash", "avatar": ""},
-                    {"name": "Joel", "avatar": ""},
+                    {"full_name": "Maheswaran", "profile_photo": ""},
+                    {"full_name": "Avinash", "profile_photo": ""},
+                    {"full_name": "Joel", "profile_photo": ""},
                 ],
             },
             {
@@ -435,9 +435,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Shivendu", "avatar": ""},
-                    {"name": "Abhinav", "avatar": ""},
-                    {"name": "Ambar", "avatar": ""},
+                    {"full_name": "Shivendu", "profile_photo": ""},
+                    {"full_name": "Abhinav", "profile_photo": ""},
+                    {"full_name": "Ambar", "profile_photo": ""},
                 ],
             },
             {
@@ -447,10 +447,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Keerthana", "avatar": ""},
-                    {"name": "Prabakaran", "avatar": ""},
-                    {"name": "Ram", "avatar": ""},
-                    {"name": "Soundarya", "avatar": ""},
+                    {"full_name": "Keerthana", "profile_photo": ""},
+                    {"full_name": "Prabakaran", "profile_photo": ""},
+                    {"full_name": "Ram", "profile_photo": ""},
+                    {"full_name": "Soundarya", "profile_photo": ""},
                 ],
             },
             {
@@ -460,8 +460,8 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹25,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Jithin", "avatar": ""},
-                    {"name": "Shahul", "avatar": ""},
+                    {"full_name": "Jithin", "profile_photo": ""},
+                    {"full_name": "Shahul", "profile_photo": ""},
                 ],
             },
             {
@@ -471,7 +471,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Anand", "avatar": ""},
+                    {"full_name": "Anand", "profile_photo": ""},
                 ],
             },
             {
@@ -481,10 +481,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Alaap", "avatar": ""},
-                    {"name": "Chanakya", "avatar": ""},
-                    {"name": "Yathin", "avatar": ""},
-                    {"name": "Aditya", "avatar": ""},
+                    {"full_name": "Alaap", "profile_photo": ""},
+                    {"full_name": "Chanakya", "profile_photo": ""},
+                    {"full_name": "Yathin", "profile_photo": ""},
+                    {"full_name": "Aditya", "profile_photo": ""},
                 ],
             },
             {
@@ -494,7 +494,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Vishnu", "avatar": ""},
+                    {"full_name": "Vishnu", "profile_photo": ""},
                 ],
             },
             {
@@ -504,9 +504,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Manimaran", "avatar": ""},
-                    {"name": "Kanagasabapathy", "avatar": ""},
-                    {"name": "Seenuvasan", "avatar": ""},
+                    {"full_name": "Manimaran", "profile_photo": ""},
+                    {"full_name": "Kanagasabapathy", "profile_photo": ""},
+                    {"full_name": "Seenuvasan", "profile_photo": ""},
                 ],
             },
             {
@@ -516,10 +516,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Khaleel", "avatar": ""},
-                    {"name": "Hari", "avatar": ""},
-                    {"name": "Vignesh", "avatar": ""},
-                    {"name": "Ponneelan", "avatar": ""},
+                    {"full_name": "Khaleel", "profile_photo": ""},
+                    {"full_name": "Hari", "profile_photo": ""},
+                    {"full_name": "Vignesh", "profile_photo": ""},
+                    {"full_name": "Ponneelan", "profile_photo": ""},
                 ],
             },
             {
@@ -529,10 +529,10 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Viji", "avatar": ""},
-                    {"name": "Kowsalya", "avatar": ""},
-                    {"name": "Deepak", "avatar": ""},
-                    {"name": "Dilip", "avatar": ""},
+                    {"full_name": "Viji", "profile_photo": ""},
+                    {"full_name": "Kowsalya", "profile_photo": ""},
+                    {"full_name": "Deepak", "profile_photo": ""},
+                    {"full_name": "Dilip", "profile_photo": ""},
                 ],
             },
             {
@@ -542,9 +542,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Mufeed", "avatar": ""},
-                    {"name": "Vivek", "avatar": ""},
-                    {"name": "Vishal", "avatar": ""},
+                    {"full_name": "Mufeed", "profile_photo": ""},
+                    {"full_name": "Vivek", "profile_photo": ""},
+                    {"full_name": "Vishal", "profile_photo": ""},
                 ],
             },
             {
@@ -554,9 +554,9 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Roshan", "avatar": ""},
-                    {"name": "Sudev", "avatar": ""},
-                    {"name": "Ajay", "avatar": ""},
+                    {"full_name": "Roshan", "profile_photo": ""},
+                    {"full_name": "Sudev", "profile_photo": ""},
+                    {"full_name": "Ajay", "profile_photo": ""},
                 ],
             },
             {
@@ -566,7 +566,7 @@ ARCHIVE_HACKATHONS = {
                 "cash_prize": "₹10,000",
                 "status": "Winner",
                 "team_members": [
-                    {"name": "Devdutt Shenoi", "avatar": ""},
+                    {"full_name": "Devdutt Shenoi", "profile_photo": ""},
                 ],
             },
         ],
