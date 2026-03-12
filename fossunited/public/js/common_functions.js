@@ -3,7 +3,7 @@
 $(document).ready(function () {
   // Onclick event for Event Cards (not needed anymore)
   // $(".event-card").click(function () {
-  // 	window.location.pathname = "/" + $(this).data("route");
+  //    window.location.pathname = "/" + $(this).data("route");
   // });
 
   // Horizontal Navbar Controls for Profile & Event Pages
@@ -229,31 +229,42 @@ function resetTooltip() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const toggle = document.getElementById('theme-toggle')
-  if (!toggle) {
+  const toggles = document.querySelectorAll('#theme-toggle')
+  if (!toggles.length) {
     document.documentElement.setAttribute('data-theme', 'light')
     return
   }
 
-  const icon = toggle.querySelector('i')
-  const lightIcon = toggle.dataset.lightIcon || 'ti-moon'
-  const darkIcon = toggle.dataset.darkIcon || 'ti-sun'
+  toggles.forEach((toggle) => {
+    const icon = toggle.querySelector('i')
+    const lightIcon = toggle.dataset.lightIcon || 'ti-moon'
+    const darkIcon = toggle.dataset.darkIcon || 'ti-sun'
 
-  updateIcon()
-
-  toggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme')
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
-
-    localStorage.setItem('theme', newTheme)
-    document.documentElement.setAttribute('data-theme', newTheme)
     updateIcon()
-  })
 
-  function updateIcon() {
-    const theme = document.documentElement.getAttribute('data-theme')
-    icon.className = `ti ${theme === 'dark' ? darkIcon : lightIcon}`
-  }
+    toggle.addEventListener('click', () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme')
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
+      localStorage.setItem('theme', newTheme)
+      document.documentElement.setAttribute('data-theme', newTheme)
+      updateAllIcons()
+    })
+
+    function updateIcon() {
+      const theme = document.documentElement.getAttribute('data-theme')
+      icon.className = `ti ${theme === 'dark' ? darkIcon : lightIcon}`
+    }
+
+    function updateAllIcons() {
+      const theme = document.documentElement.getAttribute('data-theme')
+      toggles.forEach((btn) => {
+        const ic = btn.querySelector('i')
+        const li = btn.dataset.lightIcon || 'ti-moon'
+        const di = btn.dataset.darkIcon || 'ti-sun'
+        ic.className = `ti ${theme === 'dark' ? di : li}`
+      })
+    }
+  })
 })
 
 // "2025-12-29" -> "Monday, December 29, 2025"
