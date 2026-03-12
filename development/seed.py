@@ -5,7 +5,7 @@ can explore the application immediately after install.
 
 Usage::
 
-    bench --site <your-site> execute development.seed.seed
+    bench --site <your-site> execute fossunited.dev.seed.seed
 
 Default credentials
 -------------------
@@ -320,9 +320,9 @@ def seed():
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:
             frappe.clear_cache()
+            logger.info("Seed data created successfully")
         except Exception:
             logger.warning("Seed data committed, but cache clear failed", exc_info=True)
-        logger.info("Seed data created successfully")
     except Exception:
         frappe.db.rollback()
         logger.exception("Seed script failed before commit — transaction rolled back")
@@ -360,9 +360,11 @@ def _create_users():
             logger.info("Set default password for new user: %s", email)
 
         if user_cfg["kind"] == "chapter":
-            user_doc = frappe.get_doc("User", email)
-            user_doc.add_roles(CHAPTER_TEAM_MEMBER_ROLE)
-            user_doc.save()
+            user_roles = frappe.get_roles(email)
+            if CHAPTER_TEAM_MEMBER_ROLE not in user_roles:
+                user_doc = frappe.get_doc("User", email)
+                user_doc.append("roles", {"role": CHAPTER_TEAM_MEMBER_ROLE})
+                user_doc.save()
             result["chapter"].append(user_cfg)
         else:
             result["normal"].append(email)
