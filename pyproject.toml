@@ -22,7 +22,7 @@ dev = [
   "pre-commit==4.2.0",
   "frappe-bench>=5.25.9",
   "ruff==0.12.5",
-  "black==25.1.0",
+  "black==26.3.1",
   "basedpyright>=1.31.0",
   "python-lsp-server>=1.13.0",
   "djlint>=1.36.4",
