@@ -1,0 +1,286 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/fosshack.html" import fosshack_navbar %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
+
+{% macro render_project_card(project) %}
+  <article class="mb-3">
+    <div
+      class="p-2 p-md-3"
+      role="button"
+      tabindex="0"
+      aria-expanded="false"
+      onclick="toggleSection('project-{{ project.name | replace(' ', '-') }}')"
+      style="cursor: pointer;"
+    >
+      <div class="d-flex justify-content-between align-items-center">
+        <div
+          class="flex-grow-1 d-flex flex-column flex-md-row align-items-start align-items-md-center"
+        >
+          <h4 class="h6 h5-md mb-1 mb-md-0 mr-md-3">
+            <a
+              href="{{ project.url }}"
+              class="font-weight-bold underline"
+              onclick="event.stopPropagation();"
+              target="_blank"
+            >
+              {{ project.name }}
+            </a>
+            <i class="ti ti-arrow-up-right ml-1"></i>
+          </h4>
+
+          <div class="d-flex flex-wrap align-items-center text-nowrap">
+            {% if project.repo_link %}
+            <a href="{{ project.repo_link }}" onclick="event.stopPropagation()" target="_blank"
+              class="mr-2 mb-1 mb-md-0 d-inline-flex align-items-center text-xl">
+              <i class="ti ti-brand-github"></i>
+            </a>
+            {% endif %}
+            {% if project.status == "Winner" %}
+              <span class="v3-tag v3-tag--success mr-2 mb-1 mb-md-0">
+                <i class="ti ti-trophy"></i> Winner
+              </span>
+            {% elif project.status == "Commendation" %}
+              <span class="v3-tag v3-status--warning mr-2 mb-1 mb-md-0">
+                <i class="ti ti-award"></i> Commendation
+              </span>
+            {% endif %}
+
+            {% if project.cash_prize %}
+              <span class="v3-tag v3-tag--category mr-2 mb-1 mb-md-0">
+                {{ project.cash_prize }}
+              </span>
+            {% endif %}
+          </div>
+        </div>
+
+        <i
+          class="ti ti-chevron-down v3-toggle-icon ml-2 border"
+          aria-hidden="true"
+          style="font-size:1rem;"
+        ></i>
+      </div>
+    </div>
+
+    <div
+      id="project-{{ project.name | replace(' ', '-') }}"
+      class="hidden px-2 px-md-3 pb-2 pb-md-3"
+    >
+      <p class="text-muted mb-2 mb-md-3 small">{{ project.description }}</p>
+
+      {% if project.team_members %}
+        <div class="row">
+          {% for member in project.team_members %}
+            <div class="col-6 col-md-4 col-lg-3 mb-2">
+              <div class="d-flex align-items-center p-1 p-md-2 rounded">
+                <div
+                  class="bg-secondary mr-2 rounded"
+                  style="width: 32px; height: 32px; min-width: 32px;"
+                >
+                  <img
+                    src="{{ member.avatar or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                    alt="{{ member.name }}"
+                    class="rounded w-100 h-100"
+                    style="object-fit: cover;"
+                    loading="lazy"
+                  />
+                </div>
+                <small class="text-truncate v3-text-secondary" style="font-size: 0.75rem;"
+                  >{{ member.name }}</small
+                >
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+    <hr class="my-0" style="opacity: 0.1;" />
+  </article>
+{% endmacro %}
+
+{% macro render_hackathon_card(hackathon) %}
+  <section
+    class="v3-card mb-3 mb-md-4 p-0 rounded"
+    id="hackathon-{{ hackathon.id }}"
+    data-year="{{ hackathon.year }}"
+  >
+    <div
+      class="p-3 p-md-4"
+      role="button"
+      tabindex="0"
+      aria-expanded="false"
+      onclick="toggleSection('content-{{ hackathon.id }}')"
+    >
+      <div
+        class="d-flex justify-content-between align-items-start p-3 mb-2 mb-md-3 v3-bg-secondary rounded"
+      >
+        <div class="flex-grow-1">
+          <div class="text-uppercase mb-1" style="font-size:0.8rem;">
+            {{ hackathon.date }} | {{ hackathon.mode }}
+          </div>
+          <a
+            href="{{ hackathon.route }}"
+            class="font-weight-bold h4 v3-text-primary d-inline-flex align-items-center text-nowrap"
+            onclick="event.stopPropagation()"
+            target="_blank"
+          >
+            {{ hackathon.name }}
+            <i class="ti ti-arrow-up-right ml-1"></i>
+          </a>
+        </div>
+
+        <i
+          class="ti ti-chevron-down btn btn-light btn-sm v3-toggle-icon ml-2"
+          aria-hidden="true"
+        ></i>
+      </div>
+    </div>
+
+    <div id="content-{{ hackathon.id }}" class="hidden">
+      <div class="card-body p-0 v3-text-secondary">
+          <div class="row no-gutters">
+            <div class="col-12 col-lg-3 p-3 p-md-4 border-right mb-2">
+              {% if hackathon.forum_post %}
+                <div class="mb-3 mb-md-4 border rounded p-2">
+                  <a
+                    href="{{ hackathon.forum_post }}"
+                    class="btn d-inline-flex align-items-center"
+                    onclick="event.stopPropagation()"
+                    target="_blank"
+                  >
+                    Announcement
+                    <i class="ti ti-external-link ml-1 text-xl"></i>
+                  </a>
+                </div>
+              {% endif %}
+
+              <div class="mb-3 mb-md-4 border rounded p-2">
+                <div class="d-flex align-items-center mb-8">
+                  <i class="ti ti-users-group mr-2 text-2xl mb-0"></i>
+                  <div class="d-flex flex-column">
+                    <span class="text-muted">Total Teams</span>
+                    <span class="h5 h4-md mb-0 font-weight-bold">{{ hackathon.total_teams }}</span>
+                  </div>
+                </div>
+                <span class="mb-0 font-weight-medium">
+                  <i class="ti ti-user mr-1 text-xl"></i>
+                  {{ hackathon.total_participants or (hackathon.total_teams * 3) | int }}
+                  Participants
+                </span>
+              </div>
+
+              <div class="mb-3 mb-md-4 border rounded p-2">
+                <div class="d-flex align-items-center">
+                  <i class="ti ti-device-laptop mr-2 text-2xl mb-0"></i>
+                  <div class="d-flex flex-column">
+                    <span class="text-muted">Project Submissions</span>
+                    <span class="h5 h4-md mb-0 font-weight-bold"
+                      >{{ hackathon.project_submissions }}</span
+                    >
+                  </div>
+                </div>
+
+                {% if hackathon.partner_projects %}
+                  <div class="mb-0 font-weight-medium mt-8">
+                    <i class="ti ti-heart-handshake mr-1"></i>
+                    {{ hackathon.partner_projects or 0 }} Partner Projects
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            {% if hackathon.projects %}
+            <div class="col-12 col-lg-9 p-3 p-md-4">
+              {% for project in hackathon.projects %}
+                {{ render_project_card(project) }}
+              {% endfor %}
+            </div>
+          </div>
+        {% else %}
+          <div class="p-3 p-md-4">
+            <div class="mb-0" role="status">
+              <i class="ti ti-info-circle mr-2"></i>
+              On-going hackathon. Results will be available once its over.
+            </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+{% endmacro %}
+
+{% block content %}
+  <div class="v3-page">
+    <div class="container-fluid" style="max-width:1024px">
+      {{ fosshack_navbar() }}
+
+      {{ breadcrumb() }}
+
+      <main id="main-content" class="mt-3 mt-md-4" role="main">
+        <h1 class="sr-only">FOSSHACK Hackathon Results</h1>
+
+        <div
+          class="v3-card rounded d-flex align-items-center justify-content-between p-0 mb-3 mb-md-8"
+          style="min-height:60px;"
+        >
+          <div class="d-flex align-items-center v3-text-secondary">
+            <div class="p-2 p-md-3">
+              {% include "fossunited/public/images/fosshack/fh-results.svg" %}
+            </div>
+
+            <div class="d-flex flex-column ml-2 ml-md-3">
+              <span class="font-weight-bold text-2xl mb-0"> Hacked to Victory </span>
+
+              <span class="small v3-text-muted text-sm">
+                Winners & Commendation of FOSS Hack
+              </span>
+            </div>
+          </div>
+
+          <div class="h-100 overflow-hidden">
+            <img
+              src="/assets/fossunited/images/fosshack/fh-26-block-right.svg"
+              class="d-none d-sm-inline"
+              style="height:120px;"
+              alt=""
+            />
+          </div>
+        </div>
+
+        {% if hackathons %}
+          {% for hackathon in hackathons %}
+            {{ render_hackathon_card(hackathon) }}
+          {% endfor %}
+        {% else %}
+          <div class="alert alert-warning" role="status">
+            <i class="ti ti-alert-triangle mr-2"></i>
+            No hackathon results available at this time.
+          </div>
+        {% endif %}
+      </main>
+    </div>
+  </div>
+
+  <script>
+    function openCardFromUrl() {
+      const urlParams = new URLSearchParams(window.location.search)
+      const year = urlParams.get('year')
+
+      if (year) {
+        // Find all hackathon cards and match by data attribute
+        const allCards = document.querySelectorAll('[id^="hackathon-"]')
+        allCards.forEach((card) => {
+          // data-year attribute in hackathon cards
+          if (card.getAttribute('data-year') === year) {
+            const contentId = card.id.replace('hackathon-', 'content-')
+            const content = document.getElementById(contentId)
+            if (content && content.classList.contains('hidden')) {
+              toggleSection(contentId)
+              card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }
+          }
+        })
+      }
+    }
+    document.addEventListener('DOMContentLoaded', openCardFromUrl)
+  </script>
+{% endblock %}
