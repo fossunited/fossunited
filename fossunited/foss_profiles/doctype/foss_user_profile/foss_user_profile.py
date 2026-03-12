@@ -341,9 +341,11 @@ class FOSSUserProfile(WebsiteGenerator):
                 Event.event_start_date,
                 Event.event_location,
             )
-            .where((EventMember.member == self.name) & (~Event.chapter.isin(chapter_ids)))
+            .where((EventMember.member == self.name) & (Event.is_published == 1))
         ).run(as_dict=True)
         for e in events:
+            if e.chapter in chapter_ids:
+                continue
             volunteered.append(
                 {
                     "type": "event",
