@@ -15,7 +15,6 @@ class HackathonResult(Document):
         from frappe.types import DF
 
         cash_prize: DF.Currency
-        forum_post: DF.Data | None
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data
