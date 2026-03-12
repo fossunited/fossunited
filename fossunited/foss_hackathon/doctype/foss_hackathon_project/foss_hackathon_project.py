@@ -111,7 +111,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
 
         context.team = frappe.get_doc(HACKATHON_TEAM, self.team)
-        context.team_members = get_team_members(context.team)
+        context.team_members = self.get_team_members(context.team)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
 
@@ -120,20 +120,20 @@ class FOSSHackathonProject(WebsiteGenerator):
                 HACKATHON_PARTNER_PROJECT, self.partner_project
             )
 
-
-def get_team_members(team):
-    member_details = []
-    for member in team.members:
-        profile_id = frappe.db.get_value(
-            HACKATHON_PARTICIPANT,
-            member.member,
-            "user_profile",
-        )
-        profile = frappe.db.get_value(
-            USER_PROFILE,
-            profile_id,
-            ["route", "full_name", "username", "profile_photo"],
-            as_dict=True,
-        )
-        member_details.append(profile)
-    return member_details
+    @staticmethod
+    def get_team_members(team):
+        member_details = []
+        for member in team.members:
+            profile_id = frappe.db.get_value(
+                HACKATHON_PARTICIPANT,
+                member.member,
+                "user_profile",
+            )
+            profile = frappe.db.get_value(
+                USER_PROFILE,
+                profile_id,
+                ["route", "full_name", "username", "profile_photo"],
+                as_dict=True,
+            )
+            member_details.append(profile)
+        return member_details

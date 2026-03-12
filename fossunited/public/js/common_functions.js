@@ -234,6 +234,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.documentElement.setAttribute('data-theme', 'light')
     return
   }
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme)
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark')
+  }
 
   toggles.forEach((toggle) => {
     const icon = toggle.querySelector('i')
