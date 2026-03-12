@@ -49,9 +49,9 @@ This uses [frappe-manager](https://github.com/rtCamp/Frappe-Manager) to spin up 
 mkdir fossu-dev && cd fossu-dev
 uv init
 uv add frappe-manager
-fm create foss.localhost
-fm start        # start the container and select your site from the menu
-fm shell        # enter the container shell
+uv run fm create foss.localhost
+uv run fm start        # start the container and select your site from the menu
+uv run fm shell        # enter the container shell
 ```
 
 Inside the container:
@@ -65,7 +65,7 @@ bench --site foss.localhost migrate
 
 Open `http://foss.localhost` in your browser.
 
-> Dashboard is at `http://foss.localhost/dashboard`. Run `bench build --apps fossunited` after making dashboard changes since it doesn't run as a live dev server.
+> Dashboard is at `http://foss.localhost/dashboard`. For Docker users, run `bench build --apps fossunited` after making dashboard changes. If you're actively working on dashboard features, see the Dashboard Setup section below to run the Vite dev server instead.
 
 ---
 
@@ -76,18 +76,18 @@ First follow the [official Frappe installation guide](https://frappeframework.co
 ```bash
 bench init fossu-bench
 cd fossu-bench
+bench new-site foss.localhost
 ```
 
-**If you're on Frappe v16+**, install the Newsletter app first (it was split into a separate app in v16):
+**If you're on Frappe v16+**, install the Newsletter app before fossunited (it was split into a separate app in v16):
 ```bash
 bench get-app https://github.com/frappe/newsletter
-bench install-app newsletter
+bench --site foss.localhost install-app newsletter
 ```
 
 Then install FOSS United:
 ```bash
 bench get-app https://github.com/fossunited/fossunited
-bench new-site foss.localhost
 bench --site foss.localhost install-app fossunited
 bench --site foss.localhost set-config developer_mode 1
 bench set-config -g server_script_enabled true
