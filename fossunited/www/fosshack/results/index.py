@@ -613,7 +613,7 @@ def get_hackathon_results(hackathon_id, year):
         # Build project dict
         project = {
             "name": project_doc.title or project_doc.name,
-            "url": project_doc.route,
+            "url": f"/{project_doc.route}",
             "description": project_doc.short_description or "",
             "cash_prize": frappe.format_value(result.cash_prize, {"fieldtype": "Currency"})
             if result.cash_prize
