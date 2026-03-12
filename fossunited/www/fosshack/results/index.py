@@ -641,7 +641,7 @@ def get_hackathon_results(hackathon_id, year):
         ),
         "route": hackathon.external_website_url or f"/fosshack/{year}",
         "projects": projects,
-        "forum_post": ANNOUNCEMENTS.get("year"),
+        "forum_post": ANNOUNCEMENTS.get(year),
     }
 
     return hackathon_data
