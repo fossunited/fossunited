@@ -3898,3 +3898,10 @@ a.underline {
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
   gap: 0.8rem;
 }
+
+
+ /* Utility based css only for themes (thinking to full bootstrap v4 on all sites) */
+.v3-bg-secondary {
+  background: var(--v3-button-border);
+  color: var(--v3-text-color);
+}
