@@ -1,0 +1,74 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-12 11:35:46.222803",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "foss_hack_results_section",
+  "team",
+  "project",
+  "forum_post",
+  "cash_prize",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "team",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Team",
+   "options": "FOSS Hackathon Team"
+  },
+  {
+   "fetch_from": "team.project",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "FOSS Hackathon Project"
+  },
+  {
+   "fieldname": "forum_post",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Forum Post",
+   "options": "URL"
+  },
+  {
+   "fieldname": "cash_prize",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Prize Awarded",
+   "options": "INR"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Winner\nCommendation"
+  },
+  {
+   "fieldname": "foss_hack_results_section",
+   "fieldtype": "Section Break",
+   "label": "Foss Hack Results"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-12 11:56:02.147524",
+ "modified_by": "Administrator",
+ "module": "FOSS Hackathon",
+ "name": "Hackathon Result",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
