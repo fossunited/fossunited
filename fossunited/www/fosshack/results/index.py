@@ -600,11 +600,10 @@ def get_hackathon_results(hackathon_id, year):
     projects = []
     for result in results:
         # Fetch project details
+        if not result.project or not frappe.db.exists(HACKATHON_PROJECT, result.project):
+            continue
         project_doc = frappe.get_doc(HACKATHON_PROJECT, result.project) if result.project else None
         team_doc = frappe.get_doc(HACKATHON_TEAM, result.team) if result.team else None
-
-        if not project_doc:
-            continue
 
         # Get team members
         team_members = []
