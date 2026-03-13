@@ -58,9 +58,11 @@
         </div>
 
         <select class="v3-select" onchange="if(this.value) window.open(this.value,'_blank')">
-          <option value="" selected>Hackathon</option>
           {% for hack in hackathons %}
-            <option value="{{ hack.external_website_url or hack.route }}">
+            <option
+              value="{{ hack.route }}"
+              {% if hack.route == "/fosshack/2026" %}selected{% endif %}
+            >
               {{ hack.hackathon_name }}
             </option>
           {% endfor %}
@@ -103,9 +105,13 @@
           class="custom-select v3-select mb-3"
           onchange="if(this.value) window.open(this.value,'_blank')"
         >
-          <option value="" selected>Hackathon</option>
           {% for hack in hackathons %}
-            <option value="{{ hack.route }}">{{ hack.hackathon_name }}</option>
+            <option
+              value="{{ hack.route }}"
+              {% if hack.route == "/fosshack/2026" %}selected{% endif %}
+            >
+              {{ hack.hackathon_name }}
+            </option>
           {% endfor %}
         </select>
 
