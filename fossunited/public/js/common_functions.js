@@ -230,15 +230,12 @@ function resetTooltip() {
 
 document.addEventListener('DOMContentLoaded', () => {
   const toggles = document.querySelectorAll('.theme-toggle')
+  if (!toggles.length) return document.documentElement.setAttribute('data-theme', 'light')
   const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme)
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', 'dark')
-  } else {
-    document.documentElement.setAttribute('data-theme', 'light')
-  }
-  if (!toggles.length) return
+  document.documentElement.setAttribute(
+    'data-theme',
+    savedTheme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'),
+  )
   toggles.forEach((toggle) => {
     const icon = toggle.querySelector('i')
     const lightIcon = toggle.dataset.lightIcon || 'ti-moon'

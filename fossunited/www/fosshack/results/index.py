@@ -615,7 +615,9 @@ def get_hackathon_results(hackathon_id, year):
             "name": project_doc.title or project_doc.name,
             "url": f"/{project_doc.route}",
             "description": project_doc.short_description or "",
-            "cash_prize": frappe.format_value(result.cash_prize, {"fieldtype": "Currency"})
+            "cash_prize": frappe.format_value(
+                result.cash_prize, {"fieldtype": "Currency", "precision": "0"}
+            )
             if result.cash_prize
             else None,
             "status": result.status,

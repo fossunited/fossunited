@@ -2,12 +2,13 @@
 
 {%
   macro fosshack_navbar(
-      hackathons=
-          frappe.get_all("FOSS Hackathon", ["hackathon_name", "external_website_url"])
-          + [
+      hackathons= [
               {"hackathon_name": "FOSS Hack 2020", "route": "/fosshack/2020"},
               {"hackathon_name": "FOSS Hack 2021", "route": "/fosshack/2021"},
-              {"hackathon_name": "FOSS Hack 3.0", "route": "/fosshack/2023"}
+              {"hackathon_name": "FOSS Hack 3.0", "route": "/fosshack/2023"},
+              {"hackathon_name": "FOSS Hack 2024", "route": "/fosshack/2024"},
+              {"hackathon_name": "FOSS Hack 2025", "route": "/fosshack/2025"},
+              {"hackathon_name": "FOSS Hack 2026", "route": "/fosshack/2026"},
             ],
       pages=[],
       live="Ongoing"
@@ -46,15 +47,22 @@
         {% set class = "v3-status--success" if live else "v3-status--error" %}
         <div class="v3-status mr-3 {{ class }}">
           <span class="text-xs">
-            {% if live == "Ongoing" %}Ongoing Event{% elif live %}Registration Open{% else %}Event
-            Ended{% endif %}
+            {% if live == "Ongoing" %}
+              Ongoing Event
+            {% elif live %}
+              Registration Open
+            {% else %}
+              Event Ended
+            {% endif %}
           </span>
         </div>
 
         <select class="v3-select" onchange="if(this.value) window.open(this.value,'_blank')">
           <option value="" selected>Hackathon</option>
           {% for hack in hackathons %}
-            <option value="{{ hack.external_website_url or hack.route }}">{{ hack.hackathon_name }}</option>
+            <option value="{{ hack.external_website_url or hack.route }}">
+              {{ hack.hackathon_name }}
+            </option>
           {% endfor %}
         </select>
 
@@ -65,7 +73,7 @@
         {% endfor %}
 
         <a href="/fosshack/results?year=2026" class="btn border-0 mr-2">Results</a>
-        <a href="/hack/hack/projects/all" class="btn border-0 mr-2">Projects</a>
+        <a href="/hack/fosshack26/projects/all" class="btn border-0 mr-2">Projects</a>
 
         <!-- for now keeping it page wise, someday keep it on header for all pages -->
         {{ theme_toggle() }}
@@ -81,8 +89,13 @@
         {% set class = "v3-status--success" if live else "v3-status--error" %}
         <div class="v3-status mb-3 {{ class }}">
           <span class="text-xs">
-            {% if live == "Ongoing" %}Ongoing Event{% elif live %}Registration Open{% else %}Event
-            Ended{% endif %}
+            {% if live == "Ongoing" %}
+              Ongoing Event
+            {% elif live %}
+              Registration Open
+            {% else %}
+              Event Ended
+            {% endif %}
           </span>
         </div>
 
@@ -90,6 +103,7 @@
           class="custom-select v3-select mb-3"
           onchange="if(this.value) window.open(this.value,'_blank')"
         >
+          <option value="" selected>Hackathon</option>
           {% for hack in hackathons %}
             <option value="{{ hack.route }}">{{ hack.hackathon_name }}</option>
           {% endfor %}
@@ -100,7 +114,7 @@
         {% endfor %}
 
         <a href="/fosshack/results?year=2026" class="d-block py-2">Results</a>
-        <a href="/hack/hack/projects/all" class="d-block py-2">Projects</a>
+        <a href="/hack/fosshack26/projects/all" class="d-block py-2">Projects</a>
         {{ theme_toggle() }}
       </div>
     </div>
