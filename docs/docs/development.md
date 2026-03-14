@@ -19,6 +19,9 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 - `uv run fm create foss.localhost`
 - `uv run fm start` — choose site as it shows in menu
 - `uv run fm shell` — enter into docker container shell and run further steps there
+- For frappe >= v16, install newsletter first:
+  - `bench get-app https://github.com/frappe/newsletter`
+  - `bench --site foss.localhost install-app newsletter`
 - `bench get-app https://github.com/fossunited/fossunited.git`
 - `bench --site foss.localhost install-app fossunited` — this will also install dashboard
 - Configure frappe for server scripts and developer mode:
@@ -28,6 +31,8 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 
 - To run tests please create new-site since it can have unintended DB changes.
   - `bench new-site break.site`
+  - For frappe >= v16: `bench --site break.site install-app newsletter`
+  - `bench --site break.site install-app fossunited`
   - `bench --site break.site set-config allow_tests true`
 
 - Open `foss.localhost` in your browser and start exploring!
@@ -80,6 +85,7 @@ bench --site foss.localhost install-app newsletter
 bench get-app https://github.com/fossunited/fossunited
 
 # Install the app on the site
+bench set-config -g server_script_enabled true
 bench --site foss.localhost install-app fossunited
 bench --site foss.localhost set-config developer_mode 1
 bench --site foss.localhost migrate
