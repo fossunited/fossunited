@@ -1,6 +1,6 @@
 ## Before You Start
 
-If you haven't set up a local dev environment yet, do that first — the [Installation section in README.md](./README.md#installation) walks you through everything. Make sure you can run `bench start` and load the site in your browser before jumping into code.
+If you haven't set up a local dev environment yet, do that first — the [development guide](https://docs.fossunited.org/development/) walks you through everything. Make sure you can start the stack and open the site in your browser before jumping into code.
 
 Also make sure these are enabled or most features won't work locally:
 
