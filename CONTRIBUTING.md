@@ -2,7 +2,7 @@
 
 If you haven't set up a local dev environment yet, do that first — the [development guide](https://docs.fossunited.org/development/) walks you through everything. Make sure you can start the stack and open the site in your browser before jumping into code.
 
-Also make sure these are enabled or most features won't work locally:
+Also make sure these are enabled — run the following if not already configured (developer_mode may already be set during initialization):
 
 ```bash
 bench --site <your-site> set-config developer_mode 1

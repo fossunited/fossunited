@@ -186,8 +186,9 @@ ln -sfn $(which docker-compose) ~/.docker/cli-plugins/docker-compose
 
 **3. UID 1000 crash**
 ```bash
-find .venv/lib/python3.12/site-packages/frappe_manager -type f -name "*.py" -exec sed -i '' 's/os.getuid()/1000/g' {} +
-find .venv/lib/python3.12/site-packages/frappe_manager -type f -name "*.py" -exec sed -i '' 's/os.getgid()/1000/g' {} +
+SITE_PKGS="$(uv run python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getuid()/1000/g' {} +
+find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getgid()/1000/g' {} +
 ```
 
 **4. uv install failing (os error 1)**
