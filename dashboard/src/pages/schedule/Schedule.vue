@@ -2,7 +2,10 @@
   <Header />
   <div v-if="event.data && schedule.data" class="w-full flex flex-col items-center p-4">
     <div class="max-w-screen-xl w-full">
-      <Breadcrumb class="mt-2" :items="breadcrumb_items" />
+      <div class="flex mb-6 items-center justify-between">
+        <Breadcrumb class="mt-2" :items="breadcrumb_items" />
+        <ThemeToggle size="20" />
+      </div>
       <EventHeader :event="event.data" class="my-4 border-b border-outline-gray-5 pb-4" />
       <ScheduleHeader :event="event.data" class="py-2" />
       <div
@@ -56,6 +59,8 @@ import SearchSession from '@/components/schedule/SearchSession.vue'
 import { ref, computed, watch, provide } from 'vue'
 import { createResource, LoadingText, usePageMeta } from 'frappe-ui'
 import { useRoute } from 'vue-router'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
+
 import dayjs from 'dayjs'
 
 const route = useRoute()

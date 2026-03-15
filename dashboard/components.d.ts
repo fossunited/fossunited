@@ -153,6 +153,7 @@ declare module 'vue' {
     TextEditor: typeof import('./src/components/ui/TextEditor.vue')['default']
     TextEditorLinkDialog: typeof import('./src/components/ui/TextEditorLinkDialog.vue')['default']
     ThemedSelectBlack: typeof import('./src/components/common/ThemedSelectBlack.vue')['default']
+    ThemeToggle: typeof import('./src/components/ui/ThemeToggle.vue')['default']
     TicketCustomFieldDialog: typeof import('./src/components/event/TicketCustomFieldDialog.vue')['default']
     TicketCustomFieldsSection: typeof import('./src/components/event/TicketCustomFieldsSection.vue')['default']
     TicketList: typeof import('./src/components/event/TicketList.vue')['default']
