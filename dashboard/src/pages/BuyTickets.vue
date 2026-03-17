@@ -39,7 +39,7 @@
           Book Conference Tickets for {{ event.data.event_name }}
         </h1>
         <div
-          class="my-2 text-ink-gray-6"
+          class="my-2 text-ink-gray-6 prose prose-sm dark:prose-invert max-w-none"
           v-html="markdown.render(event.data.ticket_form_description || '')"
         ></div>
         <RadioGroup v-model="checkoutInfo.tier" class="py-4">
@@ -68,11 +68,10 @@
                         tier.title
                       }}</RadioGroupLabel>
                       <RadioGroupDescription
-                        as="span"
-                        class="mt-2 text-sm text-ink-gray-4"
-                        :innerHTML="markdown.render(tier.description || '')"
-                      >
-                      </RadioGroupDescription>
+                        as="div"
+                        class="mt-2 text-sm text-ink-gray-1 prose prose-sm max-w-none"
+                        v-html="markdown.render(tier.description || '')"
+                      />
                     </span>
                     <span class="flex flex-col gap-4 mt-4">
                       <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
@@ -109,7 +108,7 @@
                   <span class="flex flex-col gap-2">
                     <span class="block text-xl font-bold text-ink-gray-4">{{ tier.title }}</span>
                     <span
-                      class="mt-2 text-sm text-ink-gray-3"
+                      class="mt-2 text-sm text-ink-gray-3 prose prose-sm max-w-none"
                       v-html="markdown.render(tier.description || '')"
                     >
                     </span>
@@ -490,7 +489,11 @@ usePageMeta(() => {
 })
 
 const showAdditionalDetails = ref(false)
-const markdown = new MarkdownIt()
+const markdown = MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+})
 
 const eventName = ref(null)
 const checkoutInfo = reactive({

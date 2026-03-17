@@ -213,6 +213,28 @@
       </div>
     </div>
 
+    <div class="flex flex-col my-6">
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Ticket Settings</div>
+      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+        <FormControl
+          v-model="event.doc.is_paid_event"
+          type="checkbox"
+          size="md"
+          label="Paid Event"
+          description="Enable ticket purchases for this event."
+        />
+        <FormControl
+          v-if="event.doc.is_paid_event"
+          v-model="event.doc.ticket_form_description"
+          type="textarea"
+          size="md"
+          label="Ticket Form Description"
+          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
+          class="col-span-2"
+        />
+      </div>
+    </div>
+
     <FormActionBar
       :document-resource="event"
       :is-saving="event.save.loading"

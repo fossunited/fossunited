@@ -63,7 +63,7 @@
           <div class="text-sm text-ink-gray-5 mb-1">Description</div>
           <textarea
             v-model="modifyTier.description"
-            class="w-full border border-outline-gray-2 rounded-sm p-2 text-base"
+            class="w-full border border-outline-gray-2 rounded p-2 text-base bg-surface-gray-2"
             rows="4"
             placeholder="Add a description"
           ></textarea>
