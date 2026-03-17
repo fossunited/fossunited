@@ -32,14 +32,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { Button } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
   documentResource: {
     type: Object,
-    required: true, // only DocumentResource
+    required: true,
   },
   isSaving: {
     type: Boolean,
@@ -47,56 +47,56 @@ const props = defineProps({
   },
   fieldsToWatch: {
     type: Array,
-    default: null, // If null, watch all fields
+    default: null,
   },
 })
 
 const emit = defineEmits(['save', 'cancel'])
 
-const originalData = ref({})
+const originalData = ref(null)
 
-// Watch the document and store original values
+// Capture baseline only once when doc first becomes available.
 watch(
   () => props.documentResource.doc,
-  (newDoc) => {
-    if (newDoc) {
-      // Update original values when doc changes (includes after reload)
-      if (Object.keys(originalData.value).length === 0) {
-        originalData.value = JSON.parse(JSON.stringify(newDoc))
-      }
+  async (newDoc) => {
+    if (newDoc && originalData.value === null) {
+      await nextTick()
+      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
     }
   },
-  { immediate: true, deep: true },
+  { immediate: true },
 )
 
-// Detect changes
+// Reset baseline after save completes (isSaving true → false)
+watch(
+  () => props.isSaving,
+  async (saving, wasSaving) => {
+    if (wasSaving && !saving && props.documentResource.doc) {
+      await nextTick()
+      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
+    }
+  },
+)
+
 const hasChanges = computed(() => {
   if (!props.documentResource.doc || !originalData.value) return false
-
   const fieldsToCheck = props.fieldsToWatch || Object.keys(originalData.value)
-
-  return fieldsToCheck.some((key) => {
-    return (
-      JSON.stringify(props.documentResource.doc[key]) !== JSON.stringify(originalData.value[key])
-    )
-  })
+  return fieldsToCheck.some(
+    (key) =>
+      JSON.stringify(props.documentResource.doc[key]) !== JSON.stringify(originalData.value[key]),
+  )
 })
 
 const handleSave = () => {
   emit('save')
-  // Reset original data after save
-  setTimeout(() => {
-    if (props.documentResource.doc) {
-      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
-    }
-  }, 300)
 }
 
 const handleCancel = () => {
   props.documentResource
     .reload()
-    .then(() => {
-      originalData.value = {}
+    .then(async () => {
+      await nextTick()
+      originalData.value = JSON.parse(JSON.stringify(props.documentResource.doc))
       toast.info('Changes discarded')
       emit('cancel')
     })
