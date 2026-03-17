@@ -175,57 +175,57 @@
             <IconAt class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.x" :type="'url'" size="md" label="Twitter">
+        <FormControl v-model="chapter.doc.x" :type="'url'" size="md" label="Twitter" @blur="chapter.doc.x = ensureHttpsPrefix(chapter.doc.x)">
           <template #prefix>
             <IconBrandX class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.facebook" :type="'url'" size="md" label="Facebook">
+        <FormControl v-model="chapter.doc.facebook" :type="'url'" size="md" label="Facebook" @blur="chapter.doc.facebook = ensureHttpsPrefix(chapter.doc.facebook)">
           <template #prefix>
             <IconBrandFacebook class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.linkedin" :type="'url'" size="md" label="LinkedIn">
+        <FormControl v-model="chapter.doc.linkedin" :type="'url'" size="md" label="LinkedIn" @blur="chapter.doc.linkedin = ensureHttpsPrefix(chapter.doc.linkedin)">
           <template #prefix>
             <IconBrandLinkedin class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.instagram" :type="'url'" size="md" label="Instagram">
+        <FormControl v-model="chapter.doc.instagram" :type="'url'" size="md" label="Instagram" @blur="chapter.doc.instagram = ensureHttpsPrefix(chapter.doc.instagram)">
           <template #prefix>
             <IconBrandInstagram class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.mastodon" :type="'url'" size="md" label="Mastodon">
+        <FormControl v-model="chapter.doc.mastodon" :type="'url'" size="md" label="Mastodon" @blur="chapter.doc.mastodon = ensureHttpsPrefix(chapter.doc.mastodon)">
           <template #prefix>
             <IconBrandMastodon class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.telegram" :type="'url'" size="md" label="Telegram">
+        <FormControl v-model="chapter.doc.telegram" :type="'url'" size="md" label="Telegram" @blur="chapter.doc.telegram = ensureHttpsPrefix(chapter.doc.telegram)">
           <template #prefix>
             <IconBrandTelegram class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.zulip" :type="'url'" size="md" label="Zulip">
+        <FormControl v-model="chapter.doc.zulip" :type="'url'" size="md" label="Zulip" @blur="chapter.doc.zulip = ensureHttpsPrefix(chapter.doc.zulip)">
           <template #prefix>
             <IconBrandZulip class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.bluesky" :type="'url'" size="md" label="Bluesky">
+        <FormControl v-model="chapter.doc.bluesky" :type="'url'" size="md" label="Bluesky" @blur="chapter.doc.bluesky = ensureHttpsPrefix(chapter.doc.bluesky)">
           <template #prefix>
             <IconBrandBluesky class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.matrix" :type="'url'" size="md" label="Matrix">
+        <FormControl v-model="chapter.doc.matrix" :type="'url'" size="md" label="Matrix" @blur="chapter.doc.matrix = ensureHttpsPrefix(chapter.doc.matrix)">
           <template #prefix>
             <IconBrandMatrix class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.whatsapp" :type="'url'" size="md" label="Whatsapp">
+        <FormControl v-model="chapter.doc.whatsapp" :type="'url'" size="md" label="Whatsapp" @blur="chapter.doc.whatsapp = ensureHttpsPrefix(chapter.doc.whatsapp)">
           <template #prefix>
             <IconBrandWhatsapp class="w-5 text-ink-gray-8" />
           </template>
         </FormControl>
-        <FormControl v-model="chapter.doc.discord" :type="'url'" size="md" label="Discord">
+        <FormControl v-model="chapter.doc.discord" :type="'url'" size="md" label="Discord" @blur="chapter.doc.discord = ensureHttpsPrefix(chapter.doc.discord)">
           <template #prefix>
             <IconBrandDiscord class="w-5 text-ink-gray-8" />
           </template>
@@ -238,14 +238,13 @@
       :is-saving="chapter.save.loading"
       @save="updateDetails"
     />
-
   </div>
 </template>
 <script setup>
 import { useRoute } from 'vue-router'
 import { createDocumentResource, FormControl, FileUploader } from 'frappe-ui'
 import ChapterHeader from '@/components/ChapterHeader.vue'
-import { redirectRoute } from '@/helpers/utils'
+import { redirectRoute, ensureHttpsPrefix } from '@/helpers/utils'
 import { toast } from 'vue-sonner'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import {
@@ -263,7 +262,6 @@ import {
   IconBrandDiscord,
 } from '@tabler/icons-vue'
 import FormActionBar from '@/components/FormActionBar.vue'
-
 
 const route = useRoute()
 

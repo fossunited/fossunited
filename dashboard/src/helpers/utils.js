@@ -40,6 +40,11 @@ export const cleanedHTML = (htmlData) => {
   return tempDiv.innerHTML
 }
 
+export const ensureHttpsPrefix = (url) => {
+  if (!url || url.startsWith('http://') || url.startsWith('https://')) return url
+  return 'https://' + url
+}
+
 export const isValidUrl = (link) => {
   try {
     const url = new URL(link)
