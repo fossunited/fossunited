@@ -503,6 +503,13 @@ h6 {
 .text-2xl {
   font-size: 1.5rem; /* 24px */
 }
+.text-3xl {
+  font-size: 1.8rem;
+}
+.text-4xl {
+  font-size: 2rem;
+}
+
 
 .medium {
   font-weight: 500;
@@ -2448,7 +2455,7 @@ h6 {
 }
 
 [data-theme='dark'] {
-  --v3-card-bg: hsla(0, 0%, 17%, 1);
+  --v3-card-bg: hsla(0, 0%, 11%, 1);
   --v3-main-bg: hsla(0, 0%, 8%, 1);
   --v3-button-border: hsla(0, 0%, 29%, 1);
   --v3-text-color: hsla(0, 0%, 94%, 1);
@@ -3412,6 +3419,9 @@ body:has(.v3-page) {
 a.underline {
   text-decoration: underline;
 }
+a.hover-underline:hover {
+  text-decoration: underline;
+}
 
 /* Controls wrapper */
 .v3-controls {
@@ -3901,7 +3911,7 @@ a.underline {
 
 
  /* Utility based css only for themes (thinking to full bootstrap v4 on all sites) */
-.v3-bg-secondary {
-  background: var(--v3-button-border);
+.v3-bg-primary {
+  background: var(--v3-main-bg);
   color: var(--v3-text-color);
 }

@@ -54,7 +54,7 @@
         </div>
 
         <i
-          class="ti ti-chevron-down v3-toggle-icon ml-2 border"
+          class="ti ti-chevron-down v3-toggle-icon ml-2 border border-secondary"
           aria-hidden="true"
           style="font-size:1rem;"
         ></i>
@@ -111,7 +111,7 @@
       onclick="toggleSection('content-{{ hackathon.id }}')"
     >
       <div
-        class="d-flex justify-content-between align-items-start p-3 mb-2 mb-md-3 v3-bg-secondary rounded"
+        class="d-flex justify-content-between align-items-center p-3 mb-2 mb-md-3 v3-bg-primary rounded"
       >
         <div class="flex-grow-1">
           <div class="text-uppercase mb-1" style="font-size:0.8rem;">
@@ -119,7 +119,7 @@
           </div>
           <a
             href="{{ hackathon.route }}"
-            class="font-weight-bold h4 v3-text-primary d-inline-flex align-items-center text-nowrap"
+            class="font-weight-bold text-4xl v3-text-primary d-inline-flex align-items-center text-nowrap"
             onclick="event.stopPropagation()"
             target="_blank"
           >
@@ -129,7 +129,7 @@
         </div>
 
         <i
-          class="ti ti-chevron-down btn btn-light btn-sm v3-toggle-icon ml-2"
+          class="ti ti-chevron-down v3-toggle-icon ml-2 border p-2 border-secondary"
           aria-hidden="true"
         ></i>
       </div>
@@ -155,10 +155,10 @@
 
               <div class="mb-3 mb-md-4 border rounded p-2">
                 <div class="d-flex align-items-center mb-8">
-                  <i class="ti ti-users-group mr-2 text-2xl mb-0"></i>
+                  <i class="ti ti-users-group mr-2 text-4xl mb-0"></i>
                   <div class="d-flex flex-column">
                     <span class="text-muted">Total Teams</span>
-                    <span class="h5 h4-md mb-0 font-weight-bold">{{ hackathon.total_teams }}</span>
+                    <span class="text-xl mb-0 font-weight-bold">{{ hackathon.total_teams }}</span>
                   </div>
                 </div>
                 <span class="mb-0 font-weight-medium">
@@ -170,22 +170,33 @@
 
               <div class="mb-3 mb-md-4 border rounded p-2">
                 <div class="d-flex align-items-center">
-                  <i class="ti ti-device-laptop mr-2 text-2xl mb-0"></i>
-                  <div class="d-flex flex-column">
+                  <i class="ti ti-device-laptop mr-2 text-4xl mb-0"></i>
+                  <a class="d-flex flex-column hover-underline" href="{{hackathon.projects_url}}">
                     <span class="text-muted">Project Submissions</span>
-                    <span class="h5 h4-md mb-0 font-weight-bold"
+                    <span class="text-xl mb-0 font-weight-bold"
                       >{{ hackathon.project_submissions }}</span
                     >
-                  </div>
+                  </a>
                 </div>
 
                 {% if hackathon.partner_projects %}
-                  <div class="mb-0 font-weight-medium mt-8">
-                    <i class="ti ti-heart-handshake mr-1"></i>
+                  <a class="d-block mb-0 font-weight-medium mt-8 hover-underline" href="{{hackathon.partner_project_url}}">
+                    <i class="ti ti-git-pull-request mr-1"></i>
                     {{ hackathon.partner_projects or 0 }} Partner Projects
-                  </div>
+                  </a>
                 {% endif %}
               </div>
+              {% if hackathon.community_partners %}
+              <div class="mb-3 mb-md-4 border rounded p-2">
+                <div class="d-flex align-items-center">
+                  <i class="ti ti-heart-handshake users-group mr-2 text-4xl mb-0"></i>
+                  <div class="d-flex flex-column">
+                    <span class="text-muted">Community Partners</span>
+                    <span class="text-xl mb-0 font-weight-bold">{{ hackathon.community_partners }}</span>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
             </div>
 
             {% if hackathon.projects %}
@@ -228,7 +239,7 @@
             </div>
 
             <div class="d-flex flex-column ml-2 ml-md-3">
-              <span class="font-weight-bold text-2xl mb-0"> Hacked to Victory </span>
+              <span class="font-weight-bold text-4xl mb-0"> Hacked to Victory </span>
 
               <span class="small v3-text-muted text-sm">
                 Winners & Commendation of FOSS Hack

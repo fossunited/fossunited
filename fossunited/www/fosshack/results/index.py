@@ -23,11 +23,14 @@ ARCHIVE_HACKATHONS = {
         "year": "2020",
         "mode": "Virtual",
         "total_teams": 150,
-        "total_participants": None,
+        "total_participants": 3384,
         "project_submissions": 147,
         "partner_projects": None,
-        "route": "/fosshack/2020",
+        "community_partners": 22,
+        "route": "https://fossunited.org/fosshack/2020",
         "forum_post": "https://forum.fossunited.org/t/foss-hack-2020-results/424",
+        "partner_project_url": None,
+        "projects_url": "https://archive.fossunited.org/fosshack/2020/projects",
         "projects": [
             {
                 "name": "Fika",
@@ -192,11 +195,13 @@ ARCHIVE_HACKATHONS = {
         "year": "2021",
         "mode": "Virtual",
         "total_teams": 120,
-        "total_participants": None,
+        "total_participants": 1302,
         "project_submissions": 120,
         "partner_projects": None,
-        "route": "/fosshack/2021",
+        "route": "https://fossunited.org/fosshack/2021",
         "forum_post": "https://forum.fossunited.org/t/foss-hack-2021-results/957",
+        "partner_project_url": None,
+        "projects_url": "https://archive.fossunited.org/fosshack/2021/projects",
         "projects": [
             {
                 "name": "mquictt",
@@ -375,11 +380,14 @@ ARCHIVE_HACKATHONS = {
         "year": "2023",
         "mode": "Hybrid",
         "total_teams": 196,
-        "total_participants": None,
+        "total_participants": 1014,
         "project_submissions": 187,
         "partner_projects": 12,
-        "route": "/fosshack/2023",
+        "community_partners": 30,
+        "route": "https://fossunited.org/fosshack/2023",
         "forum_post": "https://forum.fossunited.org/t/foss-hack-3-0-results/1882",
+        "partner_project_url": "https://archive.fossunited.org/fosshack/2023/partner-projects-list",
+        "projects_url": "https://archive.fossunited.org/fosshack/2023/projects",
         "projects": [
             {
                 "name": "Helios",
@@ -573,13 +581,22 @@ ARCHIVE_HACKATHONS = {
     },
 }
 
-# Forum post URLs for each year
-ANNOUNCEMENTS = {
-    "2020": "https://forum.fossunited.org/t/foss-hack-2020-results/424",
-    "2021": "https://forum.fossunited.org/t/foss-hack-2021-results/957",
-    "2023": "https://forum.fossunited.org/t/foss-hack-3-0-results/1882",
-    "2024": "https://forum.fossunited.org/t/foss-hack-2024-results/3964",
-    "2025": "https://forum.fossunited.org/t/foss-hack-2025-results/5541",
+HACKATHON_URLS = {
+    "2024": {
+        "forum_post": "https://forum.fossunited.org/t/foss-hack-2024-results/3964",
+        "partner_project_url": "https://fossunited.org/fh24/partner-projects",
+        "projects_url": "https://fossunited.org/hack/fosshack24/projects/all",
+    },
+    "2025": {
+        "forum_post": "https://forum.fossunited.org/t/foss-hack-2025-results/5541",
+        "partner_project_url": "https://fossunited.org/fosshack/2025/partner-projects",
+        "projects_url": "https://fossunited.org/hack/fosshack25/projects/all",
+    },
+    "2026": {
+        "forum_post": None,
+        "partner_project_url": "https://fossunited.org/fosshack/2026/partner-projects",
+        "projects_url": "https://fossunited.org/hack/fosshack26/projects/all",
+    },
 }
 
 
@@ -640,9 +657,18 @@ def get_hackathon_results(hackathon_id, year):
         "partner_projects": frappe.db.count(
             HACKATHON_PARTNER_PROJECT, {"hackathon": hackathon_id}
         ),
+        "community_partners": len(hackathon.community_partners),
         "route": hackathon.external_website_url or f"/fosshack/{year}",
         "projects": projects,
-        "forum_post": ANNOUNCEMENTS.get(year),
+        "forum_post": HACKATHON_URLS.get(year, {}).get("forum_post"),
+        "partner_project_url": (
+            HACKATHON_URLS.get(year, {}).get("partner_project_url")
+            or f"https://fossunited.org/fosshack/{year}/partner-projects"
+        ),
+        "projects_url": (
+            HACKATHON_URLS.get(year, {}).get("projects_url")
+            or f"https://fossunited.org/{hackathon.route}/projects/all"
+        ),
     }
 
     return hackathon_data
