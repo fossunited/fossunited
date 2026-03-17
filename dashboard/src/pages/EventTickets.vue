@@ -40,5 +40,9 @@ const tabs = [
     label: 'Insights',
     route: `/event/${route.params.id}/tickets/insights`,
   },
+  {
+    label: 'Free Coupons',
+    route: `/event/${route.params.id}/tickets/free-codes`,
+  },
 ]
 </script>

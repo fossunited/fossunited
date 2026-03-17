@@ -143,6 +143,11 @@ const routes = [
             name: 'EventTicketsInsights',
             component: () => import('@/pages/EventTicketInsights.vue'),
           },
+          {
+            path: 'free-codes',
+            name: 'EventTicketsFreeCodes',
+            component: () => import('@/components/event/FreeTicketCodeSection.vue'),
+          },
         ],
       },
       {

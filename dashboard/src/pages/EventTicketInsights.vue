@@ -20,7 +20,10 @@
         />
       </div>
 
-      <div v-if="ticket_checkin_insights.data?.daily_data?.length" class="flex flex-col gap-4 my-2">
+      <div
+        v-if="ticket_checkin_insights.data?.daily_data?.length"
+        class="flex flex-col gap-4 my-2"
+      >
         <div class="prose">
           <h4>Daily Check-in Insights</h4>
         </div>
