@@ -135,7 +135,7 @@
             <h3 class="text-md font-semibold">Contribution Guidelines</h3>
             <div
               class="prose leading-normal"
-              v-html="markdown.render(hackathon.data.contribution_project_guidelines || '')"
+              v-html="markdownToHTML(hackathon.data.contribution_project_guidelines || '')"
             ></div>
           </div>
           <div
@@ -145,7 +145,7 @@
             <h3 class="text-md font-semibold">Partner Project Guidelines</h3>
             <div
               class="prose leading-normal text-ink-blue-3"
-              v-html="markdown.render(hackathon.data.partner_project_guidelines || '')"
+              v-html="markdownToHTML(hackathon.data.partner_project_guidelines || '')"
             ></div>
           </div>
         </div>
@@ -275,8 +275,8 @@
 import Header from '@/components/Header.vue'
 import HackathonHeader from '@/components/hackathon/HackathonParticipantHeader.vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
-import Markdownit from 'markdown-it'
 import { createResource, FormControl, ErrorMessage, createListResource, Badge } from 'frappe-ui'
+import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
 import { RadioGroup, RadioGroupLabel, RadioGroupOption } from '@headlessui/vue'
 import { useRoute, useRouter } from 'vue-router'
 import { onMounted, reactive, ref, watch } from 'vue'
@@ -286,7 +286,6 @@ import DocsInfo from '@/components/DocsInfo.vue'
 
 const route = useRoute()
 const router = useRouter()
-const markdown = new Markdownit()
 
 const inSelectProjectType = ref(true)
 const inCreateProject = ref(false)

@@ -39,8 +39,8 @@
           Book Conference Tickets for {{ event.data.event_name }}
         </h1>
         <div
-          class="my-2 text-ink-gray-6 prose prose-sm dark:prose-invert max-w-none"
-          v-html="markdown.render(event.data.ticket_form_description || '')"
+          class="my-2 prose prose-sm max-w-none"
+          v-html="markdownToHTML(event.data.ticket_form_description || '')"
         ></div>
         <RadioGroup v-model="checkoutInfo.tier" class="py-4">
           <RadioGroupLabel class="text-lg font-semibold leading-6 text-ink-gray-8">
@@ -69,8 +69,8 @@
                       }}</RadioGroupLabel>
                       <RadioGroupDescription
                         as="div"
-                        class="mt-2 text-sm text-ink-gray-1 prose prose-sm max-w-none"
-                        v-html="markdown.render(tier.description || '')"
+                        class="my-2 prose prose-sm max-w-none"
+                        :innerHTML="markdownToHTML(tier.description || '')"
                       />
                     </span>
                     <span class="flex flex-col gap-4 mt-4">
@@ -108,8 +108,8 @@
                   <span class="flex flex-col gap-2">
                     <span class="block text-xl font-bold text-ink-gray-4">{{ tier.title }}</span>
                     <span
-                      class="mt-2 text-sm text-ink-gray-3 prose prose-sm max-w-none"
-                      v-html="markdown.render(tier.description || '')"
+                      class="mt-2 prose prose-sm max-w-none"
+                      v-html="markdownToHTML(tier.description || '')"
                     >
                     </span>
                   </span>
@@ -448,7 +448,6 @@
 </template>
 
 <script setup>
-import MarkdownIt from 'markdown-it'
 import Header from '@/components/Header.vue'
 import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
@@ -462,6 +461,7 @@ import {
   Badge,
   Dialog,
 } from 'frappe-ui'
+import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
 import {
   RadioGroup,
   RadioGroupDescription,
@@ -489,11 +489,6 @@ usePageMeta(() => {
 })
 
 const showAdditionalDetails = ref(false)
-const markdown = MarkdownIt({
-  html: true,
-  linkify: true,
-  typographer: true,
-})
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
