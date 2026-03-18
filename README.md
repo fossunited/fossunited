@@ -28,6 +28,32 @@ Read more at [https://docs.fossunited.org/](https://docs.fossunited.org/)
 
 Please follow our [development guide](https://docs.fossunited.org/development/) to set up the project locally.
 
+## Platform Overview
+
+FOSS United platform helps manage:
+- Events
+- Chapters
+- Community programs
+- Contributor profiles
+
+## Screenshots
+
+
+### Homepage
+![Homepage](docs/docs/assets/screenshots/homepage.png)
+
+### Events
+![Events](docs/docs/assets/screenshots/events.png)
+
+### Event Details
+![Event](docs/docs/assets/screenshots/event-page.png)
+
+### Community
+![Community](docs/docs/assets/screenshots/community.png)
+
+### User Profile
+![Profile](docs/docs/assets/screenshots/profile.png)
+
 ## Pre-commit
 
 For automatic running of linters before you commit:
