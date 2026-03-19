@@ -7,7 +7,7 @@
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleBold().run()"
           :class="{ 'bg-surface-gray-3': editor.isActive('bold') }"
-          @click="editor.chain().focus().toggleBold().run()"
+          @click="editor.chain().focus().toggleBold().run()"  aria-label="Bold"
         >
           <IconBold class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
@@ -15,7 +15,7 @@
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleItalic().run()"
           :class="{ 'bg-surface-gray-3': editor.isActive('italic') }"
-          @click="editor.chain().focus().toggleItalic().run()"
+          @click="editor.chain().focus().toggleItalic().run()" aria-label="Italic"
         >
           <IconItalic class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
@@ -23,7 +23,7 @@
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleUnderline().run()"
           :class="{ 'bg-surface-gray-3': editor.isActive('underline') }"
-          @click="editor.chain().focus().toggleUnderline().run()"
+          @click="editor.chain().focus().toggleUnderline().run()" aria-label="Underline"
         >
           <IconUnderline class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
@@ -31,28 +31,28 @@
           class="p-1 rounded-sm"
           :disabled="!editor.can().chain().focus().toggleStrike().run()"
           :class="{ 'bg-surface-gray-3': editor.isActive('strike') }"
-          @click="editor.chain().focus().toggleStrike().run()"
+          @click="editor.chain().focus().toggleStrike().run()" aria-label="Strikethrough"
         >
           <IconStrikethrough class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
-          @click="editor.chain().focus().toggleBulletList().run()"
+          @click="editor.chain().focus().toggleBulletList().run()" aria-label="Bullet list" 
         >
           <IconList class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-surface-gray-3': editor.isActive('orderedList') }"
-          @click="editor.chain().focus().toggleOrderedList().run()"
+          @click="editor.chain().focus().toggleOrderedList().run()" aria-label="Ordered list"
         >
           <IconListNumbers class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-surface-gray-3': editor.isActive('blockquote') }"
-          @click="editor.chain().focus().toggleBlockquote().run()"
+          @click="editor.chain().focus().toggleBlockquote().run()" aria-label="Blockquote"
         >
           <IconBlockquote class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
