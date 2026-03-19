@@ -54,7 +54,7 @@
             v-if="curr_section !== 'success'"
             :is-first-step="curr_section === 0"
             :is-last-step="curr_section === maxSectionIndex"
-            :loading="insertProposal.loading"
+            :loading="isSubmitting"
             @next="nextStep"
             @back="prevStep"
             @submit="submitForm"
@@ -232,6 +232,8 @@ function prevStep() {
   }
 }
 
+const isSubmitting = ref(false)
+
 const insertProposal = createResource({
   url: 'frappe.client.insert',
   makeParams() {
@@ -249,23 +251,27 @@ const insertProposal = createResource({
     }
   },
   onSuccess() {
+    isSubmitting.value = false
     curr_section.value = 'success'
     toast.success('Proposal submitted successfully!')
   },
   onError(err) {
+    isSubmitting.value = false
     errorMessages.value = err.message
     showError(err, 'Error submitting the proposal')
   },
 })
 
 function submitForm() {
-  if (insertProposal.loading) return
+  if (isSubmitting.value) return
+  isSubmitting.value = true
 
   let errors = []
   if (curr_section.value == 3) {
     errors = errors.concat(validateRequiredFields(proposalConfirmationFields.value))
   }
   if (errors.length) {
+    isSubmitting.value = false
     errorMessages.value = errors.join('\n\n')
     return
   }
