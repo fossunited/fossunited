@@ -38,8 +38,7 @@
         <button
           class="p-1 rounded-sm"
           :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
-          @click="editor.chain().focus().toggleBulletList().run()" aria-label="Bullet list" 
-        >
+       @click="editor.chain().focus().toggleBulletList().run()" aria-label="Bullet list">
           <IconList class="w-4 h-4 sm:w-5 sm:h-5" />
         </button>
         <button
