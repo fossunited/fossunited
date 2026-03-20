@@ -1,5 +1,5 @@
-﻿<template>
-  <Sidebar :sections="mappedSections">
+ï»¿<template>
+  <Sidebar :sections="mappedSections" :header="sidebarHeader">
     <template #footer-items="{ isCollapsed }">
       <slot name="pre-nav-items">
         <div v-if="title" class="text-lg font-semibold uppercase mt-2">{{ title }}</div>
@@ -112,6 +112,10 @@ const isMenuItemActive = (menuRoute, index) => {
     menuRoute === '/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/')
   )
 }
+
+const sidebarHeader = computed(() =>
+  props.title ? { title: props.title } : undefined
+)
 
 const mappedSections = computed(() =>
   props.menuItems.map((group) => ({
