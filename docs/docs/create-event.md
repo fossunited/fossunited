@@ -48,3 +48,12 @@ events "disappear" from the public pages of chapters because the
 `"Upcoming Events"` because the date & time for the event is in the past.
 
 ![concluded event](./assets/concluded-event.png)
+
+
+## Archive / Delete Event
+
+Events cannot be deleted or archived directly from the platform.
+
+If you need to hide an event, you can set the `"Event Status"` to `"Unpublished"`, `"Draft"`, or `"Cancelled"`. This will remove it from public pages without losing any data.
+
+If you need an event to be permanently removed, please reach out to [developers@fossunited.org](mailto:developers@fossunited.org).
