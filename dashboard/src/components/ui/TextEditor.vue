@@ -17,7 +17,7 @@
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleBold().run()"
         :class="{ 'bg-surface-gray-3': editor.isActive('bold') }"
-        @click="editor.chain().focus().toggleBold().run()"
+        @click="editor.chain().focus().toggleBold().run()" aria-label="Bold"
       >
         <IconBold class="w-5 h-5" />
       </button>
@@ -25,7 +25,7 @@
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleItalic().run()"
         :class="{ 'bg-surface-gray-3': editor.isActive('italic') }"
-        @click="editor.chain().focus().toggleItalic().run()"
+        @click="editor.chain().focus().toggleItalic().run()" aria-label="Italic"
       >
         <IconItalic class="w-5 h-5" />
       </button>
@@ -33,7 +33,7 @@
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleUnderline().run()"
         :class="{ 'bg-surface-gray-3': editor.isActive('underline') }"
-        @click="editor.chain().focus().toggleUnderline().run()"
+        @click="editor.chain().focus().toggleUnderline().run()" aria-label="Underline"
       >
         <IconUnderline class="w-5 h-5" />
       </button>
@@ -41,21 +41,21 @@
         class="p-1 rounded-sm"
         :disabled="!editor.can().chain().focus().toggleStrike().run()"
         :class="{ 'bg-surface-gray-3': editor.isActive('strike') }"
-        @click="editor.chain().focus().toggleStrike().run()"
+        @click="editor.chain().focus().toggleStrike().run()" aria-label="Strikethrough"
       >
         <IconStrikethrough class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('paragraph') }"
-        @click="editor.chain().focus().setParagraph().run()"
+        @click="editor.chain().focus().setParagraph().run()" aria-label="Paragraph"
       >
         <IconPilcrow class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('link') }"
-        @click="handleToggleLink(editor)"
+        @click="handleToggleLink(editor)" aria-label="Insert link"
       >
         <IconLink class="w-5 h-5" />
       </button>
@@ -64,7 +64,7 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 1 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 1 }).run()" aria-label="Heading 1"
       >
         <IconH1 class="w-5 h-5" />
       </button>
@@ -73,7 +73,7 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 2 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 2 }).run()" aria-label="Heading 2"
       >
         <IconH2 class="w-5 h-5" />
       </button>
@@ -82,7 +82,7 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 3 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 3 }).run()" aria-label="Heading 3"
       >
         <IconH3 class="w-5 h-5" />
       </button>
@@ -91,7 +91,7 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 4 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 4 }).run()" aria-label="Heading 4"
       >
         <IconH4 class="w-5 h-5" />
       </button>
@@ -100,7 +100,7 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 5 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 5 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 5 }).run()" aria-label="Heading 5"
       >
         <IconH5 class="w-5 h-5" />
       </button>
@@ -109,39 +109,39 @@
         :class="{
           'bg-surface-gray-3': editor.isActive('heading', { level: 6 }),
         }"
-        @click="editor.chain().focus().toggleHeading({ level: 6 }).run()"
+        @click="editor.chain().focus().toggleHeading({ level: 6 }).run()" aria-label="Heading 6"
       >
         <IconH6 class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
-        @click="editor.chain().focus().toggleBulletList().run()"
+        @click="editor.chain().focus().toggleBulletList().run()" aria-label="Bullet list"
       >
         <IconList class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('orderedList') }"
-        @click="editor.chain().focus().toggleOrderedList().run()"
+        @click="editor.chain().focus().toggleOrderedList().run()" aria-label="Ordered list"
       >
         <IconListNumbers class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('codeBlock') }"
-        @click="editor.chain().focus().toggleCodeBlock().run()"
+        @click="editor.chain().focus().toggleCodeBlock().run()" aria-label="Code block"
       >
         <IconCode class="w-5 h-5" />
       </button>
       <button
         class="p-1 rounded-sm"
         :class="{ 'bg-surface-gray-3': editor.isActive('blockquote') }"
-        @click="editor.chain().focus().toggleBlockquote().run()"
+        @click="editor.chain().focus().toggleBlockquote().run()" aria-label="Blockquote"
       >
         <IconBlockquote class="w-5 h-5" />
       </button>
-      <button class="p-1 rounded-sm" @click="editor.chain().focus().setHorizontalRule().run()">
+      <button class="p-1 rounded-sm" @click="editor.chain().focus().setHorizontalRule().run()" aria-label="Horizontal rule">
         <IconSeparatorHorizontal class="w-5 h-5" />
       </button>
     </section>
