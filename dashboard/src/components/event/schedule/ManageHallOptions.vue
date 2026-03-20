@@ -59,7 +59,7 @@ const addHallOption = () => {
           class="flex items-center gap-2 text-sm border p-1 rounded-xs bg-surface-gray-1"
         >
           {{ option }}
-          <button @click.prevent="handleDeleteHall(option)"><IconX class="w-3 h-3" /></button>
+         <button @click.prevent="handleDeleteHall(option)" aria-label="Delete hall"><IconX class="w-3 h-3" /></button>
         </div>
       </div>
       <textarea

@@ -19,12 +19,14 @@
             <button
               class="p-2 rounded-full bg-surface-white/20 hover:bg-surface-white/30 transition-colors"
               @click="removeImage"
+              aria-label="Remove image"
             >
               <IconTrash class="w-5 h-5 text-ink-white" />
             </button>
             <button
               class="p-2 rounded-full bg-surface-white/20 hover:bg-surface-white/30 transition-colors"
               @click="$refs.fileUploader.openFileSelector()"
+              aria-label="Upload image"
             >
               <IconEdit class="w-5 h-5 text-ink-white" />
             </button>
