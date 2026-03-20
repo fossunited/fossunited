@@ -21,6 +21,7 @@
 
 {% block navbar %}
   {% if not hide_nav %}
+  <a href="#main-content" class="skip-link">Skip to Main Content</a>
     {{ super() }}
   {% endif %}
 {% endblock %}
@@ -39,7 +40,6 @@
 </style>
 {% block page_style %}{% endblock %} {% endblock %}
  {% block content %}
- <a href="#main-content" class="skip-link">Skip to Main Content</a>
 {% block page_content %}
 <div id="main-content" class="base-placeholder">
   <h3>Your Content Goes Here.</h3>
