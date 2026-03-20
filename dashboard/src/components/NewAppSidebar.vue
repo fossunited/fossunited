@@ -75,7 +75,7 @@
 </template>
 
 <script setup>
-import { Sidebar, createResource, FeatherIcon, Popover } from 'frappe-ui'
+import { Sidebar, Button, createResource, FeatherIcon, Popover } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { inject, computed, h } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
