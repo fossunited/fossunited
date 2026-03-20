@@ -37,8 +37,22 @@
 <style>
   {% include "public/css/custom.css" %}
 </style>
-{% block page_style %}{% endblock %} {% endblock %} {% block content %} {% block page_content %}
-<div class="base-placeholder">
+{% block page_style %}{% endblock %} {% endblock %}
+ {% block content %}
+ 
+ <a href="#main-content" style="
+position:absolute;
+top:0;
+left:0;
+background:#000;
+color:#fff;
+padding:8px;
+z-index:1000;
+">
+  Skip to Main Content
+</a>
+{% block page_content %}
+<div id="main-content" class="base-placeholder"></div>
   <h3>Your Content Goes Here.</h3>
   <br />-> Change content inside "block page_content" in your page. <br />-> Include new style
   inside inside "block page_style" in your page. <br />-> Include new script inside inside "block
