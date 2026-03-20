@@ -3919,8 +3919,8 @@ a.hover-underline:hover {
   position: absolute;
   top: 0;
   left: 0;
-  background: #000;
-  color: #fff;
+  background: black;
+  color: white;
   padding: 8px;
   z-index: 1000;
 }
