@@ -11,6 +11,8 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
 />
+<link rel="stylesheet" href="/assets/fossunited/css/custom.css">
+{% endblock %}
 {% endblock %}
 
 {% set layout = layout | default("standard") %}
@@ -36,10 +38,6 @@
 <!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
 {% block style %}
   {{ super() }}
-  {% block head_include %}
-    {{ super() }}
-    <link rel="stylesheet" href="/assets/fossunited/css/custom.css">
-  {% endblock %}
   {% block page_style %}
   {% endblock %}
 {% endblock %}
