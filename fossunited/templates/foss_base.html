@@ -34,18 +34,23 @@
 
 
 <!-- Write all css in public/css/styles.css file. Or include as per requirements. -->
-{% block style %} {{ super() }}
-{% block head_include %} {{ super() }}
-<link rel="stylesheet" href="/assets/fossunited/css/custom.css">
-{% block page_style %}{% endblock %} {% endblock %}
+{% block style %}
+  {{ super() }}
+  {% block head_include %}
+    {{ super() }}
+    <link rel="stylesheet" href="/assets/fossunited/css/custom.css">
+  {% endblock %}
+  {% block page_style %}
+  {% endblock %}
+{% endblock %}
 {% block content %}
 <main id="main-content" class="base-placeholder" tabindex="-1">
-{% block page_content %}
-  <h3>Your Content Goes Here.</h3>
-  <br />-> Change content inside "block page_content" in your page.
-  <br />-> Include new style inside "block page_style" in your page.
-  <br />-> Include new script inside "block page_script" in your page.
-{% endblock %}
+  {% block page_content %}
+    <h3>Your Content Goes Here.</h3>
+    <br />-> Change content inside "block page_content" in your page.
+    <br />-> Include new style inside "block page_style" in your page.
+    <br />-> Include new script inside "block page_script" in your page.
+  {% endblock %}
 </main>
 {% endblock %}
 
@@ -54,3 +59,4 @@
    {% block page_script %}{% endblock %}
 {%- endblock -%}
 <!-- prettier-ignore-end -->
+ 
