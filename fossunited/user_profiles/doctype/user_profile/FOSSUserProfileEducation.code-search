@@ -1,0 +1,13 @@
+# Query: FOSSUserProfileEducation
+# ContextLines: 1
+
+2 results - 1 file
+
+user_profiles\doctype\user_profile\user_profile.py:
+  44      from fossunited.user_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
+  45:     ,
+  46  )
+
+  65          devto: DF.Data | None
+  66:         education: DF.Table[FOSSUserProfileEducation]
+  67          email: DF.Data | None

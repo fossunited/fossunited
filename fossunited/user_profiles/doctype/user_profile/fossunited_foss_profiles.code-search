@@ -1,0 +1,14 @@
+# Query: fossunited.foss_profiles
+# ContextLines: 1
+
+2 results - 2 files
+
+user_profiles\doctype\user_profile\test_foss_user_profile.py:
+   9  from fossunited.doctype_ids import USER_PROFILE
+  10: from .doctype.foss_user_profile.foss_user_profile import (
+  11      PrivateProfileError,
+
+user_profiles\doctype\user_profile\user_profile.py:
+  55  )
+  56: from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  57      FOSSUserSkillMultiselect,

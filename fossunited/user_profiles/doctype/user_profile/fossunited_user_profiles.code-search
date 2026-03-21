@@ -1,0 +1,18 @@
+# Query: fossunited.user_profiles
+# ContextLines: 1
+
+4 results - 1 file
+
+user_profiles\doctype\user_profile\user_profile.py:
+  43  
+  44:     from fossunited.user_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
+  45      FOSSUserProfileEducation,
+  46  )
+  47: from fossunited.user_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
+  48      FOSSUserProfileWorkExperience,
+  49  )
+  50: from fossunited.user_profiles.doctype.foss_user_projects.foss_user_projects import (
+  51      FOSSUserProjects,
+  52  )
+  53: from fossunited.user_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  54      FOSSUserSkillMultiselect,

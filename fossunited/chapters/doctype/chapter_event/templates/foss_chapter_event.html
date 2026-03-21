@@ -1,0 +1,628 @@
+{% extends 'templates/foss_base.html' %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+{% from "fossunited/templates/macros/volunteers_card.html" import people_card %}
+{% from "fossunited/templates/macros/agenda_card.html" import agenda_card %}
+{% from "fossunited/templates/macros/sponsor_card.html" import sponsor_card %}
+{% from "fossunited/templates/macros/projects_card.html" import projects_card %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+{% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
+
+{% macro cfp_block(cfp_status_block, doc) %}
+  {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
+    {% set badge_class = "v3-status--success" %}
+    {% set badge_text = "Live" %}
+    {% set badge_type = "dot" %}
+  {% elif cfp_status_block.closing_soon %}
+    {% set badge_class = "v3-status--warning" %}
+    {% set badge_text = "Closing Soon" %}
+    {% set badge_type = "dot" %}
+  {% else %}
+    {% set badge_class = "v3-status--error" %}
+    {% set badge_text = "Closed" %}
+    {% set badge_type = "icon" %}
+  {% endif %}
+
+  <div
+    class="v3-clickable cfp-card-v3"
+    onclick="window.location.href='/{{ cfp_status_block.form_route | e }}'"
+    role="button"
+    tabindex="0"
+    aria-label="Call for Proposals - {{ badge_text }}"
+    onkeypress="if(event.key==='Enter'||event.key===' ')window.location.href='/{{ cfp_status_block.form_route | e }}'"
+  >
+    <div class="ev-cfp-header">
+      <div class="ev-cfp-title">Call for Proposals</div>
+
+      <div class="v3-status {{ badge_class }}" role="status" aria-live="polite">
+        {% if badge_type == "dot" %}
+          <span class="v3-status-dot" aria-hidden="true"></span>
+        {% else %}
+          <i class="ti ti-ban v3-status-ban-icon" aria-hidden="true"></i>
+        {% endif %}
+        <span>{{ badge_text }}</span>
+      </div>
+    </div>
+
+    <div class="ev-cfp-desc">
+      {% if doc.proposal_page_description %}
+        {{ doc.proposal_page_description[:100] }}{% if doc.proposal_page_description|length > 100 %}...{% endif %}
+      {% else %}
+        Give a talk at the event, propose your ideas here and we will get back to you.
+      {% endif %}
+    </div>
+
+    <div class="ev-cfp-footer">
+        <div class="ev-cfp-deadline">
+      {% if cfp_status_block.deadline %}
+          <span>Deadline:</span>
+          <strong>{{ cfp_status_block.deadline }}</strong>
+      {% endif %}
+        </div>
+      <i class="ti ti-arrow-right" aria-hidden="true"></i>
+    </div>
+  </div>
+{% endmacro %}
+
+
+{% macro event_cover() %}
+  <div class="v3-banner-wrap">
+    <img
+      src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_logo.png' }}"
+      alt="{{ doc.event_name }} event banner"
+      class="v3-banner"
+    />
+
+    {% if event_stats and (event_stats.attending > 0 or event_stats.proposals > 0) %}
+      <div class="ev-stats" role="region" aria-label="Event statistics">
+        {% if event_stats.attending > 0 %}
+          <span>{{ event_stats.attending }} Attend{{ "ing" if status_live else "ed" }}</span>
+        {% endif %}
+        {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
+          <span aria-hidden="true">•</span>
+        {% endif %}
+        {% if event_stats.proposals > 0 %}
+          <span>{{ event_stats.proposals }} Proposals</span>
+        {% endif %}
+      </div>
+    {% endif %}
+
+{% if registration_status in ["accepted", "ticket"] %}
+    <div class="v3-status v3-status--success" role="status" aria-live="polite">
+      <i class="ti ti-discount-check-filled" aria-hidden="true"></i>
+      You've registered for this event
+    </div>
+
+    {% elif registration_status == "pending" %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-clock-filled" aria-hidden="true"></i>
+      You're on the waiting list for this event
+    </div>
+
+    {% elif registration_status == "rejected" %}
+    <div class="v3-status v3-status--error" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      Your registration was not accepted for this event
+    </div>
+    {% endif %}
+
+    {% if status_live and event_stats.attending > 0 and (not rsvp_status_block.is_published) and not doc.is_paid_event %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      Registration is closed for the event
+    </div>
+    {% endif %}
+    {% if status_concluded %}
+    <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+      <i class="ti ti-ban" aria-hidden="true"></i>
+      This event has concluded
+    </div>
+    {% endif %}
+
+
+  </div>
+{% endmacro %}
+
+{% block meta_block %}
+  {{ meta_tags(pagetitle, description, image) }}
+{% endblock %}
+
+{% block content %}
+  <style>
+    body {
+      background: var(--v3-main-bg);
+    }
+
+    .ev-main-card {
+      width: 100%;
+      max-width: 840px;
+      margin-bottom: 2rem;
+    }
+
+    .ev-title {
+      color: var(--v3-text-color);
+      font-size: 1.75rem;
+      font-weight: 600;
+      line-height: 2.1rem;
+      margin: 0.5rem 0;
+    }
+
+    .ev-detail-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ev-icon {
+      width: 2.875rem;
+      height: 2.875rem;
+      background: var(--v3-main-bg);
+      border-radius: 0.5rem;
+      border: 1px solid var(--v3-button-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .ev-icon:hover { opacity: 0.9; }
+
+    .ev-icon i {
+      font-size: 1.5rem;
+      color: var(--v3-text-color3);
+    }
+
+    .ev-detail-primary {
+      color: var(--v3-text-color3);
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+
+    .ev-detail-secondary {
+      color: var(--v3-text-color2);
+      font-size: 0.875rem;
+    }
+
+    .ev-stats {
+      padding: 0.25rem 0.5rem;
+      background: var(--v3-main-bg);
+      border-radius: 0.5rem;
+      display: flex;
+      gap: 0.375rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--v3-text-color3);
+    }
+
+    .ev-cfp-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .ev-cfp-title {
+      color: var(--v3-card-bg);
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .ev-cfp-desc {
+      font-size: 0.875rem;
+      line-height: 1.3125rem;
+      margin-bottom: 0.375rem;
+    }
+
+    .ev-cfp-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ev-cfp-deadline {
+      display: flex;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+    }
+    .ev-cfp-deadline:empty {
+      visibility: hidden;
+    }
+
+    .ev-contact {
+      padding: 1.5rem;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .ev-contact i {
+      font-size: 1rem;
+      color: var(--v3-text-color);
+    }
+
+    .ev-contact-email {
+      color: var(--v3-text-color);
+      font-size: 1rem;
+      padding-left: 0.5rem;
+    }
+
+    /* Visibility helpers */
+    .show-mobile-only {
+      display: block;
+    }
+
+    .show-desktop-only {
+      display: none;
+    }
+
+    @media (min-width: 48rem) {
+      .ev-title {
+        font-size: 2rem;
+        line-height: 2.4rem;
+      }
+
+      /* Visibility helpers */
+      .show-mobile-only {
+        display: none;
+      }
+
+      .show-desktop-only {
+        display: block;
+      }
+    }
+  </style>
+
+  <div class="v3-page ev-page">
+    <div class="v3-container">
+      <div class="d-flex justify-content-between align-items-center">
+        {{ breadcrumb(breadcrumbs) }}
+        {{ theme_toggle() }}
+      </div>
+
+      <!-- Main Event Card - Fixed 840px -->
+      <div class="v3-card ev-main-card">
+        <div class="v3-header">
+          <div class="show-mobile-only">{{ event_cover() }}</div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;">
+            <!-- Header Info -->
+            <div style="display: flex; flex-direction: column;">
+              <div style="display: flex; flex-direction: column;">
+                {{ chapter_branding_block(chapter) }}
+
+                <h1 class="ev-title">{{ doc.event_name }}</h1>
+                <div class="v3-event-tags" aria-label="Event tags">
+                  {% if doc.must_attend %}
+                    {{ event_must_attend_tag() }}
+                  {% endif %}
+                  {{ event_category_tag(doc.event_type) }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Date/Time/Location -->
+            <div style="margin-top: 3px;">
+              <div class="ev-detail-row">
+                <div
+                  class="ev-icon"
+                  onclick="downloadEventIcs()"
+                  type="button"
+                  aria-label="Add event to calendar"
+                  title="Download to calendar"
+                >
+                  <i class="ti ti-calendar-plus" aria-hidden="true"></i>
+                </div>
+                <div class="ev-detail-text">
+                  <div class="ev-detail-primary">
+                    {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
+                      {{ doc.event_start_date.strftime("%-d - ") }}{{ doc.event_end_date.strftime("%-d %B %Y") }}
+                    {% else %}
+                      {{ doc.event_end_date.strftime("%-d %B %Y") }}
+                    {% endif %}
+                  </div>
+                  <div class="ev-detail-secondary">
+                    <time datetime="{{ doc.event_start_date.isoformat() }}">
+                      {{ doc.event_start_date.strftime("%-I:%M %p") }}
+                    </time>
+                     -
+                    <time datetime="{{ doc.event_end_date.isoformat() }}">
+                      {{ doc.event_end_date.strftime("%-I:%M %p") }}
+                    </time>
+                  </div>
+                </div>
+              </div>
+
+              {% if doc.map_link %}
+              <a
+                href="{{ doc.map_link }}"
+                class="ev-detail-row ev-detail-link"
+                aria-label="View {{ doc.event_location or 'event location' }} on map"
+              >
+                {% else %}
+                <div class="ev-detail-row">
+                  {% endif %}
+                  <div class="ev-icon" aria-hidden="true"><i class="ti ti-map-pin"></i></div>
+                  <div class="ev-detail-secondary">{{ doc.event_location or 'Location TBA' }}</div>
+                  {% if doc.map_link %}
+              </a>
+              {% else %}
+            </div>
+            {% endif %}
+            </div>
+
+            <!-- Do we need to make them repeat same content? -->
+            <!-- <div class="ev-detail-row"> -->
+            <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
+            <!-- </div> -->
+            <!-- Buttons -->
+          <div>
+              <div class="v3-btn-group" role="group" aria-label="Event actions">
+                  {% if status_concluded and doc.livestream_embed_link %}
+                    <a
+                      href="{{ doc.livestream_embed_link }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="Watch event recording on YouTube"
+                    >
+                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                      <span>Watch</span>
+                    </a>
+
+                  {% elif status_live %}
+                    {% if doc.is_paid_event %}
+                      <a
+                        href="/dashboard/buy-tickets?event={{ doc.name }}"
+                        class="v3-btn v3-btn-primary"
+                        aria-label="Buy ticket for {{ doc.event_name }}"
+                      >
+                        Buy Ticket
+                      </a>
+                    {% elif doc.show_rsvp and rsvp_status_block.is_published %}
+                      {% if registration_status %}
+                        <a
+                          href="/{{ rsvp_status_block.form_route }}"
+                          class="v3-btn v3-btn-primary"
+                          aria-label="Edit your RSVP for this event"
+                        >
+                          Edit RSVP
+                        </a>
+                      {% else %}
+                        <a
+                          href="/{{ rsvp_status_block.form_route }}"
+                          class="v3-btn v3-btn-primary"
+                          aria-label="Register for {{ doc.event_name }}"
+                        >
+                          Register
+                        </a>
+                      {% endif %}
+                    {% endif %}
+                  {% endif %}
+
+                  {% if doc.show_cfp and cfp_status_block.has_doc %}
+                    <a
+                      href="{{ all_cfp_link }}"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="View all talk proposals"
+                    >
+                      TALK PROPOSALS
+                      <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+                    </a>
+                  {% endif %}
+
+
+                  {% if can_manage_event %}
+                <a
+                  href="{{ event_dashboard_url }}"
+                  class="v3-btn v3-btn-secondary v3-btn-icon-only"
+                  aria-label="Edit event details"
+                >
+                  <i class="ti ti-edit" aria-hidden="true"></i>
+                </a>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+
+            <!-- Banner -->
+            <div class="show-desktop-only">{{ event_cover() }}</div>
+          </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="v3-grid">
+          <!-- Main Column -->
+          <main class="v3-content-main">
+            <!-- About -->
+            {% if doc.event_description %}
+              <section class="v3-card ev-about-section" aria-labelledby="about-heading">
+                <h2 class="v3-section-title" id="about-heading">
+                  <i class="ti ti-info-square" aria-hidden="true"></i>
+                  <span>About</span>
+                </h2>
+
+                {% if status_live and doc.livestream_link %}
+                <a
+                  href="{{ doc.livestream_link }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="v3-btn v3-btn-dark mb-3 w-100"
+                  aria-label="Join livestream"
+                >
+                  <i class="ti ti-video" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                  <span>Livestream Link</span>
+                </a>
+                {% endif %}
+
+                <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
+                  {{ doc.event_description }}
+                </div>
+              </section>
+            {% endif %}
+
+            <!-- CFP Card (Mobile) -->
+            {% if doc.show_cfp and cfp_status_block.has_doc %}
+              <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
+            {% endif %}
+
+            <!-- Schedule -->
+            {% if doc.show_schedule and schedule_data %}
+              <section class="ev-agenda-section" aria-labelledby="schedule-heading">
+                <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
+                {{ agenda_card(schedule_data, doc.route, 10) }}
+              </section>
+            {% endif %}
+
+            {% if doc.project_showcase %}
+              <section aria-labelledby="projects-heading">
+                <h2 id="projects-heading" class="sr-only">Project Showcase</h2>
+                {{ projects_card(doc.project_showcase, "Project Showcase", "ti-code") }}
+              </section>
+            {% endif %}
+
+            <!-- Sponsors -->
+            {% if sponsors_dict %}
+              <section class="ev-sponsors-section" aria-labelledby="sponsors-heading">
+                <h2 id="sponsors-heading" class="sr-only">Event Sponsors</h2>
+                {{ sponsor_card(sponsors_dict, doc.deck_link) }}
+              </section>
+            {% endif %}
+
+            {% if doc.community_partners %}
+              <section aria-labelledby="partners-heading">
+                <h2 id="partners-heading" class="sr-only">Community Partners</h2>
+                {{ projects_card(doc.community_partners, "Community Partners", "ti-users") }}
+              </section>
+            {% endif %}
+          </main>
+
+          <!-- Sidebar -->
+          <div class="v3-content-sidebar" aria-label="Event information sidebar">
+            <!-- CFP Card (Desktop) -->
+            {% if doc.show_cfp and cfp_status_block.has_doc %}
+              <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
+            {% endif %}
+
+            <!-- Speakers -->
+            {% if doc.show_speakers and speakers %}
+              <section class="ev-speakers-section" aria-labelledby="speakers-heading">
+                <h2 id="speakers-heading" class="sr-only">Event Speakers</h2>
+                {{ people_card(speakers, 'speakers', submissions) }}
+              </section>
+            {% endif %}
+
+            <!-- Volunteers -->
+            {% if volunteers %}
+              <section class="ev-volunteers-section" aria-labelledby="volunteers-heading">
+                <h2 id="volunteers-heading" class="sr-only">Event Volunteers</h2>
+                {{ people_card(volunteers, 'volunteers') }}
+              </section>
+            {% endif %}
+
+            <!-- Contact -->
+            <section class="v3-card ev-contact" aria-labelledby="contact-heading">
+              <h2 id="contact-heading" class="sr-only">Contact Information</h2>
+              {% if chapter.email %}
+              <div class="d-flex align-items-center">
+                <i class="ti ti-mail" aria-hidden="true"></i>
+                <div class="ev-contact-email">
+                  <a
+                    href="mailto:{{ chapter.email }}"
+                    aria-label="Email {{ chapter.email }}"
+                  >
+                    {{ chapter.email }}
+                  </a>
+                </div>
+              </div>
+              {% endif %}
+
+              {% if social_links %}
+              <nav class="header-section--socials-event mt-2" aria-label="Social media links">
+                {% for (k,v) in social_links.items() %}
+                <a
+                  href="{{ v }}"
+                  aria-label="{{ k|title }} page for {{ doc.chapter_name }} chapter"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src="https://svgl.app/library/{{ k }}.svg"
+                    alt="{{ k|title }} icon"
+                  />
+                </a>
+                {% endfor %}
+              </nav>
+              {% endif %}
+            </section>
+
+            <!-- Map -->
+            {% if map_lat and map_lng %}
+              <link
+                rel="stylesheet"
+                href="/assets/frappe/js/lib/leaflet/leaflet.css"
+              />
+              <script
+                src="/assets/frappe/js/lib/leaflet/leaflet.js"
+              ></script>
+
+              <div
+                class="v3-clickable ev-map-section"
+                role="button"
+                tabindex="0"
+                aria-label="Open location in map"
+              >
+                <div
+                  id="osm-map-{{ doc.event_location | default('main') }}"
+                  class="ev-map"
+                  style="width: 100%; height: 5.0625rem; border-radius: 1rem; border: 1px solid var(--v3-button-border); cursor: pointer;"
+                ></div>
+              </div>
+
+              <script>
+            (function () {
+                 var lat = {{ map_lat }}
+                 var lng = {{ map_lng }}
+                 var mapLink = '{{ doc.map_link | e }}'
+                 var mapId = 'osm-map-{{ doc.event_location| e | default("main") }}'
+                 var element = document.getElementById(mapId)
+
+                 if (element) {
+                   var map = L.map(element).setView([lat, lng], 14)
+
+                   map.attributionControl.setPrefix('')
+                   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                     maxZoom: 19,
+                   }).addTo(map)
+
+                   L.marker([lat, lng])
+                     .addTo(map)
+                     <!-- .bindPopup('{{ doc.event_location | e }}') -->
+                     <!-- .openPopup() -->
+
+                   element.addEventListener('click', function (e) {
+                     window.open(mapLink, '_blank')
+                   })
+
+                   element.addEventListener('keypress', function (e) {
+                     if (e.key === 'Enter' || e.key === ' ') {
+                       window.open(mapLink, '_blank')
+                     }
+                   })
+                 }
+               })()
+              </script>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- from 'fossunited/templates/macros/ics_download.html' import ics_download -%}
+    {{ ics_download(
+      event_ids=[doc.name],
+      filename=doc.event_name.replace(' ', '_') + '.ics',
+      fn_name='downloadEventIcs',
+    ) }}
+  </div>
+{% endblock %}

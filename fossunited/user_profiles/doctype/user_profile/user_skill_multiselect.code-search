@@ -1,0 +1,12 @@
+# Query: user_skill_multiselect
+# ContextLines: 1
+
+4 results - 1 file
+
+fossunited\fossunited\user_profiles\doctype\user_profile\user_profile.py:
+  52  )
+  53: from fossunited.user_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  54      FOSSUserSkillMultiselect,
+  55  )
+  56: from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  57      FOSSUserSkillMultiselect,

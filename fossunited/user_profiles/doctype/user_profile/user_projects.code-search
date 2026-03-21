@@ -1,0 +1,9 @@
+# Query: user_projects
+# ContextLines: 1
+
+2 results - 1 file
+
+fossunited\fossunited\user_profiles\doctype\user_profile\user_profile.py:
+  49  )
+  50: from fossunited.user_profiles.doctype.foss_user_projects.foss_user_projects import (
+  51      FOSSUserProjects,

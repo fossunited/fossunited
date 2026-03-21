@@ -1,0 +1,3652 @@
+# Query: event_
+# ContextLines: 1
+
+1260 results - 130 files
+
+fossunited\tailwind.config.js:
+  11      './fossunited/foss_hackathon/doctype/foss_hackathon_localhost/**/*.html',
+  12:     './fossunited/fossunited/doctype/foss_event_cfp_submission/**/*.html',
+  13    ],
+
+fossunited\.github\workflows\linters.yml:
+  31        - name: Install Semgrep
+  32:         if: github.event_name == 'pull_request'
+  33          run: pip install semgrep
+
+  35        - name: Download Frappe Semgrep rules
+  36:         if: github.event_name == 'pull_request'
+  37          run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
+
+  39        - name: Run Semgrep
+  40:         if: github.event_name == 'pull_request'
+  41          run: semgrep ci --config ./frappe-semgrep-rules/rules
+
+  46      name: Validate PR title
+  47:     if: github.event_name == 'pull_request'
+  48      runs-on: ubuntu-latest
+
+fossunited\dashboard\src\components\EventCard.vue:
+   2    <Card
+   3:     :title="event.event_name"
+   4      class="border-2 border-transparent hover:border-outline-gray-4 transition-colors hover:cursor-pointer"
+
+  20        {{
+  21:         new Date(event.event_start_date).toLocaleDateString('en-IN', {
+  22            day: 'numeric',
+
+fossunited\dashboard\src\components\EventHeader.vue:
+  10        <div class="prose">
+  11:         <h1>{{ event.event_name }}</h1>
+  12        </div>
+
+  26        <div>
+  27:         {{ event.event_type }}
+  28        </div>
+
+  31          <span>
+  32:           {{ getFormattedDate(event.event_start_date) }}
+  33          </span>
+  34:         <span v-if="event.event_start_date != event.event_end_date">
+  35:           - {{ getFormattedDate(event.event_end_date) }}
+  36          </span>
+
+fossunited\dashboard\src\components\cfp-public\EventHeader.vue:
+   2    <div class="flex flex-col md:flex-row gap-3 md:gap-6 items-center md:items-start">
+   3:     <EventLogo v-if="cfpData.data.event.event_logo" :logo-path="cfpData.data.event.event_logo" />
+   4      <div class="flex flex-col gap-3 flex-grow w-full">
+
+   7        >
+   8:         <h2 class="font-semibold">{{ cfpData.data.event_name }}</h2>
+   9          <a
+
+  42        icon: IconMapPin,
+  43:       label: cfpData.data.event.event_location || 'TBD',
+  44      },
+
+  47        label: getFormattedEventDate(
+  48:         cfpData.data.event.event_start_date,
+  49:         cfpData.data.event.event_end_date,
+  50        ),
+
+  53        icon: IconClock,
+  54:       label: `${getFormattedTime(cfpData.data.event.event_start_date) + ' - ' + getFormattedTime(cfpData.data.event.event_end_date)}`,
+  55      },
+
+fossunited\dashboard\src\components\cfp-public\SubmissionsListView.vue:
+  23  const submissions = createResource({
+  24:   url: 'fossunited.api.proposal.get_event_proposals',
+  25    params: {
+
+  42        : []
+  43:     submissions.eventRoute = response?.event_route || ''
+  44:     submissions.eventName = response?.event_name || 'submissions'
+  45  
+
+fossunited\dashboard\src\components\cfp-submission-edit\SubmissionHeader.vue:
+  7      <div class="flex gap-2 text-base items-center">
+  8:       <span>{{ submission.event_name }}</span>
+  9        <Badge :theme="badgeTheme[submission.status]" :label="submission.status" />
+
+fossunited\dashboard\src\components\chapter\AddMember.vue:
+  94    if (props.event) {
+  95:     return props.event.doc.event_members.map((member) => member.member)
+  96    }
+
+fossunited\dashboard\src\components\common\EventHeader.vue:
+  17        icon: IconMapPin,
+  18:       label: props.event.event_location || 'TBD',
+  19      },
+
+  21        icon: IconCalendarWeek,
+  22:       label: getFormattedEventDate(props.event.event_start_date, props.event.event_end_date),
+  23      },
+
+  25        icon: IconClock,
+  26:       label: `${getFormattedTime(props.event.event_start_date) + ' - ' + getFormattedTime(props.event.event_end_date)}`,
+  27      },
+
+  36        <slot name="logo">
+  37:         <EventLogo v-if="event.event_logo" :logo-path="event.event_logo" />
+  38        </slot>
+
+  42          >
+  43:           <h2 class="font-semibold">{{ event.event_name }}</h2>
+  44            <a
+
+fossunited\dashboard\src\components\event\CheckinConfirmationDialog.vue:
+  142      return {
+  143:       event_id: route.params.id,
+  144        attendee: { name: props.selectedAttendee?.name },
+
+fossunited\dashboard\src\components\event\CheckinManageDialog.vue:
+  117      return {
+  118:       event_id: route.params.id,
+  119        attendee: props.selectedAttendee,
+
+  134      return {
+  135:       event_id: route.params.id,
+  136        attendee: props.selectedAttendee,
+
+fossunited\dashboard\src\components\event\FreeTicketCodeSection.vue:
+  37        item-label="free coupons"
+  38:       export-filename="event_coupons"
+  39        :options="{
+
+  89  const freeCodes = createResource({
+  90:   url: 'fossunited.api.tickets.get_event_free_codes',
+  91    makeParams() {
+
+fossunited\dashboard\src\components\event\TicketList.vue:
+  12      item-label="attendees"
+  13:     export-filename="event_attendees"
+  14      :export-columns="[{ label: 'Tier', key: 'tier' }, ...columns]"
+
+  53      return {
+  54:       event_id: props.event.data.name,
+  55      }
+
+fossunited\dashboard\src\components\event\cfp\InsightsGrid.vue:
+  17      return {
+  18:       event_id: props.eventId,
+  19      }
+
+fossunited\dashboard\src\components\event\schedule\ManageDates.vue:
+  39  const handleRemoveScheduleDate = () => {
+  40:   event.doc.event_schedule = event.doc.event_schedule.filter(
+  41      (item) => item.scheduled_date !== dateToRemove.value,
+
+  43  
+  44:   emit('update:schedule', event.doc.event_schedule)
+  45    emit('reset:selected-schedule')
+
+fossunited\dashboard\src\components\profile\SubmissionListItem.vue:
+  16          <Badge class="!rounded-sm" :theme="getTheme[proposal.status]">{{ proposal.status }}</Badge>
+  17:         <span class="text-sm uppercase pl-2">{{ proposal.event_name }}</span>
+  18          <span class="text-sm uppercase pl-2">{{ proposal.chapter }}</span>
+
+fossunited\dashboard\src\components\proposals\AllProposalsBanner.vue:
+  11            <span v-else>
+  12:             Explore the proposals for {{ event.event_name }}, that offers a wide array of sessions.
+  13            </span>
+
+fossunited\dashboard\src\components\reviewers\ReviewListItem.vue:
+  10        </div>
+  11:       <h4 class="text-lg font-semibold">{{ event.event_name }}</h4>
+  12      </div>
+
+fossunited\dashboard\src\components\schedule\EventHeader.vue:
+   3      <router-link :to="`/${event.route}`" class="flex gap-2 items-center no-underline text-inherit">
+   4:       <div v-if="event.event_logo">
+   5:         <img :src="event.event_logo" :alt="event.event_name + ' Logo'" class="h-8" />
+   6        </div>
+
+  12        <div class="text-2xl">|</div>
+  13:       <h2 class="text-lg font-semibold">{{ event.event_name }}</h2>
+  14      </router-link>
+
+  24          >
+  25:           {{ event.event_location }}
+  26          </a>
+  27          <div v-else class="text-sm">
+  28:           {{ event.event_location }}
+  29          </div>
+
+  32        <div>
+  33:         <span v-if="dayjs(event.event_start_date).date() != dayjs(event.event_end_date).date()">
+  34:           {{ dayjs(event.event_start_date).format('Do') }} -
+  35          </span>
+  36:         <span>{{ dayjs(event.event_end_date).format('Do MMM YYYY') }}</span>
+  37        </div>
+
+fossunited\dashboard\src\components\schedule\SessionCard.vue:
+  109    let icsEvent = {
+  110:     title: `${props.session.title} - ${event.data.event_name}`,
+  111      start: formatTimeForIcs(props.session.start_time),
+  112      end: formatTimeForIcs(props.session.end_time),
+  113:     location: `${props.session.hall}, ${event.data.event_location}`,
+  114      categories: [
+
+  122      action: 'display',
+  123:     description: `Session Reminder: ${props.session.title} | ${event.data.event_name}`,
+  124      trigger: { minutes: 10, before: true },
+
+  127      action: 'audio',
+  128:     description: `Session Reminder: ${props.session.title} | ${event.data.event_name}`,
+  129      trigger: { minutes: 10, before: true },
+
+fossunited\dashboard\src\helpers\cfp.js:
+  417        return {
+  418:         event_id: eventId,
+  419        }
+
+fossunited\dashboard\src\helpers\event.js:
+  18  
+  19: export const isEventOrganizer = async (event_id) => {
+  20    const isOrganizer = ref(false)
+
+  26        filters: {
+  27:         name: event_id,
+  28        },
+
+fossunited\dashboard\src\pages\BuyTickets.vue:
+   16          <a :href="redirectToEvent" class="font-semibold text-base hover:underline">{{
+   17:           event.data.event_name
+   18          }}</a>
+
+   38          <h1 class="text-[2rem] font-bold">
+   39:           Book Conference Tickets for {{ event.data.event_name }}
+   40          </h1>
+
+  220                        variant="subtle"
+  221:                       :label="`Yes, I'd like to receive email updates about future events from ${event.data.event_name}.`"
+  222                      />
+
+  668      },
+  669:     event.data.event_name,
+  670    )
+
+  678      return {
+  679:       event_id: eventName.value,
+  680      }
+
+fossunited\dashboard\src\pages\ChapterEvents.vue:
+  59      ['chapter', '=', route.params.id],
+  60:     ['event_end_date', '>', today()],
+  61    ],
+  62:   orderBy: 'event_start_date asc',
+  63    auto: true,
+
+  70      ['chapter', '=', route.params.id],
+  71:     ['event_start_date', '<', today()],
+  72    ],
+  73:   orderBy: 'event_start_date desc',
+  74    auto: true,
+
+fossunited\dashboard\src\pages\CreateEventForm.vue:
+   18              <FormControl
+   19:               v-model="temp_event.event_type"
+   20                type="select"
+
+   25              <FormControl
+   26:               v-model="temp_event.event_name"
+   27                :type="'text'"
+
+   31              <FormControl
+   32:               v-model="temp_event.event_permalink"
+   33                :type="'text'"
+
+   68                placeholder="Write an event description"
+   69:               :model-value="temp_event.event_description"
+   70:               @update:model-value="($event) => (temp_event.event_description = $event)"
+   71              />
+
+   99              <FormControl
+  100:               v-model="temp_event.event_start_date"
+  101                :type="'datetime-local'"
+
+  105              <FormControl
+  106:               v-model="temp_event.event_end_date"
+  107                :type="'datetime-local'"
+
+  151    chapter: route.params.id,
+  152:   event_name: '',
+  153:   event_permalink: '',
+  154    status: '',
+  155:   event_type: '',
+  156:   event_description: '',
+  157    location: 'TBD',
+  158    map_link: '',
+  159:   event_start_date: '',
+  160:   event_end_date: '',
+  161  })
+
+  172        doctype_name: 'FOSS Chapter Event',
+  173:       fieldname: 'event_type',
+  174      }
+
+  216  
+  217:   if (!temp_event.event_type) {
+  218      errors.push('Event Type is required')
+
+  220  
+  221:   if (!temp_event.event_name) {
+  222      errors.push('Event Name is required')
+
+  224  
+  225:   if (!temp_event.event_permalink) {
+  226      errors.push('Permalink is required')
+
+  232  
+  233:   if (!temp_event.event_description) {
+  234      errors.push('Event description is required')
+
+  242  
+  243:   if (!temp_event.event_start_date) {
+  244      errors.push('Start Date is required')
+
+  246  
+  247:   if (!temp_event.event_end_date) {
+  248      errors.push('End date is required')
+
+  250  
+  251:   if (dayjs(temp_event.event_end_date).isBefore(dayjs(temp_event.event_start_date))) {
+  252      errors.push('End date cannot be before start date')
+
+  259    const input = event.target?.value ?? ''
+  260:   temp_event.event_permalink = sluggify(input)
+  261  }
+
+  272  const getEventLink = () => {
+  273:   const slug = sluggify(temp_event.event_permalink || '')
+  274    const baseRoute = chapter.doc?.route ? `${chapter.doc?.route}` : ''
+  275:   const event_route = createAbsoluteUrlFromRoute(`${baseRoute}/${slug}`)
+  276:   return event_route.replace(/(^\w+:|^)\/\//, '')
+  277  }
+
+fossunited\dashboard\src\pages\EventCfpManage.vue:
+  15    </div>
+  16:   <div v-if="cfp_exists && event_cfp.data">
+  17      <div class="px-4 py-8 md:p-8">
+
+  46  let cfp_exists = ref(false)
+  47: let event_cfp = reactive({})
+  48  
+  49  watch(event, (newEvent) => {
+  50:   event_cfp = createResource({
+  51      url: 'frappe.client.get',
+
+fossunited\dashboard\src\pages\EventCheckins.vue:
+  190    return {
+  191:     title: `Check-ins | ${event.data?.event_name}`,
+  192    }
+
+  198      return {
+  199:       event_id: route.params.id,
+  200        filters: {},
+
+  209      return {
+  210:       event_id: route.params.id,
+  211      }
+
+fossunited\dashboard\src\pages\EventDetails.vue:
+   78          <FormControl
+   79:           v-model="event.doc.event_permalink"
+   80            :type="'text'"
+
+  106          </div>
+  107:         <FormControl v-model="event.doc.event_name" :type="'text'" size="md" label="Event Name" />
+  108          <FormControl
+
+  133          <FormControl
+  134:           v-model="event.doc.event_type"
+  135            :type="'select'"
+
+  140          <FormControl
+  141:           v-model="event.doc.event_bio"
+  142            :type="'text'"
+
+  156            class="col-span-2"
+  157:           :model-value="event.doc.event_description"
+  158:           @update:model-value="($event) => (event.doc.event_description = $event)"
+  159          />
+
+  165          <FormControl
+  166:           v-model="event.doc.event_start_date"
+  167            :type="'datetime-local'"
+
+  171          <FormControl
+  172:           v-model="event.doc.event_end_date"
+  173            :type="'datetime-local'"
+
+  200          <FormControl
+  201:           v-model="event.doc.event_location"
+  202            :type="'text'"
+
+  278    }
+  279:   return '/assets/fossunited/images/defaults/event_banner.png'
+  280  }
+
+  297        doctype_name: 'FOSS Chapter Event',
+  298:       fieldname: 'event_type',
+  299      }
+
+  330    const input = eventInput.target?.value ?? ''
+  331:   event.doc.event_permalink = sluggify(input)
+  332  }
+
+  351  const getEventLink = () => {
+  352:   const slug = sluggify(event.doc.event_permalink || '')
+  353:   const event_route = createAbsoluteUrlFromRoute(chapter.data?.route + '/' + slug)
+  354:   return event_route.replace(/(^\w+:|^)\/\//, '')
+  355  }
+
+fossunited\dashboard\src\pages\EventRsvp.vue:
+   6        :form-exists="Boolean(has_rsvp.data)"
+   7:       :form="event_rsvp"
+   8      />
+
+  16  
+  17:     <RouterView :event_rsvp="event_rsvp" @rsvp-created="rsvpCreated" />
+  18    </div>
+
+  60      if (data > 0) {
+  61:       event_rsvp.fetch()
+  62        tabs.options.push({
+
+  78  
+  79: const event_rsvp = createResource({
+  80    url: 'frappe.client.get',
+
+fossunited\dashboard\src\pages\EventRsvpInsights.vue:
+  187    url: 'fossunited.api.rsvp.get_submissions_with_answers',
+  188:   params: { event_id: route.params.id },
+  189    auto: true,
+
+  193    url: 'fossunited.api.rsvp.get_rsvp_checkins',
+  194:   params: { event_id: route.params.id },
+  195    auto: true,
+
+  199    url: 'fossunited.api.rsvp.if_rsvp_show_checkins',
+  200:   params: { event_id: route.params.id },
+  201    auto: true,
+
+  205    url: 'fossunited.api.rsvp.get_rsvp_checkin_stats',
+  206:   params: { event_id: route.params.id },
+  207    auto: true,
+
+  387      await frappeRequest({
+  388:       url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
+  389        params: { submission_name: row.name },
+
+  408      await frappeRequest({
+  409:       url: 'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.remove_checkin_for_today',
+  410        params: { submission_name: row.name },
+
+fossunited\dashboard\src\pages\EventRsvpManage.vue:
+  18    </div>
+  19:   <div v-if="rsvp_exists && event_rsvp.data">
+  20      <div class="p-4 md:p-8">
+
+  48  let rsvp_exists = ref(false)
+  49: let event_rsvp = reactive({})
+  50  
+  51  watch(event, (newEvent) => {
+  52:   event_rsvp = createResource({
+  53      url: 'frappe.client.get',
+
+fossunited\dashboard\src\pages\EventSchedule.vue:
+   22  
+   23:   event.doc?.event_schedule.forEach((schedule) => {
+   24      if (schedule.scheduled_date in schedule_dict) {
+
+   43  const linkedCfpSubmissions = computed(() => {
+   44:   return event.doc?.event_schedule.map((schedule) => schedule.linked_cfp)
+   45  })
+
+   93      is_new: true,
+   94:     idx: event.doc.event_schedule.length + 1,
+   95      title: 'Placeholder Event',
+
+  105  
+  106:   event.doc.event_schedule.push(newScheduleItem)
+  107  }
+
+  109  const handleRemoveScheduleItem = (item) => {
+  110:   event.doc.event_schedule = event.doc.event_schedule.filter(
+  111      (schedule) => schedule.name != item.name,
+
+  113  
+  114:   event.doc.event_schedule.forEach((schedule, index) => {
+  115      schedule.idx = index + 1
+
+  124  const handleUpdateSchedule = () => {
+  125:   event.doc.event_schedule.forEach((schedule) => {
+  126      if (schedule.is_new) {
+
+  133    })
+  134:   event.doc.event_schedule.forEach((schedule, index) => {
+  135      schedule.idx = index + 1
+
+  138    event.setValue.submit({
+  139:     event_schedule: event.doc.event_schedule,
+  140    })
+
+  144    return [
+  145:     { label: event.doc?.event_name, onClick: () => redirectRoute(event.doc?.route) },
+  146      { label: 'Schedule' },
+
+  217            v-if="selectedScheduleItemIndex"
+  218:           v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"
+  219            @update:schedule="handleUpdateSchedule"
+
+  225          v-model:show="showModifyScheduleItemDrawer"
+  226:         v-model="event.doc.event_schedule[selectedScheduleItemIndex - 1]"
+  227          @update:schedule="handleUpdateSchedule"
+
+fossunited\dashboard\src\pages\EventTicketInsights.vue:
+  73      return {
+  74:       event_id: props.event.data.name,
+  75      }
+
+  91      return {
+  92:       event_id: props.event.data.name,
+  93      }
+
+fossunited\dashboard\src\pages\EventVolunteers.vue:
+   18      <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+   19:       <Card v-for="member in event.doc.event_members" :key="member.name" :title="member.full_name">
+   20          <template v-if="member.email != session.user && isCoreTeam()" #actions>
+
+  106  const isCoreTeam = () => {
+  107:   const me = event.doc?.event_members?.find((m) => m.email === session.user)
+  108    return me ? me.role === 'Core Team Member' : false
+
+  127    showEditmodal.value = false
+  128:   let updatedMembers = event.doc.event_members
+  129    updatedMembers.forEach((m, idx) => {
+
+  135    event.setValue.submit({
+  136:     event_members: updatedMembers,
+  137    })
+
+  140  const addNewMember = (newMembers, role) => {
+  141:   const updatedMembers = event.doc.event_members.concat(
+  142      newMembers.map((value, idx) => {
+  143        return {
+  144:         idx: event.doc.event_members.length + idx + 1,
+  145          member: value.value,
+
+  150    event.setValue.submit({
+  151:     event_members: updatedMembers,
+  152    })
+
+  163  const removeMember = (member) => {
+  164:   const updatedMembers = event.doc.event_members.filter((m) => m.idx !== member.idx)
+  165    updatedMembers.forEach((m, idx) => {
+
+  168    event.setValue.submit({
+  169:     event_members: updatedMembers,
+  170    })
+
+fossunited\dashboard\src\pages\QuickEventCheckin.vue:
+  149      const res = await call('fossunited.api.checkins.get_attendee_with_checkin_data', {
+  150:       event_id: route.params.id,
+  151        filters: {
+
+fossunited\dashboard\src\pages\TicketTransfer.vue:
+  45                  <FormControl
+  46:                   v-model="event.data.event_name"
+  47                    label="Event"
+
+fossunited\dashboard\src\pages\cfp\CfpForm.vue:
+  143    return {
+  144:     title: 'Apply CFP | ' + cfpData.data?.event_name,
+  145    }
+
+  149    {
+  150:     label: cfpData.data?.event_name,
+  151      link: `/c/${route.params.route}`,
+
+  164      if (newData) {
+  165:       breadcrumb_items.value[0].label = newData.event_name
+  166      }
+
+fossunited\dashboard\src\pages\events\AllProposals.vue:
+  26    onSuccess(data) {
+  27:     breadcrumb_items.value[1].label = data.event_name
+  28    },
+
+  42    {
+  43:     label: cfpData.data?.event_name,
+  44      link: `/c/${route.params.route}`,
+
+  52    return {
+  53:     title: 'All Proposals | ' + cfpData.data?.event_name,
+  54    }
+
+  73              class="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
+  74:             v-html="cleanedHTML(cfpData.data.event.event_description)"
+  75            ></div>
+
+fossunited\dashboard\src\pages\profile\MyProposals.vue:
+  35          'status',
+  36:         'event_name',
+  37          'session_type',
+
+fossunited\dashboard\src\pages\reviewers\ReviewPage.vue:
+   23            <div class="prose">
+   24:             <h2>{{ event.data.event_name }}</h2>
+   25            </div>
+   26            <span class="text-sm text-ink-gray-6">
+   27:             {{ dayjs(event.data.event_start_date).format('D MMM YYYY') }}
+   28            </span>
+
+   84        },
+   85:       fields: ['name', 'event_name', 'route', 'event_start_date', 'event_end_date'],
+   86      }
+
+   90      breadcrumbItems.value.push({
+   91:       label: data.event_name,
+   92        link: `${window.location.origin}/${data.route}`,
+
+  105    return {
+  106:     title: `Review | ${event.data?.event_name}`,
+  107    }
+
+fossunited\dashboard\src\pages\schedule\Schedule.vue:
+   75  const event = createResource({
+   76:   url: 'fossunited.api.dashboard.get_event_from_route',
+   77    makeParams() {
+
+   85      if (!data.schedule_page_description) {
+   86:       data.schedule_page_description = `Explore the full schedule for ${data.event_name} to plan your experience. From keynote sessions and workshops to panel discussions and networking breaks, our schedule is designed to offer a balanced mix of learning, inspiration, and collaboration.`
+   87      }
+
+   96  const schedule = createResource({
+   97:   url: 'fossunited.api.schedule.get_event_schedule',
+   98    makeParams() {
+   99      return {
+  100:       event_id: event.data.name,
+  101      }
+
+  122      {
+  123:       label: event.data.event_name,
+  124        link: event.data.has_external_webpage
+  125:         ? event.data.external_event_url
+  126          : getRedirectRoute(event.data.route),
+
+  135    return {
+  136:     title: `${event.data.event_name} Schedule`,
+  137    }
+
+fossunited\docs\zensical.toml:
+  28      {"Creating Event Schedule" = "event-schedule.md"},
+  29:     {"Event Mailing" = "event_mailing.md"},
+  30      {"What to Do at the Event" = "event.md"}
+
+fossunited\docs\docs\changelog.md:
+  267  - [#1379](https://github.com/fossunited/fossunited/pull/1379) **Event Grant Doctype Updates**
+  268:   Added new fields (`event_description`, status options like "Ongoing" and "Disbursed") to Event Grant doctype for better tracking via web forms.
+  269  
+
+  318  - [#1342](https://github.com/fossunited/fossunited/pull/1342) **Edit Event Button for Concluded Events**
+  319:   Added "Edit Event" button visible to organisers even for concluded events. Uses proper permission checks via `check_if_chapter_or_event_core_member`.
+  320    Credits: [@Pranav1921](https://github.com/Pranav1921)
+
+  782    Related issue [#1144](https://github.com/fossunited/fossunited/issues/1144) and PR [#1145](https://github.com/fossunited/fossunited/pull/1145)
+  783: - [#1128](https://github.com/fossunited/fossunited/pull/1128) Small Doc on purpose of `event_permalink`
+  784    Some users might confuse with the term permalink, so added some doc to give info that it means page 'route' (alias)
+
+fossunited\docs\docs\localhost.md:
+  34  
+  35: - Please read [Event mailing](event_mailing.md) to know how to use.
+  36  - You'll only see Recipients as "Event Participants" with count, those are the participants email that have been accepted. You can go ahead and choose to send email to them all.
+
+fossunited\fossunited\doctype_ids.py:
+  28  # Event-related identifiers
+  29: EVENT_VOLUNTEER = "FOSS Chapter Event Member"
+  30: EVENT_SCHEDULE = "FOSS Event Schedule"
+  31  
+  32  # Event proposal-related identifiers
+  33: EVENT_CFP = "FOSS Event CFP"
+  34  PROPOSAL = "FOSS Event CFP Submission"
+
+  39  # Event RSVP-related identifiers
+  40: EVENT_RSVP = "FOSS Event RSVP"
+  41  RSVP_RESPONSE = "FOSS Event RSVP Submission"
+  42  RSVP_CUSTOM_FIELD = "FOSS Custom Answer"
+  43: EVENT_CHECKIN = "Event Check In"
+  44  
+  45  # Ticket-related identifiers
+  46: EVENT_TICKET = "FOSS Event Ticket"
+  47  TICKET_TRANSFER = "FOSS Event Ticket Transfer"
+
+  73  PROJ_GRANTS = "FOSS Project Grant"
+  74: EVENT_GRANTS = "FOSS Event Grant"
+
+fossunited\fossunited\hooks.py:
+  28      {
+  29:         "from_route": "/<path:event_route>/rsvp/<submission>/edit",
+  30          "to_route": "/rsvp/submission/edit",
+
+  78          "on_update": [
+  79:             "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.handle_payment_on_update"
+  80          ],
+  81          "before_insert": [
+  82:             "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.validate_payment_before_insert"
+  83          ],
+
+fossunited\fossunited\patches.txt:
+   6  # Patches added in this section will be executed after doctypes are migrated
+   7: fossunited.patches.v1_0.duplicate_event_name_to_reference_field  #31-12-2024
+   8  fossunited.patches.v1_0.handle_sharing_all_existing_profiles
+
+  10  fossunited.patches.v1_0.convert_lead_to_core_team_chapters
+  11: fossunited.patches.v1_0.convert_event_type_new_option
+  12  fossunited.patches.v1_0.set_jobs_route
+
+fossunited\fossunited\scheduled_tasks.py:
+   5      EVENT,
+   6:     EVENT_CFP,
+   7:     EVENT_RSVP,
+   8      JOB,
+
+  23              "status": "Live",
+  24:             "event_end_date": ["<", now_datetime()],
+  25          },
+  26:         ["name", "status", "event_end_date", "event_start_date"],
+  27          page_length=999,
+
+  38  
+  39:             rsvps = frappe.get_all(EVENT_RSVP, filters={"event": doc.name}, fields=["name"])
+  40              for r in rsvps:
+  41:                 frappe.db.set_value(EVENT_RSVP, r.name, "is_published", 0)
+  42  
+  43:             cfps = frappe.get_all(EVENT_CFP, filters={"event": doc.name}, fields=["name"])
+  44              for c in cfps:
+  45:                 frappe.db.set_value(EVENT_CFP, c.name, "status", "Closed")
+  46  
+
+fossunited\fossunited\api\cfp.py:
+    7      EVENT,
+    8:     EVENT_CFP,
+    9      PROPOSAL,
+
+   24              "name",
+   25:             "event_name",
+   26:             "event_logo",
+   27:             "event_location",
+   28:             "event_start_date",
+   29:             "event_end_date",
+   30:             "event_description",
+   31          ],
+
+   34  
+   35:     cfp = frappe.get_doc(EVENT_CFP, {"event": event.name}).as_dict()
+   36      cfp.event = event
+
+   41  @frappe.whitelist(allow_guest=True)
+   42: def get_cfp_submissions_insight(event_id: str) -> list:
+   43:     cfp_form_id = frappe.db.get_value(EVENT_CFP, {"event": event_id}, "name")
+   44  
+
+   81  
+   82:     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
+   83  
+
+  315  @frappe.whitelist()
+  316: def get_proposal_filter_fields(event_id: str) -> list:
+  317      fields = frappe.get_meta(PROPOSAL).fields
+
+  327          "submitted_by",
+  328:         "event_name",
+  329          "attendance_confirmed",
+
+  352  
+  353:     cfp = frappe.get_doc(EVENT_CFP, {"event": event_id})
+  354  
+
+fossunited\fossunited\api\chapter.py:
+   14      EVENT,
+   15:     EVENT_VOLUNTEER,
+   16      USER_PROFILE,
+
+   52  @frappe.whitelist(allow_guest=True)
+   53: def check_if_event_member(event: str) -> bool:
+   54      """
+
+   67          frappe.db.exists(
+   68:             EVENT_VOLUNTEER,
+   69              {
+
+   72                  "member": profile,
+   73:                 "parentfield": "event_members",
+   74              },
+
+   81  @frappe.whitelist(allow_guest=True)
+   82: def check_if_chapter_or_event_core_member(event: str) -> bool:
+   83      """
+
+   85      This API function is intended to only apply for cases where every time event is created
+   86:     they would not add themselves to event_members table
+   87      """
+   88:     event_doc = frappe.get_doc(EVENT, event, ["name"])
+   89:     chapter_id = event_doc.chapter
+   90      is_team = bool(
+   91:         check_if_event_member(event) or check_if_chapter_member(chapter_id, frappe.session.user)
+   92      )
+
+   99  @rate_limit(limit=5, seconds=60 * 60 * 6)
+  100: def generate_ics(event_ids: str | list, chapter: str | None = None):
+  101      """
+
+  104      Args:
+  105:         event_ids (list): list of event ids (doc.name)
+  106          chapter (str, optional): chapter docname to restrict events to
+
+  111      try:
+  112:         if isinstance(event_ids, str) and len(event_ids) > 10000:
+  113              frappe.throw("Input too large", frappe.ValidationError)
+  114  
+  115:         ids = json.loads(event_ids) if isinstance(event_ids, str) else event_ids
+  116  
+  117          if not isinstance(ids, list):
+  118:             frappe.throw("event_ids must be a list", frappe.ValidationError)
+  119  
+
+  122  
+  123:         for event_id in ids:
+  124:             if not isinstance(event_id, str) or len(event_id) > 140:
+  125                  frappe.throw("Invalid event ID format", frappe.ValidationError)
+
+  141          fields=[
+  142:             "event_name",
+  143:             "event_location",
+  144              "chapter_name",
+  145:             "event_description",
+  146              "route",
+  147:             "event_start_date",
+  148:             "event_end_date",
+  149          ],
+
+  153          tz = ZoneInfo(tz_name)
+  154:         start_dt = frappe.utils.get_datetime(event.event_start_date)
+  155:         end_dt = frappe.utils.get_datetime(event.event_end_date)
+  156          # If naive, treat as local time in site TZ; if aware, convert
+
+  164          e = Event()
+  165:         e.name = event.event_name
+  166:         e.location = event.event_location
+  167          e.organizer = event.chapter_name + " Community"
+  168          # Optional hardening (keep if desired):
+  169:         e.description = frappe.utils.strip_html(event.event_description or "") or None
+  170          if event.route:
+
+  230          recent = [
+  231:             e for e in doc.get_past_events() if e.event_end_date and (e.event_end_date >= since_3w)
+  232          ]
+
+fossunited\fossunited\api\checkins.py:
+    6  from fossunited.api.tickets import has_valid_permission
+    7: from fossunited.doctype_ids import EVENT_TICKET
+    8  
+
+   10  @frappe.whitelist()
+   11: def get_attendee_with_checkin_data(event_id: str, filters: dict = {}) -> dict:
+   12      """
+
+   15      Args:
+   16:         event_id (str): The event id
+   17          user (str): The user who is requesting the data
+
+   21      """
+   22:     if not has_valid_permission(event_id):
+   23          frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+   24  
+   25:     _filters = {"event": event_id}
+   26      # Map the items in filters to be like "key": ["like", value]
+
+   29      tickets = frappe.db.get_all(
+   30:         EVENT_TICKET,
+   31          _filters,
+
+   62          "Event Check In",
+   63:         {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
+   64          ["check_in_time"],
+
+   70  @frappe.whitelist()
+   71: def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False):
+   72      """
+
+   75      Args:
+   76:         event_id (str): The event ID
+   77          attendee (dict): The attendee details / ticket details
+
+   79      """
+   80:     if not has_valid_permission(event_id):
+   81          frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+   82  
+   83:     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+   84  
+
+  114          "Event Check In",
+  115:         {"parent": attendee_id, "parenttype": EVENT_TICKET, "parentfield": "check_ins"},
+  116          ["check_in_time"],
+
+  129  @frappe.whitelist()
+  130: def undo_attendee_checkin(event_id: str, attendee: dict):
+  131      """
+
+  137      """
+  138:     if not has_valid_permission(event_id):
+  139          frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+  140  
+  141:     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+  142      ticket.check_ins.pop()
+
+  146  @frappe.whitelist()
+  147: def assign_tshirt(event_id: str, attendee: dict):
+  148      """
+
+  151      Args:
+  152:         event_id (str): The event id
+  153          attendee (dict): The attendee details / ticket details
+
+  155      """
+  156:     if not has_valid_permission(event_id):
+  157          frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+  158  
+  159:     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
+  160      ticket.tshirt_delivered = True
+
+fossunited\fossunited\api\dashboard.py:
+  16          "doctype": event.doctype,
+  17:         "event_name": event.event_name,
+  18          "route": event.route,
+
+  27  @frappe.whitelist(allow_guest=True)
+  28: def get_event_from_permalink(permalink: str, fields: list) -> dict:
+  29:     return frappe.db.get_value(EVENT, {"event_permalink": permalink}, fields, as_dict=1)
+  30  
+
+  32  @frappe.whitelist(allow_guest=True)
+  33: def get_event_from_route(route: str, fields: list) -> dict:
+  34      # if route does not start with c/, add it
+
+fossunited\fossunited\api\emailing.py:
+  150      event: Optional[str] = None,
+  151:     event_type: str = "Event Participants",
+  152      chapter_type: str = "Chapter Event Participants",
+
+  165          event (str, optional): Event reference.
+  166:         event_type (str): Event group type (e.g., "Accepted Participants").
+  167          chapter_type (str): Chapter group type.
+
+  188  
+  189:         event_group = None
+  190          if event and document_type_event:
+  191:             event_group = create_email_group(
+  192:                 type=event_type,
+  193                  reference_document=event,
+
+  204                  # Handle event group subscription
+  205:                 if event_group:
+  206                      if subscribe_to_event:
+  207:                         add_to_email_group(event_group.name, email)
+  208                      else:
+  209:                         remove_from_email_group(event_group.name, email)
+  210  
+
+fossunited\fossunited\api\hackathon.py:
+    8  from fossunited.doctype_ids import (
+    9:     EVENT_CHECKIN,
+   10      HACKATHON,
+
+  618      Participant = DocType(HACKATHON_PARTICIPANT)
+  619:     CheckIn = DocType(EVENT_CHECKIN)
+  620  
+
+fossunited\fossunited\api\proposal.py:
+    3  
+    4: from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL, SPEAKER
+    5  
+
+    7  @frappe.whitelist(allow_guest=True)
+    8: def get_event_proposals(event: str) -> dict:
+    9      """
+
+   20              "custom_questions": list[dict],
+   21:             "event_route": str,
+   22:             "event_name": str,
+   23          }
+
+   26      cfp = frappe.db.get_value(
+   27:         EVENT_CFP,
+   28          {"event": event},
+
+   32  
+   33:     event_route, event_name = frappe.db.get_value(EVENT, event, ["route", "event_name"])
+   34  
+
+   99              "FOSS Custom Question",
+  100:             filters={"parenttype": EVENT_CFP, "parent": cfp.name},
+  101              fields=["idx", "question"],
+
+  107          "custom_questions": custom_questions,
+  108:         "event_route": event_route,
+  109:         "event_name": event_name,
+  110      }
+
+  258      cfp = frappe.db.get_value(
+  259:         EVENT_CFP,
+  260          {"event": event},
+
+  268              filters={
+  269:                 "parenttype": EVENT_CFP,
+  270                  "parent": cfp.name,
+
+fossunited\fossunited\api\reviewer.py:
+    5      EVENT,
+    6:     EVENT_CFP,
+    7      PROPOSAL,
+
+   31      """
+   32:     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
+   33  
+
+   66              "is_published": 1,
+   67:             "event_start_date": [">=", frappe.utils.nowdate()],
+   68              "is_external_event": 0,
+
+   72              "chapter",
+   73:             "event_name",
+   74:             "event_start_date",
+   75:             "event_end_date",
+   76          ],
+   77          page_length=99,
+   78:         order_by="event_start_date",
+   79      )
+
+   84          cfp = frappe.db.get_value(
+   85:             EVENT_CFP,
+   86              {"event": event.name},
+
+  106                  "event": event.name,
+  107:                 "event_name": event.event_name,
+  108:                 "start_date": event.event_start_date,
+  109:                 "end_date": event.event_end_date,
+  110                  "cfp": cfp,
+
+fossunited\fossunited\api\rsvp.py:
+    7      EVENT,
+    8:     EVENT_CHECKIN,
+    9      RSVP_CUSTOM_FIELD,
+
+   11  )
+   12: from fossunited.utils.decorators import require_chapter_or_event_member
+   13  
+
+   15  @frappe.whitelist()
+   16: @require_chapter_or_event_member(event_id="event_id")
+   17: def get_submissions_with_answers(event_id: str) -> list:
+   18      """
+
+   42          )
+   43:         .where(rsvp.event == event_id)
+   44          .orderby(rsvp.creation)
+
+   71  @frappe.whitelist()
+   72: @require_chapter_or_event_member(event_id="event_id")
+   73: def get_rsvp_checkins(event_id: str) -> list:
+   74      """
+
+   78      Submission = DocType(RSVP_RESPONSE)
+   79:     CheckIn = DocType(EVENT_CHECKIN)
+   80  
+
+   91          )
+   92:         .where(Submission.event == event_id)
+   93          .where(Submission.status == "Accepted")
+
+  104  @frappe.whitelist()
+  105: @require_chapter_or_event_member(event_id="event_id")
+  106: def if_rsvp_show_checkins(event_id: str) -> bool:
+  107      """
+
+  110      """
+  111:     event_start_date, event_end_date = frappe.db.get_value(
+  112:         EVENT, event_id, ["event_start_date", "event_end_date"]
+  113      )
+  114:     if not event_start_date or not event_end_date:
+  115          return False
+  116      today = getdate(nowdate())
+  117:     start_date = getdate(event_start_date)
+  118:     end_date = getdate(event_end_date)
+  119  
+
+  123  @frappe.whitelist()
+  124: @require_chapter_or_event_member(event_id="event_id")
+  125: def get_rsvp_checkin_stats(event_id: str) -> dict:
+  126      """
+
+  131          RSVP_RESPONSE,
+  132:         filters={"event": event_id, "status": "Accepted", "confirm_attendance": 1},
+  133      )
+
+fossunited\fossunited\api\schedule.py:
+   14  
+   15: from fossunited.doctype_ids import EVENT, EVENT_SCHEDULE, PROPOSAL, SPEAKER
+   16  
+
+   52  @frappe.whitelist(allow_guest=True)
+   53: def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
+   54      """
+
+   58      Args:
+   59:         event_id (str): Event ID
+   60  
+
+   64      schedule = frappe.db.get_all(
+   65:         EVENT_SCHEDULE,
+   66:         {"parent": event_id, "parenttype": doctype},
+   67          ["*"],
+
+  173      doc = frappe.get_doc(EVENT, event)
+  174:     sessions = get_event_sessions(doc, days_date_objects, halls_list)
+  175  
+  176      # Event metadata (shared across all formats)
+  177:     event_metadata = {
+  178:         "Event Name": doc.event_name,
+  179:         "Event Type": doc.event_type,
+  180          "Event Route": f"https://fossunited.org/{str(doc.route).lstrip('/')}" if doc.route else "",
+  181:         "Location": doc.event_location or "Online",
+  182          "Map Link": doc.map_link or "",
+  183:         "Description": frappe.utils.strip_html(doc.event_description or "") or "N/A",
+  184      }
+
+  186      # Sanitize filename
+  187:     filename = re.sub(r"[^A-Za-z0-9._-]+", "_", doc.event_name)
+  188      if days_date_objects:
+
+  197      if not sessions:
+  198:         return build_response(format, None, filename, empty=True, event_metadata=event_metadata)
+  199  
+  200:     content = format_schedule_data(format, doc, sessions, event_metadata)
+  201:     return build_response(format, content, filename, event_metadata=event_metadata)
+  202  
+  203  
+  204: def get_event_sessions(doc, days_date_objects, halls_list):
+  205      """
+
+  216  
+  217:     for s in doc.event_schedule:
+  218          session_date = (
+
+  371              e = Event()
+  372:             e.name = f"{s.title} - {doc.event_name}"
+  373              t_start = to_time(s.start_time)
+
+  476  
+  477: def build_response(format, content, filename, empty=False, event_metadata=None):
+  478      """
+
+  486              frappe.response["result"] = {
+  487:                 "event_metadata": event_metadata or {},
+  488                  "sessions": [],
+
+  510              cal = Calendar()
+  511:             if event_metadata:
+  512                  cal.extra.append(
+
+  514                          name="X-WR-CALDESC",
+  515:                         value="\n".join([f"{k}: {v}" for k, v in event_metadata.items()]),
+  516                      )
+
+  528          if format == "pdf":
+  529:             html = f"<h2>{(event_metadata or {}).get('Event Name', 'Event')}</h2><p>No matching sessions found.</p>"  # noqa: E501
+  530              frappe.response["type"] = "download"
+
+  571          frappe.response["result"] = {
+  572:             "event_metadata": event_metadata or {},
+  573              "sessions": content if not empty else [],
+
+fossunited\fossunited\api\tickets.py:
+   13      EVENT,
+   14:     EVENT_CHECKIN,
+   15:     EVENT_TICKET,
+   16      FREE_TICKET_APPLY,
+
+   27      """
+   28:     is_ticket_valid = frappe.db.exists(EVENT_TICKET, ticket_id)
+   29  
+
+   39      ticket = frappe.db.get_value(
+   40:         EVENT_TICKET,
+   41          ticket_id,
+
+  102      doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
+  103:     ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
+  104      current_user = frappe.session.user
+
+  119  @frappe.whitelist()
+  120: def get_tickets_insights(event_id: str) -> dict:
+  121      """
+
+  126      """
+  127:     total_sold = frappe.db.count(EVENT_TICKET, filters={"event": event_id})
+  128  
+  129      # Get the insights of the t-shirts
+  130:     tshirt_insights = get_tshirt_insights(event_id)
+  131  
+
+  133      tickets_sold_today = frappe.db.count(
+  134:         EVENT_TICKET,
+  135          filters={
+  136:             "event": event_id,
+  137              "creation": ["like", f"{frappe.utils.nowdate()}%"],
+
+  140      tickets_sold_yesterday = frappe.db.count(
+  141:         EVENT_TICKET,
+  142          filters={
+  143:             "event": event_id,
+  144              "creation": [
+
+  159          "FOSS Ticket Tier",
+  160:         filters={"parent": event_id, "parentfield": "tiers"},
+  161          fields=["*"],
+
+  167      combined_tier_data = list(tier_data.values())
+  168:     free_pass_data = get_free_pass_insights(event_id)
+  169      if free_pass_data:
+
+  181  @frappe.whitelist()
+  182: def get_checkin_insights(event_id: str) -> dict:
+  183      """
+
+  188      """
+  189:     event_start_date, event_end_date = frappe.db.get_value(
+  190:         EVENT, event_id, ["event_start_date", "event_end_date"]
+  191      )
+
+  193      # Get all tickets for this event
+  194:     tickets = frappe.get_all(EVENT_TICKET, filters={"event": event_id}, pluck="name")
+  195  
+
+  198  
+  199:     start_date = frappe.utils.get_datetime(event_start_date).date()
+  200:     end_date = frappe.utils.get_datetime(event_end_date).date()
+  201  
+
+  206          count = frappe.db.count(
+  207:             EVENT_CHECKIN,
+  208              filters={
+  209                  "parent": ["in", tickets],
+  210:                 "parenttype": EVENT_TICKET,
+  211                  "parentfield": "check_ins",
+
+  228  
+  229: def get_tshirt_insights(event_id: str) -> dict:
+  230      """
+
+  236      tshirts_sold = frappe.db.count(
+  237:         EVENT_TICKET,
+  238:         filters={"event": event_id, "wants_tshirt": 1},
+  239      )
+
+  242      tshirt_sizes = frappe.db.get_all(
+  243:         EVENT_TICKET,
+  244:         filters={"event": event_id, "wants_tshirt": 1},
+  245          fields=["tshirt_size"],
+
+  265      stats["total_sold"] = frappe.db.count(
+  266:         EVENT_TICKET,
+  267          filters={"event": tier.parent, "tier": tier.title},
+
+  269      stats["tickets_sold_today"] = frappe.db.count(
+  270:         EVENT_TICKET,
+  271          filters={
+
+  277      stats["tickets_sold_yesterday"] = frappe.db.count(
+  278:         EVENT_TICKET,
+  279          filters={
+
+  315  @frappe.whitelist()
+  316: def get_tickets_with_custom_fields(event_id: str) -> list:
+  317      """
+
+  320      Args:
+  321:         event_id (str): Event ID
+  322          filters (dict): Additional filters for tickets
+
+  326      """
+  327:     if not has_valid_permission(event_id):
+  328          frappe.throw("You are not authorized to view the tickets for this event")
+
+  332  
+  333:     tickets = DocType(EVENT_TICKET)
+  334      custom = DocType("FOSS Ticket Custom Field")
+
+  340              (custom.parent == tickets.name)
+  341:             & (custom.parenttype == EVENT_TICKET)
+  342              & (custom.parentfield == "custom_fields")
+
+  354          )
+  355:         .where(tickets.event == event_id)
+  356          .orderby(tickets.creation)
+
+  377  
+  378: def has_valid_permission(event_id: str) -> bool:
+  379      """
+
+  382      Args:
+  383:         event_id (str): Event ID
+  384  
+
+  391      if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
+  392:         chapter_id = frappe.db.get_value(EVENT, event_id, "chapter")
+  393          if chapter_id and check_if_chapter_member(chapter_id, session_user):
+
+  399          {
+  400:             "parent": event_id,
+  401              "parenttype": EVENT,
+
+  410  @frappe.whitelist()
+  411: def get_ticket_tiers(event_id: str) -> list:
+  412      """
+
+  418          "FOSS Ticket Tier",
+  419:         filters={"parent": event_id, "parentfield": "tiers"},
+  420          fields=["title", "maximum_tickets"],
+
+  426          {
+  427:             "event": event_id,
+  428              "tier": ["like", "%Free pass%"],
+
+  444  @frappe.whitelist(allow_guest=True)
+  445: def is_ticket_live(event_id: str) -> bool:
+  446      """
+
+  449      Args:
+  450:         event_id (str): Event ID
+  451  
+
+  454      """
+  455:     ticket_status = frappe.db.get_value(EVENT, event_id, "tickets_status")
+  456  
+
+  459  
+  460: def get_free_pass_insights(event_id: str) -> dict:
+  461      """
+
+  469          "total_sold": frappe.db.count(
+  470:             EVENT_TICKET,
+  471              filters={
+  472:                 "event": event_id,
+  473                  "tier": ["like", "%Free pass%"],
+
+  476          "tickets_sold_today": frappe.db.count(
+  477:             EVENT_TICKET,
+  478              filters={
+  479:                 "event": event_id,
+  480                  "tier": ["like", "%Free pass%"],
+
+  484          "tickets_sold_yesterday": frappe.db.count(
+  485:             EVENT_TICKET,
+  486              filters={
+  487:                 "event": event_id,
+  488                  "tier": ["like", "%Free pass%"],
+
+  502  @frappe.whitelist()
+  503: def get_event_free_codes(event):
+  504      """Get all free ticket codes for an event"""
+
+  538              "status": ["in", ["Live", "Concluded"]],
+  539:             "event_end_date": [">=", thirty_days_ago],
+  540          },
+  541:         fields=["name", "event_name"],
+  542:         order_by="event_end_date desc",
+  543      )
+
+  558          return frappe.get_all(
+  559:             EVENT_TICKET,
+  560              filters={"event": event, "email": search_term},
+
+  565      # Ticket ID - direct lookup, no event needed
+  566:     if frappe.db.exists(EVENT_TICKET, search_term):
+  567          return [get_ticket_details(search_term)]
+
+  581          return frappe.get_all(
+  582:             EVENT_TICKET,
+  583              filters={"email": ["in", coupon_apps], "event": coupon_event},
+
+  593      """Download single ticket PDF"""
+  594:     if not frappe.db.exists(EVENT_TICKET, ticket_id):
+  595          frappe.throw("Ticket not found")
+
+  599      return download_pdf(
+  600:         doctype=EVENT_TICKET,
+  601          name=ticket_id,
+
+  619      for ticket_id in ticket_ids:
+  620:         if not frappe.db.exists(EVENT_TICKET, ticket_id):
+  621              frappe.throw(f"Ticket {ticket_id} not found")
+
+  626      download_multi_pdf(
+  627:         doctype=EVENT_TICKET,
+  628          name=json.dumps(ticket_ids),
+
+fossunited\fossunited\chapters\doctype\foss_chapter\foss_chapter.py:
+  209                  "chapter": self.name,
+  210:                 "event_end_date": (">=", frappe.utils.now()),
+  211                  "status": "Live",
+
+  213              fields=["*"],
+  214:             order_by="event_start_date asc",
+  215              # page_length=6,
+
+  232                  "chapter": self.name,
+  233:                 "event_end_date": ("<", frappe.utils.now()),
+  234                  "status": "Concluded",
+
+  236              fields=["*"],
+  237:             order_by="event_end_date desc",
+  238          )
+
+fossunited\fossunited\chapters\doctype\foss_chapter\templates\foss_chapter.html:
+   93      from
+   94:     'fossunited/templates/macros/event_card.html' import event_card
+   95    %}
+
+  113          {{ ics_download(
+  114:           event_ids=upcoming_events | map(attribute='name') | list,
+  115            filename=doc.slug + '-upcoming-events.ics',
+
+  121      <div class="events-grid-4">
+  122:       {% for event in upcoming_events %}{{ event_card(event) }}{% endfor %}
+  123      </div>
+
+  128      from
+  129:     'fossunited/templates/macros/event_card.html' import event_card
+  130    %}
+
+  133      <div class="events-grid-4">
+  134:       {% for event in past_events %}{{ event_card(event) }}{% endfor %}
+  135      </div>
+
+fossunited\fossunited\chapters\doctype\foss_chapter_event\foss_chapter_event.json:
+   14    "column_break_okxh",
+   15:   "external_event_url",
+   16    "meta_info_section",
+
+   30    "chapter_name",
+   31:   "event_infomation_section",
+   32    "must_attend",
+   33:   "event_name",
+   34:   "event_permalink",
+   35    "status",
+   36:   "event_type",
+   37    "column_break_pua4",
+   38:   "event_logo",
+   39    "banner_image",
+   40:   "event_location",
+   41    "map_link",
+   42    "map_coordinate",
+   43:   "event_timeline_section",
+   44:   "event_start_date",
+   45    "column_break_ae9v",
+   46:   "event_end_date",
+   47    "livestreaming_section",
+
+   49    "livestream_embed_link",
+   50:   "event_information_section",
+   51:   "event_bio",
+   52:   "event_description",
+   53    "proposal_page_description",
+   54:   "event_sponsors_section",
+   55    "sponsor_list",
+
+   61    "volunteers_tab",
+   62:   "event_members_section",
+   63:   "event_members",
+   64    "schedule_tab",
+   65    "schedule_section",
+   66:   "event_schedule",
+   67    "section_break_vlwf",
+
+   84    {
+   85:    "fieldname": "event_infomation_section",
+   86     "fieldtype": "Section Break",
+
+   89    {
+   90:    "fieldname": "event_name",
+   91     "fieldtype": "Data",
+
+  100    {
+  101:    "fieldname": "event_type",
+  102     "fieldtype": "Select",
+
+  133    {
+  134:    "fieldname": "event_timeline_section",
+  135     "fieldtype": "Section Break",
+
+  138    {
+  139:    "fieldname": "event_start_date",
+  140     "fieldtype": "Datetime",
+
+  145    {
+  146:    "fieldname": "event_end_date",
+  147     "fieldtype": "Datetime",
+
+  156    {
+  157:    "fieldname": "event_location",
+  158     "fieldtype": "Data",
+
+  162     "depends_on": "eval:doc.is_external_event == 0",
+  163:    "fieldname": "event_description",
+  164     "fieldtype": "Text Editor",
+
+  176    {
+  177:    "fieldname": "event_members_section",
+  178     "fieldtype": "Section Break",
+
+  181    {
+  182:    "fieldname": "event_members",
+  183     "fieldtype": "Table",
+
+  191    {
+  192:    "fieldname": "event_information_section",
+  193     "fieldtype": "Section Break",
+
+  196    {
+  197:    "fieldname": "event_sponsors_section",
+  198     "fieldtype": "Section Break",
+
+  234    {
+  235:    "fieldname": "event_schedule",
+  236     "fieldtype": "Table",
+
+  255    {
+  256:    "fieldname": "event_bio",
+  257     "fieldtype": "Data",
+
+  318     "depends_on": "eval:doc.is_external_event == 0",
+  319:    "description": "Only enter the permalink endpoint.\nRoute will be set as events/< event_permalink >",
+  320:    "fieldname": "event_permalink",
+  321     "fieldtype": "Data",
+
+  403    {
+  404:    "fieldname": "external_event_url",
+  405     "fieldtype": "Data",
+
+  429    {
+  430:    "fieldname": "event_logo",
+  431     "fieldtype": "Attach Image",
+
+  553   "row_format": "Dynamic",
+  554:  "search_fields": "event_permalink, chapter",
+  555   "show_title_field_in_link": 1,
+
+  575   ],
+  576:  "title_field": "event_name"
+  577  }
+
+fossunited\fossunited\chapters\doctype\foss_chapter_event\foss_chapter_event.py:
+   10  
+   11: from fossunited.api.chapter import check_if_chapter_or_event_core_member
+   12  from fossunited.api.emailing import create_email_group
+
+   17      EVENT,
+   18:     EVENT_CFP,
+   19:     EVENT_RSVP,
+   20:     EVENT_TICKET,
+   21      PROPOSAL,
+
+   25  )
+   26: from fossunited.fossunited.utils import get_event_sponsors
+   27  
+
+   39  
+   40:         from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
+   41              FOSSChapterEventMember,
+   42          )
+   43:         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
+   44              FOSSEventCommunityPartner,
+   45          )
+   46:         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
+   47              EventProjectShowcase,
+   48          )
+   49:         from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
+   50              FOSSEventField,
+   51          )
+   52:         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
+   53              FOSSEventSchedule,
+   54          )
+   55:         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+   56              FOSSEventSponsor,
+
+   67          deck_link: DF.Data | None
+   68:         event_bio: DF.Data | None
+   69:         event_description: DF.TextEditor | None
+   70:         event_end_date: DF.Datetime
+   71:         event_location: DF.Data | None
+   72:         event_logo: DF.AttachImage | None
+   73:         event_members: DF.Table[FOSSChapterEventMember]
+   74:         event_name: DF.Data
+   75:         event_permalink: DF.Data | None
+   76:         event_schedule: DF.Table[FOSSEventSchedule]
+   77:         event_start_date: DF.Datetime
+   78:         event_type: DF.Literal[
+   79              "Meet Up",
+
+   86          ]
+   87:         external_event_url: DF.Data | None
+   88          hall_options: DF.SmallText | None
+
+  185              self.append(
+  186:                 "event_members",
+  187                  {
+
+  201              {
+  202:                 "event_permalink": self.event_permalink,
+  203                  "name": ("!=", self.name),
+
+  207              frappe.throw(
+  208:                 f"Event Permalink {self.event_permalink} already exists!",
+  209                  frappe.ValidationError,
+
+  211  
+  212:         if " " in self.event_permalink:
+  213              frappe.throw("Event Permalink cannot have spaces!", frappe.ValidationError)
+
+  226  
+  227:         event_route = frappe.db.get_value(CHAPTER, self.chapter, "route")
+  228:         self.route = f"{event_route}/{self.event_permalink}"
+  229  
+  230      def get_meta(self):
+  231:         pagetitle = self.event_name
+  232  
+  233:         desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
+  234  
+  235:         description = "{self.event_name} is being organized on {start_date} by {self.chapter_name} Community. {desc_short}".format(  # noqa: E501
+  236              self=self,
+  237              desc_short=desc_short,
+  238:             start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
+  239          )
+
+  242  
+  243:         og_image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
+  244              self=self,
+  245              og_url=og_url,
+  246:             start_date=self.event_start_date.strftime("%-d %B %Y"),
+  247          )
+
+  253          """Get volunteers with profile information. Batch fetch profiles for performance."""
+  254:         if not self.event_members:
+  255              return []
+
+  257          # Batch fetch all profiles
+  258:         member_ids = [member.member for member in self.event_members]
+  259          profiles = {
+
+  268          members = []
+  269:         for member in self.event_members:
+  270              profile = profiles.get(member.member, {})
+
+  312          rsvp_status_block = {}
+  313:         rsvp_status_block["doctype"] = EVENT_RSVP
+  314          rsvp_status_block["block_for"] = "rsvp"
+  315  
+  316:         if frappe.db.exists(EVENT_RSVP, {"event": self.name}):
+  317:             rsvp_form = frappe.get_doc(EVENT_RSVP, {"event": self.name})
+  318              rsvp_status_block |= {
+
+  361          cfp_status_block = {}
+  362:         cfp_status_block["doctype"] = EVENT_CFP
+  363          cfp_status_block["block_for"] = "cfp"
+  364  
+  365:         if frappe.db.exists(EVENT_CFP, {"event": self.name}):
+  366:             cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
+  367              closing_soon = (
+
+  437          if self.is_paid_event and frappe.db.exists(
+  438:             EVENT_TICKET,
+  439              {"event": self.name, "email": user},
+
+  444  
+  445:     def get_event_stats(self):
+  446          """Get attendance and proposal statistics for the event"""
+
+  455              ticket_count = frappe.db.count(
+  456:                 EVENT_TICKET,
+  457                  {"event": self.name},
+
+  502              {"route": "/events/timeline", "label": "Events"},
+  503:             {"label": self.event_name},
+  504          ]
+
+  509          context.chapter = frappe.get_doc(CHAPTER, self.chapter)
+  510:         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
+  511          context.volunteers = self.get_volunteers()
+
+  520          # Add event statistics
+  521:         context.event_stats = self.get_event_stats()
+  522  
+  523          # Add schedule data using existing API - keep nested structure for proper ordering
+  524:         from fossunited.api.schedule import get_event_schedule
+  525  
+  526:         schedule_dict = get_event_schedule(self.name)
+  527          context.schedule_data = self.format_schedule_for_template(schedule_dict)
+
+  534          # Add permission check for managing event
+  535:         context.can_manage_event = check_if_chapter_or_event_core_member(self.name)
+  536:         context.event_dashboard_url = f"/dashboard/event/{self.name}"
+  537  
+
+fossunited\fossunited\chapters\doctype\foss_chapter_event\test_foss_chapter_event.py:
+    6      EVENT,
+    7:     EVENT_VOLUNTEER,
+    8  )
+
+   34                  frappe.db.exists(
+   35:                     EVENT_VOLUNTEER,
+   36                      {
+
+   42  
+   43:     def test_unique_event_slug(self):
+   44          """Test that event slugs must be unique within a chapter
+
+   48          original_event = self.event
+   49:         existing_permalink = original_event.event_permalink
+   50  
+
+   52          with self.assertRaises(frappe.exceptions.ValidationError):
+   53:             insert_test_event(chapter=original_chapter, event_permalink=existing_permalink)
+   54  
+
+   59              chapter=new_chapter,
+   60:             event_permalink=existing_permalink,
+   61          )
+
+   65  
+   66:     def test_email_groups_are_created_on_event_insert(self):
+   67          expected_group_types = [
+
+  125  
+  126:     def test_event_without_map_link_has_no_coordinates(self):
+  127          """Test that events created without map_link have no coordinates."""
+
+fossunited\fossunited\chapters\doctype\foss_chapter_event\templates\foss_chapter_event.html:
+    8  {% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+    9: {% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
+   10  
+
+   67  
+   68: {% macro event_cover() %}
+   69    <div class="v3-banner-wrap">
+   70      <img
+   71:       src="{{ doc.banner_image or '/assets/fossunited/images/defaults/event_logo.png' }}"
+   72:       alt="{{ doc.event_name }} event banner"
+   73        class="v3-banner"
+
+   75  
+   76:     {% if event_stats and (event_stats.attending > 0 or event_stats.proposals > 0) %}
+   77        <div class="ev-stats" role="region" aria-label="Event statistics">
+   78:         {% if event_stats.attending > 0 %}
+   79:           <span>{{ event_stats.attending }} Attend{{ "ing" if status_live else "ed" }}</span>
+   80          {% endif %}
+   81:         {% if event_stats.attending > 0 and event_stats.proposals > 0 %}
+   82            <span aria-hidden="true">•</span>
+   83          {% endif %}
+   84:         {% if event_stats.proposals > 0 %}
+   85:           <span>{{ event_stats.proposals }} Proposals</span>
+   86          {% endif %}
+
+  108  
+  109:     {% if status_live and event_stats.attending > 0 and (not rsvp_status_block.is_published) and not doc.is_paid_event %}
+  110      <div class="v3-status v3-status--warning" role="status" aria-live="polite">
+
+  284          <div class="v3-header">
+  285:           <div class="show-mobile-only">{{ event_cover() }}</div>
+  286            <div style="flex: 1; display: flex; flex-direction: column; gap: 1.2rem; justify-content: space-between;">
+
+  291  
+  292:                 <h1 class="ev-title">{{ doc.event_name }}</h1>
+  293                  <div class="v3-event-tags" aria-label="Event tags">
+  294                    {% if doc.must_attend %}
+  295:                     {{ event_must_attend_tag() }}
+  296                    {% endif %}
+  297:                   {{ event_category_tag(doc.event_type) }}
+  298                  </div>
+
+  315                    <div class="ev-detail-primary">
+  316:                     {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
+  317:                       {{ doc.event_start_date.strftime("%-d - ") }}{{ doc.event_end_date.strftime("%-d %B %Y") }}
+  318                      {% else %}
+  319:                       {{ doc.event_end_date.strftime("%-d %B %Y") }}
+  320                      {% endif %}
+
+  322                    <div class="ev-detail-secondary">
+  323:                     <time datetime="{{ doc.event_start_date.isoformat() }}">
+  324:                       {{ doc.event_start_date.strftime("%-I:%M %p") }}
+  325                      </time>
+  326                       -
+  327:                     <time datetime="{{ doc.event_end_date.isoformat() }}">
+  328:                       {{ doc.event_end_date.strftime("%-I:%M %p") }}
+  329                      </time>
+
+  337                  class="ev-detail-row ev-detail-link"
+  338:                 aria-label="View {{ doc.event_location or 'event location' }} on map"
+  339                >
+
+  343                    <div class="ev-icon" aria-hidden="true"><i class="ti ti-map-pin"></i></div>
+  344:                   <div class="ev-detail-secondary">{{ doc.event_location or 'Location TBA' }}</div>
+  345                    {% if doc.map_link %}
+
+  353              <!-- <div class="ev-detail-row"> -->
+  354:             <!--   <div class="ev-detail-secondary">{{ doc.event_bio or '' }}</div> -->
+  355              <!-- </div> -->
+
+  375                          class="v3-btn v3-btn-primary"
+  376:                         aria-label="Buy ticket for {{ doc.event_name }}"
+  377                        >
+
+  392                            class="v3-btn v3-btn-primary"
+  393:                           aria-label="Register for {{ doc.event_name }}"
+  394                          >
+
+  414                  <a
+  415:                   href="{{ event_dashboard_url }}"
+  416                    class="v3-btn v3-btn-secondary v3-btn-icon-only"
+
+  427              <!-- Banner -->
+  428:             <div class="show-desktop-only">{{ event_cover() }}</div>
+  429            </div>
+
+  436              <!-- About -->
+  437:             {% if doc.event_description %}
+  438                <section class="v3-card ev-about-section" aria-labelledby="about-heading">
+
+  457                  <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
+  458:                   {{ doc.event_description }}
+  459                  </div>
+
+  574                  <div
+  575:                   id="osm-map-{{ doc.event_location | default('main') }}"
+  576                    class="ev-map"
+
+  585                   var mapLink = '{{ doc.map_link | e }}'
+  586:                  var mapId = 'osm-map-{{ doc.event_location| e | default("main") }}'
+  587                   var element = document.getElementById(mapId)
+
+  598                       .addTo(map)
+  599:                      <!-- .bindPopup('{{ doc.event_location | e }}') -->
+  600                       <!-- .openPopup() -->
+
+  622      {{ ics_download(
+  623:       event_ids=[doc.name],
+  624:       filename=doc.event_name.replace(' ', '_') + '.ics',
+  625        fn_name='downloadEventIcs',
+
+fossunited\fossunited\chapters\doctype\foss_chapter_event_participant\foss_chapter_event_participant.json:
+  12      "chapter_event",
+  13:     "event_name",
+  14      "participant"
+
+  41      {
+  42:       "fetch_from": "chapter_event.event_name",
+  43:       "fieldname": "event_name",
+  44        "fieldtype": "Data",
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp\foss_event_rsvp.json:
+   19      "rsvp_count",
+   20:     "event_information_section",
+   21      "event",
+
+   23      "column_break_yrzh",
+   24:     "event_name",
+   25      "chapter",
+
+   32      {
+   33:       "fieldname": "event_information_section",
+   34        "fieldtype": "Section Break",
+
+  120      {
+  121:       "fetch_from": "event.event_name",
+  122:       "fieldname": "event_name",
+  123        "fieldtype": "Data",
+
+  182    "row_format": "Dynamic",
+  183:   "search_fields": "event_name, event, chapter",
+  184    "sort_field": "modified",
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp\foss_event_rsvp.py:
+    7  
+    8: from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+    9  
+
+   27          event: DF.Link
+   28:         event_name: DF.Data | None
+   29          is_published: DF.Check
+
+   46          context.event = frappe.get_doc(EVENT, self.event)
+   47:         context.event_name = self.event_name
+   48:         context.event_date = context.event.event_start_date.strftime("%B %d, %Y")
+   49          is_guest = frappe.session.user in ("Guest", "Administrator")
+
+  100      def set_route(self):
+  101:         event_route = frappe.db.get_value(EVENT, self.event, "route")
+  102:         self.route = f"{event_route}/rsvp"
+  103  
+
+  135  
+  136:     linked_rsvp_exists = frappe.db.exists(EVENT_RSVP, fields.get("linked_rsvp"))
+  137      if not linked_rsvp_exists:
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp\templates\foss_event_rsvp.html:
+    4  {% block meta_block %}
+    5:   <meta name="title" content="{{ event.event_name }}" />
+    6    {% if doc.is_published %}
+    7:     {% if event.event_type in ['Meet Up'] %}
+    8        <meta
+    9          property="og:title"
+   10:         content="🔴 RSVP form is live! - {{ event.event_name }}, {{ event.chapter_name | title }}"
+   11        />
+   12      {% else %}
+   13:       <meta property="og:title" content="🔴 RSVP form is live! - {{ event.event_name }}" />
+   14      {% endif %}
+
+   17        property="og:title"
+   18:       content="RSVP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}"
+   19      />
+   20    {% endif %}
+   21:   {% if event.event_type in ['Meet Up'] %}
+   22      <meta
+   23        property="og:description"
+   24:       content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}"
+   25      />
+
+   28        property="og:description"
+   29:       content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }}"
+   30      />
+
+  149          <div class="v3-text-secondary" style="font-size: 0.95rem;">
+  150:           <span class="font-weight-bold">Event:</span> {{ event_name }}
+  151          </div>
+  152          <div class="v3-text-secondary" style="font-size: 0.95rem;">
+  153:           <span class="font-weight-bold">Date:</span> {{ event_date }}
+  154          </div>
+
+  210                      method:
+  211:                     'fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp.create_rsvp',
+  212                      args: {
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp_submission\foss_event_rsvp_submission.json:
+   12    "event",
+   13:   "event_name",
+   14    "column_break_tpys",
+
+  108     "columns": 3,
+  109:    "fetch_from": "linked_rsvp.event_name",
+  110:    "fieldname": "event_name",
+  111     "fieldtype": "Data",
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp_submission\foss_event_rsvp_submission.py:
+   11  from fossunited.api.emailing import handle_email_group_subscription
+   12: from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP, RSVP_RESPONSE
+   13  
+
+   25  
+   26:         from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+   27              EventCheckIn,
+
+   38          event: DF.Data
+   39:         event_name: DF.Data | None
+   40          im_a: DF.Literal["", "Student", "Professional", "FOSS Enthusiast", "Other"]
+
+   83      def validate_linked_rsvp_exists(self):
+   84:         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
+   85              frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
+
+  104  
+  105:         rsvp_published = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "is_published")
+  106          if not rsvp_published:
+
+  117              frappe.db.set_value(
+  118:                 EVENT_RSVP,
+  119                  self.linked_rsvp,
+
+  136          <br>
+  137:         The RSVP for {self.event_name} has reached its maximum count.<br>
+  138          RSVP form is now closed.<br>
+
+  149      def get_max_count(self):
+  150:         max_count = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "max_rsvp_count")
+  151          return max_count
+
+  156          requires_host_approval = bool(
+  157:             frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "requires_host_approval")
+  158          )
+
+  192          # Check if event allows check-in (between start and end date)
+  193:         event_start, event_end = frappe.db.get_value(
+  194:             EVENT, self.event, ["event_start_date", "event_end_date"]
+  195          )
+  196:         if not self.can_check_in(event_start, event_end):
+  197              frappe.throw("Check-in is only available during the event dates")
+
+  204  
+  205:     def can_check_in(self, event_start_date, event_end_date):
+  206          """Check if check-in is allowed based on date only (no time)."""
+  207:         if not event_start_date or not event_end_date:
+  208              return False
+
+  210          today = getdate(nowdate())
+  211:         start_date = getdate(event_start_date)
+  212:         end_date = getdate(event_end_date)
+  213  
+
+fossunited\fossunited\chapters\doctype\foss_event_rsvp_submission\test_foss_event_rsvp_submission.py:
+    5  
+    6: from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_RSVP
+    7  from fossunited.tests.utils import (
+
+   24              chapter=self.chapter,
+   25:             event_start_date=add_days(nowdate(), -1),
+   26:             event_end_date=add_days(nowdate(), 1),
+   27          )
+
+   41          frappe.delete_doc(EVENT, self.event.name, force=True)
+   42:         frappe.delete_doc(EVENT_RSVP, self.rsvp.name, force=True)
+   43  
+
+   58          # Then the RSVP must be unpublished
+   59:         is_published = frappe.db.get_value(EVENT_RSVP, rsvp.name, "is_published")
+   60          self.assertFalse(is_published)
+
+  349  
+  350:     def test_checkin_outside_event_dates_fails(self):
+  351          frappe.set_user(CORE_TEAM)
+
+  354          event = frappe.get_doc(EVENT, self.event.name)
+  355:         event.event_start_date = add_days(nowdate(), -10)
+  356:         event.event_end_date = add_days(nowdate(), -5)
+  357          event.save()
+
+  374  
+  375:     def test_can_check_in_only_during_event_days(self):
+  376          frappe.set_user(CORE_TEAM)
+
+  381          event = frappe.get_doc(EVENT, self.event.name)
+  382:         event.event_start_date = add_days(nowdate(), 1)  # starts tomorrow
+  383:         event.event_end_date = add_days(nowdate(), 2)
+  384          event.save()
+  385  
+  386:         self.assertFalse(submission.can_check_in(event.event_start_date, event.event_end_date))
+  387  
+
+  389          event = frappe.get_doc(EVENT, self.event.name)
+  390:         event.event_start_date = add_days(nowdate(), -1)
+  391:         event.event_end_date = add_days(nowdate(), 1)
+  392          event.save()
+  393  
+  394:         self.assertTrue(submission.can_check_in(event.event_start_date, event.event_end_date))
+  395  
+
+fossunited\fossunited\chapters\doctype\foss_event_type\foss_event_type.json:
+   3    "allow_rename": 1,
+   4:   "autoname": "field:event_type",
+   5    "creation": "2023-07-01 23:54:46.695025",
+
+   9    "engine": "InnoDB",
+  10:   "field_order": ["event_type"],
+  11    "fields": [
+  12      {
+  13:       "fieldname": "event_type",
+  14        "fieldtype": "Data",
+
+fossunited\fossunited\chapters\doctype\foss_event_type\foss_event_type.py:
+  14  
+  15:         event_type: DF.Data | None
+  16      # end: auto-generated types
+
+fossunited\fossunited\fixtures\foss_event_type.json:
+   4      "doctype": "FOSS Event Type",
+   5:     "event_type": "CityFOSS Conference",
+   6      "modified": "2023-11-18 14:09:31.237796",
+
+  11      "doctype": "FOSS Event Type",
+  12:     "event_type": "Conference",
+  13      "modified": "2023-11-18 14:09:39.521394",
+
+  18      "doctype": "FOSS Event Type",
+  19:     "event_type": "FOSS Hack",
+  20      "modified": "2023-11-18 14:09:47.027395",
+
+  25      "doctype": "FOSS Event Type",
+  26:     "event_type": "Hackathon",
+  27      "modified": "2023-11-18 14:09:53.651035",
+
+  32      "doctype": "FOSS Event Type",
+  33:     "event_type": "FOSS Meetup",
+  34      "modified": "2023-11-18 14:10:04.506767",
+
+  39      "doctype": "FOSS Event Type",
+  40:     "event_type": "City Meetup",
+  41      "modified": "2023-11-18 14:10:10.707990",
+
+  46      "doctype": "FOSS Event Type",
+  47:     "event_type": "Linux Installation Party",
+  48      "modified": "2023-11-18 14:10:22.951970",
+
+fossunited\fossunited\foss_hackathon\doctype\foss_hackathon\foss_hackathon.py:
+    8  from fossunited.api.emailing import create_email_group
+    9: from fossunited.api.schedule import get_event_schedule
+   10  from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import (
+
+   22  )
+   23: from fossunited.fossunited.utils import get_event_sponsors
+   24  
+
+   36  
+   37:         from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
+   38              FOSSChapterEventMember,
+   39          )
+   40:         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
+   41              FOSSEventCommunityPartner,
+
+   45          )
+   46:         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
+   47              FOSSEventSchedule,
+   48          )
+   49:         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+   50              FOSSEventSponsor,
+
+  106  
+  107:         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
+  108  
+  109:         schedule_dict = get_event_schedule(self.name, self.doctype)
+  110          context.schedule_data = FOSSChapterEvent.format_schedule_for_template(schedule_dict)
+
+  129          )
+  130:         context.event_year = str(self.start_date.year)
+  131          context.pagetitle, context.description, context.image = self.get_meta()
+
+fossunited\fossunited\foss_hackathon\doctype\foss_hackathon\templates\foss_hackathon.html:
+    8  {% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
+    9: {% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
+   10  
+   11: {% macro event_cover() %}
+   12    <div class="v3-banner-wrap">
+   13      <img
+   14:       src="{{ doc.hackathon_banner or '/assets/fossunited/images/defaults/event_logo.png' }}"
+   15        alt="{{ doc.hackathon_name }} banner"
+
+   67      <a
+   68:       href="/fosshack/{{ event_year }}/partner-projects"
+   69        class="v3-btn v3-btn-secondary w-100 mb-4"
+
+  199          <div class="v3-header">
+  200:           <div class="show-mobile-only">{{ event_cover() }}</div>
+  201            <div
+
+  208  
+  209:                 <a href="/fosshack/{{ event_year }}" target="_blank" class="v3-text-primary my-2">
+  210                    <h1 class="h1 font-weight-bold d-inline-flex align-items-start w-100">
+
+  215                  <div class="v3-event-tags" aria-label="Event tags">
+  216:                   {{ event_must_attend_tag() }}
+  217:                   {{ event_category_tag(doc.hackathon_type) }}
+  218                  </div>
+
+  276                  <a
+  277:                   href="/fosshack/{{ event_year }}"
+  278                    class="v3-btn v3-btn-secondary"
+
+  298            <!-- Banner -->
+  299:           <div class="show-desktop-only">{{ event_cover() }}</div>
+  300          </div>
+
+fossunited\fossunited\foss_hackathon\doctype\foss_hackathon_localhost\foss_hackathon_localhost.py:
+  13  )
+  14: from fossunited.fossunited.utils import get_event_sponsors, sanitize_text_content
+  15  
+
+  28          )
+  29:         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
+  30              FOSSEventSponsor,
+
+  77  
+  78:         context.sponsors_dict = get_event_sponsors(self.sponsor_list)
+  79  
+
+fossunited\fossunited\foss_hackathon\doctype\foss_hackathon_participant\foss_hackathon_participant.py:
+   29  
+   30:         from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+   31              EventCheckIn,
+
+  135          """Handle chapter and hackathon event subscription"""
+  136:         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+  137  
+
+  139              emails=[self.email],
+  140:             chapter=event_doc.chapter,
+  141              event=self.hackathon,
+
+  150  
+  151:         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+  152  
+
+  157                  emails=[self.email],
+  158:                 chapter=event_doc.chapter,
+  159                  event=self.localhost,
+  160:                 event_type="Event Participants",
+  161                  custom_group_title=f"{old_status}-{self.localhost}-Localhost",
+
+  170                  emails=[self.email],
+  171:                 chapter=event_doc.chapter,
+  172                  event=self.localhost,
+  173:                 event_type="Event Participants",
+  174                  custom_group_title=f"{new_status}-{self.localhost}-Localhost",
+
+  190  
+  191:         event_doc = frappe.get_doc(HACKATHON, self.hackathon)
+  192          all_statuses = ["Pending", "Pending Confirmation", "Accepted", "Rejected"]
+
+  197                      emails=[self.email],
+  198:                     chapter=event_doc.chapter,
+  199                      event=target_localhost,
+  200:                     event_type="Event Participants",
+  201                      custom_group_title=f"{status}-{target_localhost}-Localhost",
+
+fossunited\fossunited\foss_hackathon\doctype\foss_hackathon_partner_project\foss_hackathon_partner_project.py:
+  49          start_date = frappe.db.get_value(HACKATHON, self.hackathon, "start_date")
+  50:         event_year = str(start_date.year)
+  51:         self.route = f"fosshack/{event_year}/partner-projects/{frappe.scrub(self.project_name)}"
+  52  
+
+fossunited\fossunited\fossunited\utils.py:
+   22  
+   23: def get_event_volunteers(event):
+   24:     volunteers = frappe.get_doc(EVENT, event).event_members
+   25      return volunteers
+
+  227              "is_published": 1,
+  228:             "event_end_date": [">=", frappe.utils.now()],
+  229          },
+  230:         order_by="event_start_date",
+  231          page_length=100,
+
+  350              Chapter.route.as_("chapter_route"),
+  351:             Max(Event.event_start_date).as_("latest_event"),
+  352          )
+
+  381          .groupby(ChapterMember.chapter_member, Chapter.name)
+  382:         .having(Max(Event.event_start_date) >= one_year_ago)
+  383      )
+
+  396  
+  397: def get_event_sponsors(sponsor_list):
+  398      """
+
+fossunited\fossunited\fossunited\doctype\event_free_ticket_applications\event_free_ticket_applications.py:
+    6  
+    7: from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
+    8  
+
+   74                  {
+   75:                     "doctype": EVENT_TICKET,
+   76                      "event": self.event,
+
+  102          if frappe.db.exists(
+  103:             EVENT_TICKET,
+  104              {
+
+fossunited\fossunited\fossunited\doctype\event_free_ticket_applications\test_event_free_ticket_applications.py:
+   10      EVENT,
+   11:     EVENT_TICKET,
+   12      FREE_TICKET_APPLY,
+
+   38          frappe.db.delete(FREE_TICKET_APPLY, {"event": self.event.name})
+   39:         frappe.db.delete(EVENT_TICKET, {"event": self.event.name})
+   40          frappe.db.delete(FREE_TICKET_CODE, {"event": self.event.name})
+
+   83  
+   84:         ticket = frappe.get_doc(EVENT_TICKET, {"event": self.event.name, "email": email})
+   85          self.assertEqual(ticket.full_name, full_name)
+
+  122  
+  123:     def test_coupon_event_mismatch_throws_error(self):
+  124:         other_event = insert_test_event(chapter=self.chapter, event_name="Other Test Event")
+  125          coupon = self.create_test_coupon()
+
+  133          self.submit_application(coupon.name)
+  134:         ticket = frappe.get_last_doc(EVENT_TICKET)
+  135          self.assertEqual(ticket.tier, "VIP Guest Free Pass")
+
+  145          tickets_count = frappe.db.count(
+  146:             EVENT_TICKET, {"event": self.event.name, "tier": "Volunteer Free Pass"}
+  147          )
+
+  162                  self.submit_application(coupon.name)
+  163:                 ticket = frappe.get_last_doc(EVENT_TICKET)
+  164                  self.assertEqual(ticket.tier, f"{tier} Free Pass")
+
+fossunited\fossunited\fossunited\doctype\event_free_ticket_code\event_free_ticket_code.py:
+   6  
+   7: from fossunited.api.chapter import check_if_chapter_or_event_core_member
+   8  
+
+  52  
+  53:         if check_if_chapter_or_event_core_member(self.event):
+  54              return True
+
+fossunited\fossunited\fossunited\doctype\foss_event_cfp\foss_event_cfp.json:
+  17      "only_talk_proposals",
+  18:     "event_information_section",
+  19      "event",
+  20:     "event_name",
+  21      "column_break_je1w",
+
+  43      {
+  44:       "fieldname": "event_information_section",
+  45        "fieldtype": "Section Break",
+
+  56      {
+  57:       "fetch_from": "event.event_name",
+  58:       "fieldname": "event_name",
+  59        "fieldtype": "Data",
+
+fossunited\fossunited\fossunited\doctype\foss_event_cfp\foss_event_cfp.py:
+  21          )
+  22:         from fossunited.fossunited.doctype.foss_event_cfp_reviewer.foss_event_cfp_reviewer import (
+  23              FOSSEventCFPReviewer,
+
+  33          event: DF.Link
+  34:         event_name: DF.Data | None
+  35          has_public_custom_responses: DF.Check
+
+fossunited\fossunited\fossunited\doctype\foss_event_cfp_submission\foss_event_cfp_submission.json:
+   23    "event",
+   24:   "event_name",
+   25    "submitted_by",
+
+   83     "columns": 2,
+   84:    "fetch_from": "linked_cfp.event_name",
+   85:    "fieldname": "event_name",
+   86     "fieldtype": "Data",
+
+  417   "row_format": "Dynamic",
+  418:  "search_fields": "submitted_by, event, event_name, chapter",
+  419   "show_title_field_in_link": 1,
+
+fossunited\fossunited\fossunited\doctype\foss_event_cfp_submission\foss_event_cfp_submission.py:
+   15      EVENT,
+   16:     EVENT_CFP,
+   17:     EVENT_SCHEDULE,
+   18      PROPOSAL,
+
+   40          )
+   41:         from fossunited.fossunited.doctype.foss_event_cfp_review.foss_event_cfp_review import (
+   42              FOSSEventCFPReview,
+
+   52          event: DF.Data | None
+   53:         event_name: DF.Data | None
+   54          first_name: DF.Data | None
+
+  120      def set_route(self):
+  121:         event_route = frappe.db.get_value(EVENT, self.event, "route")
+  122:         self.route = f"{event_route}/cfp/{self.name}"
+  123  
+
+  135      def validate_linked_cfp_exists(self) -> None:
+  136:         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
+  137              frappe.throw("Invalid CFP", frappe.DoesNotExistError)
+
+  139      def validate_form_is_live(self) -> None:
+  140:         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+  141          if not linked_cfp.status == "Live":
+
+  158          cfp = frappe.db.get_value(
+  159:             EVENT_CFP,
+  160              self.linked_cfp,
+
+  231  
+  232:         description = "{self.talk_title} is a {self.session_type} proposal for {self.event_name}. {desc_short}".format(  # noqa: E501
+  233              self=self, desc_short=desc_short
+
+  244  
+  245:         image = "{og_url}/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(  # noqa: E501
+  246              self=self,
+
+  295                  "route": f"/{event.route}",
+  296:                 "label": event.event_name,
+  297              },
+
+  384              event=self.event,
+  385:             event_type=email_group_type,
+  386              chapter_type="Chapter CFP Proposers",
+
+  388              # ideally CFPs would require some communication to occur by team
+  389:             # Again, event is temporary for event_duration. Hope logic sounds intentional?
+  390              # if not, please do raise an issue!
+
+  399          talk_scheduled = frappe.db.get_value(
+  400:             EVENT_SCHEDULE,
+  401              {"linked_cfp": self.name},
+
+  413  
+  414:         <p><b>{self.full_name}</b> has withdrawn their proposal from <b>{self.event_name}</b>,
+  415          which was <b>approved</b> before for the event.</p>
+
+  431                  cc=team_emails,
+  432:                 subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
+  433                  message=message,
+
+  472                  cc=speaker_emails,
+  473:                 subject=f"{sub_prefix} on your proposal for {self.event_name}",
+  474                  message=self._build_review_message(review, change_type, old_review),
+
+  487              f"Dear {self.full_name},<br><br>"
+  488:             f"Your proposal for <b>{self.event_name}</b>, "
+  489              f"titled <b>{self.talk_title}</b>, has an update.<br><br>"
+
+fossunited\fossunited\fossunited\doctype\foss_event_cfp_submission\test_foss_event_cfp_submission.py:
+  120  
+  121:     def is_added_to_email_group(self, event_id, email, group_type):
+  122          email_group = frappe.db.get_value(
+
+  124              {
+  125:                 "reference_document": event_id,
+  126                  "document_type": EVENT,
+
+fossunited\fossunited\fossunited\doctype\foss_event_grant\foss_event_grant.json:
+    8    "field_order": [
+    9:     "event_basics_section",
+   10:     "event_name",
+   11:     "event_type",
+   12:     "other_event_type",
+   13      "column_break_meta",
+   14:     "event_description",
+   15:     "event_schedule_section",
+   16:     "event_start_date",
+   17:     "event_end_date",
+   18      "column_break_dates",
+   19:     "event_location",
+   20:     "event_count",
+   21      "foss_alignment_section",
+
+   27      "if_license_cc",
+   28:     "event_history_section",
+   29      "if_recurring_event",
+   30:     "event_edition",
+   31      "prev_edition_details",
+   32      "organizer_section",
+   33:     "event_organiser",
+   34      "organizer_type",
+
+   38      "poc_phone",
+   39:     "event_website",
+   40      "grant_section",
+   41:     "total_event_budget",
+   42      "amount_requested",
+
+   53      "grant_amount",
+   54:     "post_event_report_received",
+   55:     "post_event_report",
+   56      "rejection_section",
+
+   60      {
+   61:       "fieldname": "event_basics_section",
+   62        "fieldtype": "Section Break",
+
+   65      {
+   66:       "fieldname": "event_name",
+   67        "fieldtype": "Data",
+
+   72      {
+   73:       "fieldname": "event_type",
+   74        "fieldtype": "Select",
+
+   80      {
+   81:       "fieldname": "event_schedule_section",
+   82        "fieldtype": "Section Break",
+
+   85      {
+   86:       "fieldname": "event_start_date",
+   87        "fieldtype": "Date",
+
+   91      {
+   92:       "fieldname": "event_end_date",
+   93        "fieldtype": "Date",
+
+  101      {
+  102:       "fieldname": "event_location",
+  103        "fieldtype": "Data",
+
+  106      {
+  107:       "fieldname": "event_count",
+  108        "fieldtype": "Data",
+
+  141      {
+  142:       "depends_on": "eval: doc.event_type == 'Hackathon'",
+  143        "description": "Agree to: https://fossunited.org/fosshack/rules",
+
+  155      {
+  156:       "fieldname": "event_history_section",
+  157        "fieldtype": "Section Break",
+
+  167        "depends_on": "eval: doc.if_recurring_event == 'Yes'",
+  168:       "fieldname": "event_edition",
+  169        "fieldtype": "Data",
+
+  183      {
+  184:       "fieldname": "event_organiser",
+  185        "fieldtype": "Data",
+
+  215      {
+  216:       "fieldname": "event_website",
+  217        "fieldtype": "Data",
+
+  226      {
+  227:       "fieldname": "total_event_budget",
+  228        "fieldtype": "Currency",
+
+  304        "default": "0",
+  305:       "fieldname": "post_event_report_received",
+  306        "fieldtype": "Check",
+
+  309      {
+  310:       "fieldname": "post_event_report",
+  311        "fieldtype": "Attach",
+
+  329      {
+  330:       "depends_on": "eval:doc.event_type==\"Other\"",
+  331:       "fieldname": "other_event_type",
+  332        "fieldtype": "Data",
+  333        "label": "Other event type",
+  334:       "mandatory_depends_on": "eval:doc.event_type==\"Other\""
+  335      },
+
+  340      {
+  341:       "fieldname": "event_description",
+  342        "fieldtype": "Small Text",
+
+  379    "states": [],
+  380:   "title_field": "event_name"
+  381  }
+
+fossunited\fossunited\fossunited\doctype\foss_event_grant\foss_event_grant.py:
+  19          custom_sponsor_request: DF.Data | None
+  20:         event_count: DF.Data | None
+  21:         event_description: DF.SmallText | None
+  22:         event_edition: DF.Data | None
+  23:         event_end_date: DF.Date | None
+  24:         event_location: DF.Data | None
+  25:         event_name: DF.Data
+  26:         event_organiser: DF.Data
+  27:         event_start_date: DF.Date | None
+  28:         event_type: DF.Literal[
+  29              "Hackathon", "Meetup", "Conference", "Workshop", "Devsprint", "Other"
+  30          ]
+  31:         event_website: DF.Data | None
+  32          foss_creation: DF.SmallText | None
+
+  47          organizer_type_other: DF.Data | None
+  48:         other_event_type: DF.Data | None
+  49          poc_name: DF.Data
+  50          poc_phone: DF.Data | None
+  51:         post_event_report: DF.Attach | None
+  52:         post_event_report_received: DF.Check
+  53          prev_edition_details: DF.SmallText | None
+
+  61          support_document: DF.Attach | None
+  62:         total_event_budget: DF.Currency
+  63      # end: auto-generated types
+
+fossunited\fossunited\fossunited\doctype\industry_partners\industry_partners.json:
+  18      "special_category",
+  19:     "flagship_event_sponsorship_section",
+  20      "indiafoss_sponsorship_column",
+
+  83      {
+  84:       "fieldname": "flagship_event_sponsorship_section",
+  85        "fieldtype": "Section Break",
+
+fossunited\fossunited\fossunited\web_template\first_commit\first_commit.html:
+  43          "chapter": chapter_id,
+  44:         "event_end_date": [">=", frappe.utils.today()]
+  45        },
+  46        fields=["*"],
+  47:       order_by="event_end_date asc"
+  48      )
+
+  55          "chapter": chapter_id,
+  56:         "event_end_date": ["<", frappe.utils.today()]
+  57        },
+  58        fields=["*"],
+  59:       order_by="event_end_date desc"
+  60      )
+
+  67        {% for event in data %}
+  68:         {% set formatted_date = event.event_start_date.strftime("%d %b %Y") %}
+  69:         {% set formatted_time = event.event_start_date.strftime("%I:%M %p") %}
+  70  
+
+  73              <img
+  74:               src="{{ event.banner_image or '/assets/fossunited/images/defaults/event_banner.png' }}"
+  75:               alt="{{ event.event_name }}"
+  76              />
+
+  78              <div class="event-details v3-text-primary">
+  79:               <h3 class="event-title">{{ event.event_name }}</h3>
+  80                <p class="event-meta">
+  81:                 <span class="event-date">{{ event.event_start_date.strftime("%d %b %Y") }}</span>
+  82                  <span class="event-dot">•</span>
+  83:                 <span class="event-time">{{ event.event_start_date.strftime("%I:%M %p") }}</span>
+  84                </p>
+
+fossunited\fossunited\fossunited\web_template\get_event_tickets\get_event_tickets.html:
+  119                option.value = event.name
+  120:               option.textContent = event.event_name || event.name
+  121                select.appendChild(option)
+
+fossunited\fossunited\fossunited\web_template\upcoming_foss_events_section\upcoming_foss_events_section.html:
+  57  
+  58:     {% from "fossunited/templates/macros/event_card.html" import event_card %}
+  59      {% set events = get_main_foss_events() %}
+
+  61      {% if events | length %}
+  62:       <div class="events-grid-4">{% for event in events %}{{ event_card(event) }}{% endfor %}</div>
+  63      {% else %}
+
+fossunited\fossunited\patches\v1_0\convert_event_type_new_option.py:
+   7      doctype = EVENT
+   8:     fieldname = "event_type"
+   9  
+
+  22          try:
+  23:             event_names = frappe.get_all(doctype, filters={fieldname: old_value}, pluck="name")
+  24:             for name in event_names:
+  25                  frappe.db.set_value(
+
+  31                  )
+  32:             if event_names:
+  33:                 print(f"Updated {len(event_names)} record(s) from '{old_value}' → '{new_value}'")
+  34          except Exception as e:
+
+fossunited\fossunited\patches\v1_0\convert_lead_to_core_team_chapters.py:
+  12      # Map doctype to the member attribute name
+  13:     doctype_members_map = {CHAPTER: "chapter_members", EVENT: "event_members"}
+  14  
+
+fossunited\fossunited\payments\doctype\razorpay_payment\test_razorpay_payment.py:
+    4  
+    5: from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
+    6  from fossunited.tests.utils import (
+
+   10  )
+   11: from fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket import (
+   12      TicketTierMismatchError,
+
+   42  
+   43:         tickets = frappe.get_all(EVENT_TICKET, {"event": self.event})
+   44          for ticket in tickets:
+   45:             frappe.delete_doc(EVENT_TICKET, ticket.name)
+   46  
+
+   72          # And there should be no ticket linked to this payment doctype
+   73:         self.assertIsNone(frappe.db.exists(EVENT_TICKET, {"razorpay_payment": payment.name}))
+   74  
+
+   80          # Then a ticket should be created
+   81:         self.assertIsNotNone(frappe.db.exists(EVENT_TICKET, {"razorpay_payment": payment.name}))
+   82  
+
+   91          # And there should be no tickets linked to this payment
+   92:         self.assertEqual(frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), 0)
+   93  
+
+  100          self.assertEqual(
+  101:             frappe.db.count(EVENT_TICKET, {"razorpay_payment": payment.name}), number_of_attendees
+  102          )
+
+  114  
+  115:     def test_event_ticket_tier_mismatch(self):
+  116:         event_1 = self.event
+  117:         event_2 = insert_test_event(
+  118              chapter=self.chapter,
+
+  130  
+  131:         event_2_tier = frappe.get_doc(TICKET_TIER, {"parent": event_2.name, "parenttype": EVENT})
+  132  
+  133:         # create a payment for event_1 but with event_2 tier
+  134          with self.assertRaises(TicketTierMismatchError):
+  135:             insert_test_razorpay_payment(event=event_1.name, tier=event_2_tier)
+  136  
+  137:         event_2.delete()
+
+fossunited\fossunited\public\js\website.bundle.js:
+  3  import '../../../../frappe/frappe/public/js/frappe/ui/keyboard.js'
+  4: import '../../../../frappe/frappe/public/js/frappe/event_emitter.js'
+  5  import '../../../../frappe/frappe/public/js/frappe/form/controls/control.js'
+
+fossunited\fossunited\templates\macros\event_card.html:
+   2  
+   3: {% macro event_must_attend_tag() %}
+   4    <div class="v3-tag v3-tag--must">
+
+  22  
+  23: {% macro event_category_tag(category) %}
+  24    {% if category %}
+
+  28  
+  29: {% macro event_card(event, lazy=false) %}
+  30:   {% set event_name = event.event_name or event.hackathon_name %}
+  31:   {% set start_date = event.event_start_date or event.start_date %}
+  32:   {% set end_date = event.event_end_date or event.end_date or start_date %}
+  33:   {% set location = event.event_location or event.location or event.hackathon_type or "TBA" %}
+  34:   {% set banner = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
+  35    {% set chapter_name = event.chapter %}
+
+  37    <a
+  38:     href="{{ event.external_event_url or '/' ~ (event.route or '').lstrip('/') }}"
+  39      class="v3-event-card"
+
+  53          {% endif %}
+  54:         alt="{{ event_name }}"
+  55        />
+
+  82          <div class="v3-event-card__details">
+  83:           <div class="v3-event-card__title">{{ event_name }}</div>
+  84  
+
+  86            {% if event.must_attend %}
+  87:             {{ event_must_attend_tag() }}
+  88            {% endif %}
+
+fossunited\fossunited\templates\macros\ics_download.html:
+   1: {% macro ics_download(event_ids, filename, chapter='', btn_id=None, btn_class='btn btn-sm btn-secondary', fn_name=None) %}
+   2  {% if btn_id %}
+
+  17          args: {
+  18:           event_ids: JSON.stringify(ids),
+  19            {% if chapter %}chapter: '{{ chapter }}',{% endif %}
+
+  43      var _btn = document.getElementById('{{ btn_id }}');
+  44:     if (_btn) { _btn.addEventListener('click', function () { _download({{ event_ids | tojson }}, _btn); }); }
+  45      {% endif %}
+  46      {% if fn_name %}
+  47:     window.{{ fn_name }} = function () { _download({{ event_ids | tojson }}, null); };
+  48      {% endif %}
+
+fossunited\fossunited\templates\macros\status_block_event.html:
+   1: {% macro status_block(status_block_content, event_name) %}
+   2    <div class="submission-status-block">
+
+  83              class="primary-button"
+  84:             onClick="window.location.href='/{{ status_block_content.block_for }}/create/new?event={{ event_name }}'"
+  85            >
+
+fossunited\fossunited\templates\pages\timeline_base.html:
+    2  {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+    3: {% from "fossunited/templates/macros/event_card.html" import event_card %}
+    4  
+
+  176              data-event-id="{{ event.name }}"
+  177:             data-name="{{ event.event_name }}"
+  178:             data-location="{{ event.event_location }}"
+  179              data-city="{{ event._chapter_city or '' }}"
+
+  185            >
+  186:             {{ event_card(event, lazy=true) }}
+  187            </div>
+
+  608              method: 'fossunited.api.chapter.generate_ics',
+  609:             args: { event_ids: JSON.stringify(ids) },
+  610              callback: (r) => {
+
+fossunited\fossunited\tests\test_rsvp_insights.py:
+   14      EVENT,
+   15:     EVENT_RSVP,
+   16      RSVP_RESPONSE,
+
+   36              chapter=self.chapter,
+   37:             event_start_date=add_days(now_datetime(), -1),
+   38:             event_end_date=add_days(now_datetime(), 3),
+   39          )
+
+   51              frappe.delete_doc(RSVP_RESPONSE, sub.name, force=True)
+   52:         frappe.delete_doc(EVENT_RSVP, self.rsvp.name, force=True)
+   53          frappe.delete_doc(EVENT, self.event.name, force=True)
+
+   62          with self.assertRaises(frappe.PermissionError):
+   63:             get_submissions_with_answers(event_id=self.event.name)
+   64  
+
+   68          with self.assertRaises(frappe.PermissionError):
+   69:             get_submissions_with_answers(event_id=self.event.name)
+   70  
+
+   82          frappe.set_user(self.core_team_email)
+   83:         result = get_submissions_with_answers(event_id=self.event.name)
+   84  
+
+  104          frappe.set_user(self.core_team_email)
+  105:         result = get_submissions_with_answers(event_id=self.event.name)
+  106  
+
+  126          frappe.set_user(self.core_team_email)
+  127:         result = get_submissions_with_answers(event_id=self.event.name)
+  128  
+
+  148          frappe.set_user(self.core_team_email)
+  149:         result = get_submissions_with_answers(event_id=self.event.name)
+  150  
+
+  158          with self.assertRaises(frappe.PermissionError):
+  159:             get_rsvp_checkins(event_id=self.event.name)
+  160  
+
+  164          with self.assertRaises(frappe.PermissionError):
+  165:             get_rsvp_checkins(event_id=self.event.name)
+  166  
+
+  193          frappe.set_user(self.core_team_email)
+  194:         result = get_rsvp_checkins(event_id=self.event.name)
+  195  
+
+  227          frappe.set_user(self.core_team_email)
+  228:         result = get_rsvp_checkins(event_id=self.event.name)
+  229  
+
+  236          frappe.set_user(self.core_team_email)
+  237:         result = if_rsvp_show_checkins(event_id=self.event.name)
+  238          self.assertTrue(result)
+
+  243          with self.assertRaises(frappe.PermissionError):
+  244:             get_rsvp_checkin_stats(event_id=self.event.name)
+  245  
+
+  278          frappe.set_user(self.core_team_email)
+  279:         result = get_rsvp_checkin_stats(event_id=self.event.name)
+  280          self.assertEqual(result["total_accepted"], 2)
+
+  284          frappe.set_user(self.core_team_email)
+  285:         result = get_rsvp_checkin_stats(event_id=self.event.name)
+  286          self.assertEqual(result["total_accepted"], 0)
+
+fossunited\fossunited\tests\test_scheduled_tasks.py:
+   6  
+   7: from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_CFP, EVENT_RSVP
+   8  from fossunited.scheduled_tasks import conclude_events
+
+  26              status="Live",
+  27:             event_start_date=today.replace(hour=9, minute=00),
+  28:             event_end_date=today.replace(hour=15, minute=30),
+  29          )
+
+  37              status="Cancelled",
+  38:             event_start_date=today.replace(hour=9, minute=00),
+  39:             event_end_date=today.replace(hour=15, minute=30),
+  40          )
+
+  46              chapter=self.chapter,
+  47:             event_start_date=today.replace(hour=9, minute=00) + timedelta(days=1),
+  48:             event_end_date=today.replace(hour=14, minute=00) + timedelta(days=2),
+  49          )
+
+  55          frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+  56:         frappe.delete_doc(EVENT_CFP, self.event1_cfp.name, force=True)
+  57:         frappe.delete_doc(EVENT_RSVP, self.event1_rsvp.name, force=True)
+  58          frappe.delete_doc(EVENT, self.event1.name, force=True)
+
+fossunited\fossunited\tests\test_volunteers.py:
+  196              chapter=self.chapter1,
+  197:             event_start_date=old_date,
+  198          )
+
+  211  
+  212:     def test_get_volunteers_data_includes_latest_event_timestamp(self):
+  213          """Test that latest_event shows the most recent event date."""
+
+  216              chapter=self.chapter1,
+  217:             event_start_date=add_to_date(nowdate(), days=-30),
+  218          )
+
+  220              chapter=self.chapter1,
+  221:             event_start_date=add_to_date(nowdate(), days=-5),
+  222          )
+
+  234          latest_date = list(latest_dates)[0]
+  235:         self.assertIn(recent_event.event_start_date.strftime("%Y-%m-%d"), latest_date)
+
+fossunited\fossunited\tests\utils.py:
+    9      EVENT,
+   10:     EVENT_CFP,
+   11:     EVENT_RSVP,
+   12:     EVENT_TICKET,
+   13      HACKATHON,
+
+  158                  If not provided, a new test chapter will be generated.
+  159:         event_name (str, optional): Name of the event. Defaults to random text.
+  160:         event_type (str, optional): Type of event. Defaults to "Hackathon".
+  161:         event_start_date (datetime, optional): Event start date. Defaults to today.
+  162:         event_end_date (datetime, optional): Event end date. Defaults to next day.
+  163          status (str, optional): Event status. Defaults to "Live".
+
+  174          event = insert_test_event(
+  175:             event_name="Python Developers Meetup",
+  176:             event_start_date=datetime(2024, 6, 1),
+  177:             event_end_date=datetime(2024, 6, 2),
+  178:             event_type="Conference"
+  179          )
+
+  197          # Prepare event data with flexible defaults
+  198:         event_data = {
+  199              "doctype": EVENT,
+  200              "chapter": chapter.name,
+  201:             "event_name": kwargs.get("event_name", fake.text(max_nb_chars=20).strip()),
+  202:             "event_permalink": kwargs.get("event_permalink", fake.slug().replace("-", "_")),
+  203              "status": kwargs.get("status", "Live"),
+  204:             "event_type": kwargs.get("event_type", "Hackathon"),
+  205:             "event_start_date": kwargs.get(
+  206:                 "event_start_date", datetime.today() + timedelta(days=1)
+  207              ),
+  208:             "event_end_date": kwargs.get("event_end_date", datetime.today() + timedelta(days=2)),
+  209:             "event_description": kwargs.get(
+  210                  "description", f"Test event for {chapter.chapter_name}"
+
+  218          for key, value in kwargs.items():
+  219:             if key not in event_data and key not in [
+  220                  "chapter",
+  221:                 "event_name",
+  222                  "start_date",
+
+  225              ]:
+  226:                 event_data[key] = value
+  227  
+  228          # Create and insert event
+  229:         event = frappe.get_doc(event_data)
+  230          event.insert()
+
+  320      ticket_data = {
+  321:         "doctype": EVENT_TICKET,
+  322          "event": event,
+
+  374          # If event is a dictionary, use its name, otherwise assume it's already a name
+  375:         event_name = event.name if hasattr(event, "name") else event
+  376  
+
+  378          rsvp_data = {
+  379:             "doctype": EVENT_RSVP,
+  380              "allow_edit": kwargs.get("allow_edit", 1),  # Default to allowing edits
+  381:             "event": event_name,
+  382              "max_rsvp_count": kwargs.get("max_rsvp_count", 5),
+
+  476      form_data = {
+  477:         "doctype": EVENT_CFP,
+  478          "allow_cfp_edit": kwargs.get("allow_cfp_edit", False),
+
+fossunited\fossunited\ticketing\doctype\foss_event_ticket\foss_event_ticket.py:
+   10  from fossunited.api.emailing import handle_email_group_subscription
+   11: from fossunited.doctype_ids import EVENT, EVENT_TICKET
+   12  
+
+   27  
+   28:         from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+   29              EventCheckIn,
+
+   68                  {
+   69:                     "doctype": EVENT_TICKET,
+   70                      "razorpay_payment": payment.name,
+
+  118  
+  119:         event_doc = frappe.get_doc(EVENT, self.event)
+  120          handle_email_group_subscription(
+  121              emails=[self.email],
+  122:             chapter=event_doc.chapter,
+  123              event=self.event,
+
+  139          tickets_count = frappe.db.count(
+  140:             EVENT_TICKET,
+  141              {"event": self.event, "tier": self.tier},
+
+  179      tier = payment_meta_data.get("tier", {}).get("name")
+  180:     price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
+  181  
+  182      # Check if the tier belongs to the correct event
+  183:     if event_name != payment_meta_data.get("event"):
+  184          frappe.throw("This tier does not belong to this event!", TicketTierMismatchError)
+
+  209  
+  210:     tshirt_price = frappe.db.get_value(EVENT, event_name, "t_shirt_price")
+  211  
+
+  229  def tickets_already_created(doc: "RazorpayPayment"):
+  230:     return frappe.db.exists(EVENT_TICKET, {"razorpay_payment": doc.name})
+
+fossunited\fossunited\ticketing\doctype\foss_event_ticket\test_foss_event_ticket.py:
+    5  from fossunited.api.checkins import checkin_attendee
+    6: from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
+    7  from fossunited.tests.utils import (
+
+   42              {
+   43:                 "doctype": EVENT_TICKET,
+   44                  "event": self.event.name,
+
+   76              {
+   77:                 "doctype": EVENT_TICKET,
+   78                  "event": self.event.name,
+
+  124              frappe.db.count(
+  125:                 EVENT_TICKET,
+  126                  {
+
+fossunited\fossunited\ticketing\doctype\foss_event_ticket_transfer\foss_event_ticket_transfer.py:
+    6  
+    7: from fossunited.doctype_ids import EVENT, EVENT_TICKET
+    8  
+
+   48      def validate_ticket_exists(self):
+   49:         if not frappe.db.exists(EVENT_TICKET, self.ticket):
+   50              frappe.throw("Ticket not found", frappe.DoesNotExistError)
+
+   63          try:
+   64:             ticket = frappe.get_doc(EVENT_TICKET, self.ticket)
+   65              self.handle_already_transferred_ticket(ticket)
+
+   92          """Prevent transfer of free tier tickets and enforce event status check."""
+   93:         tier = frappe.db.get_value(EVENT_TICKET, self.ticket, "tier")
+   94          if "Free Pass" in tier:
+
+   96  
+   97:         event_name = frappe.db.get_value(EVENT_TICKET, self.ticket, "event")
+   98:         event_status = frappe.db.get_value(EVENT, event_name, "status")
+   99  
+  100          # avoid scam of people tranferring old event tickets
+  101:         if event_status != "Live":
+  102              frappe.throw(
+  103:                 f"Tickets can only be transferred for Live events. Current status: {event_status}"
+  104              )
+
+fossunited\fossunited\ticketing\doctype\foss_event_ticket_transfer\test_foss_event_ticket_transfer.py:
+   4  
+   5: from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TRANSFER
+   6  from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
+
+  70          old_ticket_exists = frappe.db.exists(
+  71:             EVENT_TICKET,
+  72              {
+
+  80          new_ticket_exists = frappe.db.exists(
+  81:             EVENT_TICKET,
+  82              {
+
+fossunited\fossunited\user_profiles\doctype\user_profile\user_profile.py:
+   17      EVENT,
+   18:     EVENT_TICKET,
+   19:     EVENT_VOLUNTEER,
+   20      HACKATHON,
+
+  149  
+  150:         paid_event_ids = frappe.db.get_all(
+  151:             EVENT_TICKET,
+  152              pluck="event",
+
+  155          )
+  156:         rsvpd_event_ids = frappe.db.get_all(
+  157              RSVP_RESPONSE,
+
+  161          )
+  162:         event_volunteer_ids = frappe.get_all(
+  163:             EVENT_VOLUNTEER,  # populated from chap volunteers by default
+  164              filters={"member": self.name},
+
+  166          )
+  167:         attended_event_ids = list(set(rsvpd_event_ids + paid_event_ids + event_volunteer_ids))
+  168:         for val in attended_event_ids:
+  169              event = frappe.db.get_value(
+
+  173                      "route",
+  174:                     "external_event_url",
+  175                      "chapter",
+  176:                     "event_start_date",
+  177:                     "event_end_date",
+  178:                     "event_name",
+  179                      "banner_image",
+  180                      "must_attend",
+  181:                     "event_location",
+  182                  ],
+
+  239  
+  240:         cfp_event_ids = frappe.db.get_all(
+  241              PROPOSAL,
+
+  246  
+  247:         for val in cfp_event_ids:
+  248              if self.cfp_visibility == "Everyone" or (
+
+  257                              "chapter",
+  258:                             "event_start_date",
+  259:                             "event_name",
+  260                              "banner_image",
+  261                              "must_attend",
+  262:                             "event_location",
+  263                          ],
+
+  279                              "chapter",
+  280:                             "event_start_date",
+  281:                             "event_name",
+  282                              "banner_image",
+  283                              "must_attend",
+  284:                             "event_location",
+  285                          ],
+
+  329  
+  330:         EventMember = DocType(EVENT_VOLUNTEER)
+  331          Event = DocType(EVENT)
+
+  341                  Event.route,
+  342:                 Event.event_name.as_("title"),
+  343                  Event.chapter,
+  344:                 Event.event_start_date,
+  345:                 Event.event_location,
+  346              )
+
+  358                      "role": e.role,
+  359:                     "meta": f"Event | {frappe.utils.formatdate(e.event_start_date, 'd MMM yyyy')}",
+  360:                     "event_date": e.event_start_date,
+  361                  }
+
+fossunited\fossunited\user_profiles\doctype\user_profile\templates\foss_user_profile.html:
+  212      from
+  213:     'fossunited/templates/macros/event_card.html' import event_card
+  214    %}
+
+  240          <div class="events-grid-4">
+  241:           {% for event in attended %}{{ event_card(event) }}{% endfor %}
+  242          </div>
+
+  305      href="/{{ talk.route }}"
+  306:     aria-label="{{ talk.talk_title }} at {{ talk.event_name }}, {{ talk.event_start_date.strftime('%d %b %Y') }}, {{ talk.event_location or 'location TBA' }}"
+  307    >
+
+  328            {% endif %}
+  329:           <div class="talk-card--event-name-text">{{ talk.event_name }}</div>
+  330          </div>
+
+  335      <div class="talk-card--location-date">
+  336:       {{ talk.event_start_date.strftime("%d %b %Y") }} |
+  337:       {{ (talk.event_location or 'To Be Announced' ) }}
+  338      </div>
+
+fossunited\fossunited\utils\decorators.py:
+   11      check_if_chapter_member,
+   12:     check_if_chapter_or_event_core_member,
+   13:     check_if_event_member,
+   14  )
+
+  163  
+  164: def require_event_member(event_id="event"):
+  165      """
+
+  168      Args:
+  169:         event_id (str): Name of the parameter containing event ID
+  170      """
+
+  177  
+  178:             event = kwargs.get(event_id)
+  179              if not event:
+
+  181  
+  182:             if not check_if_event_member(event):
+  183                  frappe.throw(_("You are not an event volunteer"), frappe.PermissionError)
+
+  191  
+  192: def require_chapter_or_event_member(event_id="event"):
+  193      """
+
+  196      Args:
+  197:         event_id (str): Name of the parameter containing event ID
+  198      """
+
+  205  
+  206:             event = kwargs.get(event_id)
+  207              if not event:
+
+  210              # Reuse existing function directly
+  211:             if not check_if_chapter_or_event_core_member(event):
+  212                  frappe.throw(
+
+fossunited\fossunited\volunteering\doctype\event_volunteer\event_volunteer.json:
+    9      "chapter",
+   10:     "event_linked_field",
+   11:     "event_name",
+   12      "volunteer_status",
+
+   96      {
+   97:       "fieldname": "event_linked_field",
+   98        "fieldtype": "Link",
+
+  102      {
+  103:       "fetch_from": "event_linked_field.event_name",
+  104:       "fieldname": "event_name",
+  105        "fieldtype": "Data",
+
+fossunited\fossunited\volunteering\doctype\event_volunteer\event_volunteer.py:
+  23          email: DF.Data
+  24:         event_linked_field: DF.Link | None
+  25:         event_name: DF.Data | None
+  26          identification: DF.Data | None
+
+  60          if not self.chapter:
+  61:             event_chapter = frappe.db.get_value(EVENT, self.event_linked_field, "chapter")
+  62:             self.chapter = event_chapter
+
+fossunited\fossunited\www\c\rss.py:
+  29      for event in events:
+  30:         if event.is_external_event and event.external_event_url:
+  31:             event.link = event.external_event_url
+  32          else:
+
+  34  
+  35:         location = escape_html(event.event_location or "")
+  36:         event.event_type_display = escape_html(event.event_type or "Event")
+  37:         location = location or ("Online" if event.event_type == "Online" else "TBA")
+  38          event.title = escape_html(
+  39:             f"{event.event_name} \u2013 {location}" if event.event_name else ""
+  40          )
+  41          event.author = escape_html(doc.chapter_name)
+  42:         event.category = event.event_type_display
+  43          event.guid = f"{host}/c/{doc.slug}/rss.xml#{event.name}"
+  44  
+  45:         start_date = frappe.utils.get_datetime(event.event_start_date)
+  46:         end_date = frappe.utils.get_datetime(event.event_end_date)
+  47          event.start_date_formatted = start_date.strftime("%d %B %Y, %I:%M %p")
+
+  50  
+  51:         _name = html.escape(event.event_name or "", quote=True)
+  52          _link = html.escape(event.link, quote=True)
+  53  
+  54:         event_details = f"""
+  55          <![CDATA[
+  56          <h3>{_name}</h3>
+  57:         <p><strong>Type:</strong> {event.event_type_display}</p>
+  58          <p><strong>Location:</strong> {location}</p>
+
+  63          if event.must_attend:
+  64:             event_details += "<p><strong>⭐ Must Attend Event</strong></p>"
+  65  
+
+  67              banner_url = html.escape(urljoin(host, event.banner_image), quote=True)
+  68:             event_details += (
+  69                  f'<p><img src="{banner_url}" alt="{_name}"'
+
+  72  
+  73:         if event.event_description:
+  74:             event_details += f"<div>{sanitize_html(event.event_description)}</div>"
+  75  
+  76:         event_details += f'<p><a href="{_link}">View Event Details \u2192</a></p>'
+  77:         event_details += "]]>"
+  78  
+  79:         event.content = event_details
+  80  
+
+fossunited\fossunited\www\clubs\index.py:
+   91      events_map = get_events_map(club_ids)
+   92:     live_event_map, upcoming_event_map = get_live_and_upcoming_event_maps(club_ids, now)
+   93  
+
+  100          events = events_map.get(club_id, [])
+  101:         has_live_event = live_event_map.get(club_id, False)
+  102:         has_upcoming_event = upcoming_event_map.get(club_id, False)
+  103          events_count = len(events)
+
+  172          },
+  173:         fields=["chapter", "event_start_date", "event_end_date"],
+  174          page_length=999999,
+
+  182  
+  183: def get_live_and_upcoming_event_maps(
+  184      club_ids: list[str], now
+
+  193              "status": "Live",
+  194:             "event_start_date": ["<=", now],
+  195:             "event_end_date": [">=", now],
+  196          },
+
+  205              "status": "Live",
+  206:             "event_start_date": [">", now],
+  207          },
+
+fossunited\fossunited\www\events\timeline\index.py:
+    5  
+    6: from fossunited.doctype_ids import EVENT, EVENT_GRANTS, HACKATHON
+    7  
+
+   18  
+   19:     event_filters = {
+   20:         "event_end_date": [">=" if is_upcoming else "<", now],
+   21          "status": "Live" if is_upcoming else "Concluded",
+
+   30          EVENT,
+   31:         filters=event_filters,
+   32          or_filters={
+
+   38              "route",
+   39:             "external_event_url",
+   40              "is_external_event",
+   41:             "event_name",
+   42:             "event_start_date",
+   43:             "event_end_date",
+   44:             "event_location",
+   45              "banner_image",
+
+   58              "route",
+   59:             "hackathon_name as event_name",
+   60:             "start_date as event_start_date",
+   61:             "end_date as event_end_date",
+   62              "hackathon_banner as banner_image",
+   63:             "hackathon_type as event_location",
+   64              "chapter",
+
+   70      grants = frappe.get_all(
+   71:         EVENT_GRANTS,
+   72          filters={
+   73              "grant_status": "Approved",
+   74:             "event_end_date": [">=" if is_upcoming else "<", now],
+   75          },
+
+   77              "name",
+   78:             "event_name",
+   79:             "event_start_date",
+   80:             "event_end_date",
+   81:             "event_location",
+   82:             "event_website",
+   83              "grant_amount",
+
+  102      for g in grants:
+  103:         website = g.get("event_website") or f"/grants/events?s={g.event_name}"
+  104:         location = (g.get("event_location") or "").strip().title()
+  105          city = location.split(",")[0].strip() if location else None
+
+  109                  "route": website,
+  110:                 "external_event_url": website,
+  111                  "is_external_event": 1,
+
+  117                  "_chapter_city": city,
+  118:                 "event_location": location,
+  119              }
+
+  129      for item in events + hackathons + grants:
+  130:         start_dt = get_datetime(item.get("event_start_date"))
+  131:         end_dt = get_datetime(item.get("event_end_date"))
+  132  
+
+fossunited\fossunited\www\events\timeline\rss.py:
+   24              "name",
+   25:             "event_name",
+   26:             "event_description",
+   27:             "event_start_date",
+   28:             "event_end_date",
+   29:             "event_location",
+   30:             "event_type",
+   31              "chapter",
+
+   38              "is_published": 1,
+   39:             "event_end_date": (">=", now),
+   40          },
+   41:         order_by="event_start_date asc",
+   42          limit=50,
+
+   49              "name",
+   50:             "hackathon_name as event_name",
+   51:             "hackathon_description as event_description",
+   52:             "start_date as event_start_date",
+   53:             "end_date as event_end_date",
+   54:             "hackathon_type as event_type",
+   55              "chapter",
+
+   70              "name",
+   71:             "event_name",
+   72:             "event_description",
+   73:             "event_start_date",
+   74:             "event_end_date",
+   75:             "event_location",
+   76:             "event_type",
+   77:             "event_website as route",
+   78              "grant_amount",
+
+   82              "grant_status": "Approved",
+   83:             "event_end_date": (">=", now),
+   84          },
+   85:         order_by="event_start_date asc",
+   86          limit=20,
+
+   89      for g in grants:
+   90:         g.route = g.route or f"/grants/events?s={g.event_name}"
+   91          g.chapter = "FOSS Event Grants"
+
+   98      all_events = events + hackathons + grants
+   99:     all_events.sort(key=lambda x: frappe.utils.get_datetime(x.event_start_date))
+  100  
+
+  105              event.link = urljoin(host, event.route or "")
+  106:         event.location = escape_html(event.event_location or "")
+  107          event.chapter_name = escape_html(event.chapter or "")
+  108:         event.event_type_display = escape_html(event.event_type or "Event")
+  109:         location = event.location or ("Online" if event.event_type == "Online" else "TBA")
+  110          event.title = escape_html(
+  111:             f"{event.event_name} \u2013 {location}" if event.event_name else ""
+  112          )
+  113          event.author = event.chapter_name
+  114:         event.category = event.event_type_display
+  115          event.guid = event.link
+
+  117          # Format dates
+  118:         start_date = frappe.utils.get_datetime(event.event_start_date)
+  119:         end_date = frappe.utils.get_datetime(event.event_end_date)
+  120  
+
+  125          # Build RSS description with event details
+  126:         event_details = f"""
+  127          <![CDATA[
+  128:         <h3>{event.event_name}</h3>
+  129:         <p><strong>Type:</strong> {event.event_type_display}</p>
+  130          <p><strong>Chapter:</strong> {event.chapter_name}</p>
+
+  136          if event.must_attend:
+  137:             event_details += "<p><strong>⭐ Must Attend Event</strong></p>"
+  138  
+
+  140              banner_url = urljoin(host, event.banner_image)
+  141:             event_details += f"""<p><img src="{banner_url}" alt="{event.event_name}"
+  142              style="max-width: 600px; height: auto;"/></p>"""
+  143  
+  144:         if event.event_description:
+  145:             description_html = sanitize_html(event.event_description)
+  146:             event_details += f"<div>{description_html}</div>"
+  147  
+  148:         event_details += f'<p><a href="{event.link}">View Event Details →</a></p>'
+  149:         event_details += "]]>"
+  150  
+  151:         event.content = event_details
+  152  
+
+fossunited\fossunited\www\fosshack\2026\index.html:
+  121                <a
+  122:                 href="{{ hackathon.event_page_url }}"
+  123                  class="btn v3-bg-muted v3-text text-uppercase font-weight-semibold rounded-0"
+
+fossunited\fossunited\www\fosshack\2026\index.py:
+   6  )
+   7: from fossunited.fossunited.utils import get_event_sponsors
+   8  
+
+  37          "register_url": f"/dashboard/register-for-hackathon?id={hackathon_id}",
+  38:         "event_page_url": f"/{hackathon.route}",
+  39          "projects_idea_url": "https://forum.fossunited.org/t/problem-statements-and-ideas-fosshack-2026/7186",
+
+  85          {"tier": tier, "sponsor_list": sponsor_list}
+  86:         for tier, sponsor_list in get_event_sponsors(hackathon.sponsor_list).items()
+  87      ]
+
+fossunited\fossunited\www\fosshack\results\index.py:
+  689      for hack in frappe.get_all(HACKATHON, ["name", "start_date"]):
+  690:         event_year = str(hack.start_date.year)
+  691:         hackathon_data = get_hackathon_results(hack.name, event_year)
+  692          if hackathon_data:
+
+fossunited\fossunited\www\grants\index.html:
+  137  
+  138:         {% if recent_project_grants or recent_event_grants or recent_fellowship_grants %}
+  139            <div class="mt-5">
+
+  153  
+  154:             {% if recent_event_grants %}
+  155                {{
+
+  158                    icon='ti ti-building-circus',
+  159:                   grants=recent_event_grants,
+  160                    grant_type='Event',
+
+fossunited\fossunited\www\grants\index.py:
+    5  
+    6: from fossunited.doctype_ids import EVENT_GRANTS, PROJ_GRANTS
+    7  
+
+   17      project_counts = get_project_grant_counts()
+   18:     event_counts = get_event_grant_counts()
+   19  
+
+   39              "route": "/grants/events",
+   40:             "completed": event_counts["completed"],
+   41:             "pending": event_counts["pending"],
+   42          },
+
+   56      context.recent_fellowship_grants = get_recent_project_grants("Fellowship")
+   57:     context.recent_event_grants = get_recent_event_grants()
+   58      context.no_cache = 1
+
+   92  
+   93: def get_event_grant_counts():
+   94      rows = frappe.db.get_all(
+   95:         EVENT_GRANTS,
+   96          fields=[
+
+  129  
+  130: _EVENT_GRANT_FIELDS = [
+  131      "name",
+  132:     "event_name",
+  133:     "event_website",
+  134:     "event_description",
+  135      "application_details",
+  136:     "event_start_date",
+  137      "grant_amount",
+  138:     "event_organiser",
+  139      "modified",
+
+  164  
+  165: def fetch_event_grants(limit=None):
+  166      kwargs = dict(
+  167          filters={"grant_status": ["in", APPROVED_STATUS]},
+  168:         fields=_EVENT_GRANT_FIELDS,
+  169:         order_by="event_start_date desc",
+  170      )
+
+  172          kwargs["limit"] = limit
+  173:     return frappe.db.get_all(EVENT_GRANTS, **kwargs)
+  174  
+
+  179          + fetch_fellowship_grants(limit=limit)
+  180:         + fetch_event_grants(limit=limit)
+  181      )
+
+  188  
+  189: def get_recent_event_grants():
+  190:     return [format_event_grant(g) for g in fetch_event_grants(limit=3)]
+  191  
+
+  212  
+  213: def format_event_grant(grant, grant_type=None):
+  214      return {
+  215:         "name": grant.event_name,
+  216:         "url": grant.event_website,
+  217:         "description": grant.event_description or "FOSS event grant",
+  218:         "year": grant.event_start_date.year if grant.event_start_date else None,
+  219:         "date": (grant.event_start_date.strftime("%Y-%m-%d") if grant.event_start_date else None),
+  220:         "date_display": grant.event_start_date.strftime("%d %b %Y"),
+  221          "grant_amount": grant.grant_amount,
+
+  226          ),
+  227:         "organizer": grant.event_organiser,
+  228          "grant_type": grant_type,
+
+fossunited\fossunited\www\grants\events\index.py:
+   3  from fossunited.www.grants.index import (
+   4:     fetch_event_grants,
+   5:     format_event_grant,
+   6      group_grants_by_year,
+
+  13      # Fetch all approved event grants
+  14:     grants = fetch_event_grants()
+  15  
+
+  17          grants,
+  18:         formatter=format_event_grant,
+  19      )
+
+fossunited\fossunited\www\grants\grantees\index.py:
+   3  from fossunited.www.grants.index import (
+   4:     fetch_event_grants,
+   5      fetch_fellowship_grants,
+   6      fetch_project_grants,
+   7:     format_event_grant,
+   8      format_project_grant,
+
+  19      fellowship_grants = fetch_fellowship_grants()
+  20:     event_grants = fetch_event_grants()
+  21  
+
+  29  
+  30:     for grant in event_grants:
+  31          all_grants.append(
+  32:             format_event_grant(
+  33                  grant,
+
+fossunited\fossunited\www\grants\grantees\rss.py:
+   8  from fossunited.www.grants.index import (
+   9:     fetch_event_grants,
+  10      fetch_fellowship_grants,
+
+  34      project_grants = fetch_project_grants(limit=50) + fetch_fellowship_grants(limit=50)
+  35:     event_grants = fetch_event_grants(limit=50)
+  36  
+
+  67  
+  68:     for g in event_grants:
+  69          amount = (
+
+  73          )
+  74:         date = g.event_start_date or g.modified
+  75:         url = _safe_href(g.event_website)
+  76          description = _safe_cdata(g.application_details or "")
+
+  78              {
+  79:                 "title": escape_html(f"{g.event_name} (Event Grant)"),
+  80                  "link": escape_html(url) if url else host + "/grants/grantees",
+  81:                 "guid": f"{host}/grants/grantees?s={g.event_name}",
+  82:                 "author": escape_html(g.event_organiser or ""),
+  83                  "published_date": format_datetime(frappe.utils.get_datetime(date)),
+
+  88                      "<p><strong>Grant Type:</strong> Event Grant</p>"
+  89:                     f"<p><strong>Organiser:</strong> {escape_html(g.event_organiser or '')}</p>"
+  90                      f"<p><strong>Amount:</strong> {escape_html(amount)}</p>"
+
+fossunited\fossunited\www\rsvp\submission\edit.html:
+   79  
+   80:       <div class="v3-text-secondary"><strong>Event:</strong> {{ event.event_name }}</div>
+   81  
+   82        <div class="v3-text-secondary">
+   83:         <strong>Date:</strong> {{ event.event_start_date.strftime("%B %d, %Y") }}
+   84        </div>
+
+  122          method:
+  123:           'fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission.self_check_in',
+  124          args: {
+
+fossunited\fossunited\www\rsvp\submission\edit.py:
+   2  
+   3: from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
+   4      FOSSEventRSVPSubmission,
+   5  )
+   6: from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
+   7  from fossunited.fossunited.utils import filter_field_values
+
+  33      context.can_check_in = FOSSEventRSVPSubmission.can_check_in(
+  34:         context.event, context.event.event_start_date, context.event.event_end_date
+  35      )
+
+  72  
+  73:     rsvp_doc = frappe.get_doc(EVENT_RSVP, submission.linked_rsvp)
+  74  

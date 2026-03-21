@@ -1,0 +1,21 @@
+# Query: UserSkillMultiselect
+# ContextLines: 1
+
+4 results - 2 files
+
+fossunited\fossunited\user_profiles\doctype\user_profile\user_profile.py:
+  53  from fossunited.user_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  54:     FOSSUserSkillMultiselect,
+  55  )
+  56  from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
+  57:     FOSSUserSkillMultiselect,
+  58  )
+
+  83          show_activity: DF.Check
+  84:         skills: DF.TableMultiSelect[FOSSUserSkillMultiselect]
+  85          user: DF.Link
+
+fossunited\fossunited\user_profiles\doctype\user_skill_multiselect\user_skill_multiselect.py:
+  6  
+  7: class UserSkillMultiselect(Document):
+  8      pass

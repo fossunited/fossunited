@@ -1,0 +1,18 @@
+# Query: UserProjects
+# ContextLines: 1
+
+3 results - 2 files
+
+fossunited\fossunited\user_profiles\doctype\user_profile\user_profile.py:
+  50  from fossunited.user_profiles.doctype.foss_user_projects.foss_user_projects import (
+  51:     FOSSUserProjects,
+  52  )
+
+  80          profile_photo: DF.AttachImage | None
+  81:         projects: DF.Table[FOSSUserProjects]
+  82          route: DF.Data | None
+
+fossunited\fossunited\user_profiles\doctype\user_projects\user_projects.py:
+  10  
+  11: class UserProjects(Document):
+  12      def validate(self):

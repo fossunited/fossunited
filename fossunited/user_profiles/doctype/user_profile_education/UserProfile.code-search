@@ -1,0 +1,42 @@
+# Query: UserProfile
+# ContextLines: 1
+
+9 results - 5 files
+
+doctype_ids.py:
+  1  # Storing all the possible Doctype Identifiers in constants
+  2: # FOSSUserProfile
+  3  USER_PROFILE = "FOSS User Profile"
+
+user_profiles\doctype\foss_user_profile_work_experience\foss_user_profile_work_experience.py:
+  6  
+  7: class FOSSUserProfileWorkExperience(Document):
+  8      # begin: auto-generated types
+
+user_profiles\doctype\user_profile\test_foss_user_profile.py:
+  17  
+  18: class TestFOSSUserProfile(FrappeTestCase):
+  19      def test_add_profile(self):
+
+user_profiles\doctype\user_profile\user_profile.py:
+  34  
+  35: class UserProfile(WebsiteGenerator):
+  36      # begin: auto-generated types
+
+  44      from fossunited.user_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
+  45:     FOSSUserProfileEducation,
+  46  )
+  47  from fossunited.user_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
+  48:     FOSSUserProfileWorkExperience,
+  49  )
+
+  65          devto: DF.Data | None
+  66:         education: DF.Table[FOSSUserProfileEducation]
+  67          email: DF.Data | None
+  68:         experience: DF.Table[FOSSUserProfileWorkExperience]
+  69          full_name: DF.Data | None
+
+user_profiles\doctype\user_profile_education\user_profile_education.py:
+  6  
+  7: class UserProfileEducation(Document):
+  8      pass
