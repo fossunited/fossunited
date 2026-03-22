@@ -3,7 +3,6 @@ let originalItems = []
 document.addEventListener('DOMContentLoaded', () => {
   const items = document.querySelectorAll('.grant-item')
 
-  // Store original items ONCE (no need to clone here)
   originalItems = Array.from(items)
 
   const searchInput = document.getElementById('search')
@@ -33,7 +32,6 @@ function toggleYear(id) {
   const content = document.getElementById(id)
   const header = content?.previousElementSibling
 
-  // Use Bootstrap utility instead of custom "hidden"
   content?.classList.toggle('d-none')
 
   header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
@@ -54,7 +52,6 @@ function applyFilters() {
     resultsContainer.style.display = searchTerm ? '' : 'none'
   }
 
-  // Clone only when needed (not at startup)
   const allItems = originalItems.map((item) => item.cloneNode(true))
 
   const visibleItems = allItems.filter((item) => {
@@ -68,14 +65,12 @@ function applyFilters() {
     )
   })
 
-  // Update results count
   const resultsCount = document.getElementById('results-count')
   if (searchTerm && resultsCount) {
     resultsCount.textContent =
       `Showing ${visibleItems.length} grant${visibleItems.length !== 1 ? 's' : ''}`
   }
 
-  // Sorting
   visibleItems.sort((a, b) => {
     switch (sortBy) {
       case 'date-asc':
@@ -159,7 +154,7 @@ function applyFilters() {
 
 function addYearSection(year, items) {
   const section = document.createElement('div')
-  section.className = 'mb-4' // removed custom class
+  section.className = 'mb-4'
 
   const sectionId = `year-content-${year}`
 
@@ -167,6 +162,8 @@ function addYearSection(year, items) {
     <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2"
       role="button"
       tabindex="0"
+      aria-expanded="true"
+      aria-controls="${sectionId}"
       onclick="toggleYear('${sectionId}')"
       onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear('${sectionId}')"
       style="cursor:pointer;">
@@ -213,10 +210,10 @@ function addSection(title, icon, items) {
         <span class="text-muted small">(${items.length})</span>
       </div>
     </div>
-    <div class="d-flex flex-column"></div>
+    <div class="d-flex flex-column grants-section-content"></div>
   `
 
-  const content = section.querySelector('div:last-child')
+  const content = section.querySelector('.grants-section-content')
   items.forEach((item) => content.appendChild(item))
 
   document.getElementById('grants-container').appendChild(section)
