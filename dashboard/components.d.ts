@@ -13,7 +13,6 @@ declare module 'vue' {
     AddMember: typeof import('./src/components/chapter/AddMember.vue')['default']
     AllProposalsBanner: typeof import('./src/components/proposals/AllProposalsBanner.vue')['default']
     AllProposalsBannerImage: typeof import('./src/components/proposals/AllProposalsBannerImage.vue')['default']
-    AppSidebar: typeof import('./src/components/AppSidebar.vue')['default']
     AttendeeRequestList: typeof import('./src/components/localhost/AttendeeRequestList.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     CampaignList: typeof import('./src/components/mailing/CampaignList.vue')['default']

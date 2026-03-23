@@ -10,7 +10,7 @@
         <p class="text-base text-ink-gray-5">Edit your talk proposal</p>
       </template>
     </SideNavbar>
-    <div v-if="cfpForm.data" class="w-full md:ml-[220px]">
+    <div v-if="cfpForm.data" class="flex-1 min-w-0">
       <SubmissionHeader :submission="submission.doc" />
       <div class="px-6 w-fit">
         <TabButtons v-model="selectedTab" :buttons="tabs" />
