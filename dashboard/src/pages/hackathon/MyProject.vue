@@ -69,8 +69,16 @@
 
       <HackathonHeader :hackathon="hackathon" :show-banner="false" />
 
+      <!-- Hackathon ended read-only notice -->
+      <div
+        v-if="isHackathonEnded"
+        class="my-4 px-4 py-3 bg-surface-amber-1 border border-outline-amber-2 rounded-md text-ink-gray-7 text-sm"
+      >
+        This hackathon has ended. The project is now read-only.
+      </div>
+
       <!-- Project Name & Edit -->
-      <div v-if="inNameEdit" class="flex flex-col gap-2 mb-4">
+      <div v-if="inNameEdit && !isHackathonEnded" class="flex flex-col gap-2 mb-4">
         <div class="flex flex-col gap-4 md:flex-row w-full justify-between md:items-center">
           <input
             v-model="newProjectName"
@@ -95,7 +103,7 @@
       </div>
       <div v-else class="prose mt-4 flex items-top gap-4">
         <h2>{{ project.data.title }}</h2>
-        <Button icon="edit-3" @click="inNameEdit = true" />
+        <Button v-if="!isHackathonEnded" icon="edit-3" @click="inNameEdit = true" />
       </div>
 
       <!-- Tabs -->
@@ -107,7 +115,7 @@
             <div class="bg-surface-gray-7 w-full h-full" />
           </TabsIndicator>
           <TabsTrigger
-            v-for="tab in tabs"
+            v-for="tab in visibleTabs"
             :key="tab.value"
             :value="tab.value"
             class="px-4 pb-2 mx-2 leading-none bg-surface-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
@@ -119,12 +127,16 @@
             >{{ tab.label }}</TabsTrigger
           >
         </TabsList>
-        <TabsContent v-for="tab in tabs" :key="tab.value" :value="tab.value" class="p-4">
+        <TabsContent v-for="tab in visibleTabs" :key="tab.value" :value="tab.value" class="p-4">
           <div v-if="tab.value === 'details'">
-            <HackathonProjectDetail :project="project" />
+            <HackathonProjectDetail :project="project" :is-hackathon-ended="isHackathonEnded" />
           </div>
           <div v-else-if="tab.value === 'issues'">
-            <HackathonProjectIssue :project="project" @fetch-project="project.fetch()" />
+            <HackathonProjectIssue
+              :project="project"
+              :is-hackathon-ended="isHackathonEnded"
+              @fetch-project="project.fetch()"
+            />
           </div>
           <div v-else-if="tab.value === 'manage'">
             <HackathonProjectManage @delete-project="showConfirmationDialog = true" />
@@ -145,7 +157,7 @@ import HackathonProjectManage from '@/components/hackathon/HackathonProjectManag
 import HackathonProjectIssue from '@/components/hackathon/HackathonProjectIssue.vue'
 
 import { createResource, LoadingIndicator, Dialog, ErrorMessage } from 'frappe-ui'
-import { inject, ref } from 'vue'
+import { inject, ref, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import { TabsContent, TabsIndicator, TabsList, TabsRoot, TabsTrigger } from 'radix-vue'
@@ -197,6 +209,15 @@ const hackathon = createResource({
     project.fetch()
   },
 })
+
+const isHackathonEnded = computed(() => {
+  if (!hackathon.data) return false
+  return new Date(hackathon.data.end_date) < new Date()
+})
+
+const visibleTabs = computed(() =>
+  isHackathonEnded.value ? tabs.filter((t) => t.value !== 'manage') : tabs,
+)
 
 const newProjectName = ref('')
 const inNameEdit = ref(false)

@@ -1,12 +1,6 @@
 <template>
   <!-- Add PR/Issue Dialog -->
-  <Dialog
-    v-model="showAddDialog"
-    class="z-50"
-    :options="{
-      title: 'Add Issue / PR / Discussion',
-    }"
-  >
+  <Dialog v-model="showAddDialog" class="z-50" :options="{ title: 'Add Issue / PR / Discussion' }">
     <template #body-content>
       <div class="flex flex-col gap-4">
         <FormControl v-model="newIssuePr.link" type="url" label="Link &ast;" />
@@ -14,20 +8,7 @@
         <FormControl
           v-model="newIssuePr.type"
           type="select"
-          :options="[
-            {
-              label: 'Issue',
-              value: 'Issue',
-            },
-            {
-              label: 'Pull Request',
-              value: 'Pull Request',
-            },
-            {
-              label: 'Discussion',
-              value: 'Discussion',
-            },
-          ]"
+          :options="issueTypes"
           label="Type &ast;"
         />
         <ErrorMessage :message="addIssueErrors" />
@@ -36,25 +17,14 @@
     <template #actions>
       <div class="grid w-full grid-cols-2 gap-4">
         <Button label="Add" variant="solid" @click="handleAddIssuePr" />
-        <Button
-          label="Cancel"
-          theme="gray"
-          @click="
-            () => {
-              newIssuePr.title = ''
-              newIssuePr.link = ''
-              newIssuePr.type = ''
-              showAddDialog = false
-            }
-          "
-        />
+        <Button label="Cancel" theme="gray" @click="closeDialog" />
       </div>
     </template>
   </Dialog>
 
   <!-- Issue / PR ListView -->
   <div
-    v-if="projectDoc.doc.issue_pr_table.length > 0"
+    v-if="!isHackathonEnded && projectDoc.doc.issue_pr_table.length > 0"
     class="flex flex-row-reverse w-full p-2 mb-2"
   >
     <Button
@@ -67,46 +37,9 @@
   </div>
   <ListView
     class="h-[440px]"
-    :columns="[
-      {
-        label: 'Title',
-        key: 'title',
-        width: '300px',
-      },
-      {
-        label: 'Link',
-        key: 'link',
-      },
-      {
-        label: 'Type',
-        key: 'type',
-        width: '100px',
-      },
-      {
-        label: '',
-        key: 'actions',
-        width: '100px',
-      },
-    ]"
+    :columns="listColumns"
     :rows="groupedIssuePrs"
-    :options="{
-      selectable: false,
-      showTooltip: true,
-      resizeColumn: true,
-      onRowClick: (row) => {},
-      emptyState: {
-        title: 'No issues or PRs linked to the project',
-        description: 'You can link issues and PRs to the project to keep track of them.',
-        button: {
-          label: 'Link Issue / PR / Discussion',
-          variant: 'solid',
-          'icon-left': 'plus',
-          onClick: () => {
-            showAddDialog = true
-          },
-        },
-      },
-    }"
+    :options="listOptions"
     row-key="name"
   >
     <template #cell="{ item, row, column }">
@@ -116,23 +49,19 @@
           target="_blank"
           class="text-ink-gray-9 text-base underline flex gap-1 truncate"
         >
-          <span>
-            {{ item }}
-          </span>
+          <span>{{ item }}</span>
           <IconArrowUpRight class="w-4 h-4" />
         </a>
       </div>
       <div v-else-if="column.key == 'actions'">
         <Button icon="trash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
       </div>
-      <div v-else class="text-base truncate text-wrap">
-        {{ item }}
-      </div>
+      <div v-else class="text-base truncate text-wrap">{{ item }}</div>
     </template>
   </ListView>
 </template>
 <script setup>
-import { computed, ref, defineProps, defineEmits, reactive } from 'vue'
+import { computed, ref, watch, defineProps, defineEmits, reactive } from 'vue'
 import {
   ErrorMessage,
   FormControl,
@@ -140,27 +69,26 @@ import {
   Dialog,
   createResource,
   createDocumentResource,
-  LoadingIndicator,
 } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import { IconArrowUpRight } from '@tabler/icons-vue'
 
 const props = defineProps({
-  project: {
-    type: Object,
-    required: true,
-  },
+  project: { type: Object, required: true },
+  isHackathonEnded: { type: Boolean, default: false },
 })
 
 const emits = defineEmits(['fetch-project'])
 
-const newIssuePr = reactive({
-  title: '',
-  link: '',
-  type: '',
-})
+const issueTypes = [
+  { label: 'Issue', value: 'Issue' },
+  { label: 'Pull Request', value: 'Pull Request' },
+  { label: 'Discussion', value: 'Discussion' },
+]
 
+const newIssuePr = reactive({ title: '', link: '', type: '' })
 const showAddDialog = ref(false)
+const addIssueErrors = ref([])
 
 const projectDoc = createDocumentResource({
   doctype: 'FOSS Hackathon Project',
@@ -168,62 +96,95 @@ const projectDoc = createDocumentResource({
   auto: true,
 })
 
-const groupedIssuePrs = computed(() => {
-  if (!projectDoc.doc) return []
-
-  const groups = {
-    Issue: {
-      group: 'Issues',
-      collapsed: false,
-      rows: [],
-    },
-    'Pull Request': {
-      group: 'Pull Requests',
-      collapsed: false,
-      rows: [],
-    },
-    Discussion: {
-      group: 'Discussions',
-      collapsed: false,
-      rows: [],
-    },
+const listColumns = computed(() => {
+  const cols = [
+    { label: 'Title', key: 'title', width: '300px' },
+    { label: 'Link', key: 'link' },
+    { label: 'Type', key: 'type', width: '100px' },
+  ]
+  if (!props.isHackathonEnded) {
+    cols.push({ label: '', key: 'actions', width: '100px' })
   }
-
-  projectDoc.doc.issue_pr_table.forEach((row) => {
-    groups[row.type]?.rows.push(row)
-  })
-
-  return Object.values(groups).filter((g) => g.rows.length)
+  return cols
 })
 
-const addIssueErrors = ref([])
+const listOptions = computed(() => ({
+  selectable: false,
+  showTooltip: true,
+  resizeColumn: true,
+  onRowClick: () => {},
+  emptyState: {
+    title: 'No issues or PRs linked to the project',
+    description: props.isHackathonEnded
+      ? 'The hackathon has ended.'
+      : 'You can link issues and PRs to the project to keep track of them.',
+    ...(!props.isHackathonEnded && {
+      button: {
+        label: 'Link Issue / PR / Discussion',
+        variant: 'solid',
+        'icon-left': 'plus',
+        onClick: () => {
+          showAddDialog.value = true
+        },
+      },
+    }),
+  },
+}))
+
+const GROUP_LABELS = {
+  Issue: 'Issues',
+  'Pull Request': 'Pull Requests',
+  Discussion: 'Discussions',
+}
+
+const groupedIssuePrs = ref([])
+
+watch(
+  () => projectDoc.doc?.issue_pr_table,
+  (table) => {
+    if (!table) return
+
+    // Preserve collapsed state across reloads
+    const collapsed = Object.fromEntries(groupedIssuePrs.value.map((g) => [g.group, g.collapsed]))
+
+    const groups = Object.fromEntries(
+      Object.entries(GROUP_LABELS).map(([type, label]) => [
+        type,
+        { group: label, collapsed: collapsed[label] ?? false, rows: [] },
+      ]),
+    )
+
+    table.forEach((row) => groups[row.type]?.rows.push(row))
+
+    groupedIssuePrs.value = Object.values(groups).filter((g) => g.rows.length)
+  },
+  { deep: true, immediate: true },
+)
+
+const resetNewIssuePr = () => {
+  newIssuePr.title = ''
+  newIssuePr.link = ''
+  newIssuePr.type = ''
+  addIssueErrors.value = []
+}
+
+const closeDialog = () => {
+  resetNewIssuePr()
+  showAddDialog.value = false
+}
 
 const validateIssuePr = () => {
   const errors = []
-
-  if (!newIssuePr.link) {
-    errors.push('Link cannot be empty')
-  } else if (!newIssuePr.link.startsWith('https://')) {
-    errors.push('Enter a valid link')
-  }
-
-  if (!newIssuePr.title) {
-    errors.push('Title cannot be empty')
-  }
-
-  if (!newIssuePr.type) {
-    errors.push('Type cannot be empty')
-  }
-
+  if (!newIssuePr.link) errors.push('Link cannot be empty')
+  else if (!newIssuePr.link.startsWith('https://')) errors.push('Enter a valid link')
+  if (!newIssuePr.title) errors.push('Title cannot be empty')
+  if (!newIssuePr.type) errors.push('Type cannot be empty')
   return errors
 }
 
 const handleAddIssuePr = async () => {
   addIssueErrors.value = validateIssuePr()
-
-  if (addIssueErrors.value.length) {
-    return
-  }
+  if (addIssueErrors.value.length) return
 
   projectDoc.doc.issue_pr_table.push({
     title: newIssuePr.title,
@@ -234,29 +195,20 @@ const handleAddIssuePr = async () => {
   try {
     await projectDoc.save.submit()
     await projectDoc.reload()
-
     toast.success('Issue / PR added')
-
-    newIssuePr.title = ''
-    newIssuePr.link = ''
-    newIssuePr.type = ''
-    addIssueErrors.value = []
-    showAddDialog.value = false
+    closeDialog()
   } catch (err) {
     addIssueErrors.value = err.messages || [err.message]
     showError(err, `Failed to add item.`)
   }
 }
 
-const fetchTitleError = ref('')
-
 // FIXME: remove if no need auto-fill for title 10d from 4th mar 26
+const fetchTitleError = ref('')
 const getPrIssueTitle = createResource({
   url: 'fossunited.api.hackathon.get_issue_pr_title',
   makeParams() {
-    return {
-      url: newIssuePr.link,
-    }
+    return { url: newIssuePr.link }
   },
   onSuccess(data) {
     fetchTitleError.value = ''
@@ -277,7 +229,6 @@ const getPrIssueTitle = createResource({
 
 const deleteIssuePr = (row) => {
   projectDoc.doc.issue_pr_table = projectDoc.doc.issue_pr_table.filter((r) => r.name !== row.name)
-
   projectDoc.save
     .submit()
     .then(() => toast.success(`Deleted the ${row.type}`))
