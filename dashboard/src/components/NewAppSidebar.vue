@@ -63,7 +63,14 @@
 import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
 import { computed, inject, ref, h } from 'vue'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { IconMenu, IconSun, IconMoon, IconExternalLink } from '@tabler/icons-vue'
+import {
+  IconMenu,
+  IconSun,
+  IconMoon,
+  IconExternalLink,
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+} from '@tabler/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const session = inject('$session')
@@ -160,6 +167,14 @@ const allSections = computed(() => [
         onClick: toggleTheme,
         icon: () => h(currentTheme.value === 'dark' ? IconSun : IconMoon, { class: 'w-4 h-4' }),
       },
+      {
+        label: isCollapsed.value ? 'Expand Sidebar' : 'Collapse Sidebar',
+        onClick: () => { resolvedCollapsed.value = !isCollapsed.value },
+        icon: () =>
+          h(isCollapsed.value ? IconLayoutSidebarLeftExpand : IconLayoutSidebarLeftCollapse, {
+            class: 'w-4 h-4',
+          }),
+      },
     ],
   },
   ...navSections.value,
@@ -189,11 +204,3 @@ const sidebarHeader = computed(() => ({
   ],
 }))
 </script>
-
-<style>
-/* DropdownMenuPortal teleports to <body> with no z-index, placing it behind
-   our fixed z-40/z-50 mobile overlay. Force it above. */
-.dropdown-content {
-  z-index: 9999 !important;
-}
-</style>
