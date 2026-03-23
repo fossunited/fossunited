@@ -34,6 +34,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         is_partner_project: DF.Check
         is_published: DF.Check
         issue_pr_table: DF.Table[HackathonProjectIssuePR]
+        license: DF.Data | None
         partner_project: DF.Link | None
         repo_link: DF.Data | None
         route: DF.Data | None

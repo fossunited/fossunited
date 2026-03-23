@@ -21,6 +21,7 @@
     "title",
     "repo_link",
     "demo_link",
+    "license",
     "short_description",
     "column_break_xfpp",
     "hackathon",
@@ -154,12 +155,18 @@
       "fieldtype": "Table",
       "label": "Issue PR Table",
       "options": "Hackathon Project Issue PR"
+    },
+    {
+      "description": "https://opensource.org/licenses",
+      "fieldname": "license",
+      "fieldtype": "Data",
+      "label": "License"
     }
   ],
   "has_web_view": 1,
   "is_published_field": "is_published",
   "links": [],
-  "modified": "2026-03-07 16:42:28.857254",
+  "modified": "2026-03-23 19:40:14.939482",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Project",

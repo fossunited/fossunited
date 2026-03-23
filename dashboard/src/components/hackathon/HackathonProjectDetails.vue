@@ -25,6 +25,13 @@
       label="Demo Link"
       :disabled="isHackathonEnded"
     />
+    <FormControl
+      v-model="projectDoc.doc.license"
+      label="License"
+      placeholder="e.g. MIT, Apache-2.0, GPL-3.0-only"
+      description="Use the SPDX identifier of an OSI-approved license (https://opensource.org/licenses)"
+      :disabled="isHackathonEnded"
+    />
     <div class="col-span-2 mt-2" :class="{ 'pointer-events-none opacity-60': isHackathonEnded }">
       <TextEditor
         label="Project Description"
