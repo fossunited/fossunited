@@ -191,9 +191,10 @@ const sidebarHeader = computed(() => ({
 </script>
 
 <style>
-/* DropdownMenuPortal teleports to <body> with no z-index, placing it behind
-   our fixed z-40/z-50 mobile overlay. Force it above. */
-.dropdown-content {
+/* DropdownMenuPortal teleports to <body>. Reka UI sets pointer-events: none
+   on body when dropdown opens, blocking interaction with the menu items. */
+[data-reka-popper-content-wrapper] {
   z-index: 9999 !important;
+  pointer-events: auto !important;
 }
 </style>
