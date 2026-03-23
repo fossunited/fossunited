@@ -48,7 +48,7 @@
 
   <div class="flex items-center gap-1 rounded-full {{ variant_classes[theme] }} {{ size_classes[size] }} {{additional_classes}}">
     {% if prefix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ prefix }}</div>{% endif %}
-    {{ label }}
+    {{ label | e }}
     {% if suffix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ suffix }}</div>{% endif %}
   </div>
 {% endmacro %}
