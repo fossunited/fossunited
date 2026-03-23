@@ -28,15 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
   applyFilters()
 })
 
-function toggleYear(id) {
-  const content = document.getElementById(id)
-  const header = content?.previousElementSibling
-
-  content?.classList.toggle('d-none')
-
-  header?.querySelector('.v3-toggle-icon')?.classList.toggle('rotated')
-  header?.setAttribute('aria-expanded', !content?.classList.contains('d-none'))
-}
 
 function applyFilters() {
   const searchInput = document.getElementById('search')
@@ -139,7 +130,10 @@ function applyFilters() {
     const flatContainer = document.createElement('div')
     flatContainer.className = 'd-flex flex-column'
 
-    visibleItems.forEach((item) => flatContainer.appendChild(item))
+    visibleItems.forEach((item) => {
+      item.classList.add('mb-3')
+      flatContainer.appendChild(item)
+    })
     container.appendChild(flatContainer)
   }
 
@@ -164,8 +158,8 @@ function addYearSection(year, items) {
       tabindex="0"
       aria-expanded="true"
       aria-controls="${sectionId}"
-      onclick="toggleYear('${sectionId}')"
-      onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleYear('${sectionId}')"
+      onclick="toggleSection('${sectionId}')"
+      onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleSection('${sectionId}')"
       style="cursor:pointer;">
       <div>
         <strong>${year}</strong>
@@ -177,7 +171,10 @@ function addYearSection(year, items) {
   `
 
   const content = section.querySelector(`#${sectionId}`)
-  items.forEach((item) => content.appendChild(item))
+  items.forEach((item) => {
+    item.classList.add('mb-3')
+    content.appendChild(item)
+  })
 
   document.getElementById('grants-container').appendChild(section)
 }
@@ -198,13 +195,14 @@ function groupByField(items, field, configs) {
   })
 }
 
+
 function addSection(title, icon, items) {
   const section = document.createElement('div')
   section.className = 'mb-5'
 
   section.innerHTML = `
     <div class="border-bottom pb-2 mb-3">
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center">
         <i class="${icon}"></i>
         <strong>${title}</strong>
         <span class="text-muted small">(${items.length})</span>
@@ -214,7 +212,10 @@ function addSection(title, icon, items) {
   `
 
   const content = section.querySelector('.grants-section-content')
-  items.forEach((item) => content.appendChild(item))
+  items.forEach((item) => {
+    item.classList.add('mb-3')
+    content.appendChild(item)
+  })
 
   document.getElementById('grants-container').appendChild(section)
 }
