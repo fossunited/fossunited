@@ -551,6 +551,37 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.no_cache = 1
 
 
+@frappe.whitelist()
+def get_event_connection_counts(events):
+    import json
+
+    if isinstance(events, str):
+        events = json.loads(events)
+
+    if not events:
+        return {}
+
+    def get_counts(doctype):
+        rows = frappe.db.get_all(
+            doctype,
+            filters={"event": ["in", events]},
+            fields=["event", "count(*) as count"],
+            group_by="event",
+        )
+        return {r.event: r.count for r in rows}
+
+    cfp = get_counts(PROPOSAL)
+    rsvp = get_counts(RSVP_RESPONSE)
+
+    return {
+        event: {
+            "cfp_count": cfp.get(event, 0),
+            "rsvp_count": rsvp.get(event, 0),
+        }
+        for event in events
+    }
+
+
 def extract_map_coordinates(map_url):
     """
     Extract latitude and longitude from map URLs.
