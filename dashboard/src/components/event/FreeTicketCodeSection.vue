@@ -1,4 +1,5 @@
 <template>
+  <div>
   <FreeTicketCodeDialog
     v-model="showDialog"
     :event="event"
@@ -61,6 +62,7 @@
         </div>
       </template>
     </SearchListView>
+  </div>
   </div>
 </template>
 

@@ -58,7 +58,6 @@ const upcoming_events = createListResource({
   filters: [
     ['chapter', '=', route.params.id],
     ['event_end_date', '>', today()],
-    ['status', 'in', ['Live', 'Draft', 'Cancelled']],
   ],
   orderBy: 'event_start_date asc',
   auto: true,
@@ -70,7 +69,6 @@ const past_events = createListResource({
   filters: [
     ['chapter', '=', route.params.id],
     ['event_start_date', '<', today()],
-    ['status', 'in', ['Concluded', 'Cancelled']],
   ],
   orderBy: 'event_start_date desc',
   auto: true,

@@ -11,6 +11,7 @@ import { useRoute } from 'vue-router'
 import { ref } from 'vue'
 import FormCard from '../../components/cfp-public/FormCard.vue'
 import InsightsGrid from '../../components/event/cfp/InsightsGrid.vue'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 
 const route = useRoute()
 
@@ -56,7 +57,11 @@ usePageMeta(() => {
 <template>
   <Header></Header>
   <NarrowLayout v-if="cfpData.data">
-    <Breadcrumb :items="breadcrumb_items" />
+    <div class="flex items-center justify-between w-full">
+      <Breadcrumb :items="breadcrumb_items" />
+      <ThemeToggle size="20" />
+    </div>
+
     <div class="w-full space-y-4">
       <h1 class="text-3xl font-bold">Talk Proposals</h1>
       <EventHeader :event="cfpData.data.event">

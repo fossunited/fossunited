@@ -10,8 +10,13 @@ def get_sidebar_items(user: str = frappe.session.user):
                 {
                     "label": "Details",
                     "route": "/me",
+                    "icon": "user",
                 },
-                {"label": "My Proposals", "route": "/my-proposals"},
+                {
+                    "label": "My Proposals",
+                    "route": "/my-proposals",
+                    "icon": "file-text",
+                },
             ],
         },
         {
@@ -20,6 +25,7 @@ def get_sidebar_items(user: str = frappe.session.user):
                 {
                     "label": "Hackathons",
                     "route": "/my-hackathons",
+                    "icon": "zap",
                 },
             ],
         },
@@ -33,6 +39,7 @@ def get_sidebar_items(user: str = frappe.session.user):
                     {
                         "label": "Manage Chapter",
                         "route": "/chapter",
+                        "icon": "users",
                     },
                 ],
             }
@@ -43,6 +50,7 @@ def get_sidebar_items(user: str = frappe.session.user):
             {
                 "label": "Manage Localhost",
                 "route": "/localhost",
+                "icon": "map-pin",
             }
         )
 
@@ -54,6 +62,7 @@ def get_sidebar_items(user: str = frappe.session.user):
                     {
                         "label": "Review Proposals",
                         "route": "/review",
+                        "icon": "check-square",
                     },
                 ],
             }

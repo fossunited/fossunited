@@ -41,7 +41,20 @@ class FOSSHackathonTeam(Document):
         self.validate_new_members_not_in_other_teams()
 
     def on_update(self):
-        self.delete_if_empty_team()
+        self.update_member_team_links()
+        self.auto_delete_if_empty()
+
+    def on_trash(self):
+        """Clear team link when team is deleted"""
+        for participant in self.members:
+            if participant.member:
+                frappe.db.set_value(
+                    HACKATHON_PARTICIPANT,
+                    participant.member,
+                    "team",
+                    None,
+                    update_modified=False,
+                )
 
     def validate_team_size(self):
         """Check team size limits"""
@@ -130,26 +143,61 @@ class FOSSHackathonTeam(Document):
 
         return user in participant_users
 
-    def delete_if_empty_team(self):
-        """Auto-delete team if it becomes empty after having content."""
-        prev_doc = self.get_doc_before_save()
-
-        if not prev_doc:
+    def auto_delete_if_empty(self):
+        """Delete team if it has no members or no project"""
+        if frappe.flags.in_test:
             return
-        # Only delete if team had members before
-        previously_had_content = bool(
-            prev_doc.members or prev_doc.project or prev_doc.partner_project
-        )
+        has_content = bool(self.members or self.project or self.partner_project)
+        if not has_content:
+            frappe.db.after_commit.add(lambda: delete_team_if_exists(self.name))
 
-        if not previously_had_content:
-            return
+    def update_member_team_links(self):
+        """Update team link for added members, clear for removed members"""
+        old_doc = self.get_doc_before_save()
 
-        is_now_empty = not (self.members or self.project or self.partner_project)
+        # Get current member IDs
+        current_member_ids = {m.member for m in self.members if m.member}
 
-        if is_now_empty:
+        # Get previous member IDs
+        old_member_ids = set()
+        if old_doc:
+            old_member_ids = {m.member for m in old_doc.members if m.member}
+
+        # Added members: Set team link
+        added_members = current_member_ids - old_member_ids
+        for member_id in added_members:
+            frappe.db.set_value(
+                HACKATHON_PARTICIPANT,
+                member_id,
+                "team",
+                self.name,
+                update_modified=False,
+            )
+
+        # Removed members: Clear team link
+        removed_members = old_member_ids - current_member_ids
+        for member_id in removed_members:
+            frappe.db.set_value(
+                HACKATHON_PARTICIPANT,
+                member_id,
+                "team",
+                None,
+                update_modified=False,
+            )
+
+
+def delete_team_if_exists(team_name):
+    """Helper function to delete team"""
+    try:
+        if frappe.db.exists(HACKATHON_TEAM, team_name):
             frappe.delete_doc(
                 HACKATHON_TEAM,
-                self.name,
+                team_name,
                 ignore_permissions=True,
                 force=True,
             )
+    except Exception:
+        frappe.log_error(
+            frappe.get_traceback(),
+            f"Failed to auto-delete team {team_name}",
+        )

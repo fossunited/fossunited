@@ -15,6 +15,8 @@
       variant="solid"
       :icon-right="!isLastStep ? 'chevron-right' : ''"
       class="uppercase !min-w-8 !font-medium !px-4"
+      :loading="loading"
+      :disabled="loading"
       @click="handleActionClick"
     />
   </div>
@@ -28,6 +30,10 @@ const props = defineProps({
     default: false,
   },
   isLastStep: {
+    type: Boolean,
+    default: false,
+  },
+  loading: {
     type: Boolean,
     default: false,
   },
@@ -56,6 +62,7 @@ const actionButtonLabel = computed(() => {
 
 // Handle click based on the current step
 const handleActionClick = () => {
+  if (props.loading) return
   if (props.isLastStep) {
     emits('submit')
   } else {

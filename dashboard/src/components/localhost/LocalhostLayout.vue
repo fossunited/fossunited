@@ -8,10 +8,10 @@
     }"
   />
 
-  <div v-if="isValidated" class="w-full min-h-screen flex overflow-x-hidden">
+  <div v-if="isValidated" class="w-full min-h-screen flex flex-col md:flex-row overflow-x-hidden">
     <SideNavbar title="Manage Localhost" :menu-items="sidebarMenuItems" />
 
-    <div class="flex-1 p-4 md:ml-[220px] min-w-0">
+    <div class="flex-1 p-4 min-w-0">
       <div class="w-full min-w-0">
         <RouterView />
       </div>
@@ -47,14 +47,17 @@ const sidebarMenuItems = computed(() => [
   {
     items: [
       {
+        icon: 'edit',
         label: 'Edit Localhost',
         route: `/localhost/${route.params.id}/edit`,
       },
       {
+        icon: 'users',
         label: 'Manage Attendees',
         route: `/localhost/${route.params.id}`,
       },
       {
+        icon: 'mail',
         label: 'Localhost Mailing',
         route: `/localhost/${route.params.id}/mailing`,
       },

@@ -53,7 +53,7 @@ def get_hackathon_from_permalink(permalink: str) -> dict:
 
 
 @frappe.whitelist()
-def create_participant(hackathon, participant):
+def create_participant(hackathon: dict, participant: dict) -> dict:
     """
     This method is used to create a participant for a hackathon.
 
@@ -97,7 +97,7 @@ def create_participant(hackathon, participant):
             "git_profile": participant.get("git_profile", ""),
             "wants_to_attend_locally": participant.get("wants_to_attend_locally", 0),
             "localhost": participant.get("localhost", ""),
-            "subscribe_chapter_mailing": participant.get("subscribe_chapter_mailing", 0),
+            "subscribe_chapter_mailing": 1,
         }
     )
     participant_doc.insert(ignore_permissions=True)
@@ -299,17 +299,9 @@ def get_localhost_requests_by_team(
     ],
 ):
     """
-    Get requests for a particular localhost grouped by team.
-
-    params:
-        hackathon(str): hackathon name
-        localhost(str): localhost name
-        status(list): status of the request
-
-    return:
-        dict: requests grouped by team
+    Get requests for a particular localhost with team and project info.
+    Returns a flat list.
     """
-
     requests = frappe.get_all(
         doctype=HACKATHON_PARTICIPANT,
         filters={
@@ -334,38 +326,51 @@ def get_localhost_requests_by_team(
         order_by="creation",
     )
 
+    # Enrich each request with profile, team, and project data
     for request in requests:
-        request["profile_route"] = frappe.db.get_value(USER_PROFILE, request.user_profile, "route")
-        profile_photo = frappe.db.get_value(USER_PROFILE, request.user_profile, "profile_photo")
-        request["profile_photo"] = (
-            profile_photo
-            if profile_photo
-            else "/assets/fossunited/images/defaults/user_profile_image.png"
-        )
-        request["profile_username"] = frappe.db.get_value(
-            USER_PROFILE, request.user_profile, "username"
-        )
+        # Profile data
+        if request.user_profile:
+            profile = (
+                frappe.db.get_value(
+                    USER_PROFILE,
+                    request.user_profile,
+                    ["route", "profile_photo", "username"],
+                    as_dict=True,
+                )
+                or {}
+            )
+            request["profile_route"] = profile.get("route")
+            request["profile_photo"] = (
+                profile.get("profile_photo")
+                or "/assets/fossunited/images/defaults/user_profile_image.png"
+            )
+            request["profile_username"] = profile.get("username")
+        else:
+            request["profile_route"] = None
+            request["profile_photo"] = "/assets/fossunited/images/defaults/user_profile_image.png"
+            request["profile_username"] = None
 
-    requests_by_team = {}
-
-    for request in requests:
+        # Team data
         team = get_team_from_participant_id(hackathon, request.get("name"))
         if team:
+            request["team_id"] = team.name
+            request["team_name"] = team.team_name
+
+            # Project data
             project = get_project_by_team(hackathon, team.name)
             if project:
                 request["project_title"] = project.title
                 request["project_route"] = project.route
-            if team.name not in requests_by_team:
-                requests_by_team[team.name] = []
-            request["team"] = team
-            requests_by_team[team.name].append(request)
+            else:
+                request["project_title"] = None
+                request["project_route"] = None
         else:
-            request["team"] = {"team_name": "Individual Participants"}
-            if "Individual Participants" not in requests_by_team:
-                requests_by_team["Individual Participants"] = []
-            requests_by_team["Individual Participants"].append(request)
+            request["team_id"] = "individual"
+            request["team_name"] = "Individual Participants"
+            request["project_title"] = None
+            request["project_route"] = None
 
-    return requests_by_team or None
+    return requests
 
 
 @frappe.whitelist()
@@ -555,35 +560,6 @@ def validate_participant_for_localhost(participant_id: str):
 
 
 @frappe.whitelist()
-def validate_user_as_localhost_member(localhost_id: str):
-    if not frappe.db.exists(
-        "Has Role",
-        {
-            "parent": frappe.session.user,
-            "role": "Localhost Organizer",
-        },
-    ):
-        frappe.throw("You are not a Localhost Organizer. You are not authorized to view this page")
-
-    if not frappe.db.exists(
-        LOCALHOST_ORGANIZER,
-        {
-            "parent": localhost_id,
-            "profile": frappe.db.get_value(
-                USER_PROFILE,
-                {"user": frappe.session.user},
-                "name",
-            ),
-        },
-    ):
-        frappe.throw(
-            "You are not a member of this Localhost. You are not authorized to view this page"
-        )
-
-    return True
-
-
-@frappe.whitelist()
 def get_issue_pr_title(url: str) -> dict:
     """
     Get title of the issue/PR/Discussion from the URL
@@ -674,3 +650,44 @@ def get_localhost_checkin_stats(localhost_id: str):
     )
 
     return {"total_accepted": total_accepted}
+
+
+@frappe.whitelist()
+def check_participant_disqualification(hackathon_permalink: str):
+    """
+    Check if current user is disqualified from a hackathon.
+
+    Returns:
+        dict: {
+            'is_disqualified': bool,
+            'hackathon_name': str,
+            'rules': str (HTML/markdown),
+        }
+    """
+    user = frappe.session.user
+    hackathon = frappe.db.get_value(
+        HACKATHON,
+        {"permalink": hackathon_permalink},
+        ["name", "hackathon_name", "hackathon_rules"],
+        as_dict=True,
+    )
+
+    if not hackathon:
+        frappe.throw(frappe._("Hackathon not found"))
+
+    participant = frappe.db.get_value(
+        HACKATHON_PARTICIPANT,
+        {"hackathon": hackathon.name, "user": user},
+        ["disqualified", "name"],
+        as_dict=True,
+    )
+
+    if not participant:
+        return {"is_disqualified": False, "registered": False}
+
+    return {
+        "is_disqualified": bool(participant.disqualified),
+        "registered": True,
+        "hackathon_name": hackathon.hackathon_name,
+        "rules": hackathon.hackathon_rules or "",
+    }

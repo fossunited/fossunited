@@ -5,7 +5,13 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["profile", "user", "column_break_pwxv", "full_name", "email"],
+  "field_order": [
+    "profile",
+    "user",
+    "column_break_pwxv",
+    "full_name",
+    "email"
+  ],
   "fields": [
     {
       "fieldname": "profile",
@@ -43,15 +49,15 @@
       "label": "Full Name"
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-04-02 13:37:34.609404",
+  "modified": "2026-03-07 16:37:03.613908",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Global CFP Review Member",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

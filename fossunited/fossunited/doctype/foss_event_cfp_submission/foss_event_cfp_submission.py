@@ -222,6 +222,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             )
 
         context.talk_video = self.cfp_get_talk_video()
+        context.youtube_embed_id = self.cfp_get_youtube_id(context.talk_video)
         context.no_cache = 1
 
     def get_meta(self, context):
@@ -392,6 +393,17 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             subscribe_to_chapter=self.subscribe_chapter_mailing,
             document_type_event=EVENT,
         )
+
+    @staticmethod
+    def cfp_get_youtube_id(url: str | None) -> str | None:
+        """Extract YouTube video ID from a URL, or None if not a YouTube link."""
+        if not url:
+            return None
+        match = re.search(
+            r"(?:youtube\.com/(?:watch\?v=|embed/)|youtu\.be/)([a-zA-Z0-9_-]{11})",
+            url,
+        )
+        return match.group(1) if match else None
 
     def cfp_get_talk_video(self) -> str | None:
         """Return the talk video link if CFP is linked in schedule and has a video."""

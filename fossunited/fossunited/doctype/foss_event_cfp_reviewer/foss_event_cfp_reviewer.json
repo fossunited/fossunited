@@ -5,7 +5,11 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["reviewer", "email", "full_name"],
+  "field_order": [
+    "reviewer",
+    "email",
+    "full_name"
+  ],
   "fields": [
     {
       "fieldname": "reviewer",
@@ -30,15 +34,15 @@
       "label": "Email"
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-04-02 15:01:18.940570",
+  "modified": "2026-03-07 16:37:03.356214",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Reviewer",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

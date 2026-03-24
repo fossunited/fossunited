@@ -16,16 +16,23 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 - Install [`uv`](https://github.com/astral-sh/uv) python manager and `docker`
 - `uv init` in a new directory
 - `uv add frappe-manager`
-- `fm create foss.localhost`
-- `fm start` choose site as it shows in menu
-- `fm shell` (enter into docker container shell and run further steps there)
+- `uv run fm create foss.localhost`
+- `uv run fm start` — choose site as it shows in menu
+- `uv run fm shell` — enter into docker container shell and run further steps there
+- For frappe >= v16, install newsletter first:
+  - `bench get-app https://github.com/frappe/newsletter`
+  - `bench --site foss.localhost install-app newsletter`
 - `bench get-app https://github.com/fossunited/fossunited.git`
-- `bench install-app fossunited` - This will also install dashboard
-- Also please configure frappe for server scripts and running tests
+- `bench --site foss.localhost install-app fossunited` — this will also install dashboard
+- Configure frappe for server scripts and developer mode:
   - `bench set-config -g server_script_enabled true`
+  - `bench --site foss.localhost set-config developer_mode 1`
+  - `bench --site foss.localhost migrate`
 
 - To run tests please create new-site since it can have unintended DB changes.
   - `bench new-site break.site`
+  - For frappe >= v16: `bench --site break.site install-app newsletter`
+  - `bench --site break.site install-app fossunited`
   - `bench --site break.site set-config allow_tests true`
 
 - Open `foss.localhost` in your browser and start exploring!
@@ -64,8 +71,9 @@ cd fossu-bench
 For frappe >= v16, the **Newsletter** module has been moved as an separate app. Install it *before* `fossunited`:
 
 ```sh
+bench new-site foss.localhost
 bench get-app https://github.com/frappe/newsletter
-bench install-app newsletter
+bench --site foss.localhost install-app newsletter
 ```
 
 > Related discussion: [#1120](https://github.com/fossunited/fossunited/issues/1120)
@@ -76,11 +84,11 @@ bench install-app newsletter
 # Get the app
 bench get-app https://github.com/fossunited/fossunited
 
-# Create a new site
-bench new-site test.localhost
-
 # Install the app on the site
-bench --site test.localhost install-app fossunited
+bench set-config -g server_script_enabled true
+bench --site foss.localhost install-app fossunited
+bench --site foss.localhost set-config developer_mode 1
+bench --site foss.localhost migrate
 
 # Start development server
 bench start
@@ -146,6 +154,65 @@ pre-commit install
 ```
 
 Or use [uv](https://github.com/astral-sh/uv) as an alternative Python package manager.
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+- **MariaDB root password error** — follow [this guide](https://www.digitalocean.com/community/tutorials/how-to-reset-your-mysql-or-mariadb-root-password) to reset it
+- **Site shows errors after install** — make sure you ran `bench --site foss.localhost migrate`
+- **Server scripts not running** — verify `server_script_enabled` is set to `true`
+- **`tatsu` crash during install** — a recent `tatsu` release is broken. Fix it by downgrading and using `--force`:
+
+```bash
+./env/bin/pip install "tatsu<5.10.0"
+bench --site foss.localhost install-app --force fossunited
+```
+
+> See [#1320](https://github.com/fossunited/fossunited/issues/1320) for more context on this issue.
+
+---
+
+### macOS + Colima Setup
+
+If you're using Colima instead of Docker Desktop, here are the fixes for the common errors you'll hit:
+
+**1. Docker socket not found**
+```bash
+sudo ln -sfn ~/.colima/default/docker.sock /var/run/docker.sock
+```
+
+**2. Missing Compose plugin**
+```bash
+mkdir -p ~/.docker/cli-plugins
+ln -sfn $(which docker-compose) ~/.docker/cli-plugins/docker-compose
+```
+
+**3. UID 1000 crash**
+```bash
+SITE_PKGS="$(uv run python -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')"
+find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getuid()/1000/g' {} +
+find "$SITE_PKGS/frappe_manager" -type f -name "*.py" -exec sed -i '' 's/os.getgid()/1000/g' {} +
+```
+
+**4. uv install failing (os error 1)**
+
+Run these inside `fm shell` before `bench get-app`:
+```bash
+export UV_CACHE_DIR=/tmp/uv_cache
+export UV_LINK_MODE=copy
+```
+
+**5. Dashboard build crash (exit code 137)**
+
+Colima's default RAM is too low for the Vite build. Restart with more resources:
+```bash
+colima start --cpu 4 --memory 8
+```
+
+> Full discussion and all fixes: [#1320](https://github.com/fossunited/fossunited/issues/1320)
 
 ---
 

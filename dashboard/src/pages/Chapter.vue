@@ -9,7 +9,7 @@
   />
   <div v-if="chapter.data" class="flex flex-col md:flex-row">
     <SideNavbar title="Manage Chapter" :menu-items="sidebarMenuItems" />
-    <div class="w-full md:ml-[220px]">
+    <div class="flex-1 min-w-0">
       <RouterView />
     </div>
   </div>
@@ -44,18 +44,22 @@ const sidebarMenuItems = [
   {
     items: [
       {
+        icon: 'info',
         label: 'Details',
         route: `/chapter/${route.params.id}`,
       },
       {
+        icon: 'calendar',
         label: 'Events',
         route: `/chapter/${route.params.id}/events`,
       },
       {
+        icon: 'users',
         label: 'Members',
         route: `/chapter/${route.params.id}/members`,
       },
       {
+        icon: 'mail',
         label: 'Chapter Mailing',
         route: `/chapter/${route.params.id}/mailing`,
       },

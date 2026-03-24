@@ -176,17 +176,17 @@
               Enter the complete links to your social, including
               <code>http(s)://</code>
             </div>
-            <FormControl v-model="profileDoc.doc.website" type="url" label="Website" />
-            <FormControl v-model="profileDoc.doc.x" type="url" label="Twitter / X" />
-            <FormControl v-model="profileDoc.doc.linkedin" type="url" label="LinkedIn" />
-            <FormControl v-model="profileDoc.doc.github" type="url" label="GitHub" />
-            <FormControl v-model="profileDoc.doc.gitlab" type="url" label="GitLab" />
-            <FormControl v-model="profileDoc.doc.instagram" type="url" label="Instagram" />
-            <FormControl v-model="profileDoc.doc.youtube" type="url" label="YouTube" />
-            <FormControl v-model="profileDoc.doc.devto" type="url" label="Dev.to" />
-            <FormControl v-model="profileDoc.doc.medium" type="url" label="Medium" />
-            <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" />
-            <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" />
+            <FormControl v-model="profileDoc.doc.website" type="url" label="Website" @blur="profileDoc.doc.website = ensureHttpsPrefix(profileDoc.doc.website)" />
+            <FormControl v-model="profileDoc.doc.x" type="url" label="Twitter / X" @blur="profileDoc.doc.x = ensureHttpsPrefix(profileDoc.doc.x)" />
+            <FormControl v-model="profileDoc.doc.linkedin" type="url" label="LinkedIn" @blur="profileDoc.doc.linkedin = ensureHttpsPrefix(profileDoc.doc.linkedin)" />
+            <FormControl v-model="profileDoc.doc.github" type="url" label="GitHub" @blur="profileDoc.doc.github = ensureHttpsPrefix(profileDoc.doc.github)" />
+            <FormControl v-model="profileDoc.doc.gitlab" type="url" label="GitLab" @blur="profileDoc.doc.gitlab = ensureHttpsPrefix(profileDoc.doc.gitlab)" />
+            <FormControl v-model="profileDoc.doc.instagram" type="url" label="Instagram" @blur="profileDoc.doc.instagram = ensureHttpsPrefix(profileDoc.doc.instagram)" />
+            <FormControl v-model="profileDoc.doc.youtube" type="url" label="YouTube" @blur="profileDoc.doc.youtube = ensureHttpsPrefix(profileDoc.doc.youtube)" />
+            <FormControl v-model="profileDoc.doc.devto" type="url" label="Dev.to" @blur="profileDoc.doc.devto = ensureHttpsPrefix(profileDoc.doc.devto)" />
+            <FormControl v-model="profileDoc.doc.medium" type="url" label="Medium" @blur="profileDoc.doc.medium = ensureHttpsPrefix(profileDoc.doc.medium)" />
+            <FormControl v-model="profileDoc.doc.mastodon" type="url" label="Mastodon" @blur="profileDoc.doc.mastodon = ensureHttpsPrefix(profileDoc.doc.mastodon)" />
+            <FormControl v-model="profileDoc.doc.bluesky" type="url" label="Bluesky" @blur="profileDoc.doc.bluesky = ensureHttpsPrefix(profileDoc.doc.bluesky)" />
             <ErrorMessage class="col-span-2" :message="updateErrors" />
             <div class="hidden md:block"></div>
             <div class="flex justify-end">
@@ -346,7 +346,7 @@
 import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck } from '@tabler/icons-vue'
 import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
-import { isValidUrl } from '@/helpers/utils'
+import { isValidUrl, ensureHttpsPrefix } from '@/helpers/utils'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'

@@ -100,7 +100,7 @@ def get_context(context, page_type="upcoming"):
     )
 
     for g in grants:
-        website = g.get("event_website") or "/grants/events"
+        website = g.get("event_website") or f"/grants/events?s={g.event_name}"
         location = (g.get("event_location") or "").strip().title()
         city = location.split(",")[0].strip() if location else None
 

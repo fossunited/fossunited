@@ -15,6 +15,7 @@
   <div class="container max-w-[800px] flex flex-col gap-6 mb-6 px-4">
     {{ breadcrumb(breadcrumbs) }}
     {{ talk_header() }}
+    {% if talk_video %}{{ video_embed() }}{% endif %}
     {{ prose_container("Session Description", doc.talk_description) }}
     {{ prose_container("Key Takeaways", doc.key_takeaways) }}
     {{ references() }}
@@ -68,6 +69,28 @@
   </div>
 {% endmacro %}
 
+{% macro video_embed() %}
+  <div class="flex flex-col gap-2">
+    {% if youtube_embed_id %}
+      <div class="relative w-full" style="padding-top: 56.25%">
+        <iframe
+          class="absolute inset-0 w-full h-full rounded border border-gray-200"
+          src="https://www.youtube-nocookie.com/embed/{{ youtube_embed_id }}?rel=0&modestbranding=1"
+          title="{{ doc.talk_title }}"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+      </div>
+    {% else %}
+      <video class="w-full rounded border border-gray-200" controls preload="metadata">
+        <source src="{{ talk_video }}" />
+        Your browser does not support the video element.
+      </video>
+    {% endif %}
+  </div>
+{% endmacro %}
+
 {% macro prose_container(label, content) %}
   <div class="flex flex-col">
     <h2 class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
@@ -86,8 +109,8 @@
       {% for reference in doc.references %}
         <div class="flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors">
           <i class="ti ti-link text-lg" aria-hidden="true"></i>
-          <a class="no-underline" href="{{ reference.link }}" target="_blank" rel="noopener noreferrer">
-            {{ reference.link }}
+          <a class="no-underline" href="{{ reference.link | e }}" target="_blank" rel="noopener noreferrer">
+            {{ reference.link | e }}
           </a>
         </div>
       {% endfor %}
@@ -134,7 +157,7 @@
           </div>
         </div>
         {% if speaker.social_link %}
-          <a href="{{ speaker.social_link }}" target="_blank" rel="noopener noreferrer" aria-label="{{ speaker.full_name }}'s social profile">
+          <a href="{{ speaker.social_link | e }}" target="_blank" rel="noopener noreferrer" aria-label="{{ speaker.full_name }}'s social profile">
             {{ badge(label=speaker.social_link, variant="outline", prefix="<i class='ti ti-world' aria-hidden='true'></i>", theme="gray") }}
           </a>
         {% endif %}

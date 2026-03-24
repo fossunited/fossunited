@@ -1,12 +1,12 @@
 D:\foss\fossunited\dashboard\src\components\NewAppSidebar.vue 
 <template>
-  <div
-    class="relative hidden md:block min-h-0 flex-shrink-0 overflow-hidden hover:overflow-auto"
-    :class="toggleSidebar ? '!block' : ''"
+  <!-- Mobile: top bar -->
+  <header
+    class="flex md:hidden items-center gap-2 h-12 px-3 sticky top-0 z-40 bg-surface-menu-bar border-b border-outline-gray-1 w-full"
   >
-    <div
-      class="fixed flex justify-between min-h-screen w-[220px] flex-col border-r bg-surface-gray-1 p-4 z-50 transform transition-transform duration-500 ease-in-out"
-      :class="toggleSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+    <button
+      class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-gray-2"
+      @click="mobileOpen = true"
     >
       <div class="flex flex-col gap-4">
         <slot name="header"> </slot>
@@ -184,58 +184,187 @@ D:\foss\fossunited\dashboard\src\components\NewAppSidebar.vue
     </div>
   </div>
 
-  <!-- Dark background overlay -->
+  <!-- Sidebar: sticky on desktop, fixed on mobile when open -->
   <div
-    v-if="toggleSidebar"
-    class="fixed inset-0 bg-surface-gray-7 bg-opacity-50 z-40 transition-opacity duration-500 md:hidden"
-    @click="toggleSidebar = false"
-  ></div>
+    :class="
+      mobileOpen
+        ? 'fixed top-0 left-0 h-screen z-50'
+        : 'h-screen hidden md:block md:sticky md:top-0'
+    "
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+  >
+    <Sidebar
+      v-model:collapsed="resolvedCollapsed"
+      :class="mobileOpen ? '!w-60' : ''"
+      :sections="allSections"
+      :header="sidebarHeader"
+    >
+      <template #footer-items>
+        <p
+          v-if="!resolvedCollapsed"
+          class="text-sm leading-normal tracking-tight font-medium text-ink-gray-5"
+        >
+          Need Help? Check out our
+          <a
+            class="underline flex gap-1 items-center"
+            href="https://docs.fossunited.org/"
+            target="_blank"
+          >
+            documentation
+            <IconExternalLink class="w-4 h-4" />
+          </a>
+        </p>
+        <p v-if="!resolvedCollapsed" class="text-ink-gray-6 text-xs leading-snug">
+          FOSS United Foundation.<br />CC-BY-SA.
+        </p>
+      </template>
+    </Sidebar>
+  </div>
 </template>
-<script setup>
-import { createResource, FeatherIcon, Popover, useTheme } from 'frappe-ui'
-import { useRoute } from 'vue-router'
-import { ref, defineProps, inject } from 'vue'
-import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { IconExternalLink, IconSunHighFilled, IconMoonStars } from '@tabler/icons-vue'
 
-const route = useRoute()
+<script setup>
+import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
+import { computed, inject, ref, h } from 'vue'
+import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
+import {
+  IconMenu,
+  IconSun,
+  IconMoon,
+  IconExternalLink,
+  IconLayoutSidebarLeftCollapse,
+  IconLayoutSidebarLeftExpand,
+} from '@tabler/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+
 const session = inject('$session')
-const toggleSidebar = ref(false)
+const route = useRoute()
+const router = useRouter()
 const { currentTheme, toggleTheme } = useTheme()
 
 const props = defineProps({
-  title: {
-    type: String,
-    default: '',
-  },
-  menuItems: {
-    type: Array,
-    required: true,
-    default: () => [],
+  menuItems: { type: Array, default: () => [] },
+})
+
+const STORAGE_KEY = 'foss_sidebar_collapsed'
+const isCollapsed = ref(localStorage.getItem(STORAGE_KEY) === 'true')
+const isHovering = ref(false)
+const mobileOpen = ref(false)
+
+let leaveTimer = null
+const onMouseEnter = () => {
+  clearTimeout(leaveTimer)
+  isHovering.value = true
+}
+const onMouseLeave = () => {
+  leaveTimer = setTimeout(() => {
+    isHovering.value = false
+  }, 200)
+}
+
+const resolvedCollapsed = computed({
+  get: () => (mobileOpen.value ? false : isCollapsed.value && !isHovering.value),
+  set: (val) => {
+    if (!mobileOpen.value) {
+      if (isHovering.value && isCollapsed.value) {
+        // hover-expanded: button click means "stay expanded / pin open"
+        isCollapsed.value = false
+        isHovering.value = false
+      } else {
+        isCollapsed.value = val
+        if (val) isHovering.value = false
+      }
+      localStorage.setItem(STORAGE_KEY, isCollapsed.value)
+    }
   },
 })
 
-const user_profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-})
-
-if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
+const user_profile = createResource({ url: 'fossunited.api.dashboard.get_session_user_profile' })
+if (session.isLoggedIn && session.user !== 'Guest' && session.user !== 'Administrator') {
   user_profile.fetch()
 }
 
-const isMenuItemActive = (menuRoute, index) => {
-  if (index == 0 && menuRoute != route.path) {
-    return false
-  }
+const logo = computed(
+  () =>
+    user_profile.data?.profile_photo ??
+    '/assets/fossunited/images/defaults/user_profile_image.png',
+)
+
+const isItemActive = (menuRoute, index) => {
+  if (index === 0 && menuRoute !== route.path) return false
   return (
     menuRoute === route.path ||
     menuRoute === '/' + route.path.split('/').filter(Boolean).slice(0, -1).join('/')
   )
 }
 
-const handleClick = () => {
-  if (window.screen.width < 768) {
-    toggleSidebar.value = false
-  }
-}
+const itemIcon = (icon, label) =>
+  icon
+    ? () => h(FeatherIcon, { name: icon, class: 'w-4 h-4' })
+    : () =>
+        h(
+          'span',
+          {
+            class:
+              'w-4 h-4 rounded text-[10px] font-semibold flex items-center justify-center bg-surface-gray-3 text-ink-gray-6 uppercase flex-shrink-0',
+          },
+          label?.[0] ?? '?',
+        )
+
+const navSections = computed(() =>
+  props.menuItems.map((group) => ({
+    label: group.parent_label || undefined,
+    items: group.items.map((item, i) => ({
+      label: item.label,
+      to: item.route,
+      isActive: isItemActive(item.route, i),
+      icon: itemIcon(item.icon, item.label),
+    })),
+  })),
+)
+
+const allSections = computed(() => [
+  {
+    items: [
+      {
+        label: currentTheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
+        onClick: toggleTheme,
+        icon: () => h(currentTheme.value === 'dark' ? IconSun : IconMoon, { class: 'w-4 h-4' }),
+      },
+      {
+        label: isCollapsed.value ? 'Expand Sidebar' : 'Collapse Sidebar',
+        onClick: () => { resolvedCollapsed.value = !isCollapsed.value },
+        icon: () =>
+          h(isCollapsed.value ? IconLayoutSidebarLeftExpand : IconLayoutSidebarLeftCollapse, {
+            class: 'w-4 h-4',
+          }),
+      },
+    ],
+  },
+  ...navSections.value,
+])
+
+const sidebarHeader = computed(() => ({
+  title: 'FOSS United',
+  subtitle: user_profile.data?.full_name ?? '',
+  logo: logo.value,
+  menuItems: [
+    {
+      label: currentTheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
+      onClick: toggleTheme,
+      icon: 'sun',
+    },
+    {
+      label: 'My Profile',
+      onClick: () => router.push(createAbsoluteUrlFromRoute('me')),
+      icon: 'user',
+    },
+    {
+      label: 'Go To Website',
+      onClick: () => router.push(createAbsoluteUrlFromRoute('')),
+      icon: 'external-link',
+    },
+    { label: 'Logout', onClick: () => session.logout.fetch(), icon: 'log-out' },
+  ],
+}))
 </script>

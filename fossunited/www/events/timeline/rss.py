@@ -87,7 +87,7 @@ def get_context(context):
     )
 
     for g in grants:
-        g.route = g.route or "/grants/events"
+        g.route = g.route or f"/grants/events?s={g.event_name}"
         g.chapter = "FOSS Event Grants"
         g.must_attend = (g.grant_amount or 0) > 10000
 

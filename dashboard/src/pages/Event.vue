@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col md:flex-row">
     <SideNavbar title="Manage Event" :menu-items="sidebarMenuItems" />
-    <div class="w-full md:ml-[220px] overflow-x-hidden">
+    <div class="flex-1 min-w-0 overflow-x-hidden">
       <RouterView />
     </div>
   </div>
@@ -45,34 +45,42 @@ watch(
       let sidebar_items = {
         items: [
           {
+            icon: 'info',
             label: 'Details',
             route: `/event/${route.params.id}`,
           },
           {
+            icon: 'check-circle',
             label: 'RSVP',
             route: `/event/${route.params.id}/rsvp`,
           },
           {
+            icon: 'mic',
             label: 'CFP',
             route: `/event/${route.params.id}/cfp`,
           },
           {
+            icon: 'clock',
             label: 'Schedule',
             route: `/event/${route.params.id}/schedule`,
           },
           {
+            icon: 'briefcase',
             label: 'Partners',
             route: `/event/${route.params.id}/partner`,
           },
           {
+            icon: 'monitor',
             label: 'Project Showcases',
             route: `/event/${route.params.id}/showcases`,
           },
           {
+            icon: 'heart',
             label: 'Volunteers',
             route: `/event/${route.params.id}/volunteers`,
           },
           {
+            icon: 'mail',
             label: 'Mailing',
             route: `/event/${route.params.id}/mailing`,
           },
@@ -81,14 +89,17 @@ watch(
 
       if (doc.is_paid_event) {
         sidebar_items.items.splice(1, 1, {
+          icon: 'tag',
           label: 'Tickets',
           route: `/event/${route.params.id}/tickets`,
         })
         sidebar_items.items.push({
+          icon: 'user-check',
           label: 'Check-Ins',
           route: `/event/${route.params.id}/checkins`,
         })
         sidebar_items.items.push({
+          icon: 'zap',
           label: 'Quick-Checkin',
           route: `/event/${route.params.id}/quick-checkin`,
         })

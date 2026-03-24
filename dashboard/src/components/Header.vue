@@ -14,6 +14,11 @@
       <Dropdown
         :options="[
           {
+            label: currentTheme === 'dark' ? 'Switch to Light' : 'Switch to Dark',
+            icon: currentTheme === 'dark' ? 'sun' : 'moon',
+            onClick: toggleTheme,
+          },
+          {
             label: 'My Profile',
             icon: 'user',
             onClick: redirectToProfile,
@@ -33,14 +38,13 @@
         ]"
       >
         <Avatar
-          v-if="user_profile.data"
-          :shape="'circle'"
+          shape="circle"
           class="cursor-pointer"
           :image="
-            user_profile.data.profile_photo ||
+            user_profile.data?.profile_photo ||
             '/assets/fossunited/images/defaults/user_profile_image.png'
           "
-          :label="user_profile.data.full_name[0].toUpperCase()"
+          :label="user_profile.data?.full_name?.[0]?.toUpperCase() || '?'"
           size="xl"
         />
       </Dropdown>
@@ -51,11 +55,12 @@
   </header>
 </template>
 <script setup>
-import { inject, computed } from 'vue'
-import { Avatar, Dropdown, createResource } from 'frappe-ui'
+import { inject } from 'vue'
+import { Avatar, Dropdown, createResource, useTheme } from 'frappe-ui'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 const session = inject('$session')
+const { currentTheme, toggleTheme } = useTheme()
 
 const user_profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',

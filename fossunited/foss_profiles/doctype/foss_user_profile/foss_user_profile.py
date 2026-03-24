@@ -6,6 +6,7 @@ import textwrap
 
 import frappe
 from frappe.exceptions import PermissionError
+from frappe.query_builder import DocType
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
@@ -289,31 +290,72 @@ class FOSSUserProfile(WebsiteGenerator):
                     | val
                 )
 
-        # City Chapters/FOSS Clubs user volunteers for
+        ChapterMember = DocType(CHAPTER_MEMBER)
+        Chapter = DocType(CHAPTER)
+
+        chapters = (
+            frappe.qb.from_(ChapterMember)
+            .join(Chapter)
+            .on(Chapter.name == ChapterMember.parent)
+            .select(
+                ChapterMember.parent,
+                ChapterMember.role,
+                Chapter.name,
+                Chapter.route,
+                Chapter.chapter_name.as_("title"),
+                Chapter.chapter_type,
+                Chapter.chapter_status,
+            )
+            .where((ChapterMember.chapter_member == self.name) & (Chapter.is_published == 1))
+        ).run(as_dict=True)
         volunteered = []
+        chapter_ids = [c["parent"] for c in chapters]
 
-        volunteer_chapters = frappe.db.get_all(
-            CHAPTER_MEMBER,
-            fields=["parent", "role"],
-            filters={"chapter_member": self.name},
-            page_length=9999,
-        )
-
-        for val in volunteer_chapters:
+        for c in chapters:
             volunteered.append(
-                frappe.db.get_value(
-                    CHAPTER,
-                    fieldname=[
-                        "name",
-                        "route",
-                        "chapter_type",
-                        "chapter_name",
-                        "chapter_status",
-                    ],
-                    filters={"name": val.parent, "is_published": 1},
-                    as_dict=1,
-                )
-                | val
+                {
+                    "type": "chapter",
+                    "name": c.name,
+                    "route": c.route,
+                    "title": c.title,
+                    "role": c.role,
+                    "meta": f"{c.chapter_type} | {c.chapter_status}",
+                    "chapter_type": c.chapter_type,
+                }
+            )
+
+        EventMember = DocType(EVENT_VOLUNTEER)
+        Event = DocType(EVENT)
+
+        events = (
+            frappe.qb.from_(EventMember)
+            .join(Event)
+            .on(Event.name == EventMember.parent)
+            .select(
+                EventMember.parent,
+                EventMember.role,
+                Event.name,
+                Event.route,
+                Event.event_name.as_("title"),
+                Event.chapter,
+                Event.event_start_date,
+                Event.event_location,
+            )
+            .where((EventMember.member == self.name) & (Event.is_published == 1))
+        ).run(as_dict=True)
+        for e in events:
+            if e.chapter in chapter_ids:
+                continue
+            volunteered.append(
+                {
+                    "type": "event",
+                    "name": e.name,
+                    "route": e.route,
+                    "title": e.title,
+                    "role": e.role,
+                    "meta": f"Event | {frappe.utils.formatdate(e.event_start_date, 'd MMM yyyy')}",
+                    "event_date": e.event_start_date,
+                }
             )
 
         return attended, attended_hack, talked, cfps, volunteered
@@ -332,13 +374,14 @@ class FOSSUserProfile(WebsiteGenerator):
             experiences_dict[experience.company].append(experience.as_dict())
         context.experiences_dict = experiences_dict
 
-        (
-            context.attended,
-            context.attended_hack,
-            context.talked,
-            context.cfps,
-            context.volunteered,
-        ) = self.get_user_activity()
+        if self.show_activity:
+            (
+                context.attended,
+                context.attended_hack,
+                context.talked,
+                context.cfps,
+                context.volunteered,
+            ) = self.get_user_activity()
 
         context.pagetitle, context.description, context.image = self.get_meta()
 

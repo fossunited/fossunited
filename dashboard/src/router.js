@@ -143,6 +143,11 @@ const routes = [
             name: 'EventTicketsInsights',
             component: () => import('@/pages/EventTicketInsights.vue'),
           },
+          {
+            path: 'free-codes',
+            name: 'EventTicketsFreeCodes',
+            component: () => import('@/components/event/FreeTicketCodeSection.vue'),
+          },
         ],
       },
       {
@@ -254,6 +259,7 @@ const routes = [
   },
   {
     path: '/hack/:permalink',
+    component: () => import('@/components/hackathon/HackathonLayout.vue'),
     children: [
       {
         path: '',

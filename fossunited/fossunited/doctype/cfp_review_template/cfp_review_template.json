@@ -4,7 +4,9 @@
   "creation": "2024-03-07 23:38:10.218042",
   "doctype": "DocType",
   "engine": "InnoDB",
-  "field_order": ["reviews_list"],
+  "field_order": [
+    "reviews_list"
+  ],
   "fields": [
     {
       "fieldname": "reviews_list",
@@ -13,10 +15,9 @@
       "options": "CFP Review Template Reason"
     }
   ],
-  "index_web_pages_for_search": 1,
   "issingle": 1,
   "links": [],
-  "modified": "2024-03-19 16:58:17.262386",
+  "modified": "2026-03-07 16:37:03.891027",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "CFP Review Template",
@@ -33,6 +34,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

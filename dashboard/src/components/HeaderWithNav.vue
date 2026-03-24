@@ -1,7 +1,7 @@
 <template>
   <header class="sticky top-0 z-40 flex items-center justify-between border-b bg-surface-white px-5 py-2">
     <div>
-      <button class="block md:hidden" @click="handleToggleSidebar()">
+     <button class="block md:hidden" @click="handleToggleSidebar()" aria-label="Toggle sidebar">
         <IconMenu2 class="w-5 h-5" />
       </button>
     </div>

@@ -40,6 +40,9 @@ class FOSSHackathon(WebsiteGenerator):
         from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
             FOSSEventCommunityPartner,
         )
+        from fossunited.foss_hackathon.doctype.hackathon_result.hackathon_result import (
+            HackathonResult,
+        )
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
@@ -72,6 +75,7 @@ class FOSSHackathon(WebsiteGenerator):
         partner_project_guidelines: DF.MarkdownEditor | None
         permalink: DF.Data | None
         registration_description: DF.TextEditor | None
+        results: DF.Table[HackathonResult]
         route: DF.Data | None
         schedule: DF.Table[FOSSEventSchedule]
         show_schedule_tab: DF.Check
@@ -247,6 +251,7 @@ class FOSSHackathon(WebsiteGenerator):
                 "mentor.username as username",
                 "skills as info",
             ],
+            order_by="full_name",
         )
 
         for m in mentors:

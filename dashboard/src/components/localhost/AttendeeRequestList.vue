@@ -58,6 +58,10 @@
     </div>
   </div>
 
+  <span v-if="currentView === 'requests'" class="ml-2 text-sm font-normal text-ink-gray-5">
+    Note: Grouped by teamID (more than one team can share same name)
+  </span>
+
   <!-- Check-Ins View -->
   <CheckInsTable
     v-if="currentView === 'checkins'"
@@ -263,7 +267,7 @@ const totalAccepted = computed(() => {
 })
 
 watchEffect(() => {
-  if (!requests.data) {
+  if (!requests.data || !Array.isArray(requests.data)) {
     groupedRequests.value = []
     return
   }
@@ -279,32 +283,31 @@ watchEffect(() => {
     }
   })
 
-  // Flatten requests and add check-in status
-  const allRequests = []
-  Object.entries(requests.data).forEach(([teamId, teamRequests]) => {
-    teamRequests.forEach((request) => {
-      allRequests.push({
-        ...request,
-        has_checked_in_today: checkedInToday.has(request.name),
-        team_name: request.team?.team_name || 'Unknown Team',
-      })
-    })
-  })
+  // Add check-in status to each request
+  const enrichedRequests = requests.data.map((request) => ({
+    ...request,
+    has_checked_in_today: checkedInToday.has(request.name),
+  }))
 
-  // Group by team name
-  const teamGroups = {}
-  allRequests.forEach((request) => {
-    const teamName = request.team_name
-    if (!teamGroups[teamName]) {
-      teamGroups[teamName] = []
+  // Group by team ID
+  const teamGroups = enrichedRequests.reduce((groups, request) => {
+    const teamId = request.team_id
+    if (!groups[teamId]) {
+      groups[teamId] = []
     }
-    teamGroups[teamName].push(request)
-  })
+    groups[teamId].push(request)
+    return groups
+  }, {})
 
-  // Convert to array of groups
+  // Convert to sorted array of groups
   groupedRequests.value = Object.entries(teamGroups)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([teamName, rows]) => {
+    .sort(([, aRows], [, bRows]) => {
+      const aName = aRows[0]?.team_name || ''
+      const bName = bRows[0]?.team_name || ''
+      return aName.localeCompare(bName)
+    })
+    .map(([teamId, rows]) => {
+      const teamName = rows[0]?.team_name || 'Unknown Team'
       const hasPending = rows.some((r) => r.localhost_request_status === 'Pending')
       const hasPendingConfirmation = rows.some(
         (r) => r.localhost_request_status === 'Pending Confirmation',

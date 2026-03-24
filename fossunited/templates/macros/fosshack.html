@@ -1,0 +1,137 @@
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+
+{%
+  macro fosshack_navbar(
+      hackathons= [
+              {"hackathon_name": "FOSS Hack 2020", "route": "/fosshack/2020"},
+              {"hackathon_name": "FOSS Hack 2021", "route": "/fosshack/2021"},
+              {"hackathon_name": "FOSS Hack 3.0", "route": "/fosshack/2023"},
+              {"hackathon_name": "FOSS Hack 2024", "route": "/fosshack/2024"},
+              {"hackathon_name": "FOSS Hack 2025", "route": "/fosshack/2025"},
+              {"hackathon_name": "FOSS Hack 2026", "route": "/fosshack/2026"},
+            ],
+      pages=[],
+      live="Ongoing"
+  )
+%}
+  <header class="v3-card fosshack-navbar rounded p-2 my-4 v3-text-secondary position-relative">
+    <div class="d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center">
+        <img
+          src="/assets/fossunited/images/fosshack/fh26-annouce-block.svg"
+          style="height:48px;"
+          class="mr-3"
+        />
+
+        <div>
+          <div>{% include "fossunited/public/images/fosshack/fh-title.svg" %}</div>
+          <div class="text-uppercase font-weight-semibold text-xs">
+            India’s Largest FOSS Hackathon
+          </div>
+        </div>
+      </div>
+
+      <button
+        class="btn d-md-none"
+        type="button"
+        data-toggle="collapse"
+        data-target="#fosshackMobileMenu"
+        aria-controls="fosshackMobileMenu"
+        aria-expanded="false"
+        aria-label="Open FOSS Hack navigation menu"
+      >
+        <i class="ti ti-menu-2" aria-hidden="true"></i>
+      </button>
+
+      <div class="d-none d-md-flex align-items-center">
+        {% set class = "v3-status--success" if live else "v3-status--error" %}
+        <div class="v3-status mr-3 {{ class }}">
+          <span class="text-xs">
+            {% if live == "Ongoing" %}
+              Ongoing Event
+            {% elif live %}
+              Registration Open
+            {% else %}
+              Event Ended
+            {% endif %}
+          </span>
+        </div>
+
+        <select class="v3-select" onchange="if(this.value) window.open(this.value,'_blank')">
+          {% for hack in hackathons %}
+            <option
+              value="{{ hack.route }}"
+              {% if hack.route == "/fosshack/2026" %}selected{% endif %}
+            >
+              {{ hack.hackathon_name }}
+            </option>
+          {% endfor %}
+        </select>
+
+        {% for page in pages %}
+          <a href="{{ page.route }}" class="btn border-0 text-uppercase mr-2">
+            {{ page.title }}
+          </a>
+        {% endfor %}
+
+        <a href="/fosshack/results?year=2026" class="btn border-0 mr-2">Results</a>
+        <a href="/hack/fosshack26/projects/all" class="btn border-0 mr-2">Projects</a>
+
+        <!-- for now keeping it page wise, someday keep it on header for all pages -->
+        {{ theme_toggle() }}
+      </div>
+    </div>
+
+    <div
+      class="collapse d-md-none position-absolute"
+      id="fosshackMobileMenu"
+      style="top:100%; right:0; width:70%; z-index:1050;"
+    >
+      <div class="v3-card rounded p-3 mt-2">
+        {% set class = "v3-status--success" if live else "v3-status--error" %}
+        <div class="v3-status mb-3 {{ class }}">
+          <span class="text-xs">
+            {% if live == "Ongoing" %}
+              Ongoing Event
+            {% elif live %}
+              Registration Open
+            {% else %}
+              Event Ended
+            {% endif %}
+          </span>
+        </div>
+
+        <select
+          class="custom-select v3-select mb-3"
+          onchange="if(this.value) window.open(this.value,'_blank')"
+        >
+          {% for hack in hackathons %}
+            <option
+              value="{{ hack.route }}"
+              {% if hack.route == "/fosshack/2026" %}selected{% endif %}
+            >
+              {{ hack.hackathon_name }}
+            </option>
+          {% endfor %}
+        </select>
+
+        {% for page in pages %}
+          <a href="{{ page.route }}" class="d-block py-2"> {{ page.title }} </a>
+        {% endfor %}
+
+        <a href="/fosshack/results?year=2026" class="d-block py-2">Results</a>
+        <a href="/hack/fosshack26/projects/all" class="d-block py-2">Projects</a>
+        {{ theme_toggle() }}
+      </div>
+    </div>
+  </header>
+  <style>
+    .fosshack-navbar a,
+    .fosshack-navbar button,
+    .fosshack-navbar select,
+    .fosshack-navbar span {
+      overflow-wrap: normal !important;
+      white-space: nowrap;
+    }
+  </style>
+{% endmacro %}

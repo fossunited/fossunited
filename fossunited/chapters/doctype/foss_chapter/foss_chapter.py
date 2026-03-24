@@ -175,6 +175,7 @@ class FOSSChapter(WebsiteGenerator):
             frappe.throw("Slug cannot have spaces")
 
     def get_context(self, context):
+        context.no_cache = 1
         logo_assets = {
             CITY_COMMUNITY: "city_community",
             STUDENT_CLUB: "foss_club",

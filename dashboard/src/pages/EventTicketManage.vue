@@ -40,15 +40,12 @@
 
     <!-- Custom Fields -->
     <TicketCustomFieldsSection :event="event" />
-
-    <FreeTicketCodeSection :event="event" />
   </div>
 </template>
 <script setup>
 import TicketTierSection from '@/components/event/TicketTierSection.vue'
 import TicketTshirtSection from '@/components/event/TicketTshirtSection.vue'
 import TicketCustomFieldsSection from '@/components/event/TicketCustomFieldsSection.vue'
-import FreeTicketCodeSection from '@/components/event/FreeTicketCodeSection.vue'
 import { createResource } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 

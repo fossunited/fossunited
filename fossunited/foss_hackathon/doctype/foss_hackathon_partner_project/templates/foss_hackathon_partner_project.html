@@ -53,7 +53,7 @@
       </div>
 
       {{ render_description() }}
-      {{ issue_pr_table(doc.issue_pr_table, "No issues or pull requests linked yet. Check the repository discussion thread for contribution opportunities.") }}
+      {{ issue_pr_table(doc.issue_pr_table, title="Issues Board", empty_message="No issues or pull requests linked yet. Check the repository discussion thread for contribution opportunities.") }}
       {{ render_participant_projects() }}
     </div>
   </div>
@@ -91,13 +91,13 @@
             class="v3-clickable d-flex flex-column p-3"
             style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
           >
-            <div class="v3-text-primary mb-1 text-lg">{{ project.title }}</div>
+            <div class="v3-text-primary mb-1 text-sm font-weight-bold">{{ project.title }}</div>
             {% if project.short_description %}
-              <div class="v3-text-secondary text-base">
+              <div class="v3-text-secondary text-sm">
                 {{ project.short_description | truncate(100, true) }}
               </div>
             {% endif %}
-            <div class="d-flex align-items-center gap-2 mt-2 text-base">
+            <div class="d-flex align-items-center gap-2 mt-2 text-sm">
               <span class="v3-text-tertiary">
                 <i class="ti ti-users-group"></i>
                 {{ project.team_name }}

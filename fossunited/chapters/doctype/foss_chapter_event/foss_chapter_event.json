@@ -484,7 +484,6 @@
   }
  ],
  "has_web_view": 1,
- "index_web_pages_for_search": 1,
  "is_published_field": "is_published",
  "links": [
   {
@@ -513,7 +512,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2025-12-11 12:50:27.937795",
+ "modified": "2026-03-07 16:38:56.973361",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

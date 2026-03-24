@@ -188,8 +188,8 @@
         <FormControl
           v-model="event.doc.livestream_embed_link"
           type="url"
-          label="Livestream Link (For embedding)"
-          description="eg. https://youtube.com/watch?v=VIDEOID becomes https://youtube.com/embed/VIDEOID"
+          label="Recorded Video Link"
+          description="Provide a link to the event recording."
           size="md"
         />
       </div>
@@ -202,6 +202,7 @@
           :type="'text'"
           label="Location"
           size="md"
+          description="Event Venue if offline else Jitsi meet or Online"
         />
         <FormControl
           v-model="event.doc.map_link"
@@ -209,6 +210,28 @@
           label="Map Link"
           side="md"
           description="Prefer OpenStreetMap (OSM) links, e.g., https://osmapp.org/"
+        />
+      </div>
+    </div>
+
+    <div class="flex flex-col my-6">
+      <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Ticket Settings</div>
+      <div class="p-2 my-1 grid sm:grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+        <FormControl
+          v-model="event.doc.is_paid_event"
+          type="checkbox"
+          size="md"
+          label="Paid Event"
+          description="Enable ticket purchases for this event."
+        />
+        <FormControl
+          v-if="event.doc.is_paid_event"
+          v-model="event.doc.ticket_form_description"
+          type="textarea"
+          size="md"
+          label="Ticket Form Description"
+          description="Supports markdown (bold, italic, bullet points, headings). Shown at the top of the ticket purchase page."
+          class="col-span-2 [&_textarea]:min-h-[200px]"
         />
       </div>
     </div>

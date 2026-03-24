@@ -107,6 +107,8 @@ website_redirects = [
         "source": r"hack/(.+)/partner-projects(.*)",
         "target": r"/api/method/fossunited.api.pages.partner_projects_redirect?hack=\1&project=\2",
     },
+    # fosshack
+    {"source": r"^fosshack/(\d{4})/results/?$", "target": "/fosshack/results?year=\\1"},
 ]
 
 # Installation

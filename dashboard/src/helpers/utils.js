@@ -1,5 +1,6 @@
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
+import DOMPurify from 'dompurify'
 
 export const truncateStr = (title, len) => {
   return title.length > len ? title.substring(0, len) + '...' : title
@@ -13,6 +14,10 @@ export const createAbsoluteUrlFromRoute = (route) => {
   return window.location.origin + '/' + route
 }
 
+export const redirectToExternalUrl = (url) => {
+  window.open(url, '_blank')
+}
+
 export const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
 }
@@ -21,7 +26,7 @@ export const copyToClipboard = (text) => {
 export const cleanedHTML = (htmlData) => {
   const html = htmlData || ''
   const tempDiv = document.createElement('div')
-  tempDiv.innerHTML = html
+  tempDiv.innerHTML = DOMPurify.sanitize(html)
 
   // Process each <p> tag
   tempDiv.querySelectorAll('p').forEach((p) => {
@@ -33,6 +38,11 @@ export const cleanedHTML = (htmlData) => {
     }
   })
   return tempDiv.innerHTML
+}
+
+export const ensureHttpsPrefix = (url) => {
+  if (!url || url.startsWith('http://') || url.startsWith('https://')) return url
+  return 'https://' + url
 }
 
 export const isValidUrl = (link) => {

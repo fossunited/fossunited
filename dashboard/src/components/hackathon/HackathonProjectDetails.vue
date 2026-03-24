@@ -9,26 +9,39 @@
       v-model="projectDoc.doc.short_description"
       label="Short Description"
       placeholder="Enter a short description of the project"
+      :disabled="isHackathonEnded"
     />
     <FormControl
       v-model="projectDoc.doc.repo_link"
       label="Repository Link"
-      :disabled="projectDoc.doc.is_partner_project"
+      :disabled="isHackathonEnded || projectDoc.doc.is_partner_project"
     >
       <template #prefix>
         <IconBrandGithub class="w-4" />
       </template>
     </FormControl>
-    <FormControl v-model="projectDoc.doc.demo_link" label="Demo Link" />
-    <TextEditor
-      class="col-span-2 mt-2"
-      label="Project Description"
-      :model-value="projectDoc.doc.description"
-      placeholder="Enter a detailed description of the project"
-      @update:model-value="($event) => (projectDoc.doc.description = $event)"
+    <FormControl
+      v-model="projectDoc.doc.demo_link"
+      label="Demo Link"
+      :disabled="isHackathonEnded"
     />
+    <FormControl
+      v-model="projectDoc.doc.license"
+      label="License"
+      placeholder="e.g. MIT, Apache-2.0, GPL-3.0-only"
+      description="Use the SPDX identifier of an OSI-approved license (https://opensource.org/licenses)"
+      :disabled="isHackathonEnded"
+    />
+    <div class="col-span-2 mt-2" :class="{ 'pointer-events-none opacity-60': isHackathonEnded }">
+      <TextEditor
+        label="Project Description"
+        :model-value="projectDoc.doc.description"
+        placeholder="Enter a detailed description of the project"
+        @update:model-value="($event) => (projectDoc.doc.description = $event)"
+      />
+    </div>
   </div>
-  <div>
+  <div v-if="!isHackathonEnded">
     <ErrorMessage :message="errorMessage" />
     <div class="flex flex-row-reverse">
       <Button
@@ -54,6 +67,10 @@ const props = defineProps({
   project: {
     type: Object,
     required: true,
+  },
+  isHackathonEnded: {
+    type: Boolean,
+    default: false,
   },
 })
 

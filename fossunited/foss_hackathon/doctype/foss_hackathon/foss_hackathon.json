@@ -53,7 +53,10 @@
     "schedule",
     "partner_projects_tab",
     "has_partner_projects",
-    "partner_project_guidelines"
+    "partner_project_guidelines",
+    "results_tab",
+    "results_section",
+    "results"
   ],
   "fields": [
     {
@@ -317,10 +320,25 @@
       "fieldtype": "Table",
       "label": "Volunteers",
       "options": "FOSS Chapter Event Member"
+    },
+    {
+      "fieldname": "results_tab",
+      "fieldtype": "Tab Break",
+      "label": "Results"
+    },
+    {
+      "fieldname": "results_section",
+      "fieldtype": "Section Break",
+      "label": "Results"
+    },
+    {
+      "fieldname": "results",
+      "fieldtype": "Table",
+      "label": "Winners & Mentions",
+      "options": "Hackathon Result"
     }
   ],
   "has_web_view": 1,
-  "index_web_pages_for_search": 1,
   "is_published_field": "is_published",
   "links": [
     {
@@ -344,7 +362,7 @@
       "link_fieldname": "parent_hackathon"
     }
   ],
-  "modified": "2026-02-10 12:15:32.910928",
+  "modified": "2026-03-12 11:51:42.555221",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon",

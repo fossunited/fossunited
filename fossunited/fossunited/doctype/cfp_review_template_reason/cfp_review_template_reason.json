@@ -5,7 +5,10 @@
   "doctype": "DocType",
   "editable_grid": 1,
   "engine": "InnoDB",
-  "field_order": ["reason", "type"],
+  "field_order": [
+    "reason",
+    "type"
+  ],
   "fields": [
     {
       "fieldname": "reason",
@@ -23,15 +26,15 @@
       "reqd": 1
     }
   ],
-  "index_web_pages_for_search": 1,
   "istable": 1,
   "links": [],
-  "modified": "2024-03-08 00:02:39.419531",
+  "modified": "2026-03-07 16:37:04.188689",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "CFP Review Template Reason",
   "owner": "Administrator",
   "permissions": [],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": []

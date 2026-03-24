@@ -13,7 +13,7 @@
         <p class="text-sm text-ink-gray-5">Review the session proposals for this event.</p>
       </template>
     </Sidebar>
-    <div class="w-full md:ml-[220px] flex">
+    <div class="flex-1 min-w-0 flex">
       <div
         v-if="event.data"
         class="w-full shrink-0 md:basis-2/5 p-6 border-r space-y-6 md:overflow-y-scroll max-h-svh"

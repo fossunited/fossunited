@@ -26,7 +26,7 @@ Read more at [https://docs.fossunited.org/](https://docs.fossunited.org/)
 
 ## Installation
 
-Please follow our [guide to setup and get started](https://docs.fossunited.org/development/).
+Please follow our [development guide](https://docs.fossunited.org/development/) to set up the project locally.
 
 ## Pre-commit
 

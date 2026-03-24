@@ -165,14 +165,13 @@
       "label": "State"
     }
   ],
-  "index_web_pages_for_search": 1,
   "links": [
     {
       "link_doctype": "FOSS Event Ticket",
       "link_fieldname": "razorpay_payment"
     }
   ],
-  "modified": "2024-09-20 15:49:08.884687",
+  "modified": "2026-03-09 14:36:59.337400",
   "modified_by": "Administrator",
   "module": "Payments",
   "name": "Razorpay Payment",
@@ -224,6 +223,7 @@
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "show_title_field_in_link": 1,
   "sort_field": "creation",
   "sort_order": "DESC",

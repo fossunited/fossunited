@@ -137,24 +137,31 @@ const getSearchText = (row) => {
 }
 
 const originalGroupRows = new WeakMap()
+
 const filteredRows = computed(() => {
   const term = search.value ? search.value.toLowerCase().trim() : ''
   const hasSearch = !!term
   const hasFilter = props.filterField && selectedFilter.value && selectedFilter.value !== 'All'
 
-  // No filters applied, return original rows
-  if (!hasSearch && !hasFilter) {
-    return props.rows
-  }
-
   if (isGrouped.value) {
-    return props.rows.reduce((acc, group) => {
-      // store original rows once
+    // First pass: cache original rows for all groups
+    props.rows.forEach((group) => {
       if (!originalGroupRows.has(group)) {
-        originalGroupRows.set(group, group.rows)
+        originalGroupRows.set(group, [...group.rows])
       }
-      const sourceRows = originalGroupRows.get(group)
+    })
 
+    // No filters applied - restore all original rows
+    if (!hasSearch && !hasFilter) {
+      props.rows.forEach((group) => {
+        group.rows = originalGroupRows.get(group)
+      })
+      return props.rows
+    }
+
+    // Apply filters
+    return props.rows.reduce((acc, group) => {
+      const sourceRows = originalGroupRows.get(group)
       const filtered = sourceRows.filter((row) => {
         if (hasSearch && !getSearchText(row).includes(term)) return false
         if (hasFilter && row[props.filterField] !== selectedFilter.value) return false
@@ -170,15 +177,10 @@ const filteredRows = computed(() => {
     }, [])
   }
 
+  // Non-grouped filtering
   return props.rows.filter((row) => {
-    // Apply search filter
-    if (hasSearch && !getSearchText(row).includes(term)) {
-      return false
-    }
-    // Apply status filter
-    if (hasFilter && row[props.filterField] !== selectedFilter.value) {
-      return false
-    }
+    if (hasSearch && !getSearchText(row).includes(term)) return false
+    if (hasFilter && row[props.filterField] !== selectedFilter.value) return false
     return true
   })
 })

@@ -34,6 +34,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         is_partner_project: DF.Check
         is_published: DF.Check
         issue_pr_table: DF.Table[HackathonProjectIssuePR]
+        license: DF.Data | None
         partner_project: DF.Link | None
         repo_link: DF.Data | None
         route: DF.Data | None
@@ -45,12 +46,25 @@ class FOSSHackathonProject(WebsiteGenerator):
     # end: auto-generated types
     def validate(self):
         """Validate project data"""
+        self.check_hackathon_not_ended()
         self.description = sanitize_text_content(self.description)
         self.validate_one_project_per_team()
         self.validate_team_belongs_to_hackathon()
 
     def before_save(self):
         self.set_route()
+
+    def check_hackathon_not_ended(self):
+        """Raise PermissionError if hackathon has ended (System Manager/Administrator bypass)"""
+        user = frappe.session.user
+        if user == "Administrator" or "System Manager" in frappe.get_roles(user):
+            return
+        end_date = frappe.db.get_value(HACKATHON, self.hackathon, "end_date")
+        if end_date and frappe.utils.now_datetime() > frappe.utils.get_datetime(end_date):
+            frappe.throw(
+                frappe._("The hackathon has ended. Project cannot be modified."),
+                frappe.PermissionError,
+            )
 
     def set_route(self):
         hackathon = frappe.get_doc(HACKATHON, self.hackathon)
@@ -111,7 +125,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.hackathon = frappe.get_doc(HACKATHON, self.hackathon)
 
         context.team = frappe.get_doc(HACKATHON_TEAM, self.team)
-        context.team_members = get_team_members(context.team)
+        context.team_members = self.get_team_members(context.team)
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
 
@@ -120,20 +134,20 @@ class FOSSHackathonProject(WebsiteGenerator):
                 HACKATHON_PARTNER_PROJECT, self.partner_project
             )
 
-
-def get_team_members(team):
-    member_details = []
-    for member in team.members:
-        profile_id = frappe.db.get_value(
-            HACKATHON_PARTICIPANT,
-            member.member,
-            "user_profile",
-        )
-        profile = frappe.db.get_value(
-            USER_PROFILE,
-            profile_id,
-            ["route", "full_name", "username", "profile_photo"],
-            as_dict=True,
-        )
-        member_details.append(profile)
-    return member_details
+    @staticmethod
+    def get_team_members(team):
+        member_details = []
+        for member in team.members:
+            profile_id = frappe.db.get_value(
+                HACKATHON_PARTICIPANT,
+                member.member,
+                "user_profile",
+            )
+            profile = frappe.db.get_value(
+                USER_PROFILE,
+                profile_id,
+                ["route", "full_name", "username", "profile_photo"],
+                as_dict=True,
+            )
+            member_details.append(profile)
+        return member_details

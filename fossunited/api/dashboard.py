@@ -9,7 +9,19 @@ from fossunited.utils.payments import (
 
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str) -> dict:
-    return frappe.get_doc(EVENT, name)
+    event = frappe.get_doc(EVENT, name)
+
+    return {
+        "name": event.name,
+        "doctype": event.doctype,
+        "event_name": event.event_name,
+        "route": event.route,
+        "ticket_form_description": event.ticket_form_description,
+        "paid_tshirts_available": event.paid_tshirts_available,
+        "t_shirt_price": event.t_shirt_price,
+        "tiers": event.tiers,
+        "custom_fields": event.custom_fields,
+    }
 
 
 @frappe.whitelist(allow_guest=True)

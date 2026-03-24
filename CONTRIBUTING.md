@@ -1,6 +1,18 @@
-## Introduction
+## Before You Start
 
-Thank you for showing interest for contributing in our new FOSS United Platform which we are building for the FOSS Community all over India. You can always take a look at what are the current issues we are working on. Help us make our platform better by requesting documentation, reporting bugs, or suggesting new features. Every contribution improves performance and usability.
+If you haven't set up a local dev environment yet, do that first — the [development guide](https://docs.fossunited.org/development/) walks you through everything. Make sure you can start the stack and open the site in your browser before jumping into code.
+
+Also make sure these are enabled — run the following if not already configured (developer_mode may already be set during initialization):
+
+```bash
+bench --site <your-site> set-config developer_mode 1
+bench set-config -g server_script_enabled true
+```
+
+## Introduction
+FOSS United Platform is built by the community, for the community. We're glad you want to contribute — whether it's fixing a bug, improving docs, or building something new, all contributions are welcome.
+
+You can browse the [issue tracker](https://github.com/fossunited/fossunited/issues) to find something to work on, or open a new issue if you've spotted a problem or have a feature idea.
 
 ### Bug Report Guidelines
 

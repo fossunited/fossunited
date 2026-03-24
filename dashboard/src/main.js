@@ -17,6 +17,11 @@ import {
   useTheme,
 } from 'frappe-ui'
 
+if (!localStorage.getItem('theme')) {
+  localStorage.setItem('theme', 'light')
+}
+document.documentElement.setAttribute('data-theme', localStorage.getItem('theme'))
+
 const { initializeTheme } = useTheme()
 initializeTheme()
 

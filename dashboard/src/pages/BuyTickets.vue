@@ -11,30 +11,36 @@
     }"
   ></Dialog>
   <div v-if="event.data" class="bg-surface-gray-1 mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex gap-2 mb-6 items-center">
-      <a :href="redirectToEvent" class="font-semibold text-base hover:underline">{{
-        event.data.event_name
-      }}</a>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="2"
-        stroke="currentColor"
-        class="w-4 h-4"
-      >
-        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-      </svg>
-      <span class="text-base">Book Tickets</span>
+    <div class="flex mb-6 items-center justify-between">
+      <div class="flex gap-2 items-center">
+        <a :href="redirectToEvent" class="font-semibold text-base hover:underline">{{
+          event.data.event_name
+        }}</a>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          class="w-4 h-4"
+        >
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+        <span class="text-base">Book Tickets</span>
+      </div>
+
+      <ThemeToggle size="20" />
     </div>
     <div class="flex gap-6">
-      <div class="p-4 lg:px-8 md:py-8 border border-outline-gray-2 rounded-md bg-surface-white md:w-3/4">
+      <div
+        class="p-4 lg:px-8 md:py-8 border border-outline-gray-2 rounded-md bg-surface-white md:w-3/4"
+      >
         <h1 class="text-[2rem] font-bold">
           Book Conference Tickets for {{ event.data.event_name }}
         </h1>
         <div
-          class="my-2 text-ink-gray-6"
-          v-html="markdown.render(event.data.ticket_form_description || '')"
+          class="my-2 prose prose-sm max-w-none"
+          v-html="markdownToHTML(event.data.ticket_form_description || '')"
         ></div>
         <RadioGroup v-model="checkoutInfo.tier" class="py-4">
           <RadioGroupLabel class="text-lg font-semibold leading-6 text-ink-gray-8">
@@ -62,11 +68,10 @@
                         tier.title
                       }}</RadioGroupLabel>
                       <RadioGroupDescription
-                        as="span"
-                        class="mt-2 text-sm text-ink-gray-4"
-                        :innerHTML="markdown.render(tier.description || '')"
-                      >
-                      </RadioGroupDescription>
+                        as="div"
+                        class="my-2 prose prose-sm max-w-none"
+                        :innerHTML="markdownToHTML(tier.description || '')"
+                      />
                     </span>
                     <span class="flex flex-col gap-4 mt-4">
                       <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
@@ -103,8 +108,8 @@
                   <span class="flex flex-col gap-2">
                     <span class="block text-xl font-bold text-ink-gray-4">{{ tier.title }}</span>
                     <span
-                      class="mt-2 text-sm text-ink-gray-3"
-                      v-html="markdown.render(tier.description || '')"
+                      class="mt-2 prose prose-sm max-w-none"
+                      v-html="markdownToHTML(tier.description || '')"
                     >
                     </span>
                   </span>
@@ -443,7 +448,6 @@
 </template>
 
 <script setup>
-import MarkdownIt from 'markdown-it'
 import Header from '@/components/Header.vue'
 import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import {
@@ -452,20 +456,21 @@ import {
   Switch,
   Checkbox,
   Button,
-  Card,
   usePageMeta,
   ErrorMessage,
   Badge,
   Dialog,
 } from 'frappe-ui'
+import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
 import {
   RadioGroup,
   RadioGroupDescription,
   RadioGroupLabel,
   RadioGroupOption,
 } from '@headlessui/vue'
-import RazorpayCheckout from '../components/common/RazorpayCheckout.vue'
+import RazorpayCheckout from '@/components/common/RazorpayCheckout.vue'
 import { IconCircleCheckFilled, IconTicketOff } from '@tabler/icons-vue'
+import ThemeToggle from '@/components/ui/ThemeToggle.vue'
 
 const dayjs = inject('$dayjs')
 
@@ -484,7 +489,6 @@ usePageMeta(() => {
 })
 
 const showAdditionalDetails = ref(false)
-const markdown = new MarkdownIt()
 
 const eventName = ref(null)
 const checkoutInfo = reactive({
@@ -562,7 +566,7 @@ watch(
           subscribe_chapter_mailing: true,
           organization: '',
           wants_tshirt: false,
-          tshirt_size: 'M',
+          tshirt_size: '',
           custom_fields: {},
         }
 
