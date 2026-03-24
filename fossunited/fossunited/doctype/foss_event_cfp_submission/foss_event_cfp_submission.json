@@ -85,6 +85,7 @@
    "fieldname": "event_name",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Event Name"
   },
   {
@@ -345,7 +346,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2025-12-24 20:53:47.253272",
+ "modified": "2026-03-24 16:08:52.019045",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
