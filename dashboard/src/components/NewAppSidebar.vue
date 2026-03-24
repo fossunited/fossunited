@@ -1,4 +1,3 @@
-D:\foss\fossunited\dashboard\src\components\NewAppSidebar.vue 
 <template>
   <!-- Mobile: top bar -->
   <header
