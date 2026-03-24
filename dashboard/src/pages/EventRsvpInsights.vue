@@ -27,6 +27,7 @@
                 : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'attendees'"
+            aria-label="Show attendees list"
           >
             Attendees
           </button>
@@ -38,6 +39,7 @@
                 : 'text-ink-gray-5 hover:text-ink-gray-9'
             "
             @click="currentView = 'checkins'"
+            aria-label="Show check-ins list"
           >
             Check-ins
           </button>
@@ -47,6 +49,7 @@
           v-if="currentView === 'checkins'"
           size="md"
           icon-left="refresh-cw"
+          aria-label="Refresh check-in data"
           @click="refreshCheckins"
         >
           Refresh

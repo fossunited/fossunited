@@ -16,6 +16,7 @@ const { currentTheme, toggleTheme } = useTheme()
   <button
     class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
     :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
+    :aria-label="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="toggleTheme"
   >
     <IconSunHighFilled v-if="currentTheme === 'dark'" :size="size" :stroke="1.5" />

@@ -44,6 +44,7 @@
         <!-- an easter egg awaits.. -->
         <button
           @click="redirectToExternalUrl('https://www.youtube.com/watch?v=dQw4w9WgXcQ')"
+          aria-label="Open external video in a new tab"
           class="px-6 py-2.5 bg-surface-gray-7 text-ink-white rounded-lg font-medium hover:bg-surface-gray-6 transition-colors"
         >
           Better Luck Next Time!
