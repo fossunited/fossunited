@@ -27,6 +27,8 @@
               : 'text-ink-gray-5 hover:text-ink-gray-9'
           "
           @click="currentView = 'requests'"
+          aria-label="View participant requests"
+          :aria-pressed="currentView === 'requests'"
         >
           Requests
         </button>
@@ -38,6 +40,8 @@
               : 'text-ink-gray-5 hover:text-ink-gray-9'
           "
           @click="currentView = 'checkins'"
+          aria-label="View participant check-ins"
+          :aria-pressed="currentView === 'checkins'"
         >
           Check-ins
         </button>

@@ -209,6 +209,7 @@ watch(filteredSubmissions, (val) => {
           <button
             class="flex bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6"
             @click="downloadCSV"
+            aria-label="Download submissions as CSV file"
           >
             <IconDownload class="w-4 h-4 mr-1" />
             <span>CSV</span>

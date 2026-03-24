@@ -32,6 +32,7 @@
                 inCreateProject = true
               }
             "
+            aria-label="Create a new project"
           >
             Create Project
           </button>
@@ -61,6 +62,7 @@
                 : ''
             "
             :disabled="hackathon.data.is_contribution_project_coming_soon"
+            :aria-disabled="hackathon.data.is_contribution_project_coming_soon"
             @click="
               () => {
                 inSelectProjectType = false
@@ -68,6 +70,7 @@
                 project.is_contribution_project = 1
               }
             "
+            
           >
             Contribute
           </button>
@@ -209,6 +212,7 @@
                         :href="partner_project.repo_link"
                         class="flex items-center gap-1 mt-3 text-xs text-ink-gray-5 text-center hover:text-ink-gray-8"
                         target="_blank"
+                        aria-label="Open repository link in a new tab"
                       >
                         <IconBrandGithub class="w-4" />
                         <span> Repo Link </span>

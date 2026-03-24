@@ -14,6 +14,8 @@
     <div
       v-if="showModal"
       class="fixed inset-0 bg-surface-gray-7 bg-opacity-50 flex justify-center items-center z-50"
+      role="dialog"
+      aria-modal="true"
     >
       <div class="bg-surface-white p-6 rounded w-full max-w-lg">
         <h2 class="text-lg font-semibold mb-4">Download Options</h2>
@@ -77,12 +79,17 @@
 
         <!-- Buttons -->
         <div class="flex justify-end gap-3 mt-4">
-          <button class="text-sm text-ink-gray-5 hover:underline" @click="showModal = false">
+          <button
+             class="text-sm text-ink-gray-5 hover:underline"
+             @click="showModal = false"
+             aria-label="Close download options modal"
+          >
             Cancel
           </button>
           <button
             class="bg-surface-gray-7 text-ink-white px-4 py-2 rounded text-sm hover:bg-surface-gray-6 transition-colors duration-200"
             @click="downloadSchedule"
+            aria-label="Download selected schedule"
           >
             Download
           </button>

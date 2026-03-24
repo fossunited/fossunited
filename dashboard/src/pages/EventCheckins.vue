@@ -33,6 +33,7 @@
             :aria-expanded="!!showScanner"
             aria-controls="qr-ticket-scanner"
             @click="showScanner = !showScanner"
+            :aria-label="showScanner ? 'Close QR ticket scanner' : 'Open QR scanner to scan attendee ticket'"
           >
             {{ showScanner ? 'Close Scanner' : 'Scan Ticket QR' }}
           </button>

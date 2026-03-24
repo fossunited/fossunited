@@ -1,3 +1,4 @@
+D:\foss\fossunited\dashboard\src\components\NewAppSidebar.vue 
 <template>
   <div
     class="relative hidden md:block min-h-0 flex-shrink-0 overflow-hidden hover:overflow-auto"
@@ -19,6 +20,7 @@
               class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
               :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
               @click="toggleTheme"
+              :aria-label="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
             >
               <IconSunHighFilled v-if="currentTheme === 'dark'" :size="18" :stroke="1.5" />
               <IconMoonStars v-else :size="18" :stroke="1.5" />
@@ -146,7 +148,7 @@
     <div class="flex items-center gap-2">
       <Popover>
         <template #target="{ togglePopover }">
-          <button @click="togglePopover()">
+          <button @click="togglePopover()" aria-label="Open user menu">
             <img
               v-if="user_profile.data?.profile_photo"
               :src="user_profile.data?.profile_photo"
