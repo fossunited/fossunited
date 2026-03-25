@@ -15,6 +15,7 @@ from fossunited.doctype_ids import (
     EVENT_TICKET,
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
+    RAZORPAY_PAYMENT,
     TICKET_TRANSFER,
 )
 
@@ -544,16 +545,16 @@ def get_paid_events():
 
 
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=10, seconds=60 * 60 * 3)
+@rate_limit(limit=5, seconds=60 * 60 * 10)
 def search_tickets(search_term, event=None):
     """
-    Search tickets by ticket_id or coupon_id.
+    Search tickets by ticket_id, Razorpay order_id, or coupon code.
 
     Rate limit: 10 requests per 3 hours per IP
 
     Args:
-        search_term (str): Ticket ID or coupon code to search
-        event (str, optional): Event filter (currently not used)
+        search_term (str): Ticket ID, Razorpay order ID, or coupon code
+        event (str, optional): Unused — kept for backwards compatibility
 
     Returns:
         list: List of ticket dictionaries
@@ -570,6 +571,16 @@ def search_tickets(search_term, event=None):
     # Direct ticket ID lookup
     if frappe.db.exists(EVENT_TICKET, search_term):
         return [get_ticket_details(search_term)]
+
+    # Razorpay order ID lookup — order IDs are hard to guess (not enumerable)
+    payment_name = frappe.db.get_value(RAZORPAY_PAYMENT, {"order_id": search_term}, "name")
+    if payment_name:
+        return frappe.get_all(
+            EVENT_TICKET,
+            filters={"razorpay_payment": payment_name},
+            fields=["name", "full_name", "email", "tier", "organization"],
+            order_by="full_name",
+        )
 
     # Coupon-based search
     coupon_event = frappe.db.get_value(FREE_TICKET_CODE, search_term, "event")
