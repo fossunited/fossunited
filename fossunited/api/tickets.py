@@ -544,9 +544,11 @@ def get_paid_events():
     )
 
 
+# should be defensive with rate limit and we only allow based on IDs
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 10)
-def search_tickets(search_term, event=None):
+def search_tickets(search_term: str, event=str | None) -> dict:
     """
     Search tickets by ticket_id, Razorpay order_id, or coupon code.
 

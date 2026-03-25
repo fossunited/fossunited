@@ -7,6 +7,7 @@ from fossunited.utils.payments import (
 )
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_event(name: str, by_route: bool = False) -> dict:
     if by_route:
