@@ -37,26 +37,6 @@
       <span>₹{{ subTotal }}</span>
     </div>
 
-    <!-- Coupon -->
-    /*
-    <div class="flex flex-col gap-1.5">
-      <label class="text-sm text-ink-gray-7">Apply Coupon</label>
-      <div class="flex border border-outline-gray-2 rounded-lg overflow-hidden bg-surface-white">
-        <input
-          :value="couponCode"
-          type="text"
-          placeholder="Enter Code"
-          class="flex-1 px-3.5 py-2.5 text-sm text-ink-gray-7 bg-surface-white outline-none"
-          @input="$emit('update:couponCode', $event.target.value)"
-        />
-        <button
-          class="bg-outline-gray-1 hover:bg-outline-gray-2 px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-ink-gray-5 border-l border-outline-gray-2 transition-colors"
-        >
-          Apply
-        </button>
-      </div>
-    </div>
-    */
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
     <Button class="w-full" variant="solid" size="md" :loading="loading" @click="$emit('proceed')">

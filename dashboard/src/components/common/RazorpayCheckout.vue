@@ -36,6 +36,7 @@ function handlePaymentSuccess(response) {
         query: {
           order_id: response.razorpay_order_id,
           payment_id: response.razorpay_payment_id,
+          event: currentEventID,
         },
       })
     },
