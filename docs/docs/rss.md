@@ -30,20 +30,26 @@ RSS is a common tool for keeping up with information posted to your favorite sit
 
 We have extensive RSS feed support in our platforms.
 
-1. FOSS United Blog: [https://fossunited.org/rss.xml]()
+1. FOSS United Blog Posts: [https://fossunited.org/rss.xml](https://fossunited.org/rss.xml)
 
-2. Forklore.in: [https://forklore.in/rss]()
+2. Forklore.in Maintainers: [https://forklore.in/rss](https://forklore.in/rss)
 
-3. FOSS United Newsletter: [https://fossunited.org/newsletter]()
+3. Upcoming Events feed: [https://fossunited.org/events/timeline/rss.xml](https://fossunited.org/events/timeline/rss.xml)
+
+4. Chapter Event Feeds: Append `rss.xml` to chapter permalink: eg: [https://fossunited.org/c/indiafoss/rss.xml](https://fossunited.org/c/indiafoss/rss.xml)
+
+5. New Grantees: [https://fossunited.org/grants/grantees/rss.xml](https://fossunited.org/grants/grantees/rss.xml)
+
+6. Jobs Posted from community: [https://fossunited.org/jobs/rss.xml](https://fossunited.org/jobs/rss.xml)
+
+7. FOSS United Newsletter: [https://fossunited.org/newsletter](https://fossunited.org/newsletter)
    Receive event updated via email.
 
-4. Forum RSS feeds:
-  - All latest: [https://forum.fossunited.org/latest.rss]()
+8. Forum RSS feeds:
+  - All latest: [https://forum.fossunited.org/latest.rss](https://forum.fossunited.org/latest.rss)
   - Based on category:
-    Go to this page [https://forum.fossunited.org/categories]() and choose any category and append `/rss` to the URL for RSS.
-    for example: [https://forum.fossunited.org/c/organisation.rss]()
-
-5. Upcoming Events feed: https://fossunited.org/events/timeline/rss.xml
+    Go to this page [https://forum.fossunited.org/categories](https://forum.fossunited.org/categories) and choose any category and append `/rss` to the URL for RSS.
+    for example: [https://forum.fossunited.org/c/organisation.rss](https://forum.fossunited.org/c/organisation.rss)
 
 ### Suggested RSS Readers
 
