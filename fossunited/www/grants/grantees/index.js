@@ -1,9 +1,9 @@
 let originalItems = []
 
 document.addEventListener('DOMContentLoaded', () => {
-  const items = document.querySelectorAll('.grant-item')
-
-  originalItems = Array.from(items)
+  originalItems = Array.from(document.querySelectorAll('.grant-item')).map((item) =>
+    item.cloneNode(true),
+  )
 
   const searchInput = document.getElementById('search')
   const groupBySelect = document.getElementById('group-by')
@@ -153,7 +153,7 @@ function addYearSection(year, items) {
   const sectionId = `year-content-${year}`
 
   section.innerHTML = `
-    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2"
+    <div class="v3-section-header d-flex justify-content-between align-items-center"
       role="button"
       tabindex="0"
       aria-expanded="true"
@@ -161,20 +161,23 @@ function addYearSection(year, items) {
       onclick="toggleSection('${sectionId}')"
       onkeydown="if (event.key === 'Enter' || event.key === ' ') toggleSection('${sectionId}')"
       style="cursor:pointer;">
-      <div>
-        <strong>${year}</strong>
-        <span class="text-muted small">(${items.length})</span>
+      
+      <div class="v3-section-title">
+        <span>${year}</span>
+        <span class="v3-text-tertiary" style="font-size:0.875rem;">
+          (${items.length})
+        </span>
       </div>
-      <i class="ti ti-chevron-down v3-toggle-icon"></i>
+
+      <hr />
+      <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
     </div>
-    <div class="d-flex flex-column" id="${sectionId}"></div>
+
+    <div class="v3-grant-year-content" id="${sectionId}"></div>
   `
 
-  const content = section.querySelector(`#${sectionId}`)
-  items.forEach((item) => {
-    item.classList.add('mb-3')
-    content.appendChild(item)
-  })
+  const content = section.querySelector('.v3-grant-year-content')
+  items.forEach((item) => content.appendChild(item))
 
   document.getElementById('grants-container').appendChild(section)
 }
