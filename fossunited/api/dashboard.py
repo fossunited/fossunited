@@ -8,33 +8,28 @@ from fossunited.utils.payments import (
 
 
 @frappe.whitelist(allow_guest=True)
-def get_event(name: str) -> dict:
-    event = frappe.get_doc(EVENT, name)
+def get_event(name: str, by_route: bool = False) -> dict:
+    if by_route:
+        if not name.startswith("c/"):
+            name = f"c/{name}"
 
-    return {
-        "name": event.name,
-        "doctype": event.doctype,
-        "event_name": event.event_name,
-        "route": event.route,
-        "ticket_form_description": event.ticket_form_description,
-        "paid_tshirts_available": event.paid_tshirts_available,
-        "t_shirt_price": event.t_shirt_price,
-        "tiers": event.tiers,
-        "custom_fields": event.custom_fields,
-    }
+        event_id = frappe.db.get_value(EVENT, {"route": name}, "name")
+        if not name:
+            return {}
+    else:
+        event_id = name
+
+    doc = frappe.get_doc(EVENT, event_id)
+    data = doc.as_dict()
+    # Remove members table
+    data.pop("event_members", None)
+
+    return data
 
 
 @frappe.whitelist(allow_guest=True)
 def get_event_from_permalink(permalink: str, fields: list) -> dict:
     return frappe.db.get_value(EVENT, {"event_permalink": permalink}, fields, as_dict=1)
-
-
-@frappe.whitelist(allow_guest=True)
-def get_event_from_route(route: str, fields: list) -> dict:
-    # if route does not start with c/, add it
-    if not route.startswith("c/"):
-        route = f"c/{route}"
-    return frappe.db.get_value(EVENT, {"route": route}, fields, as_dict=1)
 
 
 @frappe.whitelist(allow_guest=True)
