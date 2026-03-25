@@ -48,7 +48,12 @@
     </div>
     <div class="flex justify-between gap-4">
       <h1 class="text-3xl font-bold">{{ doc.talk_title }}</h1>
-      {{ like_button() }}
+      <div class="flex gap-2 items-center">
+        {% if is_owner %}
+          <a href="/dashboard/my-proposals/edit/{{ proposal_id }}" class="btn btn-default btn-sm">Edit proposal</a>
+        {% endif %}
+        {{ like_button() }}
+      </div>
     </div>
     <div class="flex items-center gap-2">
       <div class="w-fit">{{ badge(label=doc.status, theme=status_badge_theme[doc.status]) }}</div>
