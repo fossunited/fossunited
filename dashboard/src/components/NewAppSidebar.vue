@@ -62,7 +62,6 @@
 <script setup>
 import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
 import { computed, inject, ref, h } from 'vue'
-import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
 import {
   IconMenu,
   IconSun,
@@ -71,11 +70,10 @@ import {
   IconLayoutSidebarLeftCollapse,
   IconLayoutSidebarLeftExpand,
 } from '@tabler/icons-vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 const session = inject('$session')
 const route = useRoute()
-const router = useRouter()
 const { currentTheme, toggleTheme } = useTheme()
 
 const props = defineProps({
@@ -192,12 +190,12 @@ const sidebarHeader = computed(() => ({
     },
     {
       label: 'My Profile',
-      onClick: () => router.push(createAbsoluteUrlFromRoute('me')),
+      onClick: () => (window.location.href = '/me'),
       icon: 'user',
     },
     {
       label: 'Go To Website',
-      onClick: () => router.push(createAbsoluteUrlFromRoute('')),
+      onClick: () => (window.location.href = '/'),
       icon: 'external-link',
     },
     { label: 'Logout', onClick: () => session.logout.fetch(), icon: 'log-out' },
