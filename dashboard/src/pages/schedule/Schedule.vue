@@ -73,11 +73,11 @@ const searchQuery = ref('')
 const isSearching = computed(() => searchQuery.value.trim().length > 0)
 
 const event = createResource({
-  url: 'fossunited.api.dashboard.get_event_from_route',
+  url: 'fossunited.api.dashboard.get_event',
   makeParams() {
     return {
-      route: route.params.route,
-      fields: ['*'],
+      name: route.params.route,
+      by_route: true,
     }
   },
   auto: true,

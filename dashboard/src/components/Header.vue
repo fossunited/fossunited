@@ -10,58 +10,67 @@
       <FossUnitedLogo class="w-auto h-8" fill="black" />
     </router-link>
 
-    <div v-if="session.isLoggedIn" class="flex items-center">
-      <Dropdown
-        :options="[
-          {
-            label: currentTheme === 'dark' ? 'Switch to Light' : 'Switch to Dark',
-            icon: currentTheme === 'dark' ? 'sun' : 'moon',
-            onClick: toggleTheme,
-          },
-          {
-            label: 'My Profile',
-            icon: 'user',
-            onClick: redirectToProfile,
-          },
-          {
-            label: 'Dashboard',
-            icon: 'layout',
-            onClick: goToDashboard,
-          },
-          {
-            label: 'Go to website',
-            icon: 'globe',
-            onClick: goToPublicSite,
-          },
-          {
-            label: 'Logout',
-            icon: 'log-out',
-            onClick: () => {
-              session.logout.fetch()
-            },
-          },
-        ]"
+    <div class="flex items-center gap-2">
+      <button
+        class="w-8 h-8 flex items-center justify-center rounded-lg text-ink-gray-5 hover:bg-surface-gray-2 hover:text-ink-gray-9 transition-colors"
+        :title="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        @click="toggleTheme"
       >
-        <Avatar
-          shape="circle"
-          class="cursor-pointer"
-          :image="
-            user_profile.data?.profile_photo ||
-            '/assets/fossunited/images/defaults/user_profile_image.png'
-          "
-          :label="user_profile.data?.full_name?.[0]?.toUpperCase() || '?'"
-          size="xl"
-        />
-      </Dropdown>
-    </div>
-    <div v-else>
-      <a href="/login" class="text-ink-gray-9 font-medium text-base hover:text-ink-gray-8">Login</a>
+        <IconSun v-if="currentTheme === 'dark'" class="w-5 h-5" />
+        <IconMoon v-else class="w-5 h-5" />
+      </button>
+
+      <div v-if="session.isLoggedIn">
+        <Dropdown
+          :options="[
+            {
+              label: 'My Profile',
+              icon: 'user',
+              onClick: redirectToProfile,
+            },
+            {
+              label: 'Dashboard',
+              icon: 'layout',
+              onClick: goToDashboard,
+            },
+            {
+              label: 'Go to website',
+              icon: 'globe',
+              onClick: goToPublicSite,
+            },
+            {
+              label: 'Logout',
+              icon: 'log-out',
+              onClick: () => {
+                session.logout.fetch()
+              },
+            },
+          ]"
+        >
+          <Avatar
+            shape="circle"
+            class="cursor-pointer"
+            :image="
+              user_profile.data?.profile_photo ||
+              '/assets/fossunited/images/defaults/user_profile_image.png'
+            "
+            :label="user_profile.data?.full_name?.[0]?.toUpperCase() || '?'"
+            size="xl"
+          />
+        </Dropdown>
+      </div>
+      <div v-else>
+        <a href="/login" class="text-ink-gray-9 font-medium text-base hover:text-ink-gray-8"
+          >Login</a
+        >
+      </div>
     </div>
   </header>
 </template>
 <script setup>
 import { inject } from 'vue'
 import { Avatar, Dropdown, createResource, useTheme } from 'frappe-ui'
+import { IconSun, IconMoon } from '@tabler/icons-vue'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 const session = inject('$session')

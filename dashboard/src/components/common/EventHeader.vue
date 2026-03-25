@@ -34,7 +34,10 @@ const eventDetailItems = computed(() => {
   <div class="flex flex-col gap-2">
     <div class="flex flex-col md:flex-row gap-3 md:gap-6 items-center md:items-start">
       <slot name="logo">
-        <EventLogo v-if="event.event_logo" :logo-path="event.event_logo" />
+        <EventLogo
+          v-if="event.event_logo || event.banner_image"
+          :logo-path="event.event_logo || event.banner_image"
+        />
       </slot>
       <div class="flex flex-col gap-3 flex-grow w-full">
         <div
