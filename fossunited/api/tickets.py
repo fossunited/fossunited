@@ -543,33 +543,40 @@ def get_paid_events():
     )
 
 
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=10, seconds=60 * 60 * 3)
 def search_tickets(search_term, event=None):
-    """Search tickets by ticket_id, email, or coupon_id"""
+    """
+    Search tickets by ticket_id or coupon_id.
+
+    Rate limit: 10 requests per 3 hours per IP
+
+    Args:
+        search_term (str): Ticket ID or coupon code to search
+        event (str, optional): Event filter (currently not used)
+
+    Returns:
+        list: List of ticket dictionaries
+
+    Raises:
+        ValidationError: If search_term is empty
+        RateLimitExceededError: If rate limit is exceeded
+    """
     if not search_term:
         frappe.throw("Search term is required")
 
     search_term = search_term.strip()
 
-    # Email search - requires event
-    if "@" in search_term:
-        if not event:
-            frappe.throw("Please select an event to search by email")
-
-        return frappe.get_all(
-            EVENT_TICKET,
-            filters={"event": event, "email": search_term},
-            fields=["name", "full_name", "email", "tier", "organization"],
-            order_by="full_name",
-        )
-
-    # Ticket ID - direct lookup, no event needed
+    # Direct ticket ID lookup
     if frappe.db.exists(EVENT_TICKET, search_term):
         return [get_ticket_details(search_term)]
 
+    # Coupon-based search
     coupon_event = frappe.db.get_value(FREE_TICKET_CODE, search_term, "event")
     if not coupon_event:
         return []
 
+    # Get all emails that applied with this coupon
     coupon_apps = frappe.get_all(
         FREE_TICKET_APPLY,
         filters={"coupon_id": search_term, "event": coupon_event},
@@ -588,44 +595,74 @@ def search_tickets(search_term, event=None):
     return []
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=5, seconds=60 * 60 * 5)
 def download_ticket(ticket_id):
-    """Download single ticket PDF"""
+    """
+    Download single ticket PDF.
+
+    Rate limit: 5 requests per 5 hours per IP
+
+    Args:
+        ticket_id (str): ID of the ticket to download
+
+    Raises:
+        ValidationError: If ticket doesn't exist
+        RateLimitExceededError: If rate limit is exceeded
+    """
     if not frappe.db.exists(EVENT_TICKET, ticket_id):
         frappe.throw("Ticket not found")
 
-    from frappe.utils.print_format import download_pdf
+    frappe.local.flags.ignore_print_permissions = True
 
-    return download_pdf(
-        doctype=EVENT_TICKET,
-        name=ticket_id,
-        format="[Designer] Event Ticket",
+    pdf_file = frappe.get_print(
+        EVENT_TICKET,
+        ticket_id,
+        "[Designer] Event Ticket",
         no_letterhead=1,
+        as_pdf=True,
     )
 
+    frappe.local.response.filename = "event-ticket.pdf"
+    frappe.local.response.filecontent = pdf_file
+    frappe.local.response.type = "download"
 
-@frappe.whitelist()
+
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=3, seconds=60 * 60 * 12)
 def download_all_tickets(ticket_ids):
-    """Download multiple tickets as single PDF"""
+    """
+    Download multiple tickets as single PDF.
+
+    Rate limit: 3 requests per 12 hours per IP
+    (Lower limit due to higher resource usage)
+
+    Args:
+        ticket_ids (str|list): JSON string or list of ticket IDs
+
+    Raises:
+        ValidationError: If no tickets provided or invalid format
+        RateLimitExceededError: If rate limit is exceeded
+    """
     import json
 
     if isinstance(ticket_ids, str):
-        ticket_ids = json.loads(ticket_ids)
+        try:
+            ticket_ids = json.loads(ticket_ids)
+        except json.JSONDecodeError:
+            frappe.throw("Invalid ticket IDs format")
 
     if not ticket_ids or not isinstance(ticket_ids, list):
         frappe.throw("No tickets provided")
 
-    # Verify all tickets exist
-    for ticket_id in ticket_ids:
-        if not frappe.db.exists(EVENT_TICKET, ticket_id):
-            frappe.throw(f"Ticket {ticket_id} not found")
-
     from frappe.utils.print_format import download_multi_pdf
 
-    # download_multi_pdf returns the PDF content directly
+    frappe.local.flags.ignore_print_permissions = True
+
     download_multi_pdf(
         doctype=EVENT_TICKET,
         name=json.dumps(ticket_ids),
         format="[Designer] Event Ticket",
         no_letterhead=True,
     )
+    frappe.local.response.type = "download"
