@@ -227,9 +227,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         user = frappe.session.user
         speaker_emails = [s.email for s in self.speakers if s.email]
         context.is_owner = user != "Guest" and (
-            user == self.submitted_by or
-            user == self.email or
-            user in speaker_emails
+            user == self.submitted_by or user == self.email or user in speaker_emails
         )
         context.proposal_id = self.name
         context.no_cache = 1
