@@ -1,684 +1,809 @@
-<!-- eslint-disable vue/attribute-hyphenation -->
 <template>
   <RazorpayCheckout ref="rzpCheckout" />
   <Header />
   <Dialog
     v-model="showDialog"
     class="z-50"
-    :options="{
-      title: 'Tickets are closed!',
-      message: dialogError,
-    }"
-  ></Dialog>
-  <div v-if="event.data" class="bg-surface-gray-1 mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="flex mb-6 items-center justify-between">
-      <div class="flex gap-2 items-center">
-        <a :href="redirectToEvent" class="font-semibold text-base hover:underline">{{
-          event.data.event_name
-        }}</a>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="2"
-          stroke="currentColor"
-          class="w-4 h-4"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-        </svg>
-        <span class="text-base">Book Tickets</span>
+    :options="{ title: 'Tickets are closed!', message: dialogError }"
+  />
+
+  <div v-if="event.data" class="bg-surface-gray-1 min-h-screen">
+    <main
+      id="main-content"
+      class="max-w-[800px] mx-auto w-full flex flex-col gap-6 md:gap-10 py-8 px-4 pb-24"
+      aria-label="Ticket registration"
+    >
+      <Breadcrumb :items="breadcrumbItems" />
+
+      <!-- Page Header -->
+      <div class="flex flex-col gap-1">
+        <h1 class="text-2xl font-bold tracking-tight text-ink-gray-9">Registration</h1>
       </div>
 
-      <ThemeToggle size="20" />
-    </div>
-    <div class="flex gap-6">
+      <EventHeader :event="event.data" />
+
       <div
-        class="p-4 lg:px-8 md:py-8 border border-outline-gray-2 rounded-md bg-surface-white md:w-3/4"
+        role="note"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg border border-yellow-400 bg-yellow-50 text-yellow-700 text-sm self-center"
       >
-        <h1 class="text-[2rem] font-bold">
-          Book Conference Tickets for {{ event.data.event_name }}
-        </h1>
-        <div
-          class="my-2 prose prose-sm max-w-none"
-          v-html="markdownToHTML(event.data.ticket_form_description || '')"
-        ></div>
-        <RadioGroup v-model="checkoutInfo.tier" class="py-4">
-          <RadioGroupLabel class="text-lg font-semibold leading-6 text-ink-gray-8">
-            Select a tier
-          </RadioGroupLabel>
-          <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-3 sm:gap-x-4 md:min-w-[48rem]">
-            <!-- Active Tiers -->
-            <RadioGroupOption
-              v-for="tier in activeTiers"
-              :key="tier.name"
-              v-slot="{ active, checked }"
-              as="template"
-              :value="tier"
+        <IconInfoCircle class="w-5 h-5 shrink-0" aria-hidden="true" />
+        <span
+          >Tickets are non-cancellable.
+          <a
+            href="https://fossunited.org/refund-transfer-policy"
+            target="_blank"
+            class="underline font-semibold"
+            >Only transfers are allowed</a
+          >
+        </span>
+      </div>
+
+      <!-- Step Progress -->
+      <nav aria-label="Registration steps">
+        <ol class="flex items-center w-full" role="list">
+          <template v-for="n in 4" :key="n">
+            <!-- Dot -->
+            <li
+              class="w-8 h-8 rounded-full shrink-0 flex items-center justify-center border-2 transition-all duration-300"
+              :class="stepDotClass(n)"
+              :style="
+                n === currentStep + 1
+                  ? { background: 'linear-gradient(to right, #111827 50%, white 50%)' }
+                  : {}
+              "
+              :aria-current="stepState(n) === 'active' ? 'step' : undefined"
+              :aria-label="`Step ${n}: ${stepLabels[n - 1]} — ${stepState(n) === 'done' ? 'completed' : stepState(n) === 'active' ? 'current' : 'not yet reached'}`"
             >
-              <div
-                :class="[
-                  checked ? 'border-outline-gray-5 ring-1 ring-gray-800' : 'border-outline-gray-2',
-                  'relative flex cursor-pointer rounded-lg border bg-surface-white p-4 shadow-sm focus:outline-none min-w-36',
-                ]"
+              <IconCheck
+                v-if="stepState(n) === 'done'"
+                class="w-4 h-4 text-white"
+                aria-hidden="true"
+              />
+              <span
+                v-else-if="stepState(n) === 'active'"
+                class="text-xs font-bold text-white"
+                aria-hidden="true"
+                >{{ n }}</span
               >
-                <span class="flex flex-1">
-                  <span class="flex flex-col justify-between">
-                    <span class="flex flex-col gap-2">
-                      <RadioGroupLabel as="span" class="block text-xl font-bold text-ink-gray-9">{{
-                        tier.title
-                      }}</RadioGroupLabel>
-                      <RadioGroupDescription
-                        as="div"
-                        class="my-2 prose prose-sm max-w-none"
-                        :innerHTML="markdownToHTML(tier.description || '')"
-                      />
-                    </span>
-                    <span class="flex flex-col gap-4 mt-4">
-                      <Badge v-if="tier.valid_till" class="w-fit" variant="outline" theme="green"
-                        >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
-                      >
-                      <RadioGroupDescription as="span" class="text-xl font-medium text-ink-gray-9"
-                        >₹{{ tier.price }}</RadioGroupDescription
-                      >
-                    </span>
-                  </span>
-                </span>
-                <IconCircleCheckFilled class="h-6 w-6" />
-                <span
-                  :class="[
-                    active ? 'border' : 'border-2',
-                    checked ? 'border-outline-gray-5' : 'border-transparent',
-                    'pointer-events-none absolute -inset-px rounded-lg',
-                  ]"
-                  aria-hidden="true"
-                />
-              </div>
-            </RadioGroupOption>
+              <span
+                v-else-if="n !== currentStep + 1"
+                class="text-xs font-medium text-ink-gray-4"
+                aria-hidden="true"
+                >{{ n }}</span
+              >
+            </li>
+            <!-- Connector -->
+            <li v-if="n < 4" class="flex-1 h-0.5 relative overflow-hidden" aria-hidden="true">
+              <div class="absolute inset-0 bg-outline-gray-2" />
+              <div
+                class="absolute inset-y-0 left-0 bg-ink-gray-9 motion-safe:transition-all motion-safe:duration-500 ease-out"
+                :style="{ width: currentStep > n ? '100%' : '0%' }"
+              />
+            </li>
+          </template>
+        </ol>
+        <p class="text-xl font-semibold text-center text-ink-gray-9 mt-4" aria-live="polite">
+          {{ stepTitle }}
+        </p>
+      </nav>
 
-            <!-- Disabled/Expired Tiers -->
-            <div
-              v-for="tier in inactiveTiers"
+      <!-- Step Content -->
+      <transition
+        mode="out-in"
+        :enter-active-class="tClasses.enterActive"
+        :enter-from-class="tClasses.enterFrom"
+        :enter-to-class="tClasses.enterTo"
+        :leave-active-class="tClasses.leaveActive"
+        :leave-from-class="tClasses.leaveFrom"
+        :leave-to-class="tClasses.leaveTo"
+      >
+        <div :key="currentStep">
+          <!-- Select Tiers -->
+          <div
+            v-if="currentStep === 1"
+            class="flex flex-col gap-6 items-center"
+            role="list"
+            aria-label="Available ticket tiers"
+          >
+            <article
+              v-for="tier in allTiers"
               :key="tier.name"
-              :class="[
-                'relative flex rounded-lg border border-outline-gray-1 bg-surface-gray-1 p-4 shadow-sm min-w-36 opacity-60 cursor-not-allowed',
-              ]"
+              role="listitem"
+              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 p-4 w-full max-w-[600px]"
+              :class="!isTierActive(tier) ? 'opacity-50' : 'shadow-sm'"
+              :aria-label="`${tier.title} ticket, ₹${tier.price}`"
+              :aria-disabled="!isTierActive(tier)"
             >
-              <span class="flex flex-1">
-                <span class="flex flex-col justify-between">
-                  <span class="flex flex-col gap-2">
-                    <span class="block text-xl font-bold text-ink-gray-4">{{ tier.title }}</span>
-                    <span
-                      class="mt-2 prose prose-sm max-w-none"
-                      v-html="markdownToHTML(tier.description || '')"
-                    >
-                    </span>
-                  </span>
-                  <span class="flex flex-col gap-4 mt-4">
-                    <Badge v-if="!tier.enabled" class="w-fit" variant="outline" theme="red">
-                      Disabled
-                    </Badge>
-                    <Badge
-                      v-else-if="isTierExpired(tier)"
-                      class="w-fit"
-                      variant="outline"
-                      theme="orange"
-                    >
-                      Expired on {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}
-                    </Badge>
-                    <span class="text-xl font-medium text-ink-gray-4">₹{{ tier.price }}</span>
-                  </span>
-                </span>
-              </span>
-              <IconTicketOff class="h-6 w-6 text-ink-gray-5" />
-            </div>
-          </div>
-        </RadioGroup>
+              <!-- Image: full-width on mobile, fixed thumbnail on desktop -->
+              <div
+                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-full py-6 md:py-0 md:w-[88px] md:h-[108px] md:shrink-0 flex items-center justify-center text-ink-gray-4"
+                aria-hidden="true"
+              >
+                <IconTicket class="w-10 h-10" />
+              </div>
 
-        <div>
-          <div class="flex flex-col gap-1">
-            <span class="text-lg font-semibold leading-6 text-ink-gray-8">No. of Tickets</span>
-            <FormControl
-              v-model="checkoutInfo.numSeats"
-              class="w-1/4"
-              type="select"
-              :options="seatOptions"
-              size="md"
-              variant="subtle"
+              <!-- Content -->
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-base text-ink-gray-9 mb-1">{{ tier.title }}</p>
+                <div
+                  v-if="tier.description"
+                  class="prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full mb-2"
+                  v-html="cleanedHTML(tier.description)"
+                />
+                <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
+                <Badge
+                  v-if="tier.valid_till && isTierActive(tier)"
+                  class="mt-1 w-fit"
+                  variant="outline"
+                  theme="green"
+                  >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                >
+                <Badge v-if="!tier.enabled" class="mt-1 w-fit" variant="outline" theme="red"
+                  >Disabled</Badge
+                >
+                <Badge
+                  v-else-if="isTierExpired(tier)"
+                  class="mt-1 w-fit"
+                  variant="outline"
+                  theme="orange"
+                  >Expired</Badge
+                >
+              </div>
+
+              <!-- counter -->
+              <div
+                class="flex items-center gap-1 w-full md:w-auto justify-center md:justify-end md:shrink-0 md:pl-2"
+                :aria-label="`${tier.title} ticket quantity`"
+              >
+                <button
+                  :disabled="!isTierActive(tier) || (tierCounts[tier.name] || 0) <= 0"
+                  :aria-label="`Remove one ${tier.title} ticket`"
+                  class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  :class="
+                    (tierCounts[tier.name] || 0) > 0
+                      ? 'border-ink-gray-9 bg-ink-gray-9'
+                      : 'border-ink-gray-9 bg-surface-white'
+                  "
+                  @click="decrementTier(tier.name)"
+                >
+                  <IconMinus
+                    aria-hidden="true"
+                    class="w-4 h-4"
+                    :class="(tierCounts[tier.name] || 0) > 0 ? 'text-white' : 'text-ink-gray-9'"
+                  />
+                </button>
+                <span
+                  class="w-8 text-center font-semibold text-ink-gray-9"
+                  aria-live="polite"
+                  :aria-label="`${tierCounts[tier.name] || 0} ${tier.title} tickets selected`"
+                  >{{ tierCounts[tier.name] || 0 }}</span
+                >
+                <button
+                  :disabled="!isTierActive(tier) || totalTickets >= MAX_SEATS"
+                  :aria-label="`Add one ${tier.title} ticket`"
+                  class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                  :class="
+                    isTierActive(tier)
+                      ? 'border-ink-gray-9 bg-ink-gray-9'
+                      : 'border-ink-gray-9 bg-surface-white'
+                  "
+                  @click="incrementTier(tier.name)"
+                >
+                  <IconPlus
+                    aria-hidden="true"
+                    class="w-4 h-4"
+                    :class="isTierActive(tier) ? 'text-white' : 'text-ink-gray-9'"
+                  />
+                </button>
+              </div>
+            </article>
+          </div>
+
+          <!-- STEP 2: Attendee Details -->
+          <div v-else-if="currentStep === 2" class="flex flex-col gap-6">
+            <AttendeeCard
+              v-for="(attendee, idx) in attendees"
+              :key="idx"
+              :attendee="attendee"
+              :index="idx"
+              :tier-title="getTierTitle(attendee.ticket_type)"
+              :custom-fields="!customFieldsApplyToAll ? event.data.custom_fields : []"
+              :show-tshirt="Boolean(event.data.paid_tshirts_available)"
+              :tshirt-price="event.data.t_shirt_price || 0"
+              :can-delete="attendees.length > 1"
+              @update:attendee="attendees[idx] = $event"
+              @delete="removeAttendee(idx)"
             />
-          </div>
 
-          <!-- custom fields section -->
-          <div v-if="event.data.custom_fields.length > 0">
-            <div class="flex-row mb-2">
-              <h2 class="text-base font-semibold text-ink-gray-8 mt-4">Additional Details</h2>
+            <div v-if="event.data.custom_fields?.length > 0" class="flex flex-col gap-4">
               <Switch
                 v-model="customFieldsApplyToAll"
                 class="w-fit text-xs"
-                label="Apply Same answers for all tickets/attendees"
+                label="Apply same answers for all tickets"
               />
+              <div
+                v-if="customFieldsApplyToAll"
+                class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
+                <FormControl
+                  v-for="field in event.data.custom_fields"
+                  :key="field.name"
+                  v-model="globalCustomFields[field.field_name]"
+                  :type="FIELD_TYPE_MAP[field.field_type]"
+                  :label="field.label"
+                  :options="field.options"
+                  size="sm"
+                  variant="subtle"
+                />
+              </div>
             </div>
 
-            <!-- global custom fields (when apply to all is enabled) -->
-            <div
-              v-if="customFieldsApplyToAll"
-              class="mt-3 sm:grid sm:grid-cols-2 gap-2 space-y-2 sm:space-y-0"
-            >
-              <FormControl
-                v-for="field in event.data.custom_fields"
-                :key="field.name"
-                v-model="globalCustomFields[field.field_name]"
-                :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
-                :label="field.label"
-                :options="field.options"
-                size="sm"
-                variant="subtle"
-              />
+            <div class="flex justify-center">
+              <button
+                :disabled="totalTickets >= MAX_SEATS"
+                class="flex items-center gap-2 bg-outline-gray-1 hover:bg-outline-gray-2 border border-outline-gray-2 rounded-lg px-5 py-2.5 font-semibold text-sm uppercase tracking-wider text-ink-gray-9 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                @click="addAttendee"
+              >
+                <IconPlus class="w-5 h-5" /> Add Another Ticket
+              </button>
             </div>
           </div>
 
-          <!-- attendee details -->
-          <h2 class="text-lg font-semibold leading-6 text-ink-gray-8 mt-4">Attendees</h2>
-          <div>
+          <!-- STEP 3: Verify Details -->
+          <div v-else-if="currentStep === 3" class="flex flex-wrap gap-6 justify-center">
             <div
-              v-for="(attendee, index) in checkoutInfo.attendees"
-              :key="index"
-              class="px-4 py-4 my-4 border rounded-sm"
+              v-for="(attendee, idx) in attendees"
+              :key="idx"
+              class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-5 w-full max-w-[375px]"
             >
-              <p class="text-base text-ink-gray-5 font-medium mb-1">#{{ index + 1 }}</p>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-                <div class="flex flex-col gap-7">
-                  <FormControl
-                    v-model="attendee.full_name"
-                    type="text"
-                    size="sm"
-                    variant="subtle"
-                    :placeholder="attendee.placeholder"
-                    label="Full Name"
-                  />
-                  <FormControl
-                    v-model="attendee.organization"
-                    type="text"
-                    size="sm"
-                    variant="subtle"
-                    label="Organization / College"
-                  />
+              <div class="flex items-center justify-between">
+                <span class="font-semibold text-2xl text-ink-gray-9 tracking-tight"
+                  >#{{ idx + 1 }}</span
+                >
+                <span
+                  class="bg-green-100 text-green-700 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
+                  >{{ getTierTitle(attendee.ticket_type) }}</span
+                >
+              </div>
+              <div class="flex flex-col gap-3">
+                <div>
+                  <p class="font-semibold text-ink-gray-8">{{ attendee.full_name || '—' }}</p>
+                  <p class="text-sm text-ink-gray-5">
+                    {{ [attendee.designation, attendee.organization].filter(Boolean).join(' | ') }}
+                  </p>
                 </div>
-                <div class="flex flex-col gap-1">
-                  <FormControl
-                    v-model="attendee.email"
-                    type="email"
-                    size="sm"
-                    variant="subtle"
-                    label="Email"
-                  />
-                  <div class="pl-1">
-                    <FormControl
-                      v-model="attendee.subscribe_chapter_mailing"
-                      class="text-sm"
-                      type="checkbox"
-                      size="sm"
-                      variant="subtle"
-                      :label="`Yes, I'd like to receive email updates about future events from ${event.data.event_name}.`"
-                    />
-                  </div>
-                  <FormControl
-                    v-model="attendee.designation"
-                    type="text"
-                    size="sm"
-                    variant="subtle"
-                    label="Designation"
-                  />
+                <div class="text-sm text-ink-gray-5 flex flex-col gap-1">
+                  <p>{{ attendee.email }}</p>
                 </div>
               </div>
-
-              <!-- Per-Attendee custom fields (when apply to all is disabled) -->
-              <div
-                v-if="!customFieldsApplyToAll && event.data.custom_fields.length > 0"
-                class="mt-4 border-t pt-4"
-              >
-                <h3 class="text-sm font-medium text-ink-gray-6 mb-2">Additional Details</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-2 gap-y-4">
-                  <FormControl
-                    v-for="field in event.data.custom_fields"
-                    :key="field.name"
-                    v-model="attendee.custom_fields[field.field_name]"
-                    :type="FIELD_TYPE_FORM_CONTROL_MAP[field.field_type]"
-                    :label="field.label"
-                    :options="field.options"
-                    size="sm"
-                    variant="subtle"
-                  />
+              <div class="flex items-center gap-6 flex-wrap">
+                <div
+                  v-if="event.data.paid_tshirts_available"
+                  class="flex items-center gap-1.5 text-sm text-ink-gray-7"
+                >
+                  <IconShirt class="w-5 h-5" />
+                  <span>{{
+                    attendee.wants_tshirt ? attendee.tshirt_size : 'Without T-shirt'
+                  }}</span>
                 </div>
-              </div>
-
-              <div
-                v-if="event.data.paid_tshirts_available"
-                class="grid grid-cols-1 md:grid-cols-2 gap-2 mt-2"
-              >
-                <FormControl
-                  v-model="attendee.wants_tshirt"
-                  type="checkbox"
-                  size="sm"
-                  variant="subtle"
-                  label="Add a T-shirt?"
-                />
-                <FormControl
-                  v-model="attendee.tshirt_size"
-                  :class="attendee.wants_tshirt ? '' : ' invisible'"
-                  type="select"
-                  :options="T_SHIRT_SIZES"
-                  size="sm"
-                  class="min-w-[100px]"
-                  variant="subtle"
-                  label="Size"
-                />
+                <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
+                  <IconSoup class="w-5 h-5" />
+                  <span>Breakfast + Lunch included</span>
+                </div>
               </div>
             </div>
           </div>
 
-          <div class="border rounded-md p-5 my-4 flex flex-col gap-4">
-            <h4 class="text-base font-semibold">Billing Details</h4>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <!-- STEP 4: Billing -->
+          <div
+            v-else-if="currentStep === 4"
+            class="flex flex-col md:flex-row gap-6 md:gap-10 items-start"
+          >
+            <div
+              class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6 flex-1"
+            >
+              <div class="flex items-center gap-2">
+                <IconReceipt class="w-6 h-6 text-ink-gray-7" />
+                <span class="font-semibold text-ink-gray-9">Billing Details</span>
+              </div>
               <FormControl
-                v-model="checkoutInfo.buyer_name"
+                v-model="billing.buyer_name"
                 type="text"
+                label="Name"
                 size="sm"
                 variant="subtle"
                 placeholder="John Doe"
-                label="Name"
               />
               <FormControl
-                v-model="checkoutInfo.email"
-                type="email"
-                size="sm"
-                variant="subtle"
-                placeholder="john@fossunited.org"
-                label="Email"
-              />
-              <FormControl
-                v-model="checkoutInfo.state"
+                v-model="billing.state"
                 type="select"
-                size="sm"
-                variant="subtle"
                 label="State"
-                :options="stateOptions.data"
-                :placeholder="stateOptions.data[0]?.label"
-              />
-            </div>
-            <div class="my-2">
-              <Switch
-                v-model="checkoutInfo.hasGST"
-                class="w-fit"
-                label="Enter GST Details"
-                description="Invoice will be generated with GST details."
-              />
-            </div>
-            <div v-if="checkoutInfo.hasGST" class="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div class="flex flex-col gap-2">
-                <FormControl
-                  v-model="checkoutInfo.company_name"
-                  type="text"
-                  size="sm"
-                  variant="subtle"
-                  label="Company Name"
-                />
-                <FormControl
-                  v-model="checkoutInfo.gstn"
-                  type="text"
-                  size="sm"
-                  variant="subtle"
-                  label="GSTN (optional)"
-                />
-              </div>
-              <FormControl
-                v-model="checkoutInfo.billing_address"
-                type="textarea"
                 size="sm"
                 variant="subtle"
-                label="Billing Address"
+                :options="stateOptions.data"
               />
+              <FormControl
+                v-model="billing.email"
+                type="email"
+                label="Email"
+                size="sm"
+                variant="subtle"
+                placeholder="example@email.com"
+              />
+              <div class="flex flex-col gap-1.5">
+                <div class="flex items-center gap-2">
+                  <input
+                    id="gst-toggle"
+                    v-model="billing.hasGST"
+                    type="checkbox"
+                    class="rounded"
+                  />
+                  <label for="gst-toggle" class="text-sm text-ink-gray-7 cursor-pointer"
+                    >Add GST Details</label
+                  >
+                </div>
+                <p class="text-xs text-ink-gray-4 ml-6">
+                  Invoice will be generated with GST details
+                </p>
+              </div>
+              <template v-if="billing.hasGST">
+                <FormControl
+                  v-model="billing.company_name"
+                  type="text"
+                  label="Company Name"
+                  size="sm"
+                  variant="subtle"
+                />
+                <FormControl
+                  v-model="billing.gstn"
+                  type="text"
+                  label="GST Details (GSTN)"
+                  size="sm"
+                  variant="subtle"
+                  placeholder="22AAAAA0000A1Z5"
+                />
+                <FormControl
+                  v-model="billing.billing_address"
+                  type="textarea"
+                  label="Billing Address"
+                  size="sm"
+                  variant="subtle"
+                />
+              </template>
+              <div class="flex items-start gap-2">
+                <input
+                  id="refund-policy"
+                  v-model="billing.readRefundPolicy"
+                  type="checkbox"
+                  class="mt-0.5 rounded"
+                />
+                <label
+                  for="refund-policy"
+                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
+                >
+                  I understand that tickets are non-refundable and have read the
+                  <a
+                    href="https://fossunited.org/refund-transfer-policy"
+                    target="_blank"
+                    class="font-semibold underline"
+                    >Refund Policy</a
+                  >
+                </label>
+              </div>
             </div>
-            <div class="my-2">
-              <Checkbox v-model="checkoutInfo.readRefundPolicy" size="sm"></Checkbox
-              ><span class="font-medium leading-normal text-ink-gray-8 >text-base">
-                I understand that tickets are non-refundable and have read the
-                <a href="/refund-transfer-policy" class="font-semibold underline"
-                  >Refund Policy</a
-                ></span
-              >
-            </div>
+
+            <!-- Ticket Summary Sidebar -->
+            <TicketSummary
+              :active-tier-counts="activeTierCounts"
+              :all-tiers="allTiers"
+              :tshirt-count="numTShirtsAdded"
+              :tshirt-price="event.data.t_shirt_price || 0"
+              :show-gst="billing.hasGST"
+              :loading="rzpCheckout?.resource.loading"
+              :coupon-code="billing.coupon_code"
+              :error-message="errorMessage || ''"
+              @proceed="createOrder"
+              @update:coupon-code="billing.coupon_code = $event"
+            />
           </div>
         </div>
-      </div>
+      </transition>
 
-      <Card class="w-1/4 h-fit sticky top-20 hidden md:block" title="Ticket Summary">
-        <div class="w-full mt-2 space-y-1">
-          <div class="grid grid-cols-3 gap-2">
-            <p>{{ checkoutInfo.tier.title }} Ticket</p>
-            <p class="justify-self-center">
-              ₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}
-            </p>
-            <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
-          </div>
-
-          <div
-            v-if="event.data.paid_tshirts_available && numTShirtAdded > 0"
-            class="grid grid-cols-3"
-          >
-            <p>T-Shirts</p>
-            <p class="justify-self-center">
-              ₹{{ event.data.t_shirt_price }} x
-              {{ numTShirtAdded }}
-            </p>
-            <p class="justify-self-end">₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
-          </div>
+      <!-- Navigation (Steps 1-3) -->
+      <template v-if="currentStep !== 4">
+        <div class="flex gap-4 items-center justify-end">
+          <Button
+            v-if="currentStep > 1"
+            label="Back"
+            size="lg"
+            variant="subtle"
+            icon-left="chevron-left"
+            class="uppercase !font-medium"
+            @click="prevStep"
+          />
+          <Button
+            label="Next"
+            size="lg"
+            variant="solid"
+            icon-right="chevron-right"
+            class="uppercase !font-medium !px-6"
+            :disabled="currentStep === 1 && totalTickets === 0"
+            @click="nextStep"
+          />
         </div>
-        <hr class="my-2" />
-        <div class="grid grid-cols-3 gap-2 font-semibold">
-          <p>Total</p>
-          <p class="justify-self-center"></p>
-          <p class="justify-self-end">₹{{ totalAmount }}</p>
-        </div>
-
-        <ErrorMessage v-if="errorMessage" class="m-2 mt-5" :message="errorMessage" />
+        <ErrorMessage
+          v-if="errorMessage"
+          role="alert"
+          aria-live="assertive"
+          :message="errorMessage"
+        />
+      </template>
+      <div v-else class="flex justify-end">
         <Button
-          class="mt-4 w-full"
-          size="md"
-          :loading="rzpCheckout?.resource.loading"
-          variant="solid"
-          @click="createOrder"
-        >
-          Pay Now
-        </Button>
-      </Card>
-    </div>
+          label="Back"
+          size="lg"
+          variant="subtle"
+          icon-left="chevron-left"
+          class="uppercase !font-medium"
+          aria-label="Go back to verify details"
+          @click="prevStep"
+        />
+      </div>
+    </main>
   </div>
-  <div class="p-5 bg-surface-gray-1">
-    <Button v-if="Boolean(event.loading)" :loading="true" loading-text="Loading" />
-    <p v-else-if="!eventName" class="text-ink-gray-8 font-medium">Event not found</p>
-    <p v-else-if="event.error">Error loading event</p>
-  </div>
+
+  <!-- Loading / Error -->
   <div
-    v-if="event.data"
-    class="md:hidden sticky bottom-0 z-50 pb-8 h-fit bg-surface-white rounded-t-lg border-outline-gray-5 px-5 py-3 border"
+    v-else
+    class="p-5 bg-surface-gray-1 min-h-screen flex items-center justify-center"
+    role="status"
+    aria-live="polite"
   >
-    <div class="mb-4 flex justify-between items-center">
-      <h3 class="text-lg font-medium">Ticket Summary</h3>
-      <Button
-        size="sm"
-        variant="ghost"
-        label="Show Details"
-        @click="showAdditionalDetails = !showAdditionalDetails"
-      />
-    </div>
-    <div v-if="showAdditionalDetails" class="w-full mt-2 space-y-1">
-      <div class="grid grid-cols-3 gap-2">
-        <p>{{ checkoutInfo.tier.title }} Ticket</p>
-        <p class="justify-self-center">
-          ₹{{ checkoutInfo.tier.price }} x {{ checkoutInfo.numSeats }}
-        </p>
-        <p class="justify-self-end">₹{{ checkoutInfo.tier.price * checkoutInfo.numSeats }}</p>
-      </div>
-      <div v-if="event.data.paid_tshirts_available && numTShirtAdded > 0" class="grid grid-cols-3">
-        <p>T-Shirts</p>
-        <p class="justify-self-center">
-          ₹{{ event.data.t_shirt_price }} x
-          {{ numTShirtAdded }}
-        </p>
-        <p class="justify-self-end">₹{{ numTShirtAdded * event.data.t_shirt_price }}</p>
-      </div>
-      <hr class="my-2" />
-    </div>
-    <ErrorMessage v-if="errorMessage" class="m-2 mt-5" :message="errorMessage" />
-    <div class="grid grid-cols-3 gap-2 mt-2 font-semibold">
-      <p>Total</p>
-      <p class="justify-self-center"></p>
-      <p class="justify-self-end">₹{{ totalAmount }}</p>
-    </div>
     <Button
-      class="mt-4 w-full"
-      size="md"
-      :loading="rzpCheckout?.resource.loading"
-      variant="solid"
-      @click="createOrder"
-    >
-      Pay Now
-    </Button>
+      v-if="event.loading"
+      :loading="true"
+      loading-text="Loading"
+      aria-label="Loading event details"
+    />
+    <p v-else-if="!eventName" class="text-ink-gray-8 font-medium">Event not found</p>
+    <p v-else-if="event.error" role="alert">Error loading event</p>
   </div>
 </template>
 
 <script setup>
-import Header from '@/components/Header.vue'
-import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
+import { computed, reactive, ref, onMounted, watch, inject, provide } from 'vue'
+import { useRouter } from 'vue-router'
 import {
   createResource,
   FormControl,
   Switch,
-  Checkbox,
   Button,
   usePageMeta,
   ErrorMessage,
   Badge,
   Dialog,
 } from 'frappe-ui'
-import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
-import {
-  RadioGroup,
-  RadioGroupDescription,
-  RadioGroupLabel,
-  RadioGroupOption,
-} from '@headlessui/vue'
+import Header from '@/components/Header.vue'
+import Breadcrumb from '@/components/Breadcrumb.vue'
+import EventHeader from '@/components/common/EventHeader.vue'
 import RazorpayCheckout from '@/components/common/RazorpayCheckout.vue'
-import { IconCircleCheckFilled, IconTicketOff } from '@tabler/icons-vue'
-import ThemeToggle from '@/components/ui/ThemeToggle.vue'
+import AttendeeCard from '@/components/tickets/AttendeeCard.vue'
+import TicketSummary from '@/components/tickets/TicketSummary.vue'
+import {
+  IconInfoCircle,
+  IconCheck,
+  IconPlus,
+  IconMinus,
+  IconShirt,
+  IconSoup,
+  IconReceipt,
+  IconTicket,
+} from '@tabler/icons-vue'
+import { cleanedHTML } from '@/helpers/utils'
 
 const dayjs = inject('$dayjs')
+const router = useRouter()
 
-const MAX_SEATS_PER_BOOKING = 10
-const T_SHIRT_SIZES = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
-const FIELD_TYPE_FORM_CONTROL_MAP = {
-  Data: 'text',
-  Int: 'number',
-  Select: 'select',
-}
+const MAX_SEATS = 10
+const FIELD_TYPE_MAP = { Data: 'text', Int: 'number', Select: 'select' }
+const stepLabels = ['Select Tickets', 'Attendee Details', 'Verify Details', 'Billing']
 
-usePageMeta(() => {
-  return {
-    title: 'Book Tickets',
-  }
-})
+usePageMeta(() => ({ title: 'Book Tickets' }))
 
-const showAdditionalDetails = ref(false)
-
+// State
 const eventName = ref(null)
-const checkoutInfo = reactive({
-  tier: null,
-  numSeats: 1,
-  email: '',
-  attendees: [],
-  hasGST: false,
-  readRefundPolicy: false,
-  company_name: '',
-  buyer_name: '',
-  state: '',
-  gstn: '',
-  billing_address: '',
-})
-const customFields = reactive({})
+const currentStep = ref(1)
+const transitionDir = ref('next')
 const errorMessage = ref(null)
+const showDialog = ref(false)
+const dialogError = ref('')
+const rzpCheckout = ref(null)
 
+const tierCounts = reactive({})
+const attendees = ref([])
 const customFieldsApplyToAll = ref(false)
 const globalCustomFields = reactive({})
 
-const fullNamePlaceholders = ['Jenny Smith', 'Jacob Doe', 'Jim Brown']
-
-const stateOptions = createResource({
-  url: 'fossunited.api.dashboard.get_states',
-  transform(data) {
-    return data.map((state) => ({ label: state.name, value: state.name }))
-  },
-  auto: true,
+const billing = reactive({
+  buyer_name: '',
+  email: '',
+  state: '',
+  hasGST: false,
+  company_name: '',
+  gstn: '',
+  billing_address: '',
+  coupon_code: '',
+  readRefundPolicy: false,
 })
 
-const rzpCheckout = ref(null)
+// Computed
+const allTiers = computed(() => event.data?.tiers || [])
 
-const event = createResource({
-  url: 'fossunited.api.dashboard.get_event',
-  makeParams() {
-    return {
-      name: eventName.value,
-    }
-  },
-  onSuccess(data) {
-    const activeTiersList = data.tiers.filter((tier) => {
-      const isEnabled = Boolean(tier.enabled)
-      const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
-      return isEnabled && !deadlinePassed
-    })
-
-    if (activeTiersList.length > 0) {
-      checkoutInfo.tier = activeTiersList[0]
-    }
-    resetCustomFields()
-  },
-})
-
-const redirectToEvent = computed(() => {
-  if (event.data) {
-    return `${window.location.origin}/${event.data.route}`
+const activeTierCounts = computed(() => {
+  const result = {}
+  for (const [name, count] of Object.entries(tierCounts)) {
+    if (count > 0) result[name] = count
   }
-  return window.location.origin
+  return result
 })
 
-watch(
-  () => checkoutInfo.numSeats,
-  () => {
-    if (checkoutInfo.attendees.length < checkoutInfo.numSeats) {
-      for (let i = checkoutInfo.attendees.length; i < checkoutInfo.numSeats; i++) {
-        const randomPlaceholder =
-          fullNamePlaceholders[Math.floor(Math.random() * fullNamePlaceholders.length)]
+const totalTickets = computed(() => Object.values(tierCounts).reduce((s, c) => s + (c || 0), 0))
 
-        const newAttendee = {
-          full_name: '',
-          email: '',
-          placeholder: randomPlaceholder,
-          designation: '',
-          subscribe_chapter_mailing: true,
-          organization: '',
-          wants_tshirt: false,
-          tshirt_size: '',
-          custom_fields: {},
-        }
+const numTShirtsAdded = computed(() => attendees.value.filter((a) => a.wants_tshirt).length)
 
-        // Initialize custom fields for new attendee if not applying to all
-        if (!customFieldsApplyToAll.value && event.data?.custom_fields) {
-          for (let field of event.data.custom_fields) {
-            newAttendee.custom_fields[field.field_name] = ''
-          }
-        }
-
-        checkoutInfo.attendees.push(newAttendee)
-      }
-    } else if (checkoutInfo.attendees.length > checkoutInfo.numSeats) {
-      checkoutInfo.attendees = checkoutInfo.attendees.slice(0, checkoutInfo.numSeats)
-    }
-  },
-  { immediate: true },
+const stepTitle = computed(
+  () =>
+    ({
+      1: 'Select your Tickets',
+      2: 'Enter Attendee Details',
+      3: 'Verify Details',
+      4: 'Billing',
+    })[currentStep.value] || '',
 )
 
-// Update the customFields initialization
-function resetCustomFields() {
-  if (event.data?.custom_fields) {
-    // Reset global custom fields
-    for (let field of event.data.custom_fields) {
-      globalCustomFields[field.field_name] = ''
-      if (field.field_type == 'Select') {
-        field.options = field.options.split('\n')
-      }
-    }
-
-    // Initialize custom fields for existing attendees if apply to all is disabled
-    if (!customFieldsApplyToAll.value) {
-      for (let attendee of checkoutInfo.attendees) {
-        if (!attendee.custom_fields) {
-          attendee.custom_fields = {}
-        }
-        for (let field of event.data.custom_fields) {
-          if (!(field.field_name in attendee.custom_fields)) {
-            attendee.custom_fields[field.field_name] = ''
-          }
-        }
-      }
-    }
-  }
-}
-
-watch(customFieldsApplyToAll, (newValue) => {
-  if (!event.data?.custom_fields) return
-
-  if (newValue) {
-    // When switching to "apply to all", clear individual attendee custom fields
-    for (let attendee of checkoutInfo.attendees) {
-      attendee.custom_fields = {}
-    }
-  } else {
-    // When switching to individual, initialize custom fields for each attendee
-    for (let attendee of checkoutInfo.attendees) {
-      if (!attendee.custom_fields) {
-        attendee.custom_fields = {}
-      }
-      for (let field of event.data.custom_fields) {
-        attendee.custom_fields[field.field_name] = globalCustomFields[field.field_name] || ''
-      }
-    }
+const tClasses = computed(() => {
+  const fwd = transitionDir.value === 'next'
+  return {
+    enterActive: 'transition ease-out duration-300',
+    enterFrom: `opacity-0 transform ${fwd ? 'translate-x-8' : '-translate-x-8'}`,
+    enterTo: 'opacity-100 transform translate-x-0',
+    leaveActive: 'transition ease-in duration-200',
+    leaveFrom: 'opacity-100 transform translate-x-0',
+    leaveTo: `opacity-0 transform ${fwd ? '-translate-x-8' : 'translate-x-8'}`,
   }
 })
 
+const breadcrumbItems = computed(() => [
+  { label: event.data?.event_name || '...', link: redirectToEvent.value },
+  { label: 'Tickets' },
+  { label: 'Register' },
+])
+
+const redirectToEvent = computed(() =>
+  event.data ? `${window.location.origin}/${event.data.route}` : window.location.origin,
+)
+
+// ── Helpers ────────────────────────────────────────────────────────────
+function isTierActive(tier) {
+  return Boolean(tier.enabled) && !isTierExpired(tier)
+}
 function isTierExpired(tier) {
   return tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
 }
+function getTierTitle(tierName) {
+  return allTiers.value.find((t) => t.name === tierName)?.title || tierName
+}
+function stepState(n) {
+  if (n < currentStep.value) return 'done'
+  if (n === currentStep.value) return 'active'
+  return 'upcoming'
+}
+function stepDotClass(n) {
+  const state = stepState(n)
+  if (state === 'done' || state === 'active') return 'bg-ink-gray-9 border-ink-gray-9'
+  if (n === currentStep.value + 1) return 'border-ink-gray-9' // half-fill applied via inline style
+  return 'bg-surface-white border-outline-gray-2'
+}
+
+// Tier counter actions
+function incrementTier(name) {
+  if (totalTickets.value >= MAX_SEATS) return
+  tierCounts[name] = (tierCounts[name] || 0) + 1
+}
+function decrementTier(name) {
+  if ((tierCounts[name] || 0) <= 0) return
+  tierCounts[name]--
+}
+
+// Attendee management
+function makeAttendee(ticketType = '') {
+  const a = {
+    ticket_type: ticketType,
+    full_name: '',
+    email: '',
+    designation: '',
+    organization: '',
+    wants_tshirt: false,
+    tshirt_size: '',
+    subscribe_chapter_mailing: true,
+    custom_fields: {},
+  }
+  for (const f of event.data?.custom_fields || []) {
+    a.custom_fields[f.field_name] = ''
+  }
+  return a
+}
+
+function buildAttendees() {
+  const newList = []
+  const used = new Set()
+  for (const [name, count] of Object.entries(tierCounts)) {
+    for (let i = 0; i < (count || 0); i++) {
+      const existing = attendees.value.find((a) => a.ticket_type === name && !used.has(a))
+      if (existing) {
+        used.add(existing)
+        newList.push(existing)
+      } else {
+        newList.push(makeAttendee(name))
+      }
+    }
+  }
+  attendees.value = newList
+}
+
+function addAttendee() {
+  if (totalTickets.value >= MAX_SEATS) return
+  const firstType = Object.keys(activeTierCounts.value)[0] || ''
+  attendees.value.push(makeAttendee(firstType))
+  if (firstType) tierCounts[firstType] = (tierCounts[firstType] || 0) + 1
+}
+
+function removeAttendee(index) {
+  const removed = attendees.value.splice(index, 1)[0]
+  if (removed?.ticket_type && (tierCounts[removed.ticket_type] || 0) > 0) {
+    tierCounts[removed.ticket_type]--
+  }
+}
+
+// Navigation
+function nextStep() {
+  errorMessage.value = null
+  const errors = validateStep(currentStep.value)
+  if (errors.length) {
+    errorMessage.value = errors.join('\n')
+    return
+  }
+  if (currentStep.value === 1) buildAttendees()
+  transitionDir.value = 'next'
+  currentStep.value++
+}
+
+function prevStep() {
+  errorMessage.value = null
+  if (currentStep.value <= 1) return
+  transitionDir.value = 'back'
+  currentStep.value--
+}
+
+function validateStep(step) {
+  const errors = []
+  if (step === 1 && totalTickets.value === 0) {
+    errors.push('Please select at least one ticket')
+  }
+  if (step === 2) {
+    for (const [i, a] of attendees.value.entries()) {
+      if (!a.full_name) errors.push(`Attendee #${i + 1}: Full name is required`)
+      if (!a.email) errors.push(`Attendee #${i + 1}: Email is required`)
+      else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(a.email)) {
+        errors.push(`Attendee #${i + 1}: Invalid email address`)
+      }
+      if (!customFieldsApplyToAll.value) {
+        for (const f of event.data?.custom_fields || []) {
+          if (f.mandatory && !a.custom_fields?.[f.field_name]) {
+            errors.push(`Attendee #${i + 1}: ${f.label} is required`)
+          }
+        }
+      }
+    }
+    if (customFieldsApplyToAll.value) {
+      for (const f of event.data?.custom_fields || []) {
+        if (f.mandatory && !globalCustomFields[f.field_name]) {
+          errors.push(`${f.label} is required`)
+        }
+      }
+    }
+  }
+  return errors
+}
+
+// Razorpay Order
+// TODO: Remove mock before production
+const MOCK_PAYMENT = true
 
 function createOrder() {
-  if (checkoutFormErrors.value.length > 0) {
-    errorMessage.value = checkoutFormErrors.value.join(', ')
+  errorMessage.value = null
+  const errors = []
+  if (!billing.buyer_name) errors.push('Please enter your name in Billing Details')
+  if (!billing.email) errors.push('Please enter your email in Billing Details')
+  else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(billing.email)) {
+    errors.push('Please enter a valid email address')
+  }
+  if (!billing.state) errors.push('Please select a state in Billing Details')
+  if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
+  if (errors.length) {
+    errorMessage.value = errors.join('\n')
     return
-  } else {
-    errorMessage.value = null
   }
 
+  // TODO: Remove mock before production
+  if (MOCK_PAYMENT) {
+    router.push({
+      name: 'success',
+      query: { order_id: 'MOCK-ORDER-00001', payment_id: 'MOCK-PAY-00001' },
+    })
+    return
+  }
+
+  const primaryTier =
+    allTiers.value.find((t) => (tierCounts[t.name] || 0) > 0 && isTierActive(t)) ||
+    allTiers.value[0]
+
+  const subTotal =
+    Object.entries(tierCounts).reduce((s, [name, count]) => {
+      const tier = allTiers.value.find((t) => t.name === name)
+      return s + (tier?.price || 0) * (count || 0)
+    }, 0) +
+    numTShirtsAdded.value * (event.data.t_shirt_price || 0)
+
   rzpCheckout.value.createOrder(
-    totalAmount.value,
-    checkoutInfo.email,
+    subTotal,
+    billing.email,
     {
       event: eventName.value,
-      tier: checkoutInfo.tier,
-      attendees: checkoutInfo.attendees,
-      num_seats: checkoutInfo.numSeats,
+      tier: primaryTier,
+      tier_counts: { ...tierCounts },
+      attendees: attendees.value,
+      num_seats: totalTickets.value,
       custom_fields_apply_to_all: customFieldsApplyToAll.value,
-      global_custom_fields: customFieldsApplyToAll.value ? globalCustomFields : null,
+      global_custom_fields: customFieldsApplyToAll.value ? { ...globalCustomFields } : null,
     },
     event.data.doctype,
     event.data.name,
     {
-      buyer_name: checkoutInfo.buyer_name,
-      company_name: checkoutInfo.company_name,
-      gstn: checkoutInfo.gstn,
-      state: checkoutInfo.state,
-      billing_address: checkoutInfo.billing_address,
+      buyer_name: billing.buyer_name,
+      company_name: billing.company_name,
+      gstn: billing.gstn,
+      state: billing.state,
+      billing_address: billing.billing_address,
     },
     event.data.event_name,
   )
 }
-const showDialog = ref(false)
-const dialogError = ref('')
+
+// Resources
+const stateOptions = createResource({
+  url: 'fossunited.api.dashboard.get_states',
+  transform: (data) => data.map((s) => ({ label: s.name, value: s.name })),
+  auto: true,
+})
+
+const event = createResource({
+  url: 'fossunited.api.dashboard.get_event',
+  makeParams: () => ({ name: eventName.value }),
+  onSuccess(data) {
+    for (const k in tierCounts) delete tierCounts[k]
+    for (const f of data.custom_fields || []) {
+      globalCustomFields[f.field_name] = ''
+      if (f.field_type === 'Select' && typeof f.options === 'string') {
+        f.options = f.options.split('\n')
+      }
+    }
+  },
+})
 
 const checkIfTicketsLive = createResource({
   url: 'fossunited.api.tickets.is_ticket_live',
-  makeParams() {
-    return {
-      event_id: eventName.value,
-    }
-  },
+  makeParams: () => ({ event_id: eventName.value }),
   onSuccess(data) {
     if (!data) {
       dialogError.value = 'Tickets are not live for this event'
@@ -700,118 +825,14 @@ onMounted(() => {
   }
 })
 
-const totalAmount = computed(() => {
-  let total = checkoutInfo.tier?.price * checkoutInfo.numSeats
-
-  if (event.data.paid_tshirts_available) {
-    total += numTShirtAdded.value * event.data.t_shirt_price
-  }
-
-  return total
-})
-
-const numTShirtAdded = computed(() => {
-  let tShirts = 0
-
-  for (let attendee of checkoutInfo.attendees) {
-    if (attendee.wants_tshirt) {
-      tShirts += 1
-    }
-  }
-
-  return tShirts
-})
-
-const activeTiers = computed(() => {
-  let tiers = event.data?.tiers || []
-  tiers = tiers.filter((tier) => {
-    const isEnabled = Boolean(tier.enabled)
-    const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
-    return isEnabled && !deadlinePassed
-  })
-  return tiers
-})
-
-const inactiveTiers = computed(() => {
-  let tiers = event.data?.tiers || []
-  tiers = tiers.filter((tier) => {
-    const isEnabled = Boolean(tier.enabled)
-    const deadlinePassed = tier.valid_till && dayjs().isAfter(tier.valid_till, 'day')
-    return !isEnabled || deadlinePassed
-  })
-  return tiers
-})
-
-const ticketTiers = computed(() => {
-  return activeTiers.value
-})
-
-const seatOptions = computed(() => {
-  return Array.from({ length: MAX_SEATS_PER_BOOKING }, (_, i) => i + 1).map((i) => ({
-    label: i.toString(),
-    value: i,
-  }))
-})
-
-const checkoutFormErrors = computed(() => {
-  const errors = []
-  if (!checkoutInfo.email) {
-    errors.push('\nPlease enter your email')
-  }
-
-  if (
-    checkoutInfo.email &&
-    !checkoutInfo.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-  ) {
-    errors.push('\nPlease enter a valid email address')
-  }
-
-  if (checkoutInfo.attendees.some((a) => !a.full_name || !a.email)) {
-    errors.push('\nPlease fill in all attendee details')
-  }
-
-  // Validate global custom fields if apply to all is enabled
-  if (customFieldsApplyToAll.value) {
-    for (let field of event.data?.custom_fields || []) {
-      if (field.mandatory && !globalCustomFields[field.field_name]) {
-        errors.push(`\nPlease fill in ${field.label}`)
-      }
-    }
-  } else {
-    // Validate individual attendee custom fields
-    for (let attendee of checkoutInfo.attendees) {
-      for (let field of event.data?.custom_fields || []) {
-        if (field.mandatory && !attendee.custom_fields?.[field.field_name]) {
-          errors.push(`\nPlease fill in ${field.label} for all attendees`)
-          break // Only show error once per missing field
-        }
+watch(customFieldsApplyToAll, (newVal) => {
+  if (!newVal && event.data?.custom_fields) {
+    for (const a of attendees.value) {
+      if (!a.custom_fields) a.custom_fields = {}
+      for (const f of event.data.custom_fields) {
+        a.custom_fields[f.field_name] = globalCustomFields[f.field_name] || ''
       }
     }
   }
-
-  for (let attendee of checkoutInfo.attendees) {
-    if (
-      attendee.email &&
-      !attendee.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
-    ) {
-      errors.push('\nPlease enter a valid email address for all attendees')
-    }
-  }
-
-  if (!checkoutInfo.state) {
-    errors.push('\nPlease select a state in Billing Details')
-  }
-
-  if (!checkoutInfo.buyer_name) {
-    errors.push('\nPlease enter name in Billing Details')
-  }
-
-  if (!checkoutInfo.readRefundPolicy) {
-    errors.push(
-      '\nPlease read and accept our refund policy if you want to proceed with the purchase',
-    )
-  }
-
-  return errors
 })
 </script>
