@@ -223,6 +223,13 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         context.talk_video = self.cfp_get_talk_video()
         context.youtube_embed_id = self.cfp_get_youtube_id(context.talk_video)
+
+        user = frappe.session.user
+        speaker_emails = [s.email for s in self.speakers if s.email]
+        context.is_owner = user != "Guest" and (
+            user == self.submitted_by or user == self.email or user in speaker_emails
+        )
+
         context.no_cache = 1
 
     def get_meta(self, context):
