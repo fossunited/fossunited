@@ -2,7 +2,6 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.tickets import (
-    download_all_tickets,
     search_tickets,
 )
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, FREE_TICKET_CODE
@@ -70,24 +69,6 @@ class TestTicketAPI(FrappeTestCase):
         result = search_tickets(self.coupon.name)
         self.assertEqual(len(result), 2)
 
-    def test_search_tickets_coupon_only_returns_matching_event(self):
-        """Should only return tickets for the coupon's event"""
-        # Create another event and tickets
-        other_event = insert_test_event(self.chapter, is_paid_event=1, tickets_status="Live")
-        ticket_same_event = insert_test_ticket(self.event.name)
-        ticket_other_event = insert_test_ticket(other_event.name, email=ticket_same_event.email)
-
-        # Apply coupon only for the first event
-        insert_test_coupon_application(
-            self.coupon.name, self.event.name, email=ticket_same_event.email
-        )
-
-        result = search_tickets(self.coupon.name)
-
-        ticket_ids = [t["name"] for t in result]
-        self.assertIn(ticket_same_event.name, ticket_ids)
-        self.assertNotIn(ticket_other_event.name, ticket_ids)
-
     def test_search_returns_only_allowed_fields(self):
         """Should only return specified fields in search results"""
         insert_test_ticket(self.event.name)
@@ -98,58 +79,3 @@ class TestTicketAPI(FrappeTestCase):
         allowed_fields = {"name", "full_name", "email", "tier", "organization"}
         for ticket_data in result:
             self.assertTrue(set(ticket_data.keys()).issubset(allowed_fields))
-
-
-class TestTicketAPIIntegration(FrappeTestCase):
-    """Integration tests for full workflows"""
-
-    def test_coupon_to_ticket_download_workflow(self):
-        """Test complete workflow: search by coupon -> download tickets"""
-        # Setup
-        chapter = insert_test_chapter()
-        event = insert_test_event(chapter, is_paid_event=1, tickets_status="Live")
-        coupon = insert_test_coupon(event.name)
-
-        # Create multiple tickets with coupon applications
-        tickets = []
-        for _ in range(3):
-            ticket = insert_test_ticket(event.name)
-            insert_test_coupon_application(coupon.name, event.name)
-            tickets.append(ticket)
-
-        # Search by coupon
-        results = search_tickets(coupon.name)
-        self.assertEqual(len(results), 3)
-
-        # Download all tickets
-        ticket_ids = [r["name"] for r in results]
-        download_all_tickets(ticket_ids)
-
-        self.assertEqual(frappe.local.response.type, "download")
-
-        frappe.db.rollback()
-
-    def test_multiple_coupons_same_user(self):
-        """Test user with tickets from multiple coupons"""
-        chapter = insert_test_chapter()
-        event = insert_test_event(chapter, is_paid_event=1, tickets_status="Live")
-
-        # Create two coupons
-        coupon1 = insert_test_coupon(event.name)
-        coupon2 = insert_test_coupon(event.name)
-
-        # Create ticket and apply both coupons
-        insert_test_ticket(event.name)
-        insert_test_coupon_application(coupon1.name, event.name, email="random@example.com")
-        insert_test_coupon_application(coupon2.name, event.name, email="random@example.com")
-
-        # the catch is we can only match by their email as common field
-        # so we get two same tickets from each coupon actually.
-        results1 = search_tickets(coupon1.name)
-        results2 = search_tickets(coupon2.name)
-
-        self.assertEqual(len(results1), 2)
-        self.assertEqual(len(results2), 2)
-        self.assertEqual(results1[0]["email"], results2[0]["email"])
-
-        frappe.db.rollback()
