@@ -24,6 +24,11 @@
             onClick: redirectToProfile,
           },
           {
+            label: 'Dashboard',
+            icon: 'layout',
+            onClick: goToDashboard,
+          },
+          {
             label: 'Go to website',
             icon: 'globe',
             onClick: goToPublicSite,
@@ -72,6 +77,10 @@ if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administra
 
 const redirectToProfile = () => {
   window.location.pathname = '/me'
+}
+
+const goToDashboard = () => {
+  window.location.pathname = '/dashboard'
 }
 
 const goToPublicSite = () => {
