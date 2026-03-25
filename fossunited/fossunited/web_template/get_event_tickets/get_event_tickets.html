@@ -7,9 +7,8 @@
 
 {% block page_content %}
   {% set page_title = page_title | default("Grab Your Event Tickets") %}
-  {% set intro_text = intro_text | default("Download your event tickets by searching with your ticket ID, email, or name.") %}
+  {% set intro_text = intro_text | default("Download your event tickets by entering your Ticket ID, Order ID, or Coupon Code.") %}
   {% set ticket_info_text = ticket_info_text | default("") %}
-
 
   <div class="v3-page">
     <div class="v3-container mb-5">
@@ -25,42 +24,30 @@
 
         <div id="search-section">
           <div class="mb-8">
-            <label class="v3-text-primary mb-2" style="display:block; font-weight:500;">
-              Select Event
-              <span class="v3-text-tertiary" style="font-size:0.85rem; font-weight:400;"
-                >(only needed for email search)</span
-              >
-            </label>
-            <select
-              id="event-select"
-              class="v3-text-primary"
-              style="width:100%; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
-            >
-              <option value="">-- Select Event --</option>
-            </select>
-          </div>
-
-          <div class="mb-8">
             <label class="v3-text-primary mb-2" style="display:block; font-weight:500;"
-              >Search by Ticket ID, Email or Coupon Code</label
+              >Ticket ID, Order ID, or Coupon Code</label
             >
             <input
               type="text"
               id="search-input"
               class="v3-text-primary"
-              placeholder="Enter ticket ID, email or coupon code"
+              placeholder="Enter your Ticket ID, Order ID, or Coupon Code"
               style="width:100%; padding:0.65rem; border-radius:6px; border:1px solid var(--v3-button-border); background:var(--v3-main-bg);"
             />
+            <p class="v3-text-tertiary mt-2" style="font-size:0.85rem;">
+              Your <strong>Ticket ID</strong> and <strong>Order ID</strong> were sent to your email after purchase.
+              <strong>Coupon codes</strong> are provided by event organizers.
+            </p>
           </div>
 
           <button class="v3-btn v3-btn-primary" id="search-btn">
             <i class="ti ti-search"></i>
-            Search Tickets
+            Find Tickets
           </button>
         </div>
 
         <div id="loading" style="display:none; text-align:center; padding:2rem;">
-          <span class="v3-text-secondary">Loading...</span>
+          <span class="v3-text-secondary">Looking up tickets…</span>
         </div>
 
         <div
@@ -91,8 +78,6 @@
     let foundTickets = []
 
     document.addEventListener('DOMContentLoaded', function () {
-      loadEvents()
-
       const urlParams = new URLSearchParams(window.location.search)
       const ticketId = urlParams.get('id')
 
@@ -108,34 +93,11 @@
       })
     })
 
-    function loadEvents() {
-      frappe.call({
-        method: 'fossunited.api.tickets.get_paid_events',
-        callback: function (r) {
-          if (r.message) {
-            const select = document.getElementById('event-select')
-            r.message.forEach((event) => {
-              const option = document.createElement('option')
-              option.value = event.name
-              option.textContent = event.event_name || event.name
-              select.appendChild(option)
-            })
-          }
-        },
-      })
-    }
-
     function searchTickets() {
-      const event = document.getElementById('event-select').value
       const searchTerm = document.getElementById('search-input').value.trim()
 
       if (!searchTerm) {
-        showError('Please enter ticket ID, email or coupon code')
-        return
-      }
-
-      if (searchTerm.includes('@') && !event) {
-        showError('Please select an event to search by email')
+        showError('Please enter a Ticket ID or Coupon Code')
         return
       }
 
@@ -145,22 +107,23 @@
 
       frappe.call({
         method: 'fossunited.api.tickets.search_tickets',
-        args: {
-          search_term: searchTerm,
-          event: event || null,
-        },
+        args: { search_term: searchTerm },
         callback: function (r) {
           showLoading(false)
           if (r.message && r.message.length > 0) {
             foundTickets = r.message
             displayTickets(r.message)
           } else {
-            showError('No tickets found matching your search')
+            showError('No tickets found. Please check your Ticket ID or Coupon Code and try again.')
           }
         },
         error: function (r) {
           showLoading(false)
-          showError(r.message || 'An error occurred while searching')
+          if (r.status === 429) {
+            showError('Too many requests. Please wait a while before trying again.')
+          } else {
+            showError(r.message || 'An error occurred while searching. Please try again.')
+          }
         },
       })
     }
@@ -175,21 +138,17 @@
         div.style.padding = '1rem'
         div.innerHTML = `
         <div style="margin-bottom:0.5rem;">
-          <strong class="v3-text-primary" style="font-size:1.1rem;">${ticket.full_name}</strong>
-        </div>
-        <div class="v3-text-secondary" style="font-size:0.9rem; margin-bottom:0.5rem;">
-          ${ticket.email}
+          <strong class="v3-text-primary" style="font-size:1.1rem;">${escapeHtml(ticket.full_name)}</strong>
         </div>
         <div class="v3-text-tertiary" style="font-size:0.85rem; margin-bottom:0.75rem;">
-    Ticket ID: ${ticket.name}${[
-      ticket.tier && ` | Tier: ${ticket.tier}`,
-      ticket.organization && ` | Organization: ${ticket.organization}`,
-    ]
-      .filter(Boolean)
-      .join('')}
-
+          Ticket ID: ${escapeHtml(ticket.name)}${[
+          ticket.tier && ` | Tier: ${escapeHtml(ticket.tier)}`,
+          ticket.organization && ` | Organization: ${escapeHtml(ticket.organization)}`,
+        ]
+          .filter(Boolean)
+          .join('')}
         </div>
-        <button class="v3-btn v3-btn-secondary v3-btn-sm" onclick="downloadTicket('${ticket.name}')" style="padding:0.5rem 1rem; font-size:0.8rem;">
+        <button class="v3-btn v3-btn-secondary v3-btn-sm" onclick="downloadTicket('${escapeHtml(ticket.name)}')" style="padding:0.5rem 1rem; font-size:0.8rem;">
           <i class="ti ti-download"></i>
           Download Ticket
         </button>
@@ -205,17 +164,14 @@
     }
 
     function downloadTicket(ticketName) {
-      const url = `/api/method/fossunited.api.tickets.download_ticket?ticket_id=${ticketName}`
+      const url = `/api/method/fossunited.api.tickets.download_ticket?ticket_id=${encodeURIComponent(ticketName)}`
       window.location.href = url
     }
 
     function downloadAll() {
       if (foundTickets.length > 1) {
-        if (!confirm(`Download ${foundTickets.length} tickets as single PDF?`)) {
-          return
-        }
+        if (!confirm(`Download ${foundTickets.length} tickets as a single PDF?`)) return
       }
-
       const ticketIds = foundTickets.map((t) => t.name)
       const url = `/api/method/fossunited.api.tickets.download_all_tickets?ticket_ids=${encodeURIComponent(JSON.stringify(ticketIds))}`
       window.location.href = url
@@ -229,12 +185,19 @@
 
     function showError(message) {
       const errorDiv = document.getElementById('error-message')
-      errorDiv.innerHTML = `<i class="ti ti-alert-circle" style="margin-right:0.5rem;"></i>${message}`
+      errorDiv.innerHTML = `<i class="ti ti-alert-circle" style="margin-right:0.5rem;"></i>${escapeHtml(message)}`
       errorDiv.style.display = 'block'
     }
 
     function hideError() {
       document.getElementById('error-message').style.display = 'none'
+    }
+
+    // Prevent XSS in dynamically-built HTML
+    function escapeHtml(str) {
+      const div = document.createElement('div')
+      div.appendChild(document.createTextNode(String(str || '')))
+      return div.innerHTML
     }
   </script>
 {% endblock %}
