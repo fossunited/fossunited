@@ -229,7 +229,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.is_owner = user != "Guest" and (
             user == self.submitted_by or user == self.email or user in speaker_emails
         )
-        context.proposal_id = self.name
+
         context.no_cache = 1
 
     def get_meta(self, context):

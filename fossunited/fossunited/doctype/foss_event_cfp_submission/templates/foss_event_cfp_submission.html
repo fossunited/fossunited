@@ -50,7 +50,7 @@
       <h1 class="text-3xl font-bold">{{ doc.talk_title }}</h1>
       <div class="flex gap-2 items-center">
         {% if is_owner %}
-          <a href="/dashboard/my-proposals/edit/{{ proposal_id }}" class="btn btn-default btn-sm">Edit proposal</a>
+<a href="/dashboard/my-proposals/edit/{{ doc.name }}" class="btn btn-default btn-sm">Edit proposal</a>
         {% endif %}
         {{ like_button() }}
       </div>
