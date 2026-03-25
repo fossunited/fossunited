@@ -24,7 +24,7 @@
 
       <div
         role="note"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg border border-yellow-400 bg-yellow-50 text-yellow-700 text-sm self-center"
+        class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-amber-2 bg-surface-amber-1 text-ink-amber-3 text-sm self-center"
       >
         <IconInfoCircle class="w-5 h-5 shrink-0" aria-hidden="true" />
         <span
@@ -37,54 +37,22 @@
           >
         </span>
       </div>
-
       <!-- Step Progress -->
       <nav aria-label="Registration steps">
-        <ol class="flex items-center w-full" role="list">
-          <template v-for="n in 4" :key="n">
-            <!-- Dot -->
-            <li
-              class="w-8 h-8 rounded-full shrink-0 flex items-center justify-center border-2 transition-all duration-300"
-              :class="stepDotClass(n)"
-              :style="
-                n === currentStep + 1
-                  ? { background: 'linear-gradient(to right, #111827 50%, white 50%)' }
-                  : {}
-              "
-              :aria-current="stepState(n) === 'active' ? 'step' : undefined"
-              :aria-label="`Step ${n}: ${stepLabels[n - 1]} — ${stepState(n) === 'done' ? 'completed' : stepState(n) === 'active' ? 'current' : 'not yet reached'}`"
+        <Progress
+          :value="currentStep * 25"
+          :intervals="true"
+          :interval-count="4"
+          size="lg"
+          :label="stepTitle"
+          :hint="true"
+        >
+          <template #hint>
+            <span class="text-sm font-medium text-ink-gray-4" aria-live="polite"
+              >{{ currentStep }} / 4</span
             >
-              <IconCheck
-                v-if="stepState(n) === 'done'"
-                class="w-4 h-4 text-white"
-                aria-hidden="true"
-              />
-              <span
-                v-else-if="stepState(n) === 'active'"
-                class="text-xs font-bold text-white"
-                aria-hidden="true"
-                >{{ n }}</span
-              >
-              <span
-                v-else-if="n !== currentStep + 1"
-                class="text-xs font-medium text-ink-gray-4"
-                aria-hidden="true"
-                >{{ n }}</span
-              >
-            </li>
-            <!-- Connector -->
-            <li v-if="n < 4" class="flex-1 h-0.5 relative overflow-hidden" aria-hidden="true">
-              <div class="absolute inset-0 bg-outline-gray-2" />
-              <div
-                class="absolute inset-y-0 left-0 bg-ink-gray-9 motion-safe:transition-all motion-safe:duration-500 ease-out"
-                :style="{ width: currentStep > n ? '100%' : '0%' }"
-              />
-            </li>
           </template>
-        </ol>
-        <p class="text-xl font-semibold text-center text-ink-gray-9 mt-4" aria-live="polite">
-          {{ stepTitle }}
-        </p>
+        </Progress>
       </nav>
 
       <!-- Step Content -->
@@ -109,17 +77,21 @@
               v-for="tier in allTiers"
               :key="tier.name"
               role="listitem"
-              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 p-4 w-full max-w-[600px]"
+              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 p-4 w-full"
               :class="!isTierActive(tier) ? 'opacity-50' : 'shadow-sm'"
               :aria-label="`${tier.title} ticket, ₹${tier.price}`"
               :aria-disabled="!isTierActive(tier)"
             >
-              <!-- Image: full-width on mobile, fixed thumbnail on desktop -->
+              <!-- Tier image: full-width on mobile, fixed thumbnail on desktop -->
               <div
-                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-full py-6 md:py-0 md:w-[88px] md:h-[108px] md:shrink-0 flex items-center justify-center text-ink-gray-4"
+                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-full py-4 md:py-0 md:w-[88px] md:h-[108px] md:shrink-0 flex items-center justify-center"
                 aria-hidden="true"
               >
-                <IconTicket class="w-10 h-10" />
+                <img
+                  :src="getTierImage(tier)"
+                  :alt="`${tier.title} ticket`"
+                  class="w-[60px] h-[76px] object-contain"
+                />
               </div>
 
               <!-- Content -->
@@ -128,7 +100,7 @@
                 <div
                   v-if="tier.description"
                   class="prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full mb-2"
-                  v-html="cleanedHTML(tier.description)"
+                  v-html="renderedDescription(tier.description)"
                 />
                 <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
                 <Badge
@@ -150,7 +122,7 @@
                 >
               </div>
 
-              <!-- counter -->
+              <!-- Quantity counter -->
               <div
                 class="flex items-center gap-1 w-full md:w-auto justify-center md:justify-end md:shrink-0 md:pl-2"
                 :aria-label="`${tier.title} ticket quantity`"
@@ -261,7 +233,7 @@
                   >#{{ idx + 1 }}</span
                 >
                 <span
-                  class="bg-green-100 text-green-700 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
+                  class="bg-surface-green-1 text-ink-green-3 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
                   >{{ getTierTitle(attendee.ticket_type) }}</span
                 >
               </div>
@@ -431,12 +403,6 @@
             @click="nextStep"
           />
         </div>
-        <ErrorMessage
-          v-if="errorMessage"
-          role="alert"
-          aria-live="assertive"
-          :message="errorMessage"
-        />
       </template>
       <div v-else class="flex justify-end">
         <Button
@@ -449,6 +415,14 @@
           @click="prevStep"
         />
       </div>
+
+      <!-- Error message at bottom (below nav, except step 4 which uses TicketSummary) -->
+      <ErrorMessage
+        v-if="errorMessage && currentStep !== 4"
+        role="alert"
+        aria-live="assertive"
+        :message="errorMessage"
+      />
     </main>
   </div>
 
@@ -471,7 +445,7 @@
 </template>
 
 <script setup>
-import { computed, reactive, ref, onMounted, watch, inject, provide } from 'vue'
+import { computed, reactive, ref, onMounted, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   createResource,
@@ -482,7 +456,10 @@ import {
   ErrorMessage,
   Badge,
   Dialog,
+  Progress,
 } from 'frappe-ui'
+import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
+import { toast } from 'vue-sonner'
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import EventHeader from '@/components/common/EventHeader.vue'
@@ -491,13 +468,11 @@ import AttendeeCard from '@/components/tickets/AttendeeCard.vue'
 import TicketSummary from '@/components/tickets/TicketSummary.vue'
 import {
   IconInfoCircle,
-  IconCheck,
   IconPlus,
   IconMinus,
   IconShirt,
   IconSoup,
   IconReceipt,
-  IconTicket,
 } from '@tabler/icons-vue'
 import { cleanedHTML } from '@/helpers/utils'
 
@@ -506,7 +481,24 @@ const router = useRouter()
 
 const MAX_SEATS = 10
 const FIELD_TYPE_MAP = { Data: 'text', Int: 'number', Select: 'select' }
-const stepLabels = ['Select Tickets', 'Attendee Details', 'Verify Details', 'Billing']
+
+// Tier image keyword mapping — order matters
+const TIER_IMAGE_KEYWORDS = [
+  {
+    keywords: ['student', 'stud'],
+    file: 'event-ticket-student.svg',
+  },
+  {
+    keywords: ['enthusiast', 'hobbyist', 'fan', 'supporter'],
+    file: 'event-ticket-enthusiast.svg',
+  },
+  {
+    keywords: ['contributor', 'professional', 'pro', 'developer', 'dev', 'premium', 'expert'],
+    file: 'event-ticket-contributor.svg',
+  },
+]
+const TIER_IMAGES_BASE = '/assets/fossunited/images/tickets/'
+const TIER_IMAGE_DEFAULT = 'event-ticket-regular.svg'
 
 usePageMeta(() => ({ title: 'Book Tickets' }))
 
@@ -542,12 +534,18 @@ const allTiers = computed(() => event.data?.tiers || [])
 const activeTierCounts = computed(() => {
   const result = {}
   for (const [name, count] of Object.entries(tierCounts)) {
-    if (count > 0) result[name] = count
+    if (count > 0) {
+      const tier = allTiers.value.find((t) => t.name === name)
+      if (tier && isTierActive(tier)) result[name] = count
+    }
   }
   return result
 })
 
-const totalTickets = computed(() => Object.values(tierCounts).reduce((s, c) => s + (c || 0), 0))
+// Only count active tiers to prevent paying for expired/disabled ones
+const totalTickets = computed(() =>
+  Object.values(activeTierCounts.value).reduce((s, c) => s + (c || 0), 0),
+)
 
 const numTShirtsAdded = computed(() => attendees.value.filter((a) => a.wants_tshirt).length)
 
@@ -583,7 +581,7 @@ const redirectToEvent = computed(() =>
   event.data ? `${window.location.origin}/${event.data.route}` : window.location.origin,
 )
 
-// ── Helpers ────────────────────────────────────────────────────────────
+// Helpers
 function isTierActive(tier) {
   return Boolean(tier.enabled) && !isTierExpired(tier)
 }
@@ -593,20 +591,26 @@ function isTierExpired(tier) {
 function getTierTitle(tierName) {
   return allTiers.value.find((t) => t.name === tierName)?.title || tierName
 }
-function stepState(n) {
-  if (n < currentStep.value) return 'done'
-  if (n === currentStep.value) return 'active'
-  return 'upcoming'
-}
-function stepDotClass(n) {
-  const state = stepState(n)
-  if (state === 'done' || state === 'active') return 'bg-ink-gray-9 border-ink-gray-9'
-  if (n === currentStep.value + 1) return 'border-ink-gray-9' // half-fill applied via inline style
-  return 'bg-surface-white border-outline-gray-2'
+
+function getTierImage(tier) {
+  // If backend provides a custom image URL, use it
+  if (tier.image) return tier.image
+  const name = (tier.title || '').toLowerCase()
+  for (const { keywords, file } of TIER_IMAGE_KEYWORDS) {
+    if (keywords.some((k) => name.includes(k))) return TIER_IMAGES_BASE + file
+  }
+  return TIER_IMAGES_BASE + TIER_IMAGE_DEFAULT
 }
 
-// Tier counter actions
+function renderedDescription(raw) {
+  if (!raw) return ''
+  return cleanedHTML(markdownToHTML(raw))
+}
+
+// Tier counter actions — guard against inactive tiers
 function incrementTier(name) {
+  const tier = allTiers.value.find((t) => t.name === name)
+  if (!tier || !isTierActive(tier)) return
   if (totalTickets.value >= MAX_SEATS) return
   tierCounts[name] = (tierCounts[name] || 0) + 1
 }
@@ -637,7 +641,8 @@ function makeAttendee(ticketType = '') {
 function buildAttendees() {
   const newList = []
   const used = new Set()
-  for (const [name, count] of Object.entries(tierCounts)) {
+  // Use activeTierCounts to prevent building attendees for inactive tiers
+  for (const [name, count] of Object.entries(activeTierCounts.value)) {
     for (let i = 0; i < (count || 0); i++) {
       const existing = attendees.value.find((a) => a.ticket_type === name && !used.has(a))
       if (existing) {
@@ -653,9 +658,9 @@ function buildAttendees() {
 
 function addAttendee() {
   if (totalTickets.value >= MAX_SEATS) return
-  const firstType = Object.keys(activeTierCounts.value)[0] || ''
-  attendees.value.push(makeAttendee(firstType))
-  if (firstType) tierCounts[firstType] = (tierCounts[firstType] || 0) + 1
+  const firstActiveTier = Object.keys(activeTierCounts.value)[0] || ''
+  attendees.value.push(makeAttendee(firstActiveTier))
+  if (firstActiveTier) tierCounts[firstActiveTier] = (tierCounts[firstActiveTier] || 0) + 1
 }
 
 function removeAttendee(index) {
@@ -666,11 +671,16 @@ function removeAttendee(index) {
 }
 
 // Navigation
+function setError(msg) {
+  errorMessage.value = msg
+  if (msg) toast.error(msg, { duration: 4000 })
+}
+
 function nextStep() {
   errorMessage.value = null
   const errors = validateStep(currentStep.value)
   if (errors.length) {
-    errorMessage.value = errors.join('\n')
+    setError(errors[0])
     return
   }
   if (currentStep.value === 1) buildAttendees()
@@ -693,7 +703,7 @@ function validateStep(step) {
   if (step === 2) {
     for (const [i, a] of attendees.value.entries()) {
       if (!a.full_name) errors.push(`Attendee #${i + 1}: Full name is required`)
-      if (!a.email) errors.push(`Attendee #${i + 1}: Email is required`)
+      else if (!a.email) errors.push(`Attendee #${i + 1}: Email is required`)
       else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(a.email)) {
         errors.push(`Attendee #${i + 1}: Invalid email address`)
       }
@@ -717,7 +727,7 @@ function validateStep(step) {
 }
 
 // Razorpay Order
-// TODO: Remove mock before production
+// TODO: Set MOCK_PAYMENT = false before production
 const MOCK_PAYMENT = true
 
 function createOrder() {
@@ -731,25 +741,29 @@ function createOrder() {
   if (!billing.state) errors.push('Please select a state in Billing Details')
   if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
   if (errors.length) {
-    errorMessage.value = errors.join('\n')
+    setError(errors[0])
     return
   }
 
-  // TODO: Remove mock before production
   if (MOCK_PAYMENT) {
     router.push({
       name: 'success',
-      query: { order_id: 'MOCK-ORDER-00001', payment_id: 'MOCK-PAY-00001' },
+      query: {
+        order_id: 'MOCK-ORDER-00001',
+        payment_id: 'MOCK-PAY-00001',
+        event: eventName.value,
+      },
     })
     return
   }
 
   const primaryTier =
-    allTiers.value.find((t) => (tierCounts[t.name] || 0) > 0 && isTierActive(t)) ||
+    allTiers.value.find((t) => (activeTierCounts.value[t.name] || 0) > 0 && isTierActive(t)) ||
     allTiers.value[0]
 
+  // Use activeTierCounts for accurate billing — inactive tiers excluded
   const subTotal =
-    Object.entries(tierCounts).reduce((s, [name, count]) => {
+    Object.entries(activeTierCounts.value).reduce((s, [name, count]) => {
       const tier = allTiers.value.find((t) => t.name === name)
       return s + (tier?.price || 0) * (count || 0)
     }, 0) +
@@ -761,7 +775,7 @@ function createOrder() {
     {
       event: eventName.value,
       tier: primaryTier,
-      tier_counts: { ...tierCounts },
+      tier_counts: { ...activeTierCounts.value },
       attendees: attendees.value,
       num_seats: totalTickets.value,
       custom_fields_apply_to_all: customFieldsApplyToAll.value,
@@ -813,7 +827,7 @@ const checkIfTicketsLive = createResource({
     event.fetch()
   },
   onError() {
-    errorMessage.value = 'Error checking ticket status'
+    setError('Error checking ticket status')
   },
 })
 
