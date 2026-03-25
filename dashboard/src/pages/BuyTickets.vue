@@ -727,9 +727,6 @@ function validateStep(step) {
 }
 
 // Razorpay Order
-// TODO: Set MOCK_PAYMENT = false before production
-const MOCK_PAYMENT = true
-
 function createOrder() {
   errorMessage.value = null
   const errors = []
@@ -742,18 +739,6 @@ function createOrder() {
   if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
   if (errors.length) {
     setError(errors[0])
-    return
-  }
-
-  if (MOCK_PAYMENT) {
-    router.push({
-      name: 'success',
-      query: {
-        order_id: 'MOCK-ORDER-00001',
-        payment_id: 'MOCK-PAY-00001',
-        event: eventName.value,
-      },
-    })
     return
   }
 
