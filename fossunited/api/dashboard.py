@@ -15,7 +15,7 @@ def get_event(name: str, by_route: bool = False) -> dict:
             name = f"c/{name}"
 
         event_id = frappe.db.get_value(EVENT, {"route": name}, "name")
-        if not name:
+        if not event_id:
             return {}
     else:
         event_id = name

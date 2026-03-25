@@ -1,5 +1,7 @@
 <template>
-  <div class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6">
+  <div
+    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6"
+  >
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-1.5">
         <IconUserCircle class="w-6 h-6 text-ink-gray-7" />
@@ -7,12 +9,15 @@
           Attendee Details #{{ index + 1 }}
         </span>
       </div>
-      <span class="bg-green-100 text-green-700 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg">
+      <span
+        class="bg-green-100 text-green-700 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
+      >
         {{ tierTitle }}
       </span>
       <button
         v-if="canDelete"
         class="bg-red-50 rounded-lg p-2.5 hover:bg-red-100 transition-colors"
+        :aria-label="`Remove attendee #${index + 1}`"
         @click="$emit('delete')"
       >
         <IconTrash class="w-5 h-5 text-red-500" />

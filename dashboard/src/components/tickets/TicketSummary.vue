@@ -26,10 +26,6 @@
         <span>Sub Total</span>
         <span>₹{{ subTotal }}</span>
       </div>
-      <div v-if="showGst" class="flex justify-between">
-        <span>GST (Exclusive)</span>
-        <span>₹{{ gstAmount }}</span>
-      </div>
     </div>
 
     <div class="flex justify-between font-semibold text-ink-gray-9 border-t pt-4 text-base">
@@ -81,6 +77,4 @@ const subTotal = computed(() => {
   total += props.tshirtCount * props.tshirtPrice
   return total
 })
-
-const gstAmount = computed(() => Math.round(subTotal.value * 0.18))
 </script>

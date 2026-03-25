@@ -707,6 +707,9 @@ function validateStep(step) {
       else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(a.email)) {
         errors.push(`Attendee #${i + 1}: Invalid email address`)
       }
+      if (event.data?.paid_tshirts_available && a.wants_tshirt && !a.tshirt_size) {
+        errors.push(`Attendee #${i + 1}: T-shirt size is required`)
+      }
       if (!customFieldsApplyToAll.value) {
         for (const f of event.data?.custom_fields || []) {
           if (f.mandatory && !a.custom_fields?.[f.field_name]) {
@@ -736,6 +739,11 @@ function createOrder() {
     errors.push('Please enter a valid email address')
   }
   if (!billing.state) errors.push('Please select a state in Billing Details')
+  if (billing.hasGST) {
+    if (!billing.company_name) errors.push('Please enter the company name for GST billing')
+    if (!billing.gstn) errors.push('Please enter the GSTN')
+    if (!billing.billing_address) errors.push('Please enter the billing address for GST billing')
+  }
   if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
   if (errors.length) {
     setError(errors[0])
@@ -770,10 +778,14 @@ function createOrder() {
     event.data.name,
     {
       buyer_name: billing.buyer_name,
-      company_name: billing.company_name,
-      gstn: billing.gstn,
       state: billing.state,
-      billing_address: billing.billing_address,
+      ...(billing.hasGST
+        ? {
+            company_name: billing.company_name,
+            gstn: billing.gstn,
+            billing_address: billing.billing_address,
+          }
+        : {}),
     },
     event.data.event_name,
   )
