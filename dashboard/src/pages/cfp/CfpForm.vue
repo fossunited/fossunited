@@ -4,7 +4,7 @@
     <div v-if="cfpData.data" class="max-w-[800px] w-full flex flex-col gap-6 md:gap-10 my-4 px-4">
       <Breadcrumb :items="breadcrumb_items" />
       <FormHeader />
-      <EventHeader />
+      <EventHeader v-if="cfpData.data.event" :event="cfpData.data.event" />
       <template v-if="cfpData.data.status == 'Live'">
         <transition
           mode="out-in"
@@ -74,7 +74,7 @@
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
 import FormHeader from '@/components/cfp-public/FormHeader.vue'
-import EventHeader from '@/components/cfp-public/EventHeader.vue'
+import EventHeader from '@/components/common/EventHeader.vue'
 import GuidelineSection from '@/components/cfp-public/GuidelineSection.vue'
 import SessionDetailForm from '@/components/cfp-public/SessionDetailForm.vue'
 import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
