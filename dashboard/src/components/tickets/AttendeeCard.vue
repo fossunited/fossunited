@@ -32,6 +32,7 @@
         size="sm"
         variant="subtle"
         placeholder="Full Name"
+        required
         @update:model-value="update('full_name', $event)"
       />
       <FormControl
@@ -41,6 +42,7 @@
         size="sm"
         variant="subtle"
         placeholder="example@email.com"
+        required
         @update:model-value="update('email', $event)"
       />
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -73,6 +75,7 @@
           :type="fieldTypeMap[field.field_type]"
           :label="field.label"
           :options="field.options"
+          :required="field.mandatory"
           size="sm"
           variant="subtle"
           @update:model-value="updateCustomField(field.field_name, $event)"

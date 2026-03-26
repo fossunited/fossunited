@@ -77,54 +77,50 @@
               v-for="tier in allTiers"
               :key="tier.name"
               role="listitem"
-              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-col md:flex-row md:items-center gap-4 p-4 w-full"
+              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-wrap items-stretch gap-3 p-4 w-full"
               :class="!isTierActive(tier) ? 'opacity-50' : 'shadow-sm'"
               :aria-label="`${tier.title} ticket, ₹${tier.price}`"
               :aria-disabled="!isTierActive(tier)"
             >
-              <!-- Tier image: full-width on mobile, fixed thumbnail on desktop -->
+              <!-- Image -->
               <div
-                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-full py-4 md:py-0 md:w-[88px] md:h-[108px] md:shrink-0 flex items-center justify-center"
+                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-16 h-20 shrink-0 flex items-center justify-center overflow-hidden md:w-[88px] md:h-[108px]"
                 aria-hidden="true"
               >
                 <img
                   :src="getTierImage(tier)"
                   :alt="`${tier.title} ticket`"
-                  class="w-[60px] h-[76px] object-contain"
+                  class="w-full h-full object-contain"
                 />
               </div>
 
-              <!-- Content -->
-              <div class="flex-1 min-w-0">
-                <p class="font-semibold text-base text-ink-gray-9 mb-1">{{ tier.title }}</p>
-                <div
-                  v-if="tier.description"
-                  class="prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full mb-2"
-                  v-html="renderedDescription(tier.description)"
-                />
+              <div class="flex-1 min-w-0 flex flex-col justify-evenly">
+                <p class="font-semibold text-base text-ink-gray-9">{{ tier.title }}</p>
                 <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
-                <Badge
-                  v-if="tier.valid_till && isTierActive(tier)"
-                  class="mt-1 w-fit"
-                  variant="outline"
-                  theme="green"
-                  >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
-                >
-                <Badge v-if="!tier.enabled" class="mt-1 w-fit" variant="outline" theme="red"
-                  >Disabled</Badge
-                >
-                <Badge
-                  v-else-if="isTierExpired(tier)"
-                  class="mt-1 w-fit"
-                  variant="outline"
-                  theme="orange"
-                  >Expired</Badge
-                >
+                <div class="flex flex-wrap gap-1">
+                  <Badge
+                    v-if="tier.valid_till && isTierActive(tier)"
+                    class="w-fit"
+                    variant="outline"
+                    theme="green"
+                    >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                  >
+                  <Badge v-if="!tier.enabled" class="w-fit" variant="outline" theme="red"
+                    >Disabled</Badge
+                  >
+                  <Badge
+                    v-else-if="isTierExpired(tier)"
+                    class="w-fit"
+                    variant="outline"
+                    theme="orange"
+                    >Expired</Badge
+                  >
+                </div>
               </div>
 
-              <!-- Quantity counter -->
+              <!-- Counter: on mobile order-last (after description); on desktop back in row -->
               <div
-                class="flex items-center gap-1 w-full md:w-auto justify-center md:justify-end md:shrink-0 md:pl-2"
+                class="order-last md:order-none w-full md:w-auto flex items-center gap-1 justify-center md:justify-end md:self-center md:shrink-0 md:pl-2"
                 :aria-label="`${tier.title} ticket quantity`"
               >
                 <button
@@ -141,7 +137,7 @@
                   <IconMinus
                     aria-hidden="true"
                     class="w-4 h-4"
-                    :class="(tierCounts[tier.name] || 0) > 0 ? 'text-white' : 'text-ink-gray-9'"
+                    :class="(tierCounts[tier.name] || 0) > 0 ? '' : 'text-ink-gray-9'"
                   />
                 </button>
                 <span
@@ -164,10 +160,16 @@
                   <IconPlus
                     aria-hidden="true"
                     class="w-4 h-4"
-                    :class="isTierActive(tier) ? 'text-white' : 'text-ink-gray-9'"
+                    :class="isTierActive(tier) ? '' : 'text-ink-gray-9'"
                   />
                 </button>
               </div>
+
+              <div
+                v-if="tier.description"
+                class="w-full prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full"
+                v-html="renderedDescription(tier.description)"
+              />
             </article>
           </div>
 
@@ -187,7 +189,10 @@
               @delete="removeAttendee(idx)"
             />
 
-            <div v-if="event.data.custom_fields?.length > 0" class="flex flex-col gap-4">
+            <div
+              v-if="event.data.custom_fields?.length > 0 && attendees.length > 1"
+              class="flex flex-col gap-4"
+            >
               <Switch
                 v-model="customFieldsApplyToAll"
                 class="w-fit text-xs"
@@ -285,6 +290,7 @@
                 size="sm"
                 variant="subtle"
                 placeholder="John Doe"
+                required
               />
               <FormControl
                 v-model="billing.state"
@@ -293,6 +299,7 @@
                 size="sm"
                 variant="subtle"
                 :options="stateOptions.data"
+                required
               />
               <FormControl
                 v-model="billing.email"
@@ -301,15 +308,11 @@
                 size="sm"
                 variant="subtle"
                 placeholder="example@email.com"
+                required
               />
               <div class="flex flex-col gap-1.5">
                 <div class="flex items-center gap-2">
-                  <input
-                    id="gst-toggle"
-                    v-model="billing.hasGST"
-                    type="checkbox"
-                    class="rounded"
-                  />
+                  <input id="gst-toggle" v-model="billing.hasGST" type="checkbox" class="rounded-sm" />
                   <label for="gst-toggle" class="text-sm text-ink-gray-7 cursor-pointer"
                     >Add GST Details</label
                   >
@@ -325,6 +328,7 @@
                   label="Company Name"
                   size="sm"
                   variant="subtle"
+                  required
                 />
                 <FormControl
                   v-model="billing.gstn"
@@ -333,6 +337,7 @@
                   size="sm"
                   variant="subtle"
                   placeholder="22AAAAA0000A1Z5"
+                  required
                 />
                 <FormControl
                   v-model="billing.billing_address"
@@ -340,6 +345,7 @@
                   label="Billing Address"
                   size="sm"
                   variant="subtle"
+                  required
                 />
               </template>
               <div class="flex items-start gap-2">
@@ -347,7 +353,7 @@
                   id="refund-policy"
                   v-model="billing.readRefundPolicy"
                   type="checkbox"
-                  class="mt-0.5 rounded"
+                  class="mt-0.5 rounded-sm"
                 />
                 <label
                   for="refund-policy"
@@ -416,13 +422,22 @@
         />
       </div>
 
-      <!-- Error message at bottom (below nav, except step 4 which uses TicketSummary) -->
-      <ErrorMessage
-        v-if="errorMessage && currentStep !== 4"
+      <!-- Error messages at bottom (step 4 uses TicketSummary instead) -->
+      <ul
+        v-if="errorMessages.length && currentStep !== 4"
         role="alert"
         aria-live="assertive"
-        :message="errorMessage"
-      />
+        class="flex flex-col gap-1 p-3 rounded-lg bg-surface-red-1 border border-outline-red-2"
+      >
+        <li
+          v-for="msg in errorMessages"
+          :key="msg"
+          class="text-sm text-ink-red-3 flex items-start gap-1.5"
+        >
+          <span class="mt-0.5 shrink-0">•</span>
+          <span>{{ msg }}</span>
+        </li>
+      </ul>
     </main>
   </div>
 
@@ -507,6 +522,7 @@ const eventName = ref(null)
 const currentStep = ref(1)
 const transitionDir = ref('next')
 const errorMessage = ref(null)
+const errorMessages = ref([])
 const showDialog = ref(false)
 const dialogError = ref('')
 const rzpCheckout = ref(null)
@@ -671,16 +687,22 @@ function removeAttendee(index) {
 }
 
 // Navigation
+function setErrors(msgs) {
+  errorMessages.value = msgs
+  errorMessage.value = msgs[0] || null
+  if (msgs[0]) toast.error(msgs[0], { duration: 4000 })
+}
+
 function setError(msg) {
-  errorMessage.value = msg
-  if (msg) toast.error(msg, { duration: 4000 })
+  setErrors(msg ? [msg] : [])
 }
 
 function nextStep() {
+  errorMessages.value = []
   errorMessage.value = null
   const errors = validateStep(currentStep.value)
   if (errors.length) {
-    setError(errors[0])
+    setErrors(errors)
     return
   }
   if (currentStep.value === 1) buildAttendees()
@@ -689,6 +711,7 @@ function nextStep() {
 }
 
 function prevStep() {
+  errorMessages.value = []
   errorMessage.value = null
   if (currentStep.value <= 1) return
   transitionDir.value = 'back'
@@ -731,6 +754,7 @@ function validateStep(step) {
 
 // Razorpay Order
 function createOrder() {
+  errorMessages.value = []
   errorMessage.value = null
   const errors = []
   if (!billing.buyer_name) errors.push('Please enter your name in Billing Details')
@@ -746,7 +770,7 @@ function createOrder() {
   }
   if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
   if (errors.length) {
-    setError(errors[0])
+    setErrors(errors)
     return
   }
 
