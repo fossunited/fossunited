@@ -67,8 +67,6 @@ import {
   IconSun,
   IconMoon,
   IconExternalLink,
-  IconLayoutSidebarLeftCollapse,
-  IconLayoutSidebarLeftExpand,
 } from '@tabler/icons-vue'
 import { useRoute } from 'vue-router'
 
@@ -158,23 +156,6 @@ const navSections = computed(() =>
 )
 
 const allSections = computed(() => [
-  {
-    items: [
-      {
-        label: currentTheme.value === 'dark' ? 'Switch to Light' : 'Switch to Dark',
-        onClick: toggleTheme,
-        icon: () => h(currentTheme.value === 'dark' ? IconSun : IconMoon, { class: 'w-4 h-4' }),
-      },
-      {
-        label: isCollapsed.value ? 'Expand Sidebar' : 'Collapse Sidebar',
-        onClick: () => { resolvedCollapsed.value = !isCollapsed.value },
-        icon: () =>
-          h(isCollapsed.value ? IconLayoutSidebarLeftExpand : IconLayoutSidebarLeftCollapse, {
-            class: 'w-4 h-4',
-          }),
-      },
-    ],
-  },
   ...navSections.value,
 ])
 
