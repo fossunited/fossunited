@@ -21,7 +21,7 @@
 
 {% block navbar %}
   {% if not hide_nav %}
-  <a href="#main-content" class="skip-link">Skip to Main Content</a>
+  <a href="#main-content" class="sr-only">Skip to Main Content</a>
     {{ super() }}
   {% endif %}
 {% endblock %}
@@ -42,7 +42,6 @@
 {% block content %}
 <main id="main-content" tabindex="-1">
   {% block page_content %}
-    {% block page_content %}
 <div class="base-placeholder">
   <h3>Your Content Goes Here.</h3>
   <br />-> Change content inside "block page_content" in your page.
