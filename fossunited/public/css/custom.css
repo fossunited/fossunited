@@ -2550,6 +2550,7 @@ body:has(.v3-page) {
   gap: 0.5rem;
   text-decoration: none;
   z-index: 999;
+  white-space: nowrap;
 }
 .v3-btn:hover {
   background: var(--v3-button-border);
