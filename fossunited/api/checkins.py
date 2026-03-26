@@ -1,7 +1,5 @@
-from datetime import datetime
-
 import frappe
-from frappe.utils import getdate, now_datetime
+from frappe.utils import getdate, now_datetime, today
 
 from fossunited.api.tickets import has_valid_permission
 from fossunited.doctype_ids import EVENT_TICKET
@@ -119,8 +117,9 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
     if not checkins:
         return False
 
+    today_date = getdate(today())
     for checkin in checkins:
-        if checkin["check_in_time"].date() == datetime.today().date():
+        if getdate(checkin["check_in_time"]) == today_date:
             return True
 
     return False
