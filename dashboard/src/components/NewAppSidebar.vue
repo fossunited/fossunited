@@ -33,7 +33,7 @@
     <Sidebar
       v-model:collapsed="resolvedCollapsed"
       :class="mobileOpen ? '!w-60' : ''"
-      :sections="allSections"
+      :sections="navSections"
       :header="sidebarHeader"
     >
       <template #footer-items>
@@ -155,9 +155,6 @@ const navSections = computed(() =>
   })),
 )
 
-const allSections = computed(() => [
-  ...navSections.value,
-])
 
 const sidebarHeader = computed(() => ({
   title: 'FOSS United',
