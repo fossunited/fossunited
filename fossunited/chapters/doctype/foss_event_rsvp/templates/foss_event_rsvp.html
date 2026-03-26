@@ -2,118 +2,101 @@
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 
 {% block meta_block %}
-  <meta name="title" content="{{ event.event_name }}" />
-  {% if doc.is_published %}
-    {% if event.event_type in ['Meet Up'] %}
-      <meta
-        property="og:title"
-        content="🔴 RSVP form is live! - {{ event.event_name }}, {{ event.chapter_name | title }}"
-      />
-    {% else %}
-      <meta property="og:title" content="🔴 RSVP form is live! - {{ event.event_name }}" />
-    {% endif %}
-  {% else %}
-    <meta
-      property="og:title"
-      content="RSVP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}"
-    />
-  {% endif %}
-  {% if event.event_type in ['Meet Up'] %}
-    <meta
-      property="og:description"
-      content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}"
-    />
-  {% else %}
-    <meta
-      property="og:description"
-      content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }}"
-    />
-  {% endif %}
+<meta name="title" content="{{ event.event_name }}" />
+{% if doc.is_published %}
+{% if event.event_type in ['Meet Up'] %}
+<meta property="og:title" content="🔴 RSVP form is live! - {{ event.event_name }}, {{ event.chapter_name | title }}" />
+{% else %}
+<meta property="og:title" content="🔴 RSVP form is live! - {{ event.event_name }}" />
+{% endif %}
+{% else %}
+<meta property="og:title" content="RSVP is coming soon! - {{ event.event_name }}, {{ event.chapter_name | title }}" />
+{% endif %}
+{% if event.event_type in ['Meet Up'] %}
+<meta property="og:description"
+  content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }} - {{ event.chapter_name | title }}" />
+{% else %}
+<meta property="og:description"
+  content="RSVP forms are live for {{ event.event_name }} {{ event.event_start_date.strftime('%B') }}" />
+{% endif %}
 
-  <meta property="og:image" content="https://fossunited.org/files/og-image.png" />
-  <meta property=""og:image:width"" content=""1200″" />
-  <meta property=""og:image:height"" content=""630″" />
+<meta property="og:image" content="https://fossunited.org/files/og-image.png" />
+<meta property="" og:image:width"" content="" 1200″" />
+<meta property="" og:image:height"" content="" 630″" />
 {% endblock %}
 
 {% block title %}{{ _("RSVP Form Submission") }}{% endblock %}
 
 {% block page_content %}
-  <div class="v3-page">
-    <div class="v3-container mb-5">
+<div class="v3-page">
+  <div class="v3-container mb-5">
 
-      <div class="d-flex justify-content-between align-items-center">
-        {{ breadcrumb(ignore_indices=[0]) }}
-        {{ theme_toggle() }}
-      </div>
-
-          {% if already_rsvp %}
-            {{ render_complete_section(show=True) }}
-          {% else %}
-            {{ render_complete_section(show=False) }}
-            {{ render_form() }}
-          {% endif %}
-
+    <div class="d-flex justify-content-between align-items-center">
+      {{ breadcrumb(ignore_indices=[0]) }}
+      {{ theme_toggle() }}
     </div>
+
+    {% if already_rsvp %}
+    {{ render_complete_section(show=True) }}
+    {% else %}
+    {{ render_complete_section(show=False) }}
+    {{ render_form() }}
+    {% endif %}
+
   </div>
+</div>
 {% endblock %}
 
 {% macro render_complete_section(show=False) %}
-  <div class="v3-card my-5"
-       id="rsvp-complete"
-       {% if not show %}style="display:none"{% endif %}>
-    <div class="text-center p-4">
-      <h3 class="v3-text-primary mb-4 font-2xl">
-        {% if doc.requires_host_approval %}
-          {{ _("RSVP Submitted for Approval") }}
-        {% else %}
-          {{ _("You have successfully RSVP'd for this event!") }} <i class="ti ti-rocket"></i>
-        {% endif %}
-      </h3>
+<div class="v3-card my-5" id="rsvp-complete" {% if not show %}style="display:none" {% endif %}>
+  <div class="text-center p-4">
+    <h3 class="v3-text-primary mb-4 font-2xl">
+      {% if doc.requires_host_approval %}
+      {{ _("RSVP Submitted for Approval") }}
+      {% else %}
+      {{ _("You have successfully RSVP'd for this event!") }} <i class="ti ti-rocket"></i>
+      {% endif %}
+    </h3>
 
-      <p class="v3-text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
-        {% if doc.requires_host_approval %}
-          {{ _("Your RSVP has been submitted for approval. You will receive an email once your RSVP has been approved.") }}
-        {% else %}
-          {{
-            _("You have successfully RSVP'd for this event. If you need to make any changes, you can
-            edit the rsvp form.")
-          }}
-        {% endif %}
+    <p class="v3-text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
+      {% if doc.requires_host_approval %}
+      {{ _("Your RSVP has been submitted for approval. You will receive an email once your RSVP has been approved.") }}
+      {% else %}
+      {{
+      _("You have successfully RSVP'd for this event. If you need to make any changes, you can
+      edit the rsvp form.")
+      }}
+      {% endif %}
+    </p>
+    <!-- Newsletter subscription block -->
+    <div class="mt-4">
+      <h5 class="v3-text-primary mb-2">
+        Stay updated with FossUnited 🚀
+      </h5>
+      <p class="v3-text-secondary mb-3" style="font-size: 0.95rem;">
+        Subscribe to our newsletter for updates on upcoming events and community news.
       </p>
-      <!-- Newsletter subscription block -->
-<div class="mt-4">
-  <h5 class="v3-text-primary mb-2">
-    Stay updated with FossUnited 🚀
-  </h5>
-  <p class="v3-text-secondary mb-3" style="font-size: 0.95rem;">
-    Subscribe to our newsletter for updates on upcoming events and community news.
-  </p>
 
-  <iframe
-    src="https://fossunited.org/newsletter"
-    width="100%"
-    height="400px"
-    style="border: none; border-radius: 8px;">
-  </iframe>
-</div>
-
-
-      <div class="mt-3">
-        {% if frappe.session.user != "Guest" %}
-        <button
-          class="v3-btn v3-btn-primary"
-          onclick="window.location.pathname+='/{{ submission }}/edit'">
-          Edit RSVP Response
-        </button>
-        {% else %}
-        <a href="/{{ event.route }}" class="v3-btn v3-btn-primary">
-          Go to Event Page
-        </a>
-        {% endif %}
-      </div>
-
+      <iframe src="https://fossunited.org/newsletter" title="FossUnited Newsletter Subscription Form" width="100%"
+        height="400" style="border: none; border-radius: 8px;" loading="lazy">
+      </iframe>
     </div>
+
+
+    <div class="mt-3">
+      {% if frappe.session.user != "Guest" %}
+      <button class="v3-btn v3-btn-primary" onclick="window.location.pathname+='/{{ submission }}/edit'">
+        Edit RSVP Response
+      </button>
+      {% else %}
+      <a href="/{{ event.route }}" class="v3-btn v3-btn-primary">
+        Go to Event Page
+      </a>
+      {% endif %}
+    </div>
+
   </div>
+</div>
 {% endmacro %}
 
 {% macro render_form() %}
@@ -126,8 +109,8 @@
     {% from 'fossunited/templates/macros/renderfield.html' import renderfield %}
     <div class="d-flex flex-column">
       {% for field in form_fields %}
-          {{ renderfield(field) }}
-        {% endfor %}
+      {{ renderfield(field) }}
+      {% endfor %}
     </div>
   </form>
 
@@ -140,132 +123,141 @@
   <div class="text-right mt-3">
     <p class="v3-text-tertiary mb-0" style="font-size: 0.875rem;">
       By submitting this form, you agree to our
-      <a
-        href="https://fossunited.org/privacy-policy"
-        style="color: var(--v3-primary-button); text-decoration: underline;"
-      >privacy policy.</a>
+      <a href="https://fossunited.org/privacy-policy"
+        style="color: var(--v3-primary-button); text-decoration: underline;">privacy policy.</a>
     </p>
   </div>
 </div>
 {% endmacro %}
 
 {% macro form_header() %}
-  <div>
-    <h3 class="v3-text-primary mb-4" style="font-size: 1.75rem; font-weight: 600;">
-      {{ _("RSVP for the event!") }}
-    </h3>
+<div>
+  <h3 class="v3-text-primary mb-4" style="font-size: 1.75rem; font-weight: 600;">
+    {{ _("RSVP for the event!") }}
+  </h3>
 
-    <div class="mb-4">
-      {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
+  <div class="mb-4">
+    {% from 'fossunited/templates/macros/chapter_branding_block.html' import chapter_branding_block %}
 
-      <div class="mb-3">
-        {{ chapter_branding_block(event.chapter) }}
-      </div>
-
-      <div class="d-flex flex-column" style="gap: 0.75rem;">
-        <div class="v3-text-secondary" style="font-size: 0.95rem;">
-          <span class="font-weight-bold">Event:</span> {{ event_name }}
-        </div>
-        <div class="v3-text-secondary" style="font-size: 0.95rem;">
-          <span class="font-weight-bold">Date:</span> {{ event_date }}
-        </div>
-      </div>
+    <div class="mb-3">
+      {{ chapter_branding_block(event.chapter) }}
     </div>
 
-    {% if doc.rsvp_description %}
-      <p class="v3-text-primary mb-0" style="font-size: 1rem; line-height: 1.6;">
-        {{ doc.rsvp_description }}
-      </p>
-    {% endif %}
+    <div class="d-flex flex-column" style="gap: 0.75rem;">
+      <div class="v3-text-secondary" style="font-size: 0.95rem;">
+        <span class="font-weight-bold">Event:</span> {{ event_name }}
+      </div>
+      <div class="v3-text-secondary" style="font-size: 0.95rem;">
+        <span class="font-weight-bold">Date:</span> {{ event_date }}
+      </div>
+    </div>
   </div>
+
+  {% if doc.rsvp_description %}
+  <p class="v3-text-primary mb-0" style="font-size: 1rem; line-height: 1.6;">
+    {{ doc.rsvp_description }}
+  </p>
+  {% endif %}
+</div>
 {% endmacro %}
 
 {% block page_script %}
-  <script>
-    const IS_LOGGED_IN = {{ "true" if frappe.session.user != "Guest" else "false" }};
-    $(document).ready(() => {
-        set_mandatory_asterisk()
-        let isSubmitting = false
+<script>
+  const IS_LOGGED_IN = {{ "true" if frappe.session.user != "Guest" else "false" }};
+  $( document ).ready( () =>
+  {
+    set_mandatory_asterisk()
+    let isSubmitting = false
 
-        $('#submit-rsvp').on('click', async (e) => {
-            e.preventDefault()
+    $( '#submit-rsvp' ).on( 'click', async ( e ) =>
+    {
+      e.preventDefault()
 
-            if (isSubmitting) return
-            isSubmitting = true
+      if ( isSubmitting ) return
+      isSubmitting = true
 
-            const btn = $('#submit-rsvp')
-            btn.prop('disabled', true)
-            btn.html('<i class="fa fa-spinner fa-spin"></i> Submitting...')
+      const btn = $( '#submit-rsvp' )
+      btn.prop( 'disabled', true )
+      btn.html( '<i class="fa fa-spinner fa-spin"></i> Submitting...' )
 
-            try {
-                const formData = $('form').serializeArray()
-                const data = {}
+      try
+      {
+        const formData = $( 'form' ).serializeArray()
+        const data = {}
 
-                data['linked_rsvp'] = '{{ doc.name }}'
-                data['confirm_attendance'] = '1'
+        data[ 'linked_rsvp' ] = '{{ doc.name }}'
+        data[ 'confirm_attendance' ] = '1'
 
-                formData.forEach((field) => {
-                    data[field.name] = field.value
-                })
+        formData.forEach( ( field ) =>
+        {
+          data[ field.name ] = field.value
+        } )
 
-                $('.ql-editor-custom').each((idx, element) => {
-                    data[element.id] = $(element).find('.ql-editor').html()
-                })
+        $( '.ql-editor-custom' ).each( ( idx, element ) =>
+        {
+          data[ element.id ] = $( element ).find( '.ql-editor' ).html()
+        } )
 
-                const custom_answers = []
-                for (const key in data) {
-                    if (key.includes('custom_question')) {
-                        const label = $(`[name="${key}"]`).attr('data-label')
-                        const type = $(`[name="${key}"]`).data('type')
-                        custom_answers.push({ question: label, response: data[key], type: type })
-                        delete data[key]
-                    }
-                }
-                data['custom_answers'] = custom_answers
+        const custom_answers = []
+        for ( const key in data )
+        {
+          if ( key.includes( 'custom_question' ) )
+          {
+            const label = $( `[name="${ key }"]` ).attr( 'data-label' )
+            const type = $( `[name="${ key }"]` ).data( 'type' )
+            custom_answers.push( { question: label, response: data[ key ], type: type } )
+            delete data[ key ]
+          }
+        }
+        data[ 'custom_answers' ] = custom_answers
 
-                const response = await frappe.call({
-                    method:
-                    'fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp.create_rsvp',
-                    args: {
-                        fields: JSON.stringify(data),
-                    },
-                    freeze: true,
-                    freeze_message: 'Submitting RSVP...'
-                })
+        const response = await frappe.call( {
+          method:
+            'fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp.create_rsvp',
+          args: {
+            fields: JSON.stringify( data ),
+          },
+          freeze: true,
+          freeze_message: 'Submitting RSVP...'
+        } )
 
-                if (response.message) {
-                    $('#rsvp-form-card').hide()
-                    $('#rsvp-complete').fadeIn()
+        if ( response.message )
+        {
+          $( '#rsvp-form-card' ).hide()
+          $( '#rsvp-complete' ).fadeIn()
 
-                    frappe.show_alert({
-                        message: "🎉 RSVP submitted successfully!",
-                        indicator: "green"
-                    }, 7)
-                    if (IS_LOGGED_IN === true || IS_LOGGED_IN === "true") {
-                        setTimeout(() => {
-                            window.location.reload()
-                        }, 2000)
-                    }
-                }
+          frappe.show_alert( {
+            message: "🎉 RSVP submitted successfully!",
+            indicator: "green"
+          }, 7 )
+          if ( IS_LOGGED_IN === true || IS_LOGGED_IN === "true" )
+          {
+            setTimeout( () =>
+            {
+              window.location.reload()
+            }, 2000 )
+          }
+        }
 
-            } catch (err) {
-                isSubmitting = false
-                btn.prop('disabled', false)
-                btn.html(__('RSVP for this event'))
-                frappe.msgprint(__('Failed to submit RSVP. Please try again.'))
-            }
-        })
-    })
-
-  </script>
-
-  <style>
-    /* Button full width on mobile, auto on desktop */
-    @media (min-width: 768px) {
-      .v3-btn.w-100 {
-        width: auto !important;
-        min-width: 200px;
+      } catch ( err )
+      {
+        isSubmitting = false
+        btn.prop( 'disabled', false )
+        btn.html( __( 'RSVP for this event' ) )
+        frappe.msgprint( __( 'Failed to submit RSVP. Please try again.' ) )
       }
+    } )
+  } )
+
+</script>
+
+<style>
+  /* Button full width on mobile, auto on desktop */
+  @media (min-width: 768px) {
+    .v3-btn.w-100 {
+      width: auto !important;
+      min-width: 200px;
     }
-  </style>
+  }
+</style>
 {% endblock %}
