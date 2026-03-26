@@ -40,7 +40,7 @@
 {% block page_content %}
   <div
     class="v3-page"
-    data-is-logged-in="{{ 'true' if frappe.session.user != 'Guest' else 'false' }}"
+    data-is-logged-in="{{ 'true' if frappe.session.user not in ['Guest', 'Administrator'] else 'false' }}"
   >
     <div class="v3-container mb-5">
       <div class="d-flex justify-content-between align-items-center">
@@ -91,10 +91,10 @@
       </div>
 
       <div class="mt-3">
-        {% if frappe.session.user != "Guest" %}
+        {% if frappe.session.user != "Guest" and submission %}
           <button
             class="v3-btn v3-btn-primary"
-            onclick="window.location.pathname+='/{{ submission }}/edit'"
+            onclick="window.location.pathname='/{{ submission }}/edit'"
           >
             Edit RSVP Response
           </button>
