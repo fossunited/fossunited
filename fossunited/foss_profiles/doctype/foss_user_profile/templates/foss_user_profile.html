@@ -218,10 +218,13 @@
   %}
   <div class="profile-content-div p-5">
     {% if doc.show_activity %}
+
+      {% if talked | length > 0 %}
       <div class="container">
         <h3 class="subtitle">Talks Given</h3>
         {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
       </div>
+      {% endif %}
 
       {% if cfps | length > 0 %}
         <div class="container">
@@ -230,23 +233,30 @@
         </div>
       {% endif %}
 
+      {% if volunteered | length > 0 %}
       <div class="container">
         <h3 class="subtitle">Chapter & Event Volunteership</h3>
         {% for item in volunteered %}{{ volunteer_card(item) }}{% endfor %}
       </div>
+      {% endif %}
 
+      {% if attended | length > 0 %}
       <div class="container">
         <h3 class="subtitle">Events Attended</h3>
         <div class="events-grid-4">
           {% for event in attended %}{{ event_card(event) }}{% endfor %}
         </div>
       </div>
+      {% endif %}
+
+      {% if attended_hack | length > 0 %}
       <div class="container">
         <h3 class="subtitle">Hackathons Attended</h3>
         <div class="events-grid-4">
           {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
         </div>
       </div>
+      {% endif %}
     {% else %}
       <div>User has chosen to keep their Community Activity anonymous</div>
     {% endif %}

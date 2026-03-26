@@ -141,14 +141,9 @@ class FOSSUserProfile(WebsiteGenerator):
         self.route = f"u/{self.username}"
 
     def get_user_activity(self):
-        # Events the user has attended
-        attended = []
-
+        # Events the user has attended (concluded only)
         paid_event_ids = frappe.db.get_all(
-            EVENT_TICKET,
-            pluck="event",
-            filters={"email": self.email},
-            page_length=9999,
+            EVENT_TICKET, pluck="event", filters={"email": self.email}, page_length=9999
         )
         rsvpd_event_ids = frappe.db.get_all(
             RSVP_RESPONSE,
@@ -162,10 +157,10 @@ class FOSSUserProfile(WebsiteGenerator):
             pluck="parent",
         )
         attended_event_ids = list(set(rsvpd_event_ids + paid_event_ids + event_volunteer_ids))
-        for val in attended_event_ids:
-            event = frappe.db.get_value(
+        attended = (
+            frappe.db.get_all(
                 EVENT,
-                fieldname=[
+                fields=[
                     "name",
                     "route",
                     "external_event_url",
@@ -177,27 +172,31 @@ class FOSSUserProfile(WebsiteGenerator):
                     "must_attend",
                     "event_location",
                 ],
-                filters={"name": val, "is_published": 1, "status": "Concluded"},
-                as_dict=1,
+                filters={
+                    "name": ["in", attended_event_ids],
+                    "is_published": 1,
+                    "status": "Concluded",
+                },
             )
-            if event:
-                attended.append(event)
+            if attended_event_ids
+            else []
+        )
 
         # Hackathons the user has attended
-        attended_hack = []
-
-        hackathon_ids = frappe.db.get_all(
+        hackathon_participants = frappe.db.get_all(
             HACKATHON_PARTICIPANT,
             fields=["hackathon", "localhost"],
             filters={"email": self.email},
             page_length=9999,
         )
 
-        for val in hackathon_ids:
-            hackathon_data = (
-                frappe.db.get_value(
+        hack_ids = [v.hackathon for v in hackathon_participants]
+        hackathon_map = (
+            {
+                h.name: h
+                for h in frappe.db.get_all(
                     HACKATHON,
-                    fieldname=[
+                    fields=[
                         "name",
                         "route",
                         "chapter",
@@ -207,88 +206,82 @@ class FOSSUserProfile(WebsiteGenerator):
                         "only_show_logo",
                         "hackathon_name",
                     ],
-                    filters={"name": val.hackathon, "is_published": 1},
-                    as_dict=1,
+                    filters={"name": ["in", hack_ids], "is_published": 1},
                 )
-                or {}
-            )
+            }
+            if hack_ids
+            else {}
+        )
 
-            # Add localhost details if he attended a localhost
-            localhost_data = (
-                frappe.db.get_value(
+        localhost_ids = [v.localhost for v in hackathon_participants if v.localhost]
+        localhost_map = (
+            {
+                host.name: host
+                for host in frappe.db.get_all(
                     HACKATHON_LOCALHOST,
-                    fieldname=[
-                        "localhost_name",
-                        "location",
-                    ],
-                    filters={"name": val.localhost, "is_published": 1},
-                    as_dict=1,
+                    fields=["name", "localhost_name", "location"],
+                    filters={"name": ["in", localhost_ids], "is_published": 1},
                 )
-                if val.localhost
-                else {"localhost_name": "", "location": ""}
-            ) or {}
+            }
+            if localhost_ids
+            else {}
+        )
 
-            attended_hack.append({**hackathon_data, **localhost_data})
+        attended_hack = []
+        for val in hackathon_participants:
+            hack_data = hackathon_map.get(val.hackathon, {})
+            local_data = localhost_map.get(val.localhost, {"localhost_name": "", "location": ""})
+            attended_hack.append({**hack_data, **local_data})
 
         # CFP Proposals submitted, and how many of those were approved
-        cfps = []
-        talked = []
-
-        cfp_event_ids = frappe.db.get_all(
+        proposals = frappe.db.get_all(
             PROPOSAL,
             fields=["event", "status", "talk_title", "route", "session_type"],
             filters={"email": self.email},
             page_length=9999,
         )
 
-        for val in cfp_event_ids:
-            if self.cfp_visibility == "Everyone" or (
-                self.cfp_visibility == "Chapter Volunteers"
-                and user_is_chapter_member(frappe.session.user)
-            ):
-                cfps.append(
-                    frappe.db.get_value(
-                        EVENT,
-                        fieldname=[
-                            "name",
-                            "chapter",
-                            "event_start_date",
-                            "event_name",
-                            "banner_image",
-                            "must_attend",
-                            "event_location",
-                        ],
-                        filters={
-                            "name": val.event,
-                            "is_published": 1,
-                            "status": ["in", ["Live", "Concluded"]],
-                        },
-                        as_dict=1,
-                    )
-                    | val
+        proposal_event_ids = list({p.event for p in proposals})
+        cfp_event_map = (
+            {
+                e.name: e
+                for e in frappe.db.get_all(
+                    EVENT,
+                    fields=[
+                        "name",
+                        "chapter",
+                        "event_start_date",
+                        "event_name",
+                        "banner_image",
+                        "must_attend",
+                        "event_location",
+                    ],
+                    filters={
+                        "name": ["in", proposal_event_ids],
+                        "is_published": 1,
+                        "status": ["in", ["Live", "Concluded"]],
+                    },
                 )
+            }
+            if proposal_event_ids
+            else {}
+        )
+
+        show_cfps = self.cfp_visibility == "Everyone" or (
+            self.cfp_visibility == "Chapter Volunteers"
+            and user_is_chapter_member(frappe.session.user)
+        )
+
+        cfps = []
+        talked = []
+        for val in proposals:
+            event_data = cfp_event_map.get(val.event)
+            if not event_data:
+                continue
+            if show_cfps:
+                cfps.append(event_data | val)
             if val.status == "Approved":
-                talked.append(
-                    frappe.db.get_value(
-                        EVENT,
-                        fieldname=[
-                            "name",
-                            "chapter",
-                            "event_start_date",
-                            "event_name",
-                            "banner_image",
-                            "must_attend",
-                            "event_location",
-                        ],
-                        filters={
-                            "name": val.event,
-                            "is_published": 1,
-                            "status": "Concluded",
-                        },
-                        as_dict=1,
-                    )
-                    | val
-                )
+                talked.append(event_data | val)
 
         ChapterMember = DocType(CHAPTER_MEMBER)
         Chapter = DocType(CHAPTER)
