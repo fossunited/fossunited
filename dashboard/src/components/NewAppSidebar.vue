@@ -6,6 +6,7 @@
     <button
       class="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-gray-2"
       @click="mobileOpen = true"
+      aria-label="Open sidebar menu"
     >
       <div class="flex flex-col gap-4">
         <slot name="header"> </slot>
@@ -19,7 +20,7 @@
               class="p-1.5 rounded-md hover:bg-surface-gray-2 transition-colors"
               :title="currentTheme === 'dark' ? 'Switch to light' : 'Switch to dark'"
               @click="toggleTheme"
-              :aria-label="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+              :aria-label= "currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
             >
               <IconSunHighFilled v-if="currentTheme === 'dark'" :size="18" :stroke="1.5" />
               <IconMoonStars v-else :size="18" :stroke="1.5" />
@@ -29,6 +30,7 @@
               variant="outline"
               icon="arrow-left"
               @click="toggleSidebar = false"
+              aria-label="Close sidebar"
             >
             </Button>
           </div>
@@ -142,12 +144,12 @@
   <!-- For mobile screens -->
   <div class="md:hidden px-4 py-3 flex justify-between bg-surface-white">
     <div class="flex items-center gap-2">
-      <Button icon="menu" class="text-ink-gray-9" variant="ghost" @click="toggleSidebar = true" />
+      <Button icon="menu" class="text-ink-gray-9" variant="ghost" @click="toggleSidebar = true" aria-label="Open sidebar" />
     </div>
     <div class="flex items-center gap-2">
       <Popover>
         <template #target="{ togglePopover }">
-          <button @click="togglePopover()" aria-label="Open user menu">
+        <button @click="togglePopover()" aria-label="Open user menu">
             <img
               v-if="user_profile.data?.profile_photo"
               :src="user_profile.data?.profile_photo"
