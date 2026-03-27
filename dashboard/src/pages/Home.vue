@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col md:flex-row">
     <SideNavbar v-if="navItems.data" :menu-items="navItems.data" />
-    <div class="flex-1 min-w-0">
+    <div class="flex-1 min-w-0 transition-colors duration-300">
       <RouterView />
     </div>
   </div>
