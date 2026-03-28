@@ -11,16 +11,8 @@
     </router-link>
 
     <div class="flex items-center gap-2">
-      <button
-        class="w-8 h-8 flex items-center justify-center rounded-lg text-ink-gray-5 hover:bg-surface-gray-2 hover:text-ink-gray-9 transition-colors"
-        :title="currentTheme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
-        @click="toggleTheme"
-      >
-        <IconSun v-if="currentTheme === 'dark'" class="w-5 h-5" />
-        <IconMoon v-else class="w-5 h-5" />
-      </button>
-
-      <div v-if="session.isLoggedIn">
+      <ThemeToggle size="20" />
+      <div v-if="session.isLoggedIn" class="flex items-center">
         <Dropdown
           :options="[
             {
@@ -69,12 +61,10 @@
 </template>
 <script setup>
 import { inject } from 'vue'
-import { Avatar, Dropdown, createResource, useTheme } from 'frappe-ui'
-import { IconSun, IconMoon } from '@tabler/icons-vue'
+import { Avatar, Dropdown, createResource } from 'frappe-ui'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
 
 const session = inject('$session')
-const { currentTheme, toggleTheme } = useTheme()
 
 const user_profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',

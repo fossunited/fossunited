@@ -1,6 +1,12 @@
 <template>
-  <!-- Add PR/Issue Dialog -->
-  <Dialog v-model="showAddDialog" class="z-50" :options="{ title: 'Add Issue / PR / Discussion' }">
+  <!-- Add/Edit PR/Issue Dialog -->
+  <Dialog
+    v-model="showAddDialog"
+    class="z-50"
+    :options="{
+      title: editingRow ? 'Edit Issue / PR / Discussion' : 'Add Issue / PR / Discussion',
+    }"
+  >
     <template #body-content>
       <div class="flex flex-col gap-4">
         <FormControl v-model="newIssuePr.link" type="url" label="Link &ast;" />
@@ -16,7 +22,11 @@
     </template>
     <template #actions>
       <div class="grid w-full grid-cols-2 gap-4">
-        <Button label="Add" variant="solid" @click="handleAddIssuePr" />
+        <Button
+          :label="editingRow ? 'Save' : 'Add'"
+          variant="solid"
+          @click="editingRow ? handleEditIssuePr() : handleAddIssuePr()"
+        />
         <Button label="Cancel" theme="gray" @click="closeDialog" />
       </div>
     </template>
@@ -35,13 +45,7 @@
       @click="showAddDialog = true"
     />
   </div>
-  <ListView
-    class="h-[440px]"
-    :columns="listColumns"
-    :rows="groupedIssuePrs"
-    :options="listOptions"
-    row-key="name"
-  >
+  <ListView :columns="listColumns" :rows="groupedIssuePrs" :options="listOptions" row-key="name">
     <template #cell="{ item, row, column }">
       <div v-if="column.label == 'Link'">
         <a
@@ -53,7 +57,8 @@
           <IconArrowUpRight class="w-4 h-4" />
         </a>
       </div>
-      <div v-else-if="column.key == 'actions'">
+      <div v-else-if="column.key == 'actions'" class="flex gap-1">
+        <Button icon="edit" size="sm" variant="subtle" @click="openEditDialog(row)" />
         <Button icon="trash" size="sm" theme="red" variant="subtle" @click="deleteIssuePr(row)" />
       </div>
       <div v-else class="text-base truncate text-wrap">{{ item }}</div>
@@ -62,14 +67,7 @@
 </template>
 <script setup>
 import { computed, ref, watch, defineProps, defineEmits, reactive } from 'vue'
-import {
-  ErrorMessage,
-  FormControl,
-  ListView,
-  Dialog,
-  createResource,
-  createDocumentResource,
-} from 'frappe-ui'
+import { ErrorMessage, FormControl, ListView, Dialog, createDocumentResource } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import { IconArrowUpRight } from '@tabler/icons-vue'
 
@@ -89,6 +87,7 @@ const issueTypes = [
 const newIssuePr = reactive({ title: '', link: '', type: '' })
 const showAddDialog = ref(false)
 const addIssueErrors = ref([])
+const editingRow = ref(null)
 
 const projectDoc = createDocumentResource({
   doctype: 'FOSS Hackathon Project',
@@ -166,11 +165,21 @@ const resetNewIssuePr = () => {
   newIssuePr.link = ''
   newIssuePr.type = ''
   addIssueErrors.value = []
+  editingRow.value = null
 }
 
 const closeDialog = () => {
   resetNewIssuePr()
   showAddDialog.value = false
+}
+
+const openEditDialog = (row) => {
+  editingRow.value = row
+  newIssuePr.title = row.title
+  newIssuePr.link = row.link
+  newIssuePr.type = row.type
+  addIssueErrors.value = []
+  showAddDialog.value = true
 }
 
 const validateIssuePr = () => {
@@ -199,33 +208,29 @@ const handleAddIssuePr = async () => {
     closeDialog()
   } catch (err) {
     addIssueErrors.value = err.messages || [err.message]
-    showError(err, `Failed to add item.`)
   }
 }
 
-// FIXME: remove if no need auto-fill for title 10d from 4th mar 26
-const fetchTitleError = ref('')
-const getPrIssueTitle = createResource({
-  url: 'fossunited.api.hackathon.get_issue_pr_title',
-  makeParams() {
-    return { url: newIssuePr.link }
-  },
-  onSuccess(data) {
-    fetchTitleError.value = ''
-    addIssueErrors.value = ''
-    newIssuePr.title = data.title
-    newIssuePr.type = data.type
-  },
-  onError(err) {
-    newIssuePr.title = ''
-    newIssuePr.type = ''
-    if (err.messages[0] == 'Not a Github URL.') {
-      fetchTitleError.value = 'Failed to fetch title :( \nPlease enter data manually.'
-      return
-    }
-    addIssueErrors.value = 'Failed to fetch title : \n' + err.message
-  },
-})
+const handleEditIssuePr = async () => {
+  addIssueErrors.value = validateIssuePr()
+  if (addIssueErrors.value.length) return
+
+  const row = projectDoc.doc.issue_pr_table.find((r) => r.name === editingRow.value.name)
+  if (row) {
+    row.title = newIssuePr.title
+    row.link = newIssuePr.link
+    row.type = newIssuePr.type
+  }
+
+  try {
+    await projectDoc.save.submit()
+    await projectDoc.reload()
+    toast.success('Issue / PR updated')
+    closeDialog()
+  } catch (err) {
+    addIssueErrors.value = err.messages || [err.message]
+  }
+}
 
 const deleteIssuePr = (row) => {
   projectDoc.doc.issue_pr_table = projectDoc.doc.issue_pr_table.filter((r) => r.name !== row.name)
