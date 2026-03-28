@@ -48,7 +48,7 @@
 
       <div class="profile-content-section mt-10">
         <div class="d-flex align-items-center">
-          <h5 style="padding: 2rem 2.5rem;">
+          <h5 style="padding-left: 2.5rem;">
             Activity
           </h5>
           <a
@@ -216,32 +216,32 @@
     from
     'fossunited/templates/macros/hackathon_card.html' import hackathon_card
   %}
-  <div class="profile-content-div p-5">
+  <div class="profile-content-div">
     {% if doc.show_activity %}
 
       {% if talked | length > 0 %}
-      <div class="container">
+      <div>
         <h3 class="subtitle">Talks Given</h3>
         {% for talk in talked %}{{ speaker_card(talk) }}{% endfor %}
       </div>
       {% endif %}
 
       {% if cfps | length > 0 %}
-        <div class="container">
+        <div>
           <h3 class="subtitle">CFPs Proposed</h3>
           {% for talk in cfps %}{{ speaker_card(talk) }}{% endfor %}
         </div>
       {% endif %}
 
       {% if volunteered | length > 0 %}
-      <div class="container">
+      <div>
         <h3 class="subtitle">Chapter & Event Volunteership</h3>
         {% for item in volunteered %}{{ volunteer_card(item) }}{% endfor %}
       </div>
       {% endif %}
 
       {% if attended | length > 0 %}
-      <div class="container">
+      <div>
         <h3 class="subtitle">Events Attended</h3>
         <div class="events-grid-4">
           {% for event in attended %}{{ event_card(event) }}{% endfor %}
@@ -250,7 +250,7 @@
       {% endif %}
 
       {% if attended_hack | length > 0 %}
-      <div class="container">
+      <div>
         <h3 class="subtitle">Hackathons Attended</h3>
         <div class="events-grid-4">
           {% for hackathon in attended_hack %}{{ hackathon_card(hackathon) }}{% endfor %}
