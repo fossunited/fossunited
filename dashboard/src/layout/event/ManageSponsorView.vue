@@ -17,20 +17,27 @@
         No sponsors added for this event.
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <SponsorCard
+        <EntityCard
           v-for="sponsor in event.doc.sponsor_list"
           :key="sponsor.name"
-          :sponsor="sponsor"
-          @edit-sponsor="handleEditSponsor(sponsor)"
-        />
+          :item="sponsor"
+          image-key="image"
+          name-key="sponsor_name"
+          event-field="sponsor_list"
+          label="Sponsor"
+          @edit="handleEditSponsor(sponsor)"
+        >
+          <p class="text-base text-ink-gray-6">
+            {{ sponsor.tier == 'Custom' ? sponsor.custom_tier : sponsor.tier }}
+          </p>
+        </EntityCard>
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { inject, ref } from 'vue'
-
-import SponsorCard from '@/components/event/SponsorCard.vue'
+import EntityCard from '@/components/event/EntityCard.vue'
 import ManageSponsorDialog from '@/components/event/ManageSponsorDialog.vue'
 
 const inAddNew = ref(false)

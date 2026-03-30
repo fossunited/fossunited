@@ -16,19 +16,25 @@
         No showcases added for this event.
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <ShowcaseCard
+        <EntityCard
           v-for="showcase in event.doc.project_showcase"
           :key="showcase.name"
-          :showcase="showcase"
-          @edit:showcase="handleEdit(showcase)"
-        />
+          :item="showcase"
+          image-key="image"
+          name-key="showcase_name"
+          event-field="project_showcase"
+          label="Showcase"
+          @edit="handleEdit(showcase)"
+        >
+          <div class="text-sm font-small">{{ showcase.description }}</div>
+        </EntityCard>
       </div>
     </div>
   </div>
 </template>
 <script setup>
 import { inject, reactive, ref } from 'vue'
-import ShowcaseCard from '@/components/event/ShowcaseCard.vue'
+import EntityCard from '@/components/event/EntityCard.vue'
 import ManageShowcaseDialog from '@/components/event/ManageShowcaseDialog.vue'
 
 const inAddNew = ref(false)

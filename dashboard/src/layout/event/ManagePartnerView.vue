@@ -16,11 +16,15 @@
         No partners added for this event.
       </div>
       <div v-else class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <PartnerCard
+        <EntityCard
           v-for="partner in event.doc.community_partners"
           :key="partner.name"
-          :partner="partner"
-          @edit:partner="handleEdit(partner)"
+          :item="partner"
+          image-key="logo"
+          name-key="org_name"
+          event-field="community_partners"
+          label="Partner"
+          @edit="handleEdit(partner)"
         />
       </div>
     </div>
@@ -28,7 +32,7 @@
 </template>
 <script setup>
 import { inject, reactive, ref } from 'vue'
-import PartnerCard from '@/components/event/PartnerCard.vue'
+import EntityCard from '@/components/event/EntityCard.vue'
 import ManagePartnerDialog from '@/components/event/ManagePartnerDialog.vue'
 
 const inAddNew = ref(false)

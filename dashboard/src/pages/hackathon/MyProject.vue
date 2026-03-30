@@ -74,7 +74,8 @@
         v-if="isHackathonEnded"
         class="my-4 px-4 py-3 bg-surface-amber-1 border border-outline-amber-2 rounded-md text-ink-gray-7 text-sm"
       >
-        This hackathon has ended. The project is now read-only.
+        This hackathon has ended. The project is now read-only. You may await for resuls:
+        <a href="https://fossunited.org/fosshack/results">fosshack/results</a>
       </div>
 
       <!-- Project Name & Edit -->
@@ -120,7 +121,8 @@
             :value="tab.value"
             class="px-4 pb-2 mx-2 leading-none bg-surface-white flex items-center justify-center text-base select-none rounded-tl-md outline-none cursor-pointer transition-colors duration-200"
             :class="{
-              'text-ink-gray-8 border-b border-outline-gray-5 font-medium': activeTab === tab.value,
+              'text-ink-gray-8 border-b border-outline-gray-5 font-medium':
+                activeTab === tab.value,
               'text-ink-gray-5 hover:text-ink-gray-8 hover:border-b hover:border-outline-gray-3':
                 activeTab !== tab.value,
             }"
