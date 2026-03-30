@@ -852,7 +852,7 @@ h6 {
 .profile-content-div {
   display: flex;
   flex-direction: column;
-  padding: 2rem 2.5rem;
+  padding: 1rem 2.5rem;
   gap: 1rem;
 }
 
