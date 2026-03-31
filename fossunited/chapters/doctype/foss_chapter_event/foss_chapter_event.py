@@ -25,8 +25,6 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import get_event_sponsors
 
-now = datetime.now()
-
 
 class FOSSChapterEvent(WebsiteGenerator):
     # begin: auto-generated types
@@ -288,130 +286,57 @@ class FOSSChapterEvent(WebsiteGenerator):
             {"event": self.name, "status": "Approved"},
             ["name", "talk_title", "route"],
         )
+        if not submissions:
+            return [], []
 
-        speakers = []
-
-        for submission in submissions:
-            _submission_speakers = frappe.db.get_all(
-                SPEAKER,
-                {"parent": submission.name},
-                [
-                    "photo",
-                    "full_name",
-                    "designation",
-                    "organization",
-                    "linked_user",
-                    "parent",
-                ],
-            )
-            speakers.extend(_submission_speakers)
-
+        speakers = frappe.db.get_all(
+            SPEAKER,
+            filters={"parent": ["in", [s.name for s in submissions]]},
+            fields=[
+                "photo",
+                "full_name",
+                "designation",
+                "organization",
+                "linked_user",
+                "parent",
+            ],
+        )
         return speakers, submissions
 
     def get_rsvp_status_block(self):
-        rsvp_status_block = {}
-        rsvp_status_block["doctype"] = EVENT_RSVP
-        rsvp_status_block["block_for"] = "rsvp"
-
-        if frappe.db.exists(EVENT_RSVP, {"event": self.name}):
-            rsvp_form = frappe.get_doc(EVENT_RSVP, {"event": self.name})
-            rsvp_status_block |= {
-                "form_route": rsvp_form.route,
-                "has_doc": True,
-                "block_heading": "RSVP Form is Live!",
-                "docname": rsvp_form.name,
-                "is_published": rsvp_form.is_published,
-                "is_unpublished": not rsvp_form.is_published,
-            }
-            rsvp_status_block["is_team_member"] = False
-            if frappe.db.exists(
-                RSVP_RESPONSE,
-                {
-                    "linked_rsvp": rsvp_form.name,
-                    "submitted_by": frappe.session.user,
-                },
-            ):
-                submission = frappe.get_doc(
-                    RSVP_RESPONSE,
-                    {
-                        "linked_rsvp": rsvp_form.name,
-                        "submitted_by": frappe.session.user,
-                    },
-                )
-                rsvp_status_block |= {
-                    "has_submitted": True,
-                    "block_heading": "You have RSVP'd",
-                    "submission": submission.name,
-                    "edit_submission": True,
-                }
-            else:
-                rsvp_status_block["show_primary_cta"] = True
-                rsvp_status_block["primary_cta"] = "RSVP for the event"
-
-            if not rsvp_form.is_published:
-                rsvp_status_block["block_heading"] = "RSVP form is closed!"
-        else:
-            rsvp_status_block["has_doc"] = False
-            rsvp_status_block["block_heading"] = "RSVP form is not live yet!"
-            rsvp_status_block["is_team_member"] = False
-            rsvp_status_block["show_primary_cta"] = False
-        return rsvp_status_block
+        rsvp = frappe.db.get_value(
+            EVENT_RSVP,
+            {"event": self.name},
+            ["route", "is_published"],
+            as_dict=1,
+        )
+        if not rsvp:
+            return {"has_doc": False, "is_published": False, "form_route": None}
+        return {
+            "has_doc": True,
+            "is_published": bool(rsvp.is_published),
+            "form_route": rsvp.route,
+        }
 
     def get_cfp_status_block(self):
-        cfp_status_block = {}
-        cfp_status_block["doctype"] = EVENT_CFP
-        cfp_status_block["block_for"] = "cfp"
+        cfp = frappe.db.get_value(
+            EVENT_CFP,
+            {"event": self.name},
+            ["status", "deadline"],
+            as_dict=1,
+        )
+        if not cfp:
+            return {"has_doc": False}
 
-        if frappe.db.exists(EVENT_CFP, {"event": self.name}):
-            cfp_form = frappe.get_doc(EVENT_CFP, {"event": self.name})
-            closing_soon = (
-                cfp_form.deadline is not None
-                and now <= cfp_form.deadline <= now + timedelta(days=3)
-            )
-            cfp_status_block |= {
-                "form_route": cfp_form.get("route") or f"{self.route}/cfp",
-                "has_doc": True,
-                "block_heading": "Call for Proposal (CFP) Form is Live!",
-                "docname": cfp_form.name,
-                "deadline": (
-                    cfp_form.deadline.strftime("%d %b %Y") if cfp_form.deadline else None
-                ),
-                "is_published": cfp_form.status == "Live",
-                "is_unpublished": cfp_form.status == "Closed",
-                "closing_soon": closing_soon,
-            }
-            cfp_status_block["is_team_member"] = False
-            if frappe.db.exists(
-                PROPOSAL,
-                {
-                    "linked_cfp": cfp_form.name,
-                    "submitted_by": frappe.session.user,
-                },
-            ):
-                submission = frappe.get_doc(
-                    PROPOSAL,
-                    {
-                        "linked_cfp": cfp_form.name,
-                        "submitted_by": frappe.session.user,
-                    },
-                )
-                cfp_status_block |= {
-                    "has_submitted": True,
-                    "block_heading": "You have submitted a talk",
-                    "submission": submission.name,
-                }
-
-            cfp_status_block["show_primary_cta"] = True
-            cfp_status_block["primary_cta"] = "Submit a talk proposal"
-
-            if cfp_form.status == "Closed":
-                cfp_status_block["block_heading"] = "Talk Proposal Form is Unpublished!"
-        else:
-            cfp_status_block["has_doc"] = False
-            cfp_status_block["block_heading"] = "Talk Proposal Form is not live yet!"
-            cfp_status_block["is_team_member"] = False
-            cfp_status_block["show_primary_cta"] = False
-        return cfp_status_block
+        now = datetime.now()
+        closing_soon = cfp.deadline is not None and now <= cfp.deadline <= now + timedelta(days=3)
+        return {
+            "has_doc": True,
+            "form_route": f"{self.route}/cfp",
+            "is_published": cfp.status == "Live",
+            "closing_soon": closing_soon,
+            "deadline": cfp.deadline.strftime("%d %b %Y") if cfp.deadline else None,
+        }
 
     def get_user_registration_status(self):
         """Return the current user's registration status for this event"""
@@ -483,17 +408,11 @@ class FOSSChapterEvent(WebsiteGenerator):
         for date_str, halls in schedule_dict.items():
             formatted[date_str] = {}
             for hall, items in halls.items():
-                formatted[date_str][hall] = [
-                    (
-                        setattr(
-                            item,
-                            "start_time_display",
-                            fmt(getattr(item, "start_time", None)),
-                        )
-                        or item
-                    )
-                    for item in items
-                ]
+                hall_items = []
+                for item in items:
+                    item.start_time_display = fmt(getattr(item, "start_time", None))
+                    hall_items.append(item)
+                formatted[date_str][hall] = hall_items
         return formatted
 
     def get_breadcrumb(self):
@@ -527,7 +446,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         context.schedule_data = self.format_schedule_for_template(schedule_dict)
 
         context.pagetitle, context.description, context.image = self.get_meta()
-        context.social_links = frappe.get_doc(CHAPTER, self.chapter).get_social_links()
+        context.social_links = context.chapter.get_social_links()
         context.status_concluded = self.status == "Concluded"
         context.status_live = self.status == "Live"
 
