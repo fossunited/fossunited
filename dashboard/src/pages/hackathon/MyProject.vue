@@ -84,7 +84,7 @@
           <input
             v-model="newProjectName"
             type="text"
-            class="border-l-0 border-t-0 border-r-0 p-2 pt-4 font-bold text-3xl text-ink-gray-9 active:outline-none focus:outline-none"
+            class="bg-surface-gray-2 border border-outline-gray-2 rounded-md px-3 py-2 font-bold text-3xl text-ink-gray-9 placeholder-ink-gray-4 active:outline-none focus:outline-none focus:border-outline-gray-4 transition-colors"
           />
           <div class="grid grid-cols-2 gap-2 w-full md:w-auto">
             <Button
