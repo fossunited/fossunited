@@ -96,7 +96,8 @@ export const getProposalFormFields = (cfpData) => {
   ]
 
   baseFields.value.sort((a, b) => order.indexOf(a.fieldname) - order.indexOf(b.fieldname))
-  baseFields.value.push(...customFields)
+  const titleIdx = baseFields.value.findIndex((f) => f.fieldname === 'talk_title')
+  baseFields.value.splice(titleIdx + 1, 0, ...customFields)
 
   return baseFields
 }
