@@ -22,14 +22,13 @@ Redis, background workers, file storage.
 
 ### High level structure:
 
-fossunited/
- ├── fossunited/        → Main application code
- ├── dashboard/         → Vue based admin dashboard
- ├── www/               → Website pages (routes)
- ├── templates/         → Shared UI templates
- ├── doctype/           → Core data models
- ├── public/            → Static assets
- ├── docs/              → Documentation
+fossunited/fossunited/
+│
+├── doctype → contains database models
+├── public → frontend assets
+├── www → website pages
+├── config → configuration
+├── templates → UI templates
 
 
 ## How Website Pages Map to Code
@@ -379,4 +378,41 @@ This document is meant to reduce onboarding friction for new contributors. If so
 
 Contributions to improve this walkthrough are welcome.
 
+## If you want to contribute:
 
+1. Clone repo:
+```sh
+git clone https://github.com/fossunited/fossunited
+```
+2. Setup bench:
+```sh
+bench init foss-env
+cd foss-env
+```
+3. Get app:
+```sh
+bench get-app https://github.com/fossunited/fossunited
+```
+4. Create site:
+```sh
+bench new-site foss.localhost
+```
+5. Install app:
+```sh
+bench --site foss.localhost install-app fossunited
+```
+6. Start server:
+```sh
+bench start
+```
+7. Open:
+```sh
+http://localhost:8000
+```
+
+## To start contributing:
+
+1. Check GitHub issues
+2. Look for "good first issue"
+3. Comment before working
+4. Create branch
