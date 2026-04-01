@@ -122,7 +122,29 @@
       </div>
     </form>
 
-    <div class="mt-4 pt-3">
+    <div class="pt-3">
+      <div class="mb-6">
+        <label class="d-flex align-items-center" style="gap: 0.5rem; cursor: pointer;">
+          <input
+            type="checkbox"
+            id="coc-agreement"
+            required
+            style="flex-shrink: 0; cursor: pointer;"
+          />
+          <span class="v3-text-secondary" style="font-size: 0.875rem;">
+            I agree to abide by the FOSS United
+            <a
+              href="https://fossunited.org/code-of-conduct"
+              class="underline"
+              target="_blank"
+              rel="noopener noreferrer"
+              required
+              >Code of Conduct</a
+            >.<span style="color: red;">*</span>
+          </span>
+        </label>
+      </div>
+
       <button class="v3-btn v3-btn-primary w-100" type="submit" id="submit-rsvp">
         {{ _("RSVP for this event") }}
       </button>
@@ -180,6 +202,11 @@
 
       $('#submit-rsvp').on('click', async (e) => {
         e.preventDefault()
+
+        if (!$('#coc-agreement').is(':checked')) {
+          frappe.msgprint(__('Please agree to the FOSS United Code of Conduct to proceed.'))
+          return
+        }
 
         if (isSubmitting) return
         isSubmitting = true
