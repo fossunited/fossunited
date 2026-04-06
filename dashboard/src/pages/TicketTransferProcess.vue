@@ -26,6 +26,7 @@ import { createResource, Dialog, usePageMeta, LoadingIndicator } from 'frappe-ui
 import { useRoute } from 'vue-router'
 import { ref, onMounted } from 'vue'
 import StatusMessage from '@/components/ticket_transfer/StatusMessage.vue'
+import { showError } from '@/helpers/utils'
 
 const route = useRoute()
 
@@ -42,7 +43,6 @@ const transferID = route.query.id
 const toApprove = route.query.status
 
 const showDialog = ref(false)
-const dialogTitle = ref('Error')
 const dialogMessage = ref('')
 
 const ticketDoc = createResource({
@@ -123,10 +123,11 @@ const approveTransfer = (data) => {
       transferStatus.value = 'Approved'
     },
     onError(err) {
-      dialogMessage.value +=
-        ' There was an error while approving the transfer request. Please contact system admin.' +
-        err
-      showDialog.value = true
+      if (err?.response?.status === 401 || err?.status === 401) {
+        window.location.href = `/login?redirect-to=${encodeURIComponent(window.location.pathname + window.location.search)}`
+        return
+      }
+      showError(err, 'There was an error while approving the transfer request')
     },
   })
 }
@@ -143,10 +144,11 @@ const rejectTransfer = (data) => {
       transferStatus.value = 'Rejected'
     },
     onError(err) {
-      dialogMessage.value +=
-        ' There was an error while rejecting the transfer request. Please contact system admin.' +
-        err
-      showDialog.value = true
+      if (err?.response?.status === 401 || err?.status === 401) {
+        window.location.href = `/login?redirect-to=${encodeURIComponent(window.location.pathname + window.location.search)}`
+        return
+      }
+      showError(err, 'There was an error while rejecting the transfer request')
     },
   })
 }

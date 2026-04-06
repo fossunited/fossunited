@@ -100,12 +100,17 @@ def change_transfer_status(transfer_id: str, status: str):
     """
     Change the status of the transfer request
     """
+    if frappe.session.user == "Guest":
+        frappe.throw(
+            "Please login with your FOSS United account to process this transfer",
+            frappe.AuthenticationError,
+        )
+
     doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
     ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
-    current_user = frappe.session.user
-    if current_user not in [ticket.email, doc.receiver_email]:
+    if frappe.session.user not in [ticket.email, doc.receiver_email]:
         frappe.throw(
-            "Unauthorized to modify this transfer, please login with fossunited account proceed",
+            "You are not authorized to modify this transfer",
             frappe.PermissionError,
         )
 
