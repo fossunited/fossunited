@@ -362,6 +362,35 @@
       </div>
     </div>
 
+    {% if judges %}
+    <h1 class="h1 font-weight-bold v3-text margin-10">
+      <i class="ti ti-gavel mr-2" style="font-size:1.5rem;vertical-align:middle;"></i>Judges
+    </h1>
+    <div class="row mt-3">
+      {% for judge in judges %}
+      <div class="col-12 col-md-4 mb-3">
+        <div class="v3-card p-3 h-100" style="border-left: 3px solid var(--v3-text);">
+          <a {% if judge.route %}href="/{{ judge.route }}"{% endif %} class="d-flex align-items-center text-decoration-none h-100">
+            <img
+              src="{{ judge.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+              alt="{{ judge.full_name }}"
+              class="mr-3 rounded flex-shrink-0"
+              style="width:40px;height:40px;object-fit:cover;">
+            <div class="d-flex flex-column justify-content-center">
+              <div class="font-weight-bold v3-text mb-1">
+                {{ judge.full_name }}
+              </div>
+              <div class="small v3-text-light">
+                {{ judge.info }}
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <h1 class="h1 font-weight-bold v3-text margin-10">Mentors</h1>
     <div class="row mt-3">
       {% for mentor in doc.get_mentors() %}

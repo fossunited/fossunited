@@ -3,8 +3,18 @@ import frappe
 from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_PARTNER_PROJECT,
+    USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_event_sponsors
+
+JUDGE_IDENTIFIERS = [
+    "Shree Kumar",
+    "Rajandran R",
+    "Agriya Khetarpal",
+    "Ayushmaan Bora",
+    "Manas",
+    "Liyas Thomas",
+]
 
 # TODO: Make this into template to serve data for future hackathon pages?
 # same for Indiafoss if we are not using builder for it
@@ -95,6 +105,33 @@ def get_context(context):
         ["repo_link as link", "project_name as sponsor_name", "logo as image"],
         limit_page_length=7,
     )
+
+    # Judges
+    found_judges = {
+        j.full_name: j
+        for j in frappe.get_all(
+            USER_PROFILE,
+            filters={"full_name": ("in", JUDGE_IDENTIFIERS), "is_published": 1},
+            fields=[
+                "full_name",
+                "profile_photo as profile_picture",
+                "route",
+                "bio as info",
+            ],
+        )
+    }
+    context.judges = [
+        found_judges.get(
+            name,
+            {
+                "full_name": name,
+                "profile_picture": "/assets/fossunited/images/defaults/user_profile_image.png",
+                "route": None,
+                "info": "",
+            },
+        )
+        for name in JUDGE_IDENTIFIERS
+    ]
 
     # Volunteers
     context.volunteers = hackathon.get_volunteers()
