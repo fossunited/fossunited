@@ -12,7 +12,7 @@ JUDGE_IDENTIFIERS = [
     "Rajandran R",
     "Agriya Khetarpal",
     "Ayushmaan Bora",
-    "Manas",
+    "Manas Kamal",
     "Liyas Thomas",
 ]
 
@@ -127,7 +127,7 @@ def get_context(context):
                 "full_name": name,
                 "profile_picture": "/assets/fossunited/images/defaults/user_profile_image.png",
                 "route": None,
-                "info": "",
+                "info": "FOSS Hack 2026 Judge",
             },
         )
         for name in JUDGE_IDENTIFIERS
