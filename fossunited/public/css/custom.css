@@ -273,25 +273,6 @@ input[type='file'] {
   z-index: -1;
 }
 
-.inputFileLabel {
-  display: flex;
-  align-items: center;
-  justify-items: center;
-  gap: 0.5em;
-  width: fit-content;
-  border-radius: 0.5rem;
-  border: 1px solid hsl(var(--clr-open-gray-100));
-  font-size: var(--text-base);
-  padding: 7px 10px;
-  cursor: pointer;
-  background: none;
-  transition: background 0.1s ease-in-out;
-}
-
-.inputFileLabel:hover {
-  background: hsl(var(--clr-open-gray-50));
-}
-
 /* ---------- */
 
 h1 {
@@ -399,22 +380,6 @@ h6 {
   cursor: pointer;
 }
 
-.dark-button {
-  display: flex;
-  padding: 0.625rem 0.75rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  border-radius: 0.5rem;
-  background: hsl(var(--clr-code-night-700));
-  color: #fff;
-}
-
-.dark-button:hover {
-  background: hsl(var(--clr-code-night-400));
-  cursor: pointer;
-}
-
 .fff-forward {
   font-family: 'FFF Forward', sans-serif;
   line-height: 1.5;
@@ -428,46 +393,10 @@ h6 {
   align-items: center;
 }
 
-.hero-icon-container {
-  padding: 8px;
-  margin-top: 52px;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.hero-page-icon > svg {
-  width: auto;
-  height: 68px;
-}
-
 .container-center {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.base-container {
-  max-width: 1200px;
-  width: 100%;
-  padding: 16px;
-  margin: 8px;
-}
-
-.location-container {
-  display: flex;
-  gap: 4px;
-  justify-content: center;
-  align-items: center;
-}
-
-.text-md-rg {
-  font-size: 1rem;
-  font-weight: 500;
-  color: inherit;
-  margin: 0px;
-  padding: 0px;
 }
 
 .subtitle {
@@ -531,86 +460,6 @@ h6 {
   color: #4ba306;
 }
 
-.event-by-month {
-  display: flex;
-}
-
-.must-attend {
-  background-color: #fff;
-  padding: 0px 8px;
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  vertical-align: middle;
-  position: absolute;
-  top: 0;
-  transform: translatey(-50%);
-}
-
-.event-container {
-  max-width: 320px;
-  width: 100%;
-  border-radius: 16px;
-  box-shadow: inset 0px 0px 0px 1px #000;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  justify-content: flex-start;
-  align-items: center;
-  position: relative;
-  padding-bottom: 8px;
-}
-
-.event-container:hover {
-  text-decoration: none;
-}
-
-.event-thumbnail {
-  width: 100% !important;
-  border-radius: 16px 16px 0 0;
-  height: 158px !important;
-  object-fit: cover;
-  z-index: -10;
-}
-
-.event-container-info {
-  display: flex;
-  padding: 8px;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  align-self: stretch;
-}
-
-.event-container-title {
-  color: #000;
-  text-align: center;
-  font-size: 18px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: normal;
-}
-
-.event-container-bio {
-  color: #000;
-  text-align: center;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
-
-.event-container-date-location {
-  color: #5b5b5b;
-  text-align: center;
-  font-family: Inter;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
-}
 
 .upcoming-event {
   box-shadow: inset 0px 0px 0px 1px #4ba306;
@@ -621,21 +470,9 @@ h6 {
   box-shadow: inset 0px 0px 0px 3px #4ba306;
 }
 
-.event-start-date {
-  font-size: 18px;
-  font-weight: 600;
-}
 
 .custom-select {
   background-color: #f5f5f5;
-}
-
-.form-divider {
-  height: 4px;
-  width: 100%;
-  border-bottom: #d0d5dd 1px solid;
-  margin-bottom: 4px;
-  margin-top: 4px;
 }
 
 .badge {
@@ -656,13 +493,6 @@ h6 {
   font-size: 12px;
 }
 
-.badge-md {
-  font-size: 14px;
-}
-
-.badge-lg {
-  font-size: 16px;
-}
 
 .like-button svg {
   fill: none;
@@ -958,28 +788,6 @@ h6 {
   border-radius: 0.375rem;
 }
 
-.project-edit-button {
-  z-index: 10;
-  padding: 6px;
-  margin: 8px;
-  background-color: hsl(var(--clr-gray-100));
-  border: 1.5px solid hsl(var(--clr-code-night-100));
-  border-radius: 100%;
-  position: absolute;
-  align-self: flex-end;
-  width: min-content;
-  height: min-content;
-  aspect-ratio: 1;
-}
-
-.project-banner {
-  border-radius: 0.5rem 0.5rem 0 0;
-  z-index: 0;
-  height: 7.5rem;
-  width: 100%;
-  object-fit: cover;
-  object-position: top;
-}
 
 .project-title {
   font-size: var(--text-base);
@@ -1069,12 +877,6 @@ h6 {
   border-radius: 1rem;
 }
 
-.buttons-group {
-  display: flex;
-  gap: 0.5rem;
-  padding: 0.5rem 0;
-  flex-wrap: wrap;
-}
 
 .header--img-title {
   display: flex;
@@ -1084,27 +886,7 @@ h6 {
   color: hsl(var(--clr-open-gray-200));
 }
 
-.backlink > * {
-  font-size: var(--text-sm);
-  font-weight: var(--fw-semibold);
-  color: hsl(var(--clr-code-night-500));
-}
 
-.user-img-sm {
-  width: 2rem;
-  height: 2rem;
-  aspect-ratio: 1;
-}
-
-.green-link {
-  color: hsl(var(--clr-foss-mint-500));
-  font-weight: var(--fw-semibold);
-}
-
-.green-link:hover,
-.green-link:active {
-  color: hsl(var(--clr-foss-mint-600));
-}
 /* ------- */
 
 /* CHAPTERS PAGES */
@@ -1154,12 +936,6 @@ h6 {
   text-decoration: none;
 }
 
-.event-card--banner {
-  width: 100%;
-  height: 7.5rem;
-  object-fit: cover;
-  border-radius: 0.5rem 0.5rem 0 0;
-}
 
 .event-card-contents {
   display: flex;
@@ -1188,30 +964,6 @@ h6 {
 .event-card--logo {
   width: 10rem;
   height: auto;
-}
-
-.event-card--title {
-  height: 3.125rem;
-  flex-shrink: 0;
-  font-size: var(--text-lg);
-  font-weight: 600;
-  letter-spacing: -0.045rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.event-card--location-section {
-  display: flex;
-  justify-content: space-between;
-  font-size: var(--text-sm);
-}
-
-.event-card--location {
-  display: flex;
-  align-items: center;
-  gap: 0.3125rem;
-  color: hsl(var(--clr-open-gray-200));
 }
 
 .talk-card {
@@ -1377,26 +1129,6 @@ h6 {
 
 /* FOSS Event Pages */
 
-.event-header {
-  gap: 1.25rem;
-}
-
-.header--title-cta-parent {
-  display: flex;
-  justify-content: space-between;
-  align-content: center;
-}
-
-.header--city-name {
-  font-size: var(--text-xl);
-  font-weight: var(--fw-medium);
-  color: hsl(var(--clr-foss-mint-500));
-}
-
-.header--tags {
-  display: flex;
-  gap: 0.94rem;
-}
 
 .foss-tag {
   background: hsl(var(--clr-gray-100));
@@ -1411,49 +1143,6 @@ h6 {
   font-weight: 600;
 }
 
-.time-location-parent {
-  display: flex;
-  gap: 1.88rem;
-}
-
-.time-location--child-container i {
-  color: hsl(var(--clr-code-night-500));
-}
-
-.time-location--child-container {
-  display: flex;
-  align-items: flex-start;
-  width: max-content;
-  gap: 0.5rem;
-}
-
-.child-container--heading {
-  font-weight: var(--fw-semibold);
-  font-size: var(--text-xl);
-  color: hsl(var(--clr-code-night-500));
-}
-
-.child-container--subtext {
-  color: var(--clr-open-gray-200);
-  margin-top: 2px;
-  font-size: var(--text-sm);
-  font-weight: 500;
-  line-height: 100%; /* 0.875rem */
-}
-
-.horizontal-navbar-parent {
-  width: 100%;
-  max-width: 100%;
-  margin: 2rem 0 1rem 0;
-  box-shadow: inset 0px -1px 0px 1px hsl(var(--clr-code-night-100));
-}
-
-.event-content-div {
-  display: flex;
-  flex-direction: column;
-  min-height: 800px;
-  gap: 1rem;
-}
 
 .sponsor--tier-block {
   margin: 1rem 0;
@@ -1530,98 +1219,6 @@ h6 {
   gap: 1rem;
 }
 
-.submitted-proposals-list {
-  margin: 1rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.schedule-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 2rem;
-}
-
-.schedule-card {
-  display: flex;
-  width: 100%;
-  min-height: 10rem;
-  padding: 1.875rem;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1.25rem;
-  flex-shrink: 0;
-  border-radius: 0.5rem;
-  background: hsl(var(--clr-gray-50));
-  transition: box-shadow 0.1s ease-in-out;
-  box-shadow: 0px 0px 0px 1px hsl(var(--clr-open-gray-100));
-}
-
-.schedule-card:hover,
-.schedule-card:focus {
-  box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-200));
-  cursor: pointer;
-  text-decoration: none;
-}
-
-.no-hover.schedule-card:hover,
-.no-hover.schedule-card:focus {
-  cursor: default;
-  box-shadow: 0px 0px 0px 1px hsl(var(--clr-open-gray-100));
-  text-decoration: none;
-}
-
-.schedule--title-time-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-}
-
-.schedule--title {
-  flex-basis: 60%;
-  color: hsl(var(--clr-code-night-600));
-  font-size: var(--text-lg);
-  font-weight: var(--fw-semibold);
-  line-height: normal;
-}
-
-.schedule--time {
-  font-size: var(--text-sm);
-  font-weight: var(--fw-semibold);
-  display: flex;
-  padding: 0.625rem;
-  justify-content: center;
-  align-items: center;
-  gap: 0.625rem;
-  border-radius: 0.375rem;
-  background: hsl(var(--clr-foss-mint-100));
-  color: hsl(var(--clr-foss-mint-600));
-}
-
-.schedule--speakers-section {
-  display: flex;
-  gap: 0.625rem;
-  align-items: flex-start;
-}
-
-.schedule--speaker-container {
-  display: grid;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.schedule--speaker-name {
-  font-size: var(--text-lg);
-  font-weight: var(--fw-semibold);
-  color: hsl(var(--clr-code-night-600));
-}
-
-.speaker-designation-company {
-  font-size: var(--text-xs);
-}
 
 .copy-url-clipboard > button {
   border: none;
@@ -1665,55 +1262,7 @@ h6 {
 /* ---- */
 
 /* FORM STYLES */
-.foss-form-wrapper {
-  min-height: 800px;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem 0;
-  align-items: center;
-}
 
-.form-heading-section {
-  margin-top: 6rem;
-  margin-bottom: 3rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-  align-items: center;
-}
-
-.form-page-icon {
-  width: 7rem;
-  border-radius: 1rem;
-}
-
-.form-page-heading {
-  font-size: var(--text-2xl);
-  font-weight: var(--fw-bold);
-  color: hsl(var(--clr-code-night-800));
-  text-align: center;
-}
-
-.form-container {
-  padding: 1rem 2rem;
-  width: 75%;
-  border-radius: 0.5rem;
-  border: 2px solid hsl(var(--clr-gray-200));
-}
-
-.foss-form-container {
-  padding: 2rem;
-  width: 75%;
-  border-radius: 1rem;
-  border: 2px solid hsl(var(--clr-foss-mint-500));
-}
-
-.foss-form-heading-3xl {
-  font-size: var(--text-3xl);
-  font-weight: var(--fw-bold);
-  color: hsl(var(--clr-code-night-800));
-  margin: 0.5rem 0;
-}
 
 .foss-form-question {
   font-size: var(--text-base);
@@ -1725,53 +1274,9 @@ h6 {
   background: var(--v3-button-border);
 }
 
-.foss-form-buttons {
-  display: flex;
-  gap: 1rem;
-  justify-content: flex-end;
-  margin-top: 2rem;
-}
-
-.submitted-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.submitted-container > button {
-  margin: 1rem 0;
-  width: max-content;
-}
-
-.foss-form--cfp-list-container {
-  margin: 2rem 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.foss-form--cfp-card {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-}
-
-.foss-form--cfp-card--heading-status {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  margin-right: 1rem;
-}
-
-.foss-form--cfp-card--heading {
-  font-weight: var(--fw-semibold);
-}
 
 /* --------------- */
 
-.ticket-button {
-  max-height: 5rem !important;
-}
 
 /* HACKATHON */
 
@@ -1789,24 +1294,6 @@ h6 {
   width: fit-content;
 }
 
-.search-box {
-  padding-top: 1rem;
-  margin-bottom: 0;
-  width: 50%;
-}
-
-.search-box input {
-  width: 100%;
-  border: none;
-}
-
-.search-box input::placeholder {
-  color: hsl(var(--clr-gray-500));
-}
-
-.search-box input:focus {
-  outline: none;
-}
 
 .projects-grid {
   display: grid;
@@ -1836,57 +1323,12 @@ h6 {
   color: hsl(var(--clr-code-night-600));
 }
 
-.project-card--short-bio {
-  font-size: var(--text-sm);
-  color: hsl(var(--clr-open-gray-200));
-}
 
 .project-card--team {
   font-size: var(--text-sm);
   font-weight: var(--fw-medium);
 }
 
-.team-member-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1rem;
-}
-
-.team-member-card {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid hsl(var(--clr-open-gray-100));
-  align-items: center;
-}
-
-.team-member-card:hover {
-  cursor: pointer;
-}
-
-.team-member--img {
-  width: 3rem;
-  height: 3rem;
-  aspect-ratio: 1;
-  border-radius: 100%;
-}
-
-.team-member--name {
-  font-size: var(--text-base);
-  font-weight: var(--fw-semibold);
-  color: hsl(var(--clr-code-night-600));
-}
-
-.team-member--username {
-  font-size: var(--text-sm);
-  color: hsl(var(--clr-open-gray-200));
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-wrap: wrap;
-  overflow-wrap: break-word;
-  word-break: break-all;
-}
 
 .status-block-deadline {
   font-size: var(--text-xs);
@@ -1905,11 +1347,6 @@ h6 {
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
     row-gap: 24px;
   }
-  .sponsor-grid {
-    grid-template-columns: repeat(3, minmax(200px, 1fr));
-    row-gap: 24px;
-    justify-items: center;
-  }
 
   .members-grid-6 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1918,34 +1355,6 @@ h6 {
   }
 }
 @media screen and (max-width: 768px) {
-  .page-title {
-    font-size: 1.5rem;
-  }
-
-  .location-social-flex {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-  .team-grid {
-    padding: 8px;
-    grid-template-columns: repeat(2, minmax(200px, 1fr));
-    justify-content: center;
-    row-gap: 24px;
-  }
-  .sponsor-grid {
-    grid-template-columns: repeat(3, minmax(160px, 1fr));
-    gap: 16px;
-    justify-items: center;
-  }
-  .sponsor-container {
-    max-width: 150px;
-    max-height: 60px;
-  }
-  .rsvp-form-container {
-    min-width: 75%;
-  }
-
   /* Profile Section */
   .header-cover-image {
     height: 6rem;
@@ -2028,30 +1437,11 @@ h6 {
     flex-direction: column;
     align-items: flex-start !important;
   }
-  .search-box {
-    margin-bottom: 1rem;
-    width: 100%;
-  }
   .projects-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(300px, 1fr));
     gap: 1rem;
   }
-  /* ------  */
-
-  /* FOSS Profile Edit */
-  .profile-edit--pfp {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  .profile-edit--pfp-input {
-    margin: 0;
-    gap: 4px;
-  }
-
-  /* ----- */
 
   /* COMMON */
   .subtitle {
@@ -2126,58 +1516,6 @@ h6 {
     width: 7rem;
     border-radius: 0.5rem;
   }
-  /* ------- */
-
-  /* FOSS Event Pages */
-  .header--title-cta-parent {
-    padding: 0 1.25rem;
-  }
-
-  .header--tags {
-    padding: 0 1.25rem;
-  }
-
-  .header--short-desc {
-    padding: 0 1.25rem;
-  }
-
-  .time-location-parent {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding: 0.5rem 0;
-  }
-
-  .time-location--child-container {
-    width: 100%;
-    gap: 0.5rem;
-  }
-
-  .time-location--child-container .child-container--heading {
-    font-size: var(--text-lg);
-  }
-
-  .horizontal-navbar-parent {
-    margin: 1rem 0;
-  }
-
-  .speakers-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1.25rem;
-    padding: 1.88rem 0;
-  }
-
-  .speaker-card {
-    padding: 1.5rem;
-  }
-  .speaker-card:focus {
-    box-shadow: 0px 0px 0px 2px hsl(var(--clr-open-gray-100));
-  }
-
-  .speaker--talk-category {
-    font-size: var(--text-sm);
-  }
 
   .status--icon-text-container {
     gap: 0.5rem;
@@ -2192,61 +1530,6 @@ h6 {
     gap: 0.5rem;
   }
 
-  .recent-submissions-section {
-    margin: 2rem 0;
-  }
-
-  .cfp-submission-card .cfp-submission--title-status {
-    flex-direction: column-reverse;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-
-  .recent-proposals-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(22rem, 1fr));
-    gap: 1.25rem;
-    padding: 1rem 0;
-  }
-
-  .recent-proposal-card {
-    padding: 1.5rem;
-  }
-
-  .schedule-grid {
-    display: grid;
-    grid-template: none;
-    gap: 1.5rem;
-    margin: 1.5rem 0;
-  }
-
-  .schedule--title-time-section {
-    flex-direction: column;
-    justify-items: flex-start;
-    gap: 1rem;
-  }
-
-  .ticket-button {
-    font-size: var(--text-base);
-  }
-
-  /* -------------------- */
-
-  /* FORM Elements */
-  .form-container {
-    width: 100%;
-    padding: 1rem;
-  }
-  /* ------ */
-
-  /* CFP PAGES */
-  .review-statistics-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
-  }
-
-  /* -------------- */
-
   /* HACKATHON */
   .projects-grid {
     display: grid;
@@ -2254,11 +1537,6 @@ h6 {
     gap: 1rem;
   }
 
-  .team-member-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-  }
 }
 @media screen and (max-width: 425px) {
   button {
@@ -2283,67 +1561,12 @@ h6 {
     padding: 0.5rem;
   }
 
-  .team-grid {
-    grid-template-columns: repeat(1, minmax(200px, 1fr));
-    justify-content: center;
-    row-gap: 24px;
-  }
-
-  .sponsor-grid {
-    grid-template-columns: repeat(2, minmax(160px, 1fr));
-    gap: 16px;
-    justify-items: center;
-  }
-
-  .date-location-container {
-    flex-direction: column;
-    gap: 20px;
-    padding: 16px 24px;
-  }
-  .ticket-button {
-    font-size: var(--text-sm);
-    margin-top: 1.2rem;
-  }
-  .header--title-cta-parent {
-    flex-direction: column;
-  }
-
   .submission-status-block {
     flex-direction: column;
     gap: 1rem;
     align-items: initial;
   }
 
-  .cfp-submission-card {
-    flex-direction: column;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .cfp-submission-card .button-group {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-  }
-
-  .cfp-submission-card .button-group > * {
-    width: 100%;
-  }
-
-  /* CFP */
-
-  .cfp-header--speaker-status-like {
-    flex-direction: column;
-    align-items: baseline;
-    gap: 1rem;
-  }
-
-  .cfp-header--like-edit-container {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-  }
   /* PROFILES */
   .header-section {
     border-radius: 0;
@@ -2378,13 +1601,7 @@ h6 {
     gap: 1rem;
   }
 
-  .team-member-grid {
-    display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap: 1rem;
-  }
-}
-
+/* These are generic css rules from frappe blog, web page and web form */
 :is(article.blog-content, article.web-page-content, .from-markdown, .ql-editor) :is(h1, h2, h3, h4, h5, h6) {
   padding: 2rem 0 1.5rem 0;
 }
@@ -2696,24 +1913,6 @@ body:has(.v3-page) {
   font-size: 1.3rem;
 }
 
-/* Event Grid V3 - For event pages */
-.event-grid-v3 {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem; /* 32px */
-}
-
-.event-grid-v3 .v3-card {
-  margin-bottom: 0;
-}
-
-/* Volunteers Grid V3 - For volunteers page */
-.volunteers-grid-v3 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 0.5rem; /* 8px between volunteers */
-}
-
 /* CFP Card V3 - Responsive placement */
 .cfp-card-v3 {
   background: linear-gradient(102deg, var(--v3-text-color2) 0%, var(--v3-text-color) 100%);
@@ -2796,14 +1995,6 @@ body:has(.v3-page) {
   gap: 0.25rem;
   text-decoration: none;
   width: 5rem;
-}
-
-.v3-volunteer-avatar {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 0.5rem;
-  border: 1px solid var(--v3-button-border);
-  object-fit: cover;
 }
 
 .v3-volunteer-name {
@@ -2945,48 +2136,6 @@ body:has(.v3-page) {
   gap: 1rem;
 }
 
-.v3-speaker-card {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background: var(--v3-main-bg);
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-
-.v3-speaker-card:hover {
-  opacity: 0.8;
-}
-
-.v3-speaker-photo {
-  width: 4rem;
-  height: 4rem;
-  border-radius: 0.5rem;
-  object-fit: cover;
-  flex-shrink: 0;
-  filter: grayscale(100%);
-}
-
-.v3-speaker-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.v3-speaker-talk {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: var(--v3-text-color);
-  line-height: 1.3;
-}
-
-.v3-speaker-person {
-  font-size: 0.875rem;
-  color: var(--v3-text-color2);
-}
-
 /* Sponsor Card Component */
 .v3-sponsor-header {
   display: flex;
@@ -3123,17 +2272,6 @@ body:has(.v3-page) {
   display: none;
 }
 
-.v3-view-all-link {
-  margin-top: 1rem;
-  color: var(--v3-text-color2);
-  font-size: 0.875rem;
-  font-weight: 400;
-  text-decoration: underline;
-  line-height: 1.5;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
 .v3-card.has-view-all .v3-people-container::after {
   content: '';
   position: absolute;
@@ -3145,10 +2283,6 @@ body:has(.v3-page) {
   pointer-events: none;
   opacity: 1;
   transition: opacity 0.3s ease;
-}
-
-.v3-view-all-link:hover {
-  color: var(--v3-text-color);
 }
 
 .v3-theme-toggle {
@@ -3199,9 +2333,6 @@ body:has(.v3-page) {
 }
 
 /* mobile first cfp layout */
-.cfp-card-v3-desktop {
-  display: none;
-}
 
 /* Grants page */
 .v3-grant-icon {
@@ -3818,9 +2949,6 @@ a.hover-underline:hover {
     gap: 2rem;
   }
 
-  .cfp-card-v3-mobile {
-    display: none;
-  }
   .cfp-card-v3-desktop {
     display: block;
   }
@@ -3865,9 +2993,6 @@ a.hover-underline:hover {
   }
 }
 
-.hidden-html-comment {
-  display: none !important;
-}
 
 /* TODO: Replace .events-grid-4, .members-grid-6, etc. */
 .v3-grid-auto {

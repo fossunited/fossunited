@@ -78,5 +78,7 @@ fossunited = { workspace = true }
 
 [dependency-groups]
 dev = [
+    "cssutils>=2.11.1",
     "fossunited[dev,docs]",
+    "tinycss2>=1.5.1",
 ]
