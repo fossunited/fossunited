@@ -11,6 +11,7 @@
   "event",
   "full_name",
   "designation",
+  "accept_coc",
   "column_break_dnhv",
   "tier",
   "email",
@@ -162,10 +163,17 @@
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Mailing Group?"
+  },
+  {
+   "default": "0",
+   "description": "Abide to https://fossunited.org/code-of-conduct",
+   "fieldname": "accept_coc",
+   "fieldtype": "Check",
+   "label": "Accept Code of Conduct"
   }
  ],
  "links": [],
- "modified": "2025-12-11 13:23:11.242154",
+ "modified": "2026-04-08 16:09:39.170671",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

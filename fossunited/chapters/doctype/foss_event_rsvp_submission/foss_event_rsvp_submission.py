@@ -23,13 +23,12 @@ class FOSSEventRSVPSubmission(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
-            EventCheckIn,
-        )
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
 
+        accept_coc: DF.Check
         chapter: DF.Data | None
         check_ins: DF.Table[EventCheckIn]
         confirm_attendance: DF.Check

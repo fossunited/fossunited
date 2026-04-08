@@ -22,6 +22,7 @@
   "email",
   "confirm_attendance",
   "subscribe_chapter_mailing",
+  "accept_coc",
   "section_break_vzwa",
   "custom_answers",
   "checkin_section",
@@ -151,10 +152,17 @@
    "fieldtype": "Table",
    "label": "Checkin Table",
    "options": "Event Check In"
+  },
+  {
+   "default": "0",
+   "description": "Abide by https://fossunited.org/code-of-conduct",
+   "fieldname": "accept_coc",
+   "fieldtype": "Check",
+   "label": "Accept Code of Conduct"
   }
  ],
  "links": [],
- "modified": "2025-11-21 12:03:36.919346",
+ "modified": "2026-04-08 16:20:21.052558",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Event RSVP Submission",

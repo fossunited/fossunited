@@ -32,6 +32,7 @@ class FOSSEventTicket(Document):
             FOSSTicketCustomField,
         )
 
+        accept_coc: DF.Check
         check_ins: DF.Table[EventCheckIn]
         custom_fields: DF.Table[FOSSTicketCustomField]
         customer: DF.Data | None
