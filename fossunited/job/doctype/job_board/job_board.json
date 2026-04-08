@@ -32,6 +32,7 @@
    "fieldname": "company_name",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Company Name",
    "reqd": 1
   },
@@ -69,6 +70,7 @@
    "fieldname": "job_title",
    "fieldtype": "Data",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Job Title",
    "reqd": 1
   },
@@ -84,6 +86,7 @@
    "description": "ex: Remote, Hybrid, City Location",
    "fieldname": "job_location",
    "fieldtype": "Data",
+   "in_standard_filter": 1,
    "label": "Job Location",
    "reqd": 1
   },
@@ -108,6 +111,7 @@
    "default": "Received",
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "Received\nApproved\nRejected\nExpired"
   },
@@ -126,7 +130,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-03-07 16:42:48.271726",
+ "modified": "2026-04-08 12:28:58.046337",
  "modified_by": "Administrator",
  "module": "Job",
  "name": "Job Board",
@@ -149,5 +153,22 @@
  "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Red",
+   "title": "Expired"
+  },
+  {
+   "color": "Green",
+   "title": "Approved"
+  },
+  {
+   "color": "Gray",
+   "title": "Rejected"
+  },
+  {
+   "color": "Yellow",
+   "title": "Received"
+  }
+ ]
 }
