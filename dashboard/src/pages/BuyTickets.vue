@@ -74,7 +74,7 @@
             aria-label="Available ticket tiers"
           >
             <article
-              v-for="tier in allTiers"
+              v-for="tier in sortedTiers"
               :key="tier.name"
               role="listitem"
               class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-wrap items-stretch gap-3 p-4 w-full"
@@ -546,6 +546,15 @@ const billing = reactive({
 
 // Computed
 const allTiers = computed(() => event.data?.tiers || [])
+
+const sortedTiers = computed(() =>
+  [...allTiers.value].sort((a, b) => {
+    const aActive = isTierActive(a) ? 0 : 1
+    const bActive = isTierActive(b) ? 0 : 1
+    if (aActive !== bActive) return aActive - bActive
+    return (a.price || 0) - (b.price || 0)
+  }),
+)
 
 const activeTierCounts = computed(() => {
   const result = {}
