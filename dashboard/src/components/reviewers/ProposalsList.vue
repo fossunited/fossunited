@@ -9,7 +9,7 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
         <Filter v-model="filters" :docfields="docfields.data" />
-        <Switch v-model="showNotReviewed" label="Only show not reviewed" />
+          <Switch v-model="showNotReviewed" label="Hide reviewed (By Me)" />
       </div>
       <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
@@ -88,7 +88,7 @@ function applyFilters() {
   const _filters = {
     ...filters.value,
     ...(searchTitle.value ? { talk_title: ['like', searchTitle.value] } : {}),
-    ...(showNotReviewed.value ? { _is_not_reviewed: ['=', 'Yes'] } : {}),
+    ...(showNotReviewed.value ? { _is_reviewed: ['=', 'No'] } : {}),
   }
   cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
 }

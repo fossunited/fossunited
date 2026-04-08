@@ -164,7 +164,6 @@ def get_cfp_submissions(event: str) -> list:
         submission.update(
             {
                 "_is_reviewed": "Yes" if is_reviewed else "No",
-                "_is_not_reviewed": "No" if is_reviewed else "Yes",
                 "_is_seen": is_reviewed,
             }
         )
@@ -370,13 +369,7 @@ def get_proposal_filter_fields(event_id: str) -> list:
             {
                 "fieldname": "_is_reviewed",
                 "fieldtype": "Check",
-                "label": "Only show reviewed (By Me)",
-                "reqd": 0,
-            },
-            {
-                "fieldname": "_is_not_reviewed",
-                "fieldtype": "Check",
-                "label": "Only show not reviewed (By Me)",
+                "label": "Reviewed (By Me)",
                 "reqd": 0,
             },
         ]
