@@ -1,17 +1,12 @@
-export const getStatusBadgeTheme = (status) => {
-  switch (status) {
-    case 'Yes':
-    case 'Approved':
-      return 'green'
-    case 'No':
-    case 'Review Pending':
-      return 'orange'
-    case 'Rejected':
-      return 'red'
-    default:
-      return 'gray'
-  }
+const STATUS_THEMES = {
+  Approved: 'green',
+  Rejected: 'red',
+  'Review Pending': 'orange',
+  Screening: 'blue',
+  Withdrawn: 'gray',
 }
+
+export const getStatusBadgeTheme = (status) => STATUS_THEMES[status] ?? 'gray'
 
 export const defaultSelectedReviewValue = () => {
   return {
