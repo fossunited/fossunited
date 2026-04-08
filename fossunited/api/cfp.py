@@ -66,6 +66,19 @@ def get_cfp_submissions_insight(event_id: str) -> list:
     return insight_values
 
 
+CFP_SUBMISSION_FIELDS = [
+    "name",
+    "talk_title",
+    "status",
+    "session_categories",
+    "session_type",
+    "is_first_talk",
+    "intended_audience",
+    "talk_license",
+    "creation",
+]
+
+
 @frappe.whitelist()
 def get_cfp_submissions(event: str) -> list:
     """
@@ -81,21 +94,10 @@ def get_cfp_submissions(event: str) -> list:
 
     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
 
-    fields = [
-        "name",
-        "talk_title",
-        "status",
-        "session_categories",
-        "session_type",
-        "is_first_talk",
-        "intended_audience",
-        "creation",
-    ]
-
     submissions = frappe.db.get_list(
         PROPOSAL,
         {"linked_cfp": cfp},
-        fields,
+        CFP_SUBMISSION_FIELDS,
         page_length=9999,
         order_by="creation desc",
     )
@@ -288,7 +290,15 @@ def get_speakers(submission: str) -> list:
     return frappe.db.get_all(
         SPEAKER,
         {"parent": submission},
-        ["photo", "full_name", "designation", "organization", "linked_user", "social_link", "bio"],
+        [
+            "photo",
+            "full_name",
+            "designation",
+            "organization",
+            "linked_user",
+            "social_link",
+            "bio",
+        ],
     )
 
 
@@ -313,40 +323,23 @@ def get_global_cfp_guidelines() -> dict:
 
 @frappe.whitelist()
 def get_proposal_filter_fields(event_id: str) -> list:
-    fields = frappe.get_meta(PROPOSAL).fields
-
-    fieldtypes_to_remove = ["Section Break", "Tab Break", "Column Break"]
-    fields_to_remove = [
-        "talk_title",
-        "is_published",
-        "route",
-        "linked_cfp",
-        "chapter",
-        "event",
-        "submitted_by",
-        "event_name",
-        "attendance_confirmed",
-        "first_name",
-        "last_name",
-        "talk_reference",
-        "full_name",
-        "email",
-        "picture_url",
-        "designation",
+    # excluding non-filterable ones (name, creation, talk_title handled by search)
+    FILTERABLE_FIELDNAMES = {
+        f for f in CFP_SUBMISSION_FIELDS if f not in ("name", "talk_title")
+    } | {
+        "is_withdrawn",
+        "talk_license",
+        "speakers",
+        "custom_answers",
+        "is_first_talk",
         "organization",
-        "bio",
-        "positive_reviews",
-        "negative_reviews",
-        "unsure_reviews",
-        "approvability",
-    ]
+        "session_categories",
+        "submitted_by",
+    }
 
-    fieldnames_to_remove = set(fields_to_remove)
+    all_meta_fields = frappe.get_meta(PROPOSAL).fields
     filtered_fields = [
-        field
-        for field in fields
-        if field.fieldtype not in fieldtypes_to_remove
-        and field.fieldname not in fieldnames_to_remove
+        field for field in all_meta_fields if field.fieldname in FILTERABLE_FIELDNAMES
     ]
 
     cfp = frappe.get_doc(EVENT_CFP, {"event": event_id})
