@@ -34,12 +34,8 @@
         {% if loop.last %}
           <span aria-current="page">{{ display_label }}</span>
         {% else %}
-          {% set url_parts = [] %}
-          {% for i in range(loop.index) %}
-            {% set original_idx = filtered_indices[i] %}
-            {% set _ = url_parts.append(path_parts[original_idx]) %}
-          {% endfor %}
-          <a class="hover:cursor-pointer" href="/{{ url_parts|join('/') }}">
+          {% set original_idx = filtered_indices[loop.index0] %}
+          <a class="hover:cursor-pointer" href="/{{ path_parts[:original_idx + 1]|join('/') }}">
             {{ display_label }}
           </a>
         {% endif %}
