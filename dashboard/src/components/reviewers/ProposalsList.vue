@@ -27,7 +27,7 @@
           :key="submission.name"
           :submission="submission"
           tabindex="0"
-          @click="handleOpenSubmission(submission)"
+          @open:submission="handleOpenSubmission($event)"
         />
         <div v-if="cfpSubmissions.data.length === 0">
           <span class="text-sm text-ink-gray-5"> No submissions found.</span>
@@ -37,7 +37,7 @@
   </Suspense>
 </template>
 <script setup>
-import ProposalListItem from './ProposalListItem.vue'
+import ProposalListItem from '@/components/event/cfp/SubmissionListItem.vue'
 import { watch, ref } from 'vue'
 import { createResource, FormControl, LoadingIndicator, Switch } from 'frappe-ui'
 import Filter from '../ui/Filter.vue'
@@ -105,4 +105,5 @@ const handleOpenSubmission = (submission) => {
   submission._is_seen = true
   emit('open:submission', submission.name)
 }
+
 </script>

@@ -90,7 +90,6 @@ declare module 'vue' {
     ProposalBlock: typeof import('./src/components/proposals/ProposalBlock.vue')['default']
     ProposalDetails: typeof import('./src/components/reviewers/ProposalDetails.vue')['default']
     ProposalDetailsDrawer: typeof import('./src/components/reviewers/ProposalDetailsDrawer.vue')['default']
-    ProposalListItem: typeof import('./src/components/reviewers/ProposalListItem.vue')['default']
     ProposalLogo: typeof import('./src/components/cfp-public/ProposalLogo.vue')['default']
     ProposalsList: typeof import('./src/components/reviewers/ProposalsList.vue')['default']
     ProposalSpeakerCard: typeof import('./src/components/reviewers/ProposalSpeakerCard.vue')['default']
