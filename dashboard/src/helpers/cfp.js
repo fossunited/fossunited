@@ -293,6 +293,12 @@ export const getSubmissionConfirmationFields = () => {
       required: true,
       value: false,
     },
+    {
+      fieldname: 'accept_coc',
+      fieldtype: 'checkbox',
+      required: true,
+      value: false,
+    },
   ]
 }
 

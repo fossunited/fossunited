@@ -42,6 +42,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             FOSSEventCFPReview,
         )
 
+        accept_coc: DF.Check
         approvability: DF.Data | None
         attendance_confirmed: DF.Check
         bio: DF.TextEditor | None

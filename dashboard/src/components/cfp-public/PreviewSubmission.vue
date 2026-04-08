@@ -57,8 +57,32 @@
     </div>
     <div class="flex flex-col gap-2">
       <div v-for="(field, index) in confirmationFields" :key="index">
-        <FormControl v-model="field.value" type="checkbox" :label="field.label" />
-        <span v-if="field.required" class="text-ink-red-3">*</span>
+        <template v-if="field.fieldname === 'accept_coc'">
+          <div class="flex items-start gap-2">
+            <input
+              id="coc-cfp"
+              v-model="field.value"
+              type="checkbox"
+              class="mt-0.5 rounded-sm shrink-0"
+            />
+            <label for="coc-cfp" class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed">
+              By registering for this event, you agree to abide by the FOSS United
+              <a
+                href="https://fossunited.org/code-of-conduct"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="font-semibold underline"
+                >Code of Conduct</a
+              >. The code of conduct and anti-harassment policies apply to everyone participating
+              in the event including sponsors, judges, mentors, volunteers, organisers and the FOSS
+              United staff.<span class="text-ink-red-3 ml-0.5">*</span>
+            </label>
+          </div>
+        </template>
+        <template v-else>
+          <FormControl v-model="field.value" type="checkbox" :label="field.label" />
+          <span v-if="field.required" class="text-ink-red-3">*</span>
+        </template>
       </div>
     </div>
   </div>

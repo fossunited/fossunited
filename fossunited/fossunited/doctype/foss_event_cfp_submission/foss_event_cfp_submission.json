@@ -24,6 +24,7 @@
   "event_name",
   "submitted_by",
   "subscribe_chapter_mailing",
+  "accept_coc",
   "about_talk_section",
   "talk_title",
   "session_type",
@@ -341,12 +342,19 @@
    "fieldname": "talk_license",
    "fieldtype": "Data",
    "label": "Talk License"
+  },
+  {
+   "default": "0",
+   "description": "Abide to https://fossunited.org/code-of-conduct",
+   "fieldname": "accept_coc",
+   "fieldtype": "Check",
+   "label": "Accept Code of Conduct"
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-03-24 16:08:52.019045",
+ "modified": "2026-04-08 18:04:25.195053",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",

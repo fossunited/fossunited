@@ -242,6 +242,10 @@ const insertProposal = createResource({
         doctype: 'FOSS Event CFP Submission',
         linked_cfp: cfpData.data.name,
         submitted_by: session.user,
+        accept_coc: proposalConfirmationFields.value.find((f) => f.fieldname === 'accept_coc')
+          ?.value
+          ? 1
+          : 0,
         ...getTransformedSubmissionFields(
           proposalFormFields.value,
           proposalReferences.value,
