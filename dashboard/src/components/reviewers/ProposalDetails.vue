@@ -10,10 +10,8 @@
         <h2 class="font-semibold">{{ submission.data.talk_title }}</h2>
       </div>
       <div class="flex items-center gap-2">
-        <Badge
-          :label="submission.data.hasReviewed ? 'Reviewed' : submission.data.status"
-          :theme="getStatusBadgeTheme(submission.data.hasReviewed ? 'Yes' : 'No')"
-        />
+        <Badge :label="submission.data.status" :theme="getStatusBadgeTheme(submission.data.status)" />
+        <Badge v-if="submission.data.hasReviewed" label="Reviewed" theme="blue" />
         <span class="text-sm text-ink-gray-5">
           Submitted {{ dayjs(submission.data.creation).fromNow() }}
         </span>

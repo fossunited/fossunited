@@ -1,6 +1,6 @@
 <template>
   <div
-    class="border-t border-b py-4 px-2 gap-4 flex flex-col hover:bg-surface-gray-1 focus:bg-surface-gray-1 hover:cursor-pointer transition-colors duration-300"
+    class="border-t border-b py-4 px-2 gap-4 flex flex-col hover:bg-surface-gray-1 focus:bg-surface-gray-2 focus:outline-none hover:cursor-pointer transition-colors duration-300"
   >
     <ProposalBadgeGroup
       :session-type="submission.session_type"
@@ -11,10 +11,8 @@
       {{ submission.talk_title }}
     </h4>
     <div class="flex gap-2 items-center !text-sm">
-      <Badge
-        :label="submission._is_reviewed === 'Yes' ? 'Reviewed' : submission.status"
-        :theme="getStatusBadgeTheme(submission._is_reviewed || submission.status)"
-      />
+      <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
+      <Badge v-if="submission._is_reviewed === 'Yes'" label="Reviewed" theme="blue" />
       <Badge :label="submission._likes_count" variant="ghost" class="!text-ink-gray-4">
         <template #prefix>
           <IconHeart size="14" />
