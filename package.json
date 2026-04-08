@@ -15,7 +15,8 @@
     "build-dashboard": "cd dashboard && yarn build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "purge-css": "purgecss --config purgecss.config.cjs"
   },
   "keywords": [],
   "author": "",

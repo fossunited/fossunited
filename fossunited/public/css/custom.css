@@ -1600,6 +1600,7 @@ h6 {
     grid-template-columns: repeat(1, minmax(200px, 1fr));
     gap: 1rem;
   }
+} /* this costed me 10 mins debug of not closing */
 
 /* These are generic css rules from frappe blog, web page and web form */
 :is(article.blog-content, article.web-page-content, .from-markdown, .ql-editor) :is(h1, h2, h3, h4, h5, h6) {
@@ -3028,13 +3029,4 @@ a.hover-underline:hover {
 .v3-bg-primary {
   background: var(--v3-main-bg);
   color: var(--v3-text-color);
-}
-.skip-link {
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: black;
-  color: white;
-  padding: 8px;
-  z-index: 1000;
 }
