@@ -47,15 +47,15 @@
                     </button>
                   </div>
                 </TransitionChild>
-                <div class="flex h-full flex-col overflow-y-scroll bg-surface-white py-10 shadow-xl">
-                  <div class="px-4 sm:px-6 flex gap-2">
+                <div class="flex h-full flex-col overflow-y-scroll bg-surface-white py-6 sm:py-10 shadow-xl">
+                  <div class="px-3 sm:px-6 flex gap-2">
                     <slot name="pre-title"></slot>
                     <DialogTitle class="text-2xl font-semibold text-ink-gray-9">
                       <slot name="dialog-title">{{ title }}</slot>
                     </DialogTitle>
                     <slot name="post-title"></slot>
                   </div>
-                  <div class="relative mt-6 flex-1 px-4 sm:px-6">
+                  <div class="relative mt-4 sm:mt-6 flex-1 px-3 sm:px-6">
                     <slot></slot>
                   </div>
                 </div>

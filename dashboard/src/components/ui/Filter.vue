@@ -207,8 +207,8 @@ import { computed, h } from 'vue'
 import NestedPopover from './NestedPopover.vue'
 import SearchComplete from './SearchComplete.vue'
 import { IconFilter2 } from '@tabler/icons-vue'
+import { isSmallScreen } from '@/helpers/utils'
 
-const isSmallScreen = computed(() => window.innerWidth < 768)
 const typeCheck = ['Check']
 const typeLink = ['Link']
 const typeNumber = ['Float', 'Int']

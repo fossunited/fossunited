@@ -26,12 +26,12 @@ const activeTab = ref(0)
 
 const submission = createResource({
   url: 'frappe.client.get',
-  params: {
-    doctype: 'FOSS Event CFP Submission',
-    fields: ['*'],
-    filters: {
-      name: submissionId.value,
-    },
+  makeParams() {
+    return {
+      doctype: 'FOSS Event CFP Submission',
+      fields: ['*'],
+      filters: { name: submissionId.value },
+    }
   },
 })
 
@@ -39,8 +39,9 @@ provide('curr_submission', submission)
 
 watch(
   () => submissionId.value,
-  async (newId) => {
+  (newId) => {
     if (newId) {
+      activeTab.value = 0
       submission.fetch()
     }
   },
@@ -49,7 +50,7 @@ watch(
 </script>
 <template>
   <Suspense>
-    <div v-if="submission.data" class="flex flex-col gap-4">
+    <div v-if="submission.data" class="w-full p-3 sm:p-6 flex flex-col gap-4 overflow-y-scroll max-h-svh">
       <SubmissionHeader />
       <SubmissionInfoList />
       <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />

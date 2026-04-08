@@ -40,6 +40,7 @@
 import { createResource, usePageMeta, LoadingIndicator } from 'frappe-ui'
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import { isSmallScreen } from '@/helpers/utils'
 import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'
 import ProposalList from '@/components/reviewers/ProposalsList.vue'
 import Sidebar from '@/components/NewAppSidebar.vue'
@@ -51,8 +52,6 @@ const route = useRoute()
 
 const selectedSubmission = ref('')
 const showDrawer = ref(false)
-
-const isSmallScreen = computed(() => window.innerWidth < 768)
 
 const handleOpenSubmission = (submission) => {
   selectedSubmission.value = submission
