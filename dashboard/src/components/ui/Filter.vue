@@ -80,11 +80,9 @@
             </div>
             <div class="flex items-center justify-between gap-2">
               <Autocomplete
-                v-model="newFilter"
-                value=""
                 :options="fields"
                 placeholder="Filter by..."
-                @change="(field) => addFilter(field.value)"
+                @update:model-value="(option) => option && addFilter(option.value)"
               >
                 <template #target="{ togglePopover }">
                   <Button
@@ -104,7 +102,7 @@
                 class="!text-ink-gray-5"
                 variant="ghost"
                 label="Clear all filter"
-                @click="model = []"
+                @click="model = {}"
               />
             </div>
           </div>
@@ -171,11 +169,9 @@
             </div>
             <div class="flex items-center justify-between gap-2">
               <Autocomplete
-                v-model="newFilter"
-                value=""
                 :options="fields"
                 placeholder="Filter by..."
-                @change="(field) => addFilter(field.value)"
+                @update:model-value="(option) => option && addFilter(option.value)"
               >
                 <template #target="{ togglePopover }">
                   <Button
@@ -195,7 +191,7 @@
                 class="!text-ink-gray-5"
                 variant="ghost"
                 label="Clear all filter"
-                @click="model = []"
+                @click="model = {}"
               />
             </div>
           </div>
@@ -207,7 +203,7 @@
 
 <script setup>
 import { Autocomplete, Badge, FeatherIcon, FormControl } from 'frappe-ui'
-import { computed, h, ref, watch } from 'vue'
+import { computed, h } from 'vue'
 import NestedPopover from './NestedPopover.vue'
 import SearchComplete from './SearchComplete.vue'
 import { IconFilter2 } from '@tabler/icons-vue'
@@ -230,18 +226,6 @@ const props = defineProps({
   },
 })
 
-const newFilter = ref({})
-
-watch(
-  () => newFilter.value,
-  () => {
-    if (!newFilter.value) {
-      return
-    }
-    addFilter(newFilter.value.fieldname)
-    newFilter.value = null
-  },
-)
 
 const fields = computed(() => {
   const fields = props.docfields
@@ -388,8 +372,10 @@ function addFilter(fieldname) {
 }
 
 function removeFilter(index) {
-  const fieldname = Object.keys(model.value)[index]
-  delete model.value[fieldname]
+  const newModel = { ...model.value }
+  const fieldname = Object.keys(newModel)[index]
+  delete newModel[fieldname]
+  model.value = newModel
 }
 
 function editFilter(filter, index, field) {

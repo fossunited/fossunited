@@ -1,18 +1,6 @@
 <template>
   <div class="flex flex-col md:flex-row">
-    <Sidebar>
-      <template #pre-nav-items>
-        <Button
-          class="w-fit"
-          label="Go Back"
-          icon-left="arrow-left"
-          variant="ghost"
-          route="/review"
-        />
-        <h4 class="text-sm uppercase font-medium text-ink-gray-6">Proposal Review</h4>
-        <p class="text-sm text-ink-gray-5">Review the session proposals for this event.</p>
-      </template>
-    </Sidebar>
+    <Sidebar :menu-items="sidebarMenuItems" />
     <div class="flex-1 min-w-0 flex">
       <div
         v-if="event.data"
@@ -92,6 +80,31 @@ const event = createResource({
       link: `${window.location.origin}/${data.route}`,
     })
   },
+})
+
+const allCfpEvents = createResource({
+  url: 'fossunited.api.reviewer.get_events_by_open_cfp',
+  auto: true,
+})
+
+const sidebarMenuItems = computed(() => {
+  const items = [
+    {
+      items: [{ icon: 'arrow-left', label: 'Go Back', route: '/review' }],
+    },
+  ]
+
+  if (allCfpEvents.data?.length) {
+    items.push({
+      parent_label: 'Open CFPs',
+      items: allCfpEvents.data.map((e) => ({
+        label: e.event_name,
+        route: `/review/${e.event}`,
+      })),
+    })
+  }
+
+  return items
 })
 
 const breadcrumbItems = ref([

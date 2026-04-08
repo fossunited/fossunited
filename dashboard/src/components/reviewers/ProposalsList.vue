@@ -9,7 +9,7 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
         <Filter v-model="filters" :docfields="docfields.data" />
-        <Switch v-model="showNotReviewed" label="Only show not reviewed" />
+          <Switch v-model="showNotReviewed" label="Hide reviewed (By Me)" />
       </div>
       <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import ProposalListItem from './ProposalListItem.vue'
-import { defineProps, watch, ref } from 'vue'
+import { watch, ref } from 'vue'
 import { createResource, FormControl, LoadingIndicator, Switch } from 'frappe-ui'
 import Filter from '../ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
@@ -61,7 +61,7 @@ const props = defineProps({
 
 const emit = defineEmits(['open:submission'])
 
-const showNotReviewed = ref(false)
+const showNotReviewed = ref(true)
 const searchTitle = ref('')
 const filters = useStorage(`review-filters:${route.params.id}`, {})
 const docfields = await getCfpFilterFields(route.params.id)
@@ -72,29 +72,33 @@ const cfpSubmissions = createResource({
     event: props.event,
   },
   auto: true,
-
-  onSuccess(data) {
-    if (filters.value) {
-      cfpSubmissions.data = filterSubmissions(data, filters.value)
-    }
-  },
   transform(data) {
-    cfpSubmissions.originalData = data
+    // Exclude withdrawn proposals from the list
+    const withoutWithdrawn = data.filter((s) => s.status !== 'Withdrawn')
+    cfpSubmissions.originalData = withoutWithdrawn
+    return withoutWithdrawn
+  },
+  onSuccess() {
+    applyFilters()
   },
 })
 
+function applyFilters() {
+  if (!cfpSubmissions.originalData) return
+  const _filters = {
+    ...filters.value,
+    ...(searchTitle.value ? { talk_title: ['like', searchTitle.value] } : {}),
+    ...(showNotReviewed.value && !filters.value?._is_reviewed
+      ? { _is_reviewed: ['=', 'No'] }
+      : {}),
+  }
+  cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
+}
+
 watch(
   [() => filters.value, () => searchTitle.value, () => showNotReviewed.value],
-  ([newFilters, newTitle, notReviewed]) => {
-    const _filters = {
-      ...newFilters,
-      ...(newTitle ? { talk_title: ['like', newTitle] } : {}),
-      ...(notReviewed ? { _is_not_reviewed: ['=', 'Yes'] } : {}),
-    }
-
-    cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
-  },
-  { deep: true, immediate: true },
+  () => applyFilters(),
+  { deep: true },
 )
 
 const handleOpenSubmission = (submission) => {
