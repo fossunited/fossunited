@@ -132,15 +132,16 @@
             style="flex-shrink: 0; cursor: pointer;"
           />
           <span class="v3-text-secondary" style="font-size: 0.875rem;">
-            I agree to abide by the FOSS United
+            By registering for this event, you agree to abide by the FOSS United
             <a
               href="https://fossunited.org/code-of-conduct"
               class="underline"
               target="_blank"
               rel="noopener noreferrer"
-              required
               >Code of Conduct</a
-            >.<span style="color: red;">*</span>
+            >. The code of conduct and anti-harassment policies apply to everyone participating in
+            the event including sponsors, judges, mentors, volunteers, organisers and the FOSS
+            United staff.<span style="color: red;"> *</span>
           </span>
         </label>
       </div>
@@ -221,6 +222,7 @@
 
           data['linked_rsvp'] = '{{ doc.name }}'
           data['confirm_attendance'] = '1'
+          data['accept_coc'] = 1
 
           formData.forEach((field) => {
             data[field.name] = field.value

@@ -368,6 +368,40 @@
                   >
                 </label>
               </div>
+              <div class="flex items-start gap-2">
+                <input
+                  id="coc-agreement"
+                  v-model="billing.acceptCoC"
+                  type="checkbox"
+                  class="mt-0.5 rounded-sm"
+                />
+                <label
+                  for="coc-agreement"
+                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
+                >
+                  By registering for this event, you agree to abide by the FOSS United
+                  <a
+                    href="https://fossunited.org/code-of-conduct"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold underline"
+                    >Code of Conduct</a
+                  >. The code of conduct and anti-harassment policies apply to everyone
+                  participating in the event including sponsors, judges, mentors, volunteers,
+                  organisers and the FOSS United staff.
+                  <span class="text-ink-red-3 ml-0.5">*</span>
+                </label>
+              </div>
+              <p class="text-xs text-ink-gray-4">
+                By completing your registration, you also agree to our
+                <a
+                  href="https://fossunited.org/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="underline"
+                  >Privacy Policy</a
+                >.
+              </p>
             </div>
 
             <!-- Ticket Summary Sidebar -->
@@ -542,6 +576,7 @@ const billing = reactive({
   billing_address: '',
   coupon_code: '',
   readRefundPolicy: false,
+  acceptCoC: false,
 })
 
 // Computed
@@ -778,6 +813,7 @@ function createOrder() {
     if (!billing.billing_address) errors.push('Please enter the billing address for GST billing')
   }
   if (!billing.readRefundPolicy) errors.push('Please accept the Refund Policy to proceed')
+  if (!billing.acceptCoC) errors.push('Please accept the Code of Conduct to proceed')
   if (errors.length) {
     setErrors(errors)
     return
@@ -802,7 +838,7 @@ function createOrder() {
       event: eventName.value,
       tier: primaryTier,
       tier_counts: { ...activeTierCounts.value },
-      attendees: attendees.value,
+      attendees: attendees.value.map((a) => ({ ...a, accept_coc: billing.acceptCoC ? 1 : 0 })),
       num_seats: totalTickets.value,
       custom_fields_apply_to_all: customFieldsApplyToAll.value,
       global_custom_fields: customFieldsApplyToAll.value ? { ...globalCustomFields } : null,

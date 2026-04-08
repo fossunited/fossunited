@@ -77,6 +77,7 @@ class FOSSEventTicket(Document):
                     "designation": attendee.get("designation"),
                     "wants_tshirt": attendee.get("wants_tshirt", 0),
                     "tshirt_size": attendee.get("tshirt_size"),
+                    "accept_coc": attendee.get("accept_coc", 0),
                     "tier": payment_meta_data.get("tier", {}).get("title"),
                     "custom_fields": [],
                 }
