@@ -10,7 +10,10 @@
         <h2 class="font-semibold">{{ submission.data.talk_title }}</h2>
       </div>
       <div class="flex items-center gap-2">
-        <Badge :label="submission.data.status" :theme="getStatusBadgeTheme(submission.data.status)" />
+        <Badge
+          :label="submission.data.status"
+          :theme="getStatusBadgeTheme(submission.data.status)"
+        />
         <Badge v-if="submission.data.hasReviewed" label="Reviewed" theme="blue" />
         <span class="text-sm text-ink-gray-5">
           Submitted {{ dayjs(submission.data.creation).fromNow() }}
@@ -31,6 +34,13 @@
       <ProseContainer label="Key Takeaways" :value="submission.data.key_takeaways" />
       <RenderReferences :references="submission.data.references" />
       <RenderSessionCategories :categories="submission.data.session_categories" />
+      <div v-if="submission.data.talk_license" class="flex flex-col gap-1">
+        <span class="text-xs font-medium text-ink-gray-5 uppercase">License</span>
+        <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
+          <IconScale class="w-4 h-4 text-ink-gray-4 flex-shrink-0" />
+          <span>{{ submission.data.talk_license }}</span>
+        </div>
+      </div>
     </div>
     <div
       v-else-if="activeTab === 1 && !hasAnonymousSpeaker.data.anonymise_proposals"
@@ -52,7 +62,7 @@ import { provide, ref, watch, inject } from 'vue'
 import { useRoute } from 'vue-router'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
 import { createAbsoluteUrlFromRoute } from '@/helpers/utils'
-import { IconArrowUpRight } from '@tabler/icons-vue'
+import { IconArrowUpRight, IconScale } from '@tabler/icons-vue'
 import ProposalSpeakers from './ProposalSpeakers.vue'
 import ProseContainer from '@/components/ui/ProseContainer.vue'
 import ProposalBadgeGroup from './ProposalBadgeGroup.vue'

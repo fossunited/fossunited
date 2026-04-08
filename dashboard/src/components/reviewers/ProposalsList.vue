@@ -88,7 +88,9 @@ function applyFilters() {
   const _filters = {
     ...filters.value,
     ...(searchTitle.value ? { talk_title: ['like', searchTitle.value] } : {}),
-    ...(showNotReviewed.value ? { _is_reviewed: ['=', 'No'] } : {}),
+    ...(showNotReviewed.value && !filters.value?._is_reviewed
+      ? { _is_reviewed: ['=', 'No'] }
+      : {}),
   }
   cfpSubmissions.data = filterSubmissions(cfpSubmissions.originalData, _filters)
 }
