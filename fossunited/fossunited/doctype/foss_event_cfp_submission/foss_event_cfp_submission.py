@@ -170,7 +170,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             "Review Pending": "orange",
             "Screening": "blue",
             "Approved": "green",
-            "Withdrawn": "red",
+            "Withdrawn": "gray",
             "Rejected": "red",
         }
         context.tabs = [

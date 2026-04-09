@@ -1,254 +1,356 @@
 {% extends "templates/foss_base.html" %}
-{% from 'fossunited/templates/macros/breadcrumb.html' import breadcrumb %}
-{% from 'fossunited/templates/macros/badge.html' import badge %}
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+{% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 
 {% block meta_block %}
   {{ meta_tags(pagetitle, description, image) }}
 {% endblock %}
 
 {% block title %}{{ doc.talk_title }}{% endblock %}
-{% set prose_classes="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium" %}
 
 {% block page_content %}
-  <link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
-  <div class="container max-w-[800px] flex flex-col gap-6 mb-6 px-4">
+<style>
+  /* Fieldset/legend prose boxes */
+  .prose-box { border-color: oklch(0.92 0.01 255) !important; }
+  .prose-box legend { font-size: 0.875rem; font-weight: 500; }
+
+  /* More prominent borders for sections */
+  .border-section { border-color: oklch(0.92 0.01 255) !important; }
+  [data-theme='dark'] .border-section { border-color: oklch(0.45 0.02 255) !important; }
+
+  /* 16:9 video aspect ratio */
+  .video-wrapper { padding-top: 56.25%; }
+  .video-iframe { inset: 0; width: 100%; height: 100%; }
+
+  /* Speaker photo */
+  .speaker-photo { width: 6rem; height: 6rem; object-fit: cover; object-position: top; }
+
+  /* Misc */
+  .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
+  .dot-sep { font-size: 0.5rem; }
+  .text-break-all { word-break: break-all; }
+
+  /* Score card colors */
+  .score-blue   { color: oklch(0.55 0.22 260); }
+  .score-green  { color: oklch(0.62 0.18 145); }
+  .score-red    { color: oklch(0.62 0.22 29); }
+  .score-orange { color: oklch(0.70 0.17 70); }
+</style>
+
+<div class="v3-page"><div class="container px-3 mb-4 d-flex flex-column gap-8" style="max-width: 800px;">
+
+  <div class="d-flex justify-content-between align-items-center">
     {{ breadcrumb(breadcrumbs) }}
-    {{ talk_header() }}
-    {% if talk_video %}{{ video_embed() }}{% endif %}
-    {{ prose_container("Session Description", doc.talk_description) }}
-    {{ prose_container("Key Takeaways", doc.key_takeaways) }}
-    {{ references() }}
-    {{ render_session_categories() }}
-    {% if has_public_custom_responses %}
-      {{ render_custom_responses() }}
-    {% endif %}
-    {% if not anonymous_cfps %}
-      {{ render_speakers() }}
-    {% endif %}
-    <hr />
-    {{ render_reviews() }}
+    {{ theme_toggle() }}
   </div>
+
+  {{ talk_header() }}
+  {% if talk_video %}{{ video_embed() }}{% endif %}
+  {{ prose_container("Session Description", doc.talk_description) }}
+  {{ prose_container("Key Takeaways", doc.key_takeaways) }}
+  {{ references() }}
+  {{ render_session_categories() }}
+  {{ render_talk_license() }}
+  {% if has_public_custom_responses %}{{ render_custom_responses() }}{% endif %}
+  {% if not anonymous_cfps %}{{ render_speakers() }}{% endif %}
+  {{ render_reviews() }}
+
+</div></div>
 {% endblock %}
 
+
+{# ─────────────────────────────────────── #}
+
 {% macro like_button() %}
-  <div class="whitespace-nowrap bg-gray-100 h-fit w-fit rounded *:!m-0 px-3 py-2">
-    {% include "templates/includes/like/like.html" %}
-  </div>
+<div class="rounded px-3 py-2 d-inline-flex v3-bg-primary text-nowrap">
+  {% include "templates/includes/like/like.html" %}
+</div>
 {% endmacro %}
+
 
 {% macro talk_header() %}
-  <div class="flex flex-col gap-3">
-    <div class="flex items-center gap-2">
-      {{ badge(label=doc.session_type, variant='outline', theme="blue") }}
-      {{ badge(label=doc.intended_audience, variant='outline', prefix="<i class='ti ti-users-group'></i>", theme="gray") }}
-      {% if doc.is_first_talk == 'Yes' %}
-        {{ badge(label="First Talk", prefix="<i class='ti ti-sparkles'></i>" ) }}
-      {% endif %}
-    </div>
-    <div class="flex justify-between gap-4">
-      <h1 class="text-3xl font-bold">{{ doc.talk_title }}</h1>
-      <div class="flex gap-2 items-center">
-        {% if is_owner %}
-<a href="/dashboard/my-proposals/edit/{{ doc.name }}" class="btn btn-default btn-sm">Edit proposal</a>
-        {% endif %}
-        {{ like_button() }}
-      </div>
-    </div>
-    <div class="flex items-center gap-2">
-      <div class="w-fit">{{ badge(label=doc.status, theme=status_badge_theme[doc.status]) }}</div>
-
-      {% if talk_video %}
-        <a
-          href="{{ talk_video }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Watch {{ doc.talk_title }} on YouTube"
-          title="Watch on YouTube"
-          class="inline-flex items-center justify-center text-red-600 hover:text-gray-600 transition-colors"
-        >
-          <i class="ti ti-brand-youtube-filled text-xl" aria-hidden="true"></i>
-        </a>
-      {% endif %}
-    </div>
-  </div>
-{% endmacro %}
-
-{% macro video_embed() %}
-  <div class="flex flex-col gap-2">
-    {% if youtube_embed_id %}
-      <div class="relative w-full" style="padding-top: 56.25%">
-        <iframe
-          class="absolute inset-0 w-full h-full rounded border border-gray-200"
-          src="https://www.youtube-nocookie.com/embed/{{ youtube_embed_id }}?rel=0&modestbranding=1"
-          title="{{ doc.talk_title }}"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowfullscreen
-        ></iframe>
-      </div>
-    {% else %}
-      <video class="w-full rounded border border-gray-200" controls preload="metadata">
-        <source src="{{ talk_video }}" />
-        Your browser does not support the video element.
-      </video>
+<div class="d-flex flex-column gap-3">
+  <div class="d-flex align-items-center gap-2 flex-wrap">
+    <span class="v3-tag v3-tag--category">{{ doc.session_type }}</span>
+    <span class="v3-tag v3-tag--category">
+      <i class="ti ti-users-group" aria-hidden="true"></i>
+      {{ doc.intended_audience }}
+    </span>
+    {% if doc.talk_license %}
+      <span class="v3-tag v3-tag--category">
+        <i class="ti ti-license" aria-hidden="true"></i>
+        {{ doc.talk_license }}
+      </span>
+    {% endif %}
+    {% if doc.is_first_talk == 'Yes' %}
+      <span class="v3-tag v3-tag--must">
+        <i class="ti ti-sparkles" aria-hidden="true"></i>
+        First Talk
+      </span>
     {% endif %}
   </div>
+
+  <div class="d-flex justify-content-between gap-4">
+    <h1 class="v3-text-primary text-3xl font-weight-bold">{{ doc.talk_title }}</h1>
+    <div class="d-flex align-items-center flex-shrink-0 gap-2">
+      {% if is_owner %}
+        <a href="/dashboard/my-proposals/edit/{{ doc.name }}" class="btn btn-default btn-sm border">Edit proposal</a>
+      {% endif %}
+      {{ like_button() }}
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    {{ status_badge(doc.status, status_badge_theme) }}
+    {% if talk_video %}
+      <a
+        href="{{ talk_video }}"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Watch {{ doc.talk_title }} on YouTube"
+        title="Watch on YouTube"
+        class="d-inline-flex align-items-center text-xl yt-icon"
+      >
+        <i class="ti ti-brand-youtube-filled" aria-hidden="true"></i>
+      </a>
+    {% endif %}
+  </div>
+</div>
 {% endmacro %}
+
+
+{% macro status_badge(status, theme_map) %}
+  {% set t = theme_map.get(status, 'gray') %}
+  {% if t == 'green' %}
+    <span class="v3-status v3-status--success">{{ status }}</span>
+  {% elif t == 'red' %}
+    <span class="v3-status v3-status--error">{{ status }}</span>
+  {% elif t in ('orange', 'yellow') %}
+    <span class="v3-status v3-status--warning">{{ status }}</span>
+  {% else %}
+    <span class="v3-tag v3-tag--category">{{ status }}</span>
+  {% endif %}
+{% endmacro %}
+
+
+{% macro video_embed() %}
+<div class="d-flex flex-column gap-2">
+  {% if youtube_embed_id %}
+    <div class="position-relative w-100 video-wrapper">
+      <iframe
+        class="position-absolute border rounded video-iframe"
+        src="https://www.youtube-nocookie.com/embed/{{ youtube_embed_id }}?rel=0&modestbranding=1"
+        title="{{ doc.talk_title }}"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+  {% else %}
+    <video class="w-100 rounded border d-block" controls preload="metadata">
+      <source src="{{ talk_video }}" />
+      Your browser does not support the video element.
+    </video>
+  {% endif %}
+</div>
+{% endmacro %}
+
 
 {% macro prose_container(label, content) %}
-  <div class="flex flex-col">
-    <h2 class="text-base font-medium text-gray-600 -mb-3 px-2 bg-white z-10 w-fit ml-2">
-      {{ label }}
-    </h2>
-    <div class="{{ prose_classes }} max-w-full p-4 border rounded border-gray-400">
-      {{ content }}
-    </div>
-  </div>
+{% if content %}
+<fieldset class="prose-box border rounded p-3">
+  <legend class="v3-text-tertiary medium w-fit px-2 mb-0">{{ label }}</legend>
+  <div class="v3-text-primary">{{ content }}</div>
+</fieldset>
+{% endif %}
 {% endmacro %}
+
 
 {% macro references() %}
-  <div>
-    <h3 class="text-base font-medium text-gray-600">References</h3>
-    <div class="flex flex-col gap-2">
-      {% for reference in doc.references %}
-        <div class="flex items-center gap-2 text-gray-500 hover:text-gray-800 transition-colors">
-          <i class="ti ti-link text-lg" aria-hidden="true"></i>
-          <a class="no-underline" href="{{ reference.link | e }}" target="_blank" rel="noopener noreferrer">
-            {{ reference.link | e }}
-          </a>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-{% endmacro %}
-
-{% macro render_session_categories() %}
-  <div>
-    <h3 class="text-base font-medium text-gray-600">Session Categories</h3>
-    <div class="flex flex-wrap gap-2">
-      {% for category in session_categories %}
-        <div
-          class="p-2 flex gap-2 items-center text-sm rounded border border-gray-500 text-gray-600 bg-gray-50"
-        >
-          <span> {{ category }} </span>
-        </div>
-      {% endfor %}
-    </div>
-  </div>
-{% endmacro %}
-
-{% macro render_speakers() %}
-  <hr />
-  <div>
-    <h3 class="text-base font-medium text-gray-600">Speakers</h3>
-    <div class="flex flex-col gap-2">
-      {% for speaker in doc.speakers %}
-        {{ speaker_card(speaker) }}
-      {% endfor %}
-    </div>
-  </div>
-{% endmacro %}
-
-{% macro speaker_card(speaker) %}
-  <div class="flex flex-col gap-2 p-4 border border-outline-gray-2 rounded">
-    <div class="flex gap-6 justify-between">
-      <div class="flex flex-col gap-2 justify-between">
-        <div class="flex flex-col gap-1">
-          <h5 class="text-lg font-semibold text-gray-900">{{ speaker.full_name }}</h5>
-          <div class="flex flex-col text-sm text-gray-500">
-            <span>{{ speaker.designation }}</span>
-            <span class="font-semibold">{{ speaker.organization }}</span>
-          </div>
-        </div>
-        {% if speaker.social_link %}
-          <a href="{{ speaker.social_link | e }}" target="_blank" rel="noopener noreferrer" aria-label="{{ speaker.full_name }}'s social profile">
-            {{ badge(label=speaker.social_link, variant="outline", prefix="<i class='ti ti-world' aria-hidden='true'></i>", theme="gray") }}
-          </a>
-        {% endif %}
-      </div>
-      <img class="w-24 h-24 border rounded" src="{{ speaker.photo }}" alt="{{ speaker.full_name }}" />
-    </div>
-    <button
-      class="p-2 text-sm outline-none border-0 w-fit"
-      aria-expanded="false"
-      aria-controls="bio-{{ speaker.name }}"
-      aria-label="Show bio for {{ speaker.full_name }}"
-      onclick="
-        var controlId = this.getAttribute('aria-controls');
-        var panel = controlId ? document.getElementById(controlId) : null;
-        if (!panel) return;
-        var expanded = panel.classList.contains('hidden');
-        panel.classList.toggle('hidden');
-        this.setAttribute('aria-expanded', expanded ? 'true' : 'false');
-        this.setAttribute('aria-label', expanded ? 'Hide bio for {{ speaker.full_name }}' : 'Show bio for {{ speaker.full_name }}');
-        this.innerText = expanded ? 'Hide Bio' : 'Show Bio';
-      "
-    >
-      Show Bio
-    </button>
-    <div id="bio-{{ speaker.name }}" class="space-y-1 p-2 hidden">
-      <div class="{{ prose_classes }} max-w-full">{{ speaker.bio }}</div>
-    </div>
-  </div>
-{% endmacro %}
-
-{% macro render_custom_responses() %}
-  <div class="flex flex-col gap-4 w-full text-base">
-    {% for response in doc.custom_answers %}
-      <div class="flex flex-col gap-1">
-        <h5 class="text-gray-500">{{ response.question }}</h5>
-        <div>{{ response.response }}</div>
+{% if doc.references %}
+<div>
+  <h3 class="v3-text-tertiary text-base medium mb-2">References</h3>
+  <div class="d-flex flex-column gap-2">
+    {% for reference in doc.references %}
+      <div class="d-flex align-items-center gap-2">
+        <i class="ti ti-link v3-text-secondary text-lg" aria-hidden="true"></i>
+        <a
+          class="v3-text-secondary"
+          href="{{ reference.link | e }}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ reference.link | e }}</a>
       </div>
     {% endfor %}
   </div>
+</div>
+{% endif %}
 {% endmacro %}
+
+
+{% macro render_session_categories() %}
+{% if session_categories %}
+<div>
+  <h3 class="v3-text-tertiary text-base medium mb-2">Session Categories</h3>
+  <div class="d-flex flex-wrap gap-2">
+    {% for category in session_categories %}
+      <div class="border border-section rounded p-2 d-flex align-items-center gap-2 v3-text-secondary text-sm v3-bg-primary">
+        {{ category }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+
+{% macro render_talk_license() %}
+{% if doc.talk_license %}
+<div class="d-flex align-items-center gap-2">
+  <i class="ti ti-license v3-text-secondary text-lg" aria-hidden="true"></i>
+  <span class="v3-text-tertiary text-sm medium">Talk License:</span>
+  <span class="v3-text-secondary text-sm">{{ doc.talk_license }}</span>
+</div>
+{% endif %}
+{% endmacro %}
+
+
+{% macro render_speakers() %}
+<div>
+  <h3 class="v3-text-tertiary text-base medium mb-2">Speakers</h3>
+  <div class="d-flex flex-column gap-2">
+    {% for speaker in doc.speakers %}
+      {{ speaker_card(speaker) }}
+    {% endfor %}
+  </div>
+</div>
+{% endmacro %}
+
+
+{% macro speaker_card(speaker) %}
+<div class="border border-section rounded p-3 d-flex flex-column gap-2">
+  <div class="d-flex justify-content-between gap-6">
+    <div class="d-flex flex-column justify-content-between gap-2">
+      <div class="d-flex flex-column gap-1">
+        <h5 class="v3-text-primary text-lg semi-bold">{{ speaker.full_name }}</h5>
+        <div class="d-flex flex-column v3-text-secondary text-sm">
+          {% if speaker.designation %}<span>{{ speaker.designation }}</span>{% endif %}
+          {% if speaker.organization %}<span class="font-weight-bold">{{ speaker.organization }}</span>{% endif %}
+        </div>
+      </div>
+      {% if speaker.social_link %}
+        <a
+          href="{{ speaker.social_link | e }}"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="{{ speaker.full_name }}'s social profile"
+        >
+          <span class="border border-section rounded v3-text-secondary d-inline-flex align-items-center gap-1 text-xs px-2 py-1 text-break-all">
+            <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
+            {{ speaker.social_link | e }}
+          </span>
+        </a>
+      {% endif %}
+    </div>
+    <img
+      class="border border-section rounded flex-shrink-0 speaker-photo"
+      src="{{ speaker.photo }}"
+      alt="{{ speaker.full_name }}"
+      loading="lazy"
+    />
+  </div>
+  <button
+    class="border-0 bg-transparent v3-text-secondary text-sm p-2 w-fit cursor-pointer"
+    aria-expanded="false"
+    aria-controls="bio-{{ speaker.name }}"
+    aria-label="Show bio for {{ speaker.full_name }}"
+    onclick="
+      var panel = document.getElementById('bio-{{ speaker.name }}');
+      if (!panel) return;
+      var expanded = panel.style.display === 'none' || !panel.style.display;
+      panel.style.display = expanded ? 'block' : 'none';
+      this.setAttribute('aria-expanded', String(expanded));
+      this.setAttribute('aria-label', expanded ? 'Hide bio for {{ speaker.full_name }}' : 'Show bio for {{ speaker.full_name }}');
+      this.innerText = expanded ? 'Hide Bio' : 'Show Bio';
+    "
+  >Show Bio</button>
+  <div id="bio-{{ speaker.name }}" class="v3-text-primary p-2 d-none">{{ speaker.bio }}</div>
+</div>
+{% endmacro %}
+
+
+{% macro render_custom_responses() %}
+<div class="d-flex flex-column gap-4">
+  {% for response in doc.custom_answers %}
+    <div class="d-flex flex-column gap-1">
+      <h5 class="v3-text-tertiary text-base">{{ response.question }}</h5>
+      <div class="v3-text-primary">{{ response.response }}</div>
+    </div>
+  {% endfor %}
+</div>
+{% endmacro %}
+
 
 {% macro render_reviews() %}
-  <div class="flex flex-col gap-3">
-    <h3 class="text-base font-medium text-gray-600">Reviews</h3>
-    <div
-      class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6 "
-    >
-      <div class="!px-0">
-        {{ score_card(label="Approvability", score=review_scores['approvability'], color="text-blue-600", suffix="%") }}
-      </div>
-      {{ score_card(label="Approvals", score=review_scores['positive'], color="text-green-600") }}
-      {{ score_card(label="Rejections", score=review_scores['negative'], color="text-red-600") }}
-      {{ score_card(label="Not Sure", score=review_scores['unsure'], color="text-orange-600") }}
+<div class="d-flex flex-column gap-3">
+  <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
+
+  <div class="row no-gutters border border-section rounded align-items-center px-2 py-3 mx-0">
+    <div class="col-6 col-md-3 px-3 py-2">
+      {{ score_card("Approvability", review_scores['approvability'], "score-blue", suffix="%") }}
     </div>
-    <div class="flex flex-col gap-2">
-      {% if not doc.reviews %}
-        <div class="text-sm text-gray-500">No reviews yet.</div>
-      {% endif %}
-      {% for review in doc.reviews %}
-        {{ review_card(review) }}
-        {% if not loop.last %}
-          <div class="form-divider"></div>
-        {% endif %}
-      {% endfor %}
+    <div class="col-6 col-md-3 px-3 py-2 border-left">
+      {{ score_card("Approvals", review_scores['positive'], "score-green") }}
+    </div>
+    <div class="col-6 col-md-3 px-3 py-2 border-left">
+      {{ score_card("Rejections", review_scores['negative'], "score-red") }}
+    </div>
+    <div class="col-6 col-md-3 px-3 py-2 border-left">
+      {{ score_card("Not Sure", review_scores['unsure'], "score-orange") }}
     </div>
   </div>
+
+  <div class="d-flex flex-column gap-2">
+    {% if not doc.reviews %}
+      <div class="v3-text-tertiary text-sm">No reviews yet.</div>
+    {% endif %}
+    {% for review in doc.reviews %}
+      {{ review_card(review) }}
+      {% if not loop.last %}<hr class="my-2" />{% endif %}
+    {% endfor %}
+  </div>
+</div>
 {% endmacro %}
+
+
+{% macro score_card(label, score, color_class, prefix='', suffix='') %}
+<div class="d-flex flex-column align-items-center align-items-md-start text-center text-md-left">
+  <div class="d-flex align-items-center gap-1 {{ color_class }}">
+    {% if prefix %}{{ prefix }}{% endif %}
+    <span class="text-xl font-weight-bold">{{ score }}</span>
+    {% if suffix %}{{ suffix }}{% endif %}
+  </div>
+  <span class="v3-text-tertiary text-sm">{{ label }}</span>
+</div>
+{% endmacro %}
+
 
 {% macro review_card(review) %}
-  <div class="flex flex-col gap-1 my-2">
-    <div class="prose prose-sm">{{ review.remarks }}</div>
-    <div class="flex gap-2 items-center">
-      <span class="text-sm">Reviewer #{{ review.idx }}</span>
-      <i class="ti ti-circle-filled text-[8px] text-gray-400" aria-hidden="true"></i>
-      {{ badge(label=review_badge[review.to_approve]["label"], theme=review_badge[review.to_approve]["theme"]) }}
-    </div>
+<div class="d-flex flex-column my-2 gap-1">
+  <div class="v3-text-primary">{{ review.remarks }}</div>
+  <div class="d-flex align-items-center gap-2">
+    <span class="v3-text-secondary text-sm">Reviewer #{{ review.idx }}</span>
+    <i class="ti ti-circle-filled v3-text-tertiary dot-sep" aria-hidden="true"></i>
+    {% if review.to_approve in review_badge %}
+      {% set rb = review_badge[review.to_approve] %}
+      {% if rb.theme == 'green' %}
+        <span class="v3-status v3-status--success text-xs">{{ rb.label }}</span>
+      {% elif rb.theme == 'red' %}
+        <span class="v3-status v3-status--error text-xs">{{ rb.label }}</span>
+      {% else %}
+        <span class="v3-status v3-status--warning text-xs">{{ rb.label }}</span>
+      {% endif %}
+    {% endif %}
   </div>
-{% endmacro %}
-
-{% macro score_card(label, score, color, prefix = '', suffix = '') %}
-  <div class="flex flex-col justify-center md:justify-normal items-center md:items-start">
-    <div class="flex gap-1 {{ color }} items-center">
-      {% if prefix %}{{ prefix }}{% endif %}
-      <span class="text-xl font-bold">{{ score }}</span>
-      {% if suffix %}{{ suffix }}{% endif %}
-    </div>
-    <span class="text-sm text-gray-500">{{ label }}</span>
-  </div>
+</div>
 {% endmacro %}
