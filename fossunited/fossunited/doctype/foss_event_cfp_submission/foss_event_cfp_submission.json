@@ -76,6 +76,7 @@
    "fieldtype": "Link",
    "label": "Submitted By",
    "options": "User",
+   "permlevel": 4,
    "reqd": 1
   },
   {
@@ -97,7 +98,8 @@
    "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "Email"
+   "label": "Email",
+   "permlevel": 4
   },
   {
    "fieldname": "column_break_dcfl",
@@ -343,7 +345,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-09 14:48:03.703968",
+ "modified": "2026-04-09 21:32:32.763731",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -410,6 +412,18 @@
    "report": 1,
    "role": "CFP Reviewer",
    "share": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 4,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
