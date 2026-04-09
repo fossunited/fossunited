@@ -15,6 +15,7 @@ class CFPSubmissionSpeaker(Document):
         from frappe.types import DF
 
         bio: DF.TextEditor | None
+        contact_info: DF.Data | None
         designation: DF.Data
         email: DF.Data
         full_name: DF.Data
