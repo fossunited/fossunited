@@ -35,7 +35,6 @@
       "fieldtype": "Data",
       "in_list_view": 1,
       "label": "Email",
-      "permlevel": 4,
       "reqd": 1
     },
     {
@@ -75,14 +74,13 @@
       "description": "Phone number or Signal contact for immediate calls",
       "fieldname": "contact_info",
       "fieldtype": "Data",
-      "label": "Contact Info",
-      "permlevel": 4
+      "label": "Contact Info"
     }
   ],
   "grid_page_length": 50,
   "istable": 1,
   "links": [],
-  "modified": "2026-04-09 21:34:17.064442",
+  "modified": "2026-04-09 16:45:25.939351",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "CFP Submission Speaker",
