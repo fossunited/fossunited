@@ -16,7 +16,7 @@
           </span>
         </div>
         <Suspense>
-          <ProposalList :event="event.data.name" @open:submission="handleOpenSubmission($event)" />
+          <ProposalList :key="route.params.id" :event="route.params.id" @open:submission="handleOpenSubmission($event)" />
           <template #fallback>
             <LoadingIndicator class="w-4 h-4 place-self-center" />
           </template>
@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import { createResource, usePageMeta, LoadingIndicator } from 'frappe-ui'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { isSmallScreen } from '@/helpers/utils'
 import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'
@@ -60,6 +60,16 @@ const handleOpenSubmission = (submission) => {
     showDrawer.value = true
   }
 }
+
+watch(
+  () => route.params.id,
+  () => {
+    selectedSubmission.value = ''
+    showDrawer.value = false
+    breadcrumbItems.value = [{ label: 'CFP Review', route: '/review' }]
+    event.reload()
+  },
+)
 
 const event = createResource({
   url: 'frappe.client.get',
