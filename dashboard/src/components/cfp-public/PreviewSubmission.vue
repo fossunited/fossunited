@@ -29,14 +29,14 @@
         </div>
         <RenderSessionCategories :categories="getValueFromProposal('session_categories')" />
         <div class="space-y-2">
-          <label class="text-base font-medium text-ink-gray-5">Session Description</label>
+          <h5 class="text-base font-medium text-ink-gray-5">Session Description</h5>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
             v-html="getValueFromProposal('talk_description')"
           ></div>
         </div>
         <div v-if="getValueFromProposal('key_takeaways')" class="space-y-2">
-          <label class="text-base font-medium text-ink-gray-5">Key Takeaways</label>
+          <h5 class="text-base font-medium text-ink-gray-5">Key Takeaways</h5>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
             v-html="getValueFromProposal('key_takeaways')"
@@ -44,7 +44,7 @@
         </div>
         <RenderReferences :references="proposalReferences" />
         <div class="space-y-2">
-          <label class="text-base font-medium text-ink-gray-5">Speakers</label>
+          <h5 class="text-base font-medium text-ink-gray-5">Speakers</h5>
           <div class="flex flex-col gap-2">
             <SpeakerCard
               v-for="(speaker, index) in proposalSpeakers"
@@ -80,8 +80,12 @@
           </div>
         </template>
         <template v-else>
-          <FormControl v-model="field.value" type="checkbox" :label="field.label" />
-          <span v-if="field.required" class="text-ink-red-3">*</span>
+          <FormControl
+            v-model="field.value"
+            type="checkbox"
+            :label="field.label"
+            :required="field.required"
+          />
         </template>
       </div>
     </div>

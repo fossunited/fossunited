@@ -1,13 +1,15 @@
 <template>
-  <div class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded bg-surface-white">
+  <section aria-label="Speaker Information" class="flex flex-col gap-6 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
-      <IconUserCircle />
+      <IconUserCircle aria-hidden="true" />
       <span>Speaker Information</span>
     </h4>
     <div :class="speakers.length > 1 ? 'grid md:grid-cols-2 gap-8' : 'flex flex-col gap-8'">
       <div
         v-for="(speaker, index) in speakers"
         :key="index"
+        role="group"
+        :aria-label="`Speaker ${index + 1}`"
         class="flex flex-col gap-4 p-6 border rounded border-outline-gray-2"
       >
         <div
@@ -15,7 +17,12 @@
           class="border-b border-outline-gray-4 pb-2 flex justify-between"
         >
           <h5 class="font-medium text-base">Speaker #{{ index + 1 }}</h5>
-          <Button icon="trash" theme="red" @click="deleteSpeaker(index)" />
+          <Button
+            icon="trash"
+            theme="red"
+            :aria-label="`Remove Speaker ${index + 1}`"
+            @click="deleteSpeaker(index)"
+          />
         </div>
         <FileUploaderArea
           v-model="speaker[getFieldIndex(speaker, 'photo')].value"
@@ -38,7 +45,7 @@
       </div>
     </div>
     <Button label="Add Speaker" icon-left="plus" class="w-fit" @click="addSpeaker" />
-  </div>
+  </section>
 </template>
 <script setup>
 import FileUploaderArea from '@/components/ui/FileUploaderArea.vue'

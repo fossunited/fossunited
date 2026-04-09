@@ -1,9 +1,10 @@
 <template>
   <div class="flex flex-col gap-2">
-    <label v-if="label" class="text-base text-ink-gray-5">
+    <span v-if="label" class="text-base text-ink-gray-5">
       {{ label }}
-      <span v-if="required" class="text-red-500">*</span>
-    </label>
+      <span v-if="required" aria-hidden="true" class="text-red-500">*</span>
+      <span v-if="required" class="sr-only">(required)</span>
+    </span>
     <div class="relative">
       <!-- Image Preview -->
       <div v-if="modelValue" class="mb-2">
@@ -46,9 +47,14 @@
             :class="[
               'transition-all duration-200',
               'border-2 border-dashed rounded-lg',
-              modelValue ? 'p-3' : 'p-8 hover:cursor-pointer',
+              modelValue ? 'p-3' : 'p-8 hover:cursor-pointer focus:outline-2 focus:outline-offset-2',
             ]"
+            role="button"
+            tabindex="0"
+            :aria-label="modelValue ? 'Change image' : (label || 'Upload image')"
             @click="openFileSelector"
+            @keydown.enter.prevent="openFileSelector"
+            @keydown.space.prevent="openFileSelector"
           >
             <!-- Upload Progress -->
             <div v-if="uploading" class="flex flex-col items-center gap-2">

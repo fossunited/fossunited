@@ -1,10 +1,18 @@
 <template>
   <Header />
   <div class="w-full flex flex-col items-center bg-surface-gray-1 mb-20 min-h-screen">
-    <div v-if="cfpData.data" class="max-w-[800px] w-full flex flex-col gap-6 md:gap-10 my-4 px-4">
+    <main
+      v-if="cfpData.data"
+      class="max-w-[800px] w-full flex flex-col gap-6 md:gap-10 my-4 px-4"
+      :aria-label="`CFP Application — ${sectionLabel}`"
+    >
       <Breadcrumb :items="breadcrumb_items" />
       <FormHeader />
       <EventHeader v-if="cfpData.data.event" :event="cfpData.data.event" />
+
+      <!-- visually-hidden live region announces step changes to screen readers -->
+      <div aria-live="polite" aria-atomic="true" class="sr-only">{{ sectionLabel }}</div>
+
       <template v-if="cfpData.data.status == 'Live'">
         <transition
           mode="out-in"
@@ -14,8 +22,9 @@
           :leave-active-class="transitionClasses.leaveActive"
           :leave-from-class="transitionClasses.leaveFrom"
           :leave-to-class="transitionClasses.leaveTo"
+          @after-enter="focusSection"
         >
-          <div :key="curr_section">
+          <div ref="sectionContent" :key="curr_section" tabindex="-1" class="focus:outline-none">
             <GuidelineSection v-if="curr_section === 0" />
             <SessionDetailForm
               v-else-if="curr_section === 1"
@@ -34,7 +43,9 @@
           </div>
         </transition>
 
-        <ErrorMessage :message="errorMessages" />
+        <div role="alert" aria-live="assertive" aria-atomic="true">
+          <ErrorMessage :message="errorMessages" />
+        </div>
         <MessageBanner
           v-if="isGuestUser"
           class="justify-center gap-4 bg-surface-gray-2"
@@ -64,8 +75,8 @@
       <template v-else>
         <FormClosedSection />
       </template>
-    </div>
-    <div v-else>
+    </main>
+    <div v-else aria-busy="true" aria-label="Loading form">
       <LoadingIndicator />
     </div>
   </div>
@@ -85,7 +96,7 @@ import PreviewSubmission from '@/components/cfp-public/PreviewSubmission.vue'
 import MessageBanner from '@/components/ui/MessageBanner.vue'
 import { createResource, LoadingIndicator, usePageMeta, ErrorMessage } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { provide, ref, watch, computed, inject } from 'vue'
+import { provide, ref, watch, computed, inject, nextTick } from 'vue'
 import {
   getProposalFormFields,
   getReferenceItemSchema,
@@ -101,6 +112,17 @@ import { toast } from 'vue-sonner'
 
 const curr_section = ref(0)
 const maxSectionIndex = 3
+const sectionContent = ref(null)
+
+const SECTION_LABELS = ['Guidelines', 'Session Details', 'Speaker Information', 'Preview & Submit']
+const sectionLabel = computed(() => {
+  if (curr_section.value === 'success') return 'Submission Successful'
+  return `Step ${curr_section.value + 1} of ${maxSectionIndex + 1}: ${SECTION_LABELS[curr_section.value] ?? ''}`
+})
+
+const focusSection = () => {
+  nextTick(() => sectionContent.value?.focus())
+}
 
 const session = inject('$session')
 

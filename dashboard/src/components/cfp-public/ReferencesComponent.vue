@@ -17,6 +17,7 @@
         variant="outline"
         class="grow"
         placeholder="https://"
+        :aria-label="`Reference link ${index + 1}`"
       >
         <template #prefix>
           <IconLink size="16" class="text-ink-gray-5" />
@@ -27,6 +28,7 @@
         icon="trash"
         size="sm"
         theme="red"
+        :aria-label="`Remove reference ${index + 1}`"
         @click="deleteReference(index)"
       />
     </div>

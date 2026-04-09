@@ -1,5 +1,13 @@
 <template>
-  <div role="group" :aria-labelledby="`${field.fieldname}-label`">
+  <!-- role="group" only wraps radio/multiselect where there are multiple controls -->
+  <div
+    :role="['radio_group', 'multiselect'].includes(field.fieldtype) ? 'group' : undefined"
+    :aria-labelledby="
+      ['radio_group', 'multiselect'].includes(field.fieldtype)
+        ? `${field.fieldname}-label`
+        : undefined
+    "
+  >
     <component
       :is="getComponent"
       v-model="fields[getFieldIndex(field.fieldname)]['value']"
@@ -10,13 +18,16 @@
       :options="field.options || []"
       :description="field.description"
       size="md"
-      :aria-required="field.required"
-      :aria-describedby="field.description ? `${field.fieldname}-description` : undefined"
+      :aria-required="field.required ? 'true' : undefined"
     ></component>
-    <!-- hidden label for screen readers -->
-    <label v-if="!field.label" :id="`${field.fieldname}-label`" class="sr-only">
-      {{ field.fieldname }}
-    </label>
+    <!-- hidden label for screen readers when no visible label -->
+    <span
+      v-if="['radio_group', 'multiselect'].includes(field.fieldtype)"
+      :id="`${field.fieldname}-label`"
+      class="sr-only"
+    >
+      {{ field.label || field.fieldname }}
+    </span>
   </div>
 </template>
 <script setup>

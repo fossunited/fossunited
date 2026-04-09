@@ -1,7 +1,7 @@
 <template>
-  <div class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
+  <section aria-label="Session Details" class="flex flex-col gap-8 w-full p-4 md:p-8 border rounded bg-surface-white">
     <h4 v-if="showTitle" class="flex gap-2 items-center font-semibold">
-      <IconClipboardText />
+      <IconClipboardText aria-hidden="true" />
       <span>Submission Form</span>
     </h4>
     <RenderField
@@ -13,7 +13,7 @@
       :class="{ hidden: _field.fieldname === 'other_category' }"
     />
     <ReferencesComponent v-model:references="references" />
-  </div>
+  </section>
 </template>
 <script setup>
 import { watch } from 'vue'

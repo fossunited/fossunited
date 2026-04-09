@@ -6,11 +6,15 @@
       v-model:editor="editor"
       @insert-link="handleLinkInsert(editor)"
     />
-    <div class="text-base text-ink-gray-5">
+    <div :id="labelId" class="text-base text-ink-gray-5">
       {{ props.label }}
-      <span v-if="required" class="text-red-500">*</span>
+      <span v-if="required" aria-hidden="true" class="text-red-500">*</span>
+      <span v-if="required" class="sr-only">(required)</span>
     </div>
     <section
+      role="toolbar"
+      :aria-label="`${props.label || 'Text'} formatting`"
+      :aria-controls="editorContentId"
       class="flex flex-wrap items-center gap-x-4 border-t border-l border-r border-outline-gray-1 buttons font-mono p-2"
     >
       <button
@@ -145,8 +149,8 @@
         <IconSeparatorHorizontal class="w-5 h-5" />
       </button>
     </section>
-    <EditorContent :editor="editor" />
-    <small class="text-sm text-ink-gray-5">{{ description }}</small>
+    <EditorContent :id="editorContentId" :editor="editor" :aria-labelledby="labelId" />
+    <small :id="`${editorContentId}-desc`" class="text-sm text-ink-gray-5">{{ description }}</small>
   </div>
 </template>
 <script setup>
@@ -155,7 +159,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
 import Link from '@tiptap/extension-link'
-import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
+import { defineProps, defineEmits, ref, reactive, watch, getCurrentInstance } from 'vue'
 import {
   IconBold,
   IconItalic,
@@ -176,6 +180,10 @@ import {
   IconSeparatorHorizontal,
 } from '@tabler/icons-vue'
 import TextEditorLinkDialog from './TextEditorLinkDialog.vue'
+
+const uid = getCurrentInstance()?.uid ?? Math.random().toString(36).slice(2, 7)
+const labelId = `te-label-${uid}`
+const editorContentId = `te-content-${uid}`
 
 const showDialog = ref(false)
 const linkData = reactive({
