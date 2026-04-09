@@ -1,7 +1,54 @@
+<link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
+
 {% macro badge(label='', theme='gray', size='md', variant='subtle', prefix='', suffix='', additional_classes='') %}
-  <div class="v3-badge v3-badge-{{ size }} v3-badge--{{ variant }}-{{ theme }} {{ additional_classes }}">
-    {% if prefix %}<span>{{ prefix }}</span>{% endif %}
+  {% set solid_classes = {
+    'gray': 'text-white bg-gray-700',
+    'blue': 'text-white bg-blue-500',
+    'green': 'text-white bg-green-500',
+    'orange': 'text-white bg-orange-500',
+    'red': 'text-white bg-red-500'
+  } %}
+
+  {% set subtle_classes = {
+    'gray': 'text-gray-600 bg-gray-200',
+    'blue': 'text-blue-600 bg-blue-100',
+    'green': 'text-green-600 bg-green-100',
+    'orange': 'text-orange-600 bg-orange-100',
+    'red': 'text-red-600 bg-red-100'
+  } %}
+
+  {% set outline_classes = {
+    'gray': 'text-gray-600 border !border-gray-300',
+    'blue': 'text-blue-600 border !border-blue-300',
+    'green': 'text-green-600 border !border-green-300',
+    'orange': 'text-orange-600 border !border-orange-300',
+    'red': 'text-red-600 border !border-red-300'
+  } %}
+
+  {% set ghost_classes = {
+    'gray': 'text-gray-600',
+    'blue': 'text-blue-600',
+    'green': 'text-green-600',
+    'orange': 'text-orange-600',
+    'red': 'text-red-600'
+  } %}
+
+  {% set size_classes = {
+    'sm': 'min-h-4 text-xs px-1.5 py-0.5',
+    'md': 'min-h-5 text-xs px-1.5 py-0.5',
+    'lg': 'min-h-6 text-sm px-2 py-1'
+  } %}
+
+  {% set variant_classes = {
+    'solid': solid_classes,
+    'subtle': subtle_classes,
+    'outline': outline_classes,
+    'ghost': ghost_classes
+  }[variant] %}
+
+  <div class="flex items-center gap-1 rounded-full {{ variant_classes[theme] }} {{ size_classes[size] }} {{additional_classes}}">
+    {% if prefix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ prefix }}</div>{% endif %}
     {{ label | e }}
-    {% if suffix %}<span>{{ suffix }}</span>{% endif %}
+    {% if suffix %}<div class="{{ 'max-h-6' if size == 'lg' else 'max-h-4' }}">{{ suffix }}</div>{% endif %}
   </div>
 {% endmacro %}

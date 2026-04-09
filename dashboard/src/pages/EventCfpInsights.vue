@@ -27,7 +27,7 @@ const cfp_form = createResource({
 })
 
 const handleOpenSubmission = (submission) => {
-  selectedSubmission.value = submission.name
+  selectedSubmission.value = submission
   if (isSmallScreen.value) {
     showDrawer.value = true
   }
