@@ -246,6 +246,13 @@ export const getSpeakerFields = () => {
       value: '',
     },
     {
+      label: 'Contact Info',
+      fieldname: 'contact_info',
+      fieldtype: 'text',
+      value: '',
+      description: 'Phone number or signal handle for volunteers to reach out.',
+    },
+    {
       label: 'Speaker Bio',
       fieldname: 'bio',
       fieldtype: 'text_editor',
