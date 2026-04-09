@@ -1,6 +1,6 @@
 <template>
   <div
-    class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
+    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
   >
     <div
       v-for="(value, key) in stats"
@@ -8,7 +8,7 @@
       class="flex flex-col justify-center md:justify-normal items-center md:items-start"
     >
       <div class="flex gap-1 items-center text-xl font-medium first:px-0" :class="getColor(key)">
-        {{ value }} <span v-if="key == 'Approvability'">%</span>
+        {{ value }}
       </div>
       <span class="text-sm text-ink-gray-4">{{ key }}</span>
     </div>
@@ -26,7 +26,6 @@ const props = defineProps({
 
 const stats = computed(() => {
   let _stats = {
-    Approvability: 0,
     Approvals: 0,
     Rejections: 0,
     'Not Sure': 0,
@@ -42,12 +41,6 @@ const stats = computed(() => {
     }
   })
 
-  if (_stats.Approvals + _stats.Rejections > 0) {
-    _stats.Approvability = Math.round(
-      (_stats.Approvals / (_stats.Approvals + _stats.Rejections)) * 100,
-    )
-  }
-
   return _stats
 })
 
@@ -59,8 +52,6 @@ const getColor = (key) => {
       return 'text-ink-red-4'
     case 'Not Sure':
       return 'text-ink-amber-3'
-    case 'Approvability':
-      return 'text-ink-blue-2'
     default:
       return 'text-ink-gray-5'
   }

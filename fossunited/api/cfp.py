@@ -226,24 +226,12 @@ def _get_bulk_review_percentages_data(submission_names: list) -> dict:
                 "approved_percent": 0,
                 "rejected_percent": 0,
                 "unsure_percent": 0,
-                "approvability": 0,
             }
         else:
-            approved_percent = int((positive_reviews / total_reviews) * 100)
-            rejected_percent = int((negative_reviews / total_reviews) * 100)
-            unsure_percent = int((unsure_reviews / total_reviews) * 100)
-
-            approvability = int(
-                (positive_reviews / (positive_reviews + negative_reviews)) * 100
-                if positive_reviews + negative_reviews > 0
-                else 0
-            )
-
             review_percentages_data[submission_name] = {
-                "approved_percent": approved_percent,
-                "rejected_percent": rejected_percent,
-                "unsure_percent": unsure_percent,
-                "approvability": approvability,
+                "approved_percent": int((positive_reviews / total_reviews) * 100),
+                "rejected_percent": int((negative_reviews / total_reviews) * 100),
+                "unsure_percent": int((unsure_reviews / total_reviews) * 100),
             }
 
     return review_percentages_data
@@ -265,24 +253,12 @@ def get_review_percentages(submission: str) -> dict:
             "approved_percent": 0,
             "rejected_percent": 0,
             "unsure_percent": 0,
-            "approvability": 0,
         }
 
-    approved_percent = int((positive_reviews / total_reviews) * 100)
-    rejected_percent = int((negative_reviews / total_reviews) * 100)
-    unsure_percent = int((unsure_reviews / total_reviews) * 100)
-
-    approvability = int(
-        (positive_reviews / (positive_reviews + negative_reviews)) * 100
-        if positive_reviews + negative_reviews > 0
-        else 0
-    )
-
     return {
-        "approved_percent": approved_percent,
-        "rejected_percent": rejected_percent,
-        "unsure_percent": unsure_percent,
-        "approvability": approvability,
+        "approved_percent": int((positive_reviews / total_reviews) * 100),
+        "rejected_percent": int((negative_reviews / total_reviews) * 100),
+        "unsure_percent": int((unsure_reviews / total_reviews) * 100),
     }
 
 

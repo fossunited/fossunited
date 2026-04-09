@@ -30,11 +30,6 @@
   .dot-sep { font-size: 0.5rem; }
   .text-break-all { word-break: break-all; }
 
-  /* Score card colors */
-  .score-blue   { color: oklch(0.55 0.22 260); }
-  .score-green  { color: oklch(0.62 0.18 145); }
-  .score-red    { color: oklch(0.62 0.22 29); }
-  .score-orange { color: oklch(0.70 0.17 70); }
 </style>
 
 <div class="v3-page"><div class="container px-3 mb-4 d-flex flex-column gap-8" style="max-width: 800px;">
@@ -57,9 +52,6 @@
 
 </div></div>
 {% endblock %}
-
-
-{# ─────────────────────────────────────── #}
 
 {% macro like_button() %}
 <div class="rounded px-3 py-2 d-inline-flex v3-bg-primary text-nowrap">
@@ -259,6 +251,7 @@
       loading="lazy"
     />
   </div>
+  {% if speaker.bio %}
   <button
     class="border-0 bg-transparent v3-text-secondary text-sm p-2 w-fit cursor-pointer"
     aria-expanded="false"
@@ -275,6 +268,7 @@
     "
   >Show Bio</button>
   <div id="bio-{{ speaker.name }}" class="v3-text-primary p-2 d-none">{{ speaker.bio }}</div>
+  {% endif %}
 </div>
 {% endmacro %}
 
@@ -295,21 +289,6 @@
 <div class="d-flex flex-column gap-3">
   <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
 
-  <div class="row no-gutters border border-section rounded align-items-center px-2 py-3 mx-0">
-    <div class="col-6 col-md-3 px-3 py-2">
-      {{ score_card("Approvability", review_scores['approvability'], "score-blue", suffix="%") }}
-    </div>
-    <div class="col-6 col-md-3 px-3 py-2 border-left">
-      {{ score_card("Approvals", review_scores['positive'], "score-green") }}
-    </div>
-    <div class="col-6 col-md-3 px-3 py-2 border-left">
-      {{ score_card("Rejections", review_scores['negative'], "score-red") }}
-    </div>
-    <div class="col-6 col-md-3 px-3 py-2 border-left">
-      {{ score_card("Not Sure", review_scores['unsure'], "score-orange") }}
-    </div>
-  </div>
-
   <div class="d-flex flex-column gap-2">
     {% if not doc.reviews %}
       <div class="v3-text-tertiary text-sm">No reviews yet.</div>
@@ -321,19 +300,6 @@
   </div>
 </div>
 {% endmacro %}
-
-
-{% macro score_card(label, score, color_class, prefix='', suffix='') %}
-<div class="d-flex flex-column align-items-center align-items-md-start text-center text-md-left">
-  <div class="d-flex align-items-center gap-1 {{ color_class }}">
-    {% if prefix %}{{ prefix }}{% endif %}
-    <span class="text-xl font-weight-bold">{{ score }}</span>
-    {% if suffix %}{{ suffix }}{% endif %}
-  </div>
-  <span class="v3-text-tertiary text-sm">{{ label }}</span>
-</div>
-{% endmacro %}
-
 
 {% macro review_card(review) %}
 <div class="d-flex flex-column my-2 gap-1">

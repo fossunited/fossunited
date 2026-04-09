@@ -26,11 +26,6 @@ const scoreTableItems = computed(() => {
       value: props.submission.unsure_percent,
       color: 'bg-orange-400',
     },
-    {
-      label: 'Approvability',
-      value: props.submission.approvability,
-      color: 'bg-blue-400',
-    },
   ]
 })
 
@@ -38,8 +33,7 @@ const hasScores = computed(() => {
   return (
     props.submission.approved_percent > 0 ||
     props.submission.rejected_percent > 0 ||
-    props.submission.unsure_percent > 0 ||
-    props.submission.approvability > 0
+    props.submission.unsure_percent > 0
   )
 })
 </script>
@@ -47,10 +41,6 @@ const hasScores = computed(() => {
   <Popover trigger="hover">
     <template #target>
       <div v-if="hasScores" class="flex flex-col items-start gap-1 w-32 text-xs p-2">
-        <div
-          class="h-1 bg-blue-400 rounded"
-          :style="{ width: `${submission.approvability}%` }"
-        ></div>
         <div class="w-full h-1 flex *:rounded">
           <div :style="{ width: `${submission.approved_percent}%` }" class="bg-green-400"></div>
           <div :style="{ width: `${submission.rejected_percent}%` }" class="bg-red-400"></div>

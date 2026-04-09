@@ -390,7 +390,6 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.assertEqual(scores["positive"], 2)
         self.assertEqual(scores["negative"], 1)
         self.assertEqual(scores["unsure"], 1)
-        self.assertEqual(scores["approvability"], 66)  # 2/(2+1) * 100
 
     def test_set_scores_updates_fields(self):
         # Given a submission with reviews
@@ -403,4 +402,3 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         # Then score fields should be updated
         self.assertIsNotNone(self.submission.positive_reviews)
         self.assertIsNotNone(self.submission.negative_reviews)
-        self.assertIsNotNone(self.submission.approvability)

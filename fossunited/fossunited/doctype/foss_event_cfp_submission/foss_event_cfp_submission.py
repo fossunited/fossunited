@@ -43,7 +43,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
         accept_coc: DF.Check
-        approvability: DF.Data | None
         attendance_confirmed: DF.Check
         bio: DF.TextEditor | None
         chapter: DF.Data | None
@@ -123,11 +122,13 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.route = f"{event_route}/cfp/{self.name}"
 
     def set_scores(self):
-        statistics = self.get_review_statistics()
-        self.positive_reviews = statistics[0]["percentage"]
-        self.negative_reviews = statistics[1]["percentage"]
-        self.unsure_reviews = statistics[2]["percentage"]
-        self.approvability = statistics[3]["percentage"]
+        total = len(self.reviews) or 1
+        yes = sum(1 for r in self.reviews if r.to_approve == "Yes")
+        no = sum(1 for r in self.reviews if r.to_approve == "No")
+        maybe = sum(1 for r in self.reviews if r.to_approve == "Maybe")
+        self.positive_reviews = int((yes / total) * 100)
+        self.negative_reviews = int((no / total) * 100)
+        self.unsure_reviews = int((maybe / total) * 100)
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
@@ -274,15 +275,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             elif review.to_approve == "Maybe":
                 unsure += 1
 
-        approvability = 0
-        if positive + negative > 0:
-            approvability = (positive / (positive + negative)) * 100
-
         return {
             "positive": positive,
             "negative": negative,
             "unsure": unsure,
-            "approvability": int(approvability),
         }
 
     def get_likes(self) -> list:
@@ -314,65 +310,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         ]
 
         return crumbs
-
-    def get_review_statistics(self):
-        reviews = self.get_reviews()
-        reviews_len = len(reviews) or 1
-
-        score = {
-            "Yes": 0,
-            "No": 0,
-            "Maybe": 0,
-        }
-
-        for review in reviews:
-            score[review.to_approve] += 1
-
-        score["approvability"] = (score["Yes"] / (reviews_len - score["Maybe"] or 1)) * 100
-
-        statistics = [
-            {
-                "fieldname": "positive_reviews",
-                "label": f"{score['Yes']} People Approved this Proposal",
-                "value": score["Yes"],
-                "percentage": int((score["Yes"] / reviews_len) * 100),
-                "color": "var(--clr-foss-mint-500)",
-                "background": "var(--clr-foss-mint-50)",
-            },
-            {
-                "fieldname": "negative_reviews",
-                "label": f"{score['No']} People Rejected this Proposal",
-                "value": score["No"],
-                "percentage": int((score["No"] / reviews_len) * 100),
-                "color": "var(--clr-error-500)",
-                "background": "var(--clr-error-50)",
-            },
-            {
-                "fieldname": "unsure_reviews",
-                "label": f"{score['Maybe']} People Marked Unsure",
-                "value": score["Maybe"],
-                "percentage": int((score["Maybe"] / reviews_len) * 100),
-                "color": "var(--clr-warning-500)",
-                "background": "var(--clr-warning-50)",
-            },
-            {
-                "fieldname": "approvability",
-                "label": "Approvability of proposal",
-                "value": "",
-                "percentage": int(score["approvability"]),
-                "color": "216, 97%, 42%",
-                "background": "206, 100%, 97%",
-            },
-        ]
-
-        return statistics
-
-    def get_reviews(self):
-        reviews = []
-        for review in self.reviews:
-            reviews.append(review)
-
-        return reviews
 
     def handle_status_change(self) -> None:
         if not self.has_value_changed("status"):

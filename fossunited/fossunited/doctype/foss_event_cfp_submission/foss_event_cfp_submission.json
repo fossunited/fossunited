@@ -55,9 +55,7 @@
   "review_scores_section",
   "positive_reviews",
   "negative_reviews",
-  "unsure_reviews",
-  "column_break_fnih",
-  "approvability"
+  "unsure_reviews"
  ],
  "fields": [
   {
@@ -243,15 +241,6 @@
    "label": "Unsure Reviews  %"
   },
   {
-   "fieldname": "column_break_fnih",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "approvability",
-   "fieldtype": "Data",
-   "label": "Approvability  %"
-  },
-  {
    "columns": 2,
    "fetch_from": "linked_cfp.chapter",
    "fieldname": "chapter",
@@ -354,7 +343,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-08 18:04:25.195053",
+ "modified": "2026-04-09 14:48:03.703968",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
