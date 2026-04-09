@@ -43,7 +43,7 @@ const handleOpenSubmission = (submission) => {
         <InsightsGrid :event-id="route.params.id" />
       </Suspense>
       <Suspense>
-        <SubmissionsList @open:submission="handleOpenSubmission($event)" />
+        <SubmissionsList :event="route.params.id" @open:submission="handleOpenSubmission($event)" />
         <template #fallback>
           <LoadingIndicator class="w-5 h-5" />
         </template>

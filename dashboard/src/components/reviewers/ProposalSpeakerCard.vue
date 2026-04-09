@@ -19,7 +19,7 @@
       </div>
       <img class="w-24 h-24 border rounded" :src="speaker.photo" alt="Speaker Image" />
     </div>
-    <Button :label="showBio ? 'Hide Bio' : 'Show Bio'" class="w-fit" @click="showBio = !showBio" />
+    <Button v-if="speaker.bio" :label="showBio ? 'Hide Bio' : 'Show Bio'" class="w-fit" @click="showBio = !showBio" />
     <div
       v-show="showBio"
       class="prose prose-sm prose-h1:text-xl prose-h2:text-xl prose-h3:text-lg prose-h4:text-base prose-h5:text-sm prose-h1:font-semibold prose-h2:font-semibold prose-h3:font-semibold prose-h4:font-medium prose-h5:font-medium max-w-full"
