@@ -5,7 +5,7 @@ can explore the application immediately after install.
 
 Usage::
 
-    bench --site <your-site> execute fossunited.dev.seed.seed
+    bench --site foss.localhost execute fossunited.dev.seed.seed
 
 Default credentials
 -------------------
@@ -55,16 +55,13 @@ from fossunited.tests.utils import (
 logger = frappe.logger("seed", allow_site=True)
 
 DEFAULT_PASSWORD = "password"
-
-# String label used in the ``chapter_members`` child table to denote a core
-# team member.  This is *not* a Frappe Role — it is a plain-text value stored
-# in the ``role`` field of the child row.
 CHAPTER_MEMBER_CHILD_TABLE_ROLE = "Core Team Member"
 
-
-# ---------------------------------------------------------------------------
-# Data declarations
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# ZONE 2: CONFIGURATION
+# Everything below is seed data. Edit these dictionaries to change what
+# records are injected into the database during the seed pass.
+# ===========================================================================
 
 SEED_USERS = [
     {
@@ -121,10 +118,6 @@ SEED_USERS = [
     },
 ]
 
-# City Communities receive standard events (meetups, conferences, etc.).
-# Student Clubs host hackathons only — they are excluded from event generation
-# to prevent slug collisions when a club shares a city with a community
-# (e.g. "FOSS Kochi" and "Campus Chapter" both in Kochi).
 CHAPTER_DATA = [
     {
         "chapter_name": "FOSS Bangalore",
@@ -160,9 +153,6 @@ CHAPTER_DATA = [
     },
 ]
 
-# Each template is expanded per city-community chapter.  Permalinks are
-# derived from the chapter *slug* (not city name) to guarantee uniqueness
-# even when multiple chapters share a city.
 EVENT_TEMPLATES = [
     {
         "name": "{city} FOSS Meetup 2026",
@@ -218,9 +208,9 @@ EVENT_TEMPLATES = [
         "day_offset": 45,
         "duration_hours": 48,
         "description": (
-            "<p>Build something cool over three days in {city} with "
-            "guidance from mentors and peers. Work solo or in a team, "
-            "start something new, or contribute to a FOSS project.</p>"
+            "<p>Build something cool over three days in {city} with guidance from "
+            "mentors and peers. Work solo or in a team, start something new, "
+            "or contribute to a FOSS project.</p>"
         ),
         "location": "Online",
         "bucket": "live",
@@ -241,8 +231,8 @@ HACKATHON_CFG = {
             "short_description": "A privacy-first GPS tracker for runners and cyclists.",
             "description": (
                 "<p>OpenTrack is an open-source alternative to Strava. It records "
-                "GPS routes, tracks pace and distance, and stores all data locally "
-                "on the device.</p>"
+                "GPS routes, tracks pace and distance, "
+                "and stores all data locally on the device.</p>"
             ),
         },
         {
@@ -262,8 +252,8 @@ HACKATHON_CFG = {
             "short_description": "Low-cost soil moisture and pH monitoring.",
             "description": (
                 "<p>FarmSense uses Arduino sensors to monitor soil conditions and "
-                "sends alerts to farmers via SMS. All hardware designs and firmware "
-                "are open-source.</p>"
+                "sends alerts to farmers via SMS. "
+                "All hardware designs and firmware are open-source.</p>"
             ),
             "is_contribution_project": 1,
         },
@@ -282,23 +272,41 @@ HACKATHON_CFG = {
 }
 
 
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
+# ===========================================================================
+# ZONE 3: UNIVERSAL HELPERS
+# ===========================================================================
+
+
+def ensure_record(doctype, filters, insert_fn, *args, **kwargs):
+    """
+    Check if a record exists using `filters`. If it does, return the existing doc.
+    Otherwise, run the provided `insert_fn` function and return the new record.
+    This creates an idempotent abstraction and cleanly manages the duplicate
+    checking logs across the script.
+    """
+    if frappe.db.exists(doctype, filters):
+        doc_name = frappe.db.get_value(doctype, filters)
+        logger.info("Skipped %s '%s' (already exists)", doctype, doc_name)
+        return frappe.get_doc(doctype, doc_name)
+
+    doc = insert_fn(*args, **kwargs)
+    logger.info("Created %s '%s'", doctype, doc.name)
+    return doc
+
+
+# ===========================================================================
+# ZONE 4: MAIN RUNNER & LOGIC
+# ===========================================================================
 
 
 def seed():
-    """Create all seed data in dependency order.
-
-    Safe to call repeatedly — existing records are detected and skipped.
-    All inserts run inside ``frappe.flags.ignore_permissions``; the flag
-    is restored on exit regardless of success or failure.
-    """
+    """Create all seed data in dependency order. Safe to run repeatedly."""
     if not frappe.conf.get("developer_mode"):
         frappe.throw(_("Seed script can only be run in developer mode."))
 
     prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
     frappe.flags.ignore_permissions = True
+
     try:
         logger.info("Seeding development data")
 
@@ -306,23 +314,23 @@ def seed():
         chapters = _create_chapters()
         _link_chapter_members(chapters)
 
+        # Generate events for city communities only to avoid location clashes
         city_chapters = [
-            ch
-            for ch, data in zip(chapters, CHAPTER_DATA)
-            if data["chapter_type"] == CITY_COMMUNITY
+            ch for ch, d in zip(chapters, CHAPTER_DATA) if d["chapter_type"] == CITY_COMMUNITY
         ]
         events = _create_events(city_chapters)
+
         _create_rsvps(events["live"], users)
         _create_cfps(events["live"])
         _create_hackathon(chapters)
 
-        # intentional manual commit for seed bootstrap
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:
             frappe.clear_cache()
             logger.info("Seed data created successfully")
         except Exception:
             logger.warning("Seed data committed, but cache clear failed", exc_info=True)
+
     except Exception:
         frappe.db.rollback()
         logger.exception("Seed script failed before commit — transaction rolled back")
@@ -331,28 +339,16 @@ def seed():
         frappe.flags.ignore_permissions = prev_ignore_permissions
 
 
-# ---------------------------------------------------------------------------
-# Users
-# ---------------------------------------------------------------------------
-
-
 def _create_users():
-    """Ensure every entry in ``SEED_USERS`` has a User doc, profile, and password.
-
-    Returns:
-        dict: ``{"normal": [email, ...], "chapter": [user_cfg, ...]}``
-    """
+    """Ensure every entry in SEED_USERS has a User doc, profile, and password."""
     result = {"normal": [], "chapter": []}
 
     for user_cfg in SEED_USERS:
         email = user_cfg["email"]
-
         is_new_user = not frappe.db.exists("User", email)
 
         insert_user_profile(
-            email=email,
-            first_name=user_cfg["first_name"],
-            last_name=user_cfg["last_name"],
+            email=email, first_name=user_cfg["first_name"], last_name=user_cfg["last_name"]
         )
 
         if is_new_user:
@@ -373,47 +369,17 @@ def _create_users():
     return result
 
 
-# ---------------------------------------------------------------------------
-# Chapters
-# ---------------------------------------------------------------------------
-
-
-def _chapter_id(data):
-    """Return the deterministic primary key for a FOSS Chapter.
-
-    Mirrors the doctype autoname ``format:{chapter_name}-{chapter_type}``.
-    """
-    return f"{data['chapter_name']}-{data['chapter_type']}"
-
-
 def _create_chapters():
-    """Insert chapters from ``CHAPTER_DATA``, skipping duplicates.
-
-    Returns:
-        list: Ordered list of chapter docs matching ``CHAPTER_DATA``.
-    """
+    """Insert chapters from CHAPTER_DATA."""
     chapters = []
-
     for data in CHAPTER_DATA:
-        cid = _chapter_id(data)
-        if frappe.db.exists(CHAPTER, cid):
-            chapters.append(frappe.get_doc(CHAPTER, cid))
-            logger.info("Skipped chapter '%s' (already exists)", data["chapter_name"])
-        else:
-            chapter = insert_test_chapter(**data)
-            chapters.append(chapter)
-            logger.info("Created chapter: %s", data["chapter_name"])
-
+        cid = f"{data['chapter_name']}-{data['chapter_type']}"
+        chapters.append(ensure_record(CHAPTER, cid, insert_test_chapter, **data))
     return chapters
 
 
 def _link_chapter_members(chapters):
-    """Add chapter-lead users as Core Team Members in their chapter doc.
-
-    Matches each ``SEED_USERS`` entry whose ``kind`` is ``"chapter"`` to the
-    chapter identified by ``chapter_slug``.  Skips if the member is already
-    linked.
-    """
+    """Add chapter-lead users as Core Team Members in their respective chapter doc."""
     slug_map = {ch.slug: ch for ch in chapters}
 
     for user_cfg in SEED_USERS:
@@ -421,11 +387,9 @@ def _link_chapter_members(chapters):
             continue
 
         chapter = slug_map.get(user_cfg["chapter_slug"])
-        if chapter is None:
+        if not chapter:
             logger.warning(
-                "No chapter with slug '%s' for %s",
-                user_cfg["chapter_slug"],
-                user_cfg["email"],
+                "No chapter with slug '%s' for %s", user_cfg["chapter_slug"], user_cfg["email"]
             )
             continue
 
@@ -434,36 +398,18 @@ def _link_chapter_members(chapters):
             continue
 
         existing = [m.chapter_member for m in chapter.get("chapter_members", [])]
-        if profile_name in existing:
-            continue
-
-        chapter.append(
-            "chapter_members",
-            {
-                "chapter_member": profile_name,
-                "role": CHAPTER_MEMBER_CHILD_TABLE_ROLE,
-            },
-        )
-        chapter.save()
-        chapter.reload()
-        logger.info("Linked %s to %s", user_cfg["email"], chapter.chapter_name)
-
-
-# ---------------------------------------------------------------------------
-# Events (City Community chapters only)
-# ---------------------------------------------------------------------------
+        if profile_name not in existing:
+            chapter.append(
+                "chapter_members",
+                {"chapter_member": profile_name, "role": CHAPTER_MEMBER_CHILD_TABLE_ROLE},
+            )
+            chapter.save()
+            chapter.reload()
+            logger.info("Linked %s to %s", user_cfg["email"], chapter.chapter_name)
 
 
 def _create_events(city_chapters):
-    """Generate events from ``EVENT_TEMPLATES`` for each city-community chapter.
-
-    Only ``CITY_COMMUNITY`` chapters are passed in.  Permalinks are derived
-    from the chapter **slug** (not city name), preventing collisions when
-    multiple chapters share a city (e.g. Kochi).
-
-    Returns:
-        dict: ``{"live": [...], "concluded": [...], "draft": [...]}``
-    """
+    """Generate events from EVENT_TEMPLATES for each city-community chapter."""
     now = datetime.now()
     buckets = {"live": [], "concluded": [], "draft": []}
 
@@ -474,46 +420,31 @@ def _create_events(city_chapters):
             permalink = tpl["permalink"].format(**fmt)
             event_name = tpl["name"].format(**fmt)
 
-            if frappe.db.exists(EVENT, {"event_permalink": permalink}):
-                doc_name = frappe.db.get_value(EVENT, {"event_permalink": permalink})
-                buckets[tpl["bucket"]].append(frappe.get_doc(EVENT, doc_name))
-                logger.info("Skipped event '%s' (already exists)", event_name)
-                continue
-
-            extra = {}
-            if tpl["bucket"] == "live":
-                extra.update(show_rsvp=1, show_cfp=1)
-
-            event = insert_test_event(
-                chapter,
-                event_name=event_name,
-                event_permalink=permalink,
-                event_type=tpl["event_type"],
-                status=tpl["status"],
-                is_published=tpl["is_published"],
-                event_start_date=now + timedelta(days=tpl["day_offset"]),
-                event_end_date=now
+            kwargs = {
+                "event_name": event_name,
+                "event_permalink": permalink,
+                "event_type": tpl["event_type"],
+                "status": tpl["status"],
+                "is_published": tpl["is_published"],
+                "event_start_date": now + timedelta(days=tpl["day_offset"]),
+                "event_end_date": now
                 + timedelta(days=tpl["day_offset"], hours=tpl["duration_hours"]),
-                description=tpl["description"].format(**fmt),
-                event_location=tpl["location"].format(**fmt),
-                **extra,
+                "description": tpl["description"].format(**fmt),
+                "event_location": tpl["location"].format(**fmt),
+            }
+            if tpl["bucket"] == "live":
+                kwargs.update(show_rsvp=1, show_cfp=1, tickets_status="Live")
+
+            event = ensure_record(
+                EVENT, {"event_permalink": permalink}, insert_test_event, chapter, **kwargs
             )
             buckets[tpl["bucket"]].append(event)
-            logger.info("Created event: %s", event_name)
 
     return buckets
 
 
-# ---------------------------------------------------------------------------
-# RSVPs
-# ---------------------------------------------------------------------------
-
-
 def _create_rsvps(live_events, users):
-    """Attach an RSVP form with two sample submissions to each live event.
-
-    Requires at least two ``normal`` users in *users*.
-    """
+    """Attach an RSVP form with two sample submissions to each live event."""
     attendees = users["normal"]
     if len(attendees) < 2:
         logger.warning("Fewer than 2 attendee users; skipping RSVP submissions")
@@ -531,7 +462,7 @@ def _create_rsvps(live_events, users):
                 "<p>Please RSVP to confirm your attendance. We look forward to seeing you!</p>"
             ),
             custom_questions=[
-                {"question": "What topics interest you the most?", "type": "Long Text"},
+                {"question": "What topics interest you the most?", "type": "Long Text"}
             ],
         )
 
@@ -549,29 +480,16 @@ def _create_rsvps(live_events, users):
             email=attendees[1],
             im_a="Student",
         )
-
         logger.info("Created RSVP + 2 submissions for: %s", event.event_name)
 
 
-# ---------------------------------------------------------------------------
-# CFPs (Call for Proposals)
-# ---------------------------------------------------------------------------
-
-
 def _create_cfps(live_events):
-    """Attach a CFP form with two sample talk submissions to each live event.
-
-    Speaker emails are resolved by name from ``SEED_USERS`` rather than by
-    list index, so reordering ``SEED_USERS`` cannot silently break this.
-    """
+    """Attach a CFP form with two sample talk submissions to each live event."""
     now = datetime.now()
+    user_emails = [u["email"] for u in SEED_USERS]
+    speaker1, speaker2 = "speaker-1@example.com", "speaker-2@example.com"
 
-    # Build a lookup from email → user config for deterministic resolution.
-    user_by_email = {u["email"]: u for u in SEED_USERS}
-    speaker_1_email = "speaker-1@example.com"
-    speaker_2_email = "speaker-2@example.com"
-
-    if speaker_1_email not in user_by_email or speaker_2_email not in user_by_email:
+    if speaker1 not in user_emails or speaker2 not in user_emails:
         logger.warning("Speaker users not found in SEED_USERS; skipping CFP submissions")
         return
 
@@ -590,78 +508,54 @@ def _create_cfps(live_events):
             ),
         )
 
-        insert_cfp_submission(
-            cfp.name,
-            event.name,
-            submitted_by=speaker_1_email,
-            talk_title="Getting Started with Contributing to Open Source",
-            session_type="Talk",
-            talk_description=(
-                "A beginner-friendly talk on how to find projects, make "
-                "your first PR, and become a regular contributor."
+        submissions = [
+            (
+                speaker1,
+                "Test Speaker 1",
+                "Getting Started with Contributing to Open Source",
+                "A beginner-friendly talk on how to find projects, make your "
+                "first PR, and become a regular contributor.",
             ),
-            speakers=[
-                {
-                    "full_name": "Test Speaker 1",
-                    "email": speaker_1_email,
-                    "designation": "Software Engineer",
-                    "organization": "Open Tech Co",
-                    "bio": "Test speaker and open-source contributor.",
-                }
-            ],
-        )
-        insert_cfp_submission(
-            cfp.name,
-            event.name,
-            submitted_by=speaker_2_email,
-            talk_title="Building CLI Tools with Python",
-            session_type="Talk",
-            talk_description=(
-                "Learn how to build powerful command-line tools using "
-                "Python's argparse, click, and rich libraries."
+            (
+                speaker2,
+                "Test Speaker 2",
+                "Building CLI Tools with Python",
+                "Learn how to build powerful command-line tools using Python's "
+                "argparse, click, and rich libraries.",
             ),
-            speakers=[
-                {
-                    "full_name": "Test Speaker 2",
-                    "email": speaker_2_email,
-                    "designation": "Developer Advocate",
-                    "organization": "DevTools Inc",
-                    "bio": "Test speaker who builds developer tools.",
-                }
-            ],
-        )
+        ]
+
+        for s_email, s_name, title, desc in submissions:
+            insert_cfp_submission(
+                cfp.name,
+                event.name,
+                submitted_by=s_email,
+                talk_title=title,
+                session_type="Talk",
+                talk_description=desc,
+                speakers=[
+                    {
+                        "full_name": s_name,
+                        "email": s_email,
+                        "designation": "Speaker",
+                        "organization": "Open Tech",
+                        "bio": "Test speaker.",
+                    }
+                ],
+            )
 
         logger.info("Created CFP + 2 submissions for: %s", event.event_name)
 
 
-# ---------------------------------------------------------------------------
-# Hackathon (Student Club chapter)
-# ---------------------------------------------------------------------------
-
-
 def _create_hackathon(chapters):
-    """Create the FOSSIT Hackathon with teams, a localhost, and projects.
-
-    The hackathon is linked to the chapter matching
-    ``HACKATHON_CFG["chapter_slug"]``.  Falls back to the first available
-    chapter if the target slug is missing.
-    """
-    cfg = HACKATHON_CFG
-    now = datetime.now()
+    """Create the initial Hackathon with teams, localhosts, and projects."""
+    cfg, now = HACKATHON_CFG, datetime.now()
 
     if frappe.db.exists(HACKATHON, {"hackathon_name": cfg["name"]}):
         logger.info("Skipped hackathon '%s' (already exists)", cfg["name"])
         return
 
-    slug_map = {d["slug"]: ch for ch, d in zip(chapters, CHAPTER_DATA)}
-    chapter = slug_map.get(cfg["chapter_slug"])
-    if chapter is None:
-        logger.warning(
-            "Chapter '%s' not found; using '%s'",
-            cfg["chapter_slug"],
-            chapters[0].chapter_name,
-        )
-        chapter = chapters[0]
+    chapter = next((ch for ch in chapters if ch.slug == cfg["chapter_slug"]), chapters[0])
 
     hackathon = insert_test_hackathon(
         chapter.name,
@@ -671,45 +565,39 @@ def _create_hackathon(chapters):
         start_date=now + timedelta(days=45),
         end_date=now + timedelta(days=47),
         hackathon_description=(
-            "<p>FOSSIT Hackathon is a 3-day hybrid hackathon organised by the "
-            "Campus Chapter. Build something cool with guidance from mentors "
-            "and peers. Work solo or in a team, start something new, or "
-            "contribute to a FOSS project.</p>"
+            "<p>FOSSIT Hackathon is a 3-day hybrid hackathon organised by the Campus Chapter. "
+            "Build something cool with guidance from mentors and peers. Work solo or in a "
+            "team, start something new, or contribute to a FOSS project.</p>"
         ),
         is_published=1,
         is_registration_live=1,
     )
     logger.info("Created hackathon: %s", cfg["name"])
 
-    teams = []
-    for team_name in cfg["teams"]:
-        teams.append(insert_test_hackathon_team(hackathon.as_dict(), team_name=team_name))
+    teams = [insert_test_hackathon_team(hackathon.as_dict(), team_name=t) for t in cfg["teams"]]
     logger.info("Created %d hackathon teams", len(teams))
 
     insert_test_hackathon_localhost(hackathon.name, localhost_name=cfg["localhost"])
     logger.info("Created hackathon localhost: %s", cfg["localhost"])
 
-    created = 0
+    created_projects = 0
     for proj in cfg["projects"]:
-        if frappe.db.exists(
-            HACKATHON_PROJECT,
-            {"title": proj["title"], "hackathon": hackathon.name},
+        if not frappe.db.exists(
+            HACKATHON_PROJECT, {"title": proj["title"], "hackathon": hackathon.name}
         ):
-            continue
+            frappe.get_doc(
+                {
+                    "doctype": HACKATHON_PROJECT,
+                    "hackathon": hackathon.name,
+                    "team": teams[proj["team_index"]].name,
+                    "title": proj["title"],
+                    "repo_link": proj.get("repo_link", ""),
+                    "short_description": proj.get("short_description", ""),
+                    "description": proj["description"],
+                    "is_published": 1,
+                    "is_contribution_project": proj.get("is_contribution_project", 0),
+                }
+            ).insert(ignore_if_duplicate=True)
+            created_projects += 1
 
-        frappe.get_doc(
-            {
-                "doctype": HACKATHON_PROJECT,
-                "hackathon": hackathon.name,
-                "team": teams[proj["team_index"]].name,
-                "title": proj["title"],
-                "repo_link": proj.get("repo_link", ""),
-                "short_description": proj.get("short_description", ""),
-                "description": proj["description"],
-                "is_published": 1,
-                "is_contribution_project": proj.get("is_contribution_project", 0),
-            }
-        ).insert(ignore_if_duplicate=True)
-        created += 1
-
-    logger.info("Created %d hackathon projects", created)
+    logger.info("Created %d hackathon projects", created_projects)
