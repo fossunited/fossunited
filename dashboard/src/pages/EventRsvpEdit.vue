@@ -14,39 +14,20 @@
       </div>
     </div>
     <div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <div class="flex flex-col gap-3">
           <div class="text-lg font-semibold">
             <span>RSVP Form is </span>
             <span v-if="rsvp.doc.is_published" class="text-ink-green-3">Live</span>
             <span v-else class="text-red-500">Unpublished</span>
           </div>
-
           <span v-if="rsvp.doc.is_published" class="text-sm text-ink-gray-5">
             Unpublishing the form will make it unaccessible to users.
           </span>
           <span v-else class="text-sm text-ink-gray-5">
             Publish this form to make it accessible to public.
           </span>
-
-          <div class="flex items-center justify-between mt-2 p-3 border rounded-md">
-            <div class="flex flex-col">
-              <span class="font-medium text-ink-gray-8">Requires organizer approval</span>
-              <span class="text-sm text-ink-gray-5">
-                When enabled, Attendees must be accepted or denied via
-                <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
-                  insights
-                </RouterLink>
-                tab to confirm them. They will receive email based on rejection or acceptance.
-              </span>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <Switch v-model="rsvp.doc.requires_host_approval" />
-            </div>
-          </div>
         </div>
-
         <div class="flex flex-col gap-2 text-base">
           <span>Route of the RSVP form</span>
           <CopyToClipboardComponent :route="whole_route" />
@@ -56,18 +37,15 @@
 
     <div class="flex flex-col my-4 gap-6">
       <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Edit Details</div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="flex flex-col gap-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex flex-col gap-1.5">
           <FormControl
             v-model="rsvp.doc.allow_edit"
             type="checkbox"
             label="Allow RSVP Edit"
-            description=""
             size="md"
           />
-          <span class="text-sm text-ink-gray-5"
-            >Allow users to edit their RSVP after submission.</span
-          >
+          <p class="text-xs text-ink-gray-5">Allow users to edit their RSVP after submission.</p>
         </div>
         <FormControl
           v-model="rsvp.doc.max_rsvp_count"
@@ -76,9 +54,22 @@
           label="Max RSVP Count"
           description="Maximum RSVP Count for the event. Default is 100."
         />
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center gap-2">
+            <Switch v-model="rsvp.doc.requires_host_approval" />
+            <span class="text-sm font-medium text-ink-gray-8">Requires organizer approval</span>
+          </div>
+          <p class="text-xs text-ink-gray-5 leading-relaxed">
+            When enabled, attendees must be accepted or denied via the
+            <RouterLink :to="`/event/${route.params.id}/rsvp/insights`" class="underline">
+              insights
+            </RouterLink>
+            tab to confirm them. They will receive an email based on rejection or acceptance.
+          </p>
+        </div>
         <TextEditor
           label="RSVP Form Description"
-          class="col-span-2"
+          class="col-span-1 md:col-span-3"
           placeholder="This description will be shown on the RSVP form."
           :model-value="rsvp.doc.rsvp_description"
           @update:model-value="($event) => (rsvp.doc.rsvp_description = $event)"

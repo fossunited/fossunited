@@ -5,30 +5,15 @@
       <Button size="md" label="Create" variant="solid" @click="createRsvpForm" />
     </div>
     <div>
-      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-        <div class="flex flex-col gap-2">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex flex-col gap-1.5">
           <FormControl
             v-model="rsvp_doc.allow_edit"
             type="checkbox"
             label="Allow RSVP Edit"
-            description=""
             size="md"
           />
-          <span class="text-sm text-ink-gray-5"
-            >Allow users to edit their RSVP after submission.</span
-          >
-          <div class="flex items-center justify-between mt-2">
-            <div class="flex items-center pr-2">
-              <Switch v-model="rsvp_doc.requires_host_approval" />
-            </div>
-            <div class="flex flex-col">
-              <span class="font-medium text-ink-gray-8">Requires organizer approval</span>
-              <span class="text-sm text-ink-gray-5">
-                When enabled, Attendees must be accepted or denied via insights tab to confirm them
-                via mail.
-              </span>
-            </div>
-          </div>
+          <p class="text-xs text-ink-gray-5">Allow users to edit their RSVP after submission.</p>
         </div>
         <FormControl
           v-model="rsvp_doc.max_rsvp_count"
@@ -37,8 +22,18 @@
           label="Max RSVP Count"
           description="Maximum RSVP Count for the event. Default is 100."
         />
+        <div class="flex flex-col gap-1.5">
+          <div class="flex items-center gap-2">
+            <Switch v-model="rsvp_doc.requires_host_approval" />
+            <span class="text-sm font-medium text-ink-gray-8">Requires organizer approval</span>
+          </div>
+          <p class="text-xs text-ink-gray-5 leading-relaxed">
+            When enabled, attendees must be accepted or denied via the insights tab to confirm
+            them. They will receive an email based on rejection or acceptance.
+          </p>
+        </div>
         <TextEditor
-          class="col-span-2"
+          class="col-span-1 md:col-span-3"
           label="RSVP Form Description"
           placeholder="Write a description to be shown in the RSVP Form"
           :model-value="rsvp_doc.rsvp_description"
