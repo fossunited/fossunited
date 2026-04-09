@@ -16,14 +16,14 @@
           </span>
         </div>
         <Suspense>
-          <ProposalList :key="route.params.id" :event="route.params.id" @open:submission="handleOpenSubmission($event)" />
+          <ProposalList :key="`${route.params.id}-${reloadReviewed}`" :event="route.params.id" @open:submission="handleOpenSubmission($event)" />
           <template #fallback>
             <LoadingIndicator class="w-4 h-4 place-self-center" />
           </template>
         </Suspense>
       </div>
       <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
-        <ProposalDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" />
+        <ProposalDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" @review:submitted="reloadReviewed++" />
         <div v-else class="w-full h-svh flex items-center justify-center text-base text-ink-gray-5">
           Select a submission to view details.
         </div>
@@ -50,6 +50,7 @@ import dayjs from 'dayjs'
 
 const route = useRoute()
 
+const reloadReviewed = ref(0)
 const selectedSubmission = ref('')
 const showDrawer = ref(false)
 

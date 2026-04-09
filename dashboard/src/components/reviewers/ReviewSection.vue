@@ -71,6 +71,8 @@ import ReviewCommentBox from './ReviewCommentBox.vue'
 
 const session = inject('$session')
 
+const emit = defineEmits(['review:submitted'])
+
 const inEdit = ref(false)
 const selectedReview = ref(defaultSelectedReviewValue())
 
@@ -123,11 +125,13 @@ const handleUpdateReview = () => {
   inEdit.value = false
   selectedReview.value = defaultSelectedReviewValue()
   submission.fetch()
+  emit('review:submitted')
 }
 
 const handleAddReview = () => {
   selectedReview.value = defaultSelectedReviewValue()
   submission.fetch()
+  emit('review:submitted')
 }
 
 const getLabel = (status) => {

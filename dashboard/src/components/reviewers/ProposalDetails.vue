@@ -49,7 +49,7 @@
       <ProposalSpeakers :speakers="submission.data.speakers" />
     </div>
     <div v-else-if="activeTab === 2" class="flex flex-col gap-2">
-      <ReviewSection :reviews="submission.data.reviews" />
+      <ReviewSection :reviews="submission.data.reviews" @review:submitted="emit('review:submitted')" />
     </div>
   </div>
   <div v-else class="w-full h-[480px] flex items-center justify-center">
@@ -76,7 +76,7 @@ dayjs.extend(relativeTime)
 
 const route = useRoute()
 
-const emit = defineEmits(['toggle-reviewed'])
+const emit = defineEmits(['toggle-reviewed', 'review:submitted'])
 
 const submissionId = defineModel('submissionId', {
   type: String,
