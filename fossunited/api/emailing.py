@@ -34,6 +34,8 @@ EMAIL_GROUP_SUFFIX_BY_DOCTYPE = {
     HACKATHON_LOCALHOST: "-Localhost",
 }
 
+LISTMONK_MAILING_LIST_UUID = "7ca3f2e2-e5c9-4910-a19f-54d5590ca797"
+
 
 def create_email_group(
     type: EMAIL_GROUP_TYPES,
@@ -606,6 +608,34 @@ def get_sending_status(campaign_id: str) -> dict:
     stats = campaign.get_sending_status()
 
     return stats
+
+
+@frappe.whitelist(allow_guest=True)
+def listmonk_subscribe(email: str, name: str = ""):
+    """
+    Subscribe an email to the FOSS United newsletter via Listmonk's public API.
+    Failure is logged but never raised — must not block the user action that triggered it.
+    """
+    import requests
+
+    if not email or not isinstance(email, str):
+        return
+
+    listmonk_url = "https://listmonk.fossunited.org"
+
+    try:
+        resp = requests.post(
+            f"{listmonk_url}/api/public/subscription",
+            json={
+                "email": email.strip(),
+                "name": name.strip() if name else email.strip(),
+                "list_uuids": [LISTMONK_MAILING_LIST_UUID],
+            },
+            timeout=5,
+        )
+        resp.raise_for_status()
+    except Exception:
+        frappe.log_error(frappe.get_traceback(), "Listmonk newsletter subscription failed")
 
 
 def check_newsletter_permission(document_type, reference_document, chapter):

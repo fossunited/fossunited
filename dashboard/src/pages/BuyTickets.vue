@@ -392,6 +392,25 @@
                   <span class="text-ink-red-3 ml-0.5">*</span>
                 </label>
               </div>
+              <div class="flex items-start gap-2">
+                <input
+                  id="subscribe-newsletter"
+                  v-model="billing.subscribeNewsletter"
+                  type="checkbox"
+                  class="mt-0.5 rounded-sm"
+                />
+                <label for="subscribe-newsletter" class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed">
+                  Subscribe to the
+                  <a
+                    href="https://fossunited.org/newsletter"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold underline"
+                    >FOSS United newsletter</a
+                  >
+                  for updates on upcoming events and community news.
+                </label>
+              </div>
               <p class="text-xs text-ink-gray-4">
                 By completing your registration, you also agree to our
                 <a
@@ -577,6 +596,7 @@ const billing = reactive({
   coupon_code: '',
   readRefundPolicy: false,
   acceptCoC: false,
+  subscribeNewsletter: false,
 })
 
 // Computed
@@ -831,6 +851,10 @@ function createOrder() {
     }, 0) +
     numTShirtsAdded.value * (event.data.t_shirt_price || 0)
 
+  if (billing.subscribeNewsletter) {
+    newsletterSubscribe.fetch()
+  }
+
   rzpCheckout.value.createOrder(
     subTotal,
     billing.email,
@@ -861,6 +885,11 @@ function createOrder() {
 }
 
 // Resources
+const newsletterSubscribe = createResource({
+  url: 'fossunited.api.emailing.listmonk_subscribe',
+  makeParams: () => ({ email: billing.email, name: billing.buyer_name }),
+})
+
 const stateOptions = createResource({
   url: 'fossunited.api.dashboard.get_states',
   transform: (data) => data.map((s) => ({ label: s.name, value: s.name })),

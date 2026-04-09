@@ -31,7 +31,11 @@
               v-model:fields="proposalFormFields"
               v-model:references="proposalReferences"
             />
-            <SpeakersForm v-else-if="curr_section === 2" v-model:speakers="proposalSpeakers" />
+            <SpeakersForm
+              v-else-if="curr_section === 2"
+              v-model:speakers="proposalSpeakers"
+              v-model:subscribe-newsletter="subscribeNewsletter"
+            />
             <PreviewSubmission
               v-else-if="curr_section === 3"
               v-model:confirmation-fields="proposalConfirmationFields"
@@ -136,6 +140,7 @@ const proposalFormFields = ref([])
 const proposalReferences = ref([])
 const proposalSpeakers = ref([])
 const proposalConfirmationFields = ref([])
+const subscribeNewsletter = ref(false)
 
 proposalReferences.value.push(getReferenceItemSchema())
 proposalSpeakers.value.push(getSpeakerFields())
@@ -256,6 +261,10 @@ function prevStep() {
 
 const isSubmitting = ref(false)
 
+const newsletterSubscribe = createResource({
+  url: 'fossunited.api.emailing.listmonk_subscribe',
+})
+
 const insertProposal = createResource({
   url: 'frappe.client.insert',
   makeParams() {
@@ -280,6 +289,13 @@ const insertProposal = createResource({
     isSubmitting.value = false
     curr_section.value = 'success'
     toast.success('Proposal submitted successfully!')
+    if (subscribeNewsletter.value) {
+      for (const speaker of proposalSpeakers.value) {
+        const email = speaker.find((f) => f.fieldname === 'email')?.value
+        const name = speaker.find((f) => f.fieldname === 'speaker_name')?.value || ''
+        if (email) newsletterSubscribe.fetch({ email, name })
+      }
+    }
   },
   onError(err) {
     isSubmitting.value = false

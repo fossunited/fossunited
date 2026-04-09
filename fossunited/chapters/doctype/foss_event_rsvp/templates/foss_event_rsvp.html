@@ -92,17 +92,6 @@
         {% endif %}
       </div>
 
-      <!-- Newsletter subscription block -->
-      <div class="mt-12">
-        <h5 class="v3-text-primary mb-2">Stay updated with FOSS United</h5>
-        <p class="v3-text-secondary mb-3" style="font-size: 0.95rem;">
-          {{ _("Subscribe to our monthly newsletter for updates on upcoming events and community news.") }}
-        </p>
-        <a href="https://fossunited.org/newsletter" class="btn btn-secondary"
-          >{{ _("Go to Newsletter") }}</a
-        >
-      </div>
-
     </div>
   </div>
 {% endmacro %}
@@ -131,7 +120,7 @@
             required
             style="flex-shrink: 0; cursor: pointer;"
           />
-          <span class="v3-text-secondary" style="font-size: 0.875rem;">
+          <span class="v3-text-secondary">
             By registering for this event, you agree to abide by the FOSS United
             <a
               href="https://fossunited.org/code-of-conduct"
@@ -142,6 +131,17 @@
             >. The code of conduct and anti-harassment policies apply to everyone participating in
             the event including sponsors, judges, mentors, volunteers, organisers and the FOSS
             United staff.<span style="color: red;"> *</span>
+          </span>
+        </label>
+      </div>
+
+      <div class="mb-4">
+        <label class="d-flex align-items-center" style="gap: 0.5rem; cursor: pointer;">
+          <input type="checkbox" id="subscribe-newsletter" style="flex-shrink: 0; cursor: pointer;" />
+          <span class="v3-text-secondary">
+            Subscribe to the
+            <a href="https://fossunited.org/newsletter" target="_blank" rel="noopener noreferrer" class="underline">FOSS United newsletter</a>
+            for updates on upcoming events and community news.
           </span>
         </label>
       </div>
@@ -263,6 +263,18 @@
               },
               7,
             )
+
+            if ($('#subscribe-newsletter').is(':checked')) {
+              const subscriberEmail = data['email'] || (IS_LOGGED_IN ? frappe.session.user : '')
+              const subscriberName = data['full_name'] || data['name'] || ''
+              if (subscriberEmail) {
+                frappe.call({
+                  method: 'fossunited.api.emailing.listmonk_subscribe',
+                  args: { email: subscriberEmail, name: subscriberName },
+                }).catch(() => {}) // fire-and-forget
+              }
+            }
+
             if (IS_LOGGED_IN === true || IS_LOGGED_IN === 'true') {
               setTimeout(() => {
                 window.location.reload()

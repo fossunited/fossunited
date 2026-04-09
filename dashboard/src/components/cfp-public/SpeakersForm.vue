@@ -45,6 +45,21 @@
       </div>
     </div>
     <Button label="Add Speaker" icon-left="plus" class="w-fit" @click="addSpeaker" />
+
+    <div class="flex items-center gap-3 pt-2 border-t border-outline-gray-2">
+      <Switch v-model="subscribeNewsletter" />
+      <span class="text-sm text-ink-gray-7 leading-relaxed">
+        Subscribe to the
+        <a
+          href="https://fossunited.org/newsletter"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-semibold underline"
+          >FOSS United newsletter</a
+        >
+        for updates on upcoming events and community news.
+      </span>
+    </div>
   </section>
 </template>
 <script setup>
@@ -53,10 +68,16 @@ import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconUserCircle } from '@tabler/icons-vue'
 import RenderField from '@/components/form/RenderField.vue'
 import { getSpeakerFields } from '@/helpers/cfp'
+import { Switch } from 'frappe-ui'
 
 const speakers = defineModel('speakers', {
   type: Array,
   required: true,
+})
+
+const subscribeNewsletter = defineModel('subscribeNewsletter', {
+  type: Boolean,
+  default: false,
 })
 
 const props = defineProps({
