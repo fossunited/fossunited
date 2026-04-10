@@ -1,0 +1,57 @@
+<template>
+  <div
+    class="w-full mt-3 bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-xl p-3"
+  >
+    <!-- Hall selector (inline, scrollable) -->
+    <div v-if="halls.length > 0" class="mb-1 overflow-x-auto scrollbar-none">
+      <div class="flex border border-outline-gray-2 rounded-lg overflow-hidden w-full">
+        <button
+          v-for="hall in halls"
+          :key="hall"
+          class="flex-1 min-w-[94px] h-10 flex items-center justify-center px-3 border-r border-outline-gray-2 last:border-r-0 text-xs font-semibold uppercase tracking-wide transition-colors shrink-0"
+          :class="
+            selectedHall === hall
+              ? 'bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9'
+              : 'text-ink-gray-5 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
+          "
+          @click="$emit('update:selectedHall', hall)"
+        >
+          {{ hall }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Session list -->
+    <div v-if="sessions.length === 0" class="py-16 text-center text-ink-gray-4 text-sm">
+      No sessions scheduled for this hall.
+    </div>
+    <div v-else class="flex flex-col">
+      <SessionCard
+        v-for="session in sessions"
+        :key="session.name || session.title"
+        :session="session"
+      />
+    </div>
+  </div>
+</template>
+
+<script setup>
+import SessionCard from '@/components/schedule/SessionCard.vue'
+
+defineProps({
+  sessions: { type: Array, required: true },
+  halls: { type: Array, default: () => [] },
+  selectedHall: { type: String, default: null },
+})
+
+defineEmits(['update:selectedHall'])
+</script>
+
+<style scoped>
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+</style>
