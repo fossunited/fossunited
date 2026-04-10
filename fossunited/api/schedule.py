@@ -3,6 +3,7 @@ import io
 import re
 from collections import defaultdict
 from datetime import datetime, time, timedelta
+from typing import Literal
 from zoneinfo import ZoneInfo
 
 import frappe
@@ -92,7 +93,12 @@ def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def download_schedule(event, format="ics", days="", halls=""):
+def download_schedule(
+    event: str,
+    format: Literal["ics", "csv", "txt", "md", "org", "json", "markdown", "orgmode"] = "ics",
+    days: str | None = None,
+    halls: str | None = None,
+):
     """Download Event Schedule (ics/csv/txt/md/org/json) for given days and halls."""
     days_list = (
         local.request.args.getlist("days") if local.request else (days.split(",") if days else [])
