@@ -196,24 +196,21 @@ watch(filteredSubmissions, (val) => {
 <template>
   <Suspense>
     <div class="flex flex-col gap-4 w-full mb-12">
-      <div class="w-full flex justify-between items-end gap-4">
-        <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
-          <template #suffix>
-            <IconSearch class="w-4" />
-          </template>
-        </FormControl>
-        <div class="flex items-end gap-2">
-          <Select v-model="filteredStatus" :options="statusOptions" />
-          <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
-
-          <button
-            class="flex bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6"
-            @click="downloadCSV"
-          >
-            <IconDownload class="w-4 h-4 mr-1" />
-            <span>CSV</span>
-          </button>
-        </div>
+      <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
+        <template #suffix>
+          <IconSearch class="w-4" />
+        </template>
+      </FormControl>
+      <div class="flex flex-wrap items-center gap-2">
+        <Select v-model="filteredStatus" :options="statusOptions" class="shrink-0" />
+        <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
+        <button
+          class="flex items-center ml-auto bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6 shrink-0"
+          @click="downloadCSV"
+        >
+          <IconDownload class="w-4 h-4 mr-1" aria-hidden="true" />
+          <span>CSV</span>
+        </button>
       </div>
       <SubmissionsList
         v-if="submissions.data && submissions.data.length > 0"

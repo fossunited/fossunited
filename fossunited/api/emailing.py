@@ -2,6 +2,7 @@ from typing import Literal, Optional
 
 import frappe
 from frappe import _
+from frappe.rate_limiter import rate_limit
 
 from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import (
@@ -611,6 +612,7 @@ def get_sending_status(campaign_id: str) -> dict:
 
 
 @frappe.whitelist(allow_guest=True)
+@rate_limit(limit=2, seconds=60 * 60 * 12)
 def listmonk_subscribe(email: str, name: str = ""):
     """
     Subscribe an email to the FOSS United newsletter via Listmonk's public API.
