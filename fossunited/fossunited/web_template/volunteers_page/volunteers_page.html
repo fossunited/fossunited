@@ -1,10 +1,5 @@
 {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
 
-{% block foss_base %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-<style>{% include "public/css/custom.css" %}</style>
-{% endblock %}
-
 {% block head_include %}
 <meta name="description" content="Join over hundreds of volunteers united by FOSS across India" />
 {% endblock %}
@@ -18,6 +13,8 @@
 {% set docs_link = docs_link | default("https://docs.fossunited.org/volunteering") %}
 {% set docs_description = docs_description | default("Be part of the push to make FOSS common sense in India's tech and policy worlds.<br>Join us today.") %}
 {% set banner_image = banner_image | default("/assets/fossunited/images/volunteers_banner.svg") %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 
 <style>
   body { background: var(--v3-main-bg); }

@@ -439,7 +439,6 @@ h6 {
   font-size: 2rem;
 }
 
-
 .medium {
   font-weight: 500;
 }
@@ -460,7 +459,6 @@ h6 {
   color: #4ba306;
 }
 
-
 .upcoming-event {
   box-shadow: inset 0px 0px 0px 1px #4ba306;
   transition: box-shadow 0.2s ease-in-out;
@@ -469,7 +467,6 @@ h6 {
 .upcoming-event:hover {
   box-shadow: inset 0px 0px 0px 3px #4ba306;
 }
-
 
 .custom-select {
   background-color: #f5f5f5;
@@ -492,7 +489,6 @@ h6 {
 .badge .badge-sm {
   font-size: 12px;
 }
-
 
 .like-button svg {
   fill: none;
@@ -788,7 +784,6 @@ h6 {
   border-radius: 0.375rem;
 }
 
-
 .project-title {
   font-size: var(--text-base);
   font-weight: var(--fw-bold);
@@ -877,7 +872,6 @@ h6 {
   border-radius: 1rem;
 }
 
-
 .header--img-title {
   display: flex;
 }
@@ -885,7 +879,6 @@ h6 {
 .description-block > * {
   color: hsl(var(--clr-open-gray-200));
 }
-
 
 /* ------- */
 
@@ -935,7 +928,6 @@ h6 {
   border: 2px solid hsl(var(--clr-code-night-300));
   text-decoration: none;
 }
-
 
 .event-card-contents {
   display: flex;
@@ -1129,7 +1121,6 @@ h6 {
 
 /* FOSS Event Pages */
 
-
 .foss-tag {
   background: hsl(var(--clr-gray-100));
   color: hsl(var(--clr-code-night-800));
@@ -1142,7 +1133,6 @@ h6 {
   gap: 0.5rem;
   font-weight: 600;
 }
-
 
 .sponsor--tier-block {
   margin: 1rem 0;
@@ -1219,7 +1209,6 @@ h6 {
   gap: 1rem;
 }
 
-
 .copy-url-clipboard > button {
   border: none;
   padding: 0.5rem;
@@ -1263,7 +1252,6 @@ h6 {
 
 /* FORM STYLES */
 
-
 .foss-form-question {
   font-size: var(--text-base);
   font-weight: var(--fw-medium);
@@ -1274,9 +1262,7 @@ h6 {
   background: var(--v3-button-border);
 }
 
-
 /* --------------- */
-
 
 /* HACKATHON */
 
@@ -1293,7 +1279,6 @@ h6 {
   font-weight: 700;
   width: fit-content;
 }
-
 
 .projects-grid {
   display: grid;
@@ -1323,12 +1308,10 @@ h6 {
   color: hsl(var(--clr-code-night-600));
 }
 
-
 .project-card--team {
   font-size: var(--text-sm);
   font-weight: var(--fw-medium);
 }
-
 
 .status-block-deadline {
   font-size: var(--text-xs);
@@ -1536,7 +1519,6 @@ h6 {
     grid-template-columns: repeat(2, minmax(200px, 1fr));
     gap: 1rem;
   }
-
 }
 @media screen and (max-width: 425px) {
   button {
@@ -1603,7 +1585,8 @@ h6 {
 } /* this costed me 10 mins debug of not closing */
 
 /* These are generic css rules from frappe blog, web page and web form */
-:is(article.blog-content, article.web-page-content, .from-markdown, .ql-editor) :is(h1, h2, h3, h4, h5, h6) {
+:is(article.blog-content, article.web-page-content, .from-markdown, .ql-editor)
+  :is(h1, h2, h3, h4, h5, h6) {
   padding: 2rem 0 1.5rem 0;
 }
 
@@ -2647,7 +2630,6 @@ a.hover-underline:hover {
   background: var(--v3-button-border);
 }
 
-
 /* Base Event Card - Used everywhere */
 .v3-event-card {
   position: relative;
@@ -2998,7 +2980,6 @@ a.hover-underline:hover {
     justify-content: left;
   }
 }
-
 
 /* TODO: Replace .events-grid-4, .members-grid-6, etc. */
 .v3-grid-auto {

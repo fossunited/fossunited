@@ -1,11 +1,5 @@
 {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
 
-{% block foss_base %}
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
-<style>{% include "public/css/custom.css" %}</style>
-{% endblock %}
-
-
 {% block page_content %}
   {% set page_title = page_title | default("Grants Thesis") %}
   {% set intro_text = intro_text | default("FOSS United Foundation was launched in 2020 with one broad goal - Strengthening India's FOSS ecosystem...") %}
@@ -24,6 +18,7 @@
 
   {% set changes_text = changes_text | default("These are the changes that we have made to the grants program and our plans for 2026...") %}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
     body {
       background: var(--v3-main-bg);
