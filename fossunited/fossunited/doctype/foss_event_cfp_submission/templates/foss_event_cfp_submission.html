@@ -28,7 +28,6 @@
   /* Misc */
   .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
   .dot-sep { font-size: 0.5rem; }
-  .text-break-all { word-break: break-all; }
 
 </style>
 
@@ -221,26 +220,33 @@
 
 {% macro speaker_card(speaker) %}
 <div class="border border-section rounded p-3 d-flex flex-column gap-2">
-  <div class="d-flex justify-content-between gap-6">
-    <div class="d-flex flex-column justify-content-between gap-2">
-      <div class="d-flex flex-column gap-1">
-        <h5 class="v3-text-primary text-lg semi-bold">{{ speaker.full_name }}</h5>
-        <div class="d-flex flex-column v3-text-secondary text-sm">
-          {% if speaker.designation %}<span>{{ speaker.designation }}</span>{% endif %}
-          {% if speaker.organization %}<span class="font-weight-bold">{{ speaker.organization }}</span>{% endif %}
-        </div>
-      </div>
+  <div class="d-flex align-items-start justify-content-between gap-6">
+    <div class="d-flex flex-column gap-1">
+      <h5 class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</h5>
+      {% if speaker.bio %}
+      <span class="v3-text-primary">{{ speaker.bio }}</span>
+      {% endif %}
+      {% if speaker.designation or speaker.organization %}
+        <span class="v3-text-secondary text-sm">
+          {%- if speaker.designation and speaker.organization -%}
+            {{ speaker.designation }} <span class="v3-text-tertiary">|</span> <span>{{ speaker.organization }}</span>
+          {%- elif speaker.designation -%}
+            {{ speaker.designation }}
+          {%- else -%}
+            <span >{{ speaker.organization }}</span>
+          {%- endif -%}
+        </span>
+      {% endif %}
       {% if speaker.social_link %}
         <a
           href="{{ speaker.social_link | e }}"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="{{ speaker.full_name }}'s social profile"
+          class="align-items-center border border-section rounded v3-text-secondary text-sm px-2 py-1 mt-2"
         >
-          <span class="border border-section rounded v3-text-secondary d-inline-flex align-items-center gap-1 text-xs px-2 py-1 text-break-all">
-            <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
-            {{ speaker.social_link | e }}
-          </span>
+          <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
+          <span>{{ speaker.social_link | e }}</span>
         </a>
       {% endif %}
     </div>
@@ -251,24 +257,6 @@
       loading="lazy"
     />
   </div>
-  {% if speaker.bio %}
-  <button
-    class="border-0 bg-transparent v3-text-secondary text-sm p-2 w-fit cursor-pointer"
-    aria-expanded="false"
-    aria-controls="bio-{{ speaker.name }}"
-    aria-label="Show bio for {{ speaker.full_name }}"
-    onclick="
-      var panel = document.getElementById('bio-{{ speaker.name }}');
-      if (!panel) return;
-      var expanded = panel.style.display === 'none' || !panel.style.display;
-      panel.style.display = expanded ? 'block' : 'none';
-      this.setAttribute('aria-expanded', String(expanded));
-      this.setAttribute('aria-label', expanded ? 'Hide bio for {{ speaker.full_name }}' : 'Show bio for {{ speaker.full_name }}');
-      this.innerText = expanded ? 'Hide Bio' : 'Show Bio';
-    "
-  >Show Bio</button>
-  <div id="bio-{{ speaker.name }}" class="v3-text-primary p-2 d-none">{{ speaker.bio }}</div>
-  {% endif %}
 </div>
 {% endmacro %}
 
