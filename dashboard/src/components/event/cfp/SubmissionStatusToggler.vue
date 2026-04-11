@@ -2,7 +2,7 @@
 import { toast } from 'vue-sonner'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
 import { Badge, Dialog, createResource } from 'frappe-ui'
-import { inject, ref, watch } from 'vue'
+import { computed, inject, ref, watch } from 'vue'
 import {
   SelectContent,
   SelectGroup,
@@ -19,21 +19,32 @@ import {
 import { IconChevronDown } from '@tabler/icons-vue'
 
 const submission = inject('curr_submission')
-
-const newStatus = ref(submission.data.status)
-
+const newStatus = ref(submission.data?.status)
 const options = ['Approved', 'Rejected', 'Screening']
-
 const showDialog = ref(false)
-
 const emit = defineEmits(['status-change'])
+const refreshSubmissions = inject('refreshSubmissions')
 
 watch(
-  () => newStatus.value,
+  () => submission.data?.name,
   () => {
-    showDialog.value = true
+    if (!submission.data) return
+    newStatus.value = submission.data.status
+    showDialog.value = false
   },
 )
+
+function onSelectStatusUpdate(value) {
+  const current = submission.data?.status
+  if (current == null || value === current) return
+  showDialog.value = true
+}
+
+function revertSelectToServer() {
+  if (submission.data) {
+    newStatus.value = submission.data.status
+  }
+}
 
 const changeStatus = createResource({
   url: 'frappe.client.set_value',
@@ -50,39 +61,45 @@ const changeStatus = createResource({
     emit('status-change', newStatus.value)
     showDialog.value = false
     submission.fetch()
+    refreshSubmissions?.()
     toast.success('Status updated successfully')
   },
   onError(error) {
     toast.error('Failed to update status', error.message)
   },
 })
+
+const confirmDialogOptions = computed(() => ({
+  title: 'Confirm',
+  icon: {
+    name: 'alert-triangle',
+    appearance: 'warning',
+  },
+  actions: [
+    {
+      label: 'Confirm',
+      variant: 'solid',
+      onClick: (ctx) => {
+        if (newStatus.value === submission.data?.status) {
+          ctx.close()
+          return
+        }
+        changeStatus.fetch()
+      },
+      loading: changeStatus.loading,
+    },
+    {
+      label: 'Cancel',
+      onClick: (ctx) => {
+        revertSelectToServer()
+        ctx.close()
+      },
+    },
+  ],
+}))
 </script>
 <template>
-  <Dialog
-    v-model="showDialog"
-    class="z-50"
-    :options="{
-      title: 'Confirm',
-      icon: {
-        name: 'alert-triangle',
-        appearance: 'warning',
-      },
-      actions: [
-        {
-          label: 'Confirm',
-          variant: 'solid',
-          onClick: () => {
-            changeStatus.fetch()
-          },
-          loading: changeStatus.loading,
-        },
-        {
-          label: 'Cancel',
-          onClick: () => (showDialog = false),
-        },
-      ],
-    }"
-  >
+  <Dialog v-model="showDialog" class="z-50" :options="confirmDialogOptions">
     <template #body-content>
       <div>
         <p class="text-base leading-6">
@@ -97,7 +114,7 @@ const changeStatus = createResource({
     </template>
   </Dialog>
   <br />
-  <SelectRoot v-model="newStatus">
+  <SelectRoot v-model="newStatus" @update:model-value="onSelectStatusUpdate">
     <SelectTrigger
       class="inline-flex min-w-32 items-center rounded text-sm leading-none h-8 gap-2 bg-surface-white"
       aria-label="Customise options"

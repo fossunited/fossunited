@@ -119,6 +119,10 @@ const cfpSubmissions = createResource({
   },
 })
 
+defineExpose({
+  reloadSubmissions: () => cfpSubmissions.reload(),
+})
+
 function applyFilters() {
   if (!cfpSubmissions.originalData) return
 

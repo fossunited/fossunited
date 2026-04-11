@@ -4,10 +4,11 @@ import SubmissionsList from '@/components/event/cfp/SubmissionsList.vue'
 import SubmissionDrawer from '@/components/event/cfp/SubmissionDrawer.vue'
 import SubmissionDetails from '@/components/event/cfp/SubmissionDetails.vue'
 import { createResource, LoadingIndicator } from 'frappe-ui'
-import { ref, inject } from 'vue'
+import { ref, inject, provide } from 'vue'
 import { useRoute } from 'vue-router'
 import { isSmallScreen } from '@/helpers/utils'
 
+const submissionsListRef = ref(null)
 const route = useRoute()
 const event = inject('event')
 
@@ -32,6 +33,11 @@ const handleOpenSubmission = (submission) => {
     showDrawer.value = true
   }
 }
+
+const refreshSubmissions = () => {
+  submissionsListRef.value?.reloadSubmissions?.()
+}
+provide('refreshSubmissions', refreshSubmissions)
 </script>
 
 <template>
@@ -43,7 +49,11 @@ const handleOpenSubmission = (submission) => {
         <InsightsGrid :event-id="route.params.id" />
       </Suspense>
       <Suspense>
-        <SubmissionsList :event="route.params.id" @open:submission="handleOpenSubmission($event)" />
+        <SubmissionsList
+          ref="submissionsListRef"
+          :event="route.params.id"
+          @open:submission="handleOpenSubmission($event)"
+        />
         <template #fallback>
           <LoadingIndicator class="w-5 h-5" />
         </template>
