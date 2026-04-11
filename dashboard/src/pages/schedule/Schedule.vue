@@ -70,6 +70,28 @@
             </div>
             <ScheduleDownload :schedule="schedule.data" :event="event.data" />
           </div>
+          <!-- Row 3: Halls (list view only — same sticky card as search/days) -->
+          <div
+            v-if="view === 'list' && !isSearching && halls.length > 0"
+            class="overflow-x-auto scrollbar-none -mx-0.5 px-0.5"
+          >
+            <div class="flex border border-outline-gray-2 rounded-lg overflow-hidden w-max min-w-full">
+              <button
+                v-for="hall in halls"
+                :key="hall"
+                type="button"
+                class="flex-1 min-w-[94px] h-10 flex items-center justify-center px-3 border-r border-outline-gray-2 last:border-r-0 text-xs font-semibold uppercase tracking-wide transition-colors shrink-0"
+                :class="
+                  selectedHall === hall
+                    ? 'bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-9'
+                    : 'text-ink-gray-5 hover:bg-surface-gray-2 dark:hover:bg-surface-gray-3'
+                "
+                @click="selectedHall = hall"
+              >
+                {{ hall }}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <!-- Fade shadow -->
@@ -80,12 +102,7 @@
     <template v-if="!isSearching">
       <!-- List view -->
       <div v-if="view === 'list'" class="max-w-[840px] mx-auto px-3 sm:px-4 pb-12 w-full">
-        <HallDayView
-          :sessions="selectedHallSessions"
-          :halls="halls"
-          :selected-hall="selectedHall"
-          @update:selected-hall="selectedHall = $event"
-        />
+        <HallDayView :sessions="selectedHallSessions" />
       </div>
       <!-- Timeline view: expands to full viewport width if halls exceed 840px -->
       <div v-else class="w-full pb-12 px-3 sm:px-4">
