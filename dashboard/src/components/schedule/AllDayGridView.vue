@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full mt-4">
-    <div v-if="!sortedHalls.length" class="py-16 text-center text-ink-gray-4">
+  <div class="w-full mt-4" role="region" aria-label="Timeline schedule for selected day">
+    <div v-if="!sortedHalls.length" class="py-16 text-center text-ink-gray-4" role="status">
       No sessions for this day.
     </div>
 
@@ -25,6 +25,7 @@
         <div
           class="sticky left-0 z-10 shrink-0 w-14 relative border-r border-outline-gray-2 bg-surface-gray-2 dark:bg-surface-gray-1"
           :style="{ height: totalHeight + 74 + 'px' }"
+          aria-label="Time of day"
         >
           <div
             v-for="label in timeLabels"

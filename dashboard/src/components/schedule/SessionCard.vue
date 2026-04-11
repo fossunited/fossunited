@@ -93,21 +93,24 @@
   <!-- ── Desktop card: timeline layout ────────────────────────────────────── -->
   <div class="hidden sm:flex flex-col w-full py-1">
     <div class="flex items-center flex-wrap gap-y-2">
-      <div class="flex items-center h-10 shrink-0">
-        <button
+      <button
+        class="flex items-center h-10 shrink-0 transition-opacity hover:opacity-80"
+        title="Add to calendar"
+        @click.stop="downloadIcs"
+      >
+        <div
           class="h-10 w-10 shrink-0 bg-surface-gray-7 rounded-l-lg flex items-center justify-center text-ink-white transition-opacity hover:opacity-80"
-          title="Add to calendar"
-          @click.stop="downloadIcs"
         >
           <IconCalendarPlus class="w-5 h-5" />
-        </button>
+        </div>
         <div
           v-if="!preview"
           class="h-10 px-3 bg-surface-gray-7 rounded-r-lg text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
+          @click.stop="downloadIcs"
         >
           {{ formatTime(session.start_time) }}
         </div>
-      </div>
+      </button>
       <!-- YouTube -->
       <a
         v-if="session.talk_video"
