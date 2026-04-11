@@ -29,7 +29,7 @@
           <div
             v-for="label in timeLabels"
             :key="label.minutes"
-            class="absolute right-1.5 flex items-center gap-1"
+            class="sticky absolute right-1.5 flex items-center gap-1"
             :style="{ top: offsetFor(label.minutes) + 74 + 'px', transform: 'translateY(-50%)' }"
           >
             <span class="text-[10px] font-semibold text-ink-gray-5 whitespace-nowrap">

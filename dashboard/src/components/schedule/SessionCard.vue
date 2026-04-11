@@ -2,10 +2,15 @@
   <!-- Mobile card: two-panel stacked ──────────────────────────────────── -->
   <div class="sm:hidden flex flex-col w-full py-2">
     <!-- Top panel: time+cal overlap | speaker thumbs -->
-    <div class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-2xl p-2 mb-[-14px]">
+    <div
+      class="relative z-10 flex items-center justify-between bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-2xl p-2 mb-[-14px]"
+    >
       <!-- Overlapping time chip + calendar button -->
       <div class="isolate flex">
-        <div class="relative z-[2] h-11 w-[94px] rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center justify-center whitespace-nowrap px-2.5 shrink-0">
+        <div
+          v-if="!preview"
+          class="relative z-[2] h-11 w-[94px] rounded-lg bg-surface-gray-7 text-ink-white text-sm font-semibold uppercase flex items-center justify-center whitespace-nowrap px-2.5 shrink-0"
+        >
           {{ formatTime(session.start_time) }}
         </div>
         <button
@@ -73,8 +78,11 @@
         </span>
         <span
           v-if="showCategory"
-          class="h-6 px-2 rounded-lg text-xs font-semibold uppercase flex items-center whitespace-nowrap"
-          :class="categoryStyle"
+          class="rounded font-bold uppercase flex items-center justify-center whitespace-nowrap leading-[1]"
+          :class="[
+            categoryStyle,
+            preview ? 'h-3 px-1 text-[9px] leading-[1] tracking-tight' : 'h-6 px-2 text-xs',
+          ]"
         >
           {{ sessionCategory }}
         </span>
@@ -84,7 +92,7 @@
 
   <!-- ── Desktop card: timeline layout ────────────────────────────────────── -->
   <div class="hidden sm:flex flex-col w-full py-1">
-    <div class="flex items-center">
+    <div class="flex items-center flex-wrap gap-y-2">
       <div class="flex items-center h-10 shrink-0">
         <button
           class="h-10 w-10 shrink-0 bg-surface-gray-7 rounded-l-lg flex items-center justify-center text-ink-white transition-opacity hover:opacity-80"
@@ -93,7 +101,10 @@
         >
           <IconCalendarPlus class="w-5 h-5" />
         </button>
-        <div class="h-10 px-3 bg-surface-gray-7 rounded-r-lg text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap">
+        <div
+          v-if="!preview"
+          class="h-10 px-3 bg-surface-gray-7 rounded-r-lg text-ink-white text-base font-semibold uppercase flex items-center whitespace-nowrap"
+        >
           {{ formatTime(session.start_time) }}
         </div>
       </div>
@@ -110,7 +121,7 @@
         <IconBrandYoutube class="w-4 h-4" />
       </a>
       <!-- Divider line -->
-      <div class="flex-1 border-t border-outline-gray-5 mx-3 min-w-4" />
+      <div class="hidden md:block flex-1 border-t border-outline-gray-5 mx-3 min-w-[20px]" />
       <!-- Badges -->
       <div class="flex items-center gap-1.5 shrink-0 flex-wrap justify-end">
         <span
@@ -121,8 +132,11 @@
         </span>
         <span
           v-if="showCategory"
-          class="h-6 px-2 rounded-lg text-xs font-semibold uppercase flex items-center whitespace-nowrap"
-          :class="categoryStyle"
+          class="rounded font-bold uppercase flex items-center justify-center whitespace-nowrap leading-[1]"
+          :class="[
+            categoryStyle,
+            preview ? 'h-3 px-1 text-[9px] leading-[1] tracking-tight' : 'h-6 px-2 text-xs',
+          ]"
         >
           {{ sessionCategory }}
         </span>
@@ -143,7 +157,7 @@
 
     <div class="flex items-stretch">
       <!-- Vertical dashed line: 40px wide, centered under calendar button -->
-      <div class="w-10 shrink-0 flex justify-center py-1">
+      <div v-if="!preview" class="w-10 shrink-0 flex justify-center py-1">
         <div class="border-l border-outline-gray-5 w-0" />
       </div>
       <!-- Content -->
@@ -186,9 +200,11 @@
               {{ speaker.full_name }}
             </span>
           </div>
-          <p v-if="speakerMeta" class="text-xs text-ink-gray-5 line-clamp-2 leading-relaxed">
-            {{ speakerMeta }}
-          </p>
+          <p
+            v-if="speakerMeta"
+            class="text-xs text-ink-gray-5 line-clamp-2 leading-relaxed"
+            v-html="speakerMeta"
+          />
         </div>
       </component>
     </div>
@@ -203,6 +219,7 @@ import { useSession } from '@/composables/useSession'
 
 const props = defineProps({
   session: { type: Object, required: true },
+  preview: { type: Boolean, default: false },
 })
 
 const {

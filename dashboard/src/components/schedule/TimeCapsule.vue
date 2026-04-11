@@ -1,10 +1,15 @@
 <template>
-  <div class="relative" @mouseleave="closeExpanded">
+  <div
+    class="relative outline-none"
+    tabindex="0"
+    @mouseleave="closeExpanded"
+    @blur="isExpanded = false"
+  >
     <!-- Compact 60px card: hover expands, click navigates to CFP -->
     <div
       class="h-[60px] bg-surface-white dark:bg-surface-gray-2 border border-outline-gray-2 rounded-[16px] flex items-center gap-2 px-2 cursor-pointer select-none overflow-hidden"
       :title="session.title"
-      @click="handleClick"
+      @click="handleClick($event)"
       @mouseenter="openExpanded"
     >
       <div
@@ -21,10 +26,10 @@
     <Transition name="fade-up">
       <div
         v-if="isExpanded"
-        class="absolute left-0 top-full z-50 w-80 shadow-xl"
+        class="absolute left-0 top-full z-50 w-auto shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
         @click.stop
       >
-        <SessionCard :session="session" />
+        <SessionCard :session="session" preview />
       </div>
     </Transition>
   </div>
@@ -44,12 +49,17 @@ const { formatTime, cfpHref } = useSession(toRef(props, 'session'))
 const isExpanded = ref(false)
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
 
-function openExpanded() { if (!isTouchDevice) isExpanded.value = true }
-function closeExpanded() { if (!isTouchDevice) isExpanded.value = false }
+function openExpanded() {
+  if (!isTouchDevice) isExpanded.value = true
+}
+function closeExpanded() {
+  if (!isTouchDevice) isExpanded.value = false
+}
 
-function handleClick() {
+function handleClick(e) {
   if (isTouchDevice && !isExpanded.value) {
     isExpanded.value = true
+    e.currentTarget.focus()
     return
   }
   navigateToCfp()
@@ -64,7 +74,9 @@ function navigateToCfp() {
 <style scoped>
 .fade-up-enter-active,
 .fade-up-leave-active {
-  transition: opacity 0.12s ease, transform 0.12s ease;
+  transition:
+    opacity 0.12s ease,
+    transform 0.12s ease;
 }
 .fade-up-enter-from,
 .fade-up-leave-to {
