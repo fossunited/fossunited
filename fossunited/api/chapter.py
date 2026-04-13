@@ -97,16 +97,17 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 6)
-def generate_ics(event_ids: str | list, chapter: str | None = None):
+def generate_ics(event_ids: str | list, chapter: str | None = None, download: bool = False):
     """
     Return ICS event for the event ids provided
 
     Args:
         event_ids (list): list of event ids (doc.name)
         chapter (str, optional): chapter docname to restrict events to
+        download (bool): if True, serve as a file download instead of returning string
 
     Returns:
-        str: ICS data
+        str: ICS data (when download=False)
     """
     try:
         if isinstance(event_ids, str) and len(event_ids) > 10000:
@@ -173,7 +174,18 @@ def generate_ics(event_ids: str | list, chapter: str | None = None):
         e.end = end
         c.events.add(e)
 
-    return c.serialize()
+    ics_data = c.serialize()
+
+    if download:
+        frappe.response["type"] = "download"
+        frappe.response["filename"] = "event.ics"
+        frappe.response["filecontent"] = (
+            ics_data.encode("utf-8") if isinstance(ics_data, str) else ics_data
+        )
+        frappe.response["content_type"] = "text/calendar; charset=utf-8"
+        return
+
+    return ics_data
 
 
 def get_chapter_members_email(chapter):

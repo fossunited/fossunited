@@ -604,19 +604,12 @@
           return alert('Please narrow filters to 30 events or fewer to export.')
         }
 
-          frappe.call({
-            method: 'fossunited.api.chapter.generate_ics',
-            args: { event_ids: JSON.stringify(ids) },
-            callback: (r) => {
-              if (!r.message) return alert('Failed to generate ICS file')
-
-              const blob = new Blob([r.message], { type: 'text/calendar' })
-              const a = document.createElement('a')
-              a.href = URL.createObjectURL(blob)
-              a.download = 'events.ics'
-              a.click()
-            },
-          })
+          const a = document.createElement('a')
+          a.href = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + encodeURIComponent(JSON.stringify(ids)) + '&download=1'
+          a.download = 'events.ics'
+          document.body.appendChild(a)
+          a.click()
+          document.body.removeChild(a)
         }
       }
 

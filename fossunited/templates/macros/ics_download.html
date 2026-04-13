@@ -1,51 +1,26 @@
 {% macro ics_download(event_ids, filename, chapter='', btn_id=None, btn_class='btn btn-sm btn-secondary', fn_name=None) %}
+{% set ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + (event_ids | tojson | urlencode) + '&download=1' + ('&chapter=' + chapter if chapter else '') %}
 {% if btn_id %}
-<button
+<a
   id="{{ btn_id }}"
+  href="{{ ics_url }}"
   class="{{ btn_class }}"
   aria-label="Download events as ICS calendar file"
+  download="{{ filename }}"
 >
   <i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS
-</button>
+</a>
 {% endif %}
+{% if fn_name %}
 <script>
-  (function () {
-    function _download(ids, btn) {
-      if (btn) { btn.disabled = true; btn.textContent = 'Downloading\u2026'; }
-      frappe.call({
-        method: 'fossunited.api.chapter.generate_ics',
-        args: {
-          event_ids: JSON.stringify(ids),
-          {% if chapter %}chapter: '{{ chapter }}',{% endif %}
-        },
-        callback: function (r) {
-          if (r.message) {
-            var blob = new Blob([r.message], { type: 'text/calendar;charset=utf-8' });
-            var url = URL.createObjectURL(blob);
-            var a = document.createElement('a');
-            a.href = url;
-            a.download = '{{ filename }}';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-          }
-        },
-        always: function () {
-          if (btn) {
-            btn.disabled = false;
-            btn.innerHTML = '<i class="ti ti-calendar-down" aria-hidden="true"></i> Download ICS';
-          }
-        },
-      });
-    }
-    {% if btn_id %}
-    var _btn = document.getElementById('{{ btn_id }}');
-    if (_btn) { _btn.addEventListener('click', function () { _download({{ event_ids | tojson }}, _btn); }); }
-    {% endif %}
-    {% if fn_name %}
-    window.{{ fn_name }} = function () { _download({{ event_ids | tojson }}, null); };
-    {% endif %}
-  })();
+  window.{{ fn_name }} = function () {
+    var a = document.createElement('a');
+    a.href = '{{ ics_url }}';
+    a.download = '{{ filename }}';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 </script>
+{% endif %}
 {% endmacro %}
