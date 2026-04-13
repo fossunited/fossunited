@@ -141,9 +141,13 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
         filters=filters,
         fields=[
             "event_name",
+            "event_type",
+            "event_bio",
             "event_location",
+            "map_link",
             "chapter_name",
             "event_description",
+            "livestream_link",
             "route",
             "event_start_date",
             "event_end_date",
@@ -164,10 +168,22 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
 
         e = Event()
         e.name = event.event_name
-        e.location = event.event_location
+        if event.event_location and event.map_link:
+            e.location = f"{event.event_location}\n{event.map_link}"
+        else:
+            e.location = event.event_location or event.map_link or None
         e.organizer = event.chapter_name + " Community"
-        # Optional hardening (keep if desired):
-        e.description = frappe.utils.strip_html(event.event_description or "") or None
+        if event.event_type:
+            e.categories = {event.event_type}
+        description_parts = []
+        if event.event_bio:
+            description_parts.append(event.event_bio)
+        long_desc = frappe.utils.strip_html(event.event_description or "").strip()
+        if long_desc:
+            description_parts.append(long_desc)
+        if event.livestream_link:
+            description_parts.append(f"Livestream: {event.livestream_link}")
+        e.description = "\n\n".join(description_parts) or None
         if event.route:
             e.url = f"https://fossunited.org/{str(event.route).lstrip('/')}"
         e.begin = start
