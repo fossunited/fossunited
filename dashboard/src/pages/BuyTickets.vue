@@ -10,7 +10,7 @@
   <div v-if="event.data" class="bg-surface-gray-1 min-h-screen">
     <main
       id="main-content"
-      class="max-w-[800px] mx-auto w-full flex flex-col gap-6 md:gap-10 py-8 px-4 pb-24"
+      class="max-w-[800px] mx-auto w-full flex flex-col gap-4 px-4 pb-24"
       aria-label="Ticket registration"
     >
       <Breadcrumb :items="breadcrumbItems" />
@@ -274,7 +274,7 @@
           <!-- STEP 4: Billing -->
           <div
             v-else-if="currentStep === 4"
-            class="flex flex-col md:flex-row gap-6 md:gap-10 items-start"
+            class="flex flex-col md:flex-row gap-4 items-start"
           >
             <div
               class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6 flex-1"

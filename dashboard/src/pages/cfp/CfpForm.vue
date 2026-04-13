@@ -3,7 +3,7 @@
   <div class="w-full flex flex-col items-center bg-surface-gray-1 mb-20 min-h-screen">
     <main
       v-if="cfpData.data"
-      class="max-w-[800px] w-full flex flex-col gap-6 md:gap-10 my-4 px-4"
+      class="max-w-[800px] w-full flex flex-col gap-4 my-2 px-4"
       :aria-label="`CFP Application — ${sectionLabel}`"
     >
       <Breadcrumb :items="breadcrumb_items" />
