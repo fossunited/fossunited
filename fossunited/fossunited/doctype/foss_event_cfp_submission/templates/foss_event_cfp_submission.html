@@ -25,6 +25,11 @@
   /* Speaker photo */
   .speaker-photo { width: 6rem; height: 6rem; object-fit: cover; object-position: top; }
 
+  /* Speaker card */
+  .speaker-col { min-width: 0; }
+  .speaker-social { min-width: 0; overflow: hidden; }
+  .speaker-social-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
   /* Misc */
   .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
   .dot-sep { font-size: 0.5rem; }
@@ -53,14 +58,14 @@
 {% endblock %}
 
 {% macro like_button() %}
-<div class="rounded px-3 py-2 d-inline-flex v3-bg-primary text-nowrap">
+<div class="rounded border p-2 d-inline-flex v3-bg-card text-nowrap">
   {% include "templates/includes/like/like.html" %}
 </div>
 {% endmacro %}
 
 
 {% macro talk_header() %}
-<div class="d-flex flex-column gap-3">
+<div class="d-flex flex-column gap-2">
   <div class="d-flex align-items-center gap-2 flex-wrap">
     <span class="v3-tag v3-tag--category">{{ doc.session_type }}</span>
     <span class="v3-tag v3-tag--category">
@@ -81,7 +86,7 @@
     {% endif %}
   </div>
 
-  <div class="d-flex justify-content-between gap-4">
+  <div class="d-flex justify-content-between gap-2">
     <h1 class="v3-text-primary text-3xl font-weight-bold">{{ doc.talk_title }}</h1>
     <div class="d-flex align-items-center flex-shrink-0 gap-2">
       {% if is_owner %}
@@ -221,32 +226,32 @@
 {% macro speaker_card(speaker) %}
 <div class="border border-section rounded p-3 d-flex flex-column gap-2">
   <div class="d-flex align-items-start justify-content-between gap-6">
-    <div class="d-flex flex-column gap-1">
+    <div class="d-flex flex-column gap-1 speaker-col">
       <h5 class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</h5>
-      {% if speaker.bio %}
-      <span class="v3-text-primary">{{ speaker.bio }}</span>
-      {% endif %}
       {% if speaker.designation or speaker.organization %}
         <span class="v3-text-secondary text-sm">
           {%- if speaker.designation and speaker.organization -%}
-            {{ speaker.designation }} <span class="v3-text-tertiary">|</span> <span>{{ speaker.organization }}</span>
+            {{ speaker.designation }} <span>|</span> {{ speaker.organization }}
           {%- elif speaker.designation -%}
             {{ speaker.designation }}
           {%- else -%}
-            <span >{{ speaker.organization }}</span>
+            {{ speaker.organization }}
           {%- endif -%}
         </span>
       {% endif %}
+        {% if speaker.bio %}
+          <span class="v3-text-secondary text-sm py-2 mb-0">{{ speaker.bio }}</span>
+        {% endif %}
       {% if speaker.social_link %}
         <a
           href="{{ speaker.social_link | e }}"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="{{ speaker.full_name }}'s social profile"
-          class="align-items-center border border-section rounded v3-text-secondary text-sm px-2 py-1 mt-2"
+          class="d-flex align-items-center gap-1 border border-section rounded v3-text-secondary text-xs px-2 py-1 mt-1 speaker-social"
         >
           <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
-          <span>{{ speaker.social_link | e }}</span>
+          <span class="speaker-social-url">{{ speaker.social_link | e }}</span>
         </a>
       {% endif %}
     </div>
