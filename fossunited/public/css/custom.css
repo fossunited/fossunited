@@ -1,3 +1,6 @@
+/* Inter — use frappe's self-hosted copy, avoids broken website-theme font path */
+@import url('/assets/frappe/css/fonts/inter/inter.css');
+
 /* FFF Forward Font */
 @font-face {
   font-family: 'FFF Forward';
@@ -999,7 +1002,7 @@ h6 {
 
 .talk-card--event-name-text {
   color: #666;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 600;
@@ -1010,7 +1013,7 @@ h6 {
 
 .talk-card--title {
   color: #1a1a1a;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 600;
@@ -1035,7 +1038,7 @@ h6 {
 .talk-card--location-date {
   align-items: center;
   color: #4b4b4b;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -1058,7 +1061,7 @@ h6 {
 
 .chapter-volunteer-card--role {
   color: #08b74f;
-  font-family: Inter;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;

@@ -1,3 +1,5 @@
+import os as _os
+
 app_name = "fossunited"
 app_title = "FOSSUnited Platform"
 app_publisher = "Frappe x FOSSUnited"
@@ -13,7 +15,9 @@ fixtures = ["State", "City", "FOSS Event Type"]
 # ------------------
 
 # include js, css files in header of web template
-web_include_css = ["/assets/fossunited/css/custom.css"]
+_css_file = _os.path.join(_os.path.dirname(__file__), "public/css/custom.css")
+_css_v = str(int(_os.path.getmtime(_css_file))) if _os.path.exists(_css_file) else "1"
+web_include_css = [f"/assets/fossunited/css/custom.css?v={_css_v}"]
 web_include_js = ["website.bundle.js"]
 
 # Jinja
