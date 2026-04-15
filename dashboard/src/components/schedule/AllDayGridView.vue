@@ -15,7 +15,7 @@
     <div
       v-else
       :class="shouldCenter ? 'w-full' : 'max-w-[840px] mx-auto'"
-      style="overflow-x: auto; overflow-y: clip"
+      style="overflow-x: auto; overflow-y: clip; padding-bottom: 360px"
     >
       <div
         class="flex w-max"
@@ -23,7 +23,7 @@
       >
         <!-- Time axis: sticky so it stays visible during horizontal scroll -->
         <div
-          class="sticky left-0 z-10 shrink-0 w-14 relative border-r border-outline-gray-2 bg-surface-gray-2 dark:bg-surface-gray-1"
+          class="sticky left-0 z-30 shrink-0 w-14 relative border-r border-outline-gray-2 bg-surface-gray-2 dark:bg-surface-gray-1"
           :style="{ height: totalHeight + 74 + 'px' }"
           aria-label="Time of day"
         >
@@ -56,8 +56,8 @@
             class="flex flex-col"
             style="min-width: 200px; width: 200px"
           >
-            <!-- Hall header -->
-            <div class="h-[74px] flex items-end pb-3 px-3 shrink-0">
+            <!-- Hall header: sticky top so it stays visible on page scroll-down -->
+            <div class="h-[74px] flex items-end pb-3 px-3 shrink-0 sticky top-0 z-20 bg-surface-gray-2 dark:bg-surface-gray-1">
               <div
                 class="bg-surface-gray-3 dark:bg-surface-gray-4 text-ink-gray-7 text-xs font-semibold uppercase px-3 py-2 rounded-lg border border-outline-gray-2 whitespace-nowrap w-full text-center"
               >

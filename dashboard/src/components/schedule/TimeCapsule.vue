@@ -26,7 +26,7 @@
     <Transition name="fade-up">
       <div
         v-if="isExpanded"
-        class="absolute left-0 top-full z-50 w-auto shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
+        class="absolute left-0 top-full z-50 w-[300px] shadow-xl bg-surface-white dark:bg-surface-gray-2 rounded-[16px] px-2 md:px-4"
         @click.stop
       >
         <SessionCard :session="session" preview />
@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, toRef } from 'vue'
+import { ref, toRef, onMounted, onUnmounted } from 'vue'
 import { useSession } from '@/composables/useSession'
 import SessionCard from '@/components/schedule/SessionCard.vue'
 
@@ -48,6 +48,10 @@ const { formatTime, cfpHref } = useSession(toRef(props, 'session'))
 
 const isExpanded = ref(false)
 const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+
+const closeOnScroll = () => { isExpanded.value = false }
+onMounted(() => window.addEventListener('scroll', closeOnScroll, { passive: true, capture: true }))
+onUnmounted(() => window.removeEventListener('scroll', closeOnScroll, { capture: true }))
 
 function openExpanded() {
   if (!isTouchDevice) isExpanded.value = true
