@@ -109,9 +109,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.set_scores()
         self.handle_status_change()
         self.validate_session_type_permissions()
+        self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
-        self.notify_proposer_on_review()
+        # self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
@@ -395,6 +396,46 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         except Exception as exc:
             frappe.log_error(title="email_core_team:send_failed", message=frappe.get_traceback())
             frappe.throw(f"Failed to send email: {exc}")
+
+    def validate_review_ownership(self):
+        """CFP Reviewers can only add/edit their own review row, and only one."""
+        roles = set(frappe.get_roles())
+        if roles & {"System Manager", "Chapter Team Member"}:
+            return
+        if "CFP Reviewer" not in roles:
+            return
+
+        user = frappe.session.user
+        old_doc = self.get_doc_before_save()
+        old_reviews = {r.name: r for r in old_doc.reviews if r.name} if old_doc else {}
+
+        own_rows = 0
+        for review in self.reviews:
+            is_new = not review.name or review.name not in old_reviews
+            if is_new:
+                if review.email and review.email != user:
+                    frappe.throw(
+                        "You can only add reviews under your own account.",
+                        frappe.PermissionError,
+                    )
+                own_rows += 1
+            else:
+                old = old_reviews[review.name]
+                if old.email != user and (
+                    review.to_approve != old.to_approve or review.remarks != old.remarks
+                ):
+                    frappe.throw(
+                        "You can only modify your own review rows.",
+                        frappe.PermissionError,
+                    )
+                if old.email == user:
+                    own_rows += 1
+
+        if own_rows > 1:
+            frappe.throw(
+                "You can only submit one review per proposal.",
+                frappe.PermissionError,
+            )
 
     def notify_proposer_on_review(self):
         """Notify proposer on new or updated review."""
