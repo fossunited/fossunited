@@ -76,7 +76,7 @@
    "fieldtype": "Link",
    "label": "Submitted By",
    "options": "User",
-   "reqd": 1
+   "permlevel": 3
   },
   {
    "columns": 2,
@@ -97,7 +97,8 @@
    "fetch_if_empty": 1,
    "fieldname": "email",
    "fieldtype": "Data",
-   "label": "Email"
+   "label": "Email",
+   "permlevel": 3
   },
   {
    "fieldname": "column_break_dcfl",
@@ -173,18 +174,21 @@
   {
    "fieldname": "reviews_tab",
    "fieldtype": "Tab Break",
-   "label": "Reviews"
+   "label": "Reviews",
+   "permlevel": 4
   },
   {
    "fieldname": "reviews",
    "fieldtype": "Table",
    "label": "Reviews",
-   "options": "FOSS Event CFP Review"
+   "options": "FOSS Event CFP Review",
+   "permlevel": 4
   },
   {
    "fieldname": "route",
    "fieldtype": "Data",
-   "label": "Route"
+   "label": "Route",
+   "permlevel": 2
   },
   {
    "fieldname": "column_break_vctq",
@@ -194,7 +198,8 @@
    "default": "1",
    "fieldname": "is_published",
    "fieldtype": "Check",
-   "label": "Is Published?"
+   "label": "Is Published?",
+   "permlevel": 2
   },
   {
    "default": "No",
@@ -213,32 +218,38 @@
    "default": "0",
    "fieldname": "attendance_confirmed",
    "fieldtype": "Check",
-   "label": "Attendance Confirmed"
+   "label": "Attendance Confirmed",
+   "permlevel": 2
   },
   {
    "fieldname": "cfp_reviews_section",
    "fieldtype": "Section Break",
-   "label": "CFP Reviews"
+   "label": "CFP Reviews",
+   "permlevel": 4
   },
   {
    "fieldname": "review_scores_section",
    "fieldtype": "Section Break",
-   "label": "Review Scores"
+   "label": "Review Scores",
+   "permlevel": 4
   },
   {
    "fieldname": "positive_reviews",
    "fieldtype": "Data",
-   "label": "Positive Reviews %"
+   "label": "Positive Reviews %",
+   "permlevel": 4
   },
   {
    "fieldname": "negative_reviews",
    "fieldtype": "Data",
-   "label": "Negative Reviews  %"
+   "label": "Negative Reviews  %",
+   "permlevel": 4
   },
   {
    "fieldname": "unsure_reviews",
    "fieldtype": "Data",
-   "label": "Unsure Reviews  %"
+   "label": "Unsure Reviews  %",
+   "permlevel": 4
   },
   {
    "columns": 2,
@@ -277,13 +288,15 @@
   {
    "fieldname": "speaker_information_section",
    "fieldtype": "Section Break",
-   "label": "Speaker Information"
+   "label": "Speaker Information",
+   "permlevel": 3
   },
   {
    "fieldname": "speakers",
    "fieldtype": "Table",
    "label": "Speakers",
-   "options": "CFP Submission Speaker"
+   "options": "CFP Submission Speaker",
+   "permlevel": 3
   },
   {
    "fieldname": "references",
@@ -324,7 +337,8 @@
    "default": "1",
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
-   "label": "Subscribe to Chapter Mailing?"
+   "label": "Subscribe to Chapter Mailing?",
+   "permlevel": 3
   },
   {
    "description": "License for the talk/project.",
@@ -337,13 +351,14 @@
    "description": "Abide to https://fossunited.org/code-of-conduct",
    "fieldname": "accept_coc",
    "fieldtype": "Check",
-   "label": "Accept Code of Conduct"
+   "label": "Accept Code of Conduct",
+   "permlevel": 3
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-09 14:48:03.703968",
+ "modified": "2026-04-15 17:24:21.973560",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -363,6 +378,24 @@
    "write": 1
   },
   {
+   "permlevel": 2,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "permlevel": 3,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
+   "permlevel": 4,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  },
+  {
    "create": 1,
    "role": "All"
   },
@@ -375,6 +408,18 @@
    "write": 1
   },
   {
+   "if_owner": 1,
+   "permlevel": 2,
+   "read": 1,
+   "role": "All"
+  },
+  {
+   "if_owner": 1,
+   "permlevel": 4,
+   "read": 1,
+   "role": "All"
+  },
+  {
    "create": 1,
    "delete": 1,
    "read": 1,
@@ -383,33 +428,39 @@
    "write": 1
   },
   {
-   "permlevel": 1,
+   "permlevel": 2,
+   "read": 1,
+   "role": "Chapter Team Member",
+   "select": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 3,
    "read": 1,
    "role": "Chapter Team Member",
    "select": 1
   },
   {
-   "permlevel": 2,
+   "permlevel": 4,
    "read": 1,
-   "role": "Chapter Team Member",
-   "write": 1
+   "role": "Chapter Team Member"
   },
   {
-   "create": 1,
    "read": 1,
    "role": "CFP Reviewer",
    "select": 1,
    "write": 1
   },
   {
-   "email": 1,
-   "export": 1,
    "permlevel": 2,
-   "print": 1,
    "read": 1,
-   "report": 1,
+   "role": "CFP Reviewer"
+  },
+  {
+   "permlevel": 4,
+   "read": 1,
    "role": "CFP Reviewer",
-   "share": 1
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
