@@ -1,20 +1,71 @@
 {% extends 'templates/foss_base.html' %}
 {% from 'fossunited/templates/macros/badge.html' import badge %}
 {% from 'fossunited/templates/macros/live_ping.html' import live_ping %}
+{% from 'fossunited/templates/macros/breadcrumb.html' import theme_toggle %}
 
 {% block page_content %}
   <link rel="stylesheet" href="/assets/fossunited/css/styles.css" />
-  <div class="bg-[#FAFAFA] w-full">
-    <div class="container max-w-[800px] flex flex-col gap-20 mb-6 px-4 py-12">
+  <div class="v3-page" style="background: var(--v3-main-bg); width: 100%;">
+    <div class="container max-w-[800px] flex flex-col gap-10 mb-6 px-4 mt-2 pb-12">
+      <div class="d-flex justify-content-end">{{ theme_toggle() }}</div>
       {{ hero() }}
       {{ roles_of_lead() }}
       {{ support_section() }}
+      {{ search_and_filter() }}
       {{ active_clubs_section() }}
       {% if past_clubs %}
         {{ past_clubs_section() }}
       {% endif %}
+      <p id="no-results" class="text-center text-gray-500 py-10 d-none">No clubs found matching your search.</p>
     </div>
   </div>
+
+  <style>
+    .v3-page .bg-white { background: var(--v3-card-bg) !important; }
+    .v3-page .bg-gray-50 { background: var(--v3-button-border) !important; }
+    .v3-page .text-gray-500 { color: var(--v3-text-color2) !important; }
+    .v3-page .border { border-color: var(--v3-button-border) !important; }
+    .v3-page .divide-x-2 > * + * { border-color: var(--v3-button-border) !important; }
+    .filter-btn.active { background: var(--v3-text-color); color: var(--v3-main-bg); border-color: var(--v3-text-color); }
+  </style>
+{% endblock %}
+
+{% block page_script %}
+<script>
+  function filterClubs() {
+    var query = $('#club-search').val().toLowerCase().trim();
+    var activeFilter = $('.filter-btn.active').data('filter') || 'all';
+    var visible = 0;
+
+    $('.club-card').each(function() {
+      var $c = $(this);
+      var matchSearch = !query || ['name','city','state'].some(k => ($c.data(k)||'').includes(query));
+      var matchFilter = activeFilter === 'all' || $c.data('status') === activeFilter;
+      var show = matchSearch && matchFilter;
+      $c.toggle(show).data('shown', show);
+      if (show) visible++;
+    });
+
+    $('#active-clubs-group, #past-clubs-group').each(function() {
+      var hasVisible = $(this).find('.club-card').filter(function() {
+        return $(this).data('shown') !== false;
+      }).length > 0;
+      $(this).toggle(hasVisible);
+    });
+
+    $('#no-results').toggle(visible === 0);
+  }
+
+  function setFilter(btn) {
+    $('.filter-btn').removeClass('active');
+    $(btn).addClass('active');
+    filterClubs();
+  }
+
+  $(function() {
+    $('#club-search').on('input search', filterClubs);
+  });
+</script>
 {% endblock %}
 
 {% macro hero() %}
@@ -30,7 +81,7 @@
         src="/assets/fossunited/images/clubs/fossclub_logo.svg"
         alt="FOSS Club Logo"
       />
-      <h1 class="text-4xl md:text-6xl font-bold text-[#1E1E1E]">FOSS Clubs</h1>
+      <h1 class="text-4xl md:text-6xl font-bold" style="color: var(--v3-text-color);">FOSS Clubs</h1>
     </div>
     <p class="text-center text-gray-500">
       {{
@@ -41,7 +92,7 @@
     </p>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <a href="/clubs/start-a-club" class="btn btn-solid w-48">Start a Club</a>
-      <a href="#active-clubs" class="btn btn-subtle w-48">Active Clubs</a>
+      <a href="#clubs-section" class="btn btn-subtle w-48">Explore Clubs</a>
     </div>
     <p class="text-center font-medium text-gray-500">
       Got Questions? Refer to our <a href="/clubs/faq" class="underline">FAQ Page</a>
@@ -77,15 +128,37 @@
   </div>
 {% endmacro %}
 
+{% macro search_and_filter() %}
+  <div id="clubs-section" class="flex flex-col gap-4">
+    <div style="position: relative;">
+      <i class="ti ti-search text-gray-400" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+      <input
+        id="club-search"
+        type="search"
+        placeholder="Search by name, city, state..."
+        class="w-full border rounded-lg py-2 pl-10 pr-4 text-sm bg-white"
+        style="border-color: var(--v3-button-border); background: var(--v3-card-bg); color: var(--v3-text-color);"
+      />
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <button class="btn btn-sm btn-subtle filter-btn active" data-filter="all" onclick="setFilter(this)">All</button>
+      <button class="btn btn-sm btn-subtle filter-btn" data-filter="active" onclick="setFilter(this)">Active</button>
+      <button class="btn btn-sm btn-subtle filter-btn" data-filter="new" onclick="setFilter(this)">New</button>
+      <button class="btn btn-sm btn-subtle filter-btn" data-filter="inactive" onclick="setFilter(this)">Inactive</button>
+    </div>
+  </div>
+
+{% endmacro %}
+
 {% macro active_clubs_section() %}
-  <div class="flex flex-col gap-10">
-    <h3 id="active-clubs" class="text-xl font-semibold">Active Clubs</h3>
+  <div id="active-clubs-group" class="flex flex-col gap-10">
+    <h3 class="text-xl font-semibold">Active Clubs</h3>
     {% for club in active_clubs %}{{ club_card(club) }}{% endfor %}
   </div>
 {% endmacro %}
 
 {% macro past_clubs_section() %}
-  <div class="flex flex-col gap-10">
+  <div id="past-clubs-group" class="flex flex-col gap-10">
     <h3 class="text-xl font-semibold">Past Clubs</h3>
     {% for club in past_clubs %}{{ club_card(club) }}{% endfor %}
   </div>
@@ -94,7 +167,11 @@
 {% macro club_card(club) %}
   <a
     href="{{ club.route }}"
-    class="flex flex-col gap-4 p-6 bg-white rounded-lg border hover:!border-gray-400 transition-colors ease-in-out duration-300 no-underline"
+    class="club-card flex flex-col gap-4 p-6 bg-white rounded-lg border hover:!border-gray-400 transition-colors ease-in-out duration-300 no-underline"
+    data-name="{{ club.chapter_name | lower }}"
+    data-city="{{ club.city | lower }}"
+    data-state="{{ club.state | lower }}"
+    data-status="{{ 'new' if club.is_new_club else ('independent' if club.is_independent else ('inactive' if club.is_inactive else 'active')) }}"
   >
     {% if club.is_new_club %}
       {{ badge(label="New Club", theme="gray", variant="solid", prefix="<i class='ti ti-star-filled text-yellow-400'></i>", additional_classes=' w-fit font-semibold tracking-wide !rounded-md -mt-8 ') }}

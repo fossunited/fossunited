@@ -1,15 +1,25 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle %}
 {% block head_include %}
 {{ super() }}
 <link rel="alternate" type="application/rss+xml" title="Upcoming Events \u2013 {{ doc.chapter_name }}" href="/c/{{ doc.slug }}/rss.xml" />
 {% endblock %}
 {% block page_content %}
-  {{ header() }}
-  {{ render_about() }}
-  {% if upcoming_events %}{{ render_upcoming_events() }}{% endif %}
-  {% if past_events %}{{ render_past_events() }}{% endif %}
-  {{ render_members() }}
-  <div class="my-5 py-5"></div>
+  <div class="v3-page">
+    <style>
+      .v3-page .header-section-parent { background: var(--v3-main-bg); }
+      .v3-page .header-section { background-color: var(--v3-main-bg); }
+      .v3-page .subtitle { color: var(--v3-text-color); }
+      .v3-page .description-block > * { color: var(--v3-text-color2); }
+    </style>
+    <div class="container d-flex justify-content-end pt-3">{{ theme_toggle() }}</div>
+    {{ header() }}
+    {{ render_about() }}
+    {% if upcoming_events %}{{ render_upcoming_events() }}{% endif %}
+    {% if past_events %}{{ render_past_events() }}{% endif %}
+    {{ render_members() }}
+    <div class="my-5 py-5"></div>
+  </div>
 {% endblock %}
 {% macro header() %}
   <div class="container header-section-parent">
@@ -39,7 +49,7 @@
                 </h1>
               </div>
               <div
-                class="header--username-location ml-4"
+                class="header--username-location v3-text-primary ml-4"
                 style="font-size: var(--text-sm); margin-top: -20px;"
               >
                 {% if doc.chapter_type == 'FOSS Club' and (doc.city or doc.state) %}
