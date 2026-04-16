@@ -8,8 +8,21 @@
         v-if="ticket_checkin_insights.data?.daily_data?.length"
         class="flex flex-col gap-4 my-2"
       >
-        <div class="prose">
-          <h4>Daily Check-in Insights</h4>
+        <div class="flex items-center justify-between gap-4">
+          <div class="prose">
+            <h4>Daily Check-in Insights</h4>
+          </div>
+          <Button
+            label="Refresh"
+            variant="subtle"
+            size="sm"
+            :loading="ticket_checkin_insights.loading"
+            @click="ticket_checkin_insights.fetch()"
+          >
+            <template #prefix>
+              <IconRefresh class="w-4 h-4" />
+            </template>
+          </Button>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <TicketTierInsightCard
@@ -159,7 +172,7 @@ import {
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
 import { inject, provide, ref, computed, watch, watchEffect } from 'vue'
-import { IconChecks } from '@tabler/icons-vue'
+import { IconChecks, IconRefresh } from '@tabler/icons-vue'
 import dayjs, { formatCheckinDateTime, getRelativeTime, isCheckedInToday } from '@/helpers/date'
 import { toast } from 'vue-sonner'
 

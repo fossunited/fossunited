@@ -1,9 +1,27 @@
 <template>
   <div v-if="ticket_insights.data" class="flex flex-col gap-6">
     <div class="flex flex-col gap-4">
-      <div class="prose">
-        <h2 class="mb-1">Insights</h2>
-        <p class="text-sm">Get insights about the tickets sold for this event.</p>
+      <div class="flex items-start justify-between gap-4">
+        <div class="prose">
+          <h2 class="mb-1">Insights</h2>
+          <p class="text-sm">Get insights about the tickets sold for this event.</p>
+        </div>
+        <Button
+          label="Refresh"
+          variant="subtle"
+          size="sm"
+          :loading="ticket_insights.loading || ticket_checkin_insights.loading"
+          @click="
+            () => {
+              ticket_insights.fetch()
+              ticket_checkin_insights.fetch()
+            }
+          "
+        >
+          <template #prefix>
+            <IconRefresh class="w-4 h-4" />
+          </template>
+        </Button>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <TicketTierInsightCard :tier="today_stats" />
@@ -47,7 +65,8 @@
 </template>
 <script setup>
 import { defineProps, reactive } from 'vue'
-import { createResource, LoadingIndicator, ListView } from 'frappe-ui'
+import { createResource, LoadingIndicator, ListView, Button } from 'frappe-ui'
+import { IconRefresh } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
 import TicketTshirtInsightCard from '@/components/event/TicketTshirtInsightCard.vue'
