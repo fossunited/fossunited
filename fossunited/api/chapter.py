@@ -260,21 +260,29 @@ def get_my_chapter_dashboard():
         filters={"email": user, "parenttype": EVENT},
         pluck="parent",
     )
-    for event_name in volunteer_event_names:
-        if event_name in chapter_event_names:
-            continue
-        event = frappe.db.get_value(
-            EVENT,
-            event_name,
-            ["*"],
-            as_dict=True,
+    only_volunteer_event_names = [n for n in volunteer_event_names if n not in chapter_event_names]
+    if only_volunteer_event_names:
+        scheduled.extend(
+            frappe.get_all(
+                EVENT,
+                filters={
+                    "name": ["in", only_volunteer_event_names],
+                    "status": ["in", ["Live", "Draft"]],
+                },
+                fields=["*"],
+            )
         )
-        if not event:
-            continue
-        if event.status in ("Live", "Draft"):
-            scheduled.append(event)
-        elif event.event_end_date and event.event_end_date >= since_3w:
-            recent_concluded.append(event)
+        recent_concluded.extend(
+            frappe.get_all(
+                EVENT,
+                filters={
+                    "name": ["in", only_volunteer_event_names],
+                    "status": ["not in", ["Live", "Draft"]],
+                    "event_end_date": [">=", since_3w],
+                },
+                fields=["*"],
+            )
+        )
 
     return {
         "chapters": chapters,
