@@ -232,33 +232,49 @@ def get_my_chapter_dashboard():
     since_3w = add_days(now_datetime(), -21)
 
     chapter_names = get_my_chapters(user)
-
-    if not chapter_names:
-        return {
-            "chapters": [],
-            "scheduled": [],
-            "recent_concluded": [],
-        }
-
-    chapters = frappe.get_all(
-        CHAPTER,
-        filters={"name": ["in", chapter_names]},
-        fields=["*"],
-    )
-
+    chapters = []
     scheduled = []
     recent_concluded = []
 
-    for chapter in chapters:
-        doc = frappe.get_doc(CHAPTER, chapter.name)
+    if chapter_names:
+        chapters = frappe.get_all(
+            CHAPTER,
+            filters={"name": ["in", chapter_names]},
+            fields=["*"],
+        )
 
-        scheduled.extend(doc.get_upcoming_events())
+        for chapter in chapters:
+            doc = frappe.get_doc(CHAPTER, chapter.name)
+            scheduled.extend(doc.get_upcoming_events())
+            recent = [
+                e
+                for e in doc.get_past_events()
+                if e.event_end_date and (e.event_end_date >= since_3w)
+            ]
+            recent_concluded.extend(recent)
 
-        # past events to last 3 weeks only
-        recent = [
-            e for e in doc.get_past_events() if e.event_end_date and (e.event_end_date >= since_3w)
-        ]
-        recent_concluded.extend(recent)
+    # Also include events where user is an event volunteer (but not a chapter member)
+    chapter_event_names = {e.name for e in scheduled + recent_concluded}
+    volunteer_event_names = frappe.get_all(
+        EVENT_VOLUNTEER,
+        filters={"email": user, "parenttype": EVENT},
+        pluck="parent",
+    )
+    for event_name in volunteer_event_names:
+        if event_name in chapter_event_names:
+            continue
+        event = frappe.db.get_value(
+            EVENT,
+            event_name,
+            ["*"],
+            as_dict=True,
+        )
+        if not event:
+            continue
+        if event.status in ("Live", "Draft"):
+            scheduled.append(event)
+        elif event.event_end_date and event.event_end_date >= since_3w:
+            recent_concluded.append(event)
 
     return {
         "chapters": chapters,
