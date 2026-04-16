@@ -5,9 +5,10 @@
   </div>
   <SearchListView
     v-if="attendeesList.data"
-    :rows="groupedRows"
+    :rows="tickets"
     :columns="columns"
     row-key="id"
+    group-by="tier"
     search-placeholder="Search attendees..."
     item-label="attendees"
     export-filename="event_attendees"
@@ -24,7 +25,7 @@
       <span class="text-base font-medium"> {{ group.group }} ({{ group.rows.length }}) </span>
     </template>
 
-    <template #cell="{ item, row, column }">
+    <template #cell="{ item, column }">
       <Checkbox v-if="column.key === 'wants_tshirt'" :model-value="item" disabled />
       <div v-else class="text-sm truncate text-wrap">{{ item || '-' }}</div>
     </template>
@@ -38,21 +39,16 @@
 import { createResource, LoadingIndicator, Checkbox } from 'frappe-ui'
 import { toast } from 'vue-sonner'
 import SearchListView from '@/components/ui/SearchListView.vue'
-
-import { defineProps, computed, ref, watchEffect } from 'vue'
+import { defineProps, computed } from 'vue'
 
 const props = defineProps({
   event: { type: Object, required: true },
 })
 
-const groupedRows = ref([])
-
 const attendeesList = createResource({
   url: 'fossunited.api.tickets.get_tickets_with_custom_fields',
   makeParams() {
-    return {
-      event_id: props.event.data.name,
-    }
+    return { event_id: props.event.data.name }
   },
   auto: true,
   debounce: 500,
@@ -70,35 +66,17 @@ const ticket_form = createResource({
 })
 
 const tickets = computed(() => attendeesList.data || [])
+
 const columns = computed(() => [
   { label: 'Name', key: 'full_name', width: '200px' },
   { label: 'Designation', key: 'designation', width: '200px' },
   { label: 'Organization', key: 'organization', width: '200px' },
   { label: 'T-shirt Addon', key: 'wants_tshirt', width: '100px' },
   { label: 'Tshirt Size', key: 'tshirt_size', width: '100px' },
-
-  // append custom fields from Doctype (edgecase: first person might miss this?)
   ...(ticket_form.data?.custom_fields || []).map((f) => ({
     label: f.label,
     key: f.field_name,
     width: '200px',
   })),
 ])
-
-watchEffect(() => {
-  if (!tickets.value || tickets.value.length === 0) {
-    groupedRows.value = []
-    return
-  }
-
-  const grouped = {}
-  tickets.value.forEach((ticket) => {
-    if (!grouped[ticket.tier]) {
-      grouped[ticket.tier] = { group: ticket.tier, collapsed: false, rows: [] }
-    }
-    grouped[ticket.tier].rows.push(ticket)
-  })
-
-  groupedRows.value = Object.values(grouped)
-})
 </script>
