@@ -16,23 +16,30 @@ export const isChapterMember = async (chapter_id) => {
   return isMember.data
 }
 
+export const isEventMember = async (event_id) => {
+  const isMember = createResource({
+    url: 'fossunited.api.chapter.check_if_event_member',
+    params: { event: event_id },
+  })
+  await isMember.fetch()
+  return isMember.data
+}
+
 export const isEventOrganizer = async (event_id) => {
-  const isOrganizer = ref(false)
   const eventId = createResource({
     url: 'frappe.client.get_value',
     params: {
       doctype: 'FOSS Chapter Event',
       fieldname: 'chapter',
-      filters: {
-        name: event_id,
-      },
+      filters: { name: event_id },
     },
-    auto: true,
   })
   await eventId.fetch()
+
   if (eventId.data) {
-    isOrganizer.value = await isChapterMember(eventId.data.chapter)
+    const chapterMember = await isChapterMember(eventId.data.chapter)
+    if (chapterMember) return true
   }
 
-  return isOrganizer.value
+  return await isEventMember(event_id)
 }
