@@ -33,10 +33,24 @@
         </div>
       </div>
 
-      <div class="prose">
-        <h2 class="mb-1">Attendee Check-Ins</h2>
-        <p class="text-sm">Check in attendees as they arrive at the event.</p>
+      <div class="flex items-center justify-between gap-4">
+        <div class="prose">
+          <h2 class="mb-1">Attendee Check-Ins</h2>
+          <p class="text-sm">Check in attendees as they arrive at the event.</p>
+        </div>
+        <Button
+          label="Refresh"
+          variant="subtle"
+          size="sm"
+          :loading="attendees.loading"
+          @click="attendees.fetch()"
+        >
+          <template #prefix>
+            <IconRefresh class="w-4 h-4" />
+          </template>
+        </Button>
       </div>
+
       <div class="flex flex-col my-4 justify-center">
         <!-- QR Scanner Toggle -->
         <div class="mb-4">
@@ -53,16 +67,15 @@
 
         <QRTicketScanner v-model="showScanner" @scanned="handleScan" />
 
-        <!-- Attendee List with Search -->
+        <!-- Attendee List -->
         <SearchListView
           v-if="!loading"
-          :rows="groupedAttendees"
+          :rows="processedAttendees"
           :columns="columns"
           row-key="name"
+          :group-by-options="GROUP_OPTIONS"
           :search-fields="['full_name', 'name']"
           search-placeholder="Search by name or ticket ID…"
-          :filter-field="filterField"
-          :filter-options="filterOptions"
           :exportable="true"
           export-filename="event-checkins"
           :export-columns="exportColumns"
@@ -161,6 +174,7 @@ import SearchListView from '@/components/ui/SearchListView.vue'
 import CheckinConfirmationDialog from '@/components/event/CheckinConfirmationDialog.vue'
 import CheckinManageDialog from '@/components/event/CheckinManageDialog.vue'
 import QRTicketScanner from '@/components/event/QRTicketScanner.vue'
+import TicketTierInsightCard from '@/components/event/TicketTierInsightCard.vue'
 import {
   createResource,
   usePageMeta,
@@ -171,7 +185,7 @@ import {
   Button,
 } from 'frappe-ui'
 import { useRoute } from 'vue-router'
-import { inject, provide, ref, computed, watch, watchEffect } from 'vue'
+import { inject, provide, ref, computed, watch } from 'vue'
 import { IconChecks, IconRefresh } from '@tabler/icons-vue'
 import dayjs, { formatCheckinDateTime, getRelativeTime, isCheckedInToday } from '@/helpers/date'
 import { toast } from 'vue-sonner'
@@ -184,34 +198,45 @@ const showScanner = ref(false)
 const selectedAttendee = ref(null)
 const showConfirmDialog = ref(false)
 const showManageDialog = ref(false)
-const filterField = ref('checkin_group')
-const groupedAttendees = ref([])
+
+const GROUP_OPTIONS = [
+  {
+    label: 'Check-in Status',
+    value: 'checkin_group',
+    order: [
+      'Not Checked-in',
+      'Checked-in (T-shirt Pending)',
+      'Checked-in (T-shirt Delivered)',
+      'Checked-in (No T-shirt)',
+    ],
+    defaultCollapsed: ['Checked-in (T-shirt Delivered)', 'Checked-in (No T-shirt)'],
+  },
+  {
+    label: 'T-shirt',
+    value: 'tshirt_group',
+    order: ['T-shirt Pending', 'T-shirt Delivered', 'No T-shirt'],
+    defaultCollapsed: ['T-shirt Delivered'],
+  },
+  {
+    label: 'Ticket Tier',
+    value: 'tier',
+  },
+]
 
 const event = createResource({
   url: 'frappe.client.get',
   makeParams() {
-    return {
-      doctype: 'FOSS Chapter Event',
-      name: route.params.id,
-      fields: ['*'],
-    }
+    return { doctype: 'FOSS Chapter Event', name: route.params.id, fields: ['*'] }
   },
   auto: true,
 })
 
-usePageMeta(() => {
-  return {
-    title: `Check-ins | ${event.data?.event_name}`,
-  }
-})
+usePageMeta(() => ({ title: `Check-ins | ${event.data?.event_name}` }))
 
 const attendees = createResource({
   url: 'fossunited.api.checkins.get_attendee_with_checkin_data',
   makeParams() {
-    return {
-      event_id: route.params.id,
-      filters: {},
-    }
+    return { event_id: route.params.id, filters: {} }
   },
   auto: true,
 })
@@ -219,9 +244,7 @@ const attendees = createResource({
 const ticket_checkin_insights = createResource({
   url: 'fossunited.api.tickets.get_checkin_insights',
   makeParams() {
-    return {
-      event_id: route.params.id,
-    }
+    return { event_id: route.params.id }
   },
   loading: true,
   auto: true,
@@ -232,82 +255,27 @@ const ticket_checkin_insights = createResource({
 
 const loading = computed(() => !attendees.data)
 
-// Filter options with available groups
-const filterOptions = computed(() => {
-  const options = ['All']
-  const groups = groupedAttendees.value.map((g) => g.group)
-  return [...options, ...groups]
-})
-
-// Group attendees by check-in and t-shirt status using watchEffect
-watchEffect(() => {
-  const rows = attendees.data || []
-
-  const notCheckedIn = []
-  const checkedInTshirtPending = []
-  const checkedInTshirtDelivered = []
-  const checkedInNoTshirt = []
-
-  rows.forEach((attendee) => {
-    const hasCheckedIn = attendee.checkin_data?.length > 0
-
-    // Add group identifier for filtering
-    if (!hasCheckedIn) {
-      attendee.checkin_group = 'Not Checked-in'
-      notCheckedIn.push(attendee)
-    } else if (attendee.wants_tshirt && !attendee.tshirt_delivered) {
-      attendee.checkin_group = 'Checked-in (T-shirt Pending)'
-      checkedInTshirtPending.push(attendee)
-    } else if (attendee.wants_tshirt && attendee.tshirt_delivered) {
-      attendee.checkin_group = 'Checked-in (T-shirt Delivered)'
-      checkedInTshirtDelivered.push(attendee)
-    } else {
-      attendee.checkin_group = 'Checked-in (No T-shirt)'
-      checkedInNoTshirt.push(attendee)
+// Processed attendees — derived group fields, no mutation of API data
+const processedAttendees = computed(() =>
+  (attendees.data || []).map((a) => {
+    const checkedIn = a.checkin_data?.length > 0
+    return {
+      ...a,
+      checkin_group: !checkedIn
+        ? 'Not Checked-in'
+        : a.wants_tshirt && !a.tshirt_delivered
+          ? 'Checked-in (T-shirt Pending)'
+          : a.wants_tshirt && a.tshirt_delivered
+            ? 'Checked-in (T-shirt Delivered)'
+            : 'Checked-in (No T-shirt)',
+      tshirt_group: a.wants_tshirt
+        ? a.tshirt_delivered
+          ? 'T-shirt Delivered'
+          : 'T-shirt Pending'
+        : 'No T-shirt',
     }
-  })
-
-  // Preserve existing collapsed states
-  const existingStates = Object.fromEntries(
-    groupedAttendees.value.map((g) => [g.group, g.collapsed]),
-  )
-
-  const groups = []
-
-  if (notCheckedIn.length > 0) {
-    groups.push({
-      group: 'Not Checked-in',
-      collapsed: existingStates['Not Checked-in'] ?? false,
-      rows: notCheckedIn,
-    })
-  }
-
-  if (checkedInTshirtPending.length > 0) {
-    groups.push({
-      group: 'Checked-in (T-shirt Pending)',
-      collapsed: existingStates['Checked-in (T-shirt Pending)'] ?? false,
-      rows: checkedInTshirtPending,
-    })
-  }
-
-  if (checkedInTshirtDelivered.length > 0) {
-    groups.push({
-      group: 'Checked-in (T-shirt Delivered)',
-      collapsed: existingStates['Checked-in (T-shirt Delivered)'] ?? true,
-      rows: checkedInTshirtDelivered,
-    })
-  }
-
-  if (checkedInNoTshirt.length > 0) {
-    groups.push({
-      group: 'Checked-in (No T-shirt)',
-      collapsed: existingStates['Checked-in (No T-shirt)'] ?? true,
-      rows: checkedInNoTshirt,
-    })
-  }
-
-  groupedAttendees.value = groups
-})
+  }),
+)
 
 const columns = [
   { label: 'Name', key: 'full_name', width: '200px' },
@@ -341,10 +309,8 @@ const exportColumns = [
         .join('; ')
     },
   },
-  {
-    label: 'Group',
-    key: 'checkin_group',
-  },
+  { label: 'Check-in Group', key: 'checkin_group' },
+  { label: 'T-shirt Group', key: 'tshirt_group' },
 ]
 
 provide('isCheckedInToday', isCheckedInToday)
@@ -362,14 +328,10 @@ const handleManage = (row) => {
 const handleScan = (scannedId) => {
   showScanner.value = false
   const scannedAttendee = attendees.data?.find((a) => a.name === scannedId)
-  if (scannedAttendee) {
-    handleCheckIn(scannedAttendee)
-  }
+  if (scannedAttendee) handleCheckIn(scannedAttendee)
 }
 
 watch(showScanner, (val) => {
-  if (val) {
-    attendees.fetch()
-  }
+  if (val) attendees.fetch()
 })
 </script>

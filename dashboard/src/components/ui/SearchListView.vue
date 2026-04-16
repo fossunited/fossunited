@@ -1,10 +1,11 @@
 <template>
   <div class="flex flex-col h-full">
+    <!-- Controls -->
     <div class="flex-shrink-0">
-      <div class="flex flex-col md:flex-row gap-2 my-2 md:items-end">
+      <div class="flex flex-col md:flex-row gap-2 my-2 md:items-end flex-wrap">
         <FormControl
           v-if="searchable"
-          v-model="search"
+          v-model="searchRaw"
           type="search"
           :placeholder="searchPlaceholder"
           class="max-w-xs"
@@ -19,7 +20,27 @@
           class="max-w-xs"
         />
 
-        <slot name="actions" :filtered-rows="filteredRows" :search="search">
+        <!-- Group by pill selector — only when multiple options provided -->
+        <div v-if="groupByOptions && groupByOptions.length > 1" class="flex items-center gap-2">
+          <span class="text-sm text-ink-gray-5">Group by:</span>
+          <div class="flex border border-outline-gray-2 rounded-lg overflow-hidden">
+            <button
+              v-for="(opt, i) in groupByOptions"
+              :key="opt.value"
+              class="px-3 py-1 text-sm transition-colors"
+              :class="
+                activeGroupByIndex === i
+                  ? 'bg-surface-gray-3 text-ink-gray-9 font-medium'
+                  : 'text-ink-gray-5 hover:text-ink-gray-8'
+              "
+              @click="activeGroupByIndex = i"
+            >
+              {{ opt.label }}
+            </button>
+          </div>
+        </div>
+
+        <slot name="actions" :filtered-rows="visibleRows" :search="searchRaw">
           <Button
             v-if="exportable"
             icon-left="download"
@@ -31,34 +52,35 @@
       </div>
 
       <div
-        v-if="(search || activeFilterApplied) && showCount"
+        v-if="(debouncedSearch || activeFilterApplied) && showCount"
         class="text-sm text-ink-gray-5 mb-2"
       >
         {{ filteredCount }} of {{ totalCount }} {{ itemLabel }}
       </div>
     </div>
 
-    <!-- fit viewport height -->
-    <ListView
-      v-bind="$attrs"
-      class="overflow-auto max-h-[calc(100vh-220px)]"
-      :rows="filteredRows"
-      :columns="reactiveColumns"
-      :row-key="rowKey"
-      :options="mergedOptions"
-    >
-      <template v-for="(_, name) in $slots" #[name]="slotData">
-        <slot :name="name" v-bind="slotData" />
-      </template>
-    </ListView>
+    <!-- scroll control; ListView expands to full content height inside -->
+    <div class="overflow-y-auto overflow-x-auto max-h-[calc(100vh-220px)]">
+      <ListView
+        v-bind="$attrs"
+        :rows="listRows"
+        :columns="reactiveColumns"
+        :row-key="rowKey"
+        :options="mergedOptions"
+      >
+        <template v-for="(_, name) in $slots" #[name]="slotData">
+          <slot :name="name" v-bind="slotData" />
+        </template>
+      </ListView>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { ListView, FormControl, Button } from 'frappe-ui'
-import { ref, computed, reactive } from 'vue'
-import { toast } from 'vue-sonner'
+import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
+import { toast } from 'vue-sonner'
 
 const props = defineProps({
   rows: { type: Array, required: true },
@@ -78,126 +100,202 @@ const props = defineProps({
   exportFilename: { type: String, default: 'export' },
   exportColumns: { type: Array, default: null },
 
-  filterField: { type: String, default: null }, // eg: "status"
-  filterOptions: { type: Array, default: null }, // eg: ["yes", "no"]
+  filterField: { type: String, default: null },
+  filterOptions: { type: Array, default: null },
+
+  // Simple grouping (single field, no selector UI)
+  groupBy: { type: String, default: null },
+  groupOrder: { type: Array, default: null },
+  defaultCollapsed: { type: [Boolean, Array], default: false },
+
+  // Each option: { label, value, order?, defaultCollapsed? }
+  groupByOptions: { type: Array, default: null },
 })
 
 defineOptions({ inheritAttrs: false })
 
-const reactiveColumns = reactive(props.columns)
+// Reactive so dynamic columns (from computed) stay in sync;
+// reactive() enables ListView's column resize mutation tracking.
+const reactiveColumns = computed(() => reactive(props.columns))
+
+// Search
 const searchRaw = ref('')
-const search = computed({
-  get: () => searchRaw.value,
-  set: debounce((v) => {
-    searchRaw.value = v
-  }, 400),
-})
+const debouncedSearch = ref('')
+
+const applySearch = debounce((v) => {
+  debouncedSearch.value = v
+}, 400)
+
+watch(searchRaw, applySearch)
+onUnmounted(() => applySearch.cancel())
+
+// Filter dropdown
 
 const selectedFilter = ref(props.filterOptions?.[0] || 'All')
 
-const activeFilterApplied = computed(() => {
-  return (
+const activeFilterApplied = computed(
+  () =>
     selectedFilter.value &&
     selectedFilter.value !== 'All' &&
-    selectedFilter.value !== props.filterOptions?.[0]
-  )
-})
-
-const isGrouped = computed(
-  () => props.rows.length > 0 && props.rows.every((row) => row && Array.isArray(row.rows)),
+    selectedFilter.value !== props.filterOptions?.[0],
 )
 
-const getSearchableText = (row) => {
+// Active groupBy option
+
+const activeGroupByIndex = ref(0)
+
+// Resolved groupBy field, order, defaultCollapsed —
+// groupByOptions takes precedence over simple groupBy props.
+const activeOption = computed(() => props.groupByOptions?.[activeGroupByIndex.value] ?? null)
+
+const effectiveGroupBy = computed(() => activeOption.value?.value ?? props.groupBy ?? null)
+const effectiveGroupOrder = computed(() => activeOption.value?.order ?? props.groupOrder ?? null)
+const effectiveDefaultCollapsed = computed(
+  () => activeOption.value?.defaultCollapsed ?? props.defaultCollapsed ?? false,
+)
+
+// Collapse state
+// Keyed by group string — survives group object recreation across re-renders.
+// ListView mutates group.collapsed; we bridge via getter/setter so Vue tracks it.
+const collapseState = reactive({})
+
+// Group detection
+// Pre-grouped: caller passes [{ group, rows[] }] directly
+const isPreGrouped = computed(() => props.rows.length > 0 && Array.isArray(props.rows[0]?.rows))
+
+const isGrouped = computed(() => isPreGrouped.value || !!effectiveGroupBy.value)
+
+// Canonical groups
+const allGroups = computed(() => {
+  if (!isGrouped.value) return null
+
+  if (isPreGrouped.value) {
+    return props.rows.map((g) => ({ key: g.group, rows: g.rows }))
+  }
+
+  const groupMap = new Map()
+  for (const row of props.rows) {
+    const key = String(row[effectiveGroupBy.value] ?? 'Other')
+    if (!groupMap.has(key)) groupMap.set(key, [])
+    groupMap.get(key).push(row)
+  }
+
+  const order = effectiveGroupOrder.value
+    ? [
+        ...effectiveGroupOrder.value.filter((k) => groupMap.has(k)),
+        ...[...groupMap.keys()].filter((k) => !effectiveGroupOrder.value.includes(k)),
+      ]
+    : [...groupMap.keys()]
+
+  return order.map((key) => ({ key, rows: groupMap.get(key) }))
+})
+
+// Initialize collapse state for newly seen group keys
+watch(
+  allGroups,
+  (groups) => {
+    if (!groups) return
+    const d = effectiveDefaultCollapsed.value
+    for (const { key } of groups) {
+      if (!(key in collapseState)) {
+        if (d === true) collapseState[key] = true
+        else if (Array.isArray(d)) collapseState[key] = d.includes(key)
+        else collapseState[key] = false
+      }
+    }
+  },
+  { immediate: true },
+)
+
+// Expand all while searching; restore defaults when search cleared
+watch(debouncedSearch, (term, prev) => {
+  if (!allGroups.value) return
+  if (term) {
+    for (const { key } of allGroups.value) collapseState[key] = false
+  } else if (prev && !term) {
+    const d = effectiveDefaultCollapsed.value
+    for (const { key } of allGroups.value) {
+      if (d === true) collapseState[key] = true
+      else if (Array.isArray(d)) collapseState[key] = d.includes(key)
+      else collapseState[key] = false
+    }
+  }
+})
+
+// Row matching
+const getSearchText = (row) => {
   if (props.searchFields) {
     return props.searchFields
-      .map((field) => row[field])
+      .map((f) => row[f])
       .filter(Boolean)
       .join(' ')
       .toLowerCase()
   }
-
   return props.columns
     .map((col) => {
-      const value = row[col.key]
-      if (typeof value === 'boolean') return value ? 'yes' : 'no'
-      return value
+      const v = row[col.key]
+      return typeof v === 'boolean' ? (v ? 'yes' : 'no') : v
     })
     .filter(Boolean)
     .join(' ')
     .toLowerCase()
 }
 
-const searchTextCache = new WeakMap()
-
-const getSearchText = (row) => {
-  if (!searchTextCache.has(row)) {
-    searchTextCache.set(row, getSearchableText(row))
-  }
-  return searchTextCache.get(row)
+const matchesRow = (row) => {
+  const term = debouncedSearch.value.toLowerCase().trim()
+  if (term && !getSearchText(row).includes(term)) return false
+  if (activeFilterApplied.value && row[props.filterField] !== selectedFilter.value) return false
+  return true
 }
 
-const originalGroupRows = new WeakMap()
-
-const filteredRows = computed(() => {
-  const term = search.value ? search.value.toLowerCase().trim() : ''
-  const hasSearch = !!term
-  const hasFilter = props.filterField && selectedFilter.value && selectedFilter.value !== 'All'
-
-  if (isGrouped.value) {
-    // First pass: cache original rows for all groups
-    props.rows.forEach((group) => {
-      if (!originalGroupRows.has(group)) {
-        originalGroupRows.set(group, [...group.rows])
-      }
-    })
-
-    // No filters applied - restore all original rows
-    if (!hasSearch && !hasFilter) {
-      props.rows.forEach((group) => {
-        group.rows = originalGroupRows.get(group)
-      })
-      return props.rows
-    }
-
-    // Apply filters
-    return props.rows.reduce((acc, group) => {
-      const sourceRows = originalGroupRows.get(group)
-      const filtered = sourceRows.filter((row) => {
-        if (hasSearch && !getSearchText(row).includes(term)) return false
-        if (hasFilter && row[props.filterField] !== selectedFilter.value) return false
-        return true
-      })
-
-      if (filtered.length > 0) {
-        group.rows = filtered
-        acc.push(group)
-      }
-
-      return acc
-    }, [])
-  }
-
-  // Non-grouped filtering
-  return props.rows.filter((row) => {
-    if (hasSearch && !getSearchText(row).includes(term)) return false
-    if (hasFilter && row[props.filterField] !== selectedFilter.value) return false
-    return true
-  })
+// Filtered data — never mutates props
+const filteredGroups = computed(() => {
+  if (!allGroups.value) return null
+  return allGroups.value
+    .map(({ key, rows }) => ({ key, rows: rows.filter(matchesRow) }))
+    .filter((g) => g.rows.length > 0)
 })
 
+const filteredFlatRows = computed(() => {
+  if (isGrouped.value) return null
+  return props.rows.filter(matchesRow)
+})
+
+// Counts
 const totalCount = computed(() => {
-  if (isGrouped.value) {
-    return props.rows.reduce((acc, group) => acc + group.rows.length, 0)
-  }
+  if (allGroups.value) return allGroups.value.reduce((s, g) => s + g.rows.length, 0)
   return props.rows.length
 })
 
 const filteredCount = computed(() => {
-  if (isGrouped.value) {
-    return filteredRows.value.reduce((acc, group) => acc + group.rows.length, 0)
-  }
-  return filteredRows.value.length
+  if (filteredGroups.value) return filteredGroups.value.reduce((s, g) => s + g.rows.length, 0)
+  return filteredFlatRows.value?.length ?? props.rows.length
 })
+
+// Flat filtered rows — for export and actions slot
+const visibleRows = computed(() => {
+  if (filteredGroups.value) return filteredGroups.value.flatMap((g) => g.rows)
+  return filteredFlatRows.value ?? props.rows
+})
+
+// getter/setter on collapsed bridges ListView's direct mutation to collapseState
+const listRows = computed(() => {
+  if (filteredGroups.value) {
+    return filteredGroups.value.map(({ key, rows }) => ({
+      group: key,
+      rows,
+      get collapsed() {
+        return collapseState[key] ?? false
+      },
+      set collapsed(v) {
+        collapseState[key] = v
+      },
+    }))
+  }
+  return filteredFlatRows.value ?? props.rows
+})
+
+// ListView options
 
 const mergedOptions = computed(() => ({
   selectable: false,
@@ -205,65 +303,43 @@ const mergedOptions = computed(() => ({
   resizeColumn: true,
   ...props.options,
   emptyState:
-    search.value || activeFilterApplied.value
-      ? {
-          title: 'No matching results',
-          description: 'Try adjusting your filters.',
-          ...props.options.emptyState,
-        }
+    debouncedSearch.value || activeFilterApplied.value
+      ? { title: 'No matching results', description: 'Try adjusting your filters.' }
       : props.options.emptyState,
 }))
 
+// Export
 const escapeCSV = (str) => {
   const s = String(str ?? '')
   return s.includes(',') || s.includes('"') || s.includes('\n') ? `"${s.replace(/"/g, '""')}"` : s
 }
 
-const getFlatRows = () => {
-  if (isGrouped.value) {
-    return filteredRows.value.flatMap((group) => group.rows)
-  }
-  return filteredRows.value
-}
-
 const handleExport = () => {
-  const flatRows = getFlatRows()
-
-  if (!flatRows.length) {
+  const rows = visibleRows.value
+  if (!rows.length) {
     toast.error('No data to export')
     return
   }
-
-  const columnsToExport = props.exportColumns || props.columns
-  const headers = columnsToExport.map((col) => col.label || col.key)
-
-  const rows = flatRows.map((row) =>
-    columnsToExport.map((col) => {
-      if (typeof col.exportValue === 'function') {
-        return col.exportValue(row)
-      }
-
-      const value = row[col.key]
-      if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-      if (typeof value === 'object' && value !== null) return ''
-      return value ?? ''
+  const cols = props.exportColumns || props.columns
+  const headers = cols.map((c) => c.label || c.key)
+  const data = rows.map((row) =>
+    cols.map((col) => {
+      if (typeof col.exportValue === 'function') return col.exportValue(row)
+      const v = row[col.key]
+      if (typeof v === 'boolean') return v ? 'Yes' : 'No'
+      if (typeof v === 'object' && v !== null) return ''
+      return v ?? ''
     }),
   )
-
-  const csv = [headers, ...rows].map((row) => row.map(escapeCSV).join(',')).join('\n')
-
+  const csv = [headers, ...data].map((r) => r.map(escapeCSV).join(',')).join('\n')
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
   const link = document.createElement('a')
   link.href = URL.createObjectURL(blob)
-
-  const searchSuffix = search.value ? '_filtered' : ''
-  link.download = `${props.exportFilename}${searchSuffix}.csv`
-
+  link.download = `${props.exportFilename}${debouncedSearch.value ? '_filtered' : ''}.csv`
   link.click()
   URL.revokeObjectURL(link.href)
-
   toast.success('CSV downloaded successfully')
 }
 
-defineExpose({ search, selectedFilter, filteredRows, filteredCount, totalCount, handleExport })
+defineExpose({ searchRaw, selectedFilter, visibleRows, filteredCount, totalCount, handleExport })
 </script>
