@@ -136,6 +136,30 @@ class FOSSChapterEvent(WebsiteGenerator):
             else:
                 self.map_coordinate = None
 
+    def on_update(self):
+        self.sync_event_member_shares()
+
+    def sync_event_member_shares(self):
+        prev = self.get_doc_before_save()
+        prev_emails = {m.email for m in prev.event_members if m.email} if prev else set()
+        curr_emails = {m.email for m in self.event_members if m.email}
+
+        for email in curr_emails - prev_emails:
+            frappe.share.add_docshare(
+                self.doctype,
+                self.name,
+                user=email,
+                read=1,
+                write=0,
+                flags={"ignore_share_permission": True},
+            )
+
+        for email in prev_emails - curr_emails:
+            frappe.db.delete(
+                "DocShare",
+                {"share_doctype": self.doctype, "share_name": self.name, "user": email},
+            )
+
     def on_trash(self):
         self.delete_campaigns()
         self.delete_email_groups()
