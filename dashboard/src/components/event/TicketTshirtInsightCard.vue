@@ -22,7 +22,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(quantity, size) in insight.tshirt_size_count" :key="size" role="row">
+          <tr v-for="(quantity, size) in sortedTshirtSizes" :key="size" role="row">
             <td class="p-2 text-base border" role="cell">{{ size }}</td>
             <td class="p-2 text-base border" role="cell">{{ quantity }}</td>
           </tr>
@@ -55,7 +55,7 @@
 
 <script setup>
 import { Dialog } from 'frappe-ui'
-import { defineProps, ref } from 'vue'
+import { computed, defineProps, ref } from 'vue'
 import { IconShirtFilled } from '@tabler/icons-vue'
 
 const showDialog = ref(false)
@@ -65,5 +65,18 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+})
+
+const SIZE_ORDER = ['XS', 'S', 'M', 'L', 'XL', '2XL', '3XL']
+
+const sortedTshirtSizes = computed(() => {
+  const counts = props.insight.tshirt_size_count || {}
+  return Object.fromEntries(
+    Object.entries(counts).sort(
+      ([a], [b]) =>
+        (SIZE_ORDER.indexOf(a) === -1 ? 99 : SIZE_ORDER.indexOf(a)) -
+        (SIZE_ORDER.indexOf(b) === -1 ? 99 : SIZE_ORDER.indexOf(b)),
+    ),
+  )
 })
 </script>

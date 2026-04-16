@@ -100,6 +100,7 @@
             size="sm"
             variant="subtle"
             placeholder="Select size"
+            required
             class="min-w-[110px]"
             @update:model-value="update('tshirt_size', $event)"
           />
