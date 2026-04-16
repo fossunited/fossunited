@@ -4,6 +4,7 @@ import re
 import textwrap
 
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.chapter import get_chapter_members_email
@@ -112,7 +113,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
-        # self.notify_proposer_on_review()
+        self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
@@ -133,16 +134,16 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
-            frappe.throw("Illegal status change", frappe.ValidationError)
+            frappe.throw(_("Illegal status change"), frappe.ValidationError)
 
     def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
-            frappe.throw("Invalid CFP", frappe.DoesNotExistError)
+            frappe.throw(_("Invalid CFP"), frappe.DoesNotExistError)
 
     def validate_form_is_live(self) -> None:
         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
         if not linked_cfp.status == "Live":
-            frappe.throw("The CFP Form for this event is not live", frappe.PermissionError)
+            frappe.throw(_("The CFP Form for this event is not live"), frappe.PermissionError)
 
     def validate_session_type_permissions(self) -> None:
         if self.session_type != "Invited Talk":
@@ -150,11 +151,17 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         user = frappe.session.user
         # Block Website Users outright
         if frappe.db.get_value("User", user, "user_type") == "Website User":
-            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
+            frappe.throw(
+                _("You cannot set Session Type to 'Invited Talk'."),
+                frappe.PermissionError,
+            )
         # Allow only specific desk roles to set this value
         allowed_roles = {"System Manager", "Chapter Team Member", "CFP Reviewer"}
         if not set(frappe.get_roles(user)).intersection(allowed_roles):
-            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
+            frappe.throw(
+                _("You cannot set Session Type to 'Invited Talk'."),
+                frappe.PermissionError,
+            )
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
@@ -415,7 +422,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if is_new:
                 if review.email and review.email != user:
                     frappe.throw(
-                        "You can only add reviews under your own account.",
+                        _("You can only add reviews under your own account."),
                         frappe.PermissionError,
                     )
                 own_rows += 1
@@ -425,7 +432,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                     review.to_approve != old.to_approve or review.remarks != old.remarks
                 ):
                     frappe.throw(
-                        "You can only modify your own review rows.",
+                        _("You can only modify your own review rows."),
                         frappe.PermissionError,
                     )
                 if old.email == user:
@@ -433,7 +440,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         if own_rows > 1:
             frappe.throw(
-                "You can only submit one review per proposal.",
+                _("You can only submit one review per proposal."),
                 frappe.PermissionError,
             )
 
