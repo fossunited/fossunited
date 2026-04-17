@@ -36,13 +36,6 @@ For instructions on setting up a page, after your club has been onboarded, check
 
 While we want you to be making the decisions, our team is around to help with planning and execution of events.
 
-### What is FOSS Hack?
-[FOSS Hack](https://fossunited.org/fosshack) is the flagship hackathon organised by FOSS United. Unlike typical hackathons focused just on building new products, we emphasize contributing to existing open source projects. The format exposes students to real world open source development, working with established codebases, interacting with maintainers, and making contributions that persist. FOSS Hack runs for a month, bringing together community members from all over the country. FOSS United provides additional support for FOSS Hack events, including higher budgets and logistical assistance.
-
-- **Who gets to organize FOSS Hack?**
-
-  The most active FOSS Clubs will get the opportunity to host FOSS Hack in-person at their college. FOSS United will decide this based on the number of events organized and your club's activity on the FOSS Club group and the FOSS United community. Selected organizers will receive up to ₹50,000 to conduct the hackathon.
-
 ### What after we organise an event?
 
   After organising an event, core members are expected to:
@@ -64,3 +57,10 @@ FOSS United maintains brand guidelines for consistency across all clubs:
 - Design templates on
 [Penpot](https://drive.google.com/file/d/1HadV-KEyogKyvbzxwT_2WAR3JzP27V2E/view?usp=sharing) and [Figma link](https://www.figma.com/design/dfTCzPNwORsJmJVmB3QtMj/FOSS-Clubs-Design-Guidelines---Community?node-id=1-84&t=isJpyQnKPhpHz6LU-1)
 - [Expense Reimbursement form](https://account.fossunited.org/expense-reimbursement/new)
+
+### What is FOSS Hack?
+[FOSS Hack](https://fossunited.org/fosshack) is the flagship hackathon organised by FOSS United. Unlike typical hackathons focused just on building new products, we emphasize contributing to existing open source projects. The format exposes students to real world open source development, working with established codebases, interacting with maintainers, and making contributions that persist. FOSS Hack runs for a month, bringing together community members from all over the country. FOSS United provides additional support for FOSS Hack events, including higher budgets and logistical assistance.
+
+- **Who gets to organize FOSS Hack?**
+
+  The most active FOSS Clubs will get the opportunity to host FOSS Hack in-person at their college. FOSS United will decide this based on the number of events organized and your club's activity on the FOSS Club group and the FOSS United community. Selected organizers will receive up to ₹50,000 to conduct the hackathon.
