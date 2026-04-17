@@ -61,7 +61,7 @@
 
 <script setup>
 import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
-import { computed, inject, ref, h } from 'vue'
+import { computed, inject, ref, h, watch } from 'vue'
 import {
   IconMenu,
   IconSun,
@@ -82,6 +82,11 @@ const STORAGE_KEY = 'foss_sidebar_collapsed'
 const isCollapsed = ref(localStorage.getItem(STORAGE_KEY) === 'true')
 const isHovering = ref(false)
 const mobileOpen = ref(false)
+
+watch(
+  () => route.path,
+  () => { mobileOpen.value = false },
+)
 
 let leaveTimer = null
 const onMouseEnter = () => {

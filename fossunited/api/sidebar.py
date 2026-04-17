@@ -1,5 +1,7 @@
 import frappe
 
+from fossunited.doctype_ids import EVENT, EVENT_VOLUNTEER
+
 
 @frappe.whitelist(allow_guest=True)
 def get_sidebar_items(user: str = frappe.session.user):
@@ -31,7 +33,7 @@ def get_sidebar_items(user: str = frappe.session.user):
         },
     ]
 
-    if user_is_chapter_member(user):
+    if user_is_chapter_member(user) or user_is_event_volunteer(user):
         sidebar_items.append(
             {
                 "parent_label": "Organizer Dashboard",
@@ -76,6 +78,15 @@ def user_is_chapter_member(user: str = frappe.session.user):
         frappe.db.exists(
             "Has Role",
             {"role": "Chapter Team Member", "parent": user},
+        )
+    )
+
+
+def user_is_event_volunteer(user: str = frappe.session.user):
+    return bool(
+        frappe.db.exists(
+            EVENT_VOLUNTEER,
+            {"email": user, "parenttype": EVENT},
         )
     )
 
