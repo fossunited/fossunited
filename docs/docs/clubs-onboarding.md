@@ -12,6 +12,8 @@ If our team has already confirmed your FOSS Club status, please complete the fol
 
 - **Form Your Core Team:** While you wait, go ahead and [form your core team](clubs-team-formation.md), including a Faculty Coordinator. Note that we **mandate** at least one non-male member in your core team.
 
+- **Code of Conduct & Incident Response**: Ensure that all core team members thoroughly review the [FOSS United Code of Conduct](https://fossunited.org/code-of-conduct) and the [Incident Response Checklist](clubs-incidents-response-checklist.md). Maintaining a safe and inclusive environment is a primary responsibility of your team.
+
 - **Approval:** Once approved, you will receive an official confirmation letter—after which it's time to celebrate!
 
 - **Communication**: Create a Telegram or WhatsApp group (or a similar platform) where club members can join to ask questions and receive updates. Please add one of the FOSS United team members to the group to ensure seamless communication.
@@ -22,6 +24,6 @@ If our team has already confirmed your FOSS Club status, please complete the fol
 
 - **Social Handles**: Set up social media accounts for your club. Use the naming convention @fossclub[CollegeName], to make it easy for members and the our team to find you.
 
-- **Quarterly Planning**: Finally, [book a call with the team](https://cal.com/team/fossunited/learners-program) to co-create a roadmap for your [first quarter](clubs-first-quarter.md).
-
 - **Understand the Digital Commons**: Before our onboarding call, please review [these slides](https://fossunited.org/files/commons_v3.pptx) to familiarize yourself with the concept of the "Digital Commons." Understanding this philosophy is essential, as it forms the bedrock of why we build and maintain FOSS clubs.
+
+- **Quarterly Planning**: Finally, [book a call with the team](https://cal.com/team/fossunited/learners-program) to co-create a roadmap for your [first quarter](clubs-first-quarter.md).

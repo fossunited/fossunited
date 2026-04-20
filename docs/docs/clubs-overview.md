@@ -1,5 +1,8 @@
 # FOSS  Clubs Overview
 
+### The Purpose of This Guide
+While we would love to work directly with every student community, we recognize that our team's bandwidth for direct mentorship is limited. This guide is intended to be an open resource. Whether you are seeking official recognition from FOSS United or simply wish to start an independent community on your campus, these guidelines are here to help you build and sustain a FOSS-centric space without requiring official platforming.
+
 ### What is a FOSS Club?
 FOSS Clubs are campus communities that we support. When you start a FOSS Club or collaborate with FOSS United through your existing club, you join our network of student-led groups across the country!
 
