@@ -26,4 +26,6 @@ If our team has already confirmed your FOSS Club status, please complete the fol
 
 - **Understand the Digital Commons**: Before our onboarding call, please review [these slides](https://fossunited.org/files/commons_v3.pptx) to familiarize yourself with the concept of the "Digital Commons." Understanding this philosophy is essential, as it forms the bedrock of why we build and maintain FOSS clubs.
 
+- **Official Telegram channels**: Join our Telegram groups to interact with other community members - [FOSS United Foundation](https://t.me/fossunited) and [FOSS Clubs](https://t.me/fossclubs).
+
 - **Quarterly Planning**: Finally, [book a call with the team](https://cal.com/team/fossunited/learners-program) to co-create a roadmap for your [first quarter](clubs-first-quarter.md).

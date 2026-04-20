@@ -70,4 +70,8 @@ If you have other ideas, feel free to book a call to discuss with the foundation
 4. **Public Policy Whitepapers:** Researching how the government can adopt FOSS for digital sovereignty. *Start: Write a blog on "FOSS in Indian Governance."*
 5. **License Compliance:** Auditing a project to ensure it uses the correct GPL/MIT/Apache licenses. *Start: Use "FOSSology" on a local project.*
 
+
+
+> Have other ideas to suggest? Send us a PR [here](https://github.com/fossunited/fossunited/tree/develop/docs/docs).
+
 ---

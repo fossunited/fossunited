@@ -12,7 +12,9 @@
 - Top-performing clubs may receive an additional ₹50,000 to host FOSS Hack
 
 #### How do active clubs receive their annual ₹50,000 support?
-For each event organized by your FOSS Club, FOSS United will provide support of up to ₹5,000 for refreshments per event. Additionally, FOSS United will cover travel expenses for invited speakers and mentors. For detailed information, visit: [FOSS Event Standards](https://forum.fossunited.org/t/foss-event-standards/2004#p-3900-h-4-refreshment-5)
+For each event organized by your FOSS Club, FOSS United can provide support of up to ₹5,000 for refreshments per event. Additionally, FOSS United can also cover travel expenses for invited speakers and mentors. For detailed information, visit: [FOSS Event Standards](https://forum.fossunited.org/t/foss-event-standards/2004#p-3900-h-4-refreshment-5)
+
+Please make sure to reach out to the team during the planning for phase (at least 3 weeks before the event) when requesting for financial support. This is to make sure that FOSS United doesn't end up becoming just a financial sponsor but can also find ways in supporting your event through other resources.
 
 #### Who is eligible for reimbursement?
 Active FOSS Clubs organizing events can apply for reimbursements when:
@@ -28,26 +30,23 @@ Typically Reimbursable Expenses (case-by-case basis):
 
 - Venue costs when college spaces aren't available
 - Food for event participants
-- Event materials (stickers, T-shirts in reasonable quantities)
-- Equipment rental for events
-- Printing and event supplies
-- Speaker and mentor travel expenses
+- Event materials (stickers, T-shirts in reasonable quantities, banners)
+- Equipment rental for events, if absolutely necessary
+- Speaker and mentor travel
 
 Generally Not Reimbursable:
 
 - Personal expenses unrelated to club events
 - Excessive or unreasonable spending
 - Expenses exceeding a certain amount without prior communication
-- Expenses from events not registered on the platform
-
-Checking with FOSS United team before significant expenses helps avoid reimbursement issues. This form can be used to apply for reimbursements after the event with supported bills.
+- Expenses from events that don't use the FOSS United platform for registrations.
 
 #### For FOSS Hack, are there special budget considerations?
 FOSS Hack events receive higher budgets due to their larger, often multi-college scale. When organizing a FOSS Hack:
 
 - Submit budget applications early with detailed breakdowns
 - Provide clear justification for expenses
-- Track all spending carefully
+- Track all spending carefully and publicly by creating a public page
 - Maintain organized receipt records
 
 #### How do I apply for reimbursement?

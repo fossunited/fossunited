@@ -2,7 +2,20 @@
 
 To make sure that the broader FOSS United community gets to know of the awesome work you do, we require clubs to post about their events on the [FOSS United Forum](https://forum.fossunited.org/).
 
-Please copy the questions from below and answer them on the forum thread specific to your club.
+
+### New to the Forum?
+
+If you are posting on the forum for the first time, start by creating a thread and posting your first message on thread with the following details.
+
+1. Who are you?
+2. What's your Club's name?
+3. Names of core team members and their roles
+4. Link to the socials, GitHub and anything else realted to the club.
+
+
+### Post about a specific event
+
+If you have an existing thread, please copy the questions below and answer them on the forum thread specific to your club.
 
 
 1. What is your name?

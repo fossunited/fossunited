@@ -3,7 +3,7 @@
 ### What type of events can we host?
 You can host any event that aligns with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons) and avoids the promotion of proprietary software or ideologies. Whenever in doubt, get in touch with our [program managers](https://cal.com/team/fossunited/learners-program).
 
-Check out the [contribution ideas](clubs-contribution-ideas.md) to know more.
+Just starting off? Check out the [90 Day plan](clubs-first-quarter.md) guide we have created for you, along with the [contribution ideas](clubs-contribution-ideas.md).
 
 ### Where do I create an RSVP page for events?
 We require events to use the FOSS United platform for event RSVPs. We are mandating this to ensure data privacy and that it doesn't get shared to other sponsors/partners without proper consent of the attendees and the foundation.
@@ -40,9 +40,8 @@ While we want you to be making the decisions, our team is around to help with pl
 
   After organising an event, core members are expected to:
 
-  1. Share a brief report on the forum and FOSS United community on Telegram
-  2. Upload event pictures
-  3. Document outcomes and notes
+  1. Share a brief report on the forum using [post event reporting questions](clubs-peq.md).
+  2. Book a [follow up call](https://cal.com/team/fossunited/learners-program) with out team for a quick debrief.
 
 This helps future club members and assists FOSS United in providing better support.
 

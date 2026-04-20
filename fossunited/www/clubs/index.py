@@ -43,24 +43,30 @@ def get_lead_roles() -> list[dict[str, str]]:
 def get_support_item_content() -> list[dict[str, str]]:
     return [
         {
-            "icon": "ti-microphone",
-            "heading": "Expert Speakers",
-            "content": "Provide experienced speakers for lectures and workshops.",
+            "icon": "ti-book-2",
+            "heading": "Opportunities",
+            "content": (
+                "Support to present your work infront of the broader "
+                "FOSS Community in India and abroad."
+            ),
         },
         {
-            "icon": "ti-book-2",
-            "heading": "Educational Resources",
-            "content": "Supply educational material and resources to facilitate learning.",
+            "icon": "ti-microphone",
+            "heading": "Speakers and Mentors",
+            "content": "Access to speakers and mentors for club activities",
         },
         {
             "icon": "ti-empathize",
             "heading": "Mentorship",
-            "content": "Provide access to mentors for guidance and assistance in projects.",
+            "content": (
+                "Access to the FOSS United team and community for guidance "
+                "and support in club activities and growth."
+            ),
         },
         {
             "icon": "ti-cash",
             "heading": "Funding Support",
-            "content": "Financial aid of up to ₹50,000 per club annually and top performing clubs will get additional support up to ₹50,000 to host FOSS Hack.",  # noqa: E501
+            "content": "Financial aid of up to ₹50,000 per club annually",  # noqa: E501
         },
     ]
 

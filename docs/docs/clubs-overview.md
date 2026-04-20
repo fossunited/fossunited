@@ -56,7 +56,7 @@ Clubs are tracked based on activity level:
 ### vi. Where do I reach out for help?
 - If you are reporting a Code of Conduct violation, please call [9900982939](tel:+919900982939) to speak with a FOSS United Foundation's full time staff. Read more on our [Code of Conduct page](https://fossunited.org/code-of-conduct).
 
-- Join our Telegram groups to interact with other community members - [FOSS United Foundation](https://t.me/fossunited) or [FOSS Clubs](https://t.me/fossclubs).
+- Join our Telegram groups to interact with other community members - [FOSS United Foundation](https://t.me/fossunited) and [FOSS Clubs](https://t.me/fossclubs).
 
 
 - We also have an online [forum](https://forum.fossunited.org). Suitable for thoughtful questions and content that may help future members.
