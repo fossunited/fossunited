@@ -130,7 +130,7 @@ import dayjs from 'dayjs'
 
 import Header from '@/components/Header.vue'
 import Breadcrumb from '@/components/Breadcrumb.vue'
-import EventHeader from '@/components/schedule/EventHeader.vue'
+import EventHeader from '@/components/common/EventHeader.vue'
 import ScheduleDownload from '@/components/schedule/ScheduleDownload.vue'
 import SearchSession from '@/components/schedule/SearchSession.vue'
 import HallDayView from '@/components/schedule/HallDayView.vue'
