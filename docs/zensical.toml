@@ -42,9 +42,26 @@ nav = [
     {"Telegram & Communication Channels" = "telegram.md"}
   ]},
 
+  {"FOSS Clubs"=[
+    {"Overview" = "clubs-overview.md"},
+    {"Onboarding" = "clubs-onboarding.md"},
+    {"Team Formation" = "clubs-team-formation.md"},
+    {"Hosting an Event" = "clubs-hosting-events.md"},
+    {"Post Event Reporting" = "clubs-peq.md"},
+    { "90 Day Plan" = [
+      {"Overview" = "clubs-first-quarter.md"},
+      {"Month 1" = "clubs-first-quarter-m1.md"},
+      {"Month 2" = "clubs-first-quarter-m2.md"},
+      {"Month 3" = "clubs-first-quarter-m3.md"},
+    ]},
+    {"Incidents Response" = "clubs-incidents-response-checklist.md"},
+    {"Stages and Incentives" = "clubs-stages-incentives.md"},
+    {"Contribution Ideas" = "clubs-contribution-ideas.md"},
+    {"Financial Support" = "clubs-financial-support.md"},
+  ]},
+
   {"What We Do" = [
     {"Initiatives Overview" = "initiative.md"},
-    {"FOSS Clubs" = "club.md"},
     {"Grants Program" = "grants.md"},
     {"People Behind FOSS United" = "people.md"},
     {"Principles & Values" = "principles.md"},
@@ -72,7 +89,8 @@ favicon = "./assets/fossunited-white.svg"
 features = [
   "search.highlight",
   "content.action.edit",
-  "content.action.view"
+  "content.action.view",
+  "navigation.footer"
 ]
 
 [[project.theme.palette]]
