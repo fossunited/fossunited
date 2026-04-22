@@ -37,6 +37,13 @@
           >
         </span>
       </div>
+      <!-- Form description -->
+      <div
+        v-if="event.data?.ticket_form_description"
+        class="my-2 prose prose-sm max-w-none bg-surface-gray-2 rounded-lg px-4 py-3"
+        v-html="markdownToHTML(event.data.ticket_form_description)"
+      ></div>
+
       <!-- Step Progress -->
       <nav aria-label="Registration steps">
         <Progress
@@ -268,6 +275,10 @@
                   <span>Breakfast + Lunch included</span>
                 </div>
               </div>
+              <p
+                v-if="getTierDescription(attendee.ticket_type)"
+                class="text-sm text-ink-gray-6"
+              >{{ getTierDescription(attendee.ticket_type) }}</p>
             </div>
           </div>
 
@@ -670,6 +681,10 @@ function isTierExpired(tier) {
 }
 function getTierTitle(tierName) {
   return allTiers.value.find((t) => t.name === tierName)?.title || tierName
+}
+
+function getTierDescription(tierName) {
+  return allTiers.value.find((t) => t.name === tierName)?.description || ''
 }
 
 function getTierImage(tier) {
