@@ -1,19 +1,12 @@
 frappe.ui.form.on('User', {
   setup(frm) {
-    // Frappe bug: frm.module_editor is never initialized for Website Users,
-    // causing refresh to crash at `frm.module_editor.disable = ...` (user.js:253).
-    // Provide a safe no-op so Frappe's refresh doesn't abort before our handler runs.
     if (!frm.module_editor) {
       frm.module_editor = { disable: 0, show() {} }
     }
   },
 
   refresh(frm) {
-    if (
-      frm.doc.user_type === 'Website User' &&
-      !frm.is_new() &&
-      frappe.user.has_role('System Manager')
-    ) {
+    if (frappe.user.has_role('System Manager') && !frm.is_new()) {
       frm.add_custom_button(
         __('Delete User & Profile'),
         () => {
@@ -37,12 +30,7 @@ frappe.ui.form.on('User', {
       )
     }
 
-    if (
-      frm.doc.user_type === 'Website User' &&
-      !frm.doc.enabled &&
-      !frm.is_new() &&
-      frappe.user.has_role('System Manager')
-    ) {
+    if (!frm.doc.enabled && frappe.user.has_role('System Manager') && !frm.is_new()) {
       frm.add_custom_button(
         __('Approve'),
         () => {
