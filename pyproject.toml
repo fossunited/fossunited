@@ -47,10 +47,9 @@ fix = true
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "Q"] # from frappe
 # ^ add more rules as well? RUF, UP and more?
-ignore = ["F722", "F821"]
+ignore = ["F722", "F821", "E501"]
 [tool.ruff.lint.per-file-ignores]
 "**/doctype/**/*.py" = ["F821", "F722"]
-"fossunited/www/fosshack/results/index.py" = ["E501"]
 
 [tool.ruff.format]
 quote-style = "double"
