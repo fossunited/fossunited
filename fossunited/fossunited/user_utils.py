@@ -7,7 +7,7 @@ from fossunited.doctype_ids import USER_PROFILE
 APPROVAL_EMAIL = "dilip@fossunited.org"
 
 
-def set_unique_username(doc, method):
+def set_unique_username(doc: "frappe.Document", method: str | None) -> None:
     full_name = doc.full_name.lower()
     doc.first_name = full_name.split(" ")[0]
     doc.last_name = " ".join(full_name.split(" ")[1:])
@@ -15,17 +15,18 @@ def set_unique_username(doc, method):
     doc.username = generate_username(initial_username)
 
 
-def handle_user_signup(doc, method):
+def handle_user_signup(doc: "frappe.Document", method: str | None) -> None:
     """
     After insert hook for User:
-    - Web signups (Website User): disable + queue for approval + notify
+    - Web signups (Website User): disable + persist username + queue for approval + notify
     - Desk-created users: create profile immediately (original behavior)
     """
     if doc.user_type == "Website User":
-        # Disable until approved
         frappe.db.set_value("User", doc.name, "enabled", 0, update_modified=False)
+        # set_unique_username sets doc.username in memory only - persist it so
+        # approve_user / _create_profile receive the correct username later
+        frappe.db.set_value("User", doc.name, "username", doc.username, update_modified=False)
 
-        # Notify user: pending
         frappe.sendmail(
             recipients=[doc.email],
             subject="Your FOSS United account is pending approval",
@@ -37,12 +38,11 @@ def handle_user_signup(doc, method):
         )
 
     else:
-        # Desk-created system users: create profile immediately
         _create_profile(doc)
 
 
 @frappe.whitelist()
-def approve_user(user):
+def approve_user(user: str) -> str:
     frappe.only_for("System Manager")
 
     user_doc = frappe.get_doc("User", user)
@@ -67,15 +67,13 @@ def approve_user(user):
 
 
 @frappe.whitelist()
-def deny_user(user, reason="", notify=True):
+def deny_user(user: str, reason: str = "", notify: bool = True) -> str:
     frappe.only_for("System Manager")
 
-    if not frappe.db.exists("User", user):
-        return "denied"
+    user_exists = frappe.db.exists("User", user)
 
-    user_doc = frappe.get_doc("User", user)
-
-    if frappe.utils.cint(notify):
+    if user_exists and frappe.utils.cint(notify):
+        user_doc = frappe.get_doc("User", user)
         reason_html = (
             f"<p><strong>Reason:</strong> {frappe.utils.escape_html(reason)}</p>" if reason else ""
         )
@@ -89,29 +87,32 @@ def deny_user(user, reason="", notify=True):
 <p>— FOSS United Team</p>""",
         )
 
-    frappe.delete_doc("User", user, ignore_permissions=True, force=True)
+    # Delete profiles first; FOSSUserProfile.on_trash applies to User
+    for profile in frappe.get_all(USER_PROFILE, filters={"user": user}, pluck="name"):
+        frappe.delete_doc(USER_PROFILE, profile, ignore_permissions=True, force=True)
+
+    # User may already be gone via on_trash; delete if still present
+    if frappe.db.exists("User", user):
+        frappe.delete_doc("User", user, ignore_permissions=True, force=True)
 
     return "denied"
 
 
 @frappe.whitelist()
-def delete_user_and_profile(user):
+def delete_user_and_profile(user: str) -> str:
     frappe.only_for("System Manager")
 
-    if not frappe.db.exists("User", user):
-        return "deleted"
+    # Delete profiles first; on_trash applies to User
+    for profile in frappe.get_all(USER_PROFILE, filters={"user": user}, pluck="name"):
+        frappe.delete_doc(USER_PROFILE, profile, ignore_permissions=True, force=True)
 
-    profile_name = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
-    if profile_name:
-        # on_trash on FOSSUserProfile also deletes the User — so just delete profile
-        frappe.delete_doc(USER_PROFILE, profile_name, ignore_permissions=True, force=True)
-    else:
+    if frappe.db.exists("User", user):
         frappe.delete_doc("User", user, ignore_permissions=True, force=True)
 
     return "deleted"
 
 
-def _create_profile(doc):
+def _create_profile(doc: "frappe.Document") -> None:
     """Create FOSS User Profile for a user doc."""
     if frappe.db.exists(USER_PROFILE, {"user": doc.name}):
         return
@@ -130,10 +131,8 @@ def _create_profile(doc):
     frappe.db.set_value("User", doc.name, "username", profile.username, update_modified=False)
 
 
-def generate_username(username, count=1):
-    """
-    Generate a Unique Username between 3 and 30 characters
-    """
+def generate_username(username: str, count: int = 1) -> str:
+    """Generate a unique username between 3 and 30 characters."""
     if len(username) < 3:
         username = username.ljust(3, "_")
 
