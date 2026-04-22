@@ -1,98 +1,69 @@
 import frappe
-from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import CHAPTER, USER_PROFILE
-from fossunited.tests.utils import insert_test_chapter
-
-fake = Faker()
+from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP, USER_PROFILE
+from fossunited.id.roles import CHAPTER_MEMBER
+from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss_profile_id
 
 
 class TestFOSSChapter(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter(members=["test1@example.com", "member2@example.com"])
+        self.team_member_user = UserFactory.create("with_foss_website_user_role")
+        self.chapter = FOSSChapterFactory.create(
+            "with_members", members=[self.team_member_user.name]
+        )
 
     def tearDown(self):
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
 
     def test_role_assignment_on_create(self):
-        # Given a chapter
-        chapter = self.chapter
-
-        # user must have 'Chapter Team Member' role given
-        user = frappe.db.get_value(USER_PROFILE, chapter.chapter_members[0].chapter_member, "user")
-        self.assertTrue(self.has_team_member_role(user))
+        self.assertTrue(self.has_team_member_role(self.team_member_user.name))
 
     def test_role_assignment_on_member_addition(self):
-        # Given a chapter: self.chapter
-        chapter = frappe.get_doc(CHAPTER, self.chapter.name)
+        new_user = UserFactory.create("with_foss_website_user_role")
+        profile_name = get_foss_profile_id(new_user.name)
+        self.assertFalse(self.has_team_member_role(new_user.name))
 
-        # When a new member is added to the chapter
-        new_member = frappe.get_doc(USER_PROFILE, {"user": "test1@example.com"})
+        # Add user as chapter member
+        with self.set_user(self.team_member_user.name):
+            self.chapter.append(
+                "chapter_members",
+                {"chapter_member": profile_name, "role": "Core Team Member"},
+            )
+            self.chapter.save()
 
-        chapter.append(
-            "chapter_members",
-            {"chapter_member": new_member.name, "role": "Core Team Member"},
-        )
-        chapter.save()
-
-        # Then the new member should have the role of 'Chapter Team Member'
-        user = frappe.db.get_value(USER_PROFILE, new_member.name, "user")
-        self.assertTrue(self.has_team_member_role(user))
+        self.assertTrue(self.has_team_member_role(new_user.name))
 
     def test_role_deassignment_on_member_removal(self):
-        # Given a chapter: self.chapter
-        chapter = frappe.get_doc(CHAPTER, self.chapter.name)
-
-        new_members = frappe.get_all(
-            USER_PROFILE,
-            filters=[
-                ["user", "like", "%test%"],
-                ["name", "not in", [m.chapter_member for m in chapter.chapter_members]],
-            ],
-        )
-        for new_member in new_members:
-            chapter.append(
+        # Add two new members
+        new_members = UserFactory.create_list(2, "with_foss_website_user_role")
+        self.chapter.chapter_members = []
+        for user in new_members:
+            self.chapter.append(
                 "chapter_members",
-                {"chapter_member": new_member.name, "role": "Core Team Member"},
+                {"chapter_member": get_foss_profile_id(user.name), "role": "Core Team Member"},
             )
-        chapter.save()
+        self.chapter.save()
 
-        removed_member = chapter.chapter_members[len(new_members)]
-        removed_user = frappe.db.get_value(USER_PROFILE, removed_member.chapter_member, "user")
+        # Check that all members have the team member role
+        self.assertTrue(all(self.has_team_member_role(user.name) for user in new_members))
 
-        # Make sure the member to be removed has the role "Chapter Team Member" before removal
-        self.assertTrue(self.has_team_member_role(removed_user))
-
-        # When a member is removed from the chapter
-        chapter.chapter_members = [
-            m for m in chapter.chapter_members if m.chapter_member != removed_member.chapter_member
+        # Remove first member
+        removed_member_profile = get_foss_profile_id(new_members[0].name)
+        self.chapter.chapter_members = [
+            m for m in self.chapter.chapter_members if m.chapter_member != removed_member_profile
         ]
-        chapter.save()
+        self.chapter.save()
 
-        # Then the removed member should not have the role of 'Chapter Team Member'
-        self.assertFalse(self.has_team_member_role(removed_user))
+        # Check that the first member no longer has the team member role
+        self.assertFalse(self.has_team_member_role(new_members[0].name))
 
-        # check other members retain the role
-        for member in chapter.chapter_members:
-            user = frappe.db.get_value(USER_PROFILE, member.chapter_member, "user")
-            if not self.has_team_member_role(user):
-                self.fail(f"Role not retained for {member}")
-
-    def has_team_member_role(self, user: str):
-        """
-        user id of format `test@example.com`
-        """
-        return bool(frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": user}))
+    def has_team_member_role(self, user: str) -> bool:
+        return bool(frappe.db.exists("Has Role", {"role": CHAPTER_MEMBER, "parent": user}))
 
     def test_unique_chapter_slug(self):
-        # Given a chapter: self.chapter
-        chapter = self.chapter
-
-        # When a new chapter is created with the same slug
-        # Then an exception should be raised
         with self.assertRaises(frappe.UniqueValidationError):
-            insert_test_chapter(slug=chapter.slug)
+            FOSSChapterFactory.create(slug=self.chapter.slug)
 
     def test_email_groups_are_created_on_chapter_insert(self):
         expected_group_types = [
@@ -103,23 +74,17 @@ class TestFOSSChapter(FrappeTestCase):
         for group_type in expected_group_types:
             self.assertTrue(
                 frappe.db.exists(
-                    "Email Group",
+                    EMAIL_GROUP,
                     {
                         "group_type": group_type,
                         "reference_document": self.chapter.name,
                         "document_type": CHAPTER,
                     },
                 ),
-                msg=f"Email Group '{group_type}' not created for event {self.chapter.name}",
+                msg=f"Email Group '{group_type}' not created for chapter {self.chapter.name}",
             )
 
-        groups = frappe.get_all(
-            "Email Group",
-            filters={
-                "reference_document": self.chapter.name,
-                "document_type": CHAPTER,
-            },
-            pluck="name",
+        frappe.db.delete(
+            EMAIL_GROUP,
+            {"reference_document": self.chapter.name, "document_type": CHAPTER},
         )
-        for group_name in groups:
-            frappe.delete_doc("Email Group", group_name, force=True)
