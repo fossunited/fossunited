@@ -71,11 +71,15 @@ signup_form_template = "fossunited.plugins.show_custom_signup"
 # ---------------
 # Hook on document methods and events
 
+doctype_js = {
+    "User": "public/js/user_approval.js",
+}
+
 doc_events = {
     "User": {
         "after_insert": [
             "fossunited.fossunited.user_utils.set_unique_username",
-            "fossunited.fossunited.user_utils.create_profile_on_user_create",
+            "fossunited.fossunited.user_utils.handle_user_signup",
         ],
     },
     "Razorpay Payment": {
