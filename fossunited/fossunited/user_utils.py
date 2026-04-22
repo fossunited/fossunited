@@ -137,6 +137,8 @@ def generate_username(username: str, count: int = 1) -> str:
         username = username.ljust(3, "_")
 
     username = username[:30]
-    if frappe.db.exists(USER_PROFILE, {"username": username}):
+    if frappe.db.exists(USER_PROFILE, {"username": username}) or frappe.db.exists(
+        "User", {"username": username}
+    ):
         return generate_username(username.lower() + str(count), count + 1)
     return username

@@ -55,7 +55,7 @@ def _cleanup(email):
 
 
 class TestWebSignup(FrappeTestCase):
-    EMAIL = "web_signup_test@example.com"
+    EMAIL = "foss_approval_web_signup@example.com"
 
     def setUp(self):
         frappe.flags.mute_emails = True
@@ -75,7 +75,7 @@ class TestWebSignup(FrappeTestCase):
 
 
 class TestDeskUserCreation(FrappeTestCase):
-    EMAIL = "desk_user_test@example.com"
+    EMAIL = "foss_approval_desk_user@example.com"
 
     def setUp(self):
         frappe.flags.mute_emails = True
@@ -107,7 +107,7 @@ class TestDeskUserCreation(FrappeTestCase):
 
 
 class TestApproveUser(FrappeTestCase):
-    EMAIL = "approve_flow_test@example.com"
+    EMAIL = "foss_approval_approve_flow@example.com"
 
     def setUp(self):
         frappe.flags.mute_emails = True
@@ -140,7 +140,7 @@ class TestApproveUser(FrappeTestCase):
 
 
 class TestDenyUser(FrappeTestCase):
-    EMAIL = "deny_flow_test@example.com"
+    EMAIL = "foss_approval_deny_flow@example.com"
 
     def setUp(self):
         frappe.flags.mute_emails = True
