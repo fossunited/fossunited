@@ -1,7 +1,7 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP
 from fossunited.id.roles import CHAPTER_MEMBER
 from fossunited.tests.factories import FOSSChapterFactory, UserFactory, get_foss_profile_id
 

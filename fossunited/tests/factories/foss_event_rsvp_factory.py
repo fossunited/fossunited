@@ -1,22 +1,16 @@
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import frappe
 from faker import Faker
 from frappe_factory_bot.frappe_factory_bot.base_factory import BaseFactory
 
-from fossunited.doctype_ids import EVENT_RSVP, RSVP_RESPONSE
+from fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp import FOSSEventRSVP
+from fossunited.doctype_ids import EVENT_RSVP
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
-
-if TYPE_CHECKING:
-    from fossunited.chapters.doctype.foss_event_rsvp.foss_event_rsvp import FOSSEventRSVP
-    from fossunited.chapters.doctype.foss_event_rsvp_submission.foss_event_rsvp_submission import (
-        FOSSEventRSVPSubmission,
-    )
 
 fake = Faker()
 
 
-class FOSSEventRSVPFactory(BaseFactory["FOSSEventRSVP"]):
+class FOSSEventRSVPFactory(BaseFactory[FOSSEventRSVP]):
     doctype = EVENT_RSVP
 
     @property

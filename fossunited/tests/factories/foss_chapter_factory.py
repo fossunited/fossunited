@@ -1,19 +1,16 @@
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import frappe
 from faker import Faker
 from frappe_factory_bot.frappe_factory_bot.base_factory import BaseFactory
 
-from fossunited.doctype_ids import CHAPTER, CITY_COMMUNITY, USER_PROFILE
+from fossunited.chapters.doctype.foss_chapter.foss_chapter import FOSSChapter
+from fossunited.doctype_ids import CHAPTER, CITY_COMMUNITY
 from fossunited.tests.factories.user_factory import UserFactory, get_foss_profile_id
-
-if TYPE_CHECKING:
-    from fossunited.chapters.doctype.foss_chapter.foss_chapter import FOSSChapter
 
 fake = Faker()
 
 
-class FOSSChapterFactory(BaseFactory["FOSSChapter"]):
+class FOSSChapterFactory(BaseFactory[FOSSChapter]):
     doctype = CHAPTER
 
     @property

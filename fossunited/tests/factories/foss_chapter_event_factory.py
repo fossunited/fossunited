@@ -1,22 +1,20 @@
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
 import frappe
 from faker import Faker
 from frappe_factory_bot.frappe_factory_bot.base_factory import BaseFactory
 
+from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import (
+    FOSSChapterEvent,
+)
 from fossunited.doctype_ids import EVENT
 from fossunited.tests.factories.foss_chapter_factory import FOSSChapterFactory
-
-if TYPE_CHECKING:
-    from fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event import (
-        FOSSChapterEvent,
-    )
 
 fake = Faker()
 
 
-class FOSSChapterEventFactory(BaseFactory["FOSSChapterEvent"]):
+class FOSSChapterEventFactory(BaseFactory[FOSSChapterEvent]):
     doctype = EVENT
 
     @property
@@ -33,7 +31,9 @@ class FOSSChapterEventFactory(BaseFactory["FOSSChapterEvent"]):
             "event_end_date": self.overrides.get(
                 "event_end_date", frappe.utils.add_days(frappe.utils.today(), 2)
             ),
-            "event_description": self.overrides.get("event_description", fake.text(max_nb_chars=200).strip()),
+            "event_description": self.overrides.get(
+                "event_description", fake.text(max_nb_chars=200).strip()
+            ),
             "is_paid_event": 0,
             "tickets_status": "Closed",
         }
