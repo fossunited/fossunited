@@ -26,7 +26,7 @@ class TestFOSSUserProfile(FrappeTestCase):
 
     def test_private_profile_access(self):
         test_name = fake.name()
-        test_user = frappe.get_doc(
+        user_doc = frappe.get_doc(
             {
                 "doctype": "User",
                 "email": str(uuid.uuid4()) + "@fossunited.org",
@@ -34,7 +34,9 @@ class TestFOSSUserProfile(FrappeTestCase):
                 "name": test_name,
                 "full_name": test_name,
             },
-        ).insert()
+        )
+        user_doc.flags.skip_approval_flow = True
+        test_user = user_doc.insert()
 
         # Given a private profile
         private_profile = frappe.get_doc(USER_PROFILE, {"user": test_user.name})
@@ -60,13 +62,15 @@ class TestFOSSUserProfile(FrappeTestCase):
         # When a user profile is created
         # Then the route for that profile should be of format: u/<username>
         test_email = fake.email()
-        test_user = frappe.get_doc(
+        user_doc = frappe.get_doc(
             {
                 "doctype": "User",
                 "email": test_email,
                 "first_name": fake.name().split()[0],
             },
-        ).insert()
+        )
+        user_doc.flags.skip_approval_flow = True
+        test_user = user_doc.insert()
 
         test_user.reload()
 
@@ -86,13 +90,15 @@ class TestFOSSUserProfile(FrappeTestCase):
 
         test_email = fake.email()
 
-        test_user = frappe.get_doc(
+        user_doc = frappe.get_doc(
             {
                 "doctype": "User",
                 "email": test_email,
                 "first_name": fake.name().split()[0],
             },
-        ).insert(ignore_permissions=True)
+        )
+        user_doc.flags.skip_approval_flow = True
+        test_user = user_doc.insert(ignore_permissions=True)
         test_user.reload()
 
         profile_id = frappe.db.get_value(

@@ -21,7 +21,7 @@ def handle_user_signup(doc: "frappe.Document", method: str | None) -> None:
     - Web signups (Website User): disable + persist username + queue for approval + notify
     - Desk-created users: create profile immediately (original behavior)
     """
-    if doc.user_type == "Website User":
+    if doc.user_type == "Website User" and not doc.flags.get("skip_approval_flow"):
         frappe.db.set_value("User", doc.name, "enabled", 0, update_modified=False)
         # set_unique_username sets doc.username in memory only - persist it so
         # approve_user / _create_profile receive the correct username later

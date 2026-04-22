@@ -38,7 +38,7 @@ def insert_user_profile(email=None, **kwargs):
 
     if not frappe.db.exists("User", email):
         name_parts = email.split("@")[0].title()
-        frappe.get_doc(
+        user = frappe.get_doc(
             {
                 "doctype": "User",
                 "email": email,
@@ -46,7 +46,9 @@ def insert_user_profile(email=None, **kwargs):
                 "last_name": kwargs.get("last_name", name_parts),
                 "enabled": 1,
             }
-        ).insert(ignore_permissions=True)
+        )
+        user.flags.skip_approval_flow = True
+        user.insert(ignore_permissions=True)
 
     profile_name = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
 
