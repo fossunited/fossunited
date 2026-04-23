@@ -76,7 +76,7 @@
    "fieldtype": "Link",
    "label": "Submitted By",
    "options": "User",
-   "permlevel": 3
+   "permlevel": 4
   },
   {
    "columns": 2,
@@ -90,7 +90,8 @@
   {
    "fieldname": "personal_information_section",
    "fieldtype": "Section Break",
-   "label": "Personal Information"
+   "label": "Personal Information",
+   "permlevel": 1
   },
   {
    "fetch_from": "submitted_by.email",
@@ -98,31 +99,36 @@
    "fieldname": "email",
    "fieldtype": "Data",
    "label": "Email",
-   "permlevel": 3
+   "permlevel": 4
   },
   {
    "fieldname": "column_break_dcfl",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "permlevel": 1
   },
   {
    "fieldname": "bio",
    "fieldtype": "Text Editor",
-   "label": "Speaker Bio"
+   "label": "Speaker Bio",
+   "permlevel": 1
   },
   {
    "fieldname": "organization",
    "fieldtype": "Data",
-   "label": "Organization"
+   "label": "Organization",
+   "permlevel": 1
   },
   {
    "fieldname": "designation",
    "fieldtype": "Data",
-   "label": "Designation"
+   "label": "Designation",
+   "permlevel": 1
   },
   {
    "fieldname": "about_talk_section",
    "fieldtype": "Section Break",
-   "label": "Session Details"
+   "label": "Session Details",
+   "permlevel": 1
   },
   {
    "columns": 3,
@@ -131,16 +137,19 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Session Title",
+   "permlevel": 1,
    "reqd": 1
   },
   {
    "fieldname": "column_break_mhza",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "permlevel": 1
   },
   {
    "fieldname": "talk_description",
    "fieldtype": "Text Editor",
    "label": "Session Description",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -151,44 +160,47 @@
    "in_standard_filter": 1,
    "label": "Status",
    "options": "Review Pending\nScreening\nApproved\nRejected\nWithdrawn",
-   "permlevel": 2
+   "permlevel": 3
   },
   {
    "fieldname": "section_break_ilij",
    "fieldtype": "Section Break",
-   "label": "Custom Answers"
+   "label": "Custom Answers",
+   "permlevel": 1
   },
   {
    "fieldname": "custom_answers",
    "fieldtype": "Table",
    "label": "Custom Answers",
-   "options": "FOSS Custom Answer"
+   "options": "FOSS Custom Answer",
+   "permlevel": 1
   },
   {
    "fetch_from": "submitted_by.full_name",
    "fetch_if_empty": 1,
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name"
+   "label": "Full Name",
+   "permlevel": 1
   },
   {
    "fieldname": "reviews_tab",
    "fieldtype": "Tab Break",
    "label": "Reviews",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "reviews",
    "fieldtype": "Table",
    "label": "Reviews",
    "options": "FOSS Event CFP Review",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "route",
    "fieldtype": "Data",
    "label": "Route",
-   "permlevel": 2
+   "permlevel": 3
   },
   {
    "fieldname": "column_break_vctq",
@@ -199,7 +211,7 @@
    "fieldname": "is_published",
    "fieldtype": "Check",
    "label": "Is Published?",
-   "permlevel": 2
+   "permlevel": 3
   },
   {
    "default": "No",
@@ -207,7 +219,8 @@
    "fieldname": "is_first_talk",
    "fieldtype": "Select",
    "label": "Is this your first talk?",
-   "options": "Yes\nNo"
+   "options": "Yes\nNo",
+   "permlevel": 1
   },
   {
    "fieldname": "meta_info_section",
@@ -219,37 +232,37 @@
    "fieldname": "attendance_confirmed",
    "fieldtype": "Check",
    "label": "Attendance Confirmed",
-   "permlevel": 2
+   "permlevel": 3
   },
   {
    "fieldname": "cfp_reviews_section",
    "fieldtype": "Section Break",
    "label": "CFP Reviews",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "review_scores_section",
    "fieldtype": "Section Break",
    "label": "Review Scores",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "positive_reviews",
    "fieldtype": "Data",
    "label": "Positive Reviews %",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "negative_reviews",
    "fieldtype": "Data",
    "label": "Negative Reviews  %",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "fieldname": "unsure_reviews",
    "fieldtype": "Data",
    "label": "Unsure Reviews  %",
-   "permlevel": 4
+   "permlevel": 2
   },
   {
    "columns": 2,
@@ -265,6 +278,7 @@
    "fieldtype": "Select",
    "label": "Session Type",
    "options": "Talk\nLightning Talk\nPanel Discussion\nBirds of Feather(BoF)\nWorkshop\nInvited Talk",
+   "permlevel": 1,
    "reqd": 1
   },
   {
@@ -273,78 +287,88 @@
    "fieldtype": "Data",
    "label": "Picture (URL)",
    "length": 512,
-   "options": "URL"
+   "options": "URL",
+   "permlevel": 1
   },
   {
    "fieldname": "first_name",
    "fieldtype": "Data",
-   "label": "First Name"
+   "label": "First Name",
+   "permlevel": 1
   },
   {
    "fieldname": "last_name",
    "fieldtype": "Data",
-   "label": "Last Name"
+   "label": "Last Name",
+   "permlevel": 1
   },
   {
    "fieldname": "speaker_information_section",
    "fieldtype": "Section Break",
    "label": "Speaker Information",
-   "permlevel": 3
+   "permlevel": 1
   },
   {
    "fieldname": "speakers",
    "fieldtype": "Table",
    "label": "Speakers",
    "options": "CFP Submission Speaker",
-   "permlevel": 3
+   "permlevel": 1
   },
   {
    "fieldname": "references",
    "fieldtype": "Table",
    "label": "References",
-   "options": "CFP Submission Reference"
+   "options": "CFP Submission Reference",
+   "permlevel": 1
   },
   {
    "default": "Intermediate",
    "fieldname": "intended_audience",
    "fieldtype": "Select",
    "label": "Intended Audience",
-   "options": "Beginner\nIntermediate\nAdvanced"
+   "options": "Beginner\nIntermediate\nAdvanced",
+   "permlevel": 1
   },
   {
    "fieldname": "key_takeaways",
    "fieldtype": "Text Editor",
-   "label": "Key Takeaways"
+   "label": "Key Takeaways",
+   "permlevel": 1
   },
   {
    "fieldname": "categories_preview",
    "fieldtype": "HTML",
-   "label": "Categories Preview"
+   "label": "Categories Preview",
+   "permlevel": 1
   },
   {
    "description": "Each category goes on a new line",
    "fieldname": "session_categories",
    "fieldtype": "Text",
-   "label": "Session Categories"
+   "label": "Session Categories",
+   "permlevel": 1
   },
   {
    "default": "0",
    "fieldname": "is_withdrawn",
    "fieldtype": "Check",
-   "label": "Is Withdrawn?"
+   "label": "Is Withdrawn?",
+   "permlevel": 1
   },
   {
    "default": "1",
    "fieldname": "subscribe_chapter_mailing",
    "fieldtype": "Check",
    "label": "Subscribe to Chapter Mailing?",
-   "permlevel": 3
+   "permlevel": 1
   },
   {
    "description": "License for the talk/project.",
    "fieldname": "talk_license",
    "fieldtype": "Data",
-   "label": "Talk License"
+   "label": "Talk License",
+   "permlevel": 1
   },
   {
    "default": "0",
@@ -352,13 +376,13 @@
    "fieldname": "accept_coc",
    "fieldtype": "Check",
    "label": "Accept Code of Conduct",
-   "permlevel": 3
+   "permlevel": 1
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-15 17:24:21.973560",
+ "modified": "2026-04-23 16:00:00.000000",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -375,6 +399,12 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "System Manager",
    "write": 1
   },
   {
@@ -409,15 +439,10 @@
   },
   {
    "if_owner": 1,
-   "permlevel": 2,
+   "permlevel": 1,
    "read": 1,
-   "role": "All"
-  },
-  {
-   "if_owner": 1,
-   "permlevel": 4,
-   "read": 1,
-   "role": "All"
+   "role": "All",
+   "write": 1
   },
   {
    "create": 1,
@@ -428,22 +453,28 @@
    "write": 1
   },
   {
+   "permlevel": 1,
+   "read": 1,
+   "role": "Chapter Team Member"
+  },
+  {
    "permlevel": 2,
    "read": 1,
    "role": "Chapter Team Member",
-   "select": 1,
    "write": 1
   },
   {
    "permlevel": 3,
    "read": 1,
    "role": "Chapter Team Member",
-   "select": 1
+   "select": 1,
+   "write": 1
   },
   {
    "permlevel": 4,
    "read": 1,
-   "role": "Chapter Team Member"
+   "role": "Chapter Team Member",
+   "write": 1
   },
   {
    "read": 1,
@@ -454,12 +485,8 @@
   {
    "permlevel": 2,
    "read": 1,
-   "role": "CFP Reviewer"
-  },
-  {
-   "permlevel": 4,
-   "read": 1,
    "role": "CFP Reviewer",
+   "select": 1,
    "write": 1
   }
  ],
