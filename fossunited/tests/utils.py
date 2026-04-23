@@ -448,12 +448,14 @@ def insert_cfp_submission(linked_cfp: str, event: str, **kwargs):
             }
         ]
 
+    submitted_by = kwargs.get("submitted_by", "")
     submission_data = {
         "doctype": PROPOSAL,
         "status": kwargs.get("status", "Review Pending"),
         "linked_cfp": linked_cfp,
         "event": event,
-        "submitted_by": kwargs.get("submitted_by", ""),
+        "submitted_by": submitted_by,
+        "email": kwargs.get("email", submitted_by),
         "speakers": speakers,
         "is_first_talk": kwargs.get("is_first_talk", "No"),
         "session_type": kwargs.get("session_type", "Talk"),

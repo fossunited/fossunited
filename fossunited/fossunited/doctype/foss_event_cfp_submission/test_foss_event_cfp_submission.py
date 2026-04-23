@@ -17,6 +17,7 @@ from fossunited.tests.utils import (
 fake = Faker()
 
 CoreTeam = "test1@example.com"
+CFPReviewer = "test2@example.com"
 
 
 class TestFOSSEventCFPSubmission(FrappeTestCase):
@@ -41,6 +42,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             submitted_by=CoreTeam,
         )
 
+        # Assign CFP Reviewer role to test reviewer
+        if not frappe.db.exists("Has Role", {"role": "CFP Reviewer", "parent": CFPReviewer}):
+            frappe.get_doc("User", CFPReviewer).add_roles("CFP Reviewer")
+
     def tearDown(self):
         frappe.set_user("Administrator")
 
@@ -50,6 +55,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.cfp.delete(force=True)
         self.event.delete(force=True)
         self.chapter.delete(force=True)
+
+        # Remove CFP Reviewer role
+        frappe.get_doc("User", CFPReviewer).remove_roles("CFP Reviewer")
 
     def test_add_to_email_group(self):
         # given a cfp form
@@ -356,6 +364,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             },
         )
         self.submission.save()
+        self.submission.reload()
 
         frappe.db.delete("Email Queue")
         self.submission.reviews[0].remarks = "This is promising now!"
@@ -402,3 +411,126 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         # Then score fields should be updated
         self.assertIsNotNone(self.submission.positive_reviews)
         self.assertIsNotNone(self.submission.negative_reviews)
+
+    # --- Permission tests ---
+
+    def test_chapter_team_member_can_read_submission(self):
+        # Chapter Team Member can read submission without being owner
+        frappe.set_user(CoreTeam)
+        doc = frappe.get_doc(PROPOSAL, self.submission.name)
+        self.assertEqual(doc.talk_title, self.submission.talk_title)
+
+    def test_chapter_team_member_can_change_status(self):
+        # Chapter Team Member can write permlevel 2 fields (status)
+        frappe.set_user(CoreTeam)
+        self.submission.status = "Approved"
+        self.submission.save()
+        self.submission.reload()
+        self.assertEqual(self.submission.status, "Approved")
+
+    def test_chapter_team_member_can_add_review(self):
+        # Chapter Team Member can write permlevel 1 (reviews table)
+        frappe.set_user(CoreTeam)
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Yes", "remarks": "LGTM"}
+        )
+        self.submission.save()
+        self.submission.reload()
+        self.assertEqual(len(self.submission.reviews), 1)
+
+    def test_cfp_reviewer_can_add_own_review(self):
+        # CFP Reviewer can add a review row for themselves
+        frappe.set_user(CFPReviewer)
+        self.submission.append(
+            "reviews",
+            {"reviewer": CFPReviewer, "to_approve": "Yes", "remarks": "Looks good"},
+        )
+        self.submission.save()
+        self.submission.reload()
+        self.assertEqual(len(self.submission.reviews), 1)
+        self.assertEqual(self.submission.reviews[0].reviewer, CFPReviewer)
+
+    def test_cfp_reviewer_cannot_add_review_for_other(self):
+        # CFP Reviewer cannot add a review attributed to another user
+        frappe.set_user(CFPReviewer)
+        self.submission.append(
+            "reviews",
+            {"reviewer": CFPReviewer, "email": "other@example.com", "to_approve": "Yes"},
+        )
+        with self.assertRaises(frappe.PermissionError):
+            self.submission.save()
+
+    def test_cfp_reviewer_cannot_add_duplicate_review(self):
+        # CFP Reviewer cannot add more than one review row
+        frappe.set_user(CFPReviewer)
+        self.submission.append(
+            "reviews", {"reviewer": CFPReviewer, "to_approve": "Yes", "remarks": "First"}
+        )
+        self.submission.append(
+            "reviews", {"reviewer": CFPReviewer, "to_approve": "No", "remarks": "Second"}
+        )
+        with self.assertRaises(frappe.PermissionError):
+            self.submission.save()
+
+    def test_owner_cannot_change_status(self):
+        # Owner (All role, if_owner) has no write on permlevel 2 — status must stay
+        submitter = "test4@example.com"
+        frappe.set_user(submitter)
+        sub = insert_cfp_submission(
+            linked_cfp=self.cfp.name,
+            event=self.event.name,
+            submitted_by=submitter,
+        )
+        # Owner tries to change status — Frappe resets it via validate_higher_perm_levels
+        sub.status = "Approved"
+        sub.save()
+        sub.reload()
+        # Status should NOT change (permlevel 2 write denied for owner)
+        self.assertNotEqual(sub.status, "Approved")
+        sub.delete(force=True, ignore_permissions=True)
+
+    # --- Controller tests ---
+
+    def test_withdrawal_sets_status_withdrawn(self):
+        frappe.set_user(CoreTeam)
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+        self.assertEqual(self.submission.status, "Withdrawn")
+
+    def test_re_withdrawal_reverts_to_review_pending(self):
+        frappe.set_user(CoreTeam)
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+        self.submission.is_withdrawn = 0
+        self.submission.save()
+        self.assertEqual(self.submission.status, "Review Pending")
+
+    def test_withdrawal_of_approved_notifies_team(self):
+        frappe.set_user(CoreTeam)
+        self.submission.status = "Approved"
+        self.submission.save()
+        frappe.db.delete("Email Queue")
+
+        self.submission.is_withdrawn = 1
+        self.submission.save()
+
+        email_exists = frappe.db.exists(
+            "Email Queue",
+            {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
+        )
+        self.assertTrue(email_exists)
+
+    def test_scores_reset_when_reviews_removed(self):
+        frappe.set_user(CoreTeam)
+        self.submission.append(
+            "reviews", {"reviewer": CoreTeam, "to_approve": "Yes", "remarks": ""}
+        )
+        self.submission.save()
+        self.submission.reload()
+        self.assertGreater(int(self.submission.positive_reviews or 0), 0)
+
+        self.submission.reviews = []
+        self.submission.save()
+        self.submission.reload()
+        # With no reviews total defaults to 1 in set_scores, so positive=0%
+        self.assertEqual(int(self.submission.positive_reviews or 0), 0)
