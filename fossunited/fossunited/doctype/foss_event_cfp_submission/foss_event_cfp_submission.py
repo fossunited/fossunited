@@ -148,16 +148,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def validate_session_type_permissions(self) -> None:
         if self.session_type != "Invited Talk":
             return
-        user = frappe.session.user
-        # Block Website Users outright
-        if frappe.db.get_value("User", user, "user_type") == "Website User":
-            frappe.throw(
-                _("You cannot set Session Type to 'Invited Talk'."),
-                frappe.PermissionError,
-            )
-        # Allow only specific desk roles to set this value
+        if not self.has_value_changed("session_type"):
+            return
         allowed_roles = {"System Manager", "Chapter Team Member", "CFP Reviewer"}
-        if not set(frappe.get_roles(user)).intersection(allowed_roles):
+        if not allowed_roles.intersection(frappe.get_roles()):
             frappe.throw(
                 _("You cannot set Session Type to 'Invited Talk'."),
                 frappe.PermissionError,

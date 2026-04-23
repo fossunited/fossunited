@@ -25,18 +25,23 @@ function is_reviewer_only() {
   )
 }
 
-// Make all fields except the reviews table read-only for CFP Reviewers.
-// Permlevels alone can't restrict level-0 fields for a role that needs
-// write at level 0 to save (required to add review rows).
+// Make all fields except the reviews table read-only for reviewer-only users.
+// Frappe's if_owner at permlevel 1+ is not evaluated client-side (root cause in
+// frappe/public/js/frappe/model/perm.js get_role_permissions), so perm[1].write=1
+// for everyone with the All role. JS is the correct fix for the UX layer.
 function restrict_reviewer_fields(frm) {
   if (!is_reviewer_only()) return
-  frm.fields.forEach((f) => {
-    if (f.df.fieldname !== 'reviews') {
-      frm.set_df_property(f.df.fieldname, 'read_only', 1)
+  frm.fields.forEach((field) => {
+    if (field.df.fieldname !== 'reviews') {
+      frm.set_df_property(field.df.fieldname, 'read_only', 1)
     }
   })
   frm.refresh_fields()
+}
 
+// Block duplicate review rows in the grid for reviewer-only users.
+function restrict_reviewer_grid(frm) {
+  if (!is_reviewer_only()) return
   const user = frappe.session.user
   const already_reviewed = (frm.doc.reviews || []).some((r) => r.email === user)
   const grid = frm.fields_dict.reviews.grid
@@ -60,5 +65,6 @@ frappe.ui.form.on('FOSS Event CFP Submission', {
   refresh(frm) {
     render_talk_categories(frm)
     restrict_reviewer_fields(frm)
+    restrict_reviewer_grid(frm)
   },
 })
