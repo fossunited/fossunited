@@ -31,6 +31,7 @@ function is_reviewer_only() {
 // for everyone with the All role. JS is the correct fix for the UX layer.
 function restrict_reviewer_fields(frm) {
   if (!is_reviewer_only()) return
+  if (frm.doc.owner === frappe.session.user) return  // own submission stay editable
   frm.fields.forEach((field) => {
     if (field.df.fieldname !== 'reviews') {
       frm.set_df_property(field.df.fieldname, 'read_only', 1)
