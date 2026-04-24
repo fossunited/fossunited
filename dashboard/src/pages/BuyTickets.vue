@@ -1,5 +1,5 @@
 <template>
-  <RazorpayCheckout ref="rzpCheckout" />
+  <RazorpayCheckout ref="rzpCheckout" @error="onPaymentError" />
   <Header />
   <Dialog
     v-model="showDialog"
@@ -216,6 +216,7 @@
                   :type="FIELD_TYPE_MAP[field.field_type]"
                   :label="field.label"
                   :options="field.options"
+                  :required="Boolean(field.mandatory)"
                   size="sm"
                   variant="subtle"
                 />
@@ -275,18 +276,14 @@
                   <span>Breakfast + Lunch included</span>
                 </div>
               </div>
-              <p
-                v-if="getTierDescription(attendee.ticket_type)"
-                class="text-sm text-ink-gray-6"
-              >{{ getTierDescription(attendee.ticket_type) }}</p>
+              <p v-if="getTierDescription(attendee.ticket_type)" class="text-sm text-ink-gray-6">
+                {{ getTierDescription(attendee.ticket_type) }}
+              </p>
             </div>
           </div>
 
           <!-- STEP 4: Billing -->
-          <div
-            v-else-if="currentStep === 4"
-            class="flex flex-col md:flex-row gap-4 items-start"
-          >
+          <div v-else-if="currentStep === 4" class="flex flex-col md:flex-row gap-4 items-start">
             <div
               class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6 flex-1"
             >
@@ -323,7 +320,12 @@
               />
               <div class="flex flex-col gap-1.5">
                 <div class="flex items-center gap-2">
-                  <input id="gst-toggle" v-model="billing.hasGST" type="checkbox" class="rounded-sm" />
+                  <input
+                    id="gst-toggle"
+                    v-model="billing.hasGST"
+                    type="checkbox"
+                    class="rounded-sm"
+                  />
                   <label for="gst-toggle" class="text-sm text-ink-gray-7 cursor-pointer"
                     >Add GST Details</label
                   >
@@ -376,7 +378,7 @@
                     target="_blank"
                     class="font-semibold underline"
                     >Refund Policy</a
-                  >
+                  ><span class="text-ink-red-3 ml-0.5">*</span>
                 </label>
               </div>
               <div class="flex items-start gap-2">
@@ -410,7 +412,10 @@
                   type="checkbox"
                   class="mt-0.5 rounded-sm"
                 />
-                <label for="subscribe-newsletter" class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed">
+                <label
+                  for="subscribe-newsletter"
+                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
+                >
                   Subscribe to the
                   <a
                     href="https://fossunited.org/newsletter"
@@ -553,7 +558,7 @@ import {
   IconSoup,
   IconReceipt,
 } from '@tabler/icons-vue'
-import { cleanedHTML } from '@/helpers/utils'
+import { cleanedHTML, showError } from '@/helpers/utils'
 
 const dayjs = inject('$dayjs')
 const router = useRouter()
@@ -766,6 +771,13 @@ function removeAttendee(index) {
 }
 
 // Navigation
+function onPaymentError(err) {
+  const msg =
+    typeof err === 'string' ? err : err?.messages?.[0] || err?.message || 'Payment failed'
+  setError(msg)
+  showError(err, 'Failed to initiate payment')
+}
+
 function setErrors(msgs) {
   errorMessages.value = msgs
   errorMessage.value = msgs[0] || null
