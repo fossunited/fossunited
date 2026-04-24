@@ -79,7 +79,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]
-        submitted_by: DF.Link
+        submitted_by: DF.Link | None
         subscribe_chapter_mailing: DF.Check
         talk_description: DF.TextEditor
         talk_license: DF.Data | None
