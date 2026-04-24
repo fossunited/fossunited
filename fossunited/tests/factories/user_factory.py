@@ -20,6 +20,17 @@ def get_foss_profile_id(user: str) -> str | None:
 class UserFactory(BaseFactory["User"]):
     doctype = "User"
 
+    @classmethod
+    def create(cls, *_factory_traits: str, **overrides: Any) -> "User":
+        # frappe.core.doctype.user.user.throttle_user_creation() fires when
+        # >60 users are created in 60 min. In CI many test suites run together
+        # and hit this limit. frappe.flags.in_import bypasses the check.
+        frappe.flags.in_import = True
+        try:
+            return super().create(*_factory_traits, **overrides)
+        finally:
+            frappe.flags.in_import = False
+
     @property
     def default_attributes(self) -> dict[str, Any]:
         email = self.overrides.get("email", fake.email())
