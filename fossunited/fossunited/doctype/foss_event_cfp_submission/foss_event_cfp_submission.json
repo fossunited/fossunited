@@ -382,7 +382,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-24 16:07:23.273453",
+ "modified": "2026-04-24 16:36:37.863761",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -427,10 +427,6 @@
   },
   {
    "create": 1,
-   "role": "All"
-  },
-  {
-   "create": 1,
    "delete": 1,
    "if_owner": 1,
    "read": 1,
@@ -471,12 +467,6 @@
    "write": 1
   },
   {
-   "permlevel": 4,
-   "read": 1,
-   "role": "Chapter Team Member",
-   "write": 1
-  },
-  {
    "read": 1,
    "role": "CFP Reviewer",
    "select": 1,
@@ -490,35 +480,20 @@
    "write": 1
   },
   {
-   "email": 1,
-   "export": 1,
    "permlevel": 3,
-   "print": 1,
    "read": 1,
-   "report": 1,
-   "role": "CFP Reviewer",
-   "share": 1
+   "role": "CFP Reviewer"
   },
   {
-   "email": 1,
-   "export": 1,
    "permlevel": 3,
-   "print": 1,
    "read": 1,
-   "report": 1,
-   "role": "All",
-   "share": 1
+   "role": "All"
   },
   {
-   "email": 1,
-   "export": 1,
    "if_owner": 1,
    "permlevel": 4,
-   "print": 1,
    "read": 1,
-   "report": 1,
    "role": "All",
-   "share": 1,
    "write": 1
   }
  ],
