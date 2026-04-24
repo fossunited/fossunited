@@ -222,3 +222,45 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                 {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
             )
         )
+
+    def test_insert_to_closed_cfp_throws(self):
+        self.cfp.status = "Closed"
+        self.cfp.save()
+        with self.assertRaises(frappe.PermissionError):
+            FOSSEventCFPSubmissionFactory.create(
+                linked_cfp=self.cfp.name,
+                event=self.event.name,
+            )
+        self.cfp.status = "Live"
+        self.cfp.save()
+
+    def test_invited_talk_blocked_for_website_user(self):
+        frappe.set_user("test_website_user@example.com")
+        with self.assertRaises(frappe.PermissionError):
+            self.submission.session_type = "Invited Talk"
+            self.submission.save()
+
+    def test_new_review_notifies_proposer(self):
+        frappe.set_user(CoreTeam)
+        frappe.db.delete("Email Queue")
+        self._add_review(CoreTeam, "Yes", "Great proposal!")
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Queue",
+                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
+            )
+        )
+
+    def test_review_remarks_change_notifies_proposer(self):
+        frappe.set_user(CoreTeam)
+        self._add_review(CoreTeam, "Maybe", "Needs more detail.")
+        self.submission.reload()
+        frappe.db.delete("Email Queue")
+        self.submission.reviews[0].remarks = "Actually looks great now!"
+        self.submission.save()
+        self.assertTrue(
+            frappe.db.exists(
+                "Email Queue",
+                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
+            )
+        )
