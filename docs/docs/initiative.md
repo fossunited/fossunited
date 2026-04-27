@@ -20,13 +20,13 @@ FOSS United runs and supports a wide range of initiatives aimed at building a st
 6. **[FOSS Pledge](https://fossunited.org/pledge):**
    A public declaration of support on Free and Open Source Software by individuals and organizations.
 
-7. **[Mon School](https://mon.school/):**
+7. **[Mon School](https://mon.school/) (Inactive):**
    An educational platform offering courses that emphasize creativity, critical thinking, and foundational skills, especially for beginners and young learners.
 
 8. **[Job Board](https://fossunited.org/jobs):**
    Connects FOSS developers and contributors with organizations seeking talent, helping to bridge the gap between the FOSS ecosystem and the job market.
 
-9. **[FOSS Event Grant](https://fossunited.org/hackathon-grant):**
+9. **[FOSS Event Grant](https://fossunited.org/grants/events):**
    Provides financial support to community-driven FOSS events.
 
 ---

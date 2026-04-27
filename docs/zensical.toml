@@ -62,7 +62,7 @@ nav = [
 
   {"What We Do" = [
     {"Initiatives Overview" = "initiative.md"},
-    {"Grants Program" = "grants.md"},
+    {"Grants Program" = "https://fossunited.org/grants"},
     {"People Behind FOSS United" = "people.md"},
     {"Principles & Values" = "principles.md"},
     {"FOSS Philosophy" = "foss.md"},
