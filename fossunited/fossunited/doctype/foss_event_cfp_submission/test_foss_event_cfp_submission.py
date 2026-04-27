@@ -184,7 +184,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.assertEqual(self.submission.status, "Review Pending")
 
     def test_review_scores_calculated(self):
-        frappe.set_user(CoreTeam)
+        frappe.set_user("Administrator")
         for verdict in ["Yes", "Yes", "No", "Maybe"]:
             self.submission.append(
                 "reviews",
@@ -241,13 +241,16 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
     def test_insert_to_closed_cfp_throws(self):
         self.cfp.status = "Closed"
         self.cfp.save()
-        self.addCleanup(lambda: (setattr(self.cfp, "status", "Live"), self.cfp.save()))
-        with self.assertRaises(frappe.PermissionError):
-            FOSSEventCFPSubmissionFactory.create(
-                linked_cfp=self.cfp.name,
-                event=self.event.name,
-                submitted_by=CoreTeam,
-            )
+        try:
+            with self.assertRaises(frappe.PermissionError):
+                FOSSEventCFPSubmissionFactory.create(
+                    linked_cfp=self.cfp.name,
+                    event=self.event.name,
+                    submitted_by=CoreTeam,
+                )
+        finally:
+            self.cfp.status = "Live"
+            self.cfp.save()
 
     def test_invited_talk_blocked_for_website_user(self):
         frappe.set_user("test_website_user@example.com")
