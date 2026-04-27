@@ -24,7 +24,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             event=self.event.name,
             submitted_by=CoreTeam,
         )
-        if not frappe.db.exists("Has Role", {"role": "CFP Reviewer", "parent": Reviewer}):
+        self._added_cfp_reviewer = not frappe.db.exists(
+            "Has Role", {"role": "CFP Reviewer", "parent": Reviewer}
+        )
+        if self._added_cfp_reviewer:
             frappe.get_doc("User", Reviewer).add_roles("CFP Reviewer")
 
     def tearDown(self):
@@ -34,7 +37,8 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.cfp.delete(force=True)
         self.event.delete(force=True)
         self.chapter.delete(force=True)
-        frappe.get_doc("User", Reviewer).remove_roles("CFP Reviewer")
+        if self._added_cfp_reviewer:
+            frappe.get_doc("User", Reviewer).remove_roles("CFP Reviewer")
 
     # --- helpers ---
 
@@ -106,10 +110,11 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         doc = frappe.get_doc(PROPOSAL, self.submission.name)
         self.assertIsNotNone(doc.talk_title)
 
-    def test_chapter_team_member_l1_write_blocked_by_server(self):
-        # Frappe bug: get_permlevel_access() ignores if_owner at permlevel 1+, so All role
-        # grants CTM effective L1 write server-side. JS enforces read-only in desk UI.
-        # This test documents current server behaviour (CTM can write L1) until Frappe fixes it.
+    def test_chapter_team_member_l1_write_allowed_server_side_frappe_bug(self):
+        # Frappe bug: get_permlevel_access() ignores if_owner at permlevel 1+, so the
+        # FOSS Website User role (if_owner) grants CTM effective L1 write server-side.
+        # Desk UI enforces read-only via JS. Test documents the known incorrect behaviour.
+        # TODO: remove/flip once upstream Frappe fixes if_owner permlevel enforcement.
         frappe.set_user(CoreTeam)
         self.submission.talk_title = "CTM Attempted Edit"
         self.submission.save()
@@ -146,6 +151,8 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         )
         with self.assertRaises(frappe.PermissionError):
             self.submission.save()
+        self.submission = frappe.get_doc(PROPOSAL, self.submission.name)
+        self.assertEqual(len(self.submission.reviews), 0)
 
     def test_reviewer_cannot_add_duplicate_review(self):
         frappe.set_user(Reviewer)
@@ -157,6 +164,8 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         )
         with self.assertRaises(frappe.PermissionError):
             self.submission.save()
+        self.submission = frappe.get_doc(PROPOSAL, self.submission.name)
+        self.assertEqual(len(self.submission.reviews), 0)
 
     # --- controller tests ---
 
@@ -196,6 +205,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         frappe.set_user(CoreTeam)
         self.submission.status = "Approved"
         self.submission.save()
+        self.assertGreater(len(self.submission.speakers), 0)
         for speaker in self.submission.speakers:
             self.assertTrue(
                 self._email_group_has(self.event.name, speaker.email, "Accepted Proposers")
@@ -205,6 +215,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         frappe.set_user(CoreTeam)
         self.submission.status = "Rejected"
         self.submission.save()
+        self.assertGreater(len(self.submission.speakers), 0)
         for speaker in self.submission.speakers:
             self.assertTrue(
                 self._email_group_has(self.event.name, speaker.email, "Rejected Proposers")
@@ -214,7 +225,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         frappe.set_user(CoreTeam)
         self.submission.status = "Approved"
         self.submission.save()
-        frappe.db.delete("Email Queue")
+        frappe.db.delete(
+            "Email Queue",
+            {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
+        )
         self.submission.is_withdrawn = 1
         self.submission.save()
         self.assertTrue(
@@ -227,13 +241,13 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
     def test_insert_to_closed_cfp_throws(self):
         self.cfp.status = "Closed"
         self.cfp.save()
+        self.addCleanup(lambda: (setattr(self.cfp, "status", "Live"), self.cfp.save()))
         with self.assertRaises(frappe.PermissionError):
             FOSSEventCFPSubmissionFactory.create(
                 linked_cfp=self.cfp.name,
                 event=self.event.name,
+                submitted_by=CoreTeam,
             )
-        self.cfp.status = "Live"
-        self.cfp.save()
 
     def test_invited_talk_blocked_for_website_user(self):
         frappe.set_user("test_website_user@example.com")

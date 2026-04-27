@@ -401,9 +401,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def validate_review_ownership(self):
         """CFP Reviewers can only add/edit their own review row, and only one."""
         roles = set(frappe.get_roles())
-        if roles & {"System Manager", "Chapter Team Member"}:
+        if "System Manager" in roles:
             return
-        if "CFP Reviewer" not in roles:
+        if not roles & {"CFP Reviewer", "Chapter Team Member", "IndiaFOSS Chairs"}:
             return
 
         user = frappe.session.user
@@ -411,6 +411,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         old_reviews = {r.name: r for r in old_doc.reviews if r.name} if old_doc else {}
 
         own_rows = 0
+        reverted = False
         for review in self.reviews:
             is_new = not review.name or review.name not in old_reviews
             if is_new:
@@ -422,15 +423,24 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 own_rows += 1
             else:
                 old = old_reviews[review.name]
-                if old.email != user and (
-                    review.to_approve != old.to_approve or review.remarks != old.remarks
-                ):
-                    frappe.throw(
-                        _("You can only modify your own review rows."),
-                        frappe.PermissionError,
-                    )
-                if old.email == user:
+                if old.email != user:
+                    # Revert ALL fields of others' rows so stale desk dirty state
+                    # from a prior failed save doesn't block subsequent valid saves.
+                    review.reviewer = old.reviewer
+                    review.email = old.email
+                    review.reviewer_profile = old.reviewer_profile
+                    review.to_approve = old.to_approve
+                    review.remarks = old.remarks
+                    reverted = True
+                else:
                     own_rows += 1
+
+        if reverted:
+            frappe.msgprint(
+                _("Your edits to other reviewers' rows were discarded."),
+                alert=True,
+                indicator="red",
+            )
 
         if own_rows > 1:
             frappe.throw(
