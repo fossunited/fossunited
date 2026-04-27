@@ -70,7 +70,7 @@
           data-type="Check"
           name="{{ field.fieldname }}"
           type="checkbox"
-          class="form-control form-check-input text-sm"
+          class="form-check-input flex-shrink-0"
           id="{{ field.fieldname }}"
           {% if field.reqd %}required{% endif %}
           {% if field.value == '1' or submission[field.fieldname] == 1 %}checked{% endif %}

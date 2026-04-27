@@ -80,6 +80,8 @@ All FOSS Clubs follow the FOSS United Code of Conduct: [https://fossunited.org/c
 
 6. We recommend hosting a balanced mix of talks and hands-on sessions. While talks provide valuable insights, incorporating interactive workshops and collaborative building sessions is essential to keeping your community engaged and motivated.
 
+7. Please use gender-neutral language in your communication. See [heyguys.cc](https://heyguys.cc/) for how.
+
 ### ix. Brand guidelines
 FOSS United maintains brand guidelines for consistency across all clubs. Once you are approved to be a FOSS United recognised club, you should only:
 - Use the provided official FOSS Club logos

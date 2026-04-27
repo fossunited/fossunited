@@ -78,7 +78,10 @@ class FOSSEventTicket(Document):
                     "wants_tshirt": attendee.get("wants_tshirt", 0),
                     "tshirt_size": attendee.get("tshirt_size"),
                     "accept_coc": attendee.get("accept_coc", 0),
-                    "tier": payment_meta_data.get("tier", {}).get("title"),
+                    "tier": frappe.db.get_value(
+                        "FOSS Ticket Tier", attendee.get("ticket_type"), "title"
+                    )
+                    or payment_meta_data.get("tier", {}).get("title"),
                     "custom_fields": [],
                 }
             )
@@ -174,53 +177,65 @@ class TicketTierMismatchError(frappe.ValidationError):
 
 
 def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
-    # calculate total amount
-    calculated_amount = 0
     payment_meta_data: dict = frappe.parse_json(doc.meta_data)
+    tier_counts: dict = payment_meta_data.get("tier_counts") or {}
     attendees = payment_meta_data.get("attendees", [])
-    tier = payment_meta_data.get("tier", {}).get("name")
-    price, event_name = frappe.db.get_value("FOSS Ticket Tier", tier, ["price", "parent"])
+    event_name = payment_meta_data.get("event")
 
-    # Check if the tier belongs to the correct event
-    if event_name != payment_meta_data.get("event"):
-        frappe.throw("This tier does not belong to this event!", TicketTierMismatchError)
+    if not tier_counts:
+        frappe.throw("No ticket tiers selected.", TicketTierMismatchError)
 
-    # Retrieve the tier details for validation
-    tier_details = frappe.get_doc("FOSS Ticket Tier", tier)
+    calculated_amount = 0.0
 
-    # Check if the tier is enabled
-    if not tier_details.enabled:
-        frappe.throw("This ticket tier is not enabled!", TicketTierMismatchError)
+    for tier_name, count in tier_counts.items():
+        count = int(count or 0)
+        if count <= 0:
+            continue
 
-    # Check if the ticket purchase is within the valid time frame
-    valid_till = tier_details.valid_till
-    if valid_till and valid_till < datetime.today().date():
-        frappe.throw("This ticket tier has expired!", TicketTierMismatchError)
+        price, tier_event = frappe.db.get_value("FOSS Ticket Tier", tier_name, ["price", "parent"])
+        if tier_event != event_name:
+            frappe.throw("A tier does not belong to this event.", TicketTierMismatchError)
 
-    # Check if the number of tickets purchased does not exceed the maximum allowed
-    maximum_tickets = tier_details.maximum_tickets
-    total_tickets = frappe.db.count(
-        "FOSS Event Ticket",
-        filters={"tier": tier_details.title, "event": payment_meta_data.get("event")},
-    )
-    if maximum_tickets and total_tickets > maximum_tickets:
-        frappe.throw(
-            f"The maximum tickets for this tier is {maximum_tickets}. Sold out, Houseful!",
-            TicketTierMismatchError,
+        tier_details = frappe.get_doc("FOSS Ticket Tier", tier_name)
+
+        if not tier_details.enabled:
+            frappe.throw(
+                f"Ticket tier '{tier_details.title}' is not enabled.",
+                TicketTierMismatchError,
+            )
+
+        if tier_details.valid_till and tier_details.valid_till < datetime.today().date():
+            frappe.throw(
+                f"Ticket tier '{tier_details.title}' has expired.",
+                TicketTierMismatchError,
+            )
+
+        existing_count = frappe.db.count(
+            "FOSS Event Ticket",
+            filters={"tier": tier_details.title, "event": event_name},
         )
+        if (
+            tier_details.maximum_tickets
+            and (existing_count + count) > tier_details.maximum_tickets
+        ):
+            frappe.throw(
+                f"Not enough seats in '{tier_details.title}'. Houseful!",
+                TicketTierMismatchError,
+            )
 
-    tshirt_price = frappe.db.get_value(EVENT, event_name, "t_shirt_price")
+        calculated_amount += float(price) * count
 
-    for attendee in attendees:
-        wants_tshirt = attendee.get("wants_tshirt", 0)
-        calculated_amount += price
+    paid_tshirts_available, tshirt_price = frappe.db.get_value(
+        EVENT, event_name, ["paid_tshirts_available", "t_shirt_price"]
+    )
+    if paid_tshirts_available:
+        num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+        calculated_amount += float(tshirt_price or 0) * num_tshirts
 
-        if wants_tshirt:
-            calculated_amount += tshirt_price
-
-    if calculated_amount != doc.amount:
+    if abs(calculated_amount - float(doc.amount)) > 1:
         frappe.throw(
-            "Looks like you did some funny stuff in the frontend and amounts don't match!"
+            "Amount mismatch - please refresh and try again.",
+            TicketTierMismatchError,
         )
 
 

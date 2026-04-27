@@ -45,7 +45,6 @@ class FOSSEventRSVP(WebsiteGenerator):
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
         context.event_name = self.event_name
-        context.event_date = context.event.event_start_date.strftime("%B %d, %Y")
         is_guest = frappe.session.user in ("Guest", "Administrator")
 
         form_fields = [

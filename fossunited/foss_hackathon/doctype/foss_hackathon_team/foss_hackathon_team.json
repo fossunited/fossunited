@@ -98,7 +98,7 @@
     }
   ],
   "links": [],
-  "modified": "2024-07-10 12:25:54.595850",
+  "modified": "2026-04-27 11:36:22.687421",
   "modified_by": "Administrator",
   "module": "FOSS Hackathon",
   "name": "FOSS Hackathon Team",
@@ -119,17 +119,13 @@
     },
     {
       "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
       "read": 1,
-      "report": 1,
       "role": "All",
       "select": 1,
-      "share": 1,
       "write": 1
     }
   ],
+  "row_format": "Dynamic",
   "search_fields": "hackathon",
   "show_title_field_in_link": 1,
   "sort_field": "modified",

@@ -85,6 +85,7 @@ jobs:
       - name: Install App and Setup Site
         working-directory: ${{ env.BENCH_PATH }}
         run: |
+          bench get-app harshtandiya/frappe_factory_bot --branch main
           bench get-app fossunited $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin ${{ env.SITE_NAME }}

@@ -7,6 +7,7 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createResource } from 'frappe-ui'
 
+const emit = defineEmits(['error'])
 const router = useRouter()
 
 const CHECKOUT_JS_SRC = 'https://checkout.razorpay.com/v1/checkout.js'
@@ -57,6 +58,9 @@ function handlePaymentFailed(response) {
 
 const createRazorpayOrderResource = createResource({
   url: 'fossunited.api.dashboard.create_razorpay_order',
+  onError(err) {
+    emit('error', err)
+  },
   onSuccess(data) {
     const orderId = data.order_id
     const razorpayKey = data.key_id

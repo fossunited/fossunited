@@ -14,6 +14,8 @@ JUDGE_IDENTIFIERS = [
     "Ayushmaan Bora",
     "Manas Kamal",
     "Liyas Thomas",
+    "Natarajan Kannan",
+    "Arjun Ashok",
 ]
 
 # TODO: Make this into template to serve data for future hackathon pages?

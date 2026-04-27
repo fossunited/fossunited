@@ -1,6 +1,6 @@
 import frappe
 
-from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT, USER_PROFILE
+from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT, TICKET_TIER, USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -38,6 +38,33 @@ def get_states():
     return frappe.get_all("State", fields=["name"], page_length=1000, order_by="name")
 
 
+def _compute_order_amount(meta_data: dict, ref_doctype: str, ref_docname: str) -> float:
+    """Compute order total server-side from tier prices + t-shirt costs."""
+    tier_counts = meta_data.get("tier_counts") or {}
+    total = 0.0
+
+    for tier_name, count in tier_counts.items():
+        count = int(count or 0)
+        if count <= 0:
+            continue
+        price = frappe.db.get_value(TICKET_TIER, tier_name, "price") or 0
+        total += float(price) * count
+
+    if ref_doctype == EVENT and ref_docname:
+        event_doc = frappe.db.get_value(
+            EVENT,
+            ref_docname,
+            ["paid_tshirts_available", "t_shirt_price"],
+            as_dict=True,
+        )
+        if event_doc and event_doc.paid_tshirts_available:
+            attendees = meta_data.get("attendees") or []
+            num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+            total += float(event_doc.t_shirt_price or 0) * num_tshirts
+
+    return total
+
+
 @frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
     checkout_info: dict,
@@ -45,10 +72,21 @@ def create_razorpay_order(
     ref_doctype=None,
     ref_docname=None,
 ):
+    amount = _compute_order_amount(meta_data, ref_doctype, ref_docname)
+    if amount <= 0:
+        frappe.throw(frappe._("Order amount must be greater than zero."), frappe.ValidationError)
+
+    client_amount = float(checkout_info.get("amount") or 0)
+    if abs(client_amount - amount) > 1:
+        frappe.throw(
+            frappe._("Amount mismatch - please refresh and try again."),
+            frappe.ValidationError,
+        )
+
     client = get_razorpay_client()
     order = client.order.create(
         data={
-            "amount": get_in_razorpay_money(checkout_info["amount"]),
+            "amount": get_in_razorpay_money(amount),
             "currency": "INR",
         }
     )
@@ -56,7 +94,7 @@ def create_razorpay_order(
     frappe.get_doc(
         {
             "doctype": RAZORPAY_PAYMENT,
-            "amount": checkout_info["amount"],
+            "amount": amount,
             "email": checkout_info["email"],
             "buyer_name": checkout_info.get("tax_details", {}).get("buyer_name"),
             "company_name": checkout_info.get("tax_details", {}).get("company_name"),
@@ -95,7 +133,18 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
 
 @frappe.whitelist(allow_guest=True)
 def handle_payment_failed(order_id):
+    client = get_razorpay_client()
+    try:
+        order = client.order.fetch(order_id)
+    except Exception:
+        frappe.throw(frappe._("Invalid order."), frappe.ValidationError)
+
+    if order.get("status") == "paid":
+        return
+
     payment = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": order_id})
+    if payment.status == "Captured":
+        return
     payment.status = "Failed"
     payment.save(ignore_permissions=True)
 
