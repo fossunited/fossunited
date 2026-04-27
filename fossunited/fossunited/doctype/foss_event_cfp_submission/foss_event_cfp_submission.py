@@ -4,6 +4,7 @@ import re
 import textwrap
 
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.chapter import get_chapter_members_email
@@ -78,7 +79,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         ]
         speakers: DF.Table[CFPSubmissionSpeaker]
         status: DF.Literal["Review Pending", "Screening", "Approved", "Rejected", "Withdrawn"]
-        submitted_by: DF.Link
+        submitted_by: DF.Link | None
         subscribe_chapter_mailing: DF.Check
         talk_description: DF.TextEditor
         talk_license: DF.Data | None
@@ -109,6 +110,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.set_scores()
         self.handle_status_change()
         self.validate_session_type_permissions()
+        self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
         self.notify_proposer_on_review()
@@ -132,28 +134,28 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
-            frappe.throw("Illegal status change", frappe.ValidationError)
+            frappe.throw(_("Illegal status change"), frappe.ValidationError)
 
     def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
-            frappe.throw("Invalid CFP", frappe.DoesNotExistError)
+            frappe.throw(_("Invalid CFP"), frappe.DoesNotExistError)
 
     def validate_form_is_live(self) -> None:
         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
         if not linked_cfp.status == "Live":
-            frappe.throw("The CFP Form for this event is not live", frappe.PermissionError)
+            frappe.throw(_("The CFP Form for this event is not live"), frappe.PermissionError)
 
     def validate_session_type_permissions(self) -> None:
         if self.session_type != "Invited Talk":
             return
-        user = frappe.session.user
-        # Block Website Users outright
-        if frappe.db.get_value("User", user, "user_type") == "Website User":
-            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
-        # Allow only specific desk roles to set this value
+        if not self.has_value_changed("session_type"):
+            return
         allowed_roles = {"System Manager", "Chapter Team Member", "CFP Reviewer"}
-        if not set(frappe.get_roles(user)).intersection(allowed_roles):
-            frappe.throw("You cannot set Session Type to 'Invited Talk'.", frappe.PermissionError)
+        if not allowed_roles.intersection(frappe.get_roles()):
+            frappe.throw(
+                _("You cannot set Session Type to 'Invited Talk'."),
+                frappe.PermissionError,
+            )
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
@@ -395,6 +397,56 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         except Exception as exc:
             frappe.log_error(title="email_core_team:send_failed", message=frappe.get_traceback())
             frappe.throw(f"Failed to send email: {exc}")
+
+    def validate_review_ownership(self):
+        """CFP Reviewers can only add/edit their own review row, and only one."""
+        roles = set(frappe.get_roles())
+        if "System Manager" in roles:
+            return
+        if not roles & {"CFP Reviewer", "Chapter Team Member", "IndiaFOSS Chairs"}:
+            return
+
+        user = frappe.session.user
+        old_doc = self.get_doc_before_save()
+        old_reviews = {r.name: r for r in old_doc.reviews if r.name} if old_doc else {}
+
+        own_rows = 0
+        reverted = False
+        for review in self.reviews:
+            is_new = not review.name or review.name not in old_reviews
+            if is_new:
+                if review.email and review.email != user:
+                    frappe.throw(
+                        _("You can only add reviews under your own account."),
+                        frappe.PermissionError,
+                    )
+                own_rows += 1
+            else:
+                old = old_reviews[review.name]
+                if old.email != user:
+                    # Revert ALL fields of others' rows so stale desk dirty state
+                    # from a prior failed save doesn't block subsequent valid saves.
+                    review.reviewer = old.reviewer
+                    review.email = old.email
+                    review.reviewer_profile = old.reviewer_profile
+                    review.to_approve = old.to_approve
+                    review.remarks = old.remarks
+                    reverted = True
+                else:
+                    own_rows += 1
+
+        if reverted:
+            frappe.msgprint(
+                _("Your edits to other reviewers' rows were discarded."),
+                alert=True,
+                indicator="red",
+            )
+
+        if own_rows > 1:
+            frappe.throw(
+                _("You can only submit one review per proposal."),
+                frappe.PermissionError,
+            )
 
     def notify_proposer_on_review(self):
         """Notify proposer on new or updated review."""

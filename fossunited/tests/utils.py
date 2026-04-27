@@ -33,15 +33,20 @@ def insert_user_profile(email=None, **kwargs):
 
     if not frappe.db.exists("User", email):
         name_parts = email.split("@")[0].title()
-        frappe.get_doc(
-            {
-                "doctype": "User",
-                "email": email,
-                "first_name": kwargs.get("first_name", name_parts),
-                "last_name": kwargs.get("last_name", name_parts),
-                "enabled": 1,
-            }
-        ).insert(ignore_permissions=True)
+        prev = frappe.flags.in_import
+        frappe.flags.in_import = True
+        try:
+            frappe.get_doc(
+                {
+                    "doctype": "User",
+                    "email": email,
+                    "first_name": kwargs.get("first_name", name_parts),
+                    "last_name": kwargs.get("last_name", name_parts),
+                    "enabled": 1,
+                }
+            ).insert(ignore_permissions=True)
+        finally:
+            frappe.flags.in_import = prev
 
     profile_name = frappe.db.get_value(USER_PROFILE, {"user": email}, "name")
 
@@ -448,12 +453,14 @@ def insert_cfp_submission(linked_cfp: str, event: str, **kwargs):
             }
         ]
 
+    submitted_by = kwargs.get("submitted_by", "")
     submission_data = {
         "doctype": PROPOSAL,
         "status": kwargs.get("status", "Review Pending"),
         "linked_cfp": linked_cfp,
         "event": event,
-        "submitted_by": kwargs.get("submitted_by", ""),
+        "submitted_by": submitted_by,
+        "email": kwargs.get("email", submitted_by) or fake.email(),
         "speakers": speakers,
         "is_first_talk": kwargs.get("is_first_talk", "No"),
         "session_type": kwargs.get("session_type", "Talk"),
