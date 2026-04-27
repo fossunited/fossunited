@@ -50,7 +50,7 @@ class FOSSChapterEventFactory(BaseFactory[FOSSChapterEvent]):
     def with_paid_tickets(self) -> dict[str, Any]:
         return {
             "is_paid_event": 1,
-            "tickets_status": "Open",
+            "tickets_status": "Live",
             "tiers": [
                 {
                     "enabled": 1,
