@@ -76,7 +76,7 @@ All FOSS Clubs follow the FOSS United Code of Conduct: [https://fossunited.org/c
 
 4. [Don't say hello](https://nohello.net/en/), ask questions directly.
 
-5. If a response takes longer than expected, polite follow-ups are appropriate after allowing for a reasonable buffer period.
+5. If a response takes longer than expected, polite follow-ups are appropriate after allowing for a reasonable buffer period (3-5 working days).
 
 6. We recommend hosting a balanced mix of talks and hands-on sessions. While talks provide valuable insights, incorporating interactive workshops and collaborative building sessions is essential to keeping your community engaged and motivated.
 
