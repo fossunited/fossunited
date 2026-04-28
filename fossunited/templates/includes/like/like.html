@@ -14,7 +14,17 @@
     let in_queue = false
 
     let toggle_like_icon = function (active) {
-      active ? $('.like-icon').addClass('liked') : $('.like-icon').removeClass('liked')
+      const $btn = $('.like-icon')
+      const $i = $btn.find('i')
+      if (active) {
+        $btn.addClass('liked')
+        $i.removeClass('ti-heart').addClass('ti-heart-filled')
+        $btn.attr('aria-pressed', 'true')
+      } else {
+        $btn.removeClass('liked')
+        $i.removeClass('ti-heart-filled').addClass('ti-heart')
+        $btn.attr('aria-pressed', 'false')
+      }
     }
 
     $('.like-icon').append(`<i class="ti ti-heart" aria-hidden="true"></i>`)
