@@ -342,11 +342,21 @@ function _openCfpDialog(doc) {
           { fieldtype: 'Data', fieldname: 'social_link', label: 'Social Link' },
         ]
       },
+      ...(_CFP_DATA.custom_answers && _CFP_DATA.custom_answers.length ? [
+        { fieldtype: 'Section Break', label: 'Custom Answers' },
+        { fieldtype: 'Table', fieldname: 'custom_answers', options: 'FOSS Custom Answer',
+          fields: [
+            { fieldtype: 'Small Text', fieldname: 'question', label: 'Question', in_list_view: 1, read_only: 1 },
+            { fieldtype: 'Long Text', fieldname: 'response', label: 'Response', in_list_view: 1 },
+          ]
+        },
+      ] : []),
     ],
     primary_action_label: 'Save',
     primary_action(values) {
       const EDITABLE = ['talk_title','session_type','intended_audience','is_first_talk',
-                        'talk_license','talk_description','key_takeaways','references','speakers']
+                        'talk_license','talk_description','key_takeaways','references','speakers',
+                        'custom_answers']
       const payload = { doctype: _CFP_DATA.doctype, name: _CFP_DATA.name }
       EDITABLE.forEach(f => { if (f in values) payload[f] = values[f] })
       frappe.call({
@@ -374,6 +384,7 @@ function _openCfpDialog(doc) {
   }
   _loadTable('references', doc.references)
   _loadTable('speakers', doc.speakers)
+  _loadTable('custom_answers', doc.custom_answers)
 }
 </script>
 {% endif %}
