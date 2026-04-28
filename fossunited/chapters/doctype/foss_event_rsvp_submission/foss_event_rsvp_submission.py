@@ -230,4 +230,4 @@ def remove_checkin_for_today(submission_name):
         frappe.throw("Not permitted", frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
-    return doc.remove_todays_checkin()
+    return doc.remove_today_check_in()

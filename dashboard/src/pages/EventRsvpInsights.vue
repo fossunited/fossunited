@@ -98,57 +98,42 @@
         </span>
 
         <div
-          v-else-if="column.key === 'checkin_action' && row.is_attending === true"
+          v-else-if="column.key === 'checkin_action'"
           class="flex gap-2"
           @click.stop
         >
-          <!-- Check-in button - disabled before event with tooltip -->
-          <div class="relative group">
+          <div v-if="checkinAction(row)" class="relative group">
             <Button
-              v-if="!row.has_checked_in_today"
               size="sm"
-              label="Check-in"
-              variant="solid"
-              :disabled="!showCheckins"
-              @click="checkInAttendee(row)"
+              :label="checkinAction(row).label"
+              :variant="checkinAction(row).variant"
+              :theme="checkinAction(row).theme"
+              :disabled="checkinAction(row).disabled"
+              @click="checkinAction(row).onClick()"
             />
-            <Button
-              v-else
-              size="sm"
-              label="Checked-in today"
-              theme="green"
-              variant="outline"
-              :disabled="!showCheckins"
-              @click="confirmUndoCheckIn(row)"
-            />
-
-            <!-- Tooltip for disabled state -->
             <div
-              v-if="!showCheckins"
-              class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+              v-if="checkinAction(row).tooltip"
+              class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
             >
-              Check-in will be available during event days
-              <div
-                class="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"
-              ></div>
+              {{ checkinAction(row).tooltip }}
             </div>
           </div>
         </div>
 
-        <div v-else-if="column.key === 'actions'" class="flex gap-2" @click.stop>
+        <div
+          v-else-if="column.key === 'actions'"
+          class="flex gap-2"
+          @click.stop
+        >
           <Button
+            v-for="action in approvalActions(row)"
+            :key="action.label"
             size="sm"
-            label="Accept"
-            variant="solid"
-            :disabled="row.status === 'Accepted'"
-            @click="updateRsvpStatus(row, 'Accepted')"
-          />
-          <Button
-            size="sm"
-            label="Reject"
-            theme="red"
-            :disabled="row.status === 'Rejected'"
-            @click="confirmReject(row)"
+            :label="action.label"
+            :variant="action.variant"
+            :theme="action.theme"
+            :disabled="action.disabled"
+            @click="action.onClick()"
           />
         </div>
 
@@ -161,7 +146,9 @@
           class="w-4 h-4 accent-ink-gray-7 cursor-default"
         />
 
-        <div v-else class="text-sm truncate cursor-pointer w-full" :title="String(item ?? '')">{{ item }}</div>
+        <div v-else class="text-sm truncate cursor-pointer w-full" :title="String(item ?? '')">
+          {{ item }}
+        </div>
       </template>
 
       <template #drawer-cell="{ column, item }">
@@ -181,14 +168,45 @@
             disabled
             class="w-4 h-4 accent-ink-gray-7"
           />
-          <span class="text-sm text-ink-gray-7">{{ (!!item && item !== '0') ? 'Yes' : 'No' }}</span>
+          <span class="text-sm text-ink-gray-7">{{ !!item && item !== '0' ? 'Yes' : 'No' }}</span>
         </div>
         <!-- Long text / Text Editor: full text, no truncation -->
         <p
           v-else-if="['Long Text', 'Text Editor'].includes(questionTypeMap[column.key])"
           class="text-sm text-ink-gray-7 whitespace-pre-wrap"
-        >{{ item || '—' }}</p>
+        >
+          {{ item || '—' }}
+        </p>
         <span v-else class="text-sm text-ink-gray-7 break-words">{{ item ?? '—' }}</span>
+      </template>
+
+      <template #drawer-actions="{ row }">
+        <div v-if="checkinAction(row)" class="relative group">
+          <Button
+            size="sm"
+            :label="checkinAction(row).label"
+            :variant="checkinAction(row).variant"
+            :theme="checkinAction(row).theme"
+            :disabled="checkinAction(row).disabled"
+            @click="checkinAction(row).onClick()"
+          />
+          <div
+            v-if="checkinAction(row).tooltip"
+            class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 bg-surface-gray-7 text-ink-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"
+          >
+            {{ checkinAction(row).tooltip }}
+          </div>
+        </div>
+        <Button
+          v-for="action in approvalActions(row)"
+          :key="action.label"
+          size="sm"
+          :label="action.label"
+          :variant="action.variant"
+          :theme="action.theme"
+          :disabled="action.disabled"
+          @click="action.onClick()"
+        />
       </template>
     </SearchListView>
   </div>
@@ -393,6 +411,23 @@ watchEffect(() => {
         },
       ]
 })
+
+const checkinAction = (row) => {
+  if (!row.is_attending) return null
+  const disabled = !showCheckins.value
+  const tooltip = disabled ? 'Check-in available during event days' : null
+  return row.has_checked_in_today
+    ? { label: 'Checked-in today', theme: 'green', variant: 'outline', disabled, tooltip, onClick: () => confirmUndoCheckIn(row) }
+    : { label: 'Check-in', variant: 'solid', disabled, tooltip, onClick: () => checkInAttendee(row) }
+}
+
+const approvalActions = (row) => {
+  if (!rsvp_form.data?.requires_host_approval) return []
+  return [
+    { label: 'Accept', variant: 'solid', disabled: row.status === 'Accepted', onClick: () => updateRsvpStatus(row, 'Accepted') },
+    { label: 'Reject', theme: 'red', disabled: row.status === 'Rejected', onClick: () => confirmReject(row) },
+  ]
+}
 
 // Actions
 const refreshCheckins = () => {

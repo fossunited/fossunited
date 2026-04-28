@@ -93,6 +93,9 @@
               </span>
             </slot>
           </div>
+          <div v-if="$slots['drawer-actions']" class="pt-4 flex gap-2 flex-wrap">
+            <slot name="drawer-actions" :row="selectedRow" />
+          </div>
         </div>
       </template>
     </Dialog>
