@@ -73,11 +73,34 @@
         </template>
       </ListView>
     </div>
+
+    <!-- Row detail drawer -->
+    <Dialog v-if="rowDrawer" v-model="showDrawer" :options="{ size: 'lg' }">
+      <template #body-title>
+        <span class="font-semibold text-ink-gray-9">{{ drawerTitle || 'Details' }}</span>
+      </template>
+      <template #body-content>
+        <div v-if="selectedRow" class="flex flex-col divide-y divide-outline-gray-1 mt-1">
+          <div
+            v-for="col in columns.filter(c => c.drawer !== false)"
+            :key="col.key"
+            class="flex flex-col gap-1 py-3 first:pt-0"
+          >
+            <span class="text-xs font-medium text-ink-gray-4 uppercase tracking-wide">{{ col.label }}</span>
+            <slot name="drawer-cell" :column="col" :item="selectedRow[col.key]" :row="selectedRow">
+              <span class="text-sm text-ink-gray-7 break-words whitespace-pre-wrap">
+                {{ selectedRow[col.key] ?? '—' }}
+              </span>
+            </slot>
+          </div>
+        </div>
+      </template>
+    </Dialog>
   </div>
 </template>
 
 <script setup>
-import { ListView, FormControl, Button } from 'frappe-ui'
+import { ListView, FormControl, Button, Dialog } from 'frappe-ui'
 import { ref, computed, reactive, watch, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
 import { toast } from 'vue-sonner'
@@ -110,6 +133,9 @@ const props = defineProps({
 
   // Each option: { label, value, order?, defaultCollapsed? }
   groupByOptions: { type: Array, default: null },
+
+  rowDrawer: { type: Boolean, default: false },
+  drawerTitleKey: { type: String, default: null },
 })
 
 defineOptions({ inheritAttrs: false })
@@ -295,6 +321,18 @@ const listRows = computed(() => {
   return filteredFlatRows.value ?? props.rows
 })
 
+// Row drawer
+const selectedRow = ref(null)
+const showDrawer = computed({
+  get: () => !!selectedRow.value,
+  set: (v) => { if (!v) selectedRow.value = null },
+})
+const drawerTitle = computed(() => {
+  if (!selectedRow.value) return ''
+  if (props.drawerTitleKey) return String(selectedRow.value[props.drawerTitleKey] ?? '')
+  return ''
+})
+
 // ListView options
 
 const mergedOptions = computed(() => ({
@@ -302,6 +340,7 @@ const mergedOptions = computed(() => ({
   showTooltip: true,
   resizeColumn: true,
   ...props.options,
+  ...(props.rowDrawer ? { onRowClick: (row) => { selectedRow.value = row } } : {}),
   emptyState:
     debouncedSearch.value || activeFilterApplied.value
       ? { title: 'No matching results', description: 'Try adjusting your filters.' }

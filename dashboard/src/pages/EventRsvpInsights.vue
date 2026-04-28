@@ -80,6 +80,7 @@
       item-label="attendees"
       :export-filename="`rsvp-submissions-${route.params.id}`"
       :export-columns="attendeeExportColumns"
+      row-drawer
     >
       <template #group-header="{ group }">
         <span class="text-base font-medium leading-6 text-ink-gray-9">
@@ -99,6 +100,7 @@
         <div
           v-else-if="column.key === 'checkin_action' && row.is_attending === true"
           class="flex gap-2"
+          @click.stop
         >
           <!-- Check-in button - disabled before event with tooltip -->
           <div class="relative group">
@@ -133,7 +135,7 @@
           </div>
         </div>
 
-        <div v-else-if="column.key === 'actions'" class="flex gap-2">
+        <div v-else-if="column.key === 'actions'" class="flex gap-2" @click.stop>
           <Button
             size="sm"
             label="Accept"
@@ -150,7 +152,43 @@
           />
         </div>
 
-        <span v-else class="text-base truncate text-wrap" :title="item">{{ item }}</span>
+        <!-- Check type → disabled checkbox -->
+        <input
+          v-else-if="questionTypeMap[column.key] === 'Check'"
+          type="checkbox"
+          :checked="!!item && item !== '0'"
+          disabled
+          class="w-4 h-4 accent-ink-gray-7 cursor-default"
+        />
+
+        <div v-else class="text-sm truncate cursor-pointer w-full" :title="String(item ?? '')">{{ item }}</div>
+      </template>
+
+      <template #drawer-cell="{ column, item }">
+        <!-- confirm_attendance badge -->
+        <span
+          v-if="column.key === 'confirm_attendance'"
+          class="px-2 py-0.5 rounded text-sm font-medium w-fit"
+          :class="item ? 'bg-surface-green-2 text-ink-green-3' : 'bg-surface-red-2 text-ink-red-3'"
+        >
+          {{ item ? 'Yes' : 'No' }}
+        </span>
+        <!-- Check type → checkbox + label -->
+        <div v-else-if="questionTypeMap[column.key] === 'Check'" class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            :checked="!!item && item !== '0'"
+            disabled
+            class="w-4 h-4 accent-ink-gray-7"
+          />
+          <span class="text-sm text-ink-gray-7">{{ (!!item && item !== '0') ? 'Yes' : 'No' }}</span>
+        </div>
+        <!-- Long text / Text Editor: full text, no truncation -->
+        <p
+          v-else-if="['Long Text', 'Text Editor'].includes(questionTypeMap[column.key])"
+          class="text-sm text-ink-gray-7 whitespace-pre-wrap"
+        >{{ item || '—' }}</p>
+        <span v-else class="text-sm text-ink-gray-7 break-words">{{ item ?? '—' }}</span>
       </template>
     </SearchListView>
   </div>
@@ -223,6 +261,15 @@ const sectionTitle = computed(() => {
   return 'Attendees List'
 })
 
+// Maps question label → field type for type-aware cell rendering
+const questionTypeMap = computed(() => {
+  const map = {}
+  for (const q of rsvp_form.data?.custom_questions || []) {
+    map[q.question] = q.type
+  }
+  return map
+})
+
 const attendeeColumns = computed(() => {
   const baseColumns = [
     { label: 'Name', key: 'name1', width: '250px' },
@@ -241,10 +288,10 @@ const attendeeColumns = computed(() => {
     })
   })
 
-  baseColumns.push({ label: 'Check-in', key: 'checkin_action', width: '180px' })
+  baseColumns.push({ label: 'Check-in', key: 'checkin_action', width: '180px', drawer: false })
 
   if (rsvp_form.data?.requires_host_approval) {
-    baseColumns.push({ label: 'Actions', key: 'actions', width: '200px' })
+    baseColumns.push({ label: 'Actions', key: 'actions', width: '200px', drawer: false })
   }
 
   return baseColumns
