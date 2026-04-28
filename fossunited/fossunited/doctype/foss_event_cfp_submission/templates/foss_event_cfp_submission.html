@@ -11,12 +11,11 @@
 {% block page_content %}
 <style>
   /* Fieldset/legend prose boxes */
-  .prose-box { border-color: oklch(0.92 0.01 255) !important; }
+  .prose-box { border-color: oklch(0.80 0.01 255) !important; }
   .prose-box legend { font-size: 0.875rem; font-weight: 500; }
 
   /* More prominent borders for sections */
-  .border-section { border-color: oklch(0.92 0.01 255) !important; }
-  [data-theme='dark'] .border-section { border-color: oklch(0.45 0.02 255) !important; }
+  .border-section { border-color: oklch(0.80 0.01 255) !important; }
 
   /* 16:9 video aspect ratio */
   .video-wrapper { padding-top: 56.25%; }
@@ -58,7 +57,7 @@
 {% endblock %}
 
 {% macro like_button() %}
-<div class="rounded border p-2 d-inline-flex v3-bg-card text-nowrap">
+<div class="v3-border v3-bg-card rounded d-inline-flex align-items-center px-2" style="height:35px;">
   {% include "templates/includes/like/like.html" %}
 </div>
 {% endmacro %}
@@ -86,11 +85,30 @@
     {% endif %}
   </div>
 
-  <div class="d-flex justify-content-between gap-2">
-    <h1 class="v3-text-primary text-3xl font-weight-bold">{{ doc.talk_title }}</h1>
-    <div class="d-flex align-items-center flex-shrink-0 gap-2">
+  <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
+    <h1 class="v3-text-primary text-3xl font-weight-bold mb-0">{{ doc.talk_title }}</h1>
+    <div class="d-flex align-items-center flex-shrink-0 flex-wrap gap-2">
       {% if is_owner %}
-        <a href="/dashboard/my-proposals/edit/{{ doc.name }}" class="btn btn-default btn-sm border">Edit proposal</a>
+        <a
+          href="/dashboard/my-proposals/edit/{{ doc.name }}"
+          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
+          title="Edit full proposal in dashboard"
+          data-toggle="tooltip"
+        >
+          <i class="ti ti-external-link" aria-hidden="true"></i>
+          Dashboard
+        </a>
+        <button
+          type="button"
+          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
+          onclick="cfpEditAll()"
+          title="Quick-edit this proposal inline"
+          data-toggle="tooltip"
+          aria-label="Quick edit proposal"
+        >
+          <i class="ti ti-pencil" aria-hidden="true"></i>
+          Edit
+        </button>
       {% endif %}
       {{ like_button() }}
     </div>
@@ -293,6 +311,100 @@
   </div>
 </div>
 {% endmacro %}
+
+{% block script %}
+{{ super() }}
+{% if is_owner %}
+<script>
+frappe.ready(function() {
+  frappe.require('controls.bundle.js')
+  $('[data-toggle="tooltip"]').tooltip()
+})
+
+const _CFP_DATA = {{ cfp_data_json }}
+
+function cfpEditAll() {
+  _openCfpDialog(_CFP_DATA)
+}
+
+function _openCfpDialog(doc) {
+  const d = new frappe.ui.Dialog({
+    title: 'Edit Proposal',
+    size: 'extra-large',
+    fields: [
+      { fieldtype: 'Section Break', label: 'Talk Info' },
+      { fieldtype: 'Data', fieldname: 'talk_title', label: 'Talk Title', reqd: 1 },
+      { fieldtype: 'Select', fieldname: 'session_type', label: 'Session Type',
+        options: 'Talk\nLightning Talk\nPanel Discussion\nBirds of Feather(BoF)\nWorkshop' },
+      { fieldtype: 'Column Break' },
+      { fieldtype: 'Select', fieldname: 'intended_audience', label: 'Intended Audience',
+        options: 'Beginner\nIntermediate\nAdvanced' },
+      { fieldtype: 'Select', fieldname: 'is_first_talk', label: 'First Talk?', options: 'Yes\nNo' },
+      { fieldtype: 'Data', fieldname: 'talk_license', label: 'Talk License' },
+      { fieldtype: 'Section Break', label: 'Content' },
+      { fieldtype: 'Text Editor', fieldname: 'talk_description', label: 'Session Description', reqd: 1 },
+      { fieldtype: 'Text Editor', fieldname: 'key_takeaways', label: 'Key Takeaways' },
+      { fieldtype: 'Section Break', label: 'References' },
+      { fieldtype: 'Table', fieldname: 'references', options: 'CFP Submission Reference',
+        fields: [{ fieldtype: 'Data', fieldname: 'link', label: 'Link', in_list_view: 1, reqd: 1 }] },
+      { fieldtype: 'Section Break', label: 'Speakers' },
+      { fieldtype: 'Table', fieldname: 'speakers', options: 'CFP Submission Speaker',
+        fields: [
+          { fieldtype: 'Data', fieldname: 'full_name', label: 'Full Name', in_list_view: 1, reqd: 1 },
+          { fieldtype: 'Data', fieldname: 'email', label: 'Email', in_list_view: 1, reqd: 1 },
+          { fieldtype: 'Data', fieldname: 'designation', label: 'Designation', in_list_view: 1 },
+          { fieldtype: 'Data', fieldname: 'organization', label: 'Organization' },
+          { fieldtype: 'Text', fieldname: 'bio', label: 'Bio' },
+          { fieldtype: 'Data', fieldname: 'social_link', label: 'Social Link' },
+        ]
+      },
+      ...(_CFP_DATA.custom_answers && _CFP_DATA.custom_answers.length ? [
+        { fieldtype: 'Section Break', label: 'Custom Answers' },
+        { fieldtype: 'Table', fieldname: 'custom_answers', options: 'FOSS Custom Answer',
+          fields: [
+            { fieldtype: 'Small Text', fieldname: 'question', label: 'Question', in_list_view: 1, read_only: 1 },
+            { fieldtype: 'Long Text', fieldname: 'response', label: 'Response', in_list_view: 1 },
+          ]
+        },
+      ] : []),
+    ],
+    primary_action_label: 'Save',
+    primary_action(values) {
+      const EDITABLE = ['talk_title','session_type','intended_audience','is_first_talk',
+                        'talk_license','talk_description','key_takeaways','references','speakers',
+                        'custom_answers']
+      const payload = { doctype: _CFP_DATA.doctype, name: _CFP_DATA.name }
+      EDITABLE.forEach(f => { if (f in values) payload[f] = values[f] })
+      frappe.call({
+        method: 'frappe.client.save',
+        args: { doc: Object.assign({}, _CFP_DATA, payload) },
+        callback() { d.hide(); location.reload() },
+        error(e) { frappe.msgprint({ message: e.message || 'Save failed', indicator: 'red' }) }
+      })
+    }
+  })
+
+  d.show()
+
+  // Simple fields can be set immediately
+  const simple = ['talk_title','session_type','intended_audience','is_first_talk',
+                  'talk_license','talk_description','key_takeaways']
+  simple.forEach(f => d.set_value(f, doc[f]))
+
+  // Tables must be populated after show() so the grid is initialized
+  function _loadTable(fieldname, rows) {
+    const fd = d.fields_dict[fieldname]
+    if (!fd) return
+    fd.df.data = (rows || []).map(r => Object.assign({}, r))
+    fd.grid.refresh()
+  }
+  _loadTable('references', doc.references)
+  _loadTable('speakers', doc.speakers)
+  _loadTable('custom_answers', doc.custom_answers)
+}
+</script>
+{% endif %}
+{% endblock %}
 
 {% macro review_card(review) %}
 <div class="d-flex flex-column my-2 gap-1">

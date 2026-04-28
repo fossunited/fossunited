@@ -87,6 +87,15 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         unsure_reviews: DF.Data | None
     # end: auto-generated types
 
+    def has_permission(self, permtype="read", user=None):
+        """Allow speakers listed on the proposal to write/submit/cancel."""
+        if permtype in ("write", "submit", "cancel"):
+            _user = user or frappe.session.user
+            speaker_emails = [s.email for s in self.speakers if s.email]
+            if _user and _user != "Guest" and _user in speaker_emails:
+                return True
+        return super().has_permission(permtype)
+
     def validate(self):
         self.bio = sanitize_text_content(self.bio)
         self.talk_description = sanitize_text_content(self.talk_description)
@@ -235,6 +244,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
         context.no_cache = 1
+        if context.is_owner:
+            context.cfp_data_json = frappe.as_json(self.as_dict()).replace("</", "<\\/")
 
     def get_meta(self, context):
         pagetitle = self.talk_title
