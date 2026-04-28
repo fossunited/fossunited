@@ -11,12 +11,11 @@
 {% block page_content %}
 <style>
   /* Fieldset/legend prose boxes */
-  .prose-box { border-color: oklch(0.92 0.01 255) !important; }
+  .prose-box { border-color: oklch(0.80 0.01 255) !important; }
   .prose-box legend { font-size: 0.875rem; font-weight: 500; }
 
   /* More prominent borders for sections */
-  .border-section { border-color: oklch(0.92 0.01 255) !important; }
-  [data-theme='dark'] .border-section { border-color: oklch(0.45 0.02 255) !important; }
+  .border-section { border-color: oklch(0.80 0.01 255) !important; }
 
   /* 16:9 video aspect ratio */
   .video-wrapper { padding-top: 56.25%; }
@@ -29,6 +28,9 @@
   .speaker-col { min-width: 0; }
   .speaker-social { min-width: 0; overflow: hidden; }
   .speaker-social-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* Owner action buttons */
+  .owner-btn:hover { background: var(--v3-button-border) !important; }
 
   /* Misc */
   .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
@@ -58,7 +60,7 @@
 {% endblock %}
 
 {% macro like_button() %}
-<div class="rounded border p-2 d-inline-flex v3-bg-card text-nowrap">
+<div class="btn btn-sm v3-border v3-bg-card d-inline-flex align-items-center text-nowrap px-2">
   {% include "templates/includes/like/like.html" %}
 </div>
 {% endmacro %}
@@ -86,13 +88,29 @@
     {% endif %}
   </div>
 
-  <div class="d-flex justify-content-between gap-2">
-    <h1 class="v3-text-primary text-3xl font-weight-bold">{{ doc.talk_title }}</h1>
-    <div class="d-flex align-items-center flex-shrink-0 gap-2">
+  <div class="d-flex flex-column flex-md-row justify-content-md-between gap-2">
+    <h1 class="v3-text-primary text-3xl font-weight-bold mb-0">{{ doc.talk_title }}</h1>
+    <div class="d-flex align-items-center flex-shrink-0 flex-wrap gap-2">
       {% if is_owner %}
-        <a href="/dashboard/my-proposals/edit/{{ doc.name }}" class="btn btn-default btn-sm border">Edit proposal</a>
-        <button type="button" class="btn btn-default btn-sm border" onclick="cfpEditAll()" aria-label="Quick edit fields">
+        <a
+          href="/dashboard/my-proposals/edit/{{ doc.name }}"
+          class="btn btn-sm v3-border v3-bg-card v3-text-secondary owner-btn"
+          title="Edit full proposal in dashboard"
+          data-toggle="tooltip"
+        >
+          <i class="ti ti-external-link" aria-hidden="true"></i>
+          Dashboard
+        </a>
+        <button
+          type="button"
+          class="btn btn-sm v3-border v3-bg-card v3-text-secondary owner-btn"
+          onclick="cfpEditAll()"
+          title="Quick-edit this proposal inline"
+          data-toggle="tooltip"
+          aria-label="Quick edit proposal"
+        >
           <i class="ti ti-pencil" aria-hidden="true"></i>
+          Edit
         </button>
       {% endif %}
       {{ like_button() }}
@@ -303,6 +321,7 @@
 <script>
 frappe.ready(function() {
   frappe.require('controls.bundle.js')
+  $('[data-toggle="tooltip"]').tooltip()
 })
 
 const _CFP_DATA = {{ cfp_data_json }}
