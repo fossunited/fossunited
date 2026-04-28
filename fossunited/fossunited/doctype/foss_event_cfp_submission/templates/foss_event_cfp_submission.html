@@ -29,9 +29,6 @@
   .speaker-social { min-width: 0; overflow: hidden; }
   .speaker-social-url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-  /* Owner action buttons */
-  .owner-btn:hover { background: var(--v3-button-border) !important; }
-
   /* Misc */
   .yt-icon { color: oklch(0.62 0.22 29); line-height: 1; transition: color 0.2s; }
   .dot-sep { font-size: 0.5rem; }
@@ -60,7 +57,7 @@
 {% endblock %}
 
 {% macro like_button() %}
-<div class="btn btn-sm v3-border v3-bg-card d-inline-flex align-items-center text-nowrap px-2">
+<div class="v3-border v3-bg-card rounded d-inline-flex align-items-center px-2" style="height:35px;">
   {% include "templates/includes/like/like.html" %}
 </div>
 {% endmacro %}
@@ -94,7 +91,7 @@
       {% if is_owner %}
         <a
           href="/dashboard/my-proposals/edit/{{ doc.name }}"
-          class="btn btn-sm v3-border v3-bg-card v3-text-secondary owner-btn"
+          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
           title="Edit full proposal in dashboard"
           data-toggle="tooltip"
         >
@@ -103,7 +100,7 @@
         </a>
         <button
           type="button"
-          class="btn btn-sm v3-border v3-bg-card v3-text-secondary owner-btn"
+          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
           onclick="cfpEditAll()"
           title="Quick-edit this proposal inline"
           data-toggle="tooltip"
