@@ -322,6 +322,9 @@ frappe.ready(function() {
 })
 
 const _CFP_DATA = {{ cfp_data_json }}
+const _CFP_DESC = {{ cfp_field_desc_json }}
+
+function _desc(fieldname) { return _CFP_DESC[fieldname] || '' }
 
 function cfpEditAll() {
   _openCfpDialog(_CFP_DATA)
@@ -339,12 +342,14 @@ function _openCfpDialog(doc) {
       { fieldtype: 'Column Break' },
       { fieldtype: 'Select', fieldname: 'intended_audience', label: 'Intended Audience',
         options: 'Beginner\nIntermediate\nAdvanced' },
-      { fieldtype: 'Select', fieldname: 'is_first_talk', label: 'First Talk?', options: 'Yes\nNo' },
-      { fieldtype: 'Data', fieldname: 'talk_license', label: 'Talk License' },
+      { fieldtype: 'Select', fieldname: 'is_first_talk', label: 'First Talk?', options: 'Yes\nNo',
+        description: _desc('is_first_talk') },
+      { fieldtype: 'Data', fieldname: 'talk_license', label: 'Talk License',
+        description: _desc('talk_license') },
       { fieldtype: 'Section Break', label: 'Content' },
       { fieldtype: 'Text Editor', fieldname: 'talk_description', label: 'Session Description', reqd: 1 },
       { fieldtype: 'Text Editor', fieldname: 'key_takeaways', label: 'Key Takeaways' },
-      { fieldtype: 'Section Break', label: 'References' },
+      { fieldtype: 'Section Break', label: 'References', description: _desc('references') },
       { fieldtype: 'Table', fieldname: 'references', options: 'CFP Submission Reference',
         fields: [{ fieldtype: 'Data', fieldname: 'link', label: 'Link', in_list_view: 1, reqd: 1 }] },
       { fieldtype: 'Section Break', label: 'Speakers' },
@@ -354,8 +359,9 @@ function _openCfpDialog(doc) {
           { fieldtype: 'Data', fieldname: 'email', label: 'Email', in_list_view: 1, reqd: 1 },
           { fieldtype: 'Data', fieldname: 'designation', label: 'Designation', in_list_view: 1 },
           { fieldtype: 'Data', fieldname: 'organization', label: 'Organization' },
-          { fieldtype: 'Text', fieldname: 'bio', label: 'Bio' },
           { fieldtype: 'Data', fieldname: 'social_link', label: 'Social Link' },
+          { fieldtype: 'Data', fieldname: 'contact_info', label: 'Contact Info' },
+          { fieldtype: 'Text', fieldname: 'bio', label: 'Bio' },
         ]
       },
       ...(_CFP_DATA.custom_answers && _CFP_DATA.custom_answers.length ? [

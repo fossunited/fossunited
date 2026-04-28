@@ -246,6 +246,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.no_cache = 1
         if context.is_owner:
             context.cfp_data_json = frappe.as_json(self.as_dict()).replace("</", "<\\/")
+            meta = frappe.get_meta(PROPOSAL)
+            context.cfp_field_desc_json = frappe.as_json(
+                {f.fieldname: f.description for f in meta.fields if f.description}
+            ).replace("</", "<\\/")
 
     def get_meta(self, context):
         pagetitle = self.talk_title

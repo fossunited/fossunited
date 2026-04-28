@@ -316,6 +316,7 @@
    "permlevel": 1
   },
   {
+   "description": "Reference links for the Project/Talk. Eg: Git repo, website, docs, slides, paper, blog post or prev talk video",
    "fieldname": "references",
    "fieldtype": "Table",
    "label": "References",
@@ -364,7 +365,7 @@
    "permlevel": 1
   },
   {
-   "description": "License for the talk/project.",
+   "description": "License(s) under which the project/talk is distributed. Examples: MIT License (software), CC BY-SA 4.0 (open data/documentation), CERN OHL-W (open hardware). Refer: https://opensource.org/licenses",
    "fieldname": "talk_license",
    "fieldtype": "Data",
    "label": "Talk License",
@@ -382,7 +383,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-24 16:36:37.863761",
+ "modified": "2026-04-28 15:07:21.439325",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
