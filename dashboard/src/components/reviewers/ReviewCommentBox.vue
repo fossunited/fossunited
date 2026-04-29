@@ -11,25 +11,40 @@
         @click="review = option.value"
       />
     </div>
+    <div v-if="eventCategories?.data?.length" class="flex flex-col gap-4 p-4 border-x border-b-0">
+      <div v-for="category in eventCategories.data" :key="category.name" class="flex flex-col gap-1">
+        <label class="text-sm font-medium text-ink-gray-7">{{ category.category_name }} <span class="text-xs text-ink-gray-5 font-normal">(Weight: {{ category.weight }})</span></label>
+        <FormControl type="number" v-model="scores[category.name]" :placeholder="'Score for ' + category.category_name" />
+      </div>
+    </div>
     <CommentBox
       v-model="remarks"
       class="border-t-0 mt-0 rounded-t-none"
       :has-custom-actions="true"
       :custom-actions="getCustomAction()"
     />
+    <div class="flex gap-2 items-center mt-4">
+      <Button v-if="!inEdit" label="Save & Next" variant="solid" @click="handleSaveAndNext" />
+      <Button v-if="!inEdit" label="Skip for Now" variant="outline" @click="$emit('next')" />
+      <Button v-if="!inEdit" label="Abstain" variant="outline" @click="handleAbstain" />
+    </div>
   </div>
 </template>
 <script setup>
 import { createResource, ErrorMessage } from 'frappe-ui'
-import { ref, inject } from 'vue'
+import { ref, inject, computed } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
 import { toast } from 'vue-sonner'
 import { filter } from 'lodash'
 import { useStorage } from '@vueuse/core'
 
-const emits = defineEmits(['add:review', 'update:review'])
+const emits = defineEmits(['add:review', 'update:review', 'next'])
 
 const session = inject('$session')
+const submissionDoc = inject('submission')
+const submissionData = computed(() => submissionDoc?.data)
+const eventCategories = inject('eventCategories')
+console.log('ReviewCommentBox categories:', eventCategories?.data?.length)
 
 const props = defineProps({
   submissionId: {
@@ -49,8 +64,15 @@ const props = defineProps({
   },
 })
 
-const review = useStorage(`review-${props.submissionId}`, props.review.to_approve)
-const remarks = useStorage(`remarks-${props.submissionId}`, props.review.remarks)
+const review = useStorage(`review-${props.submissionId}`, props.review.to_approve || 'Yes')
+const remarks = useStorage(`remarks-${props.submissionId}`, props.review.remarks || '')
+const scores = useStorage(`scores-${props.submissionId}`, {})
+
+if (props.inEdit && props.review.scores) {
+  props.review.scores.forEach(s => {
+    scores.value[s.category] = s.score
+  })
+}
 
 const reviewOptions = [
   { label: 'Approve', value: 'Yes' },
@@ -106,7 +128,7 @@ const validateRemark = () => {
   return errors
 }
 
-const submitReview = () => {
+const submitReview = (onSuccessCallback) => {
   const errors = validateRemark()
   if (errors.length) {
     errorMessages.value = errors.join('\n')
@@ -121,10 +143,12 @@ const submitReview = () => {
           parenttype: 'FOSS Event CFP Submission',
           parent: props.submissionId,
           parentfield: 'reviews',
+          proposal: props.submissionId,
           remarks: remarks.value,
           to_approve: review.value,
           reviewer_profile: reviewerProfile.data.name,
           reviewer: reviewerProfile.data.full_name,
+          scores: Object.keys(scores.value).map(cat => ({ category: cat, score: scores.value[cat] }))
         },
       }
     },
@@ -133,6 +157,7 @@ const submitReview = () => {
       errorMessages.value = ''
       emits('add:review')
       closeAssignedTodo()
+      if (onSuccessCallback) onSuccessCallback()
     },
     onError(err) {
       errorMessages.value = err
@@ -154,8 +179,10 @@ const editReview = () => {
         doctype: 'FOSS Event CFP Review',
         name: props.review.name,
         fieldname: {
+          proposal: props.submissionId,
           remarks: remarks.value,
           to_approve: review.value,
+          scores: Object.keys(scores.value).map(cat => ({ category: cat, score: scores.value[cat] }))
         },
       }
     },
@@ -176,5 +203,17 @@ const getCustomAction = () => {
     return [editReview]
   }
   return [submitReview]
+}
+
+const handleSaveAndNext = () => {
+  submitReview(() => {
+    emits('next')
+  })
+}
+
+const handleAbstain = () => {
+  review.value = 'Abstain'
+  remarks.value = remarks.value || 'Abstained'
+  handleSaveAndNext()
 }
 </script>

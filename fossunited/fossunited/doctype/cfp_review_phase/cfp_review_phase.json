@@ -1,0 +1,89 @@
+{
+  "actions": [],
+  "allow_rename": 1,
+  "creation": "2024-04-21 11:45:00.000000",
+  "doctype": "DocType",
+  "editable_grid": 1,
+  "engine": "InnoDB",
+  "field_order": [
+    "phase_name",
+    "is_active",
+    "start_date",
+    "end_date",
+    "can_review",
+    "proposal_visibility",
+    "can_see_other_reviews",
+    "can_see_speaker_names",
+    "can_see_reviewer_names"
+  ],
+  "fields": [
+    {
+      "fieldname": "phase_name",
+      "fieldtype": "Data",
+      "in_list_view": 1,
+      "label": "Phase Name",
+      "reqd": 1
+    },
+    {
+      "default": "0",
+      "fieldname": "is_active",
+      "fieldtype": "Check",
+      "in_list_view": 1,
+      "label": "Is Active"
+    },
+    {
+      "fieldname": "start_date",
+      "fieldtype": "Datetime",
+      "label": "Start Date"
+    },
+    {
+      "fieldname": "end_date",
+      "fieldtype": "Datetime",
+      "label": "End Date"
+    },
+    {
+      "default": "1",
+      "fieldname": "can_review",
+      "fieldtype": "Check",
+      "label": "Can Review"
+    },
+    {
+      "default": "All",
+      "fieldname": "proposal_visibility",
+      "fieldtype": "Select",
+      "label": "Proposal Visibility",
+      "options": "All\nOnly Assigned"
+    },
+    {
+      "default": "After Review",
+      "fieldname": "can_see_other_reviews",
+      "fieldtype": "Select",
+      "label": "Can See Other Reviews",
+      "options": "Always\nNever\nAfter Review"
+    },
+    {
+      "default": "1",
+      "fieldname": "can_see_speaker_names",
+      "fieldtype": "Check",
+      "label": "Can See Speaker Names"
+    },
+    {
+      "default": "1",
+      "fieldname": "can_see_reviewer_names",
+      "fieldtype": "Check",
+      "label": "Can See Reviewer Names"
+    }
+  ],
+  "istable": 1,
+  "links": [],
+  "modified": "2026-04-21 11:45:00.000000",
+  "modified_by": "Administrator",
+  "module": "FOSSUnited",
+  "name": "CFP Review Phase",
+  "owner": "Administrator",
+  "permissions": [],
+  "row_format": "Dynamic",
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "states": []
+}

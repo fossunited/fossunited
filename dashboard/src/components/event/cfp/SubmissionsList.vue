@@ -123,6 +123,14 @@ const cfpSubmissions = createResource({
 
 defineExpose({
   reloadSubmissions: () => cfpSubmissions.reload(),
+  getNextSubmission: (currentId) => {
+    if (!cfpSubmissions.data) return null;
+    const index = cfpSubmissions.data.findIndex(s => s.name === currentId);
+    if (index !== -1 && index + 1 < cfpSubmissions.data.length) {
+      return cfpSubmissions.data[index + 1].name;
+    }
+    return null;
+  }
 })
 
 function applyFilters() {

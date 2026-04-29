@@ -138,30 +138,43 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             else:
                 self.status = "Review Pending"
         self.set_route()
-        self.set_scores()
         self.handle_status_change()
         self.validate_session_type_permissions()
         self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
-        self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
         self.handle_email_group("CFP Proposers")
+        self.notify_reviewers_of_new_submission()
+
+    def notify_reviewers_of_new_submission(self):
+        cfp_doc = frappe.get_doc(EVENT_CFP, self.linked_cfp)
+        active_phase = None
+        for phase in cfp_doc.get("cfp_review_phases", []):
+            if phase.is_active:
+                active_phase = phase
+                break
+                
+        if not active_phase or active_phase.proposal_visibility != "All":
+            return
+            
+        reviewers = frappe.get_all("Has Role", {"role": "CFP Reviewer"}, ["parent"])
+        reviewer_emails = [r.parent for r in reviewers]
+        
+        if not reviewer_emails:
+            return
+            
+        frappe.sendmail(
+            bcc=reviewer_emails,
+            subject=f"New Proposal for {self.event_name}: {self.talk_title}",
+            message=f"A new proposal titled <b>{self.talk_title}</b> has been submitted for {self.event_name}.<br><br>Please check your reviewer dashboard."
+        )
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/cfp/{self.name}"
-
-    def set_scores(self):
-        total = len(self.reviews) or 1
-        yes = sum(1 for r in self.reviews if r.to_approve == "Yes")
-        no = sum(1 for r in self.reviews if r.to_approve == "No")
-        maybe = sum(1 for r in self.reviews if r.to_approve == "Maybe")
-        self.positive_reviews = int((yes / total) * 100)
-        self.negative_reviews = int((no / total) * 100)
-        self.unsure_reviews = int((maybe / total) * 100)
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
@@ -233,8 +246,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             },
         }
 
-        context.review_scores = self.get_review_scores()
-        context.total_reviews = len(self.reviews)
+        reviews = frappe.get_all("FOSS Event CFP Review", {"proposal": self.name}, ["*"])
+        context.review_scores = self.get_review_scores(reviews)
+        context.total_reviews = len(reviews)
 
         context.pagetitle, context.description, context.image = self.get_meta(context)
 
@@ -321,12 +335,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         return pagetitle, description, image
 
-    def get_review_scores(self) -> dict[str, int]:
+    def get_review_scores(self, reviews) -> dict[str, int]:
         positive = 0
         negative = 0
         unsure = 0
 
-        for review in self.reviews:
+        for review in reviews:
             if review.to_approve == "Yes":
                 positive += 1
             elif review.to_approve == "No":

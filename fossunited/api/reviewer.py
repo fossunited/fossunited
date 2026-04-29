@@ -30,20 +30,37 @@ def get_reviewed_count(event: str) -> tuple:
     returns:
         tuple: (reviewed count, not reviewed count)
     """
-    cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
+    cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event})
+    cfp = cfp_doc.name
 
     reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
 
     reviewed_count = frappe.db.count(
         PROPOSAL_REVIEW,
         {
-            "parenttype": PROPOSAL,
             "reviewer_profile": reviewer_profile,
-            "parent": ("in", frappe.db.get_list(PROPOSAL, {"linked_cfp": cfp}, pluck="name")),
+            "proposal": ("in", frappe.db.get_list(PROPOSAL, {"linked_cfp": cfp}, pluck="name")),
         },
     )
 
-    total_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp})
+    active_phase = None
+    for phase in cfp_doc.get("cfp_review_phases", []):
+        if phase.is_active:
+            active_phase = phase
+            break
+
+    filters = {"linked_cfp": cfp}
+    if active_phase and active_phase.proposal_visibility == "Only Assigned":
+        assigned_proposals = frappe.db.get_all(
+            "CFP Reviewer Assignment", 
+            filters={"reviewer": reviewer_profile},
+            pluck="proposal"
+        )
+        if not assigned_proposals:
+            return reviewed_count, 0
+        filters["name"] = ("in", assigned_proposals)
+
+    total_count = frappe.db.count(PROPOSAL, filters)
     not_reviewed_count = total_count - reviewed_count
 
     return reviewed_count, not_reviewed_count
@@ -99,8 +116,23 @@ def get_events_by_open_cfp() -> list:
             as_dict=1,
         )
 
+        active_phase = None
+        cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event.name})
+        for phase in cfp_doc.get("cfp_review_phases", []):
+            if phase.is_active:
+                active_phase = phase
+                break
+
         submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp})
         reviewed_count, not_reviewed_count = get_reviewed_count(event=event.name)
+        
+        phase_info = None
+        if active_phase:
+            phase_info = {
+                "name": active_phase.phase_name,
+                "proposal_visibility": active_phase.proposal_visibility,
+                "can_see_other_reviews": active_phase.can_see_other_reviews
+            }
 
         cfps_to_review.append(
             {
@@ -115,7 +147,72 @@ def get_events_by_open_cfp() -> list:
                 "chapter": chapter.name,
                 "chapter_name": chapter.chapter_name,
                 "chapter_type": chapter.chapter_type,
+                "active_phase": phase_info
             }
         )
 
     return cfps_to_review
+
+@frappe.whitelist()
+def get_reviews_for_proposal(proposal: str) -> list:
+    """
+    Get all reviews and their child scores for a proposal.
+    """
+    frappe.only_for(["CFP Reviewer", "System Manager", "Chapter Team Member"])
+    
+    reviews = frappe.get_all(
+        "FOSS Event CFP Review",
+        filters={"proposal": proposal},
+        fields=["*"]
+    )
+    
+    for review in reviews:
+        review.scores = frappe.get_all(
+            "CFP Review Score",
+            filters={"parent": review.name, "parenttype": "FOSS Event CFP Review"},
+            fields=["*"]
+        )
+        
+    return reviews
+
+@frappe.whitelist()
+def get_bulk_review_data(event: str) -> dict:
+    frappe.only_for(["CFP Reviewer", "System Manager", "Chapter Team Member"])
+    
+    cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event})
+    
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
+    
+    submissions = frappe.get_all(
+        PROPOSAL,
+        filters={"linked_cfp": cfp_doc.name},
+        fields=["name", "talk_title", "status"]
+    )
+    
+    categories = frappe.get_all(
+        "CFP Score Category",
+        filters={"event_cfp": cfp_doc.name, "active": 1},
+        fields=["name", "category_name", "weight"]
+    )
+    
+    reviews = frappe.get_all(
+        "FOSS Event CFP Review",
+        filters={
+            "proposal": ("in", [s.name for s in submissions]),
+            "reviewer_profile": reviewer_profile
+        },
+        fields=["name", "proposal", "to_approve"]
+    )
+    
+    for review in reviews:
+        review.scores = frappe.get_all(
+            "CFP Review Score",
+            filters={"parent": review.name, "parenttype": "FOSS Event CFP Review"},
+            fields=["category", "score"]
+        )
+        
+    return {
+        "submissions": submissions,
+        "categories": categories,
+        "reviews": reviews
+    }

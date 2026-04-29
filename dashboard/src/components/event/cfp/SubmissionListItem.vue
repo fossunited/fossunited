@@ -44,6 +44,7 @@ defineEmits(['open:submission'])
       <div class="flex gap-2 items-center !text-sm flex-wrap">
         <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
         <Badge v-if="submission._is_reviewed === 'Yes'" label="Reviewed" theme="blue" />
+        <Badge v-if="submission._is_assigned" label="Assigned" theme="purple" />
         <Badge
           :label="submission._likes_count"
           variant="ghost"

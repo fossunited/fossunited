@@ -41,15 +41,18 @@
           <span>{{ submission.data.talk_license }}</span>
         </div>
       </div>
+      
+      <!-- Review Section is now part of the overview -->
+      <div class="mt-8 pt-8 border-t">
+        <h3 class="text-lg font-semibold mb-4">Reviews & Scoring</h3>
+        <ReviewSection :reviews="submission.data.reviews" @review:submitted="emit('review:submitted')" @next="emit('next')" />
+      </div>
     </div>
     <div
       v-else-if="activeTab === 1 && !hasAnonymousSpeaker.data.anonymise_proposals"
       class="flex flex-col gap-2"
     >
       <ProposalSpeakers :speakers="submission.data.speakers" />
-    </div>
-    <div v-else-if="activeTab === 2" class="flex flex-col gap-2">
-      <ReviewSection :reviews="submission.data.reviews" @review:submitted="emit('review:submitted')" />
     </div>
   </div>
   <div v-else class="w-full h-[480px] flex items-center justify-center">
@@ -76,7 +79,7 @@ dayjs.extend(relativeTime)
 
 const route = useRoute()
 
-const emit = defineEmits(['toggle-reviewed', 'review:submitted'])
+const emit = defineEmits(['toggle-reviewed', 'review:submitted', 'next'])
 
 const submissionId = defineModel('submissionId', {
   type: String,
@@ -87,10 +90,6 @@ const tabs = ref([
   {
     label: 'Overview',
     value: 0,
-  },
-  {
-    label: 'Reviews',
-    value: 2,
   },
 ])
 const activeTab = ref(0)
@@ -129,14 +128,30 @@ const submission = createResource({
   transform(data) {
     // Ensure session_categories is always an array
     data.session_categories = (data.session_categories ?? '').split('\n').filter(Boolean)
-
-    // Ensure reviews is always an array
-    data.reviews = data.reviews ?? []
-
-    data.hasReviewed = data.reviews.some((review) => review.owner === session.user)
-
     return data
   },
+  onSuccess(data) {
+    if (data.name) {
+      console.log('Submission loaded:', data.name, 'CFP:', data.linked_cfp)
+      reviewsResource.fetch()
+    }
+  }
+})
+
+const reviewsResource = createResource({
+  url: 'fossunited.api.reviewer.get_reviews_for_proposal',
+  makeParams() {
+    return {
+      proposal: submissionId.value,
+    }
+  },
+  transform(data) {
+    if (submission.data) {
+      submission.data.reviews = data || []
+      submission.data.hasReviewed = submission.data.reviews.some((review) => review.owner === session.user)
+    }
+    return data
+  }
 })
 
 watch(
@@ -144,11 +159,11 @@ watch(
   (newId) => {
     if (newId) {
       submission.fetch()
-      provide('submission', submission.data)
     }
   },
   { immediate: true },
 )
 
 provide('submission', submission)
+provide('reloadReviews', () => reviewsResource.fetch())
 </script>

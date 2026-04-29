@@ -35,6 +35,10 @@ PROPOSAL = "FOSS Event CFP Submission"
 PROPOSAL_REVIEW = "FOSS Event CFP Review"
 GLOBAL_CFP_SETTINGS = "Global CFP Settings"
 SPEAKER = "CFP Submission Speaker"
+CFP_REVIEW_PHASE = "CFP Review Phase"
+CFP_SCORE_CATEGORY = "CFP Score Category"
+CFP_REVIEW_TEMPLATE = "CFP Review Template"
+CFP_REVIEWER_ASSIGNMENT = "CFP Reviewer Assignment"
 
 # Event RSVP-related identifiers
 EVENT_RSVP = "FOSS Event RSVP"

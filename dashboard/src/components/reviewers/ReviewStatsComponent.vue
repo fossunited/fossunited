@@ -1,6 +1,7 @@
 <template>
   <div
-    class="grid grid-cols-3 gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
+    class="grid gap-4 md:gap-2 items-center justify-between px-6 py-4 border rounded md:divide-x-2 *:px-6"
+    :class="avgScore !== null ? 'grid-cols-4' : 'grid-cols-3'"
   >
     <div
       v-for="(value, key) in stats"
@@ -11,6 +12,12 @@
         {{ value }}
       </div>
       <span class="text-sm text-ink-gray-4">{{ key }}</span>
+    </div>
+    <div v-if="avgScore !== null" class="flex flex-col justify-center md:justify-normal items-center md:items-start">
+      <div class="flex gap-1 items-center text-xl font-medium text-ink-blue-3">
+        {{ avgScore }}
+      </div>
+      <span class="text-sm text-ink-gray-4">Avg. Score</span>
     </div>
   </div>
 </template>
@@ -42,6 +49,13 @@ const stats = computed(() => {
   })
 
   return _stats
+})
+
+const avgScore = computed(() => {
+  const scoredReviews = props.reviews.filter((r) => r.total_score && r.total_score > 0)
+  if (!scoredReviews.length) return null
+  const sum = scoredReviews.reduce((acc, r) => acc + (r.total_score || 0), 0)
+  return (sum / scoredReviews.length).toFixed(1)
 })
 
 const getColor = (key) => {

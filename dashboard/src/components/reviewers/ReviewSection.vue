@@ -24,6 +24,7 @@
       :submission-id="submission.data.name"
       @add:review="handleAddReview()"
       @update:review="handleUpdateReview()"
+      @next="emit('next')"
     />
 
     <!-- Review List -->
@@ -52,6 +53,58 @@
             :label="getLabel(review.to_approve)"
             :theme="getTheme(review.to_approve)"
           />
+          <div v-if="review.scores && review.scores.length" class="mt-3">
+            <h6 class="text-xs font-semibold text-ink-gray-5 uppercase mb-2">Score Calibration</h6>
+            <table class="w-full text-sm text-left border rounded">
+              <thead class="bg-surface-gray-3">
+                <tr>
+                  <th class="px-3 py-1.5 font-medium border-b border-r text-ink-gray-7">Category</th>
+                  <th class="px-3 py-1.5 font-medium border-b text-ink-gray-7 w-24">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(score, sIdx) in review.scores" :key="score.name" class="border-b last:border-b-0">
+                  <td class="px-3 py-1.5 border-r text-ink-gray-7">{{ score.category }}</td>
+                  <td class="px-3 py-1.5 font-medium">{{ score.score }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div v-else-if="canSeeOtherReviews" class="p-4 border rounded flex flex-col gap-2 bg-surface-gray-1">
+          <div class="flex items-center justify-between">
+            <h5 class="text-base font-semibold">{{ review.reviewer }}'s Review</h5>
+            <Badge
+              class="w-fit"
+              :label="getLabel(review.to_approve)"
+              :theme="getTheme(review.to_approve)"
+            />
+          </div>
+          <div class="flex justify-between items-start gap-4">
+            <div
+              v-if="review.remarks"
+              class="prose prose-sm max-w-full"
+              v-html="cleanedHTML(review.remarks)"
+            ></div>
+            <span v-else class="text-sm text-ink-gray-5">No Remarks</span>
+          </div>
+          <div v-if="review.scores && review.scores.length" class="mt-3">
+            <h6 class="text-xs font-semibold text-ink-gray-5 uppercase mb-2">Score Calibration</h6>
+            <table class="w-full text-sm text-left border rounded">
+              <thead class="bg-surface-gray-3">
+                <tr>
+                  <th class="px-3 py-1.5 font-medium border-b border-r text-ink-gray-7">Category</th>
+                  <th class="px-3 py-1.5 font-medium border-b text-ink-gray-7 w-24">Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(score, sIdx) in review.scores" :key="score.name" class="border-b last:border-b-0">
+                  <td class="px-3 py-1.5 border-r text-ink-gray-7">{{ score.category }}</td>
+                  <td class="px-3 py-1.5 font-medium">{{ score.score }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <hr v-if="index != sortedReviews.length - 1" class="mt-2" />
       </div>
@@ -71,12 +124,21 @@ import ReviewCommentBox from './ReviewCommentBox.vue'
 
 const session = inject('$session')
 
-const emit = defineEmits(['review:submitted'])
+const emit = defineEmits(['review:submitted', 'next'])
 
 const inEdit = ref(false)
 const selectedReview = ref(defaultSelectedReviewValue())
 
 const submission = inject('submission')
+const currentEventStats = inject('currentEventStats')
+
+const canSeeOtherReviews = computed(() => {
+  const phase = currentEventStats?.value?.active_phase
+  if (!phase) return false
+  if (phase.can_see_other_reviews === 'Always') return true
+  if (phase.can_see_other_reviews === 'After Review' && hasReviewed.value) return true
+  return false
+})
 
 const sortedReviews = computed(() => {
   // if the session.user has reviewed, put that review item as the first in the list.

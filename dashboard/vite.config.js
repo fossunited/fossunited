@@ -18,7 +18,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: `../${path.basename(path.resolve('..'))}/public/dashboard`,
+    outDir: '../fossunited/public/dashboard',
     emptyOutDir: true,
     target: 'es2015',
   },
