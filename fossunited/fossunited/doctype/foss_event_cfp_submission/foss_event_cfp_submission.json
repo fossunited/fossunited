@@ -383,7 +383,7 @@
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-28 15:07:21.439325",
+ "modified": "2026-04-29 23:16:20.436113",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -435,7 +435,7 @@
    "write": 1
   },
   {
-   "if_owner": 1,
+   "create": 1,
    "permlevel": 1,
    "read": 1,
    "role": "All",
@@ -491,7 +491,7 @@
    "role": "All"
   },
   {
-   "if_owner": 1,
+   "create": 1,
    "permlevel": 4,
    "read": 1,
    "role": "All",

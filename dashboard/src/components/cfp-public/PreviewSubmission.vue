@@ -58,14 +58,14 @@
     <div class="flex flex-col gap-2">
       <div v-for="(field, index) in confirmationFields" :key="index">
         <template v-if="field.fieldname === 'accept_coc'">
-          <div class="flex items-start gap-2">
+          <div class="inline-flex space-x-2 rounded transition">
             <input
               id="coc-cfp"
               v-model="field.value"
               type="checkbox"
-              class="mt-0.5 rounded-sm shrink-0"
+              class="rounded-sm mt-[1px] bg-surface-white border-outline-gray-4 text-ink-gray-9 hover:border-outline-gray-5 focus:ring-offset-0 focus:border-outline-gray-8 active:border-outline-gray-6 transition hover:shadow-sm focus:ring-0 focus-visible:ring-2 focus-visible:ring-outline-gray-3 active:bg-surface-gray-2 w-3.5 h-3.5 shrink-0"
             />
-            <label for="coc-cfp" class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed">
+            <label for="coc-cfp" class="block text-base font-medium text-ink-gray-8 select-none cursor-pointer leading-relaxed">
               By registering for this event, you agree to abide by the FOSS United
               <a
                 href="https://fossunited.org/code-of-conduct"

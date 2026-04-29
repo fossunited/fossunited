@@ -301,6 +301,7 @@ export const getSubmissionConfirmationFields = () => {
       value: false,
     },
     {
+      label: 'Accepting Code of Conduct',
       fieldname: 'accept_coc',
       fieldtype: 'checkbox',
       required: true,

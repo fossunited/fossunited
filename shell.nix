@@ -13,8 +13,8 @@ in
 	buildInputs = with pkgs; [
 	  # pypkgs
 	  # ruff black
-	  # ty # basedpyright
-	  uv nodePackages.eslint nodePackages.prettier html-tidy nodePackages.yarn
+	  # ty basedpyright # some are from uv itself
+	  uv eslint prettier html-tidy yarn
 	  vale harper
 	];
 
