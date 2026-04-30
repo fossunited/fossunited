@@ -43,13 +43,20 @@ build-backend = "flit_core.buildapi"
 
 [tool.ruff]
 line-length = 99
+target-version = "py310"
 fix = true
+
 [tool.ruff.lint]
-select = ["F", "E", "W", "I", "Q"] # from frappe
-# ^ add more rules as well? RUF, UP and more?
-ignore = ["F722", "F821"]
+select = ["F", "E", "W", "I", "B", "UP", "RUF"]
+ignore = [
+    "E402",   # module-level import not at top
+    "E501",   # line too long (formatter handles)
+    "F722",   # syntax error in forward annotation (Frappe TYPE_CHECKING)
+]
+typing-modules = ["frappe.types.DF"]
+
 [tool.ruff.lint.per-file-ignores]
-"**/doctype/**/*.py" = ["F821", "F722"]
+"**/doctype/**/*.py" = ["F722"]
 "fossunited/www/fosshack/results/index.py" = ["E501"]
 
 [tool.ruff.format]

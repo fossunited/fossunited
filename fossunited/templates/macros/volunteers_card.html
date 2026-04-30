@@ -1,3 +1,26 @@
+{% macro profile_headshot(name, photo=None, url=None, info=None) %}
+  {# Single avatar+name chip. Extracted from people_card. url optional — wraps in anchor if provided. #}
+  {% set default_photo = "/assets/fossunited/images/defaults/user_profile_image.png" %}
+  {% if url %}
+    <a class="v3-clickable v3-people-item" href="{{ url }}" aria-label="{{ name }}{{ ', ' + info if info else '' }}">
+  {% else %}
+    <div class="v3-people-item">
+  {% endif %}
+      <img
+        src="{{ photo or default_photo }}"
+        alt="{{ name }}"
+        class="v3-people-avatar"
+      />
+      <div class="d-flex flex-column">
+        <div class="v3-people-name">{{ name }}</div>
+        {% if info %}
+          <small class="v3-text-tertiary">{{ info }}</small>
+        {% endif %}
+      </div>
+  {% if url %}</a>{% else %}</div>{% endif %}
+{% endmacro %}
+
+
 {% macro people_card(items, type, submissions=None, icon="empathize", show_info=False) %}
   {# type can be 'volunteers' or 'speakers' #}
   {% set show_view_all = items|length > 4 %}
@@ -13,37 +36,13 @@
       <div class="v3-people-list">
         {% if type != 'speakers' %}
           {% for volunteer in items %}
-            <a class="v3-clickable v3-people-item" href="/{{ volunteer.route }}" aria-label="{{ volunteer.full_name }}{{ ', ' + volunteer.info if volunteer.info else '' }}">
-              <img
-                src="{{ volunteer.profile_picture or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                alt="{{ volunteer.full_name }}"
-                class="v3-people-avatar"
-              />
-              <div class="d-flex flex-column">
-                <div class="v3-people-name">
-                  {{ volunteer.full_name }}
-                </div>
-
-                {% if volunteer.info %}
-                <small class="v3-text-tertiary">
-                  {{ volunteer.info }}
-                </small>
-                {% endif %}
-              </div>
-            </a>
+            {{ profile_headshot(volunteer.full_name, volunteer.profile_picture, '/' + volunteer.route, volunteer.info if show_info else None) }}
           {% endfor %}
         {% else %}
           {% for speaker in items %}
             {% for submission in submissions %}
               {% if submission.name == speaker.parent %}
-                <a class="v3-clickable v3-people-item" href="/{{ submission.route }}" aria-label="{{ speaker.full_name }}, speaker">
-                  <img
-                    src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                    alt="{{ speaker.full_name }}"
-                    class="v3-people-avatar"
-                  />
-                  <div class="v3-people-name">{{ speaker.full_name }}</div>
-                </a>
+                {{ profile_headshot(speaker.full_name, speaker.photo, '/' + submission.route) }}
               {% endif %}
             {% endfor %}
           {% endfor %}
@@ -54,7 +53,7 @@
     {% if show_view_all %}
       <button
         type="button"
-        class="v3-btn-secondary border-0"
+        class="v3-btn-secondary border-0 mt-3"
         onclick="togglePeopleView('{{ unique_id }}')"
         aria-expanded="false"
         aria-controls="container_{{ unique_id }}"

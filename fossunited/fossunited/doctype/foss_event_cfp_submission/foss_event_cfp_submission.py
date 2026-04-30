@@ -17,6 +17,7 @@ from fossunited.doctype_ids import (
     EVENT_CFP,
     EVENT_SCHEDULE,
     PROPOSAL,
+    USER_PROFILE,
 )
 from fossunited.fossunited.utils import sanitize_text_content
 
@@ -30,7 +31,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.cfp_submission_reference.cfp_submission_reference import (  # noqa: E501
+        from fossunited.fossunited.doctype.cfp_submission_reference.cfp_submission_reference import (
             CFPSubmissionReference,
         )
         from fossunited.fossunited.doctype.cfp_submission_speaker.cfp_submission_speaker import (
@@ -117,6 +118,15 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.check_status()
         self.validate_linked_cfp_exists()
         self.validate_form_is_live()
+        self._set_name_from_first_speaker()
+
+    def _set_name_from_first_speaker(self):
+        if not self.speakers:
+            return
+        parts = (self.speakers[0].full_name or "").strip().split(" ", 1)
+        self.first_name = parts[0]
+        self.last_name = parts[1] if len(parts) > 1 else ""
+        self.full_name = self.speakers[0].full_name
 
     def before_save(self):
         if self.has_value_changed("is_withdrawn"):
@@ -255,6 +265,34 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             user == self.submitted_by or user == self.email or user in speaker_emails
         )
 
+        _visible_filters = {"is_published": 1, "cfp_visibility": "Everyone"}
+
+        # Speaker profile URLs keyed by email (suppressed when CFP is anonymous)
+        context.speaker_profile_map = {}
+        if speaker_emails and not context.anonymous_cfps:
+            rows = frappe.db.get_all(
+                USER_PROFILE,
+                filters={"user": ["in", speaker_emails], **_visible_filters},
+                fields=["user", "username"],
+            )
+            context.speaker_profile_map = {p.user: f"/u/{p.username}" for p in rows if p.username}
+
+        # Submitter profile (suppressed when CFP is anonymous)
+        context.submitter_profile = None
+        if self.submitted_by and not context.anonymous_cfps:
+            profile = frappe.db.get_value(
+                USER_PROFILE,
+                {"user": self.submitted_by, **_visible_filters},
+                ["username", "full_name", "profile_photo"],
+                as_dict=True,
+            )
+            if profile and profile.username:
+                context.submitter_profile = {
+                    "url": f"/u/{profile.username}",
+                    "full_name": profile.full_name or self.full_name or self.submitted_by,
+                    "photo": profile.profile_photo,
+                }
+
         context.no_cache = 1
         if context.is_owner:
             context.cfp_data_json = frappe.as_json(self.as_dict()).replace("</", "<\\/")
@@ -268,9 +306,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.talk_description), width=150)
 
-        description = "{self.talk_title} is a {self.session_type} proposal for {self.event_name}. {desc_short}".format(  # noqa: E501
-            self=self, desc_short=desc_short
-        )
+        description = f"{self.talk_title} is a {self.session_type} proposal for {self.event_name}. {desc_short}"
 
         speaker = self.speakers[0]
         if context.anonymous_cfps:
@@ -281,13 +317,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         chapter_name = frappe.db.get_value(CHAPTER, {"name": self.chapter}, "chapter_name")
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
-        image = "{og_url}/gen/submission?talk_title={talk_title_short}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}".format(  # noqa: E501
-            self=self,
-            og_url=og_url,
-            talk_title_short=textwrap.shorten(self.talk_title, width=50),
-            chapter_name=chapter_name,
-            speaker=speaker,
-        )
+        image = f"{og_url}/gen/submission?talk_title={textwrap.shorten(self.talk_title, width=50)}&session_type={self.session_type}&event_name={self.event_name}&speaker_designation={speaker.designation}&speaker_name={speaker.full_name}&speaker_image={speaker.photo}&event_chapter={chapter_name}"
 
         return pagetitle, description, image
 

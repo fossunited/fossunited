@@ -1,6 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
+{% from "fossunited/templates/macros/volunteers_card.html" import profile_headshot %}
 
 {% block meta_block %}
   {{ meta_tags(pagetitle, description, image) }}
@@ -114,7 +115,7 @@
     </div>
   </div>
 
-  <div class="d-flex align-items-center gap-2">
+  <div class="d-flex align-items-center flex-wrap gap-2">
     {{ status_badge(doc.status, status_badge_theme) }}
     {% if talk_video %}
       <a
@@ -129,6 +130,10 @@
       </a>
     {% endif %}
   </div>
+
+  {% if submitter_profile %}
+    {{ profile_headshot(submitter_profile.full_name, submitter_profile.photo, submitter_profile.url) }}
+  {% endif %}
 </div>
 {% endmacro %}
 
@@ -242,10 +247,11 @@
 
 
 {% macro speaker_card(speaker) %}
+{% set sp_url = speaker_profile_map.get(speaker.email) %}
 <div class="border border-section rounded p-3 d-flex flex-column gap-2">
-  <div class="d-flex align-items-start justify-content-between gap-6">
+  {% if sp_url %}<a href="{{ sp_url }}" class="d-flex align-items-start justify-content-between gap-6 text-decoration-none">{% else %}<div class="d-flex align-items-start justify-content-between gap-6">{% endif %}
     <div class="d-flex flex-column gap-1 speaker-col">
-      <h5 class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</h5>
+      <span class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</span>
       {% if speaker.designation or speaker.organization %}
         <span class="v3-text-secondary text-sm">
           {%- if speaker.designation and speaker.organization -%}
@@ -257,20 +263,8 @@
           {%- endif -%}
         </span>
       {% endif %}
-        {% if speaker.bio %}
-          <span class="v3-text-secondary text-sm py-2 mb-0">{{ speaker.bio }}</span>
-        {% endif %}
-      {% if speaker.social_link %}
-        <a
-          href="{{ speaker.social_link | e }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="{{ speaker.full_name }}'s social profile"
-          class="d-flex align-items-center gap-1 border border-section rounded v3-text-secondary text-xs px-2 py-1 mt-1 speaker-social"
-        >
-          <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
-          <span class="speaker-social-url">{{ speaker.social_link | e }}</span>
-        </a>
+      {% if speaker.bio %}
+        <span class="v3-text-secondary text-sm py-2 mb-0">{{ speaker.bio }}</span>
       {% endif %}
     </div>
     <img
@@ -279,7 +273,19 @@
       alt="{{ speaker.full_name }}"
       loading="lazy"
     />
-  </div>
+  {% if sp_url %}</a>{% else %}</div>{% endif %}
+  {% if speaker.social_link %}
+    <a
+      href="{{ speaker.social_link | e }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="{{ speaker.full_name }}'s social profile"
+      class="d-flex align-items-center gap-1 border border-section rounded v3-text-secondary text-xs px-2 py-1 mt-1 speaker-social"
+    >
+      <i class="ti ti-world flex-shrink-0" aria-hidden="true"></i>
+      <span class="speaker-social-url">{{ speaker.social_link | e }}</span>
+    </a>
+  {% endif %}
 </div>
 {% endmacro %}
 
