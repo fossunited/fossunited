@@ -1,12 +1,13 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import PROPOSAL
+from fossunited.doctype_ids import EVENT, PROPOSAL
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
     FOSSEventCFPFactory,
     FOSSEventCFPSubmissionFactory,
+    UserFactory,
 )
 
 CoreTeam = "test1@example.com"
@@ -282,3 +283,58 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
                 {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
             )
         )
+
+
+class TestCFPHasPermission(FrappeTestCase):
+    """CTM chapter-scoped has_permission checks."""
+
+    def setUp(self):
+        self.ctm = UserFactory.create("with_foss_website_user_role")
+        frappe.get_doc("User", self.ctm.name).add_roles("Chapter Team Member")
+
+        self.reviewer = UserFactory.create("with_foss_website_user_role")
+        frappe.get_doc("User", self.reviewer.name).add_roles("CFP Reviewer")
+
+        self.chapter_a = FOSSChapterFactory.create("with_members", members=[self.ctm.name])
+        self.chapter_b = FOSSChapterFactory.create()
+
+        self.event_a = FOSSChapterEventFactory.create(chapter=self.chapter_a.name)
+        self.cfp_a = FOSSEventCFPFactory.create(event=self.event_a.name)
+        self.sub_a = FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=self.cfp_a.name, event=self.event_a.name, submitted_by=Submitter
+        )
+
+        self.event_b = FOSSChapterEventFactory.create(chapter=self.chapter_b.name)
+        self.cfp_b = FOSSEventCFPFactory.create(event=self.event_b.name)
+        self.sub_b = FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=self.cfp_b.name, event=self.event_b.name, submitted_by=Submitter
+        )
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for name in [self.sub_a.name, self.sub_b.name]:
+            frappe.delete_doc(PROPOSAL, name, force=True)
+        for cfp in [self.cfp_a, self.cfp_b]:
+            cfp.delete(force=True)
+        for event_name in [self.event_a.name, self.event_b.name]:
+            frappe.delete_doc(EVENT, event_name, force=True)
+        self.chapter_a.delete(force=True)
+        self.chapter_b.delete(force=True)
+        frappe.get_doc("User", self.ctm.name).remove_roles("Chapter Team Member")
+        frappe.get_doc("User", self.reviewer.name).remove_roles("CFP Reviewer")
+
+    def test_submitter_can_read(self):
+        doc = frappe.get_doc(PROPOSAL, self.sub_a.name)
+        self.assertTrue(doc.has_permission("read", user=Submitter))
+
+    def test_ctm_same_chapter_can_read(self):
+        doc = frappe.get_doc(PROPOSAL, self.sub_a.name)
+        self.assertTrue(doc.has_permission("read", user=self.ctm.name))
+
+    def test_ctm_other_chapter_denied(self):
+        doc = frappe.get_doc(PROPOSAL, self.sub_b.name)
+        self.assertFalse(doc.has_permission("read", user=self.ctm.name))
+
+    def test_cfp_reviewer_can_read_any(self):
+        doc = frappe.get_doc(PROPOSAL, self.sub_b.name)
+        self.assertTrue(doc.has_permission("read", user=self.reviewer.name))
