@@ -11,6 +11,143 @@ Please find the TLDR reports for each blog in blog posts and forum thread:
 - Blog post: [https://fossunited.org/blog/tech-report](https://fossunited.org/blog/tech-report)
 - Forum thread: [https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431](https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431)
 
+## April 2026
+
+> Project stats: [git commands before reading code](https://piechowski.io/post/git-commands-before-reading-code/)
+
+Big month - schedule page got a full redesign just in time for ChennaiFOSS 2026, code of conduct enforcement added across all registration flows, CFP reviewer workflow improved, and clubs got holistic documentation.
+
+<details>
+<summary>PR Highlights</summary>
+
+### PR Highlights
+
+#### Schedule Page Redesign
+
+- [#1548](https://github.com/fossunited/fossunited/pull/1548) **Schedule Page Redesign**
+  Rebuilt from scratch. Two views - list (default) and all-day timeline grid.
+
+  Credits: Jeswin Josu (the macbook designer)
+
+  Visit: [ChennaiFOSS 2026 Schedule](https://fossunited.org/c/chennai/2026/schedule)
+
+#### Code of Conduct
+
+Added CoC acceptance across all registration flows. No opt-out, checkbox is required:
+
+- RSVP form - agree to abide by FOSS United Code of Conduct before submitting
+- Buy Tickets - CoC checkbox on attendee detail step
+- CFP form - accept CoC checkbox on submission
+- Visit: https://fossunited.org/code-of-conduct
+
+Field added to RSVP, Ticket Attendee, and CFP Submission doctypes to record acceptance.
+Things are now strict, contact Siddharth upon this.
+
+#### CFP Reviewer Workflow
+
+- [#1565](https://github.com/fossunited/fossunited/pull/1565) **Inline Edit on Proposal Detail Page**
+  Reviewers and proposal owners can now edit proposal fields (title, description, tags) directly on the public proposal detail page without going to the dashboard. Field descriptions shown in edit mode.
+
+- [#1553](https://github.com/fossunited/fossunited/pull/1553) **Granular CFP Submission Permissions**
+  CFP reviewers are now granted access to Frappe desk - needed for using frappe's built-in tools (assigning, email, comments, etc.) during review cycles. Permission level are granular, allows only one review, rest of the field read-only.
+
+- [#1544](https://github.com/fossunited/fossunited/pull/1544) **Proposal Review Improvements**
+  Withdrawn proposals hidden by default in review list. Toggle to show/hide reviewed proposals. Filter and sort work reliably now.
+
+- [#1547](https://github.com/fossunited/fossunited/pull/1547) **Speaker Contact Info Field**
+  Added `contact_info` field to CFP Speaker doctype - needed for IndiaFOSS speaker coordination.
+
+- CFP insight reload on status change. Review list reloads when a new review is submitted.
+- Speaker card made compact on submission detail page.
+- Common `ProposalListItem` component extracted - reused across proposals list and review page.
+- CFP submission detail page now shows the speaker's submitted profile card with a direct link to their public profile.
+- b751b084d: Show Submitted by FOSS User Profile (respecting their `cfp_visibility`) and link speaker email to profile if exists.
+
+#### DocShare for Events
+
+- [#1552](https://github.com/fossunited/fossunited/pull/1552) **DocShare Event to Event Volunteers**
+  Events are now shared via Frappe's DocShare to all users in the event's `event_members` table (Volunteers). Only gives read access, purpose is for them to help in Ticket checkin for that event, thus access to dashboard page to read.
+
+#### Clubs
+
+- [#1556](https://github.com/fossunited/fossunited/pull/1556) **FOSS Clubs Documentation**
+  New club documentation covering what a FOSS Club is, how to start one, and what support is available. Messaging on clubs website updated to match.
+
+  Credits: Siddharth Shivkumar (Educational Program Manager)
+
+- [#1562](https://github.com/fossunited/fossunited/pull/1562) **Docs Restructure for Clubs & Initiatives**
+  Revised clubs doc structure, onboarding resources, and corrected docs across other initiative pages.
+
+- [#1561](https://github.com/fossunited/fossunited/pull/1561) **Best Practices - heyguys.cc**
+  Added heyguys.cc as a best practice example in the clubs overview page.
+
+- Added search bar to clubs listing page. Layout made more compact with tighter gaps.
+
+#### Tests
+
+- [#1560](https://github.com/fossunited/fossunited/pull/1560) **Test Factories**
+  Factory helpers added for `FOSSChapter`, `FOSSChapterEvent`, and `RSVP` — makes writing unit/integration tests significantly less boilerplate.
+
+  Credits: Harsh Tandiya (OG maintainer)
+
+#### Accessibility
+
+- [#1495](https://github.com/fossunited/fossunited/pull/1495) **Skip to Main Content Link**
+  Added a "skip to main content" anchor link at the top of pages - standard keyboard/screen reader accessibility feature.
+
+  Credits: [@nimiverma](https://github.com/nimiverma)
+
+#### FOSS United Newsletter Subscribe
+
+Every signup form will show checkbox to signin a user for our monthly fossunited newsletter managed via Listmonk.
+
+  Visit: https://fossunited.org/newsletter
+
+#### ICS Calendar Enrichment
+
+ICS files generated for events now include more fields - description, location, organiser info. Makes calendar entries actually useful when downloaded from event pages.
+Also in Desk, added a "Download to Calendar" helper for signups to help track.
+
+#### Permission Cleanup
+
+- Removed `"All"` permission from grants doctype, was unnecessarily broad.
+- `event_volunteer` lookup reduced from N+1 queries to two DB calls.
+- Added `permission_query_conditions` hooks to filter list views — only shows doctypes linked to the current user's Chapter Team Member record. Proper Frappe row-level security instead of relying on role-based filtering.
+- Removed `if_owner` from CFP submission permission levels — was incorrectly applied on levels other than owner.
+- Tests added for `permission_query_conditions` hooks to catch regressions.
+
+#### RSVP Insight Drawer
+
+RSVP insight rows now open a details drawer on click, showing full attendee data and action buttons in context, helps to wrap long form text and show in focus.
+Also provides Action buttons (Accept, reject and checkin)
+
+#### Bug Fixes
+
+- Dark mode: project edit input background no longer shows browser default white.
+- Ticket tiers now sorted by active status then price on buy tickets page.
+- T-shirt size is now mandatory for attendees who want one; insight sorted by size.
+- Ticket transfer shows toast error and redirects guest to login (was silent before).
+- Team list card no longer overflows on long names.
+- CSS now uses `mtime` version param on includes for proper cache busting (F Chrome users).
+- CFP page migrated away from Tailwind (`styles.css`) to Bootstrap — was getting purged in production.
+- RSVP `requires_host_approval` switch now shows with its description text.
+- Check-in insight has a refresh button to reload data without full page reload.
+- Like button now uses filled icon when active (was always outline before).
+- Breadcrumb `ignore_indice` no longer incorrectly modifies `href` on remaining items.
+
+---
+
+### Contributor Spotlight
+
+- Harsh Tandiya: test factories for FOSSChapter, FOSSChapterEvent, RSVP ([#1560](https://github.com/fossunited/fossunited/pull/1560))
+- Siddharth: clubs documentation and initiatives docs restructure ([#1556](https://github.com/fossunited/fossunited/pull/1556), [#1562](https://github.com/fossunited/fossunited/pull/1562))
+- Poruri Sai Rahul: heyguys.cc clubs best practice ([#1561](https://github.com/fossunited/fossunited/pull/1561))
+- [@nimiverma](https://github.com/nimiverma): skip to main content a11y link ([#1495](https://github.com/fossunited/fossunited/pull/1495))
+
+</details>
+
+---
+
 ## March 2026
 
 | Metric        | Count |
