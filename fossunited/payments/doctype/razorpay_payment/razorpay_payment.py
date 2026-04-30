@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT
@@ -24,7 +25,7 @@ class RazorpayPayment(Document):
         billing_address: DF.Text | None
         buyer_name: DF.Data | None
         company_name: DF.Data | None
-        currency: DF.Literal["INR"]  # noqa: F821
+        currency: DF.Literal["INR"]
         document_name: DF.DynamicLink | None
         document_type: DF.Link | None
         email: DF.Data
@@ -35,11 +36,11 @@ class RazorpayPayment(Document):
         refund_id: DF.Data | None
         state: DF.Data | None
         status: DF.Literal[
-            "Captured",  # noqa: F821
-            "Failed",  # noqa: F821
-            "Pending",  # noqa: F821
-            "Refund Pending",  # noqa: F722, F821
-            "Refunded",  # noqa: F722, F821
+            "Captured",
+            "Failed",
+            "Pending",
+            "Refund Pending",
+            "Refunded",
         ]
 
     # end: auto-generated types
@@ -49,7 +50,7 @@ class RazorpayPayment(Document):
         frappe.only_for("System Manager")
 
         if not self.is_paid:
-            frappe.throw("Refunds Can be Made Only on Captured Payments!")
+            frappe.throw(_("Refunds Can be Made Only on Captured Payments!"))
 
         client = get_razorpay_client()
         refund_amount = int(get_in_razorpay_money(self.amount))
@@ -91,4 +92,4 @@ class RazorpayPayment(Document):
                 EVENT, {"name": self.document_name}, "tickets_status"
             )
             if ticket_status == "Closed":
-                frappe.throw("Ticket sale are closed for this event!", frappe.PermissionError)
+                frappe.throw(_("Ticket sale are closed for this event!"), frappe.PermissionError)

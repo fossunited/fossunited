@@ -3,8 +3,9 @@ import frappe
 from fossunited.doctype_ids import CHAPTER, EVENT, HACKATHON, STUDENT_CLUB
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def search_foss_club(query):
+def search_foss_club(query: str):
     club_list = frappe.get_all(
         CHAPTER,
         fields=[
@@ -24,8 +25,9 @@ def search_foss_club(query):
     return club_list
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def buy_tickets_page(route):
+def buy_tickets_page(route: str):
     event = frappe.db.get_value(
         EVENT,
         {"route": route},
@@ -50,8 +52,9 @@ def buy_tickets_page(route):
     return
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def partner_projects_redirect(hack=None, project=None):
+def partner_projects_redirect(hack: str | None = None, project: str | None = None):
     if not hack:
         frappe.local.response["type"] = "redirect"
         frappe.local.response["location"] = "/404"

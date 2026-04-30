@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
@@ -58,6 +59,6 @@ class EventFreeTicketCode(Document):
             message=f"User {user} attempted to modify free ticket code for event {self.event}",
         )
         frappe.throw(
-            "You are not allowed to modify free ticket codes for this event.",
+            _("You are not allowed to modify free ticket codes for this event."),
             frappe.PermissionError,
         )

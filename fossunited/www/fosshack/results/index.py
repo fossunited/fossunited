@@ -649,7 +649,7 @@ def get_hackathon_results(hackathon_id, year):
         "id": year,
         "year": year,
         "name": hackathon.hackathon_name or f"FOSS Hack {year}",
-        "date": f"{formatdate(hackathon.start_date, 'd')} – {formatdate(hackathon.end_date, 'd MMM yyyy')}",
+        "date": f"{formatdate(hackathon.start_date, 'd')} - {formatdate(hackathon.end_date, 'd MMM yyyy')}",
         "mode": hackathon.hackathon_type or "Hybrid",
         "total_teams": frappe.db.count(HACKATHON_TEAM, {"hackathon": hackathon_id}),
         "total_participants": frappe.db.count(HACKATHON_PARTICIPANT, {"hackathon": hackathon_id}),

@@ -45,6 +45,7 @@ build-backend = "flit_core.buildapi"
 line-length = 99
 target-version = "py310"
 fix = true
+exclude = ["development/", ".venv/"]
 
 [tool.ruff.lint]
 select = ["F", "E", "W", "I", "B", "UP", "RUF"]
@@ -58,6 +59,8 @@ typing-modules = ["frappe.types.DF"]
 [tool.ruff.lint.per-file-ignores]
 "**/doctype/**/*.py" = ["F722"]
 "fossunited/www/fosshack/results/index.py" = ["E501"]
+"fossunited/job/**/*.py" = ["W191", "E101"]  # auto-generated stubs use tabs
+"get.py" = ["F821"]                           # frappe context not resolvable statically
 
 [tool.ruff.format]
 quote-style = "double"

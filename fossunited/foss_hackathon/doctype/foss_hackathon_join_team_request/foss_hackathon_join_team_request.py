@@ -3,6 +3,7 @@
 
 import frappe
 import frappe.permissions
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.doctype_ids import (
@@ -28,7 +29,7 @@ class FOSSHackathonJoinTeamRequest(Document):
         reciever_email: DF.Data
         requested_by: DF.Link
         sender_name: DF.Data | None
-        status: DF.Literal["Pending", "Accepted", "Rejected"]  # noqa: F821
+        status: DF.Literal["Pending", "Accepted", "Rejected"]
         team: DF.Link
         team_name: DF.Data | None
     # end: auto-generated types
@@ -53,7 +54,7 @@ class FOSSHackathonJoinTeamRequest(Document):
                 },
             )
         except frappe.DoesNotExistError:
-            frappe.throw("Participant not found")
+            frappe.throw(_("Participant not found"))
             return
 
         team_doc = frappe.get_doc(HACKATHON_TEAM, self.team)
@@ -95,6 +96,6 @@ class FOSSHackathonJoinTeamRequest(Document):
         )
 
         if not is_team_member:
-            frappe.throw("Request sender is not a team member", frappe.ValidationError)
+            frappe.throw(_("Request sender is not a team member"), frappe.ValidationError)
 
         return

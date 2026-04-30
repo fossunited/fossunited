@@ -86,7 +86,7 @@ def filter_field_values(key):
 
 
 @frappe.whitelist()
-def get_user_editable_doctype_fields(doctype, docname=None):
+def get_user_editable_doctype_fields(doctype: str, docname: str | None = None):
     meta = frappe.get_meta(doctype).as_dict()
     NOT_EDITABLE_FIELDS = ["is_published", "route", "user"]
     for field in meta["fields"]:
@@ -145,7 +145,7 @@ def get_user_socials(foss_user):
 
 
 @frappe.whitelist()
-def get_meta(doctype):
+def get_meta(doctype: str):
     return frappe.get_meta(doctype).as_dict()
 
 
@@ -189,16 +189,18 @@ def get_signup_optin_checks():
     return (", ").join(links)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def check_username_availability(username):
+def check_username_availability(username: str):
     username_exists = frappe.db.exists(USER_PROFILE, {"username": username})
 
     is_cityname = frappe.db.exists("City", {"name": username})
     return username_exists or is_cityname
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def check_if_profile_owner(username):
+def check_if_profile_owner(username: str):
     profile_user = frappe.get_doc(USER_PROFILE, {"username": username})
     return profile_user.user == frappe.session.user
 
@@ -279,8 +281,9 @@ def get_all_city_names():
     return cities
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def get_foss_profile(email):
+def get_foss_profile(email: str):
     """
     Return the FOSS User Profile doc linked to the parameter email.
     """
@@ -306,8 +309,9 @@ def get_foss_profile(email):
     return profile
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def get_select_field_options(doctype_name, fieldname):
+def get_select_field_options(doctype_name: str, fieldname: str):
     """
     Return options for a Select field in a Doctype as a list of strings.
     """

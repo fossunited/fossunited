@@ -6,21 +6,21 @@ frappe.ui.form.on('Grants Funding Directory', {
     // show button only for saved docs
     if (frm.is_new()) return
 
-    frm.add_custom_button('Re-fetch Manifest Data', () => {
+    frm.add_custom_button(__('Re-fetch Manifest Data'), () => {
       frappe.call({
         method:
           'fossunited.fossunited.doctype.grants_funding_directory.grants_funding_directory.refresh_funding_data',
         args: { docname: frm.doc.name },
         freeze: true,
-        freeze_message: 'Refreshing funding data…',
+        freeze_message: __('Refreshing funding data…'),
         callback(r) {
           if (r && r.message && r.message.success) {
-            frappe.msgprint(r.message.message || 'Funding data refreshed')
+            frappe.msgprint(r.message.message || __('Funding data refreshed'))
             frm.reload_doc()
           } else {
             frappe.msgprint({
-              title: 'Refresh failed',
-              message: (r && r.message && r.message.message) || 'Unknown error',
+              title: __('Refresh failed'),
+              message: (r && r.message && r.message.message) || __('Unknown error'),
               indicator: 'red',
             })
           }

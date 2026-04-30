@@ -3,6 +3,7 @@
 import json
 
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.doctype_ids import EVENT, EVENT_RSVP, RSVP_RESPONSE
@@ -40,7 +41,7 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def on_update(self):
         if int(self.rsvp_count) >= int(self.max_rsvp_count):
-            self.is_published = 0
+            self.db_set("is_published", 0)
 
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
@@ -77,7 +78,7 @@ class FOSSEventRSVP(WebsiteGenerator):
             {
                 "fieldname": "subscribe_chapter_mailing",
                 "fieldtype": "Check",
-                "label": f"Yes, I'd like to receive email updates about future events from {self.chapter}.",  # noqa: E501
+                "label": f"Yes, I'd like to receive email updates about future events from {self.chapter}.",
             },
         ]
         form_fields.extend(self.get_custom_questions())
@@ -128,13 +129,14 @@ class FOSSEventRSVP(WebsiteGenerator):
         )
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def create_rsvp(fields):
+def create_rsvp(fields: str):
     fields = json.loads(fields)
 
     linked_rsvp_exists = frappe.db.exists(EVENT_RSVP, fields.get("linked_rsvp"))
     if not linked_rsvp_exists:
-        frappe.throw("Invalid RSVP ID.", frappe.DoesNotExistError)
+        frappe.throw(_("Invalid RSVP ID."), frappe.DoesNotExistError)
 
     fields.update(
         {

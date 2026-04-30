@@ -19,7 +19,7 @@ class FOSSCustomQuestion(Document):
         parentfield: DF.Data
         parenttype: DF.Data
         question: DF.Data | None
-        type: DF.Literal["Data", "Select", "Long Text", "Text Editor", "Check", "Radio Group"]  # noqa: F722, F821
+        type: DF.Literal["Data", "Select", "Long Text", "Text Editor", "Check", "Radio Group"]
     # end: auto-generated types
 
     pass

@@ -163,7 +163,7 @@ def get_custom_fields():
                 "fieldname": "group_type",
                 "fieldtype": "Select",
                 "label": "Group Type",
-                "options": "Chapter Event Participants\nChapter CFP Proposers\nEvent Participants\nCFP Proposers\nAccepted Proposers\nRejected Proposers\nOther",  # noqa: E501
+                "options": "Chapter Event Participants\nChapter CFP Proposers\nEvent Participants\nCFP Proposers\nAccepted Proposers\nRejected Proposers\nOther",
                 "default": "Other",
                 "insert_after": "event",
             },

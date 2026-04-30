@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.doctype_ids import (
@@ -20,7 +21,7 @@ class FOSSHackathonTeam(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.foss_hackathon_team_member.foss_hackathon_team_member import (  # noqa: E501
+        from fossunited.foss_hackathon.doctype.foss_hackathon_team_member.foss_hackathon_team_member import (
             FOSSHackathonTeamMember,
         )
 
@@ -28,7 +29,7 @@ class FOSSHackathonTeam(Document):
         looking_for_members: DF.Check
         members: DF.Table[FOSSHackathonTeamMember]
         partner_project: DF.Link | None
-        partner_project_status: DF.Literal["", "Pending", "Accepted", "Rejected"]  # noqa: F722, F821
+        partner_project_status: DF.Literal["", "Pending", "Accepted", "Rejected"]
         project: DF.Link | None
         team_name: DF.Data
         working_on_partner_project: DF.Check
@@ -74,7 +75,7 @@ class FOSSHackathonTeam(Document):
         """Ensure no duplicate members in this team"""
         member_ids = [m.member for m in self.members if m.member]
         if len(member_ids) != len(set(member_ids)):
-            frappe.throw("Cannot add the same member twice to a team")
+            frappe.throw(_("Cannot add the same member twice to a team"))
 
     def check_member_not_in_other_team(self, member_id):
         """Check if member is already in another team for this hackathon"""

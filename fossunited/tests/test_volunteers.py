@@ -231,5 +231,5 @@ class TestVolunteersPage(FrappeTestCase):
         self.assertEqual(len(latest_dates), 1)
 
         # Verify it's the recent event's date (ISO format comparison)
-        latest_date = list(latest_dates)[0]
+        latest_date = next(iter(latest_dates))
         self.assertIn(recent_event.event_start_date.strftime("%Y-%m-%d"), latest_date)

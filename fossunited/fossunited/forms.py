@@ -1,6 +1,7 @@
 import json
 
 import frappe
+from frappe import _
 
 from fossunited.doctype_ids import PROPOSAL, RSVP_RESPONSE, USER_PROFILE
 
@@ -17,14 +18,14 @@ def is_valid_doctype(doctype: str):
 
 
 @frappe.whitelist()
-def update_submission(doctype, submission, fields, custom):
+def update_submission(doctype: str, submission: str, fields: str, custom: str):
     """Update submission fields and upsert custom answers (update existing, append new)."""
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of update_submission")
-        frappe.throw("You are not permitted to use this resource", frappe.PermissionError)
+        frappe.throw(_("You are not permitted to use this resource"), frappe.PermissionError)
 
     if not check_if_submitter(doctype, submission):
-        frappe.throw("You are not authorized to update this submission", frappe.PermissionError)
+        frappe.throw(_("You are not authorized to update this submission"), frappe.PermissionError)
 
     fields = json.loads(fields or "{}")
     custom = json.loads(custom or "[]")
@@ -70,7 +71,7 @@ def update_submission(doctype, submission, fields, custom):
 
 
 @frappe.whitelist()
-def check_if_submitter(doctype, docname):
+def check_if_submitter(doctype: str, docname: str):
     """
     Check if the current user is the submitter of the given docname.
     Only used for RSVP and CFP
@@ -79,7 +80,7 @@ def check_if_submitter(doctype, docname):
 
 
 @frappe.whitelist()
-def post_review(submission, to_approve, remarks):
+def post_review(submission: str, to_approve: str | int, remarks: str):
     """
     Post a review for a particular CFP Submission
 
@@ -103,7 +104,7 @@ def post_review(submission, to_approve, remarks):
 
 
 @frappe.whitelist()
-def publish_form(doctype, docname):
+def publish_form(doctype: str, docname: str):
     """
     Used to Publish RSVP and CFP forms by the user.
     This bypasses the permissions required to publish the form.
@@ -111,7 +112,7 @@ def publish_form(doctype, docname):
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of publish_form")
         frappe.throw(
-            "You are not permitted to use this resource",
+            _("You are not permitted to use this resource"),
             frappe.PermissionError,
         )
 
@@ -122,7 +123,7 @@ def publish_form(doctype, docname):
 
 
 @frappe.whitelist()
-def unpublish_form(doctype, docname):
+def unpublish_form(doctype: str, docname: str):
     """
     Used to Unpublish RSVP and CFP forms by the user.
     This bypasses the permissions required to unpublish the form.
@@ -130,7 +131,7 @@ def unpublish_form(doctype, docname):
     if not is_valid_doctype(doctype):
         frappe.log("Unauthorized usage of unpublish_form")
         frappe.throw(
-            "You are not permitted to use this resource",
+            _("You are not permitted to use this resource"),
             frappe.PermissionError,
         )
 

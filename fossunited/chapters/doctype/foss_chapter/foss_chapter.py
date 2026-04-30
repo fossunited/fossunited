@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.emailing import create_email_group
@@ -24,7 +25,7 @@ class FOSSChapter(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_chapter_lead_team_member.foss_chapter_lead_team_member import (
             FOSSChapterLeadTeamMember,
         )
 
@@ -34,10 +35,8 @@ class FOSSChapter(WebsiteGenerator):
         chapter_logo: DF.AttachImage | None
         chapter_members: DF.Table[FOSSChapterLeadTeamMember]
         chapter_name: DF.Data
-        chapter_status: DF.Literal[
-            "Active", "Inactive", "Defunct", "Independent", "New"  # noqa: F722, F821
-        ]
-        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference", "Virtual"]  # noqa: F722, F821
+        chapter_status: DF.Literal["Active", "Inactive", "Defunct", "Independent", "New"]
+        chapter_type: DF.Literal["City Community", "FOSS Club", "Conference", "Virtual"]
         city: DF.Link | None
         country: DF.Link | None
         discord: DF.Data | None
@@ -172,7 +171,7 @@ class FOSSChapter(WebsiteGenerator):
             )
 
         if " " in self.slug:
-            frappe.throw("Slug cannot have spaces")
+            frappe.throw(_("Slug cannot have spaces"))
 
     def get_context(self, context):
         context.no_cache = 1

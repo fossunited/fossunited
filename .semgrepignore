@@ -1,0 +1,33 @@
+development/
+.venv/
+get.py
+frappe_docker/
+
+# Frappe DocType JSON permission files - "role": "All" is intentional for public-read doctypes
+# better to document them and re-review for perm gaps. Use docshare, permission_query_conditions or has_permission
+fossunited/chapters/doctype/foss_chapter/foss_chapter.json
+fossunited/chapters/doctype/foss_chapter_event/foss_chapter_event.json
+fossunited/chapters/doctype/foss_event_rsvp/foss_event_rsvp.json
+fossunited/chapters/doctype/foss_event_rsvp_submission/foss_event_rsvp_submission.json
+fossunited/chapters/doctype/foss_event_type/foss_event_type.json
+fossunited/foss_hackathon/doctype/foss_hackathon/foss_hackathon.json
+fossunited/foss_hackathon/doctype/foss_hackathon_join_team_request/foss_hackathon_join_team_request.json
+fossunited/foss_hackathon/doctype/foss_hackathon_localhost/foss_hackathon_localhost.json
+fossunited/foss_hackathon/doctype/foss_hackathon_mentor/foss_hackathon_mentor.json
+fossunited/foss_hackathon/doctype/foss_hackathon_participant/foss_hackathon_participant.json
+fossunited/foss_hackathon/doctype/foss_hackathon_partner_project/foss_hackathon_partner_project.json
+fossunited/foss_hackathon/doctype/foss_hackathon_project/foss_hackathon_project.json
+fossunited/foss_hackathon/doctype/foss_hackathon_team/foss_hackathon_team.json
+fossunited/fossunited/doctype/foss_event_cfp/foss_event_cfp.json
+fossunited/fossunited/doctype/foss_event_cfp_submission/foss_event_cfp_submission.json
+fossunited/fossunited/doctype/foss_united_team/foss_united_team.json
+fossunited/fossunited/doctype/fossu_settings/fossu_settings.json
+fossunited/fossunited/doctype/global_cfp_settings/global_cfp_settings.json
+fossunited/fossunited/doctype/industry_partners/industry_partners.json
+fossunited/fossunited/doctype/institute/institute.json
+fossunited/fossunited/doctype/organization/organization.json
+fossunited/fossunited/doctype/state/state.json
+fossunited/job/doctype/dummy_test/dummy_test.json
+fossunited/stack/doctype/stack/stack.json
+fossunited/ticketing/doctype/foss_event_ticket_transfer/foss_event_ticket_transfer.json
+fossunited/ticketing/doctype/ticket_transfer_settings/ticket_transfer_settings.json

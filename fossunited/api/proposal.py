@@ -4,6 +4,7 @@ from frappe import qb
 from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL, SPEAKER
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_event_proposals(event: str) -> dict:
     """
@@ -224,6 +225,7 @@ def _get_bulk_custom_answers_data(proposal_names: list) -> dict:
     return custom_answers_data
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_public_proposal_filters(
     event: str,

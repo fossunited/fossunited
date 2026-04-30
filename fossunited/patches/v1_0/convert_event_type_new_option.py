@@ -32,8 +32,8 @@ def execute():
             if event_names:
                 print(f"Updated {len(event_names)} record(s) from '{old_value}' → '{new_value}'")
         except Exception as e:
-            print(f"Error updating '{old_value}': {str(e)}")
-            frappe.log_error(f"Event type migration error: {str(e)}")
+            print(f"Error updating '{old_value}': {e!s}")
+            frappe.log_error(f"Event type migration error: {e!s}")
 
     # change fieldtype from Link to Select and set new options
     docfield = frappe.get_doc("DocField", {"parent": doctype, "fieldname": fieldname})

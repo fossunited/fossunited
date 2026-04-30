@@ -236,7 +236,7 @@ def _format_content(fmt, doc, sessions, meta):
         for s in sessions:
             spk = ", ".join(_speaker_name(sp) for sp in s.speakers_list if _speaker_name(sp)) or ""
             lines.append(
-                f"Title: {s.title}\nDate: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"  # noqa: E501
+                f"Title: {s.title}\nDate: {s.scheduled_date}, {s.start_time_str} - {s.end_time_str}\n"
                 f"Hall: {s.hall}\nCategory: {s.category}\nCFP: {getattr(s, 'cfp_route', '')}\n"
                 f"Speakers: {spk}\n{'-' * 40}"
             )

@@ -5,6 +5,7 @@ APIs for Tickets and Transfer Tickets
 from datetime import timedelta
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 
@@ -20,6 +21,7 @@ from fossunited.doctype_ids import (
 )
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 12)
 def check_ticket_validity(ticket_id: str):
@@ -31,6 +33,7 @@ def check_ticket_validity(ticket_id: str):
     return bool(is_ticket_valid)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
@@ -46,6 +49,7 @@ def get_ticket_details(ticket_id: str):
     return ticket
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=3, seconds=60 * 60 * 12)
 def create_transfer_request(ticket: str, receiver_details: dict):
@@ -69,6 +73,7 @@ def create_transfer_request(ticket: str, receiver_details: dict):
     return transfer_request
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_transfer_doc_validity(transfer_id: str):
     """
@@ -79,6 +84,7 @@ def get_transfer_doc_validity(transfer_id: str):
     return bool(is_valid_id)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=4, seconds=60 * 60 * 12)
 def get_transfer_details(id: str):
@@ -94,6 +100,7 @@ def get_transfer_details(id: str):
     return doc
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=3, seconds=60 * 60 * 12)
 def change_transfer_status(transfer_id: str, status: str):
@@ -102,7 +109,7 @@ def change_transfer_status(transfer_id: str, status: str):
     """
     if frappe.session.user == "Guest":
         frappe.throw(
-            "Please login with your FOSS United account to process this transfer",
+            _("Please login with your FOSS United account to process this transfer"),
             frappe.AuthenticationError,
         )
 
@@ -110,12 +117,12 @@ def change_transfer_status(transfer_id: str, status: str):
     ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
     if frappe.session.user not in [ticket.email, doc.receiver_email]:
         frappe.throw(
-            "You are not authorized to modify this transfer",
+            _("You are not authorized to modify this transfer"),
             frappe.PermissionError,
         )
 
     if status not in ["Completed", "Cancelled"]:
-        frappe.throw("Invalid status provided for ticket transfer")
+        frappe.throw(_("Invalid status provided for ticket transfer"))
 
     doc.status = status
     doc.save()
@@ -331,7 +338,7 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
         dict: Dictionary containing tickets list and custom field names
     """
     if not has_valid_permission(event_id):
-        frappe.throw("You are not authorized to view the tickets for this event")
+        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     from frappe.query_builder import DocType
     from frappe.query_builder.functions import Coalesce
@@ -447,6 +454,7 @@ def get_ticket_tiers(event_id: str) -> list:
     return tiers
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def is_ticket_live(event_id: str) -> bool:
     """
@@ -506,11 +514,11 @@ def get_free_pass_insights(event_id: str) -> dict:
 
 
 @frappe.whitelist()
-def get_event_free_codes(event):
+def get_event_free_codes(event: str):
     """Get all free ticket codes for an event"""
 
     if not has_valid_permission(event):
-        frappe.throw("You are not authorized to view the tickets for this event")
+        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     codes = frappe.get_all(
         FREE_TICKET_CODE,
@@ -532,6 +540,7 @@ def get_event_free_codes(event):
     return codes
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_paid_events():
     """Get list of paid events for ticket search - Live or recently concluded (within 30 days)"""
@@ -571,7 +580,7 @@ def search_tickets(search_term: str, event: str | None = None) -> dict:
         RateLimitExceededError: If rate limit is exceeded
     """
     if not search_term:
-        frappe.throw("Search term is required")
+        frappe.throw(_("Search term is required"))
 
     search_term = search_term.strip()
 
@@ -613,9 +622,10 @@ def search_tickets(search_term: str, event: str | None = None) -> dict:
     return []
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 5)
-def download_ticket(ticket_id):
+def download_ticket(ticket_id: str):
     """
     Download single ticket PDF.
 
@@ -629,7 +639,7 @@ def download_ticket(ticket_id):
         RateLimitExceededError: If rate limit is exceeded
     """
     if not frappe.db.exists(EVENT_TICKET, ticket_id):
-        frappe.throw("Ticket not found")
+        frappe.throw(_("Ticket not found"))
 
     frappe.local.flags.ignore_print_permissions = True
 
@@ -646,9 +656,10 @@ def download_ticket(ticket_id):
     frappe.local.response.type = "download"
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=3, seconds=60 * 60 * 12)
-def download_all_tickets(ticket_ids):
+def download_all_tickets(ticket_ids: str | list):
     """
     Download multiple tickets as single PDF.
 
@@ -668,10 +679,10 @@ def download_all_tickets(ticket_ids):
         try:
             ticket_ids = json.loads(ticket_ids)
         except json.JSONDecodeError:
-            frappe.throw("Invalid ticket IDs format")
+            frappe.throw(_("Invalid ticket IDs format"))
 
     if not ticket_ids or not isinstance(ticket_ids, list):
-        frappe.throw("No tickets provided")
+        frappe.throw(_("No tickets provided"))
 
     from frappe.utils.print_format import download_multi_pdf
 

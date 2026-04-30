@@ -1,4 +1,4 @@
-from typing import Literal, Optional
+from typing import Literal
 
 import frappe
 from frappe import _
@@ -42,8 +42,8 @@ def create_email_group(
     type: EMAIL_GROUP_TYPES,
     reference_document: str,
     document_type: str = EVENT,
-    chapter: Optional[str] = None,
-    custom_title: Optional[str] = None,
+    chapter: str | None = None,
+    custom_title: str | None = None,
 ):
     """
     Ensure an email group exists for the given document.
@@ -150,14 +150,14 @@ def remove_from_email_group(email_group: str, email: str):
 def handle_email_group_subscription(
     emails: list[str],
     chapter: str,
-    event: Optional[str] = None,
+    event: str | None = None,
     event_type: str = "Event Participants",
     chapter_type: str = "Chapter Event Participants",
     subscribe_to_chapter: bool = True,
     subscribe_to_event: bool = True,
-    document_type_event: Optional[str] = None,
+    document_type_event: str | None = None,
     document_type_chapter: str = CHAPTER,
-    custom_group_title: Optional[str] = None,
+    custom_group_title: str | None = None,
 ):
     """
     Sync email(s) to event and/or chapter email groups.
@@ -227,9 +227,9 @@ def handle_email_group_subscription(
 @frappe.whitelist()
 def create_newsletter_campaign(
     data: dict,
-    reference_document: str = None,
+    reference_document: str | None = None,
     document_type: str = EVENT,
-    chapter: str = None,
+    chapter: str | None = None,
 ):
     """
     Create a newsletter document linked to the particular event / chapter
@@ -304,7 +304,7 @@ def create_newsletter_campaign(
 
 @frappe.whitelist()
 def get_newsletter_campaigns(
-    reference_document: str = None, document_type: str = EVENT, chapter: str = None
+    reference_document: str | None = None, document_type: str = EVENT, chapter: str | None = None
 ):
     """
     Get all newsletter / email campaigns specific to an event or a chapter
@@ -422,9 +422,9 @@ def get_campaign_detail(id: str) -> dict:
 
 @frappe.whitelist()
 def get_email_groups(
-    reference_document: str = None,
+    reference_document: str | None = None,
     document_type: str = EVENT,
-    chapter: str = None,
+    chapter: str | None = None,
 ) -> list:
     """
     Get email group for a specific event or chapter
@@ -611,6 +611,7 @@ def get_sending_status(campaign_id: str) -> dict:
     return stats
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=2, seconds=60 * 60 * 12)
 def listmonk_subscribe(email: str, name: str = ""):

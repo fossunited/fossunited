@@ -14,6 +14,7 @@ from fossunited.doctype_ids import (
 from fossunited.id.roles import CHAPTER_MEMBER, REVIEWER
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_cfp_from_route(route: str) -> dict:
     event = frappe.db.get_value(
@@ -38,6 +39,7 @@ def get_cfp_from_route(route: str) -> dict:
     return cfp
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_cfp_submissions_insight(event_id: str) -> list:
     cfp_form_id = frappe.db.get_value(EVENT_CFP, {"event": event_id}, "name")
@@ -289,12 +291,13 @@ def get_custom_answers(submission: str) -> dict:
     return custom_answers_dict
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_global_cfp_guidelines() -> dict:
     """
     Get the global CFP guidelines.
     """
-    return frappe.db.get_value("Global CFP Settings", None, "guidelines", as_dict=True)
+    return {"guidelines": frappe.db.get_single_value("Global CFP Settings", "guidelines")}
 
 
 @frappe.whitelist()

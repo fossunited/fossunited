@@ -34,10 +34,10 @@ class FOSSHackathon(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (
             FOSSChapterEventMember,
         )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
             FOSSEventCommunityPartner,
         )
         from fossunited.foss_hackathon.doctype.hackathon_result.hackathon_result import (
@@ -173,14 +173,7 @@ class FOSSHackathon(WebsiteGenerator):
         if self.hackathon_type:
             hackathon_type_text = f"This is a {self.hackathon_type.lower()} hackathon. "
 
-        description = "{hackathon_name} is a hackathon organized by {chapter_name} Community from {start_date} to {end_date}. {type_text}{desc_short}".format(  # noqa: E501
-            hackathon_name=self.hackathon_name,
-            chapter_name=chapter_name,
-            start_date=start_date,
-            end_date=end_date,
-            type_text=hackathon_type_text,
-            desc_short=desc_short,
-        )
+        description = f"{self.hackathon_name} is a hackathon organized by {chapter_name} Community from {start_date} to {end_date}. {hackathon_type_text}{desc_short}"
 
         image = frappe.utils.get_url(self.hackathon_banner)
 

@@ -4,11 +4,11 @@
 frappe.ui.form.on('Razorpay Payment', {
   refresh(frm) {
     if (frm.doc.status === 'Captured') {
-      frm.add_custom_button('Refund', () => {
-        frappe.confirm('Are you sure you want to refund in full?', () => {
+      frm.add_custom_button(__('Refund'), () => {
+        frappe.confirm(__('Are you sure you want to refund in full?'), () => {
           frm.call('refund').then(({ message }) => {
             if (message != 'failed') {
-              frappe.show_alert('Refund Processed')
+              frappe.show_alert(__('Refund Processed'))
               frm.refresh()
             }
           })
@@ -16,9 +16,9 @@ frappe.ui.form.on('Razorpay Payment', {
       })
     }
 
-    const btn = frm.add_custom_button('Sync Status', () => {
+    const btn = frm.add_custom_button(__('Sync Status'), () => {
       frm.call({ method: 'sync_status', btn, doc: frm.doc }).then(() => {
-        frappe.show_alert('Latest status synced')
+        frappe.show_alert(__('Latest status synced'))
         frm.refresh()
       })
     })

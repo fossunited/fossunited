@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT_TICKET, FREE_TICKET_CODE
@@ -29,7 +30,7 @@ class EventFreeTicketApplications(Document):
         if not self.event and self.coupon_id:
             event = frappe.db.get_value(FREE_TICKET_CODE, self.coupon_id, "event")
             if not event:
-                frappe.throw("Selected coupon has no linked event. Please contact organizers")
+                frappe.throw(_("Selected coupon has no linked event. Please contact organizers"))
             self.event = event
 
         self.validate_email_not_used()
@@ -44,7 +45,7 @@ class EventFreeTicketApplications(Document):
             FREE_TICKET_CODE,
             {"name": self.coupon_id, "event": self.event},
         ):
-            frappe.throw("Invalid or Deleted Coupon provided.")
+            frappe.throw(_("Invalid or Deleted Coupon provided."))
 
         coupon_data = frappe.db.get_value(
             FREE_TICKET_CODE,
@@ -54,10 +55,10 @@ class EventFreeTicketApplications(Document):
         )
 
         if not coupon_data:
-            frappe.throw("Coupon not found or inactive.")
+            frappe.throw(_("Coupon not found or inactive."))
 
         if coupon_data.is_used or (coupon_data.used_count >= coupon_data.max_count):
-            frappe.throw("Reached max count of coupon usage.")
+            frappe.throw(_("Reached max count of coupon usage."))
 
         return coupon_data
 
@@ -87,7 +88,7 @@ class EventFreeTicketApplications(Document):
             frappe.throw(f"Error creating free ticket: {e}")
         except Exception as e:
             frappe.log_error(f"Unexpected error creating free ticket: {e}")
-            frappe.throw("An unexpected error occurred while creating your free ticket.")
+            frappe.throw(_("An unexpected error occurred while creating your free ticket."))
 
     def update_coupon_usage(self, coupon_data):
         """Increment coupon usage and mark as used if max reached."""
@@ -106,4 +107,4 @@ class EventFreeTicketApplications(Document):
                 "email": self.email,
             },
         ):
-            frappe.throw("This email already has a ticket for this event!")
+            frappe.throw(_("This email already has a ticket for this event!"))

@@ -7,7 +7,7 @@ from frappe_factory_bot.frappe_factory_bot.base_factory import BaseFactory
 from fossunited.doctype_ids import USER_PROFILE
 
 if TYPE_CHECKING:
-    from frappe.core.doctype.user.user import User  # noqa: F401
+    from frappe.core.doctype.user.user import User
 
 fake = Faker()
 

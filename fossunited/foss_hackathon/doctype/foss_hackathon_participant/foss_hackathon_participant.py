@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.checkins import (
@@ -60,20 +61,20 @@ class FOSSHackathonParticipant(Document):
         )
 
         if not hackathon:
-            frappe.throw("Invalid Hackathon selected")
+            frappe.throw(_("Invalid Hackathon selected"))
 
         today = frappe.utils.now_datetime()
 
         # Registration closed manually
         if not hackathon.is_registration_live:
             frappe.throw(
-                "Registrations have been closed for this hackathon!",
+                _("Registrations have been closed for this hackathon!"),
                 frappe.PermissionError,
             )
 
         if hackathon.end_date and hackathon.end_date < today:
             frappe.throw(
-                "This event has already ended. Registration is no longer allowed.",
+                _("This event has already ended. Registration is no longer allowed."),
                 frappe.PermissionError,
             )
 
@@ -114,7 +115,7 @@ class FOSSHackathonParticipant(Document):
 
     def validate(self):
         if self.wants_to_attend_locally and not self.localhost:
-            frappe.throw("No LocalHost value provided", frappe.ValidationError)
+            frappe.throw(_("No LocalHost value provided"), frappe.ValidationError)
 
     def on_trash(self):
         try:
@@ -152,7 +153,7 @@ class FOSSHackathonParticipant(Document):
 
         # REMOVE from old group
         if old_status:
-            # frappe.throw("for old")
+            # frappe.throw(_("for old"))
             handle_email_group_subscription(
                 emails=[self.email],
                 chapter=event_doc.chapter,
@@ -239,7 +240,7 @@ class FOSSHackathonParticipant(Document):
 
         if (self.localhost == prev_doc.localhost) and self.localhost_request_status == "Rejected":
             frappe.throw(
-                "You have already been rejected from this localhost.",
+                _("You have already been rejected from this localhost."),
                 frappe.PermissionError,
             )
 

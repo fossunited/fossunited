@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.doctype_ids import EVENT, EVENT_TICKET
@@ -23,7 +24,7 @@ class FOSSEventTicketTransfer(Document):
         owner_name: DF.Data | None
         receiver_email: DF.Data
         receiver_name: DF.Data
-        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]  # noqa: F722, F821
+        status: DF.Literal["Pending Approval", "Completed", "Cancelled"]
         ticket: DF.Link
         tshirt_size: DF.Data | None
         wants_tshirt: DF.Check
@@ -47,7 +48,7 @@ class FOSSEventTicketTransfer(Document):
 
     def validate_ticket_exists(self):
         if not frappe.db.exists(EVENT_TICKET, self.ticket):
-            frappe.throw("Ticket not found", frappe.DoesNotExistError)
+            frappe.throw(_("Ticket not found"), frappe.DoesNotExistError)
 
     def validate_status_is_pending(self):
         if self.status != "Pending Approval":
@@ -92,7 +93,7 @@ class FOSSEventTicketTransfer(Document):
         """Prevent transfer of free tier tickets and enforce event status check."""
         tier = frappe.db.get_value(EVENT_TICKET, self.ticket, "tier")
         if "Free Pass" in tier:
-            frappe.throw("Free Tier Tickets cannot be transferred!")
+            frappe.throw(_("Free Tier Tickets cannot be transferred!"))
 
         event_name = frappe.db.get_value(EVENT_TICKET, self.ticket, "event")
         event_status = frappe.db.get_value(EVENT, event_name, "status")

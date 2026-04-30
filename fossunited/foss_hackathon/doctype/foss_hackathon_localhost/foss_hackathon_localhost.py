@@ -23,7 +23,7 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (  # noqa: E501
+        from fossunited.foss_hackathon.doctype.foss_hackathon_localhost_organizer.foss_hackathon_localhost_organizer import (
             FOSSHackathonLocalHostOrganizer,
         )
         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
@@ -168,11 +168,11 @@ class FOSSHackathonLocalHost(WebsiteGenerator):
 
         if start_date.year != end_date.year:
             # Format: 30 Dec 2024 - 2 Jan 2025
-            return f"{start_date.day} {start_date.strftime('%b')} {start_date.year} - {end_date.day} {end_date.strftime('%b')} {end_date.year}"  # noqa: E501
+            return f"{start_date.day} {start_date.strftime('%b')} {start_date.year} - {end_date.day} {end_date.strftime('%b')} {end_date.year}"
 
         if start_date.month != end_date.month:
             # Format: 31 Jan - 2 Feb 2025
-            return f"{start_date.day} {start_date.strftime('%b')} - {end_date.day} {end_date.strftime('%b')} {start_date.year}"  # noqa: E501
+            return f"{start_date.day} {start_date.strftime('%b')} - {end_date.day} {end_date.strftime('%b')} {start_date.year}"
 
         # Format: 2-3 Feb 2025
         return f"{start_date.day} - {end_date.day} {start_date.strftime('%b')} {start_date.year}"

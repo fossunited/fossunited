@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.emailing import handle_email_group_subscription
@@ -28,7 +29,7 @@ class FOSSEventTicket(Document):
         from fossunited.fossunited.doctype.event_check_in.event_check_in import (
             EventCheckIn,
         )
-        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (  # noqa: E501
+        from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
             FOSSTicketCustomField,
         )
 
@@ -106,7 +107,7 @@ class FOSSEventTicket(Document):
 
     def before_insert(self):
         if not self.is_ticket_live():
-            frappe.throw("Ticket sale are closed for this event!", frappe.PermissionError)
+            frappe.throw(_("Ticket sale are closed for this event!"), frappe.PermissionError)
 
     def after_insert(self):
         self.check_max_tickets()
@@ -183,7 +184,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
     event_name = payment_meta_data.get("event")
 
     if not tier_counts:
-        frappe.throw("No ticket tiers selected.", TicketTierMismatchError)
+        frappe.throw(_("No ticket tiers selected."), TicketTierMismatchError)
 
     calculated_amount = 0.0
 
@@ -194,7 +195,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
 
         price, tier_event = frappe.db.get_value("FOSS Ticket Tier", tier_name, ["price", "parent"])
         if tier_event != event_name:
-            frappe.throw("A tier does not belong to this event.", TicketTierMismatchError)
+            frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
 
         tier_details = frappe.get_doc("FOSS Ticket Tier", tier_name)
 
@@ -234,7 +235,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
 
     if abs(calculated_amount - float(doc.amount)) > 1:
         frappe.throw(
-            "Amount mismatch - please refresh and try again.",
+            _("Amount mismatch - please refresh and try again."),
             TicketTierMismatchError,
         )
 

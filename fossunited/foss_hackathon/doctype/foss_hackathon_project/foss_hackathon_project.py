@@ -1,6 +1,7 @@
 # Copyright (c) 2024, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.doctype_ids import (
@@ -23,7 +24,7 @@ class FOSSHackathonProject(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_hackathon.doctype.hackathon_project_issue_pr.hackathon_project_issue_pr import (  # noqa: E501
+        from fossunited.foss_hackathon.doctype.hackathon_project_issue_pr.hackathon_project_issue_pr import (
             HackathonProjectIssuePR,
         )
 
@@ -82,13 +83,13 @@ class FOSSHackathonProject(WebsiteGenerator):
                 },
             )
             if existing:
-                frappe.throw("This team already has a project for this hackathon")
+                frappe.throw(_("This team already has a project for this hackathon"))
 
     def validate_team_belongs_to_hackathon(self):
         """Ensure team belongs to the same hackathon"""
         team_hackathon = frappe.db.get_value(HACKATHON_TEAM, self.team, "hackathon")
         if team_hackathon != self.hackathon:
-            frappe.throw("Team does not belong to this hackathon")
+            frappe.throw(_("Team does not belong to this hackathon"))
 
     def has_permission(self, ptype="read", user=None):
         """Only team members can edit/delete project"""

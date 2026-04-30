@@ -32,7 +32,7 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
         frappe.db.delete(FREE_TICKET_CODE, {"event": self.event.name})
         frappe.delete_doc(EVENT, self.event.name, force=True)
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
-        frappe.db.commit()
+        frappe.db.commit()  # nosemgrep: frappe-manual-commit — tearDown needs commit to flush deletes before next test
 
     def _make_coupon_doc(self, **kwargs):
         data = {

@@ -43,8 +43,8 @@ def execute():
 
         except Exception as e:
             error_count += 1
-            print(f"Error migrating participant {p.name}: {str(e)}")
-            frappe.logger().error(f"Error migrating participant {p.name}: {str(e)}")
+            print(f"Error migrating participant {p.name}: {e!s}")
+            frappe.logger().error(f"Error migrating participant {p.name}: {e!s}")
             continue
 
     # Single commit at the end

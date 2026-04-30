@@ -16,7 +16,7 @@ class GlobalCFPSettings(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.foss_global_cfp_review_member.foss_global_cfp_review_member import (  # noqa: E501
+        from fossunited.fossunited.doctype.foss_global_cfp_review_member.foss_global_cfp_review_member import (
             FOSSGlobalCFPReviewMember,
         )
 

@@ -12,8 +12,8 @@ from fossunited.tests.factories.razorpay_payment_factory import RazorpayPaymentF
 from fossunited.tests.factories.user_factory import UserFactory, get_foss_profile_id
 
 __all__ = [
-    "FOSSChapterFactory",
     "FOSSChapterEventFactory",
+    "FOSSChapterFactory",
     "FOSSEventCFPFactory",
     "FOSSEventCFPSubmissionFactory",
     "FOSSEventRSVPFactory",

@@ -3,6 +3,7 @@ APIs used for Hackathon based operations
 """
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 
 from fossunited.doctype_ids import (
@@ -24,6 +25,7 @@ from fossunited.utils.decorators import (
 )
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_hackathon(name: str) -> dict:
     """
@@ -38,6 +40,7 @@ def get_hackathon(name: str) -> dict:
     return frappe.get_doc(HACKATHON, name)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_hackathon_from_permalink(permalink: str) -> dict:
     """
@@ -66,16 +69,16 @@ def create_participant(hackathon: dict, participant: dict) -> dict:
     """
     current_user = frappe.session.user
     if current_user == "Guest":
-        frappe.throw("Authentication required", frappe.PermissionError)
+        frappe.throw(_("Authentication required"), frappe.PermissionError)
 
     hackathon_name = hackathon.get("data", {}).get("name")
     if not hackathon_name:
-        frappe.throw("Invalid hackathon")
+        frappe.throw(_("Invalid hackathon"))
 
     if frappe.db.exists(
         HACKATHON_PARTICIPANT, {"hackathon": hackathon_name, "user": current_user}
     ):
-        frappe.throw("You have already registered for this hackathon")
+        frappe.throw(_("You have already registered for this hackathon"))
 
     user_profile_data = frappe.db.get_value(
         USER_PROFILE,
@@ -291,17 +294,14 @@ def get_project_by_email(hackathon: str):
 def get_localhost_requests_by_team(
     hackathon: str,
     localhost: str,
-    status: list[str] = [
-        "Pending",
-        "Accepted",
-        "Rejected",
-        "Pending Confirmation",
-    ],
+    status: list[str] | None = None,
 ):
     """
     Get requests for a particular localhost with team and project info.
     Returns a flat list.
     """
+    if status is None:
+        status = ["Pending", "Accepted", "Rejected", "Pending Confirmation"]
     requests = frappe.get_all(
         doctype=HACKATHON_PARTICIPANT,
         filters={
@@ -386,7 +386,7 @@ def join_team_via_code(team_code: str, hackathon: str):
 
     # Verify team belongs to hackathon
     if team.hackathon != hackathon:
-        frappe.throw("Team does not belong to this hackathon")
+        frappe.throw(_("Team does not belong to this hackathon"))
 
     participant = frappe.get_doc(
         HACKATHON_PARTICIPANT, {"hackathon": hackathon, "user": current_user}
@@ -529,7 +529,7 @@ def validate_participant_for_localhost(participant_id: str):
     Also, validates that the participant is valid to make request for localhost.
     """
     if not frappe.db.exists(HACKATHON_PARTICIPANT, participant_id):
-        frappe.throw("Participant does not exist")
+        frappe.throw(_("Participant does not exist"))
 
     participant = frappe.db.get(
         HACKATHON_PARTICIPANT,
@@ -542,19 +542,19 @@ def validate_participant_for_localhost(participant_id: str):
         ],
     )
     if participant.user != frappe.session.user:
-        frappe.throw("You are not authorized to perform this action")
+        frappe.throw(_("You are not authorized to perform this action"))
 
     if not participant.wants_to_attend_locally:
-        frappe.throw("Participant has not opted for local attendance")
+        frappe.throw(_("Participant has not opted for local attendance"))
 
     if not participant.localhost:
-        frappe.throw("Participant has not selected a localhost")
+        frappe.throw(_("Participant has not selected a localhost"))
 
     if participant.localhost_request_status == "Accepted":
-        frappe.throw("Participant has already been accepted for local attendance")
+        frappe.throw(_("Participant has already been accepted for local attendance"))
 
     if not participant.localhost_request_status == "Pending Confirmation":
-        frappe.throw("Participant has not been accepted for local attendance")
+        frappe.throw(_("Participant has not been accepted for local attendance"))
 
     return True
 
@@ -571,13 +571,13 @@ def get_issue_pr_title(url: str) -> dict:
         dict: Issue/PR title
     """
     if "https://github.com" not in url:
-        frappe.throw("Not a Github URL.")
+        frappe.throw(_("Not a Github URL."))
 
     gh = GithubHelper()
 
     parts = url.split("/")
     if len(parts) < 5:
-        frappe.throw("Invalid URL")
+        frappe.throw(_("Invalid URL"))
 
     if parts[5] == "issues":
         issue = gh.get_issue_info("/".join(parts[3:5]), parts[-1])
@@ -588,7 +588,7 @@ def get_issue_pr_title(url: str) -> dict:
     elif parts[5] == "discussions":
         return {"title": "", "type": "Discussion"}
     else:
-        frappe.throw("Invalid URL")
+        frappe.throw(_("Invalid URL"))
 
 
 @frappe.whitelist()

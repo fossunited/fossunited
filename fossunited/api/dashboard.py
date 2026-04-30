@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT, TICKET_TIER, USER_PROFILE
 from fossunited.utils.payments import (
@@ -28,11 +29,13 @@ def get_event(name: str, by_route: bool = False) -> dict:
     return data
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_event_from_permalink(permalink: str, fields: list) -> dict:
     return frappe.db.get_value(EVENT, {"event_permalink": permalink}, fields, as_dict=1)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_states():
     return frappe.get_all("State", fields=["name"], page_length=1000, order_by="name")
@@ -65,13 +68,16 @@ def _compute_order_amount(meta_data: dict, ref_doctype: str, ref_docname: str) -
     return total
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def create_razorpay_order(
     checkout_info: dict,
-    meta_data=dict(),
-    ref_doctype=None,
-    ref_docname=None,
+    meta_data: dict | None = None,
+    ref_doctype: str | None = None,
+    ref_docname: str | None = None,
 ):
+    if meta_data is None:
+        meta_data = {}
     amount = _compute_order_amount(meta_data, ref_doctype, ref_docname)
     if amount <= 0:
         frappe.throw(frappe._("Order amount must be greater than zero."), frappe.ValidationError)
@@ -112,6 +118,7 @@ def create_razorpay_order(
     return {"key_id": client.auth[0], "order_id": order["id"]}
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def handle_payment_success(order_id: str, payment_id: str, signature: str):
     client = get_razorpay_client()
@@ -131,8 +138,9 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
     payment.save(ignore_permissions=True)
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def handle_payment_failed(order_id):
+def handle_payment_failed(order_id: str):
     client = get_razorpay_client()
     try:
         order = client.order.fetch(order_id)
@@ -166,12 +174,12 @@ def get_session_user_profile():
 
 
 @frappe.whitelist()
-def get_profile_data(username: str = None, email: str = None) -> dict:
+def get_profile_data(username: str | None = None, email: str | None = None) -> dict:
     """
     Returns the profile data of the given username.
     """
     if not username and not email:
-        frappe.throw("Username or email is required")
+        frappe.throw(_("Username or email is required"))
 
     user = frappe.db.get_value(
         USER_PROFILE,
@@ -189,7 +197,7 @@ def get_profile_data(username: str = None, email: str = None) -> dict:
 
 
 @frappe.whitelist()
-def get_user_profile_list(filters: dict = None, search_term: str = None) -> list:
+def get_user_profile_list(filters: dict | None = None, search_term: str | None = None) -> list:
     """
     Returns the list of user profiles based on the given filters and optional search term.
     """

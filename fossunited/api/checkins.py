@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.utils import getdate, now_datetime, today
 
 from fossunited.api.tickets import has_valid_permission
@@ -6,7 +7,7 @@ from fossunited.doctype_ids import EVENT_TICKET
 
 
 @frappe.whitelist()
-def get_attendee_with_checkin_data(event_id: str, filters: dict = {}) -> dict:
+def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -> dict:
     """
     Get the attendees of the event with their checkin details
 
@@ -18,7 +19,9 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict = {}) -> dict:
         dict: The attendees of the event with their checkin details
     """
     if not has_valid_permission(event_id):
-        frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+        frappe.throw(
+            _("You do not have permission to access this resource"), frappe.PermissionError
+        )
 
     _filters = {"event": event_id}
     # Map the items in filters to be like "key": ["like", value]
@@ -76,7 +79,9 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
         assign_tshirt (bool): Whether to assign a T-shirt to the attendee
     """
     if not has_valid_permission(event_id):
-        frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+        frappe.throw(
+            _("You do not have permission to access this resource"), frappe.PermissionError
+        )
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
 
@@ -89,7 +94,7 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
             ticket.save(ignore_permissions=True)
             return  # Success, exit early
         else:
-            frappe.throw("Attendee is already checked in", frappe.ValidationError)
+            frappe.throw(_("Attendee is already checked in"), frappe.ValidationError)
 
     # Perform full check-in
     ticket.append("check_ins", {"check_in_time": frappe.utils.now()})
@@ -135,7 +140,9 @@ def undo_attendee_checkin(event_id: str, attendee: dict):
         user (str): The user who is undoing the check-in
     """
     if not has_valid_permission(event_id):
-        frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+        frappe.throw(
+            _("You do not have permission to access this resource"), frappe.PermissionError
+        )
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.check_ins.pop()
@@ -153,7 +160,9 @@ def assign_tshirt(event_id: str, attendee: dict):
         user (str): The user who is assigning the Tshirt
     """
     if not has_valid_permission(event_id):
-        frappe.throw("You do not have permission to access this resource", frappe.PermissionError)
+        frappe.throw(
+            _("You do not have permission to access this resource"), frappe.PermissionError
+        )
 
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.tshirt_delivered = True
@@ -173,7 +182,7 @@ def has_checked_in_today(doc):
 def add_checkin(doc):
     """Add a check-in to document"""
     if has_checked_in_today(doc):
-        frappe.throw("Already checked in today")
+        frappe.throw(_("Already checked in today"))
     doc.append("check_ins", {"check_in_time": now_datetime()})
     doc.save()
 
@@ -186,4 +195,4 @@ def remove_today_checkin(doc):
             doc.remove(check_in)
             doc.save()
             return True
-    frappe.throw("No check-in found for today")
+    frappe.throw(_("No check-in found for today"))

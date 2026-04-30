@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, nowdate
 
@@ -81,7 +82,7 @@ class FOSSEventRSVPSubmission(Document):
 
     def validate_linked_rsvp_exists(self):
         if not frappe.db.exists(EVENT_RSVP, self.linked_rsvp):
-            frappe.throw("Invalid RSVP", frappe.DoesNotExistError)
+            frappe.throw(_("Invalid RSVP"), frappe.DoesNotExistError)
 
     def deny_if_duplicate(self):
         already_rsvp = frappe.db.exists(
@@ -90,7 +91,7 @@ class FOSSEventRSVPSubmission(Document):
         )
 
         if already_rsvp:
-            frappe.throw("You've Already RSVP'd for this event!")
+            frappe.throw(_("You've Already RSVP'd for this event!"))
 
     def validate_rsvp_is_published(self):
         is_system_user = frappe.get_roles(frappe.session.user).count("System Manager")
@@ -103,7 +104,7 @@ class FOSSEventRSVPSubmission(Document):
 
         rsvp_published = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "is_published")
         if not rsvp_published:
-            frappe.throw("RSVP is not published")
+            frappe.throw(_("RSVP is not published"))
 
     def close_rsvp_on_max_count(self):
         max_count = self.get_max_count()
@@ -157,7 +158,7 @@ class FOSSEventRSVPSubmission(Document):
         )
 
         if requires_host_approval and self.status == "Accepted":
-            frappe.throw("Invalid action. Status cannot be `Accepted`.", frappe.PermissionError)
+            frappe.throw(_("Invalid action. Status cannot be `Accepted`."), frappe.PermissionError)
 
         # If the RSVP requires host approval, set the status to Pending
         if requires_host_approval:
@@ -193,7 +194,7 @@ class FOSSEventRSVPSubmission(Document):
             EVENT, self.event, ["event_start_date", "event_end_date"]
         )
         if not self.can_check_in(event_start, event_end):
-            frappe.throw("Check-in is only available during the event dates")
+            frappe.throw(_("Check-in is only available during the event dates"))
 
         return add_checkin(self)
 
@@ -214,20 +215,20 @@ class FOSSEventRSVPSubmission(Document):
 
 
 @frappe.whitelist()
-def self_check_in(submission_name):
+def self_check_in(submission_name: str):
     """API endpoint for self check-in"""
     if not frappe.session.user or frappe.session.user == "Guest":
-        frappe.throw("Not permitted", frappe.PermissionError)
+        frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
     return doc.add_check_in()
 
 
 @frappe.whitelist()
-def remove_checkin_for_today(submission_name):
+def remove_checkin_for_today(submission_name: str):
     """API endpoint to remove today's check-in"""
     if not frappe.session.user or frappe.session.user == "Guest":
-        frappe.throw("Not permitted", frappe.PermissionError)
+        frappe.throw(_("Not permitted"), frappe.PermissionError)
 
     doc = frappe.get_doc(RSVP_RESPONSE, submission_name)
     return doc.remove_today_check_in()

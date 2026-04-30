@@ -3,10 +3,10 @@
 
 import json
 import re
-from typing import Dict, List, Tuple
 
 import frappe
 import requests
+from frappe import _
 from frappe.utils import add_days, get_datetime, now_datetime
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -47,7 +47,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
     def fetch_and_validate_json(self):
         """Fetch and validate funding JSON from URL."""
         if not self.funding_json:
-            frappe.throw("Please enter a Funding JSON Link before saving.")
+            frappe.throw(_("Please enter a Funding JSON Link before saving."))
 
         try:
             # Fetch JSON content
@@ -62,18 +62,18 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
         except requests.exceptions.RequestException as e:
             frappe.log_error(
-                f"Error fetching funding JSON for {self.name or 'new'}: {str(e)}",
+                f"Error fetching funding JSON for {self.name or 'new'}: {e!s}",
                 "Grants Funding Directory Error",
             )
-            frappe.throw(f"Failed to fetch JSON from URL: {str(e)}")
+            frappe.throw(f"Failed to fetch JSON from URL: {e!s}")
         except json.JSONDecodeError as e:
-            frappe.throw(f"Invalid JSON format: {str(e)}")
+            frappe.throw(f"Invalid JSON format: {e!s}")
         except Exception as e:
             frappe.log_error(
-                f"Unexpected error processing funding JSON: {str(e)}",
+                f"Unexpected error processing funding JSON: {e!s}",
                 "Grants Funding Directory Error",
             )
-            frappe.throw(f"Error processing JSON: {str(e)}")
+            frappe.throw(f"Error processing JSON: {e!s}")
 
     def _fetch_json_from_url(self, url: str) -> str:
         """Fetch JSON content from URL."""
@@ -104,13 +104,13 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
             # Must contain validated data
             if "data" not in result:
-                frappe.throw("Validation failed: API returned no data")
+                frappe.throw(_("Validation failed: API returned no data"))
 
             return result["data"]
 
         except Exception as e:
             frappe.throw(
-                f"Validation error. Please verify with https://dir.floss.fund/validate: {str(e)}"
+                f"Validation error. Please verify with https://dir.floss.fund/validate: {e!s}"
             )
 
     def set_route(self):
@@ -132,7 +132,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
         try:
             data = json.loads(self.json_data or "{}")
         except json.JSONDecodeError:
-            frappe.throw("Invalid JSON data stored in document")
+            frappe.throw(_("Invalid JSON data stored in document"))
 
         # extract top-level parts
         context.entity = data.get("entity", {})
@@ -146,14 +146,14 @@ class GrantsFundingDirectory(WebsiteGenerator):
 
         # page metadata
         entity_name = context.entity.get("name") or self.name
-        context.page_title = f"{entity_name} – Funding Profile"
+        context.page_title = f"{entity_name} - Funding Profile"
         context.doctype_name = self.doctype
         context.doc_name = self.name
         context.no_cache = 1
 
         return context
 
-    def _normalize_channels(self, channels: List[dict]) -> Tuple[List[dict], Dict[str, dict]]:
+    def _normalize_channels(self, channels: list[dict]) -> tuple[list[dict], dict[str, dict]]:
         """Normalize funding channel addresses."""
         site_url = frappe.utils.get_url()
         normalized_channels = []
@@ -224,7 +224,7 @@ class GrantsFundingDirectory(WebsiteGenerator):
         except Exception as e:
             frappe.log_error(
                 title=f"Manifest refresh failed for {self.name}",
-                message=f"Doc: {self.name}\nURL: {self.funding_json}\n{str(e)}",
+                message=f"Doc: {self.name}\nURL: {self.funding_json}\n{e!s}",
             )
 
 
@@ -237,5 +237,5 @@ def refresh_funding_data(docname: str) -> dict:
         doc.save()
         return {"success": True, "message": "Funding data refreshed successfully"}
     except Exception as e:
-        frappe.log_error(f"Error refreshing funding data: {str(e)}")
+        frappe.log_error(f"Error refreshing funding data: {e!s}")
         return {"success": False, "message": str(e)}

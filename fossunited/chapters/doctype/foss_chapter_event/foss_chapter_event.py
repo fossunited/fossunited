@@ -6,6 +6,7 @@ import textwrap
 from datetime import datetime, timedelta
 
 import frappe
+from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.chapter import check_if_chapter_or_event_core_member
@@ -35,10 +36,10 @@ class FOSSChapterEvent(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_chapter_event_member.foss_chapter_event_member import (
             FOSSChapterEventMember,
         )
-        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (  # noqa: E501
+        from fossunited.chapters.doctype.foss_event_community_partner.foss_event_community_partner import (
             FOSSEventCommunityPartner,
         )
         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
@@ -232,7 +233,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             )
 
         if " " in self.event_permalink:
-            frappe.throw("Event Permalink cannot have spaces!", frappe.ValidationError)
+            frappe.throw(_("Event Permalink cannot have spaces!"), frappe.ValidationError)
 
     def update_published_status(self):
         if self.status == "Draft" or self.status == "Cancelled":
@@ -254,7 +255,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.event_description), width=150)
 
-        description = "{self.event_name} is being organized on {start_date} by {self.chapter_name} Community. {desc_short}".format(  # noqa: E501
+        description = "{self.event_name} is being organized on {start_date} by {self.chapter_name} Community. {desc_short}".format(
             self=self,
             desc_short=desc_short,
             start_date=self.event_start_date.strftime("%A, %-d %B %Y"),
@@ -262,7 +263,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
         og_url = frappe.db.get_single_value("Ograph Settings", "ograph_url")
 
-        og_image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(  # noqa: E501
+        og_image = "{og_url}/gen/events?event_name={self.event_name}&event_date={start_date}&event_type={self.event_type}&event_chapter={self.chapter_name}&event_location={self.event_location}".format(
             self=self,
             og_url=og_url,
             start_date=self.event_start_date.strftime("%-d %B %Y"),
@@ -495,7 +496,7 @@ class FOSSChapterEvent(WebsiteGenerator):
 
 
 @frappe.whitelist()
-def get_event_connection_counts(events):
+def get_event_connection_counts(events: str | list):
     import json
 
     if isinstance(events, str):
@@ -635,7 +636,9 @@ def extract_map_coordinates(map_url):
                 if nodes_list:
                     # Remove duplicate nodes (closing polygons)
                     unique_nodes = list(dict.fromkeys(nodes_list))
-                    node_ids = ",".join(map(str, unique_nodes))
+                    node_ids = ",".join(
+                        map(str, unique_nodes)  # nosemgrep: frappe-no-functional-code
+                    )
 
                     nodes_response = requests.get(
                         f"https://www.openstreetmap.org/api/0.6/nodes.json?nodes={node_ids}",

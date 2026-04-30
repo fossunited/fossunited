@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -57,7 +58,7 @@ def get_events_by_open_cfp() -> list:
         list: List of events with open CFP
     """
     if not has_reviewer_role():
-        frappe.throw("Unauthorized Access", frappe.PermissionError)
+        frappe.throw(_("Unauthorized Access"), frappe.PermissionError)
 
     events = frappe.get_all(
         EVENT,

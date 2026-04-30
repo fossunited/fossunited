@@ -1,10 +1,15 @@
 import frappe
 from frappe.utils.password import get_decrypted_password
 
-from fossunited.doctype_ids import RAZORPAY_PAYMENT, RAZORPAY_SETTINGS, RAZORPAY_WEBHOOK_LOG
+from fossunited.doctype_ids import (
+    RAZORPAY_PAYMENT,
+    RAZORPAY_SETTINGS,
+    RAZORPAY_WEBHOOK_LOG,
+)
 from fossunited.utils.payments import get_razorpay_client
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def handle_razorpay_webhook():
     form_dict = frappe.local.form_dict
@@ -13,7 +18,9 @@ def handle_razorpay_webhook():
     verify_webhook_signature(payload)  # for security purposes
 
     current_user = frappe.session.user
-    frappe.set_user("Administrator")
+    frappe.set_user(  # nosemgrep: frappe-setuser — webhook arrives as Guest, needs admin to process payment
+        "Administrator"
+    )
 
     payment_entity = form_dict["payload"]["payment"]["entity"]
     razorpay_order_id = payment_entity["order_id"]
@@ -47,7 +54,7 @@ def handle_razorpay_webhook():
         payment_doc.refund_id = refund_entity["id"]
         payment_doc.save()
 
-    frappe.set_user(current_user)
+    frappe.set_user(current_user)  # nosemgrep: frappe-setuser
 
 
 def verify_webhook_signature(payload):

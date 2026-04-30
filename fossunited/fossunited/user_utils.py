@@ -1,6 +1,7 @@
 import re
 
 import frappe
+from frappe import _
 
 from fossunited.doctype_ids import USER_PROFILE
 
@@ -37,7 +38,7 @@ def create_profile_on_user_create(doc, method):
             "User", profile.user, "username", profile.username, update_modified=False
         )
     except Exception as e:
-        frappe.throw("Error updating username. Error: " + str(e))
+        frappe.throw(_(f"Error updating username. Error: {e}"))
 
 
 def generate_username(username, count=1):

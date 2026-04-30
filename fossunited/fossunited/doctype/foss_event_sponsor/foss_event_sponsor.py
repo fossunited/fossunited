@@ -21,7 +21,7 @@ class FOSSEventSponsor(Document):
         parentfield: DF.Data
         parenttype: DF.Data
         sponsor_name: DF.Data
-        tier: DF.Literal["Platinum", "Gold", "Silver", "Bronze", "Venue Partner", "Custom"]  # noqa: F722, F821
+        tier: DF.Literal["Platinum", "Gold", "Silver", "Bronze", "Venue Partner", "Custom"]
     # end: auto-generated types
 
     pass

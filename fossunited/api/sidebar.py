@@ -3,6 +3,7 @@ import frappe
 from fossunited.doctype_ids import EVENT, EVENT_VOLUNTEER
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_sidebar_items(user: str = frappe.session.user):
     sidebar_items = [

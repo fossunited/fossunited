@@ -14,7 +14,7 @@ class FOSSEventField(Document):
         from frappe.types import DF
 
         field_name: DF.Data
-        field_type: DF.Literal["Data", "Select", "Int"]  # noqa: F821
+        field_type: DF.Literal["Data", "Select", "Int"]
         label: DF.Data
         mandatory: DF.Check
         options: DF.SmallText | None

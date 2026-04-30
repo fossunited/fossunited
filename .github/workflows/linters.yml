@@ -29,15 +29,12 @@ jobs:
         uses: pre-commit/action@v3.0.1
 
       - name: Install Semgrep
-        if: github.event_name == 'pull_request'
         run: pip install semgrep
 
       - name: Download Frappe Semgrep rules
-        if: github.event_name == 'pull_request'
         run: git clone --depth 1 https://github.com/frappe/semgrep-rules.git frappe-semgrep-rules
 
       - name: Run Semgrep
-        if: github.event_name == 'pull_request'
         run: semgrep ci --config ./frappe-semgrep-rules/rules
 
 

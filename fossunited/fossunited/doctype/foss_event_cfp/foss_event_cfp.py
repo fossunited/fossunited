@@ -35,7 +35,7 @@ class FOSSEventCFP(Document):
         has_public_custom_responses: DF.Check
         only_talk_proposals: DF.Check
         only_workshops: DF.Check
-        status: DF.Literal["Closed", "Live"]  # noqa: F821
+        status: DF.Literal["Closed", "Live"]
     # end: auto-generated types
 
     def before_insert(self):

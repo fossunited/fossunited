@@ -26,16 +26,14 @@ def upload_json(file_path):
         with open(file_path, "rb") as f:
             r = requests.post("https://0x0.st", files={"file": f}, headers=headers, timeout=20)
         if r.status_code == 200 and r.text.startswith("https://0x0.st"):
-            print(r.text)
             return r.text.strip()
     except requests.exceptions.RequestException as e:
-        frappe.log_error(f"0x0.st upload failed: {str(e)}")
+        frappe.log_error(f"0x0.st upload failed: {e!s}")
 
     # Fallback: paste.rs
     with open(file_path, "rb") as f:
         r = requests.post("https://paste.rs", data=f, headers=headers, timeout=20)
         if r.status_code in (200, 201) and r.text.startswith("http"):
-            print(r.text)
             return r.text.strip()
 
     raise RuntimeError("Upload failed on both 0x0.st and paste.rs")

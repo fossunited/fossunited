@@ -19,7 +19,7 @@ class FOSSChapterLeadTeamMember(Document):
         parentfield: DF.Data
         parenttype: DF.Data
         role: DF.Literal[
-            "Core Team Member", "Volunteer", "Graphic Designer", "Content Writer", "Marketing"  # noqa: F722, F821
+            "Core Team Member", "Volunteer", "Graphic Designer", "Content Writer", "Marketing"
         ]
     # end: auto-generated types
     pass

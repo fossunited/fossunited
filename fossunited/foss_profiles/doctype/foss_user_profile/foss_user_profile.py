@@ -5,6 +5,7 @@ import re
 import textwrap
 
 import frappe
+from frappe import _
 from frappe.exceptions import PermissionError
 from frappe.query_builder import DocType
 from frappe.website.website_generator import WebsiteGenerator
@@ -41,22 +42,22 @@ class FOSSUserProfile(WebsiteGenerator):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_profile_education.foss_user_profile_education import (
             FOSSUserProfileEducation,
         )
-        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_profile_work_experience.foss_user_profile_work_experience import (
             FOSSUserProfileWorkExperience,
         )
         from fossunited.foss_profiles.doctype.foss_user_projects.foss_user_projects import (
             FOSSUserProjects,
         )
-        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (  # noqa: E501
+        from fossunited.foss_profiles.doctype.foss_user_skill_multiselect.foss_user_skill_multiselect import (
             FOSSUserSkillMultiselect,
         )
 
         about: DF.TextEditor | None
         bio: DF.SmallText | None
-        cfp_visibility: DF.Literal["Everyone", "Chapter Volunteers", "Only Me"]  # noqa: F722, F821
+        cfp_visibility: DF.Literal["Everyone", "Chapter Volunteers", "Only Me"]
         cover_image: DF.AttachImage | None
         current_city: DF.Link | None
         devto: DF.Data | None
@@ -115,16 +116,16 @@ class FOSSUserProfile(WebsiteGenerator):
                     self.username,
                 )
         except Exception as e:
-            frappe.log_error(f"Error updating user details: {str(e)}")
-            frappe.throw("Error updating user details")
+            frappe.log_error(f"Error updating user details: {e!s}")
+            frappe.throw(_("Error updating user details"))
 
     def validate_username(self):
         if not (3 <= len(self.username) <= 30):
-            frappe.throw("Username must be between 3 and 30 characters")
+            frappe.throw(_("Username must be between 3 and 30 characters"))
 
         if not re.match(r"^[a-z0-9_\.]+$", self.username):
             frappe.throw(
-                "Username can only contain lowercase letters, numbers, underscores and dots."
+                _("Username can only contain lowercase letters, numbers, underscores and dots.")
             )
 
         if re.search(
@@ -132,10 +133,10 @@ class FOSSUserProfile(WebsiteGenerator):
             self.username,
             re.IGNORECASE,
         ):
-            frappe.throw("Username cannot end with extensions like .txt, .html, etc.")
+            frappe.throw(_("Username cannot end with extensions like .txt, .html, etc."))
 
         if not is_valid_username(self.username, self.name):
-            frappe.throw("Username is already taken or restricted.")
+            frappe.throw(_("Username is already taken or restricted."))
 
     def set_route(self):
         self.route = f"u/{self.username}"
@@ -358,7 +359,7 @@ class FOSSUserProfile(WebsiteGenerator):
             "Administrator",
             self.user,
         ):
-            frappe.throw("Profile is Private", PrivateProfileError)
+            frappe.throw(_("Profile is Private"), PrivateProfileError)
 
         experiences_dict = {}
         for experience in self.experience:
@@ -391,10 +392,7 @@ class FOSSUserProfile(WebsiteGenerator):
         if self.about:
             desc_short = textwrap.shorten(re.sub(r"<.*?>", "", self.about), width=150)
 
-        description = "{self.full_name} is a Community Member. {desc_short}".format(  # noqa: E501
-            self=self,
-            desc_short=desc_short,
-        )
+        description = f"{self.full_name} is a Community Member. {desc_short}"
 
         og_url = None
         if frappe.db.exists("DocType", "Ograph Settings"):

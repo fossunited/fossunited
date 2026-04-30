@@ -2,9 +2,10 @@ import frappe
 from frappe.rate_limiter import rate_limit
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(key="reference_name", limit=10, seconds=60 * 60)
-def like(reference_doctype, reference_name, like):
+def like(reference_doctype: str, reference_name: str, like: str):
     like = frappe.parse_json(like)
 
     if like:

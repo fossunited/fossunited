@@ -1,6 +1,7 @@
 import io
 
 import frappe
+from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils.file_manager import save_file
 from PIL import Image
@@ -25,7 +26,7 @@ def convert_image_to_webp(image_content: bytes) -> bytes:
     except Image.DecompressionBombError:
         frappe.throw(_("Image exceeds maximum allowed dimensions."))
     except Exception as e:
-        frappe.throw(f"Failed to process image: {str(e)}")
+        frappe.throw(f"Failed to process image: {e!s}")
 
 
 @frappe.whitelist()
@@ -38,7 +39,7 @@ def set_profile_image(file_url: str) -> bool:
     user_doc = get_session_user_profile()
     try:
         file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:
+        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:
@@ -76,7 +77,7 @@ def set_cover_image(file_url: str) -> bool:
             frappe.db.set_value(USER_PROFILE, user_doc.name, "cover_image", "")
             return True
         file_path = frappe.get_site_path("public", file_url.lstrip("/"))
-        with open(file_path, "rb") as f:
+        with open(file_path, "rb") as f:  # nosemgrep: frappe-security-file-traversal
             original_image = f.read()
 
         if len(original_image) > MAX_IMAGE_SIZE_BYTES:

@@ -19,15 +19,15 @@ class FOSSUnitedTeam(Document):
         headshot: DF.AttachImage | None
         is_active: DF.Check
         org_role: DF.Literal[
-            "",  # noqa: F722, F821
-            "Founder",  # noqa: F821
-            "Board",  # noqa: F821
-            "Governing Board",  # noqa: F722
-            "Full-Time",  # noqa: F821
-            "Part-Time",  # noqa: F821
-            "Intern",  # noqa: F821
-            "Fellow",  # noqa: F821
-            "Volunteer",  # noqa: F821
+            "",
+            "Founder",
+            "Board",
+            "Governing Board",
+            "Full-Time",
+            "Part-Time",
+            "Intern",
+            "Fellow",
+            "Volunteer",
         ]
         portfolio_url: DF.Data | None
         user_bio: DF.SmallText | None

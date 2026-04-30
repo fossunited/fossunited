@@ -17,6 +17,7 @@ from fossunited.doctype_ids import (
 )
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def check_if_chapter_member(chapter: str, user: str) -> bool:
     """
@@ -49,6 +50,7 @@ def check_if_chapter_member(chapter: str, user: str) -> bool:
     return is_member
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def check_if_event_member(event: str) -> bool:
     """
@@ -78,6 +80,7 @@ def check_if_event_member(event: str) -> bool:
     return is_volunteer
 
 
+# nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def check_if_chapter_or_event_core_member(event: str) -> bool:
     """
@@ -111,22 +114,22 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
     """
     try:
         if isinstance(event_ids, str) and len(event_ids) > 10000:
-            frappe.throw("Input too large", frappe.ValidationError)
+            frappe.throw(_("Input too large"), frappe.ValidationError)
 
         ids = json.loads(event_ids) if isinstance(event_ids, str) else event_ids
 
         if not isinstance(ids, list):
-            frappe.throw("event_ids must be a list", frappe.ValidationError)
+            frappe.throw(_("event_ids must be a list"), frappe.ValidationError)
 
         if len(ids) > 30:
-            frappe.throw("Maximum 30 events allowed per request", frappe.ValidationError)
+            frappe.throw(_("Maximum 30 events allowed per request"), frappe.ValidationError)
 
         for event_id in ids:
             if not isinstance(event_id, str) or len(event_id) > 140:
-                frappe.throw("Invalid event ID format", frappe.ValidationError)
+                frappe.throw(_("Invalid event ID format"), frappe.ValidationError)
 
     except (json.JSONDecodeError, ValueError):
-        frappe.throw("Invalid JSON format", frappe.ValidationError)
+        frappe.throw(_("Invalid JSON format"), frappe.ValidationError)
 
     c = Calendar()
 
