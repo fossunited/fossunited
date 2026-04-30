@@ -163,12 +163,26 @@ def get_cfp_submissions(event: str) -> list:
     for s in speakers_raw:
         speakers_by_submission[s["parent"]].append(s)
 
+    # Fetch assignment status in bulk
+    assigned_todos = frappe.db.get_all(
+        "ToDo",
+        {
+            "reference_type": PROPOSAL,
+            "reference_name": ("in", submission_names),
+            "allocated_to": frappe.session.user,
+            "status": "Open",
+        },
+        pluck="reference_name",
+    )
+    assigned_submissions = set(assigned_todos)
+
     for submission in submissions:
         is_reviewed = submission.name in reviewed_submissions
         submission.update(
             {
                 "_is_reviewed": "Yes" if is_reviewed else "No",
                 "_is_seen": is_reviewed,
+                "_is_assigned": "Yes" if submission.name in assigned_submissions else "No",
             }
         )
         submission["_likes_count"] = like_counts.get(submission.name, 0)

@@ -29,6 +29,7 @@
       <div class="flex items-center gap-4">
         <Filter v-model="filters" :docfields="docfields.data" />
         <Switch v-if="reviewerMode" v-model="showNotReviewed" label="Hide reviewed (By Me)" />
+        <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
       </div>
       <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
@@ -83,6 +84,7 @@ const storageKey = props.reviewerMode
 const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
+const showAssignedOnly = ref(false)
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
@@ -144,6 +146,7 @@ function applyFilters() {
     ...(props.reviewerMode && showNotReviewed.value && !filters.value?._is_reviewed
       ? { _is_reviewed: ['=', 'No'] }
       : {}),
+    ...(props.reviewerMode && showAssignedOnly.value ? { _is_assigned: ['=', 'Yes'] } : {}),
   }
 
   if (Object.keys(fieldFilters).length > 0) {
@@ -154,7 +157,7 @@ function applyFilters() {
 }
 
 watch([filters, searchQuery, selectedStatus], applyFilters, { deep: true })
-watch(showNotReviewed, applyFilters)
+watch([showNotReviewed, showAssignedOnly], applyFilters)
 
 function handleOpenSubmission(submission) {
   submission._is_seen = true
