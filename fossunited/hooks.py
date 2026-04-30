@@ -124,6 +124,11 @@ after_install = "fossunited.install.after_install"
 # ----------------
 before_uninstall = "fossunited.uninstall.before_uninstall"
 
+permission_query_conditions = {
+    "FOSS Event CFP Submission": "fossunited.fossunited.permissions.cfp_submission_query",
+    "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
+}
+
 override_doctype_class = {
     "Newsletter": "fossunited.overrides.newsletter_extend.NewsletterExtend",
 }

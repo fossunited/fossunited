@@ -88,12 +88,24 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     # end: auto-generated types
 
     def has_permission(self, permtype="read", user=None):
-        """Allow speakers listed on the proposal to write/submit/cancel."""
-        if permtype in ("write", "submit", "cancel"):
-            _user = user or frappe.session.user
-            speaker_emails = [s.email for s in self.speakers if s.email]
-            if _user and _user != "Guest" and _user in speaker_emails:
-                return True
+        """Grant access to the submitter and all speakers on the proposal."""
+        _user = user or frappe.session.user
+        if _user == "Guest":
+            return super().has_permission(permtype)
+
+        speaker_emails = [s.email for s in self.speakers if s.email]
+        if _user == self.submitted_by or _user in speaker_emails:
+            return True
+
+        roles = set(frappe.get_roles(_user))
+        if "System Manager" in roles or "CFP Reviewer" in roles:
+            return super().has_permission(permtype)
+
+        if "Chapter Team Member" in roles:
+            from fossunited.fossunited.permissions import _ctm_chapters
+
+            return bool(self.chapter and self.chapter in _ctm_chapters(_user))
+
         return super().has_permission(permtype)
 
     def validate(self):
@@ -439,14 +451,20 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             else:
                 old = old_reviews[review.name]
                 if old.email != user:
-                    # Revert ALL fields of others' rows so stale desk dirty state
-                    # from a prior failed save doesn't block subsequent valid saves.
-                    review.reviewer = old.reviewer
-                    review.email = old.email
-                    review.reviewer_profile = old.reviewer_profile
-                    review.to_approve = old.to_approve
-                    review.remarks = old.remarks
-                    reverted = True
+                    dirty = (
+                        review.reviewer != old.reviewer
+                        or review.email != old.email
+                        or review.reviewer_profile != old.reviewer_profile
+                        or review.to_approve != old.to_approve
+                        or review.remarks != old.remarks
+                    )
+                    if dirty:
+                        review.reviewer = old.reviewer
+                        review.email = old.email
+                        review.reviewer_profile = old.reviewer_profile
+                        review.to_approve = old.to_approve
+                        review.remarks = old.remarks
+                        reverted = True
                 else:
                     own_rows += 1
 
