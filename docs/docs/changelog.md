@@ -17,9 +17,6 @@ Please find the TLDR reports for each blog in blog posts and forum thread:
 
 Big month - schedule page got a full redesign just in time for ChennaiFOSS 2026, code of conduct enforcement added across all registration flows, CFP reviewer workflow improved, and clubs got holistic documentation.
 
-<details>
-<summary>PR Highlights</summary>
-
 ### PR Highlights
 
 #### Schedule Page Redesign
@@ -62,11 +59,17 @@ Things are now strict, contact Siddharth upon this.
 - Common `ProposalListItem` component extracted - reused across proposals list and review page.
 - CFP submission detail page now shows the speaker's submitted profile card with a direct link to their public profile.
 - b751b084d: Show Submitted by FOSS User Profile (respecting their `cfp_visibility`) and link speaker email to profile if exists.
+- Improved Accessibility (a11y) for whole proposal submitting form.
 
 #### DocShare for Events
 
 - [#1552](https://github.com/fossunited/fossunited/pull/1552) **DocShare Event to Event Volunteers**
   Events are now shared via Frappe's DocShare to all users in the event's `event_members` table (Volunteers). Only gives read access, purpose is for them to help in Ticket checkin for that event, thus access to dashboard page to read.
+
+#### FOSS Hack 2026
+
+- Added FOSS Hack 2026 Judges to fosshack page.
+- Visit: https://fossunited.org/fosshack/2026
 
 #### Clubs
 
@@ -144,8 +147,6 @@ Also provides Action buttons (Accept, reject and checkin)
 - Poruri Sai Rahul: heyguys.cc clubs best practice ([#1561](https://github.com/fossunited/fossunited/pull/1561))
 - [@nimiverma](https://github.com/nimiverma): skip to main content a11y link ([#1495](https://github.com/fossunited/fossunited/pull/1495))
 
-</details>
-
 ---
 
 ## March 2026
@@ -156,10 +157,6 @@ Also provides Action buttons (Accept, reject and checkin)
 | PRs merged    | 50    |
 
 March was the month for **FOSS Hack 2026**, previous FOSS Hack results page is live, there were stream of contributions from the hackathon participants for the platform. We rolled out three new RSS feeds, redesigned the ticket purchase page as a step-progress wizard, launched the partner projects page, and delivered a dedicated accessibility pass. The dashboard sidebar also got a long-overdue refactor using frappe-ui's SideBar.
-
-
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -346,7 +343,6 @@ Returning contributors this month:
 - [@ni5arga](https://github.com/ni5arga) (Nisarga Adhikary) — security, performance, RSS feeds, and profile features
 - [@anshi321](https://github.com/anshi321) (Anshika Yadav) — event UX, security sanitization, CFP improvements, dashboard sidebar refactor, and documentation
 
-</details>
 
 ---
 
@@ -363,8 +359,6 @@ Hello,
 February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon page, added dark mode support to the dashboard, implemented crucial security fixes, and polished the RSVP experience.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -554,7 +548,6 @@ February was all about **FOSS Hack 2026**! We shipped the redesigned hackathon p
   - [#1401](https://github.com/fossunited/fossunited/pull/1401): Team member validation in project creation
   Credits also to [@kewonit](https://github.com/kewonit) (Kartik Kulloli) for security research
 
-</details>
 
 ---
 
@@ -571,8 +564,6 @@ Hey everyone,
 January kicked off with significant improvements focused on **FOSS Hack 2026** preparation, **Events Timeline redesign** (much needed), and **Grants page overhaul**. We've also enhanced the dashboard with better **localhost management**.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -726,7 +717,6 @@ January kicked off with significant improvements focused on **FOSS Hack 2026** p
 - [@Pranav1921](https://github.com/Pranav1921) made their first contribution:
   - [#1342](https://github.com/fossunited/fossunited/pull/1342): Added edit event button for concluded events with proper permission checks
 
-</details>
 
 ---
 
@@ -743,8 +733,6 @@ Hi everyone,
 December was a quieter but productive month as we wrapped up the year amidst holidays and year-end slowdowns. This month focus has been early groundwork for upcoming **FOSS Hack 2026**, ensuring the platform enters the New Year in a more stable and maintainable state.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -879,7 +867,6 @@ December was a quieter but productive month as we wrapped up the year amidst hol
 - [@ig-imanish](https://github.com/ig-imanish) made their first contribution:
   - [#1306](https://github.com/fossunited/fossunited/pull/1306): Improve accessibility: Add missing alt text to all images across dashboard and main site
 
-</details>
 
 
 ## November 2025
@@ -894,8 +881,6 @@ Hi everyone,
 November brought some major additions to the platform! We've introduced a **Grants Funding Directory** inspired by floss.fund, implemented **RSVP Check-ins** for better event management, and launched **Host Approval workflow** for RSVPs. The new **Events Page redesign** with v3.0 design is now live, alongside the [**First Commit**](https://fossunited.org/first-commit) initiative page. We've also added comprehensive **Free Ticket management** for organisers.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -1023,7 +1008,6 @@ Credits: [@jeswinjosu](https://github.com/jeswinjosu)
 
 - [#1278](https://github.com/fossunited/fossunited/issues/1278) Temporarily hid the **Projects**, **Education**, and **Resume** tabs on user profiles until we redesigned profile page. For now, only the **About** and **Activity** sections will be shown.
 
-</details>
 
 ---
 
@@ -1041,8 +1025,6 @@ It was Hack-tober month!
 We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with initiation of **Dark Theme** support was introduced to it, alongside several UI refinements and [documentation](https://docs.fossunited.org) upgrades. Moving on next month, we will be focusing more on IndiaFOSS related issues and hey if you did not know there are many important (Big) events lined up like MangaloreFOSS, MumbaiFOSS, ChennaiFOSS and [more](https://fossunited.org/events/timeline).
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -1121,7 +1103,6 @@ We've a new [**Volunteers Page**](https://fossunited.org/volunteers) and with in
 
 - [@dependabot[bot]](https://github.com/dependabot) Yea, for Automation of package updates!
 
-</details>
 
 ---
 
@@ -1137,8 +1118,6 @@ Hi again,
 We had Successfully Concluded our 5th Edition of IndiaFOSS (2025) on 20-21 Sept. This month had most focus on Schedule page.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -1186,7 +1165,6 @@ Could not complete the Schedule re-design, so added some features to enhance UX.
 
 <br>
 
-</details>
 
 
 ## August 2025
@@ -1202,8 +1180,6 @@ I'm **Dilip G** (also known as *Zororg* on Telegram, or with username `@idlip`),
 This is my first monthly tech report as part of the FOSS United team. I'd love your feedback on the format, content, or anything you'd like to see added in future changelogs. You can share your suggestions via GitHub Issues or drop me an email; whichever works best for you.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -1267,7 +1243,6 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 
 <br>
 
-</details>
 
 
 ## July 2025
@@ -1275,8 +1250,6 @@ This is my first monthly tech report as part of the FOSS United team. I'd love y
 The FOSS United platform was mostly under maintenance mode during this period. This was mostly my scrutiny period with some given tasks for two weeks.
 
 
-<details>
-<summary>Detailed Updates</summary>
 
 ### PR Highlights
 
@@ -1285,5 +1258,3 @@ The FOSS United platform was mostly under maintenance mode during this period. T
 
 #### Job Management
 - [#1077](https://github.com/fossunited/fossunited/pull/1077) Added date of posting for each job card and closing for expired ones
-
-</details>

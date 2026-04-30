@@ -19,18 +19,17 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = [
-  "pre-commit==4.2.0",
-  "frappe-bench>=5.25.9",
-  "ruff==0.12.5",
-  "black==26.3.1",
-  "basedpyright>=1.31.0",
-  "python-lsp-server>=1.13.0",
-  "djlint>=1.36.4",
-  "ty>=0.0.1a25",
-  "semgrep>=1.121.0",
-]
-docs = [
-    "zensical>=0.0.23",
+  "pre-commit",
+  "frappe-bench",
+  "ruff",
+  "basedpyright",
+  "python-lsp-server",
+  "djlint",
+  "ty",
+  "semgrep",
+  "zensical",
+  "cssutils",
+  "tinycss2",
 ]
 
 [build-system]
@@ -87,8 +86,4 @@ members = [
 fossunited = { workspace = true }
 
 [dependency-groups]
-dev = [
-    "cssutils>=2.11.1",
-    "fossunited[dev,docs]",
-    "tinycss2>=1.5.1",
-]
+dev = ["fossunited[dev]",]
