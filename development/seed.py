@@ -53,7 +53,6 @@ from fossunited.doctype_ids import (
     CFP_REVIEW_PHASE,
     CFP_SCORE_CATEGORY,
     CFP_REVIEW_TEMPLATE,
-    CFP_REVIEWER_ASSIGNMENT,
 )
 from fossunited.id.roles import CHAPTER_MEMBER as CHAPTER_TEAM_MEMBER_ROLE, REVIEWER as REVIEWER_ROLE
 from fossunited.tests.utils import (
@@ -1608,11 +1607,22 @@ def teardown_all():
         summary[HACKATHON_TEAM] = _delete_many(HACKATHON_TEAM, hackathon_team_names)
         summary[HACKATHON] = _delete_many(HACKATHON, list(mock_hackathon_names))
 
-        # Cleanup Reviewer Workflow V2
-        _delete_many(CFP_SCORE_CATEGORY, frappe.get_all(CFP_SCORE_CATEGORY, pluck="name"))
-        _delete_many(CFP_REVIEW_PHASE, frappe.get_all(CFP_REVIEW_PHASE, pluck="name"))
-        _delete_many(CFP_REVIEW_TEMPLATE, frappe.get_all(CFP_REVIEW_TEMPLATE, pluck="name"))
-        _delete_many(CFP_REVIEWER_ASSIGNMENT, frappe.get_all(CFP_REVIEWER_ASSIGNMENT, pluck="name"))
+        # Cleanup Reviewer Workflow V2 — only delete records linked to mock CFPs
+        if cfp_names:
+            mock_score_cat_names = frappe.get_all(
+                CFP_SCORE_CATEGORY,
+                filters={"event_cfp": ["in", cfp_names]},
+                pluck="name",
+                page_length=100000,
+            )
+            _delete_many(CFP_SCORE_CATEGORY, mock_score_cat_names)
+            mock_review_template_names = frappe.get_all(
+                CFP_REVIEW_TEMPLATE,
+                filters={"event_cfp": ["in", cfp_names]},
+                pluck="name",
+                page_length=100000,
+            )
+            _delete_many(CFP_REVIEW_TEMPLATE, mock_review_template_names)
 
         summary[EVENT] = _delete_many(EVENT, list(mock_event_names))
 

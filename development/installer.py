@@ -113,6 +113,11 @@ def get_args_parser():
         help="Database type to use (e.g., mariadb or postgres)",
         default="mariadb",  # Set your default database type here
     )
+    parser.add_argument(
+        "--force-site",
+        action="store_true",
+        help="Pass --force to bench new-site, dropping any existing site (dev use only)",
+    )
     return parser
 
 
@@ -207,7 +212,7 @@ def create_site_in_bench(args):
         new_site_cmd = [
             "bench",
             "new-site",
-            "--force",
+            *( ["--force"] if args.force_site else []),
             "--db-root-username=root",
             "--db-host=mariadb",  # Should match the compose service name
             f"--db-type={args.db_type}",  # Add the selected database type
@@ -224,7 +229,7 @@ def create_site_in_bench(args):
         new_site_cmd = [
             "bench",
             "new-site",
-            "--force",
+            *( ["--force"] if args.force_site else []),
             "--db-root-username=root",
             "--db-host=postgresql",  # Should match the compose service name
             f"--db-type={args.db_type}",  # Add the selected database type

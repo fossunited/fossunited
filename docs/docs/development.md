@@ -219,8 +219,8 @@ This script will:
 
 **Access Details:**
 - **URL:** [http://fossunited.localhost:8000](http://fossunited.localhost:8000)
-- **Demo Reviewer:** `mock-reviewer@example.com`
-- **Password:** `admin` (default for all seeded users)
+- **Demo Reviewer:** `reviewer@example.com`
+- **Password:** `password` (default for all seeded users)
 
 The demo uses your local repository changes, allowing for rapid iteration and testing of the new reviewer experience.
 
@@ -255,6 +255,7 @@ All seed users share the same password.
 | Chapter Lead (Mumbai) | mumbai-lead@example.com | `password` |
 | Chapter Lead (Kochi) | kochi-lead@example.com | `password` |
 | Chapter Lead (Campus) | campus-lead@example.com | `password` |
+| Reviewer | reviewer@example.com | `password` |
 
 ---
 

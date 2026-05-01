@@ -1,25 +1,25 @@
 #!/bin/bash
 
-cd /home/frappe
+cd /home/frappe || exit 1
 
 # Check for existence of the FOSS United Bench, if not create one
 if [ -d "fossu-bench/Procfile" ]; then
-    cd fossu-bench
+    cd fossu-bench || exit 1
     bench start
     exit 0
 else
     echo "FOSS United Bench not found, creating a new one..."
     /workspace/development/installer.py --site-name fossunited.localhost \
-    --apps-json /workspace/development/${APPS_JSON:-apps.json} \
+    --apps-json "/workspace/development/${APPS_JSON:-apps.json}" \
     --bench-name fossu-bench \
     --admin-password admin
     
-    cd fossu-bench
+    cd fossu-bench || exit 1
     
     # Build Dashboard if in demo mode
     if [ "$DEMO_MODE" = "1" ]; then
         echo "Building Dashboard..."
-        cd apps/fossunited/dashboard
+        cd apps/fossunited/dashboard || exit 1
         yarn install
         yarn build
         cd ../../../
