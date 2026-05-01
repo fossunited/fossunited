@@ -22,7 +22,6 @@ declare module 'vue' {
     ChapterHeader: typeof import('./src/components/ChapterHeader.vue')['default']
     CheckinConfirmationDialog: typeof import('./src/components/event/CheckinConfirmationDialog.vue')['default']
     CheckinManageDialog: typeof import('./src/components/event/CheckinManageDialog.vue')['default']
-    CheckInsButton: typeof import('./src/components/ui/CheckInsButton.vue')['default']
     CheckInsTable: typeof import('./src/components/ui/CheckInsTable.vue')['default']
     ChevronDown: typeof import('./src/components/icons/ChevronDown.vue')['default']
     CityBadge: typeof import('./src/components/CityBadge.vue')['default']

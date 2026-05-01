@@ -50,10 +50,6 @@ from fossunited.doctype_ids import (
     TICKET_TRANSFER,
     USER_PROFILE,
     GLOBAL_CFP_SETTINGS,
-    CFP_REVIEW_PHASE,
-    CFP_SCORE_CATEGORY,
-    CFP_REVIEW_TEMPLATE,
-    CFP_REVIEWER_ASSIGNMENT,
 )
 from fossunited.id.roles import CHAPTER_MEMBER as CHAPTER_TEAM_MEMBER_ROLE, REVIEWER as REVIEWER_ROLE
 from fossunited.tests.utils import (
@@ -393,7 +389,6 @@ def seed():
         _create_rsvps(events["live"], users)
         _create_cfps(events["live"])
         _create_hackathon(chapters)
-        _setup_reviewer_workflow(users)
 
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:
@@ -446,47 +441,6 @@ def _create_users():
 
     logger.info("Ensured %d users from SEED_USERS", len(SEED_USERS))
     return result
-
-
-def _setup_reviewer_workflow(users):
-    """Set up the Pretalx-inspired reviewer workflow data."""
-    logger.info("Setting up Reviewer Workflow V2")
-
-    # Get all live CFPs
-    live_cfps = frappe.get_all(EVENT_CFP, filters={"status": "Live"}, pluck="name")
-
-    # 1. Create Review Score Categories for each live CFP
-    score_categories = ["Content", "Relevance", "Speaker Experience"]
-    for cfp_name in live_cfps:
-        for cat in score_categories:
-            ensure_record(
-                CFP_SCORE_CATEGORY,
-                {"category_name": cat, "event_cfp": cfp_name},
-                frappe.get_doc(
-                    {
-                        "doctype": CFP_SCORE_CATEGORY,
-                        "category_name": cat,
-                        "weight": 1.0,
-                        "event_cfp": cfp_name,
-                    }
-                ).insert,
-                ignore_permissions=True,
-            )
-
-    # 2. Setup Global CFP Settings for Reviewers
-    global_settings = frappe.get_single(GLOBAL_CFP_SETTINGS)
-    
-    for reviewer_email in users["reviewer"]:
-        reviewer_profile = frappe.db.get_value(USER_PROFILE, {"user": reviewer_email}, "name")
-        if reviewer_profile and not any(m.profile == reviewer_profile for m in global_settings.members):
-            global_settings.append("members", {
-                "profile": reviewer_profile,
-                "full_name": "Demo Reviewer",
-                "email": reviewer_email
-            })
-    
-    global_settings.save(ignore_permissions=True)
-    logger.info("Added reviewers to Global CFP Settings")
 
 
 def _create_chapters():
@@ -1607,12 +1561,6 @@ def teardown_all():
         summary[HACKATHON_LOCALHOST] = _delete_many(HACKATHON_LOCALHOST, hackathon_localhost_names)
         summary[HACKATHON_TEAM] = _delete_many(HACKATHON_TEAM, hackathon_team_names)
         summary[HACKATHON] = _delete_many(HACKATHON, list(mock_hackathon_names))
-
-        # Cleanup Reviewer Workflow V2
-        _delete_many(CFP_SCORE_CATEGORY, frappe.get_all(CFP_SCORE_CATEGORY, pluck="name"))
-        _delete_many(CFP_REVIEW_PHASE, frappe.get_all(CFP_REVIEW_PHASE, pluck="name"))
-        _delete_many(CFP_REVIEW_TEMPLATE, frappe.get_all(CFP_REVIEW_TEMPLATE, pluck="name"))
-        _delete_many(CFP_REVIEWER_ASSIGNMENT, frappe.get_all(CFP_REVIEWER_ASSIGNMENT, pluck="name"))
 
         summary[EVENT] = _delete_many(EVENT, list(mock_event_names))
 
