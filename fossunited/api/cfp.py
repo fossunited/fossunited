@@ -384,3 +384,24 @@ def get_proposal_filter_fields(event_id: str) -> list:
         ]
 
     return filtered_fields
+
+
+@frappe.whitelist()
+def get_score_categories_for_cfp(cfp: str) -> list:
+    """Return active score categories for a CFP, for reviewer score bootstrapping.
+
+    Args:
+        cfp: FOSS Event CFP document name
+
+    Returns:
+        list of dicts with name, category_name, weight
+    """
+    frappe.only_for(["CFP Reviewer", "System Manager", "Chapter Team Member"])
+    if not frappe.db.exists(EVENT_CFP, cfp):
+        frappe.throw(frappe._("CFP not found"), frappe.DoesNotExistError)
+    return frappe.get_all(
+        "CFP Score Category",
+        filters={"event_cfp": cfp, "active": 1},
+        fields=["name", "category_name", "weight"],
+        order_by="creation",
+    )

@@ -88,7 +88,69 @@ function apply_role_restrictions(frm) {
   grid.refresh()
 }
 
+// --- Phase banner ---
+
+function render_phase_banner(frm) {
+  const phase = frm.doc.__onload && frm.doc.__onload.active_phase
+  if (!phase) {
+    frm.set_intro('')
+    return
+  }
+
+  const parts = [`<b>Review Phase:</b> ${frappe.utils.escape_html(phase.phase_name)}`]
+
+  if (!phase.can_review) {
+    parts.push('⚠️ Reviews are not accepted in this phase.')
+  }
+  if (phase.proposal_visibility === 'Only Assigned') {
+    parts.push('You can only see proposals assigned to you.')
+  }
+  if (phase.can_see_other_reviews === 'Never') {
+    parts.push("Other reviewers' remarks are hidden.")
+  } else if (phase.can_see_other_reviews === 'After Review') {
+    parts.push("Other reviews are visible after you submit yours.")
+  }
+
+  frm.set_intro(parts.join(' &nbsp;·&nbsp; '), 'blue')
+}
+
+// --- Review visibility filtering ---
+
+function apply_review_visibility(frm) {
+  const filtered = frm.doc.__onload && frm.doc.__onload.filtered_reviews
+  if (filtered === null || filtered === undefined) return
+
+  // Keep new unsaved rows (reviewer just added them) + the server-filtered rows.
+  const new_rows = (frm.doc.reviews || []).filter((r) => r.__islocal)
+  frm.doc.reviews = [...filtered, ...new_rows]
+  frm.refresh_field('reviews')
+}
+
+// --- Score category bootstrapping ---
+
+function bootstrap_score_rows(frm, cdt, cdn) {
+  if (!frm.doc.linked_cfp) return
+  frappe.call({
+    method: 'fossunited.api.cfp.get_score_categories_for_cfp',
+    args: { cfp: frm.doc.linked_cfp },
+    callback(r) {
+      if (!r.message || !r.message.length) return
+      const review_row = frappe.get_doc(cdt, cdn)
+      if (!review_row) return
+      // Dedup: only bootstrap if scores are still empty
+      if (review_row.scores && review_row.scores.length > 0) return
+      r.message.forEach((cat) => {
+        const score_row = frappe.model.add_child(review_row, 'scores')
+        frappe.model.set_value(score_row.doctype, score_row.name, 'category', cat.name)
+      })
+      frm.refresh_field('reviews')
+    },
+  })
+}
+
 // Within a review row dialog: lock fields belonging to a different reviewer.
+// form_render fires when the row dialog opens (frm = parent form).
+// refresh fires for inline edits (frm.doc = the review row).
 frappe.ui.form.on('FOSS Event CFP Review', {
   refresh(frm) {
     if (is_system_manager()) return
@@ -97,11 +159,28 @@ frappe.ui.form.on('FOSS Event CFP Review', {
       frm.refresh_fields()
     }
   },
+  form_render(frm, cdt, cdn) {
+    const review_row = frappe.get_doc(cdt, cdn)
+    if (!review_row) return
+    // Only bootstrap for the current reviewer's own row
+    if (review_row.email && review_row.email !== frappe.session.user) return
+    // Only bootstrap if no scores yet (existing row without scores, pre-feature)
+    if (review_row.scores && review_row.scores.length > 0) return
+    bootstrap_score_rows(frm, cdt, cdn)
+  },
 })
 
 frappe.ui.form.on('FOSS Event CFP Submission', {
   refresh(frm) {
     render_talk_categories(frm)
     apply_role_restrictions(frm)
+    render_phase_banner(frm)
+    apply_review_visibility(frm)
+  },
+  reviews_add(frm, cdt, cdn) {
+    // Auto-fill reviewer identity (server will enforce on save too)
+    frappe.model.set_value(cdt, cdn, 'email', frappe.session.user)
+    frappe.model.set_value(cdt, cdn, 'reviewer', frappe.session.user)
+    bootstrap_score_rows(frm, cdt, cdn)
   },
 })

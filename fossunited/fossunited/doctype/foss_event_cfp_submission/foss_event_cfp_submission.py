@@ -109,7 +109,46 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         return super().has_permission(permtype)
 
-    def validate(self):
+    def onload(self):
+        """Populate __onload metadata for JS: active phase info and visibility-filtered reviews."""
+        cfp_doc = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
+        active_phase = next(
+            (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
+        )
+
+        phase_info = None
+        if active_phase:
+            phase_info = {
+                "phase_name": active_phase.phase_name,
+                "proposal_visibility": active_phase.proposal_visibility,
+                "can_see_other_reviews": active_phase.can_see_other_reviews,
+                "can_see_speaker_names": active_phase.can_see_speaker_names,
+                "can_review": active_phase.can_review,
+            }
+
+        self.set_onload("active_phase", phase_info)
+        self.set_onload("filtered_reviews", self._get_visible_reviews_for_user(active_phase))
+
+    def _get_visible_reviews_for_user(self, active_phase):
+        """Return a filtered review list for the current user based on phase settings.
+
+        Returns None if no filtering is needed (show all), or a list of allowed review dicts.
+        System Managers and Chapter Team Members always see all reviews.
+        """
+        user = frappe.session.user
+        roles = set(frappe.get_roles(user))
+        if "System Manager" in roles or "Chapter Team Member" in roles:
+            return None
+
+        if not active_phase or active_phase.can_see_other_reviews == "Always":
+            return None
+
+        has_reviewed = any(r.email == user for r in self.reviews)
+        if active_phase.can_see_other_reviews == "After Review" and has_reviewed:
+            return None  # reviewer has submitted; can now see all
+
+        return [r.as_dict() for r in self.reviews if r.email == user]
+
         self.bio = sanitize_text_content(self.bio)
         self.talk_description = sanitize_text_content(self.talk_description)
         self.key_takeaways = sanitize_text_content(self.key_takeaways)
@@ -140,9 +179,44 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.set_route()
         self.handle_status_change()
         self.validate_session_type_permissions()
+        self._restore_hidden_reviews()
         self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
+
+    def _restore_hidden_reviews(self):
+        """Merge back review rows hidden from this user's view due to phase visibility.
+
+        When a reviewer sees a filtered subset of reviews (via __onload.filtered_reviews)
+        and saves the form, hidden rows must be restored so they are not deleted from the DB.
+        Only runs for non-admin, non-CTM users where phase filtering may apply.
+        """
+        if self.is_new():
+            return
+
+        user = frappe.session.user
+        roles = set(frappe.get_roles(user))
+        if "System Manager" in roles or "Chapter Team Member" in roles:
+            return
+
+        cfp_doc = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
+        active_phase = next(
+            (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
+        )
+        if not active_phase or active_phase.can_see_other_reviews == "Always":
+            return
+
+        old_doc = self.get_doc_before_save()
+        if not old_doc:
+            return
+
+        current_review_names = {r.name for r in self.reviews if r.name}
+        for old_review in old_doc.reviews:
+            if old_review.email == user:
+                continue  # user's own row is already included in self.reviews
+            if old_review.name and old_review.name not in current_review_names:
+                self.append("reviews", old_review.as_dict())
+
 
     def after_insert(self):
         # Always handle initial subscription on insert
@@ -481,6 +555,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         old_doc = self.get_doc_before_save()
         old_reviews = {r.name: r for r in old_doc.reviews if r.name} if old_doc else {}
 
+        reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": user}, "name")
+
         own_rows = 0
         reverted = False
         for review in self.reviews:
@@ -491,6 +567,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                         _("You can only add reviews under your own account."),
                         frappe.PermissionError,
                     )
+                # Auto-fill reviewer identity on new rows
+                review.email = user
+                if not review.reviewer:
+                    review.reviewer = user
+                if not review.reviewer_profile and reviewer_profile:
+                    review.reviewer_profile = reviewer_profile
                 own_rows += 1
             else:
                 old = old_reviews[review.name]
@@ -508,6 +590,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                         review.reviewer_profile = old.reviewer_profile
                         review.to_approve = old.to_approve
                         review.remarks = old.remarks
+                        review.scores = old.scores  # restore scores from old state
                         reverted = True
                 else:
                     own_rows += 1
