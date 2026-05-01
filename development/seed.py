@@ -5,7 +5,8 @@ can explore the application immediately after install.
 
 Usage::
 
-    bench --site foss.localhost execute fossunited.dev.seed.seed
+    podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+        ../env/bin/python /workspace/development/run_seed.py
 
 Default credentials
 -------------------
@@ -1593,4 +1594,3 @@ def teardown_all():
 
 if __name__ == "__main__":
     seed()
-

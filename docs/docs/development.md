@@ -149,7 +149,8 @@ RSVPs, CFPs, and a hackathon — without having to create records manually.
 ### Running the Script
 
 ```sh
-bench --site <your-site> execute development.seed.seed
+podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+    ../env/bin/python /workspace/development/run_seed.py
 ```
 
 The script is **idempotent** — running it multiple times on the same database
@@ -220,7 +221,7 @@ This script will:
 **Access Details:**
 - **URL:** [http://fossunited.localhost:8000](http://fossunited.localhost:8000)
 - **Demo Reviewer:** `mock-reviewer@example.com`
-- **Password:** `admin` (default for all seeded users)
+- **Password:** `password` (default for all seeded users)
 
 The demo uses your local repository changes, allowing for rapid iteration and testing of the new reviewer experience.
 

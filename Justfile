@@ -1,5 +1,9 @@
 # Justfile for FOSS United CFP Review Workflow
 
+# docker-compose binary — override with COMPOSE_BIN env var if needed
+COMPOSE_BIN := env_var_or_default("COMPOSE_BIN", "docker-compose")
+COMPOSE_CMD := COMPOSE_BIN + " -f .devcontainer/docker-compose.yml"
+
 # Default recipe: list all available recipes
 default:
     @just --list
@@ -10,11 +14,11 @@ default:
 up:
     #!/usr/bin/env bash
     set -euo pipefail
-    COMPOSE="/home/linuxbrew/.linuxbrew/bin/docker-compose -f .devcontainer/docker-compose.yml"
+    COMPOSE="{{COMPOSE_CMD}}"
     if ! $COMPOSE up -d 2>&1; then
         echo "⚠️  compose up failed — cleaning up stale containers and network, then retrying..."
         # Force-remove any containers that failed to clean their network namespace
-        podman ps -a --format '{{{{.Names}}' \
+        podman ps -a --format '{{{{.Names}}}}' \
             | grep '^devcontainer-' \
             | xargs -r podman rm -f 2>/dev/null || true
         # Remove the stale bridge network
@@ -25,7 +29,7 @@ up:
 
 # Stop the podman compose services
 down:
-    /home/linuxbrew/.linuxbrew/bin/docker-compose -f .devcontainer/docker-compose.yml down
+    {{COMPOSE_CMD}} down
 
 # Initialize the Frappe site: fix permissions, reinstall DB, register & install the fossunited app.
 # Also installs setuptools<80 to restore pkg_resources on Python 3.14.
@@ -42,10 +46,10 @@ setup:
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 bench --site fossunited.localhost reinstall --mariadb-root-password 123 --admin-password admin --yes
     # Ensure fossunited is in the bench app registry (bench reinstall wipes sites/apps.txt)
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 \
-        bash -c "grep -qx fossunited sites/apps.txt 2>/dev/null || printf 'frappe\nfossunited\n' > sites/apps.txt"
+        bash -c "touch sites/apps.txt && grep -qx fossunited sites/apps.txt || echo fossunited >> sites/apps.txt"
     # Python 3.14 dropped pkg_resources from setuptools 80+; pin to a version that still has it
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 \
-        bash -c "env/bin/pip install 'setuptools<80' --quiet 2>/dev/null || true"
+        bash -c "env/bin/pip install 'setuptools<80' --quiet"
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 bench --site fossunited.localhost install-app fossunited
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 bench --site fossunited.localhost migrate
     # Patch: migrate doesn't add parent/parentfield/parenttype to FOSS Event CFP Review
@@ -101,9 +105,14 @@ launch: dev
 shell:
     podman exec -it devcontainer-frappe-1 bash
 
+# Install the git pre-commit hook and run all checks against every file
+lint:
+    pre-commit install
+    pre-commit run --all-files
+
 # View container logs
 logs:
-    /home/linuxbrew/.linuxbrew/bin/docker-compose -f .devcontainer/docker-compose.yml logs -f
+    {{COMPOSE_CMD}} logs -f
 
 # Complete demo setup: up → setup → seed → build-dashboard → ready to start
 # This is the one-click local demo deploy. Run 'just start' (or 'just launch') afterwards.

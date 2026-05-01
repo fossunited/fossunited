@@ -26,8 +26,8 @@ FIXES = [
 
 for table, column, defn in FIXES:
     existing = frappe.db.sql(
-        f"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "  # noqa: S608
-        f"WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s AND COLUMN_NAME = %s",
+        "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS "  # noqa: S608
+        "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = %s AND COLUMN_NAME = %s",
         (table, column),
     )
     if not existing:
