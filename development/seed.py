@@ -431,10 +431,16 @@ def _create_users():
                 user_doc.save()
             result["chapter"].append(user_cfg)
         elif user_cfg["kind"] == "reviewer":
-            user_roles = frappe.get_roles(email)
-            if REVIEWER_ROLE not in user_roles:
-                user_doc = frappe.get_doc("User", email)
+            user_doc = frappe.get_doc("User", email)
+            changed = False
+            if REVIEWER_ROLE not in frappe.get_roles(email):
                 user_doc.append("roles", {"role": REVIEWER_ROLE})
+                changed = True
+            # Desk access (/app) requires System User type
+            if user_doc.user_type != "System User":
+                user_doc.user_type = "System User"
+                changed = True
+            if changed:
                 user_doc.save()
             result["reviewer"].append(email)
         else:
