@@ -30,6 +30,14 @@ down:
 # Initialize the Frappe site: fix permissions, reinstall DB, register & install the fossunited app.
 # Also installs setuptools<80 to restore pkg_resources on Python 3.14.
 setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "⏳ Waiting for MariaDB to be ready..."
+    until podman exec devcontainer-mariadb-1 \
+            mariadb -u root -p123 -e "SELECT 1" &>/dev/null; do
+        sleep 2
+    done
+    echo "✅ MariaDB is ready."
     podman exec -u root devcontainer-frappe-1 chown -R frappe:frappe /workspace/development/fossu-bench
     podman exec -w /workspace/development/fossu-bench devcontainer-frappe-1 bench --site fossunited.localhost reinstall --mariadb-root-password 123 --admin-password admin --yes
     # Ensure fossunited is in the bench app registry (bench reinstall wipes sites/apps.txt)
