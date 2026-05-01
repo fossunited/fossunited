@@ -79,11 +79,6 @@ const routes = [
     ],
   },
   {
-    path: '/review/:id',
-    name: 'ReviewPage',
-    component: () => import('@/pages/reviewers/ReviewPage.vue'),
-  },
-  {
     name: 'Event Dashboard',
     path: '/event/:id',
     redirect: { name: 'EventDetails' },

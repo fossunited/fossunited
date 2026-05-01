@@ -97,23 +97,23 @@ def get_cfp_submissions(event: str) -> list:
     cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event})
     cfp = cfp_doc.name
     
-    active_phase = None
-    for phase in cfp_doc.get("cfp_review_phases", []):
-        if phase.is_active:
-            active_phase = phase
-            break
-            
-    reviewer_profile = frappe.db.get_value(
-        USER_PROFILE, {"email": frappe.session.user}, "name"
+    active_phase = next(
+        (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
     )
 
     filters = {"linked_cfp": cfp}
-    
+
     if active_phase and active_phase.proposal_visibility == "Only Assigned":
+        all_cfp_proposals = frappe.db.get_list(PROPOSAL, {"linked_cfp": cfp}, pluck="name")
         assigned_proposals = frappe.db.get_all(
-            "CFP Reviewer Assignment", 
-            filters={"reviewer": reviewer_profile},
-            pluck="proposal"
+            "ToDo",
+            filters={
+                "reference_type": PROPOSAL,
+                "reference_name": ("in", all_cfp_proposals),
+                "allocated_to": frappe.session.user,
+                "status": "Open",
+            },
+            pluck="reference_name",
         )
         if not assigned_proposals:
             return []
