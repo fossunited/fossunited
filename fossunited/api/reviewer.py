@@ -40,9 +40,7 @@ def get_reviewed_count(event: str) -> tuple:
         },
     )
 
-    active_phase = next(
-        (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
-    )
+    active_phase = next((p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None)
 
     filters = {"linked_cfp": cfp}
     if active_phase and active_phase.proposal_visibility == "Only Assigned":
@@ -101,9 +99,7 @@ def get_events_by_open_cfp() -> list:
         )
 
         cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event.name})
-        active_phase = next(
-            (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
-        )
+        active_phase = next((p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None)
 
         submission_count = frappe.db.count(PROPOSAL, {"linked_cfp": cfp})
         reviewed_count, not_reviewed_count = get_reviewed_count(event=event.name)

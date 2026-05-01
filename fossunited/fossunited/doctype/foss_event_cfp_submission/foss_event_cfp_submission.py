@@ -112,9 +112,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def onload(self):
         """Populate __onload metadata for JS: active phase info and visibility-filtered reviews."""
         cfp_doc = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
-        active_phase = next(
-            (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
-        )
+        active_phase = next((p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None)
 
         phase_info = None
         if active_phase:
@@ -200,9 +198,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             return
 
         cfp_doc = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
-        active_phase = next(
-            (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
-        )
+        active_phase = next((p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None)
         if not active_phase or active_phase.can_see_other_reviews == "Always":
             return
 
@@ -217,7 +213,6 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if old_review.name and old_review.name not in current_review_names:
                 self.append("reviews", old_review.as_dict())
 
-
     def after_insert(self):
         # Always handle initial subscription on insert
         self.handle_email_group("CFP Proposers")
@@ -230,20 +225,20 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
             if phase.is_active:
                 active_phase = phase
                 break
-                
+
         if not active_phase or active_phase.proposal_visibility != "All":
             return
-            
+
         reviewers = frappe.get_all("Has Role", {"role": "CFP Reviewer"}, ["parent"])
         reviewer_emails = [r.parent for r in reviewers]
-        
+
         if not reviewer_emails:
             return
-            
+
         frappe.sendmail(
             bcc=reviewer_emails,
             subject=f"New Proposal for {self.event_name}: {self.talk_title}",
-            message=f"A new proposal titled <b>{self.talk_title}</b> has been submitted for {self.event_name}.<br><br>Please check your reviewer dashboard."
+            message=f"A new proposal titled <b>{self.talk_title}</b> has been submitted for {self.event_name}.<br><br>Please check your reviewer dashboard.",
         )
 
     def set_route(self):

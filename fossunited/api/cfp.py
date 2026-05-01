@@ -96,10 +96,8 @@ def get_cfp_submissions(event: str) -> list:
 
     cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event})
     cfp = cfp_doc.name
-    
-    active_phase = next(
-        (p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None
-    )
+
+    active_phase = next((p for p in cfp_doc.get("cfp_review_phases", []) if p.is_active), None)
 
     filters = {"linked_cfp": cfp}
 
