@@ -9,6 +9,7 @@
   "is_published",
   "route",
   "publish_date",
+  "closed_date",
   "company_location_section",
   "company_name",
   "status",
@@ -124,13 +125,18 @@
    "fieldname": "publish_date",
    "fieldtype": "Datetime",
    "label": "Published date"
+  },
+  {
+   "fieldname": "closed_date",
+   "fieldtype": "Datetime",
+   "label": "Closed Date"
   }
  ],
  "grid_page_length": 50,
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-08 12:28:58.046337",
+ "modified": "2026-05-04 17:14:22.471908",
  "modified_by": "Administrator",
  "module": "Job",
  "name": "Job Board",

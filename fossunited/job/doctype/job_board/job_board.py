@@ -1,7 +1,7 @@
 # Copyright (c) 2025, Frappe x FOSSUnited and contributors
 # For license information, please see license.txt
 
-from frappe.utils import add_days, now_datetime
+from frappe.utils import now_datetime
 from frappe.website.website_generator import WebsiteGenerator
 
 
@@ -15,6 +15,7 @@ class JobBoard(WebsiteGenerator):
         from frappe.types import DF
 
         application_link: DF.Data
+        closed_date: DF.Datetime | None
         company_name: DF.Data
         company_vcs: DF.Data | None
         company_website: DF.Data
@@ -49,6 +50,10 @@ class JobBoard(WebsiteGenerator):
             if not self.publish_date:
                 self.publish_date = now_datetime()
 
+        elif self.status == "Expired":
+            if not self.closed_date:
+                self.closed_date = now_datetime()
+
         elif self.status in ["Rejected", "Received"]:
             self.is_published = 0
 
@@ -56,4 +61,4 @@ class JobBoard(WebsiteGenerator):
         """Context for rendering job detail page"""
         context.title = f"{self.job_title} at {self.company_name}"
         context.posted_on = self.publish_date or self.creation
-        context.closed_on = add_days(context.posted_on, 90)
+        context.closed_on = self.closed_date
