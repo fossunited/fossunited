@@ -35,9 +35,9 @@ def get_context(context):
             "company_website",
             "job_type",
             "creation",
-            "modified",
             "publish_date",
+            "closed_date",
         ],
-        order_by="modified desc",
+        order_by="closed_date desc",
     )
     context.title = "Job Board - FOSS United"

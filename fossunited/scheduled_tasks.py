@@ -73,25 +73,6 @@ def update_past_job_status():
             job_doc.status = JOB_STATUS_EXPIRED
             job_doc.save(ignore_permissions=True)
 
-            if job_doc.email:
-                frappe.sendmail(
-                    recipients=[job_doc.email],
-                    cc=["team@fossunited.org"],
-                    subject=(
-                        f"Job Posting Auto-Expiry Notice: "
-                        f"{frappe.utils.escape_html(job_doc.job_title)}"
-                    ),
-                    message=(
-                        f"<p>Dear {frappe.utils.escape_html(job_doc.company_name)},</p>"
-                        f"<p>Your job posting "
-                        f"<strong>{frappe.utils.escape_html(job_doc.job_title)}</strong> "
-                        f"has been live for 90 days and is now marked "
-                        f"<strong>Expired</strong>.</p>"
-                        f"<p>If you wish to keep it open, please reply to this email.</p>"
-                        f"<p>Regards,<br>FOSS United Team</p>"
-                    ),
-                )
-
         except Exception:
             frappe.log_error(
                 frappe.get_traceback(),
