@@ -80,7 +80,7 @@ def get_context(context):
             make sure to add a link to the source code repository, e.g., GitHub repo.""",
         },
         {
-            "date": "4 May",
+            "date": "31 May",
             "event": "Results",
             "desc": """After multiple rounds of elimination,
             we will be sharing the results on Monday, the 4th of May. Projects will be evaluated
