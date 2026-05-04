@@ -67,6 +67,18 @@ class TestJobBoard(FrappeTestCase):
 
         self.assertEqual(job.is_published, 1)
 
+    def test_closed_date_set_on_expired(self):
+        job = frappe.get_doc(self.test_job_data)
+        job.status = "Approved"
+        job.insert()
+
+        self.assertFalse(job.closed_date)
+
+        job.status = "Expired"
+        job.save()
+
+        self.assertTrue(job.closed_date)
+
     def test_rss_feed_includes_approved_job(self):
         """Test that an approved, published job appears in the RSS feed context"""
         from fossunited.www.jobs.rss import get_context
