@@ -1,94 +1,292 @@
 {% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle, breadcrumb %}
 {% block head_include %}
 {{ super() }}
 <link rel="alternate" type="application/rss+xml" title="FOSS United Job Board" href="/jobs/rss.xml" />
 {% endblock %}
 {% block page_content %}
 
-<div class="container">
-  <div class="text-center my-4">
-    <img src="/files/job-board.png" alt="job-thumbnail" class="img-fluid">
-  </div>
+<div class="v3-page">
+  <div class="container v3-container-wide py-4">
 
-  <div class="jobs-board py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h4>Job Board</h4>
-      <div class="d-flex gap-2">
-        <a href="/jobs/rss.xml" class="btn btn-outline-secondary" title="RSS Feed">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      {{breadcrumb()}}
+      <div class="d-flex align-items-center gap-2">
+        <a href="/jobs/rss.xml" class="v3-btn v3-btn-secondary v3-btn--sm" title="RSS Feed">
           <i class="ti ti-rss"></i> RSS
         </a>
-        <a href="/post-a-job" class="btn btn-success">Post a Job</a>
+        {{ theme_toggle() }}
       </div>
     </div>
 
-    <!-- Active Jobs -->
-    <div class="row">
+    <div class="text-center mb-4">
+      <img src="/files/job-board.png" alt="FOSS United Job Board" class="img-fluid rounded">
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h2 class="v3-text-primary mb-0">Job Board</h2>
+      <a href="/post-a-job" class="v3-btn v3-btn-primary v3-btn--sm">Post a Job</a>
+    </div>
+
+    <!-- Controls -->
+    <div class="v3-controls my-4">
+      <div class="v3-controls-left">
+        <div class="v3-search-input">
+          <label for="job-search" class="sr-only">Search jobs</label>
+          <input id="job-search" type="text" placeholder="Search by title, company, or location" aria-label="Search jobs" />
+          <i class="ti ti-search v3-text-tertiary" aria-hidden="true"></i>
+        </div>
+      </div>
+      <div class="v3-controls-right align-items-center">
+        <label class="v3-text-tertiary mb-0" for="filter-type" style="font-size:0.875rem;">Type:</label>
+        <select id="filter-type" class="v3-select">
+          <option value="">All Types</option>
+          <option value="Full Time">Full Time</option>
+          <option value="Part Time">Part Time</option>
+          <option value="Intern">Intern</option>
+          <option value="Freelance">Freelance</option>
+          <option value="Contract">Contract</option>
+        </select>
+        <label class="v3-text-tertiary mb-0" for="job-group-by" style="font-size:0.875rem;">Group by:</label>
+        <select id="job-group-by" class="v3-select">
+          <option value="flat">None</option>
+          <option value="company">Organization</option>
+          <option value="type">Job Type</option>
+        </select>
+        <label class="v3-text-tertiary mb-0" for="job-sort" style="font-size:0.875rem;">Sort:</label>
+        <select id="job-sort" class="v3-select">
+          <option value="date-desc">Most Recent</option>
+          <option value="date-asc">Oldest First</option>
+          <option value="title-asc">Title A–Z</option>
+          <option value="title-desc">Title Z–A</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active jobs -->
+    <div id="results-count" class="v3-text-tertiary mb-3 small d-none"></div>
+    <div id="no-results" class="v3-card text-center py-5 mb-4 d-none">
+      <i class="ti ti-search-off v3-text-tertiary text-2xl"></i>
+      <p class="v3-text-secondary mt-2 mb-0">No jobs match your search.</p>
+    </div>
+
+    <div id="active-jobs" class="row">
       {% for job in active_jobs %}
-      <div class="col-lg-4 col-md-6 mb-3">
-        <div class="card h-100">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ job.job_title }}</h5>
-              {% set posted_on = job.publish_date or job.creation %}
-            <small class="text-muted mb-5">Posted {{ frappe.utils.pretty_date(posted_on) }}</small>
-
-            <div class="d-flex align-items-center mb-1">
-              <i class="ti ti-building mr-2"></i>
-              <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer">{{ job.company_name }}</a>
-            </div>
-
-            <div class="d-flex align-items-center mb-5">
-              <i class="ti ti-map-pin mr-2"></i>
-              <span>{{ job.job_location }}</span>
-            </div>
-
-            <div class="mt-auto d-flex justify-content-between align-items-center">
-              <span> <i class="ti ti-briefcase-2 mr-2"></i>{{ job.job_type }}</span>
-              <a href="/jobs/{{ job.name }}" class="text-success">View Details <i class="ti ti-arrow-right"></i></a>
-            </div>
+      <div class="col-lg-4 col-md-6 mb-3 job-item"
+        data-title="{{ job.job_title | lower }}"
+        data-company="{{ job.company_name | lower }}"
+        data-company-display="{{ job.company_name }}"
+        data-location="{{ job.job_location | lower }}"
+        data-type="{{ job.job_type }}"
+        data-date="{{ job.publish_date or job.creation }}">
+        <div class="v3-card h-100 d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-start mb-2">
+            <h6 class="v3-text-primary mb-0">{{ job.job_title }}</h6>
+            <span class="v3-tag v3-tag--success ml-2 text-nowrap">{{ job.job_type }}</span>
+          </div>
+          {% set posted_on = job.publish_date or job.creation %}
+          <small class="v3-text-tertiary mb-3">Posted {{ frappe.utils.pretty_date(posted_on) }}</small>
+          <div class="d-flex align-items-center mb-1">
+            <i class="ti ti-building mr-1 v3-text-tertiary"></i>
+            <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer" class="v3-text-secondary">{{ job.company_name }}</a>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <i class="ti ti-map-pin mr-1 v3-text-tertiary"></i>
+            <span class="v3-text-secondary">{{ job.job_location }}</span>
+          </div>
+          <div class="mt-auto">
+            <a href="/jobs/{{ job.name }}" class="v3-btn v3-btn-primary v3-btn--sm w-100 text-center">View Details</a>
           </div>
         </div>
       </div>
       {% endfor %}
     </div>
 
-    <!-- Closed Jobs -->
-    <details class="mt-4">
-      <summary class="btn btn-outline-secondary mb-3">Show Closed Jobs</summary>
-      <div class="row">
+    {% if not active_jobs %}
+    <div class="v3-card text-center py-5">
+      <i class="ti ti-briefcase-off v3-text-tertiary text-2xl"></i>
+      <p class="v3-text-secondary mt-2 mb-0">No active job listings right now.</p>
+    </div>
+    {% endif %}
+
+    <!-- Closed jobs -->
+    {% if expired_jobs %}
+    <details class="mt-5" id="expired-details">
+      <summary class="v3-btn v3-btn-secondary mb-3">
+        Show Closed Jobs (<span id="expired-count">{{ expired_jobs | length }}</span>)
+      </summary>
+      <div id="expired-jobs" class="row mt-3">
         {% for job in expired_jobs %}
-        <div class="col-lg-4 col-md-6 mb-3">
-          <div class="card h-100">
-            <div class="card-body d-flex flex-column">
-              <h5 class="card-title">{{ job.job_title }}</h5>
-              {% set posted_on = job.publish_date or job.creation %}
-              {% set closed_on = frappe.utils.add_days(posted_on, 90) %}
-              <small class="text-muted">
-                Posted on {{ frappe.utils.format_date(posted_on, "MMMM dd, yyyy") }}
-              </small>
-              <small class="text-muted d-block">
-                Closed on {{ frappe.utils.format_date(closed_on, "MMMM dd, yyyy") }}
-              </small>
-              <div class="d-flex align-items-center mb-1 mt-2">
-                <i class="ti ti-building mr-2"></i>
-                <a href="{{ job.company_website }}" target="_blank">{{ job.company_name }}</a>
-              </div>
-
-              <div class="d-flex align-items-center mb-5">
-                <i class="ti ti-map-pin mr-2"></i>
-                <span>{{ job.job_location }}</span>
-              </div>
-
-              <div class="mt-auto d-flex justify-content-between align-items-center">
-              <span> <i class="ti ti-briefcase-2 mr-2"></i>{{ job.job_type }}</span>
-                <a href="/jobs/{{ job.name }}" class="text-success">View Details <i class="ti ti-arrow-right"></i></a>
-              </div>
+        <div class="col-lg-4 col-md-6 mb-3 job-item-expired"
+          data-title="{{ job.job_title | lower }}"
+          data-company="{{ job.company_name | lower }}"
+          data-company-display="{{ job.company_name }}"
+          data-location="{{ job.job_location | lower }}"
+          data-type="{{ job.job_type }}"
+          data-date="{{ job.publish_date or job.creation }}">
+          <div class="v3-card h-100 d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+              <h6 class="v3-text-primary mb-0">{{ job.job_title }}</h6>
+              <span class="v3-tag v3-tag--category ml-2 text-nowrap">{{ job.job_type }}</span>
+            </div>
+            {% set posted_on = job.publish_date or job.creation %}
+            <small class="v3-text-tertiary">Posted {{ frappe.utils.format_date(posted_on, "MMM dd, yyyy") }}</small>
+            {% if job.closed_date %}
+            <small class="v3-text-tertiary d-block mb-3">Closed {{ frappe.utils.format_date(job.closed_date, "MMM dd, yyyy") }}</small>
+            {% else %}
+            <div class="mb-3"></div>
+            {% endif %}
+            <div class="d-flex align-items-center mb-1">
+              <i class="ti ti-building mr-1 v3-text-tertiary"></i>
+              <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer" class="v3-text-secondary">{{ job.company_name }}</a>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+              <i class="ti ti-map-pin mr-1 v3-text-tertiary"></i>
+              <span class="v3-text-secondary">{{ job.job_location }}</span>
+            </div>
+            <div class="mt-auto">
+              <a href="/jobs/{{ job.name }}" class="v3-btn v3-btn-secondary v3-btn--sm w-100 text-center">View Details</a>
             </div>
           </div>
         </div>
         {% endfor %}
       </div>
     </details>
+    {% endif %}
+
   </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  function cloneAll(sel) {
+    return Array.from(document.querySelectorAll(sel)).map(function (el) { return el.cloneNode(true); });
+  }
+
+  var originals = cloneAll('.job-item');
+  var expiredOriginals = cloneAll('.job-item-expired');
+
+  var search = document.getElementById('job-search');
+  var filterType = document.getElementById('filter-type');
+  var groupBy = document.getElementById('job-group-by');
+  var sort = document.getElementById('job-sort');
+  var container = document.getElementById('active-jobs');
+  var expiredContainer = document.getElementById('expired-jobs');
+  var expiredCountEl = document.getElementById('expired-count');
+  var expiredDetails = document.getElementById('expired-details');
+  var countEl = document.getElementById('results-count');
+  var noResults = document.getElementById('no-results');
+
+  var debounceTimer;
+  search.addEventListener('input', function () {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(applyFilters, 300);
+  });
+  [filterType, groupBy, sort].forEach(function (el) { el.addEventListener('change', applyFilters); });
+
+  function filterAndSort(pool, query, type, sortVal) {
+    var result = pool.map(function (el) { return el.cloneNode(true); });
+    if (query) {
+      result = result.filter(function (el) {
+        return el.dataset.title.indexOf(query) !== -1 ||
+               el.dataset.company.indexOf(query) !== -1 ||
+               el.dataset.location.indexOf(query) !== -1;
+      });
+    }
+    if (type) {
+      result = result.filter(function (el) { return el.dataset.type === type; });
+    }
+    result.sort(function (a, b) {
+      if (sortVal === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
+      if (sortVal === 'date-asc')  return new Date(a.dataset.date) - new Date(b.dataset.date);
+      if (sortVal === 'title-asc') return a.dataset.title.localeCompare(b.dataset.title);
+      if (sortVal === 'title-desc') return b.dataset.title.localeCompare(a.dataset.title);
+      return 0;
+    });
+    return result;
+  }
+
+  function renderInto(target, items, groupByVal) {
+    target.innerHTML = '';
+    if (groupByVal === 'flat' || items.length === 0) {
+      items.forEach(function (el) { target.appendChild(el); });
+      return;
+    }
+    if (groupByVal === 'company') {
+      var groups = {}, order = [];
+      items.forEach(function (el) {
+        var key = el.dataset.company;
+        if (!groups[key]) { groups[key] = { display: el.dataset.companyDisplay, items: [] }; order.push(key); }
+        groups[key].items.push(el);
+      });
+      order.forEach(function (key) {
+        var g = groups[key];
+        target.appendChild(makeSection(g.display, 'ti-building', g.items));
+      });
+    } else if (groupByVal === 'type') {
+      var tgroups = {};
+      items.forEach(function (el) {
+        if (!tgroups[el.dataset.type]) tgroups[el.dataset.type] = [];
+        tgroups[el.dataset.type].push(el);
+      });
+      ['Full Time', 'Part Time', 'Intern', 'Freelance', 'Contract'].forEach(function (t) {
+        if (tgroups[t]) target.appendChild(makeSection(t, 'ti-briefcase', tgroups[t]));
+      });
+    }
+  }
+
+  function applyFilters() {
+    var query = search.value.toLowerCase().trim();
+    var type = filterType.value;
+    var groupByVal = groupBy.value;
+    var sortVal = sort.value;
+
+    var filtered = filterAndSort(originals, query, type, sortVal);
+    var expiredFiltered = filterAndSort(expiredOriginals, query, type, sortVal);
+
+    var hasFilter = query || type;
+    var total = filtered.length + expiredFiltered.length;
+
+    if (hasFilter) {
+      countEl.textContent = total + ' result' + (total !== 1 ? 's' : '') + ' found';
+      countEl.classList.remove('d-none');
+    } else {
+      countEl.classList.add('d-none');
+    }
+    noResults.classList.toggle('d-none', total > 0);
+
+    renderInto(container, filtered, groupByVal);
+    renderInto(expiredContainer, expiredFiltered, groupByVal);
+
+    if (expiredCountEl) expiredCountEl.textContent = expiredFiltered.length;
+    if (expiredDetails) expiredDetails.open = hasFilter && expiredFiltered.length > 0;
+  }
+
+  function makeSection(title, icon, items) {
+    var row = document.createElement('div');
+    row.className = 'row';
+    items.forEach(function (item) {
+      item.className = item.className.replace('col-lg-4', 'col-lg-6');
+      row.appendChild(item);
+    });
+
+    var header = document.createElement('div');
+    header.className = 'd-flex align-items-center gap-2 mb-3';
+    header.innerHTML = '<i class="ti ' + icon + ' v3-text-tertiary"></i>' +
+      '<h6 class="v3-text-primary mb-0 flex-grow-1">' + title + '</h6>' +
+      '<span class="v3-tag v3-tag--category">' + items.length + ' job' + (items.length !== 1 ? 's' : '') + '</span>';
+
+    var card = document.createElement('div');
+    card.className = 'v3-card';
+    card.appendChild(header);
+    card.appendChild(row);
+
+    var wrapper = document.createElement('div');
+    wrapper.className = 'col-12 mb-3';
+    wrapper.appendChild(card);
+    return wrapper;
+  }
+});
+</script>
 
 {% endblock %}
