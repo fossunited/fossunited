@@ -1,22 +1,23 @@
-
 <div class="community-list-section container">
   <div class="community-list-container">
     <h2>FOSS Communities near you</h2>
 
+    <link rel="stylesheet" href="/assets/frappe/js/lib/leaflet/leaflet.css" />
+    <div id="india-map" class="rounded" style="width:100%;height:clamp(320px,50vh,540px);border:1px solid #e0e0e0;"></div>
+
     <div class="city-card-section">
       <div class="city-card-container">
-        {%
-          set communities = frappe.get_all("FOSS Chapter", fields=["city",
-          "represent_image","route","chapter_status"], filters={"is_published": 1, "chapter_type": "City Community"},
-          order_by="city")
-        %}
-        {% for community in communities %}
-          <a class="city-card" href="{{ community.route }}" aria-label="Open source software communities in {{ community.city }}">
+        {% set communities = frappe.get_all("FOSS Chapter",
+            fields=["city","represent_image","route","chapter_status"],
+            filters={"is_published": 1, "chapter_type": "City Community"},
+            order_by="city") %}
+        {% for c in communities %}
+          <a class="city-card" href="{{ c.route }}">
             <div class="city-image">
-              <img src="{{ community.represent_image }}" alt="Community Icon for {{ community.city }}" />
+              <img src="{{ c.represent_image }}" alt="{{ c.city }}" />
             </div>
-            <span class="city-name">{{ community.city }}</span>
-            <span class="chapter-status">{% if community.chapter_status != "Active" %}{{ community.chapter_status }}{% endif %}</span>
+            <span class="city-name">{{ c.city }}</span>
+            <span class="chapter-status">{% if c.chapter_status != "Active" %}{{ c.chapter_status }}{% endif %}</span>
           </a>
         {% endfor %}
       </div>
@@ -24,134 +25,178 @@
   </div>
 </div>
 
-<style>
-  .community-list-section {
-    display: flex;
-    font-family: Inter;
+<script>
+(function () {
+  {% set map_chapters = frappe.get_all("FOSS Chapter",
+      fields=["chapter_name","city","route"],
+      filters={"is_published": 1, "chapter_status": "Active"},
+      order_by="chapter_name") %}
+  var chapters = {{ map_chapters | tojson }};
+
+  var coords = {
+    'agra':[27.18,78.01],'ahmedabad':[23.02,72.57],'allahabad':[25.44,81.85],'amaravati':[16.51,80.52],
+    'amravati':[20.94,77.78],'amritapuri':[9.09,76.59],'amritsar':[31.63,74.87],'angamaly':[10.20,76.39],
+    'aurangabad':[19.88,75.34],'bangalore':[12.97,77.59],'bengaluru':[12.97,77.59],'belagavi':[15.85,74.50],
+    'belgavi':[15.85,74.50],'belgaum':[15.85,74.50],'bhilai':[21.19,81.35],'bhopal':[23.26,77.41],
+    'bhubaneswar':[20.30,85.82],'bihar':[25.59,85.14],'chandigarh':[30.73,76.78],'chennai':[13.08,80.27],
+    'coimbatore':[11.02,76.96],'cuttack':[20.46,85.88],'dehradun':[30.32,78.03],'delhi':[28.70,77.10],
+    'dhanbad':[23.80,86.43],'durg':[21.19,81.28],'erode':[11.34,77.34],'faridabad':[28.41,77.32],
+    'goa':[15.30,74.12],'greater noida':[28.47,77.50],'gurgaon':[28.46,77.03],'gurugram':[28.46,77.03],
+    'guwahati':[26.14,91.74],'gwalior':[26.22,78.18],'howrah':[22.60,88.26],'hubballi':[15.36,75.12],
+    'hubli':[15.36,75.12],'hyderabad':[17.39,78.49],'idukki':[9.92,76.97],'indore':[22.72,75.86],
+    'jabalpur':[23.18,79.99],'jaipur':[26.91,75.79],'jalandhar':[31.33,75.58],'jodhpur':[26.24,73.02],
+    'kalyan-dombivali':[19.24,73.13],'kalyani':[22.98,88.43],'kanhangad':[12.33,75.10],'kanpur':[26.45,80.33],
+    'kasargod':[12.50,74.99],'kochi':[9.93,76.27],'kolhapur':[16.71,74.24],'kolkata':[22.57,88.36],
+    'kollam':[8.89,76.61],'kota':[25.21,75.86],'kottayam':[9.59,76.52],'kozhikode':[11.26,75.78],
+    'lucknow':[26.85,80.95],'ludhiana':[30.90,75.86],'madurai':[9.93,78.12],'mangalore':[12.91,74.86],
+    'mangaluru':[12.91,74.86],'meerut':[28.98,77.71],'mumbai':[19.08,72.88],'mysore':[12.30,76.64],
+    'mysuru':[12.30,76.64],'nagpur':[21.15,79.09],'nashik':[20.00,73.79],'navi mumbai':[19.03,73.03],
+    'nellore':[14.44,79.99],'new delhi':[28.61,77.21],'noida':[28.54,77.39],'pala':[9.70,76.69],
+    'palakkad':[10.79,76.65],'patna':[25.59,85.14],'peermade':[9.57,77.01],'pimpri-chinchwad':[18.63,73.80],
+    'piravom':[9.87,76.51],'pondicherry':[11.94,79.81],'prayagraj':[25.44,81.85],'puducherry':[11.94,79.81],
+    'pune':[18.52,73.86],'raipur':[21.25,81.63],'rajkot':[22.30,70.80],'ranchi':[23.34,85.31],
+    'sathyamangalam':[11.51,77.24],'sheikhpura':[25.14,85.84],'shillong':[25.58,91.89],'shimla':[31.10,77.17],
+    'shivamogga':[13.93,75.57],'siliguri':[26.73,88.40],'solapur':[17.66,75.91],'srinagar':[34.08,74.80],
+    'surat':[21.17,72.83],'thane':[19.22,72.98],'thiruvananthapuram':[8.52,76.94],'thrissur':[10.53,76.21],
+    'tiruchirapalli':[10.79,78.70],'tiruchirappalli':[10.79,78.70],'tirunelveli':[8.71,77.76],
+    'tirupati':[13.63,79.42],'tiruppur':[11.11,77.34],'trivandrum':[8.52,76.94],'trichy':[10.79,78.70],
+    'vadakara':[11.60,75.59],'vadodara':[22.31,73.18],'varanasi':[25.32,82.97],'vasai-virar':[19.46,72.80],
+    'vellore':[12.92,79.13],'vijayawada':[16.51,80.65],'vijayapura':[16.83,75.71],'visakhapatnam':[17.69,83.22],
+    'vizag':[17.69,83.22],'warananagar':[16.81,74.07],'warangal':[17.97,79.59]
+  };
+
+  function norm(s) { return (s || '').toLowerCase().trim(); }
+
+  function pinIcon(label) {
+    return L.divIcon({
+      className: '',
+      html: '<div style="display:flex;flex-direction:column;align-items:center;pointer-events:none">' +
+        '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="20" viewBox="0 0 14 20"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13C14 3.13 10.87 0 7 0z" fill="#08b74f" stroke="white" stroke-width="1.2"/><circle cx="7" cy="7" r="2.5" fill="white"/></svg>' +
+        '<span style="font-size:8px;font-family:Inter,sans-serif;color:#1a1a1a;background:rgba(255,255,255,0.85);padding:1px 3px;border-radius:2px;max-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;margin-top:1px;line-height:1.3">' + label + '</span>' +
+        '</div>',
+      iconSize: [70, 34],
+      iconAnchor: [35, 20]
+    });
   }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.L) return init();
+    var s = document.createElement('script');
+    s.src = '/assets/frappe/js/lib/leaflet/leaflet.js'; // to avoid None error from BS4 stripping script
+    s.onload = init;
+    document.head.appendChild(s);
+  });
+
+  function init() {
+    var indiaBounds = L.latLngBounds([[6.5, 68], [37.5, 97.5]]);
+    var map = L.map('india-map', {
+      scrollWheelZoom: false, zoomSnap: 0.5, minZoom: 4, maxZoom: 12,
+      maxBounds: indiaBounds, maxBoundsViscosity: 1.0, attributionControl: false
+    }).fitBounds(indiaBounds, { padding: [8, 8] });
+
+    map.getPane('tilePane').style.backgroundColor = '#e8edf2';
+
+    fetch('/assets/fossunited/geojson/india_states.geojson')
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        L.geoJSON(data, {
+          style: { fillColor: '#fff', fillOpacity: 1, color: '#bbb', weight: 1, opacity: 1 }
+        }).addTo(map);
+      });
+
+    // Count chapters per city to offset overlapping pins
+    var cityCount = {}, cityIdx = {};
+    chapters.forEach(function (ch) { var k = norm(ch.city); if (coords[k]) cityCount[k] = (cityCount[k] || 0) + 1; });
+
+    var mapped = [], missing = [];
+    chapters.forEach(function (ch) {
+      if (!ch.city || norm(ch.city) === 'other') return;
+      var k = norm(ch.city), c = coords[k];
+      if (!c) { missing.push(ch.chapter_name + ' (' + ch.city + ')'); return; }
+
+      // Spread same-city markers in a small circle
+      cityIdx[k] = (cityIdx[k] || 0);
+      var idx = cityIdx[k]++, total = cityCount[k];
+      var lat = c[0], lng = c[1];
+      if (total > 1) {
+        var angle = (idx / total) * 2 * Math.PI - Math.PI / 2;
+        lat += 0.06 * Math.cos(angle);
+        lng += 0.06 * Math.sin(angle);
+      }
+
+      mapped.push(ch.chapter_name + ' (' + ch.city + ')');
+      var label = ch.chapter_name || ch.city;
+      var m = L.marker([lat, lng], { icon: pinIcon(label) }).addTo(map);
+      m.bindPopup(
+        '<div style="text-align:center;min-width:130px;font-family:Inter,sans-serif">' +
+        '<strong style="font-size:13px;color:#1a1a1a">' + (ch.chapter_name || ch.city) + '</strong>' +
+        (ch.city ? '<br><span style="font-size:11px;color:#666">' + ch.city + '</span>' : '') +
+        '<br><a href="/' + ch.route + '" style="color:#08b74f;font-weight:600;font-size:12px;text-decoration:none">View Chapter →</a>' +
+        '</div>', { maxWidth: 200 }
+      );
+      var sticky = false;
+      m.on('mouseover', function () { this.openPopup(); });
+      m.on('mouseout', function () { if (!sticky) this.closePopup(); });
+      m.on('click', function () { sticky = true; });
+      m.on('popupclose', function () { sticky = false; });
+    });
+
+  }
+}());
+</script>
+
+<style>
+  .community-list-section { display: flex; font-family: Inter; }
 
   .community-list-container {
-    display: flex;
-    gap: 3rem;
-    width: 100%;
-    flex-direction: column;
-    padding: 6rem 0rem 6rem 0rem;
+    display: flex; gap: 3rem; width: 100%; flex-direction: column;
+    padding: 6rem 0;
   }
 
-  .city-card-section {
-    display: flex;
-    justify-content: space-between;
-  }
+  .city-card-section { display: flex; justify-content: space-between; }
 
   h2 {
-    margin: 0;
-    color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
-    font-size: 1.75rem;
-    font-weight: 600;
-    line-height: 100%;
-    letter-spacing: -0.105rem;
+    margin: 0; color: #1a1a1a; font-size: 1.75rem; font-weight: 600;
+    line-height: 100%; letter-spacing: -0.105rem;
   }
 
   .city-card-container {
-    display: grid;
-    gap: 2rem;
-    align-items: start;
-    justify-content: center;
-    grid-template-rows: 1fr 1fr 1fr;
+    display: grid; gap: 2rem; width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
-    width: 100%;
   }
 
   .city-card {
-    display: flex;
-    flex-direction: column;
-    border-radius: 0.5rem;
-    background: #f5f5f5;
-    text-decoration: none;
-    padding: 1rem;
-    align-items: center;
+    display: flex; flex-direction: column; border-radius: 0.5rem;
+    background: #f5f5f5; text-decoration: none; padding: 1rem; align-items: center;
   }
 
-  .city-card:hover {
-    color: #08b74f;
+  .city-card:hover { color: #08b74f; }
+
+  .city-image {
+    width: 100%; aspect-ratio: 1; display: flex; align-items: center;
+    justify-content: center; overflow: hidden; border-radius: 0.5rem;
   }
+
+  .city-card img { width: 100%; height: 100%; object-fit: contain; object-position: center center; border-radius: 0.5rem; display: block; }
 
   .city-name {
-    padding: 1.5rem;
-    padding-bottom: 0rem;
-    color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
-    font-size: 1.125rem;
-    font-weight: 600;
-    letter-spacing: -0.045rem;
-    text-decoration: none;
+    padding: 1.5rem 1.5rem 0; color: #1a1a1a; font-size: 1.125rem;
+    font-weight: 600; letter-spacing: -0.045rem; text-decoration: none;
   }
 
   .chapter-status {
-    padding: 1.5rem;
-    padding-top: 0.25rem;
-    color: var(--Foundation-Code-Night-code-night-500, #1a1a1a);
-    font-size: 0.75rem;
-    font-weight: 400;
-    letter-spacing: -0.045rem;
-    text-decoration: none;
+    padding: 0.25rem 1.5rem 1.5rem; color: #1a1a1a; font-size: 0.75rem;
+    font-weight: 400; text-decoration: none;
   }
 
-  .city-card img {
-    width: 100%;
-    border-radius: 0.5rem;
-  }
-
-  @media screen and (max-width: 768px) {
-    .community-list-section {
-      flex-direction: column;
-      gap: 2.5rem;
-      padding: 1rem;
-    }
-
-    .community-list-container {
-      padding: 4rem 0rem 4rem 0rem;
-      gap: 3rem;
-    }
-
-    h2 {
-      font-size: 1.5rem;
-    }
-
-    .city-card-container {
-      display: grid;
-      gap: 2rem;
-      align-items: start;
-      grid-template-columns: 1fr;
-      width: 100%;
-    }
-
-    .city-card {
-      display: flex;
-      flex-direction: row-reverse;
-      border-radius: 0.5rem;
-      background: #f5f5f5;
-      justify-content: flex-end;
-      align-items: center;
-      padding: 1rem;
-      gap: 1rem;
-    }
-
-    .city-name {
-      padding: 0;
-    }
-
-    .chapter-status {
-      padding: 0;
-    }
-
-    .city-image {
-      max-width: 2rem;
-      max-height: 2rem;
-      background-color: #1a1a1a;
-    }
-
-    .city-card img {
-      height: 2rem;
-    }
+  @media (max-width: 768px) {
+    .community-list-section { padding: 1rem; }
+    .community-list-container { padding: 4rem 0; gap: 3rem; }
+    h2 { font-size: 1.5rem; }
+    .city-card-container { grid-template-columns: 1fr; }
+    .city-card { flex-direction: row-reverse; justify-content: flex-end; gap: 1rem; }
+    .city-name, .chapter-status { padding: 0; }
+    .city-image { width: 2.5rem; height: 2.5rem; aspect-ratio: unset; flex-shrink: 0; background: #1a1a1a; }
+    #india-map { height: 300px; }
   }
 </style>
