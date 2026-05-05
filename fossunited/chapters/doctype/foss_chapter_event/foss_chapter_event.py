@@ -24,7 +24,7 @@ from fossunited.doctype_ids import (
     SPEAKER,
     USER_PROFILE,
 )
-from fossunited.fossunited.utils import get_event_sponsors
+from fossunited.fossunited.utils import get_event_sponsors, get_youtube_id
 
 
 class FOSSChapterEvent(WebsiteGenerator):
@@ -491,6 +491,8 @@ class FOSSChapterEvent(WebsiteGenerator):
                 pass
 
         context.breadcrumbs = self.get_breadcrumb()
+
+        context.livestream_youtube_id = get_youtube_id(self.livestream_embed_link)
 
         context.no_cache = 1
 

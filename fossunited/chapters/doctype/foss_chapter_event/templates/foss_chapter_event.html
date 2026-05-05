@@ -7,6 +7,7 @@
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/chapter_branding_block.html" import chapter_branding_block %}
 {% from "fossunited/templates/macros/event_card.html" import event_must_attend_tag, event_category_tag %}
+{% from "fossunited/templates/macros/video_embed.html" import video_embed %}
 
 {% macro cfp_block(cfp_status_block, doc) %}
   {% if cfp_status_block.is_published and not cfp_status_block.closing_soon %}
@@ -433,6 +434,17 @@
         <div class="v3-grid">
           <!-- Main Column -->
           <main class="v3-content-main">
+            <!-- Recording (concluded events with embed link) -->
+            {% if status_concluded and doc.livestream_embed_link %}
+              <section class="v3-card" aria-label="Event Recording">
+                <h2 class="v3-section-title">
+                  <i class="ti ti-brand-youtube" aria-hidden="true"></i>
+                  <span>Recording</span>
+                </h2>
+                {{ video_embed(doc.livestream_embed_link, doc.event_name, youtube_id=livestream_youtube_id) }}
+              </section>
+            {% endif %}
+
             <!-- About -->
             {% if doc.event_description %}
               <section class="v3-card ev-about-section" aria-labelledby="about-heading">

@@ -1,0 +1,20 @@
+{% macro video_embed(url, title, youtube_id=None) %}
+{% if url or youtube_id %}
+  {% if youtube_id %}
+    <div class="embed-responsive embed-responsive-16by9 rounded border">
+      <iframe
+        class="embed-responsive-item"
+        src="https://www.youtube-nocookie.com/embed/{{ youtube_id }}?rel=0&modestbranding=1"
+        title="{{ title | e }}"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+      ></iframe>
+    </div>
+  {% elif url %}
+    <video class="w-100 d-block rounded border" controls preload="metadata">
+      <source src="{{ url | e }}" />
+      Your browser does not support the video element.
+    </video>
+  {% endif %}
+{% endif %}
+{% endmacro %}

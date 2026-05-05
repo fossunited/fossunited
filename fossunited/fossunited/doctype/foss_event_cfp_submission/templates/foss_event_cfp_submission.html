@@ -2,6 +2,7 @@
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/volunteers_card.html" import profile_headshot %}
+{% from "fossunited/templates/macros/video_embed.html" import video_embed %}
 
 {% block meta_block %}
   {{ meta_tags(pagetitle, description, image) }}
@@ -17,10 +18,6 @@
 
   /* More prominent borders for sections */
   .border-section { border-color: oklch(0.80 0.01 255) !important; }
-
-  /* 16:9 video aspect ratio */
-  .video-wrapper { padding-top: 56.25%; }
-  .video-iframe { inset: 0; width: 100%; height: 100%; }
 
   /* Speaker photo */
   .speaker-photo { width: 6rem; height: 6rem; object-fit: cover; object-position: top; }
@@ -44,7 +41,7 @@
   </div>
 
   {{ talk_header() }}
-  {% if talk_video %}{{ video_embed() }}{% endif %}
+  {% if talk_video %}{{ video_embed(talk_video, doc.talk_title, youtube_id=youtube_embed_id) }}{% endif %}
   {{ prose_container("Session Description", doc.talk_description) }}
   {{ prose_container("Key Takeaways", doc.key_takeaways) }}
   {{ references() }}
@@ -149,29 +146,6 @@
   {% else %}
     <span class="v3-tag v3-tag--category">{{ status }}</span>
   {% endif %}
-{% endmacro %}
-
-
-{% macro video_embed() %}
-<div class="d-flex flex-column gap-2">
-  {% if youtube_embed_id %}
-    <div class="position-relative w-100 video-wrapper">
-      <iframe
-        class="position-absolute border rounded video-iframe"
-        src="https://www.youtube-nocookie.com/embed/{{ youtube_embed_id }}?rel=0&modestbranding=1"
-        title="{{ doc.talk_title }}"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    </div>
-  {% else %}
-    <video class="w-100 rounded border d-block" controls preload="metadata">
-      <source src="{{ talk_video }}" />
-      Your browser does not support the video element.
-    </video>
-  {% endif %}
-</div>
 {% endmacro %}
 
 

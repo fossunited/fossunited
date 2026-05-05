@@ -1,7 +1,21 @@
+import re
+
 import frappe
 from frappe import qb
 from frappe.query_builder.functions import Max
 from frappe.utils import add_to_date, get_datetime, nowdate, sanitize_html
+
+
+def get_youtube_id(url: str | None) -> str | None:
+    """Extract YouTube video ID (11-char) from any YouTube URL, or None."""
+    if not url:
+        return None
+    match = re.search(
+        r"(?:youtube\.com/(?:watch\?v=|embed/)|youtu\.be/)([a-zA-Z0-9_-]{11})",
+        url,
+    )
+    return match.group(1) if match else None
+
 
 from fossunited.doctype_ids import (
     CHAPTER,
