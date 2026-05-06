@@ -1,0 +1,5 @@
+info:
+  name: Fossunited API Testing
+  summary: Auto-generated from @frappe.whitelist. Re-run generate_bruno_collection.py
+    to update.
+opencollection: 1.0.0
