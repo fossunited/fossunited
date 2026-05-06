@@ -30,6 +30,7 @@ dev = [
   "zensical",
   "cssutils",
   "tinycss2",
+  "mkdocstrings-python>=2.0.3",
 ]
 
 [build-system]

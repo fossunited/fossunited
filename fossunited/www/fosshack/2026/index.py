@@ -83,7 +83,7 @@ def get_context(context):
             "date": "31 May",
             "event": "Results",
             "desc": """After multiple rounds of elimination,
-            we will be sharing the results on Monday, the 4th of May. Projects will be evaluated
+            we will be sharing the results by the end of May. Projects will be evaluated
             for novelty, completeness, and relevance. For additional details, please see FAQs.""",
         },
     ]

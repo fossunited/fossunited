@@ -169,3 +169,8 @@ repo_url_shortener = true
 repo_url_shorthand = true
 user = "fossunited"
 repo = "fossunited"
+
+# we can have api documentation for users to use (optional, idk if anyone even uses)
+# [project.plugins.macros]
+# module_name = "hooks/api_macros"
+# render_by_default = true
