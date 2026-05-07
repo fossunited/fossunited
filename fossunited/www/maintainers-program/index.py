@@ -95,6 +95,6 @@ def get_context(context):
         forklore="https://forklore.in",
         events="/events/timeline?s=maintainers",
         infra_grants="/grants/projects",
-        fellowships="/grants/projects",
+        fellowships="/grants/fellowships",
         other_grants="/grants",
     )
