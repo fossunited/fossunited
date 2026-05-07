@@ -1,15 +1,31 @@
 {% macro video_embed(url, title, youtube_id=None) %}
 {% if url or youtube_id %}
   {% if youtube_id %}
-    <div class="embed-responsive embed-responsive-16by9 rounded border">
-      <iframe
-        class="embed-responsive-item"
-        src="https://www.youtube-nocookie.com/embed/{{ youtube_id }}?rel=0&modestbranding=1"
-        title="{{ title | e }}"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
+    <link rel="preconnect" href="https://www.youtube-nocookie.com">
+    <link rel="preconnect" href="https://i.ytimg.com">
+    <div class="m-video-aspect rounded overflow-hidden cursor-pointer"
+         id="ve-{{ youtube_id }}"
+         role="button"
+         tabindex="0"
+         aria-label="Play {{ title | e }}"
+         data-yt="{{ youtube_id }}">
+      <img src="https://img.youtube.com/vi/{{ youtube_id }}/hqdefault.jpg"
+           alt="{{ title | e }}"
+           class="position-absolute w-100 h-100 object-cover" />
+      <div class="m-play-btn" aria-hidden="true">
+        <i class="ti ti-player-play-filled text-white" style="font-size: 1.5rem;"></i>
+      </div>
     </div>
+    <script>
+      document.getElementById('ve-{{ youtube_id }}').addEventListener('click', function () {
+        var f = document.createElement('iframe');
+        f.src = 'https://www.youtube-nocookie.com/embed/{{ youtube_id }}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&color=white';
+        f.allow = 'autoplay; encrypted-media';
+        f.allowFullscreen = true;
+        f.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;border:0';
+        this.replaceChildren(f);
+      });
+    </script>
   {% elif url %}
     <video class="w-100 d-block rounded border" controls preload="metadata">
       <source src="{{ url | e }}" />
