@@ -1,0 +1,291 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+{% from "fossunited/templates/macros/maintainer_event_card.html" import maintainer_event_card %}
+{% from "fossunited/templates/macros/video_embed.html" import video_embed %}
+
+{% block title %}Maintainers May | FOSS United{% endblock %}
+
+{% block page_content %}
+<div class="v3-page m-page">
+  <div class="v3-container v3-container-wide">
+    {{ v3_navbar() }}
+
+    <header class="mt-5">
+      <div class="d-flex align-items-end mb-4 mt-4 m-hero-row">
+        <div class="m-hero-text flex-shrink-0">
+          <!-- Mobile: image above title -->
+          <div class="m-hero-img-mobile mb-3" aria-hidden="true">
+            <img src="/assets/fossunited/images/maintainers/maintainer-group.svg" alt=""
+                 class="img-fluid" onerror="this.style.display='none'" />
+          </div>
+          <h1 class="font-weight-bold mb-3 m-hero-title m-title-gradient">
+            Maintainers<br>May
+          </h1>
+          <p class="mb-0 text-base lh-base m-text-1" style="max-width: 380px;">
+            A month for the people who keep open source alive.
+            Meetups, resources, grants, and community, shaped with maintainers at the centre.
+          </p>
+        </div>
+        <div class="m-hero-img-desktop flex-fill justify-content-end align-items-end" aria-hidden="true">
+          <span class="m-hero-svg-wrap">{% include "public/images/maintainers/maintainer-group.svg" %}</span>
+        </div>
+      </div>
+
+      <nav aria-label="Maintainers May quick links">
+        <div class="d-flex flex-wrap gap-3 m-hero-cta-gap">
+          <a href="{{ links.meetups }}" class="m-btn m-btn-p">Join A Meetup</a>
+          <a href="{{ links.pack }}" class="m-btn m-btn-s">Maintainers Pack</a>
+          <a href="{{ links.forklore }}" target="_blank" rel="noopener noreferrer" class="m-btn m-btn-s">
+            Forklore.in <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+            <span class="sr-only">(opens in new tab)</span>
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" class="d-flex flex-column gap-section mt-section">
+
+      <!-- Upcoming Meetups + Maintainers Program -->
+      <section id="meetups" aria-labelledby="meetups-title" class="py-5">
+        <div class="row">
+
+          <!-- Left: Events list -->
+          <div class="col-lg-7 mb-5 mb-lg-0">
+            <h2 id="meetups-title" class="semi-bold mb-2 m-section-title m-text-1">
+              Upcoming Maintainers Meetups
+            </h2>
+            <p class="mb-4 text-base lh-base m-text-2">
+              As part of #MaintainersMay, FOSS United is organising unconference-style meetups for open
+              source maintainers all over India. The schedule is shaped by the people in the room.
+            </p>
+
+            {% if events %}
+              <ol class="d-flex flex-column gap-8 list-unstyled mb-0">
+                {% for event in events %}
+                  <li>{{ maintainer_event_card(event) }}</li>
+                {% endfor %}
+              </ol>
+              {% if events | length > 4 %}
+              <div class="mt-4 text-center">
+                <a href="{{ links.events }}" class="m-text-1 semi-bold">View More Events</a>
+              </div>
+              {% endif %}
+            {% else %}
+              <p class="m-text-2">No upcoming Maintainers meetups at the moment.</p>
+            {% endif %}
+          </div>
+
+          <!-- Right: Video + description -->
+          <div class="col-lg-5 m-col-gap-lg">
+            <h2 id="program-title" class="semi-bold mb-2 m-section-title m-text-1">Maintainers Program</h2>
+            <p class="mb-4 text-base lh-base m-text-2">
+              A community-led initiative to support, celebrate, and connect open source maintainers across India.
+            </p>
+
+            {% if videos %}
+              <div class="d-flex flex-column gap-3 mb-3">
+                {% for video in videos %}
+                  {{ video_embed(url=None, title=video.title, youtube_id=video.youtube_id) }}
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="rounded mb-3 d-flex align-items-center justify-content-center m-video-aspect m-card"
+                   aria-label="Video coming soon">
+                <i class="ti ti-video position-absolute text-5xl m-text-2" aria-hidden="true"></i>
+              </div>
+            {% endif %}
+
+            <div class="d-flex flex-wrap gap-3">
+              <a href="{{ links.thesis }}" class="m-btn m-btn-p">Read More</a>
+              <a href="{{ links.view_deck }}" target="_blank" rel="noopener noreferrer" class="m-btn m-btn-s">
+                View Deck <span class="sr-only">(opens in new tab)</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Forklore -->
+      <section aria-labelledby="forklore-title" class="py-5">
+        <div class="row">
+          <div class="col-md-4 mb-4 mb-md-0 d-flex align-items-center justify-content-center" aria-hidden="true">
+            <img src="/assets/fossunited/images/maintainers/forklore.svg" alt="Forklore"
+                 class="img-fluid" onerror="this.style.display='none'" loading="lazy" />
+          </div>
+          <div class="col-md-8">
+            <h2 id="forklore-title" class="sr-only">Forklore</h2>
+            <p class="mb-3 text-base lh-base m-text-1">
+              In May 2025, we started a small thing — every day for a month, we featured one Indian FOSS
+              maintainer on social media. Their story and their project. People liked it, so we kept it
+              going as #ForkloreFriday, a weekly post that has now profiled 70+ maintainers, all archived
+              at forklore.in
+            </p>
+            <a href="{{ links.forklore }}" target="_blank" rel="noopener noreferrer" class="m-btn m-btn-s">
+              Forklore.in <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Supporters -->
+      {% if partners_tier1 or partners_tier2 %}
+      <section aria-labelledby="supporters-title" class="py-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <h2 id="supporters-title" class="semi-bold mb-0 m-section-title m-text-1">Supporters</h2>
+          <a href="{{ links.view_deck }}" target="_blank" rel="noopener noreferrer"
+             class="semi-bold text-sm ls-wider text-uppercase m-text-1 text-underline">
+            View Deck<span class="sr-only"> (opens in new tab)</span>
+          </a>
+        </div>
+        <div class="m-card rounded-16 p-4">
+          {% if partners_tier1 %}
+          <ul class="list-unstyled d-flex flex-wrap justify-content-center gap-4 mb-0 {% if partners_tier2 %}mb-4{% endif %}">
+            {% for partner in partners_tier1 %}
+              <li class="text-center">
+                {% if partner.website %}
+                  <a href="{{ partner.website | e }}" target="_blank" rel="noopener noreferrer"
+                     class="d-block text-decoration-none"
+                     aria-label="{{ partner.company }} (opens in new tab)">
+                {% else %}
+                  <div>
+                {% endif %}
+                  {% if partner.logo %}
+                    <img src="{{ partner.logo }}" alt="{{ partner.company }}"
+                         class="rounded-16 mb-2 mx-auto d-block m-partner-logo-lg object-contain"
+                         loading="lazy" />
+                  {% else %}
+                    <div class="rounded-16 mb-2 mx-auto m-partner-logo-lg m-card" aria-hidden="true"></div>
+                  {% endif %}
+                  <p class="semi-bold mb-0 text-sm m-text-1">{{ partner.company }}</p>
+                {% if partner.website %}
+                  </a>
+                {% else %}
+                  </div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          {% if partners_tier2 %}
+          <ul class="list-unstyled d-flex flex-wrap justify-content-center gap-4 mb-0 {% if partners_tier1 %}mt-4{% endif %}">
+            {% for partner in partners_tier2 %}
+              <li class="text-center">
+                {% if partner.website %}
+                  <a href="{{ partner.website | e }}" target="_blank" rel="noopener noreferrer"
+                     class="d-block text-decoration-none"
+                     aria-label="{{ partner.company }} (opens in new tab)">
+                {% else %}
+                  <div>
+                {% endif %}
+                  {% if partner.logo %}
+                    <img src="{{ partner.logo }}" alt="{{ partner.company }}"
+                         class="rounded-16 mb-2 mx-auto d-block m-partner-logo object-contain"
+                         loading="lazy" />
+                  {% else %}
+                    <div class="rounded-16 mb-2 mx-auto m-partner-logo m-card" aria-hidden="true"></div>
+                  {% endif %}
+                  <p class="semi-bold mb-0 text-sm m-text-1">{{ partner.company }}</p>
+                {% if partner.website %}
+                  </a>
+                {% else %}
+                  </div>
+                {% endif %}
+              </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </section>
+      {% endif %}
+
+      <!-- FOSS United for Maintainers -->
+      <section aria-labelledby="foss-for-maintainers-title" class="py-5">
+        <h2 id="foss-for-maintainers-title" class="semi-bold mb-4 m-section-title m-text-1">
+          FOSS United for Maintainers
+        </h2>
+        <div class="row">
+          <div class="col-md-4 mb-4">
+            <a href="{{ links.fellowships }}" class="d-flex flex-column p-3 rounded text-decoration-none h-100 m-card">
+              <i class="ti ti-heart-handshake mb-2 text-5xl m-text-1" aria-hidden="true"></i>
+              <h3 class="semi-bold mb-2 text-xl m-text-1">Individual Grants &amp; Fellowships</h3>
+              <p class="mb-0 text-sm m-text-2 lh-base">
+                Project grants, fellowships, and financial support for Indian FOSS maintainers.
+              </p>
+            </a>
+          </div>
+          <div class="col-md-4 mb-4">
+            <a href="{{ links.infra_grants }}" class="d-flex flex-column p-3 rounded text-decoration-none h-100 m-card">
+              <i class="ti ti-box-multiple mb-2 text-5xl m-text-1" aria-hidden="true"></i>
+              <h3 class="semi-bold mb-2 text-xl m-text-1">Infrastructure Support</h3>
+              <p class="mb-0 text-sm m-text-2 lh-base">
+                Hosting and tooling costs covered for small FOSS teams who need the runway to keep shipping.
+              </p>
+            </a>
+          </div>
+          <div class="col-md-4 mb-4">
+            <a href="{{ links.other_grants }}" class="d-flex flex-column p-3 rounded text-decoration-none h-100 m-card">
+              <i class="ti ti-cash mb-2 text-5xl m-text-1" aria-hidden="true"></i>
+              <h3 class="semi-bold mb-2 text-xl m-text-1">Other Grants</h3>
+              <p class="mb-0 text-sm m-text-2 lh-base">
+                Fund readable documentation, design, and better onboarding flows. Travel grants available.
+              </p>
+            </a>
+          </div>
+        </div>
+        <div class="d-flex flex-wrap gap-3 mt-8">
+          <a href="{{ links.thesis }}" class="m-btn m-btn-p">Maintainers Program</a>
+          <a href="{{ links.pack }}" class="m-btn m-btn-s">Maintainers Pack</a>
+        </div>
+      </section>
+
+      <!-- Maintainer Blogs -->
+      {% if blogs %}
+      <section aria-labelledby="blogs-title" class="py-5">
+        <h2 id="blogs-title" class="semi-bold mb-4 m-section-title m-text-1">Notes from Maintainers</h2>
+        <div class="row">
+          {% for blog in blogs %}
+          <div class="col-md-4 mb-4">
+            <article class="h-100">
+              <a href="/{{ blog.route | e }}" class="d-flex flex-column p-3 rounded text-decoration-none h-100 m-card">
+                <h3 class="semi-bold mb-2 text-xl m-text-1 lh-snug ls-tight line-clamp-2">
+                  {{ blog.title }}
+                </h3>
+                <p class="mb-3 text-sm m-text-2 lh-base flex-fill line-clamp-3">
+                  {{ blog.blog_intro }}
+                </p>
+                <footer class="d-flex align-items-center gap-3 p-2 rounded mt-auto m-bg m-border">
+                  {% if blog.blogger_avatar %}
+                    <img src="{{ blog.blogger_avatar }}"
+                         alt="{{ blog.blogger_name }}"
+                         class="rounded avatar-sm object-cover"
+                         loading="lazy" />
+                  {% else %}
+                    <div class="rounded avatar-sm m-border-bg" aria-hidden="true"></div>
+                  {% endif %}
+                  <div class="overflow-hidden">
+                    <p class="mb-0 text-truncate text-base m-text-1">{{ blog.blogger_name }}</p>
+                    <p class="mb-0 text-sm m-text-2">
+                      <time datetime="{{ blog.published_on }}">{{ blog.date_str }}</time>
+                      {% if blog.read_time %} · <span>{{ blog.read_time }} min read</span>{% endif %}
+                    </p>
+                  </div>
+                </footer>
+              </a>
+            </article>
+          </div>
+          {% endfor %}
+        </div>
+        {% if blogs_has_more %}
+        <div class="mt-4 text-center">
+          <a href="https://fossunited.org/blog/maintainers" class="m-text-1 semi-bold">Read More</a>
+        </div>
+        {% endif %}
+      </section>
+      {% endif %}
+
+    </main>
+  </div>
+</div>
+
+{% endblock %}
