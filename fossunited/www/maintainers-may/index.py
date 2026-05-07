@@ -92,8 +92,8 @@ def get_context(context):
 
     context.links = frappe._dict(
         meetups="#meetups",
-        pack="/maintainers-program/thesis",
-        thesis="/maintainers-program/thesis",
+        pack="/maintainers/thesis",
+        thesis="/maintainers/thesis",
         view_deck="https://fossunited.org/files/MP-deck.pdf",
         forklore="https://forklore.in",
         events="/events/timeline?s=maintainers",

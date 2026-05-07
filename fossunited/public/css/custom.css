@@ -3111,15 +3111,15 @@ body:has(.m-page) { background: var(--m-bg) !important; }
   font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em;
   text-transform: uppercase; text-decoration: none;
   border-radius: 8px; white-space: nowrap;
-  transition: opacity 0.15s ease;
+  transition: filter 0.15s ease;
 }
-.m-btn:hover, .m-btn:focus { opacity: 0.75; color: inherit; text-decoration: none; }
+.m-btn:hover, .m-btn:focus { filter: brightness(1.15); color: inherit; text-decoration: none; }
 .m-btn-p { background: var(--m-btn-p-bg);  color: var(--m-btn-p-text); }
 .m-btn-s { background: var(--m-border);    color: var(--m-text-1); }
 
 /* --- Text links in maintainer suite --- */
 .m-text-1[href]:hover, .m-text-2[href]:hover,
-a.m-text-1:hover, a.m-text-2:hover { opacity: 0.7; color: inherit; text-decoration: inherit; }
+a.m-text-1:hover, a.m-text-2:hover { opacity: 0.85; color: inherit; text-decoration: inherit; }
 
 /* --- Hero title --- */
 .m-hero-title { font-size: 5.5rem; line-height: 1; letter-spacing: -0.04em; padding-bottom: 0.12em; user-select: none; }
