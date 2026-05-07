@@ -613,6 +613,21 @@
         }
       }
 
+      // Read ?s= URL param to pre-populate search
+      const _urlSearch = new URLSearchParams(window.location.search).get('s')
+      if (_urlSearch) {
+        dom.searchInput.value = _urlSearch
+        const _parsed = parseSearchBangs(_urlSearch)
+        Object.assign(state.filters, {
+          search: _parsed.search,
+          location: _parsed.location,
+          start: _parsed.start,
+          end: _parsed.end,
+        })
+        dom.startDate.value = _parsed.start
+        dom.endDate.value = _parsed.end
+      }
+
       // Initialize
       setupPagination()
       render()
