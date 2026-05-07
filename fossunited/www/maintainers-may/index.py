@@ -34,7 +34,6 @@ def get_context(context):
         ],
         order_by="event_start_date asc",
         page_length=5,
-        ignore_permissions=True,
     )
 
     for e in events:
@@ -66,7 +65,6 @@ def get_context(context):
         ],
         order_by="published_on desc",
         page_length=7,
-        ignore_permissions=True,
     )
 
     for blog in blogs:
