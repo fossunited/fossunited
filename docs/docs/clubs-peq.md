@@ -5,7 +5,11 @@ To make sure that the broader FOSS United community gets to know of the awesome 
 
 ### New to the Forum?
 
-If you are posting on the forum for the first time, start by creating a thread and posting your first message on thread with the following details.
+If you are posting on the forum for the first time, start by creating a topic and posting your first message on thread with the following details.
+
+**Title: [Club Name]**\
+**Category: Student Program, FOSS Club**
+
 
 1. Who are you?
 2. What's your Club's name?

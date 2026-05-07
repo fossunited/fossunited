@@ -10,7 +10,6 @@ Ensure you include a dedicated slide in your opening ceremony deck that displays
 ## Incident Response Checklist
 
 - [x] ~~**Open this checklist**~~
-- [ ] **Make a copy of this checklist for yourself**
 - [ ] **Stay Calm:** Take a breath. Your composure sets the tone for the reporter’s safety.
 - [ ] **Involve a Trusted Third Person:** If possible, ensure you are not alone with the reporter. Bring in a neutral witness to observe and "break the mandate."
     - This person must not belong to the group being reported.
@@ -32,6 +31,6 @@ Ensure you include a dedicated slide in your opening ceremony deck that displays
 - [ ] **Find a Safe Space:** Immediately move the reporter to a private, quiet area away from the incident.
 - [ ] **Protect Privacy:** Assure them that this stays within the necessary FOSS United team members.
 - [ ] **Call the Incident Line:** Dial **[9900982939](tel:+919900982939)** immediately. Tell the reporter that this is standard operating procedure as mentioned in the [Code of Conduct](https://fossunited.org/code-of-conduct). Call twice in a row to bypass "Do Not Disturb" (DND) settings on phones.
-    - **Follow Up:** If the call isn't answered after the second attempt, notify the central team (Rahul, Ansh, Siddharth) by calling them directly.
+    - **Follow Up:** If the call isn't answered after the second attempt, notify the central team (Rahul or Siddharth) by calling them directly.
 - [ ] **Don’t play the interpreter:** Let the reporter speak to the FOSS United team member.
 - [ ] **Action:** Wait for the team’s instructions and handle resolutions accordingly.
