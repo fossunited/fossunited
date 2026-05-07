@@ -45,18 +45,14 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.fossunited.doctype.event_project_showcase.event_project_showcase import (
             EventProjectShowcase,
         )
-        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import (
-            FOSSEventField,
-        )
+        from fossunited.fossunited.doctype.foss_event_field.foss_event_field import FOSSEventField
         from fossunited.fossunited.doctype.foss_event_schedule.foss_event_schedule import (
             FOSSEventSchedule,
         )
         from fossunited.fossunited.doctype.foss_event_sponsor.foss_event_sponsor import (
             FOSSEventSponsor,
         )
-        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import (
-            FOSSTicketTier,
-        )
+        from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
         chapter: DF.Link | None
@@ -84,6 +80,7 @@ class FOSSChapterEvent(WebsiteGenerator):
             "Linux Installation Party",
         ]
         external_event_url: DF.Data | None
+        feedback_sent: DF.Check
         hall_options: DF.SmallText | None
         has_external_webpage: DF.Check
         is_external_event: DF.Check
@@ -119,6 +116,22 @@ class FOSSChapterEvent(WebsiteGenerator):
     def before_insert(self):
         self.copy_team_members()
 
+    def on_update(self):
+        self.sync_event_member_shares()
+        if (
+            self.has_value_changed("status")
+            and self.status == "Concluded"
+            and not self.feedback_sent
+            and self.event_end_date
+            and datetime.now() >= frappe.utils.get_datetime(self.event_end_date)
+        ):
+            frappe.enqueue(
+                "fossunited.utils.notifications.send_event_feedback_request",
+                event_id=self.name,
+                queue="long",
+                enqueue_after_commit=True,
+            )
+
     def validate(self):
         self.validate_permalink()
 
@@ -136,9 +149,6 @@ class FOSSChapterEvent(WebsiteGenerator):
                 self.map_coordinate = f"{lat},{lng}" if (lat and lng) else None
             else:
                 self.map_coordinate = None
-
-    def on_update(self):
-        self.sync_event_member_shares()
 
     def sync_event_member_shares(self):
         prev = self.get_doc_before_save()

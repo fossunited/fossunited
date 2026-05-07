@@ -44,6 +44,7 @@
   "event_start_date",
   "column_break_ae9v",
   "event_end_date",
+  "feedback_sent",
   "livestreaming_section",
   "livestream_link",
   "livestream_embed_link",
@@ -483,6 +484,13 @@
    "fieldname": "map_coordinate",
    "fieldtype": "Data",
    "label": "Map Coordinates"
+  },
+  {
+   "default": "0",
+   "fieldname": "feedback_sent",
+   "fieldtype": "Check",
+   "label": "Feedback sent?",
+   "read_only": 1
   }
  ],
  "has_web_view": 1,
@@ -515,7 +523,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-03-24 16:46:54.159578",
+ "modified": "2026-05-07 16:53:25.160146",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
