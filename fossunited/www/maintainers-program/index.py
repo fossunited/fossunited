@@ -83,8 +83,9 @@ def get_context(context):
         fields=["company", "website", "logo"],
     )
 
-    context.video_youtube_id = "nV_1WCU0XOM"
-    context.video_title = "Maintainers Program"
+    context.videos = [
+        {"youtube_id": "nV_1WCU0XOM", "title": "Maintainers Program"},
+    ]
 
     context.links = frappe._dict(
         meetups="#meetups",
