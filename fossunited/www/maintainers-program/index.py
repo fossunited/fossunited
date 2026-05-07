@@ -34,6 +34,7 @@ def get_context(context):
         ],
         order_by="event_start_date asc",
         page_length=5,
+        ignore_permissions=True,
     )
 
     for e in events:
@@ -61,13 +62,17 @@ def get_context(context):
             "read_time",
             "blogger.full_name as blogger_name",
             "blogger.avatar as blogger_avatar",
+            "blogger.user as blogger_user",
         ],
         order_by="published_on desc",
         page_length=7,
+        ignore_permissions=True,
     )
 
     for blog in blogs:
         blog.date_str = blog.published_on.strftime("%-d %b %Y") if blog.published_on else ""
+        if not blog.blogger_avatar and blog.blogger_user:
+            blog.blogger_avatar = frappe.db.get_value("User", blog.blogger_user, "user_image")
 
     context.blogs = blogs[:6]
     context.blogs_has_more = len(blogs) > 6
