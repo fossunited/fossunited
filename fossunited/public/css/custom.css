@@ -1738,16 +1738,24 @@ body:has(.v3-page) {
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
   text-transform: uppercase;
   letter-spacing: 0.07rem;
   cursor: pointer;
+  touch-action: manipulation;
+  user-select: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
   text-decoration: none;
-  z-index: 999;
   white-space: nowrap;
+  background-image: none;
+  box-sizing: border-box;
+  -webkit-appearance: none; appearance: none;
+  -webkit-font-smoothing: antialiased;
+  z-index: 999;
 }
 .v3-btn--sm {
   padding: 0.375rem 0.625rem;
@@ -3104,18 +3112,24 @@ body:has(.m-page) { background: var(--m-bg) !important; }
 .m-border   { border: 1px solid var(--m-border); }
 .m-card     { background: var(--m-card-bg); border: 1px solid var(--m-border); }
 
-/* --- Maintainer buttons --- */
+/* --- Maintainer buttons (base on v3-btn) --- */
 .m-btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.25rem;
-  height: 44px; padding: 11px 20px;
-  font-size: 0.875rem; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; text-decoration: none;
-  border-radius: 8px; white-space: nowrap;
+  height: 44px; padding: 11px 20px; letter-spacing: 0.08em;
+  font-family: inherit; font-size: 0.875rem;
+  line-height: 1;
+  box-sizing: border-box;
+  -webkit-appearance: none; appearance: none;
+  -webkit-font-smoothing: antialiased;
   transition: filter 0.15s ease;
 }
-.m-btn:hover, .m-btn:focus { filter: brightness(1.15); color: inherit; text-decoration: none; }
-.m-btn-p { background: var(--m-btn-p-bg);  color: var(--m-btn-p-text); }
-.m-btn-s { background: var(--m-border);    color: var(--m-text-1); }
+
+.m-btn-p              { background: var(--m-btn-p-bg); color: var(--m-btn-p-text); }
+.m-btn-p:hover,
+.m-btn-p:focus        { background: var(--m-btn-p-bg); color: var(--m-btn-p-text); filter: brightness(1.12); }
+
+.m-btn-s              { background: var(--m-border); color: var(--m-text-1); }
+.m-btn-s:hover,
+.m-btn-s:focus        { background: var(--m-border); color: var(--m-text-1); filter: brightness(1.2); }
 
 /* --- Text links in maintainer suite --- */
 .m-text-1[href]:hover, .m-text-2[href]:hover,
@@ -3208,7 +3222,15 @@ a.m-text-1:hover, a.m-text-2:hover { opacity: 0.85; color: inherit; text-decorat
 /* --- Section spacing (100px desktop, 48px mobile) --- */
 .gap-section  { gap: 5.25rem; }
 .mt-section   { margin-top: 6.25rem; }
-@media (max-width: 839px) { .gap-section { gap: 3rem; } .mt-section { margin-top: 3rem; } }
+.mb-section   { margin-bottom: 5.25rem; }
+.pb-section   { padding-bottom: 5.25rem; }
+@media (max-width: 839px) {
+  .gap-section { gap: 3rem; }
+  .mt-section  { margin-top: 3rem; }
+  .mb-section  { margin-bottom: 3rem; }
+  .pb-section  { padding-bottom: 3rem; }
+  .m-col-mobile-gap { margin-bottom: 5rem; }
+}
 
 /* --- Hero CTA gap (80px desktop, compact mobile) --- */
 .m-hero-cta-gap { margin-top: 5rem; }
@@ -3218,7 +3240,7 @@ a.m-text-1:hover, a.m-text-2:hover { opacity: 0.85; color: inherit; text-decorat
 .mt-8 { margin-top: 2.5rem; }
 
 /* --- Events/video desktop column gap (70px) --- */
-@media (min-width: 992px) { .m-col-gap-lg { padding-left: 4.375rem; } }
+@media (min-width: 992px) { .m-col-gap-lg { padding-left: 2.5rem; } }
 
 /* --- Rounded 16 utility --- */
 .rounded-16 { border-radius: 16px !important; }
@@ -3228,8 +3250,9 @@ a.m-text-1:hover, a.m-text-2:hover { opacity: 0.85; color: inherit; text-decorat
 .text-underline:hover { opacity: 0.7; color: inherit; }
 
 /* --- Hero inline SVG sizing --- */
-.m-hero-svg-wrap { line-height: 0; }
-.m-hero-svg-wrap svg { max-height: 300px; width: auto; height: auto; display: block; }
+.m-hero-img-desktop { min-width: 0; overflow: hidden; }
+.m-hero-svg-wrap { line-height: 0; display: block; }
+.m-hero-svg-wrap svg { max-height: 300px; max-width: 100%; width: auto; height: auto; display: block; }
 
 /* --- SVG gradient: light-mode override for maintainer-group vector blocks --- */
 [data-theme="light"] #paint0_linear_3822_11984 stop:first-child,
