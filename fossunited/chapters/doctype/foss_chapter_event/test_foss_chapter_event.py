@@ -3,18 +3,22 @@ from unittest.mock import patch
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_VOLUNTEER
+from fossunited.doctype_ids import (
+    CAMPAIGN,
+    CHAPTER,
+    EMAIL_GROUP,
+    EMAIL_MEMBER,
+    EVENT,
+    EVENT_VOLUNTEER,
+)
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
-    FOSSEventRSVPFactory,
-    FOSSEventRSVPSubmissionFactory,
-    FOSSEventTicketFactory,
 )
 from fossunited.utils.notifications import send_event_feedback_request
 
 ENQUEUE_PATH = "fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event.frappe.enqueue"
-SENDMAIL_PATH = "fossunited.utils.notifications.frappe.sendmail"
+NEWSLETTER_SEND_PATH = "frappe.email.doctype.newsletter.newsletter.Newsletter.send_emails"
 
 
 class TestFOSSChapterEvent(FrappeTestCase):
@@ -50,12 +54,14 @@ class TestFOSSChapterEvent(FrappeTestCase):
 
         # Different chapter, same slug → should succeed
         other_chapter = FOSSChapterFactory.create()
-        FOSSChapterEventFactory.create(
-            chapter=other_chapter.name, event_permalink=existing_permalink
-        )
-
-        # Same chapter, different slug → should succeed
-        FOSSChapterEventFactory.create(chapter=self.chapter.name)
+        try:
+            FOSSChapterEventFactory.create(
+                chapter=other_chapter.name, event_permalink=existing_permalink
+            )
+            # Same chapter, different slug → should succeed
+            FOSSChapterEventFactory.create(chapter=self.chapter.name)
+        finally:
+            frappe.delete_doc(CHAPTER, other_chapter.name, force=True)
 
     def test_email_groups_are_created_on_event_insert(self):
         expected_group_types = [
@@ -134,6 +140,16 @@ class TestFeedbackEmail(FrappeTestCase):
         frappe.delete_doc(EVENT, self.event.name, force=True)
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
 
+    def _add_to_email_group(self, group_type, email):
+        group = frappe.db.get_value(
+            EMAIL_GROUP,
+            {"reference_document": self.event.name, "group_type": group_type},
+            "name",
+        )
+        frappe.get_doc({"doctype": EMAIL_MEMBER, "email_group": group, "email": email}).insert(
+            ignore_permissions=True
+        )
+
     @patch(ENQUEUE_PATH)
     def test_concluding_past_event_enqueues_feedback(self, mock_enqueue):
         event = frappe.get_doc(EVENT, self.event.name)
@@ -166,47 +182,27 @@ class TestFeedbackEmail(FrappeTestCase):
         mock_enqueue.assert_not_called()
         frappe.delete_doc(EVENT, event.name, force=True)
 
-    @patch(SENDMAIL_PATH)
-    def test_sends_to_accepted_rsvp_skips_pending(self, mock_sendmail):
-        rsvp = FOSSEventRSVPFactory.create(event=self.event.name)
-        FOSSEventRSVPSubmissionFactory.create(
-            linked_rsvp=rsvp.name, email="accepted@test.com", status="Accepted"
-        )
-        FOSSEventRSVPSubmissionFactory.create(
-            linked_rsvp=rsvp.name, email="pending@test.com", status="Pending"
-        )
+    @patch(NEWSLETTER_SEND_PATH)
+    def test_creates_campaign_when_participants_exist(self, mock_send):
+        self._add_to_email_group("Event Participants", "participant@test.com")
 
         send_event_feedback_request(self.event.name)
 
-        sent_to = {c.kwargs["recipients"][0] for c in mock_sendmail.call_args_list}
-        self.assertIn("accepted@test.com", sent_to)
-        self.assertNotIn("pending@test.com", sent_to)
+        mock_send.assert_called_once()
+        self.assertTrue(frappe.db.exists(CAMPAIGN, {"reference_document": self.event.name}))
 
-    @patch(SENDMAIL_PATH)
-    def test_sends_to_ticket_holders_for_paid_event(self, mock_sendmail):
-        paid_event = FOSSChapterEventFactory.create(
-            "with_past_dates", "with_paid_tickets", chapter=self.chapter.name
-        )
-        FOSSEventTicketFactory.create(event=paid_event.name, email="ticket@test.com")
-
-        send_event_feedback_request(paid_event.name)
-
-        sent_to = {c.kwargs["recipients"][0] for c in mock_sendmail.call_args_list}
-        self.assertIn("ticket@test.com", sent_to)
-        frappe.delete_doc(EVENT, paid_event.name, force=True)
-
-    @patch(SENDMAIL_PATH)
-    def test_feedback_sent_flag_set_after_send(self, mock_sendmail):
-        rsvp = FOSSEventRSVPFactory.create(event=self.event.name)
-        FOSSEventRSVPSubmissionFactory.create(
-            linked_rsvp=rsvp.name, email="flag@test.com", status="Accepted"
-        )
+    @patch(NEWSLETTER_SEND_PATH)
+    def test_feedback_sent_flag_set_after_send(self, mock_send):
+        self._add_to_email_group("Event Participants", "flag@test.com")
 
         send_event_feedback_request(self.event.name)
 
         self.assertEqual(frappe.db.get_value(EVENT, self.event.name, "feedback_sent"), 1)
 
-    @patch(SENDMAIL_PATH)
-    def test_no_send_if_no_participants(self, mock_sendmail):
+    @patch(NEWSLETTER_SEND_PATH)
+    def test_no_send_if_no_participants(self, mock_send):
+        # Email groups exist but empty → total_subscribers = 0 → bail early
         send_event_feedback_request(self.event.name)
-        mock_sendmail.assert_not_called()
+
+        mock_send.assert_not_called()
+        self.assertFalse(frappe.db.exists(CAMPAIGN, {"reference_document": self.event.name}))

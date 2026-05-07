@@ -38,7 +38,11 @@ class FOSSEventRSVPSubmissionFactory(BaseFactory):
     def create(cls, *traits, **overrides):
         """Override to force status via db.set_value after insert,
         bypassing handle_submission_status in before_insert."""
-        desired_status = overrides.get("status", "Accepted")
+        # Resolve desired status from merged attrs (traits + overrides) before insert
+        instance = cls(*traits)
+        instance.overrides = overrides
+        desired_status = {**instance.attributes, **overrides}.get("status", "Accepted")
+
         doc = super().create(*traits, **overrides)
         if doc.status != desired_status:
             frappe.db.set_value(RSVP_RESPONSE, doc.name, "status", desired_status)
