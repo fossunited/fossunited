@@ -1,22 +1,23 @@
 {% macro maintainer_event_card(event) %}
-{% set event_url    = event.external_event_url if event.is_external_event else ("/" + event.route if event.route else "#") %}
-{% set banner       = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
+{% set event_url     = event.external_event_url if event.is_external_event else ("/" + event.route if event.route else "#") %}
+{% set banner        = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
 {% set chapter_label = event.chapter_name or event.chapter_city or "FOSS United" %}
-{% set date_str     = event.date_str or "Date TBD" %}
+{% set date_str      = event.date_str or "Date TBD" %}
 <a href="{{ event_url }}" class="d-flex gap-3 text-decoration-none color-inherit">
   <div class="m-event-thumb">
     <img src="{{ banner }}" alt="{{ event.event_name }}"
          class="w-100 h-100 object-cover" loading="lazy" />
   </div>
-  <div class="d-flex flex-column flex-fill overflow-hidden rounded m-card-bg m-event-body">
-    <div class="d-flex align-items-end m-card-bg">
-      <div class="px-3 pt-2 pb-0 m-card-bg m-rounded-top">
-        <span class="semi-bold text-uppercase m-city-badge" aria-label="Chapter">
-          {{ chapter_label }}
-        </span>
+  <div class="d-flex flex-column flex-fill overflow-hidden m-event-body" style="border-radius: 0 16px 16px 16px;">
+    <div class="d-flex align-items-end">
+      <div class="m-city-tab">
+        <span class="m-city-badge" aria-label="Chapter">{{ chapter_label }}</span>
       </div>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M0 0C0 8.83655 7.16344 16 16 16H0V0Z" fill="var(--m-card-bg)" />
+      </svg>
     </div>
-    <div class="d-flex align-items-center gap-2 p-2 flex-fill m-card-bg">
+    <div class="d-flex align-items-center gap-2 p-2 flex-fill m-card-bg" style="border-radius: 0 16px 16px 16px;">
       <div class="d-flex flex-column align-items-center justify-content-center rounded m-bg m-border m-date-box"
            aria-label="Event date">
         {% if event.date_day and event.date_day != "TBD" %}
