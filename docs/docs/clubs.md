@@ -10,7 +10,20 @@ By being recognised as an official club, you gain access to FOSS United's team o
 
 As a FOSS Club, you will mentor students at your college to cultivate a school of thought aligned with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons).
 
-### i. How to apply as a club?
+### i. Who should apply and why?
+Applications are encouraged from students who:
+1. Have a genuine interest in open source and want to build a thriving campus community around its principles.
+2. Want to create environments where knowledge is shared openly and students learn by building together.
+3. Are willing to put in the consistent effort required to organize, manage, and sustain a club over time.
+
+### ii. Who is this not for?
+The program may not be suitable for:
+- Students who want to contribute to open source without having to deal with the logistics of setting up a club and engaging a broader audience.
+- Students primarily seeking leadership titles for their resumes rather than focusing on building genuine communities.
+- Students without an actual interest in FOSS culture and philosophy
+
+
+### iii. How to apply as a club?
 While the applications are typically accepted at the start of every financial year, we'd encourage you to setup a call with [our team](https://cal.com/team/fossunited/learners-program) whenever you are ready.  Applications require:
 - Information about the college and team
 - Explanation of motivation for starting a FOSS club
@@ -19,16 +32,6 @@ While the applications are typically accepted at the start of every financial ye
 
 Application link: [https://fossunited.org/clubs/start-a-club/new](https://fossunited.org/clubs/start-a-club/new)
 
-### ii. Who should apply and why?
-Applications are encouraged from students who:
-1. Have a genuine interest in open source and want to build a thriving campus community around its principles.
-2. Want to create environments where knowledge is shared openly and students learn by building together.
-3. Are willing to put in the consistent effort required to organize, manage, and sustain a club over time.
-
-### iii. Who is this not for?
-The program may not be suitable for:
-- Students primarily seeking leadership titles for their resumes rather than focusing on building genuine communities.
-- Students without an actual interest in FOSS culture and philosophy
 
 ### iv. What are the benefits of collaborating with FOSS United?
 Support and benefits include, but are not limited to:
