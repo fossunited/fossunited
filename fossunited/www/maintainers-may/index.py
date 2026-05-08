@@ -64,7 +64,6 @@ def get_context(context):
             "blogger.user as blogger_user",
         ],
         order_by="published_on desc",
-        page_length=7,
     )
 
     for blog in blogs:
@@ -72,8 +71,7 @@ def get_context(context):
         if not blog.blogger_avatar and blog.blogger_user:
             blog.blogger_avatar = frappe.db.get_value("User", blog.blogger_user, "user_image")
 
-    context.blogs = blogs[:6]
-    context.blogs_has_more = len(blogs) > 6
+    context.blogs = blogs
 
     context.partners_tier1 = frappe.get_all(
         "Industry Partners",
