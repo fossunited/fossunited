@@ -13,10 +13,6 @@
     <header class="mt-5">
       <div class="d-flex align-items-end mb-4 mt-4 m-hero-row">
         <div class="m-hero-text flex-shrink-0">
-          <!-- Mobile: image above title -->
-          <div class="m-hero-img-mobile mb-3" aria-hidden="true">
-            <span class="m-hero-svg-wrap">{% include "public/images/maintainers/maintainer-group.svg" %}</span>
-          </div>
           <h1 class="font-weight-bold mb-3 m-hero-title m-title-gradient">
             Maintainers<br>May
           </h1>
@@ -24,7 +20,8 @@
             A month to come together as keepers of the digital commons. Vent about the good, the bad. Rally ideas and resources.
           </p>
         </div>
-        <div class="m-hero-img-desktop flex-fill justify-content-end align-items-end" aria-hidden="true">
+        <!-- Single inline SVG — CSS shows above title on mobile, beside title on desktop -->
+        <div class="m-hero-img flex-fill justify-content-end align-items-end" aria-hidden="true">
           <span class="m-hero-svg-wrap">{% include "public/images/maintainers/maintainer-group.svg" %}</span>
         </div>
       </div>
@@ -32,7 +29,13 @@
       <nav aria-label="Maintainers May quick links">
         <div class="d-flex flex-wrap gap-3 m-hero-cta-gap">
           <a href="{{ links.meetups }}" class="v3-btn m-btn m-btn-p">Join A Meetup</a>
+          {% if links.pack %}
           <a href="{{ links.pack }}" class="v3-btn m-btn m-btn-s">Maintainers Pack</a>
+          {% else %}
+          <span class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
+                data-toggle="tooltip" data-placement="bottom" title="WIP - page not yet ready"
+                tabindex="0" aria-disabled="true">Maintainers Pack</span>
+          {% endif %}
           <a href="{{ links.forklore }}" target="_blank" rel="noopener noreferrer" class="v3-btn m-btn m-btn-s">
             Forklore.in <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
             <span class="sr-only">(opens in new tab)</span>
@@ -53,8 +56,8 @@
               Upcoming Maintainers Meetups
             </h2>
             <p class="mb-4 text-base lh-base m-text-2">
-              As part of #MaintainersMay, FOSS United is organising unconference-style meetups for open
-              source maintainers all over India. The schedule is shaped by the people in the room.
+              As part of #MaintainersMay, FOSS United is organising unconference-style meetups for
+              digital commons maintainers all over India. More events will be added here soon!
             </p>
 
             {% if events %}
@@ -129,13 +132,7 @@
       <!-- Supporters -->
       {% if partners_tier1 or partners_tier2 %}
       <section aria-labelledby="supporters-title" class="py-5">
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <h2 id="supporters-title" class="semi-bold mb-0 m-section-title m-text-1">Supporters</h2>
-          <a href="{{ links.view_deck }}" target="_blank" rel="noopener noreferrer"
-             class="semi-bold text-sm ls-wider text-uppercase m-text-1 text-underline">
-            View Deck<span class="sr-only"> (opens in new tab)</span>
-          </a>
-        </div>
+        <h2 id="supporters-title" class="semi-bold mb-4 m-section-title m-text-1">Supporters</h2>
         <div class="m-card rounded-16 p-4">
           {% if partners_tier1 %}
           <ul class="list-unstyled d-flex flex-wrap justify-content-center gap-4 mb-0 {% if partners_tier2 %}mb-4{% endif %}">
@@ -194,6 +191,11 @@
           </ul>
           {% endif %}
         </div>
+        <p class="mt-3 mb-0 text-sm m-text-2 text-center">
+          More supporters joining soon.
+          <a href="{{ links.view_deck }}" target="_blank" rel="noopener noreferrer" class="m-text-1 underline">Check out the deck</a>
+          if you'd like to partner with us.
+        </p>
       </section>
       {% endif %}
 
@@ -233,7 +235,13 @@
         </div>
         <div class="d-flex flex-wrap gap-3 mt-8">
           <a href="{{ links.thesis }}" class="v3-btn m-btn m-btn-p">Maintainers Program</a>
+          {% if links.pack %}
           <a href="{{ links.pack }}" class="v3-btn m-btn m-btn-s">Maintainers Pack</a>
+          {% else %}
+          <span class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
+                data-toggle="tooltip" data-placement="bottom" title="WIP - page not yet ready"
+                tabindex="0" aria-disabled="true">Maintainers Pack</span>
+          {% endif %}
         </div>
       </section>
 
@@ -283,6 +291,7 @@
       {% endif %}
 
     </main>
+    <script>$(function(){ $('[data-toggle="tooltip"]').tooltip(); });</script>
   </div>
 </div>
 
