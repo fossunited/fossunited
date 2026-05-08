@@ -1,7 +1,7 @@
 {% macro maintainer_event_card(event) %}
 {% set event_url    = event.external_event_url if event.is_external_event else ("/" + event.route if event.route else "#") %}
 {% set banner       = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
-{% set chapter_label = event._chapter_city or event._chapter_name or "FOSS United" %}
+{% set chapter_label = event.chapter_name or event.chapter_city or "FOSS United" %}
 {% set date_str     = event.date_str or "Date TBD" %}
 <a href="{{ event_url }}" class="d-flex gap-3 text-decoration-none color-inherit">
   <div class="m-event-thumb">

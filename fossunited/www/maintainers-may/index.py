@@ -29,8 +29,8 @@ def get_context(context):
             "event_location",
             "banner_image",
             "chapter",
-            "chapter.chapter_name as _chapter_name",
-            "chapter.city as _chapter_city",
+            "chapter.chapter_name as chapter_name",
+            "chapter.city as chapter_city",
         ],
         order_by="event_start_date asc",
         page_length=5,
@@ -90,7 +90,7 @@ def get_context(context):
 
     context.links = frappe._dict(
         meetups="#meetups",
-        pack="/maintainers/thesis",
+        pack="",
         thesis="/maintainers/thesis",
         view_deck="https://fossunited.org/files/MP-deck.pdf",
         forklore="https://forklore.in",
