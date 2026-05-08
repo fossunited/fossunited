@@ -15,6 +15,9 @@
 <a href="https://tailwindcss.com/">
 <img src="https://img.shields.io/badge/TailwindCSS-dashboard-38bdf8?style=for-the-badge&logo=tailwindcss&labelColor=black" alt="Badge for TailwindCSS, used for styling components">
 </a>
+<a href="https://project-types.github.io/#stadium">
+  <img src="https://img.shields.io/badge/project%20type-stadium-orange" alt="Stadium Badge"/>
+</a>
 </p>
 
 
