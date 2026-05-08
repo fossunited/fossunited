@@ -28,7 +28,7 @@ def create_profile_on_user_create(doc, method):
                 "user": doc.name,
                 "full_name": doc.full_name,
                 "username": doc.username,
-                "is_published": 1,
+                "is_published": 0,
             }
         )
         profile.insert(ignore_permissions=True)
