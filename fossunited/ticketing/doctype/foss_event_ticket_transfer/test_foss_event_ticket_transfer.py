@@ -3,27 +3,19 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TRANSFER
-from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FOSSEventTicketFactory,
+)
 
 fake = Faker()
 
 
 class TestFOSSEventTicketTransfer(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(
-            chapter=self.chapter,
-            is_paid_event=True,
-            tickets_status="Live",
-            tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Test",
-                    "price": 100,
-                    "maximum_tickets": 5,
-                }
-            ],
-        )
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -42,7 +34,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         }
 
         # Given for an event, a ticket is created. For that ticket, a transfer is generated.
-        ticket = insert_test_ticket(
+        ticket = FOSSEventTicketFactory.create(
             event=self.event.name,
             full_name=sender["full_name"],
             email=sender["email"],
@@ -91,7 +83,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         # Given an event and a ticket linked to the event
         # With a ticket created for a user, try to transfer this ticket to another user while
         # passing "Completed" as the status
-        ticket = insert_test_ticket(event=self.event.name)
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
 
         # Then verify that this operation raises a ValidationError
         with self.assertRaises(frappe.exceptions.ValidationError):
@@ -121,7 +113,7 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
             "email": fake.email(),
         }
 
-        ticket = insert_test_ticket(
+        ticket = FOSSEventTicketFactory.create(
             event=self.event.name,
             full_name=sender["full_name"],
             email=sender["email"],
