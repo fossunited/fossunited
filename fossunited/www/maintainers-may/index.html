@@ -32,9 +32,9 @@
           {% if links.pack %}
           <a href="{{ links.pack }}" class="v3-btn m-btn m-btn-s">Maintainers Pack</a>
           {% else %}
-          <span class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
-                data-toggle="tooltip" data-placement="bottom" title="WIP - page not yet ready"
-                tabindex="0" aria-disabled="true">Maintainers Pack</span>
+          <button class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
+                  onclick="frappe.msgprint('Maintainers Pack page is WIP — stay tuned!')"
+                  type="button">Maintainers Pack</button>
           {% endif %}
           <a href="{{ links.forklore }}" target="_blank" rel="noopener noreferrer" class="v3-btn m-btn m-btn-s">
             Forklore.in <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
@@ -53,7 +53,7 @@
           <!-- Left: Events list -->
           <div class="col-lg-7 mb-lg-0 m-col-mobile-gap">
             <h2 id="meetups-title" class="semi-bold mb-2 m-section-title m-text-1">
-              Upcoming Maintainers Meetups
+              Maintainers May Meetups
             </h2>
             <p class="mb-4 text-base lh-base m-text-2">
               As part of #MaintainersMay, FOSS United is organising unconference-style meetups for
@@ -238,9 +238,9 @@
           {% if links.pack %}
           <a href="{{ links.pack }}" class="v3-btn m-btn m-btn-s">Maintainers Pack</a>
           {% else %}
-          <span class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
-                data-toggle="tooltip" data-placement="bottom" title="WIP - page not yet ready"
-                tabindex="0" aria-disabled="true">Maintainers Pack</span>
+          <button class="v3-btn m-btn m-btn-s" style="opacity:0.45;cursor:not-allowed;"
+                  onclick="frappe.msgprint('Maintainers Pack page is WIP - stay tuned!')"
+                  type="button">Maintainers Pack</button>
           {% endif %}
         </div>
       </section>
@@ -291,7 +291,7 @@
       {% endif %}
 
     </main>
-    <script>$(function(){ $('[data-toggle="tooltip"]').tooltip(); });</script>
+
   </div>
 </div>
 
