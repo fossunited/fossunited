@@ -99,3 +99,9 @@ def get_context(context):
         fellowships="/grants/fellowships",
         other_grants="/grants",
     )
+
+    context.pagetitle, context.description, context.image = (
+        "Maintainers May",
+        "A month to come together as keepers of the digital commons. Vent about the good, the bad. Rally ideas and resources.",
+        frappe.utils.get_url("/assets/fossunited/images/maintainers/og.png"),
+    )

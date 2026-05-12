@@ -115,8 +115,12 @@ def get_foss_timeline_items(is_upcoming=True):
 
 
 def get_must_attend_events(limit=9):
-    """Upcoming must-attend events for web templates."""
-    return [i for i in get_foss_timeline_items(is_upcoming=True) if i.get("must_attend")][:limit]
+    """Upcoming must-attend or City Community chapter events for web templates."""
+    return [
+        i
+        for i in get_foss_timeline_items(is_upcoming=True)
+        if i.get("must_attend") or i.get("_chapter_type") == "City Community"
+    ][:limit]
 
 
 def get_context(context, page_type="upcoming"):
