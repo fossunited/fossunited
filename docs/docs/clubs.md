@@ -44,7 +44,7 @@ Support and benefits include, but are not limited to:
 - **Visibility**: Opportunities to present your work at premier events attended by thousands of open-source enthusiasts and decision-makers.
 - **Leadership & Governance**: The chance to join the program committee and help shape the future of the FOSS Clubs initiative.
 - **Grow as a Mentor**: The opportunity to give back by mentoring newly established clubs and fostering the next generation of contributors.
-- **Financial Support** to sustain your club's work
+- **Financial Support** to sustain your club's work. Read more about [financial support](clubs-financial-support.md).
 
 ### v. Club status - New, Active, Inactive, Defunct
 Clubs are tracked based on activity level:
@@ -61,10 +61,9 @@ Clubs are tracked based on activity level:
 
 - Join our Telegram groups to interact with other community members - [FOSS United Foundation](https://t.me/fossunited) and [FOSS Clubs](https://t.me/fossclubs).
 
+- If you have general questions related to FOSS Clubs or FOSS United Foundation, reach out to the foundation staff at [clubs@fossunited.org](mailto:clubs@fossunited.org).
 
 - We also have an online [forum](https://forum.fossunited.org). Suitable for thoughtful questions and content that may help future members.
-
-- If you have general questions related to FOSS Clubs or FOSS United Foundation, reach out to the foundation staff at [clubs@fossunited.org](mailto:clubs@fossunited.org).
 
 ### vii. Code of Conduct
 All FOSS Clubs follow the FOSS United Code of Conduct: [https://fossunited.org/code-of-conduct](https://fossunited.org/code-of-conduct).
