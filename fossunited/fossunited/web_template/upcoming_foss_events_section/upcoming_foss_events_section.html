@@ -54,7 +54,7 @@
     </div>
 
     {% from "fossunited/templates/macros/event_card.html" import event_card %}
-    {% set events = get_main_foss_events() %}
+    {% set events = get_must_attend_events(9) %}
 
     {% if events | length %}
       <div class="events-grid-4">{% for event in events %}{{ event_card(event) }}{% endfor %}</div>

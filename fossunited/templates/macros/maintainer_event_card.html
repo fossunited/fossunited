@@ -1,0 +1,39 @@
+{% macro maintainer_event_card(event) %}
+{% set event_url     = event.external_event_url if event.is_external_event else ("/" + event.route if event.route else "#") %}
+{% set banner        = event.banner_image or '/assets/fossunited/images/defaults/event_logo.png' %}
+{% set chapter_label = event.chapter_name or event.chapter_city or "FOSS United" %}
+{% set date_str      = event.date_str or "Date TBD" %}
+<a href="{{ event_url }}" class="d-flex gap-3 text-decoration-none color-inherit">
+  <div class="m-event-thumb">
+    <img src="{{ banner }}" alt="{{ event.event_name }}"
+         class="w-100 h-100 object-cover" loading="lazy" />
+  </div>
+  <div class="d-flex flex-column flex-fill overflow-hidden m-event-body" style="border-radius: 0 16px 16px 16px;">
+    <div class="d-flex align-items-end">
+      <div class="m-city-tab">
+        <span class="m-city-badge" aria-label="Chapter">{{ chapter_label }}</span>
+      </div>
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M0 0C0 8.83655 7.16344 16 16 16H0V0Z" fill="var(--m-card-bg)" />
+      </svg>
+    </div>
+    <div class="d-flex align-items-center gap-2 p-2 flex-fill m-card-bg" style="border-radius: 0 16px 16px 16px;">
+      <div class="d-flex flex-column align-items-center justify-content-center rounded m-bg m-border m-date-box"
+           aria-label="Event date">
+        {% if event.date_day and event.date_day != "TBD" %}
+          <span class="m-text-2 text-4xl ls-tight lh-none" aria-hidden="true">{{ event.date_day }}</span>
+          <span class="semi-bold text-uppercase m-text-2 text-sm ls-wider" aria-hidden="true">{{ event.date_month }}</span>
+        {% else %}
+          <span class="semi-bold text-uppercase m-text-2 text-sm ls-wider">TBD</span>
+        {% endif %}
+      </div>
+      <div class="overflow-hidden">
+        <p class="semi-bold mb-1 text-truncate text-lg ls-tight lh-snug m-text-1">{{ event.event_name }}</p>
+        <p class="mb-0 text-truncate text-sm m-text-2">
+          {{ date_str }}{% if event.event_location %} | {{ event.event_location }}{% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+</a>
+{% endmacro %}

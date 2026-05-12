@@ -74,29 +74,6 @@ const reviewerProfile = createResource({
 
 const errorMessages = ref('')
 
-async function closeAssignedTodo() {
-  const todoName = await createResource({
-    url: 'frappe.client.get_value',
-    params: {
-      doctype: 'ToDo',
-      filters: {
-        reference_type: 'FOSS Event CFP Submission',
-        reference_name: props.submissionId,
-        allocated_to: session.user,
-        status: 'Open',
-      },
-      fieldname: 'name',
-    },
-    auto: true,
-  }).promise
-  if (todoName)
-    createResource({
-      url: 'frappe.client.set_value',
-      params: { doctype: 'ToDo', name: todoName, fieldname: 'status', value: 'Closed' },
-      auto: true,
-    })
-}
-
 const validateRemark = () => {
   const errors = []
 
@@ -132,7 +109,6 @@ const submitReview = () => {
     onSuccess() {
       errorMessages.value = ''
       emits('add:review')
-      closeAssignedTodo()
     },
     onError(err) {
       errorMessages.value = err

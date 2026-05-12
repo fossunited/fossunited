@@ -170,7 +170,6 @@ def get_cfp_submissions(event: str) -> list:
             "reference_type": PROPOSAL,
             "reference_name": ("in", submission_names),
             "allocated_to": frappe.session.user,
-            "status": "Open",
         },
         pluck="reference_name",
     )

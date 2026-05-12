@@ -84,7 +84,7 @@ const storageKey = props.reviewerMode
 const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
-const showAssignedOnly = ref(false)
+const showAssignedOnly = ref(true)
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
