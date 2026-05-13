@@ -152,4 +152,4 @@ class TestFOSSHackathonTeam(FrappeTestCase):
             frappe.db.commit()  # nosemgrep
             self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
         finally:
-            frappe.flags.in_test = True
+            frappe.in_test = True

@@ -146,7 +146,7 @@ class FOSSHackathonTeam(Document):
 
     def auto_delete_if_empty(self):
         """Delete team if it has no members or no project"""
-        if frappe.flags.in_test:
+        if frappe.in_test:
             return
         has_content = bool(self.members or self.project or self.partner_project)
         if not has_content:
