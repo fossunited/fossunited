@@ -1,5 +1,4 @@
 import frappe
-from frappe.utils import now_datetime
 
 from fossunited.doctype_ids import EVENT
 
@@ -7,13 +6,10 @@ from fossunited.doctype_ids import EVENT
 def get_context(context):
     context.no_cache = 1
 
-    now = now_datetime()
-
     events = frappe.get_all(
         EVENT,
         filters={
             "event_name": ["like", "%Maintainers%"],
-            "event_start_date": [">=", now],
         },
         or_filters={
             "is_published": 1,
@@ -26,6 +22,7 @@ def get_context(context):
             "is_external_event",
             "event_name",
             "event_start_date",
+            "event_end_date",
             "event_location",
             "banner_image",
             "chapter",
@@ -33,19 +30,22 @@ def get_context(context):
             "chapter.city as chapter_city",
         ],
         order_by="event_start_date asc",
-        page_length=5,
+        page_length=6,
     )
 
+    today = frappe.utils.getdate(frappe.utils.today())
     for e in events:
         if e.event_start_date:
             dt = e.event_start_date
             e.date_day = dt.strftime("%d")
             e.date_month = dt.strftime("%b").upper()
             e.date_str = dt.strftime("%-d %B %Y")
+            e.is_concluded = frappe.utils.getdate(e.event_end_date) < today
         else:
             e.date_day = "TBD"
             e.date_month = ""
             e.date_str = "Date TBD"
+            e.is_concluded = False
 
     context.events = events
 
