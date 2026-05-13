@@ -1,5 +1,9 @@
 # Manage event RSVP
 
+This page explains how a FOSS Club or City Chapter member can create a RSVP page for their events.
+
+Before you proceed further, make sure to have [listed your event](create-event.md) under your club or chapter on the FOSS United platform.
+
 ## Create RSVP form
 
 Once an event is created, you should be able to create the RSVP form for the
