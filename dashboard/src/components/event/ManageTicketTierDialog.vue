@@ -59,6 +59,13 @@
           placeholder="0"
           required
         />
+        <FormControl
+          v-model="modifyTier.tshirt_included"
+          label="T-shirt Included?"
+          type="checkbox"
+          class="col-span-2"
+          :description="'Tick if this tier includes a t-shirt at no extra charge'"
+        />
         <div class="col-span-2">
           <div class="text-sm text-ink-gray-5 mb-1">Description</div>
           <textarea
@@ -122,6 +129,7 @@ const modifyTier = reactive({
   valid_till: '',
   maximum_tickets: 0,
   description: '',
+  tshirt_included: false,
 })
 
 onMounted(() => {
@@ -143,6 +151,7 @@ const updateTier = createResource({
         valid_till: modifyTier.valid_till,
         maximum_tickets: modifyTier.maximum_tickets,
         description: modifyTier.description,
+        tshirt_included: modifyTier.tshirt_included,
       },
     }
   },
@@ -222,6 +231,7 @@ const createTier = createResource({
         maximum_tickets: modifyTier.maximum_tickets,
         description: modifyTier.description,
         enabled: modifyTier.enabled,
+        tshirt_included: modifyTier.tshirt_included,
         parent: route.params.id,
         parentfield: 'tiers',
         parenttype: 'FOSS Chapter Event',
