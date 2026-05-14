@@ -6,7 +6,11 @@ import SubmissionInfoList from './SubmissionInfoList.vue'
 import SubmissionOverview from './SubmissionOverview.vue'
 import ProposalSpeakers from '@/components/reviewers/ProposalSpeakers.vue'
 import SubmissionReviews from './SubmissionReviews.vue'
+import AssignReviewers from './AssignReviewers.vue'
 
+const props = defineProps({
+  eventId: { type: String, default: '' },
+})
 const submissionId = defineModel('submissionId', { type: String, default: '' })
 const tabs = ref([
   {
@@ -52,6 +56,7 @@ watch(
   <Suspense>
     <div v-if="submission.data" class="w-full p-3 sm:p-6 flex flex-col gap-4 overflow-y-scroll max-h-svh">
       <SubmissionHeader />
+      <AssignReviewers v-if="props.eventId" :submission-id="submissionId" :event-id="props.eventId" />
       <SubmissionInfoList />
       <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
       <SubmissionOverview v-if="activeTab === 0" />

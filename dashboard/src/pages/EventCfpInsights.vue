@@ -60,11 +60,11 @@ provide('refreshSubmissions', refreshSubmissions)
       </Suspense>
     </div>
     <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
-      <SubmissionDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" />
+      <SubmissionDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" :event-id="route.params.id" />
       <div v-else class="w-full h-svh flex items-center justify-center text-base text-ink-gray-5">
         Select a submission to view details.
       </div>
     </div>
-    <SubmissionDrawer v-else v-model:show="showDrawer" :submission-id="selectedSubmission" />
+    <SubmissionDrawer v-else v-model:show="showDrawer" :submission-id="selectedSubmission" :event-id="route.params.id" />
   </div>
 </template>
