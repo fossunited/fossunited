@@ -56,6 +56,7 @@ class FOSSChapterEventFactory(BaseFactory[FOSSChapterEvent]):
                     "enabled": 1,
                     "title": "General",
                     "price": 100,
+                    "maximum_tickets": 100,
                 }
             ],
         }
