@@ -360,3 +360,22 @@ def get_proposal_filter_fields(event_id: str) -> list:
         ]
 
     return filtered_fields
+
+
+@frappe.whitelist()
+def get_my_latest_speaker_entry() -> dict:
+    """Returns the most recent speaker entry for the current user (matched by linked_user or email)."""
+    user = frappe.session.user
+    profile_name = frappe.db.get_value(USER_PROFILE, {"user": user}, "name")
+    or_filters = {"email": user}
+    if profile_name:
+        or_filters["linked_user"] = profile_name
+    rows = frappe.db.get_all(
+        SPEAKER,
+        or_filters=or_filters,
+        fields=["photo", "designation", "organization", "contact_info", "social_link"],
+        order_by="creation desc",
+        limit=1,
+        ignore_permissions=True,
+    )
+    return rows[0] if rows else {}
