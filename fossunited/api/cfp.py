@@ -467,6 +467,7 @@ def set_submission_reviewers(submission_name: str, reviewer_users: list) -> None
                 "reference_type": PROPOSAL,
                 "reference_name": submission_name,
                 "allocated_to": user,
+                "assigned_by": frappe.session.user,
                 "description": f"Review CFP Submission: {submission_name}",
             }
         ).insert(ignore_permissions=True)
