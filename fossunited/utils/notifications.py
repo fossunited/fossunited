@@ -1,6 +1,16 @@
 import frappe
+from frappe.desk.doctype.notification_log.notification_log import (
+    enqueue_create_notification,
+)
 
-from fossunited.doctype_ids import CAMPAIGN, CHAPTER, EMAIL_GROUP, EVENT
+from fossunited.doctype_ids import (
+    CAMPAIGN,
+    CHAPTER,
+    EMAIL_GROUP,
+    EVENT,
+    EVENT_CFP,
+    PROPOSAL,
+)
 
 
 def send_event_feedback_request(event_id):
@@ -63,4 +73,55 @@ for the broader community.</p><br/>
     frappe.log_error(
         title=f"Feedback email sent: {event_id}",
         message=f"Campaign {newsletter.name} sent to groups: {email_groups}",
+    )
+
+
+def notify_cfp_reviewer_assignment(doc, method=None) -> None:
+    """
+    doc_events hook: ToDo → after_insert.
+    Sends in-app + email notification when a CFP submission is assigned to a reviewer,
+    sending URL to the reviewer dashboard instead of the Frappe desk form.
+    """
+    if doc.reference_type != PROPOSAL:
+        return
+
+    assigned_by = doc.assigned_by or frappe.session.user
+    if assigned_by == doc.allocated_to:
+        return
+
+    submission = frappe.db.get_value(
+        PROPOSAL, doc.reference_name, ["linked_cfp", "talk_title"], as_dict=True
+    )
+    if not submission:
+        return
+
+    event_id = frappe.db.get_value(EVENT_CFP, submission.linked_cfp, "event")
+    if not event_id:
+        return
+
+    event_name = frappe.db.get_value(EVENT, event_id, "event_name") or event_id
+    assigner_name = frappe.get_cached_value("User", assigned_by, "full_name") or assigned_by
+    dashboard_url = (
+        f"{frappe.utils.get_url()}/dashboard/review/{event_id}?submission={doc.reference_name}"
+    )
+
+    subject = f'{assigner_name} assigned you a proposal to review: "{submission.talk_title}"'
+    email_content = f"""
+        <p><b>{assigner_name}</b> has assigned you a proposal to review
+        for <b>{event_name}</b>:</p>
+        <p style="margin: 12px 0; font-size: 15px;"><b>{submission.talk_title}</b></p>
+        <p><a href="{dashboard_url}">Open Reviewer Dashboard →</a></p>
+    """
+
+    enqueue_create_notification(
+        doc.allocated_to,
+        {
+            "type": "Assignment",
+            "document_type": PROPOSAL,
+            "document_name": doc.reference_name,
+            "subject": subject,
+            "from_user": assigned_by,
+            "email_content": email_content,
+            "link": dashboard_url,
+        },
     )
