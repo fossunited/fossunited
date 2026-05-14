@@ -132,7 +132,7 @@ import {
   usePageMeta,
 } from 'frappe-ui'
 import { reactive, ref } from 'vue'
-import { toast } from 'vue-sonner'
+import { showError } from '@/helpers/utils'
 
 usePageMeta(() => {
   return {
@@ -169,18 +169,25 @@ const ticket = createResource({
     }
   },
   onSuccess(data) {
+    if (!data) {
+      ticket.data = null
+      ticketValidateError.value = 'Invalid Ticket ID'
+      return
+    }
     if (data.tier && data.tier.toLowerCase().includes('free pass')) {
       ticketValidateError.value =
         'Free Pass tickets cannot be transferred. Please contact us via email.'
-      ticket.data = null // Clear ticket data to prevent showing
+      ticket.data = null
       return
     }
-
     event.fetch()
     receiver.wants_tshirt = data.wants_tshirt
     if (data.tshirt_size) {
       receiver.tshirt_size = data.tshirt_size
     }
+  },
+  onError(err) {
+    showError(err, 'Failed to fetch ticket details')
   },
 })
 
@@ -199,29 +206,10 @@ const isTicketValid = () => {
     ticketValidateError.value = 'Ticket ID is required'
     event.data = null
     ticket.data = null
-    return false
+    return
   }
-
-  createResource({
-    url: 'fossunited.api.tickets.check_ticket_validity',
-    params: {
-      ticket_id: ticketId.value,
-    },
-    auto: true,
-    onSuccess(data) {
-      if (!data) {
-        ticket.data = null
-        ticketValidateError.value = 'Invalid Ticket ID'
-        return false
-      }
-      ticketValidateError.value = ''
-      ticket.fetch()
-      return true
-    },
-    onError(err) {
-      toast.error('Failed to validate ticket. ' + err.message)
-    },
-  })
+  ticketValidateError.value = ''
+  ticket.fetch()
 }
 
 const transferErrors = () => {
@@ -261,7 +249,7 @@ const createTransferDoc = createResource({
     inSuccess.value = true
   },
   onError(err) {
-    toast.error('Failed to initiate transfer. ' + err.message)
+    showError(err, 'Failed to initiate transfer')
   },
 })
 

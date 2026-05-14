@@ -74,7 +74,7 @@ const routes = [
         name: 'TicketTransferProcess',
         component: () => import('@/pages/TicketTransferProcess.vue'),
         props: true,
-        meta: { isPublicPage: true },
+        meta: { isPublicPage: false },
       },
     ],
   },

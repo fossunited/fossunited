@@ -1,6 +1,6 @@
 {
  "actions": [],
- "allow_rename": 1,
+ "autoname": "hash",
  "creation": "2024-04-27 12:37:58.593416",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -173,10 +173,11 @@
   }
  ],
  "links": [],
- "modified": "2026-04-08 16:09:39.170671",
+ "modified": "2026-05-14 12:34:31.070138",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",
+ "naming_rule": "Random",
  "owner": "Administrator",
  "permissions": [
   {
