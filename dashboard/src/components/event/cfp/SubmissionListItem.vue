@@ -2,10 +2,17 @@
 import { inject } from 'vue'
 import { IconHeart, IconScale } from '@tabler/icons-vue'
 import { getStatusBadgeTheme } from '@/helpers/reviewer'
-import { Badge } from 'frappe-ui'
+import { Avatar, Badge, Tooltip } from 'frappe-ui'
 import ReviewScoreIndicator from './ReviewScoreIndicator.vue'
 import ProposalBadgeGroup from '@/components/reviewers/ProposalBadgeGroup.vue'
 import relativeTime from 'dayjs/plugin/relativeTime'
+
+function verdictLabel(u) {
+  if (!u._review_verdict) return `${u.full_name} - Review Pending`
+  if (u._review_verdict === 'Yes') return `${u.full_name} - Approved ✓`
+  if (u._review_verdict === 'No') return `${u.full_name} - Rejected ✗`
+  return `${u.full_name} - Not Sure`
+}
 
 const dayjs = inject('$dayjs')
 dayjs.extend(relativeTime)
@@ -60,6 +67,27 @@ defineEmits(['open:submission'])
       <div v-if="submission.talk_license" class="flex items-center gap-1 text-xs text-ink-gray-5">
         <IconScale size="12" />
         <span>{{ submission.talk_license }}</span>
+      </div>
+      <div v-if="submission._assigned_users?.length" class="flex items-center gap-1">
+        <Tooltip
+          v-for="u in submission._assigned_users"
+          :key="u.user"
+          :text="verdictLabel(u)"
+          placement="top"
+        >
+          <Avatar
+            :image="u.user_image"
+            :label="u.full_name"
+            size="xs"
+            class="rounded-full"
+            :class="[
+              !u._review_verdict && 'opacity-40',
+              u._review_verdict === 'Yes' && 'ring-2 ring-green-500',
+              u._review_verdict === 'No' && 'ring-2 ring-red-500',
+              u._review_verdict === 'Maybe' && 'ring-2 ring-orange-400',
+            ]"
+          />
+        </Tooltip>
       </div>
     </div>
   </div>
