@@ -49,13 +49,13 @@
     },
     {
       "fieldname": "description",
-      "fieldtype": "Small Text",
+      "fieldtype": "Markdown Editor",
       "label": "Description"
     }
   ],
   "istable": 1,
   "links": [],
-  "modified": "2026-03-07 16:37:01.587940",
+  "modified": "2026-05-14 21:47:48.930466",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Custom Question",

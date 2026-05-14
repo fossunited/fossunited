@@ -12,7 +12,7 @@ class FOSSCustomQuestion(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        description: DF.SmallText | None
+        description: DF.MarkdownEditor | None
         is_mandatory: DF.Check
         options: DF.SmallText | None
         parent: DF.Data
