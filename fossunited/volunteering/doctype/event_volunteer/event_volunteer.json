@@ -22,13 +22,15 @@
     "bio",
     "photo",
     "affirmation_for_commitment",
-    "past_experience"
+    "past_experience",
+    "video_url"
   ],
   "fields": [
     {
       "fieldname": "volunteer_name",
       "fieldtype": "Data",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Full Name",
       "reqd": 1
     },
@@ -40,6 +42,7 @@
     {
       "fieldname": "volunteer_as",
       "fieldtype": "Select",
+      "in_standard_filter": 1,
       "label": "Volunteer for",
       "options": "\nMarketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nCommunity Outreach\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager\nOther"
     },
@@ -57,6 +60,7 @@
       "fieldname": "email",
       "fieldtype": "Data",
       "in_list_view": 1,
+      "in_standard_filter": 1,
       "label": "Email",
       "options": "Email",
       "reqd": 1
@@ -96,6 +100,7 @@
     {
       "fieldname": "event_linked_field",
       "fieldtype": "Link",
+      "in_standard_filter": 1,
       "label": "Event Link",
       "options": "FOSS Chapter Event"
     },
@@ -103,13 +108,8 @@
       "fetch_from": "event_linked_field.event_name",
       "fieldname": "event_name",
       "fieldtype": "Data",
+      "in_list_view": 1,
       "label": "Event Name"
-    },
-    {
-      "fieldname": "volunteer_status",
-      "fieldtype": "Select",
-      "label": "Volunteer Status",
-      "options": "\nAccepted\nWaitlisted\nRejected"
     },
     {
       "fieldname": "phone_number",
@@ -120,6 +120,7 @@
       "depends_on": "eval: doc.volunteer_as == \"Other\";",
       "fieldname": "other_volunteering_options",
       "fieldtype": "Data",
+      "in_standard_filter": 1,
       "label": "Other volunteering options"
     },
     {
@@ -127,10 +128,26 @@
       "fieldtype": "Link",
       "label": "Chapter",
       "options": "FOSS Chapter"
+    },
+    {
+      "description": "Please Record a 2 min video of your response and share the URL below",
+      "fieldname": "video_url",
+      "fieldtype": "Data",
+      "label": "Tell us why you'd like to join us as a volunteer and what would you like us to do differently this year?",
+      "options": "URL"
+    },
+    {
+      "default": "Waitlisted",
+      "fieldname": "volunteer_status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Volunteer Status",
+      "options": "Accepted\nWaitlisted\nRejected"
     }
   ],
   "links": [],
-  "modified": "2026-03-09 14:36:59.193565",
+  "modified": "2026-05-15 15:47:38.254905",
   "modified_by": "Administrator",
   "module": "Volunteering",
   "name": "Event Volunteer",
@@ -152,5 +169,18 @@
   "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
-  "states": []
+  "states": [
+    {
+      "color": "Blue",
+      "title": "Waitlisted"
+    },
+    {
+      "color": "Green",
+      "title": "Accepted"
+    },
+    {
+      "color": "Red",
+      "title": "Rejected"
+    }
+  ]
 }

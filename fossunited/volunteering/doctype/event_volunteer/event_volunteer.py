@@ -28,6 +28,7 @@ class EventVolunteer(Document):
         past_experience: DF.LongText | None
         phone_number: DF.Data | None
         photo: DF.AttachImage | None
+        video_url: DF.Data | None
         volunteer_as: DF.Literal[
             "",
             "Marketing",
@@ -50,7 +51,7 @@ class EventVolunteer(Document):
             "Other",
         ]
         volunteer_name: DF.Data
-        volunteer_status: DF.Literal["", "Accepted", "Waitlisted", "Rejected"]
+        volunteer_status: DF.Literal["Accepted", "Waitlisted", "Rejected"]
     # end: auto-generated types
 
     def before_save(self):

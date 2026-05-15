@@ -27,38 +27,38 @@ If you have other ideas, feel free to book a call to discuss with the foundation
 1. **FOSS Photography:** Taking high-quality photos of events and uploading them to **FOSS United Forum/Wikimedia/Ente.io** with a creative commons attribution. *Start: A "Photo Walk" at the next meetup.*
 2. **Illustration/UI Design:** Designing icons or SVG assets for FOSS projects and banners for college fests using **Penpot/Inkscape.** *Start: Design a banner for the next FOSS meetup.*
 3. **Video Tutorials:** Creating "How to install Linux" or "Git basics" videos for YouTube. *Start: Record a 2-minute screen-cap of a FOSS tool.*
-4. **Localization (L10n):** Translating software UI into local languages (Hindi, Tamil, etc.). *Start: Join a project on **Weblate.** *
+4. **Localization (L10n):** Translating software UI into local languages (Hindi, Tamil, etc.). *Start: Join a project on Weblate.*
 5. **Technical Documentation:** Rewriting confusing "ReadMe" files to be beginner-friendly. *Start: Fork a repo and fix the installation guide.*
-6. **FOSS in Videos:** Use **Blender** for video editing and animations for college fests.
-7. **FOSS Newsletter Management:** Curating a bi-weekly "State of FOSS" email for the campus using an open-source tool like **Listmonk.**
-8. **Font Design (Typography):** Contributing to open-source font projects or creating a custom open-source font for the college. *Start: Use FontForge. *
-9. **Open Music Composition:** Composing and releasing royalty-free background scores for FOSS United videos. *Start: Use LMMS or Ardour. *
+6. **FOSS in Videos:** Use *Blender* for video editing and animations for college fests.
+7. **FOSS Newsletter Management:** Curating a bi-weekly "State of FOSS" email for the campus using an open-source tool like *Listmonk*.
+8. **Font Design (Typography):** Contributing to open-source font projects or creating a custom open-source font for the college. *Start: Use FontForge*.
+9. **Open Music Composition:** Composing and releasing royalty-free background scores for FOSS United videos. *Start: Use LMMS or Ardour*.
 10. **UI/UX Research:** Conducting "User Interviews" for clunky FOSS tools and creating "Persona Documents" to help developers improve them.
-11. **Digital Archiving:** Digitizing old college magazines, historical documents or other academic material and uploading them to the **Internet Archive.**
+11. **Digital Archiving:** Digitizing old college magazines, historical documents or other academic material and uploading them to the *Internet Archive.*
 
 ---
 
 ### The Advocacy Track
 
 1. **Intro to Digital Commons:** Share the idea of Digital Commons with your community and make them think beyond code.
-2. **Techfest Integration:** Pitching a "FOSS Only" shift or a track at the next edition of the college hackathon. *Start: A meeting with the organisers.*
-3. **Wikipedia Editing:** Improving articles or making a wiki page for your campus.
-4. **OpenStreetMap Mapping:** Mapping the college campus in detail on OSM. *Start: Use the iD Editor to add campus buildings.*
+2. **Techfest Integration:** Pitching a "FOSS Only" shift or a track at the next edition of the college hackathon. *Start: A meeting with the organisers*.
+3. **Wikipedia Editing:** Improving articles or making a wiki page for your campus that lists activities of all clubs in your college.
+4. **OpenStreetMap Mapping:** Mapping the college campus in detail on OSM. *Start: Use the iD Editor to add campus buildings*.
 5. **FOSS Training for Faculty:** Organizing "Digital Literacy" sessions specifically for teachers to show them how to use FOSS in the classroom.
-6. **Podcast/Interviewing:** Recording conversations with local FOSS contributors. *Start: An "Audacity" session with a club mentor.*
-7. **Social Media Advocacy:** Running a "FOSS Fact of the Day" thread on social media. *Start: A 7-day thread on FOSS history.*
-8. **Mentorship/Teaching:** Running a 4-week "Linux for Beginners" course for juniors. *Start: Create a 4-slide curriculum.*
-9. **Alumni Registry:** Creating an open registry for alumni of the college. *Start: A simple CSV or Git-based repository for community members.*
+6. **Podcast/Interviewing:** Recording conversations with local FOSS contributors or creating video tutorials for open source tools in your regional language.
+7. **Social Media Advocacy:** Running a "FOSS Fact of the Day" thread on social media. *Start: A 7-day thread on FOSS history*.
+8. **Mentorship/Teaching:** Running a 4-week "Digital Commons for Beginners" course for juniors. *Start: Create a 4-slide curriculum*.
+9. **Alumni Registry:** Creating an open registry for alumni of the college. *Start: A simple CSV or Git-based repository for community members*.
 
 ---
 
 ### The Community & Organization Track
 
-1. **Event Management:** Running the logistics for an in-person meetup. *Start: Organize a "FOSS Tea-time" session.*
-2. **Community Moderation:** Keeping the club's Discord/Matrix/Forum civil and helpful. *Start: Draft a Code of Conduct.*
-3. **Sponsorship Outreach:** Reaching out to local tech companies to sponsor your next open source initiative (swag, snacks, stickers or monetary). *Start: Draft a cold-email template for the club.*
+1. **Event Management:** Running the logistics for an in-person meetup. *Start: Organize a "FOSS Tea-time" session*.
+2. **Community Moderation:** Keeping the club's Discord/Matrix/Forum civil and helpful. *Start: Draft a Code of Conduct*.
+3. **Sponsorship Outreach:** Reaching out to local tech companies to sponsor your next open source initiative (swag, snacks, stickers or monetary). *Start: Draft a cold-email template for the club*.
 4. **Open Ledger Bookkeeping:** Using **GnuCash** or **Frappe Books** to manage and publicly display the FOSS Club's finances.
-5. **Video Streaming:** Use **Jitsi** or other open source tools for video conferencing. *Start: Run your team meetings on Jitsi.*
+5. **Video Streaming:** Use **Jitsi** or other open source tools for video conferencing. *Start: Run your team meetings on Jitsi*.
 
 ---
 

@@ -16,10 +16,14 @@
       :type="field.fieldtype"
       variant="outline"
       :options="field.options || []"
-      :description="field.description"
       size="md"
       :aria-required="field.required ? 'true' : undefined"
     ></component>
+    <p
+      v-if="field.description"
+      class="mt-1 text-sm text-ink-gray-5 prose max-w-none"
+      v-html="markdownToHTML(field.description)"
+    />
     <!-- hidden label for screen readers when no visible label -->
     <span
       v-if="['radio_group', 'multiselect'].includes(field.fieldtype)"
@@ -36,6 +40,7 @@ import { computed, watch } from 'vue'
 import TextEditor from '@/components/ui/TextEditor.vue'
 import RadioGroup from '@/components/ui/RadioGroup.vue'
 import MultiselectInput from '@/components/ui/MultiselectInput.vue'
+import { markdownToHTML } from 'frappe-ui/src/utils/markdown'
 
 const props = defineProps({
   field: {

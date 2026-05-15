@@ -27,12 +27,16 @@
           <span class="semi-bold text-uppercase m-text-2 text-sm ls-wider">TBD</span>
         {% endif %}
       </div>
-      <div class="overflow-hidden">
+      <div class="overflow-hidden flex-fill">
         <p class="semi-bold mb-1 text-truncate text-lg ls-tight lh-snug m-text-1">{{ event.event_name }}</p>
         <p class="mb-0 text-truncate text-sm m-text-2">
           {{ date_str }}{% if event.event_location %} | {{ event.event_location }}{% endif %}
         </p>
       </div>
+      {% if event.is_concluded %}
+      <span class="flex-shrink-0 text-xs semi-bold px-2 py-1 rounded m-text-2"
+            style="border: 1px solid var(--m-border); white-space: nowrap;">Concluded</span>
+      {% endif %}
     </div>
   </div>
 </a>

@@ -91,7 +91,7 @@
             >
               <!-- Image -->
               <div
-                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg w-16 h-20 shrink-0 flex items-center justify-center overflow-hidden md:w-[88px] md:h-[108px]"
+                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg overflow-hidden w-[58px] h-20 md:w-[78px] md:h-[108px]"
                 aria-hidden="true"
               >
                 <img
@@ -105,6 +105,14 @@
                 <p class="font-semibold text-base text-ink-gray-9">{{ tier.title }}</p>
                 <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
                 <div class="flex flex-wrap gap-1">
+                  <Badge
+                    v-if="tier.tshirt_included"
+                    class="w-fit"
+                    variant="subtle"
+                    theme="green"
+                    title="T-shirt is included with this tier at no extra charge"
+                    >T-shirt Included</Badge
+                  >
                   <Badge
                     v-if="tier.valid_till && isTierActive(tier)"
                     class="w-fit"
@@ -191,6 +199,7 @@
               :custom-fields="!customFieldsApplyToAll ? event.data.custom_fields : []"
               :show-tshirt="Boolean(event.data.paid_tshirts_available)"
               :tshirt-price="event.data.t_shirt_price || 0"
+              :tshirt-included="isTierTshirtIncluded(attendee.ticket_type)"
               :can-delete="attendees.length > 1"
               @update:attendee="attendees[idx] = $event"
               @delete="removeAttendee(idx)"
@@ -263,12 +272,23 @@
               </div>
               <div class="flex items-center gap-6 flex-wrap">
                 <div
-                  v-if="event.data.paid_tshirts_available"
-                  class="flex items-center gap-1.5 text-sm text-ink-gray-7"
+                  v-if="
+                    isTierTshirtIncluded(attendee.ticket_type) || event.data.paid_tshirts_available
+                  "
+                  class="flex items-center gap-1.5 text-sm"
+                  :class="
+                    isTierTshirtIncluded(attendee.ticket_type)
+                      ? 'text-ink-green-3'
+                      : 'text-ink-gray-7'
+                  "
                 >
-                  <IconShirt class="w-5 h-5" />
+                  <IconShirt class="w-5 h-5" aria-hidden="true" />
                   <span>{{
-                    attendee.wants_tshirt ? attendee.tshirt_size : 'Without T-shirt'
+                    isTierTshirtIncluded(attendee.ticket_type)
+                      ? 'T-shirt Included'
+                      : attendee.wants_tshirt
+                        ? attendee.tshirt_size
+                        : 'Without T-shirt'
                   }}</span>
                 </div>
                 <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
@@ -692,6 +712,10 @@ function getTierDescription(tierName) {
   return allTiers.value.find((t) => t.name === tierName)?.description || ''
 }
 
+function isTierTshirtIncluded(tierName) {
+  return Boolean(allTiers.value.find((t) => t.name === tierName)?.tshirt_included)
+}
+
 function getTierImage(tier) {
   // If backend provides a custom image URL, use it
   if (tier.image) return tier.image
@@ -821,7 +845,14 @@ function validateStep(step) {
       else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(a.email)) {
         errors.push(`Attendee #${i + 1}: Invalid email address`)
       }
-      if (event.data?.paid_tshirts_available && a.wants_tshirt && !a.tshirt_size) {
+      if (isTierTshirtIncluded(a.ticket_type) && !a.tshirt_size) {
+        errors.push(`Attendee #${i + 1}: T-shirt size is required`)
+      } else if (
+        event.data?.paid_tshirts_available &&
+        !isTierTshirtIncluded(a.ticket_type) &&
+        a.wants_tshirt &&
+        !a.tshirt_size
+      ) {
         errors.push(`Attendee #${i + 1}: T-shirt size is required`)
       }
       if (!customFieldsApplyToAll.value) {

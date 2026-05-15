@@ -9,7 +9,7 @@ from frappe import _
 from frappe.model.document import Document
 
 from fossunited.api.emailing import handle_email_group_subscription
-from fossunited.doctype_ids import EVENT, EVENT_TICKET
+from fossunited.doctype_ids import EVENT, EVENT_TICKET, TICKET_TIER
 
 if TYPE_CHECKING:
     from fossunited.payments.doctype.razorpay_payment.razorpay_payment import (
@@ -26,9 +26,7 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
-            EventCheckIn,
-        )
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
         from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
             FOSSTicketCustomField,
         )
@@ -65,7 +63,18 @@ class FOSSEventTicket(Document):
         custom_fields_apply_to_all = payment_meta_data.get("custom_fields_apply_to_all", False)
         global_custom_fields = payment_meta_data.get("global_custom_fields", {})
 
+        tier_names = {a.get("ticket_type") for a in attendees if a.get("ticket_type")}
+        tshirt_included_by_tier = {
+            name: bool(frappe.db.get_value(TICKET_TIER, name, "tshirt_included"))
+            for name in tier_names
+        }
+
         for attendee in attendees:
+            tier_name = attendee.get("ticket_type")
+            wants_tshirt = int(attendee.get("wants_tshirt", 0)) or int(
+                tshirt_included_by_tier.get(tier_name, False)
+            )
+
             ticket_doc = frappe.get_doc(
                 {
                     "doctype": EVENT_TICKET,
@@ -76,12 +85,10 @@ class FOSSEventTicket(Document):
                     "subscribe_chapter_mailing": attendee.get("subscribe_chapter_mailing"),
                     "organization": attendee.get("organization"),
                     "designation": attendee.get("designation"),
-                    "wants_tshirt": attendee.get("wants_tshirt", 0),
+                    "wants_tshirt": wants_tshirt,
                     "tshirt_size": attendee.get("tshirt_size"),
                     "accept_coc": attendee.get("accept_coc", 0),
-                    "tier": frappe.db.get_value(
-                        "FOSS Ticket Tier", attendee.get("ticket_type"), "title"
-                    )
+                    "tier": frappe.db.get_value(TICKET_TIER, attendee.get("ticket_type"), "title")
                     or payment_meta_data.get("tier", {}).get("title"),
                     "custom_fields": [],
                 }
@@ -193,11 +200,11 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         if count <= 0:
             continue
 
-        price, tier_event = frappe.db.get_value("FOSS Ticket Tier", tier_name, ["price", "parent"])
+        price, tier_event = frappe.db.get_value(TICKET_TIER, tier_name, ["price", "parent"])
         if tier_event != event_name:
             frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
 
-        tier_details = frappe.get_doc("FOSS Ticket Tier", tier_name)
+        tier_details = frappe.get_doc(TICKET_TIER, tier_name)
 
         if not tier_details.enabled:
             frappe.throw(
@@ -212,7 +219,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
             )
 
         existing_count = frappe.db.count(
-            "FOSS Event Ticket",
+            EVENT_TICKET,
             filters={"tier": tier_details.title, "event": event_name},
         )
         if (

@@ -28,4 +28,4 @@ If our team has already confirmed your FOSS Club status, please complete the fol
 
 - **Official Telegram channels**: Join our Telegram groups to interact with other community members - [FOSS United Foundation](https://t.me/fossunited) and [FOSS Clubs](https://t.me/fossclubs).
 
-- **Quarterly Planning**: Finally, [book a call with the team](https://cal.com/team/fossunited/learners-program) to co-create a roadmap for your [first quarter](clubs-first-quarter.md).
+- **Planning**: Finally, [schedule recurring calls with the team](https://cal.com/team/fossunited/foss-clubs-recurring) to co-create a [roadmap](clubs-first-quarter.md) for your club.

@@ -23,18 +23,6 @@ from fossunited.doctype_ids import (
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-@rate_limit(limit=5, seconds=60 * 60 * 12)
-def check_ticket_validity(ticket_id: str):
-    """
-    Check if the ticket is valid or not
-    """
-    is_ticket_valid = frappe.db.exists(EVENT_TICKET, ticket_id)
-
-    return bool(is_ticket_valid)
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
 @rate_limit(limit=2, seconds=60 * 60 * 12)
 def get_ticket_details(ticket_id: str):
     """
@@ -75,17 +63,6 @@ def create_transfer_request(ticket: str, receiver_details: dict):
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def get_transfer_doc_validity(transfer_id: str):
-    """
-    Check the validity of transfer doc/id
-    """
-    is_valid_id = frappe.db.exists(TICKET_TRANSFER, transfer_id)
-
-    return bool(is_valid_id)
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
 @rate_limit(limit=4, seconds=60 * 60 * 12)
 def get_transfer_details(id: str):
     """
@@ -113,19 +90,13 @@ def change_transfer_status(transfer_id: str, status: str):
             frappe.AuthenticationError,
         )
 
-    doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
-    ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
-    if frappe.session.user not in [ticket.email, doc.receiver_email]:
-        frappe.throw(
-            _("You are not authorized to modify this transfer"),
-            frappe.PermissionError,
-        )
-
     if status not in ["Completed", "Cancelled"]:
         frappe.throw(_("Invalid status provided for ticket transfer"))
 
+    doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
     doc.status = status
-    doc.save()
+    # Auth enforced in controller before_save — ignore doctype write perm
+    doc.save(ignore_permissions=True)
     return True
 
 

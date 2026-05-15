@@ -28,8 +28,12 @@
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
         <Filter v-model="filters" :docfields="docfields.data" />
-        <Switch v-if="reviewerMode" v-model="showNotReviewed" label="Hide reviewed (By Me)" />
-        <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
+        <Tooltip text="Only show submissions you haven't reviewed yet">
+          <Switch v-if="reviewerMode" v-model="showNotReviewed" label="Hide reviewed (By Me)" />
+        </Tooltip>
+        <Tooltip text="Only show submissions assigned to you">
+          <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
+        </Tooltip>
       </div>
       <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
     </div>
@@ -60,7 +64,7 @@ import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
 import { useStorage } from '@vueuse/core'
 import { ref, watch, computed } from 'vue'
-import { createResource, FormControl, LoadingIndicator, Switch } from 'frappe-ui'
+import { createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
 
 const props = defineProps({

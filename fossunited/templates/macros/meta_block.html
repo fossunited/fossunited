@@ -1,4 +1,5 @@
 {% macro meta_tags(page_title, description, image_url) %}
+{%- set description = description or "FOSS United is a non-profit foundation that aims at promoting &amp; strengthening the Free and Open Source Software (FOSS) ecosystem in India." -%}
 <meta property="og:site_name" content="FOSS United" />
 <meta property="og:type" content="object" />
 <meta name="twitter:site" content="@fossunited" />
@@ -15,6 +16,6 @@
 <meta property="og:image" content="{{ image_url }}" />
 <meta name="twitter:image" content="{{ image_url }}" />
 
-<meta property="”og:image:width”" content="1200" />
-<meta property="”og:image:height”" content="630" />
+<meta property=”og:image:width” content=”1200” />
+<meta property=”og:image:height” content=”630” />
 {% endmacro %}

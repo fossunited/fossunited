@@ -164,6 +164,21 @@ class TestFeedbackEmail(FrappeTestCase):
         )
 
     @patch(ENQUEUE_PATH)
+    def test_conclude_events_scheduler_enqueues_feedback(self, mock_enqueue):
+        from fossunited.scheduled_tasks import conclude_events
+
+        conclude_events()
+
+        matching = [
+            c for c in mock_enqueue.call_args_list if c.kwargs.get("event_id") == self.event.name
+        ]
+        self.assertEqual(len(matching), 1)
+        self.assertEqual(
+            matching[0].args[0],
+            "fossunited.utils.notifications.send_event_feedback_request",
+        )
+
+    @patch(ENQUEUE_PATH)
     def test_no_enqueue_if_feedback_already_sent(self, mock_enqueue):
         frappe.db.set_value(EVENT, self.event.name, "feedback_sent", 1)
         event = frappe.get_doc(EVENT, self.event.name)
@@ -171,16 +186,6 @@ class TestFeedbackEmail(FrappeTestCase):
         event.save()
 
         mock_enqueue.assert_not_called()
-
-    @patch(ENQUEUE_PATH)
-    def test_no_enqueue_if_end_date_in_future(self, mock_enqueue):
-        event = FOSSChapterEventFactory.create(chapter=self.chapter.name)
-        event = frappe.get_doc(EVENT, event.name)
-        event.status = "Concluded"
-        event.save()
-
-        mock_enqueue.assert_not_called()
-        frappe.delete_doc(EVENT, event.name, force=True)
 
     @patch(NEWSLETTER_SEND_PATH)
     def test_creates_campaign_when_participants_exist(self, mock_send):

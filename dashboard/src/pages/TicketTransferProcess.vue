@@ -38,28 +38,17 @@ usePageMeta(() => {
 
 const transferStatus = ref('')
 
-const ticket = route.query.ticket
 const transferID = route.query.id
 const toApprove = route.query.status
 
 const showDialog = ref(false)
 const dialogMessage = ref('')
 
-const ticketDoc = createResource({
-  url: 'fossunited.api.tickets.get_ticket_details',
-  makeParams() {
-    return {
-      ticket_id: ticket,
-    }
-  },
-})
-
 onMounted(() => {
   if (!isValidStatus()) {
     return
   }
-  validateTicket.fetch()
-  validateTransferId.fetch()
+  transferDoc.fetch()
 })
 
 const isValidStatus = () => {
@@ -71,21 +60,6 @@ const isValidStatus = () => {
   return true
 }
 
-const validateTicket = createResource({
-  url: 'fossunited.api.tickets.check_ticket_validity',
-  params: {
-    ticket_id: ticket,
-  },
-  onSuccess(data) {
-    if (!data) {
-      showDialog.value = true
-      dialogMessage.value += ' The ticket you are trying to transfer does not exist.'
-    } else {
-      ticketDoc.fetch()
-    }
-  },
-})
-
 const transferDoc = createResource({
   url: 'fossunited.api.tickets.get_transfer_details',
   makeParams() {
@@ -95,6 +69,11 @@ const transferDoc = createResource({
   },
   loading: true,
   onSuccess(data) {
+    if (!data) {
+      dialogMessage.value = 'The transfer request does not exist.'
+      showDialog.value = true
+      return
+    }
     if (data.status == 'Pending Approval') {
       if (toApprove == 1) {
         approveTransfer(data)
@@ -106,6 +85,9 @@ const transferDoc = createResource({
     } else if (data.status == 'Cancelled') {
       transferStatus.value = 'Already Rejected'
     }
+  },
+  onError(err) {
+    showError(err, 'Failed to fetch transfer details')
   },
 })
 
@@ -153,19 +135,4 @@ const rejectTransfer = (data) => {
   })
 }
 
-const validateTransferId = createResource({
-  url: 'fossunited.api.tickets.get_transfer_doc_validity',
-  params: {
-    transfer_id: transferID,
-  },
-  onSuccess(data) {
-    if (!data) {
-      showDialog.value = true
-      dialogMessage.value += ' The transfer request you are trying to approve does not exist. '
-      return false
-    } else {
-      transferDoc.fetch()
-    }
-  },
-})
 </script>

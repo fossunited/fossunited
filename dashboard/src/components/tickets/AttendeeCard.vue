@@ -83,7 +83,25 @@
       </div>
 
       <!-- T-shirt -->
-      <div v-if="showTshirt" class="flex items-center gap-4 flex-wrap">
+      <div v-if="tshirtIncluded" class="flex flex-col gap-3">
+        <div class="flex items-center gap-2 text-sm text-ink-green-3">
+          <IconShirt class="w-4 h-4 shrink-0" aria-hidden="true" />
+          <span>T-shirt included with this tier</span>
+        </div>
+        <FormControl
+          :model-value="attendee.tshirt_size"
+          type="select"
+          :options="tshirtSizes"
+          size="sm"
+          variant="subtle"
+          label="T-shirt size"
+          placeholder="Select size"
+          required
+          class="min-w-[110px]"
+          @update:model-value="update('tshirt_size', $event)"
+        />
+      </div>
+      <div v-else-if="showTshirt" class="flex items-center gap-4 flex-wrap">
         <FormControl
           :model-value="attendee.wants_tshirt"
           type="checkbox"
@@ -113,7 +131,7 @@
 
 <script setup>
 import { FormControl } from 'frappe-ui'
-import { IconUserCircle, IconTrash } from '@tabler/icons-vue'
+import { IconUserCircle, IconTrash, IconShirt } from '@tabler/icons-vue'
 
 const props = defineProps({
   attendee: { type: Object, required: true },
@@ -122,6 +140,7 @@ const props = defineProps({
   customFields: { type: Array, default: () => [] },
   showTshirt: { type: Boolean, default: false },
   tshirtPrice: { type: Number, default: 0 },
+  tshirtIncluded: { type: Boolean, default: false },
   canDelete: { type: Boolean, default: false },
 })
 

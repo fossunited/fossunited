@@ -149,6 +149,27 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def after_insert(self):
         # Always handle initial subscription on insert
         self.handle_email_group("CFP Proposers")
+        self._link_speaker_users()
+
+    def _link_speaker_users(self):
+        """Set linked_user (FOSS User Profile) on speaker rows whose email has a profile."""
+        emails = [s.email for s in self.speakers if s.email and not s.linked_user]
+        if not emails:
+            return
+        profile_map = {
+            p.user: p.name
+            for p in frappe.db.get_all(USER_PROFILE, {"user": ("in", emails)}, ["name", "user"])
+        }
+        for speaker in self.speakers:
+            profile_name = profile_map.get(speaker.email)
+            if profile_name:
+                frappe.db.set_value(
+                    "CFP Submission Speaker",
+                    speaker.name,
+                    "linked_user",
+                    profile_name,
+                    update_modified=False,
+                )
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")

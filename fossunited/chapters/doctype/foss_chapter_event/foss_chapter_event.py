@@ -123,7 +123,6 @@ class FOSSChapterEvent(WebsiteGenerator):
             and self.status == "Concluded"
             and not self.feedback_sent
             and self.event_end_date
-            and datetime.now() >= frappe.utils.get_datetime(self.event_end_date)
         ):
             frappe.enqueue(
                 "fossunited.utils.notifications.send_event_feedback_request",

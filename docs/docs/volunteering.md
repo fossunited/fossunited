@@ -70,6 +70,8 @@ Volunteers can contribute in a wide variety of ways. Here are some of the main a
 10. **Propose Your Own Contribution**
    Have a unique skill or project idea? We’re open to custom contributions that align with our mission.
 
+Interested? Reach out to us on [team@fossunited.org](mailto:team@fossunited.org).
+
 ---
 
 ## How to Get Started
@@ -86,7 +88,7 @@ If you're interested in volunteering with a local chapter:
 ### Start or Restart a Chapter or Club
 
 Interested in starting a new city chapter or reviving an existing one? Want to set up a FOSS Club at your educational institution?
-Reach out to the FOSS United Foundation team directly.
+Reach out to the FOSS United Foundation team directly by [booking a call](https://cal.com/team/fossunited/learners-program).
 
 ---
 

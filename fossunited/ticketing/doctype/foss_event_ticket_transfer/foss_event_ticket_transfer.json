@@ -24,17 +24,26 @@
   ],
   "fields": [
     {
+      "default": "Pending Approval",
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "in_list_view": 1,
+      "in_standard_filter": 1,
+      "label": "Status",
+      "options": "Pending Approval\nCompleted\nCancelled"
+    },
+    {
+      "fieldname": "ticket_detail_section",
+      "fieldtype": "Section Break",
+      "label": "Ticket Detail"
+    },
+    {
       "fieldname": "ticket",
       "fieldtype": "Link",
       "in_list_view": 1,
       "label": "Ticket",
       "options": "FOSS Event Ticket",
       "reqd": 1
-    },
-    {
-      "fieldname": "ticket_detail_section",
-      "fieldtype": "Section Break",
-      "label": "Ticket Detail"
     },
     {
       "fetch_from": "ticket.email",
@@ -71,29 +80,6 @@
       "label": "Receiver Details"
     },
     {
-      "fieldname": "column_break_hkqo",
-      "fieldtype": "Column Break"
-    },
-    {
-      "fieldname": "designation",
-      "fieldtype": "Data",
-      "label": "Designation"
-    },
-    {
-      "fieldname": "organization",
-      "fieldtype": "Data",
-      "label": "Organization / College"
-    },
-    {
-      "default": "Pending Approval",
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "in_list_view": 1,
-      "in_standard_filter": 1,
-      "label": "Status",
-      "options": "Pending Approval\nCompleted\nCancelled"
-    },
-    {
       "fieldname": "receiver_name",
       "fieldtype": "Data",
       "in_list_view": 1,
@@ -118,6 +104,20 @@
       "label": "Wants T Shirt?"
     },
     {
+      "fieldname": "column_break_hkqo",
+      "fieldtype": "Column Break"
+    },
+    {
+      "fieldname": "designation",
+      "fieldtype": "Data",
+      "label": "Designation"
+    },
+    {
+      "fieldname": "organization",
+      "fieldtype": "Data",
+      "label": "Organization / College"
+    },
+    {
       "depends_on": "eval:doc.wants_tshirt == 1",
       "fieldname": "tshirt_size",
       "fieldtype": "Data",
@@ -125,7 +125,7 @@
     }
   ],
   "links": [],
-  "modified": "2024-07-07 21:26:22.906297",
+  "modified": "2026-05-14 12:40:52.705901",
   "modified_by": "Administrator",
   "module": "Ticketing",
   "name": "FOSS Event Ticket Transfer",
@@ -146,19 +146,10 @@
     },
     {
       "create": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "report": 1,
-      "role": "All",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "role": "Guest",
-      "write": 1
+      "role": "All"
     }
   ],
+  "row_format": "Dynamic",
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [
