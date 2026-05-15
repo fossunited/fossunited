@@ -105,12 +105,15 @@ def notify_cfp_reviewer_assignment(doc, method=None) -> None:
         f"{frappe.utils.get_url()}/dashboard/review/{event_id}?submission={doc.reference_name}"
     )
 
-    subject = f'{assigner_name} assigned you a proposal to review: "{submission.talk_title}"'
+    subject = f'New proposal to review: "{submission.talk_title}"'
     email_content = f"""
-        <p><b>{assigner_name}</b> has assigned you a proposal to review
-        for <b>{event_name}</b>:</p>
-        <p style="margin: 12px 0; font-size: 15px;"><b>{submission.talk_title}</b></p>
-        <p><a href="{dashboard_url}">Open Reviewer Dashboard →</a></p>
+        <p style="margin: 0 0 8px;">
+          <b>{assigner_name}</b> assigned you a proposal for <b>{event_name}</b>:
+        </p>
+        <p style="margin: 0 0 16px; font-size: 15px;"><b>{submission.talk_title}</b></p>
+        <a href="{dashboard_url}" style="display:inline-block; padding: 8px 16px; background:#2d6a4f; color:#fff; border-radius:6px; text-decoration:none; font-size:14px;">
+          Open Reviewer Dashboard
+        </a>
     """
 
     enqueue_create_notification(
