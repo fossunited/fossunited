@@ -64,8 +64,12 @@ defineEmits(['open:submission'])
         {{ submission.talk_title }}
       </h4>
       <div class="flex gap-2 items-center !text-sm flex-wrap">
-        <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
-        <Badge v-if="submission._is_reviewed === 'Yes'" label="Reviewed" theme="blue" />
+        <Tooltip text="Proposal status managed event organizer" placement="top">
+          <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
+        </Tooltip>
+        <Tooltip v-if="submission._is_reviewed === 'Yes'" text="You've added your review" placement="top">
+          <Badge label="Reviewed" theme="blue" />
+        </Tooltip>
         <Badge
           :label="submission._likes_count"
           variant="ghost"
@@ -96,7 +100,6 @@ defineEmits(['open:submission'])
             size="sm"
             class="rounded-full"
             :class="[
-              !u.user_image && '!bg-ink-gray-6 !text-surface-white',
               !u._review_verdict && 'opacity-40 ring-2 ring-outline-gray-3',
               u._review_verdict === 'Yes' && 'ring-2 ring-green-500',
               u._review_verdict === 'No' && 'ring-2 ring-red-500',
