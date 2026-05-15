@@ -70,13 +70,18 @@ class TestVolunteersPage(FrappeTestCase):
             if frappe.db.exists("User", user.name):
                 frappe.delete_doc("User", user.name, force=True)
 
+    def _scoped(self, result):
+        """Filter results to only this test's fixtures (DB may have leftovers from other suites)."""
+        routes = {self.chapter1.route, self.chapter2.route}
+        return [r for r in result if r["chapter_route"] in routes]
+
     def test_get_volunteers_data_returns_correct_structure(self):
         """Test that volunteers data returns expected fields and structure."""
         # Create a recent event
         event = FOSSChapterEventFactory.create(chapter=self.chapter1.name)
         self._events.append(event)
 
-        result = get_volunteers_data()
+        result = self._scoped(get_volunteers_data())
 
         # Should have volunteers from both chapters
         self.assertEqual(len(result), 4)
@@ -116,7 +121,7 @@ class TestVolunteersPage(FrappeTestCase):
         event2 = FOSSChapterEventFactory.create(chapter=self.chapter2.name)
         self._events.extend([event1, event2])
 
-        result = get_volunteers_data()
+        result = self._scoped(get_volunteers_data())
 
         # Get all unique member profile names from results
         member_profiles = {row["chapter_member"] for row in result}
@@ -133,7 +138,7 @@ class TestVolunteersPage(FrappeTestCase):
         event2 = FOSSChapterEventFactory.create(chapter=self.chapter2.name)
         self._events.extend([event1, event2])
 
-        result = get_volunteers_data()
+        result = self._scoped(get_volunteers_data())
 
         # luffy (profile1) is in both chapters
         luffy_entries = [r for r in result if r["chapter_member"] == self.profile1.name]
@@ -150,7 +155,7 @@ class TestVolunteersPage(FrappeTestCase):
         event = FOSSChapterEventFactory.create(chapter=self.chapter1.name)
         self._events.append(event)
 
-        result = get_volunteers_data()
+        result = self._scoped(get_volunteers_data())
 
         # Find luffy's entry
         luffy_entry = next((r for r in result if r["chapter_member"] == self.profile1.name), None)
@@ -171,21 +176,24 @@ class TestVolunteersPage(FrappeTestCase):
 
     def test_get_volunteers_stats_counts_unique_volunteers(self):
         """Test that stats count unique volunteers even if in multiple chapters."""
+        baseline = get_volunteers_stats()
+
         # Create recent events (within last year)
         event1 = FOSSChapterEventFactory.create(chapter=self.chapter1.name)
         event2 = FOSSChapterEventFactory.create(chapter=self.chapter2.name)
         self._events.extend([event1, event2])
 
         result = get_volunteers_stats()
-        # Should count unique volunteers (Luffy in 2 chapters = 1 unique)
-        # Total unique: Luffy, Zoro, Xebec = 3
-        self.assertEqual(result["active_count"], 3)
+        # Luffy in 2 chapters = 1 unique. Total unique added: Luffy, Zoro, Xebec = 3
+        self.assertEqual(result["active_count"] - baseline["active_count"], 3)
 
-        # Should count both chapters
-        self.assertEqual(result["communities_count"], 2)
+        # Both chapters newly active
+        self.assertEqual(result["communities_count"] - baseline["communities_count"], 2)
 
     def test_get_volunteers_stats_excludes_inactive_chapters(self):
         """Test that stats only include chapters with events in last year."""
+        baseline = get_volunteers_stats()
+
         # Create old event (more than 1 year ago) for chapter1
         old_date = add_to_date(nowdate(), years=-2)
         old_event = FOSSChapterEventFactory.create(
@@ -199,11 +207,11 @@ class TestVolunteersPage(FrappeTestCase):
 
         result = get_volunteers_stats()
 
-        # Should only count chapter2 (with recent event)
-        self.assertEqual(result["communities_count"], 1)
+        # Only chapter2 newly active (chapter1 has old event)
+        self.assertEqual(result["communities_count"] - baseline["communities_count"], 1)
 
-        # Should only count volunteers from chapter2 (Luffy and Xebec)
-        self.assertEqual(result["active_count"], 2)
+        # Only volunteers from chapter2 (Luffy and Xebec) newly active
+        self.assertEqual(result["active_count"] - baseline["active_count"], 2)
 
     def test_get_volunteers_data_includes_latest_event_timestamp(self):
         """Test that latest_event shows the most recent event date."""
@@ -219,9 +227,9 @@ class TestVolunteersPage(FrappeTestCase):
         recent_event.reload()
         self._events.extend([old_event, recent_event])
 
-        result = get_volunteers_data()
+        result = self._scoped(get_volunteers_data())
 
-        chapter1_entries = [r for r in result if r["chapter_name"] == self.chapter1.chapter_name]
+        chapter1_entries = [r for r in result if r["chapter_route"] == self.chapter1.route]
 
         # All should have the same latest_event (the most recent one)
         latest_dates = {entry["latest_event"] for entry in chapter1_entries}
