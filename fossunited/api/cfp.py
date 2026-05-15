@@ -157,9 +157,7 @@ def get_cfp_submissions(event: str) -> list:
 
 def _get_reviewed_by_current_user(submission_names: list) -> set[str]:
     """Submission names the current user has already reviewed."""
-    reviewer_profile = frappe.db.get_value(
-        USER_PROFILE, {"email": frappe.session.user}, "name"
-    )
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
     rows = frappe.db.get_all(
         PROPOSAL_REVIEW,
         {
@@ -357,9 +355,7 @@ def _get_bulk_reviewed_by_user_verdict(
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_global_cfp_guidelines() -> dict:
-    return {
-        "guidelines": frappe.db.get_single_value("Global CFP Settings", "guidelines")
-    }
+    return {"guidelines": frappe.db.get_single_value("Global CFP Settings", "guidelines")}
 
 
 @frappe.whitelist()
@@ -411,6 +407,7 @@ def get_proposal_filter_fields(event_id: str) -> list:
     return filtered_fields
 
 
+@frappe.whitelist()
 def get_cfp_reviewers(event_id: str) -> list:
     frappe.only_for([CHAPTER_MEMBER])
     members = frappe.db.get_all(
@@ -460,6 +457,11 @@ def set_submission_reviewers(submission_name: str, reviewer_users: list) -> None
     for user in existing_set - new_set:
         frappe.delete_doc("ToDo", existing_map[user], ignore_permissions=True)
 
+    if new_set - existing_set:
+        talk_title = (
+            frappe.db.get_value(PROPOSAL, submission_name, "talk_title") or submission_name
+        )
+
     for user in new_set - existing_set:
         frappe.get_doc(
             {
@@ -468,7 +470,7 @@ def set_submission_reviewers(submission_name: str, reviewer_users: list) -> None
                 "reference_name": submission_name,
                 "allocated_to": user,
                 "assigned_by": frappe.session.user,
-                "description": f"Review CFP Submission: {submission_name}",
+                "description": f"[RP]: {talk_title}",
             }
         ).insert(ignore_permissions=True)
 
