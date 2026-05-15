@@ -28,19 +28,16 @@ class TestFOSSUserProfile(FrappeTestCase):
         private_profile = frappe.get_doc(USER_PROFILE, {"user": test_user.name})
         frappe.db.set_value(USER_PROFILE, private_profile.name, "is_private", "1")
 
-        current_user = frappe.session.user
-        frappe.set_user("guest@example.com")
+        with self.set_user("guest@example.com"):
+            with self.assertRaises(PrivateProfileError) as context:
+                # When accessing the profile not as admin or user
+                # then an exception is raised
+                private_profile = frappe.get_doc(USER_PROFILE, {"user": test_user.name})
+                # Simulate loading the profile
+                private_profile.get_context({})
 
-        with self.assertRaises(PrivateProfileError) as context:
-            # When accessing the profile not as admin or user
-            # then an exception is raised
-            private_profile = frappe.get_doc(USER_PROFILE, {"user": test_user.name})
-            # Simulate loading the profile
-            private_profile.get_context({})
+            self.assertTrue("Profile is Private" in str(context.exception))
 
-        self.assertTrue("Profile is Private" in str(context.exception))
-
-        frappe.set_user(current_user)
         frappe.delete_doc(USER_PROFILE, private_profile.name)
         frappe.delete_doc("User", test_user.name)
 
@@ -61,32 +58,31 @@ class TestFOSSUserProfile(FrappeTestCase):
         test_user.delete(force=True)
 
     def test_share_user_with_self(self):
-        frappe.set_user("Guest")
-
-        test_user = frappe.get_doc(
-            {
-                "doctype": "User",
-                "email": fake.email(),
-                "first_name": fake.first_name(),
-            },
-        ).insert(ignore_permissions=True)
-        test_user.reload()
-
-        profile_id = frappe.db.get_value(
-            USER_PROFILE,
-            {"user": test_user.name},
-            "name",
-        )
-
-        self.assertTrue(
-            frappe.db.exists(
-                "DocShare",
+        with self.set_user("Guest"):
+            test_user = frappe.get_doc(
                 {
-                    "user": test_user.name,
-                    "share_doctype": USER_PROFILE,
-                    "share_name": profile_id,
+                    "doctype": "User",
+                    "email": fake.email(),
+                    "first_name": fake.first_name(),
                 },
+            ).insert(ignore_permissions=True)
+            test_user.reload()
+
+            profile_id = frappe.db.get_value(
+                USER_PROFILE,
+                {"user": test_user.name},
+                "name",
             )
-        )
+
+            self.assertTrue(
+                frappe.db.exists(
+                    "DocShare",
+                    {
+                        "user": test_user.name,
+                        "share_doctype": USER_PROFILE,
+                        "share_name": profile_id,
+                    },
+                )
+            )
 
         test_user.delete(force=True)
