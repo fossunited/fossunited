@@ -103,13 +103,18 @@ const sortBy = ref('creation_desc')
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
-const SORT_OPTIONS = [
-  { label: 'Newest first', value: 'creation_desc' },
-  { label: 'Oldest first', value: 'creation_asc' },
-  { label: 'Review count ↓', value: 'review_count_desc' },
-  { label: 'Assigned count ↓', value: 'assigned_count_desc' },
-  { label: 'Title A–Z', value: 'title_asc' },
-]
+const SORT_OPTIONS = computed(() => {
+  const options = [
+    { label: 'Newest first', value: 'creation_desc' },
+    { label: 'Oldest first', value: 'creation_asc' },
+    { label: 'Review count ↓', value: 'review_count_desc' },
+    { label: 'Title A–Z', value: 'title_asc' },
+  ]
+  if (!props.reviewerMode) {
+    options.splice(3, 0, { label: 'Assigned count ↓', value: 'assigned_count_desc' })
+  }
+  return options
+})
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All', activeClass: 'bg-surface-gray-7 text-ink-white' },
