@@ -14,6 +14,7 @@ declare module 'vue' {
     AllDayGridView: typeof import('./src/components/schedule/AllDayGridView.vue')['default']
     AllProposalsBanner: typeof import('./src/components/proposals/AllProposalsBanner.vue')['default']
     AllProposalsBannerImage: typeof import('./src/components/proposals/AllProposalsBannerImage.vue')['default']
+    AssignReviewers: typeof import('./src/components/event/cfp/AssignReviewers.vue')['default']
     AttendeeCard: typeof import('./src/components/tickets/AttendeeCard.vue')['default']
     AttendeeRequestList: typeof import('./src/components/localhost/AttendeeRequestList.vue')['default']
     BillingForm: typeof import('./src/components/tickets/BillingForm.vue')['default']

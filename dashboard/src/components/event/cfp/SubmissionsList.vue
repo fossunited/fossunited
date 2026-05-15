@@ -57,6 +57,7 @@
       v-for="submission in cfpSubmissions.data"
       :key="submission.name"
       :submission="submission"
+      :sort-by="sortBy"
       tabindex="0"
       @open:submission="handleOpenSubmission($event)"
     />
