@@ -100,4 +100,4 @@ jobs:
           source ./env/bin/activate
           bench --site ${{ env.SITE_NAME }} set-config developer_mode 1
           bench --site ${{ env.SITE_NAME }} set-config allow_tests true
-          bench --site ${{ env.SITE_NAME }} run-parallel-tests --app fossunited
+          bench --site ${{ env.SITE_NAME }} run-tests --app fossunited
