@@ -14,6 +14,17 @@ from fossunited.tests.factories.foss_event_ticket_factory import FOSSEventTicket
 from fossunited.tests.factories.foss_event_ticket_transfer_factory import (
     FOSSEventTicketTransferFactory,
 )
+from fossunited.tests.factories.foss_hackathon_factory import FOSSHackathonFactory
+from fossunited.tests.factories.foss_hackathon_join_team_request_factory import (
+    FOSSHackathonJoinTeamRequestFactory,
+)
+from fossunited.tests.factories.foss_hackathon_localhost_factory import (
+    FOSSHackathonLocalHostFactory,
+)
+from fossunited.tests.factories.foss_hackathon_participant_factory import (
+    FOSSHackathonParticipantFactory,
+)
+from fossunited.tests.factories.foss_hackathon_team_factory import FOSSHackathonTeamFactory
 from fossunited.tests.factories.razorpay_payment_factory import RazorpayPaymentFactory
 from fossunited.tests.factories.user_factory import UserFactory, get_foss_profile_id
 
@@ -26,6 +37,11 @@ __all__ = [
     "FOSSEventRSVPSubmissionFactory",
     "FOSSEventTicketFactory",
     "FOSSEventTicketTransferFactory",
+    "FOSSHackathonFactory",
+    "FOSSHackathonJoinTeamRequestFactory",
+    "FOSSHackathonLocalHostFactory",
+    "FOSSHackathonParticipantFactory",
+    "FOSSHackathonTeamFactory",
     "RazorpayPaymentFactory",
     "UserFactory",
     "get_foss_profile_id",
