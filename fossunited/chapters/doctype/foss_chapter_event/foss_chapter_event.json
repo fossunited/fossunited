@@ -59,6 +59,8 @@
   "project_showcase",
   "community_partners_section",
   "community_partners",
+  "arbitrary_timeline_data_section",
+  "event_data",
   "volunteers_tab",
   "event_members_section",
   "event_members",
@@ -491,6 +493,17 @@
    "fieldtype": "Check",
    "label": "Feedback sent?",
    "read_only": 1
+  },
+  {
+   "fieldname": "arbitrary_timeline_data_section",
+   "fieldtype": "Section Break",
+   "label": "Arbitrary Timeline Data"
+  },
+  {
+   "description": "Data to store updating data fields for IndiaFOSS event specifically.\nEg: Timeline dates, co-chairs, certain links, showing items in macro cards",
+   "fieldname": "event_data",
+   "fieldtype": "JSON",
+   "label": "Event data"
   }
  ],
  "has_web_view": 1,
@@ -523,7 +536,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-05-07 16:53:25.160146",
+ "modified": "2026-05-18 14:41:03.808722",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
