@@ -14,6 +14,10 @@ from fossunited.tests.factories.foss_event_ticket_factory import FOSSEventTicket
 from fossunited.tests.factories.foss_event_ticket_transfer_factory import (
     FOSSEventTicketTransferFactory,
 )
+from fossunited.tests.factories.free_ticket_application_factory import (
+    FreeTicketApplicationFactory,
+)
+from fossunited.tests.factories.free_ticket_code_factory import FreeTicketCodeFactory
 from fossunited.tests.factories.razorpay_payment_factory import RazorpayPaymentFactory
 from fossunited.tests.factories.user_factory import UserFactory, get_foss_profile_id
 
@@ -26,6 +30,8 @@ __all__ = [
     "FOSSEventRSVPSubmissionFactory",
     "FOSSEventTicketFactory",
     "FOSSEventTicketTransferFactory",
+    "FreeTicketApplicationFactory",
+    "FreeTicketCodeFactory",
     "RazorpayPaymentFactory",
     "UserFactory",
     "get_foss_profile_id",

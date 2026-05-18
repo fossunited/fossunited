@@ -6,26 +6,19 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT, FREE_TICKET_CODE
-from fossunited.tests.utils import insert_test_chapter, insert_test_event
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FreeTicketCodeFactory,
+)
+
+fake = Faker()
 
 
 class TestEventFreeTicketCodeController(FrappeTestCase):
     def setUp(self):
-        self.fake = Faker()
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(
-            chapter=self.chapter,
-            is_paid_event=True,
-            tickets_status="Live",
-            tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Test",
-                    "price": 100,
-                    "maximum_tickets": 5,
-                }
-            ],
-        )
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -34,20 +27,8 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.db.commit()  # nosemgrep: frappe-manual-commit — tearDown needs commit to flush deletes before next test
 
-    def _make_coupon_doc(self, **kwargs):
-        data = {
-            "doctype": FREE_TICKET_CODE,
-            "event": self.event.name,
-            "tier": "Volunteer",
-            "max_count": 10,
-            "mapped_email": self.fake.email(),
-        }
-        data.update(kwargs)
-        return frappe.get_doc(data)
-
     def test_create_coupon_with_required_fields(self):
-        coupon = self._make_coupon_doc()
-        coupon.insert(ignore_permissions=True)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name)
 
         # Exists in DB and normalized defaults applied
         self.assertTrue(frappe.db.exists(FREE_TICKET_CODE, coupon.name))
@@ -59,14 +40,12 @@ class TestEventFreeTicketCodeController(FrappeTestCase):
 
     def test_defaults_and_normalization(self):
         # Create without passing used_count/is_used explicitly
-        coupon = self._make_coupon_doc()
-        coupon.insert(ignore_permissions=True)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name)
         coupon.reload()
         # After insert the before_insert/validate hooks should normalize
         self.assertEqual(int(coupon.used_count), 0)
         self.assertEqual(int(coupon.is_used), 0)
 
     def test_invalid_mapped_email_throws_error(self):
-        coupon = self._make_coupon_doc(mapped_email="not-an-email")
         with self.assertRaises(frappe.ValidationError):
-            coupon.insert(ignore_permissions=True)
+            FreeTicketCodeFactory.create(event=self.event.name, mapped_email="not-an-email")
