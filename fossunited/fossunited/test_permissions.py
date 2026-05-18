@@ -14,6 +14,7 @@ class TestPermissionQueries(FrappeTestCase):
     """Unit tests for cfp_submission_query and rsvp_submission_query SQL fragments."""
 
     def setUp(self):
+        frappe.set_user("Administrator")
         self.ctm = UserFactory.create("with_foss_website_user_role")
         frappe.get_doc("User", self.ctm.name).add_roles("Chapter Team Member")
         self.chapter = FOSSChapterFactory.create("with_members", members=[self.ctm.name])
