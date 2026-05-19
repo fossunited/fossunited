@@ -503,7 +503,8 @@
    "description": "Data to store updating data fields for IndiaFOSS event specifically.\nEg: Timeline dates, co-chairs, certain links, showing items in macro cards",
    "fieldname": "event_data",
    "fieldtype": "JSON",
-   "label": "Event data"
+   "label": "Event data",
+   "permlevel": 4
   }
  ],
  "has_web_view": 1,
@@ -536,7 +537,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-05-18 14:41:03.808722",
+ "modified": "2026-05-20 00:13:16.522002",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -572,6 +573,14 @@
    "read": 1,
    "role": "Guest",
    "select": 1
+  },
+  {
+   "delete": 1,
+   "export": 1,
+   "permlevel": 4,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",
