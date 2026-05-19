@@ -3479,8 +3479,12 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .illust-mobile-grid { display: none; }
 @media (max-width: 799px) { .illust-strip { display: none; } .illust-mobile-grid { display: flex; flex-direction: column; gap: 16px; } }
 .illust-mobile-row { display: flex; align-items: center; gap: 12px; }
-.illust-mobile-card { flex-shrink: 0; width: 72px; height: 120px; border: 1px solid var(--v3-button-border); border-radius: 12px; overflow: hidden; background: var(--v3-card-bg); }
-.illust-mobile-card img { width: 100%; height: 100%; object-fit: cover; }
+.illust-mobile-card { flex-shrink: 0; width: 72px; height: 120px; border: 1px solid var(--v3-button-border); border-radius: 12px; overflow: hidden; background: var(--v3-card-bg); position: relative; cursor: pointer; }
+.illust-card { cursor: pointer; }
+.illust-card.is-flipped .illust-photo,
+.illust-mobile-card.is-flipped .illust-photo { opacity: 1; }
+.illust-card.is-flipped .illust-img,
+.illust-mobile-card.is-flipped .illust-img { opacity: 0; }
 .illust-mobile-pills { flex: 1; display: flex; flex-direction: column; gap: 8px; }
 .illust-pill { background: var(--v3-button-border); border-radius: 100px; padding: 6px 14px; font-size: .8125rem; font-weight: 600; color: var(--v3-text-color); text-align: center; white-space: nowrap; }
 
