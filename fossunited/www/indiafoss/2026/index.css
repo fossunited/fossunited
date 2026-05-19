@@ -1,0 +1,38 @@
+/* ── Skip link ──────────────────────────────── */
+.skip-link {
+  position: absolute; top: -40px; left: 0; z-index: 9999;
+  background: var(--v3-primary-button); color: #fff;
+  padding: .5rem 1rem; font-size: .875rem; text-decoration: none; border-radius: 0 0 6px 0;
+}
+.skip-link:focus { top: 0; }
+
+/* ── IndiaFOSS nav link style ───────────────── */
+.if-nav-link {
+  display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 6px;
+  font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--v3-text-color2); background: transparent; border: none;
+  white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .15s;
+}
+.if-nav-link:hover { background: var(--v3-button-border); color: var(--v3-text-color2); text-decoration: none; }
+.if-nav-ticket { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; margin-left: 4px; }
+
+/* ── Hero (IndiaFOSS-specific sizing) ───────── */
+.if-hero {
+  position: relative; overflow: hidden; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 32px 24px;
+  background: var(--v3-card-bg); border: 1px solid var(--v3-button-border); border-radius: 16px;
+  color: var(--v3-text-color)
+}
+.if-hero-logo { max-height: 80px; width: auto; display: block; }
+.if-hero-meta { font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--v3-text-color); margin: 0; text-decoration: none; }
+a.if-hero-meta:hover { opacity: .75; text-decoration: none; color: var(--v3-text-color); }
+.if-hero-desc { max-width: 540px; color: var(--v3-text-color); margin: 0; }
+
+/* ── Community tagline ──────────────────────── */
+.if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
+.if-tagline svg { width: 40px; height: 40px; margin-bottom: 4px; }
+.if-footer-tagline .if-tagline { color: #fafafa; }
+
+
+/* ── Toggle icon rotation ───────────────────── */
+[data-toggle="collapse"][aria-expanded="true"] .v3-toggle-icon { transform: rotate(180deg); }
