@@ -546,6 +546,8 @@
           start: parsed.start,
           end: parsed.end,
         })
+        state._parsedStart = parsed.start ? new Date(parsed.start) : null
+        state._parsedEnd = parsed.end ? new Date(parsed.end) : null
 
         dom.startDate.value = parsed.start
         dom.endDate.value = parsed.end
@@ -553,13 +555,14 @@
       }
 
       dom.startDate.onchange = (e) => {
-          state.filters.start = e.target.value
-          state._parsedStart = e.target.value ? new Date(e.target.value) : null
-          render()
+        state.filters.start = e.target.value
+        state._parsedStart = e.target.value ? new Date(e.target.value) : null
+        render()
       }
 
       dom.endDate.onchange = (e) => {
         state.filters.end = e.target.value
+        state._parsedEnd = e.target.value ? new Date(e.target.value) : null
         render()
       }
 
@@ -624,6 +627,8 @@
           start: _parsed.start,
           end: _parsed.end,
         })
+        state._parsedStart = _parsed.start ? new Date(_parsed.start) : null
+        state._parsedEnd = _parsed.end ? new Date(_parsed.end) : null
         dom.startDate.value = _parsed.start
         dom.endDate.value = _parsed.end
       }

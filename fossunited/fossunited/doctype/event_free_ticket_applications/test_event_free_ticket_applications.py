@@ -12,26 +12,20 @@ from fossunited.doctype_ids import (
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
 )
-from fossunited.tests.utils import insert_test_chapter, insert_test_event
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FreeTicketApplicationFactory,
+    FreeTicketCodeFactory,
+)
+
+fake = Faker()
 
 
 class TestEventFreeTicketApplications(FrappeTestCase):
     def setUp(self):
-        self.fake = Faker()
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(
-            chapter=self.chapter,
-            is_paid_event=True,
-            tickets_status="Live",
-            tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Test",
-                    "price": 100,
-                    "maximum_tickets": 5,
-                }
-            ],
-        )
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -42,46 +36,16 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
         frappe.db.commit()  # nosemgrep: frappe-manual-commit - tearDown needs commit to flush deletes before next test
 
-    def create_test_coupon(self, max_count=5, used_count=0, tier="Volunteer", other_tier=None):
-        coupon = frappe.get_doc(
-            {
-                "doctype": FREE_TICKET_CODE,
-                "event": self.event.name,
-                "tier": tier,
-                "max_count": max_count,
-                "used_count": used_count,
-                "is_used": 0,
-                "mapped_email": self.fake.email(),
-                "other_tier": other_tier,
-            }
-        )
-        coupon.insert(ignore_permissions=True)
-        return coupon
-
-    def submit_application(self, coupon_id, event=None, full_name=None, email=None, **kwargs):
-        full_name = full_name or self.fake.name()
-        email = email or self.fake.email()
-        application = frappe.get_doc(
-            {
-                "doctype": FREE_TICKET_APPLY,
-                "event": (event or self.event).name
-                if hasattr(event, "name")
-                else (event or self.event.name),
-                "coupon_id": coupon_id,
-                "full_name": full_name,
-                "email": email,
-                **kwargs,
-            }
-        )
-        application.insert(ignore_permissions=True)
-        return application, email, full_name
-
     def test_valid_application_creates_ticket(self):
-        coupon = self.create_test_coupon()
-        full_name = self.fake.name()
-        _, email, _ = self.submit_application(coupon.name, full_name=full_name)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name)
+        full_name = fake.name()
+        application = FreeTicketApplicationFactory.create(
+            coupon_id=coupon.name, event=self.event.name, full_name=full_name
+        )
 
-        ticket = frappe.get_doc(EVENT_TICKET, {"event": self.event.name, "email": email})
+        ticket = frappe.get_doc(
+            EVENT_TICKET, {"event": self.event.name, "email": application.email}
+        )
         self.assertEqual(ticket.full_name, full_name)
         self.assertEqual(ticket.tier, "Volunteer Free Pass")
         self.assertIsNone(ticket.designation)
@@ -89,56 +53,53 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         self.assertEqual(ticket.subscribe_chapter_mailing, 1)
 
     def test_coupon_usage_increments(self):
-        coupon = self.create_test_coupon(max_count=5, used_count=0)
-        self.submit_application(coupon.name)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=5, used_count=0)
+        FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
         coupon.reload()
         self.assertEqual(coupon.used_count, 1)
         self.assertEqual(coupon.is_used, 0)
 
     def test_coupon_marked_used_at_max_count(self):
-        coupon = self.create_test_coupon(max_count=2, used_count=1)
-        self.submit_application(coupon.name)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=2, used_count=1)
+        FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
         coupon.reload()
         self.assertEqual(coupon.used_count, 2)
         self.assertEqual(coupon.is_used, 1)
 
     def test_invalid_coupon_throws_error(self):
-        application = frappe.get_doc(
-            {
-                "doctype": FREE_TICKET_APPLY,
-                "event": self.event.name,
-                "coupon_id": "INVALID_COUPON_123",
-                "full_name": self.fake.name(),
-                "email": self.fake.email(),
-            }
-        )
         with self.assertRaises(frappe.ValidationError):
-            application.insert(ignore_permissions=True)
+            FreeTicketApplicationFactory.create(
+                coupon_id="INVALID_COUPON_123", event=self.event.name
+            )
 
     def test_max_count_reached_throws_error(self):
-        coupon = self.create_test_coupon(max_count=3, used_count=3)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=3, used_count=3)
         with self.assertRaises(frappe.ValidationError):
-            self.submit_application(coupon.name)
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
 
     def test_coupon_event_mismatch_throws_error(self):
-        other_event = insert_test_event(chapter=self.chapter, event_name="Other Test Event")
-        coupon = self.create_test_coupon()
+        other_event = FOSSChapterEventFactory.create(
+            chapter=self.chapter.name, event_name="Other Test Event"
+        )
+        coupon = FreeTicketCodeFactory.create(event=self.event.name)
         with self.assertRaises(frappe.ValidationError):
             # pass other event id explicitly
-            self.submit_application(coupon.name, event=other_event)
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=other_event.name)
         frappe.delete_doc(EVENT, other_event.name, force=True)
 
     def test_other_tier_formatting(self):
-        coupon = self.create_test_coupon(tier="Other", other_tier="VIP Guest")
-        self.submit_application(coupon.name)
+        coupon = FreeTicketCodeFactory.create(
+            event=self.event.name, tier="Other", other_tier="VIP Guest"
+        )
+        FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
         ticket = frappe.get_last_doc(EVENT_TICKET)
         self.assertEqual(ticket.tier, "VIP Guest Free Pass")
 
     def test_multiple_applications_same_coupon(self):
-        coupon = self.create_test_coupon(max_count=3, used_count=0)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=3, used_count=0)
         for i in range(3):
             with self.subTest(i=i):
-                self.submit_application(coupon.name)
+                FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
         coupon.reload()
         self.assertEqual(coupon.used_count, 3)
         self.assertEqual(coupon.is_used, 1)
@@ -158,15 +119,15 @@ class TestEventFreeTicketApplications(FrappeTestCase):
         ]
         for tier in tiers:
             with self.subTest(tier=tier):
-                coupon = self.create_test_coupon(tier=tier)
-                self.submit_application(coupon.name)
+                coupon = FreeTicketCodeFactory.create(event=self.event.name, tier=tier)
+                FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
                 ticket = frappe.get_last_doc(EVENT_TICKET)
                 self.assertEqual(ticket.tier, f"{tier} Free Pass")
 
     def test_second_application_after_max_count(self):
-        coupon = self.create_test_coupon(max_count=1, used_count=0)
-        self.submit_application(coupon.name)
+        coupon = FreeTicketCodeFactory.create(event=self.event.name, max_count=1, used_count=0)
+        FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
         coupon.reload()
         self.assertEqual(coupon.is_used, 1)
         with self.assertRaises(frappe.ValidationError):
-            self.submit_application(coupon.name)
+            FreeTicketApplicationFactory.create(coupon_id=coupon.name, event=self.event.name)
