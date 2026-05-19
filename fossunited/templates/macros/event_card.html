@@ -73,7 +73,7 @@
           </svg>
           <div class="v3-event-card__chapter-badge">
             <div class="v3-event-card__chapter-inner">
-              {{ chapter_branding_block(chapter_name, as_link=false) }}
+              {{ chapter_branding_block(chapter_name or "Custom", as_link=false) }}
             </div>
           </div>
         </div>
@@ -88,7 +88,7 @@
           {% endif %}
 
           <div class="v3-event-card__meta">
-            <span>
+            <span class="v3-event-card__meta-date">
               {% set sd = frappe.utils.get_datetime(start_date) %}
               {% set ed = frappe.utils.get_datetime(end_date or start_date) %}
               {% set same_day = sd.date() == ed.date() %}
@@ -108,8 +108,7 @@
                 – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
               {% endif %}
             </span>
-            <span>|</span>
-            <span>{{ location }}</span>
+            <span class="v3-event-card__meta-loc">{{ location }}</span>
           </div>
         </div>
       </div>
