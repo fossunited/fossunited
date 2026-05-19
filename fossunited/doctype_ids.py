@@ -72,3 +72,6 @@ FREE_TICKET_APPLY = "Event Free Ticket Applications"
 GRANTS_DIR = "Grants Funding Directory"
 PROJ_GRANTS = "FOSS Project Grant"
 EVENT_GRANTS = "FOSS Event Grant"
+
+# for files
+DEFAULT_USER_PHOTO = "/assets/fossunited/images/defaults/user_profile_image.png"
