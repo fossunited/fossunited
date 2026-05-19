@@ -28,6 +28,7 @@ CORE_TEAM = "Core Team Member"
 # Event-related identifiers
 EVENT_VOLUNTEER = "FOSS Chapter Event Member"
 EVENT_SCHEDULE = "FOSS Event Schedule"
+COMMUNITY_PARTNER = "FOSS Event Community Partner"
 
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
