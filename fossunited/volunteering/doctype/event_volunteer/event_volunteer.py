@@ -30,7 +30,6 @@ class EventVolunteer(Document):
         photo: DF.AttachImage | None
         video_url: DF.Data | None
         volunteer_as: DF.Literal[
-            "",
             "Marketing",
             "Design",
             "Community Outreach",
@@ -39,7 +38,6 @@ class EventVolunteer(Document):
             "Video Editing",
             "Sponsorships",
             "Content",
-            "Community Outreach",
             "Parallel Sessions Management",
             "Venue Management",
             "Open Spaces Management",
@@ -48,6 +46,7 @@ class EventVolunteer(Document):
             "Production and Livestream",
             "Adhoc Jobs Management",
             "Volunteer Manager",
+            "Logistics",
             "Other",
         ]
         volunteer_name: DF.Data

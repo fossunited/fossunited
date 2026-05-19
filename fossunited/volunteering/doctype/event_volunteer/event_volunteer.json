@@ -18,12 +18,12 @@
     "volunteer_as",
     "other_volunteering_options",
     "city",
+    "video_url",
     "column_break_uknn",
     "bio",
     "photo",
     "affirmation_for_commitment",
-    "past_experience",
-    "video_url"
+    "past_experience"
   ],
   "fields": [
     {
@@ -44,7 +44,7 @@
       "fieldtype": "Select",
       "in_standard_filter": 1,
       "label": "Volunteer for",
-      "options": "\nMarketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nCommunity Outreach\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager\nOther"
+      "options": "Marketing\nDesign\nCommunity Outreach\nSpeaker Management\nDiversity\nVideo Editing\nSponsorships\nContent\nParallel Sessions Management\nVenue Management\nOpen Spaces Management\nTravel Desk\nHost/Emcees\nProduction and Livestream\nAdhoc Jobs Management\nVolunteer Manager\nLogistics\nOther"
     },
     {
       "fieldname": "column_break_uknn",
@@ -88,9 +88,10 @@
     },
     {
       "default": "0",
+      "description": "refer: https://fossunited.org/code-of-conduct",
       "fieldname": "affirmation_for_commitment",
       "fieldtype": "Check",
-      "label": "Affirmation for commitment"
+      "label": "Affirmation for commitment and code of conduct"
     },
     {
       "fieldname": "past_experience",
@@ -147,7 +148,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-05-15 15:47:38.254905",
+  "modified": "2026-05-19 18:28:34.983497",
   "modified_by": "Administrator",
   "module": "Volunteering",
   "name": "Event Volunteer",
