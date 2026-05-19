@@ -61,6 +61,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
+        event_data: DF.JSON | None
         event_description: DF.TextEditor | None
         event_end_date: DF.Datetime
         event_location: DF.Data | None

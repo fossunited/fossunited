@@ -1,0 +1,669 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer, if_tagline %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
+{% block title %}{{ pagetitle }} | FOSS United{% endblock %}
+
+{% block page_content %}
+<a href="#main-content" class="skip-link">Skip to main content</a>
+
+<div class="v3-page">
+  <div class="v3-page-wide">
+
+    {% set ticket_btn = cta_buttons | selectattr('label', 'equalto', 'Get Tickets') | first %}
+    {{ if_header(years, current_year, ticket_url=(ticket_btn.url if ticket_btn else "")) }}
+
+    <main id="main-content" role="main" class="d-flex flex-column gap-section mt-4 pb-section">
+
+      {# position:relative + overflow:hidden reserved for future animated bg SVG #}
+      <section id="hero" class="if-hero" aria-labelledby="hero-title">
+
+        {{ if_tagline() }}
+
+        {% include "fossunited/public/images/indiafoss/if26-banner.svg" %}
+
+        {% if event_date_str or event_location %}
+          {% if map_link %}
+            <a href="{{ map_link }}" class="if-hero-meta" target="_blank" rel="noopener noreferrer">
+          {% else %}
+            <p class="if-hero-meta">
+          {% endif %}
+            {% if event_date_str %}{{ event_date_str }}{% endif %}
+            {% if event_date_str and event_location %} | {% endif %}
+            {% if event_location %}{{ event_location }}{% endif %}
+          {% if map_link %}</a>{% else %}</p>{% endif %}
+        {% endif %}
+
+        <p id="hero-title" class="if-hero-desc text-base lh-lg">
+          The 6th edition of Free and Open Source Software Festival by the FOSS United community
+        </p>
+
+        <div class="d-flex flex-nowrap gap-2 justify-content-center" role="group" aria-label="Primary actions">
+          {% for btn in cta_buttons %}
+            {% if btn.url %}
+              <a href="{{ btn.url }}"
+                 class="v3-btn {% if btn.primary %}v3-btn-dark{% else %}v3-btn-secondary{% endif %}">
+                {{ btn.label }}
+              </a>
+            {% else %}
+              <button class="v3-btn v3-btn-secondary" type="button"
+                      style="opacity: 0.45; cursor: not-allowed;"
+                      onclick="frappe.msgprint('{{ btn.label }} — coming soon, stay tuned!')">
+                {{ btn.label }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+      </section>
+
+      {# ── 2. TIMELINE ──────────────────────────────── #}
+      {% if timeline or action_cards %}
+      <section id="timeline" aria-label="Event timeline and resources">
+        <div class="v3-col-3-1">
+
+        {# Left (flex-col-3): timeline card + expanded list #}
+        {% if timeline %}
+        <div class="v3-flex-3 relative isolate">
+
+          <div class="tl-card" role="region" aria-label="Timeline progress">
+            {# Countdown heading #}
+            <div class="d-flex align-items-baseline gap-2"
+                 aria-label="{% if countdown_state == 'live' %}IndiaFOSS is live{% elif countdown_state == 'concluded' %}IndiaFOSS 2026 concluded{% else %}{{ countdown_days }} days until IndiaFOSS{% endif %}">
+              {% if countdown_state == 'live' %}
+                <span class="tl-count-num text-4xl" style="color: rgba(16,185,129,1);">It's Live!</span>
+              {% elif countdown_state == 'concluded' %}
+                <span class="tl-count-num text-4xl">Concluded</span>
+              {% else %}
+                <span class="tl-count-num text-4xl">{{ countdown_days or '' }}</span>
+                <span class="tl-count-label text-xl semi-bold">days until IndiaFOSS</span>
+              {% endif %}
+            </div>
+
+            {# Week-based progress bar — chips above/below on desktop, bar only on mobile #}
+            {% if progress_segments %}
+            <div class="pb-wrap" role="progressbar" aria-label="Event timeline progress">
+
+              {# Chips ABOVE the bar — desktop only #}
+              <div class="pb-above" aria-hidden="true">
+                {% for marker in progress_markers if marker.above %}
+                  <div class="pb-chip-abs{% if marker.is_urgent %} urgent{% elif marker.is_past %} past{% endif %}"
+                       style="left: {{ marker.pct }}%"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       data-container="body"
+                       title="{{ marker.description or marker.label }}">
+                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}</span>
+                    <span class="pb-tick-down"></span>
+                  </div>
+                {% endfor %}
+              </div>
+
+              {# Bar segments #}
+              <div class="pb-bar">
+                {% for seg in progress_segments %}
+                  <div class="pb-seg {{ seg.cls }}"
+                       data-toggle="tooltip" data-container="body"
+                       title="{{ seg.label }}"></div>
+                {% endfor %}
+
+              </div>
+
+              {# Chips BELOW the bar — desktop only #}
+              <div class="pb-below" aria-hidden="true">
+                {% for marker in progress_markers if not marker.above %}
+                  <div class="pb-chip-abs{% if marker.is_urgent %} urgent{% elif marker.is_past %} past{% endif %}"
+                       style="left: {{ marker.pct }}%"
+                       data-toggle="tooltip"
+                       data-placement="bottom"
+                       data-container="body"
+                       title="{{ marker.description or marker.label }}">
+                    <span class="pb-tick-up"></span>
+                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+
+            </div>
+            {% endif %}
+
+            {# Bottom row: urgency text (left) + Full Timeline toggle (right) #}
+            <div class="d-flex align-items-center justify-content-between gap-3">
+              {% if urgency_text %}
+                <p class="text-sm mb-0 semi-bold" style="color: var(--v3-error-text);">
+                  {{ urgency_text.label }} closing in <strong>{{ urgency_text.days }}</strong> {{ 'day' if urgency_text.days == 1 else 'days' }}
+                </p>
+              {% else %}
+                <span></span>
+              {% endif %}
+              <button class="v3-btn v3-btn-secondary v3-btn--sm"
+                      style="text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; flex-shrink: 0;"
+                      type="button"
+                      data-toggle="collapse"
+                      data-target="#tl-expanded"
+                      aria-controls="tl-expanded"
+                      aria-expanded="false">
+                Full Timeline
+                <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+
+          {# Expanded timeline list — hidden by default, slides behind tl-card #}
+          <div id="tl-expanded" class="collapse tl-list"
+               role="region" aria-label="Full event timeline">
+            {% for item in timeline %}
+              {% set is_past = item.date < today_str %}
+              {% set st = (item.get('status', '') or '') | lower %}
+              <div class="d-flex align-items-center gap-2">
+                <div class="tl-date" aria-hidden="true">
+                  <span class="tl-day text-2xl">{{ item.day_num }}</span>
+                  <span class="tl-month">{{ item.month_str }}</span>
+                </div>
+                <div class="tl-row">
+                  <span class="tl-name">{{ item.label }}</span>
+                  {% if st == 'live' %}
+                    <span class="v3-tag v3-tag--success flex-shrink-0">
+                      <span class="v3-status-dot" aria-hidden="true"></span>Live
+                    </span>
+                  {% elif st == 'extended' and item.get('extended_date', '') %}
+                    <span class="v3-tag v3-status--warning flex-shrink-0">
+                      <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>
+                      Extended till {{ item.extended_date }}
+                    </span>
+                  {% elif st == 'closed' or (not st and is_past) %}
+                    <span class="v3-tag v3-status--error flex-shrink-0">
+                      <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed
+                    </span>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+
+        </div>
+        {% endif %}
+
+        {# Right (flex-col-1): action cards — grid on desktop, scroll on mobile #}
+        {% if action_cards %}
+        <div class="v3-flex-1">
+          <div class="v3-action-outer">
+          <div class="v3-action-wrap">
+            <div class="v3-action-grid" role="list" aria-label="Event resources">
+              {% for card in action_cards %}
+                {% set badge_lower = (card.badge or '') | lower %}
+                {% set is_active = badge_lower == 'live' %}
+                {% if card.url %}
+                  <a href="{{ card.url }}"
+                     class="v3-action-card"
+                     role="listitem"
+                     aria-label="{{ card.label }}{% if card.badge %} — {{ card.badge }}{% endif %}">
+                {% else %}
+                  <div class="v3-action-card"
+                       role="listitem"
+                       style="cursor: default;"
+                       aria-label="{{ card.label }} — coming soon">
+                {% endif %}
+                  <div class="v3-action-card-top">
+                    <i class="ti {{ card.icon or 'ti-arrow-right' }} v3-action-card-icon text-xl" aria-hidden="true"></i>
+                    {% if is_active %}
+                      <span class="v3-tag v3-tag--success flex-shrink-0">
+                        <span class="v3-status-dot" aria-hidden="true"></span>{{ card.badge }}
+                      </span>
+                    {% endif %}
+                  </div>
+                  <div>
+                    <div class="v3-action-card-title-row">
+                      <span class="v3-action-card-title">{{ card.label }}</span>
+                      {% if card.url %}
+                        <i class="ti ti-chevron-right v3-action-card-arrow" aria-hidden="true"></i>
+                      {% endif %}
+                    </div>
+                    {% if card.deadline %}
+                      <span class="v3-action-card-sub">Due {{ card.deadline }}</span>
+                    {% elif card.get('subtitle', '') %}
+                      <span class="v3-action-card-sub">{{ card.subtitle }}</span>
+                    {% elif card.badge and badge_lower != 'live' %}
+                      <span class="v3-action-card-sub">{{ card.badge }}</span>
+                    {% elif not card.url %}
+                      <span class="v3-action-card-sub">Coming soon</span>
+                    {% endif %}
+                  </div>
+                {% if card.url %}</a>{% else %}</div>{% endif %}
+              {% endfor %}
+            </div>
+          </div>
+          </div>{# /v3-action-outer #}
+        </div>
+        {% endif %}
+
+        </div>
+      </section>
+      {% endif %}
+
+      {# ── 3. Illustrations + REWIND ─────────────────────── #}
+      <section id="festival" aria-label="About IndiaFOSS">
+        <div class="v3-col-3-1">
+
+          {# Left col (800fr): description + illustration strip #}
+          <div class="d-flex flex-column gap-4">
+            <h2 class="text-2xl semi-bold v3-text-primary mb-0">
+              A festival of open-source, hosted by its community.
+            </h2>
+            <div class="v3-text-secondary">
+              <p class="mb-2">
+                IndiaFOSS is one of the largest gatherings for the country's Free and Open Source
+                Software communities. Less of a classical conference, more of a
+                <em>festival for FOSS</em>, digital commons and all the people who make it happen!
+              </p>
+              <p class="mb-0">
+                Whether you are a seasoned developer, an aspiring enthusiast, or someone with a
+                passion for technology, IndiaFOSS invites you to be part of this vibrant community.
+              </p>
+            </div>
+
+            {% set illust_types = [
+              ('Talks',          'talks'),
+              ('Panel Discussion',         'panels'),
+              ('Lightning Talks','lightning'),
+              ('Workshops & Demos',      'workshops'),
+              ('Open Space & Discussion',     'openspace'),
+              ('Stories',          'stories'),
+            ] %}
+            <div class="illust-strip" aria-label="Session types at IndiaFOSS" role="list">
+              {% for name, slug in illust_types %}
+                <div class="illust-card" role="listitem" aria-label="{{ name }}"
+                     data-toggle="tooltip" data-container="body" data-placement="top"
+                     title="{{ name }}">
+                  <img class="illust-img"
+                       src="/assets/fossunited/images/indiafoss/ill-{{ slug }}.svg"
+                       alt="" aria-hidden="true">
+                  <img class="illust-photo"
+                       src="/assets/fossunited/images/indiafoss/h-{{ slug }}.webp"
+                       alt="{{ name }} at IndiaFOSS" loading="lazy">
+                </div>
+              {% endfor %}
+            </div>
+
+            {# Mobile illustration grid — 3 rows: [illust] [2 pills] [illust] #}
+            <div class="illust-mobile-grid" aria-label="Session types at IndiaFOSS" aria-hidden="true">
+              {% set rows = [
+                (illust_types[0], illust_types[1]),
+                (illust_types[2], illust_types[3]),
+                (illust_types[4], illust_types[5]),
+              ] %}
+              {% for left, right in rows %}
+              <div class="illust-mobile-row">
+                <div class="illust-mobile-card" aria-label="{{ left[0] }}" role="button" tabindex="0">
+                  <img class="illust-img" src="/assets/fossunited/images/indiafoss/ill-{{ left[1] }}.svg" alt="" aria-hidden="true">
+                  <img class="illust-photo" src="/assets/fossunited/images/indiafoss/h-{{ left[1] }}.webp" alt="{{ left[0] }}" loading="lazy">
+                </div>
+                <div class="illust-mobile-pills">
+                  <span class="illust-pill">{{ left[0] }}</span>
+                  <span class="illust-pill">{{ right[0] }}</span>
+                </div>
+                <div class="illust-mobile-card" aria-label="{{ right[0] }}" role="button" tabindex="0">
+                  <img class="illust-img" src="/assets/fossunited/images/indiafoss/ill-{{ right[1] }}.svg" alt="" aria-hidden="true">
+                  <img class="illust-photo" src="/assets/fossunited/images/indiafoss/h-{{ right[1] }}.webp" alt="{{ right[0] }}" loading="lazy">
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# Right: Rewind card — theme-aware, image at bottom with gradient #}
+          {% if rewind %}
+          <div class="v3-inverse-card" aria-labelledby="rewind-heading" role="region">
+            <div class="v3-inverse-card-body">
+              <h3 id="rewind-heading" class="text-xl semi-bold v3-text-primary mb-0">IndiaFOSS 2025 Rewind</h3>
+              <div class="d-flex flex-column gap-2 v3-text-secondary">
+                {% if rewind.people %}
+                  <p class="text-base lh-base mb-0">
+                    <strong>{{ rewind.people }}</strong> People,
+                    <strong>{{ rewind.days }}</strong> days
+                  </p>
+                {% endif %}
+                {% if rewind.main_sessions %}
+                  <p class="text-base lh-base mb-0">
+                    <strong>{{ rewind.main_sessions }}</strong> Main sessions,
+                    <strong>{{ rewind.devroom_sessions }}</strong> Devroom sessions
+                  </p>
+                {% endif %}
+                {% if rewind.pre_events %}
+                  <p class="text-base lh-base mb-0">
+                    <strong>{{ rewind.pre_events }}</strong> Pre-Events, including a Maintainer summit
+                  </p>
+                {% endif %}
+              </div>
+              <div class="d-flex flex-nowrap gap-3">
+                  <a href="/indiafoss/2025" class="v3-btn v3-btn-secondary">IndiaFOSS 2025</a>
+                  <a href="https://albums.ente.io/?t=Z8ZTNN4u#DandoWSQxCBN8o6cjnnQjx9gLxmedwTNqQabZMc5q2Q2" class="v3-btn v3-btn-secondary"
+                     target="_blank" rel="noopener noreferrer">Gallery</a>
+              </div>
+            </div>
+            <div class="v3-image-well" aria-hidden="true">
+              <img src="/assets/fossunited/images/indiafoss/if25-group-end.jpg" alt="" loading="lazy">
+            </div>
+          </div>
+          {% endif %}
+
+        </div>
+      </section>
+
+      {# ── 4. TOPICS ────────────────────────────────── #}
+      {% if topics %}
+      <section id="topics" aria-labelledby="topics-heading">
+        <h2 id="topics-heading" class="text-2xl semi-bold v3-text-primary mb-4">
+          What we talk about at IndiaFOSS
+        </h2>
+        <div class="v3-card p-3">
+          <div class="topics-grid" role="list" aria-label="Topic categories">
+            {% for topic in topics %}
+              {% if topic.url %}
+                <a href="{{ topic.url }}" target="_blank" rel="noopener" class="topic-item" role="listitem">
+              {% else %}
+                <span class="topic-item" role="listitem">
+              {% endif %}
+                <i class="ti {{ topic.icon }}" aria-hidden="true"></i>
+                {{ topic.label }}
+              {% if topic.url %}</a>{% else %}</span>{% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+      {% endif %}
+
+      {# ── 5. SPONSORS ──────────────────────────────── #}
+      {% if sponsors %}
+      <section id="sponsors" aria-labelledby="sponsors-heading">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h2 id="sponsors-heading" class="text-2xl semi-bold v3-text-primary mb-0">
+            Thanks to our Sponsors
+          </h2>
+          {% if deck_link %}
+            <a href="{{ deck_link }}" class="text-sm v3-text-secondary"
+               style="text-decoration: underline;"
+               target="_blank" rel="noopener noreferrer">
+              Sponsor IndiaFOSS 2026
+              <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+        </div>
+
+        {% set tier1_groups = sponsors | selectattr('is_tier1') | list %}
+        {% set tier2_groups = sponsors | rejectattr('is_tier1') | list %}
+
+        {% if tier1_groups %}
+          <div class="if-sponsor-grid-t1" role="list" aria-label="Premier sponsors">
+            {% for grp in tier1_groups %}
+              {% for s in grp.sponsor_list %}
+                <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
+                   class="if-sponsor-logo" role="listitem"
+                   data-toggle="tooltip" data-container="body"
+                   title="{{ s.sponsor_name }} · {{ grp.tier }}"
+                   aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                  {% if s.image %}
+                    <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
+                  {% else %}
+                    <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
+                  {% endif %}
+                </a>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if tier2_groups %}
+          {% if tier1_groups %}<div class="if-tier-sep" aria-hidden="true"></div>{% endif %}
+          <div class="if-sponsor-grid-t2" role="list" aria-label="Supporting sponsors">
+            {% for grp in tier2_groups %}
+              {% for s in grp.sponsor_list %}
+                <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
+                   class="if-sponsor-logo" role="listitem"
+                   data-toggle="tooltip" data-container="body"
+                   title="{{ s.sponsor_name }} · {{ grp.tier }}"
+                   aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                  {% if s.image %}
+                    <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
+                  {% else %}
+                    <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
+                  {% endif %}
+                </a>
+              {% endfor %}
+            {% endfor %}
+          </div>
+        {% endif %}
+      </section>
+      {% endif %}
+
+      {# ── 5b. COMMUNITY PARTNERS ───────────────────── #}
+      {% if partners %}
+      <section id="community-partners" aria-labelledby="partners-heading">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <h2 id="partners-heading" class="text-2xl semi-bold v3-text-primary mb-0">
+            Community Partners
+          </h2>
+          {% if deck_link %}
+            <a href="{{ deck_link }}" class="text-sm v3-text-secondary"
+               style="text-decoration: underline;"
+               target="_blank" rel="noopener noreferrer">
+              Partner with us
+              <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          {% endif %}
+        </div>
+        <div class="if-sponsor-grid-cp" role="list" aria-label="Community partners">
+          {% for p in partners %}
+            <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer"
+               class="if-sponsor-logo" role="listitem"
+               aria-label="{{ p.org_name }}">
+              {% if p.logo %}
+                <img src="{{ p.logo }}" alt="{{ p.org_name }} logo">
+              {% else %}
+                <span class="text-sm" style="color:#888;padding:8px;">{{ p.org_name }}</span>
+              {% endif %}
+            </a>
+          {% endfor %}
+        </div>
+      </section>
+      {% endif %}
+
+      {# ── 6. VOLUNTEERS ────────────────────────────── #}
+      <section id="team" aria-labelledby="team-heading">
+        <div class="v3-card p-4 d-flex flex-column gap-4">
+          <h2 id="team-heading" class="text-2xl semi-bold v3-text-primary mb-0">
+            Humans behind the conference
+          </h2>
+
+          {% set vol_tabs = [
+            ('co-chairs',  'Co-Chairs',       co_chairs),
+            ('volunteers', 'Volunteers',       volunteers),
+            ('devrooms',   'Devroom Managers', devroom_managers),
+            ('reviewers',  'Reviewers',        reviewers),
+          ] %}
+
+          <ul class="nav v3-nav-pills" role="tablist" aria-label="Conference team categories">
+            {% for tab_id, tab_label, _ in vol_tabs %}
+              <li class="nav-item">
+                <a class="nav-link {% if loop.first %}active{% endif %}"
+                   data-toggle="tab"
+                   href="#panel-{{ tab_id }}"
+                   role="tab"
+                   id="tab-btn-{{ tab_id }}"
+                   aria-controls="panel-{{ tab_id }}"
+                   aria-selected="{{ 'true' if loop.first else 'false' }}">
+                  {{ tab_label }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <div class="tab-content">
+            {% for tab_id, tab_label, people in vol_tabs %}
+              <div class="tab-pane {% if loop.first %}active{% endif %}"
+                   id="panel-{{ tab_id }}"
+                   role="tabpanel"
+                   aria-labelledby="tab-btn-{{ tab_id }}">
+                {% if people %}
+                  <div class="d-flex flex-wrap" style="gap: 16px 24px;">
+                    {% for p in people %}
+                      <a href="{{ p.route }}" class="vol-item"
+                         aria-label="{{ p.full_name }}, {{ p.bio }}">
+                        <img src="{{ p.profile_photo }}" alt="{{ p.full_name }}"
+                             class="vol-avatar" loading="lazy">
+                        <div class="flex-1">
+                          <span class="vol-name text-base">{{ p.full_name }}</span>
+                          <span class="vol-bio text-xs">{{ p.bio }}</span>
+                        </div>
+                      </a>
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <p class="text-sm v3-text-tertiary mb-0">Details coming soon.</p>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      {# ── 7. FAQ ───────────────────────────────────── #}
+      {% if faqs %}
+      <section id="faq" aria-labelledby="faq-heading">
+        <div class="v3-col-3-1">
+
+          {# Left — FAQ accordion #}
+          <div class="v3-flex-3 v3-card p-4 d-flex flex-column gap-4">
+            <h2 id="faq-heading" class="text-2xl semi-bold v3-text-primary mb-0">FAQ</h2>
+            <div role="list" aria-label="Frequently asked questions">
+              {% for item in faqs %}
+                <div class="faq-item" role="listitem">
+                  <button class="faq-q-btn"
+                          type="button"
+                          data-toggle="collapse"
+                          data-target="#faq-{{ loop.index }}"
+                          aria-expanded="{% if loop.first %}true{% else %}false{% endif %}"
+                          aria-controls="faq-{{ loop.index }}">
+                    <span class="faq-q">{{ item.question }}</span>
+                    <i class="ti ti-chevron-down faq-chevron" aria-hidden="true"></i>
+                  </button>
+                  <div id="faq-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}">
+                    <p class="faq-answer mb-0 text-base lh-base">{{ item.answer }}</p>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# Right — support cards (sidebar on desktop, full-width row below on tablet/mobile) #}
+          {% set support = [
+            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': '',  'icon': 'ti-baby-carriage'},
+            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': '',  'icon': 'ti-accessible'},
+            {'title': 'Zero Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '',   'icon': 'ti-leaf'},
+          ] %}
+          <div class="v3-flex-1" aria-label="Support and accessibility">
+            <div class="support-cards">
+              {% for card in support %}
+                <div class="support-card v3-card p-4 d-flex flex-column gap-2">
+                  <i class="ti {{ card.icon }} support-icon text-4xl" aria-hidden="true"></i>
+                  <p class="semi-bold v3-text-secondary mb-0">{{ card.title }}</p>
+                  <p class="text-sm v3-text-secondary mb-0">
+                    {{ card.desc }}
+                    {% if card.form_url %}
+                      <a href="{{ card.form_url }}" style="text-decoration: underline; color: inherit;">Fill this form</a>
+                      if you need support.
+                    {% else %}
+                      <p class="text-sm">Form will be opening soon.</p>
+                    {% endif %}
+                  </p>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+        </div>
+      </section>
+      {% endif %}
+
+    </main>
+
+  </div>
+
+  {{ if_footer(footer_links) }}
+
+</div>
+
+<script>
+frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
+
+// Illustration cards: auto-rotate in view; hover pauses + resumes from next; click locks
+(function() {
+  var timer = null, idx = 0, cards = [];
+  var noMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function resolveCards() {
+    var strip = document.querySelector('.illust-strip');
+    if (strip && getComputedStyle(strip).display !== 'none') return Array.from(strip.querySelectorAll('.illust-card'));
+    var grid = document.querySelector('.illust-mobile-grid');
+    if (grid && getComputedStyle(grid).display !== 'none') return Array.from(grid.querySelectorAll('.illust-mobile-card'));
+    return [];
+  }
+
+  function clearAll() { cards.forEach(function(c) { c.classList.remove('is-flipped'); }); }
+  function stop() { clearInterval(timer); timer = null; }
+  function start() {
+    if (timer || !cards.length || noMotion) return;
+    clearAll();
+    if (cards[idx]) cards[idx].classList.add('is-flipped');
+    idx = (idx + 1) % cards.length;
+    timer = setInterval(function() {
+      clearAll();
+      if (cards[idx]) cards[idx].classList.add('is-flipped');
+      idx = (idx + 1) % cards.length;
+    }, 2000);
+  }
+
+  var section = document.getElementById('festival');
+  if (section && 'IntersectionObserver' in window && !noMotion) {
+    new IntersectionObserver(function(entries) {
+      if (entries[0].isIntersecting) { cards = resolveCards(); idx = 0; start(); }
+      else { stop(); clearAll(); }
+    }, { threshold: 0.2 }).observe(section);
+  }
+
+  document.querySelectorAll('.illust-card').forEach(function(card) {
+    card.addEventListener('mouseenter', function() { stop(); clearAll(); });
+    card.addEventListener('mouseleave', function() {
+      var i = cards.indexOf(card);
+      if (i >= 0) idx = (i + 1) % cards.length;
+      start();
+    });
+  });
+
+  document.querySelectorAll('.illust-card, .illust-mobile-card').forEach(function(card) {
+    card.addEventListener('click', function() { stop(); clearAll(); card.classList.toggle('is-flipped'); });
+    card.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
+    });
+  });
+})();
+
+// Progress bar: clamp chip positions to stay within bar width
+(function() {
+  ['pb-above', 'pb-below'].forEach(function(cls) {
+    var area = document.querySelector('.' + cls);
+    if (!area) return;
+    var areaW = area.offsetWidth;
+    if (!areaW) return;
+    area.querySelectorAll('.pb-chip-abs').forEach(function(el) {
+      var chip = el.querySelector('.pb-chip');
+      var chipW = chip ? chip.offsetWidth : 80;
+      var pctLeft = parseFloat(el.style.left) / 100 * areaW;
+      var clamped = Math.max(chipW / 2, Math.min(areaW - chipW / 2, pctLeft));
+      el.style.left = clamped + 'px';
+    });
+  });
+})();
+</script>
+{% endblock %}

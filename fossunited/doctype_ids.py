@@ -28,6 +28,7 @@ CORE_TEAM = "Core Team Member"
 # Event-related identifiers
 EVENT_VOLUNTEER = "FOSS Chapter Event Member"
 EVENT_SCHEDULE = "FOSS Event Schedule"
+COMMUNITY_PARTNER = "FOSS Event Community Partner"
 
 # Event proposal-related identifiers
 EVENT_CFP = "FOSS Event CFP"
@@ -72,3 +73,6 @@ FREE_TICKET_APPLY = "Event Free Ticket Applications"
 GRANTS_DIR = "Grants Funding Directory"
 PROJ_GRANTS = "FOSS Project Grant"
 EVENT_GRANTS = "FOSS Event Grant"
+
+# for files
+DEFAULT_USER_PHOTO = "/assets/fossunited/images/defaults/user_profile_image.png"
