@@ -2941,8 +2941,6 @@ a.hover-underline:hover {
     width: 17.5rem;
     height: 17.5rem;
   }
-  .pb-above { display: block; position: relative; height: 30px; overflow: hidden; }
-  .pb-below { display: block; position: relative; height: 30px; overflow: hidden; }
 }
 
 /* ===== Desktop ===== */
@@ -3005,8 +3003,6 @@ a.hover-underline:hover {
   .v3-pagination {
     justify-content: left;
   }
-  .v3-page-wide { padding-inline: 0.5rem; }
-  .v3-col-3-1 { gap: 16px; }
   .footer-element-items { grid-template-columns: 1fr; gap: 2rem; }
   .footer-link-category { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
   .footer-element-logo > img { max-height: 2rem; }
@@ -3402,6 +3398,10 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 
 .pb-wrap { position: relative; }
 .pb-above, .pb-below { display: none; }
+@media (min-width: 768px) {
+  .pb-above { display: block; position: relative; height: 30px; overflow: hidden; }
+  .pb-below { display: block; position: relative; height: 30px; overflow: hidden; }
+}
 .pb-chip-abs { position: absolute; display: flex; flex-direction: column; align-items: center; transform: translateX(-50%); }
 .pb-above .pb-chip-abs { bottom: 0; }
 .pb-below .pb-chip-abs { top: 0; }
@@ -3576,6 +3576,12 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 /* ── 800px–1200px ───────────────────────────────────────────── */
 @media (min-width: 800px) and (max-width: 1200px) {
   .illust-card { flex: 1 0 120px; }
+}
+
+/* ── ≤768px ─────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .v3-page-wide { padding-inline: 0.5rem; }
+  .v3-col-3-1 { gap: 16px; }
 }
 
 /* ── ≤800px ─────────────────────────────────────────────────── */

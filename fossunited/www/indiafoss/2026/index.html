@@ -27,15 +27,27 @@
         {% include "fossunited/public/images/indiafoss/if26-banner.svg" %}
 
         {% if event_date_str or event_location %}
-          {% if map_link %}
-            <a href="{{ map_link }}" class="if-hero-meta" target="_blank" rel="noopener noreferrer">
-          {% else %}
-            <p class="if-hero-meta">
+        <p class="if-hero-meta">
+          {% if event_date_str %}
+            {% if event_docname %}
+              {% set _ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + ([event_docname] | tojson | urlencode) + '&download=1' %}
+              <a href="{{ _ics_url }}" download="indiafoss-2026.ics"
+                 class="if-hero-meta-link"
+                 data-toggle="tooltip" data-placement="top" title="Add to Calendar">{{ event_date_str }}</a>
+            {% else %}
+              {{ event_date_str }}
+            {% endif %}
           {% endif %}
-            {% if event_date_str %}{{ event_date_str }}{% endif %}
-            {% if event_date_str and event_location %} | {% endif %}
-            {% if event_location %}{{ event_location }}{% endif %}
-          {% if map_link %}</a>{% else %}</p>{% endif %}
+          {% if event_date_str and event_location %} | {% endif %}
+          {% if event_location %}
+            {% if map_link %}
+              <a href="{{ map_link }}" class="if-hero-meta-link" target="_blank" rel="noopener noreferrer"
+                 data-toggle="tooltip" data-placement="top" title="Open in OSM Maps">{{ event_location }}</a>
+            {% else %}
+              {{ event_location }}
+            {% endif %}
+          {% endif %}
+        </p>
         {% endif %}
 
         <p id="hero-title" class="if-hero-desc text-base lh-lg">
@@ -85,16 +97,6 @@
                   <span class="tl-count-label text-xl semi-bold">days until IndiaFOSS</span>
                 {% endif %}
               </div>
-              {% if event_docname %}
-                {% set _ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + ([event_docname] | tojson | urlencode) + '&download=1' %}
-                <a href="{{ _ics_url }}"
-                   download="indiafoss-2026.ics"
-                   class="v3-btn v3-btn-secondary v3-btn--sm flex-shrink-0"
-                   aria-label="Add to Calendar"
-                   data-toggle="tooltip" data-placement="top" title="Add to Calendar">
-                  <i class="ti ti-calendar-down" aria-hidden="true"></i>
-                </a>
-              {% endif %}
             </div>
 
             {# Week-based progress bar — chips above/below on desktop, bar only on mobile #}
@@ -571,7 +573,7 @@
                     <i class="ti ti-chevron-down faq-chevron" aria-hidden="true"></i>
                   </button>
                   <div id="faq-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}">
-                    <div class="faq-answer text-base lh-base">{{ item.answer | safe }}</div>
+                    <div class="faq-answer text-base lh-base">{{ frappe.utils.md_to_html(item.answer) }}</div>
                   </div>
                 </div>
               {% endfor %}
