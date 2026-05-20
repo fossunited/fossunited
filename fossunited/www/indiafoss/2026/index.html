@@ -16,6 +16,9 @@
 
     <main id="main-content" role="main" class="d-flex flex-column gap-section mt-4 pb-section">
 
+      {# Hero + Timeline grouped tight — 40px gap between them, normal gap-section to rest #}
+      <div class="d-flex flex-column gap-10">
+
       {# position:relative + overflow:hidden reserved for future animated bg SVG #}
       <section id="hero" class="if-hero" aria-labelledby="hero-title">
 
@@ -61,6 +64,7 @@
       {# ── 2. TIMELINE ──────────────────────────────── #}
       {% if timeline or action_cards %}
       <section id="timeline" aria-label="Event timeline and resources">
+
         <div class="v3-col-3-1">
 
         {# Left (flex-col-3): timeline card + expanded list #}
@@ -69,15 +73,27 @@
 
           <div class="tl-card" role="region" aria-label="Timeline progress">
             {# Countdown heading #}
-            <div class="d-flex align-items-baseline gap-2"
+            <div class="d-flex align-items-center justify-content-between gap-2"
                  aria-label="{% if countdown_state == 'live' %}IndiaFOSS is live{% elif countdown_state == 'concluded' %}IndiaFOSS 2026 concluded{% else %}{{ countdown_days }} days until IndiaFOSS{% endif %}">
-              {% if countdown_state == 'live' %}
-                <span class="tl-count-num text-4xl" style="color: rgba(16,185,129,1);">It's Live!</span>
-              {% elif countdown_state == 'concluded' %}
-                <span class="tl-count-num text-4xl">Concluded</span>
-              {% else %}
-                <span class="tl-count-num text-4xl">{{ countdown_days or '' }}</span>
-                <span class="tl-count-label text-xl semi-bold">days until IndiaFOSS</span>
+              <div class="d-flex align-items-baseline gap-2">
+                {% if countdown_state == 'live' %}
+                  <span class="tl-count-num text-4xl" style="color: rgba(16,185,129,1);">It's Live!</span>
+                {% elif countdown_state == 'concluded' %}
+                  <span class="tl-count-num text-4xl">Concluded</span>
+                {% else %}
+                  <span class="tl-count-num text-4xl">{{ countdown_days or '' }}</span>
+                  <span class="tl-count-label text-xl semi-bold">days until IndiaFOSS</span>
+                {% endif %}
+              </div>
+              {% if event_docname %}
+                {% set _ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + ([event_docname] | tojson | urlencode) + '&download=1' %}
+                <a href="{{ _ics_url }}"
+                   download="indiafoss-2026.ics"
+                   class="v3-btn v3-btn-secondary v3-btn--sm flex-shrink-0"
+                   aria-label="Add to Calendar"
+                   data-toggle="tooltip" data-placement="top" title="Add to Calendar">
+                  <i class="ti ti-calendar-down" aria-hidden="true"></i>
+                </a>
               {% endif %}
             </div>
 
@@ -154,25 +170,29 @@
           <div id="tl-expanded" class="collapse tl-list"
                role="region" aria-label="Full event timeline">
             {% for item in timeline %}
-              {% set is_past = item.date < today_str %}
-              {% set st = (item.get('status', '') or '') | lower %}
+              {% set st = item.resolved_status %}
+              {% set item_url = item.get('url') or '' %}
               <div class="d-flex align-items-center gap-2">
                 <div class="tl-date" aria-hidden="true">
                   <span class="tl-day text-2xl">{{ item.day_num }}</span>
                   <span class="tl-month">{{ item.month_str }}</span>
                 </div>
                 <div class="tl-row">
-                  <span class="tl-name">{{ item.label }}</span>
+                  {% if item_url %}
+                    <a href="{{ item_url }}" class="tl-name" target="_blank" rel="noopener noreferrer">{{ item.label }}</a>
+                  {% else %}
+                    <span class="tl-name">{{ item.label }}</span>
+                  {% endif %}
                   {% if st == 'live' %}
                     <span class="v3-tag v3-tag--success flex-shrink-0">
                       <span class="v3-status-dot" aria-hidden="true"></span>Live
                     </span>
-                  {% elif st == 'extended' and item.get('extended_date', '') %}
+                  {% elif st == 'extended' and item.get('extended_date') %}
                     <span class="v3-tag v3-status--warning flex-shrink-0">
                       <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>
                       Extended till {{ item.extended_date }}
                     </span>
-                  {% elif st == 'closed' or (not st and is_past) %}
+                  {% elif st == 'closed' %}
                     <span class="v3-tag v3-status--error flex-shrink-0">
                       <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed
                     </span>
@@ -222,8 +242,8 @@
                     </div>
                     {% if card.deadline %}
                       <span class="v3-action-card-sub">Due {{ card.deadline }}</span>
-                    {% elif card.get('subtitle', '') %}
-                      <span class="v3-action-card-sub">{{ card.subtitle }}</span>
+                    {% elif card.get('description', '') %}
+                      <span class="v3-action-card-sub">{{ card.description }}</span>
                     {% elif card.badge and badge_lower != 'live' %}
                       <span class="v3-action-card-sub">{{ card.badge }}</span>
                     {% elif not card.url %}
@@ -241,6 +261,8 @@
         </div>
       </section>
       {% endif %}
+
+      </div>{# /hero+timeline group #}
 
       {# ── 3. Illustrations + REWIND ─────────────────────── #}
       <section id="festival" aria-label="About IndiaFOSS">
@@ -507,7 +529,7 @@
                    aria-labelledby="tab-btn-{{ tab_id }}">
                 {% if people %}
                   <div class="d-flex flex-wrap" style="gap: 16px 24px;">
-                    {% for p in people %}
+                    {% for p in people | sort(attribute='full_name', case_sensitive=False) %}
                       <a href="{{ p.route }}" class="vol-item"
                          aria-label="{{ p.full_name }}, {{ p.bio }}">
                         <img src="{{ p.profile_photo }}" alt="{{ p.full_name }}"
@@ -549,7 +571,7 @@
                     <i class="ti ti-chevron-down faq-chevron" aria-hidden="true"></i>
                   </button>
                   <div id="faq-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}">
-                    <p class="faq-answer mb-0 text-base lh-base">{{ item.answer }}</p>
+                    <div class="faq-answer text-base lh-base">{{ item.answer | safe }}</div>
                   </div>
                 </div>
               {% endfor %}
@@ -558,9 +580,9 @@
 
           {# Right — support cards (sidebar on desktop, full-width row below on tablet/mobile) #}
           {% set support = [
-            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': '',  'icon': 'ti-baby-carriage'},
-            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': '',  'icon': 'ti-accessible'},
-            {'title': 'Zero Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '',   'icon': 'ti-leaf'},
+            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': '', 'has_form': true, 'icon': 'ti-baby-carriage'},
+            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': '', 'has_form': true, 'icon': 'ti-accessible'},
+            {'title': 'Low Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '', 'has_form': false, 'icon': 'ti-leaf'},
           ] %}
           <div class="v3-flex-1" aria-label="Support and accessibility">
             <div class="support-cards">
@@ -568,15 +590,12 @@
                 <div class="support-card v3-card p-4 d-flex flex-column gap-2">
                   <i class="ti {{ card.icon }} support-icon text-4xl" aria-hidden="true"></i>
                   <p class="semi-bold v3-text-secondary mb-0">{{ card.title }}</p>
-                  <p class="text-sm v3-text-secondary mb-0">
-                    {{ card.desc }}
-                    {% if card.form_url %}
-                      <a href="{{ card.form_url }}" style="text-decoration: underline; color: inherit;">Fill this form</a>
-                      if you need support.
-                    {% else %}
-                      <p class="text-sm">Form will be opening soon.</p>
-                    {% endif %}
-                  </p>
+                  <p class="text-sm v3-text-secondary mb-0">{{ card.desc }}</p>
+                  {% if card.form_url %}
+                    <a href="{{ card.form_url }}" class="text-sm" style="text-decoration: underline; color: inherit;">Fill this form</a>
+                  {% elif card.has_form %}
+                    <p class="text-sm v3-text-tertiary mb-0">Form opening soon.</p>
+                  {% endif %}
                 </div>
               {% endfor %}
             </div>

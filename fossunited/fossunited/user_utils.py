@@ -36,6 +36,16 @@ def fetch_user_profiles(identifiers, fallback_bio=""):
                     "route": f"/{p.route}" if p.route else "#",
                 }
             )
+        elif "@" not in identifier:
+            # Plain name with no matching profile - show as static card
+            result.append(
+                {
+                    "full_name": identifier,
+                    "profile_photo": DEFAULT_USER_PHOTO,
+                    "bio": fallback_bio,
+                    "route": "#",
+                }
+            )
     return result
 
 

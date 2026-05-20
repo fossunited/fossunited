@@ -61,7 +61,7 @@
           label="Institution"
           size="sm"
           variant="subtle"
-          placeholder="Institution / College"
+          placeholder="Organization / Institution"
           @update:model-value="update('organization', $event)"
         />
       </div>

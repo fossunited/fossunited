@@ -19,10 +19,11 @@
 /* ── Hero (IndiaFOSS-specific sizing) ───────── */
 .if-hero {
   position: relative; overflow: hidden; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 32px 24px;
+  display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 32px 24px;
   background: var(--v3-card-bg); border: 1px solid var(--v3-button-border); border-radius: 16px;
   color: var(--v3-text-color)
 }
+@media (max-width: 767px) { .if-hero > svg { width: 75%; height: auto; } }
 .if-hero-logo { max-height: 80px; width: auto; display: block; }
 .if-hero-meta { font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--v3-text-color); margin: 0; text-decoration: none; }
 a.if-hero-meta:hover { opacity: .75; text-decoration: none; color: var(--v3-text-color); }

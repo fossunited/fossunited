@@ -10,6 +10,7 @@ from fossunited.fossunited.utils import get_event_sponsors
 INDIAFOSS_2026_EVENT = "IndiaFOSS 2026"
 TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold"}
 
+
 # TODO: replace all short form url to /2026/ form
 # we need to figure out to automate url redirection for /indiafoss to retain future proofing per year
 
@@ -27,15 +28,8 @@ def get_context(context):
     event = frappe.get_doc(EVENT, event_docname)
     event_data = json.loads(event.get("event_data") or "{}")
 
-    cfp = (
-        frappe.db.get_value(
-            EVENT_CFP,
-            {"event": event_docname},
-            ["status", "name", "deadline", "creation"],
-            as_dict=True,
-        )
-        or {}
-    )
+    cfp_name = frappe.db.get_value(EVENT_CFP, {"event": event_docname}, "name")
+    cfp = frappe.get_doc(EVENT_CFP, cfp_name) if cfp_name else frappe._dict()
 
     context.map_link = event.get("map_link") or event_data.get("map_link") or ""
     context.cta_buttons = _get_cta_buttons(event, cfp)
@@ -55,19 +49,19 @@ def get_context(context):
         page_length=99,
     )
 
-    # People — all via fetch_user_profiles (email or profile docname)
+    # People — all via fetch_user_profiles (email or profile docname); sorted A-Z in template
     context.co_chairs = fetch_user_profiles(
         event_data.get("co_chairs", []), "Co-chair, IndiaFOSS 2026"
     )
-    context.reviewers = fetch_user_profiles(
-        event_data.get("reviewers", []), "Reviewer, IndiaFOSS 2026"
-    )
+
+    reviewer_links = [r.reviewer for r in (cfp.cfp_reviewers or []) if r.reviewer]
+    context.reviewers = fetch_user_profiles(reviewer_links, "Reviewer, IndiaFOSS 2026")
+
     devroom_managers = []
     for room, members in event_data.get("devrooms", {}).items():
         devroom_managers.extend(fetch_user_profiles(members, f"{room} Devroom Manager"))
     context.devroom_managers = devroom_managers
 
-    # Volunteers - using event doctype method, normalize field names for template
     context.volunteers = [
         {
             "full_name": v["full_name"],
@@ -82,7 +76,7 @@ def get_context(context):
     manual_tl = event_data.get("timeline", [])
     cfp_tl = _get_cfp_timeline_items(cfp, today)
     merged_tl = sorted(manual_tl + cfp_tl, key=lambda x: x.get("date", "9999"))
-    context.timeline = _enrich_timeline(merged_tl)
+    context.timeline = _enrich_timeline(merged_tl, today)
     context.progress_segments, context.progress_markers = _get_progress_bar(
         context.timeline, today
     )
@@ -95,7 +89,10 @@ def get_context(context):
         None,
     )
     context.action_cards = event_data.get("action_cards", [])
-    context.faqs = event_data.get("faqs", [])
+    faqs = event_data.get("faqs", [])
+    for faq in faqs:
+        faq["answer"] = frappe.utils.md_to_html(faq.get("answer") or "")
+    context.faqs = faqs
     context.topics = event_data.get("topics", [])
     context.rewind = event_data.get("rewind_stats", {})
 
@@ -107,6 +104,7 @@ def get_context(context):
 
     context.today_str = today.isoformat()
 
+    context.event_docname = event_docname
     context.years = _get_indiafoss_years()
     context.current_year = 2026
     context.deck_link = event.get("deck_link") or ""
@@ -135,6 +133,7 @@ def _empty_context(context):
     context.rewind = {}
     context.footer_links = {}
     context.today_str = frappe.utils.getdate(frappe.utils.today()).isoformat()
+    context.event_docname = ""
     context.years = _get_indiafoss_years()
     context.current_year = 2026
     context.deck_link = ""
@@ -145,7 +144,7 @@ def _empty_context(context):
     )
 
 
-def _enrich_timeline(items):
+def _enrich_timeline(items, today):
     for item in items:
         try:
             d = frappe.utils.getdate(item["date"])
@@ -154,8 +153,30 @@ def _enrich_timeline(items):
         except Exception:
             item["day_num"] = item.get("date", "")[8:10].lstrip("0") or "?"
             item["month_str"] = ""
-        item.setdefault("status", "")
         item.setdefault("extended_date", "")
+
+        manual = (item.get("status") or "").lower()
+        if manual == "none":
+            item["resolved_status"] = "none"
+        elif manual in ("live", "extended", "closed"):
+            item["resolved_status"] = manual
+        else:
+            # auto-derive from date range if end_date provided
+            end_str = item.get("end_date") or ""
+            if end_str:
+                try:
+                    start_d = frappe.utils.getdate(item["date"])
+                    end_d = frappe.utils.getdate(end_str)
+                    if today > end_d:
+                        item["resolved_status"] = "closed"
+                    elif today >= start_d:
+                        item["resolved_status"] = "live"
+                    else:
+                        item["resolved_status"] = ""
+                except Exception:
+                    item["resolved_status"] = ""
+            else:
+                item["resolved_status"] = ""
     return items
 
 
@@ -245,7 +266,7 @@ def _get_cta_buttons(event, cfp):
                 "primary": False,
             },
         ]
-    if cfp and cfp.get("status") == "Closed":
+    if cfp and cfp.status == "Closed":
         return [
             {
                 "label": "View Proposals",
@@ -265,7 +286,7 @@ def _get_cta_buttons(event, cfp):
             "primary": True,
         }
     ]
-    if cfp and cfp.get("status") == "Live":
+    if cfp and cfp.status == "Live":
         buttons.append(
             {
                 "label": "Propose a Talk",
@@ -300,31 +321,29 @@ def _get_date_str(event):
 
 
 def _get_cfp_timeline_items(cfp, today):
-    """Auto-generate CFP Open and CFP Deadline timeline items from EVENT_CFP."""
+    """Auto-generate CFP timeline items from EVENT_CFP. Uses end_date for auto live/closed."""
     if not cfp:
         return []
     items = []
-    status = (cfp.get("status") or "").lower()
-    is_live = status in ("live", "accepting submissions")
-    is_closed = status in ("closed", "reviewing")
+    deadline_iso = frappe.utils.getdate(cfp.deadline).isoformat() if cfp.deadline else ""
 
-    if cfp.get("creation"):
-        d = frappe.utils.getdate(cfp["creation"])
+    if cfp.creation:
         items.append(
             {
                 "label": "CFP Opens",
-                "date": d.isoformat(),
-                "status": "live" if is_live else "",
+                "date": frappe.utils.getdate(cfp.creation).isoformat(),
+                "end_date": deadline_iso,
+                "status": "",
             }
         )
 
-    if cfp.get("deadline"):
-        d = frappe.utils.getdate(cfp["deadline"])
+    if cfp.deadline:
         items.append(
             {
                 "label": "CFP Deadline",
-                "date": d.isoformat(),
-                "status": "closed" if (is_closed or d < today) else ("live" if is_live else ""),
+                "date": deadline_iso,
+                "end_date": deadline_iso,  # live on deadline day, closed after
+                "status": "",
             }
         )
 
