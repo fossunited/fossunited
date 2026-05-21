@@ -5,8 +5,8 @@ on:
     branches:
       # - develop
       - docs/curriculum
-    paths:
-      - 'docs/**'
+    # paths:
+    #   - 'docs/**'
   workflow_dispatch:
 
 permissions:
