@@ -59,7 +59,9 @@ def get_context(context):
 
     devroom_managers = []
     for room, members in event_data.get("devrooms", {}).items():
-        devroom_managers.extend(fetch_user_profiles(members, f"{room} Devroom Manager"))
+        devroom_managers.extend(
+            fetch_user_profiles(members, f"{room} Devroom Manager", force_bio=True)
+        )
     context.devroom_managers = devroom_managers
 
     context.volunteers = [

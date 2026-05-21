@@ -32,7 +32,7 @@
 
 /* ── Community tagline ──────────────────────── */
 .if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
-.if-tagline svg { width: 40px; height: 40px; margin-bottom: 4px; }
+.if-tagline svg { width: 40px; height: auto; }
 .if-footer-tagline .if-tagline { color: #fafafa; }
 
 
