@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - docs/curriculum
     paths:
       - 'docs/**'
   workflow_dispatch:
