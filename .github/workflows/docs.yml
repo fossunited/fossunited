@@ -21,15 +21,31 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/configure-pages@v5
-      - uses: actions/checkout@v5
-      - uses: actions/setup-python@v5
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          python-version: 3.x
-      - run: pip install zensical
-      - run: cd docs && zensical build --clean
-      - uses: actions/upload-pages-artifact@v4
+          ref: docs/curriculum # Explicitly check out your documentation branch
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          path: docs/site
-      - uses: actions/deploy-pages@v4
+          python-version: '3.12'
+
+      - name: Install Zensical
+        run: pip install zensical
+
+      - name: Build documentation
+        run: zensical build # Generates the static files into the ./site directory
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      - name: Deploy to GitHub Pages
         id: deployment
+        uses: actions/deploy-pages@v4

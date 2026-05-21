@@ -2,9 +2,9 @@
 site_name= "FOSS United Knowledge Base"
 site_description= "Comprehensive documentation and resources for the FOSS United platform and community."
 copyright= "Copyright &copy; 2021 - 2026 FOSS United Foundation"
-# site_url= "https://docs.fossunited.org"
-repo_url= "https://github.com/fossunited/fossunited"
-edit_uri= "edit/develop/docs/docs/"
+site_url= "https://siddharth2798.github.io/fossunited/"
+repo_url= "https://siddharth2798.github.io/fossunited/"
+edit_uri= "edit/develop/curriculum/docs/"
 docs_dir = "docs"
 # extra_css = ["assets/custom.css"]
 
