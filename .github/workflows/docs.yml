@@ -3,7 +3,7 @@ name: publish-docs
 on:
   push:
     branches:
-      - develop
+      # - develop
       - docs/curriculum
     paths:
       - 'docs/**'
