@@ -3387,6 +3387,60 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .if-sponsor-grid-t2 .if-sponsor-logo { width: 166px; }
 .if-sponsor-grid-cp .if-sponsor-logo { width: 148px; }
 
+/* ── Devroom cards ──────────────────────────────────────────── */
+.if-devroom-wrap { background: var(--v3-card-bg); box-shadow: inset 0 0 0 1px var(--v3-button-border); border-radius: 16px; overflow: hidden; }
+.if-devroom-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.if-devroom-card {
+  flex: 0 0 100%;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: background .15s, box-shadow .15s, border-radius .15s;
+}
+@media (min-width: 600px) {
+  .if-devroom-card { flex: 0 0 50%; }
+}
+@media (min-width: 1200px) {
+  .if-devroom-card { flex: 0 0 33.333%; }
+}
+.if-devroom-card:hover { background: #fff; box-shadow: 0 4px 32px 0 rgba(0,0,0,.08); border-radius: 1rem; text-decoration: none; }
+[data-theme="dark"] .if-devroom-card:hover { background: #000; }
+.if-devroom-card:hover .if-devroom-title { color: var(--v3-primary-button); }
+.if-devroom-banner-svg {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 368 / 72;
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.if-devroom-banner-rect { fill: var(--dc-l); }
+[data-theme="dark"] .if-devroom-banner-rect { fill: var(--dc-d); }
+.if-devroom-tex { mix-blend-mode: color-burn; }
+[data-theme="dark"] .if-devroom-tex { mix-blend-mode: screen; }
+.if-devroom-icon-wrap {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  border: 1px solid var(--v3-button-border);
+  background: var(--dc-l);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+[data-theme="dark"] .if-devroom-icon-wrap { background: var(--dc-d); }
+.if-devroom-icon-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.if-devroom-title { font-size: 14px; font-weight: 600; color: var(--v3-text-color); line-height: 1.3; }
+
 /* ── Volunteer / people list item ───────────────────────────── */
 .vol-item { padding: 8px; display: flex; gap: 8px; align-items: center; width: 260px; min-width: 252px; text-decoration: none; transition: background .15s, box-shadow .15s, border-radius .15s; }
 .vol-item:hover { background: #fff; box-shadow: 0 4px 32px 0 rgba(0,0,0,.08); border-radius: 1rem; text-decoration: none; }
@@ -3400,7 +3454,7 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 /* ── FAQ accordion ─────────────────────────────────────────── */
 .faq-item { border-top: 1px solid var(--v3-button-border); padding: 16px 0; }
 .faq-item:last-child { border-bottom: 1px solid var(--v3-button-border); }
-.faq-q-btn { width: 100%; background: none; border: none; padding: 0; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.faq-q-btn { width: 100%; background: none; border: none; padding: 4px 8px; margin: 0 -8px; text-align: left; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-radius: 8px; transition: background .15s; }
 .faq-q-btn:hover { background: var(--v3-button-border); }
 .faq-q { font-size: 1rem; font-weight: 600; letter-spacing: -.02em; color: var(--v3-text-color); }
 .faq-chevron { flex-shrink: 0; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; font-size: 1.125rem; color: var(--v3-text-color2); transition: transform .2s; }

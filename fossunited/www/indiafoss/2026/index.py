@@ -10,6 +10,39 @@ from fossunited.fossunited.utils import get_event_sponsors
 INDIAFOSS_2026_EVENT = "IndiaFOSS 2026"
 TIER1 = {"Maintainer", "Patrons", "Platinum", "Gold"}
 
+# Devroom banner colors keyed by slug
+# Light: high-L low-C pastel from Figma SVGs
+# Dark: L=0.30 (just above card bg 0.2788), C boosted to hold color identity under screen blend
+_DEVROOM_DEFAULT = {"light": "oklch(0.97 0.047 147)", "dark": "oklch(0.30 0.10 147)"}
+DEVROOM_COLORS = {
+    "aosp": {"light": "oklch(0.9581 0.0369 144.37)", "dark": "oklch(0.30 0.10 144.37)"},
+    "devops": {
+        "light": "oklch(0.9372 0.024 238.73)",
+        "dark": "oklch(0.30 0.09 238.73)",
+    },
+    "compilers": {
+        "light": "oklch(0.9496 0.0189 17.49)",
+        "dark": "oklch(0.30 0.10 17.49)",
+    },
+    "docs": {
+        "light": "oklch(0.9371 0.035 312.73)",
+        "dark": "oklch(0.30 0.11 312.73)",
+    },
+    "design": {
+        "light": "oklch(0.9383 0.0304 356.53)",
+        "dark": "oklch(0.30 0.09 356.53)",
+    },
+    "hardware": {
+        "light": "oklch(0.954 0.0245 67.53)",
+        "dark": "oklch(0.30 0.10 67.53)",
+    },
+    "rtos": {"light": "oklch(0.9658 0.0372 108.64)", "dark": "oklch(0.32 0.12 108.64)"},
+    "security": {
+        "light": "oklch(0.9613 0.0224 182.54)",
+        "dark": "oklch(0.30 0.10 182.54)",
+    },
+}
+
 
 # TODO: replace all short form url to /2026/ form
 # we need to figure out to automate url redirection for /indiafoss to retain future proofing per year
@@ -48,6 +81,18 @@ def get_context(context):
         ["org_name", "link", "logo"],
         page_length=99,
     )
+
+    devrooms = frappe.get_all(
+        "Devroom Custom",
+        {"event": event_docname},
+        ["title", "slug", "logo"],
+        order_by="title asc",
+    )
+    for dr in devrooms:
+        c = DEVROOM_COLORS.get(dr.slug, _DEVROOM_DEFAULT)
+        dr.color_light = c["light"]
+        dr.color_dark = c["dark"]
+    context.devrooms = devrooms
 
     # People — all via fetch_user_profiles (email or profile docname); sorted A-Z in template
     context.co_chairs = fetch_user_profiles(
@@ -110,6 +155,9 @@ def get_context(context):
     context.years = _get_indiafoss_years()
     context.current_year = 2026
     context.deck_link = event.get("deck_link") or ""
+    context.community_deck_link = (
+        event_data.get("community_deck") or "https://fossunited.org/files/Community-deck-V2.pdf"
+    )
 
     context.pagetitle = "IndiaFOSS 2026"
     context.description = (
@@ -128,6 +176,7 @@ def _empty_context(context):
     context.sponsors = []
     context.partners = []
     context.co_chairs = context.reviewers = context.devroom_managers = context.volunteers = []
+    context.devrooms = []
     context.timeline = context.action_cards = context.faqs = context.topics = []
     context.progress_segments = []
     context.progress_markers = []
@@ -139,6 +188,7 @@ def _empty_context(context):
     context.years = _get_indiafoss_years()
     context.current_year = 2026
     context.deck_link = ""
+    context.community_deck_link = ""
     context.pagetitle = "IndiaFOSS 2026"
     context.description = (
         "The 6th edition of the Free and Open Source Software Festival "

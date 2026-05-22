@@ -425,8 +425,8 @@
                 <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
                    class="if-sponsor-logo" role="listitem"
                    data-toggle="tooltip" data-container="body"
-                   title="{{ s.sponsor_name }} · {{ grp.tier }}"
-                   aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                   title="{{ s.sponsor_name }}"
+                   aria-label="{{ s.sponsor_name }}">
                   {% if s.image %}
                     <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
                   {% else %}
@@ -446,8 +446,8 @@
                 <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
                    class="if-sponsor-logo" role="listitem"
                    data-toggle="tooltip" data-container="body"
-                   title="{{ s.sponsor_name }} · {{ grp.tier }}"
-                   aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                   title="{{ s.sponsor_name }}"
+                   aria-label="{{ s.sponsor_name }}">
                   {% if s.image %}
                     <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
                   {% else %}
@@ -468,8 +468,8 @@
           <h2 id="partners-heading" class="text-2xl semi-bold v3-text-primary mb-0">
             Community Partners
           </h2>
-          {% if deck_link %}
-            <a href="{{ deck_link }}" class="text-sm v3-text-secondary"
+          {% if community_deck_link %}
+            <a href="{{ community_deck_link }}" class="text-sm v3-text-secondary"
                style="text-decoration: underline;"
                target="_blank" rel="noopener noreferrer">
               Partner with us
@@ -481,6 +481,8 @@
           {% for p in partners %}
             <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer"
                class="if-sponsor-logo" role="listitem"
+               data-toggle="tooltip" data-container="body" data-placement="top"
+               title="{{ p.org_name }}"
                aria-label="{{ p.org_name }}">
               {% if p.logo %}
                 <img src="{{ p.logo }}" alt="{{ p.org_name }} logo">
@@ -490,6 +492,64 @@
             </a>
           {% endfor %}
         </div>
+      </section>
+      {% endif %}
+
+      {# ── 5c. DEVROOMS ─────────────────────────────── #}
+      {% if devrooms %}
+      <section id="devrooms" aria-labelledby="devrooms-heading">
+
+        {# Shared pattern - inlined once, referenced by all card SVGs via url(#devroom-pat) #}
+        <svg aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden">
+          <defs>
+            <image id="devroom-tex" width="548" height="548" preserveAspectRatio="none"
+                   href="/assets/fossunited/images/indiafoss/devroom-pattern.png"/>
+            <pattern id="devroom-pat" patternContentUnits="objectBoundingBox" width="1" height="1">
+              <use href="#devroom-tex"
+                   transform="matrix(0.00182482 0 0 0.00932685 0 -2.05556)"/>
+            </pattern>
+          </defs>
+        </svg>
+
+        <div class="mb-4">
+          <h2 id="devrooms-heading" class="text-2xl semi-bold v3-text-primary mb-2">
+            <a href="/indiafoss/2026/devrooms" class="v3-text-primary" style="text-decoration:none;">
+              Devrooms <i class="ti ti-arrow-up-right" aria-hidden="true"></i>
+            </a>
+          </h2>
+          <p class="text-base v3-text-secondary mb-0">
+            Devrooms are half-day mini-conference tracks that run in parallel with the main conference.
+          </p>
+        </div>
+
+        <div class="if-devroom-wrap">
+        <div class="if-devroom-grid" role="list" aria-label="Devroom tracks">
+          {% for dr in devrooms %}
+            <a href="/indiafoss/2026/devrooms/{{ dr.slug }}"
+               class="if-devroom-card"
+               role="listitem"
+               style="--dc-l: {{ dr.color_light }}; --dc-d: {{ dr.color_dark }};"
+               aria-label="{{ dr.title }} devroom">
+
+              <svg class="if-devroom-banner-svg" viewBox="0 0 368 72"
+                   xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect class="if-devroom-banner-rect" width="368" height="72" rx="8"/>
+                <rect width="368" height="72" rx="8"
+                      fill="url(#devroom-pat)" class="if-devroom-tex"/>
+              </svg>
+
+              <div class="d-flex align-items-center gap-2">
+                <div class="if-devroom-icon-wrap">
+                  <img src="{{ dr.logo }}" alt="" aria-hidden="true">
+                </div>
+                <span class="if-devroom-title">{{ dr.title }}</span>
+              </div>
+
+            </a>
+          {% endfor %}
+        </div>
+        </div>
+
       </section>
       {% endif %}
 
