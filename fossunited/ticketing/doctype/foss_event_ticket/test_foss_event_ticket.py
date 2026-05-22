@@ -2,13 +2,15 @@ import frappe
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
+from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TIER
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
     FOSSEventTicketFactory,
+    RazorpayPaymentFactory,
     UserFactory,
 )
+from fossunited.tests.factories.razorpay_payment_factory import _make_attendee
 
 
 class TestFOSSEventTicket(FrappeTestCase):
@@ -17,7 +19,11 @@ class TestFOSSEventTicket(FrappeTestCase):
         self.chapter = FOSSChapterFactory.create(
             "with_members", members=[self.team_member_user.name]
         )
-        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tiers=[{"enabled": 1, "title": "Test", "price": 100, "maximum_tickets": 3}],
+        )
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -245,3 +251,90 @@ class TestFOSSEventTicket(FrappeTestCase):
         )
 
         ticket.delete(force=True)
+
+
+class TestFOSSEventTicketTshirt(FrappeTestCase):
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tiers=[
+                {
+                    "enabled": 1,
+                    "title": "Premium",
+                    "price": 500,
+                    "maximum_tickets": 10,
+                    "tshirt_included": 1,
+                },
+                {"enabled": 1, "title": "Standard", "price": 100, "maximum_tickets": 10},
+            ],
+            paid_tshirts_available=1,
+            t_shirt_price=200,
+        )
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        self.tier_premium = next(t for t in tiers if t.title == "Premium")
+        self.tier_standard = next(t for t in tiers if t.title == "Standard")
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+
+    def test_no_tshirt_nulls_tshirt_size(self):
+        # Attendee sends wants_tshirt=0 with a stale tshirt_size — backend must null it
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=0, tshirt_size="XL"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertFalse(ticket.tshirt_size)
+
+    def test_included_tier_forces_wants_tshirt_on_ticket(self):
+        # Tier has tshirt_included=1 — backend forces wants_tshirt=1 even if frontend sends 0
+        attendee = _make_attendee(
+            ticket_type=self.tier_premium.name, wants_tshirt=0, tshirt_size="M"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_premium.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "M")
+
+    def test_paid_tshirt_addon_records_size_on_ticket(self):
+        # Attendee opts into paid tshirt addon — size must be recorded on ticket
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="L"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "L")

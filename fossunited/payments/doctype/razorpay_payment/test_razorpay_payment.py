@@ -109,86 +109,6 @@ class TestRazorpayPayment(FrappeTestCase):
 
         event_2.delete(force=True)
 
-    def test_multi_tier_payment_creation(self):
-        # Given an event with two tiers via factory
-        event = FOSSChapterEventFactory.create(
-            "with_paid_tickets",
-            chapter=self.chapter.name,
-            tiers=[
-                {"enabled": 1, "title": "Early Bird", "price": 200, "maximum_tickets": 10},
-                {"enabled": 1, "title": "General", "price": 500, "maximum_tickets": 10},
-            ],
-        )
-        tiers = frappe.get_all(
-            TICKET_TIER, {"parent": event.name, "parenttype": EVENT}, ["name", "price", "title"]
-        )
-        tier_a = next(t for t in tiers if t.title == "Early Bird")
-        tier_b = next(t for t in tiers if t.title == "General")
-
-        # 2 early bird + 1 general
-        attendees = [
-            _make_attendee(ticket_type=tier_a.name),
-            _make_attendee(ticket_type=tier_a.name),
-            _make_attendee(ticket_type=tier_b.name),
-        ]
-        tier_counts = {tier_a.name: 2, tier_b.name: 1}
-
-        payment = RazorpayPaymentFactory.create(
-            "with_multi_tier",
-            event=event.name,
-            tier_counts=tier_counts,
-            attendees=attendees,
-        )
-
-        # amount = 200*2 + 500*1 = 900
-        self.assertTrue(payment)
-        self.assertEqual(float(payment.amount), 900.0)
-
-        payment.delete(force=True)
-        event.delete(force=True)
-
-    def test_multi_tier_ticket_creation_and_tier_assignment(self):
-        # Given an event with two tiers via factory
-        event = FOSSChapterEventFactory.create(
-            "with_paid_tickets",
-            chapter=self.chapter.name,
-            tiers=[
-                {"enabled": 1, "title": "Early Bird", "price": 200, "maximum_tickets": 10},
-                {"enabled": 1, "title": "General", "price": 500, "maximum_tickets": 10},
-            ],
-        )
-        tiers = frappe.get_all(
-            TICKET_TIER, {"parent": event.name, "parenttype": EVENT}, ["name", "price", "title"]
-        )
-        tier_a = next(t for t in tiers if t.title == "Early Bird")
-        tier_b = next(t for t in tiers if t.title == "General")
-
-        attendees = [
-            _make_attendee(ticket_type=tier_a.name),
-            _make_attendee(ticket_type=tier_b.name),
-        ]
-        tier_counts = {tier_a.name: 1, tier_b.name: 1}
-
-        payment = RazorpayPaymentFactory.create(
-            "with_multi_tier",
-            event=event.name,
-            tier_counts=tier_counts,
-            attendees=attendees,
-        )
-
-        # When captured
-        payment.status = "Captured"
-        payment.save()
-
-        # Then 2 tickets with correct tier titles
-        tickets = frappe.get_all(EVENT_TICKET, {"razorpay_payment": payment.name}, ["tier"])
-        self.assertEqual(len(tickets), 2)
-        tier_titles = {t.tier for t in tickets}
-        self.assertIn("Early Bird", tier_titles)
-        self.assertIn("General", tier_titles)
-
-        event.delete(force=True)
-
     def test_amount_mismatch_rejected(self):
         # Given a payment where amount was tampered
         tier = frappe.get_doc(EVENT, self.event.name).get("tiers")[0]
@@ -202,107 +122,279 @@ class TestRazorpayPayment(FrappeTestCase):
                 amount=1,  # wrong amount
             )
 
-    def test_disabled_tier_rejected(self):
-        # Given an event with a disabled tier
-        event = FOSSChapterEventFactory.create(
+
+class TestRazorpayPaymentTierRejection(FrappeTestCase):
+    """Disabled, expired, and houseful tiers share one event with one tier each."""
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        yesterday = (date.today() - timedelta(days=1)).isoformat()
+        self.event = FOSSChapterEventFactory.create(
             "with_paid_tickets",
             chapter=self.chapter.name,
-            tiers=[{"enabled": 0, "title": "Disabled", "price": 100}],
-        )
-        tier = frappe.get_doc(TICKET_TIER, {"parent": event.name, "parenttype": EVENT})
-
-        with self.assertRaises(TicketTierMismatchError):
-            RazorpayPaymentFactory.create(
-                "with_multi_tier",
-                event=event.name,
-                tier_counts={tier.name: 1},
-                attendees=[_make_attendee(ticket_type=tier.name)],
-            )
-
-        event.delete(force=True)
-
-    def test_expired_tier_rejected(self):
-        # Given an event with an expired tier
-        event = FOSSChapterEventFactory.create(
-            "with_paid_tickets",
-            chapter=self.chapter.name,
+            tickets_status="Live",
             tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Expired",
-                    "price": 100,
-                    "valid_till": (date.today() - timedelta(days=1)).isoformat(),
-                }
+                {"enabled": 0, "title": "Disabled", "price": 100},
+                {"enabled": 1, "title": "Expired", "price": 100, "valid_till": yesterday},
+                {"enabled": 1, "title": "Limited", "price": 100, "maximum_tickets": 1},
             ],
         )
-        tier = frappe.get_doc(TICKET_TIER, {"parent": event.name, "parenttype": EVENT})
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        self.tier_disabled = next(t for t in tiers if t.title == "Disabled")
+        self.tier_expired = next(t for t in tiers if t.title == "Expired")
+        self.tier_limited = next(t for t in tiers if t.title == "Limited")
 
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for payment in frappe.get_all(RAZORPAY_PAYMENT, {"document_name": self.event.name}):
+            frappe.delete_doc(RAZORPAY_PAYMENT, payment.name, force=True)
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        self.event.delete(force=True)
+        self.chapter.delete(force=True)
+
+    def test_disabled_tier_rejected(self):
         with self.assertRaises(TicketTierMismatchError):
             RazorpayPaymentFactory.create(
                 "with_multi_tier",
-                event=event.name,
-                tier_counts={tier.name: 1},
-                attendees=[_make_attendee(ticket_type=tier.name)],
+                event=self.event.name,
+                tier_counts={self.tier_disabled.name: 1},
+                attendees=[_make_attendee(ticket_type=self.tier_disabled.name)],
             )
 
-        event.delete(force=True)
+    def test_expired_tier_rejected(self):
+        with self.assertRaises(TicketTierMismatchError):
+            RazorpayPaymentFactory.create(
+                "with_multi_tier",
+                event=self.event.name,
+                tier_counts={self.tier_expired.name: 1},
+                attendees=[_make_attendee(ticket_type=self.tier_expired.name)],
+            )
 
     def test_houseful_tier_rejected(self):
-        # Given a tier already at max capacity
-        event = FOSSChapterEventFactory.create(
-            "with_paid_tickets",
-            chapter=self.chapter.name,
-            tiers=[{"enabled": 1, "title": "Limited", "price": 100, "maximum_tickets": 1}],
+        # Fill the one available slot
+        first_payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_limited.name: 1},
+            attendees=[_make_attendee(ticket_type=self.tier_limited.name)],
         )
-        tier = frappe.get_doc(TICKET_TIER, {"parent": event.name, "parenttype": EVENT})
-
-        # Fill the tier: create pending then capture so tickets are created
-        first_payment = RazorpayPaymentFactory.create(event=event.name)
         first_payment.status = "Captured"
         first_payment.save()
 
         with self.assertRaises(TicketTierMismatchError):
             RazorpayPaymentFactory.create(
                 "with_multi_tier",
-                event=event.name,
-                tier_counts={tier.name: 1},
-                attendees=[_make_attendee(ticket_type=tier.name)],
+                event=self.event.name,
+                tier_counts={self.tier_limited.name: 1},
+                attendees=[_make_attendee(ticket_type=self.tier_limited.name)],
             )
 
-        first_payment.delete(force=True)
-        event.delete(force=True)
 
-    def test_tshirt_amount_included_in_validation(self):
-        # Given an event with paid t-shirts
-        event = FOSSChapterEventFactory.create(
+class TestRazorpayPaymentMultiTier(FrappeTestCase):
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
             "with_paid_tickets",
             chapter=self.chapter.name,
-            tiers=[{"enabled": 1, "title": "Standard", "price": 100, "maximum_tickets": 10}],
+            tickets_status="Live",
+            tiers=[
+                {"enabled": 1, "title": "Early Bird", "price": 200, "maximum_tickets": 10},
+                {"enabled": 1, "title": "General", "price": 500, "maximum_tickets": 10},
+            ],
+        )
+        tiers = frappe.get_all(
+            TICKET_TIER,
+            {"parent": self.event.name, "parenttype": EVENT},
+            ["name", "price", "title"],
+        )
+        self.tier_eb = next(t for t in tiers if t.title == "Early Bird")
+        self.tier_gen = next(t for t in tiers if t.title == "General")
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for payment in frappe.get_all(RAZORPAY_PAYMENT, {"document_name": self.event.name}):
+            frappe.delete_doc(RAZORPAY_PAYMENT, payment.name, force=True)
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        self.event.delete(force=True)
+        self.chapter.delete(force=True)
+
+    def test_multi_tier_payment_creation(self):
+        # 2 early bird + 1 general → amount = 200*2 + 500*1 = 900
+        attendees = [
+            _make_attendee(ticket_type=self.tier_eb.name),
+            _make_attendee(ticket_type=self.tier_eb.name),
+            _make_attendee(ticket_type=self.tier_gen.name),
+        ]
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_eb.name: 2, self.tier_gen.name: 1},
+            attendees=attendees,
+        )
+        self.assertTrue(payment)
+        self.assertEqual(float(payment.amount), 900.0)
+
+    def test_multi_tier_ticket_creation_and_tier_assignment(self):
+        # When captured, tickets carry correct tier titles
+        attendees = [
+            _make_attendee(ticket_type=self.tier_eb.name),
+            _make_attendee(ticket_type=self.tier_gen.name),
+        ]
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_eb.name: 1, self.tier_gen.name: 1},
+            attendees=attendees,
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        tickets = frappe.get_all(EVENT_TICKET, {"razorpay_payment": payment.name}, ["tier"])
+        self.assertEqual(len(tickets), 2)
+        tier_titles = {t.tier for t in tickets}
+        self.assertIn("Early Bird", tier_titles)
+        self.assertIn("General", tier_titles)
+
+
+class TestRazorpayPaymentTshirt(FrappeTestCase):
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tiers=[
+                {
+                    "enabled": 1,
+                    "title": "Premium",
+                    "price": 800,
+                    "maximum_tickets": 10,
+                    "tshirt_included": 1,
+                },
+                {"enabled": 1, "title": "Standard", "price": 400, "maximum_tickets": 10},
+            ],
             paid_tshirts_available=1,
             t_shirt_price=200,
         )
-        tier = frappe.get_doc(TICKET_TIER, {"parent": event.name, "parenttype": EVENT})
-        attendee = _make_attendee(ticket_type=tier.name, wants_tshirt=1)
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        self.tier_premium = next(t for t in tiers if t.title == "Premium")
+        self.tier_standard = next(t for t in tiers if t.title == "Standard")
 
-        # Payment with tshirt cost: 100 + 200 = 300
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for payment in frappe.get_all(RAZORPAY_PAYMENT, {"document_name": self.event.name}):
+            frappe.delete_doc(RAZORPAY_PAYMENT, payment.name, force=True)
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        self.event.delete(force=True)
+        self.chapter.delete(force=True)
+
+    def test_tshirt_included_tier_not_charged_extra(self):
+        # Included tier: tshirt is free, no extra charge even if paid_tshirts_available
+        attendee = _make_attendee(
+            ticket_type=self.tier_premium.name, wants_tshirt=1, tshirt_size="M"
+        )
+
         payment = RazorpayPaymentFactory.create(
             "with_multi_tier",
-            event=event.name,
-            tier_counts={tier.name: 1},
+            event=self.event.name,
+            tier_counts={self.tier_premium.name: 1},
             attendees=[attendee],
         )
-        self.assertEqual(float(payment.amount), 300.0)
+        self.assertEqual(float(payment.amount), 800.0)
 
-        # Tshirt cost missing → rejected
+        # Sending 1000 (800 + 200) must be rejected — tshirt is not an add-on here
         with self.assertRaises(TicketTierMismatchError):
             RazorpayPaymentFactory.create(
                 "with_multi_tier",
-                event=event.name,
-                tier_counts={tier.name: 1},
+                event=self.event.name,
+                tier_counts={self.tier_premium.name: 1},
                 attendees=[attendee],
-                amount=100,
+                amount=1000.0,
             )
 
-        payment.delete(force=True)
-        event.delete(force=True)
-        event.delete(force=True)
+    def test_paid_tshirt_addon_correct_amounts(self):
+        # Non-included tier: wants_tshirt adds price; opting out does not
+        with_tshirt = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="L"
+        )
+        payment_with = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[with_tshirt],
+        )
+        self.assertEqual(float(payment_with.amount), 600.0)  # 400 + 200
+
+        without_tshirt = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
+        payment_without = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[without_tshirt],
+        )
+        self.assertEqual(float(payment_without.amount), 400.0)
+
+        # Sending tshirt price for opt-out attendee → rejected
+        with self.assertRaises(TicketTierMismatchError):
+            RazorpayPaymentFactory.create(
+                "with_multi_tier",
+                event=self.event.name,
+                tier_counts={self.tier_standard.name: 1},
+                attendees=[without_tshirt],
+                amount=600.0,
+            )
+
+    def test_tshirt_amount_required_when_opted_in(self):
+        # Opted-in attendee but amount missing tshirt cost → rejected
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="M"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[attendee],
+        )
+        self.assertEqual(float(payment.amount), 600.0)  # 400 + 200
+
+        with self.assertRaises(TicketTierMismatchError):
+            RazorpayPaymentFactory.create(
+                "with_multi_tier",
+                event=self.event.name,
+                tier_counts={self.tier_standard.name: 1},
+                attendees=[attendee],
+                amount=400,  # tshirt cost missing
+            )
+
+    def test_mixed_tiers_only_addon_tshirt_charged(self):
+        # One included, one non-included: only non-included tshirt counts toward amount
+        attendees = [
+            _make_attendee(ticket_type=self.tier_premium.name, wants_tshirt=1, tshirt_size="M"),
+            _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="L"),
+        ]
+        tier_counts = {self.tier_premium.name: 1, self.tier_standard.name: 1}
+
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts=tier_counts,
+            attendees=attendees,
+        )
+        # 800 + 400 + 200 (only standard addon) = 1400
+        self.assertEqual(float(payment.amount), 1400.0)
+
+        # Charging both tshirts (1600) → rejected
+        with self.assertRaises(TicketTierMismatchError):
+            RazorpayPaymentFactory.create(
+                "with_multi_tier",
+                event=self.event.name,
+                tier_counts=tier_counts,
+                attendees=attendees,
+                amount=1600.0,
+            )
