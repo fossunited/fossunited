@@ -26,7 +26,9 @@ class FOSSEventTicket(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
         from fossunited.ticketing.doctype.foss_ticket_custom_field.foss_ticket_custom_field import (
             FOSSTicketCustomField,
         )
@@ -86,7 +88,7 @@ class FOSSEventTicket(Document):
                     "organization": attendee.get("organization"),
                     "designation": attendee.get("designation"),
                     "wants_tshirt": wants_tshirt,
-                    "tshirt_size": attendee.get("tshirt_size"),
+                    "tshirt_size": attendee.get("tshirt_size") if wants_tshirt else None,
                     "accept_coc": attendee.get("accept_coc", 0),
                     "tier": frappe.db.get_value(TICKET_TIER, attendee.get("ticket_type"), "title")
                     or payment_meta_data.get("tier", {}).get("title"),
@@ -194,6 +196,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         frappe.throw(_("No ticket tiers selected."), TicketTierMismatchError)
 
     calculated_amount = 0.0
+    tshirt_included_by_tier: dict[str, bool] = {}
 
     for tier_name, count in tier_counts.items():
         count = int(count or 0)
@@ -205,6 +208,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
             frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
 
         tier_details = frappe.get_doc(TICKET_TIER, tier_name)
+        tshirt_included_by_tier[tier_name] = bool(tier_details.tshirt_included)
 
         if not tier_details.enabled:
             frappe.throw(
@@ -237,7 +241,12 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         EVENT, event_name, ["paid_tshirts_available", "t_shirt_price"]
     )
     if paid_tshirts_available:
-        num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+        num_tshirts = sum(
+            1
+            for a in attendees
+            if a.get("wants_tshirt")
+            and not tshirt_included_by_tier.get(a.get("ticket_type"), False)
+        )
         calculated_amount += float(tshirt_price or 0) * num_tshirts
 
     if abs(calculated_amount - float(doc.amount)) > 1:

@@ -663,7 +663,9 @@ const totalTickets = computed(() =>
   Object.values(activeTierCounts.value).reduce((s, c) => s + (c || 0), 0),
 )
 
-const numTShirtsAdded = computed(() => attendees.value.filter((a) => a.wants_tshirt).length)
+const numTShirtsAdded = computed(() =>
+  attendees.value.filter((a) => a.wants_tshirt && !isTierTshirtIncluded(a.ticket_type)).length
+)
 
 const stepTitle = computed(
   () =>
@@ -751,7 +753,7 @@ function makeAttendee(ticketType = '') {
     email: '',
     designation: '',
     organization: '',
-    wants_tshirt: false,
+    wants_tshirt: isTierTshirtIncluded(ticketType),
     tshirt_size: '',
     subscribe_chapter_mailing: true,
     custom_fields: {},
@@ -845,14 +847,7 @@ function validateStep(step) {
       else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(a.email)) {
         errors.push(`Attendee #${i + 1}: Invalid email address`)
       }
-      if (isTierTshirtIncluded(a.ticket_type) && !a.tshirt_size) {
-        errors.push(`Attendee #${i + 1}: T-shirt size is required`)
-      } else if (
-        event.data?.paid_tshirts_available &&
-        !isTierTshirtIncluded(a.ticket_type) &&
-        a.wants_tshirt &&
-        !a.tshirt_size
-      ) {
+      if (a.wants_tshirt && !a.tshirt_size) {
         errors.push(`Attendee #${i + 1}: T-shirt size is required`)
       }
       if (!customFieldsApplyToAll.value) {

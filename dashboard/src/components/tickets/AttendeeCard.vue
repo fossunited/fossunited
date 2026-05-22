@@ -83,32 +83,19 @@
       </div>
 
       <!-- T-shirt -->
-      <div v-if="tshirtIncluded" class="flex flex-col gap-3">
-        <div class="flex items-center gap-2 text-sm text-ink-green-3">
+      <div v-if="tshirtIncluded || showTshirt" class="flex flex-col gap-3">
+        <div v-if="tshirtIncluded" class="flex items-center gap-2 text-sm text-ink-green-3">
           <IconShirt class="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>T-shirt included with this tier</span>
         </div>
         <FormControl
-          :model-value="attendee.tshirt_size"
-          type="select"
-          :options="tshirtSizes"
-          size="sm"
-          variant="subtle"
-          label="T-shirt size"
-          placeholder="Select size"
-          required
-          class="min-w-[110px]"
-          @update:model-value="update('tshirt_size', $event)"
-        />
-      </div>
-      <div v-else-if="showTshirt" class="flex items-center gap-4 flex-wrap">
-        <FormControl
+          v-else
           :model-value="attendee.wants_tshirt"
           type="checkbox"
           size="sm"
           variant="subtle"
           label="I want a T-shirt"
-          @update:model-value="(value) => { update('wants_tshirt', value); if (!value) update('tshirt_size', '') }"
+          @update:model-value="(value) => emit('update:attendee', { ...attendee, wants_tshirt: value, tshirt_size: value ? attendee.tshirt_size : '' })"
         />
         <div v-if="attendee.wants_tshirt" class="flex items-center gap-2">
           <FormControl
@@ -117,12 +104,13 @@
             :options="tshirtSizes"
             size="sm"
             variant="subtle"
+            :label="tshirtIncluded ? 'T-shirt size' : undefined"
             placeholder="Select size"
             required
             class="min-w-[110px]"
             @update:model-value="update('tshirt_size', $event)"
           />
-          <span class="text-sm text-ink-gray-5">(+ ₹{{ tshirtPrice }})</span>
+          <span v-if="!tshirtIncluded" class="text-sm text-ink-gray-5">(+ ₹{{ tshirtPrice }})</span>
         </div>
       </div>
     </div>
