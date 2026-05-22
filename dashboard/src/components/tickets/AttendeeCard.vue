@@ -108,7 +108,10 @@
           size="sm"
           variant="subtle"
           label="I want a T-shirt"
-          @update:model-value="update('wants_tshirt', $event)"
+          @update:model-value="
+            update('wants_tshirt', $event)
+            if (!$event) update('tshirt_size', '')
+          "
         />
         <div v-if="attendee.wants_tshirt" class="flex items-center gap-2">
           <FormControl

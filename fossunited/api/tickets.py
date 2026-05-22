@@ -350,9 +350,12 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
     for row in results:
         ticket_id = row["name"]
         if ticket_id not in tickets_map:
-            tickets_map[ticket_id] = {
+            ticket_data = {
                 k: v for k, v in row.items() if k not in ("question", "response", "name")
             }
+            if not ticket_data.get("wants_tshirt"):
+                ticket_data["tshirt_size"] = None
+            tickets_map[ticket_id] = ticket_data
         if row["question"]:
             tickets_map[ticket_id][row["question"]] = row["response"] or ""
 
