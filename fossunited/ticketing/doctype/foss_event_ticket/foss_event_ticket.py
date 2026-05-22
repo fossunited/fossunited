@@ -177,8 +177,11 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
     if doc.status == "Captured":
         try:
             FOSSEventTicket.create_tickets_for_payment(doc)
-        except:
-            frappe.log_error("Ticket Creation Failed!")
+        except Exception as e:
+            frappe.log_error(
+                title="Ticket Creation Failed",
+                message=f"Payment: {doc.name}\nEvent: {doc.document_name}\nAmount: {doc.amount}\nError: {e}\nMeta: {doc.meta_data}",
+            )
             raise
 
 
@@ -250,6 +253,10 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         calculated_amount += float(tshirt_price or 0) * num_tshirts
 
     if abs(calculated_amount - float(doc.amount)) > 1:
+        frappe.log_error(
+            title="Payment Amount Mismatch",
+            message=f"Event: {event_name}\nDoc amount: {doc.amount}\nCalculated: {calculated_amount}\nTier counts: {tier_counts}\nTshirt included by tier: {tshirt_included_by_tier}",
+        )
         frappe.throw(
             _("Amount mismatch - please refresh and try again."),
             TicketTierMismatchError,

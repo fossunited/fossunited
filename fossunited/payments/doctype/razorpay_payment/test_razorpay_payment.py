@@ -1,9 +1,11 @@
 from datetime import date, timedelta
+from unittest.mock import MagicMock, patch
 
 import frappe
 from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
+from fossunited.api.dashboard import create_razorpay_order
 from fossunited.doctype_ids import EVENT, EVENT_TICKET, RAZORPAY_PAYMENT, TICKET_TIER
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
@@ -398,3 +400,108 @@ class TestRazorpayPaymentTshirt(FrappeTestCase):
                 attendees=attendees,
                 amount=1600.0,
             )
+
+
+class TestCreateRazorpayOrderAmount(FrappeTestCase):
+    """Verify _compute_order_amount (used to create Razorpay order) and
+    validate_payment_before_insert agree on amount for every tshirt scenario.
+    Both must produce the same number or valid orders get rejected at the API layer.
+    """
+
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tickets_status="Live",
+            tiers=[
+                {
+                    "enabled": 1,
+                    "title": "Premium",
+                    "price": 800,
+                    "maximum_tickets": 10,
+                    "tshirt_included": 1,
+                },
+                {"enabled": 1, "title": "Standard", "price": 400, "maximum_tickets": 10},
+            ],
+            paid_tshirts_available=1,
+            t_shirt_price=200,
+        )
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        self.tier_premium = next(t for t in tiers if t.title == "Premium")
+        self.tier_standard = next(t for t in tiers if t.title == "Standard")
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for payment in frappe.get_all(RAZORPAY_PAYMENT, {"document_name": self.event.name}):
+            frappe.delete_doc(RAZORPAY_PAYMENT, payment.name, force=True)
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        self.event.delete(force=True)
+        self.chapter.delete(force=True)
+
+    def _mock_client(self, order_id):
+        mock = MagicMock()
+        mock.order.create.return_value = {"id": order_id}
+        mock.auth = ["rzp_test_key", "secret"]
+        return mock
+
+    def _create_order(self, client_amount, tier_counts, attendees, order_id):
+        meta_data = {
+            "event": self.event.name,
+            "tier_counts": tier_counts,
+            "attendees": attendees,
+            "num_seats": sum(tier_counts.values()),
+        }
+        with patch(
+            "fossunited.api.dashboard.get_razorpay_client",
+            return_value=self._mock_client(order_id),
+        ):
+            return create_razorpay_order(
+                checkout_info={
+                    "amount": client_amount,
+                    "email": "buyer@example.com",
+                    "tax_details": {},
+                },
+                meta_data=meta_data,
+                ref_doctype=EVENT,
+                ref_docname=self.event.name,
+            )
+
+    def test_standard_tier_no_tshirt(self):
+        attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
+        result = self._create_order(400, {self.tier_standard.name: 1}, [attendee], "ord_001")
+        self.assertEqual(result["order_id"], "ord_001")
+
+    def test_standard_tier_with_tshirt_addon(self):
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="M"
+        )
+        result = self._create_order(600, {self.tier_standard.name: 1}, [attendee], "ord_002")
+        self.assertEqual(result["order_id"], "ord_002")
+
+    def test_included_tier_tshirt_not_charged_extra(self):
+        # Regression: before fix, backend computed 800+200=1000 while frontend sent 800.
+        attendee = _make_attendee(
+            ticket_type=self.tier_premium.name, wants_tshirt=1, tshirt_size="L"
+        )
+        result = self._create_order(800, {self.tier_premium.name: 1}, [attendee], "ord_003")
+        self.assertEqual(result["order_id"], "ord_003")
+
+    def test_mixed_tiers_only_addon_tshirt_charged(self):
+        # 800 + 400 + 200 (only standard addon) = 1400
+        attendees = [
+            _make_attendee(ticket_type=self.tier_premium.name, wants_tshirt=1, tshirt_size="M"),
+            _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="L"),
+        ]
+        result = self._create_order(
+            1400, {self.tier_premium.name: 1, self.tier_standard.name: 1}, attendees, "ord_004"
+        )
+        self.assertEqual(result["order_id"], "ord_004")
+
+    def test_tampered_amount_rejected(self):
+        attendee = _make_attendee(ticket_type=self.tier_standard.name, wants_tshirt=0)
+        with self.assertRaises(frappe.ValidationError):
+            self._create_order(1, {self.tier_standard.name: 1}, [attendee], "ord_005")

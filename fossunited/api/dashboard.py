@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 
-from fossunited.doctype_ids import EVENT, RAZORPAY_PAYMENT, TICKET_TIER, USER_PROFILE
+from fossunited.doctype_ids import CHAPTER, EVENT, RAZORPAY_PAYMENT, TICKET_TIER, USER_PROFILE
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -25,6 +25,9 @@ def get_event(name: str, by_route: bool = False) -> dict:
     data = doc.as_dict()
     # Remove members table
     data.pop("event_members", None)
+
+    if doc.chapter:
+        data["chapter_email"] = frappe.db.get_value(CHAPTER, doc.chapter, "email")
 
     return data
 
@@ -62,7 +65,16 @@ def _compute_order_amount(meta_data: dict, ref_doctype: str, ref_docname: str) -
         )
         if event_doc and event_doc.paid_tshirts_available:
             attendees = meta_data.get("attendees") or []
-            num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+            tier_tshirt_included = {
+                tier_name: bool(frappe.db.get_value(TICKET_TIER, tier_name, "tshirt_included"))
+                for tier_name in (meta_data.get("tier_counts") or {}).keys()
+            }
+            num_tshirts = sum(
+                1
+                for a in attendees
+                if a.get("wants_tshirt")
+                and not tier_tshirt_included.get(a.get("ticket_type"), False)
+            )
             total += float(event_doc.t_shirt_price or 0) * num_tshirts
 
     return total

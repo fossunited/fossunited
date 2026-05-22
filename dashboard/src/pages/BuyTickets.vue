@@ -1,5 +1,5 @@
 <template>
-  <RazorpayCheckout ref="rzpCheckout" @error="onPaymentError" />
+  <RazorpayCheckout v-if="currentStep === 4" ref="rzpCheckout" @error="onPaymentError" />
   <Header />
   <Dialog
     v-model="showDialog"
