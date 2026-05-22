@@ -573,7 +573,7 @@
                     <i class="ti ti-chevron-down faq-chevron" aria-hidden="true"></i>
                   </button>
                   <div id="faq-{{ loop.index }}" class="collapse{% if loop.first %} show{% endif %}">
-                    <div class="faq-answer text-base lh-base">{{ frappe.utils.md_to_html(item.answer) }}</div>
+                    <div class="faq-answer text-base lh-base">{{ item.answer }}</div>
                   </div>
                 </div>
               {% endfor %}
