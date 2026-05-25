@@ -3431,13 +3431,13 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   flex-shrink: 0;
   border-radius: 7px;
   border: 1px solid var(--v3-button-border);
-  background: var(--dc-l);
+  background: var(--v3-bg-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
-[data-theme="dark"] .if-devroom-icon-wrap { background: var(--dc-d); }
+
 .if-devroom-icon-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .if-devroom-title { font-size: 14px; font-weight: 600; color: var(--v3-text-color); line-height: 1.3; }
 
