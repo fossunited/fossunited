@@ -451,9 +451,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         FOSS United Team</p>
         """
 
+        if not to:
+            return
+
         try:
             frappe.sendmail(
-                recipients=to,
+                recipients=[to],
                 cc=team_emails,
                 subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
                 message=message,
@@ -550,7 +553,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         try:
             frappe.sendmail(
-                recipients=self.email,
+                recipients=[self.email],
                 cc=speaker_emails,
                 subject=f"{sub_prefix} on your proposal for {self.event_name}",
                 message=self._build_review_message(review, change_type, old_review),

@@ -58,7 +58,6 @@ for the broader community.</p><br/>
     newsletter.flags.ignore_permissions = True
     newsletter.insert(ignore_permissions=True)
     newsletter.send_emails()
-    newsletter.save(ignore_permissions=True)
 
     frappe.db.set_value(EVENT, event_id, "feedback_sent", 1)
     frappe.log_error(

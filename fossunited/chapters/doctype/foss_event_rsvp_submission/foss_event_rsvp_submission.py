@@ -3,7 +3,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import getdate, nowdate
 
-from fossunited.api.chapter import check_if_chapter_member
+from fossunited.api.chapter import check_if_chapter_member, get_chapter_members_email
 from fossunited.api.checkins import (
     add_checkin,
     has_checked_in_today,
@@ -130,7 +130,10 @@ class FOSSEventRSVPSubmission(Document):
             filters={"name": self.chapter},
             fieldname="email",
         )
+        if not organizer_email:
+            return
 
+        team_emails = get_chapter_members_email(self.chapter)
         message = f"""
         Dear Organizers,
         <br>
@@ -141,9 +144,12 @@ class FOSSEventRSVPSubmission(Document):
         """
 
         frappe.sendmail(
-            recipients=organizer_email,
+            recipients=[organizer_email],
+            cc=team_emails,
             subject="RSVP Maximum Count Reached",
             message=message,
+            reference_doctype=self.doctype,
+            reference_name=self.name,
         )
 
     def get_max_count(self):
