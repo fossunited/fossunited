@@ -3,10 +3,9 @@ name: publish-docs
 on:
   push:
     branches:
-      # - develop
       - docs/curriculum
-    # paths:
-    #   - 'docs/**'
+    paths:
+      - 'docs/**'
   workflow_dispatch:
 
 permissions:
@@ -17,10 +16,6 @@ permissions:
 jobs:
   deploy:
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
@@ -39,12 +34,13 @@ jobs:
         run: pip install zensical
 
       - name: Build documentation
+        working-directory: docs
         run: zensical build # Generates the static files into the ./site directory
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ./docs/site
 
       - name: Deploy to GitHub Pages
         id: deployment
