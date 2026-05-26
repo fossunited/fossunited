@@ -12,6 +12,7 @@ from fossunited.doctype_ids import (
     CHAPTER_MEMBER,
     CORE_TEAM,
     EVENT,
+    EVENT_GRANTS,
     EVENT_VOLUNTEER,
     USER_PROFILE,
 )
@@ -97,21 +98,85 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
 
 
 # Only published event data is returned. No sensitive fields exposed.
+_ICS_FIELDS = [
+    "name",
+    "modified",
+    "event_name",
+    "event_type",
+    "event_bio",
+    "event_location",
+    "map_link",
+    "chapter_name",
+    "event_description",
+    "livestream_link",
+    "route",
+    "event_start_date",
+    "event_end_date",
+]
+
+
+def _build_ics_calendar(events):
+    tz_name = frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
+    tz = ZoneInfo(tz_name)
+    utc = ZoneInfo("UTC")
+    c = Calendar()
+
+    for event in events:
+        start_dt = frappe.utils.get_datetime(event.event_start_date)
+        end_dt = frappe.utils.get_datetime(event.event_end_date)
+        start = start_dt.replace(tzinfo=tz) if start_dt.tzinfo is None else start_dt.astimezone(tz)
+        end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
+
+        if end < start:
+            continue
+
+        e = Event()
+        e.uid = event.name
+        e.name = event.event_name
+        if event.modified:
+            mod = frappe.utils.get_datetime(event.modified)
+            e.last_modified = mod.replace(tzinfo=utc) if mod.tzinfo is None else mod
+        if event.event_location and event.map_link:
+            e.location = f"{event.event_location}\n{event.map_link}"
+        else:
+            e.location = event.event_location or event.map_link or None
+        e.organizer = (event.chapter_name or "FOSS United") + " Community"
+        if event.event_type:
+            e.categories = {event.event_type}
+        description_parts = []
+        if event.event_bio:
+            description_parts.append(event.event_bio)
+        long_desc = frappe.utils.strip_html(event.event_description or "").strip()
+        if long_desc:
+            description_parts.append(long_desc)
+        if event.livestream_link:
+            description_parts.append(f"Livestream: {event.livestream_link}")
+        e.description = "\n\n".join(description_parts) or None
+        if event.route:
+            route = str(event.route)
+            e.url = (
+                route
+                if route.startswith("http")
+                else f"https://fossunited.org/{route.lstrip('/')}"
+            )
+        e.begin = start
+        e.end = end
+        c.events.add(e)
+
+    return c
+
+
+def _ics_download_response(c, filename):
+    frappe.response["type"] = "download"
+    frappe.response["filename"] = filename
+    frappe.response["filecontent"] = c.serialize().encode("utf-8")
+    frappe.response["content_type"] = "text/calendar; charset=utf-8"
+
+
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 @rate_limit(limit=5, seconds=60 * 60 * 6)
 def generate_ics(event_ids: str | list, chapter: str | None = None, download: bool = False):
-    """
-    Return ICS event for the event ids provided
-
-    Args:
-        event_ids (list): list of event ids (doc.name)
-        chapter (str, optional): chapter docname to restrict events to
-        download (bool): if True, serve as a file download instead of returning string
-
-    Returns:
-        str: ICS data (when download=False)
-    """
     try:
         if isinstance(event_ids, str) and len(event_ids) > 10000:
             frappe.throw(_("Input too large"), frappe.ValidationError)
@@ -131,80 +196,69 @@ def generate_ics(event_ids: str | list, chapter: str | None = None, download: bo
     except (json.JSONDecodeError, ValueError):
         frappe.throw(_("Invalid JSON format"), frappe.ValidationError)
 
-    c = Calendar()
+    if chapter and (not isinstance(chapter, str) or len(chapter) > 140):
+        frappe.throw(_("Invalid chapter"), frappe.ValidationError)
 
     filters = [["name", "IN", ids], ["status", "=", "Live"], ["is_published", "=", 1]]
     if chapter:
-        if not isinstance(chapter, str) or len(chapter) > 140:
-            frappe.throw(_("Invalid chapter"), frappe.ValidationError)
         filters.append(["chapter", "=", chapter])
+
+    events = frappe.db.get_all(EVENT, filters=filters, fields=_ICS_FIELDS)
+    c = _build_ics_calendar(events)
+
+    if download:
+        _ics_download_response(c, "event.ics")
+        return
+
+    return c.serialize()
+
+
+# nosemgrep: guest-whitelisted-method
+@frappe.whitelist(allow_guest=True)
+@rate_limit(limit=60, seconds=60 * 60)
+def upcoming_events_ics():
+    """
+    ICS subscription feed — upcoming published events + approved grants.
+    Stable UIDs + LAST-MODIFIED so calendar apps detect reschedules.
+    Subscribe via: /api/method/fossunited.api.chapter.upcoming_events_ics
+    """
+    now = now_datetime()
 
     events = frappe.db.get_all(
         EVENT,
-        filters=filters,
+        filters=[
+            ["status", "=", "Live"],
+            ["is_published", "=", 1],
+            ["event_start_date", ">=", now],
+        ],
+        fields=_ICS_FIELDS,
+    )
+
+    grants = frappe.db.get_all(
+        EVENT_GRANTS,
+        filters={
+            "grant_status": "Approved",
+            "event_end_date": [">=", now],
+            "grant_amount": [">", 10000],
+        },
         fields=[
+            "name",
+            "modified",
             "event_name",
-            "event_type",
-            "event_bio",
-            "event_location",
-            "map_link",
-            "chapter_name",
             "event_description",
-            "livestream_link",
-            "route",
             "event_start_date",
             "event_end_date",
+            "event_location",
+            "event_website",
         ],
     )
-    for event in events:
-        tz_name = frappe.db.get_single_value("System Settings", "time_zone") or "Asia/Kolkata"
-        tz = ZoneInfo(tz_name)
-        start_dt = frappe.utils.get_datetime(event.event_start_date)
-        end_dt = frappe.utils.get_datetime(event.event_end_date)
-        # If naive, treat as local time in site TZ; if aware, convert
-        start = start_dt.replace(tzinfo=tz) if start_dt.tzinfo is None else start_dt.astimezone(tz)
-        end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
+    for g in grants:
+        g.chapter_name = "FOSS Event Grants"
 
-        # Skip if end is before start
-        if end < start:
-            continue
+        g.route = g.event_website
 
-        e = Event()
-        e.name = event.event_name
-        if event.event_location and event.map_link:
-            e.location = f"{event.event_location}\n{event.map_link}"
-        else:
-            e.location = event.event_location or event.map_link or None
-        e.organizer = event.chapter_name + " Community"
-        if event.event_type:
-            e.categories = {event.event_type}
-        description_parts = []
-        if event.event_bio:
-            description_parts.append(event.event_bio)
-        long_desc = frappe.utils.strip_html(event.event_description or "").strip()
-        if long_desc:
-            description_parts.append(long_desc)
-        if event.livestream_link:
-            description_parts.append(f"Livestream: {event.livestream_link}")
-        e.description = "\n\n".join(description_parts) or None
-        if event.route:
-            e.url = f"https://fossunited.org/{str(event.route).lstrip('/')}"
-        e.begin = start
-        e.end = end
-        c.events.add(e)
-
-    ics_data = c.serialize()
-
-    if download:
-        frappe.response["type"] = "download"
-        frappe.response["filename"] = "event.ics"
-        frappe.response["filecontent"] = (
-            ics_data.encode("utf-8") if isinstance(ics_data, str) else ics_data
-        )
-        frappe.response["content_type"] = "text/calendar; charset=utf-8"
-        return
-
-    return ics_data
+    c = _build_ics_calendar(list(events) + list(grants))
+    _ics_download_response(c, "foss-upcoming-events.ics")
 
 
 def get_chapter_members_email(chapter):

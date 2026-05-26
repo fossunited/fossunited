@@ -118,12 +118,9 @@
   </div>
 
   <script>
-    // Initialize tooltips if jQuery is available
-    if (typeof $ !== 'undefined') {
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      })
-    }
+    frappe.ready(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
 
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', (e) => {

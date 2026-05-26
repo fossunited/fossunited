@@ -53,20 +53,49 @@
             />
             <i class="ti ti-search v3-text-tertiary" aria-hidden="true"></i>
           </div>
+          <a
+            class="v3-text-tertiary"
+            aria-label="Search tips"
+            data-toggle="tooltip"
+            data-container="body"
+            data-placement="top"
+            title="Search bangs: event:name, location:city, date:2026-01 - combine with commas"
+          ><i class="ti ti-help"></i></a>
         </div>
 
         <div class="v3-controls-right">
           {% if page_type == "upcoming" %}
             <a
               href="/events/timeline/rss.xml"
-              class="v3-text-secondary mr-4"
-              title="Subscribe to Upcoming Events"
+              class="v3-btn v3-btn-secondary v3-btn-icon-only"
               aria-label="Subscribe to Upcoming Events RSS feed"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Catchup on Upcoming event via RSS"
             >
               <i class="ti ti-rss" aria-hidden="true"></i>
             </a>
+            <a
+              href="/api/method/fossunited.api.chapter.upcoming_events_ics"
+              class="v3-btn v3-btn-secondary v3-btn-icon-only"
+              aria-label="Subscribe to upcoming events calendar feed"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Add Upcoming events to calendar"
+            >
+              <i class="ti ti-calendar-event" aria-hidden="true"></i>
+            </a>
           {% endif %}
-          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false" aria-controls="filters-panel">
+          <button
+            id="filter-toggle"
+            class="v3-btn v3-btn-secondary"
+            type="button"
+            aria-expanded="false"
+            aria-controls="filters-panel"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Toggle filters"
+          >
             Filter
             <i class="ti ti-adjustments-filled" aria-hidden="true"></i>
           </button>
@@ -116,14 +145,6 @@
             </label>
           </div>
 
-          {% if page_type == "upcoming" %}
-            <div class="v3-controls-right">
-              <button id="download-ics" class="v3-btn v3-btn-dark" aria-label="Download events as ICS calendar file">
-                <i class="ti ti-download" aria-hidden="true"></i>
-                Download ICS
-              </button>
-            </div>
-          {% endif %}
         </div>
       </div>
 
@@ -228,7 +249,6 @@
         filtersPanel: document.getElementById('filters-panel'),
         toggleCity: document.getElementById('toggle-city'),
         toggleClub: document.getElementById('toggle-club'),
-        downloadIcs: document.getElementById('download-ics'),
         yearPagination: document.getElementById('year-pagination'),
       }
 
@@ -595,27 +615,6 @@
         render()
       }
 
-      if (dom.downloadIcs) {
-        dom.downloadIcs.onclick = () => {
-        const ids = wrappers
-          .filter(passesFilters)
-          .map((w) => w.dataset.eventId)
-          .filter(Boolean)
-
-          if (!ids.length) return alert('No events to export')
-        if (ids.length > 30) {
-          return alert('Please narrow filters to 30 events or fewer to export.')
-        }
-
-          const a = document.createElement('a')
-          a.href = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + encodeURIComponent(JSON.stringify(ids)) + '&download=1'
-          a.download = 'events.ics'
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-        }
-      }
-
       // Read ?s= URL param to pre-populate search
       const _urlSearch = new URLSearchParams(window.location.search).get('s')
       if (_urlSearch) {
@@ -638,4 +637,5 @@
       render()
     })()
   </script>
+  <script>frappe.ready(function(){ $('[data-toggle="tooltip"]').tooltip(); })</script>
 {% endblock %}
