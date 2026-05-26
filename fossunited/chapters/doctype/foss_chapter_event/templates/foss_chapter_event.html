@@ -24,13 +24,10 @@
     {% set badge_type = "icon" %}
   {% endif %}
 
-  <div
+  <a
+    href="/{{ cfp_status_block.form_route | e }}"
     class="v3-clickable cfp-card-v3"
-    onclick="window.location.href='/{{ cfp_status_block.form_route | e }}'"
-    role="button"
-    tabindex="0"
     aria-label="Call for Proposals - {{ badge_text }}"
-    onkeypress="if(event.key==='Enter'||event.key===' ')window.location.href='/{{ cfp_status_block.form_route | e }}'"
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
@@ -62,7 +59,7 @@
         </div>
       <i class="ti ti-arrow-right" aria-hidden="true"></i>
     </div>
-  </div>
+  </a>
 {% endmacro %}
 
 
@@ -129,6 +126,7 @@
 {% endblock %}
 
 {% block content %}
+  {% set ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + ([doc.name] | tojson | urlencode) + '&download=1' %}
   <style>
     body {
       background: var(--v3-main-bg);
@@ -303,15 +301,17 @@
             <!-- Date/Time/Location -->
             <div style="margin-top: 3px;">
               <div class="ev-detail-row">
-                <div
+                <a
+                  href="{{ ics_url }}"
                   class="ev-icon"
-                  onclick="downloadEventIcs()"
-                  type="button"
-                  aria-label="Add event to calendar"
-                  title="Download to calendar"
+                  download="{{ doc.event_name.replace(' ', '_') }}.ics"
+                  aria-label="Download calendar file"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="Download calendar (.ics)"
                 >
                   <i class="ti ti-calendar-plus" aria-hidden="true"></i>
-                </div>
+                </a>
                 <div class="ev-detail-text">
                   <div class="ev-detail-primary">
                     {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
@@ -337,6 +337,7 @@
                 href="{{ doc.map_link }}"
                 class="ev-detail-row ev-detail-link"
                 aria-label="View {{ doc.event_location or 'event location' }} on map"
+                title="View {{ doc.event_location or 'event location' }} on map"
               >
                 {% else %}
                 <div class="ev-detail-row">
@@ -631,11 +632,6 @@
       </div>
     </div>
 
-    {%- from 'fossunited/templates/macros/ics_download.html' import ics_download -%}
-    {{ ics_download(
-      event_ids=[doc.name],
-      filename=doc.event_name.replace(' ', '_') + '.ics',
-      fn_name='downloadEventIcs',
-    ) }}
+    <script>$(function(){ $('[data-toggle="tooltip"]').tooltip() })</script>
   </div>
 {% endblock %}

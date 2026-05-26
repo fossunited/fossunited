@@ -849,6 +849,7 @@ h6 {
   color: var(--v3-main-bg, white);
 }
 
+
 .club-brand {
   display: flex;
   gap: 0.5rem;
@@ -2650,11 +2651,26 @@ a.hover-underline:hover {
   transition: box-shadow 0.2s ease;
   border-radius: 16px;
 }
+.v3-event-card::before,
+.v3-event-card::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  width: 17px;
+  height: 17px;
+  background: var(--v3-main-bg);
+  z-index: 2;
+  pointer-events: none;
+}
+.v3-event-card::before { left: -1px; border-top-right-radius: 16px; }
+.v3-event-card::after  { right: -1px; border-top-left-radius: 16px; }
 
 .v3-event-card:hover {
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06);
   text-decoration: none;
 }
+.v3-event-card:hover::before,
+.v3-event-card:hover::after { display: none; }
 
 [data-theme='dark'] .v3-event-card:hover {
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7);
