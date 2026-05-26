@@ -3388,11 +3388,11 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .if-sponsor-grid-cp .if-sponsor-logo { width: 148px; }
 
 /* ── Devroom cards ──────────────────────────────────────────── */
-.if-devroom-wrap { background: var(--v3-card-bg); box-shadow: inset 0 0 0 1px var(--v3-button-border); border-radius: 16px; overflow: hidden; }
+.if-devroom-wrap { background: var(--v3-card-bg); box-shadow: inset 0 0 0 1px var(--v3-button-border); border-radius: 16px; overflow: hidden; transform: translateZ(0); }
 .if-devroom-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .if-devroom-card {
   flex: 0 0 100%;
@@ -3402,6 +3402,7 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   gap: 14px;
   text-decoration: none;
   color: inherit;
+  background: var(--v3-card-bg);
   transition: background .15s, box-shadow .15s, border-radius .15s;
 }
 @media (min-width: 600px) {
@@ -3409,6 +3410,12 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 }
 @media (min-width: 1200px) {
   .if-devroom-card { flex: 0 0 33.333%; }
+  .if-devroom-grid::after {
+    content: '';
+    flex: 0 0 33.333%;
+    background: var(--v3-main-bg);
+    border-top-left-radius: 16px;
+  }
 }
 .if-devroom-card:hover { background: #fff; box-shadow: 0 4px 32px 0 rgba(0,0,0,.08); border-radius: 1rem; text-decoration: none; }
 [data-theme="dark"] .if-devroom-card:hover { background: #000; }
@@ -3431,13 +3438,12 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   flex-shrink: 0;
   border-radius: 7px;
   border: 1px solid var(--v3-button-border);
-  background: var(--v3-bg-subtle);
+  background: hsla(0, 0%, 94%, 1);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
-
 .if-devroom-icon-wrap img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .if-devroom-title { font-size: 14px; font-weight: 600; color: var(--v3-text-color); line-height: 1.3; }
 
