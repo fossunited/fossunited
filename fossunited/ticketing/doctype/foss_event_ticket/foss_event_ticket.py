@@ -91,7 +91,9 @@ class FOSSEventTicket(Document):
                     "tshirt_size": attendee.get("tshirt_size") if wants_tshirt else None,
                     "accept_coc": attendee.get("accept_coc", 0),
                     "tier": frappe.db.get_value(TICKET_TIER, attendee.get("ticket_type"), "title")
-                    or payment_meta_data.get("tier", {}).get("title"),
+                    or (payment_meta_data.get("tiers_snapshot") or {})
+                    .get(attendee.get("ticket_type"), {})
+                    .get("title"),
                     "custom_fields": [],
                 }
             )

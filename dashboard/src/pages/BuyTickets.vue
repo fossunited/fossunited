@@ -892,10 +892,6 @@ function createOrder() {
     return
   }
 
-  const primaryTier =
-    allTiers.value.find((t) => (activeTierCounts.value[t.name] || 0) > 0 && isTierActive(t)) ||
-    allTiers.value[0]
-
   // Use activeTierCounts for accurate billing — inactive tiers excluded
   const subTotal =
     Object.entries(activeTierCounts.value).reduce((s, [name, count]) => {
@@ -913,8 +909,13 @@ function createOrder() {
     billing.email,
     {
       event: eventName.value,
-      tier: primaryTier,
       tier_counts: { ...activeTierCounts.value },
+      tiers_snapshot: Object.fromEntries(
+        Object.keys(activeTierCounts.value).map((name) => {
+          const t = allTiers.value.find((t) => t.name === name)
+          return [name, { title: t?.title, price: t?.price }]
+        }),
+      ),
       attendees: attendees.value.map((a) => ({ ...a, accept_coc: billing.acceptCoC ? 1 : 0 })),
       num_seats: totalTickets.value,
       custom_fields_apply_to_all: customFieldsApplyToAll.value,
