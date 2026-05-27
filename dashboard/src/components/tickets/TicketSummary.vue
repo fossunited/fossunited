@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-6 w-full md:max-w-[360px] md:sticky md:top-20"
+    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-6 w-full"
   >
     <div>
       <p class="font-semibold text-ink-gray-9">Ticket Summary</p>
@@ -35,9 +35,17 @@
 
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
 
-    <Button class="w-full" variant="solid" size="md" :loading="loading" @click="$emit('proceed')">
+    <Button
+      v-if="showProceedButton"
+      class="w-full"
+      variant="solid"
+      size="md"
+      :loading="loading"
+      aria-label="Proceed to payment"
+      @click="$emit('proceed')"
+    >
       <span class="flex items-center justify-center gap-1.5 uppercase tracking-wider">
-        Proceed to Pay <IconChevronRight class="w-4 h-4" />
+        Proceed to Pay <IconChevronRight class="w-4 h-4" aria-hidden="true" />
       </span>
     </Button>
   </div>
@@ -57,6 +65,7 @@ const props = defineProps({
   loading: { type: Boolean, default: false },
   couponCode: { type: String, default: '' },
   errorMessage: { type: String, default: '' },
+  showProceedButton: { type: Boolean, default: false },
 })
 
 defineEmits(['proceed', 'update:couponCode'])
