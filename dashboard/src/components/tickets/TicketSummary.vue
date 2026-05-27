@@ -34,41 +34,20 @@
     </div>
 
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
-
-    <Button
-      v-if="showProceedButton"
-      class="w-full"
-      variant="solid"
-      size="md"
-      :loading="loading"
-      aria-label="Proceed to payment"
-      @click="$emit('proceed')"
-    >
-      <span class="flex items-center justify-center gap-1.5 uppercase tracking-wider">
-        Proceed to Pay <IconChevronRight class="w-4 h-4" aria-hidden="true" />
-      </span>
-    </Button>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { Button, ErrorMessage } from 'frappe-ui'
-import { IconChevronRight } from '@tabler/icons-vue'
+import { ErrorMessage } from 'frappe-ui'
 
 const props = defineProps({
   activeTierCounts: { type: Object, default: () => ({}) },
   allTiers: { type: Array, default: () => [] },
   tshirtCount: { type: Number, default: 0 },
   tshirtPrice: { type: Number, default: 0 },
-  showGst: { type: Boolean, default: false },
-  loading: { type: Boolean, default: false },
-  couponCode: { type: String, default: '' },
   errorMessage: { type: String, default: '' },
-  showProceedButton: { type: Boolean, default: false },
 })
-
-defineEmits(['proceed', 'update:couponCode'])
 
 function getTierTitle(tierName) {
   return props.allTiers.find((t) => t.name === tierName)?.title || tierName
