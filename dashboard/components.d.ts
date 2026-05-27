@@ -16,6 +16,7 @@ declare module 'vue' {
     AllProposalsBannerImage: typeof import('./src/components/proposals/AllProposalsBannerImage.vue')['default']
     AttendeeCard: typeof import('./src/components/tickets/AttendeeCard.vue')['default']
     AttendeeRequestList: typeof import('./src/components/localhost/AttendeeRequestList.vue')['default']
+    BillingForm: typeof import('./src/components/tickets/BillingForm.vue')['default']
     Breadcrumb: typeof import('./src/components/Breadcrumb.vue')['default']
     CampaignList: typeof import('./src/components/mailing/CampaignList.vue')['default']
     ChapterCard: typeof import('./src/components/ChapterCard.vue')['default']

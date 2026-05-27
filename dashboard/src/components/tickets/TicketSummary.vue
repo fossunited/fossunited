@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-6 w-full md:max-w-[360px] md:sticky md:top-20"
+    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-6 w-full"
   >
     <div>
       <p class="font-semibold text-ink-gray-9">Ticket Summary</p>
@@ -34,32 +34,20 @@
     </div>
 
     <ErrorMessage v-if="errorMessage" :message="errorMessage" />
-
-    <Button class="w-full" variant="solid" size="md" :loading="loading" @click="$emit('proceed')">
-      <span class="flex items-center justify-center gap-1.5 uppercase tracking-wider">
-        Proceed to Pay <IconChevronRight class="w-4 h-4" />
-      </span>
-    </Button>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { Button, ErrorMessage } from 'frappe-ui'
-import { IconChevronRight } from '@tabler/icons-vue'
+import { ErrorMessage } from 'frappe-ui'
 
 const props = defineProps({
   activeTierCounts: { type: Object, default: () => ({}) },
   allTiers: { type: Array, default: () => [] },
   tshirtCount: { type: Number, default: 0 },
   tshirtPrice: { type: Number, default: 0 },
-  showGst: { type: Boolean, default: false },
-  loading: { type: Boolean, default: false },
-  couponCode: { type: String, default: '' },
   errorMessage: { type: String, default: '' },
 })
-
-defineEmits(['proceed', 'update:couponCode'])
 
 function getTierTitle(tierName) {
   return props.allTiers.find((t) => t.name === tierName)?.title || tierName

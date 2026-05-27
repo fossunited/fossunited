@@ -8,526 +8,474 @@
   />
 
   <div v-if="event.data" class="bg-surface-gray-1 min-h-screen">
-    <main
-      id="main-content"
-      class="max-w-[800px] mx-auto w-full flex flex-col gap-4 px-4 pb-24"
-      aria-label="Ticket registration"
-    >
-      <Breadcrumb :items="breadcrumbItems" />
-
-      <!-- Page Header -->
-      <div class="flex flex-col gap-1">
-        <h1 class="text-2xl font-bold tracking-tight text-ink-gray-9">Registration</h1>
-      </div>
-
-      <EventHeader :event="event.data" />
-
-      <div
-        role="note"
-        class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-amber-2 bg-surface-amber-1 text-ink-amber-3 text-sm self-center"
+    <div class="mx-auto w-full max-w-[1100px] px-4">
+      <main
+        id="main-content"
+        class="flex flex-col gap-4 pb-24 md:pb-8"
+        aria-label="Ticket registration"
       >
-        <IconInfoCircle class="w-5 h-5 shrink-0" aria-hidden="true" />
-        <span
-          >Tickets are non-cancellable.
-          <a
-            href="https://fossunited.org/refund-transfer-policy"
-            target="_blank"
-            class="underline font-semibold"
-            >Only transfers are allowed</a
-          >
-        </span>
-      </div>
-      <!-- Form description -->
-      <div
-        v-if="event.data?.ticket_form_description"
-        class="my-2 prose prose-sm max-w-none bg-surface-gray-2 rounded-lg px-4 py-3"
-        v-html="markdownToHTML(event.data.ticket_form_description)"
-      ></div>
+        <Breadcrumb :items="breadcrumbItems" />
 
-      <!-- Step Progress -->
-      <nav aria-label="Registration steps">
-        <Progress
-          :value="currentStep * 25"
-          :intervals="true"
-          :interval-count="4"
-          size="lg"
-          :label="stepTitle"
-          :hint="true"
+        <!-- Page Header -->
+        <div class="flex flex-col gap-1">
+          <h1 class="text-2xl font-bold tracking-tight text-ink-gray-9">Registration</h1>
+        </div>
+
+        <EventHeader :event="event.data" />
+
+        <div
+          role="note"
+          class="flex items-center gap-2 px-3 py-2 rounded-lg border border-outline-amber-2 bg-surface-amber-1 text-ink-amber-3 text-sm self-center"
         >
-          <template #hint>
-            <span class="text-sm font-medium text-ink-gray-4" aria-live="polite"
-              >{{ currentStep }} / 4</span
+          <IconInfoCircle class="w-5 h-5 shrink-0" aria-hidden="true" />
+          <span
+            >Tickets are non-cancellable.
+            <a
+              href="https://fossunited.org/refund-transfer-policy"
+              target="_blank"
+              class="underline font-semibold"
+              >Only transfers are allowed</a
             >
-          </template>
-        </Progress>
-      </nav>
+          </span>
+        </div>
+        <!-- Form description -->
+        <div
+          v-if="event.data?.ticket_form_description"
+          class="my-2 prose prose-sm max-w-none bg-surface-gray-2 rounded-lg px-4 py-3"
+          v-html="markdownToHTML(event.data.ticket_form_description)"
+        ></div>
 
-      <!-- Step Content -->
-      <transition
-        mode="out-in"
-        :enter-active-class="tClasses.enterActive"
-        :enter-from-class="tClasses.enterFrom"
-        :enter-to-class="tClasses.enterTo"
-        :leave-active-class="tClasses.leaveActive"
-        :leave-from-class="tClasses.leaveFrom"
-        :leave-to-class="tClasses.leaveTo"
-      >
-        <div :key="currentStep">
-          <!-- Select Tiers -->
-          <div
-            v-if="currentStep === 1"
-            class="flex flex-col gap-6 items-center"
-            role="list"
-            aria-label="Available ticket tiers"
-          >
-            <article
-              v-for="tier in sortedTiers"
-              :key="tier.name"
-              role="listitem"
-              class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-wrap items-stretch gap-3 p-4 w-full"
-              :class="!isTierActive(tier) ? 'opacity-50' : 'shadow-sm'"
-              :aria-label="`${tier.title} ticket, ₹${tier.price}`"
-              :aria-disabled="!isTierActive(tier)"
+        <!-- Steps + Sidebar two-column -->
+        <div class="flex flex-col md:flex-row md:items-start md:gap-6">
+          <div class="flex-1 min-w-0 flex flex-col gap-4">
+            <!-- Step Progress -->
+            <nav aria-label="Registration steps">
+              <Progress
+                :value="currentStep * 25"
+                :intervals="true"
+                :interval-count="4"
+                size="lg"
+                :label="stepTitle"
+                :hint="true"
+              >
+                <template #hint>
+                  <span class="text-sm font-medium text-ink-gray-4" aria-live="polite"
+                    >{{ currentStep }} / 4</span
+                  >
+                </template>
+              </Progress>
+            </nav>
+
+            <!-- Step Content -->
+            <transition
+              mode="out-in"
+              :enter-active-class="tClasses.enterActive"
+              :enter-from-class="tClasses.enterFrom"
+              :enter-to-class="tClasses.enterTo"
+              :leave-active-class="tClasses.leaveActive"
+              :leave-from-class="tClasses.leaveFrom"
+              :leave-to-class="tClasses.leaveTo"
             >
-              <!-- Image -->
-              <div
-                class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg overflow-hidden w-[58px] h-20 md:w-[78px] md:h-[108px]"
-                aria-hidden="true"
-              >
-                <img
-                  :src="getTierImage(tier)"
-                  :alt="`${tier.title} ticket`"
-                  class="w-full h-full object-contain"
-                />
-              </div>
-
-              <div class="flex-1 min-w-0 flex flex-col justify-evenly">
-                <p class="font-semibold text-base text-ink-gray-9">{{ tier.title }}</p>
-                <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
-                <div class="flex flex-wrap gap-1">
-                  <Badge
-                    v-if="tier.tshirt_included"
-                    class="w-fit"
-                    variant="subtle"
-                    theme="green"
-                    title="T-shirt is included with this tier at no extra charge"
-                    >T-shirt Included</Badge
-                  >
-                  <Badge
-                    v-if="tier.valid_till && isTierActive(tier)"
-                    class="w-fit"
-                    variant="outline"
-                    theme="green"
-                    >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
-                  >
-                  <Badge v-if="!tier.enabled" class="w-fit" variant="outline" theme="red"
-                    >Disabled</Badge
-                  >
-                  <Badge
-                    v-else-if="isTierExpired(tier)"
-                    class="w-fit"
-                    variant="outline"
-                    theme="orange"
-                    >Expired</Badge
-                  >
-                </div>
-              </div>
-
-              <!-- Counter: on mobile order-last (after description); on desktop back in row -->
-              <div
-                class="order-last md:order-none w-full md:w-auto flex items-center gap-1 justify-center md:justify-end md:self-center md:shrink-0 md:pl-2"
-                :aria-label="`${tier.title} ticket quantity`"
-              >
-                <button
-                  :disabled="!isTierActive(tier) || (tierCounts[tier.name] || 0) <= 0"
-                  :aria-label="`Remove one ${tier.title} ticket`"
-                  class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  :class="
-                    (tierCounts[tier.name] || 0) > 0
-                      ? 'border-ink-gray-9 bg-ink-gray-9'
-                      : 'border-ink-gray-9 bg-surface-white'
-                  "
-                  @click="decrementTier(tier.name)"
-                >
-                  <IconMinus
-                    aria-hidden="true"
-                    class="w-4 h-4"
-                    :class="(tierCounts[tier.name] || 0) > 0 ? '' : 'text-ink-gray-9'"
-                  />
-                </button>
-                <span
-                  class="w-8 text-center font-semibold text-ink-gray-9"
-                  aria-live="polite"
-                  :aria-label="`${tierCounts[tier.name] || 0} ${tier.title} tickets selected`"
-                  >{{ tierCounts[tier.name] || 0 }}</span
-                >
-                <button
-                  :disabled="!isTierActive(tier) || totalTickets >= MAX_SEATS"
-                  :aria-label="`Add one ${tier.title} ticket`"
-                  class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                  :class="
-                    isTierActive(tier)
-                      ? 'border-ink-gray-9 bg-ink-gray-9'
-                      : 'border-ink-gray-9 bg-surface-white'
-                  "
-                  @click="incrementTier(tier.name)"
-                >
-                  <IconPlus
-                    aria-hidden="true"
-                    class="w-4 h-4"
-                    :class="isTierActive(tier) ? '' : 'text-ink-gray-9'"
-                  />
-                </button>
-              </div>
-
-              <div
-                v-if="tier.description"
-                class="w-full prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full"
-                v-html="renderedDescription(tier.description)"
-              />
-            </article>
-          </div>
-
-          <!-- STEP 2: Attendee Details -->
-          <div v-else-if="currentStep === 2" class="flex flex-col gap-6">
-            <AttendeeCard
-              v-for="(attendee, idx) in attendees"
-              :key="idx"
-              :attendee="attendee"
-              :index="idx"
-              :tier-title="getTierTitle(attendee.ticket_type)"
-              :custom-fields="!customFieldsApplyToAll ? event.data.custom_fields : []"
-              :show-tshirt="Boolean(event.data.paid_tshirts_available)"
-              :tshirt-price="event.data.t_shirt_price || 0"
-              :tshirt-included="isTierTshirtIncluded(attendee.ticket_type)"
-              :can-delete="attendees.length > 1"
-              @update:attendee="attendees[idx] = $event"
-              @delete="removeAttendee(idx)"
-            />
-
-            <div
-              v-if="event.data.custom_fields?.length > 0 && attendees.length > 1"
-              class="flex flex-col gap-4"
-            >
-              <Switch
-                v-model="customFieldsApplyToAll"
-                class="w-fit text-xs"
-                label="Apply same answers for all tickets"
-              />
-              <div
-                v-if="customFieldsApplyToAll"
-                class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
-              >
-                <FormControl
-                  v-for="field in event.data.custom_fields"
-                  :key="field.name"
-                  v-model="globalCustomFields[field.field_name]"
-                  :type="FIELD_TYPE_MAP[field.field_type]"
-                  :label="field.label"
-                  :options="field.options"
-                  :required="Boolean(field.mandatory)"
-                  size="sm"
-                  variant="subtle"
-                />
-              </div>
-            </div>
-
-            <div class="flex justify-center">
-              <button
-                :disabled="totalTickets >= MAX_SEATS"
-                class="flex items-center gap-2 bg-outline-gray-1 hover:bg-outline-gray-2 border border-outline-gray-2 rounded-lg px-5 py-2.5 font-semibold text-sm uppercase tracking-wider text-ink-gray-9 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                @click="addAttendee"
-              >
-                <IconPlus class="w-5 h-5" /> Add Another Ticket
-              </button>
-            </div>
-          </div>
-
-          <!-- STEP 3: Verify Details -->
-          <div v-else-if="currentStep === 3" class="flex flex-wrap gap-6 justify-center">
-            <div
-              v-for="(attendee, idx) in attendees"
-              :key="idx"
-              class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-5 w-full max-w-[375px]"
-            >
-              <div class="flex items-center justify-between">
-                <span class="font-semibold text-2xl text-ink-gray-9 tracking-tight"
-                  >#{{ idx + 1 }}</span
-                >
-                <span
-                  class="bg-surface-green-1 text-ink-green-3 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
-                  >{{ getTierTitle(attendee.ticket_type) }}</span
-                >
-              </div>
-              <div class="flex flex-col gap-3">
-                <div>
-                  <p class="font-semibold text-ink-gray-8">{{ attendee.full_name || '—' }}</p>
-                  <p class="text-sm text-ink-gray-5">
-                    {{ [attendee.designation, attendee.organization].filter(Boolean).join(' | ') }}
-                  </p>
-                </div>
-                <div class="text-sm text-ink-gray-5 flex flex-col gap-1">
-                  <p>{{ attendee.email }}</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-6 flex-wrap">
+              <div :key="currentStep">
+                <!-- Select Tiers -->
                 <div
-                  v-if="
-                    isTierTshirtIncluded(attendee.ticket_type) || event.data.paid_tshirts_available
-                  "
-                  class="flex items-center gap-1.5 text-sm"
-                  :class="
-                    isTierTshirtIncluded(attendee.ticket_type)
-                      ? 'text-ink-green-3'
-                      : 'text-ink-gray-7'
-                  "
+                  v-if="currentStep === 1"
+                  class="flex flex-col gap-6 items-center"
+                  role="list"
+                  aria-label="Available ticket tiers"
                 >
-                  <IconShirt class="w-5 h-5" aria-hidden="true" />
-                  <span>{{
-                    isTierTshirtIncluded(attendee.ticket_type)
-                      ? 'T-shirt Included'
-                      : attendee.wants_tshirt
-                        ? attendee.tshirt_size
-                        : 'Without T-shirt'
-                  }}</span>
+                  <article
+                    v-for="tier in sortedTiers"
+                    :key="tier.name"
+                    role="listitem"
+                    class="bg-surface-white border border-outline-gray-2 rounded-2xl flex flex-wrap items-stretch gap-3 p-4 w-full"
+                    :class="
+                      !isTierActive(tier)
+                        ? isTierComingSoon(tier)
+                          ? 'opacity-70'
+                          : 'opacity-50'
+                        : 'shadow-sm'
+                    "
+                    :aria-label="`${tier.title} ticket, ₹${tier.price}`"
+                    :aria-disabled="!isTierActive(tier)"
+                  >
+                    <!-- Image -->
+                    <div
+                      class="bg-surface-gray-1 border border-outline-gray-2 rounded-lg overflow-hidden w-[58px] h-20 md:w-[78px] md:h-[108px]"
+                      aria-hidden="true"
+                    >
+                      <img
+                        :src="getTierImage(tier)"
+                        :alt="`${tier.title} ticket`"
+                        class="w-full h-full object-contain"
+                      />
+                    </div>
+
+                    <div class="flex-1 min-w-0 flex flex-col justify-evenly">
+                      <p class="font-semibold text-base text-ink-gray-9">{{ tier.title }}</p>
+                      <p class="font-semibold text-xl text-ink-gray-9">₹{{ tier.price }}</p>
+                      <div class="flex flex-wrap gap-1">
+                        <Badge
+                          v-if="tier.tshirt_included"
+                          class="w-fit"
+                          variant="subtle"
+                          theme="green"
+                          title="T-shirt is included with this tier at no extra charge"
+                          >T-shirt Included</Badge
+                        >
+                        <Badge v-if="isTierSoldOut(tier)" class="w-fit" variant="solid" theme="red"
+                          >Sold Out</Badge
+                        >
+                        <Badge
+                          v-else-if="isTierComingSoon(tier)"
+                          class="w-fit"
+                          variant="subtle"
+                          theme="blue"
+                          >Coming Soon</Badge
+                        >
+                        <Badge
+                          v-else-if="!tier.enabled"
+                          class="w-fit"
+                          variant="outline"
+                          theme="red"
+                          >Disabled</Badge
+                        >
+                        <Badge
+                          v-else-if="isTierExpired(tier)"
+                          class="w-fit"
+                          variant="outline"
+                          theme="orange"
+                          >Expired</Badge
+                        >
+                        <Badge
+                          v-if="tier.maximum_tickets > 0 && isTierActive(tier)"
+                          :theme="tierRemainingTheme(tier)"
+                          variant="subtle"
+                          class="w-fit"
+                          :aria-label="`${tierRemainingLabel(tier)} for ${tier.title}`"
+                          >{{ tierRemainingLabel(tier) }}</Badge
+                        >
+                        <Badge
+                          v-if="tier.valid_till && isTierActive(tier)"
+                          class="w-fit"
+                          variant="outline"
+                          theme="green"
+                          >Available till {{ dayjs(tier.valid_till).format('MMM D, YYYY') }}</Badge
+                        >
+                      </div>
+                    </div>
+
+                    <!-- Counter: only shown for active tiers -->
+                    <div
+                      v-if="isTierActive(tier)"
+                      class="order-last md:order-none w-full md:w-auto flex items-center gap-1 justify-center md:justify-end md:self-center md:shrink-0 md:pl-2"
+                      :aria-label="`${tier.title} ticket quantity`"
+                    >
+                      <button
+                        :disabled="!isTierActive(tier) || (tierCounts[tier.name] || 0) <= 0"
+                        :aria-label="`Remove one ${tier.title} ticket`"
+                        class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        :class="
+                          (tierCounts[tier.name] || 0) > 0
+                            ? 'border-ink-gray-9 bg-ink-gray-9'
+                            : 'border-ink-gray-9 bg-surface-white'
+                        "
+                        @click="decrementTier(tier.name)"
+                      >
+                        <IconMinus
+                          aria-hidden="true"
+                          class="w-4 h-4"
+                          :class="(tierCounts[tier.name] || 0) > 0 ? '' : 'text-ink-gray-9'"
+                        />
+                      </button>
+                      <span
+                        class="w-8 text-center font-semibold text-ink-gray-9"
+                        aria-live="polite"
+                        :aria-label="`${tierCounts[tier.name] || 0} ${tier.title} tickets selected`"
+                        >{{ tierCounts[tier.name] || 0 }}</span
+                      >
+                      <button
+                        :disabled="!isTierActive(tier) || totalTickets >= MAX_SEATS"
+                        :aria-label="`Add one ${tier.title} ticket`"
+                        class="w-10 h-10 rounded-lg border flex items-center justify-center transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                        :class="
+                          isTierActive(tier)
+                            ? 'border-ink-gray-9 bg-ink-gray-9'
+                            : 'border-ink-gray-9 bg-surface-white'
+                        "
+                        @click="incrementTier(tier.name)"
+                      >
+                        <IconPlus
+                          aria-hidden="true"
+                          class="w-4 h-4"
+                          :class="isTierActive(tier) ? '' : 'text-ink-gray-9'"
+                        />
+                      </button>
+                    </div>
+
+                    <div
+                      v-if="tier.description"
+                      class="w-full prose prose-sm prose-p:text-xs prose-p:text-ink-gray-5 prose-p:leading-relaxed prose-p:my-0.5 max-w-full"
+                      v-html="renderedDescription(tier.description)"
+                    />
+                  </article>
                 </div>
-                <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
-                  <IconSoup class="w-5 h-5" />
-                  <span>Breakfast + Lunch included</span>
+
+                <!-- STEP 2: Attendee Details -->
+                <div v-else-if="currentStep === 2" class="flex flex-col gap-6">
+                  <AttendeeCard
+                    v-for="(attendee, idx) in attendees"
+                    :key="idx"
+                    :attendee="attendee"
+                    :index="idx"
+                    :tier-title="getTierTitle(attendee.ticket_type)"
+                    :custom-fields="!customFieldsApplyToAll ? event.data.custom_fields : []"
+                    :show-tshirt="Boolean(event.data.paid_tshirts_available)"
+                    :tshirt-price="event.data.t_shirt_price || 0"
+                    :tshirt-included="isTierTshirtIncluded(attendee.ticket_type)"
+                    :can-delete="attendees.length > 1"
+                    @update:attendee="attendees[idx] = $event"
+                    @delete="removeAttendee(idx)"
+                  />
+
+                  <div
+                    v-if="event.data.custom_fields?.length > 0 && attendees.length > 1"
+                    class="flex flex-col gap-4"
+                  >
+                    <Switch
+                      v-model="customFieldsApplyToAll"
+                      class="w-fit text-xs"
+                      label="Apply same answers for all tickets"
+                    />
+                    <div
+                      v-if="customFieldsApplyToAll"
+                      class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6"
+                    >
+                      <FormControl
+                        v-for="field in event.data.custom_fields"
+                        :key="field.name"
+                        v-model="globalCustomFields[field.field_name]"
+                        :type="FIELD_TYPE_MAP[field.field_type]"
+                        :label="field.label"
+                        :options="field.options"
+                        :required="Boolean(field.mandatory)"
+                        size="sm"
+                        variant="subtle"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="flex justify-center">
+                    <button
+                      :disabled="totalTickets >= MAX_SEATS"
+                      class="flex items-center gap-2 bg-outline-gray-1 hover:bg-outline-gray-2 border border-outline-gray-2 rounded-lg px-5 py-2.5 font-semibold text-sm uppercase tracking-wider text-ink-gray-9 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      @click="addAttendee"
+                    >
+                      <IconPlus class="w-5 h-5" /> Add Another Ticket
+                    </button>
+                  </div>
+                </div>
+
+                <!-- STEP 3: Verify Details -->
+                <div v-else-if="currentStep === 3" class="flex flex-wrap gap-6 justify-center">
+                  <div
+                    v-for="(attendee, idx) in attendees"
+                    :key="idx"
+                    class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 flex flex-col gap-5 w-full max-w-[375px]"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span class="font-semibold text-2xl text-ink-gray-9 tracking-tight"
+                        >#{{ idx + 1 }}</span
+                      >
+                      <span
+                        class="bg-surface-green-1 text-ink-green-3 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
+                        >{{ getTierTitle(attendee.ticket_type) }}</span
+                      >
+                    </div>
+                    <div class="flex flex-col gap-3">
+                      <div>
+                        <p class="font-semibold text-ink-gray-8">
+                          {{ attendee.full_name || '—' }}
+                        </p>
+                        <p class="text-sm text-ink-gray-5">
+                          {{
+                            [attendee.designation, attendee.organization]
+                              .filter(Boolean)
+                              .join(' | ')
+                          }}
+                        </p>
+                      </div>
+                      <div class="text-sm text-ink-gray-5 flex flex-col gap-1">
+                        <p>{{ attendee.email }}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-6 flex-wrap">
+                      <div
+                        v-if="
+                          isTierTshirtIncluded(attendee.ticket_type) ||
+                          event.data.paid_tshirts_available
+                        "
+                        class="flex items-center gap-1.5 text-sm"
+                        :class="
+                          isTierTshirtIncluded(attendee.ticket_type)
+                            ? 'text-ink-green-3'
+                            : 'text-ink-gray-7'
+                        "
+                      >
+                        <IconShirt class="w-5 h-5" aria-hidden="true" />
+                        <span>{{
+                          isTierTshirtIncluded(attendee.ticket_type)
+                            ? 'T-shirt Included'
+                            : attendee.wants_tshirt
+                              ? attendee.tshirt_size
+                              : 'Without T-shirt'
+                        }}</span>
+                      </div>
+                      <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
+                        <IconSoup class="w-5 h-5" />
+                        <span>Breakfast + Lunch included</span>
+                      </div>
+                    </div>
+                    <p
+                      v-if="getTierDescription(attendee.ticket_type)"
+                      class="text-sm text-ink-gray-6"
+                    >
+                      {{ getTierDescription(attendee.ticket_type) }}
+                    </p>
+                  </div>
+                </div>
+
+                <!-- STEP 4: Billing -->
+                <div v-else-if="currentStep === 4">
+                  <BillingForm :billing="billing" :state-options="stateOptions.data" />
                 </div>
               </div>
-              <p v-if="getTierDescription(attendee.ticket_type)" class="text-sm text-ink-gray-6">
-                {{ getTierDescription(attendee.ticket_type) }}
-              </p>
+            </transition>
+
+            <!-- Navigation (Steps 1-3) -->
+            <template v-if="currentStep !== 4">
+              <div class="flex gap-4 items-center justify-end">
+                <Button
+                  v-if="currentStep > 1"
+                  label="Back"
+                  size="lg"
+                  variant="subtle"
+                  icon-left="chevron-left"
+                  class="uppercase !font-medium"
+                  @click="prevStep"
+                />
+                <Button
+                  label="Next"
+                  size="lg"
+                  variant="solid"
+                  icon-right="chevron-right"
+                  class="uppercase !font-medium !px-6"
+                  :disabled="currentStep === 1 && totalTickets === 0"
+                  @click="nextStep"
+                />
+              </div>
+            </template>
+            <div v-else class="flex justify-between">
+              <Button
+                label="Back"
+                size="lg"
+                variant="subtle"
+                icon-left="chevron-left"
+                class="uppercase !font-medium"
+                aria-label="Go back to verify details"
+                @click="prevStep"
+              />
+              <Button
+                label="Proceed to Pay"
+                size="lg"
+                variant="solid"
+                icon-right="chevron-right"
+                class="uppercase !font-medium !px-6"
+                :loading="rzpCheckout?.resource.loading"
+                aria-label="Proceed to payment"
+                @click="createOrder"
+              />
             </div>
+
+            <!-- Error messages -->
+            <ul
+              v-if="errorMessages.length"
+              role="alert"
+              aria-live="assertive"
+              class="flex flex-col gap-1 p-3 rounded-lg bg-surface-red-1 border border-outline-red-2"
+            >
+              <li
+                v-for="msg in errorMessages"
+                :key="msg"
+                class="text-sm text-ink-red-3 flex items-start gap-1.5"
+              >
+                <span class="mt-0.5 shrink-0">•</span>
+                <span>{{ msg }}</span>
+              </li>
+            </ul>
           </div>
 
-          <!-- STEP 4: Billing -->
-          <div v-else-if="currentStep === 4" class="flex flex-col md:flex-row gap-4 items-start">
-            <div
-              class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6 flex-1"
-            >
-              <div class="flex items-center gap-2">
-                <IconReceipt class="w-6 h-6 text-ink-gray-7" />
-                <span class="font-semibold text-ink-gray-9">Billing Details</span>
-              </div>
-              <FormControl
-                v-model="billing.buyer_name"
-                type="text"
-                label="Name"
-                size="sm"
-                variant="subtle"
-                placeholder="John Doe"
-                required
-              />
-              <FormControl
-                v-model="billing.state"
-                type="select"
-                label="State"
-                size="sm"
-                variant="subtle"
-                :options="stateOptions.data"
-                required
-              />
-              <FormControl
-                v-model="billing.email"
-                type="email"
-                label="Email"
-                size="sm"
-                variant="subtle"
-                placeholder="example@email.com"
-                required
-              />
-              <div class="flex flex-col gap-1.5">
-                <div class="flex items-center gap-2">
-                  <input
-                    id="gst-toggle"
-                    v-model="billing.hasGST"
-                    type="checkbox"
-                    class="rounded-sm"
-                  />
-                  <label for="gst-toggle" class="text-sm text-ink-gray-7 cursor-pointer"
-                    >Add GST Details</label
-                  >
-                </div>
-                <p class="text-xs text-ink-gray-4 ml-6">
-                  Invoice will be generated with GST details
-                </p>
-              </div>
-              <template v-if="billing.hasGST">
-                <FormControl
-                  v-model="billing.company_name"
-                  type="text"
-                  label="Company Name"
-                  size="sm"
-                  variant="subtle"
-                  required
-                />
-                <FormControl
-                  v-model="billing.gstn"
-                  type="text"
-                  label="GST Details (GSTN)"
-                  size="sm"
-                  variant="subtle"
-                  placeholder="22AAAAA0000A1Z5"
-                  required
-                />
-                <FormControl
-                  v-model="billing.billing_address"
-                  type="textarea"
-                  label="Billing Address"
-                  size="sm"
-                  variant="subtle"
-                  required
-                />
-              </template>
-              <div class="flex items-start gap-2">
-                <input
-                  id="refund-policy"
-                  v-model="billing.readRefundPolicy"
-                  type="checkbox"
-                  class="mt-0.5 rounded-sm"
-                />
-                <label
-                  for="refund-policy"
-                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
-                >
-                  I understand that tickets are non-refundable and have read the
-                  <a
-                    href="https://fossunited.org/refund-transfer-policy"
-                    target="_blank"
-                    class="font-semibold underline"
-                    >Refund Policy</a
-                  ><span class="text-ink-red-3 ml-0.5">*</span>
-                </label>
-              </div>
-              <div class="flex items-start gap-2">
-                <input
-                  id="coc-agreement"
-                  v-model="billing.acceptCoC"
-                  type="checkbox"
-                  class="mt-0.5 rounded-sm"
-                />
-                <label
-                  for="coc-agreement"
-                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
-                >
-                  By registering for this event, you agree to abide by the FOSS United
-                  <a
-                    href="https://fossunited.org/code-of-conduct"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-semibold underline"
-                    >Code of Conduct</a
-                  >. The code of conduct and anti-harassment policies apply to everyone
-                  participating in the event including sponsors, judges, mentors, volunteers,
-                  organisers and the FOSS United staff.
-                  <span class="text-ink-red-3 ml-0.5">*</span>
-                </label>
-              </div>
-              <div class="flex items-start gap-2">
-                <input
-                  id="subscribe-newsletter"
-                  v-model="billing.subscribeNewsletter"
-                  type="checkbox"
-                  class="mt-0.5 rounded-sm"
-                />
-                <label
-                  for="subscribe-newsletter"
-                  class="text-sm text-ink-gray-7 cursor-pointer leading-relaxed"
-                >
-                  Subscribe to the
-                  <a
-                    href="https://fossunited.org/newsletter"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="font-semibold underline"
-                    >FOSS United newsletter</a
-                  >
-                  for updates on upcoming events and community news.
-                </label>
-              </div>
-              <p class="text-xs text-ink-gray-4">
-                By completing your registration, you also agree to our
-                <a
-                  href="https://fossunited.org/privacy-policy"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="underline"
-                  >Privacy Policy</a
-                >.
-              </p>
-            </div>
-
-            <!-- Ticket Summary Sidebar -->
+          <aside
+            class="hidden md:block shrink-0 w-[300px] self-start sticky top-6"
+            aria-label="Order summary"
+          >
             <TicketSummary
               :active-tier-counts="activeTierCounts"
               :all-tiers="allTiers"
               :tshirt-count="numTShirtsAdded"
               :tshirt-price="event.data.t_shirt_price || 0"
-              :show-gst="billing.hasGST"
-              :loading="rzpCheckout?.resource.loading"
-              :coupon-code="billing.coupon_code"
-              :error-message="errorMessage || ''"
-              @proceed="createOrder"
-              @update:coupon-code="billing.coupon_code = $event"
+              :error-message="currentStep === 4 ? errorMessage || '' : ''"
             />
-          </div>
+          </aside>
         </div>
-      </transition>
+      </main>
+    </div>
 
-      <!-- Navigation (Steps 1-3) -->
-      <template v-if="currentStep !== 4">
-        <div class="flex gap-4 items-center justify-end">
-          <Button
-            v-if="currentStep > 1"
-            label="Back"
-            size="lg"
-            variant="subtle"
-            icon-left="chevron-left"
-            class="uppercase !font-medium"
-            @click="prevStep"
-          />
-          <Button
-            label="Next"
-            size="lg"
-            variant="solid"
-            icon-right="chevron-right"
-            class="uppercase !font-medium !px-6"
-            :disabled="currentStep === 1 && totalTickets === 0"
-            @click="nextStep"
-          />
-        </div>
-      </template>
-      <div v-else class="flex justify-end">
-        <Button
-          label="Back"
-          size="lg"
-          variant="subtle"
-          icon-left="chevron-left"
-          class="uppercase !font-medium"
-          aria-label="Go back to verify details"
-          @click="prevStep"
+    <!-- Mobile order summary drawer -->
+    <div
+      class="fixed bottom-0 inset-x-0 z-40 md:hidden bg-surface-white border-t border-outline-gray-2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]"
+      role="region"
+      aria-label="Order summary"
+    >
+      <!-- Expanded breakdown -->
+      <div
+        v-if="mobileBarExpanded"
+        id="mobile-order-summary"
+        class="px-4 pt-4 pb-2 max-h-[55vh] overflow-y-auto border-b border-outline-gray-2"
+      >
+        <TicketSummary
+          :active-tier-counts="activeTierCounts"
+          :all-tiers="allTiers"
+          :tshirt-count="numTShirtsAdded"
+          :tshirt-price="event.data.t_shirt_price || 0"
+          :error-message="currentStep === 4 ? errorMessage || '' : ''"
         />
       </div>
-
-      <!-- Error messages at bottom (step 4 uses TicketSummary instead) -->
-      <ul
-        v-if="errorMessages.length && currentStep !== 4"
-        role="alert"
-        aria-live="assertive"
-        class="flex flex-col gap-1 p-3 rounded-lg bg-surface-red-1 border border-outline-red-2"
+      <!-- Always visible: total toggle row -->
+      <button
+        class="w-full flex items-center justify-between px-4 py-3"
+        :aria-expanded="String(mobileBarExpanded)"
+        aria-controls="mobile-order-summary"
+        @click="mobileBarExpanded = !mobileBarExpanded"
       >
-        <li
-          v-for="msg in errorMessages"
-          :key="msg"
-          class="text-sm text-ink-red-3 flex items-start gap-1.5"
-        >
-          <span class="mt-0.5 shrink-0">•</span>
-          <span>{{ msg }}</span>
-        </li>
-      </ul>
-    </main>
+        <div class="text-left">
+          <p class="text-xs font-semibold text-ink-gray-5 uppercase tracking-wider">Total</p>
+          <p
+            class="text-lg font-bold text-ink-gray-9 leading-none"
+            aria-live="polite"
+            :aria-label="`Total amount: ₹${summaryTotal}`"
+          >
+            ₹{{ summaryTotal }}
+          </p>
+        </div>
+        <IconChevronUp
+          v-if="mobileBarExpanded"
+          class="w-5 h-5 text-ink-gray-5"
+          aria-hidden="true"
+        />
+        <IconChevronDown v-else class="w-5 h-5 text-ink-gray-5" aria-hidden="true" />
+      </button>
+    </div>
   </div>
 
   <!-- Loading / Error -->
@@ -570,13 +518,15 @@ import EventHeader from '@/components/common/EventHeader.vue'
 import RazorpayCheckout from '@/components/common/RazorpayCheckout.vue'
 import AttendeeCard from '@/components/tickets/AttendeeCard.vue'
 import TicketSummary from '@/components/tickets/TicketSummary.vue'
+import BillingForm from '@/components/tickets/BillingForm.vue'
 import {
   IconInfoCircle,
   IconPlus,
   IconMinus,
   IconShirt,
   IconSoup,
-  IconReceipt,
+  IconChevronUp,
+  IconChevronDown,
 } from '@tabler/icons-vue'
 import { cleanedHTML, showError } from '@/helpers/utils'
 
@@ -615,6 +565,7 @@ const errorMessages = ref([])
 const showDialog = ref(false)
 const dialogError = ref('')
 const rzpCheckout = ref(null)
+const mobileBarExpanded = ref(false)
 
 const tierCounts = reactive({})
 const attendees = ref([])
@@ -663,9 +614,18 @@ const totalTickets = computed(() =>
   Object.values(activeTierCounts.value).reduce((s, c) => s + (c || 0), 0),
 )
 
-const numTShirtsAdded = computed(() =>
-  attendees.value.filter((a) => a.wants_tshirt && !isTierTshirtIncluded(a.ticket_type)).length
+const numTShirtsAdded = computed(
+  () =>
+    attendees.value.filter((a) => a.wants_tshirt && !isTierTshirtIncluded(a.ticket_type)).length,
 )
+
+const summaryTotal = computed(() => {
+  const tierTotal = Object.entries(activeTierCounts.value).reduce((sum, [name, count]) => {
+    const tier = allTiers.value.find((t) => t.name === name)
+    return sum + (tier?.price || 0) * (count || 0)
+  }, 0)
+  return tierTotal + numTShirtsAdded.value * (event.data?.t_shirt_price || 0)
+})
 
 const stepTitle = computed(
   () =>
@@ -716,6 +676,38 @@ function getTierDescription(tierName) {
 
 function isTierTshirtIncluded(tierName) {
   return Boolean(allTiers.value.find((t) => t.name === tierName)?.tshirt_included)
+}
+
+function isTierSoldOut(tier) {
+  return tier.maximum_tickets > 0 && (tier.sold_count || 0) >= tier.maximum_tickets
+}
+
+function isTierComingSoon(tier) {
+  return !tier.enabled && !isTierSoldOut(tier) && tier.valid_till && !isTierExpired(tier)
+}
+
+function tierRemainingCount(tier) {
+  if (!tier.maximum_tickets) return null
+  return tier.maximum_tickets - (tier.sold_count || 0)
+}
+
+function tierRemainingTheme(tier) {
+  const r = tierRemainingCount(tier)
+  if (r === null) return 'gray'
+  const pct = r / tier.maximum_tickets
+  if (r <= 5 || pct <= 0.1) return 'red'
+  if (r <= 15 || pct <= 0.25) return 'orange'
+  return 'green'
+}
+
+function tierRemainingLabel(tier) {
+  const r = tierRemainingCount(tier)
+  if (r === null || r < 0) return ''
+  if (r === 0) return 'Sold Out'
+  const pct = r / tier.maximum_tickets
+  if (r <= 5 || pct <= 0.1) return `Only ${r} left!`
+  if (r <= 15 || pct <= 0.25) return `${r} left`
+  return `${r} available`
 }
 
 function getTierImage(tier) {
