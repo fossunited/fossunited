@@ -1,7 +1,14 @@
 import frappe
 from frappe import _
 
-from fossunited.doctype_ids import CHAPTER, EVENT, RAZORPAY_PAYMENT, TICKET_TIER, USER_PROFILE
+from fossunited.doctype_ids import (
+    CHAPTER,
+    EVENT,
+    EVENT_TICKET,
+    RAZORPAY_PAYMENT,
+    TICKET_TIER,
+    USER_PROFILE,
+)
 from fossunited.utils.payments import (
     get_in_razorpay_money,
     get_razorpay_client,
@@ -28,6 +35,13 @@ def get_event(name: str, by_route: bool = False) -> dict:
 
     if doc.chapter:
         data["chapter_email"] = frappe.db.get_value(CHAPTER, doc.chapter, "email")
+
+    for tier in data.get("tiers", []):
+        if tier.get("maximum_tickets"):
+            tier["sold_count"] = frappe.db.count(
+                EVENT_TICKET,
+                {"event": event_id, "tier": tier.get("title")},
+            )
 
     return data
 
