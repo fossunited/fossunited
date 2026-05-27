@@ -1588,7 +1588,9 @@ h6 {
   }
 } /* this costed me 10 mins debug of not closing */
 
-/* These are generic css rules from frappe blog, web page and web form */
+/* These are generic css rules for frappe blog, web page and web form. Dont remove */
+.blog-header { margin: 1rem 0rem !important; }
+
 :is(article.blog-content, article.web-page-content, .from-markdown, .ql-editor)
   :is(h1, h2, h3, h4, h5, h6) {
   padding: 2rem 0 1.5rem 0;
