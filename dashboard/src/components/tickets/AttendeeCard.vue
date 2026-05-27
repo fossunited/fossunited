@@ -6,7 +6,7 @@
       <div class="flex items-center gap-1.5 min-w-0">
         <IconUserCircle class="w-5 h-5 shrink-0 text-ink-gray-7" />
         <span class="font-semibold text-ink-gray-9 tracking-tight truncate">
-          {{ attendee.full_name ? `Attendee: ${attendee.full_name}` : `Attendee #${index + 1}` }}
+          Attendee Details #{{ index + 1 }}
         </span>
       </div>
       <div class="flex items-center gap-1.5 shrink-0">
