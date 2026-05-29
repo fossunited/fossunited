@@ -82,19 +82,47 @@
                 <i class="ti ti-chevron-down" aria-hidden="true" style="font-size: 0.85em; opacity: 0.7;"></i>
               </button>
 
-              <div id="ics-dropdown-menu" role="menu" aria-label="Calendar subscription options" class="dropdown-menu dropdown-menu-right mt-1 p-1 shadow" style="display: block; position: absolute; right: 0; top: 100%; z-index: 1050; min-width: 240px; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;">
-                <a role="menuitem" class="v3-dropdown-item d-flex align-items-center gap-2" href="https://calendar.google.com/calendar/render?cid=webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics" target="_blank" rel="noopener noreferrer">
+              <div id="ics-dropdown-menu" aria-label="Calendar subscription options" class="v3-select-dropdown mt-1 p-1" style="display: block; position: absolute; right: 0; top: 100%; z-index: 1050; min-width: 240px; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s; background: var(--v3-card-bg); border: 1px solid var(--v3-button-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <a href="#" class="v3-dropdown-item"
+                  onclick="
+                    event.preventDefault();
+                    const icsUrl = 'https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics';
+                    navigator.clipboard.writeText(icsUrl).then(() => {
+                      alert('Calendar link copied to clipboard!\n\nTo finish subscribing in Proton:\n1. Scroll down to \'My calendars\'\n2. Click \'Add calendar from URL\'\n3. Paste the link.');
+                      window.open('https://calendar.proton.me/u/0/settings/calendars', '_blank');
+                    });
+                  ">
+                  <i class="ti ti-shield-check v3-text-secondary" aria-hidden="true"></i> Subscribe with Proton
+                </a>
+                <a class="v3-dropdown-item" href="https://calendar.google.com/calendar/render?cid=webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics" target="_blank" rel="noopener noreferrer">
                   <i class="ti ti-brand-google v3-text-secondary" aria-hidden="true"></i> Subscribe with Google
                 </a>
-                <a role="menuitem" class="v3-dropdown-item d-flex align-items-center gap-2" href="webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics">
+                <a class="v3-dropdown-item" href="webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics">
                   <i class="ti ti-brand-apple v3-text-secondary" aria-hidden="true"></i> Subscribe with Apple
                 </a>
-                <a role="menuitem" class="v3-dropdown-item d-flex align-items-center gap-2" href="https://outlook.live.com/calendar/0/addcalendar?url=https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics" target="_blank" rel="noopener noreferrer">
-                  <i class="ti ti-mail v3-text-secondary" aria-hidden="true"></i> Subscribe with Outlook
-                </a>
-                <div class="dropdown-divider my-1"></div>
-                <a role="menuitem" class="v3-dropdown-item d-flex align-items-center gap-2" href="/api/method/fossunited.api.chapter.upcoming_events_ics">
-                  <i class="ti ti-download v3-text-secondary" aria-hidden="true"></i> Download .ics File
+                <div style="height: 1px; background: var(--v3-button-border); margin: 4px 0;"></div>
+                <a class="v3-dropdown-item d-flex align-items-center justify-content-between" href="/api/method/fossunited.api.chapter.upcoming_events_ics">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="ti ti-download v3-text-secondary" aria-hidden="true"></i> Download .ics File
+                  </div>
+                  <div class="p-1" role="button" tabindex="0" aria-label="Copy calendar URL" title="Copy URL" style="margin: -4px; cursor: pointer;"
+                       onclick="
+                         event.preventDefault();
+                         event.stopPropagation();
+                         const icon = this.querySelector('i');
+                         navigator.clipboard.writeText('https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics').then(() => {
+                           icon.className = 'ti ti-check text-success';
+                           setTimeout(() => { icon.className = 'ti ti-copy v3-text-secondary'; }, 2000);
+                         });
+                       "
+                       onkeydown="
+                         if (event.key === 'Enter' || event.key === ' ') {
+                           event.preventDefault();
+                           this.click();
+                         }
+                       ">
+                    <i class="ti ti-copy v3-text-secondary" aria-hidden="true"></i>
+                  </div>
                 </a>
                 <div class="px-3 pt-1 pb-2">
                   <small class="v3-text-tertiary" style="font-size: 0.75rem;">
