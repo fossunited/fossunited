@@ -219,6 +219,7 @@ import { computed, toRef } from 'vue'
 import { IconCalendarPlus, IconBrandYoutube } from '@tabler/icons-vue'
 import dayjs from 'dayjs'
 import { useSession } from '@/composables/useSession'
+import { cleanedHTML } from '@/helpers/utils'
 
 const props = defineProps({
   session: { type: Object, required: true },
@@ -245,7 +246,7 @@ function formatIsoDate(isoDate) {
 const speakerMeta = computed(() => {
   const s = speakers.value[0]
   if (!s) return ''
-  if (s.bio) return s.bio
+  if (s.bio) return cleanedHTML(s.bio)
   return [s.designation, s.organization].filter(Boolean).join(' · ')
 })
 </script>

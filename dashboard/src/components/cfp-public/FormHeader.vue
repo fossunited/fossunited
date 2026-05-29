@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-2 text-ink-gray-9">
     <h1 class="text-3xl font-bold">Proposal Submission Form</h1>
-    <div class="prose-sm md:prose max-w-full" v-html="_description"></div>
+    <div class="prose prose-sm md:prose-base max-w-full" v-html="_description"></div>
   </div>
 </template>
 

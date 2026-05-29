@@ -36,7 +36,7 @@
       <label class="text-base font-medium text-ink-gray-5">Bio</label>
       <div
         class="prose prose-sm border-l pl-2 border-outline-gray-3"
-        v-html="getValue('bio')"
+        v-html="cleanedHTML(getValue('bio'))"
       ></div>
     </div>
   </div>
@@ -44,6 +44,7 @@
 <script setup>
 import { Badge } from 'frappe-ui'
 import { IconWorld } from '@tabler/icons-vue'
+import { cleanedHTML } from '@/helpers/utils'
 
 const props = defineProps({
   speaker: {

@@ -32,14 +32,14 @@
           <h5 class="text-base font-medium text-ink-gray-5">Session Description</h5>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
-            v-html="getValueFromProposal('talk_description')"
+            v-html="cleanedHTML(getValueFromProposal('talk_description'))"
           ></div>
         </div>
         <div v-if="getValueFromProposal('key_takeaways')" class="space-y-2">
           <h5 class="text-base font-medium text-ink-gray-5">Key Takeaways</h5>
           <div
             class="prose prose-sm border-l pl-2 border-outline-gray-3"
-            v-html="getValueFromProposal('key_takeaways')"
+            v-html="cleanedHTML(getValueFromProposal('key_takeaways'))"
           ></div>
         </div>
         <RenderReferences :references="proposalReferences" />
@@ -97,6 +97,7 @@ import RenderSessionCategories from './RenderSessionCategories.vue'
 import SpeakerCard from './SpeakerCard.vue'
 import { IconUsersGroup } from '@tabler/icons-vue'
 import { Badge, FormControl } from 'frappe-ui'
+import { cleanedHTML } from '@/helpers/utils'
 
 const props = defineProps({
   proposalFields: {
