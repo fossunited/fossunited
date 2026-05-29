@@ -49,7 +49,7 @@ DEVROOM_COLORS = {
 
 
 def get_context(context):
-    context.no_cache = 0
+    context.no_cache = 1
     context.hide_nav, context.hide_footer = True, True
 
     today = frappe.utils.getdate(frappe.utils.today())
