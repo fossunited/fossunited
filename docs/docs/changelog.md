@@ -99,6 +99,12 @@ Credits: Harsh Tandiya
 - Bunch of tests to ensure payments and ticketing workflow is more rigid and future changes won't break page UI or backend.
 - Tests added for `permission_query_conditions` hooks (carried over from April's security work).
 
+#### Calendar Subscription ([#1600](https://github.com/fossunited/fossunited/pull/1600))
+
+- The static "Download .ics" button on the events timeline page is replaced with a subscription dropdown - Proton Calendar, Google Calendar, Apple Calendar, and a direct .ics download with copy-to-clipboard.
+- Backend: `upcoming_events_ics` now sets `X-WR-CALNAME`, `REFRESH-INTERVAL`, and `X-PUBLISHED-TTL` headers so calendar clients auto-refresh the feed hourly instead of treating it as a one-time download
+- Contributor: Adimalupu Ganesh
+
 #### Documentation
 
 - [#1588](https://github.com/fossunited/fossunited/pull/1588) Incident response checklist improved — clearer structure and more actionable steps. Credits: Siddharth
@@ -131,6 +137,8 @@ Credits: Harsh Tandiya
 - Harsh Tandiya: test factory migration across ticketing, profile, hackathon, and free ticket tests ([#1593](https://github.com/fossunited/fossunited/pull/1593), [#1585](https://github.com/fossunited/fossunited/pull/1585), [#1584](https://github.com/fossunited/fossunited/pull/1584), [#1583](https://github.com/fossunited/fossunited/pull/1583))
 - Siddharth: incident response checklist + clubs docs ([#1588](https://github.com/fossunited/fossunited/pull/1588), [#1580](https://github.com/fossunited/fossunited/pull/1580), [#1590](https://github.com/fossunited/fossunited/pull/1590))
 - Poruri Sai Rahul: project status badge on README ([#1582](https://github.com/fossunited/fossunited/pull/1582))
+- Adimalupu Ganesh: upgrade static calendar download to subscription dropdown
+([#1600](https://github.com/fossunited/fossunited/pull/1600))
 
 ---
 
