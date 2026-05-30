@@ -2632,6 +2632,9 @@ a.hover-underline:hover {
 }
 
 .v3-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   padding: 8px 12px;
   cursor: pointer;
   background: var(--v3-main-bg);
@@ -2640,6 +2643,7 @@ a.hover-underline:hover {
 
 .v3-dropdown-item:hover {
   background: var(--v3-button-border);
+  color: var(--v3-text-color);
 }
 
 /* Base Event Card - Used everywhere */

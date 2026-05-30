@@ -6,6 +6,7 @@ from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 from ics import Calendar, Event
+from ics.grammar.parse import ContentLine
 
 from fossunited.doctype_ids import (
     CHAPTER,
@@ -166,11 +167,13 @@ def _build_ics_calendar(events):
     return c
 
 
-def _ics_download_response(c, filename):
+def _ics_download_response(c, filename, *, is_subscription=False):
     frappe.response["type"] = "download"
     frappe.response["filename"] = filename
     frappe.response["filecontent"] = c.serialize().encode("utf-8")
     frappe.response["content_type"] = "text/calendar; charset=utf-8"
+    if is_subscription:
+        frappe.response["display_content_as"] = "inline"
 
 
 # nosemgrep: guest-whitelisted-method
@@ -258,7 +261,11 @@ def upcoming_events_ics():
         g.route = g.event_website
 
     c = _build_ics_calendar(list(events) + list(grants))
-    _ics_download_response(c, "foss-upcoming-events.ics")
+    # Calendar metadata for subscription clients
+    c.extra.append(ContentLine(name="X-WR-CALNAME", value="FOSS United Events"))
+    c.extra.append(ContentLine(name="REFRESH-INTERVAL;VALUE=DURATION", value="PT1H"))
+    c.extra.append(ContentLine(name="X-PUBLISHED-TTL", value="PT1H"))
+    _ics_download_response(c, "foss-upcoming-events.ics", is_subscription=True)
 
 
 def get_chapter_members_email(chapter):
