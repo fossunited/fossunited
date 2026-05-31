@@ -243,7 +243,7 @@
                       {% endif %}
                     </div>
                     {% if card.deadline %}
-                      <span class="v3-action-card-sub">Due {{ card.deadline }}</span>
+                      <span class="v3-action-card-sub">Due {{ frappe.utils.format_date(card.deadline, format_string='dd MMM yyyy') }}</span>
                     {% elif card.get('description', '') %}
                       <span class="v3-action-card-sub">{{ card.description }}</span>
                     {% elif card.badge and badge_lower != 'live' %}
