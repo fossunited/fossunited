@@ -16,7 +16,7 @@
                 <div class="card-body d-flex align-items-center gap-6">
                   <div class="flex-shrink-0">
                     <img
-                      src="{{ member.headshot if member.headshot else '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                      src="{{ member.headshot or member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                       alt="{{ member.full_name }}"
                       class="rounded-circle"
                       style="width: 64px; height: 64px; object-fit: cover;"
@@ -28,7 +28,10 @@
                     </h6>
                     <p class="mb-0 text-base foss-mint">@{{ member.username }}</p>
                     {% if member.designation %}
-                      <p class="mb-0 text-base v3-text-tertiary" style="overflow-wrap: break-word;">
+                      <p
+                        class="mb-0 text-base v3-text-tertiary"
+                        style="overflow-wrap: break-word;"
+                      >
                         {{ member.designation }}
                       </p>
                     {% endif %}
@@ -45,26 +48,30 @@
 
 {%
   set boardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
-      "headshot", "designation"], filters={"org_role": "Board", "is_active": 1},
+      "headshot", "foss_user_profile.profile_photo as profile_photo", "designation"],
+  filters={"org_role": "Board", "is_active": 1}, order_by="full_name", limit_page_length=0)
+%}
+{%
+  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "foss_user_profile.profile_photo as profile_photo", "designation"],
+  filters={"org_role": "Governing Board", "is_active": 1}, order_by="full_name", limit_page_length=0)
+%}
+{%
+  set staff = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "foss_user_profile.profile_photo as profile_photo", "designation"],
+  filters={"is_active": 1, "org_role": ["in", ["Full-Time", "Part-Time"]]},
   order_by="full_name", limit_page_length=0)
 %}
 {%
-  set GovBoardMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username", "headshot", "designation"], filters={"org_role": "Governing Board", "is_active": 1},
+  set fellowsInterns = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "foss_user_profile.profile_photo as profile_photo", "designation"],
+  filters={"is_active": 1, "org_role": ["in", ["Fellow", "Intern"]]},
   order_by="full_name", limit_page_length=0)
 %}
 {%
-  set staff = frappe.get_all("FOSS United Team", fields=["full_name",
-  "username", "headshot", "designation"], filters={"is_active": 1, "org_role":
-  ["in", ["Full-Time", "Part-Time"]]}, order_by ='full_name', limit_page_length=0)
-%}
-{%
-  set fellowsInterns = frappe.get_all("FOSS United Team", fields=["full_name",
-  "username", "headshot", "designation"], filters={"is_active": 1, "org_role":
-  ["in", ["Fellow", "Intern"]]}, order_by ='full_name', limit_page_length=0)
-%}
-{%
-  set pastMembers = frappe.get_all("FOSS United Team", fields=["full_name",
-  "username", "headshot", "designation"], filters={"is_active": 0,}, order_by ='full_name', limit_page_length=0)
+  set pastMembers = frappe.get_all("FOSS United Team", fields=["full_name", "username",
+      "headshot", "foss_user_profile.profile_photo as profile_photo", "designation"],
+  filters={"is_active": 0}, order_by="full_name", limit_page_length=0)
 %}
 
 <style>
