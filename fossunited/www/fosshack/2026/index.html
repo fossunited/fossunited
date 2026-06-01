@@ -117,6 +117,14 @@
                 aria-label="Register for {{ hackathon.name }}"
                 >Register</a
               >
+              {% else %}
+              <a
+                href="/fosshack/results?year=2026"
+                class="btn v3-bg-dark text-uppercase font-weight-semibold rounded-0"
+                style="letter-spacing: 1.12px; width: 200px; padding: 12px 16px;"
+                aria-label="Check out FOSS Hack 2026 Results"
+              >Results</a
+              >
               {% endif %}
               <a
                 href="{{ hackathon.event_page_url }}"
@@ -191,7 +199,7 @@
                 <small>Projects</small>
               </a>
             </div>
-            {% if doc.is_registration_live %}
+            {% if doc.is_registration_live or doc.results %}
               {% set badge_class = "badge-live" %}
               {% set badge_type = "dot" %}
             {% else %}

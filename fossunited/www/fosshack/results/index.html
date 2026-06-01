@@ -1,6 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/fosshack.html" import fosshack_navbar %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
+{% from "fossunited/templates/macros/volunteers_card.html" import profile_headshot %}
 
 {% macro render_project_card(project) %}
   <article class="mb-3">
@@ -13,44 +14,37 @@
       style="cursor: pointer;"
     >
       <div class="d-flex justify-content-between align-items-center">
-        <div
-          class="flex-grow-1 d-flex flex-column flex-md-row align-items-start align-items-md-center"
-        >
-          <h4 class="h6 h5-md mb-1 mb-md-0 mr-md-3">
+        <div class="flex-grow-1 d-flex flex-wrap align-items-center gap-2">
+          <h4 class="h6 mb-0 mr-2">
             <a
               href="{{ project.url }}"
               class="font-weight-bold underline"
               onclick="event.stopPropagation();"
               target="_blank"
-            >
-              {{ project.name }}
-            </a>
+            >{{ project.name }}</a>
             <i class="ti ti-arrow-up-right ml-1"></i>
           </h4>
 
-          <div class="d-flex flex-wrap align-items-center text-nowrap">
-            {% if project.repo_link %}
+          {% if project.repo_link %}
             <a href="{{ project.repo_link }}" onclick="event.stopPropagation()" target="_blank"
-              class="mr-2 mb-1 mb-md-0 d-inline-flex align-items-center text-xl">
+              class="d-inline-flex align-items-center text-xl">
               <i class="ti ti-brand-github"></i>
             </a>
-            {% endif %}
-            {% if project.status == "Winner" %}
-              <span class="v3-tag v3-tag--success mr-2 mb-1 mb-md-0">
-                <i class="ti ti-trophy"></i> Winner
-              </span>
-            {% elif project.status == "Commendation" %}
-              <span class="v3-tag v3-status--warning mr-2 mb-1 mb-md-0">
-                <i class="ti ti-award"></i> Commendation
-              </span>
-            {% endif %}
+          {% endif %}
 
-            {% if project.cash_prize %}
-              <span class="v3-tag v3-tag--category mr-2 mb-1 mb-md-0">
-                {{ project.cash_prize }}
-              </span>
-            {% endif %}
-          </div>
+          {% if project.status == "Winner" %}
+            <span class="v3-tag v3-tag--success">
+              <i class="ti ti-trophy"></i> Winner
+            </span>
+          {% elif project.status == "Commendation" %}
+            <span class="v3-tag v3-status--warning">
+              <i class="ti ti-award"></i> Commendation
+            </span>
+          {% endif %}
+
+          {% if project.cash_prize %}
+            <span class="v3-tag v3-tag--category">{{ project.cash_prize }}</span>
+          {% endif %}
         </div>
 
         <i
@@ -70,25 +64,14 @@
       {% if project.team_members %}
         <div class="row">
           {% for member in project.team_members %}
-          <div class="col-12 col-md-4 mb-2">
-            <div class="d-flex align-items-center p-1 p-md-2 rounded">
-              <img
-                src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                alt="{{ member.full_name }}"
-                class="rounded"
-                style="max-width:40px;max-height:40px;object-fit:cover;"
-                loading="lazy"
-              />
-              <div class="d-flex flex-column ml-2 justify-content-center">
-                <div class="v3-text-primary">
-                  {{ member.full_name }}
-                </div>
-                {% if member.username %}
-                <div class="v3-text-secondary mt-1" style="font-size:0.75rem;">@{{ member.username }}</div>
-                {% endif %}
-              </div>
+            <div class="col-6 col-md-4 mb-2">
+              {{ profile_headshot(
+                member.full_name,
+                member.profile_photo,
+                ('/' + member.route) if member.route else None,
+                ('@' + member.username) if member.username else None
+              ) }}
             </div>
-          </div>
           {% endfor %}
         </div>
       {% endif %}

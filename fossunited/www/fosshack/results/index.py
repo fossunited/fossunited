@@ -13,6 +13,7 @@ from fossunited.doctype_ids import (
     HACKATHON_PARTNER_PROJECT,
     HACKATHON_PROJECT,
     HACKATHON_TEAM,
+    HACKATHON_TEAM_MEMBER,
 )
 
 ARCHIVE_HACKATHONS = {
@@ -593,7 +594,7 @@ HACKATHON_URLS = {
         "projects_url": "https://fossunited.org/hack/fosshack25/projects/all",
     },
     "2026": {
-        "forum_post": None,
+        "forum_post": "https://forum.fossunited.org/t/foss-hack-2026-results/8094",
         "partner_project_url": "https://fossunited.org/fosshack/2026/partner-projects",
         "projects_url": "https://fossunited.org/hack/fosshack26/projects/all",
     },
@@ -612,40 +613,84 @@ def get_hackathon_results(hackathon_id, year):
 
     # Get results from child table
     results = hackathon.get("results", [])
+    if not results:
+        return _build_hackathon_data(hackathon, year, projects=[])
 
-    # Build projects list
+    # Batch fetch all projects and teams in 4 queries instead of N+1
+    project_names = [r.project for r in results if r.project]
+    team_names = [r.team for r in results if r.team]
+
+    projects_by_name = {
+        p.name: p
+        for p in frappe.get_all(
+            HACKATHON_PROJECT,
+            filters={"name": ["in", project_names]},
+            fields=["name", "title", "route", "short_description", "repo_link"],
+        )
+    }
+
+    raw_members = (
+        frappe.get_all(
+            HACKATHON_TEAM_MEMBER,
+            filters={"parent": ["in", team_names]},
+            fields=["parent as team", "member"],
+        )
+        if team_names
+        else []
+    )
+
+    participant_names = [m.member for m in raw_members]
+    profiles_by_participant = (
+        {
+            p.name: p
+            for p in frappe.get_all(
+                HACKATHON_PARTICIPANT,
+                filters={"name": ["in", participant_names]},
+                fields=[
+                    "name",
+                    "user_profile.full_name as full_name",
+                    "user_profile.username as username",
+                    "user_profile.route as route",
+                    "user_profile.profile_photo as profile_photo",
+                ],
+            )
+        }
+        if participant_names
+        else {}
+    )
+
+    members_by_team = {}
+    for m in raw_members:
+        profile = profiles_by_participant.get(m.member) or frappe._dict()
+        members_by_team.setdefault(m.team, []).append(profile)
+
     projects = []
     for result in results:
-        # Fetch project details
-        if not result.project or not frappe.db.exists(HACKATHON_PROJECT, result.project):
+        project = projects_by_name.get(result.project)
+        if not project:
             continue
-        project_doc = frappe.get_doc(HACKATHON_PROJECT, result.project) if result.project else None
-        team_doc = frappe.get_doc(HACKATHON_TEAM, result.team) if result.team else None
+        projects.append(
+            {
+                "name": project.title or project.name,
+                "url": f"/{project.route}",
+                "description": project.short_description or "",
+                "cash_prize": frappe.format_value(
+                    result.cash_prize, {"fieldtype": "Currency", "precision": "0"}
+                )
+                if result.cash_prize
+                else None,
+                "status": result.status,
+                "team_members": members_by_team.get(result.team, []),
+                "repo_link": project.repo_link,
+            }
+        )
 
-        # Get team members
-        team_members = []
-        if team_doc:
-            team_members = project_doc.get_team_members(team_doc)
+    return _build_hackathon_data(hackathon, year, projects)
 
-        # Build project dict
-        project = {
-            "name": project_doc.title or project_doc.name,
-            "url": f"/{project_doc.route}",
-            "description": project_doc.short_description or "",
-            "cash_prize": frappe.format_value(
-                result.cash_prize, {"fieldtype": "Currency", "precision": "0"}
-            )
-            if result.cash_prize
-            else None,
-            "status": result.status,
-            "team_members": team_members,
-            "repo_link": project_doc.repo_link,
-        }
 
-        projects.append(project)
-
-    # Build hackathon dict
-    hackathon_data = {
+def _build_hackathon_data(hackathon, year, projects):
+    hackathon_id = hackathon.name
+    return {
         "id": year,
         "year": year,
         "name": hackathon.hackathon_name or f"FOSS Hack {year}",
@@ -670,8 +715,6 @@ def get_hackathon_results(hackathon_id, year):
             or f"https://fossunited.org/{hackathon.route}/projects/all"
         ),
     }
-
-    return hackathon_data
 
 
 def get_all_hackathon_results():
