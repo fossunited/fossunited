@@ -2,11 +2,12 @@ import frappe
 from frappe import _
 from frappe.utils import getdate, now_datetime, today
 
-from fossunited.api.tickets import has_valid_permission
 from fossunited.doctype_ids import EVENT_TICKET
+from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -> dict:
     """
     Get the attendees of the event with their checkin details
@@ -18,11 +19,6 @@ def get_attendee_with_checkin_data(event_id: str, filters: dict | None = None) -
     Returns:
         dict: The attendees of the event with their checkin details
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(
-            _("You do not have permission to access this resource"), frappe.PermissionError
-        )
-
     _filters = {"event": event_id}
     # Map the items in filters to be like "key": ["like", value]
     _filters.update({key: ["like", f"%{value}%"] for key, value in filters.items()})
@@ -69,6 +65,7 @@ def get_checkin_data(attendee_id: str) -> dict:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False):
     """
     Check-in the attendee for the event.
@@ -78,11 +75,6 @@ def checkin_attendee(event_id: str, attendee: dict, assign_tshirt: bool = False)
         attendee (dict): The attendee details / ticket details
         assign_tshirt (bool): Whether to assign a T-shirt to the attendee
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(
-            _("You do not have permission to access this resource"), frappe.PermissionError
-        )
-
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
 
     already_checked_in = check_if_already_checked_in(attendee["name"])
@@ -131,6 +123,7 @@ def check_if_already_checked_in(attendee_id: str) -> bool:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def undo_attendee_checkin(event_id: str, attendee: dict):
     """
     Undo the check-in for the attendee
@@ -139,17 +132,13 @@ def undo_attendee_checkin(event_id: str, attendee: dict):
         attendee (dict): The attendee details / ticket details
         user (str): The user who is undoing the check-in
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(
-            _("You do not have permission to access this resource"), frappe.PermissionError
-        )
-
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.check_ins.pop()
     ticket.save(ignore_permissions=True)
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def assign_tshirt(event_id: str, attendee: dict):
     """
     Assign Tshirt to the attendee
@@ -159,11 +148,6 @@ def assign_tshirt(event_id: str, attendee: dict):
         attendee (dict): The attendee details / ticket details
         user (str): The user who is assigning the Tshirt
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(
-            _("You do not have permission to access this resource"), frappe.PermissionError
-        )
-
     ticket = frappe.get_doc(EVENT_TICKET, attendee["name"])
     ticket.tshirt_delivered = True
     ticket.save(ignore_permissions=True)
