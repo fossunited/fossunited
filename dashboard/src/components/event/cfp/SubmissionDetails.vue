@@ -1,6 +1,6 @@
 <script setup>
 import { createResource, LoadingIndicator, TabButtons } from 'frappe-ui'
-import { provide, ref, watch } from 'vue'
+import { provide, ref, watch, computed, inject } from 'vue'
 import SubmissionHeader from './SubmissionHeader.vue'
 import SubmissionInfoList from './SubmissionInfoList.vue'
 import SubmissionOverview from './SubmissionOverview.vue'
@@ -41,6 +41,15 @@ const submission = createResource({
 
 provide('curr_submission', submission)
 
+const event = inject('event')
+const showAssignReviewers = computed(() => {
+  if (!props.eventId) return false
+  if (submission.data?.status !== 'Review Pending') return false
+  const startDate = event?.doc?.event_start_date
+  if (!startDate) return true
+  return new Date() < new Date(startDate)
+})
+
 watch(
   () => submissionId.value,
   (newId) => {
@@ -56,7 +65,7 @@ watch(
   <Suspense>
     <div v-if="submission.data" class="w-full p-3 sm:p-6 flex flex-col gap-4 overflow-y-scroll max-h-svh">
       <SubmissionHeader />
-      <AssignReviewers v-if="props.eventId" :submission-id="submissionId" :event-id="props.eventId" />
+      <AssignReviewers v-if="showAssignReviewers" :submission-id="submissionId" :event-id="props.eventId" />
       <SubmissionInfoList />
       <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
       <SubmissionOverview v-if="activeTab === 0" />

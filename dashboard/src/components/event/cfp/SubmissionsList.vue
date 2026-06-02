@@ -190,7 +190,7 @@ function applyFilters() {
       case 'assigned_count_desc':
         return (b._assigned_users?.length ?? 0) - (a._assigned_users?.length ?? 0)
       case 'title_asc':
-        return a.talk_title.localeCompare(b.talk_title)
+        return (a.talk_title || '').localeCompare(b.talk_title || '')
       default:
         return new Date(b.creation) - new Date(a.creation)
     }
