@@ -1,6 +1,18 @@
 <template>
   <div class="flex flex-col gap-2">
-    <span class="text-xs font-medium text-ink-gray-5 uppercase tracking-wide">Assign Reviewers</span>
+    <div class="flex items-center gap-1">
+      <span class="text-xs font-medium text-ink-gray-5 uppercase tracking-wide">Assign Reviewers</span>
+      <Tooltip text="Assigning a reviewer sends them an email notification. Use only to notify reviewers to review this proposal." placement="right">
+        <a
+          href="https://docs.fossunited.org/event-cfp#assign-reviewers-to-a-proposal"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-ink-gray-4 hover:text-ink-gray-6 leading-none"
+        >
+          <IconHelpCircle class="w-3.5 h-3.5" />
+        </a>
+      </Tooltip>
+    </div>
     <div class="flex gap-2 items-start">
       <Autocomplete
         v-model="selectedOptions"
@@ -26,7 +38,8 @@
 
 <script setup>
 import { ref, computed, watch, nextTick } from 'vue'
-import { createResource, Autocomplete, Avatar, Button } from 'frappe-ui'
+import { createResource, Autocomplete, Avatar, Button, Tooltip } from 'frappe-ui'
+import { IconHelpCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
 const props = defineProps({
@@ -93,6 +106,19 @@ const saveResource = createResource({
 })
 
 function saveAssignments() {
+  const newSet = new Set(selectedOptions.value.map((o) => o.value))
+  const removed = (currentAssignments.data || []).filter((u) => !newSet.has(u))
+
+  if (removed.length > 0) {
+    const names = removed
+      .map((u) => reviewers.data?.find((r) => r.user === u)?.full_name || u)
+      .join(', ')
+    const ok = window.confirm(
+      `Remove ${removed.length} reviewer${removed.length > 1 ? 's' : ''}: ${names}?\n\nThey will no longer see this proposal as assigned to them.`,
+    )
+    if (!ok) return
+  }
+
   saveResource.submit({
     submission_name: props.submissionId,
     reviewer_users: selectedOptions.value.map((o) => o.value),
