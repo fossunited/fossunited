@@ -60,4 +60,4 @@ From the **Insights** tab, click any proposal to open its detail panel. If the e
 - Click **Save** - each newly assigned reviewer receives an email notification with a link to the reviewer dashboard
 - To remove a reviewer, deselect them and click **Save** - a confirmation prompt will appear before the change is applied
 
-> **Caution:** Assigning a reviewer sends them an email immediately. Removing a reviewer does not send a notification. Use this feature only to notify officially via email avoid assigning and then quickly unassigning the same person.
+> **Caution:** Assigning a reviewer sends them an email immediately. Removing a reviewer does not send a notification. Use this feature to notify reviewers officially. Avoid assigning and then quickly unassigning the same person.
