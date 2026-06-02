@@ -482,25 +482,39 @@ def get_event_free_codes(event: str):
 
 
 def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
-    """Return {email: full_name} for unique speakers across approved proposals."""
-    proposal_names = frappe.get_all(
+    """Return {email: full_name} for unique speakers across approved proposals.
+
+    Unions two sources: CFP Submission Speaker child rows + proposal-level email field.
+    Speaker child rows take priority for full_name when the same email appears in both.
+    """
+    proposals = frappe.get_all(
         PROPOSAL,
         filters={"event": event, "status": "Approved"},
-        pluck="name",
+        fields=["name", "email", "full_name"],
     )
-    if not proposal_names:
+    if not proposals:
         return {}
 
-    rows = frappe.get_all(
+    proposal_names = [p.name for p in proposals]
+
+    # Source 1: speaker child table (higher priority — more specific per-event entry)
+    speaker_rows = frappe.get_all(
         SPEAKER,
         filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
         fields=["email", "full_name"],
     )
     result = {}
-    for r in rows:
+    for r in speaker_rows:
         if r.email:
             key = r.email.strip().lower()
             result.setdefault(key, r.full_name or "")
+
+    # Source 2: proposal-level email field (fallback for single-speaker submissions)
+    for p in proposals:
+        if p.email:
+            key = p.email.strip().lower()
+            result.setdefault(key, p.full_name or "")
+
     return result
 
 
