@@ -9,6 +9,7 @@ from fossunited.doctype_ids import (
     HACKATHON_PARTICIPANT,
     HACKATHON_PARTNER_PROJECT,
     HACKATHON_PROJECT,
+    HACKATHON_RESULT,
     HACKATHON_TEAM,
     USER_PROFILE,
 )
@@ -131,7 +132,7 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.liked_by_user = frappe.session.user in context.likes
 
         context.winner_status = frappe.db.get_value(
-            "Hackathon Result",
+            HACKATHON_RESULT,
             {"parent": self.hackathon, "project": self.name},
             "status",
         )

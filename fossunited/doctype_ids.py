@@ -14,6 +14,7 @@ HACKATHON_PROJECT = "FOSS Hackathon Project"
 HACKATHON_TEAM = "FOSS Hackathon Team"
 HACKATHON_TEAM_MEMBER = "FOSS Hackathon Team Member"
 HACKATHON_ISSUE_PR = "Hackathon Project Issue PR"
+HACKATHON_RESULT = "Hackathon Result"
 
 # Chapter-related identifiers
 CHAPTER = "FOSS Chapter"
