@@ -15,7 +15,9 @@ from fossunited.doctype_ids import (
     EVENT_TICKET,
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
+    PROPOSAL,
     RAZORPAY_PAYMENT,
+    SPEAKER,
     TICKET_TRANSFER,
 )
 from fossunited.utils.decorators import require_chapter_or_event_member
@@ -477,6 +479,80 @@ def get_event_free_codes(event: str):
     )
 
     return codes
+
+
+def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
+    """Return {email: full_name} for unique speakers across approved proposals."""
+    proposal_names = frappe.get_all(
+        PROPOSAL,
+        filters={"event": event, "status": "Approved"},
+        pluck="name",
+    )
+    if not proposal_names:
+        return {}
+
+    rows = frappe.get_all(
+        SPEAKER,
+        filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
+        fields=["email", "full_name"],
+    )
+    result = {}
+    for r in rows:
+        if r.email:
+            key = r.email.strip().lower()
+            result.setdefault(key, r.full_name or "")
+    return result
+
+
+def _get_existing_coupon_emails_for_event(event: str) -> set[str]:
+    existing = frappe.get_all(FREE_TICKET_CODE, filters={"event": event}, pluck="mapped_email")
+    return {e.strip().lower() for e in existing if e}
+
+
+@frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
+def get_speaker_coupon_preview(event: str) -> dict:
+    """Return stats on how many speaker coupons would be created."""
+    info = _get_approved_speaker_emails_for_event(event)
+    existing = _get_existing_coupon_emails_for_event(event)
+    already_has = len(set(info) & existing)
+    return {
+        "total": len(info),
+        "already_has": already_has,
+        "will_create": len(info) - already_has,
+    }
+
+
+@frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
+def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
+    """
+    Idempotently create EventFreeTicketCode docs for approved CFP speakers.
+
+    Skips speakers who already have a coupon for this event.
+    """
+
+    max_count = int(max_count)
+    if not 1 <= max_count <= 3:
+        frappe.throw(_("max_count must be between 1 and 3"))
+
+    info = _get_approved_speaker_emails_for_event(event)
+    existing = _get_existing_coupon_emails_for_event(event)
+    to_create = {e: n for e, n in info.items() if e not in existing}
+
+    for email, full_name in to_create.items():
+        frappe.get_doc(
+            {
+                "doctype": FREE_TICKET_CODE,
+                "event": event,
+                "mapped_email": email,
+                "full_name": full_name,
+                "tier": "Speaker/Workshop Host",
+                "max_count": max_count,
+            }
+        ).insert(ignore_permissions=True)
+
+    return {"created": len(to_create), "skipped": len(info) - len(to_create)}
 
 
 # nosemgrep: guest-whitelisted-method
