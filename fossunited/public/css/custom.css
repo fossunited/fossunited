@@ -3711,3 +3711,29 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
     justify-content: left;
   }
 }
+
+/* === Hackathon Achievement Badges === */
+.hackathon-badge-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--badge-size, 1em);
+  height: var(--badge-size, 1em);
+  animation: hackathon-badge-glow 4s linear infinite;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+}
+.hackathon-badge-wrap > svg {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+@keyframes hackathon-badge-glow {
+  0%   { filter: drop-shadow(0 0 5px #f00); }
+  16%  { filter: drop-shadow(0 0 5px #ff0); }
+  33%  { filter: drop-shadow(0 0 5px #0f0); }
+  50%  { filter: drop-shadow(0 0 5px #0ff); }
+  66%  { filter: drop-shadow(0 0 5px #00f); }
+  83%  { filter: drop-shadow(0 0 5px #f0f); }
+  100% { filter: drop-shadow(0 0 5px #f00); }
+}
