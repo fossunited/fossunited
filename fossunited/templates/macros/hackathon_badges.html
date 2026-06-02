@@ -1,0 +1,17 @@
+{% macro hackathon_badge(badge_name, href=None, title="", count=None, size=56) %}
+  {%- set badge_path = "fossunited/public/images/badges/hackathon-" + badge_name + ".svg" %}
+  {%- set _inner %}
+    <span class="hackathon-badge-wrap" style="--badge-size:{{ size }}px;">
+      {% include badge_path %}
+    </span>
+    {% if count and count > 1 %}
+      <span class="position-absolute rounded-pill px-1 text-xs semi-bold v3-bg-card v3-text-primary v3-border"
+            style="bottom:0;right:0;">×{{ count }}</span>
+    {% endif %}
+  {%- endset %}
+  {% if href %}
+    <a href="{{ href }}" class="position-relative d-inline-block" data-toggle="tooltip" data-title="{{ title }}">{{ _inner }}</a>
+  {% else %}
+    <span class="position-relative d-inline-block" data-toggle="tooltip" data-title="{{ title }}">{{ _inner }}</span>
+  {% endif %}
+{% endmacro %}

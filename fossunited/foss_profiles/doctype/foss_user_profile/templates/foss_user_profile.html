@@ -1,4 +1,5 @@
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
 
 {% extends "templates/foss_base.html" %}
 
@@ -219,6 +220,17 @@
   <div class="profile-content-div">
     {% if doc.show_activity %}
 
+      {% if hackathon_badges %}
+      <div>
+        <h3 class="subtitle">FOSS Hackathon Badges</h3>
+        <div class="d-flex flex-wrap align-items-center gap-4">
+          {% for b in hackathon_badges %}
+            {{ hackathon_badge(b.type, href=b.href, title=b.title, size=104) }}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
       {% if talked | length > 0 %}
       <div>
         <h3 class="subtitle">Talks Given</h3>
@@ -366,9 +378,9 @@
         />
         <div class="header-content-edit-section">
           <div class="header--content-section">
-            <div class="d-flex mb-1">
-              <h4 class="mr-1">{{ doc.full_name }}</h4>
-                {% for company in doc.experience %}{% if company.is_working_here %}
+            <div class="d-flex align-items-center flex-wrap mb-1" style="gap:0.5rem;">
+              <h4 class="mb-0 mr-1">{{ doc.full_name }}</h4>
+              {% for company in doc.experience %}{% if company.is_working_here %}
                 <!-- Company logos are provided by https://logo.dev -->
                 <img
                   class="company-badge"
@@ -376,6 +388,9 @@
                   alt="{{ company.company or company.company_website }} logo"
                 />
               {% endif %}{% endfor %}
+              {% for b in hackathon_badges %}
+                {{ hackathon_badge(b.type, href=b.href, title=b.title, size=52) }}
+              {% endfor %}
             </div>
             <div class="header--username-location" style="font-size: var(--text-sm)">
               <span style="color: hsl(var(--clr-foss-mint-500))">{{ doc.username }}</span>
@@ -446,6 +461,7 @@
   <script>
     $('body').css('background', 'hsl(var(--clr-gray-100))')
     $(document).ready(() => {
+      $('[data-toggle="tooltip"]').tooltip()
       frappe.require('controls.bundle.js')
       setNavbarControl()
       frappe.call({

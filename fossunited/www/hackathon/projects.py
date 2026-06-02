@@ -12,3 +12,7 @@ def get_context(context):
         ["*", "partner_project.project_name as partner_project_name"],
         page_length=9999,
     )
+
+    result_map = {r.project: r.status for r in context.hackathon.results}
+    for project in context.projects:
+        project.winner_status = result_map.get(project.name)
