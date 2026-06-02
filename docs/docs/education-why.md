@@ -34,6 +34,6 @@ For engineering faculty in India, whose work often touches infrastructure, manuf
 
 Institutions known for open source activity attract a different kind of attention. Industry partners who build on open source, and that is most of the Indian tech sector, whether they acknowledge it or not, are more likely to sponsor labs, offer projects, and hire from institutions whose graduates understand the ecosystem.
 
-Globally, universities with active open source programmes have seen increased research collaboration, higher faculty recruitment quality, and stronger placement records. The signal an institution sends by taking open source seriously is one that industry has learned to read.
+Globally, universities with active open source program have seen increased research collaboration, higher faculty recruitment quality, and stronger placement records. The signal an institution sends by taking open source seriously is one that industry has learned to read.
 
 > **Note:** This section focuses on what moves decisions inside institutions. The arguments around digital sovereignty, the global knowledge commons, and India's disproportionately small open source contribution relative to its developer population are real and important, but they tend to matter more to people who are already interested. The five points above are the ones that tend to open doors.

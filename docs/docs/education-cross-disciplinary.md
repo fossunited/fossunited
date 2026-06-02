@@ -19,7 +19,7 @@ The open source design ecosystem is less mature than the engineering one, which 
 
 ### Law and policy
 
-Open licensing, software patents, digital rights, and the legal structure of digital public goods are active and unsettled areas of law in India. Law students at institutions with engineering programmes have a natural research area here.
+Open licensing, software patents, digital rights, and the legal structure of digital public goods are active and unsettled areas of law in India. Law students at institutions with engineering program have a natural research area here.
 
 1. **Work with engineering students:** Co-teach a workshop where law students help engineering students understand what licence they should choose for their final year project and why. Both groups learn something the other cannot teach themselves.
 
