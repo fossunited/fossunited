@@ -21,10 +21,10 @@
           <div class="flex-fill">
             <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
               <div class="d-flex align-items-center gap-3 mb-2 mb-md-0">
-                <h1 class="v3-text-primary text-2xl mb-0">{{ doc.title }}</h1>
                 {% if winner_status %}
                   {{ hackathon_badge("winner", href=results_route, title=winner_status) }}
                 {% endif %}
+                <h1 class="v3-text-primary text-2xl mb-0">{{ doc.title }}</h1>
               </div>
 
               <div class="ml-md-auto d-flex align-items-center flex-wrap">
