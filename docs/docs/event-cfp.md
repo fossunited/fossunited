@@ -51,3 +51,13 @@ event.
 **Note:** Please note that responses to custom fields in the CFP form cannot
 be downloaded using the `"Download"` button on the `"Insights"` tab. Please
 reach out to the Foundation if and when that information is required.
+
+## Assign reviewers to a proposal
+
+From the **Insights** tab, click any proposal to open its detail panel. If the event is upcoming and the proposal is in **Review Pending** status, an **Assign Reviewers** section appears at the top.
+
+- Select one or more reviewers from the dropdown (any user with the **CFP Reviewer** role appears here)
+- Click **Save** - each newly assigned reviewer receives an email notification with a link to the reviewer dashboard
+- To remove a reviewer, deselect them and click **Save** - a confirmation prompt will appear before the change is applied
+
+> **Caution:** Assigning a reviewer sends them an email immediately. Removing a reviewer does not send a notification. Use this feature only to notify officially via email avoid assigning and then quickly unassigning the same person.

@@ -100,7 +100,6 @@ def notify_cfp_reviewer_assignment(doc, method=None) -> None:
         return
 
     event_name = frappe.db.get_value(EVENT, event_id, "event_name") or event_id
-    assigner_name = frappe.get_cached_value("User", assigned_by, "full_name") or assigned_by
     dashboard_url = (
         f"{frappe.utils.get_url()}/dashboard/review/{event_id}?submission={doc.reference_name}"
     )
@@ -108,7 +107,7 @@ def notify_cfp_reviewer_assignment(doc, method=None) -> None:
     subject = f'New proposal to review: "{submission.talk_title}"'
     email_content = f"""
         <p style="margin: 0 0 8px;">
-          <b>{assigner_name}</b> assigned you a proposal for <b>{event_name}</b>:
+          You have been assigned a proposal to review for <b>{event_name}</b>:
         </p>
         <p style="margin: 0 0 16px; font-size: 15px;"><b>{submission.talk_title}</b></p>
         <a href="{dashboard_url}" style="display:inline-block; padding: 8px 16px; background:#2d6a4f; color:#fff; border-radius:6px; text-decoration:none; font-size:14px;">
