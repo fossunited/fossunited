@@ -1,5 +1,6 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import theme_toggle, breadcrumb %}
+{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -75,17 +76,23 @@
           <a
             class="v3-card project-card v3-text-primary"
             href="/{{ project.route }}"
-            data-title="{{ project.title }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
             data-toggle="tooltip"
           >
             <h3 class="text-xl p-0 mb-0">
               <div class="d-flex align-items-start">
-                <span class="project-card--title">{{ project.title }}</span>
+                {% if project.winner_status %}
+                  <span class="d-inline-flex align-items-center gap-2 v3-bg-subtle rounded px-2 py-1">
+                    {{ hackathon_badge("winner", title=project.winner_status) }}
+                    <span class="project-card--title">{{ project.title }}</span>
+                  </span>
+                {% else %}
+                  <span class="project-card--title">{{ project.title }}</span>
+                {% endif %}
 
                 {% if project.is_contribution_project %}
-                  <span class="ml-auto" title="Contribution Project">
+                  <span class="ml-auto" data-title="Contribution Project" data-toggle="tooltip">
                     <i class="ti ti-git-pull-request"></i>
                   </span>
                 {% endif %}
