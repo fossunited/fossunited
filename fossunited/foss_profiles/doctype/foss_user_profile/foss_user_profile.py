@@ -19,8 +19,13 @@ from fossunited.doctype_ids import (
     EVENT_TICKET,
     EVENT_VOLUNTEER,
     HACKATHON,
+    HACKATHON_ISSUE_PR,
     HACKATHON_LOCALHOST,
     HACKATHON_PARTICIPANT,
+    HACKATHON_PROJECT,
+    HACKATHON_RESULT,
+    HACKATHON_TEAM_MEMBER,
+    LOCALHOST_ORGANIZER,
     PROPOSAL,
     RSVP_RESPONSE,
 )
@@ -377,9 +382,130 @@ class FOSSUserProfile(WebsiteGenerator):
                 context.volunteered,
             ) = self.get_user_activity()
 
+        context.hackathon_badges = self.get_hackathon_badges()
         context.pagetitle, context.description, context.image = self.get_meta()
 
         context.no_cache = 1
+
+    def get_hackathon_badges(self):
+        badges = []
+
+        # Winner / Commendation + Participant badges
+        participants = frappe.get_all(
+            HACKATHON_PARTICIPANT,
+            filters={"user_profile": self.name},
+            fields=["name", "hackathon", "team"],
+        )
+
+        # team field on participant may not be set; resolve via team member child table
+        for p in participants:
+            if not p.team:
+                p.team = frappe.db.get_value(HACKATHON_TEAM_MEMBER, {"member": p.name}, "parent")
+
+        winning_hackathon_ids = set()
+        for p in participants:
+            if not p.team:
+                continue
+            result = frappe.db.get_value(
+                HACKATHON_RESULT,
+                {"parent": p.hackathon, "team": p.team},
+                ["status", "project"],
+                as_dict=True,
+            )
+            if result:
+                project_route = frappe.db.get_value(HACKATHON_PROJECT, result.project, "route")
+                hackathon_name = frappe.db.get_value(HACKATHON, p.hackathon, "hackathon_name")
+                badges.append(
+                    {
+                        "type": "winner",
+                        "href": f"/{project_route}" if project_route else None,
+                        "title": f"{result.status} at {hackathon_name}",
+                    }
+                )
+                winning_hackathon_ids.add(p.hackathon)
+
+        for p in participants:
+            if not p.team or p.hackathon in winning_hackathon_ids:
+                continue
+            project = frappe.db.get_value(
+                HACKATHON_PROJECT,
+                {"hackathon": p.hackathon, "team": p.team},
+                [
+                    "name",
+                    "description",
+                    "demo_link",
+                    "is_contribution_project",
+                    "route",
+                ],
+                as_dict=True,
+            )
+            if not (project and project.description):
+                continue
+            issue_count = frappe.db.count(HACKATHON_ISSUE_PR, {"parent": project.name})
+            qualifies = project.demo_link or (project.is_contribution_project and issue_count > 1)
+            if qualifies:
+                hackathon_name = frappe.db.get_value(HACKATHON, p.hackathon, "hackathon_name")
+                hackathon_route = frappe.db.get_value(HACKATHON, p.hackathon, "route")
+                badges.append(
+                    {
+                        "type": "participant",
+                        "href": f"/{project.route}" if project.route else f"/{hackathon_route}",
+                        "title": f"Participant of {hackathon_name}, qualified first round",
+                    }
+                )
+
+        # Localhost organizer badge
+        organizer_rows = frappe.get_all(
+            LOCALHOST_ORGANIZER,
+            filters={"profile": self.name},
+            fields=["parent"],
+        )
+        for row in organizer_rows:
+            localhost = frappe.db.get_value(
+                HACKATHON_LOCALHOST,
+                row.parent,
+                ["route", "localhost_name", "parent_hackathon"],
+                as_dict=True,
+            )
+            if localhost:
+                hackathon_name = frappe.db.get_value(
+                    HACKATHON, localhost.parent_hackathon, "hackathon_name"
+                )
+                badges.append(
+                    {
+                        "type": "localhost",
+                        "href": f"/{localhost.route}",
+                        "title": f"LocalHost Organizer for {localhost.localhost_name}, {hackathon_name}",
+                    }
+                )
+
+        # Judge badge (keyed by hackathon name; TODO: move to hackathon child table)
+        _HACKATHON_JUDGES = {
+            "FOSS Hack 2026": [
+                "Shree Kumar",
+                "Rajandran R",
+                "Agriya Khetarpal",
+                "Ayushmaan Bora",
+                "Manas Kamal",
+                "Liyas Thomas",
+                "Natarajan Kannan",
+                "Arjun Ashok",
+            ],
+        }
+        for hackathon_name, judges in _HACKATHON_JUDGES.items():
+            if self.full_name in judges:
+                hackathon_route = frappe.db.get_value(
+                    HACKATHON, {"hackathon_name": hackathon_name}, "route"
+                )
+                badges.append(
+                    {
+                        "type": "judge",
+                        "href": f"/{hackathon_route}" if hackathon_route else None,
+                        "title": f"Judge for {hackathon_name}",
+                    }
+                )
+
+        return badges
 
     def get_meta(self):
         if self.is_private:
