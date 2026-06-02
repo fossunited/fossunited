@@ -81,15 +81,11 @@
             data-toggle="tooltip"
           >
             <h3 class="text-xl p-0 mb-0">
-              <div class="d-flex align-items-start">
+              <div class="d-flex align-items-center gap-2">
                 {% if project.winner_status %}
-                  <span class="d-inline-flex align-items-center gap-2 v3-bg-subtle rounded px-2 py-1">
-                    {{ hackathon_badge("winner", title=project.winner_status) }}
-                    <span class="project-card--title">{{ project.title }}</span>
-                  </span>
-                {% else %}
-                  <span class="project-card--title">{{ project.title }}</span>
+                  {{ hackathon_badge("winner", title=project.winner_status) }}
                 {% endif %}
+                <span class="project-card--title">{{ project.title }}</span>
 
                 {% if project.is_contribution_project %}
                   <span class="ml-auto" data-title="Contribution Project" data-toggle="tooltip">
