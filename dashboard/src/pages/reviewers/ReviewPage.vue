@@ -38,7 +38,7 @@
 </template>
 <script setup>
 import { createResource, usePageMeta, LoadingIndicator } from 'frappe-ui'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { isSmallScreen } from '@/helpers/utils'
 import ProposalDetailsDrawer from '@/components/reviewers/ProposalDetailsDrawer.vue'
@@ -61,6 +61,12 @@ const handleOpenSubmission = (submission) => {
     showDrawer.value = true
   }
 }
+
+onMounted(() => {
+  if (route.query.submission) {
+    handleOpenSubmission(route.query.submission)
+  }
+})
 
 watch(
   () => route.params.id,

@@ -35,7 +35,16 @@
           <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
         </Tooltip>
       </div>
-      <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
+      <div class="flex items-center gap-2">
+        <FormControl
+          v-model="sortBy"
+          type="select"
+          :options="SORT_OPTIONS"
+          size="sm"
+          class="text-xs"
+        />
+        <span class="text-xs text-ink-gray-5 whitespace-nowrap">Count: {{ cfpSubmissions.data?.length }}</span>
+      </div>
     </div>
   </div>
 
@@ -48,6 +57,7 @@
       v-for="submission in cfpSubmissions.data"
       :key="submission.name"
       :submission="submission"
+      :sort-by="sortBy"
       tabindex="0"
       @open:submission="handleOpenSubmission($event)"
     />
@@ -89,8 +99,22 @@ const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
 const showAssignedOnly = ref(true)
+const sortBy = ref('creation_desc')
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
+
+const SORT_OPTIONS = computed(() => {
+  const options = [
+    { label: 'Newest first', value: 'creation_desc' },
+    { label: 'Oldest first', value: 'creation_asc' },
+    { label: 'Review count ↓', value: 'review_count_desc' },
+    { label: 'Title A–Z', value: 'title_asc' },
+  ]
+  if (!props.reviewerMode) {
+    options.splice(3, 0, { label: 'Assigned count ↓', value: 'assigned_count_desc' })
+  }
+  return options
+})
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All', activeClass: 'bg-surface-gray-7 text-ink-white' },
@@ -157,10 +181,25 @@ function applyFilters() {
     data = filterSubmissions(data, fieldFilters)
   }
 
+  data = [...data].sort((a, b) => {
+    switch (sortBy.value) {
+      case 'creation_asc':
+        return new Date(a.creation) - new Date(b.creation)
+      case 'review_count_desc':
+        return (b._review_count ?? 0) - (a._review_count ?? 0)
+      case 'assigned_count_desc':
+        return (b._assigned_users?.length ?? 0) - (a._assigned_users?.length ?? 0)
+      case 'title_asc':
+        return (a.talk_title || '').localeCompare(b.talk_title || '')
+      default:
+        return new Date(b.creation) - new Date(a.creation)
+    }
+  })
+
   cfpSubmissions.data = data
 }
 
-watch([filters, searchQuery, selectedStatus], applyFilters, { deep: true })
+watch([filters, searchQuery, selectedStatus, sortBy], applyFilters, { deep: true })
 watch([showNotReviewed, showAssignedOnly], applyFilters)
 
 function handleOpenSubmission(submission) {

@@ -1,3 +1,4 @@
+import json
 from collections import defaultdict
 
 import frappe
@@ -12,6 +13,13 @@ from fossunited.doctype_ids import (
     USER_PROFILE,
 )
 from fossunited.id.roles import CHAPTER_MEMBER, REVIEWER
+
+_EMPTY_REVIEW_STATS = {
+    "approved_percent": 0,
+    "rejected_percent": 0,
+    "unsure_percent": 0,
+    "_review_count": 0,
+}
 
 
 # nosemgrep: guest-whitelisted-method
@@ -84,18 +92,14 @@ CFP_SUBMISSION_FIELDS = [
 @frappe.whitelist()
 def get_cfp_submissions(event: str) -> list:
     """
-    Get all the submissions for the given event
+    Returns enriched submissions for an event.
 
-    Args:
-        event (str): The id of the event
-
-    Returns:
-        list: List of submissions for the given event
+    Reviewers get: _is_reviewed, _is_assigned, review percentages, speakers, likes.
+    Organizers get everything above plus _assigned_users with review verdicts per assignee.
     """
     frappe.only_for([REVIEWER, CHAPTER_MEMBER])
 
     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
-
     submissions = frappe.db.get_list(
         PROPOSAL,
         {"linked_cfp": cfp},
@@ -107,23 +111,69 @@ def get_cfp_submissions(event: str) -> list:
     if not submissions:
         return submissions
 
-    submission_names = [submission.name for submission in submissions]
+    names = [s.name for s in submissions]
+    is_organizer = CHAPTER_MEMBER in frappe.get_roles(frappe.session.user)
 
-    # Fetch review statuses in bulk
-    reviews = frappe.db.get_all(
+    # Shared data (fetched for both reviewer and organizer)
+    like_counts = _get_bulk_like_counts(names)
+    custom_answers = _get_bulk_custom_answers_data(names)
+    review_percentages = _get_bulk_review_percentages(names)
+    speakers_by = _get_bulk_speakers(names)
+    reviewed_by_me = _get_reviewed_by_current_user(names)
+
+    # Role-specific assignment enrichment
+    # Organizer: full _assigned_users list with avatars + per-user verdict (3 extra queries)
+    # Reviewer: only _is_assigned for current user (1 cheap query)
+    assignment_data = (
+        _get_organizer_assignment_data(names)
+        if is_organizer
+        else _get_reviewer_assignment_data(names)
+    )
+
+    for s in submissions:
+        s.update(
+            {
+                "_is_reviewed": "Yes" if s.name in reviewed_by_me else "No",
+                "_is_seen": s.name in reviewed_by_me,
+                "_likes_count": like_counts.get(s.name, 0),
+            }
+        )
+        s.update(assignment_data.get(s.name, {}))
+        s.update(custom_answers.get(s.name, {}))
+        s.update(review_percentages.get(s.name, _EMPTY_REVIEW_STATS))
+        speakers = speakers_by.get(s.name, [])
+        s["speakers"] = speakers
+        s["speaker_name"] = ", ".join(
+            n for n in (sp.get("full_name", "").strip() for sp in speakers) if n
+        )
+
+    return submissions
+
+
+# -- private helpers -----------------------------------------------------------
+# Each helper takes submission_names and returns a shaped dict keyed by name.
+# Keep these focused: one query concern per function.
+
+
+def _get_reviewed_by_current_user(submission_names: list) -> set[str]:
+    """Submission names the current user has already reviewed."""
+    reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
+    if not reviewer_profile:
+        return set()
+    rows = frappe.db.get_all(
         PROPOSAL_REVIEW,
         {
             "parent": ("in", submission_names),
             "parenttype": PROPOSAL,
-            "reviewer_profile": frappe.db.get_value(
-                USER_PROFILE, {"email": frappe.session.user}, "name"
-            ),
+            "reviewer_profile": reviewer_profile,
         },
         ["parent"],
     )
-    reviewed_submissions = {review.parent for review in reviews}
+    return {r.parent for r in rows}
 
-    # Fetch like counts in bulk
+
+def _get_bulk_like_counts(submission_names: list) -> dict[str, int]:
+    """Returns {submission_name: like_count}."""
     likes = frappe.db.get_all(
         "Comment",
         {
@@ -133,18 +183,46 @@ def get_cfp_submissions(event: str) -> list:
         },
         ["reference_name"],
     )
-    like_counts = {}
+    counts: dict[str, int] = {}
     for like in likes:
-        like_counts[like.reference_name] = like_counts.get(like.reference_name, 0) + 1
+        counts[like.reference_name] = counts.get(like.reference_name, 0) + 1
+    return counts
 
-    # Reuse bulk query functions from proposal.py
-    custom_answers_data = _get_bulk_custom_answers_data(submission_names)
 
-    # Bulk fetch review percentages
-    review_percentages_data = _get_bulk_review_percentages_data(submission_names)
+def _get_bulk_review_percentages(submission_names: list) -> dict[str, dict]:
+    """Returns {submission_name: {approved_percent, rejected_percent, unsure_percent, _review_count}}."""
+    if not submission_names:
+        return {}
 
-    # Bulk fetch speakers for all submissions (outside selected range)
-    speakers_raw = frappe.db.get_all(
+    from frappe import qb
+
+    Review = qb.DocType(PROPOSAL_REVIEW)
+    rows = (
+        qb.from_(Review)
+        .select(Review.parent, Review.to_approve)
+        .where((Review.parent.isin(submission_names)) & (Review.parenttype == PROPOSAL))
+        .run(as_dict=True)
+    )
+
+    grouped: dict[str, list] = {}
+    for r in rows:
+        grouped.setdefault(r.parent, []).append(r.to_approve)
+
+    result = {}
+    for name, votes in grouped.items():
+        total = len(votes)
+        result[name] = {
+            "approved_percent": int(votes.count("Yes") / total * 100),
+            "rejected_percent": int(votes.count("No") / total * 100),
+            "unsure_percent": int(votes.count("Maybe") / total * 100),
+            "_review_count": total,
+        }
+    return result
+
+
+def _get_bulk_speakers(submission_names: list) -> dict[str, list]:
+    """Returns {submission_name: [speaker_dict, ...]}."""
+    raw = frappe.db.get_all(
         SPEAKER,
         {"parent": ("in", submission_names)},
         [
@@ -158,158 +236,127 @@ def get_cfp_submissions(event: str) -> list:
             "bio",
         ],
     )
-    speakers_by_submission = defaultdict(list)
-
-    for s in speakers_raw:
-        speakers_by_submission[s["parent"]].append(s)
-
-    # Fetch assignment status in bulk
-    assigned_todos = frappe.db.get_all(
-        "ToDo",
-        {
-            "reference_type": PROPOSAL,
-            "reference_name": ("in", submission_names),
-            "allocated_to": frappe.session.user,
-        },
-        pluck="reference_name",
-    )
-    assigned_submissions = set(assigned_todos)
-
-    for submission in submissions:
-        is_reviewed = submission.name in reviewed_submissions
-        submission.update(
-            {
-                "_is_reviewed": "Yes" if is_reviewed else "No",
-                "_is_seen": is_reviewed,
-                "_is_assigned": "Yes" if submission.name in assigned_submissions else "No",
-            }
-        )
-        submission["_likes_count"] = like_counts.get(submission.name, 0)
-        submission.update(custom_answers_data.get(submission.name, {}))
-        submission.update(review_percentages_data.get(submission.name, {}))
-
-        speakers = speakers_by_submission.get(submission.name, [])
-        submission["speakers"] = speakers
-        submission["speaker_name"] = ", ".join(
-            name for name in ((s.get("full_name") or "").strip() for s in speakers) if name
-        )
-
-    return submissions
+    by_sub: dict[str, list] = defaultdict(list)
+    for s in raw:
+        by_sub[s["parent"]].append(s)
+    return by_sub
 
 
-def _get_bulk_review_percentages_data(submission_names: list) -> dict:
+def _get_reviewer_assignment_data(submission_names: list) -> dict[str, dict]:
     """
-    Bulk fetch review percentages for all submissions.
+    Reviewer context. Checks only the current user's ToDo assignment.
+    Returns {submission_name: {_is_assigned, _assigned_users: []}}.
+    """
+    assigned = set(
+        frappe.db.get_all(
+            "ToDo",
+            {
+                "reference_type": PROPOSAL,
+                "reference_name": ("in", submission_names),
+                "allocated_to": frappe.session.user,
+            },
+            pluck="reference_name",
+        )
+    )
+    return {
+        name: {
+            "_is_assigned": "Yes" if name in assigned else "No",
+            "_assigned_users": [],
+        }
+        for name in submission_names
+    }
 
-    Returns:
-        dict: {submission_name: {approved_percent: int, rejected_percent: int, ...}}
+
+def _get_organizer_assignment_data(submission_names: list) -> dict[str, dict]:
+    """
+    Organizer context. Fetches all assignees + their user profile data + review verdicts.
+    Returns {submission_name: {_is_assigned, _assigned_users: [{user, full_name, user_image, _review_verdict}]}}.
+    """
+    todos = frappe.db.get_all(
+        "ToDo",
+        {"reference_type": PROPOSAL, "reference_name": ("in", submission_names)},
+        ["reference_name", "allocated_to"],
+    )
+    todos_by_sub: dict[str, list] = defaultdict(list)
+    for t in todos:
+        todos_by_sub[t.reference_name].append(t.allocated_to)
+
+    # Bulk fetch user profile data for avatars
+    unique_users = {t.allocated_to for t in todos}
+    user_data: dict[str, object] = {}
+    if unique_users:
+        user_data = {
+            u.name: u
+            for u in frappe.db.get_all(
+                "User",
+                {"name": ("in", list(unique_users))},
+                ["name", "full_name", "user_image"],
+            )
+        }
+
+    verdict_by_sub = _get_bulk_reviewed_by_user_verdict(submission_names)
+    current_user = frappe.session.user
+
+    result = {}
+    for name in submission_names:
+        assignees = todos_by_sub.get(name, [])
+        verdicts = verdict_by_sub.get(name, {})
+        result[name] = {
+            "_is_assigned": "Yes" if current_user in assignees else "No",
+            "_assigned_users": [
+                {
+                    "user": email,
+                    "full_name": (user_data.get(email) or {}).get("full_name") or email,
+                    "user_image": (user_data.get(email) or {}).get("user_image") or "",
+                    "_review_verdict": verdicts.get(email),
+                }
+                for email in assignees
+            ],
+        }
+    return result
+
+
+def _get_bulk_reviewed_by_user_verdict(
+    submission_names: list,
+) -> dict[str, dict[str, str]]:
+    """
+    Maps {submission_name: {user_email: to_approve}} for organizer avatar verdict display.
+    Requires a USER_PROFILE lookup to convert reviewer_profile links → user emails.
     """
     if not submission_names:
         return {}
 
-    # Use frappe.qb for better performance
     from frappe import qb
 
     Review = qb.DocType(PROPOSAL_REVIEW)
-
-    reviews_query = (
+    rows = (
         qb.from_(Review)
-        .select(Review.parent, Review.to_approve)
+        .select(Review.parent, Review.to_approve, Review.reviewer_profile)
         .where((Review.parent.isin(submission_names)) & (Review.parenttype == PROPOSAL))
+        .run(as_dict=True)
     )
 
-    reviews_results = reviews_query.run(as_dict=True)
-
-    # Group reviews by submission and calculate percentages
-    review_percentages_data = {}
-    submission_reviews = {}
-
-    for review in reviews_results:
-        submission_name = review.parent
-        if submission_name not in submission_reviews:
-            submission_reviews[submission_name] = []
-        submission_reviews[submission_name].append(review.to_approve)
-
-    for submission_name, reviews in submission_reviews.items():
-        positive_reviews = reviews.count("Yes")
-        negative_reviews = reviews.count("No")
-        unsure_reviews = reviews.count("Maybe")
-
-        total_reviews = len(reviews)
-        if total_reviews == 0:
-            review_percentages_data[submission_name] = {
-                "approved_percent": 0,
-                "rejected_percent": 0,
-                "unsure_percent": 0,
-            }
-        else:
-            review_percentages_data[submission_name] = {
-                "approved_percent": int((positive_reviews / total_reviews) * 100),
-                "rejected_percent": int((negative_reviews / total_reviews) * 100),
-                "unsure_percent": int((unsure_reviews / total_reviews) * 100),
-            }
-
-    return review_percentages_data
-
-
-def get_review_percentages(submission: str) -> dict:
-    reviews = frappe.db.get_all(
-        PROPOSAL_REVIEW,
-        {"parent": submission, "parenttype": PROPOSAL},
-        pluck="to_approve",
-    )
-    positive_reviews = reviews.count("Yes")
-    negative_reviews = reviews.count("No")
-    unsure_reviews = reviews.count("Maybe")
-
-    total_reviews = len(reviews)
-    if total_reviews == 0:
-        return {
-            "approved_percent": 0,
-            "rejected_percent": 0,
-            "unsure_percent": 0,
+    unique_profiles = {r.reviewer_profile for r in rows if r.reviewer_profile}
+    profile_to_user: dict[str, str] = {}
+    if unique_profiles:
+        profile_to_user = {
+            p.name: p.user
+            for p in frappe.db.get_all(
+                USER_PROFILE, {"name": ("in", list(unique_profiles))}, ["name", "user"]
+            )
         }
 
-    return {
-        "approved_percent": int((positive_reviews / total_reviews) * 100),
-        "rejected_percent": int((negative_reviews / total_reviews) * 100),
-        "unsure_percent": int((unsure_reviews / total_reviews) * 100),
-    }
-
-
-def get_speakers(submission: str) -> list:
-    return frappe.db.get_all(
-        SPEAKER,
-        {"parent": submission},
-        [
-            "photo",
-            "full_name",
-            "designation",
-            "organization",
-            "linked_user",
-            "social_link",
-            "bio",
-        ],
-    )
-
-
-def get_custom_answers(submission: str) -> dict:
-    custom_answers = frappe.db.get_all("FOSS Custom Answer", {"parent": submission}, ["*"])
-
-    custom_answers_dict = {}
-
-    for answer in custom_answers:
-        custom_answers_dict[f"custom_question_{answer.idx}"] = answer.response
-
-    return custom_answers_dict
+    result: dict[str, dict] = {}
+    for r in rows:
+        user = profile_to_user.get(r.reviewer_profile)
+        if user:
+            result.setdefault(r.parent, {})[user] = r.to_approve
+    return result
 
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_global_cfp_guidelines() -> dict:
-    """
-    Get the global CFP guidelines.
-    """
     return {"guidelines": frappe.db.get_single_value("Global CFP Settings", "guidelines")}
 
 
@@ -360,6 +407,69 @@ def get_proposal_filter_fields(event_id: str) -> list:
         ]
 
     return filtered_fields
+
+
+@frappe.whitelist()
+def get_cfp_reviewers(event_id: str) -> list:
+    frappe.only_for([CHAPTER_MEMBER])
+    reviewer_users = frappe.db.get_all(
+        "Has Role",
+        {"role": REVIEWER, "parenttype": "User"},
+        pluck="parent",
+    )
+    if not reviewer_users:
+        return []
+    return frappe.db.get_all(
+        "User",
+        {"name": ("in", reviewer_users), "enabled": 1},
+        ["name as user", "full_name", "user_image"],
+    )
+
+
+@frappe.whitelist()
+def get_submission_reviewer_assignments(submission_name: str) -> list:
+    frappe.only_for([CHAPTER_MEMBER])
+    return frappe.db.get_all(
+        "ToDo",
+        {"reference_type": PROPOSAL, "reference_name": submission_name},
+        pluck="allocated_to",
+    )
+
+
+@frappe.whitelist()
+def set_submission_reviewers(submission_name: str, reviewer_users: list) -> None:
+    frappe.only_for([CHAPTER_MEMBER])
+    if isinstance(reviewer_users, str):
+        reviewer_users = json.loads(reviewer_users)
+
+    existing = frappe.db.get_all(
+        "ToDo",
+        {"reference_type": PROPOSAL, "reference_name": submission_name},
+        ["name", "allocated_to"],
+    )
+    existing_map = {t.allocated_to: t.name for t in existing}
+    new_set = set(reviewer_users)
+    existing_set = set(existing_map.keys())
+
+    for user in existing_set - new_set:
+        frappe.delete_doc("ToDo", existing_map[user], ignore_permissions=True)
+
+    if new_set - existing_set:
+        talk_title = (
+            frappe.db.get_value(PROPOSAL, submission_name, "talk_title") or submission_name
+        )
+
+    for user in new_set - existing_set:
+        frappe.get_doc(
+            {
+                "doctype": "ToDo",
+                "reference_type": PROPOSAL,
+                "reference_name": submission_name,
+                "allocated_to": user,
+                "assigned_by": frappe.session.user,
+                "description": f"[RP]: {talk_title}",
+            }
+        ).insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
