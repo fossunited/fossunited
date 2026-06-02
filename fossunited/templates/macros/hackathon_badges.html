@@ -1,16 +1,20 @@
-{% macro hackathon_badge(badge_name, href=None, title="") %}
-  {%- set _img %}
+{% macro hackathon_badge(badge_name, href=None, title="", count=None) %}
+  {%- set _inner %}
     <img
       src="/assets/fossunited/images/badges/badge-fh26-{{ badge_name }}.svg"
       width="56"
       height="56"
       alt="{{ title }}"
-      style="display:block;"
+      class="d-block"
     />
+    {% if count and count > 1 %}
+      <span class="position-absolute rounded-pill px-1 text-xs semi-bold v3-bg-card v3-text-primary v3-border"
+            style="bottom:0;right:0;">×{{ count }}</span>
+    {% endif %}
   {%- endset %}
   {% if href %}
-    <a href="{{ href }}" data-toggle="tooltip" data-title="{{ title }}" style="display:inline-block;line-height:0;">{{ _img }}</a>
+    <a href="{{ href }}" class="position-relative d-inline-block" data-toggle="tooltip" data-title="{{ title }}">{{ _inner }}</a>
   {% else %}
-    <span data-toggle="tooltip" data-title="{{ title }}" style="display:inline-block;line-height:0;">{{ _img }}</span>
+    <span class="position-relative d-inline-block" data-toggle="tooltip" data-title="{{ title }}">{{ _inner }}</span>
   {% endif %}
 {% endmacro %}
