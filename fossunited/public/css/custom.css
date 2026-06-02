@@ -3715,7 +3715,10 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 /* === Hackathon Achievement Badges === */
 .hackathon-badge-wrap {
   display: inline-flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
+  vertical-align: middle;
   width: var(--badge-size, 1em);
   height: var(--badge-size, 1em);
   animation: hackathon-badge-glow 4s linear infinite;
@@ -3727,13 +3730,15 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   width: 100%;
   height: 100%;
   pointer-events: none;
+  overflow: visible;
 }
+/* pulse: fades in rainbow glow, cycles, fades out, rests */
 @keyframes hackathon-badge-glow {
-  0%   { filter: drop-shadow(0 0 5px #f00); }
-  16%  { filter: drop-shadow(0 0 5px #ff0); }
-  33%  { filter: drop-shadow(0 0 5px #0f0); }
-  50%  { filter: drop-shadow(0 0 5px #0ff); }
-  66%  { filter: drop-shadow(0 0 5px #00f); }
-  83%  { filter: drop-shadow(0 0 5px #f0f); }
-  100% { filter: drop-shadow(0 0 5px #f00); }
+  0%   { filter: drop-shadow(0 0 3px #f00); }
+  16%  { filter: drop-shadow(0 0 3px #ff0); }
+  33%  { filter: drop-shadow(0 0 3px #0f0); }
+  50%  { filter: drop-shadow(0 0 3px #0ff); }
+  66%  { filter: drop-shadow(0 0 3px #00f); }
+  83%  { filter: drop-shadow(0 0 3px #f0f); }
+  100% { filter: drop-shadow(0 0 3px #f00); }
 }
