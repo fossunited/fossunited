@@ -158,6 +158,8 @@ def get_cfp_submissions(event: str) -> list:
 def _get_reviewed_by_current_user(submission_names: list) -> set[str]:
     """Submission names the current user has already reviewed."""
     reviewer_profile = frappe.db.get_value(USER_PROFILE, {"email": frappe.session.user}, "name")
+    if not reviewer_profile:
+        return set()
     rows = frappe.db.get_all(
         PROPOSAL_REVIEW,
         {
@@ -410,23 +412,18 @@ def get_proposal_filter_fields(event_id: str) -> list:
 @frappe.whitelist()
 def get_cfp_reviewers(event_id: str) -> list:
     frappe.only_for([CHAPTER_MEMBER])
-    members = frappe.db.get_all(
-        "FOSS Global CFP Review Member",
-        {"parent": "Global CFP Settings"},
-        ["profile", "full_name", "user", "email"],
+    reviewer_users = frappe.db.get_all(
+        "Has Role",
+        {"role": REVIEWER, "parenttype": "User"},
+        pluck="parent",
     )
-    unique_users = [m.user for m in members if m.user]
-    user_images: dict[str, str] = {}
-    if unique_users:
-        user_images = {
-            u.name: u.user_image
-            for u in frappe.db.get_all(
-                "User", {"name": ("in", unique_users)}, ["name", "user_image"]
-            )
-        }
-    for m in members:
-        m["user_image"] = user_images.get(m.user, "")
-    return members
+    if not reviewer_users:
+        return []
+    return frappe.db.get_all(
+        "User",
+        {"name": ("in", reviewer_users), "enabled": 1},
+        ["name as user", "full_name", "user_image"],
+    )
 
 
 @frappe.whitelist()
