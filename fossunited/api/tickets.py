@@ -9,7 +9,6 @@ from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 
-from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import (
     EVENT,
     EVENT_CHECKIN,
@@ -19,6 +18,7 @@ from fossunited.doctype_ids import (
     RAZORPAY_PAYMENT,
     TICKET_TRANSFER,
 )
+from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 # nosemgrep: guest-whitelisted-method
@@ -297,6 +297,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_tickets_with_custom_fields(event_id: str) -> list:
     """
     Get all tickets with their custom field answers merged as dynamic fields.
@@ -308,8 +309,6 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
     Returns:
         dict: Dictionary containing tickets list and custom field names
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     from frappe.query_builder import DocType
     from frappe.query_builder.functions import Coalesce
@@ -360,38 +359,6 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
             tickets_map[ticket_id][row["question"]] = row["response"] or ""
 
     return list(tickets_map.values())
-
-
-def has_valid_permission(event_id: str) -> bool:
-    """
-    Check if the user has valid permission to view the tickets for the event
-
-    Args:
-        event_id (str): Event ID
-
-    Returns:
-        bool: True if the user has valid permission, False otherwise
-    """
-    session_user = frappe.session.user
-
-    # Allow if user has "Chapter Team Member" role AND is a member of the chapter
-    if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
-        chapter_id = frappe.db.get_value(EVENT, event_id, "chapter")
-        if chapter_id and check_if_chapter_member(chapter_id, session_user):
-            return True
-
-    # Allow if user is listed as an event member
-    if frappe.db.exists(
-        "FOSS Chapter Event Member",
-        {
-            "parent": event_id,
-            "parenttype": EVENT,
-            "email": session_user,
-        },
-    ):
-        return True
-
-    return False
 
 
 @frappe.whitelist()
@@ -488,11 +455,9 @@ def get_free_pass_insights(event_id: str) -> dict:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
 def get_event_free_codes(event: str):
     """Get all free ticket codes for an event"""
-
-    if not has_valid_permission(event):
-        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     codes = frappe.get_all(
         FREE_TICKET_CODE,
