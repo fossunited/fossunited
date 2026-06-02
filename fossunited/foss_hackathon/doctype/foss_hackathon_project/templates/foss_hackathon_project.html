@@ -1,6 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
+{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -19,7 +20,12 @@
         >
           <div class="flex-fill">
             <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
-              <h1 class="v3-text-primary mb-2 mb-md-0 text-2xl">{{ doc.title }}</h1>
+              <div class="d-flex align-items-center gap-3 mb-2 mb-md-0">
+                <h1 class="v3-text-primary text-2xl mb-0">{{ doc.title }}</h1>
+                {% if winner_status %}
+                  {{ hackathon_badge("winner", href=results_route, title=winner_status) }}
+                {% endif %}
+              </div>
 
               <div class="ml-md-auto d-flex align-items-center flex-wrap">
                 {% if doc.is_contribution_project and not doc.is_partner_project %}

@@ -130,6 +130,13 @@ class FOSSHackathonProject(WebsiteGenerator):
         context.likes = get_doc_likes(self.doctype, self.name)
         context.liked_by_user = frappe.session.user in context.likes
 
+        context.winner_status = frappe.db.get_value(
+            "Hackathon Result",
+            {"parent": self.hackathon, "project": self.name},
+            "status",
+        )
+        context.results_route = "/fosshack/results?year=2026"
+
         if self.is_partner_project:
             context.partner_project = frappe.get_doc(
                 HACKATHON_PARTNER_PROJECT, self.partner_project
