@@ -13,10 +13,10 @@ A guide to adopt Free and Open Source Software, Open Education, and Digital Comm
     - [Pillar III: Open Knowledge and Research](education-pillars.md#pillar-iii-open-knowledge-and-research)
     - [Pillar IV: Open Culture and Community](education-pillars.md#pillar-iv-open-culture-and-community)
 - [Institution playbooks](education-playbooks.md#institution-playbooks): Prioritised action plans sorted by institution size.
-    - [Playbook A: Small College](education-playbooks.md#playbook-a-small-college-under-500-students)
-    - [Playbook B: Mid-size College](education-playbooks.md#playbook-b-mid-size-college-500-to-2000-students)
-    - [Playbook C: Large College and Deemed University](education-playbooksmd#playbook-c-large-college-and-deemed-university-2000-to-5000-students)
-    - [Playbook D: Technical University](education-playbooks.md#playbook-d-technical-university-5000-students)
+    - [Playbook A: Small College](education-playbooks.md#playbook-a-small-college-under-2000-students)
+    - [Playbook B: Mid-size College](education-playbooks.md#playbook-b-mid-size-college-2000-to-7000-students)
+    - [Playbook C: Large College and Deemed University](education-playbooks.md#playbook-c-large-college-and-deemed-university-7000-to-20000-students)
+    - [Playbook D: Technical University](education-playbooks.md#playbook-d-technical-university-20000-students)
 - [Digital Commons: Course Guide](education-curriculum.md#digital-commons-course-guide): A complete 15-week, 2-credit elective
 - [Ideal Program Manager](#who-should-run-this-program): The ideal persona to lead your open source efforts.
 - [Beyond engineering: Other disciplines](education-cross-disciplinary.md): How institutions from other disciplies can contribute to and benefit from the open source ecosystem, with specific communities for each.

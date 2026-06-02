@@ -2,9 +2,10 @@
 
 Each playbook below is a short, prioritised starting point for institutions of different sizes.
 
-### Playbook A: Small College (under 500 students)
+### Playbook A: Small College (under 2000 students)
 
 **Constraints:** Limited dedicated IT staff, 2 to 4 departments, faculty wearing multiple hats.
+
 **Opportunity:** Small size means decisions move fast and a single champion can create visible change quickly.
 
 - Identify one faculty member willing to be the open source point of contact. Do not wait for an OSPO; one interested person is enough to begin.
@@ -15,10 +16,11 @@ Each playbook below is a short, prioritised starting point for institutions of d
 
 **Realistic first-year goal:** One lab migrated. One FOSS Cell meeting regularly. Two courses using open textbooks. At least one student who has made a real contribution to a public project.
 
-### Playbook B: Mid-size College (500 to 2,000 students)
+### Playbook B: Mid-size College (2000 to 7,000 students)
 
 **Constraints:** Multiple departments with independent cultures, possible resistance from faculty used to specific tools.
-**Opportunity:** Enough students to sustain a real club and enough courses to create noticeable change at the department level.
+
+**Opportunity:** Enough students to sustain a real club and enough courses to create noticeable change at the department level. Most typical private autonomous engineering colleges in India fall in this band.
 
 - Designate a faculty working group as the open source coordination function. Connect them with FOSS United's Education Workgroup.
 - Run a full software cost audit. Present findings to administration with five-year cost projections for a phased migration.
@@ -27,9 +29,10 @@ Each playbook below is a short, prioritised starting point for institutions of d
 - Apply for FOSS United Summer Project mentorship so that at least one student gets structured mentorship on a real FOSS project.
 - Host or co-host a small FOSS event on campus. FOSS United can provide speaker support and logistics guidance.
 
-### Playbook C: Large College and Deemed University (2,000 to 5,000 students)
+### Playbook C: Large College and Deemed University (7,000 to 20,000 students)
 
-**Constraints:** Institutional inertia, vendor relationships, complex procurement.
+**Constraints:** Institutional inertia, vendor relationships, complex procurement. Colleges at this scale in India can have 10,000 to 20,000 students while remaining affiliated autonomous colleges rather than universities. The governance is closer to Playbook B than to Playbook D but the operational complexity is considerably higher.
+
 **Opportunity:** Scale means even partial adoption affects thousands of students; credibility to attract FOSS community speakers and collaborators.
 
 - Form an Open Source Working Group with representation from at least three departments and one student body representative.
@@ -40,9 +43,10 @@ Each playbook below is a short, prioritised starting point for institutions of d
 - Recruit students from any design program into FOSS United's cross-disciplinary design workgroup.
 - Commit to sending a cohort of students to FOSS United's Summer Projects program each year.
 
-### Playbook D: Technical University (5,000+ students)
+### Playbook D: Technical University (20,000+ students)
 
-**Constraints:** Decentralised departments, complex governance, research imperatives competing with teaching.
+**Constraints:** Decentralised departments, complex governance, research imperatives competing with teaching. At this scale the institution is typically a deemed or autonomous university with degree-granting authority, or a state technical university with affiliated colleges. Think VIT or SRM.
+
 **Opportunity:** Enough scale to establish a genuine OSPO; enough research output to make open access policy meaningful.
 
 - Establish an Open Source Program Office (OSPO). Johns Hopkins was the first US university to do so, and 12 other institutions followed through Sloan Foundation funding.<sup>[9]</sup> An OSPO serves as the hub for all open source activity: policy, training, licensing guidance, and community.
