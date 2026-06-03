@@ -8,6 +8,7 @@ import frappe
 from frappe import _
 from frappe.exceptions import PermissionError
 from frappe.query_builder import DocType
+from frappe.query_builder.functions import Count
 from frappe.website.website_generator import WebsiteGenerator
 
 from fossunited.api.profile import is_valid_username
@@ -492,7 +493,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 IssuePR = DocType(HACKATHON_ISSUE_PR)
                 rows = (
                     frappe.qb.from_(IssuePR)
-                    .select(IssuePR.parent, frappe.qb.fn.Count("*").as_("cnt"))
+                    .select(IssuePR.parent, Count(IssuePR.name).as_("cnt"))
                     .where(IssuePR.parent.isin(contrib_ids))
                     .groupby(IssuePR.parent)
                 ).run(as_dict=True)

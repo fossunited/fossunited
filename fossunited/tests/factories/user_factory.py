@@ -34,7 +34,7 @@ class UserFactory(BaseFactory["User"]):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        email = self.overrides.get("email", fake.email())
+        email = self.overrides.get("email", fake.unique.email())
         first_name = self.overrides.get("first_name", fake.first_name())
         last_name = self.overrides.get("last_name", fake.last_name())
         return {
