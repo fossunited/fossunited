@@ -50,7 +50,7 @@ The numbered references below correspond to citations in the text.
 
 **[7]** Ithaka S+R. "University Open Source Program Offices." August 2025. Describes the Saint Louis University capstone model. sr.ithaka.org/publications/university-open-source-program-offices/
 
-**[8]** UC Santa Cruz Open Source Program Office. Open Source Research Experience (OSRE) and Summer of Reproducibility programme. ucsc-ospo.github.io
+**[8]** UC Santa Cruz Open Source Program Office. Open Source Research Experience (OSRE) and Summer of Reproducibility program. ucsc-ospo.github.io
 
 **[9]** Ithaka S+R. "Open Source Program Offices." February 2024. Documents Johns Hopkins as the first US university OSPO and Sloan Foundation funding of 12 institutions. sr.ithaka.org/blog/open-source-program-offices/
 

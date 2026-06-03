@@ -1,5 +1,5 @@
 
-## Who should run this programme
+## Who should run this program
 
 The single biggest predictor of whether a college's open source initiative survives its first year is whether the right person is running it. Here is what that person looks like.
 

@@ -67,6 +67,7 @@ nav = [
       {"Get started" = "education-start-here.md"},
       {"Why bother?" = "education-why.md"},
       {"Policy Tailwinds" = "education-policy.md"},
+      {"Program Manager" = "education-program-manager.md"},
       {"Playbooks" = "education-playbooks.md"},
       {"Pillars" = "education-pillars.md"},
       {"Digital Commons Course" = "education-curriculum.md"},
