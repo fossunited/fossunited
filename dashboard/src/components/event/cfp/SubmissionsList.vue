@@ -43,7 +43,9 @@
           size="sm"
           class="text-xs"
         />
-        <span class="text-xs text-ink-gray-5 whitespace-nowrap">Count: {{ cfpSubmissions.data?.length }}</span>
+        <span class="text-xs text-ink-gray-5 whitespace-nowrap"
+          >Count: {{ cfpSubmissions.data?.length }}</span
+        >
       </div>
     </div>
   </div>
@@ -76,6 +78,13 @@ import { useStorage } from '@vueuse/core'
 import { ref, watch, computed } from 'vue'
 import { createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
+import { toast } from 'vue-sonner'
+
+// Module-level: resets on page refresh, survives component remounts within same load.
+const _assignedToggleCache = new Map()
+// Tracks events where the "all assigned reviewed" auto-untoggle already fired this page load.
+// Prevents re-firing when user manually re-enables the toggle.
+const _autoUntoggleFiredCache = new Set()
 
 const props = defineProps({
   event: {
@@ -98,8 +107,15 @@ const storageKey = props.reviewerMode
 const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
-const showAssignedOnly = ref(true)
 const sortBy = ref('creation_desc')
+
+// Restore from cache if user already toggled this session; default false until smart default runs.
+const showAssignedOnly = ref(_assignedToggleCache.get(props.event) ?? false)
+
+watch(showAssignedOnly, (val) => {
+  _assignedToggleCache.set(props.event, val)
+})
+
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
 
@@ -144,13 +160,16 @@ const cfpSubmissions = createResource({
     cfpSubmissions.originalData = filtered
     return filtered
   },
-  onSuccess() {
+  onSuccess(data) {
+    if (props.reviewerMode && !_assignedToggleCache.has(props.event)) {
+      const hasAssigned = data.some((s) => s._is_assigned === 'Yes')
+      showAssignedOnly.value = hasAssigned
+      if (!hasAssigned) {
+        toast('No proposals assigned to you - showing all.')
+      }
+    }
     applyFilters()
   },
-})
-
-defineExpose({
-  reloadSubmissions: () => cfpSubmissions.reload(),
 })
 
 function applyFilters() {
@@ -169,16 +188,33 @@ function applyFilters() {
     data = data.filter((s) => s.status === selectedStatus.value)
   }
 
-  const fieldFilters = {
+  const baseFieldFilters = {
     ...filters.value,
     ...(props.reviewerMode && showNotReviewed.value && !filters.value?._is_reviewed
       ? { _is_reviewed: ['=', 'No'] }
       : {}),
-    ...(props.reviewerMode && showAssignedOnly.value ? { _is_assigned: ['=', 'Yes'] } : {}),
   }
 
-  if (Object.keys(fieldFilters).length > 0) {
-    data = filterSubmissions(data, fieldFilters)
+  if (Object.keys(baseFieldFilters).length > 0) {
+    data = filterSubmissions(data, baseFieldFilters)
+  }
+
+  // Check assigned filter separately so we can detect "all assigned are reviewed".
+  if (props.reviewerMode && showAssignedOnly.value) {
+    const assignedData = filterSubmissions(data, { _is_assigned: ['=', 'Yes'] })
+    if (
+      assignedData.length === 0 &&
+      data.length > 0 &&
+      !_autoUntoggleFiredCache.has(props.event)
+    ) {
+      // Reviewer finished all assigned proposals — auto-untoggle once per page load.
+      // After this fires, user can manually re-enable without it fighting back.
+      _autoUntoggleFiredCache.add(props.event)
+      showAssignedOnly.value = false
+      toast('All your assigned proposals are reviewed - showing rest of them.')
+      return // watch re-runs applyFilters with showAssignedOnly=false
+    }
+    data = assignedData
   }
 
   data = [...data].sort((a, b) => {
