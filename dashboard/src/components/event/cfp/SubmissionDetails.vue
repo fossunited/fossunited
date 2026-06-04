@@ -11,6 +11,7 @@ import AssignReviewers from './AssignReviewers.vue'
 const props = defineProps({
   eventId: { type: String, default: '' },
 })
+const emit = defineEmits(['reviewers:updated'])
 const submissionId = defineModel('submissionId', { type: String, default: '' })
 const tabs = ref([
   {
@@ -65,7 +66,7 @@ watch(
   <Suspense>
     <div v-if="submission.data" class="w-full p-3 sm:p-6 flex flex-col gap-4 overflow-y-scroll max-h-svh">
       <SubmissionHeader />
-      <AssignReviewers v-if="showAssignReviewers" :submission-id="submissionId" :event-id="props.eventId" />
+      <AssignReviewers v-if="showAssignReviewers" :submission-id="submissionId" :event-id="props.eventId" @reviewers:updated="emit('reviewers:updated', $event)" />
       <SubmissionInfoList />
       <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
       <SubmissionOverview v-if="activeTab === 0" />

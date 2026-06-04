@@ -202,8 +202,29 @@ function applyFilters() {
 watch([filters, searchQuery, selectedStatus, sortBy], applyFilters, { deep: true })
 watch([showNotReviewed, showAssignedOnly], applyFilters)
 
+function patchAssignedUsers(name, newUsers) {
+  const patcher = (item) => {
+    if (item.name !== name) return
+    const verdictMap = Object.fromEntries(
+      (item._assigned_users ?? []).map((u) => [u.user, u._review_verdict]),
+    )
+    item._assigned_users = newUsers.map((u) => ({
+      ...u,
+      _review_verdict: verdictMap[u.user] ?? null,
+    }))
+    item._is_assigned = newUsers.length > 0 ? 'Yes' : 'No'
+  }
+  cfpSubmissions.originalData?.forEach(patcher)
+  applyFilters()
+}
+
 function handleOpenSubmission(submission) {
   submission._is_seen = true
   emit('open:submission', submission.name)
 }
+
+defineExpose({
+  reloadSubmissions: () => cfpSubmissions.reload(),
+  patchAssignedUsers,
+})
 </script>

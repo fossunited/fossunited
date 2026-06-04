@@ -100,7 +100,7 @@ defineEmits(['open:submission'])
             size="sm"
             class="rounded-full"
             :class="[
-              !u._review_verdict && 'opacity-40 ring-2 ring-outline-gray-3',
+              !u._review_verdict && 'opacity-40 dark:opacity-75 ring-2 ring-outline-gray-3 dark:ring-outline-gray-4',
               u._review_verdict === 'Yes' && 'ring-2 ring-green-500',
               u._review_verdict === 'No' && 'ring-2 ring-red-500',
               u._review_verdict === 'Maybe' && 'ring-2 ring-orange-400',

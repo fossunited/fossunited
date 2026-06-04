@@ -38,6 +38,10 @@ const refreshSubmissions = () => {
   submissionsListRef.value?.reloadSubmissions?.()
 }
 provide('refreshSubmissions', refreshSubmissions)
+
+function handleReviewersUpdated({ id, users }) {
+  submissionsListRef.value?.patchAssignedUsers(id, users)
+}
 </script>
 
 <template>
@@ -60,7 +64,7 @@ provide('refreshSubmissions', refreshSubmissions)
       </Suspense>
     </div>
     <div v-if="!isSmallScreen" class="flex w-full basis-3/5 shrink-0">
-      <SubmissionDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" :event-id="route.params.id" />
+      <SubmissionDetails v-if="selectedSubmission" v-model:submission-id="selectedSubmission" :event-id="route.params.id" @reviewers:updated="handleReviewersUpdated" />
       <div v-else class="w-full h-svh flex items-center justify-center text-base text-ink-gray-5">
         Select a submission to view details.
       </div>

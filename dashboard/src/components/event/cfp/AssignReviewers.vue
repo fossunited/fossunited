@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { createResource, Autocomplete, Avatar, Button, Tooltip } from 'frappe-ui'
 import { IconHelpCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
@@ -46,6 +46,8 @@ const props = defineProps({
   submissionId: { type: String, required: true },
   eventId: { type: String, required: true },
 })
+
+const emit = defineEmits(['reviewers:updated'])
 
 const reviewers = createResource({
   url: 'fossunited.api.cfp.get_cfp_reviewers',
@@ -62,19 +64,14 @@ const currentAssignments = createResource({
 })
 
 const selectedOptions = ref([])
-let initializing = false
 
 watch(
   [() => currentAssignments.data, () => reviewers.data],
   ([assignments, reviewerList]) => {
     if (!assignments || !reviewerList) return
-    initializing = true
     selectedOptions.value = reviewerList
       .filter((r) => assignments.includes(r.user))
       .map((r) => ({ label: r.full_name, value: r.user, user_image: r.user_image }))
-    nextTick(() => {
-      initializing = false
-    })
   },
 )
 
@@ -99,6 +96,15 @@ const saveResource = createResource({
   url: 'fossunited.api.cfp.set_submission_reviewers',
   onSuccess() {
     toast.success('Reviewers updated')
+    currentAssignments.reload()
+    emit('reviewers:updated', {
+      id: props.submissionId,
+      users: selectedOptions.value.map((o) => ({
+        user: o.value,
+        full_name: o.label,
+        user_image: o.user_image,
+      })),
+    })
   },
   onError(err) {
     toast.error('Failed to update reviewers', { description: err.message })
