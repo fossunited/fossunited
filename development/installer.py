@@ -207,6 +207,7 @@ def create_site_in_bench(args):
         new_site_cmd = [
             "bench",
             "new-site",
+            "--force",
             "--db-root-username=root",
             "--db-host=mariadb",  # Should match the compose service name
             f"--db-type={args.db_type}",  # Add the selected database type
@@ -223,6 +224,7 @@ def create_site_in_bench(args):
         new_site_cmd = [
             "bench",
             "new-site",
+            "--force",
             "--db-root-username=root",
             "--db-host=postgresql",  # Should match the compose service name
             f"--db-type={args.db_type}",  # Add the selected database type
