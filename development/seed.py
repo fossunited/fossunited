@@ -5,7 +5,8 @@ can explore the application immediately after install.
 
 Usage::
 
-    bench --site foss.localhost execute fossunited.dev.seed.seed
+    podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+        ../env/bin/python /workspace/development/run_seed.py
 
 Default credentials
 -------------------
@@ -49,20 +50,22 @@ from fossunited.doctype_ids import (
     TICKET_TIER,
     TICKET_TRANSFER,
     USER_PROFILE,
+    GLOBAL_CFP_SETTINGS,
 )
-from fossunited.id.roles import CHAPTER_MEMBER as CHAPTER_TEAM_MEMBER_ROLE
-from fossunited.tests.utils import (
-    insert_cfp_form,
-    insert_cfp_submission,
-    insert_rsvp_form,
-    insert_rsvp_submission,
-    insert_test_chapter,
-    insert_test_event,
-    insert_test_hackathon,
-    insert_test_hackathon_localhost,
-    insert_test_hackathon_team,
-    insert_test_ticket,
-    insert_user_profile,
+from fossunited.id.roles import CHAPTER_MEMBER as CHAPTER_TEAM_MEMBER_ROLE, REVIEWER as REVIEWER_ROLE
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FOSSEventCFPFactory,
+    FOSSEventCFPSubmissionFactory,
+    FOSSEventRSVPFactory,
+    FOSSEventRSVPSubmissionFactory,
+    FOSSEventTicketFactory,
+    FOSSHackathonFactory,
+    FOSSHackathonLocalHostFactory,
+    FOSSHackathonTeamFactory,
+    UserFactory,
+    get_foss_profile_id,
 )
 
 logger = frappe.logger("seed", allow_site=True)
@@ -138,6 +141,12 @@ SEED_USERS = [
         "last_name": "Chapter Lead",
         "kind": "chapter",
         "chapter_slug": "campus-chapter",
+    },
+    {
+        "email": "reviewer@example.com",
+        "first_name": "Demo",
+        "last_name": "Reviewer",
+        "kind": "reviewer",
     },
 ]
 
@@ -365,7 +374,9 @@ def seed():
         frappe.throw(_("Seed script can only be run in developer mode."))
 
     prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
+    prev_in_test = frappe.flags.get("in_test", False)
     frappe.flags.ignore_permissions = True
+    frappe.flags.in_test = True
 
     try:
         logger.info("Seeding development data")
@@ -396,24 +407,26 @@ def seed():
         raise
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
+        frappe.flags.in_test = prev_in_test
 
 
 def _create_users():
     """Ensure every entry in SEED_USERS has a User doc, profile, and password."""
-    result = {"normal": [], "chapter": []}
+    result = {"normal": [], "chapter": [], "reviewer": []}
 
     for raw_user_cfg in SEED_USERS:
         user_cfg = _mock_seed_user(raw_user_cfg)
         email = user_cfg["email"]
         is_new_user = not frappe.db.exists("User", email)
 
-        insert_user_profile(
-            email=email, first_name=user_cfg["first_name"], last_name=user_cfg["last_name"]
-        )
-
         if is_new_user:
+            UserFactory.create(
+                email=email, first_name=user_cfg["first_name"], last_name=user_cfg["last_name"]
+            )
             frappe.utils.password.update_password(email, DEFAULT_PASSWORD)
             logger.info("Set default password for new user: %s", email)
+        else:
+            logger.info("Skipped User '%s' (already exists)", email)
 
         if user_cfg["kind"] == "chapter":
             user_roles = frappe.get_roles(email)
@@ -422,6 +435,19 @@ def _create_users():
                 user_doc.append("roles", {"role": CHAPTER_TEAM_MEMBER_ROLE})
                 user_doc.save()
             result["chapter"].append(user_cfg)
+        elif user_cfg["kind"] == "reviewer":
+            user_doc = frappe.get_doc("User", email)
+            changed = False
+            if REVIEWER_ROLE not in frappe.get_roles(email):
+                user_doc.append("roles", {"role": REVIEWER_ROLE})
+                changed = True
+            # Desk access (/app) requires System User type
+            if user_doc.user_type != "System User":
+                user_doc.user_type = "System User"
+                changed = True
+            if changed:
+                user_doc.save()
+            result["reviewer"].append(email)
         else:
             result["normal"].append(email)
 
@@ -438,7 +464,7 @@ def _create_chapters():
         data["email"] = _mock_email(data["email"])
 
         cid = f"{data['chapter_name']}-{data['chapter_type']}"
-        chapters.append(ensure_record(CHAPTER, cid, insert_test_chapter, **data))
+        chapters.append(ensure_record(CHAPTER, cid, FOSSChapterFactory.create, **data))
     return chapters
 
 
@@ -509,7 +535,7 @@ def _create_events(city_chapters):
                 kwargs.update(show_rsvp=1, show_cfp=1, tickets_status="Live", is_paid_event=0)
 
             event = ensure_record(
-                EVENT, {"event_permalink": permalink}, insert_test_event, chapter, **kwargs
+                EVENT, {"event_permalink": permalink}, FOSSChapterEventFactory.create, chapter=chapter.name, **kwargs
             )
 
             if tpl["bucket"] == "live":
@@ -555,8 +581,8 @@ def _ensure_free_event_rsvp_glue(event):
 
         return rsvp_doc
 
-    return insert_rsvp_form(
-        event.name,
+    return FOSSEventRSVPFactory.create(
+        event=event.name,
         is_published=1,
         max_rsvp_count=FREE_EVENT_RSVP_MAX_COUNT,
         rsvp_description="<p>RSVP to confirm your attendance.</p>",
@@ -580,8 +606,8 @@ def _ensure_paid_test_conference(city_chapters=None):
     if event_name:
         event = frappe.get_doc(EVENT, event_name)
     else:
-        event = insert_test_event(
-            anchor_chapter,
+        event = FOSSChapterEventFactory.create(
+            chapter=anchor_chapter.name,
             event_name=PAID_TEST_EVENT_NAME,
             event_permalink=PAID_TEST_EVENT_PERMALINK,
             event_type="Conference",
@@ -589,7 +615,7 @@ def _ensure_paid_test_conference(city_chapters=None):
             is_published=1,
             event_start_date=datetime.now() + timedelta(days=20),
             event_end_date=datetime.now() + timedelta(days=20, hours=10),
-            description=(
+            event_description=(
                 "<p>Dedicated paid test conference for local mock ticket generation.</p>"
             ),
             event_location="Mock Convention Center",
@@ -683,8 +709,8 @@ def _create_rsvps(live_events, users):
             if rsvp_changed:
                 rsvp.save(ignore_permissions=True)
         else:
-            rsvp = insert_rsvp_form(
-                event.name,
+            rsvp = FOSSEventRSVPFactory.create(
+                event=event.name,
                 is_published=1,
                 max_rsvp_count=FREE_EVENT_RSVP_MAX_COUNT,
                 rsvp_description=(
@@ -701,10 +727,10 @@ def _create_rsvps(live_events, users):
             RSVP_RESPONSE,
             {"linked_rsvp": rsvp.name, "email": attendees[0]},
         ):
-            insert_rsvp_submission(
-                rsvp.name,
+            FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=rsvp.name,
                 submitted_by=attendees[0],
-                name=_mock_prefixed("Test Attendee 1"),
+                name1=_mock_prefixed("Test Attendee 1"),
                 email=attendees[0],
                 im_a="Professional",
             )
@@ -714,10 +740,10 @@ def _create_rsvps(live_events, users):
             RSVP_RESPONSE,
             {"linked_rsvp": rsvp.name, "email": attendees[1]},
         ):
-            insert_rsvp_submission(
-                rsvp.name,
+            FOSSEventRSVPSubmissionFactory.create(
+                linked_rsvp=rsvp.name,
                 submitted_by=attendees[1],
-                name=_mock_prefixed("Test Attendee 2"),
+                name1=_mock_prefixed("Test Attendee 2"),
                 email=attendees[1],
                 im_a="Student",
             )
@@ -746,8 +772,8 @@ def _create_cfps(live_events):
             logger.info("Skipped CFP for '%s' (already exists)", event.event_name)
             continue
 
-        cfp = insert_cfp_form(
-            event.name,
+        cfp = FOSSEventCFPFactory.create(
+            event=event.name,
             status="Live",
             deadline=now + timedelta(days=20),
             cfp_form_description=(
@@ -774,9 +800,9 @@ def _create_cfps(live_events):
         ]
 
         for s_email, s_name, title, desc in submissions:
-            insert_cfp_submission(
-                cfp.name,
-                event.name,
+            FOSSEventCFPSubmissionFactory.create(
+                linked_cfp=cfp.name,
+                event=event.name,
                 submitted_by=s_email,
                 talk_title=title,
                 session_type="Talk",
@@ -806,8 +832,8 @@ def _create_hackathon(chapters):
 
     chapter = next((ch for ch in chapters if ch.slug == cfg["chapter_slug"]), chapters[0])
 
-    hackathon = insert_test_hackathon(
-        chapter.name,
+    hackathon = FOSSHackathonFactory.create(
+        chapter=chapter.name,
         hackathon_name=hackathon_name,
         permalink=_mock_permalink(cfg["permalink"]),
         hackathon_type="Hybrid",
@@ -824,13 +850,13 @@ def _create_hackathon(chapters):
     logger.info("Created hackathon: %s", hackathon_name)
 
     teams = [
-        insert_test_hackathon_team(hackathon.as_dict(), team_name=_mock_prefixed(team_name))
+        FOSSHackathonTeamFactory.create(hackathon=hackathon.name, team_name=_mock_prefixed(team_name))
         for team_name in cfg["teams"]
     ]
     logger.info("Created %d hackathon teams", len(teams))
 
     localhost_name = _mock_prefixed(cfg["localhost"])
-    insert_test_hackathon_localhost(hackathon.name, localhost_name=localhost_name)
+    FOSSHackathonLocalHostFactory.create(parent_hackathon=hackathon.name, localhost_name=localhost_name)
     logger.info("Created hackathon localhost: %s", localhost_name)
 
     created_projects = 0
@@ -918,8 +944,8 @@ def _bootstrap_ticket_prototype():
         return prototype
 
     paid_event = _ensure_paid_event_for_ticket_generation()
-    insert_test_ticket(
-        paid_event.name,
+    FOSSEventTicketFactory.create(
+        event=paid_event.name,
         full_name=_mock_prefixed("Seed Ticket Prototype"),
         email=f"seed-ticket-{frappe.generate_hash(length=8).lower()}@example.com",
         tier=_get_ticket_tier_for_event(paid_event.name),
@@ -981,18 +1007,18 @@ def _update_mock_profile_metadata(profile, identity):
 def _generate_mock_profile(index):
     """Generate one mock profile using native helper + hook-driven profile creation."""
     identity = _create_mock_identity(index)
-    helper_profile_name = None
+    profile_name = None
 
     try:
         # Create User + Profile using the project helper so user hooks run natively.
-        helper_profile_name = insert_user_profile(
+        user_doc = UserFactory.create(
             email=identity["email"],
             first_name=identity["first_name"],
             last_name=identity["last_name"],
         )
         frappe.utils.password.update_password(identity["email"], DEFAULT_PASSWORD)
 
-        profile_name = helper_profile_name or frappe.db.get_value(
+        profile_name = get_foss_profile_id(user_doc.name) or frappe.db.get_value(
             USER_PROFILE, {"user": identity["email"]}, "name"
         )
         if not profile_name:
@@ -1006,8 +1032,8 @@ def _generate_mock_profile(index):
 
     except Exception:
         # Avoid leaving detached records on partial failures.
-        if helper_profile_name and frappe.db.exists(USER_PROFILE, helper_profile_name):
-            _safe_delete(USER_PROFILE, helper_profile_name)
+        if profile_name and frappe.db.exists(USER_PROFILE, profile_name):
+            _safe_delete(USER_PROFILE, profile_name)
         if frappe.db.exists("User", identity["email"]):
             _safe_delete("User", identity["email"])
         raise
@@ -1550,9 +1576,10 @@ def teardown_all():
 
         summary[EVENT] = _delete_many(EVENT, list(mock_event_names))
 
+        mock_chapter_emails = [c.get("email") for c in CHAPTER_DATA if c.get("email")]
         mock_chapter_names = frappe.get_all(
             CHAPTER,
-            filters={"chapter_name": ["like", f"{MOCK_PREFIX}%"]},
+            filters={"email": ["in", mock_chapter_emails]},
             pluck="name",
             page_length=100000,
         )
@@ -1576,3 +1603,6 @@ def teardown_all():
         raise
     finally:
         frappe.flags.ignore_permissions = prev_ignore_permissions
+
+if __name__ == "__main__":
+    seed()
