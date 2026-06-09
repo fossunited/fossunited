@@ -38,7 +38,7 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             },
         )
 
-    def test_unpublish_on_max_count(self):
+    def test_rsvp_is_full_on_max_count(self):
         rsvp = self.rsvp
 
         emails = set()
@@ -46,10 +46,24 @@ class TestFOSSEventRSVPSubmission(FrappeTestCase):
             emails.add(fake.email())
 
         for email in emails:
-            FOSSEventRSVPSubmissionFactory.create(linked_rsvp=self.rsvp.name, email=email)
+            FOSSEventRSVPSubmissionFactory.create(linked_rsvp=rsvp.name, email=email)
 
-        is_published = frappe.db.get_value(EVENT_RSVP, rsvp.name, "is_published")
-        self.assertFalse(is_published)
+        rsvp.reload()
+        self.assertTrue(rsvp.is_full())
+        self.assertTrue(frappe.db.get_value(EVENT_RSVP, rsvp.name, "is_published"))
+
+    def test_submission_blocked_when_rsvp_full(self):
+        rsvp = self.rsvp
+
+        emails = set()
+        while len(emails) < int(rsvp.max_rsvp_count):
+            emails.add(fake.email())
+
+        for email in emails:
+            FOSSEventRSVPSubmissionFactory.create(linked_rsvp=rsvp.name, email=email)
+
+        with self.assertRaises(frappe.ValidationError):
+            FOSSEventRSVPSubmissionFactory.create(linked_rsvp=rsvp.name, email=fake.email())
 
     def test_add_to_email_group(self):
         with self.set_user("Guest"):
