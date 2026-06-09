@@ -602,21 +602,15 @@ HACKATHON_URLS = {
 
 
 def get_hackathon_results(hackathon_id, year):
-    """
-    Fetch hackathon data from database for a specific year
-    """
-    # Fetch hackathon details
     hackathon = frappe.get_doc(HACKATHON, hackathon_id)
 
     if not hackathon:
         return None
 
-    # Get results from child table
     results = hackathon.get("results", [])
     if not results:
         return _build_hackathon_data(hackathon, year, projects=[])
 
-    # Batch fetch all projects and teams in 4 queries instead of N+1
     project_names = [r.project for r in results if r.project]
     team_names = [r.team for r in results if r.team]
 
@@ -625,7 +619,16 @@ def get_hackathon_results(hackathon_id, year):
         for p in frappe.get_all(
             HACKATHON_PROJECT,
             filters={"name": ["in", project_names]},
-            fields=["name", "title", "route", "short_description", "repo_link"],
+            fields=[
+                "name",
+                "title",
+                "route",
+                "short_description",
+                "repo_link",
+                "is_contribution_project",
+                "partner_project.project_name as partner_project_name",
+                "partner_project.route as partner_project_route",
+            ],
         )
     }
 
@@ -682,6 +685,9 @@ def get_hackathon_results(hackathon_id, year):
                 "status": result.status,
                 "team_members": members_by_team.get(result.team, []),
                 "repo_link": project.repo_link,
+                "is_contribution_project": project.is_contribution_project,
+                "partner_project_name": project.partner_project_name or "",
+                "partner_project_route": project.partner_project_route or "",
             }
         )
 
@@ -728,7 +734,6 @@ def get_all_hackathon_results():
     for year in ["2020", "2021", "2023"]:
         hackathons.append(ARCHIVE_HACKATHONS[year])
 
-    # # Fetch from database
     for hack in frappe.get_all(HACKATHON, ["name", "start_date"]):
         event_year = str(hack.start_date.year)
         hackathon_data = get_hackathon_results(hack.name, event_year)
@@ -747,5 +752,6 @@ def get_context(context):
     """
     context.hackathons = get_all_hackathon_results()
     context.hide_nav = True
+    context.no_cache = False
 
     return context
