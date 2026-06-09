@@ -24,7 +24,9 @@ class FOSSEventRSVPSubmission(Document):
     if TYPE_CHECKING:
         from frappe.types import DF
 
-        from fossunited.fossunited.doctype.event_check_in.event_check_in import EventCheckIn
+        from fossunited.fossunited.doctype.event_check_in.event_check_in import (
+            EventCheckIn,
+        )
         from fossunited.fossunited.doctype.foss_custom_answer.foss_custom_answer import (
             FOSSCustomAnswer,
         )
@@ -51,6 +53,7 @@ class FOSSEventRSVPSubmission(Document):
     def before_insert(self):
         self.deny_if_duplicate()
         self.validate_rsvp_is_published()
+        self.validate_rsvp_not_full()
         self.handle_submission_status()
 
     def after_insert(self):
@@ -106,20 +109,14 @@ class FOSSEventRSVPSubmission(Document):
         if not rsvp_published:
             frappe.throw(_("RSVP is not published"))
 
-    def close_rsvp_on_max_count(self):
-        max_count = self.get_max_count()
-        submission_count = frappe.db.count(
-            RSVP_RESPONSE,
-            {"linked_rsvp": self.linked_rsvp},
-        )
+    def validate_rsvp_not_full(self):
+        rsvp = frappe.get_doc(EVENT_RSVP, self.linked_rsvp)
+        if rsvp.is_full():
+            frappe.throw(_("RSVP is full. Registration is closed."), frappe.ValidationError)
 
-        if submission_count >= max_count:
-            frappe.db.set_value(
-                EVENT_RSVP,
-                self.linked_rsvp,
-                "is_published",
-                False,
-            )
+    def close_rsvp_on_max_count(self):
+        rsvp = frappe.get_doc(EVENT_RSVP, self.linked_rsvp)
+        if rsvp.is_full():
             self.notify_organizers()
 
     def notify_organizers(self):
@@ -136,9 +133,9 @@ class FOSSEventRSVPSubmission(Document):
         team_emails = get_chapter_members_email(self.chapter)
         message = f"""
         Dear Organizers,
-        <br>
-        The RSVP for {self.event_name} has reached its maximum count.<br>
-        RSVP form is now closed.<br>
+        <br><br>
+        The RSVP for '<strong>{self.event_name}</strong>' has reached its maximum count.<br>
+        RSVP form is now closed. Please increase the max count to continue receiving RSVP for this event.<br><br>
         Regards,<br>
         FOSS United Team
         """
@@ -152,10 +149,6 @@ class FOSSEventRSVPSubmission(Document):
             reference_name=self.name,
         )
 
-    def get_max_count(self):
-        max_count = frappe.db.get_value(EVENT_RSVP, self.linked_rsvp, "max_rsvp_count")
-        return max_count
-
     def handle_submission_status(self):
         # If requires_host_approval == True, but the status is accepted at time of creation,
         # Throw a frappe.PermissionError
@@ -164,7 +157,10 @@ class FOSSEventRSVPSubmission(Document):
         )
 
         if requires_host_approval and self.status == "Accepted":
-            frappe.throw(_("Invalid action. Status cannot be `Accepted`."), frappe.PermissionError)
+            frappe.throw(
+                _("Invalid action. Status cannot be `Accepted`."),
+                frappe.PermissionError,
+            )
 
         # If the RSVP requires host approval, set the status to Pending
         if requires_host_approval:
