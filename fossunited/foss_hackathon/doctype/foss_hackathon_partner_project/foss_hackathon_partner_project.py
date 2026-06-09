@@ -8,6 +8,7 @@ from fossunited.doctype_ids import (
     HACKATHON,
     HACKATHON_ISSUE_PR,
     HACKATHON_PROJECT,
+    HACKATHON_RESULT,
     HACKATHON_TEAM_MEMBER,
 )
 
@@ -69,15 +70,29 @@ class FOSSHackathonPartnerProject(WebsiteGenerator):
             order_by="creation desc",
         )
 
-        # Enrich participant projects with team size and likes
+        # Bulk-fetch winner status for all participant projects
+        project_names = [p.name for p in participant_projects]
+        result_map = {}
+        if project_names:
+            result_map = {
+                r.project: r
+                for r in frappe.get_all(
+                    HACKATHON_RESULT,
+                    filters={"parent": self.hackathon, "project": ["in", project_names]},
+                    fields=["project", "status"],
+                )
+            }
+
+        # Enrich participant projects with team size and winner status
         for project in participant_projects:
-            # Get team size
             project.team_size = frappe.db.count(
                 HACKATHON_TEAM_MEMBER, filters={"parent": project.team}
             )
             project.contributions = frappe.db.count(
                 HACKATHON_ISSUE_PR, filters={"parent": project.name}
             )
+            result = result_map.get(project.name)
+            project.winner_status = result.status if result else None
 
         context.participant_projects = participant_projects
 

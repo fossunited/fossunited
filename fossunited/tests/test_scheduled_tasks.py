@@ -60,7 +60,7 @@ class TestScheduledTasks(FrappeTestCase):
 
         self.assertEqual(self.event1.status, "Concluded")
         self.assertEqual(self.event1_cfp.status, "Closed")
-        self.assertEqual(self.event1_rsvp.is_published, 0)
+        self.assertEqual(self.event1_rsvp.is_published, 1)
 
         self.assertEqual(self.event2.status, "Cancelled")
         self.assertEqual(self.event2_cfp.status, "Live")

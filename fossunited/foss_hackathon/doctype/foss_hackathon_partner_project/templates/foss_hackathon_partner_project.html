@@ -1,6 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
+{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -59,6 +60,12 @@
   </div>
 {% endblock %}
 
+{% block page_script %}
+<script>
+  frappe.ready(() => $('[data-toggle="tooltip"]').tooltip())
+</script>
+{% endblock %}
+
 {% macro render_description() %}
   {% if doc.description %}
     <div class="v3-card mb-4 section-markdown">
@@ -91,7 +98,12 @@
             class="v3-clickable d-flex flex-column p-3"
             style="border:1px solid var(--v3-button-border);border-radius:0.5rem;"
           >
-            <div class="v3-text-primary mb-1 text-sm font-weight-bold">{{ project.title }}</div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              {% if project.winner_status %}
+                {{ hackathon_badge("winner", title=project.winner_status + " - " + project.title, size=28) }}
+              {% endif %}
+              <span class="v3-text-primary text-sm font-weight-bold">{{ project.title }}</span>
+            </div>
             {% if project.short_description %}
               <div class="v3-text-secondary text-sm">
                 {{ project.short_description | truncate(100, true) }}
