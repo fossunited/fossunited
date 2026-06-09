@@ -148,8 +148,14 @@ RSVPs, CFPs, and a hackathon — without having to create records manually.
 
 ### Running the Script
 
+For Frappe Manager / Manual Bench installations:
 ```sh
-podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+bench execute fossunited.dev.seed.seed
+```
+
+For Devcontainer (Docker/Podman) environments:
+```sh
+<docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
     ../env/bin/python /workspace/development/run_seed.py
 ```
 

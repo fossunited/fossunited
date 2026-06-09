@@ -2,7 +2,7 @@
 Seed runner for the FOSSUnited bench.
 
 Run via:
-    podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+    <docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
         ../env/bin/python /workspace/development/run_seed.py
 
 This bypasses `bench execute`'s eval() namespace bug on Python 3.14 which prevents

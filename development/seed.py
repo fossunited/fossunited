@@ -5,7 +5,12 @@ can explore the application immediately after install.
 
 Usage::
 
-    podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+    # For Frappe Manager / Manual Bench installations:
+    bench execute fossunited.dev.seed.seed
+    bench execute fossunited.dev.seed.teardown_all
+
+    # For Devcontainer (Docker/Podman) environments:
+    <docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
         ../env/bin/python /workspace/development/run_seed.py
 
 Default credentials
@@ -497,6 +502,7 @@ def _link_chapter_members(chapters):
             continue
 
         existing = [m.chapter_member for m in chapter.get("chapter_members", [])]
+
         if profile_name not in existing:
             chapter.append(
                 "chapter_members",
@@ -1576,7 +1582,7 @@ def teardown_all():
 
         summary[EVENT] = _delete_many(EVENT, list(mock_event_names))
 
-        mock_chapter_emails = [c.get("email") for c in CHAPTER_DATA if c.get("email")]
+        mock_chapter_emails = [_mock_email(c.get("email")) for c in CHAPTER_DATA if c.get("email")]
         mock_chapter_names = frappe.get_all(
             CHAPTER,
             filters={"email": ["in", mock_chapter_emails]},

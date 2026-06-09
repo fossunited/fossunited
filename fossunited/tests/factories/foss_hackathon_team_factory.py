@@ -17,7 +17,7 @@ class FOSSHackathonTeamFactory(BaseFactory[FOSSHackathonTeam]):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        hackathon = self.overrides.get("hackathon") or FOSSHackathonFactory.create().name
+        hackathon = FOSSHackathonFactory.create().name if "hackathon" not in self.overrides else self.overrides["hackathon"]
         return {
             "hackathon": hackathon,
             "team_name": fake.unique.name(),

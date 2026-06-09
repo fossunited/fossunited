@@ -15,7 +15,7 @@ class FOSSEventRSVPSubmissionFactory(BaseFactory):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        linked_rsvp = self.overrides.get("linked_rsvp") or FOSSEventRSVPFactory.create().name
+        linked_rsvp = FOSSEventRSVPFactory.create().name if "linked_rsvp" not in self.overrides else self.overrides["linked_rsvp"]
         event = self.overrides.get("event") or frappe.db.get_value(
             EVENT_RSVP, linked_rsvp, "event"
         )

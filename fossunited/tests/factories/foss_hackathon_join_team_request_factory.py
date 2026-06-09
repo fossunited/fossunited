@@ -33,7 +33,7 @@ class FOSSHackathonJoinTeamRequestFactory(BaseFactory[FOSSHackathonJoinTeamReque
 
             hackathon = frappe.db.get_value("FOSS Hackathon Team", team, "hackathon")
 
-        requested_by = self.overrides.get("requested_by") or UserFactory.create().name
+        requested_by = UserFactory.create().name if "requested_by" not in self.overrides else self.overrides["requested_by"]
 
         return {
             "hackathon": hackathon,
