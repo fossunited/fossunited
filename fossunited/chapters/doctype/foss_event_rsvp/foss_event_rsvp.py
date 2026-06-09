@@ -91,6 +91,7 @@ class FOSSEventRSVP(WebsiteGenerator):
                 },
             )
 
+        context.event_concluded = context.event.status == "Concluded"
         context.rsvp_full = self.is_full()
         context.no_cache = 1
 

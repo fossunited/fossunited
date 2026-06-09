@@ -53,6 +53,7 @@ class FOSSEventRSVPSubmission(Document):
     def before_insert(self):
         self.deny_if_duplicate()
         self.validate_rsvp_is_published()
+        self.validate_event_not_concluded()
         self.validate_rsvp_not_full()
         self.handle_submission_status()
 
@@ -113,6 +114,13 @@ class FOSSEventRSVPSubmission(Document):
         rsvp = frappe.get_doc(EVENT_RSVP, self.linked_rsvp)
         if rsvp.is_full():
             frappe.throw(_("RSVP is full. Registration is closed."), frappe.ValidationError)
+
+    def validate_event_not_concluded(self):
+        event_status = frappe.db.get_value(EVENT, self.event, "status")
+        if event_status == "Concluded":
+            frappe.throw(
+                _("This event has concluded. Registrations are closed."), frappe.ValidationError
+            )
 
     def close_rsvp_on_max_count(self):
         rsvp = frappe.get_doc(EVENT_RSVP, self.linked_rsvp)

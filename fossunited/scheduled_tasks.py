@@ -4,7 +4,6 @@ from frappe.utils import add_days, now_datetime
 from fossunited.doctype_ids import (
     EVENT,
     EVENT_CFP,
-    EVENT_RSVP,
     JOB,
     JOB_STATUS_APPROVED,
     JOB_STATUS_EXPIRED,
@@ -35,10 +34,6 @@ def conclude_events():
             doc.show_cfp = 0
             doc.show_speakers = 1
             doc.save(ignore_permissions=True)
-
-            rsvps = frappe.get_all(EVENT_RSVP, filters={"event": doc.name}, fields=["name"])
-            for r in rsvps:
-                frappe.db.set_value(EVENT_RSVP, r.name, "is_published", 0)
 
             cfps = frappe.get_all(EVENT_CFP, filters={"event": doc.name}, fields=["name"])
             for c in cfps:

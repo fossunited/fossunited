@@ -51,6 +51,8 @@
 
       {% if already_rsvp %}
         {{ render_complete_section(show=True) }}
+      {% elif event_concluded %}
+        {{ render_event_concluded_section() }}
       {% elif rsvp_full %}
         {{ render_rsvp_full_section() }}
       {% else %}
@@ -95,6 +97,22 @@
         {% endif %}
       </div>
 
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro render_event_concluded_section() %}
+  <div class="v3-card my-5">
+    <div class="text-center p-4">
+      <h3 class="v3-text-primary mb-4 font-xl">
+        {{ _("This Event Has Concluded") }}
+      </h3>
+      <p class="v3-text-secondary mb-4" style="font-size: 1rem; line-height: 1.6;">
+        {{ _("Registrations for this event are now closed. Visit the event page to see post-event updates.") }}
+      </p>
+      <div class="mt-3">
+        <a href="/{{ event.route }}" class="v3-btn v3-btn-primary">Go to Event Page</a>
+      </div>
     </div>
   </div>
 {% endmacro %}
