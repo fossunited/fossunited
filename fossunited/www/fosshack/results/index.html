@@ -71,6 +71,11 @@
       <p class="text-muted mb-2 mb-md-3 small">{{ project.description }}</p>
 
       {% if project.team_members %}
+        {% if project.team_name %}
+          <p class="v3-text-secondary small mb-2">
+            <i class="ti ti-users mr-1" aria-hidden="true"></i>Team: {{ project.team_name }}
+          </p>
+        {% endif %}
         <div class="row">
           {% for member in project.team_members %}
             <div class="col-6 col-md-4 mb-2">

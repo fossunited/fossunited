@@ -96,7 +96,7 @@
   <div class="v3-card mb-4">
     <div class="v3-section-title">
       <i class="ti ti-users"></i>
-      <span>Team Members</span>
+      <span>Team: {{ team.team_name or "Members" }}</span>
     </div>
     <div class="v3-speakers-grid gap-2">
       {% for member in team_members %}

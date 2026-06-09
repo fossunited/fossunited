@@ -625,6 +625,7 @@ def get_hackathon_results(hackathon_id, year):
                 "route",
                 "short_description",
                 "repo_link",
+                "team_name",
                 "is_contribution_project",
                 "partner_project.project_name as partner_project_name",
                 "partner_project.route as partner_project_route",
@@ -683,6 +684,7 @@ def get_hackathon_results(hackathon_id, year):
                 if result.cash_prize
                 else None,
                 "status": result.status,
+                "team_name": project.team_name or "",
                 "team_members": members_by_team.get(result.team, []),
                 "repo_link": project.repo_link,
                 "is_contribution_project": project.is_contribution_project,
