@@ -69,6 +69,7 @@
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
               <option value="updated" selected>Recently Updated</option>
+              <option value="issues">Most Issues / PRs</option>
             </select>
           </span>
         </div>
@@ -90,6 +91,7 @@
             data-modified="{{ project.modified }}"
             data-contribution="{{ 1 if project.is_contribution_project else 0 }}"
             data-partner="{{ 1 if project.is_partner_project else 0 }}"
+            data-issues="{{ project.issue_pr_count }}"
             data-toggle="tooltip"
           >
             <h3 class="text-xl p-0 mb-0">
@@ -119,10 +121,17 @@
             <p class="v3-text-secondary flex-grow-1">
               {{ (project.short_description or '') | truncate(150, true) }}
             </p>
-            <span class="v3-text-secondary project-card--team">
-              <i class="ti ti-users-group"></i>
-              {{ project.team_name }}
-            </span>
+            <div class="d-flex justify-content-between align-items-center">
+              <span class="v3-text-secondary project-card--team">
+                <i class="ti ti-users-group"></i>
+                {{ project.team_name }}
+              </span>
+              {% if project.issue_pr_count %}
+                <span class="v3-text-secondary project-issue-count" style="display:none;font-size:0.8rem;">
+                  <i class="ti ti-git-pull-request"></i> {{ project.issue_pr_count }}
+                </span>
+              {% endif %}
+            </div>
           </a>
         {% endfor %}
       </div>
@@ -206,6 +215,8 @@
             return new Date(a.dataset.created) - new Date(b.dataset.created)
           case 'updated':
             return new Date(b.dataset.modified) - new Date(a.dataset.modified)
+          case 'issues':
+            return parseInt(b.dataset.issues || 0) - parseInt(a.dataset.issues || 0)
           default:
             return 0
         }
@@ -213,6 +224,13 @@
 
       projectsGrid.innerHTML = ''
       cards.forEach((card) => projectsGrid.appendChild(card))
+
+      const showCounts = sortBy === 'issues'
+      document.querySelectorAll('.project-issue-count').forEach((el) => {
+        el.style.display = showCounts ? '' : 'none'
+      })
+
+      applyFilters()
     })
 
     document.getElementById('surprise').addEventListener('click', () => {
