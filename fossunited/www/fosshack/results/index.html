@@ -27,12 +27,12 @@
 
           {% if project.is_contribution_project %}
             <a
-              href="/{{ project.partner_project_route }}"
+              href="{{ ('/' + project.partner_project_route) if project.partner_project_route else project.repo_link }}"
               onclick="event.stopPropagation()"
               target="_blank"
               class="d-inline-flex align-items-center text-xl"
               data-toggle="tooltip"
-              title="Contributing project to {{ project.partner_project_name }}"
+              title="{{ ('Contributing project to ' + project.partner_project_name) if project.partner_project_route else 'Contribution project' }}"
             ><i class="ti ti-git-pull-request"></i></a>
           {% elif project.repo_link %}
             <a href="{{ project.repo_link }}" onclick="event.stopPropagation()" target="_blank"
