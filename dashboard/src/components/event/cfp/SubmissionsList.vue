@@ -209,12 +209,13 @@ function applyFilters() {
     ) {
       // Reviewer finished all assigned proposals — auto-untoggle once per page load.
       // After this fires, user can manually re-enable without it fighting back.
+      // Don't return: continue with current data so showNotReviewed filter stays applied.
       _autoUntoggleFiredCache.add(props.event)
       showAssignedOnly.value = false
-      toast('All your assigned proposals are reviewed - showing rest of them.')
-      return // watch re-runs applyFilters with showAssignedOnly=false
+      toast('All your assigned proposals are reviewed — showing all.')
+    } else {
+      data = assignedData
     }
-    data = assignedData
   }
 
   data = [...data].sort((a, b) => {
