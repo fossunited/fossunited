@@ -24,8 +24,7 @@
 
     <a href="/indiafoss/schedule" class="if-nav-link d-none" aria-label="Event schedule">Schedule</a>
 
-    {# Statistics — hidden until ready #}
-    <a href="/indiafoss/stats" class="if-nav-link d-none" aria-label="Event statistics">Statistics</a>
+    <a href="/indiafoss/2026/stats" class="if-nav-link" aria-label="IndiaFOSS 2026 live statistics">Statistics</a>
 
     {% if years | length > 1 %}
       <select class="v3-select" aria-label="Select IndiaFOSS year"
@@ -69,6 +68,7 @@
        style="top: 100%; right: 0; min-width: 200px; z-index: 1050;">
     <div class="v3-card rounded p-3 mt-2 d-flex flex-column gap-2">
       <a href="/indiafoss/schedule" class="if-nav-link">Schedule</a>
+      <a href="/indiafoss/2026/stats" class="if-nav-link">Statistics</a>
       {% if years | length > 1 %}
         <select class="v3-select" style="width: 100%;"
                 onchange="window.location=this.value;">
