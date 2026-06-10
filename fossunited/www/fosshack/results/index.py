@@ -683,6 +683,7 @@ def get_hackathon_results(hackathon_id, year):
                 )
                 if result.cash_prize
                 else None,
+                "cash_prize_raw": result.cash_prize or 0,
                 "status": result.status,
                 "team_name": project.team_name or "",
                 "team_members": members_by_team.get(result.team, []),
@@ -692,6 +693,8 @@ def get_hackathon_results(hackathon_id, year):
                 "partner_project_route": project.partner_project_route or "",
             }
         )
+
+    projects.sort(key=lambda p: (-p["cash_prize_raw"], p["name"].lower()))
 
     return _build_hackathon_data(hackathon, year, projects)
 

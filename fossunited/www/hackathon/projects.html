@@ -46,21 +46,31 @@
             <input type="text" placeholder="Search by project or team name" id="searchInput" />
             <i class="ti ti-search"></i>
           </div>
-          <div class="d-flex align-items-center">
-            <button class="v3-btn v3-btn-dark mr-2" id="surprise" title="Go to Random Project">
-              Surprise Me
-            </button>
-          </div>
+          <button class="v3-btn v3-btn-dark" id="surprise"
+            data-toggle="tooltip" title="Go to a random project">
+            Surprise Me
+          </button>
         </div>
 
         <div class="v3-controls-right">
-          <span style="color: var(--v3-text-color3); font-size: 14px;">Sort by:</span>
-          <select class="v3-select" id="sort">
-            <option value="alpha">Alphabetical</option>
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="updated" selected>Recently Updated</option>
-          </select>
+          <label class="d-flex align-items-center gap-1 v3-text-secondary" style="cursor:pointer;font-size:1rem;margin-bottom:0;"
+            data-toggle="tooltip" title="Show contribution projects only">
+            <input type="checkbox" id="filterContribution" style="cursor:pointer;" />
+            <i class="ti ti-git-pull-request"></i>
+          </label>
+          <label class="d-flex align-items-center gap-1 v3-text-secondary" style="cursor:pointer;font-size:1rem;margin-bottom:0;"
+            data-toggle="tooltip" title="Show partner projects only">
+            <input type="checkbox" id="filterPartner" style="cursor:pointer;" />
+            <i class="ti ti-heart-handshake"></i>
+          </label>
+          <span data-toggle="tooltip" title="Sort projects">
+            <select class="v3-select" id="sort">
+              <option value="alpha">Alphabetical</option>
+              <option value="newest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+              <option value="updated" selected>Recently Updated</option>
+            </select>
+          </span>
         </div>
       </div>
 
@@ -78,6 +88,8 @@
             href="/{{ project.route }}"
             data-created="{{ project.creation }}"
             data-modified="{{ project.modified }}"
+            data-contribution="{{ 1 if project.is_contribution_project else 0 }}"
+            data-partner="{{ 1 if project.is_partner_project else 0 }}"
             data-toggle="tooltip"
           >
             <h3 class="text-xl p-0 mb-0">
@@ -105,7 +117,7 @@
             </h3>
 
             <p class="v3-text-secondary flex-grow-1">
-              {{ project.short_description | truncate(150, true) }}
+              {{ (project.short_description or '') | truncate(150, true) }}
             </p>
             <span class="v3-text-secondary project-card--team">
               <i class="ti ti-users-group"></i>
@@ -125,53 +137,59 @@
       $('[data-toggle="tooltip"]').tooltip()
     })
 
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const searchTerm = e.target.value.toLowerCase()
-      let projectSearch = false
+    function applyFilters() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase()
+      const onlyContribution = document.getElementById('filterContribution').checked
+      const onlyPartner = document.getElementById('filterPartner').checked
 
+      let visibleCount = 0
       document.querySelectorAll('.project-card').forEach((card) => {
         const projectName = card.querySelector('.project-card--title').innerText.toLowerCase()
         const teamName = card.querySelector('.project-card--team').innerText.toLowerCase()
-        const partnerElement = card.querySelector('.project-card--partner')
-        const partnerName = partnerElement ? partnerElement.innerText.toLowerCase() : ''
+        const partnerEl = card.querySelector('.project-card--partner')
+        const partnerName = partnerEl ? partnerEl.innerText.toLowerCase() : ''
 
-        const matches =
+        const matchesSearch =
+          !searchTerm ||
           projectName.includes(searchTerm) ||
           teamName.includes(searchTerm) ||
           partnerName.includes(searchTerm)
 
-        if (matches) {
-          card.style.display = '' // Reset to default
-          projectSearch = true
-        } else {
-          card.style.display = 'none'
+        const isContribution = card.dataset.contribution === '1'
+        const isPartner = card.dataset.partner === '1'
+
+        let matchesType = true
+        if (onlyContribution && onlyPartner) {
+          matchesType = isContribution || isPartner
+        } else if (onlyContribution) {
+          matchesType = isContribution
+        } else if (onlyPartner) {
+          matchesType = isPartner
         }
+
+        const visible = matchesSearch && matchesType
+        card.style.display = visible ? '' : 'none'
+        if (visible) visibleCount++
       })
 
-      // Show/hide empty state
-      const emptyState = document.querySelector('.no-project')
-      if (!projectSearch && searchTerm.length > 0) {
-        emptyState.style.display = 'block'
-      } else {
-        emptyState.style.display = 'none'
-      }
-
-      // Update project count
+      const totalCount = document.querySelectorAll('.project-card').length
       const projectCountEl = document.getElementById('projectCount')
-      if (searchTerm.length > 0) {
-        const visibleCount = Array.from(document.querySelectorAll('.project-card')).filter(
-          (card) => card.style.display !== 'none',
-        ).length
-        const totalCount = document.querySelectorAll('.project-card').length
-        projectCountEl.textContent = `Showing ${visibleCount} projects out of ${totalCount}`
+      const emptyState = document.querySelector('.no-project')
+
+      if (searchTerm || onlyContribution || onlyPartner) {
+        projectCountEl.textContent = `Showing ${visibleCount} of ${totalCount} projects`
         projectCountEl.style.display = 'block'
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none'
       } else {
         projectCountEl.style.display = 'none'
+        emptyState.style.display = 'none'
       }
-    })
+    }
 
-    // Sort
+    document.getElementById('searchInput').addEventListener('input', applyFilters)
+    document.getElementById('filterContribution').addEventListener('change', applyFilters)
+    document.getElementById('filterPartner').addEventListener('change', applyFilters)
+
     document.getElementById('sort').addEventListener('change', (e) => {
       const sortBy = e.target.value
       const projectsGrid = document.querySelector('.projects-grid')
@@ -180,41 +198,29 @@
       cards.sort((a, b) => {
         switch (sortBy) {
           case 'alpha':
-            const titleA = a.dataset.title.toLowerCase()
-            const titleB = b.dataset.title.toLowerCase()
-            return titleA.localeCompare(titleB)
-
+            return a.querySelector('.project-card--title').innerText
+              .localeCompare(b.querySelector('.project-card--title').innerText)
           case 'newest':
             return new Date(b.dataset.created) - new Date(a.dataset.created)
-
           case 'oldest':
             return new Date(a.dataset.created) - new Date(b.dataset.created)
-
           case 'updated':
             return new Date(b.dataset.modified) - new Date(a.dataset.modified)
-
           default:
             return 0
         }
       })
 
-      // Clear and re-append sorted cards
       projectsGrid.innerHTML = ''
       cards.forEach((card) => projectsGrid.appendChild(card))
     })
 
-    // Sort on page load - set dropdown to match default sort
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('sort').value = 'updated'
-    })
-
-    // surprise me to show random project
     document.getElementById('surprise').addEventListener('click', () => {
-      const cards = Array.from(document.querySelectorAll('.project-card'))
-      const visibleCards = cards.filter((card) => card.style.display !== 'none')
+      const visibleCards = Array.from(document.querySelectorAll('.project-card')).filter(
+        (card) => card.style.display !== 'none',
+      )
       if (visibleCards.length > 0) {
-        const randomCard = visibleCards[Math.floor(Math.random() * visibleCards.length)]
-        randomCard.click()
+        visibleCards[Math.floor(Math.random() * visibleCards.length)].click()
       }
     })
   </script>
