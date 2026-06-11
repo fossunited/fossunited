@@ -15,7 +15,11 @@ class FOSSEventCFPFactory(BaseFactory):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        event = FOSSChapterEventFactory.create().name if "event" not in self.overrides else self.overrides["event"]
+        event = (
+            FOSSChapterEventFactory.create().name
+            if "event" not in self.overrides
+            else self.overrides["event"]
+        )
         return {
             "event": event,
             "chapter": frappe.db.get_value(EVENT, event, "chapter"),
@@ -31,7 +35,11 @@ class FOSSEventCFPSubmissionFactory(BaseFactory):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        cfp = FOSSEventCFPFactory.create().name if "linked_cfp" not in self.overrides else self.overrides["linked_cfp"]
+        cfp = (
+            FOSSEventCFPFactory.create().name
+            if "linked_cfp" not in self.overrides
+            else self.overrides["linked_cfp"]
+        )
         event = self.overrides.get("event") or frappe.db.get_value(EVENT_CFP, cfp, "event")
         submitted_by = self.overrides.get("submitted_by", "")
         return {

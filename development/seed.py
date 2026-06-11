@@ -398,6 +398,7 @@ def seed():
         _create_rsvps(events["live"], users)
         _create_cfps(events["live"])
         _create_hackathon(chapters)
+        _bootstrap_ticket_prototype()
 
         frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
         try:

@@ -17,7 +17,11 @@ class FOSSHackathonParticipantFactory(BaseFactory[FOSSHackathonParticipant]):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        hackathon = FOSSHackathonFactory.create().name if "hackathon" not in self.overrides else self.overrides["hackathon"]
+        hackathon = (
+            FOSSHackathonFactory.create().name
+            if "hackathon" not in self.overrides
+            else self.overrides["hackathon"]
+        )
         return {
             "hackathon": hackathon,
             "full_name": fake.name(),
@@ -28,7 +32,9 @@ class FOSSHackathonParticipantFactory(BaseFactory[FOSSHackathonParticipant]):
     def with_user(self) -> dict[str, Any]:
         from fossunited.tests.factories.user_factory import UserFactory
 
-        user = UserFactory.create().name if "user" not in self.overrides else self.overrides["user"]
+        user = (
+            UserFactory.create().name if "user" not in self.overrides else self.overrides["user"]
+        )
         return {"user": user}
 
     @property
