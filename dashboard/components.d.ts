@@ -144,7 +144,6 @@ declare module 'vue' {
     SuccessIcon: typeof import('./src/components/icons/SuccessIcon.vue')['default']
     TabsWithRoute: typeof import('./src/components/TabsWithRoute.vue')['default']
     TextEditor: typeof import('./src/components/ui/TextEditor.vue')['default']
-    TextEditorLinkDialog: typeof import('./src/components/ui/TextEditorLinkDialog.vue')['default']
     ThemedSelectBlack: typeof import('./src/components/common/ThemedSelectBlack.vue')['default']
     ThemeToggle: typeof import('./src/components/ui/ThemeToggle.vue')['default']
     TicketCustomFieldDialog: typeof import('./src/components/event/TicketCustomFieldDialog.vue')['default']
