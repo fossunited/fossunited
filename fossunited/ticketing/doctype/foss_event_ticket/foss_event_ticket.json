@@ -79,6 +79,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Event",
+   "link_filters": "[[\"FOSS Chapter Event\",\"is_paid_event\",\"=\",1]]",
    "options": "FOSS Chapter Event",
    "reqd": 1,
    "search_index": 1
@@ -178,7 +179,7 @@
   }
  ],
  "links": [],
- "modified": "2026-05-22 13:48:15.772924",
+ "modified": "2026-06-11 14:18:41.634622",
  "modified_by": "Administrator",
  "module": "Ticketing",
  "name": "FOSS Event Ticket",

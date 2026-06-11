@@ -86,7 +86,8 @@
       "fieldname": "event_start_date",
       "fieldtype": "Date",
       "in_list_view": 1,
-      "label": "Event Start Date"
+      "label": "Event Start Date",
+      "reqd": 1
     },
     {
       "fieldname": "event_end_date",
@@ -344,7 +345,7 @@
     }
   ],
   "links": [],
-  "modified": "2026-04-27 11:30:11.350896",
+  "modified": "2026-06-11 14:17:43.049441",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event Grant",

@@ -73,7 +73,7 @@ def get_context(context):
         )
         date = g.event_start_date or g.modified
         url = _safe_href(g.event_website)
-        description = _safe_cdata(g.application_details or "")
+        description = _safe_cdata(g.event_description or "")
         items.append(
             {
                 "title": escape_html(f"{g.event_name} (Event Grant)"),

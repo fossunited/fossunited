@@ -220,7 +220,9 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.anonymous_cfps = cfp.anonymise_proposals
         context.has_public_custom_responses = cfp.has_public_custom_responses
         context.breadcrumbs = self.get_breadcrumb(event)
-        context.session_categories = self.session_categories.splitlines()
+        context.session_categories = (
+            self.session_categories.splitlines() if self.session_categories else []
+        )
         context.status_badge_theme = {
             "Review Pending": "orange",
             "Screening": "blue",

@@ -24,7 +24,7 @@ class FOSSEventGrant(Document):
         event_location: DF.Data | None
         event_name: DF.Data
         event_organiser: DF.Data
-        event_start_date: DF.Date | None
+        event_start_date: DF.Date
         event_type: DF.Literal[
             "Hackathon", "Meetup", "Conference", "Workshop", "Devsprint", "Other"
         ]
