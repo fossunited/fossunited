@@ -189,11 +189,20 @@
                     <span class="v3-tag v3-tag--success flex-shrink-0">
                       <span class="v3-status-dot" aria-hidden="true"></span>Live
                     </span>
+                  {% elif st == 'closing_soon' %}
+                    <span class="v3-tag v3-status--warning flex-shrink-0">
+                      <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closing soon
+                    </span>
                   {% elif st == 'extended' and item.get('extended_date') %}
                     <span class="v3-tag v3-status--warning flex-shrink-0">
                       <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>
                       Extended till {{ item.extended_date }}
                     </span>
+                    {% if item.get('also_closing_soon') %}
+                    <span class="v3-tag v3-status--warning flex-shrink-0">
+                      <i class="ti ti-alert-triangle" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closing soon
+                    </span>
+                    {% endif %}
                   {% elif st == 'closed' %}
                     <span class="v3-tag v3-status--error flex-shrink-0">
                       <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed

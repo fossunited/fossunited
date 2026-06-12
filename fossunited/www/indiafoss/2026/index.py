@@ -120,8 +120,11 @@ def get_context(context):
     ]
 
     # Timeline + progress bar - merge manual items with auto CFP items
+    # Manual label wins: drop auto-generated items whose label appears in JSON timeline
     manual_tl = event_data.get("timeline", [])
     cfp_tl = _get_cfp_timeline_items(cfp, today)
+    manual_labels = {item.get("label") for item in manual_tl}
+    cfp_tl = [item for item in cfp_tl if item.get("label") not in manual_labels]
     merged_tl = sorted(manual_tl + cfp_tl, key=lambda x: x.get("date", "9999"))
     context.timeline = _enrich_timeline(merged_tl, today)
     context.progress_segments, context.progress_markers = _get_progress_bar(
@@ -205,12 +208,10 @@ def _enrich_timeline(items, today):
         except Exception:
             item["day_num"] = item.get("date", "")[8:10].lstrip("0") or "?"
             item["month_str"] = ""
-        item.setdefault("extended_date", "")
-
         manual = (item.get("status") or "").lower()
         if manual == "none":
             item["resolved_status"] = "none"
-        elif manual in ("live", "extended", "closed"):
+        elif manual in ("live", "extended", "closing_soon", "closed"):
             item["resolved_status"] = manual
         else:
             # auto-derive from date range if end_date provided
@@ -222,13 +223,32 @@ def _enrich_timeline(items, today):
                     if today > end_d:
                         item["resolved_status"] = "closed"
                     elif today >= start_d:
-                        item["resolved_status"] = "live"
+                        days_left = (end_d - today).days
+                        is_point = start_d == end_d
+                        item["resolved_status"] = (
+                            "closing_soon" if (is_point and days_left <= 7) else "live"
+                        )
                     else:
                         item["resolved_status"] = ""
                 except Exception:
                     item["resolved_status"] = ""
             else:
                 item["resolved_status"] = ""
+
+        # format extended_date for display (e.g. "20 Jun")
+        # use explicit extended_date from JSON if set, else fall back to date
+        if item["resolved_status"] == "extended":
+            raw_ext = item.get("extended_date") or item["date"]
+            try:
+                ext_d = frappe.utils.getdate(raw_ext)
+                item["extended_date"] = ext_d.strftime("%-d %b")
+                days_left = (ext_d - today).days
+                item["also_closing_soon"] = 0 <= days_left <= 7
+            except Exception:
+                item["extended_date"] = ""
+                item["also_closing_soon"] = False
+        else:
+            item["also_closing_soon"] = False
     return items
 
 
@@ -394,7 +414,7 @@ def _get_cfp_timeline_items(cfp, today):
             {
                 "label": "CFP Deadline",
                 "date": deadline_iso,
-                "end_date": deadline_iso,  # live on deadline day, closed after
+                "end_date": deadline_iso,
                 "status": "",
             }
         )
