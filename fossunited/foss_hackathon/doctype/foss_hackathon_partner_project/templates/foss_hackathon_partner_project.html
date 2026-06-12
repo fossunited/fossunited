@@ -1,7 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
-{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
+{% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -100,7 +100,7 @@
           >
             <div class="d-flex align-items-center gap-2 mb-1">
               {% if project.winner_status %}
-                {{ hackathon_badge("winner", title=project.winner_status + " - " + project.title, size=28) }}
+                {{ profile_badge("hackathon-winner", title=project.winner_status + " - " + project.title, size=28) }}
               {% endif %}
               <span class="v3-text-primary text-sm font-weight-bold">{{ project.title }}</span>
             </div>

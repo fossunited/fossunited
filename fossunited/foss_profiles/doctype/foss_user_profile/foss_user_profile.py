@@ -456,7 +456,7 @@ class FOSSUserProfile(WebsiteGenerator):
             project_route = winner_project_route_map.get(result.project)
             badges.append(
                 {
-                    "type": "winner",
+                    "type": "hackathon-winner",
                     "href": f"/{project_route}" if project_route else None,
                     "title": f"{result.status} at {hack.hackathon_name}",
                 }
@@ -512,7 +512,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 hack = hackathon_map.get(p.hackathon, frappe._dict())
                 badges.append(
                     {
-                        "type": "participant",
+                        "type": "hackathon-participant",
                         "href": f"/{proj.route}" if proj.route else f"/{hack.route}",
                         "title": f"Participant of {hack.hackathon_name}, qualified first round",
                     }
@@ -548,7 +548,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 hack = hackathon_map.get(lh.parent_hackathon, frappe._dict())
                 badges.append(
                     {
-                        "type": "localhost",
+                        "type": "hackathon-localhost",
                         "href": f"/{lh.route}",
                         "title": f"LocalHost Organizer for {lh.localhost_name}, {hack.hackathon_name}",
                     }
@@ -583,7 +583,7 @@ class FOSSUserProfile(WebsiteGenerator):
                 )
             badges.append(
                 {
-                    "type": "judge",
+                    "type": "hackathon-judge",
                     "href": f"/{hack.route}" if hack and hack.route else None,
                     "title": f"Judge for {hack_name}",
                 }

@@ -1,5 +1,5 @@
 {% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
-{% from "fossunited/templates/macros/hackathon_badges.html" import hackathon_badge %}
+{% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
 
 {% extends "templates/foss_base.html" %}
 
@@ -225,7 +225,7 @@
         <h3 class="subtitle">FOSS Hackathon Badges</h3>
         <div class="d-flex flex-wrap align-items-center gap-4">
           {% for b in hackathon_badges %}
-            {{ hackathon_badge(b.type, href=b.href, title=b.title, size=104) }}
+            {{ profile_badge(b.type, href=b.href, title=b.title, size=104) }}
           {% endfor %}
         </div>
       </div>
@@ -389,7 +389,7 @@
                 />
               {% endif %}{% endfor %}
               {% for b in hackathon_badges %}
-                {{ hackathon_badge(b.type, href=b.href, title=b.title, size=52) }}
+                {{ profile_badge(b.type, href=b.href, title=b.title, size=52) }}
               {% endfor %}
             </div>
             <div class="header--username-location" style="font-size: var(--text-sm)">
@@ -527,6 +527,24 @@
         }
       }
     })
+
+    ;(() => {
+      const u = {% if doc.github %}({{ doc.github | tojson }}.match(/github\.com\/([^\/\?#]+)/i)||[])[1] || {% endif %}{{ doc.username | tojson }};
+      if (!u) return;
+      $.get(`https://api.github.com/repos/fossunited/forklore/contents/content/maintainers/${u}.json`)
+        .done(() => {
+          $('.header--content-section .d-flex.align-items-center.flex-wrap').append(
+            `<a href="https://forklore.in/maintainers/${u}" target="_blank" rel="noopener noreferrer"
+                class="position-relative d-inline-block" data-toggle="tooltip" data-title="Forklore Maintainer">
+              <span class="hackathon-badge-wrap" style="--badge-size:52px;--badge-glow-color:#CFF2DA;--badge-glow-anim:hackathon-badge-glow-color;">
+                <img src="https://raw.githubusercontent.com/fossunited/Branding/refs/heads/main/asset/stickers/Forklore-diecut-V2.svg"
+                     alt="Forklore Maintainer" style="width:100%;height:100%;pointer-events:none;">
+              </span>
+            </a>`
+          );
+          $('[data-toggle="tooltip"]').tooltip();
+        });
+    })();
 
     function renderCompanyImage(e) {
       $(e).attr('src', '/assets/fossunited/images/defaults/company_icon.png')

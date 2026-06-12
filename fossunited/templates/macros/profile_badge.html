@@ -1,7 +1,7 @@
-{% macro hackathon_badge(badge_name, href=None, title="", count=None, size=56) %}
-  {%- set badge_path = "fossunited/public/images/badges/hackathon-" + badge_name + ".svg" %}
+{% macro profile_badge(badge_key, href=None, title="", count=None, size=56, glow=None) %}
+  {%- set badge_path = "fossunited/public/images/badges/" + badge_key + ".svg" %}
   {%- set _inner %}
-    <span class="hackathon-badge-wrap" style="--badge-size:{{ size }}px;">
+    <span class="hackathon-badge-wrap" style="--badge-size:{{ size }}px;{% if glow %}--badge-glow-color:{{ glow }};--badge-glow-anim:hackathon-badge-glow-color;{% endif %}">
       {% include badge_path %}
     </span>
     {% if count and count > 1 %}

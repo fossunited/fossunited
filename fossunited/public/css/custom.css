@@ -3712,6 +3712,11 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 }
 
 /* === Hackathon Achievement Badges === */
+@property --badge-glow-color {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: transparent;
+}
 .hackathon-badge-wrap {
   display: inline-flex;
   align-items: center;
@@ -3720,12 +3725,13 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   vertical-align: middle;
   width: var(--badge-size, 1em);
   height: var(--badge-size, 1em);
-  animation: hackathon-badge-glow 4s linear infinite;
+  animation: var(--badge-glow-anim, hackathon-badge-glow) 4s linear infinite;
   user-select: none;
   -webkit-user-select: none;
   -webkit-user-drag: none;
 }
-.hackathon-badge-wrap > svg {
+.hackathon-badge-wrap > svg,
+.hackathon-badge-wrap > img {
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -3742,7 +3748,7 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .v3-html-content ul,
 .v3-html-content ol                       { padding-left: 1.5rem; margin-bottom: 0.75rem; }
 
-/* pulse: fades in rainbow glow, cycles, fades out, rests */
+/* rainbow — default for hackathon achievement badges */
 @keyframes hackathon-badge-glow {
   0%   { filter: drop-shadow(0 0 3px #f00); }
   16%  { filter: drop-shadow(0 0 3px #ff0); }
@@ -3751,4 +3757,9 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   66%  { filter: drop-shadow(0 0 3px #00f); }
   83%  { filter: drop-shadow(0 0 3px #f0f); }
   100% { filter: drop-shadow(0 0 3px #f00); }
+}
+/* single-color glow — boosts chroma + drops lightness to make pastel colors visible on light bg */
+@keyframes hackathon-badge-glow-color {
+  0%, 100% { filter: drop-shadow(0 0 3px oklch(from var(--badge-glow-color) calc(l * 0.45) calc(c * 4) h)); }
+  50%       { filter: drop-shadow(0 0 6px oklch(from var(--badge-glow-color) calc(l * 0.55) calc(c * 5) h)); }
 }
