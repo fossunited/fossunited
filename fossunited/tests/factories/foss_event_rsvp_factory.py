@@ -16,7 +16,9 @@ class FOSSEventRSVPFactory(BaseFactory[FOSSEventRSVP]):
     @property
     def default_attributes(self) -> dict[str, Any]:
         return {
-            "event": self.overrides.get("event", FOSSChapterEventFactory.create().name),
+            "event": FOSSChapterEventFactory.create().name
+            if "event" not in self.overrides
+            else None,
             "allow_edit": 1,
             "max_rsvp_count": 5,
             "requires_host_approval": False,

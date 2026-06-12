@@ -148,8 +148,19 @@ RSVPs, CFPs, and a hackathon — without having to create records manually.
 
 ### Running the Script
 
+> **Important:** The seed script requires `frappe_factory_bot`. Please install it first:
+> ```sh
+> bench get-app https://github.com/TomasBarry/frappe_factory_bot
+> ```
+
+For Frappe Manager / Manual Bench installations:
 ```sh
-podman exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+bench execute fossunited.dev.seed.seed
+```
+
+For Devcontainer (Docker/Podman) environments:
+```sh
+<docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
     ../env/bin/python /workspace/development/run_seed.py
 ```
 
@@ -172,14 +183,16 @@ Chapters (4)
 ├── FOSS Kochi              City Community
 └── Campus Chapter          Student Club
 
-Events (12)  — one of each template per City Community chapter
+Events (13)  — one of each template per City Community chapter, plus one test conference
 ├── FOSS Meetup 2026        status: Live     (3 chapters × 1)
 ├── FOSS Conference 2025    status: Concluded
 ├── FOSS Workshop 2026      status: Draft    (unpublished)
-└── Mini FOSS Hackathon     status: Live
+├── Mini FOSS Hackathon     status: Live
+└── Paid Test Conference    status: Live     (1 dedicated event for mock tickets)
 
 RSVPs (6 forms)  — one per Live event, each with 2 submissions
 CFPs  (6 forms)  — one per Live event, each with 2 talk submissions
+Tickets (1)      — one prototype ticket attached to the Paid Test Conference
 
 Hackathon — FOSSIT Hackathon (Campus Chapter)
 ├── Teams (4)              Phoenix / Aurora / Nebula / Comet
@@ -193,6 +206,7 @@ Hackathon — FOSSIT Hackathon (Campus Chapter)
 |---|---|
 | **Chapter** | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
 | **Event** | A meetup, conference, workshop, or hackathon organised by a Chapter. |
+| **Event Ticket** | A generated ticket for an attendee of a paid or registered event. |
 | **Event RSVP** | A registration form attached to an Event. Tracks attendee count and collects custom questions. |
 | **RSVP Submission** | A single attendee's RSVP response linked to the form. |
 | **Event CFP** | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline. |
@@ -233,7 +247,8 @@ The demo uses your local repository changes, allowing for rapid iteration and te
 | Users | 9 |
 | User Profiles | 9 |
 | Chapters | 4 |
-| Events | 12 |
+| Events | 13 |
+| Event Tickets | 1 |
 | RSVP forms | 6 |
 | RSVP submissions | 12 |
 | CFP forms | 6 |

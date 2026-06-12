@@ -18,7 +18,9 @@ class FOSSHackathonLocalHostFactory(BaseFactory[FOSSHackathonLocalHost]):
     @property
     def default_attributes(self) -> dict[str, Any]:
         parent_hackathon = (
-            self.overrides.get("parent_hackathon") or FOSSHackathonFactory.create().name
+            FOSSHackathonFactory.create().name
+            if "parent_hackathon" not in self.overrides
+            else self.overrides["parent_hackathon"]
         )
         return {
             "parent_hackathon": parent_hackathon,

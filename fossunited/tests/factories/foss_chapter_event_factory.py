@@ -20,7 +20,9 @@ class FOSSChapterEventFactory(BaseFactory[FOSSChapterEvent]):
     @property
     def default_attributes(self) -> dict[str, Any]:
         return {
-            "chapter": self.overrides.get("chapter", FOSSChapterFactory.create().name),
+            "chapter": FOSSChapterFactory.create().name
+            if "chapter" not in self.overrides
+            else None,
             "event_name": self.overrides.get("event_name", fake.text(max_nb_chars=20).strip()),
             "event_permalink": fake.slug().replace("-", "_"),
             "status": "Live",

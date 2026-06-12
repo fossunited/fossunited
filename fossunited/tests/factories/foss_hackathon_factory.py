@@ -16,7 +16,11 @@ class FOSSHackathonFactory(BaseFactory[FOSSHackathon]):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        chapter = self.overrides.get("chapter") or FOSSChapterFactory.create().name
+        chapter = (
+            FOSSChapterFactory.create().name
+            if "chapter" not in self.overrides
+            else self.overrides["chapter"]
+        )
         return {
             "chapter": chapter,
             "permalink": fake.slug().replace("-", "_"),

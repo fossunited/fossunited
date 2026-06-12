@@ -7,5 +7,11 @@ echo "This will setup a local Frappe bench, build the dashboard, and seed demo d
 echo "Access the site at: http://fossunited.localhost:8000"
 echo "Login with: reviewer@example.com / password (or create your own)"
 
-podman-compose -f .devcontainer/docker-compose.yml up -d frappe mariadb redis-cache redis-queue
-podman-compose -f .devcontainer/docker-compose.yml exec frappe /workspace/development/init.sh
+if command -v podman-compose >/dev/null 2>&1; then
+    COMPOSE="podman-compose"
+else
+    COMPOSE="docker compose"
+fi
+
+$COMPOSE -f .devcontainer/docker-compose.yml up -d frappe mariadb redis-cache redis-queue
+$COMPOSE -f .devcontainer/docker-compose.yml exec frappe /workspace/development/init.sh
