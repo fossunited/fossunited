@@ -2,6 +2,7 @@
 Permission check decorators for hackathon and chapter operations
 """
 
+import inspect
 from functools import wraps
 
 import frappe
@@ -149,6 +150,14 @@ def require_chapter_member(chapter_id="chapter"):
 
             chapter = kwargs.get(chapter_id)
             if not chapter:
+                sig = inspect.signature(func)
+                param_names = list(sig.parameters.keys())
+                if chapter_id in param_names:
+                    idx = param_names.index(chapter_id)
+                    if idx < len(args):
+                        chapter = args[idx]
+
+            if not chapter:
                 frappe.throw(_("Chapter data is required"), frappe.ValidationError)
 
             if not check_if_chapter_member(chapter, frappe.session.user):
@@ -177,6 +186,14 @@ def require_event_member(event_id="event"):
 
             event = kwargs.get(event_id)
             if not event:
+                sig = inspect.signature(func)
+                param_names = list(sig.parameters.keys())
+                if event_id in param_names:
+                    idx = param_names.index(event_id)
+                    if idx < len(args):
+                        event = args[idx]
+
+            if not event:
                 frappe.throw(_("Event data is required"), frappe.ValidationError)
 
             if not check_if_event_member(event):
@@ -204,6 +221,15 @@ def require_chapter_or_event_member(event_id="event"):
                 frappe.throw(_("Authentication required"), frappe.PermissionError)
 
             event = kwargs.get(event_id)
+            if not event:
+                # Resolve positional args by inspecting the wrapped function's signature
+                sig = inspect.signature(func)
+                param_names = list(sig.parameters.keys())
+                if event_id in param_names:
+                    idx = param_names.index(event_id)
+                    if idx < len(args):
+                        event = args[idx]
+
             if not event:
                 frappe.throw(_("Event ID is not provided"), frappe.ValidationError)
 
