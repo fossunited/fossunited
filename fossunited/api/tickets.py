@@ -481,11 +481,11 @@ def get_event_free_codes(event: str):
     return codes
 
 
-def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
-    """Return {email: full_name} for unique speakers across approved proposals.
+def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, int]]:
+    """Return {email: (full_name, talk_count)} for unique speakers across approved proposals.
 
-    Unions two sources: CFP Submission Speaker child rows + proposal-level email field.
-    Speaker child rows take priority for full_name when the same email appears in both.
+    talk_count is the number of approved proposals this speaker appears in.
+    Speaker child rows take priority; proposal-level email is a fallback when no child rows exist.
     """
     proposals = frappe.get_all(
         PROPOSAL,
@@ -496,26 +496,37 @@ def _get_approved_speaker_emails_for_event(event: str) -> dict[str, str]:
         return {}
 
     proposal_names = [p.name for p in proposals]
-
-    # Source 1: speaker child table (higher priority — more specific per-event entry)
     speaker_rows = frappe.get_all(
         SPEAKER,
         filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
-        fields=["email", "full_name"],
+        fields=["email", "full_name", "parent"],
     )
-    result = {}
+
+    rows_by_proposal = {}
     for r in speaker_rows:
-        if r.email:
-            key = r.email.strip().lower()
-            result.setdefault(key, r.full_name or "")
+        rows_by_proposal.setdefault(r.parent, []).append(r)
 
-    # Source 2: proposal-level email field (fallback for single-speaker submissions)
+    email_data = {}  # email → [full_name, talk_count]
+
     for p in proposals:
-        if p.email:
-            key = p.email.strip().lower()
-            result.setdefault(key, p.full_name or "")
+        p_emails = set()
 
-    return result
+        for r in rows_by_proposal.get(p.name, []):
+            if r.email:
+                key = r.email.strip().lower()
+                p_emails.add(key)
+                email_data.setdefault(key, [r.full_name or "", 0])
+
+        # Fallback: proposal-level email if no speaker child rows on this proposal
+        if not p_emails and p.email:
+            key = p.email.strip().lower()
+            p_emails.add(key)
+            email_data.setdefault(key, [p.full_name or "", 0])
+
+        for key in p_emails:
+            email_data[key][1] += 1
+
+    return {email: (name, count) for email, (name, count) in email_data.items()}
 
 
 def _get_existing_coupon_emails_for_event(event: str) -> set[str]:
@@ -552,9 +563,9 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
 
     info = _get_approved_speaker_emails_for_event(event)
     existing = _get_existing_coupon_emails_for_event(event)
-    to_create = {e: n for e, n in info.items() if e not in existing}
+    to_create = {e: v for e, v in info.items() if e not in existing}
 
-    for email, full_name in to_create.items():
+    for email, (full_name, talk_count) in to_create.items():
         frappe.get_doc(
             {
                 "doctype": FREE_TICKET_CODE,
@@ -562,7 +573,7 @@ def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
                 "mapped_email": email,
                 "full_name": full_name,
                 "tier": "Speaker/Workshop Host",
-                "max_count": max_count,
+                "max_count": max_count * talk_count,
             }
         ).insert(ignore_permissions=True)
 
