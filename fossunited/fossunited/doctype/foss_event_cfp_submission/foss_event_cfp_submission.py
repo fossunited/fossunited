@@ -186,7 +186,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
-            frappe.throw(_("Illegal status change"), frappe.ValidationError)
+            frappe.throw(
+                _("New CFP submissions must start with status 'Review Pending'"),
+                frappe.ValidationError,
+            )
 
     def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):

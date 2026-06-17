@@ -54,12 +54,13 @@ class TestSpeakerCoupons(FrappeTestCase):
             frappe.delete_doc(PROPOSAL, name, force=True, ignore_missing=True)
 
     def _approved(self, speakers):
-        return FOSSEventCFPSubmissionFactory.create(
-            "with_approved_status",
+        sub = FOSSEventCFPSubmissionFactory.create(
             linked_cfp=self.cfp.name,
             event=self.event.name,
             speakers=speakers,
         )
+        frappe.db.set_value(PROPOSAL, sub.name, "status", "Approved")
+        return sub
 
     def test_creates_coupon_for_approved_speaker(self):
         self._approved([_speaker("alice@test.com")])
