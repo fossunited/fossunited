@@ -313,7 +313,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                     "route": profile.get("route", ""),
                 }
             )
-        return members
+        return sorted(members, key=lambda m: (m["full_name"] or "").lower())
 
     def get_speakers(self):
         submissions = frappe.db.get_all(

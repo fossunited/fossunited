@@ -358,19 +358,9 @@
             <!-- Buttons -->
           <div>
               <div class="v3-btn-group" role="group" aria-label="Event actions">
-                  {% if status_concluded and doc.livestream_embed_link %}
-                    <a
-                      href="{{ doc.livestream_embed_link }}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="v3-btn v3-btn-secondary"
-                      aria-label="Watch event recording on YouTube"
-                    >
-                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
-                      <span>Watch</span>
-                    </a>
 
-                  {% elif status_live %}
+                  {# Primary CTA: registration → schedule fallback #}
+                  {% if status_live %}
                     {% if doc.is_paid_event %}
                       <a
                         href="/dashboard/buy-tickets?event={{ doc.name }}"
@@ -397,10 +387,43 @@
                           Register
                         </a>
                       {% endif %}
+                    {% elif schedule_data %}
+                      <a
+                        href="#schedule-heading"
+                        class="v3-btn v3-btn-primary"
+                        aria-label="View event schedule"
+                      >
+                        <i class="ti ti-calendar-event" aria-hidden="true"></i>
+                        Schedule
+                      </a>
                     {% endif %}
+                  {% elif status_concluded and schedule_data %}
+                    <a
+                      href="#schedule-heading"
+                      class="v3-btn v3-btn-primary"
+                      aria-label="View event schedule"
+                    >
+                      <i class="ti ti-calendar-event" aria-hidden="true"></i>
+                      Schedule
+                    </a>
                   {% endif %}
 
-                  {% if doc.show_cfp and cfp_status_block.has_doc %}
+                  {# Watch recording — shown whenever embed link is set #}
+                  {% if doc.livestream_embed_link %}
+                    <a
+                      href="{{ doc.livestream_embed_link }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="Watch event recording on YouTube"
+                    >
+                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                      <span>Watch</span>
+                    </a>
+                  {% endif %}
+
+                  {# Talk Proposals — show when CFP is active OR proposals already exist #}
+                  {% if (doc.show_cfp and cfp_status_block.has_doc) or event_stats.proposals > 0 %}
                     <a
                       href="{{ all_cfp_link }}"
                       class="v3-btn v3-btn-secondary"
@@ -411,15 +434,14 @@
                     </a>
                   {% endif %}
 
-
                   {% if can_manage_event %}
-                <a
-                  href="{{ event_dashboard_url }}"
-                  class="v3-btn v3-btn-secondary v3-btn-icon-only"
-                  aria-label="Edit event details"
-                >
-                  <i class="ti ti-edit" aria-hidden="true"></i>
-                </a>
+                    <a
+                      href="{{ event_dashboard_url }}"
+                      class="v3-btn v3-btn-secondary v3-btn-icon-only"
+                      aria-label="Edit event details"
+                    >
+                      <i class="ti ti-edit" aria-hidden="true"></i>
+                    </a>
                   {% endif %}
                 </div>
 
@@ -479,7 +501,7 @@
             {% endif %}
 
             <!-- Schedule -->
-            {% if doc.show_schedule and schedule_data %}
+            {% if schedule_data %}
               <section class="ev-agenda-section" aria-labelledby="schedule-heading">
                 <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
                 {{ agenda_card(schedule_data, doc.route, 10) }}
@@ -517,7 +539,7 @@
             {% endif %}
 
             <!-- Speakers -->
-            {% if doc.show_speakers and speakers %}
+            {% if speakers %}
               <section class="ev-speakers-section" aria-labelledby="speakers-heading">
                 <h2 id="speakers-heading" class="sr-only">Event Speakers</h2>
                 {{ people_card(speakers, 'speakers', submissions) }}
