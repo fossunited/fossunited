@@ -75,7 +75,11 @@ usePageMeta(() => {
       </EventHeader>
     </div>
     <FormCard :cfp="cfpData.data" />
-    <InsightsGrid :event-id="cfpData.data.event.name" @select-insight="updateStatusFilter" />
+    <InsightsGrid
+      :event-id="cfpData.data.event.name"
+      :current-filter="insightFilter"
+      @select-insight="updateStatusFilter"
+    />
     <SubmissionsListView :event-id="cfpData.data.event.name" :status-filter="insightFilter" />
   </NarrowLayout>
 </template>
