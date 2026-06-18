@@ -537,15 +537,11 @@
             <a href="/indiafoss/2026/devrooms/{{ dr.slug }}"
                class="if-devroom-card"
                role="listitem"
-               style="--dc-l: {{ dr.color_light }}; --dc-d: {{ dr.color_dark }};"
                aria-label="{{ dr.title }} devroom">
 
-              <svg class="if-devroom-banner-svg" viewBox="0 0 368 72"
-                   xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <rect class="if-devroom-banner-rect" width="368" height="72" rx="8"/>
-                <rect width="368" height="72" rx="8"
-                      fill="url(#devroom-pat)" class="if-devroom-tex"/>
-              </svg>
+              <div class="if-devroom-banner-svg" aria-hidden="true">
+                {% include dr.svg_path %}
+              </div>
 
               <div class="d-flex align-items-center gap-2">
                 <div class="if-devroom-icon-wrap">

@@ -3443,16 +3443,11 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .if-devroom-card:hover .if-devroom-title { color: var(--v3-primary-button); }
 .if-devroom-banner-svg {
   width: 100%;
-  height: auto;
-  aspect-ratio: 368 / 72;
-  display: block;
+  aspect-ratio: 4 / 1;
   border-radius: 8px;
   overflow: hidden;
 }
-.if-devroom-banner-rect { fill: var(--dc-l); }
-[data-theme="dark"] .if-devroom-banner-rect { fill: var(--dc-d); }
-.if-devroom-tex { mix-blend-mode: color-burn; }
-[data-theme="dark"] .if-devroom-tex { mix-blend-mode: screen; }
+.if-devroom-banner-svg svg { width: 100%; height: auto; display: block; }
 .if-devroom-icon-wrap {
   width: 34px;
   height: 34px;
