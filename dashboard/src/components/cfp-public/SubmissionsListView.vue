@@ -22,7 +22,6 @@ const SORT_OPTIONS = [
   { label: 'Title A–Z', value: 'title_asc' },
   { label: 'Title Z–A', value: 'title_desc' },
   { label: 'Most Liked', value: 'likes_desc' },
-  { label: 'Most Reviewed', value: 'review_count_desc' },
 ]
 
 const props = defineProps({
@@ -113,13 +112,15 @@ function sortResult(arr, sort) {
     case 'creation_asc':
       return sorted.sort((a, b) => new Date(a.creation) - new Date(b.creation))
     case 'title_asc':
-      return sorted.sort((a, b) => (a.talk_title ?? '').localeCompare(b.talk_title ?? ''))
+      return sorted.sort((a, b) =>
+        (a.talk_title ?? '').trim().localeCompare((b.talk_title ?? '').trim()),
+      )
     case 'title_desc':
-      return sorted.sort((a, b) => (b.talk_title ?? '').localeCompare(a.talk_title ?? ''))
+      return sorted.sort((a, b) =>
+        (b.talk_title ?? '').trim().localeCompare((a.talk_title ?? '').trim()),
+      )
     case 'likes_desc':
-      return sorted.sort((a, b) => (b._likes_count ?? 0) - (a._likes_count ?? 0))
-    case 'review_count_desc':
-      return sorted.sort((a, b) => (b._review_count ?? 0) - (a._review_count ?? 0))
+      return sorted.sort((a, b) => (b._likes ?? 0) - (a._likes ?? 0))
     case 'modified_desc':
       return sorted.sort((a, b) => new Date(b.modified) - new Date(a.modified))
     case 'creation_desc':
@@ -152,16 +153,22 @@ const filteredSubmissions = computed(() => {
   // Apply search filter
   if (search) {
     result = result.filter((item) => {
-      const { talk_title, speaker_name, speakers, _speaker } = item
+      const { talk_title, speaker_name, speakers, _speaker, session_type, session_categories } =
+        item
 
       const titleMatch = talk_title?.toLowerCase().includes(search)
+      const categoryMatch = session_categories?.toLowerCase().includes(search)
+      const sessionTypeMatch = session_type?.toLowerCase().includes(search)
 
       const allNames = [
         ...(speaker_name ? [speaker_name.toLowerCase()] : []),
         ...((speakers ?? _speaker)?.map((s) => s?.full_name?.toLowerCase() ?? '') ?? []),
+        ...((speakers ?? _speaker)?.map((s) => s?.organization?.toLowerCase() ?? '') ?? []),
       ]
 
-      return titleMatch || allNames.some((n) => n.includes(search))
+      return (
+        titleMatch || categoryMatch || sessionTypeMatch || allNames.some((n) => n.includes(search))
+      )
     })
   }
 
