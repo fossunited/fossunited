@@ -1,6 +1,6 @@
 import frappe
-from frappe.email.doctype.newsletter.newsletter import Newsletter
 from frappe.utils import random_string
+from newsletter.newsletter.doctype.newsletter.newsletter import Newsletter
 
 
 class NewsletterExtend(Newsletter):
