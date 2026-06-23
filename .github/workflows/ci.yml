@@ -49,13 +49,13 @@ jobs:
       - name: Setup Python with Cache
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.14'
           cache: 'pip'
 
       - name: Setup Node.js with Cache
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version: '24.x'
           cache: 'yarn'
 
       - name: Install System Dependencies
@@ -76,7 +76,7 @@ jobs:
         shell: bash
         run: |
           pip install frappe-bench
-          bench init --frappe-branch version-15 --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
+          bench init --frappe-branch version-16 --skip-redis-config-generation --skip-assets --python "$(which python)" ${{ env.BENCH_PATH }}
           ${{ env.BENCH_PATH }}/env/bin/pip install "setuptools<72"
 
           mariadb --host 127.0.0.1 --port 3306 -u root -p${{ env.MARIADB_ROOT_PASSWORD }} -e "SET GLOBAL character_set_server = 'utf8mb4'"
@@ -89,6 +89,8 @@ jobs:
           bench get-app fossunited $GITHUB_WORKSPACE
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin ${{ env.SITE_NAME }}
+          bench --site ${{ env.SITE_NAME }} install-app blog
+          bench --site ${{ env.SITE_NAME }} install-app newsletter
           bench --site ${{ env.SITE_NAME }} install-app fossunited
           bench build
         env:
