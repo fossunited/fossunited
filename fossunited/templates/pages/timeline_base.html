@@ -491,15 +491,15 @@
              class="d-flex align-items-center mb-3 timeline-month-header"
              role="button"
              tabindex="0"
-             aria-expanded="true"
-             onclick="toggleSection('${sectionId}')"
+             data-toggle="collapse"
+             data-target="#${sectionId}"
            >
              <i class="ti ti-circle-filled  mr-2 v3-grant-stat-label ${statusClass}"></i>
              <h5 class="v3-text-primary mb-2">${month}</h5>
              <i class="ti ti-chevron-down v3-toggle-icon transition"></i>
            </div>
 
-           <div id="${sectionId}">
+           <div id="${sectionId}" class="collapse show">
              <div class="row v3-timeline-grid"></div>
            </div>
          `

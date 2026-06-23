@@ -676,6 +676,7 @@ def get_hackathon_results(hackathon_id, year):
         projects.append(
             {
                 "name": project.title or project.name,
+                "doc_id": project.name,
                 "url": f"/{project.route}",
                 "description": project.short_description or "",
                 "cash_prize": frappe.format_value(
