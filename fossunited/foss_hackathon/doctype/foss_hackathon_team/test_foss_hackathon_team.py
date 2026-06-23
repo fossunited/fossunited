@@ -140,7 +140,7 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         self.assertTrue(frappe.db.exists(HACKATHON_TEAM, team_name))
 
         # Temporarily disable test flag to allow auto-delete
-        frappe.flags.in_test = False
+        frappe.in_test = False
 
         try:
             team = frappe.get_doc(HACKATHON_TEAM, team_name)

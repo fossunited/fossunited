@@ -42,8 +42,10 @@ class TestCFPAssignmentAPIs(FrappeTestCase):
         cls.cfp.delete(force=True)
         frappe.delete_doc(EVENT, cls.event.name, force=True)
         cls.chapter.delete(force=True)
-        frappe.get_doc("User", cls.reviewer.name).remove_roles("CFP Reviewer")
-        frappe.get_doc("User", CTM).remove_roles("Chapter Team Member")
+        if frappe.db.exists("User", cls.reviewer.name):
+            frappe.get_doc("User", cls.reviewer.name).remove_roles("CFP Reviewer")
+        if frappe.db.exists("User", CTM):
+            frappe.get_doc("User", CTM).remove_roles("Chapter Team Member")
         super().tearDownClass()
 
     def tearDown(self):
