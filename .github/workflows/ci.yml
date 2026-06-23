@@ -87,6 +87,8 @@ jobs:
         run: |
           bench get-app harshtandiya/frappe_factory_bot --branch main
           bench get-app fossunited $GITHUB_WORKSPACE
+          bench get-app https://github.com/frappe/newsletter
+          bench get-app https://github.com/frappe/blog
           bench setup requirements --dev
           bench new-site --db-root-password root --admin-password admin ${{ env.SITE_NAME }}
           bench --site ${{ env.SITE_NAME }} install-app blog
