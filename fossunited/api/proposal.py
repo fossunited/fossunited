@@ -31,7 +31,8 @@ def get_event_proposals(event: str) -> dict:
         as_dict=True,
     )
 
-    event_route, event_name = frappe.db.get_value(EVENT, event, ["route", "event_name"])
+    event_info = frappe.db.get_value(EVENT, event, ["route", "event_name"], as_dict=True)
+    event_route, event_name = event_info.route, event_info.event_name
 
     # Use frappe.qb for the main proposals query for better performance
     Proposal = qb.DocType(PROPOSAL)
