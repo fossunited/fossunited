@@ -18,7 +18,7 @@ from fossunited.tests.factories import (
 from fossunited.utils.notifications import send_event_feedback_request
 
 ENQUEUE_PATH = "fossunited.chapters.doctype.foss_chapter_event.foss_chapter_event.frappe.enqueue"
-NEWSLETTER_SEND_PATH = "frappe.email.doctype.newsletter.newsletter.Newsletter.send_emails"
+NEWSLETTER_SEND_PATH = "newsletter.newsletter.doctype.newsletter.newsletter.Newsletter.send_emails"
 
 
 class TestFOSSChapterEvent(FrappeTestCase):
