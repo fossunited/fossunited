@@ -18,14 +18,16 @@ class FOSSHackathonProjectFactory(BaseFactory[FOSSHackathonProject]):
 
     @property
     def default_attributes(self) -> dict[str, Any]:
-        team = (
-            FOSSHackathonTeamFactory.create().name
-            if "team" not in self.overrides
-            else self.overrides["team"]
-        )
-        hackathon = self.overrides.get("hackathon") or frappe.db.get_value(
-            HACKATHON_TEAM, team, "hackathon"
-        )
+        hackathon_override = self.overrides.get("hackathon")
+
+        if "team" in self.overrides:
+            team = self.overrides["team"]
+        elif hackathon_override:
+            team = FOSSHackathonTeamFactory.create(hackathon=hackathon_override).name
+        else:
+            team = FOSSHackathonTeamFactory.create().name
+
+        hackathon = hackathon_override or frappe.db.get_value(HACKATHON_TEAM, team, "hackathon")
 
         return {
             "hackathon": hackathon,
