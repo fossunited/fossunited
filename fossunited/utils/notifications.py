@@ -76,6 +76,77 @@ for the broader community.</p><br/>
     )
 
 
+def send_event_rsvp_reminder(event_id):
+    doc = frappe.get_doc(EVENT, event_id)
+
+    email_groups = frappe.db.get_all(
+        EMAIL_GROUP,
+        filters={
+            "reference_document": event_id,
+            "document_type": EVENT,
+            "group_type": "Event Participants",
+            "total_subscribers": [">", 0],
+        },
+        pluck="name",
+    )
+
+    if not email_groups:
+        return
+
+    chapter_name, chapter_email = frappe.db.get_value(
+        CHAPTER, doc.chapter, ["chapter_name", "email"]
+    )
+    chapter_email = chapter_email or "noreply@fossunited.org"
+
+    event_url = f"https://fossunited.org/{doc.route}"
+    start_date_display = doc.event_start_date.strftime("%A, %-d %B %Y")
+    start_time_display = doc.event_start_date.strftime("%-I:%M %p")
+
+    location_html = ""
+    if doc.event_location:
+        if doc.map_link:
+            location_html = (
+                f'<li><span>Location: </span><a href="{doc.map_link}">'
+                f"{doc.event_location}</a></li>"
+            )
+        else:
+            location_html = f"<li><span>Location: </span>{doc.event_location}</li>"
+
+    subject = f"Reminder: {doc.event_name} is tomorrow!"
+    message = f"""<p>This is a friendly reminder that <a href="{event_url}"><strong>{doc.event_name}</strong></a> is happening tomorrow!</p>
+
+<ul>
+  <li><span>Date: </span>{start_date_display}</li>
+  <li><span>Time: </span>{start_time_display}</li>
+  {location_html}
+</ul>
+
+<p>We look forward to seeing you there. Check the
+<a href="{event_url}">event page</a> for the latest schedule and updates.</p>
+
+<p>Regards,<br>Team {doc.event_name}</p>"""
+
+    newsletter = frappe.get_doc(
+        {
+            "doctype": CAMPAIGN,
+            "reference_document": event_id,
+            "document_type": EVENT,
+            "chapter": doc.chapter,
+            "sender_name": chapter_name,
+            "sender_email": chapter_email,
+            "email_group": [{"email_group": g} for g in email_groups],
+            "subject": subject,
+            "content_type": "Rich Text",
+            "message": message,
+        }
+    )
+    newsletter.flags.ignore_permissions = True
+    newsletter.insert(ignore_permissions=True)
+    newsletter.send_emails()
+
+    frappe.db.set_value(EVENT, event_id, "reminder_sent", 1)
+
+
 def notify_cfp_reviewer_assignment(doc, method=None) -> None:
     """
     doc_events hook: ToDo → after_insert.

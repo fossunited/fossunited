@@ -83,6 +83,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         external_event_url: DF.Data | None
         feedback_sent: DF.Check
         hall_options: DF.SmallText | None
+        reminder_sent: DF.Check
         has_external_webpage: DF.Check
         is_external_event: DF.Check
         is_paid_event: DF.Check

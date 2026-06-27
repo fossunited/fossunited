@@ -45,6 +45,7 @@
   "column_break_ae9v",
   "event_end_date",
   "feedback_sent",
+  "reminder_sent",
   "livestreaming_section",
   "livestream_link",
   "livestream_embed_link",
@@ -492,6 +493,13 @@
    "fieldname": "feedback_sent",
    "fieldtype": "Check",
    "label": "Feedback sent?",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "reminder_sent",
+   "fieldtype": "Check",
+   "label": "Reminder sent?",
    "read_only": 1
   },
   {

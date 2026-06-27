@@ -8,6 +8,7 @@ from fossunited.doctype_ids import (
     JOB_STATUS_APPROVED,
     JOB_STATUS_EXPIRED,
 )
+from fossunited.utils.notifications import send_event_rsvp_reminder
 
 
 def conclude_events():
@@ -42,6 +43,33 @@ def conclude_events():
         except Exception:
             frappe.log_error(
                 title=f"Error concluding event: {event.name}",
+                message=frappe.get_traceback(),
+            )
+
+
+def send_rsvp_event_reminders():
+    tomorrow = add_days(frappe.utils.today(), 1)
+    day_after = add_days(frappe.utils.today(), 2)
+
+    events = frappe.db.get_all(
+        EVENT,
+        filters=[
+            ["status", "=", "Live"],
+            ["is_paid_event", "=", 0],
+            ["reminder_sent", "=", 0],
+            ["event_start_date", ">=", tomorrow],
+            ["event_start_date", "<", day_after],
+        ],
+        pluck="name",
+        page_length=999,
+    )
+
+    for event_id in events:
+        try:
+            send_event_rsvp_reminder(event_id)
+        except Exception:
+            frappe.log_error(
+                title=f"Error sending RSVP reminder: {event_id}",
                 message=frappe.get_traceback(),
             )
 

@@ -149,6 +149,7 @@ before_migrate = "fossunited.migrate.before_migrate"
 scheduler_events = {
     "daily_long": [
         "fossunited.scheduled_tasks.conclude_events",
+        "fossunited.scheduled_tasks.send_rsvp_event_reminders",
     ],
     "monthly": [
         "fossunited.scheduled_tasks.update_past_job_status",

@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from frappe.tests.utils import FrappeTestCase
 
-from fossunited.scheduled_tasks import conclude_events
+from fossunited.scheduled_tasks import conclude_events, send_rsvp_event_reminders
 from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
 from fossunited.tests.factories.foss_chapter_factory import FOSSChapterFactory
 from fossunited.tests.factories.foss_event_cfp_submission_factory import FOSSEventCFPFactory
@@ -69,3 +69,43 @@ class TestScheduledTasks(FrappeTestCase):
         self.assertEqual(self.event3.status, "Live")
         self.assertEqual(self.event3_cfp.status, "Live")
         self.assertEqual(self.event3_rsvp.is_published, 1)
+
+    @patch("fossunited.scheduled_tasks.send_event_rsvp_reminder")
+    @patch("frappe.utils.today")
+    def test_send_rsvp_event_reminders(self, mock_today, mock_send_reminder):
+        mock_today.return_value = datetime.today().strftime("%Y-%m-%d")
+
+        send_rsvp_event_reminders()
+
+        reminder_event_ids = [call[0][0] for call in mock_send_reminder.call_args_list]
+        self.assertIn(self.event3.name, reminder_event_ids)
+        self.assertNotIn(self.event1.name, reminder_event_ids)
+        self.assertNotIn(self.event2.name, reminder_event_ids)
+
+    @patch("fossunited.scheduled_tasks.send_event_rsvp_reminder")
+    @patch("frappe.utils.today")
+    def test_rsvp_reminder_not_sent_twice(self, mock_today, mock_send_reminder):
+        mock_today.return_value = datetime.today().strftime("%Y-%m-%d")
+
+        self.event3.reload()
+        self.event3.reminder_sent = 1
+        self.event3.save(ignore_permissions=True)
+
+        send_rsvp_event_reminders()
+
+        reminder_event_ids = [call[0][0] for call in mock_send_reminder.call_args_list]
+        self.assertNotIn(self.event3.name, reminder_event_ids)
+
+    @patch("fossunited.scheduled_tasks.send_event_rsvp_reminder")
+    @patch("frappe.utils.today")
+    def test_rsvp_reminder_not_sent_for_paid_events(self, mock_today, mock_send_reminder):
+        mock_today.return_value = datetime.today().strftime("%Y-%m-%d")
+
+        self.event3.reload()
+        self.event3.is_paid_event = 1
+        self.event3.save(ignore_permissions=True)
+
+        send_rsvp_event_reminders()
+
+        reminder_event_ids = [call[0][0] for call in mock_send_reminder.call_args_list]
+        self.assertNotIn(self.event3.name, reminder_event_ids)
