@@ -1,7 +1,8 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import add_to_date, now_datetime
 
-from fossunited.doctype_ids import EVENT, PROPOSAL
+from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
@@ -62,6 +63,24 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         )
         self.submission.save()
         self.submission.reload()
+
+    # --- deadline auto-close tests ---
+
+    def test_submit_past_deadline_throws(self):
+        past_cfp = FOSSEventCFPFactory.create(
+            event=self.event.name,
+            deadline=add_to_date(now_datetime(), days=-1),
+            status="Live",
+        )
+        with self.assertRaises(frappe.PermissionError):
+            FOSSEventCFPSubmissionFactory.create(
+                linked_cfp=past_cfp.name,
+                event=self.event.name,
+                submitted_by=CoreTeam,
+            )
+        # submit path rejects but does not write; status flips only on the next read
+        self.assertEqual(frappe.db.get_value(EVENT_CFP, past_cfp.name, "status"), "Live")
+        past_cfp.delete(force=True)
 
     # --- permission tests ---
 

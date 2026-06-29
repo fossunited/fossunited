@@ -41,7 +41,9 @@ def get_cfp_from_route(route: str) -> dict:
         as_dict=True,
     )
 
-    cfp = frappe.get_doc(EVENT_CFP, {"event": event.name}).as_dict()
+    cfp_doc = frappe.get_doc(EVENT_CFP, {"event": event.name})
+    cfp_doc.close_if_past_deadline()
+    cfp = cfp_doc.as_dict()
     cfp.event = event
 
     return cfp

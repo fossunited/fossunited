@@ -197,7 +197,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def validate_form_is_live(self) -> None:
         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
-        if not linked_cfp.status == "Live":
+        if linked_cfp.status != "Live" or linked_cfp.is_past_deadline():
             frappe.throw(_("The CFP Form for this event is not live"), frappe.PermissionError)
 
     def validate_session_type_permissions(self) -> None:

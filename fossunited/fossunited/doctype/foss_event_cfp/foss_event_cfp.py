@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import get_datetime, now_datetime
 
 from fossunited.doctype_ids import EVENT, GLOBAL_CFP_SETTINGS
 
@@ -37,6 +38,21 @@ class FOSSEventCFP(Document):
         only_workshops: DF.Check
         status: DF.Literal["Closed", "Live"]
     # end: auto-generated types
+
+    def is_past_deadline(self) -> bool:
+        """True when a deadline is set and has already passed (full datetime precision)."""
+        return bool(self.deadline and get_datetime(self.deadline) < now_datetime())
+
+    def close_if_past_deadline(self) -> bool:
+        """Lazily flip Live -> Closed once the deadline has passed.
+
+        Returns True only when this call performed the flip. Uses db_set, so it is safe
+        to call from a Guest read context and mutates self.status in memory for the caller.
+        """
+        if self.status == "Live" and self.is_past_deadline():
+            self.db_set("status", "Closed")
+            return True
+        return False
 
     def before_insert(self):
         self.assign_reviewers()
