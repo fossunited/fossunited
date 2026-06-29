@@ -19,11 +19,8 @@
   "route",
   "navbar_controls_section",
   "show_speakers",
-  "show_rsvp",
-  "show_schedule",
-  "column_break_moaa",
-  "show_cfp",
   "show_photos",
+  "show_schedule",
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
@@ -275,22 +272,6 @@
   },
   {
    "default": "0",
-   "fieldname": "show_rsvp",
-   "fieldtype": "Check",
-   "label": "Show RSVP"
-  },
-  {
-   "fieldname": "column_break_moaa",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_cfp",
-   "fieldtype": "Check",
-   "label": "Show CFP"
-  },
-  {
-   "default": "0",
    "fieldname": "show_photos",
    "fieldtype": "Check",
    "label": "Show Photos"
@@ -537,7 +518,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-05-20 00:13:16.522002",
+ "modified": "2026-06-29 15:58:17.947880",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",

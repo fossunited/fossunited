@@ -369,7 +369,7 @@
                       >
                         Buy Ticket
                       </a>
-                    {% elif doc.show_rsvp and rsvp_status_block.is_published %}
+                    {% elif rsvp_status_block.is_published %}
                       {% if registration_status %}
                         <a
                           href="/{{ rsvp_status_block.form_route }}"
@@ -423,7 +423,7 @@
                   {% endif %}
 
                   {# Talk Proposals — show when CFP is active OR proposals already exist #}
-                  {% if (doc.show_cfp and cfp_status_block.has_doc) or event_stats.proposals > 0 %}
+                  {% if cfp_status_block.has_doc or event_stats.proposals > 0 %}
                     <a
                       href="{{ all_cfp_link }}"
                       class="v3-btn v3-btn-secondary"
@@ -496,7 +496,7 @@
             {% endif %}
 
             <!-- CFP Card (Mobile) -->
-            {% if doc.show_cfp and cfp_status_block.has_doc %}
+            {% if cfp_status_block.has_doc %}
               <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
             {% endif %}
 
@@ -534,7 +534,7 @@
           <!-- Sidebar -->
           <div class="v3-content-sidebar" aria-label="Event information sidebar">
             <!-- CFP Card (Desktop) -->
-            {% if doc.show_cfp and cfp_status_block.has_doc %}
+            {% if cfp_status_block.has_doc %}
               <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
             {% endif %}
 

@@ -30,8 +30,6 @@ def conclude_events():
         try:
             doc = frappe.get_doc(EVENT, event.name)
             doc.status = "Concluded"
-            doc.show_rsvp = 0
-            doc.show_cfp = 0
             doc.show_speakers = 1
             doc.save(ignore_permissions=True)
 

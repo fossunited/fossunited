@@ -97,9 +97,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
-        show_cfp: DF.Check
         show_photos: DF.Check
-        show_rsvp: DF.Check
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
