@@ -6,6 +6,7 @@ from fossunited.tests.factories.foss_event_cfp_submission_factory import (
     FOSSEventCFPFactory,
     FOSSEventCFPSubmissionFactory,
 )
+from fossunited.tests.factories.foss_event_grant_factory import FOSSEventGrantFactory
 from fossunited.tests.factories.foss_event_rsvp_factory import FOSSEventRSVPFactory
 from fossunited.tests.factories.foss_event_rsvp_submission_factory import (
     FOSSEventRSVPSubmissionFactory,
@@ -24,7 +25,11 @@ from fossunited.tests.factories.foss_hackathon_localhost_factory import (
 from fossunited.tests.factories.foss_hackathon_participant_factory import (
     FOSSHackathonParticipantFactory,
 )
+from fossunited.tests.factories.foss_hackathon_project_factory import (
+    FOSSHackathonProjectFactory,
+)
 from fossunited.tests.factories.foss_hackathon_team_factory import FOSSHackathonTeamFactory
+from fossunited.tests.factories.foss_project_grant_factory import FOSSProjectGrantFactory
 from fossunited.tests.factories.free_ticket_application_factory import (
     FreeTicketApplicationFactory,
 )
@@ -37,6 +42,7 @@ __all__ = [
     "FOSSChapterFactory",
     "FOSSEventCFPFactory",
     "FOSSEventCFPSubmissionFactory",
+    "FOSSEventGrantFactory",
     "FOSSEventRSVPFactory",
     "FOSSEventRSVPSubmissionFactory",
     "FOSSEventTicketFactory",
@@ -45,7 +51,9 @@ __all__ = [
     "FOSSHackathonJoinTeamRequestFactory",
     "FOSSHackathonLocalHostFactory",
     "FOSSHackathonParticipantFactory",
+    "FOSSHackathonProjectFactory",
     "FOSSHackathonTeamFactory",
+    "FOSSProjectGrantFactory",
     "FreeTicketApplicationFactory",
     "FreeTicketCodeFactory",
     "RazorpayPaymentFactory",
