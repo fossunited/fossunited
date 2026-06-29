@@ -32,7 +32,11 @@
           <Switch v-if="reviewerMode" v-model="showNotReviewed" label="Hide reviewed (By Me)" />
         </Tooltip>
         <Tooltip text="Only show submissions assigned to you">
-          <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
+          <Switch
+            v-if="reviewerMode && eventUsesAssignment"
+            v-model="showAssignedOnly"
+            label="Assigned to me"
+          />
         </Tooltip>
       </div>
       <div class="flex items-center gap-2">
@@ -43,6 +47,7 @@
           size="sm"
           class="text-xs"
         />
+        <LoadingIndicator v-if="isRefiltering" class="w-3.5 h-3.5 text-ink-gray-5" />
         <span class="text-xs text-ink-gray-5 whitespace-nowrap"
           >Count: {{ cfpSubmissions.data?.length }}</span
         >
@@ -54,7 +59,11 @@
   <div v-if="cfpSubmissions.loading" class="flex items-center justify-center py-4">
     <LoadingIndicator class="w-5 h-5" />
   </div>
-  <div v-else-if="cfpSubmissions.data" class="flex flex-col">
+  <div
+    v-else-if="cfpSubmissions.data"
+    class="flex flex-col transition-opacity"
+    :class="{ 'opacity-50': isRefiltering }"
+  >
     <SubmissionListItem
       v-for="submission in cfpSubmissions.data"
       :key="submission.name"
@@ -63,8 +72,18 @@
       tabindex="0"
       @open:submission="handleOpenSubmission($event)"
     />
-    <div v-if="cfpSubmissions.data.length === 0" class="py-4">
-      <span class="text-sm text-ink-gray-5">No submissions found.</span>
+    <div v-if="cfpSubmissions.data.length === 0" class="py-6 flex flex-col items-center gap-2">
+      <span class="text-sm text-ink-gray-5">
+        {{ searchActive || filtersActive ? 'No submissions match.' : 'No submissions found.' }}
+      </span>
+      <div v-if="searchActive || filtersActive" class="flex items-center gap-2">
+        <Button v-if="searchActive" variant="subtle" size="sm" @click="clearSearch">
+          Clear search
+        </Button>
+        <Button v-if="filtersActive" variant="subtle" size="sm" @click="clearFilters">
+          Clear filters
+        </Button>
+      </div>
     </div>
   </div>
 </template>
@@ -75,8 +94,8 @@ import Filter from '@/components/ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
 import { useStorage } from '@vueuse/core'
-import { ref, watch, computed } from 'vue'
-import { createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
+import { ref, watch, computed, onBeforeUnmount } from 'vue'
+import { Button, createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 
@@ -108,6 +127,11 @@ const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
 const sortBy = ref('creation_desc')
+
+// Defer the heavy list re-render one frame so the toggle/pill/switch paints
+// immediately and a spinner shows, instead of the UI freezing mid-click.
+const isRefiltering = ref(false)
+let refilterFrame = 0
 
 // Restore from cache if user already toggled this session; default false until smart default runs.
 const showAssignedOnly = ref(_assignedToggleCache.get(props.event) ?? false)
@@ -143,6 +167,34 @@ const STATUS_OPTIONS = [
   { value: 'Rejected', label: 'Rejected', activeClass: 'bg-red-100 text-red-700' },
 ]
 
+// Show the "Assigned to me" toggle only when the event actually uses the
+// assignment feature (some proposal is assigned to a reviewer). Events that
+// don't use assignment hide the toggle entirely.
+const eventUsesAssignment = computed(() =>
+  (cfpSubmissions.originalData ?? []).some((s) => s._assigned_users?.length > 0),
+)
+
+// Track the two narrowing axes separately so the empty state can offer to clear
+// each on its own (e.g. matches may be hidden behind the "Assigned to me" toggle).
+const searchActive = computed(() => !!searchQuery.value)
+const filtersActive = computed(
+  () =>
+    !!selectedStatus.value ||
+    Object.keys(filters.value).length > 0 ||
+    (props.reviewerMode && (showNotReviewed.value || showAssignedOnly.value)),
+)
+
+function clearSearch() {
+  searchQuery.value = ''
+}
+
+function clearFilters() {
+  selectedStatus.value = ''
+  filters.value = {}
+  showNotReviewed.value = false
+  showAssignedOnly.value = false
+}
+
 const statusOptions = computed(() => {
   if (props.reviewerMode) return STATUS_OPTIONS
   return [
@@ -162,9 +214,12 @@ const cfpSubmissions = createResource({
   },
   onSuccess(data) {
     if (props.reviewerMode && !_assignedToggleCache.has(props.event)) {
-      const hasAssigned = data.some((s) => s._is_assigned === 'Yes')
-      showAssignedOnly.value = hasAssigned
-      if (!hasAssigned) {
+      const usesAssignment = data.some((s) => s._assigned_users?.length > 0)
+      const assignedToMe = data.some((s) => s._is_assigned === 'Yes')
+      showAssignedOnly.value = assignedToMe
+      // Only nudge when the event uses assignment but nothing landed on this
+      // reviewer; otherwise the toggle is hidden and the toast would be noise.
+      if (usesAssignment && !assignedToMe) {
         toast('No proposals assigned to you - showing all.')
       }
     }
@@ -236,8 +291,26 @@ function applyFilters() {
   cfpSubmissions.data = data
 }
 
-watch([filters, searchQuery, selectedStatus, sortBy], applyFilters, { deep: true })
-watch([showNotReviewed, showAssignedOnly], applyFilters)
+// Small lists render instantly, so apply synchronously with no indicator (no
+// flicker). For big lists, recompute on the next frame so the clicked control
+// paints first and a pending indicator shows, instead of the UI freezing.
+function deferApplyFilters() {
+  if ((cfpSubmissions.originalData?.length ?? 0) < 80) {
+    applyFilters()
+    return
+  }
+  isRefiltering.value = true
+  cancelAnimationFrame(refilterFrame)
+  refilterFrame = requestAnimationFrame(() => {
+    applyFilters()
+    isRefiltering.value = false
+  })
+}
+
+watch([filters, searchQuery, selectedStatus, sortBy], deferApplyFilters, { deep: true })
+watch([showNotReviewed, showAssignedOnly], deferApplyFilters)
+
+onBeforeUnmount(() => cancelAnimationFrame(refilterFrame))
 
 function patchAssignedUsers(name, newUsers) {
   const patcher = (item) => {

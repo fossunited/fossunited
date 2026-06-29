@@ -14,6 +14,16 @@ function verdictLabel(u) {
   return `${u.full_name} - Not Sure`
 }
 
+function verdictRing(u) {
+  return {
+    'opacity-40 dark:opacity-75 ring-2 ring-outline-gray-3 dark:ring-outline-gray-4':
+      !u._review_verdict,
+    'ring-2 ring-green-500': u._review_verdict === 'Yes',
+    'ring-2 ring-red-500': u._review_verdict === 'No',
+    'ring-2 ring-orange-400': u._review_verdict === 'Maybe',
+  }
+}
+
 const dayjs = inject('$dayjs')
 dayjs.extend(relativeTime)
 
@@ -67,7 +77,11 @@ defineEmits(['open:submission'])
         <Tooltip text="Proposal status managed event organizer" placement="top">
           <Badge :label="submission.status" :theme="getStatusBadgeTheme(submission.status)" />
         </Tooltip>
-        <Tooltip v-if="submission._is_reviewed === 'Yes'" text="You've added your review" placement="top">
+        <Tooltip
+          v-if="submission._is_reviewed === 'Yes'"
+          text="You've added your review"
+          placement="top"
+        >
           <Badge label="Reviewed" theme="blue" />
         </Tooltip>
         <Badge
@@ -94,17 +108,14 @@ defineEmits(['open:submission'])
           :text="verdictLabel(u)"
           placement="top"
         >
+          <!-- can be LazyObserved, but since we've Only ~15-30 unique reviewers across all proposals
+               URL repeats and the browser cache fetches each once. -->
           <Avatar
             :image="u.user_image"
             :label="u.full_name"
             size="sm"
             class="rounded-full"
-            :class="[
-              !u._review_verdict && 'opacity-40 dark:opacity-75 ring-2 ring-outline-gray-3 dark:ring-outline-gray-4',
-              u._review_verdict === 'Yes' && 'ring-2 ring-green-500',
-              u._review_verdict === 'No' && 'ring-2 ring-red-500',
-              u._review_verdict === 'Maybe' && 'ring-2 ring-orange-400',
-            ]"
+            :class="verdictRing(u)"
           />
         </Tooltip>
       </div>
