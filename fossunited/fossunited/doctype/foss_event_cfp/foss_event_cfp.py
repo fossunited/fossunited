@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import get_datetime, now_datetime
 
-from fossunited.doctype_ids import EVENT, GLOBAL_CFP_SETTINGS
+from fossunited.doctype_ids import GLOBAL_CFP_SETTINGS
 
 
 class FOSSEventCFP(Document):
@@ -68,9 +68,3 @@ class FOSSEventCFP(Document):
                     "full_name": reviewer.full_name,
                 },
             )
-
-    def before_save(self):
-        self.enable_cfp_tab()
-
-    def enable_cfp_tab(self):
-        frappe.db.set_value(EVENT, self.event, "show_cfp", 1)

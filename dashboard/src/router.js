@@ -107,11 +107,6 @@ const routes = [
         component: () => import('@/pages/EventRsvp.vue'),
         children: [
           {
-            path: '',
-            name: 'EventRsvpManage',
-            component: () => import('@/pages/EventRsvpManage.vue'),
-          },
-          {
             path: 'create',
             name: 'EventRsvpCreate',
             component: () => import('@/pages/EventRsvpCreate.vue'),
@@ -165,11 +160,6 @@ const routes = [
         name: 'EventCfp',
         component: () => import('@/pages/EventCfp.vue'),
         children: [
-          {
-            path: '',
-            name: 'EventCfpManage',
-            component: () => import('@/pages/EventCfpManage.vue'),
-          },
           {
             path: 'create',
             name: 'EventCfpCreate',

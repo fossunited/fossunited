@@ -37,7 +37,6 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def before_save(self):
         self.set_route()
-        self.enable_rsvp_tab()
 
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
@@ -98,9 +97,6 @@ class FOSSEventRSVP(WebsiteGenerator):
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/rsvp"
-
-    def enable_rsvp_tab(self):
-        frappe.db.set_value(EVENT, self.event, "show_rsvp", 1)
 
     def get_custom_questions(self):
         custom_questions = []

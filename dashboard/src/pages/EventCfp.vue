@@ -28,14 +28,9 @@ const event = createDocumentResource({
   auto: true,
 })
 
-const tabs = reactive({
-  options: [
-    {
-      label: 'Overview',
-      route: `/event/${route.params.id}/cfp`,
-    },
-  ],
-})
+const cfpBase = `/event/${route.params.id}/cfp`
+
+const tabs = reactive({ options: [] })
 
 const hasCfp = createResource({
   url: 'frappe.client.get_count',
@@ -49,27 +44,20 @@ const hasCfp = createResource({
   },
   auto: true,
   onSuccess(data) {
-    resetTabs()
-    if (data > 0) {
+    const exists = data > 0
+    if (exists) {
       eventCfp.fetch()
-      tabs.options.push(
-        ...[
-          {
-            label: 'Web Form',
-            route: `/event/${route.params.id}/cfp/edit`,
-          },
-          {
-            label: 'Insights',
-            route: `/event/${route.params.id}/cfp/insights`,
-          },
-        ],
-      )
-      return
+      tabs.options = [
+        { label: 'Web Form', route: `${cfpBase}/edit` },
+        { label: 'Insights', route: `${cfpBase}/insights` },
+      ]
+    } else {
+      tabs.options = [{ label: 'Web Form', route: `${cfpBase}/create` }]
     }
-    tabs.options.push({
-      label: 'Web Form',
-      route: `/event/${route.params.id}/cfp/create`,
-    })
+    // Web Form is the default landing: redirect the bare /cfp path to edit or create.
+    if (route.path === cfpBase || route.path === `${cfpBase}/`) {
+      router.replace(exists ? `${cfpBase}/edit` : `${cfpBase}/create`)
+    }
   },
 })
 
@@ -83,17 +71,8 @@ const eventCfp = createResource({
   },
 })
 
-const resetTabs = () => {
-  tabs.options = [
-    {
-      label: 'Overview',
-      route: `/event/${route.params.id}/cfp`,
-    },
-  ]
-}
-
 const cfpCreated = () => {
   hasCfp.fetch()
-  router.replace(`/event/${route.params.id}/cfp`)
+  router.replace(`${cfpBase}/edit`)
 }
 </script>

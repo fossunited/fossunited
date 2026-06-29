@@ -65,6 +65,18 @@
           />
           <span class="text-sm text-ink-gray-5">Only accept talk proposals.</span>
         </div>
+        <div class="flex flex-col gap-2">
+          <FormControl
+            v-model="cfp.doc.deadline"
+            type="datetime-local"
+            label="Submission Deadline"
+            size="md"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >The form auto-closes once this date and time passes. Leave empty to keep it open and
+            close the form manually with Publish/Unpublish.</span
+          >
+        </div>
         <TextEditor
           class="col-span-2"
           label="Form Description"
@@ -90,6 +102,19 @@
     </div>
     <div>
       <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
+      <div class="flex flex-col gap-2 mt-4">
+        <FormControl
+          v-model="cfp.doc.has_public_custom_responses"
+          type="checkbox"
+          label="Public Custom Responses"
+          size="md"
+        />
+        <span class="text-sm text-ink-gray-5"
+          >Show answers to these custom questions publicly on the proposal page. Be careful: do not
+          make responses public if any question collects sensitive data such as phone numbers or
+          email addresses.</span
+        >
+      </div>
       <Button
         class="mt-3"
         size="md"
