@@ -322,7 +322,13 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         context.no_cache = 1
         if context.is_owner:
-            context.cfp_data_json = frappe.as_json(self.as_dict()).replace("</", "<\\/")
+            data = self.as_dict()
+            # cfp_data_json only powers the proposer's quick-edit dialog, which
+            # never edits reviews. Drop the whole reviews table so no review
+            # data (remarks, verdict, private_comment, favourite) is exposed to
+            # the proposer.
+            data.pop("reviews", None)
+            context.cfp_data_json = frappe.as_json(data).replace("</", "<\\/")
             meta = frappe.get_meta(PROPOSAL)
             context.cfp_field_desc_json = frappe.as_json(
                 {f.fieldname: f.description for f in meta.fields if f.description}
