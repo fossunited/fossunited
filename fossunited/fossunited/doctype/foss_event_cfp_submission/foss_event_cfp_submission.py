@@ -117,7 +117,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_insert(self):
         self.check_status()
         self.validate_linked_cfp_exists()
-        self.validate_form_is_live()
+        if "System Manager" not in frappe.get_roles():
+            self.validate_form_is_live()
         self._set_name_from_first_speaker()
 
     def _set_name_from_first_speaker(self):
