@@ -306,13 +306,13 @@ def _get_cta_buttons(event, cfp):
     if cfp and cfp.status == "Closed":
         return [
             {
-                "label": "View Proposals",
-                "url": "/indiafoss/talks",
+                "label": "Get Tickets",
+                "url": "/indiafoss/tickets",
                 "primary": True,
             },
             {
-                "label": "Get Tickets",
-                "url": "/indiafoss/tickets",
+                "label": "View Proposals",
+                "url": "/indiafoss/talks",
                 "primary": False,
             },
         ]

@@ -9,8 +9,10 @@
     "reviewer",
     "reviewer_profile",
     "email",
+    "favourite",
     "to_approve",
-    "remarks"
+    "remarks",
+    "private_comment"
   ],
   "fields": [
     {
@@ -44,11 +46,24 @@
       "in_list_view": 1,
       "label": "Reviewer Profile",
       "options": "FOSS User Profile"
+    },
+    {
+      "default": "0",
+      "description": "To convey strong preference for a proposal",
+      "fieldname": "favourite",
+      "fieldtype": "Check",
+      "label": "Favourite"
+    },
+    {
+      "description": "Internal private comment on proposal to discuss and circulate thoughts with Organizers, Co-chair and other Reviewers. Not shown to proposer nor Guest in public page.",
+      "fieldname": "private_comment",
+      "fieldtype": "Small Text",
+      "label": "Private Comment"
     }
   ],
   "istable": 1,
   "links": [],
-  "modified": "2026-03-07 16:36:59.602849",
+  "modified": "2026-06-30 16:38:27.881010",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP Review",
