@@ -47,7 +47,6 @@
           size="sm"
           class="text-xs"
         />
-        <LoadingIndicator v-if="isRefiltering" class="w-3.5 h-3.5 text-ink-gray-5" />
         <span class="text-xs text-ink-gray-5 whitespace-nowrap"
           >Count: {{ cfpSubmissions.data?.length }}</span
         >
@@ -59,19 +58,19 @@
   <div v-if="cfpSubmissions.loading" class="flex items-center justify-center py-4">
     <LoadingIndicator class="w-5 h-5" />
   </div>
-  <div
-    v-else-if="cfpSubmissions.data"
-    class="flex flex-col transition-opacity"
-    :class="{ 'opacity-50': isRefiltering }"
-  >
+  <div v-else-if="cfpSubmissions.data" class="flex flex-col">
     <SubmissionListItem
-      v-for="submission in cfpSubmissions.data"
+      v-for="submission in renderedSubmissions"
       :key="submission.name"
       :submission="submission"
       :sort-by="sortBy"
       tabindex="0"
       @open:submission="handleOpenSubmission($event)"
     />
+    <!-- Sentinel: rendering the next page when it scrolls into view. -->
+    <div v-if="hasMoreToRender" ref="listEnd" class="flex items-center justify-center py-4">
+      <LoadingIndicator class="w-5 h-5" />
+    </div>
     <div v-if="cfpSubmissions.data.length === 0" class="py-6 flex flex-col items-center gap-2">
       <span class="text-sm text-ink-gray-5">
         {{ searchActive || filtersActive ? 'No submissions match.' : 'No submissions found.' }}
@@ -93,8 +92,8 @@ import SubmissionListItem from './SubmissionListItem.vue'
 import Filter from '@/components/ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
-import { useStorage } from '@vueuse/core'
-import { ref, watch, computed, onBeforeUnmount } from 'vue'
+import { useStorage, useElementVisibility } from '@vueuse/core'
+import { ref, watch, computed } from 'vue'
 import { Button, createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
@@ -128,10 +127,22 @@ const selectedStatus = ref('')
 const showNotReviewed = ref(true)
 const sortBy = ref('creation_desc')
 
-// Defer the heavy list re-render one frame so the toggle/pill/switch paints
-// immediately and a spinner shows, instead of the UI freezing mid-click.
-const isRefiltering = ref(false)
-let refilterFrame = 0
+// Lazy/incremental rendering: mount one page of rows, then grow as the list end
+// scrolls into view. Keeps the initial render instant even with hundreds of
+// proposals (each row mounts a Popover + Tooltips, so rendering all at once is slow).
+const PAGE_SIZE = 30
+const visibleCount = ref(PAGE_SIZE)
+const listEnd = ref(null)
+const listEndVisible = useElementVisibility(listEnd)
+
+const renderedSubmissions = computed(() =>
+  (cfpSubmissions.data ?? []).slice(0, visibleCount.value),
+)
+const hasMoreToRender = computed(() => (cfpSubmissions.data?.length ?? 0) > visibleCount.value)
+
+watch(listEndVisible, (visible) => {
+  if (visible && hasMoreToRender.value) visibleCount.value += PAGE_SIZE
+})
 
 // Restore from cache if user already toggled this session; default false until smart default runs.
 const showAssignedOnly = ref(_assignedToggleCache.get(props.event) ?? false)
@@ -289,28 +300,12 @@ function applyFilters() {
   })
 
   cfpSubmissions.data = data
+  // New filter/search/sort result: collapse back to the first page.
+  visibleCount.value = PAGE_SIZE
 }
 
-// Small lists render instantly, so apply synchronously with no indicator (no
-// flicker). For big lists, recompute on the next frame so the clicked control
-// paints first and a pending indicator shows, instead of the UI freezing.
-function deferApplyFilters() {
-  if ((cfpSubmissions.originalData?.length ?? 0) < 80) {
-    applyFilters()
-    return
-  }
-  isRefiltering.value = true
-  cancelAnimationFrame(refilterFrame)
-  refilterFrame = requestAnimationFrame(() => {
-    applyFilters()
-    isRefiltering.value = false
-  })
-}
-
-watch([filters, searchQuery, selectedStatus, sortBy], deferApplyFilters, { deep: true })
-watch([showNotReviewed, showAssignedOnly], deferApplyFilters)
-
-onBeforeUnmount(() => cancelAnimationFrame(refilterFrame))
+watch([filters, searchQuery, selectedStatus, sortBy], applyFilters, { deep: true })
+watch([showNotReviewed, showAssignedOnly], applyFilters)
 
 function patchAssignedUsers(name, newUsers) {
   const patcher = (item) => {
