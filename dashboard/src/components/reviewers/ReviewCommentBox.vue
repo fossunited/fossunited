@@ -34,16 +34,18 @@
       :has-custom-actions="true"
       :custom-actions="getCustomAction()"
     />
-    <Tooltip
-      text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
-    >
+    <div class="mt-4 pt-4 border-t border-outline-gray-2 flex flex-col gap-1.5">
+      <Tooltip
+        text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
+      >
+        <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
+      </Tooltip>
       <Textarea
         v-model="draft.private_comment"
-        class="mt-2"
         :rows="2"
-        placeholder="Private note for organizers and reviewers (optional)"
+        placeholder="Visible only to organizers and reviewers, not the proposer"
       />
-    </Tooltip>
+    </div>
   </div>
 </template>
 <script setup>

@@ -78,6 +78,11 @@
               fill="currentColor"
             />
             <Badge class="w-fit" label="Private note" theme="gray" />
+            <Tooltip
+              text="An internal note from this reviewer to organizers and other reviewers. This is not the review comment and is not shown to the proposer."
+            >
+              <IconInfoCircle class="w-4 h-4 text-ink-gray-5" />
+            </Tooltip>
           </div>
           <p class="text-sm text-ink-gray-7 whitespace-pre-wrap">
             {{ review.private_comment }}
@@ -90,8 +95,8 @@
 <script setup>
 import { cleanedHTML } from '@/helpers/utils'
 import { ref, inject, computed } from 'vue'
-import { Badge, createResource } from 'frappe-ui'
-import { IconChecks, IconAlertTriangle, IconHeart } from '@tabler/icons-vue'
+import { Badge, Tooltip, createResource } from 'frappe-ui'
+import { IconChecks, IconAlertTriangle, IconHeart, IconInfoCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { defaultSelectedReviewValue } from '@/helpers/reviewer'
 import MessageBanner from '@/components/ui/MessageBanner.vue'
