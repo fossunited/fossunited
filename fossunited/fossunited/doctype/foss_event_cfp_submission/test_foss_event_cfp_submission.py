@@ -72,6 +72,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             deadline=add_to_date(now_datetime(), days=-1),
             status="Live",
         )
+        frappe.set_user(CoreTeam)
         with self.assertRaises(frappe.PermissionError):
             FOSSEventCFPSubmissionFactory.create(
                 linked_cfp=past_cfp.name,
@@ -262,6 +263,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.cfp.status = "Closed"
         self.cfp.save()
         try:
+            frappe.set_user(CoreTeam)
             with self.assertRaises(frappe.PermissionError):
                 FOSSEventCFPSubmissionFactory.create(
                     linked_cfp=self.cfp.name,

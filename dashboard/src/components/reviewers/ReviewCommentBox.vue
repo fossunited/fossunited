@@ -7,24 +7,55 @@
         v-for="option in reviewOptions"
         :key="option.value"
         :label="option.label"
-        :variant="review === option.value ? 'solid' : 'outline'"
-        @click="review = option.value"
+        :variant="draft.to_approve === option.value ? 'solid' : 'outline'"
+        @click="draft.to_approve = option.value"
       />
     </div>
     <CommentBox
-      v-model="remarks"
+      v-model="draft.remarks"
       class="border-t-0 mt-0 rounded-t-none"
       :has-custom-actions="true"
       :custom-actions="getCustomAction()"
     />
+    <div class="mt-4 pt-4 border-t border-outline-gray-2 flex flex-col gap-1.5">
+      <div class="flex items-center justify-between gap-2">
+        <Tooltip
+          text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
+        >
+          <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
+        </Tooltip>
+        <Tooltip
+          text="Mark as favourite. Signals a strong preference for this proposal to organizers and reviewers."
+        >
+          <Button
+            :variant="draft.favourite ? 'subtle' : 'ghost'"
+            :label="draft.favourite ? 'Favourited' : 'Favourite'"
+            @click="draft.favourite = draft.favourite ? 0 : 1"
+          >
+            <template #prefix>
+              <IconHeart
+                class="w-4 h-4"
+                :class="draft.favourite ? 'text-ink-red-4' : 'text-ink-gray-5'"
+                :fill="draft.favourite ? 'currentColor' : 'none'"
+              />
+            </template>
+          </Button>
+        </Tooltip>
+      </div>
+      <Textarea
+        v-model="draft.private_comment"
+        :rows="2"
+        placeholder="Visible only to organizers and reviewers, not the proposer"
+      />
+    </div>
   </div>
 </template>
 <script setup>
-import { createResource, ErrorMessage } from 'frappe-ui'
+import { createResource, ErrorMessage, Tooltip, Textarea } from 'frappe-ui'
 import { ref, inject } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
+import { IconHeart } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
-import { filter } from 'lodash'
 import { useStorage } from '@vueuse/core'
 
 const emits = defineEmits(['add:review', 'update:review'])
@@ -49,8 +80,25 @@ const props = defineProps({
   },
 })
 
-const review = useStorage(`review-${props.submissionId}`, props.review.to_approve)
-const remarks = useStorage(`remarks-${props.submissionId}`, props.review.remarks)
+// Draft keyed per review identity ("new" when unsaved): a fresh edit seeds from
+// the existing review, a mid-edit refresh restores the draft, and clearDraft on
+// save makes the next open start from backend data.
+const storageKey = `cfp-review-draft-${props.submissionId}-${props.review.name || 'new'}`
+const draft = useStorage(storageKey, {
+  to_approve: props.review.to_approve || 'Yes',
+  remarks: props.review.remarks || '',
+  favourite: props.review.favourite || 0,
+  private_comment: props.review.private_comment || '',
+})
+
+const clearDraft = () => localStorage.removeItem(storageKey)
+
+const reviewFields = () => ({
+  remarks: draft.value.remarks,
+  to_approve: draft.value.to_approve,
+  favourite: draft.value.favourite ? 1 : 0,
+  private_comment: draft.value.private_comment,
+})
 
 const reviewOptions = [
   { label: 'Approve', value: 'Yes' },
@@ -77,7 +125,10 @@ const errorMessages = ref('')
 const validateRemark = () => {
   const errors = []
 
-  if (review.value != 'Yes' && (!remarks.value || remarks.value === '<p></p>')) {
+  if (
+    draft.value.to_approve != 'Yes' &&
+    (!draft.value.remarks || draft.value.remarks === '<p></p>')
+  ) {
     errors.push('You cannot submit the review without adding remarks.')
   }
   return errors
@@ -98,8 +149,7 @@ const submitReview = () => {
           parenttype: 'FOSS Event CFP Submission',
           parent: props.submissionId,
           parentfield: 'reviews',
-          remarks: remarks.value,
-          to_approve: review.value,
+          ...reviewFields(),
           reviewer_profile: reviewerProfile.data.name,
           reviewer: reviewerProfile.data.full_name,
         },
@@ -108,6 +158,7 @@ const submitReview = () => {
     auto: true,
     onSuccess() {
       errorMessages.value = ''
+      clearDraft()
       emits('add:review')
     },
     onError(err) {
@@ -129,15 +180,13 @@ const editReview = () => {
       return {
         doctype: 'FOSS Event CFP Review',
         name: props.review.name,
-        fieldname: {
-          remarks: remarks.value,
-          to_approve: review.value,
-        },
+        fieldname: reviewFields(),
       }
     },
     auto: true,
     onSuccess() {
       errorMessages.value = ''
+      clearDraft()
       emits('update:review')
     },
     onError(err) {

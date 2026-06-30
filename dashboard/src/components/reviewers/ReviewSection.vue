@@ -34,7 +34,14 @@
         class="flex flex-col gap-1 my-2"
       >
         <div v-if="isReviewOwner(review)" class="p-4 border rounded flex flex-col gap-2">
-          <h5 class="text-base font-semibold">Your Review</h5>
+          <div class="flex items-center gap-2">
+            <h5 class="text-base font-semibold">Your Review</h5>
+            <IconHeart
+              v-if="review.favourite"
+              class="w-4 h-4 text-ink-red-4"
+              fill="currentColor"
+            />
+          </div>
           <div class="flex justify-between items-center gap-4">
             <div
               v-if="review.remarks"
@@ -52,8 +59,35 @@
             :label="getLabel(review.to_approve)"
             :theme="getTheme(review.to_approve)"
           />
+          <p
+            v-if="review.private_comment"
+            class="text-sm text-ink-gray-7 whitespace-pre-wrap"
+          >
+            {{ review.private_comment }}
+          </p>
         </div>
-        <hr v-if="index != sortedReviews.length - 1" class="mt-2" />
+        <div
+          v-else-if="review.private_comment"
+          class="p-4 border rounded flex flex-col gap-2 bg-surface-gray-1"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-ink-gray-8">Reviewer {{ review.idx }}</span>
+            <IconHeart
+              v-if="review.favourite"
+              class="w-4 h-4 text-ink-red-4"
+              fill="currentColor"
+            />
+            <Badge class="w-fit" label="Private note" theme="gray" />
+            <Tooltip
+              text="An internal note from this reviewer to organizers and other reviewers. This is not the review comment and is not shown to the proposer."
+            >
+              <IconInfoCircle class="w-4 h-4 text-ink-gray-5" />
+            </Tooltip>
+          </div>
+          <p class="text-sm text-ink-gray-7 whitespace-pre-wrap">
+            {{ review.private_comment }}
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -61,8 +95,8 @@
 <script setup>
 import { cleanedHTML } from '@/helpers/utils'
 import { ref, inject, computed } from 'vue'
-import { Badge, createResource } from 'frappe-ui'
-import { IconChecks, IconAlertTriangle } from '@tabler/icons-vue'
+import { Badge, Tooltip, createResource } from 'frappe-ui'
+import { IconChecks, IconAlertTriangle, IconHeart, IconInfoCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { defaultSelectedReviewValue } from '@/helpers/reviewer'
 import MessageBanner from '@/components/ui/MessageBanner.vue'

@@ -6,6 +6,10 @@
     placeholder="Write a comment…"
     @change="emit('update:modelValue', $event)"
   >
+    <template #top>
+      <TextEditorFixedMenu class="-ml-1 mb-2 overflow-x-auto" :buttons="menuButtons" />
+    </template>
+
     <template #editor="{ editor }">
       <EditorContent
         class="border rounded-lg p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
@@ -14,8 +18,7 @@
     </template>
 
     <template #bottom>
-      <div class="mt-2 flex items-center justify-between">
-        <TextEditorFixedMenu class="-ml-1 overflow-x-auto" :buttons="menuButtons" />
+      <div class="mt-2 flex items-center justify-end">
         <Button :label="buttonLabel" variant="solid" @click="submit" />
       </div>
     </template>
@@ -44,7 +47,7 @@ const editorRef = ref(null)
 const menuButtons = [
   'Bold',
   'Italic',
-  'Strike',
+  'Strikethrough',
   'Separator',
   'Bullet List',
   'Numbered List',

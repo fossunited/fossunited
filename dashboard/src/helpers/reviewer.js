@@ -12,5 +12,7 @@ export const defaultSelectedReviewValue = () => {
   return {
     remarks: '',
     to_approve: 'Yes',
+    favourite: 0,
+    private_comment: '',
   }
 }

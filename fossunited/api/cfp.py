@@ -3,6 +3,7 @@ from collections import defaultdict
 
 import frappe
 
+from fossunited.api.chapter import check_if_chapter_or_event_core_member
 from fossunited.api.proposal import _get_bulk_custom_answers_data
 from fossunited.doctype_ids import (
     EVENT,
@@ -99,7 +100,19 @@ def get_cfp_submissions(event: str) -> list:
     Reviewers get: _is_reviewed, _is_assigned, review percentages, speakers, likes.
     Organizers get everything above plus _assigned_users with review verdicts per assignee.
     """
-    frappe.only_for([REVIEWER, CHAPTER_MEMBER])
+    roles = frappe.get_roles(frappe.session.user)
+    is_reviewer = REVIEWER in roles
+    # Chapter Team Member is a GLOBAL role, so holding it is not enough: only
+    # treat the user as an organizer when they actually belong to THIS event's
+    # chapter (or are an event core member). CFP Reviewer access is global by
+    # design.
+    is_organizer = check_if_chapter_or_event_core_member(event)
+
+    if not (is_reviewer or is_organizer):
+        frappe.throw(
+            frappe._("You are not allowed to view these submissions."),
+            frappe.PermissionError,
+        )
 
     cfp = frappe.db.get_value(EVENT_CFP, {"event": event}, "name")
     submissions = frappe.db.get_list(
@@ -114,7 +127,6 @@ def get_cfp_submissions(event: str) -> list:
         return submissions
 
     names = [s.name for s in submissions]
-    is_organizer = CHAPTER_MEMBER in frappe.get_roles(frappe.session.user)
 
     # Shared data (fetched for both reviewer and organizer)
     like_counts = _get_bulk_like_counts(names)
