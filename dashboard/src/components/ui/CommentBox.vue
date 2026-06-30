@@ -44,7 +44,7 @@ const editorRef = ref(null)
 const menuButtons = [
   'Bold',
   'Italic',
-  'Strike',
+  'Strikethrough',
   'Separator',
   'Bullet List',
   'Numbered List',
