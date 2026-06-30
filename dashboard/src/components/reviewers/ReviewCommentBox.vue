@@ -10,23 +10,6 @@
         :variant="draft.to_approve === option.value ? 'solid' : 'outline'"
         @click="draft.to_approve = option.value"
       />
-      <Tooltip
-        text="Mark as favourite. Signals a strong preference for this proposal to organizers and reviewers."
-      >
-        <Button
-          class="ml-auto"
-          :variant="draft.favourite ? 'subtle' : 'ghost'"
-          @click="draft.favourite = draft.favourite ? 0 : 1"
-        >
-          <template #icon>
-            <IconHeart
-              class="w-4 h-4"
-              :class="draft.favourite ? 'text-ink-red-4' : 'text-ink-gray-5'"
-              :fill="draft.favourite ? 'currentColor' : 'none'"
-            />
-          </template>
-        </Button>
-      </Tooltip>
     </div>
     <CommentBox
       v-model="draft.remarks"
@@ -35,11 +18,30 @@
       :custom-actions="getCustomAction()"
     />
     <div class="mt-4 pt-4 border-t border-outline-gray-2 flex flex-col gap-1.5">
-      <Tooltip
-        text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
-      >
-        <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
-      </Tooltip>
+      <div class="flex items-center justify-between gap-2">
+        <Tooltip
+          text="Internal note for organizers, co-chairs and other reviewers. Not shown to the proposer or on the public page."
+        >
+          <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
+        </Tooltip>
+        <Tooltip
+          text="Mark as favourite. Signals a strong preference for this proposal to organizers and reviewers."
+        >
+          <Button
+            :variant="draft.favourite ? 'subtle' : 'ghost'"
+            :label="draft.favourite ? 'Favourited' : 'Favourite'"
+            @click="draft.favourite = draft.favourite ? 0 : 1"
+          >
+            <template #prefix>
+              <IconHeart
+                class="w-4 h-4"
+                :class="draft.favourite ? 'text-ink-red-4' : 'text-ink-gray-5'"
+                :fill="draft.favourite ? 'currentColor' : 'none'"
+              />
+            </template>
+          </Button>
+        </Tooltip>
+      </div>
       <Textarea
         v-model="draft.private_comment"
         :rows="2"
@@ -54,7 +56,6 @@ import { ref, inject } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
 import { IconHeart } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
-import { filter } from 'lodash'
 import { useStorage } from '@vueuse/core'
 
 const emits = defineEmits(['add:review', 'update:review'])
@@ -79,11 +80,9 @@ const props = defineProps({
   },
 })
 
-// One draft per review identity ("new" for an unsaved review) so the add-form
-// and the edit-form never share state. useStorage only falls back to the
-// default when the key is absent, so a fresh edit seeds from the existing
-// review, while a refresh mid-edit restores the in-progress draft. Cleared on
-// save (see clearDraft) so reopening always starts from backend data.
+// Draft keyed per review identity ("new" when unsaved): a fresh edit seeds from
+// the existing review, a mid-edit refresh restores the draft, and clearDraft on
+// save makes the next open start from backend data.
 const storageKey = `cfp-review-draft-${props.submissionId}-${props.review.name || 'new'}`
 const draft = useStorage(storageKey, {
   to_approve: props.review.to_approve || 'Yes',
@@ -92,9 +91,14 @@ const draft = useStorage(storageKey, {
   private_comment: props.review.private_comment || '',
 })
 
-const clearDraft = () => {
-  localStorage.removeItem(storageKey)
-}
+const clearDraft = () => localStorage.removeItem(storageKey)
+
+const reviewFields = () => ({
+  remarks: draft.value.remarks,
+  to_approve: draft.value.to_approve,
+  favourite: draft.value.favourite ? 1 : 0,
+  private_comment: draft.value.private_comment,
+})
 
 const reviewOptions = [
   { label: 'Approve', value: 'Yes' },
@@ -145,10 +149,7 @@ const submitReview = () => {
           parenttype: 'FOSS Event CFP Submission',
           parent: props.submissionId,
           parentfield: 'reviews',
-          remarks: draft.value.remarks,
-          to_approve: draft.value.to_approve,
-          favourite: draft.value.favourite ? 1 : 0,
-          private_comment: draft.value.private_comment,
+          ...reviewFields(),
           reviewer_profile: reviewerProfile.data.name,
           reviewer: reviewerProfile.data.full_name,
         },
@@ -179,12 +180,7 @@ const editReview = () => {
       return {
         doctype: 'FOSS Event CFP Review',
         name: props.review.name,
-        fieldname: {
-          remarks: draft.value.remarks,
-          to_approve: draft.value.to_approve,
-          favourite: draft.value.favourite ? 1 : 0,
-          private_comment: draft.value.private_comment,
-        },
+        fieldname: reviewFields(),
       }
     },
     auto: true,
