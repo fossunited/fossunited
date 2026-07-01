@@ -36,9 +36,9 @@
         <div v-if="isReviewOwner(review)" class="p-4 border rounded flex flex-col gap-2">
           <div class="flex items-center gap-2">
             <h5 class="text-base font-semibold">Your Review</h5>
-            <IconHeart
-              v-if="review.favourite"
-              class="w-4 h-4 text-ink-red-4"
+            <IconStar
+              v-if="review.must_have"
+              class="w-4 h-4 text-yellow-500"
               fill="currentColor"
             />
           </div>
@@ -72,9 +72,9 @@
         >
           <div class="flex items-center gap-2">
             <span class="text-sm font-medium text-ink-gray-8">Reviewer {{ review.idx }}</span>
-            <IconHeart
-              v-if="review.favourite"
-              class="w-4 h-4 text-ink-red-4"
+            <IconStar
+              v-if="review.must_have"
+              class="w-4 h-4 text-yellow-500"
               fill="currentColor"
             />
             <Badge class="w-fit" label="Private note" theme="gray" />
@@ -96,7 +96,7 @@
 import { cleanedHTML } from '@/helpers/utils'
 import { ref, inject, computed } from 'vue'
 import { Badge, Tooltip, createResource } from 'frappe-ui'
-import { IconChecks, IconAlertTriangle, IconHeart, IconInfoCircle } from '@tabler/icons-vue'
+import { IconChecks, IconAlertTriangle, IconStar, IconInfoCircle } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { defaultSelectedReviewValue } from '@/helpers/reviewer'
 import MessageBanner from '@/components/ui/MessageBanner.vue'

@@ -14,7 +14,7 @@ class FOSSEventCFPReview(Document):
         from frappe.types import DF
 
         email: DF.Data | None
-        favourite: DF.Check
+        must_have: DF.Check
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data

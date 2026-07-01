@@ -25,18 +25,18 @@
           <span class="text-xs text-ink-gray-5 w-fit">Private note (optional)</span>
         </Tooltip>
         <Tooltip
-          text="Mark as favourite. Signals a strong preference for this proposal to organizers and reviewers."
+          text="Signals that the proposal must be included in the final schedule"
         >
           <Button
-            :variant="draft.favourite ? 'subtle' : 'ghost'"
-            :label="draft.favourite ? 'Favourited' : 'Favourite'"
-            @click="draft.favourite = draft.favourite ? 0 : 1"
+            :variant="draft.must_have ? 'subtle' : 'ghost'"
+            label="Must-have"
+            @click="draft.must_have = draft.must_have ? 0 : 1"
           >
             <template #prefix>
-              <IconHeart
+              <IconStar
                 class="w-4 h-4"
-                :class="draft.favourite ? 'text-ink-red-4' : 'text-ink-gray-5'"
-                :fill="draft.favourite ? 'currentColor' : 'none'"
+                :class="draft.must_have ? 'text-yellow-500' : 'text-ink-gray-5'"
+                :fill="draft.must_have ? 'currentColor' : 'none'"
               />
             </template>
           </Button>
@@ -54,7 +54,7 @@
 import { createResource, ErrorMessage, Tooltip, Textarea } from 'frappe-ui'
 import { ref, inject } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
-import { IconHeart } from '@tabler/icons-vue'
+import { IconStar } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { useStorage } from '@vueuse/core'
 
@@ -87,7 +87,7 @@ const storageKey = `cfp-review-draft-${props.submissionId}-${props.review.name |
 const draft = useStorage(storageKey, {
   to_approve: props.review.to_approve || 'Yes',
   remarks: props.review.remarks || '',
-  favourite: props.review.favourite || 0,
+  must_have: props.review.must_have || 0,
   private_comment: props.review.private_comment || '',
 })
 
@@ -96,7 +96,7 @@ const clearDraft = () => localStorage.removeItem(storageKey)
 const reviewFields = () => ({
   remarks: draft.value.remarks,
   to_approve: draft.value.to_approve,
-  favourite: draft.value.favourite ? 1 : 0,
+  must_have: draft.value.must_have ? 1 : 0,
   private_comment: draft.value.private_comment,
 })
 
