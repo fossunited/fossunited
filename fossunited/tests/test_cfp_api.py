@@ -101,3 +101,22 @@ class TestCFPAssignmentAPIs(FrappeTestCase):
             "_assigned_users",
         ):
             self.assertIn(key, sub)
+
+
+class TestCFPEditWindowAPI(FrappeTestCase):
+    def tearDown(self):
+        frappe.set_user("Administrator")
+
+    def test_can_edit_proposal_returns_bool(self):
+        from frappe.utils import add_to_date, now_datetime
+
+        from fossunited.api.cfp import can_edit_proposal
+
+        cfp = FOSSEventCFPFactory.create(
+            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=2)
+        )
+        sub = FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=cfp.name, submitted_by="Administrator", email="Administrator"
+        )
+        frappe.set_user("Administrator")
+        self.assertTrue(can_edit_proposal(sub.name))

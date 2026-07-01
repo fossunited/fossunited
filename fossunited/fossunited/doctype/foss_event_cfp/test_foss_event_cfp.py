@@ -63,3 +63,34 @@ class TestFOSSEventCFP(FrappeTestCase):
 
         self.assertFalse(cfp.close_if_past_deadline())
         self.assertEqual(frappe.db.get_value(EVENT_CFP, cfp.name, "status"), "Closed")
+
+
+class TestFOSSEventCFPEditWindow(FrappeTestCase):
+    def tearDown(self):
+        frappe.set_user("Administrator")
+
+    def test_editable_when_live_and_before_deadline(self):
+        cfp = FOSSEventCFPFactory.create(
+            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=3)
+        )
+        self.assertTrue(cfp.can_edit_proposal())
+
+    def test_not_editable_when_allow_cfp_edit_off(self):
+        cfp = FOSSEventCFPFactory.create(allow_cfp_edit=0, status="Live")
+        self.assertFalse(cfp.can_edit_proposal())
+
+    def test_not_editable_when_past_deadline(self):
+        cfp = FOSSEventCFPFactory.create(
+            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
+        )
+        self.assertFalse(cfp.can_edit_proposal())
+
+    def test_not_editable_when_status_closed(self):
+        cfp = FOSSEventCFPFactory.create(
+            allow_cfp_edit=1, status="Closed", deadline=add_to_date(now_datetime(), days=3)
+        )
+        self.assertFalse(cfp.can_edit_proposal())
+
+    def test_editable_when_no_deadline(self):
+        cfp = FOSSEventCFPFactory.create(allow_cfp_edit=1, status="Live", deadline=None)
+        self.assertTrue(cfp.can_edit_proposal())
