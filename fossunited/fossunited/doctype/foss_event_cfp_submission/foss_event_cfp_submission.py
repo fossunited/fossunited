@@ -21,6 +21,39 @@ from fossunited.doctype_ids import (
 )
 from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
 
+# Proposer-editable content fields. A change to any of these after the CFP
+# edit window closes is blocked for non-System-Manager users. Reviewer/status
+# edits and withdrawal touch none of these, so they pass through.
+PROPOSER_CONTENT_SCALARS = (
+    "talk_title",
+    "session_type",
+    "intended_audience",
+    "is_first_talk",
+    "talk_license",
+    "talk_description",
+    "key_takeaways",
+    "session_categories",
+)
+PROPOSER_CONTENT_TABLES = {
+    "references": ("link",),
+    "speakers": (
+        "full_name",
+        "email",
+        "designation",
+        "organization",
+        "social_link",
+        "contact_info",
+        "bio",
+        "photo",
+    ),
+    "custom_answers": ("question", "response"),
+}
+
+
+def _table_snapshot(doc, fieldname, cols):
+    """Order-sensitive snapshot of a child table restricted to `cols`."""
+    return [tuple((row.get(c) or "") for c in cols) for row in (doc.get(fieldname) or [])]
+
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
     # begin: auto-generated types
@@ -130,6 +163,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.full_name = self.speakers[0].full_name
 
     def before_save(self):
+        self.validate_proposer_edit_window()
         if self.has_value_changed("is_withdrawn"):
             if self.is_withdrawn and self.status == "Approved":
                 self.status = "Withdrawn"
@@ -201,6 +235,30 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         if linked_cfp.status != "Live" or linked_cfp.is_past_deadline():
             frappe.throw(_("The CFP Form for this event is not live"), frappe.PermissionError)
 
+    def validate_proposer_edit_window(self) -> None:
+        """Block proposer content edits once the CFP edit window has closed.
+
+        System Manager bypasses. A save that changes no proposer content
+        (reviewer adding a review, status change, withdrawal) always passes.
+        """
+        if self.is_new() or "System Manager" in frappe.get_roles():
+            return
+        if not self._content_changed():
+            return
+        if not frappe.get_cached_doc(EVENT_CFP, self.linked_cfp).can_edit_proposal():
+            frappe.throw(_("Editing for this proposal is closed."), frappe.PermissionError)
+
+    def _content_changed(self) -> bool:
+        before = self.get_doc_before_save()
+        if not before:
+            return True
+        if any((before.get(f) or "") != (self.get(f) or "") for f in PROPOSER_CONTENT_SCALARS):
+            return True
+        return any(
+            _table_snapshot(self, field, cols) != _table_snapshot(before, field, cols)
+            for field, cols in PROPOSER_CONTENT_TABLES.items()
+        )
+
     def validate_session_type_permissions(self) -> None:
         if self.session_type != "Invited Talk":
             return
@@ -215,14 +273,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
-        cfp = frappe.db.get_value(
-            EVENT_CFP,
-            self.linked_cfp,
-            ["anonymise_proposals", "has_public_custom_responses"],
-            as_dict=True,
-        )
+        cfp = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
         context.anonymous_cfps = cfp.anonymise_proposals
         context.has_public_custom_responses = cfp.has_public_custom_responses
+        context.can_edit_proposal = cfp.can_edit_proposal()
         context.breadcrumbs = self.get_breadcrumb(event)
         context.session_categories = (
             self.session_categories.splitlines() if self.session_categories else []

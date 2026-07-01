@@ -50,6 +50,18 @@ def get_cfp_from_route(route: str) -> dict:
     return cfp
 
 
+@frappe.whitelist()
+def can_edit_proposal(cfp_submission: str) -> bool:
+    """Whether the proposer may still edit this submission's content.
+
+    Server-side because the deadline is naive site-time and the form status may
+    be a stale "Live"; only the server can decide correctly. Read permission on
+    the submission is enforced by frappe.get_doc.
+    """
+    sub = frappe.get_doc(PROPOSAL, cfp_submission)
+    return frappe.get_cached_doc(EVENT_CFP, sub.linked_cfp).can_edit_proposal()
+
+
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
 def get_cfp_submissions_insight(event_id: str) -> list:

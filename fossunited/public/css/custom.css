@@ -258,8 +258,8 @@ button:hover {
 
 button:disabled {
   cursor: not-allowed;
-  background: hsl(var(--clr-gray-100));
-  color: hsl(var(--clr-gray-400));
+  background: var(--v3-button-border);
+  color: var(--v3-text-color3);
 }
 
 button.sm {

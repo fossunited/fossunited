@@ -90,23 +90,25 @@
         <a
           href="/dashboard/my-proposals/edit/{{ doc.name }}"
           class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
-          title="Edit full proposal in dashboard"
+          title="Open proposal in dashboard"
           data-toggle="tooltip"
         >
           <i class="ti ti-external-link" aria-hidden="true"></i>
           Dashboard
         </a>
-        <button
-          type="button"
-          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
-          onclick="cfpEditAll()"
-          title="Quick-edit this proposal inline"
-          data-toggle="tooltip"
-          aria-label="Quick edit proposal"
-        >
-          <i class="ti ti-pencil" aria-hidden="true"></i>
-          Edit
-        </button>
+        {% if can_edit_proposal %}
+          <button
+            type="button"
+            class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
+            onclick="cfpEditAll()"
+            title="Quick-edit this proposal inline"
+            data-toggle="tooltip"
+            aria-label="Quick edit proposal"
+          >
+            <i class="ti ti-pencil" aria-hidden="true"></i>
+            Edit
+          </button>
+        {% endif %}
       {% endif %}
       {{ like_button() }}
     </div>
@@ -127,6 +129,16 @@
       </a>
     {% endif %}
   </div>
+
+  {% if is_owner %}
+    <div class="text-sm v3-text-tertiary">
+      {% if can_edit_proposal %}
+        You can edit your proposal while the CFP is open.
+      {% else %}
+        Editing closed: the CFP is closed.
+      {% endif %}
+    </div>
+  {% endif %}
 
   {% if submitter_profile %}
     {{ profile_headshot(submitter_profile.full_name, submitter_profile.photo, submitter_profile.url) }}
@@ -294,7 +306,7 @@
 
 {% block script %}
 {{ super() }}
-{% if is_owner %}
+{% if is_owner and can_edit_proposal %}
 <script>
 frappe.ready(function() {
   frappe.require('controls.bundle.js')
