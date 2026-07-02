@@ -7,6 +7,7 @@ import SubmissionOverview from './SubmissionOverview.vue'
 import ProposalSpeakers from '@/components/reviewers/ProposalSpeakers.vue'
 import SubmissionReviews from './SubmissionReviews.vue'
 import AssignReviewers from './AssignReviewers.vue'
+import CustomAnswers from '@/components/cfp-public/CustomAnswers.vue'
 
 const props = defineProps({
   eventId: { type: String, default: '' },
@@ -68,6 +69,10 @@ watch(
       <SubmissionHeader />
       <AssignReviewers v-if="showAssignReviewers" :submission-id="submissionId" :event-id="props.eventId" @reviewers:updated="emit('reviewers:updated', $event)" />
       <SubmissionInfoList />
+      <CustomAnswers
+        v-if="submission.data.custom_answers?.length"
+        :answers="submission.data.custom_answers"
+      />
       <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
       <SubmissionOverview v-if="activeTab === 0" />
       <ProposalSpeakers v-else-if="activeTab === 1" :speakers="submission.data.speakers" />

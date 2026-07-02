@@ -125,10 +125,7 @@ const errorMessages = ref('')
 const validateRemark = () => {
   const errors = []
 
-  if (
-    draft.value.to_approve != 'Yes' &&
-    (!draft.value.remarks || draft.value.remarks === '<p></p>')
-  ) {
+  if (!draft.value.remarks || draft.value.remarks === '<p></p>') {
     errors.push('You cannot submit the review without adding remarks.')
   }
   return errors

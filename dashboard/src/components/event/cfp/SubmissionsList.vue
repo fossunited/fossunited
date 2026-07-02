@@ -24,6 +24,24 @@
       </button>
     </div>
 
+    <!-- Select-type custom questions surfaced as compact dropdowns -->
+    <div v-if="customSelectFields.length" class="flex flex-wrap items-center gap-3">
+      <div
+        v-for="field in customSelectFields"
+        :key="field.fieldname"
+        class="flex items-center gap-1.5"
+      >
+        <span class="text-xs text-ink-gray-5 whitespace-nowrap">{{ controlLabel(field) }}</span>
+        <FormControl
+          type="select"
+          size="sm"
+          :options="controlOptions(field)"
+          :model-value="getSelectValue(field.fieldname)"
+          @update:model-value="setSelectValue(field.fieldname, $event)"
+        />
+      </div>
+    </div>
+
     <!-- Filter row -->
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
@@ -153,6 +171,35 @@ watch(showAssignedOnly, (val) => {
 
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
+
+// Surface Select-type custom questions as compact dropdowns outside the Filter
+// dropdown. Backend gates these fields (organizers always; pure reviewers only
+// when responses are public), so nothing renders when hidden.
+const customSelectFields = computed(() =>
+  (docfields.data ?? []).filter(
+    (f) => f.fieldtype === 'Select' && f.fieldname?.startsWith('custom_question'),
+  ),
+)
+
+const controlLabel = (field) => field.label.replace(/ \(Custom question\)$/, '')
+
+const controlOptions = (field) => [
+  { label: 'All', value: '' },
+  ...String(field.options || '')
+    .split('\n')
+    .filter(Boolean)
+    .map((o) => ({ label: o, value: o })),
+]
+
+const getSelectValue = (fieldname) => filters.value[fieldname]?.[1] ?? ''
+
+const setSelectValue = (fieldname, value) => {
+  if (value) {
+    filters.value[fieldname] = ['=', value]
+  } else {
+    delete filters.value[fieldname]
+  }
+}
 
 const SORT_OPTIONS = computed(() => {
   const options = [

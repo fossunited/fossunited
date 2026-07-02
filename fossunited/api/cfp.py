@@ -409,17 +409,21 @@ def get_proposal_filter_fields(event_id: str) -> list:
 
     cfp = frappe.get_doc(EVENT_CFP, {"event": event_id})
 
-    for question in cfp.cfp_custom_questions:
-        custom_field = {
-            "fieldname": "custom_question_" + str(question.idx),
-            "fieldtype": question.type,
-            "label": question.question + " (Custom question)",
-            "options": question.options,
-            "reqd": question.is_mandatory or 0,
-            "description": question.description,
-        }
+    # Organizers authored the custom questions, so they can always filter by them.
+    # Reviewers (and the public) only get them when responses are made public.
+    is_organizer = check_if_chapter_or_event_core_member(event_id)
+    if is_organizer or cfp.has_public_custom_responses:
+        for question in cfp.cfp_custom_questions:
+            custom_field = {
+                "fieldname": "custom_question_" + str(question.idx),
+                "fieldtype": question.type,
+                "label": question.question + " (Custom question)",
+                "options": question.options,
+                "reqd": question.is_mandatory or 0,
+                "description": question.description,
+            }
 
-        filtered_fields.append(custom_field)
+            filtered_fields.append(custom_field)
 
     if REVIEWER in frappe.get_roles(frappe.session.user):
         # appending _is_reviewed field

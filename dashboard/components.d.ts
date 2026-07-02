@@ -32,6 +32,7 @@ declare module 'vue' {
     CopyToClipboardButton: typeof import('./src/components/CopyToClipboardButton.vue')['default']
     CopyToClipboardComponent: typeof import('./src/components/CopyToClipboardComponent.vue')['default']
     CreateCampaignDrawer: typeof import('./src/components/mailing/CreateCampaignDrawer.vue')['default']
+    CustomAnswers: typeof import('./src/components/cfp-public/CustomAnswers.vue')['default']
     DocsInfo: typeof import('./src/components/DocsInfo.vue')['default']
     Drawer: typeof import('./src/components/ui/Drawer.vue')['default']
     EditMember: typeof import('./src/components/chapter/EditMember.vue')['default']
