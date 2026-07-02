@@ -181,6 +181,28 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         sub.reload()
         self.assertEqual(len(sub.reviews), 1)
 
+    def test_reviewer_review_after_close_with_unsanitised_description(self):
+        # Regression: a stored description that is not sanitise-stable (legacy row)
+        # must not trip the edit lock when a reviewer saves the parent on a closed
+        # CFP. validate() sanitises talk_description before before_save, so the
+        # naive before/after compare would otherwise see a phantom content change.
+        _, sub = self._closed_submission(
+            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
+        )
+        frappe.db.set_value(
+            PROPOSAL,
+            sub.name,
+            "talk_description",
+            '<p onclick="x()">Hi</p><script>bad()</script>',
+            update_modified=False,
+        )
+        frappe.set_user(Reviewer)
+        sub = frappe.get_doc(PROPOSAL, sub.name)
+        sub.append("reviews", {"reviewer": Reviewer, "email": Reviewer, "to_approve": "Yes"})
+        sub.save()  # must not raise despite the dirty stored description
+        sub.reload()
+        self.assertEqual(len(sub.reviews), 1)
+
     def test_system_manager_can_edit_after_close(self):
         _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
         frappe.set_user("Administrator")

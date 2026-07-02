@@ -252,8 +252,18 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         before = self.get_doc_before_save()
         if not before:
             return True
-        if any((before.get(f) or "") != (self.get(f) or "") for f in PROPOSER_CONTENT_SCALARS):
-            return True
+        # talk_description and key_takeaways are sanitised in validate(), which
+        # runs before before_save. The before-doc still holds the raw DB value,
+        # so a non-sanitised (e.g. legacy) row would look "changed" on any save
+        # that never touched proposal content (a reviewer adding a review).
+        # Sanitise both sides for these fields so only real edits register.
+        for f in PROPOSER_CONTENT_SCALARS:
+            old = before.get(f) or ""
+            new = self.get(f) or ""
+            if f in ("talk_description", "key_takeaways"):
+                old = sanitize_text_content(old)
+            if old != new:
+                return True
         return any(
             _table_snapshot(self, field, cols) != _table_snapshot(before, field, cols)
             for field, cols in PROPOSER_CONTENT_TABLES.items()
