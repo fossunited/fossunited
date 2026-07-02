@@ -265,6 +265,7 @@
                     label="Project Link *"
                     type="url"
                     placeholder="https://github.com/..."
+                    @blur="editingProject.project_link = ensureHttpsPrefix(editingProject.project_link)"
                   />
                   <FormControl
                     v-model="editingProject.tagline"
@@ -307,6 +308,7 @@
                   label="Project Link *"
                   type="url"
                   placeholder="https://github.com/..."
+                  @blur="newProject.project_link = ensureHttpsPrefix(newProject.project_link)"
                 />
                 <FormControl
                   v-model="newProject.tagline"

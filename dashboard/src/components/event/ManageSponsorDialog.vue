@@ -21,7 +21,13 @@
           :required="sponsor.tier === 'Custom'"
         />
         <FormControl v-model="sponsor.sponsor_name" label="Sponsor Name" required />
-        <FormControl v-model="sponsor.link" label="Website Link" type="url" required>
+        <FormControl
+          v-model="sponsor.link"
+          label="Website Link"
+          type="url"
+          required
+          @blur="sponsor.link = ensureHttpsPrefix(sponsor.link)"
+        >
           <template #prefix>
             <IconLink class="w-4" />
           </template>
@@ -44,6 +50,7 @@ import { inject, ref } from 'vue'
 import { Dialog, FormControl, ErrorMessage, createResource } from 'frappe-ui'
 import { IconLink } from '@tabler/icons-vue'
 import FileUploaderArea from '@/components/ui/FileUploaderArea.vue'
+import { ensureHttpsPrefix } from '@/helpers/utils'
 
 const sponsorOptions = ref(['Platinum', 'Gold', 'Silver', 'Bronze', 'Venue Partner', 'Custom'])
 

@@ -8,7 +8,13 @@
     <template #body-content>
       <div class="flex flex-col gap-3">
         <FormControl v-model="partner.org_name" label="Community Name" required />
-        <FormControl v-model="partner.link" label="Website Link" type="url" required>
+        <FormControl
+          v-model="partner.link"
+          label="Website Link"
+          type="url"
+          required
+          @blur="partner.link = ensureHttpsPrefix(partner.link)"
+        >
           <template #prefix>
             <IconLink class="w-4" />
           </template>
@@ -31,6 +37,7 @@ import { inject, ref } from 'vue'
 import { Dialog, FormControl, ErrorMessage, createResource } from 'frappe-ui'
 import { IconLink } from '@tabler/icons-vue'
 import FileUploaderArea from '@/components/ui/FileUploaderArea.vue'
+import { ensureHttpsPrefix } from '@/helpers/utils'
 
 const event = inject('event')
 const errorMessages = ref('')

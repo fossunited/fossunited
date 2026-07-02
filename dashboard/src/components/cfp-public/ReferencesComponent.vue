@@ -18,6 +18,7 @@
         class="grow"
         placeholder="https://"
         :aria-label="`Reference link ${index + 1}`"
+        @blur="item.link = ensureHttpsPrefix(item.link)"
       >
         <template #prefix>
           <IconLink size="16" class="text-ink-gray-5" />
@@ -40,6 +41,7 @@
 import { ErrorMessage, FormControl } from 'frappe-ui'
 import { IconLink } from '@tabler/icons-vue'
 import { getReferenceItemSchema } from '@/helpers/cfp'
+import { ensureHttpsPrefix } from '@/helpers/utils'
 import { ref, watch } from 'vue'
 
 const errorMessages = ref('')
