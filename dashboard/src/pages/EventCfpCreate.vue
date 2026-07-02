@@ -8,7 +8,7 @@
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <div class="flex flex-col gap-2">
           <FormControl
-            v-model="cfp_doc.allow_edit"
+            v-model="cfp_doc.allow_cfp_edit"
             type="checkbox"
             label="Allow Proposal Edit"
             description=""
@@ -28,6 +28,18 @@
           />
           <span class="text-sm text-ink-gray-5"
             >The proposals will not show the name of the proposer.</span
+          >
+        </div>
+        <div class="flex flex-col gap-2">
+          <FormControl
+            v-model="cfp_doc.hide_review"
+            type="checkbox"
+            label="Hide Reviews"
+            description=""
+            size="md"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >Hide the reviews section from the public proposal page.</span
           >
         </div>
         <div class="flex flex-col gap-2">
@@ -281,6 +293,7 @@ let cfp_doc = reactive({
   only_workshops: 0,
   only_talk_proposals: 0,
   deadline: '',
+  hide_review: 1,
   has_public_custom_responses: 0,
   cfp_form_description: '',
   cfp_custom_questions: [],

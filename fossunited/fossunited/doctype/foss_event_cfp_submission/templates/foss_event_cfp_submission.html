@@ -293,13 +293,16 @@
   <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
 
   <div class="d-flex flex-column gap-2">
-    {% if not doc.reviews %}
+    {% if hide_review %}
+      <div class="v3-text-tertiary text-sm">Reviews are hidden by the event organisers.</div>
+    {% elif not doc.reviews %}
       <div class="v3-text-tertiary text-sm">No reviews yet.</div>
+    {% else %}
+      {% for review in doc.reviews %}
+        {{ review_card(review) }}
+        {% if not loop.last %}<hr class="my-2" />{% endif %}
+      {% endfor %}
     {% endif %}
-    {% for review in doc.reviews %}
-      {{ review_card(review) }}
-      {% if not loop.last %}<hr class="my-2" />{% endif %}
-    {% endfor %}
   </div>
 </div>
 {% endmacro %}

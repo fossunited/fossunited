@@ -47,6 +47,17 @@
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp.doc.hide_review"
+            size="md"
+            type="checkbox"
+            label="Hide Reviews"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >Hide the reviews section from the public proposal page.</span
+          >
+        </div>
+        <div class="flex flex-col gap-2">
+          <FormControl
             v-model="cfp.doc.only_workshops"
             type="checkbox"
             label="Only Workshops"

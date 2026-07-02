@@ -287,6 +287,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         context.anonymous_cfps = cfp.anonymise_proposals
         context.has_public_custom_responses = cfp.has_public_custom_responses
         context.can_edit_proposal = cfp.can_edit_proposal()
+        context.hide_review = cfp.hide_review
         context.breadcrumbs = self.get_breadcrumb(event)
         context.session_categories = (
             self.session_categories.splitlines() if self.session_categories else []

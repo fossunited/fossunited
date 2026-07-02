@@ -34,6 +34,7 @@ class FOSSEventCFP(Document):
         event: DF.Link
         event_name: DF.Data | None
         has_public_custom_responses: DF.Check
+        hide_review: DF.Check
         only_talk_proposals: DF.Check
         only_workshops: DF.Check
         status: DF.Literal["Closed", "Live"]
