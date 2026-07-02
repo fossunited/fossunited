@@ -1,17 +1,8 @@
 <template>
   <div class="flex flex-col md:flex-row">
-    <SideNavbar title="Edit Proposal">
-      <template #pre-nav-items>
-        <div>
-          <Button label="Go Back" icon-left="arrow-left" variant="ghost" @click="router.back()" />
-        </div>
-      </template>
-      <template #post-nav-items>
-        <p class="text-base text-ink-gray-5">Edit your talk proposal</p>
-      </template>
-    </SideNavbar>
+    <SideNavbar :menu-items="sidebarMenuItems" title="Edit Proposal" />
     <div v-if="cfpForm.data" class="flex-1 min-w-0">
-      <SubmissionHeader :submission="submission.doc" />
+      <SubmissionHeader :submission="submission.doc" :readonly="!canEdit" />
       <div v-if="canEditProposal.data !== undefined" class="px-6 pt-4 pb-4">
         <div
           v-if="canEdit"
@@ -72,7 +63,7 @@ import SpeakersForm from '@/components/cfp-public/SpeakersForm.vue'
 import ActionsForm from '@/components/cfp-public/ActionsForm.vue'
 import { createDocumentResource, createResource, TabButtons, ErrorMessage } from 'frappe-ui'
 import { toast } from 'vue-sonner'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import {
   getProposalFormFields,
   getSpeakerFields,
@@ -81,10 +72,10 @@ import {
   validateSpeakerFields,
   getTransformedSubmissionFields,
 } from '@/helpers/cfp'
-import { ref, provide, computed } from 'vue'
+import { ref, provide, computed, inject, watch } from 'vue'
 
 const route = useRoute()
-const router = useRouter()
+const session = inject('$session')
 const formFields = ref([])
 const speakerFields = ref([])
 const selectedTab = ref(0)
@@ -134,17 +125,61 @@ const canEditProposal = createResource({
 
 const canEdit = computed(() => canEditProposal.data ?? true)
 
+const proposals = createResource({
+  url: 'frappe.client.get_list',
+  makeParams() {
+    return {
+      doctype: 'FOSS Event CFP Submission',
+      fields: ['name', 'talk_title', 'event_name', 'creation'],
+      orderBy: 'creation desc',
+      limit_page_length: 999,
+      or_filters: { email: session.user, submitted_by: session.user },
+    }
+  },
+  auto: true,
+})
+
+const sidebarMenuItems = computed(() => {
+  const items = [
+    { items: [{ icon: 'arrow-left', label: 'My Proposals', route: '/my-proposals' }] },
+  ]
+
+  if (proposals.data?.length) {
+    items.push({
+      parent_label: 'My Proposals',
+      items: proposals.data.map((p) => ({
+        label: p.talk_title,
+        route: `/my-proposals/edit/${p.name}`,
+      })),
+    })
+  }
+
+  return items
+})
+
 const submission = createDocumentResource({
   doctype: 'FOSS Event CFP Submission',
   name: route.params.id,
   fields: ['*'],
-  onSuccess() {
-    cfpForm.fetch()
-    canEditProposal.fetch()
-  },
 })
 
 provide('submission', submission)
+
+// createDocumentResource is globally cached; on remount it may return a cached
+// instance whose onSuccess closure is bound to a destroyed component. Drive the
+// dependent fetches from a watcher local to this instance instead. Fire only on
+// the first load (falsy -> truthy) so a save (which mutates doc) does not
+// re-trigger mapping and duplicate speakers.
+watch(
+  () => submission.doc,
+  (doc, prevDoc) => {
+    if (doc && !prevDoc) {
+      cfpForm.fetch()
+      canEditProposal.fetch()
+    }
+  },
+  { immediate: true },
+)
 
 const mapTalkFields = () => {
   formFields.value = getProposalFormFields(cfpForm.data).value
@@ -163,6 +198,7 @@ const mapTalkFields = () => {
 }
 
 const mapToSpeakerFields = () => {
+  speakerFields.value = []
   submission.doc.speakers.forEach((speaker) => {
     let fields = getSpeakerFields()
     fields.forEach((field) => {

@@ -1,6 +1,11 @@
 <template>
   <div>
-    <router-view />
+    <router-view v-slot="{ Component, route }">
+      <component
+        :is="Component"
+        :key="route.name === 'Proposal Edit' ? route.fullPath : undefined"
+      />
+    </router-view>
     <Toaster rich-colors />
   </div>
 </template>
