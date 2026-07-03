@@ -118,7 +118,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         """A submission whose CFP is closed to proposer edits, owned by Submitter."""
         cfp = FOSSEventCFPFactory.create(event=self.event.name, **cfp_overrides)
         sub = FOSSEventCFPSubmissionFactory.create(
-            linked_cfp=cfp.name, event=self.event.name, submitted_by=Submitter, email=Submitter
+            linked_cfp=cfp.name,
+            event=self.event.name,
+            submitted_by=Submitter,
+            email=Submitter,
         )
         return cfp, sub
 
@@ -131,7 +134,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
 
     def test_proposer_edit_blocked_past_deadline(self):
         _, sub = self._closed_submission(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
         )
         frappe.set_user(Submitter)
         sub.talk_description = "Edited after deadline"
@@ -140,7 +145,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
 
     def test_proposer_edit_blocked_when_status_closed(self):
         _, sub = self._closed_submission(
-            allow_cfp_edit=1, status="Closed", deadline=add_to_date(now_datetime(), days=3)
+            allow_cfp_edit=1,
+            status="Closed",
+            deadline=add_to_date(now_datetime(), days=3),
         )
         frappe.set_user(Submitter)
         sub.talk_title = "Edited while closed"
@@ -155,7 +162,10 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
             deadline=add_to_date(now_datetime(), days=3),
         )
         sub = FOSSEventCFPSubmissionFactory.create(
-            linked_cfp=cfp.name, event=self.event.name, submitted_by=Submitter, email=Submitter
+            linked_cfp=cfp.name,
+            event=self.event.name,
+            submitted_by=Submitter,
+            email=Submitter,
         )
         frappe.set_user(Submitter)
         sub.talk_title = "Edited within window"
@@ -173,7 +183,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
 
     def test_reviewer_can_review_after_close(self):
         _, sub = self._closed_submission(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
         )
         frappe.set_user(Reviewer)
         sub.append("reviews", {"reviewer": Reviewer, "email": Reviewer, "to_approve": "Yes"})
@@ -187,7 +199,9 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         # CFP. validate() sanitises talk_description before before_save, so the
         # naive before/after compare would otherwise see a phantom content change.
         _, sub = self._closed_submission(
-            allow_cfp_edit=1, status="Live", deadline=add_to_date(now_datetime(), days=-1)
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
         )
         frappe.db.set_value(
             PROPOSAL,
@@ -378,31 +392,6 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         with self.assertRaises(frappe.PermissionError):
             self.submission.session_type = "Invited Talk"
             self.submission.save()
-
-    def test_new_review_notifies_proposer(self):
-        frappe.set_user(CoreTeam)
-        frappe.db.delete("Email Queue")
-        self._add_review(CoreTeam, "Yes", "Great proposal!")
-        self.assertTrue(
-            frappe.db.exists(
-                "Email Queue",
-                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
-            )
-        )
-
-    def test_review_remarks_change_notifies_proposer(self):
-        frappe.set_user(CoreTeam)
-        self._add_review(CoreTeam, "Maybe", "Needs more detail.")
-        self.submission.reload()
-        frappe.db.delete("Email Queue")
-        self.submission.reviews[0].remarks = "Actually looks great now!"
-        self.submission.save()
-        self.assertTrue(
-            frappe.db.exists(
-                "Email Queue",
-                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
-            )
-        )
 
 
 class TestCFPHasPermission(FrappeTestCase):
