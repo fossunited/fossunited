@@ -240,7 +240,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         System Manager bypasses. A save that changes no proposer content
         (reviewer adding a review, status change, withdrawal) always passes.
         """
-        if self.is_new() or "System Manager" in frappe.get_roles():
+        if self.is_new() or {"System Manager", "IndiaFOSS Chair"} & set(frappe.get_roles()):
             return
         if not self._content_changed():
             return
