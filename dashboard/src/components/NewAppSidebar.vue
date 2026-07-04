@@ -116,7 +116,10 @@ const resolvedCollapsed = computed({
   },
 })
 
-const user_profile = createResource({ url: 'fossunited.api.dashboard.get_session_user_profile' })
+const user_profile = createResource({
+  url: 'fossunited.api.dashboard.get_session_user_profile',
+  cache: 'SessionUserProfile',
+})
 if (session.isLoggedIn && session.user !== 'Guest' && session.user !== 'Administrator') {
   user_profile.fetch()
 }

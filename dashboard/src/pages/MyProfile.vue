@@ -356,6 +356,7 @@ const profileDoc = ref(null)
 
 const profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
+  cache: 'SessionUserProfile',
   auto: true,
   onSuccess(data) {
     profileDoc.value = createDocumentResource({

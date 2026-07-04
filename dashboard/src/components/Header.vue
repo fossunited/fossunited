@@ -68,6 +68,7 @@ const session = inject('$session')
 
 const user_profile = createResource({
   url: 'fossunited.api.dashboard.get_session_user_profile',
+  cache: 'SessionUserProfile',
 })
 
 if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
