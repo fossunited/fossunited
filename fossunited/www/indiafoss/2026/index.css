@@ -17,18 +17,31 @@
 .if-nav-ticket { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; margin-left: 4px; }
 
 /* ── Hero (IndiaFOSS-specific sizing) ───────── */
+/* Full-bleed bg image, natural 1200x438. >=1200 fits exactly; narrower crops
+   left/right at center (height fixed, width reduces). Text always white. */
 .if-hero {
   position: relative; overflow: hidden; text-align: center;
-  display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 32px 24px;
-  background: var(--v3-card-bg); border: 1px solid var(--v3-button-border); border-radius: 16px;
-  color: var(--v3-text-color)
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  height: 438px; padding: 48px 24px;
+  background: #1a1a1a url("/files/if26-hero.svg") center center / auto no-repeat;
+  border-radius: 16px;
+  color: #fafafa;
+  -webkit-user-select: none; -moz-user-select: none; user-select: none;
+  /* Force dark-theme button vars in both light/dark page themes (bg always dark):
+     v3-btn-dark = white primary, v3-btn-secondary = gray */
+  --v3-main-bg: hsla(0, 0%, 8%, 1);
+  --v3-button-border: hsla(0, 0%, 29%, 1);
+  --v3-text-color: hsla(0, 0%, 94%, 1);
 }
+.if-hero img, .if-hero svg { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
 @media (max-width: 767px) { .if-hero > svg { width: 75%; height: auto; } }
 .if-hero-logo { max-height: 80px; width: auto; display: block; }
-.if-hero-meta { font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--v3-text-color); margin: 0; text-decoration: none; }
+.if-hero-meta { font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fafafa; margin: 0; text-decoration: none; }
 .if-hero-meta-link { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
 .if-hero-meta-link:hover { opacity: .75; color: inherit; text-decoration: none; }
-.if-hero-desc { max-width: 540px; color: var(--v3-text-color); margin: 0; }
+.if-hero-desc { max-width: 540px; color: #f4f4f4; margin: 0; }
+/* Tagline white on dark image regardless of theme */
+.if-hero .if-tagline { color: #fff; }
 
 /* ── Community tagline ──────────────────────── */
 .if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
