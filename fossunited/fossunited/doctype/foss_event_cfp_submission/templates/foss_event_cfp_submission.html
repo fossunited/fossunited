@@ -261,8 +261,9 @@
     />
   {% if sp_url %}</a>{% else %}</div>{% endif %}
   {% if speaker.social_link %}
+    {% set social_url = speaker.social_link if speaker.social_link.startswith('http://') or speaker.social_link.startswith('https://') else 'https://' + speaker.social_link %}
     <a
-      href="{{ speaker.social_link | e }}"
+      href="{{ social_url | e }}"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="{{ speaker.full_name }}'s social profile"
