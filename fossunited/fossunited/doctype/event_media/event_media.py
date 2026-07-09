@@ -26,7 +26,15 @@ class EventMedia(Document):
         speakers: DF.Table[CFPSubmissionSpeaker]
         title: DF.Data | None
         video_type: DF.Literal[
-            "Talk", "Keynote", "Panel Discussion", "Workshop", "Lightning Talk", "Live Stream"
+            "Talk",
+            "Keynote",
+            "Panel Discussion",
+            "Workshop",
+            "Live Stream",
+            "Lightning Talk",
+            "Birds of Feather(BoF)",
+            "Workshop",
+            "Invited Talk",
         ]
         video_url: DF.Data | None
     # end: auto-generated types
