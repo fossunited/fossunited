@@ -25,6 +25,7 @@
    "label": "Title"
   },
   {
+   "fetch_from": "proposal.event",
    "fieldname": "event",
    "fieldtype": "Link",
    "label": "Event",
@@ -66,11 +67,12 @@
    "label": "Video duration"
   },
   {
+   "description": "Youtube URL or direct mp4 media file or other media links (peertube)",
    "fieldname": "video_url",
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "YouTube ID or Video URL"
+   "label": "Video URL"
   },
   {
    "description": "Only meant for IndiaFOSS 1, 2 3.0 events to map user profile here.",
@@ -87,7 +89,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-09 20:45:49.739642",
+ "modified": "2026-07-09 21:50:06.554677",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Media",
