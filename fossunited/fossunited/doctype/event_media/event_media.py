@@ -33,7 +33,6 @@ class EventMedia(Document):
             "Live Stream",
             "Lightning Talk",
             "Birds of Feather(BoF)",
-            "Workshop",
             "Invited Talk",
         ]
         video_url: DF.Data | None

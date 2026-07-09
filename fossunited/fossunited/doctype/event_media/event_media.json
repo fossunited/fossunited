@@ -59,7 +59,7 @@
    "fieldtype": "Select",
    "in_standard_filter": 1,
    "label": "Video type",
-   "options": "Talk\nKeynote\nPanel Discussion\nWorkshop\nLive Stream\nLightning Talk\nBirds of Feather(BoF)\nWorkshop\nInvited Talk"
+   "options": "Talk\nKeynote\nPanel Discussion\nWorkshop\nLive Stream\nLightning Talk\nBirds of Feather(BoF)\nInvited Talk"
   },
   {
    "fieldname": "duration",
@@ -89,7 +89,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-09 21:50:06.554677",
+ "modified": "2026-07-09 21:54:03.088499",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Media",
