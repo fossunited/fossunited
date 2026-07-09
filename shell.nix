@@ -16,7 +16,7 @@ in
 	  # ty basedpyright # some are from uv itself
 	  uv eslint prettier html-tidy yarn
 	  vale harper
-    bruno bruno-cli
+    # bruno bruno-cli
 	];
 
   }

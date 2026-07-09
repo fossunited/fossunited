@@ -159,8 +159,7 @@ def _empty_context(context):
     context.community_deck_link = ""
     context.pagetitle = "IndiaFOSS 2026"
     context.description = (
-        "The 6th edition of the Free and Open Source Software Festival "
-        "by the FOSS United community."
+        "The 6th Edition of the FOSS and Digital Commons Festival by the FOSS United community"
     )
 
 
