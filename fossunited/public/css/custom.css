@@ -1725,6 +1725,40 @@ body:has(.v3-page) {
   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7);
 }
 
+/* Reusable hover lift — same shadow as .v3-card, theme-aware, no background change */
+.v3-hover-shadow { transition: box-shadow 0.2s ease; }
+.v3-hover-shadow:hover { box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.06); }
+[data-theme='dark'] .v3-hover-shadow:hover { box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.7); }
+
+/* Small round avatar (compact people rows) */
+.v3-avatar-xs {
+  width: 1.5rem; height: 1.5rem; border-radius: 50%; object-fit: cover;
+  border: 1px solid var(--v3-button-border); background: var(--v3-button-border); flex-shrink: 0;
+}
+
+/* Filter pill — themeable toggle button. Inactive = bordered/subtle, active = inverse fill.
+   Self-contained so it doesn't inherit .v3-btn's hover-background quirk. */
+.v3-pill {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.375rem 0.75rem; border: 1px solid var(--v3-button-border); border-radius: 0.375rem;
+  background: var(--v3-card-bg); color: var(--v3-text-color2);
+  font-size: 0.8125rem; line-height: 1.4; cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.v3-pill:hover { background: var(--v3-button-border); color: var(--v3-text-color); }
+.v3-pill.is-active {
+  background: var(--v3-text-color); color: var(--v3-main-bg); border-color: var(--v3-text-color);
+}
+.v3-pill.is-active:hover { filter: brightness(1.1); }
+
+/* Bottom overlay bar + dark pill for media thumbnails (type left, duration right) */
+.v3-media-overlay { position: absolute; left: 0; right: 0; bottom: 0; padding: 8px; z-index: 2; pointer-events: none; }
+.v3-media-badge {
+  background: rgba(0, 0, 0, 0.72); color: #fff; line-height: 1.4;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.4px; text-transform: uppercase;
+  padding: 3px 7px; border-radius: 6px;
+}
+
 /* V3 Grid - 32px gap */
 .v3-grid {
   display: flex;
@@ -3758,3 +3792,19 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   0%, 100% { filter: drop-shadow(0 0 3px oklch(from var(--badge-glow-color) calc(l * 0.45) calc(c * 4) h)); }
   50%       { filter: drop-shadow(0 0 6px oklch(from var(--badge-glow-color) calc(l * 0.55) calc(c * 5) h)); }
 }
+
+/* ── IndiaFOSS shared header/footer bits (used by the if_header/if_footer macros) ──
+   These were page-local to www/indiafoss/2026; moved here so every IndiaFOSS page
+   (archive, future year pages) that uses the macros renders them correctly. */
+.if-nav-link {
+  display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 6px;
+  font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--v3-text-color2); background: transparent; border: none;
+  white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .15s;
+}
+.if-nav-link:hover { background: var(--v3-button-border); color: var(--v3-text-color2); text-decoration: none; }
+.if-nav-ticket { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; margin-left: 4px; }
+
+.if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
+.if-tagline svg { width: 40px; height: auto; }
+.if-footer-tagline .if-tagline { color: #fafafa; }
