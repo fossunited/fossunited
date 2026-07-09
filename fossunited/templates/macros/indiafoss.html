@@ -98,6 +98,28 @@
 
 
 {% macro if_footer(footer_links={}) %}
+{# Shared default footer sections; a page can override by passing its own footer_links. #}
+{% set footer_links = footer_links or {
+  "Info": [
+    {"label": "Code of Conduct", "url": "/code-of-conduct"},
+    {"label": "Ticket Transfer", "url": "/refund-transfer-policy"},
+    {"label": "Sponsorship Deck", "url": "https://fossunited.org/files/Sponsorship-Deck-IF26.pdf"},
+    {"label": "Community Deck", "url": "https://fossunited.org/files/Community-deck-V2.pdf"}
+  ],
+  "Archive": [
+    {"label": "IndiaFOSS 2025", "url": "/indiafoss/2025"},
+    {"label": "IndiaFOSS 2024", "url": "/indiafoss/2024"},
+    {"label": "IndiaFOSS 3.0", "url": "/indiafoss/2023"},
+    {"label": "IndiaFOSS 2.0", "url": "/indiafoss/2022"},
+    {"label": "IndiaOS", "url": "/indiafoss/2020"}
+  ],
+  "Explore": [
+    {"label": "IndiaFOSS 2026", "url": "/indiafoss/2026"},
+    {"label": "Schedule", "url": "/indiafoss/schedule"},
+    {"label": "All Events", "url": "/events/timeline"},
+    {"label": "Grants", "url": "/grants"}
+  ]
+} %}
 <footer class="foss-footer" aria-label="Site footer">
   <div class="if-footer-inner">
 
