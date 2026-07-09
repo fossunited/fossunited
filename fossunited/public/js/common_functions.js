@@ -9,6 +9,10 @@ $(document).ready(function () {
   // Horizontal Navbar Controls for Profile & Event Pages
   setNavbarControl()
   tab_navigation()
+
+  // Global BS4 tooltip opt-in: any element with data-toggle="tooltip" gets one.
+  // Runs on every page (bundled in website.bundle.js) so pages need no init line.
+  $('[data-toggle="tooltip"]').tooltip()
 })
 
 function makeQuill(
@@ -324,6 +328,43 @@ function toggleSection(id) {
   header?.setAttribute('aria-expanded', !content.classList.contains('hidden'))
 }
 
+// Debounce: delay fn until `wait` ms after the last call. Used by search inputs.
+function debounce(fn, wait = 250) {
+  let t
+  return function (...args) {
+    clearTimeout(t)
+    t = setTimeout(() => fn.apply(this, args), wait)
+  }
+}
+
+// Pagination window: array of page numbers with '…' gaps. First, last, and
+// current +/- `spread` are always shown. e.g. buildPageWindow(5, 20) ->
+// [1,'…',4,5,6,'…',20]. Render each as a button; skip '…'.
+function buildPageWindow(page, totalPages, spread = 1) {
+  const win = []
+  for (let p = 1; p <= totalPages; p++) {
+    if (p === 1 || p === totalPages || Math.abs(p - page) <= spread) win.push(p)
+    else if (win[win.length - 1] !== '…') win.push('…')
+  }
+  return win
+}
+
+// Read the current query string as a plain object. getParams().foo -> "bar".
+function getParams() {
+  return Object.fromEntries(new URLSearchParams(window.location.search))
+}
+
+// Write params to the URL without a reload. Falsy values are dropped.
+// setParams({q: 'x', page: 1}) -> "?q=x&page=1"; setParams({}) clears them.
+function setParams(obj) {
+  const p = new URLSearchParams()
+  Object.entries(obj).forEach(([k, v]) => {
+    if (v !== '' && v != null && v !== false) p.set(k, v)
+  })
+  const qs = p.toString()
+  history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname)
+}
+
 // expose all globally via window
 Object.assign(window, {
   makeQuill,
@@ -342,4 +383,8 @@ Object.assign(window, {
   formatShortDate,
   truncateStr,
   toggleSection,
+  debounce,
+  buildPageWindow,
+  getParams,
+  setParams,
 })
