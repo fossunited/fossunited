@@ -10,7 +10,7 @@
 {% endmacro %}
 
 
-{% macro if_header(years=[], current_year=2026, ticket_url="") %}
+{% macro if_header(years=[], current_year=2026, ticket_url="", show_archive=True, show_schedule=False, show_statistics=True) %}
 <header class="v3-event-header" aria-label="IndiaFOSS navigation">
 
   <a href="/indiafoss/{{ current_year }}" class="d-flex align-items-center" aria-label="IndiaFOSS {{ current_year }} home">
@@ -19,12 +19,17 @@
 
   <nav class="d-none d-md-flex align-items-center gap-1" aria-label="Site navigation">
 
-    {# Archive — hidden until ready #}
-    <a href="/indiafoss" class="if-nav-link d-none" aria-label="IndiaFOSS archive">Archive</a>
+    {% if show_archive %}
+      <a href="/indiafoss/archive" class="if-nav-link" aria-label="IndiaFOSS archive">Archive</a>
+    {% endif %}
 
-    <a href="/indiafoss/schedule" class="if-nav-link d-none" aria-label="Event schedule">Schedule</a>
+    {% if show_schedule %}
+      <a href="/indiafoss/schedule" class="if-nav-link" aria-label="Event schedule">Schedule</a>
+    {% endif %}
 
-    <a href="/indiafoss/2026/stats" class="if-nav-link" aria-label="IndiaFOSS 2026 live statistics">Statistics</a>
+    {% if show_statistics %}
+      <a href="/indiafoss/2026/stats" class="if-nav-link" aria-label="IndiaFOSS 2026 live statistics">Statistics</a>
+    {% endif %}
 
     {% if years | length > 1 %}
       <select class="v3-select" aria-label="Select IndiaFOSS year"
@@ -67,8 +72,9 @@
   <div class="collapse d-md-none position-absolute" id="ifMobileMenu"
        style="top: 100%; right: 0; min-width: 200px; z-index: 1050;">
     <div class="v3-card rounded p-3 mt-2 d-flex flex-column gap-2">
-      <a href="/indiafoss/schedule" class="if-nav-link">Schedule</a>
-      <a href="/indiafoss/2026/stats" class="if-nav-link">Statistics</a>
+      {% if show_archive %}<a href="/indiafoss/archive" class="if-nav-link">Archive</a>{% endif %}
+      {% if show_schedule %}<a href="/indiafoss/schedule" class="if-nav-link">Schedule</a>{% endif %}
+      {% if show_statistics %}<a href="/indiafoss/2026/stats" class="if-nav-link">Statistics</a>{% endif %}
       {% if years | length > 1 %}
         <select class="v3-select" style="width: 100%;"
                 onchange="window.location=this.value;">
