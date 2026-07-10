@@ -13,6 +13,24 @@ export function sessionUser() {
   return _sessionUser
 }
 
+export const sessionProfileResource = createResource({
+  url: 'fossunited.api.dashboard.get_session_user_profile',
+})
+
+let _profileFetchPromise = null
+export function fetchSessionProfile() {
+  if (!session.isLoggedIn || session.user === 'Guest' || session.user === 'Administrator') {
+    return Promise.resolve(null)
+  }
+  if (sessionProfileResource.data) return Promise.resolve(sessionProfileResource.data)
+  if (_profileFetchPromise) return _profileFetchPromise
+
+  _profileFetchPromise = sessionProfileResource.fetch().finally(() => {
+    _profileFetchPromise = null
+  })
+  return _profileFetchPromise
+}
+
 export const session = reactive({
   login: createResource({
     url: 'login',
@@ -33,6 +51,7 @@ export const session = reactive({
     url: 'logout',
     onSuccess() {
       userResource.reset()
+      sessionProfileResource.reset()
       session.user = sessionUser()
       window.location.href = `/login?redirect-to=/dashboard`
     },

@@ -349,23 +349,28 @@ import TextEditor from '@/components/ui/TextEditor.vue'
 import { IconCheck } from '@tabler/icons-vue'
 import { createResource, createDocumentResource, FileUploader, Switch, FormControl, ErrorMessage } from 'frappe-ui'
 import { isValidUrl, ensureHttpsPrefix } from '@/helpers/utils'
+import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 import { reactive, ref, watch, computed } from 'vue'
 import { toast } from 'vue-sonner'
 const profileDoc = ref(null)
 
-const profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-  auto: true,
-  onSuccess(data) {
-    profileDoc.value = createDocumentResource({
-      doctype: 'FOSS User Profile',
-      name: data.name,
-      fields: ['*'],
-      auto: true,
-    })
+fetchSessionProfile()
+
+watch(
+  () => sessionProfileResource.data,
+  (data) => {
+    if (data && !profileDoc.value) {
+      profileDoc.value = createDocumentResource({
+        doctype: 'FOSS User Profile',
+        name: data.name,
+        fields: ['*'],
+        auto: true,
+      })
+    }
   },
-})
+  { immediate: true }
+)
 
 const validateFile = (file) => {
   let extn = file.name.split('.').pop().toLowerCase()
