@@ -122,40 +122,44 @@
                       {% endif %}
                     </div>
 
+                    {# Whole body (title + speakers + edition) links to the card destination;
+                       the video block above stays a separate play/thumbnail area. #}
                     <a
-                      class="line-clamp-2 semi-bold v3-text-primary d-block mt-2"
+                      class="d-block text-decoration-none"
                       href="{{ m.card_link }}"
                       {% if m.card_external %}target="_blank" rel="noopener noreferrer"{% endif %}
                     >
-                      {{ m.title | e }}
+                      <span class="line-clamp-2 semi-bold v3-text-primary d-block mt-2">
+                        {{ m.title | e }}
+                      </span>
+
+                      {% if m.speakers %}
+                        {# compact single row: small avatars + truncated names #}
+                        <span class="d-flex align-items-center gap-2 mt-2">
+                          <span class="d-flex gap-1 flex-shrink-0">
+                            {% for s in m.speakers[:3] %}
+                              <img
+                                class="v3-avatar-xs"
+                                loading="lazy"
+                                alt="{{ s.name | e }}"
+                                data-toggle="tooltip"
+                                title="{{ s.name | e }}{% if s.organization %}· {{ s.organization | e }}{% endif %}"
+                                src="{{ s.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                              />
+                            {% endfor %}
+                          </span>
+                          <span
+                            class="text-truncate v3-text-secondary text-sm"
+                            title="{{ m.speaker | e }}"
+                            >{{ m.speaker | e }}</span
+                          >
+                        </span>
+                      {% endif %}
+
+                      {% if m.edition %}<span class="d-block text-xs v3-text-tertiary mt-2">
+                        {{ m.edition | e }}
+                      </span>{% endif %}
                     </a>
-
-                    {% if m.speakers %}
-                      {# compact single row: small avatars + truncated names #}
-                      <div class="d-flex align-items-center gap-2 mt-2">
-                        <div class="d-flex gap-1 flex-shrink-0">
-                          {% for s in m.speakers[:3] %}
-                            <img
-                              class="v3-avatar-xs"
-                              loading="lazy"
-                              alt="{{ s.name | e }}"
-                              data-toggle="tooltip"
-                              title="{{ s.name | e }}{% if s.organization %}· {{ s.organization | e }}{% endif %}"
-                              src="{{ s.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                            />
-                          {% endfor %}
-                        </div>
-                        <span
-                          class="text-truncate v3-text-secondary text-sm"
-                          title="{{ m.speaker | e }}"
-                          >{{ m.speaker | e }}</span
-                        >
-                      </div>
-                    {% endif %}
-
-                    {% if m.edition %}<div class="text-xs v3-text-tertiary mt-2">
-                      {{ m.edition | e }}
-                    </div>{% endif %}
                   </div>
                 </article>
               {% endfor %}
