@@ -1,0 +1,116 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-07-09 13:54:17.442297",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "video_url",
+  "event",
+  "event_name",
+  "proposal",
+  "proposal_route",
+  "video_type",
+  "duration",
+  "section_break_sljw",
+  "speakers"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Title"
+  },
+  {
+   "fetch_from": "proposal.event",
+   "fieldname": "event",
+   "fieldtype": "Link",
+   "label": "Event",
+   "options": "FOSS Chapter Event"
+  },
+  {
+   "fetch_from": "event.event_name",
+   "fieldname": "event_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Event name"
+  },
+  {
+   "fieldname": "proposal",
+   "fieldtype": "Link",
+   "label": "Proposal",
+   "options": "FOSS Event CFP Submission"
+  },
+  {
+   "fetch_from": "proposal.route",
+   "fieldname": "proposal_route",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Proposal URL"
+  },
+  {
+   "fetch_from": "proposal.session_type",
+   "fieldname": "video_type",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Video type",
+   "options": "Talk\nKeynote\nPanel Discussion\nWorkshop\nLive Stream\nLightning Talk\nBirds of Feather(BoF)\nInvited Talk"
+  },
+  {
+   "fieldname": "duration",
+   "fieldtype": "Duration",
+   "label": "Video duration"
+  },
+  {
+   "description": "Youtube URL or direct mp4 media file or other media links (peertube)",
+   "fieldname": "video_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Video URL"
+  },
+  {
+   "description": "Only meant for IndiaFOSS 1, 2 3.0 events to map user profile here.",
+   "fieldname": "speakers",
+   "fieldtype": "Table",
+   "label": "Speakers (optional)",
+   "options": "CFP Submission Speaker"
+  },
+  {
+   "fieldname": "section_break_sljw",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-07-09 21:54:03.088499",
+ "modified_by": "Administrator",
+ "module": "FOSSUnited",
+ "name": "Event Media",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

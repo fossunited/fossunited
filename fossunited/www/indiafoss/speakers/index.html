@@ -1,0 +1,218 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
+{% block title %}{{ pagetitle }} | FOSS United{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-page-wide">
+      {{ if_header(years, current_year, show_statistics=False, show_archive=True, show_speakers=True) }}
+
+      <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
+        <header>
+          <h1 class="v3-text-primary mb-2">IndiaFOSS Speakers</h1>
+          <p class="v3-text-secondary mb-0">
+            Everyone who has spoken at IndiaFOSS. <u>{{ total }}</u> speakers across all editions.
+          </p>
+        </header>
+
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <input type="search" id="spkSearch" class="form-control flex-grow-1" style="max-width:420px"
+                 placeholder="Search speakers" aria-label="Search speakers" />
+          <button class="v3-btn v3-btn-secondary v3-btn--sm d-md-none" type="button"
+                  data-toggle="collapse" data-target="#spkFilters"
+                  aria-controls="spkFilters" aria-expanded="false">
+            <i class="ti ti-filter"></i> Filters
+          </button>
+        </div>
+
+        <div class="row">
+          <aside class="col-md-3 mb-3 collapse d-md-block" id="spkFilters" aria-label="Filters">
+            <div class="sticky-top" style="top:1rem">
+              <p class="text-uppercase semi-bold text-sm v3-text-secondary mb-3">Filters</p>
+
+              <p class="v3-text-secondary mb-2">IndiaFOSS Edition</p>
+              <div class="d-flex flex-column gap-1 mb-4" data-filter="edition" data-mode="single">
+                <button type="button" class="v3-pill w-100 is-active" data-value="">All</button>
+                {% for e in editions %}
+                  <button type="button" class="v3-pill w-100" data-value="{{ e }}">{{ e }}</button>
+                {% endfor %}
+              </div>
+
+              <p class="v3-text-secondary mb-2">Session Type</p>
+              <div class="d-flex flex-wrap gap-1" data-filter="type" data-mode="multi">
+                {% for t in session_types %}
+                  <button type="button" class="v3-pill" data-value="{{ t }}">{{ t }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          </aside>
+
+          <section class="col-md-9" aria-label="Speakers">
+            <p id="spkCount" class="v3-text-tertiary text-sm mb-3" aria-live="polite"></p>
+
+            <div class="row" id="spkGrid">
+              {% for s in speakers %}
+                <div class="spk-card-col col-6 mb-3"
+                     data-editions="{{ s.editions | join('|') }}"
+                     data-types="{{ s.types | join('|') }}"
+                     data-search="{{ (s.name ~ ' ' ~ s.designation ~ ' ' ~ s.organization) | lower | e }}">
+                  <a class="v3-speaker-card" href="/indiafoss/speakers/{{ s.slug }}"
+                     aria-label="{{ s.name | e }} — {{ s.talk_count }} talks">
+                    <img class="v3-people-avatar" loading="lazy" alt="{{ s.name | e }}" src="{{ s.avatar }}" />
+                    <div class="d-flex flex-column" style="min-width:0;">
+                      <div class="v3-people-name semi-bold">{{ s.name | e }}</div>
+                      {% if s.designation %}<small class="v3-text-tertiary text-truncate">{{ s.designation | e }}</small>{% endif %}
+                      <span class="v3-tag mt-1" style="align-self:flex-start;">Talks: {{ s.talk_count }}</span>
+                    </div>
+                  </a>
+                </div>
+              {% endfor %}
+            </div>
+
+            <div id="spkEmpty" class="text-center py-5 v3-text-tertiary" hidden>
+              <i class="ti ti-mood-empty d-block mb-2" style="font-size:2rem" aria-hidden="true"></i>
+              No speakers match your filters.
+            </div>
+
+            <nav class="v3-pagination" id="spkPager" aria-label="Pagination"></nav>
+          </section>
+        </div>
+      </main>
+    </div>
+    {{ if_footer() }}
+  </div>
+{% endblock %}
+
+{% block page_script %}
+  <script>
+    ;(function () {
+      const PAGE_SIZE = 24
+      const grid = document.getElementById('spkGrid')
+      const search = document.getElementById('spkSearch')
+      const pager = document.getElementById('spkPager')
+      const count = document.getElementById('spkCount')
+      const empty = document.getElementById('spkEmpty')
+      if (!grid) return
+
+      const cards = Array.from(grid.querySelectorAll('.spk-card-col'))
+      const state = { edition: '', types: new Set(), q: '', page: 1 }
+      const ACTIVE = 'is-active'
+      const has = (csv, v) => (csv || '').split('|').filter(Boolean).includes(v)
+
+      const matches = (c) =>
+        (!state.edition || has(c.dataset.editions, state.edition)) &&
+        (state.types.size === 0 || [...state.types].some((t) => has(c.dataset.types, t))) &&
+        (!state.q || (c.dataset.search || '').includes(state.q.toLowerCase()))
+
+      function render() {
+        const list = cards.filter(matches)
+        const total = list.length
+        const pages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+        if (state.page > pages) state.page = pages
+        const start = (state.page - 1) * PAGE_SIZE
+        const slice = list.slice(start, start + PAGE_SIZE)
+
+        cards.forEach((c) => (c.style.display = 'none'))
+        slice.forEach((c) => {
+          c.style.display = ''
+          grid.appendChild(c)
+        })
+
+        empty.hidden = total !== 0
+        grid.hidden = total === 0
+        count.textContent = total
+          ? 'Showing ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' of ' + total
+          : ''
+        renderPager(pages)
+        persist()
+      }
+
+      function renderPager(pages) {
+        pager.innerHTML = ''
+        if (pages <= 1) return
+        const btn = (label, page, opts = {}) => {
+          const b = document.createElement('button')
+          b.type = 'button'
+          b.className = 'v3-pagination__btn' + (opts.active ? ' v3-pagination__btn--active' : '')
+          b.textContent = label
+          if (opts.disabled) b.disabled = true
+          else
+            b.addEventListener('click', () => {
+              state.page = page
+              render()
+              document.getElementById('main-content').scrollIntoView({ behavior: 'smooth', block: 'start' })
+            })
+          return b
+        }
+        pager.appendChild(btn('← Prev', state.page - 1, { disabled: state.page === 1 }))
+        buildPageWindow(state.page, pages).forEach((p) => {
+          if (p === '…') {
+            const s = document.createElement('span')
+            s.className = 'v3-pagination__btn'
+            s.style.pointerEvents = 'none'
+            s.textContent = '…'
+            pager.appendChild(s)
+          } else {
+            pager.appendChild(btn(String(p), p, { active: p === state.page }))
+          }
+        })
+        pager.appendChild(btn('Next →', state.page + 1, { disabled: state.page === pages }))
+      }
+
+      document.querySelectorAll('[data-filter]').forEach((box) => {
+        const single = box.dataset.mode === 'single'
+        box.addEventListener('click', (e) => {
+          const pill = e.target.closest('button[data-value]')
+          if (!pill || !box.contains(pill)) return
+          if (single) {
+            box.querySelectorAll('button[data-value]').forEach((p) => p.classList.remove(ACTIVE))
+            pill.classList.add(ACTIVE)
+            state.edition = pill.dataset.value
+          } else {
+            pill.classList.toggle(ACTIVE)
+            state.types.clear()
+            box.querySelectorAll('button.' + ACTIVE).forEach((p) => state.types.add(p.dataset.value))
+          }
+          state.page = 1
+          render()
+        })
+      })
+
+      function persist() {
+        setParams({
+          edition: state.edition,
+          type: state.types.size ? [...state.types].join(',') : '',
+          q: state.q,
+          page: state.page > 1 ? state.page : '',
+        })
+      }
+      function restore() {
+        const p = new URLSearchParams(location.search.replace(/^\?/, ''))
+        state.edition = p.get('edition') || ''
+        state.types = new Set((p.get('type') || '').split(',').filter(Boolean))
+        state.q = p.get('q') || ''
+        state.page = Math.max(1, parseInt(p.get('page'), 10) || 1)
+      }
+      function syncUI() {
+        search.value = state.q
+        document.querySelectorAll('[data-filter="edition"] button[data-value]')
+          .forEach((p) => p.classList.toggle(ACTIVE, (p.dataset.value || '') === state.edition))
+        document.querySelectorAll('[data-filter="type"] button[data-value]')
+          .forEach((p) => p.classList.toggle(ACTIVE, state.types.has(p.dataset.value)))
+      }
+
+      search.addEventListener('input', debounce(() => {
+        state.q = search.value.trim()
+        state.page = 1
+        render()
+      }, 150))
+
+      restore()
+      syncUI()
+      render()
+    })()
+  </script>
+{% endblock %}

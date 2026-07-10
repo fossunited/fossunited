@@ -9,7 +9,9 @@
          tabindex="0"
          aria-label="Play {{ title | e }}"
          data-yt="{{ youtube_id }}">
-      <img src="https://img.youtube.com/vi/{{ youtube_id }}/hqdefault.jpg"
+      {# mqdefault = native 16:9 (320x180), no letterbox bars; matches the 16:9
+         box exactly. hqdefault is 4:3 with baked-in black bars. #}
+      <img src="https://img.youtube.com/vi/{{ youtube_id }}/mqdefault.jpg"
            alt="{{ title | e }}"
            class="position-absolute w-100 h-100 object-cover" />
       <div class="m-play-btn" aria-hidden="true">

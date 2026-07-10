@@ -6,15 +6,7 @@
 }
 .skip-link:focus { top: 0; }
 
-/* ── IndiaFOSS nav link style ───────────────── */
-.if-nav-link {
-  display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 6px;
-  font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-  color: var(--v3-text-color2); background: transparent; border: none;
-  white-space: nowrap; text-decoration: none; cursor: pointer; transition: background .15s;
-}
-.if-nav-link:hover { background: var(--v3-button-border); color: var(--v3-text-color2); text-decoration: none; }
-.if-nav-ticket { font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; padding: 8px 14px; margin-left: 4px; }
+/* .if-nav-link / .if-nav-ticket moved to custom.css (shared across IndiaFOSS pages) */
 
 /* ── Hero (IndiaFOSS-specific sizing) ───────── */
 /* Full-bleed bg image, natural 1200x438. >=1200 fits exactly; narrower crops
@@ -56,10 +48,7 @@
 /* Tagline white on dark image regardless of theme */
 .if-hero .if-tagline { color: #fff; }
 
-/* ── Community tagline ──────────────────────── */
-.if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
-.if-tagline svg { width: 40px; height: auto; }
-.if-footer-tagline .if-tagline { color: #fafafa; }
+/* .if-tagline moved to custom.css (shared). Hero-specific override kept below. */
 
 
 /* ── Toggle icon rotation ───────────────────── */
