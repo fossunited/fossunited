@@ -112,14 +112,24 @@ def get_event_media(or_filters=None, filters=None, edition_order=None):
             prop_speakers.get(m.proposal, []) if m.proposal else own_speakers.get(m.name, [])
         )
         m.speaker = ", ".join(s["name"] for s in m.speakers)  # single-line + search key
-        # Card destination: proposal page if set (internal route or external URL),
-        # else the video. External links open in a new tab.
+        # Proposal/video destination (used by the talks page "View proposal" button):
+        # proposal page if set (internal route or external URL), else the video.
         if m.proposal_route:
             m.external = m.proposal_route.startswith("http")
             m.link = m.proposal_route if m.external else "/" + m.proposal_route
         else:
             m.link = m.video_url
             m.external = True
+
+        # Archive card destination: prefer the speaker page (most talks have a
+        # speaker listed), then fall back to the proposal/video destination above.
+        # "Primary" speaker = first child row (fetch_speaker_rows orders by idx).
+        if m.speakers:
+            m.card_link = "/indiafoss/speakers/" + speaker_slug(m.speakers[0]["name"])
+            m.card_external = False
+        else:
+            m.card_link = m.link
+            m.card_external = m.external
 
     return [m for m in media if m.youtube_id or m.proposal_route]
 
@@ -142,10 +152,14 @@ def get_session_types(media):
     return canonical + sorted(t for t in present if t not in canonical)
 
 
+def speaker_slug(full_name):
+    """URL slug from a speaker name: lowercase, spaces -> "-" (names are plain a-z).
+    A tiny shared helper so _speaker_key and the index slug stay identical."""
+    return (full_name or "").strip().lower().replace(" ", "-")
+
+
 def _speaker_key(row):
-    # frappe.scrub: lowercase + non-alnum -> "_" (e.g. "Jane Doe" -> "jane_doe").
-    # Speaker names are plain (no punctuation), so scrub is enough for a URL slug.
-    return row["user"] or frappe.scrub(row["name"])
+    return row["user"] or speaker_slug(row["name"])
 
 
 def _profiles(user_names):
@@ -195,7 +209,7 @@ def build_speakers_index(media, edition_order=None):
                 profile = profiles.get(s["user"]) or {}
                 rec = agg[key] = {
                     "key": key,
-                    "slug": frappe.scrub(s["name"]),
+                    "slug": speaker_slug(s["name"]),
                     "name": s["name"],
                     "designation": s["designation"],
                     "organization": s["organization"],

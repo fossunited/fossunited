@@ -124,8 +124,8 @@
 
                     <a
                       class="line-clamp-2 semi-bold v3-text-primary d-block mt-2"
-                      href="{{ m.link }}"
-                      {% if m.external %}target="_blank" rel="noopener noreferrer"{% endif %}
+                      href="{{ m.card_link }}"
+                      {% if m.card_external %}target="_blank" rel="noopener noreferrer"{% endif %}
                     >
                       {{ m.title | e }}
                     </a>
