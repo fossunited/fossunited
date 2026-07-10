@@ -52,8 +52,9 @@
 </template>
 <script setup>
 import { inject, ref, defineEmits } from 'vue'
-import { Avatar, Dropdown, createResource } from 'frappe-ui'
+import { Avatar, Dropdown } from 'frappe-ui'
 import { IconMenu2 } from '@tabler/icons-vue'
+import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 let session = inject('$session')
 
@@ -66,14 +67,9 @@ const handleToggleSidebar = () => {
   emit('toggleSidebar', showNav.value)
 }
 
-let user_profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-  cache: 'SessionUserProfile',
-})
+let user_profile = sessionProfileResource
 
-if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
-  user_profile.fetch()
-}
+fetchSessionProfile()
 
 const redirectToProfile = () => {
   window.location.pathname = '/me'

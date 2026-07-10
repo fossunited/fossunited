@@ -62,6 +62,7 @@
 <script setup>
 import { Sidebar, createResource, FeatherIcon, useTheme } from 'frappe-ui'
 import { computed, inject, ref, h, watch } from 'vue'
+import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 import {
   IconMenu,
   IconSun,
@@ -116,13 +117,8 @@ const resolvedCollapsed = computed({
   },
 })
 
-const user_profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-  cache: 'SessionUserProfile',
-})
-if (session.isLoggedIn && session.user !== 'Guest' && session.user !== 'Administrator') {
-  user_profile.fetch()
-}
+const user_profile = sessionProfileResource
+fetchSessionProfile()
 
 const logo = computed(
   () =>
