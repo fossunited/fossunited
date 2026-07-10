@@ -2291,6 +2291,26 @@ body:has(.v3-page) {
   white-space: nowrap;
 }
 
+/* Speaker listing card (IndiaFOSS speakers page) */
+.v3-speaker-card {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 0.5rem; border: 1px solid var(--v3-button-border); border-radius: 0.5rem;
+  text-decoration: none; height: 100%;
+  transition: box-shadow 0.15s, border-color 0.15s;
+}
+.v3-speaker-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+/* 80px framed avatar (Figma) — clip-path for reliable rounding on <img> */
+.v3-speaker-card .v3-people-avatar,
+.v3-avatar-lg {
+  width: 5rem; height: 5rem; border-radius: 0.5rem;
+  clip-path: inset(0 round 0.5rem); object-fit: cover;
+  border: 1px solid var(--v3-button-border); flex-shrink: 0;
+}
+
+/* Talks page: reference-link buttons column + description divider */
+.v3-talk-refs { display: flex; flex-direction: column; gap: 1rem; }
+.v3-talk-divider { border-left: 1px solid var(--v3-button-border); }
+
 /* People Card Expand/Collapse Functionality */
 .v3-people-container {
   position: relative;

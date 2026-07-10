@@ -9,7 +9,7 @@
 {% block page_content %}
   <div class="v3-page">
     <div class="v3-page-wide">
-      {{ if_header(years, current_year, show_statistics=False, show_archive=False) }}
+      {{ if_header(years, current_year, show_statistics=False, show_archive=False, show_speakers=True) }}
 
       <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
         <header>
@@ -89,7 +89,7 @@
                   data-eorder="{{ m.edition_order }}"
                   data-type="{{ m.video_type }}"
                   data-duration="{{ m.duration | int }}"
-                  data-search="{{ (m.title ~ ' ' ~ m.speaker) | lower }}"
+                  data-search="{{ (m.title ~ ' ' ~ m.speaker) | lower | e }}"
                 >
                   <div class="v3-hover-shadow rounded h-100 p-2">
                     <div class="position-relative">
@@ -110,7 +110,7 @@
                             class="v3-media-badge"
                             data-toggle="tooltip"
                             title="Session type"
-                            >{{ m.video_type }}</span
+                            >{{ m.video_type | e }}</span
                           >{% endif %}
                           {% if m.duration_str %}<span
                             class="v3-media-badge ml-auto"
@@ -127,7 +127,7 @@
                       href="{{ m.link }}"
                       {% if m.external %}target="_blank" rel="noopener noreferrer"{% endif %}
                     >
-                      {{ m.title }}
+                      {{ m.title | e }}
                     </a>
 
                     {% if m.speakers %}
@@ -138,23 +138,23 @@
                             <img
                               class="v3-avatar-xs"
                               loading="lazy"
-                              alt="{{ s.name }}"
+                              alt="{{ s.name | e }}"
                               data-toggle="tooltip"
-                              title="{{ s.name }}{% if s.organization %}· {{ s.organization }}{% endif %}"
+                              title="{{ s.name | e }}{% if s.organization %}· {{ s.organization | e }}{% endif %}"
                               src="{{ s.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                             />
                           {% endfor %}
                         </div>
                         <span
                           class="text-truncate v3-text-secondary text-sm"
-                          title="{{ m.speaker }}"
-                          >{{ m.speaker }}</span
+                          title="{{ m.speaker | e }}"
+                          >{{ m.speaker | e }}</span
                         >
                       </div>
                     {% endif %}
 
                     {% if m.edition %}<div class="text-xs v3-text-tertiary mt-2">
-                      {{ m.edition }}
+                      {{ m.edition | e }}
                     </div>{% endif %}
                   </div>
                 </article>

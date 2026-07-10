@@ -10,7 +10,7 @@
 {% endmacro %}
 
 
-{% macro if_header(years=[], current_year=2026, ticket_url="", show_archive=True, show_schedule=False, show_statistics=True) %}
+{% macro if_header(years=[], current_year=2026, ticket_url="", show_archive=True, show_schedule=False, show_statistics=True, show_speakers=False) %}
 <header class="v3-event-header" aria-label="IndiaFOSS navigation">
 
   <a href="/indiafoss/{{ current_year }}" class="d-flex align-items-center" aria-label="IndiaFOSS {{ current_year }} home">
@@ -21,6 +21,10 @@
 
     {% if show_archive %}
       <a href="/indiafoss/archive" class="if-nav-link" aria-label="IndiaFOSS archive">Archive</a>
+    {% endif %}
+
+    {% if show_speakers %}
+      <a href="/indiafoss/speakers" class="if-nav-link" aria-label="IndiaFOSS speakers">Speakers</a>
     {% endif %}
 
     {% if show_schedule %}
@@ -73,6 +77,7 @@
        style="top: 100%; right: 0; min-width: 200px; z-index: 1050;">
     <div class="v3-card rounded p-3 mt-2 d-flex flex-column gap-2">
       {% if show_archive %}<a href="/indiafoss/archive" class="if-nav-link">Archive</a>{% endif %}
+      {% if show_speakers %}<a href="/indiafoss/speakers" class="if-nav-link">Speakers</a>{% endif %}
       {% if show_schedule %}<a href="/indiafoss/schedule" class="if-nav-link">Schedule</a>{% endif %}
       {% if show_statistics %}<a href="/indiafoss/2026/stats" class="if-nav-link">Statistics</a>{% endif %}
       {% if years | length > 1 %}

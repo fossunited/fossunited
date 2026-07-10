@@ -1,4 +1,4 @@
-{% macro profile_headshot(name, photo=None, url=None, info=None) %}
+{% macro profile_headshot(name, photo=None, url=None, info=None, badge=None) %}
   {# Single avatar+name chip. Extracted from people_card. url optional — wraps in anchor if provided. #}
   {% set default_photo = "/assets/fossunited/images/defaults/user_profile_image.png" %}
   {% if url %}
@@ -15,6 +15,9 @@
         <div class="v3-people-name">{{ name }}</div>
         {% if info %}
           <small class="v3-text-tertiary">{{ info }}</small>
+        {% endif %}
+        {% if badge %}
+          <span class="v3-tag mt-1" style="align-self:flex-start;">{{ badge }}</span>
         {% endif %}
       </div>
   {% if url %}</a>{% else %}</div>{% endif %}
