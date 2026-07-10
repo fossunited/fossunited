@@ -26,4 +26,4 @@ def get_context(context):
         "Every speaker who has taken the stage at IndiaFOSS, the annual FOSS & Digital "
         "Commons Festival by the FOSS United community."
     )
-    context.image = "https://fossunited.org/files/indiafoss-2026-og.png"
+    # context.image = "https://fossunited.org/files/indiafoss-2026-og.png"

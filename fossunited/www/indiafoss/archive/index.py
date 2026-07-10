@@ -25,4 +25,4 @@ def get_context(context):
         "Browse every talk from IndiaFOSS, the annual Free and Open Source Software "
         "conference by the FOSS United community."
     )
-    context.image = "https://fossunited.org/files/indiafoss-2026-og.png"
+    # context.image = "https://fossunited.org/files/indiafoss-2026-og.png"
