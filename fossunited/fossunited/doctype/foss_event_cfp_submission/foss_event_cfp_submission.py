@@ -15,6 +15,7 @@ from fossunited.doctype_ids import (
     CHAPTER,
     EVENT,
     EVENT_CFP,
+    EVENT_MEDIA,
     EVENT_SCHEDULE,
     PROPOSAL,
     USER_PROFILE,
@@ -496,15 +497,14 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
     def cfp_get_talk_video(self) -> str | None:
-        """Return the talk video link if CFP is linked in schedule and has a video."""
+        """Talk video for this proposal: prefer the linked Event Media (the primary
+        source now that we add Event Media for all talks), else fall back to the
+        schedule row's talk_video."""
+        media_video = frappe.db.get_value(EVENT_MEDIA, {"proposal": self.name}, "video_url")
+        if media_video:
+            return media_video
 
-        talk_scheduled = frappe.db.get_value(
-            EVENT_SCHEDULE,
-            {"linked_cfp": self.name},
-            ["talk_video"],
-        )
-
-        return talk_scheduled
+        return frappe.db.get_value(EVENT_SCHEDULE, {"linked_cfp": self.name}, "talk_video")
 
     def notify_team_approved_proposal_withdrawn(self):
         """Notify chapter members that an approved proposal has been withdrawn by proposer."""
