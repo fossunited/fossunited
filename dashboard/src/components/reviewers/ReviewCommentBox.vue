@@ -47,16 +47,20 @@
         :rows="2"
         placeholder="Visible only to organizers and reviewers, not the proposer"
       />
+      <div class="flex justify-end">
+        <Button label="Add note" variant="solid" @click="getCustomAction()[0]()" />
+      </div>
     </div>
   </div>
 </template>
 <script setup>
 import { createResource, ErrorMessage, Tooltip, Textarea } from 'frappe-ui'
-import { ref, inject } from 'vue'
+import { ref, inject, watch } from 'vue'
 import CommentBox from '@/components/ui/CommentBox.vue'
 import { IconStar } from '@tabler/icons-vue'
 import { toast } from 'vue-sonner'
 import { useStorage } from '@vueuse/core'
+import { debounce } from 'lodash-es'
 
 const emits = defineEmits(['add:review', 'update:review'])
 
@@ -199,4 +203,29 @@ const getCustomAction = () => {
   }
   return [submitReview]
 }
+
+const autoSavePrivateComment = debounce((value) => {
+  createResource({
+    url: 'frappe.client.set_value',
+    makeParams() {
+      return {
+        doctype: 'FOSS Event CFP Review',
+        name: props.review.name,
+        fieldname: { private_comment: value },
+      }
+    },
+    auto: true,
+    onError(err) {
+      toast.error('Failed to save note', err.message)
+    },
+  })
+}, 800)
+
+watch(
+  () => draft.value.private_comment,
+  (value, oldValue) => {
+    if (!props.inEdit || value === oldValue) return
+    autoSavePrivateComment(value)
+  },
+)
 </script>

@@ -290,13 +290,12 @@
 
 
 {% macro render_reviews() %}
+{% if not hide_review %}
 <div class="d-flex flex-column gap-3">
   <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
 
   <div class="d-flex flex-column gap-2">
-    {% if hide_review %}
-      <div class="v3-text-tertiary text-sm">Reviews are hidden by the event organisers.</div>
-    {% elif not doc.reviews %}
+    {% if not doc.reviews %}
       <div class="v3-text-tertiary text-sm">No reviews yet.</div>
     {% else %}
       {% for review in doc.reviews %}
@@ -306,6 +305,7 @@
     {% endif %}
   </div>
 </div>
+{% endif %}
 {% endmacro %}
 
 {% block script %}
