@@ -101,7 +101,7 @@ def send_event_rsvp_reminder(event_id):
     chapter_email = chapter_email or "noreply@fossunited.org"
 
     event_name = escape_html(doc.event_name)
-    event_url = f"https://fossunited.org/{doc.route}"
+    event_url = f"{frappe.utils.get_url()}/{doc.route}"
     start_date_display = doc.event_start_date.strftime("%A, %-d %B %Y")
     start_time_display = doc.event_start_date.strftime("%-I:%M %p")
 
