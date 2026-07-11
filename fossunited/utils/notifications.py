@@ -77,6 +77,8 @@ for the broader community.</p><br/>
 
 
 def send_event_rsvp_reminder(event_id):
+    from frappe.utils import escape_html
+
     doc = frappe.get_doc(EVENT, event_id)
 
     email_groups = frappe.db.get_all(
@@ -84,7 +86,7 @@ def send_event_rsvp_reminder(event_id):
         filters={
             "reference_document": event_id,
             "document_type": EVENT,
-            "group_type": "Event Participants",
+            "group_type": ["in", ["Event Participants", "Accepted Proposers"]],
             "total_subscribers": [">", 0],
         },
         pluck="name",
@@ -98,22 +100,24 @@ def send_event_rsvp_reminder(event_id):
     )
     chapter_email = chapter_email or "noreply@fossunited.org"
 
+    event_name = escape_html(doc.event_name)
     event_url = f"https://fossunited.org/{doc.route}"
     start_date_display = doc.event_start_date.strftime("%A, %-d %B %Y")
     start_time_display = doc.event_start_date.strftime("%-I:%M %p")
 
     location_html = ""
     if doc.event_location:
-        if doc.map_link:
+        location = escape_html(doc.event_location)
+        if doc.map_link and doc.map_link.startswith(("https://", "http://")):
             location_html = (
-                f'<li><span>Location: </span><a href="{doc.map_link}">'
-                f"{doc.event_location}</a></li>"
+                f'<li><span>Location: </span><a href="{escape_html(doc.map_link)}">'
+                f"{location}</a></li>"
             )
         else:
-            location_html = f"<li><span>Location: </span>{doc.event_location}</li>"
+            location_html = f"<li><span>Location: </span>{location}</li>"
 
     subject = f"Reminder: {doc.event_name} is tomorrow!"
-    message = f"""<p>This is a friendly reminder that <a href="{event_url}"><strong>{doc.event_name}</strong></a> is happening tomorrow!</p>
+    message = f"""<p>This is a friendly reminder that <a href="{event_url}"><strong>{event_name}</strong></a> is happening tomorrow!</p>
 
 <ul>
   <li><span>Date: </span>{start_date_display}</li>
@@ -124,7 +128,7 @@ def send_event_rsvp_reminder(event_id):
 <p>We look forward to seeing you there. Check the
 <a href="{event_url}">event page</a> for the latest schedule and updates.</p>
 
-<p>Regards,<br>Team {doc.event_name}</p>"""
+<p>Regards,<br>Team {event_name}</p>"""
 
     newsletter = frappe.get_doc(
         {
