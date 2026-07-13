@@ -23,12 +23,21 @@
           <span>{{ speaker.name | e }}</span>
         </nav>
 
-        {# Speaker header card #}
+        {# Speaker header card. Avatar + name/designation link to the FOSS User Profile
+           when one exists; socials stay as their own links (no nested anchors). #}
         <div class="v3-card d-flex align-items-center gap-3 p-3">
-          <img class="v3-avatar-lg" alt="{{ speaker.name | e }}" src="{{ speaker.avatar }}" />
+          {% if speaker.profile_route %}
+            <a href="{{ speaker.profile_route }}" class="flex-shrink-0" aria-label="{{ speaker.name | e }} profile">
+              <img class="v3-avatar-lg" alt="{{ speaker.name | e }}" src="{{ speaker.avatar }}" />
+            </a>
+          {% else %}
+            <img class="v3-avatar-lg" alt="{{ speaker.name | e }}" src="{{ speaker.avatar }}" />
+          {% endif %}
           <div class="d-flex flex-column">
-            <h1 class="v3-text-primary text-xl mb-1">{{ speaker.name | e }}</h1>
-            {% if speaker.designation %}<span class="v3-text-secondary">{{ speaker.designation | e }}{% if speaker.organization %}, {{ speaker.organization | e }}{% endif %}</span>{% endif %}
+            {% if speaker.profile_route %}<a href="{{ speaker.profile_route }}" class="text-decoration-none d-flex flex-column">{% else %}<div class="d-flex flex-column">{% endif %}
+              <h1 class="v3-text-primary text-xl mb-1">{{ speaker.name | e }}</h1>
+              {% if speaker.designation %}<span class="v3-text-secondary">{{ speaker.designation | e }}{% if speaker.organization %}, {{ speaker.organization | e }}{% endif %}</span>{% endif %}
+            {% if speaker.profile_route %}</a>{% else %}</div>{% endif %}
             {% if speaker.socials %}
               <div class="d-flex align-items-center gap-3 mt-2">
                 {% for k, url in speaker.socials.items() %}

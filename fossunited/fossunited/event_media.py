@@ -49,12 +49,23 @@ def fetch_speaker_rows(parents, parenttype, parentfield="speakers"):
             "full_name",
             "photo",
             "linked_user",
+            "email",
             "designation",
             "organization",
             "social_link",
         ],
         order_by="idx asc",
     )
+    # When linked_user is blank, fall back to a profile whose User matches the
+    # speaker's email, so the same person merges across talks instead of splitting
+    # into a "name" / "name-2" pair. One bulk query.
+    emails = {r.email for r in rows if not r.linked_user and r.email}
+    by_email = {}
+    if emails:
+        by_email = {
+            p.user: p.name
+            for p in frappe.get_all(USER_PROFILE, {"user": ("in", list(emails))}, ["name", "user"])
+        }
     grouped = {}
     for r in rows:
         if r.full_name:
@@ -62,7 +73,7 @@ def fetch_speaker_rows(parents, parenttype, parentfield="speakers"):
                 {
                     "name": r.full_name,
                     "photo": r.photo or "",
-                    "user": r.linked_user or "",
+                    "user": r.linked_user or by_email.get(r.email or "", ""),
                     "designation": r.designation or "",
                     "organization": r.organization or "",
                     "social_link": r.social_link or "",
