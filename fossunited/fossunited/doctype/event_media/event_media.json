@@ -89,7 +89,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-07-09 21:54:03.088499",
+ "modified": "2026-07-10 22:55:35.190565",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "Event Media",
@@ -104,6 +104,19 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 4,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   }
