@@ -3320,6 +3320,10 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 /* ── Wide container (1200px — wider than v3-container at 840px) ── */
 .v3-page-wide { max-width: 1200px; margin-inline: auto; }
 
+/* Responsive page heading: scales with viewport so long titles fit narrow screens
+   without a single letter dropping to the next line. */
+.v3-page-title { font-size: clamp(1.5rem, 6vw, 2.5rem); line-height: 1.15; text-wrap: balance; }
+
 /* ── 3:1 + 1:1 flex column pairs ──────────────────────────── */
 .v3-flex-3 { flex: 3 1 0; min-width: min(100%, 480px); }
 .v3-flex-1 { flex: 1 1 0; min-width: min(100%, 280px); }
@@ -3628,7 +3632,8 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 
 /* ── ≤768px ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .v3-page-wide { padding-inline: 0.5rem; }
+  /* >=1rem so it covers BS4 .row's -15px gutters; 0.5rem let rows overflow the viewport. */
+  .v3-page-wide { padding-inline: 1rem; }
   .v3-col-3-1 { gap: 16px; }
   .footer-element-items { grid-template-columns: 1fr; gap: 2rem; }
   .footer-link-category { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }

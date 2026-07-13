@@ -12,7 +12,7 @@
 
       <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
         <header>
-          <h1 class="v3-text-primary mb-2">IndiaFOSS Speakers</h1>
+          <h1 class="v3-page-title v3-text-primary mb-2">IndiaFOSS Speakers</h1>
           <p class="v3-text-secondary mb-0">
             Everyone who has spoken at IndiaFOSS. <u>{{ total }}</u> speakers across all editions.
           </p>
@@ -55,7 +55,7 @@
 
             <div class="row" id="spkGrid">
               {% for s in speakers %}
-                <div class="spk-card-col col-6 mb-3"
+                <div class="spk-card-col col-12 col-sm-6 mb-3"
                      data-editions="{{ s.editions | join('|') }}"
                      data-types="{{ s.types | join('|') }}"
                      data-search="{{ (s.name ~ ' ' ~ s.designation ~ ' ' ~ s.organization) | lower | e }}">
