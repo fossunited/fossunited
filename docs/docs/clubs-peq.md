@@ -31,7 +31,7 @@ If you have an existing thread, please copy the questions below and answer them 
 7. Was the speaker provided to you by FOSS United?
 8. Mode of the event - In-person, Digital, Hybrid
 9. If Digital or Hybrid, share the livestream/recording link
-10. Please the event photos to [Ente](https://albums.ente.io/?t=ZBTJPWVETB#7bHLwchji4R1AbN3BmEq8vLsYRu1XVtajFc4pkKsyn3o) and share the link below
+10. Please the event photos to [Ente](https://albums.ente.com/?t=3HMDXMDODT#AEqDqWnFr7y5VgqXWiCGV5yHyWjDRW2WviJYjgWvdh8) and share the link below
 11. How many people attended your event?
 12. What went well at the meetup? Tell us about your team’s execution and attendee response
 13. What could be improved? Tell us about your team’s execution and attendee response
