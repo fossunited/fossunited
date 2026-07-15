@@ -4,6 +4,7 @@ import json
 import frappe
 
 from fossunited.doctype_ids import COMMUNITY_PARTNER, EVENT, EVENT_CFP
+from fossunited.fossunited.event_media import get_indiafoss_years
 from fossunited.fossunited.user_utils import fetch_user_profiles
 from fossunited.fossunited.utils import get_event_sponsors
 
@@ -32,7 +33,7 @@ def get_context(context):
     cfp = frappe.get_doc(EVENT_CFP, cfp_name) if cfp_name else frappe._dict()
 
     context.map_link = event.get("map_link") or event_data.get("map_link") or ""
-    context.cta_buttons = _get_cta_buttons(event, cfp)
+    context.cta_buttons = _get_cta_buttons(event, cfp, event_data.get("cta_buttons"))
     context.countdown_days, context.countdown_state = _get_countdown(event)
     context.event_date_str = _get_date_str(event)
     context.event_location = event.event_location or ""
@@ -90,20 +91,32 @@ def get_context(context):
     cfp_tl = _get_cfp_timeline_items(cfp, today)
     manual_labels = {item.get("label") for item in manual_tl}
     cfp_tl = [item for item in cfp_tl if item.get("label") not in manual_labels]
-    merged_tl = sorted(manual_tl + cfp_tl, key=lambda x: x.get("date", "9999"))
+    merged_tl = sorted(
+        manual_tl + cfp_tl,
+        key=lambda x: _parse_date(x.get("start")) or datetime.date.max,
+    )
     context.timeline = _enrich_timeline(merged_tl, today)
+    # Ticket availability is authoritative from the Event doctype (tickets_status),
+    tickets_status = "live" if event.get("tickets_status") == "Live" else "closed"
+    for item in context.timeline:
+        if item.get("url") == "/indiafoss/tickets":
+            item["resolved_status"] = tickets_status
+            item["deadline_fmt"] = ""
     context.progress_segments, context.progress_markers = _get_progress_bar(
         context.timeline, today
     )
-    context.urgency_text = next(
-        (
-            {"label": m["label"], "days": m["days_away"]}
-            for m in context.progress_markers
-            if m.get("is_urgent")
-        ),
-        None,
+    context.action_cards = _enrich_action_cards(
+        event_data.get("action_cards", []), context.timeline, today
     )
-    context.action_cards = event_data.get("action_cards", [])
+    # urgency banner: every deadline pin closing within 7 days (incl. today), soonest first
+    context.urgency_items = sorted(
+        (
+            {"label": m["full_label"], "days": m["days_away"]}
+            for m in context.progress_markers
+            if m.get("is_end") and m["days_away"] is not None and 0 <= m["days_away"] <= 7
+        ),
+        key=lambda x: x["days"],
+    )
     faqs = event_data.get("faqs", [])
     for faq in faqs:
         faq["answer"] = frappe.utils.md_to_html(faq.get("answer") or "")
@@ -120,7 +133,7 @@ def get_context(context):
     context.today_str = today.isoformat()
 
     context.event_docname = event_docname
-    context.years = _get_indiafoss_years()
+    context.years = get_indiafoss_years()
     context.current_year = 2026
     context.deck_link = event.get("deck_link") or ""
     context.community_deck_link = (
@@ -136,99 +149,103 @@ def get_context(context):
 
 
 def _empty_context(context):
-    context.cta_buttons = [{"label": "Get Tickets", "url": "", "primary": True}]
-    context.countdown_days, context.countdown_state = None, "upcoming"
-    context.event_date_str = "2026"
-    context.event_location = "Bengaluru"
-    context.map_link = ""
-    context.sponsors = []
-    context.partners = []
-    context.co_chairs = context.reviewers = context.devroom_managers = context.volunteers = []
-    context.devrooms = []
-    context.timeline = context.action_cards = context.faqs = context.topics = []
-    context.progress_segments = []
-    context.progress_markers = []
-    context.urgency_text = None
-    context.rewind = {}
-    context.footer_links = {}
-    context.today_str = frappe.utils.getdate(frappe.utils.today()).isoformat()
-    context.event_docname = ""
-    context.years = _get_indiafoss_years()
-    context.current_year = 2026
-    context.deck_link = ""
-    context.community_deck_link = ""
-    context.pagetitle = "IndiaFOSS 2026"
-    context.description = (
-        "The 6th Edition of the FOSS and Digital Commons Festival by the FOSS United community"
+    context.update(
+        {
+            k: []
+            for k in (
+                "sponsors",
+                "partners",
+                "co_chairs",
+                "reviewers",
+                "devroom_managers",
+                "volunteers",
+                "devrooms",
+                "timeline",
+                "action_cards",
+                "faqs",
+                "topics",
+                "progress_segments",
+                "progress_markers",
+            )
+        }
+    )
+    context.update(
+        cta_buttons=[_btn("Get Tickets", "", primary=True)],
+        countdown_days=None,
+        countdown_state="upcoming",
+        event_date_str="2026",
+        event_location="Bengaluru",
+        map_link="",
+        urgency_items=[],
+        rewind={},
+        footer_links={},
+        today_str=frappe.utils.getdate(frappe.utils.today()).isoformat(),
+        event_docname="",
+        years=get_indiafoss_years(),
+        current_year=2026,
+        deck_link="",
+        community_deck_link="",
+        pagetitle="IndiaFOSS 2026",
+        description="The 6th Edition of the FOSS and Digital Commons Festival by the FOSS United community",
     )
 
 
-def _enrich_timeline(items, today):
-    for item in items:
-        try:
-            d = frappe.utils.getdate(item["date"])
-            item["day_num"] = d.strftime("%-d")
-            item["month_str"] = d.strftime("%b")
-        except Exception:
-            item["day_num"] = item.get("date", "")[8:10].lstrip("0") or "?"
-            item["month_str"] = ""
-        manual = (item.get("status") or "").lower()
-        if manual == "none":
-            item["resolved_status"] = "none"
-        elif manual in ("live", "extended", "closing_soon", "closed"):
-            item["resolved_status"] = manual
-        else:
-            # auto-derive from date range if end_date provided
-            end_str = item.get("end_date") or ""
-            if end_str:
-                try:
-                    start_d = frappe.utils.getdate(item["date"])
-                    end_d = frappe.utils.getdate(end_str)
-                    if today > end_d:
-                        item["resolved_status"] = "closed"
-                    elif today >= start_d:
-                        days_left = (end_d - today).days
-                        is_point = start_d == end_d
-                        item["resolved_status"] = (
-                            "closing_soon" if (is_point and days_left <= 7) else "live"
-                        )
-                    else:
-                        item["resolved_status"] = ""
-                except Exception:
-                    item["resolved_status"] = ""
-            else:
-                item["resolved_status"] = ""
+# Progress bar spans the run-up to the event.
+BAR_START = datetime.date(2026, 4, 1)
+BAR_END = datetime.date(2026, 9, 26)
 
-        # format extended_date for display (e.g. "20 Jun")
-        # use explicit extended_date from JSON if set, else fall back to date
-        if item["resolved_status"] == "extended":
-            raw_ext = item.get("extended_date") or item["date"]
-            try:
-                ext_d = frappe.utils.getdate(raw_ext)
-                item["extended_date"] = ext_d.strftime("%-d %b")
-                days_left = (ext_d - today).days
-                item["also_closing_soon"] = 0 <= days_left <= 7
-            except Exception:
-                item["extended_date"] = ""
-                item["also_closing_soon"] = False
+
+def _enrich_timeline(items, today):
+    """
+    Add display fields to each item in place, all derived from its [start, end]
+    window vs today. The only thing to hand-maintain is the two dates.
+
+    day_num/month_str : start-date badge.
+    deadline_fmt      : end date, shown in the status badge ("Closed . 15 Jul").
+    resolved_status   : "" (milestone / not yet open) | live | closing | closed.
+    closing_days      : days until end when closing (<= 7), else None.
+    extended          : cosmetic passthrough -> badge reads "Extended".
+
+    An item with no `end` is a milestone (a single dated point): no status badge.
+    To extend a deadline, just edit `end` -- there is no separate override.
+    """
+    for item in items:
+        start_d = _parse_date(item.get("start"))
+        end_d = _parse_date(item.get("end"))
+
+        item["day_num"] = (
+            start_d.strftime("%-d")
+            if start_d
+            else (item.get("start", "")[8:10].lstrip("0") or "?")
+        )
+        item["month_str"] = start_d.strftime("%b") if start_d else ""
+        item["deadline_fmt"] = end_d.strftime("%-d %b") if end_d else ""
+        item["closing_days"] = None
+        item["extended"] = bool(item.get("extended"))
+
+        if not start_d or not end_d or today < start_d:
+            item["resolved_status"] = ""  # milestone, or window not yet open
+        elif today > end_d:
+            item["resolved_status"] = "closed"
         else:
-            item["also_closing_soon"] = False
+            days_left = (end_d - today).days
+            if days_left <= 7:
+                item["resolved_status"] = "closing"
+                item["closing_days"] = days_left
+            else:
+                item["resolved_status"] = "live"
     return items
 
 
 def _get_progress_bar(timeline, today):
-    """Week-based progress bar Apr 1 → Sep 26, 2026."""
-    bar_start = datetime.date(2026, 4, 1)
-    bar_end = datetime.date(2026, 9, 26)
-    total_days = (bar_end - bar_start).days  # 178
-
-    today_offset = (today - bar_start).days
-    total_weeks = -(-total_days // 7)  # ceil
+    """Week-based bar Apr-Sep 2026 + pins from marker:true items (start + deadline)."""
+    total_days = (BAR_END - BAR_START).days
+    today_offset = (today - BAR_START).days
 
     segments = []
-    for w in range(total_weeks):
-        week_start = bar_start + datetime.timedelta(days=w * 7)
-        week_end = min(bar_start + datetime.timedelta(days=w * 7 + 6), bar_end)
+    for w in range(-(-total_days // 7)):  # ceil weeks
+        week_start = BAR_START + datetime.timedelta(days=w * 7)
+        week_end = min(BAR_START + datetime.timedelta(days=w * 7 + 6), BAR_END)
         if today_offset > w * 7 + 6:
             cls = "past"
         elif today_offset >= w * 7:
@@ -242,95 +259,101 @@ def _get_progress_bar(timeline, today):
             }
         )
 
+    # an item shows on the bar when it has a `pin` chip label: a start pin, plus an
+    # end pin (ti-ban rendered in template) when it has an `end` date.
+    pins = []
+    for item in timeline:
+        pin_text = (item.get("pin") or "").strip()
+        start_d = _parse_date(item.get("start")) if pin_text else None
+        if not start_d:
+            continue
+        full_label = item.get("label", "")
+        pins.append(
+            {
+                "date": start_d,
+                "label": pin_text,
+                "full_label": full_label,
+                "tooltip": item.get("description") or full_label,
+                "is_end": False,
+            }
+        )
+        end_d = _parse_date(item.get("end"))
+        if end_d:
+            pins.append(
+                {
+                    "date": end_d,
+                    "label": pin_text,
+                    "full_label": full_label,
+                    "tooltip": f"{full_label} Deadline",
+                    "is_end": True,
+                }
+            )
+    pins.sort(key=lambda p: p["date"])
+
+    # urgent = next deadline pin (incl. today), else next pin, within 30 days
     next_idx = next(
-        (
-            i
-            for i, item in enumerate(timeline)
-            if frappe.utils.getdate(item.get("date", "1900-01-01")) > today
-        ),
-        None,
+        (i for i, p in enumerate(pins) if p["is_end"] and p["date"] >= today),
+        next((i for i, p in enumerate(pins) if p["date"] >= today), None),
     )
 
     markers = []
-    last_above_pct = -100.0
-    last_below_pct = -100.0
-    for idx, item in enumerate(timeline):
-        try:
-            d = frappe.utils.getdate(item["date"])
-            pct = max(0.0, min(100.0, (d - bar_start).days * 100.0 / total_days))
-            days_away = (d - today).days
-            is_past = d < today
-            is_urgent = idx == next_idx and 0 <= days_away <= 30
-            above = (pct - last_above_pct) >= 15
-            if above:
-                last_above_pct = pct
-            compact = False
-            if not above:
-                compact = (pct - last_below_pct) < 15
-                if not compact:
-                    last_below_pct = pct
-            markers.append(
-                {
-                    "label": item["label"],
-                    "description": item.get("description", ""),
-                    "pct": round(pct, 1),
-                    "is_past": is_past,
-                    "is_urgent": is_urgent,
-                    "above": above,
-                    "compact": compact,
-                    "days_away": days_away if is_urgent else None,
-                }
-            )
-        except Exception:
-            pass
-
+    last_above_pct = last_below_pct = -100.0
+    for idx, pin in enumerate(pins):
+        pct = max(0.0, min(100.0, (pin["date"] - BAR_START).days * 100.0 / total_days))
+        days_away = (pin["date"] - today).days
+        # alternate crowded labels above/below the bar to avoid overlap
+        above = (pct - last_above_pct) >= 15
+        if above:
+            last_above_pct = pct
+        compact = not above and (pct - last_below_pct) < 15
+        if not above and not compact:
+            last_below_pct = pct
+        is_urgent = idx == next_idx and 0 <= days_away <= 30
+        markers.append(
+            {
+                "label": pin["label"],
+                "is_end": pin["is_end"],
+                "full_label": pin["full_label"],
+                "description": pin["tooltip"],
+                "pct": round(pct, 1),
+                "is_past": pin["date"] < today,
+                "is_urgent": is_urgent,
+                "above": above,
+                "compact": compact,
+                "days_away": days_away,
+            }
+        )
     return segments, markers
 
 
-def _get_cta_buttons(event, cfp):
+def _btn(label, url, primary=False):
+    return {"label": label, "url": url, "primary": primary}
+
+
+def _get_cta_buttons(event, cfp, custom=None):
+    if custom:
+        return [_btn(b.get("label", ""), b.get("url", ""), bool(b.get("primary"))) for b in custom]
+
+    # Get Tickets appears only while tickets_status is Live; when closed it drops
+    # out and the next button in the cascade is promoted to primary.
+    tickets = _btn("Get Tickets", "/indiafoss/tickets", primary=True)
+    tickets_live = event.get("tickets_status") == "Live"
+
     if event.status == "Concluded" and event.show_photos:
         return [
-            {"label": "See Photos", "url": "#photos", "primary": True},
-            {"label": "See Schedule", "url": "/indiafoss/schedule", "primary": False},
+            _btn("See Photos", "#photos", primary=True),
+            _btn("See Schedule", "/indiafoss/schedule"),
         ]
     if event.show_schedule:
-        return [
-            {"label": "See Schedule", "url": "/indiafoss/schedule", "primary": True},
-            {
-                "label": "Get Tickets",
-                "url": "/indiafoss/tickets",
-                "primary": False,
-            },
-        ]
+        base = [_btn("See Schedule", "/indiafoss/schedule", primary=True)]
+        return [*base, {**tickets, "primary": False}] if tickets_live else base
     if cfp and cfp.status == "Closed":
-        return [
-            {
-                "label": "Get Tickets",
-                "url": "/indiafoss/tickets",
-                "primary": True,
-            },
-            {
-                "label": "View Proposals",
-                "url": "/indiafoss/talks",
-                "primary": False,
-            },
-        ]
-    buttons = [
-        {
-            "label": "Get Tickets",
-            "url": "/indiafoss/tickets",
-            "primary": True,
-        }
-    ]
+        proposals = _btn("View Proposals", "/indiafoss/talks")
+        return [tickets, proposals] if tickets_live else [{**proposals, "primary": True}]
     if cfp and cfp.status == "Live":
-        buttons.append(
-            {
-                "label": "Propose a Talk",
-                "url": "/indiafoss/cfp",
-                "primary": False,
-            }
-        )
-    return buttons
+        propose = _btn("Propose a Talk", "/indiafoss/cfp")
+        return [tickets, propose] if tickets_live else [{**propose, "primary": True}]
+    return [tickets] if tickets_live else []
 
 
 def _get_countdown(event):
@@ -357,41 +380,77 @@ def _get_date_str(event):
 
 
 def _get_cfp_timeline_items(cfp, today):
-    """Auto-generate CFP timeline items from EVENT_CFP. Uses end_date for auto live/closed."""
-    if not cfp:
+    """Single CFP window (opens -> deadline) auto-derived from EVENT_CFP. The `pin`
+    puts it on the bar (start pin + deadline pin); status auto-derives from dates.
+    Override by adding a JSON timeline item labeled 'CFP' (same-label manual wins)."""
+    if not cfp or not cfp.deadline:
         return []
-    items = []
-    deadline_iso = frappe.utils.getdate(cfp.deadline).isoformat() if cfp.deadline else ""
-
-    if cfp.creation:
-        items.append(
-            {
-                "label": "CFP Opens",
-                "date": frappe.utils.getdate(cfp.creation).isoformat(),
-                "end_date": deadline_iso,
-                "status": "",
-            }
-        )
-
-    if cfp.deadline:
-        items.append(
-            {
-                "label": "CFP Deadline",
-                "date": deadline_iso,
-                "end_date": deadline_iso,
-                "status": "",
-            }
-        )
-
-    return items
-
-
-def _get_indiafoss_years():
     return [
-        {"year": "2026", "url": "/indiafoss/2026", "name": "IndiaFOSS 2026"},
-        {"year": "2025", "url": "/indiafoss/2025", "name": "IndiaFOSS 2025"},
-        {"year": "2024", "url": "/indiafoss/2024", "name": "IndiaFOSS 2024"},
-        {"year": "2023", "url": "/indiafoss/2023", "name": "IndiaFOSS 3.0"},
-        {"year": "2022", "url": "/indiafoss/2022", "name": "IndiaFOSS 2.0"},
-        {"year": "2021", "url": "/indiafoss/2021", "name": "IndiaOS"},
+        {
+            "label": "CFP",
+            "pin": "CFP",
+            "start": frappe.utils.getdate(cfp.creation or cfp.deadline).isoformat(),
+            "end": frappe.utils.getdate(cfp.deadline).isoformat(),
+        }
     ]
+
+
+def _enrich_action_cards(explicit_cards, timeline, today):
+    """Explicit JSON cards + timeline items flagged card:true (deduped by label)."""
+    cards = []
+    for card in explicit_cards:
+        card = dict(card)
+        if card.get("deadline"):
+            card["resolved_badge"], card["badge_state"], card["clickable"] = _deadline_badge(
+                _parse_date(card["deadline"]), today
+            )
+        else:
+            raw = card.get("badge") or ""
+            card["resolved_badge"] = raw
+            card["badge_state"] = "live" if raw.lower() == "live" else ""
+            card["clickable"] = True
+        cards.append(card)
+
+    seen = {c["label"] for c in cards}
+    for item in timeline:
+        if not item.get("card") or item.get("label") in seen:
+            continue
+        deadline = item.get("end")
+        badge, state, clickable = _deadline_badge(_parse_date(deadline), today)
+        cards.append(
+            {
+                "label": item.get("label", ""),
+                "url": item.get("url") or "",
+                "icon": item.get("icon") or "",
+                "description": item.get("description") or "",
+                "resolved_badge": badge,
+                "badge_state": state,
+                "clickable": clickable if deadline else True,
+            }
+        )
+    return cards
+
+
+def _deadline_badge(deadline, today):
+    """(badge_text, badge_state, clickable) for an effective deadline date."""
+    if not deadline:
+        return None, None, True
+    days = (deadline - today).days
+    if days < 0:
+        return "Closed", "closed", False
+    if days == 0:
+        return "Closing today", "warning", True
+    if days <= 7:
+        unit = "day" if days == 1 else "days"
+        return f"Closing in {days} {unit}", "warning", True
+    return "Live", "live", True
+
+
+def _parse_date(value):
+    """frappe.utils.getdate() or None on empty/invalid input."""
+    if not value:
+        return None
+    try:
+        return frappe.utils.getdate(value)
+    except Exception:
+        return None

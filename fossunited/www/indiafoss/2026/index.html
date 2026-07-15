@@ -112,7 +112,7 @@
                        data-placement="top"
                        data-container="body"
                        title="{{ marker.description or marker.label }}">
-                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}</span>
+                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}{% if marker.is_end %} <i class="ti ti-ban" aria-hidden="true"></i>{% endif %}</span>
                     <span class="pb-tick-down"></span>
                   </div>
                 {% endfor %}
@@ -138,7 +138,7 @@
                        data-container="body"
                        title="{{ marker.description or marker.label }}">
                     <span class="pb-tick-up"></span>
-                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}</span>
+                    <span class="pb-chip">{{ (marker.label.split()[0] ~ '…') if marker.compact else marker.label }}{% if marker.is_end %} <i class="ti ti-ban" aria-hidden="true"></i>{% endif %}</span>
                   </div>
                 {% endfor %}
               </div>
@@ -148,10 +148,18 @@
 
             {# Bottom row: urgency text (left) + Full Timeline toggle (right) #}
             <div class="d-flex align-items-center justify-content-between gap-3">
-              {% if urgency_text %}
-                <p class="text-sm mb-0 semi-bold" style="color: var(--v3-error-text);">
-                  {{ urgency_text.label }} closing in <strong>{{ urgency_text.days }}</strong> {{ 'day' if urgency_text.days == 1 else 'days' }}
-                </p>
+              {% if urgency_items %}
+                <div class="d-flex flex-column gap-1">
+                  {% for u in urgency_items %}
+                    <p class="text-sm mb-0 semi-bold" style="color: var(--v3-error-text);">
+                      {% if u.days == 0 %}
+                        <strong>{{ u.label }}</strong>: closing today
+                      {% else %}
+                        {{ u.label }} closing in <strong>{{ u.days }}</strong> {{ 'day' if u.days == 1 else 'days' }}
+                      {% endif %}
+                    </p>
+                  {% endfor %}
+                </div>
               {% else %}
                 <span></span>
               {% endif %}
@@ -185,27 +193,23 @@
                   {% else %}
                     <span class="tl-name">{{ item.label }}</span>
                   {% endif %}
+                  {% if item.extended and st in ('live', 'closing') %}
+                    <span class="v3-tag v3-status--warning flex-shrink-0">
+                      <i class="ti ti-clock-edit" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Extended
+                    </span>
+                  {% endif %}
                   {% if st == 'live' %}
                     <span class="v3-tag v3-tag--success flex-shrink-0">
                       <span class="v3-status-dot" aria-hidden="true"></span>Live
                     </span>
-                  {% elif st == 'closing_soon' %}
-                    <span class="v3-tag v3-status--warning flex-shrink-0">
-                      <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closing soon
-                    </span>
-                  {% elif st == 'extended' and item.get('extended_date') %}
+                  {% elif st == 'closing' %}
                     <span class="v3-tag v3-status--warning flex-shrink-0">
                       <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>
-                      Extended till {{ item.extended_date }}
+                      {% if item.closing_days == 0 %}Closing today{% else %}Closing in {{ item.closing_days }} {{ 'day' if item.closing_days == 1 else 'days' }}{% endif %}{% if item.deadline_fmt %} &middot; {{ item.deadline_fmt }}{% endif %}
                     </span>
-                    {% if item.get('also_closing_soon') %}
-                    <span class="v3-tag v3-status--warning flex-shrink-0">
-                      <i class="ti ti-alert-triangle" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closing soon
-                    </span>
-                    {% endif %}
                   {% elif st == 'closed' %}
                     <span class="v3-tag v3-status--error flex-shrink-0">
-                      <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed
+                      <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed{% if item.deadline_fmt %} &middot; {{ item.deadline_fmt }}{% endif %}
                     </span>
                   {% endif %}
                 </div>
@@ -223,13 +227,15 @@
           <div class="v3-action-wrap">
             <div class="v3-action-grid" role="list" aria-label="Event resources">
               {% for card in action_cards %}
-                {% set badge_lower = (card.badge or '') | lower %}
-                {% set is_active = badge_lower == 'live' %}
+                {% set badge = card.get('resolved_badge') or '' %}
+                {% set state = card.get('badge_state') or '' %}
+                {% set is_closed = (card.get('clickable') == false) %}
                 {% if card.url %}
                   <a href="{{ card.url }}"
                      class="v3-action-card"
                      role="listitem"
-                     aria-label="{{ card.label }}{% if card.badge %} — {{ card.badge }}{% endif %}">
+                     {% if is_closed %}style="pointer-events:none;opacity:0.55;" aria-disabled="true" tabindex="-1"{% endif %}
+                     aria-label="{{ card.label }}{% if badge %} — {{ badge }}{% endif %}">
                 {% else %}
                   <div class="v3-action-card"
                        role="listitem"
@@ -238,25 +244,33 @@
                 {% endif %}
                   <div class="v3-action-card-top">
                     <i class="ti {{ card.icon or 'ti-arrow-right' }} v3-action-card-icon text-xl" aria-hidden="true"></i>
-                    {% if is_active %}
-                      <span class="v3-tag v3-tag--success flex-shrink-0">
-                        <span class="v3-status-dot" aria-hidden="true"></span>{{ card.badge }}
-                      </span>
+                    {% if badge %}
+                      {% if state == 'live' %}
+                        <span class="v3-tag v3-tag--success flex-shrink-0">
+                          <span class="v3-status-dot" aria-hidden="true"></span>{{ badge }}
+                        </span>
+                      {% elif state == 'warning' %}
+                        <span class="v3-tag v3-status--warning flex-shrink-0">
+                          <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>{{ badge }}
+                        </span>
+                      {% elif state == 'closed' %}
+                        <span class="v3-tag v3-status--error flex-shrink-0">
+                          <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>{{ badge }}
+                        </span>
+                      {% else %}
+                        <span class="v3-tag flex-shrink-0">{{ badge }}</span>
+                      {% endif %}
                     {% endif %}
                   </div>
                   <div>
                     <div class="v3-action-card-title-row">
                       <span class="v3-action-card-title">{{ card.label }}</span>
-                      {% if card.url %}
+                      {% if card.url and not is_closed %}
                         <i class="ti ti-chevron-right v3-action-card-arrow" aria-hidden="true"></i>
                       {% endif %}
                     </div>
-                    {% if card.deadline %}
-                      <span class="v3-action-card-sub">Due {{ frappe.utils.format_date(card.deadline, format_string='dd MMM yyyy') }}</span>
-                    {% elif card.get('description', '') %}
+                    {% if card.get('description') %}
                       <span class="v3-action-card-sub">{{ card.description }}</span>
-                    {% elif card.badge and badge_lower != 'live' %}
-                      <span class="v3-action-card-sub">{{ card.badge }}</span>
                     {% elif not card.url %}
                       <span class="v3-action-card-sub">Coming soon</span>
                     {% endif %}
