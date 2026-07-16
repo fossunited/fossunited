@@ -53,7 +53,9 @@ class RazorpayPaymentFactory(BaseFactory[RazorpayPayment]):
         )
         amount = float(tier.price) * len(attendees)
         if paid_tshirts_available:
-            num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+            num_tshirts = sum(
+                1 for a in attendees if a.get("wants_tshirt") and not bool(tier.tshirt_included)
+            )
             amount += float(tshirt_price or 0) * num_tshirts
 
         meta_data = {
@@ -92,7 +94,16 @@ class RazorpayPaymentFactory(BaseFactory[RazorpayPayment]):
             price = frappe.db.get_value(TICKET_TIER, tier_name, "price")
             amount += float(price) * int(count)
         if paid_tshirts_available:
-            num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+            tier_tshirt_included = {
+                tier_name: bool(frappe.db.get_value(TICKET_TIER, tier_name, "tshirt_included"))
+                for tier_name in tier_counts.keys()
+            }
+            num_tshirts = sum(
+                1
+                for a in attendees
+                if a.get("wants_tshirt")
+                and not tier_tshirt_included.get(a.get("ticket_type"), False)
+            )
             amount += float(tshirt_price or 0) * num_tshirts
 
         meta_data = {

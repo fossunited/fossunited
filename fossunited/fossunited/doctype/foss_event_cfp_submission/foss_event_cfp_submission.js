@@ -34,7 +34,9 @@ const render_talk_categories = (frm) => {
 
 // --- Role helpers ---
 
-const is_system_manager = () => frappe.user.has_role('System Manager')
+const is_system_manager = () =>
+	frappe.user.has_role("System Manager") ||
+	frappe.user.has_role("IndiaFOSS Chair")
 const is_chapter_team_member = () => frappe.user.has_role('Chapter Team Member')
 const is_cfp_reviewer = () => frappe.user.has_role('CFP Reviewer')
 

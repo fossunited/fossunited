@@ -37,11 +37,6 @@ class FOSSEventRSVP(WebsiteGenerator):
 
     def before_save(self):
         self.set_route()
-        self.enable_rsvp_tab()
-
-    def on_update(self):
-        if int(self.rsvp_count) >= int(self.max_rsvp_count):
-            self.db_set("is_published", 0)
 
     def get_context(self, context):
         context.event = frappe.get_doc(EVENT, self.event)
@@ -95,14 +90,13 @@ class FOSSEventRSVP(WebsiteGenerator):
                 },
             )
 
+        context.event_concluded = context.event.status == "Concluded"
+        context.rsvp_full = self.is_full()
         context.no_cache = 1
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
         self.route = f"{event_route}/rsvp"
-
-    def enable_rsvp_tab(self):
-        frappe.db.set_value(EVENT, self.event, "show_rsvp", 1)
 
     def get_custom_questions(self):
         custom_questions = []
@@ -118,6 +112,12 @@ class FOSSEventRSVP(WebsiteGenerator):
                 }
             )
         return custom_questions
+
+    def is_full(self) -> bool:
+        if not self.max_rsvp_count:
+            return False
+        current_count = frappe.db.count(RSVP_RESPONSE, {"linked_rsvp": self.name})
+        return current_count >= self.max_rsvp_count
 
     def check_if_already_rsvp(self):
         return frappe.db.exists(

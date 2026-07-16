@@ -61,18 +61,15 @@
 </template>
 <script setup>
 import { inject } from 'vue'
-import { Avatar, Dropdown, createResource } from 'frappe-ui'
+import { Avatar, Dropdown } from 'frappe-ui'
 import FossUnitedLogo from '@/components/FossUnitedLogo.vue'
+import { fetchSessionProfile, sessionProfileResource } from '@/data/session'
 
 const session = inject('$session')
 
-const user_profile = createResource({
-  url: 'fossunited.api.dashboard.get_session_user_profile',
-})
+const user_profile = sessionProfileResource
 
-if (session.isLoggedIn && session.user != 'Guest' && session.user != 'Administrator') {
-  user_profile.fetch()
-}
+fetchSessionProfile()
 
 const redirectToProfile = () => {
   window.location.pathname = '/me'

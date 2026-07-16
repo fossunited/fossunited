@@ -1,32 +1,28 @@
 import frappe
-from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.api.checkins import checkin_attendee
-from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET
-from fossunited.tests.utils import (
-    insert_test_chapter,
-    insert_test_event,
-    insert_test_ticket,
+from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TIER
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FOSSEventTicketFactory,
+    RazorpayPaymentFactory,
+    UserFactory,
 )
+from fossunited.tests.factories.razorpay_payment_factory import _make_attendee
 
 
 class TestFOSSEventTicket(FrappeTestCase):
     def setUp(self):
-        self.core_team_email = "test1@example.com"
-        self.chapter = insert_test_chapter(members=[self.core_team_email])
-        self.event = insert_test_event(
-            chapter=self.chapter,
-            is_paid_event=True,
-            tickets_status="Live",
-            tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Test",
-                    "price": 100,
-                    "maximum_tickets": 5,
-                }
-            ],
+        self.team_member_user = UserFactory.create("with_foss_website_user_role")
+        self.chapter = FOSSChapterFactory.create(
+            "with_members", members=[self.team_member_user.name]
+        )
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tiers=[{"enabled": 1, "title": "Test", "price": 100, "maximum_tickets": 3}],
         )
 
     def tearDown(self):
@@ -35,26 +31,14 @@ class TestFOSSEventTicket(FrappeTestCase):
         frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
 
     def test_checkin(self):
-        fake = Faker()
-
         # Given that a ticket is created for an event
-        ticket = frappe.get_doc(
-            {
-                "doctype": EVENT_TICKET,
-                "event": self.event.name,
-                "full_name": fake.name(),
-                "email": fake.email(),
-                "tier": "General",
-            }
-        )
-        ticket.insert(ignore_permissions=True)
-        ticket.reload()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
 
         # There should be no check-ins for that event
         self.assertFalse(ticket.check_ins)
 
         # Set the user as a chapter member
-        frappe.set_user(self.core_team_email)
+        frappe.set_user(self.team_member_user.name)
 
         # When the user checks in the attendee
         checkin_attendee(self.event.name, ticket.as_dict())
@@ -69,24 +53,14 @@ class TestFOSSEventTicket(FrappeTestCase):
             checkin_attendee(self.event.name, ticket.as_dict())
 
     def test_checkin_as_non_chapter_member(self):
-        fake = Faker()
-
         # Given that a ticket is created for an event
-        ticket = frappe.get_doc(
-            {
-                "doctype": EVENT_TICKET,
-                "event": self.event.name,
-                "full_name": fake.name(),
-                "email": fake.email(),
-                "tier": "General",
-            }
-        )
-        ticket.insert(ignore_permissions=True)
-        ticket.reload()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
 
         self.assertFalse(ticket.check_ins)
-        # Set the user as a random user
-        frappe.set_user("test2@example.com")
+
+        # Set the user as a non-member
+        non_member = UserFactory.create()
+        frappe.set_user(non_member.name)
 
         # When the user checks in the attendee
         # Then the user should not have permission to check-in the attendee
@@ -100,7 +74,7 @@ class TestFOSSEventTicket(FrappeTestCase):
         # When a ticket is created for this event
         # Then an error must be thrown
         with self.assertRaises(frappe.PermissionError):
-            insert_test_ticket(event=self.event.name)
+            FOSSEventTicketFactory.create(event=self.event.name)
 
     def test_ticket_creation(self):
         # Given an event
@@ -109,12 +83,12 @@ class TestFOSSEventTicket(FrappeTestCase):
         self.event.save()
 
         # Then a ticket for this event should be created without any problem
-        ticket = insert_test_ticket(event=self.event.name)
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
         ticket.delete(force=True)
 
     def test_ticket_tier_closing(self):
         # Given an event with a ticket tier
-        tier = self.event.get("tiers")[0]
+        tier = self.event.tiers[0]
 
         # Make sure this tier is enabled
         self.assertTrue(tier.enabled)
@@ -134,16 +108,16 @@ class TestFOSSEventTicket(FrappeTestCase):
         # When maximum number of tickets are created of this tier type
         tickets = []
         for _ in range(tier.maximum_tickets):
-            _ticket = insert_test_ticket(
+            ticket = FOSSEventTicketFactory.create(
                 event=self.event.name,
                 tier=tier.title,
             )
-            tickets.append(_ticket)
+            tickets.append(ticket)
 
         self.event.reload()
 
         # Then the tier should be disabled
-        tier = self.event.get("tiers")[0]
+        tier = self.event.tiers[0]
         self.assertEqual(tier.enabled, 0)
 
         for ticket in tickets:
@@ -156,7 +130,7 @@ class TestFOSSEventTicket(FrappeTestCase):
 
         attendee_email = "test4@example.com"
         # When a ticket is created with attendee's email
-        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=attendee_email)
         ticket.subscribe_chapter_mailing = 1
         ticket.save()
         # Then the email should be added to an email group linked to event for participants
@@ -180,8 +154,8 @@ class TestFOSSEventTicket(FrappeTestCase):
     def test_remove_from_email_group_on_unsubscribe(self):
         attendee_email = "test4@example.com"
 
-        # Given: Ticket created with subscription ON (default behavior)
-        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+        # Given: Ticket created with subscription ON
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=attendee_email)
         ticket.subscribe_chapter_mailing = 1
         ticket.save()
 
@@ -244,8 +218,8 @@ class TestFOSSEventTicket(FrappeTestCase):
     def test_resub_from_email_group(self):
         attendee_email = "test4@example.com"
 
-        # Insert with default subscription (subscribe_chapter_mailing=1)
-        ticket = insert_test_ticket(event=self.event.name, email=attendee_email)
+        # Insert with default subscription
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=attendee_email)
 
         ticket.subscribe_chapter_mailing = 0
         ticket.handle_add_to_email_group()
@@ -277,3 +251,90 @@ class TestFOSSEventTicket(FrappeTestCase):
         )
 
         ticket.delete(force=True)
+
+
+class TestFOSSEventTicketTshirt(FrappeTestCase):
+    def setUp(self):
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create(
+            "with_paid_tickets",
+            chapter=self.chapter.name,
+            tiers=[
+                {
+                    "enabled": 1,
+                    "title": "Premium",
+                    "price": 500,
+                    "maximum_tickets": 10,
+                    "tshirt_included": 1,
+                },
+                {"enabled": 1, "title": "Standard", "price": 100, "maximum_tickets": 10},
+            ],
+            paid_tshirts_available=1,
+            t_shirt_price=200,
+        )
+        tiers = frappe.get_all(
+            TICKET_TIER, {"parent": self.event.name, "parenttype": EVENT}, ["name", "title"]
+        )
+        self.tier_premium = next(t for t in tiers if t.title == "Premium")
+        self.tier_standard = next(t for t in tiers if t.title == "Standard")
+
+    def tearDown(self):
+        frappe.set_user("Administrator")
+        for ticket in frappe.get_all(EVENT_TICKET, {"event": self.event.name}):
+            frappe.delete_doc(EVENT_TICKET, ticket.name, force=True)
+        frappe.delete_doc(EVENT, self.event.name, force=True)
+        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
+
+    def test_no_tshirt_nulls_tshirt_size(self):
+        # Attendee sends wants_tshirt=0 with a stale tshirt_size — backend must null it
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=0, tshirt_size="XL"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 0)
+        self.assertFalse(ticket.tshirt_size)
+
+    def test_included_tier_forces_wants_tshirt_on_ticket(self):
+        # Tier has tshirt_included=1 — backend forces wants_tshirt=1 even if frontend sends 0
+        attendee = _make_attendee(
+            ticket_type=self.tier_premium.name, wants_tshirt=0, tshirt_size="M"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_premium.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "M")
+
+    def test_paid_tshirt_addon_records_size_on_ticket(self):
+        # Attendee opts into paid tshirt addon — size must be recorded on ticket
+        attendee = _make_attendee(
+            ticket_type=self.tier_standard.name, wants_tshirt=1, tshirt_size="L"
+        )
+        payment = RazorpayPaymentFactory.create(
+            "with_multi_tier",
+            event=self.event.name,
+            tier_counts={self.tier_standard.name: 1},
+            attendees=[attendee],
+        )
+        payment.status = "Captured"
+        payment.save()
+
+        ticket = frappe.get_doc(EVENT_TICKET, {"razorpay_payment": payment.name})
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "L")

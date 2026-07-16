@@ -3,27 +3,20 @@ from faker import Faker
 from frappe.tests.utils import FrappeTestCase
 
 from fossunited.doctype_ids import CHAPTER, EVENT, EVENT_TICKET, TICKET_TRANSFER
-from fossunited.tests.utils import insert_test_chapter, insert_test_event, insert_test_ticket
+from fossunited.tests.factories import (
+    FOSSChapterEventFactory,
+    FOSSChapterFactory,
+    FOSSEventTicketFactory,
+    FOSSEventTicketTransferFactory,
+)
 
 fake = Faker()
 
 
 class TestFOSSEventTicketTransfer(FrappeTestCase):
     def setUp(self):
-        self.chapter = insert_test_chapter()
-        self.event = insert_test_event(
-            chapter=self.chapter,
-            is_paid_event=True,
-            tickets_status="Live",
-            tiers=[
-                {
-                    "enabled": 1,
-                    "title": "Test",
-                    "price": 100,
-                    "maximum_tickets": 5,
-                }
-            ],
-        )
+        self.chapter = FOSSChapterFactory.create()
+        self.event = FOSSChapterEventFactory.create("with_paid_tickets", chapter=self.chapter.name)
 
     def tearDown(self):
         frappe.set_user("Administrator")
@@ -31,71 +24,35 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
         frappe.delete_doc(EVENT, self.event.name, force=True)
 
     def test_ticket_transfer(self):
-        sender = {
-            "full_name": fake.name(),
-            "email": fake.email(),
-        }
+        owner_email = fake.email()
+        receiver_email = fake.email()
+        receiver_name = fake.name()
 
-        recipient = {
-            "full_name": fake.name(),
-            "email": fake.email(),
-        }
-
-        # Given for an event, a ticket is created. For that ticket, a transfer is generated.
-        ticket = insert_test_ticket(
-            event=self.event.name,
-            full_name=sender["full_name"],
-            email=sender["email"],
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=owner_email)
+        transfer = FOSSEventTicketTransferFactory.create(
+            ticket=ticket.name,
+            receiver_email=receiver_email,
+            receiver_name=receiver_name,
         )
-
-        transfer = frappe.get_doc(
-            {
-                "doctype": TICKET_TRANSFER,
-                "ticket": ticket.name,
-                "receiver_name": recipient["full_name"],
-                "receiver_email": recipient["email"],
-            }
-        )
-        transfer.insert()
-
-        # When Ticket Transfer is created, status should be pending
         self.assertEqual(transfer.status, "Pending Approval")
 
-        # Change status of transfer to completed
         transfer.status = "Completed"
         transfer.save()
 
-        # Then check that a ticket with older credentials does not exists.
-        # Also check that ticket has new details.
-        old_ticket_exists = frappe.db.exists(
-            EVENT_TICKET,
-            {
-                "email": sender["email"],
-                "full_name": sender["full_name"],
-                "event": self.event.name,
-            },
+        self.assertFalse(
+            frappe.db.exists(EVENT_TICKET, {"email": owner_email, "event": self.event.name})
         )
-        self.assertFalse(old_ticket_exists)
-
-        new_ticket_exists = frappe.db.exists(
-            EVENT_TICKET,
-            {
-                "email": recipient["email"],
-                "full_name": recipient["full_name"],
-                "event": self.event.name,
-            },
+        self.assertTrue(
+            frappe.db.exists(
+                EVENT_TICKET,
+                {"email": receiver_email, "full_name": receiver_name, "event": self.event.name},
+            )
         )
-        self.assertTrue(new_ticket_exists)
 
     def test_status_pending_on_create(self):
-        # Given an event and a ticket linked to the event
-        # With a ticket created for a user, try to transfer this ticket to another user while
-        # passing "Completed" as the status
-        ticket = insert_test_ticket(event=self.event.name)
-
-        # Then verify that this operation raises a ValidationError
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
         with self.assertRaises(frappe.exceptions.ValidationError):
-            transfer = frappe.get_doc(
+            frappe.get_doc(
                 {
                     "doctype": TICKET_TRANSFER,
                     "ticket": ticket.name,
@@ -103,58 +60,103 @@ class TestFOSSEventTicketTransfer(FrappeTestCase):
                     "receiver_email": fake.email(),
                     "status": "Completed",
                 }
-            )
-            transfer.insert()
+            ).insert()
 
     def test_transfer_already_transferred_ticket(self):
-        # Given a ticket, transfer it to another user
-        sender = {
-            "full_name": fake.name(),
-            "email": fake.email(),
-        }
-        recipient_1 = {
-            "full_name": fake.name(),
-            "email": fake.email(),
-        }
-        recipient_2 = {
-            "full_name": fake.name(),
-            "email": fake.email(),
-        }
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=fake.email())
 
-        ticket = insert_test_ticket(
-            event=self.event.name,
-            full_name=sender["full_name"],
-            email=sender["email"],
-        )
-
-        # Transfer ticket to recipient_1
-        transfer_1 = frappe.get_doc(
-            {
-                "doctype": TICKET_TRANSFER,
-                "ticket": ticket.name,
-                "receiver_name": recipient_1["full_name"],
-                "receiver_email": recipient_1["email"],
-            }
-        )
-        transfer_1.insert()
+        transfer_1 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
         transfer_1.status = "Completed"
         transfer_1.save()
         ticket.reload()
         self.assertTrue(ticket.has_value_changed("is_transfer_ticket"))
 
-        # With the ticket transferred once, try to transfer it again to another user : recipient_2
-        transfer_2 = frappe.get_doc(
-            {
-                "doctype": TICKET_TRANSFER,
-                "ticket": ticket.name,
-                "receiver_name": recipient_2["full_name"],
-                "receiver_email": recipient_2["email"],
-            }
-        )
-        transfer_2.insert()
+        transfer_2 = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
         transfer_2.status = "Completed"
         transfer_2.save()
         ticket.reload()
-
-        # Then verify that the value for 'is_transfer_ticket' was changed to 1
         self.assertTrue(ticket.has_value_changed("is_transfer_ticket"))
+
+    def test_receiver_cannot_approve(self):
+        receiver_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        transfer = FOSSEventTicketTransferFactory.create(
+            ticket=ticket.name, receiver_email=receiver_email
+        )
+
+        frappe.set_user(receiver_email)
+        transfer.status = "Completed"
+        with self.assertRaises(frappe.PermissionError):
+            transfer.save(ignore_permissions=True)
+
+    def test_stranger_cannot_change_status(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name)
+        transfer = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+        frappe.set_user(fake.email())
+        transfer.status = "Completed"
+        with self.assertRaises(frappe.PermissionError):
+            transfer.save(ignore_permissions=True)
+
+    def test_owner_can_approve(self):
+        owner_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=owner_email)
+        transfer = FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+        frappe.set_user(owner_email)
+        transfer.status = "Completed"
+        transfer.save(ignore_permissions=True)
+        self.assertEqual(transfer.status, "Completed")
+
+    def test_free_pass_ticket_cannot_transfer(self):
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, tier="Free Pass")
+        with self.assertRaises(frappe.ValidationError):
+            FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+    def test_non_live_event_ticket_cannot_transfer(self):
+        closed_event = FOSSChapterEventFactory.create(
+            "with_paid_tickets", chapter=self.chapter.name, status="Concluded"
+        )
+        ticket = FOSSEventTicketFactory.create(event=closed_event.name)
+        with self.assertRaises(frappe.ValidationError):
+            FOSSEventTicketTransferFactory.create(ticket=ticket.name)
+
+    def test_transfer_updates_all_ticket_fields(self):
+        ticket = FOSSEventTicketFactory.create(
+            event=self.event.name, wants_tshirt=1, tshirt_size="M"
+        )
+        transfer = FOSSEventTicketTransferFactory.create(
+            ticket=ticket.name,
+            receiver_name=fake.name(),
+            receiver_email=fake.email(),
+            designation="Engineer",
+            organization="FOSS United",
+            wants_tshirt=1,
+            tshirt_size="XL",
+        )
+        transfer.status = "Completed"
+        transfer.save()
+
+        ticket.reload()
+        self.assertEqual(ticket.full_name, transfer.receiver_name)
+        self.assertEqual(ticket.email, transfer.receiver_email)
+        self.assertEqual(ticket.designation, "Engineer")
+        self.assertEqual(ticket.organization, "FOSS United")
+        self.assertEqual(ticket.wants_tshirt, 1)
+        self.assertEqual(ticket.tshirt_size, "XL")
+        self.assertTrue(ticket.is_transfer_ticket)
+
+    def test_owner_and_receiver_can_cancel(self):
+        owner_email = fake.email()
+        receiver_email = fake.email()
+        ticket = FOSSEventTicketFactory.create(event=self.event.name, email=owner_email)
+
+        for user_email in [owner_email, receiver_email]:
+            transfer = FOSSEventTicketTransferFactory.create(
+                ticket=ticket.name, receiver_email=receiver_email
+            )
+            frappe.set_user(user_email)
+            transfer.status = "Cancelled"
+            transfer.save(ignore_permissions=True)
+            self.assertEqual(transfer.status, "Cancelled")
+            frappe.set_user("Administrator")

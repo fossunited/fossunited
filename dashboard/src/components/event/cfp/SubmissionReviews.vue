@@ -1,5 +1,6 @@
 <script setup>
 import { Badge } from 'frappe-ui'
+import { IconStar } from '@tabler/icons-vue'
 import { cleanedHTML } from '@/helpers/utils'
 import ReviewStatsComponent from '@/components/reviewers/ReviewStatsComponent.vue'
 defineProps({
@@ -52,7 +53,18 @@ const getTheme = (status) => {
         <div class="flex gap-2 items-center">
           <span class="text-sm">Reviewer #{{ review.idx }}</span>
           <Badge :label="getLabel(review.to_approve)" :theme="getTheme(review.to_approve)" />
+          <IconStar
+            v-if="review.must_have"
+            class="w-4 h-4 text-yellow-500"
+            fill="currentColor"
+          />
         </div>
+        <p
+          v-if="review.private_comment"
+          class="text-sm text-ink-gray-7 whitespace-pre-wrap"
+        >
+          {{ review.private_comment }}
+        </p>
       </div>
     </div>
   </div>

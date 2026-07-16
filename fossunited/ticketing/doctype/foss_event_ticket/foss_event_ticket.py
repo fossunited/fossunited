@@ -88,10 +88,12 @@ class FOSSEventTicket(Document):
                     "organization": attendee.get("organization"),
                     "designation": attendee.get("designation"),
                     "wants_tshirt": wants_tshirt,
-                    "tshirt_size": attendee.get("tshirt_size"),
+                    "tshirt_size": attendee.get("tshirt_size") if wants_tshirt else None,
                     "accept_coc": attendee.get("accept_coc", 0),
                     "tier": frappe.db.get_value(TICKET_TIER, attendee.get("ticket_type"), "title")
-                    or payment_meta_data.get("tier", {}).get("title"),
+                    or (payment_meta_data.get("tiers_snapshot") or {})
+                    .get(attendee.get("ticket_type"), {})
+                    .get("title"),
                     "custom_fields": [],
                 }
             )
@@ -177,8 +179,11 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
     if doc.status == "Captured":
         try:
             FOSSEventTicket.create_tickets_for_payment(doc)
-        except:
-            frappe.log_error("Ticket Creation Failed!")
+        except Exception as e:
+            frappe.log_error(
+                title="Ticket Creation Failed",
+                message=f"Payment: {doc.name}\nEvent: {doc.document_name}\nAmount: {doc.amount}\nError: {e}\nMeta: {doc.meta_data}",
+            )
             raise
 
 
@@ -196,6 +201,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         frappe.throw(_("No ticket tiers selected."), TicketTierMismatchError)
 
     calculated_amount = 0.0
+    tshirt_included_by_tier: dict[str, bool] = {}
 
     for tier_name, count in tier_counts.items():
         count = int(count or 0)
@@ -207,6 +213,7 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
             frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
 
         tier_details = frappe.get_doc(TICKET_TIER, tier_name)
+        tshirt_included_by_tier[tier_name] = bool(tier_details.tshirt_included)
 
         if not tier_details.enabled:
             frappe.throw(
@@ -239,10 +246,19 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         EVENT, event_name, ["paid_tshirts_available", "t_shirt_price"]
     )
     if paid_tshirts_available:
-        num_tshirts = sum(1 for a in attendees if a.get("wants_tshirt"))
+        num_tshirts = sum(
+            1
+            for a in attendees
+            if a.get("wants_tshirt")
+            and not tshirt_included_by_tier.get(a.get("ticket_type"), False)
+        )
         calculated_amount += float(tshirt_price or 0) * num_tshirts
 
     if abs(calculated_amount - float(doc.amount)) > 1:
+        frappe.log_error(
+            title="Payment Amount Mismatch",
+            message=f"Event: {event_name}\nDoc amount: {doc.amount}\nCalculated: {calculated_amount}\nTier counts: {tier_counts}\nTshirt included by tier: {tshirt_included_by_tier}",
+        )
         frappe.throw(
             _("Amount mismatch - please refresh and try again."),
             TicketTierMismatchError,

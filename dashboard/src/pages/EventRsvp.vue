@@ -35,14 +35,9 @@ const event = createDocumentResource({
   auto: true,
 })
 
-const tabs = reactive({
-  options: [
-    {
-      label: 'Overview',
-      route: `/event/${route.params.id}/rsvp`,
-    },
-  ],
-})
+const rsvpBase = `/event/${route.params.id}/rsvp`
+
+const tabs = reactive({ options: [] })
 
 const has_rsvp = createResource({
   url: 'frappe.client.get_count',
@@ -56,23 +51,20 @@ const has_rsvp = createResource({
   },
   auto: true,
   onSuccess(data) {
-    resetTabs()
-    if (data > 0) {
+    const exists = data > 0
+    if (exists) {
       event_rsvp.fetch()
-      tabs.options.push({
-        label: 'Web Form',
-        route: `/event/${route.params.id}/rsvp/edit`,
-      })
-      tabs.options.push({
-        label: 'Insights',
-        route: `/event/${route.params.id}/rsvp/insights`,
-      })
-      return
+      tabs.options = [
+        { label: 'Web Form', route: `${rsvpBase}/edit` },
+        { label: 'Insights', route: `${rsvpBase}/insights` },
+      ]
+    } else {
+      tabs.options = [{ label: 'Web Form', route: `${rsvpBase}/create` }]
     }
-    tabs.options.push({
-      label: 'Web Form',
-      route: `/event/${route.params.id}/rsvp/create`,
-    })
+    // Web Form is the default landing: redirect the bare /rsvp path to edit or create.
+    if (route.path === rsvpBase || route.path === `${rsvpBase}/`) {
+      router.replace(exists ? `${rsvpBase}/edit` : `${rsvpBase}/create`)
+    }
   },
 })
 
@@ -88,17 +80,8 @@ const event_rsvp = createResource({
   },
 })
 
-const resetTabs = () => {
-  tabs.options = [
-    {
-      label: 'Overview',
-      route: `/event/${route.params.id}/rsvp`,
-    },
-  ]
-}
-
 const rsvpCreated = () => {
   has_rsvp.fetch()
-  router.replace(`/event/${route.params.id}/rsvp`)
+  router.replace(`${rsvpBase}/edit`)
 }
 </script>

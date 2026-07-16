@@ -1,17 +1,28 @@
 <script setup>
 import SubmissionsList from './SubmissionsList.vue'
 import Filter from '@/components/ui/Filter.vue'
-import { IconSearch, IconDownload } from '@tabler/icons-vue'
+import { IconSearch, IconDownload, IconX } from '@tabler/icons-vue'
 import { createResource, FormControl, LoadingText, Select } from 'frappe-ui'
 import { filterSubmissions } from '@/helpers/cfp'
-import { watch, ref, computed } from 'vue'
+import { watch, ref, computed, onUnmounted } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
 
 const filters = useStorage(`submission-filters:${route.params.route}`, {})
+const sortBy = useStorage(`submission-sort:${route.params.route}`, 'creation_desc')
 const searchTitle = ref('')
+const debouncedSearch = ref('')
+
+const SORT_OPTIONS = [
+  { label: 'Newest', value: 'creation_desc' },
+  { label: 'Oldest', value: 'creation_asc' },
+  { label: 'Latest Updated', value: 'modified_desc' },
+  { label: 'Title A–Z', value: 'title_asc' },
+  { label: 'Title Z–A', value: 'title_desc' },
+  { label: 'Most Liked', value: 'likes_desc' },
+]
 
 const props = defineProps({
   eventId: { type: String, required: true },
@@ -83,11 +94,45 @@ const statusOptions = computed(() => {
   return options
 })
 
+const totalCount = computed(() => submissions.originalData?.length ?? 0)
+
+const hasActiveFilters = computed(
+  () => searchTitle.value || filteredStatus.value || Object.keys(filters.value).length > 0,
+)
+
+function clearAll() {
+  searchTitle.value = ''
+  filteredStatus.value = ''
+  filters.value = {}
+}
+
+function sortResult(arr, sort) {
+  const sorted = [...arr]
+  switch (sort) {
+    case 'creation_asc':
+      return sorted.sort((a, b) => new Date(a.creation) - new Date(b.creation))
+    case 'title_asc':
+      return sorted.sort((a, b) =>
+        (a.talk_title ?? '').trim().localeCompare((b.talk_title ?? '').trim()),
+      )
+    case 'title_desc':
+      return sorted.sort((a, b) =>
+        (b.talk_title ?? '').trim().localeCompare((a.talk_title ?? '').trim()),
+      )
+    case 'likes_desc':
+      return sorted.sort((a, b) => (b._likes ?? 0) - (a._likes ?? 0))
+    case 'modified_desc':
+      return sorted.sort((a, b) => new Date(b.modified) - new Date(a.modified))
+    case 'creation_desc':
+    default:
+      return sorted.sort((a, b) => new Date(b.creation) - new Date(a.creation))
+  }
+}
+
 const filteredSubmissions = computed(() => {
-  const search = searchTitle.value.trim().toLowerCase()
+  const search = debouncedSearch.value
   const status = filteredStatus.value
 
-  // Ensure we have valid data
   let result = []
   if (Array.isArray(submissions.originalData)) {
     result = [...submissions.originalData]
@@ -108,20 +153,26 @@ const filteredSubmissions = computed(() => {
   // Apply search filter
   if (search) {
     result = result.filter((item) => {
-      const { talk_title, speaker_name, speakers, _speaker } = item
+      const { talk_title, speaker_name, speakers, _speaker, session_type, session_categories } =
+        item
 
       const titleMatch = talk_title?.toLowerCase().includes(search)
+      const categoryMatch = session_categories?.toLowerCase().includes(search)
+      const sessionTypeMatch = session_type?.toLowerCase().includes(search)
 
       const allNames = [
         ...(speaker_name ? [speaker_name.toLowerCase()] : []),
         ...((speakers ?? _speaker)?.map((s) => s?.full_name?.toLowerCase() ?? '') ?? []),
+        ...((speakers ?? _speaker)?.map((s) => s?.organization?.toLowerCase() ?? '') ?? []),
       ]
 
-      return titleMatch || allNames.some((n) => n.includes(search))
+      return (
+        titleMatch || categoryMatch || sessionTypeMatch || allNames.some((n) => n.includes(search))
+      )
     })
   }
 
-  return result
+  return sortResult(result, sortBy.value)
 })
 
 function escapeCsv(value) {
@@ -188,6 +239,15 @@ watch(
   },
 )
 
+let searchTimer = null
+watch(searchTitle, (val) => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    debouncedSearch.value = val.trim().toLowerCase()
+  }, 200)
+})
+onUnmounted(() => clearTimeout(searchTimer))
+
 watch(filteredSubmissions, (val) => {
   submissions.data = val
 })
@@ -203,7 +263,16 @@ watch(filteredSubmissions, (val) => {
       </FormControl>
       <div class="flex flex-wrap items-center gap-2">
         <Select v-model="filteredStatus" :options="statusOptions" class="shrink-0" />
+        <Select v-model="sortBy" :options="SORT_OPTIONS" class="shrink-0" />
         <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
+        <button
+          v-if="hasActiveFilters"
+          class="flex items-center text-sm text-ink-gray-5 hover:text-ink-gray-9 gap-1 shrink-0"
+          @click="clearAll"
+        >
+          <IconX class="w-3.5 h-3.5" aria-hidden="true" />
+          <span>Clear filters</span>
+        </button>
         <button
           class="flex items-center ml-auto bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6 shrink-0"
           @click="downloadCSV"
@@ -212,6 +281,9 @@ watch(filteredSubmissions, (val) => {
           <span>CSV</span>
         </button>
       </div>
+      <p v-if="submissions.originalData" class="text-sm text-ink-gray-5">
+        Showing {{ filteredSubmissions.length }} of {{ totalCount }} proposals
+      </p>
       <SubmissionsList
         v-if="submissions.data && submissions.data.length > 0"
         v-model="submissions.data"

@@ -1,6 +1,13 @@
 <script setup>
-import { IconArrowUpRight, IconMapPin, IconCalendarWeek, IconClock } from '@tabler/icons-vue'
-import { computed } from 'vue'
+import {
+  IconArrowUpRight,
+  IconMapPin,
+  IconCalendarWeek,
+  IconClock,
+  IconChevronDown,
+  IconChevronUp,
+} from '@tabler/icons-vue'
+import { computed, ref } from 'vue'
 import EventLogo from '@/components/event/EventLogo.vue'
 import { getFormattedEventDate, getFormattedTime } from '@/helpers/date'
 
@@ -15,6 +22,8 @@ const icsUrl = computed(() => {
   const eventIds = encodeURIComponent(JSON.stringify([props.event.name]))
   return `/api/method/fossunited.api.chapter.generate_ics?event_ids=${eventIds}&download=1`
 })
+
+const collapsed = ref(false)
 
 const eventDetailItems = computed(() => [
   {
@@ -40,8 +49,8 @@ const eventDetailItems = computed(() => [
 <template>
   <div class="flex flex-col gap-2">
     <div class="flex flex-col md:flex-row gap-3 md:gap-6 items-center md:items-start">
-      <!-- Big logo: desktop only -->
-      <div class="hidden md:block shrink-0">
+      <!-- Big logo: desktop only, hidden when collapsed -->
+      <div v-show="!collapsed" class="hidden md:block shrink-0">
         <slot name="logo">
           <EventLogo
             v-if="event.banner_image || event.event_logo"
@@ -50,23 +59,33 @@ const eventDetailItems = computed(() => [
         </slot>
       </div>
       <div class="flex flex-col gap-3 flex-grow w-full">
-        <!-- Title card — entire row links to event page -->
-        <a
-          :href="'/' + event.route"
-          class="flex flex-row p-3 rounded border gap-3 bg-surface-gray-2 w-full h-fit items-center no-underline text-inherit hover:bg-surface-gray-3 transition-colors"
-        >
-          <!-- Small logo: mobile only, inline with event name -->
-          <img
-            v-if="event.banner_image || event.event_logo"
-            :src="event.banner_image || event.event_logo"
-            alt="Event logo"
-            class="md:hidden h-7 w-7 object-contain rounded shrink-0"
-          />
-          <h2 class="font-semibold flex-grow">{{ event.event_name }}</h2>
-          <IconArrowUpRight class="w-4 h-4 text-ink-gray-4 shrink-0" />
-        </a>
+        <!-- Title card + collapse toggle -->
+        <div class="flex items-stretch gap-2">
+          <a
+            :href="'/' + event.route"
+            class="flex flex-row p-3 rounded border gap-3 bg-surface-gray-2 flex-1 h-fit items-center no-underline text-inherit hover:bg-surface-gray-3 transition-colors"
+          >
+            <!-- Small logo: mobile only, inline with event name -->
+            <img
+              v-if="event.banner_image || event.event_logo"
+              :src="event.banner_image || event.event_logo"
+              alt="Event logo"
+              class="md:hidden h-7 w-7 object-contain rounded shrink-0"
+            />
+            <h2 class="font-semibold flex-grow">{{ event.event_name }}</h2>
+            <IconArrowUpRight class="w-4 h-4 text-ink-gray-4 shrink-0" />
+          </a>
+          <button
+            class="shrink-0 px-2 rounded border bg-surface-gray-2 hover:bg-surface-gray-3 transition-colors text-ink-gray-5"
+            :aria-label="collapsed ? 'Expand event details' : 'Collapse event details'"
+            @click="collapsed = !collapsed"
+          >
+            <IconChevronUp v-if="!collapsed" class="w-4 h-4" />
+            <IconChevronDown v-else class="w-4 h-4" />
+          </button>
+        </div>
         <!-- Date, Time, Location -->
-        <div class="flex flex-col gap-3 md:gap-2">
+        <div v-show="!collapsed" class="flex flex-col gap-3 md:gap-2">
           <div
             v-for="(item, index) in eventDetailItems"
             :key="index"
@@ -80,12 +99,13 @@ const eventDetailItems = computed(() => [
               :rel="item.target === '_blank' ? 'noopener noreferrer' : undefined"
               :title="item.tooltip"
               class="no-underline hover:underline text-ink-gray-5 hover:text-ink-gray-7"
-            >{{ item.label }}</a>
+              >{{ item.label }}</a
+            >
             <span v-else>{{ item.label }}</span>
           </div>
         </div>
       </div>
     </div>
-    <slot name="description"></slot>
+    <div v-show="!collapsed"><slot name="description"></slot></div>
   </div>
 </template>

@@ -1,0 +1,485 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer %}
+{% from "fossunited/templates/macros/video_embed.html" import video_embed %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
+{% block title %}{{ pagetitle }} | FOSS United{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-page-wide">
+      {{ if_header(years, current_year, show_statistics=False, show_archive=False, show_speakers=True) }}
+
+      <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
+        <header>
+          <h1 class="v3-page-title v3-text-primary mb-2">IndiaFOSS Archive</h1>
+          <p class="v3-text-secondary mb-0">
+            Every recorded talk from IndiaFOSS, the annual FOSS & Digital Commons Festival by the
+            FOSS United community. Featuring total of <u>{{ total }}</u> talks.
+          </p>
+        </header>
+
+        {# Toolbar: search + sort + group + mobile filter toggle #}
+        <div class="d-flex flex-wrap align-items-center gap-2">
+          <input
+            type="search"
+            id="arcSearch"
+            class="form-control flex-grow-1"
+            style="max-width:420px"
+            placeholder="Search talks or speakers"
+            aria-label="Search talks or speakers"
+          />
+          <select id="arcSort" class="v3-select" aria-label="Sort talks">
+            <option value="az">Sort: A&ndash;Z</option>
+            <option value="za">Sort: Z&ndash;A</option>
+            <option value="short">Sort: Shortest</option>
+            <option value="long">Sort: Longest</option>
+          </select>
+          <select id="arcGroup" class="v3-select" aria-label="Group talks">
+            <option value="none">No grouping</option>
+            <option value="edition">Group: Event</option>
+            <option value="type">Group: Session type</option>
+            <option value="duration">Group: Duration</option>
+          </select>
+          <button
+            class="v3-btn v3-btn-secondary v3-btn--sm d-md-none"
+            type="button"
+            data-toggle="collapse"
+            data-target="#arcFilters"
+            aria-controls="arcFilters"
+            aria-expanded="false"
+          >
+            <i class="ti ti-filter"></i> Filters
+          </button>
+        </div>
+
+        <div class="row">
+          {# Filters sidebar #}
+          <aside class="col-md-3 mb-3 collapse d-md-block" id="arcFilters" aria-label="Filters">
+            <div class="sticky-top" style="top:1rem">
+              <p class="text-uppercase semi-bold text-sm v3-text-secondary mb-3">Filters</p>
+
+              <p class="v3-text-secondary mb-2">IndiaFOSS Edition</p>
+              <div class="d-flex flex-column gap-1 mb-4" data-filter="edition" data-mode="single">
+                <button type="button" class="v3-pill w-100 is-active" data-value="">All</button>
+                {% for e in editions %}
+                  <button type="button" class="v3-pill w-100" data-value="{{ e }}">{{ e }}</button>
+                {% endfor %}
+              </div>
+
+              <p class="v3-text-secondary mb-2">Session Type</p>
+              <div class="d-flex flex-wrap gap-1" data-filter="type" data-mode="multi">
+                {% for t in session_types %}
+                  <button type="button" class="v3-pill" data-value="{{ t }}">{{ t }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          </aside>
+
+          {# Results #}
+          <section class="col-md-9" aria-label="Talks">
+            <p id="arcCount" class="v3-text-tertiary text-sm mb-3" aria-live="polite"></p>
+
+            <div class="row" id="arcGrid">
+              {% for m in media %}
+                <article
+                  class="if-arc-card col-12 col-sm-6 col-md-4 mb-4"
+                  data-edition="{{ m.edition }}"
+                  data-eorder="{{ m.edition_order }}"
+                  data-type="{{ m.video_type }}"
+                  data-duration="{{ m.duration | int }}"
+                  data-search="{{ (m.title ~ ' ' ~ m.speaker) | lower | e }}"
+                >
+                  <div class="v3-hover-shadow rounded h-100 p-2">
+                    <div class="position-relative">
+                      {% if m.youtube_id %}
+                        {{ video_embed(youtube_id=m.youtube_id, title=m.title) }}
+                      {% else %}
+                        <div
+                          class="m-video-aspect rounded d-flex align-items-center justify-content-center v3-bg-subtle"
+                          data-toggle="tooltip"
+                          title="No recording available"
+                        >
+                          <i class="ti ti-video-off v3-text-tertiary" aria-hidden="true"></i>
+                        </div>
+                      {% endif %}
+                      {% if m.video_type or m.duration_str %}
+                        <div class="v3-media-overlay d-flex align-items-end">
+                          {% if m.video_type %}<span
+                            class="v3-media-badge"
+                            data-toggle="tooltip"
+                            title="Session type"
+                            >{{ m.video_type | e }}</span
+                          >{% endif %}
+                          {% if m.duration_str %}<span
+                            class="v3-media-badge ml-auto"
+                            data-toggle="tooltip"
+                            title="Talk length"
+                            >{{ m.duration_str }}</span
+                          >{% endif %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    {# Whole body (title + speakers + edition) links to the card destination;
+                       the video block above stays a separate play/thumbnail area. #}
+                    <a
+                      class="d-block text-decoration-none"
+                      href="{{ m.card_link }}"
+                      {% if m.card_external %}target="_blank" rel="noopener noreferrer"{% endif %}
+                    >
+                      <span class="line-clamp-2 semi-bold v3-text-primary d-block mt-2">
+                        {{ m.title | e }}
+                      </span>
+
+                      {% if m.speakers %}
+                        {# compact single row: small avatars + truncated names #}
+                        <span class="d-flex align-items-center gap-2 mt-2">
+                          <span class="d-flex gap-1 flex-shrink-0">
+                            {% for s in m.speakers[:3] %}
+                              <img
+                                class="v3-avatar-xs"
+                                loading="lazy"
+                                alt="{{ s.name | e }}"
+                                data-toggle="tooltip"
+                                title="{{ s.name | e }}{% if s.organization %}· {{ s.organization | e }}{% endif %}"
+                                src="{{ s.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
+                              />
+                            {% endfor %}
+                          </span>
+                          <span
+                            class="text-truncate v3-text-secondary text-sm"
+                            title="{{ m.speaker | e }}"
+                            >{{ m.speaker | e }}</span
+                          >
+                        </span>
+                      {% endif %}
+
+                      {% if m.edition %}<span class="d-block text-xs v3-text-tertiary mt-2">
+                        {{ m.edition | e }}
+                      </span>{% endif %}
+                    </a>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+
+            <div id="arcEmpty" class="text-center py-5 v3-text-tertiary" hidden>
+              <i
+                class="ti ti-mood-empty d-block mb-2"
+                style="font-size:2rem"
+                aria-hidden="true"
+              ></i>
+              No talks match your filters.
+            </div>
+
+            <nav class="v3-pagination" id="arcPager" aria-label="Pagination"></nav>
+          </section>
+        </div>
+      </main>
+    </div>
+    {{ if_footer() }}
+  </div>
+{% endblock %}
+
+{% block page_script %}
+  <script>
+    ;(function () {
+      const PAGE_SIZE = 24
+      const grid = document.getElementById('arcGrid') // a .row
+      const search = document.getElementById('arcSearch')
+      const sortEl = document.getElementById('arcSort')
+      const groupEl = document.getElementById('arcGroup')
+      const pager = document.getElementById('arcPager')
+      const count = document.getElementById('arcCount')
+      const empty = document.getElementById('arcEmpty')
+      if (!grid) return
+
+      const cards = Array.from(grid.querySelectorAll('.if-arc-card'))
+      const state = { edition: '', types: new Set(), q: '', sort: 'az', group: 'none', page: 1 }
+      const ACTIVE = 'is-active' // selected filter pill (styled by .v3-pill.is-active)
+
+      // Snapshot each embed's thumbnail; restore on re-render to stop playback (no background
+      // audio / no autoplay on return). Only embeds the user played are tracked.
+      const embeds = new Map()
+      grid.querySelectorAll('[data-yt]').forEach((el) => embeds.set(el, el.innerHTML))
+      const playing = new Set()
+      grid.addEventListener('click', (e) => {
+        const el = e.target.closest('[data-yt]')
+        if (el) playing.add(el)
+      })
+      function stopVideos() {
+        playing.forEach((el) => {
+          if (embeds.has(el)) el.innerHTML = embeds.get(el)
+        })
+        playing.clear()
+      }
+
+      const matches = (c) =>
+        (!state.edition || c.dataset.edition === state.edition) &&
+        (state.types.size === 0 || state.types.has(c.dataset.type)) &&
+        (!state.q || (c.dataset.search || '').includes(state.q.toLowerCase()))
+
+      const DUR_BUCKETS = [
+        { max: 600, label: 'Under 10 min' },
+        { max: 1200, label: '10–20 min' },
+        { max: 1800, label: '20–30 min' },
+        { max: 3600, label: '30–60 min' },
+        { max: Infinity, label: '1 hr+' },
+      ]
+      function durBucket(sec) {
+        if (!sec) return { i: 99, label: 'Unknown length' }
+        const i = DUR_BUCKETS.findIndex((b) => sec < b.max)
+        return { i: i, label: DUR_BUCKETS[i].label }
+      }
+
+      function groupOf(c) {
+        if (state.group === 'edition')
+          return { key: c.dataset.edition || 'Other', order: +c.dataset.eorder }
+        if (state.group === 'type') return { key: c.dataset.type || 'Other', order: 0 }
+        if (state.group === 'duration') {
+          const b = durBucket(+c.dataset.duration)
+          return { key: b.label, order: b.i }
+        }
+        return null
+      }
+
+      function sortCmp(a, b) {
+        if (state.sort === 'short' || state.sort === 'long') {
+          const d = (+a.dataset.duration || 0) - (+b.dataset.duration || 0)
+          if (d) return state.sort === 'short' ? d : -d
+          return a.dataset.search.localeCompare(b.dataset.search)
+        }
+        const c = a.dataset.search.localeCompare(b.dataset.search)
+        return state.sort === 'za' ? -c : c
+      }
+
+      function fullCmp(a, b) {
+        if (state.group !== 'none') {
+          const ga = groupOf(a),
+            gb = groupOf(b)
+          if (state.group === 'type') {
+            const k = ga.key.localeCompare(gb.key)
+            if (k) return k
+          } else if (ga.order !== gb.order) return ga.order - gb.order
+        }
+        return sortCmp(a, b)
+      }
+
+      // Move cards back to the root row, then drop group scaffolding (so cards survive).
+      function resetContainer() {
+        cards.forEach((c) => grid.appendChild(c))
+        grid.querySelectorAll('.if-arc-ghead, .if-arc-group').forEach((n) => n.remove())
+      }
+
+      function groupHeading(key, targetId, n) {
+        const h = document.createElement('h2')
+        h.className =
+          'if-arc-ghead v3-clickable col-12 d-flex align-items-center gap-2 ' +
+          'border-bottom pb-2 mt-3 mb-3 v3-text-secondary text-uppercase text-sm'
+        h.setAttribute('role', 'button')
+        h.setAttribute('data-toggle', 'collapse')
+        h.setAttribute('data-target', '#' + targetId)
+        h.setAttribute('aria-expanded', 'true')
+        h.setAttribute('aria-controls', targetId)
+        const chev = document.createElement('i')
+        chev.className = 'ti ti-chevron-down'
+        chev.setAttribute('aria-hidden', 'true')
+        const span = document.createElement('span')
+        span.textContent = key + ' (' + n + ')'
+        h.append(chev, span)
+        return h
+      }
+
+      function render() {
+        stopVideos()
+        resetContainer()
+        const list = cards.filter(matches).sort(fullCmp)
+        const grouped = state.group !== 'none'
+        const total = list.length
+        const pages = grouped ? 1 : Math.max(1, Math.ceil(total / PAGE_SIZE))
+        if (state.page > pages) state.page = pages
+        const start = grouped ? 0 : (state.page - 1) * PAGE_SIZE
+        const slice = grouped ? list : list.slice(start, start + PAGE_SIZE)
+
+        cards.forEach((c) => (c.style.display = 'none'))
+
+        if (grouped) {
+          // Each group = a BS4 collapsible section: clickable heading (col-12) + a `collapse show`
+          // wrapper (col-12) holding that group's own card row.
+          const counts = {}
+          slice.forEach((c) => {
+            const k = groupOf(c).key
+            counts[k] = (counts[k] || 0) + 1
+          })
+          let key = null,
+            inner = null,
+            i = 0
+          slice.forEach((c) => {
+            const k = groupOf(c).key
+            if (k !== key) {
+              key = k
+              i += 1
+              const id = 'arc-grp-' + i
+              grid.appendChild(groupHeading(k, id, counts[k]))
+              const wrap = document.createElement('div')
+              wrap.className = 'collapse show if-arc-group col-12'
+              wrap.id = id
+              inner = document.createElement('div')
+              inner.className = 'row'
+              wrap.appendChild(inner)
+              grid.appendChild(wrap)
+            }
+            c.style.display = ''
+            inner.appendChild(c)
+          })
+        } else {
+          slice.forEach((c) => {
+            c.style.display = ''
+            grid.appendChild(c)
+          })
+        }
+
+        empty.hidden = total !== 0
+        grid.hidden = total === 0
+        count.textContent = total
+          ? grouped
+            ? total + ' talk' + (total === 1 ? '' : 's')
+            : 'Showing ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' of ' + total
+          : ''
+
+        renderPager(pages)
+        persist()
+      }
+
+      function renderPager(pages) {
+        pager.innerHTML = ''
+        if (pages <= 1) return
+        const btn = (label, page, opts = {}) => {
+          const b = document.createElement('button')
+          b.type = 'button'
+          b.className = 'v3-pagination__btn' + (opts.active ? ' v3-pagination__btn--active' : '')
+          b.textContent = label
+          if (opts.disabled) b.disabled = true
+          else
+            b.addEventListener('click', () => {
+              state.page = page
+              render()
+              scrollUp()
+            })
+          return b
+        }
+        pager.appendChild(btn('← Prev', state.page - 1, { disabled: state.page === 1 }))
+        buildPageWindow(state.page, pages).forEach((p) => {
+          if (p === '…') {
+            const s = document.createElement('span')
+            s.className = 'v3-pagination__btn'
+            s.style.pointerEvents = 'none'
+            s.textContent = '…'
+            pager.appendChild(s)
+          } else {
+            pager.appendChild(btn(String(p), p, { active: p === state.page }))
+          }
+        })
+        pager.appendChild(btn('Next →', state.page + 1, { disabled: state.page === pages }))
+      }
+
+      function scrollUp() {
+        document
+          .getElementById('main-content')
+          .scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }
+
+      // Filter pill clicks (single = edition, multi = type). Selected pill = ACTIVE class.
+      document.querySelectorAll('[data-filter]').forEach((box) => {
+        const single = box.dataset.mode === 'single'
+        box.addEventListener('click', (e) => {
+          const pill = e.target.closest('button[data-value]')
+          if (!pill || !box.contains(pill)) return
+          if (single) {
+            box.querySelectorAll('button[data-value]').forEach((p) => p.classList.remove(ACTIVE))
+            pill.classList.add(ACTIVE)
+            state.edition = pill.dataset.value
+          } else {
+            pill.classList.toggle(ACTIVE)
+            state.types.clear()
+            box
+              .querySelectorAll('button.' + ACTIVE)
+              .forEach((p) => state.types.add(p.dataset.value))
+          }
+          state.page = 1
+          render()
+        })
+      })
+
+      // ── URL <-> state sync (shareable, survives reload/return; no page reload) ──
+      function persist() {
+        setParams({
+          edition: state.edition,
+          type: state.types.size ? [...state.types].join(',') : '',
+          q: state.q,
+          sort: state.sort !== 'az' ? state.sort : '',
+          group: state.group !== 'none' ? state.group : '',
+          page: state.page > 1 ? state.page : '',
+        })
+        try {
+          sessionStorage.setItem('arcFilters', location.search.replace(/^\?/, ''))
+        } catch (e) {}
+      }
+
+      function restore() {
+        let qs = location.search.replace(/^\?/, '')
+        if (!qs) {
+          try {
+            qs = sessionStorage.getItem('arcFilters') || ''
+          } catch (e) {}
+        }
+        const p = new URLSearchParams(qs)
+        state.edition = p.get('edition') || ''
+        state.types = new Set((p.get('type') || '').split(',').filter(Boolean))
+        state.q = p.get('q') || ''
+        const s = p.get('sort')
+        state.sort = ['za', 'short', 'long'].includes(s) ? s : 'az'
+        const g = p.get('group')
+        state.group = ['edition', 'type', 'duration'].includes(g) ? g : 'none'
+        state.page = Math.max(1, parseInt(p.get('page'), 10) || 1)
+      }
+
+      function syncUI() {
+        search.value = state.q
+        sortEl.value = state.sort
+        groupEl.value = state.group
+        document
+          .querySelectorAll('[data-filter="edition"] button[data-value]')
+          .forEach((p) => p.classList.toggle(ACTIVE, (p.dataset.value || '') === state.edition))
+        document
+          .querySelectorAll('[data-filter="type"] button[data-value]')
+          .forEach((p) => p.classList.toggle(ACTIVE, state.types.has(p.dataset.value)))
+      }
+
+      search.addEventListener(
+        'input',
+        debounce(() => {
+          state.q = search.value.trim()
+          state.page = 1
+          render()
+        }, 150),
+      )
+      sortEl.addEventListener('change', () => {
+        state.sort = sortEl.value
+        state.page = 1
+        render()
+      })
+      groupEl.addEventListener('change', () => {
+        state.group = groupEl.value
+        state.page = 1
+        render()
+      })
+
+      restore()
+      syncUI()
+      render()
+    })()
+  </script>
+{% endblock %}

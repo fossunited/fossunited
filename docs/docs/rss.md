@@ -51,6 +51,28 @@ We have extensive RSS feed support in our platforms.
     Go to this page [https://forum.fossunited.org/categories](https://forum.fossunited.org/categories) and choose any category and append `/rss` to the URL for RSS.
     for example: [https://forum.fossunited.org/c/organisation.rss](https://forum.fossunited.org/c/organisation.rss)
 
+### Calendar Subscriptions
+
+Stay updated on upcoming FOSS United events directly in your calendar app — events auto-refresh so you always see the latest schedule without re-downloading.
+
+**Subscribe to all upcoming events:**
+
+| Calendar App                        | How to subscribe                                                       |
+|-------------------------------------|------------------------------------------------------------------------|
+| **Proton Calendar**                 | Settings -> Calendars -> Add calendar -> From URL -> paste the ICS URL |
+| **Thunderbird**                     | New Calendar -> On the Network -> paste the ICS URL                    |
+| **Google Calendar**                 | [Other calendars] -> [+] -> From URL -> paste the ICS URL              |
+| **Any CalDAV / ICS-compatible app** | Use the ICS URL directly                                               |
+
+**ICS feed URL:**
+```
+https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics
+```
+
+The feed includes all upcoming chapter events and open grant calls. It refreshes hourly, so new events appear automatically once you've subscribed.
+
+You can also subscribe to a single chapter's events by going to the chapter page and using the calendar button there, or download a one-time `.ics` file for a specific event from its event page.
+
 ### Suggested RSS Readers
 
 Desktop:

@@ -1,56 +1,60 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/fosshack.html" import fosshack_navbar %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb %}
+{% from "fossunited/templates/macros/volunteers_card.html" import profile_headshot %}
 
 {% macro render_project_card(project) %}
+  {% set pid = project.doc_id or project.name | replace(' ', '-') %}
   <article class="mb-3">
     <div
-      class="p-2 p-md-3"
+      class="p-2 p-md-3 fh-results-toggle"
       role="button"
       tabindex="0"
-      aria-expanded="false"
-      onclick="toggleSection('project-{{ project.name | replace(' ', '-') }}')"
+      data-toggle="collapse"
+      data-target="#project-{{ pid }}"
       style="cursor: pointer;"
     >
       <div class="d-flex justify-content-between align-items-center">
-        <div
-          class="flex-grow-1 d-flex flex-column flex-md-row align-items-start align-items-md-center"
-        >
-          <h4 class="h6 h5-md mb-1 mb-md-0 mr-md-3">
+        <div class="flex-grow-1 d-flex flex-wrap align-items-center gap-2">
+          <h4 class="h6 mb-0 mr-2 fh-project-title">
             <a
               href="{{ project.url }}"
               class="font-weight-bold underline"
               onclick="event.stopPropagation();"
               target="_blank"
-            >
-              {{ project.name }}
-            </a>
+            >{{ project.name }}</a>
             <i class="ti ti-arrow-up-right ml-1"></i>
           </h4>
 
-          <div class="d-flex flex-wrap align-items-center text-nowrap">
-            {% if project.repo_link %}
+          {% if project.is_contribution_project %}
+            <a
+              href="{{ ('/' + project.partner_project_route) if project.partner_project_route else project.repo_link }}"
+              onclick="event.stopPropagation()"
+              target="_blank"
+              class="d-inline-flex align-items-center text-xl"
+              data-toggle="tooltip"
+              title="{{ ('Contributing project to ' + project.partner_project_name) if project.partner_project_route else 'Contribution project' }}"
+            ><i class="ti ti-git-pull-request"></i></a>
+          {% elif project.repo_link %}
             <a href="{{ project.repo_link }}" onclick="event.stopPropagation()" target="_blank"
-              class="mr-2 mb-1 mb-md-0 d-inline-flex align-items-center text-xl">
+              class="d-inline-flex align-items-center text-xl">
               <i class="ti ti-brand-github"></i>
             </a>
-            {% endif %}
-            {% if project.status == "Winner" %}
-              <span class="v3-tag v3-tag--success mr-2 mb-1 mb-md-0">
-                <i class="ti ti-trophy"></i> Winner
-              </span>
-            {% elif project.status == "Commendation" %}
-              <span class="v3-tag v3-status--warning mr-2 mb-1 mb-md-0">
-                <i class="ti ti-award"></i> Commendation
-              </span>
-            {% endif %}
+          {% endif %}
 
-            {% if project.cash_prize %}
-              <span class="v3-tag v3-tag--category mr-2 mb-1 mb-md-0">
-                {{ project.cash_prize }}
-              </span>
-            {% endif %}
-          </div>
+          {% if project.status == "Winner" %}
+            <span class="v3-tag v3-tag--success">
+              <i class="ti ti-trophy"></i> Winner
+            </span>
+          {% elif project.status == "Commendation" %}
+            <span class="v3-tag v3-status--warning">
+              <i class="ti ti-award"></i> Commendation
+            </span>
+          {% endif %}
+
+          {% if project.cash_prize %}
+            <span class="v3-tag v3-tag--category">{{ project.cash_prize }}</span>
+          {% endif %}
         </div>
 
         <i
@@ -62,33 +66,27 @@
     </div>
 
     <div
-      id="project-{{ project.name | replace(' ', '-') }}"
-      class="hidden px-2 px-md-3 pb-2 pb-md-3"
+      id="project-{{ pid }}"
+      class="collapse px-2 px-md-3 pb-2 pb-md-3"
     >
       <p class="text-muted mb-2 mb-md-3 small">{{ project.description }}</p>
 
       {% if project.team_members %}
+        {% if project.team_name %}
+          <p class="v3-text-secondary small mb-2">
+            <i class="ti ti-users mr-1" aria-hidden="true"></i>Team: {{ project.team_name }}
+          </p>
+        {% endif %}
         <div class="row">
           {% for member in project.team_members %}
-          <div class="col-12 col-md-4 mb-2">
-            <div class="d-flex align-items-center p-1 p-md-2 rounded">
-              <img
-                src="{{ member.profile_photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
-                alt="{{ member.full_name }}"
-                class="rounded"
-                style="max-width:40px;max-height:40px;object-fit:cover;"
-                loading="lazy"
-              />
-              <div class="d-flex flex-column ml-2 justify-content-center">
-                <div class="v3-text-primary">
-                  {{ member.full_name }}
-                </div>
-                {% if member.username %}
-                <div class="v3-text-secondary mt-1" style="font-size:0.75rem;">@{{ member.username }}</div>
-                {% endif %}
-              </div>
+            <div class="col-6 col-md-4 mb-2">
+              {{ profile_headshot(
+                member.full_name,
+                member.profile_photo,
+                ('/' + member.route) if member.route else None,
+                ('@' + member.username) if member.username else None
+              ) }}
             </div>
-          </div>
           {% endfor %}
         </div>
       {% endif %}
@@ -104,11 +102,11 @@
     data-year="{{ hackathon.year }}"
   >
     <div
-      class="p-3 p-md-4"
+      class="p-3 p-md-4 fh-results-toggle"
       role="button"
       tabindex="0"
-      aria-expanded="false"
-      onclick="toggleSection('content-{{ hackathon.id }}')"
+      data-toggle="collapse"
+      data-target="#content-{{ hackathon.id }}"
     >
       <div
         class="d-flex justify-content-between align-items-center p-3 mb-2 mb-md-3 v3-bg-primary rounded"
@@ -135,7 +133,7 @@
       </div>
     </div>
 
-    <div id="content-{{ hackathon.id }}" class="hidden">
+    <div id="content-{{ hackathon.id }}" class="collapse">
       <div class="card-body p-0 v3-text-secondary">
           <div class="row no-gutters">
             <div class="col-12 col-lg-3 p-3 p-md-4 border-right mb-2">
@@ -220,6 +218,15 @@
 {% endmacro %}
 
 {% block content %}
+  <style>
+    .fh-project-title { text-wrap: auto; }
+    .fh-results-toggle:hover,
+    .fh-results-toggle:focus-visible {
+      background: color-mix(in srgb, var(--v3-main-bg) 85%, var(--v3-text-color) 15%);
+      border-radius: 0.375rem;
+      outline: none;
+    }
+  </style>
   <div class="v3-page">
     <div class="container-fluid" style="max-width:1024px">
       {{ fosshack_navbar() }}
@@ -272,20 +279,21 @@
   </div>
 
   <script>
+    frappe.ready(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+
     function openCardFromUrl() {
       const urlParams = new URLSearchParams(window.location.search)
       const year = urlParams.get('year')
 
       if (year) {
-        // Find all hackathon cards and match by data attribute
-        const allCards = document.querySelectorAll('[id^="hackathon-"]')
-        allCards.forEach((card) => {
-          // data-year attribute in hackathon cards
+        document.querySelectorAll('[id^="hackathon-"]').forEach((card) => {
           if (card.getAttribute('data-year') === year) {
-            const contentId = card.id.replace('hackathon-', 'content-')
-            const content = document.getElementById(contentId)
-            if (content && content.classList.contains('hidden')) {
-              toggleSection(contentId)
+            const contentId = '#' + card.id.replace('hackathon-', 'content-')
+            const $content = $(contentId)
+            if ($content.length && !$content.hasClass('show')) {
+              $content.collapse('show')
               card.scrollIntoView({ behavior: 'smooth', block: 'start' })
             }
           }

@@ -12,7 +12,7 @@ from frappe.utils.response import as_csv, as_json
 from ics import Calendar, Event
 from ics.grammar.parse import ContentLine
 
-from fossunited.doctype_ids import EVENT, EVENT_SCHEDULE, PROPOSAL, SPEAKER
+from fossunited.doctype_ids import EVENT, EVENT_MEDIA, EVENT_SCHEDULE, PROPOSAL, SPEAKER
 
 
 def to_time(val):
@@ -60,7 +60,7 @@ def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
 
     linked_cfps = list({s["linked_cfp"] for s in sessions if s.get("linked_cfp")})
 
-    route_lookup, speakers_lookup = {}, {}
+    route_lookup, speakers_lookup, media_video = {}, {}, {}
     if linked_cfps:
         for row in frappe.db.get_all(PROPOSAL, {"name": ("in", linked_cfps)}, ["name", "route"]):
             route_lookup[row["name"]] = row["route"]
@@ -78,6 +78,14 @@ def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
             ],
         ):
             speakers_lookup.setdefault(sp.pop("parent"), []).append(sp)
+        # Event Media is the primary video source; one bulk fetch keyed by proposal,
+        # used only to fill sessions whose talk_video is blank.
+        for m in frappe.db.get_all(
+            EVENT_MEDIA,
+            {"proposal": ("in", linked_cfps), "video_url": ("is", "set")},
+            ["proposal", "video_url"],
+        ):
+            media_video.setdefault(m["proposal"], m["video_url"])
 
     grouped = defaultdict(lambda: defaultdict(list))
     for s in sessions:
@@ -86,6 +94,9 @@ def get_event_schedule(event_id: str, doctype: str = EVENT) -> dict:
         cfp = s.get("linked_cfp")
         s["cfp_route"] = route_lookup.get(cfp) if cfp else None
         s["cfp_speakers"] = speakers_lookup.get(cfp, []) if cfp else []
+        # Arbitrary talk_video on the schedule row wins; else fall back to Event Media.
+        if not s.get("talk_video") and cfp:
+            s["talk_video"] = media_video.get(cfp)
         grouped[date_str][s.get("hall") or "General"].append(s)
 
     return {date: dict(halls) for date, halls in sorted(grouped.items())}

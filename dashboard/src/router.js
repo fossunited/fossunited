@@ -74,7 +74,7 @@ const routes = [
         name: 'TicketTransferProcess',
         component: () => import('@/pages/TicketTransferProcess.vue'),
         props: true,
-        meta: { isPublicPage: true },
+        meta: { isPublicPage: false },
       },
     ],
   },
@@ -106,11 +106,6 @@ const routes = [
         name: 'EventRsvp',
         component: () => import('@/pages/EventRsvp.vue'),
         children: [
-          {
-            path: '',
-            name: 'EventRsvpManage',
-            component: () => import('@/pages/EventRsvpManage.vue'),
-          },
           {
             path: 'create',
             name: 'EventRsvpCreate',
@@ -165,11 +160,6 @@ const routes = [
         name: 'EventCfp',
         component: () => import('@/pages/EventCfp.vue'),
         children: [
-          {
-            path: '',
-            name: 'EventCfpManage',
-            component: () => import('@/pages/EventCfpManage.vue'),
-          },
           {
             path: 'create',
             name: 'EventCfpCreate',

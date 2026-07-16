@@ -3,7 +3,50 @@ import re
 import frappe
 from frappe import _
 
-from fossunited.doctype_ids import USER_PROFILE
+from fossunited.doctype_ids import DEFAULT_USER_PHOTO, USER_PROFILE
+
+_PROFILE_FIELDS = ["name", "full_name", "profile_photo", "bio", "route", "email"]
+
+
+def fetch_user_profiles(identifiers, fallback_bio="", force_bio=False):
+    """Fetch FOSS User Profiles by email or profile docname. Preserves input order."""
+    if not identifiers:
+        return []
+
+    emails = [i for i in identifiers if "@" in i]
+    names = [i for i in identifiers if "@" not in i]
+
+    found = {}
+    if emails:
+        for p in frappe.db.get_all(USER_PROFILE, {"email": ["in", emails]}, _PROFILE_FIELDS):
+            found[p.email] = p
+    if names:
+        for p in frappe.db.get_all(USER_PROFILE, {"name": ["in", names]}, _PROFILE_FIELDS):
+            found.setdefault(p.name, p)
+
+    result = []
+    for identifier in identifiers:
+        p = found.get(identifier)
+        if p:
+            result.append(
+                {
+                    "full_name": p.full_name,
+                    "profile_photo": p.profile_photo or DEFAULT_USER_PHOTO,
+                    "bio": fallback_bio if force_bio else (p.bio or fallback_bio),
+                    "route": f"/{p.route}" if p.route else "#",
+                }
+            )
+        elif "@" not in identifier:
+            # Plain name with no matching profile - show as static card
+            result.append(
+                {
+                    "full_name": identifier,
+                    "profile_photo": DEFAULT_USER_PHOTO,
+                    "bio": fallback_bio,
+                    "route": "#",
+                }
+            )
+    return result
 
 
 def set_unique_username(doc, method):

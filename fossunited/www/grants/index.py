@@ -132,7 +132,6 @@ _EVENT_GRANT_FIELDS = [
     "event_name",
     "event_website",
     "event_description",
-    "application_details",
     "event_start_date",
     "grant_amount",
     "event_organiser",

@@ -10,11 +10,12 @@
   "field_order": [
     "meta_section",
     "status",
+    "only_workshops",
+    "only_talk_proposals",
     "column_break_puww",
     "allow_cfp_edit",
     "anonymise_proposals",
-    "only_workshops",
-    "only_talk_proposals",
+    "hide_review",
     "event_information_section",
     "event",
     "event_name",
@@ -144,6 +145,12 @@
       "fieldname": "has_public_custom_responses",
       "fieldtype": "Check",
       "label": "Has Public Custom Responses"
+    },
+    {
+      "default": "1",
+      "fieldname": "hide_review",
+      "fieldtype": "Check",
+      "label": "Hide Reviews from Public Page"
     }
   ],
   "links": [
@@ -153,7 +160,7 @@
       "link_fieldname": "linked_cfp"
     }
   ],
-  "modified": "2025-12-08 17:46:08.489691",
+  "modified": "2026-07-02 19:38:36.773556",
   "modified_by": "Administrator",
   "module": "FOSSUnited",
   "name": "FOSS Event CFP",
@@ -187,6 +194,7 @@
     }
   ],
   "row_format": "Dynamic",
+  "show_title_field_in_link": 1,
   "sort_field": "modified",
   "sort_order": "DESC",
   "states": [
@@ -199,5 +207,6 @@
       "title": "Live"
     }
   ],
+  "title_field": "event_name",
   "track_changes": 1
 }

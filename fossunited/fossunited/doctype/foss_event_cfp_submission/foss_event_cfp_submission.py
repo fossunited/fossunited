@@ -15,11 +15,45 @@ from fossunited.doctype_ids import (
     CHAPTER,
     EVENT,
     EVENT_CFP,
+    EVENT_MEDIA,
     EVENT_SCHEDULE,
     PROPOSAL,
     USER_PROFILE,
 )
 from fossunited.fossunited.utils import get_youtube_id, sanitize_text_content
+
+# Proposer-editable content fields. A change to any of these after the CFP
+# edit window closes is blocked for non-System-Manager users. Reviewer/status
+# edits and withdrawal touch none of these, so they pass through.
+PROPOSER_CONTENT_SCALARS = (
+    "talk_title",
+    "session_type",
+    "intended_audience",
+    "is_first_talk",
+    "talk_license",
+    "talk_description",
+    "key_takeaways",
+    "session_categories",
+)
+PROPOSER_CONTENT_TABLES = {
+    "references": ("link",),
+    "speakers": (
+        "full_name",
+        "email",
+        "designation",
+        "organization",
+        "social_link",
+        "contact_info",
+        "bio",
+        "photo",
+    ),
+    "custom_answers": ("question", "response"),
+}
+
+
+def _table_snapshot(doc, fieldname, cols):
+    """Order-sensitive snapshot of a child table restricted to `cols`."""
+    return [tuple((row.get(c) or "") for c in cols) for row in (doc.get(fieldname) or [])]
 
 
 class FOSSEventCFPSubmission(WebsiteGenerator):
@@ -117,7 +151,8 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
     def before_insert(self):
         self.check_status()
         self.validate_linked_cfp_exists()
-        self.validate_form_is_live()
+        if "System Manager" not in frappe.get_roles():
+            self.validate_form_is_live()
         self._set_name_from_first_speaker()
 
     def _set_name_from_first_speaker(self):
@@ -129,6 +164,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.full_name = self.speakers[0].full_name
 
     def before_save(self):
+        self.validate_proposer_edit_window()
         if self.has_value_changed("is_withdrawn"):
             if self.is_withdrawn and self.status == "Approved":
                 self.status = "Withdrawn"
@@ -144,11 +180,31 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         self.validate_review_ownership()
         if self.has_value_changed("subscribe_chapter_mailing"):
             self.handle_email_group("CFP Proposers")
-        self.notify_proposer_on_review()
 
     def after_insert(self):
         # Always handle initial subscription on insert
         self.handle_email_group("CFP Proposers")
+        self._link_speaker_users()
+
+    def _link_speaker_users(self):
+        """Set linked_user (FOSS User Profile) on speaker rows whose email has a profile."""
+        emails = [s.email for s in self.speakers if s.email and not s.linked_user]
+        if not emails:
+            return
+        profile_map = {
+            p.user: p.name
+            for p in frappe.db.get_all(USER_PROFILE, {"user": ("in", emails)}, ["name", "user"])
+        }
+        for speaker in self.speakers:
+            profile_name = profile_map.get(speaker.email)
+            if profile_name:
+                frappe.db.set_value(
+                    "CFP Submission Speaker",
+                    speaker.name,
+                    "linked_user",
+                    profile_name,
+                    update_modified=False,
+                )
 
     def set_route(self):
         event_route = frappe.db.get_value(EVENT, self.event, "route")
@@ -165,7 +221,10 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def check_status(self) -> None:
         if self.status != "Review Pending":
-            frappe.throw(_("Illegal status change"), frappe.ValidationError)
+            frappe.throw(
+                _("New CFP submissions must start with status 'Review Pending'"),
+                frappe.ValidationError,
+            )
 
     def validate_linked_cfp_exists(self) -> None:
         if not frappe.db.exists(EVENT_CFP, self.linked_cfp):
@@ -173,8 +232,42 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def validate_form_is_live(self) -> None:
         linked_cfp = frappe.get_doc(EVENT_CFP, self.linked_cfp)
-        if not linked_cfp.status == "Live":
+        if linked_cfp.status != "Live" or linked_cfp.is_past_deadline():
             frappe.throw(_("The CFP Form for this event is not live"), frappe.PermissionError)
+
+    def validate_proposer_edit_window(self) -> None:
+        """Block proposer content edits once the CFP edit window has closed.
+
+        System Manager bypasses. A save that changes no proposer content
+        (reviewer adding a review, status change, withdrawal) always passes.
+        """
+        if self.is_new() or {"System Manager", "IndiaFOSS Chair"} & set(frappe.get_roles()):
+            return
+        if not self._content_changed():
+            return
+        if not frappe.get_cached_doc(EVENT_CFP, self.linked_cfp).can_edit_proposal():
+            frappe.throw(_("Editing for this proposal is closed."), frappe.PermissionError)
+
+    def _content_changed(self) -> bool:
+        before = self.get_doc_before_save()
+        if not before:
+            return True
+        # talk_description and key_takeaways are sanitised in validate(), which
+        # runs before before_save. The before-doc still holds the raw DB value,
+        # so a non-sanitised (e.g. legacy) row would look "changed" on any save
+        # that never touched proposal content (a reviewer adding a review).
+        # Sanitise both sides for these fields so only real edits register.
+        for f in PROPOSER_CONTENT_SCALARS:
+            old = before.get(f) or ""
+            new = self.get(f) or ""
+            if f in ("talk_description", "key_takeaways"):
+                old = sanitize_text_content(old)
+            if old != new:
+                return True
+        return any(
+            _table_snapshot(self, field, cols) != _table_snapshot(before, field, cols)
+            for field, cols in PROPOSER_CONTENT_TABLES.items()
+        )
 
     def validate_session_type_permissions(self) -> None:
         if self.session_type != "Invited Talk":
@@ -190,16 +283,15 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
     def get_context(self, context):
         event = frappe.get_doc(EVENT, self.event)
-        cfp = frappe.db.get_value(
-            EVENT_CFP,
-            self.linked_cfp,
-            ["anonymise_proposals", "has_public_custom_responses"],
-            as_dict=True,
-        )
+        cfp = frappe.get_cached_doc(EVENT_CFP, self.linked_cfp)
         context.anonymous_cfps = cfp.anonymise_proposals
         context.has_public_custom_responses = cfp.has_public_custom_responses
+        context.can_edit_proposal = cfp.can_edit_proposal()
+        context.hide_review = cfp.hide_review
         context.breadcrumbs = self.get_breadcrumb(event)
-        context.session_categories = self.session_categories.splitlines()
+        context.session_categories = (
+            self.session_categories.splitlines() if self.session_categories else []
+        )
         context.status_badge_theme = {
             "Review Pending": "orange",
             "Screening": "blue",
@@ -295,7 +387,13 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
 
         context.no_cache = 1
         if context.is_owner:
-            context.cfp_data_json = frappe.as_json(self.as_dict()).replace("</", "<\\/")
+            data = self.as_dict()
+            # cfp_data_json only powers the proposer's quick-edit dialog, which
+            # never edits reviews. Drop the whole reviews table so no review
+            # data (remarks, verdict, private_comment, must_have) is exposed to
+            # the proposer.
+            data.pop("reviews", None)
+            context.cfp_data_json = frappe.as_json(data).replace("</", "<\\/")
             meta = frappe.get_meta(PROPOSAL)
             context.cfp_field_desc_json = frappe.as_json(
                 {f.fieldname: f.description for f in meta.fields if f.description}
@@ -399,15 +497,14 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         )
 
     def cfp_get_talk_video(self) -> str | None:
-        """Return the talk video link if CFP is linked in schedule and has a video."""
+        """Talk video for this proposal: prefer the linked Event Media (the primary
+        source now that we add Event Media for all talks), else fall back to the
+        schedule row's talk_video."""
+        media_video = frappe.db.get_value(EVENT_MEDIA, {"proposal": self.name}, "video_url")
+        if media_video:
+            return media_video
 
-        talk_scheduled = frappe.db.get_value(
-            EVENT_SCHEDULE,
-            {"linked_cfp": self.name},
-            ["talk_video"],
-        )
-
-        return talk_scheduled
+        return frappe.db.get_value(EVENT_SCHEDULE, {"linked_cfp": self.name}, "talk_video")
 
     def notify_team_approved_proposal_withdrawn(self):
         """Notify chapter members that an approved proposal has been withdrawn by proposer."""
@@ -430,9 +527,12 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         FOSS United Team</p>
         """
 
+        if not to:
+            return
+
         try:
             frappe.sendmail(
-                recipients=to,
+                recipients=[to],
                 cc=team_emails,
                 subject=f"{self.full_name} has Withdrawn their proposal from {self.event_name}",
                 message=message,
@@ -499,72 +599,3 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
                 _("You can only submit one review per proposal."),
                 frappe.PermissionError,
             )
-
-    def notify_proposer_on_review(self):
-        """Notify proposer on new or updated review."""
-        old_doc = self.get_doc_before_save()
-        if self.is_new() or not old_doc:
-            return
-
-        old_reviews = {r.name: r for r in old_doc.reviews if r.name}
-        for review in self.reviews:
-            old_review = old_reviews.get(review.name)
-
-            if not old_review:
-                change_type = "new"
-            elif review.remarks != old_review.remarks:
-                change_type = "remarks_changed"
-            else:
-                continue
-
-            self._send_review_email(review, change_type, old_review)
-
-    def _send_review_email(self, review, change_type, old_review=None):
-        """Helper to send review notification emails."""
-        if not self.email:
-            return
-
-        speaker_emails = [s.email for s in self.speakers if s.email]
-        sub_prefix = "New review" if change_type == "new" else "Review remarks updated"
-
-        try:
-            frappe.sendmail(
-                recipients=self.email,
-                cc=speaker_emails,
-                subject=f"{sub_prefix} on your proposal for {self.event_name}",
-                message=self._build_review_message(review, change_type, old_review),
-                reference_doctype=PROPOSAL,
-                reference_name=self.name,
-            )
-        except Exception:
-            frappe.log_error(
-                title="review_notification:send_failed",
-                message=frappe.get_traceback(),
-            )
-
-    def _build_review_message(self, review, change_type, old_review=None):
-        """Build review notification message."""
-        base_intro = (
-            f"Dear {self.full_name},<br><br>"
-            f"Your proposal for <b>{self.event_name}</b>, "
-            f"titled <b>{self.talk_title}</b>, has an update.<br><br>"
-        )
-
-        if change_type == "new":
-            remarks_section = (
-                f"Remarks: <pre><code>{review.remarks}</code></pre><br>" if review.remarks else ""
-            )
-            body = f"<b>A new review has been submitted.</b><br>{remarks_section}"
-        else:  # remarks_changed
-            body = (
-                f"<b>A reviewer has updated their remarks.</b><br>"
-                f"Old Remarks: <pre><code>{old_review.remarks}</code></pre><br>"
-                f"New Remarks: <pre><code>{review.remarks}</code></pre><br>"
-            )
-
-        closing = (
-            f"You can access your proposal here: {frappe.utils.get_url(self.route)}<br><br>"
-            "Regards,<br>FOSS United Team"
-        )
-
-        return base_intro + body + closing

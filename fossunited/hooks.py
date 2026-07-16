@@ -41,6 +41,10 @@ website_route_rules = [
         "from_route": "/c/<chapter>/rss.xml",
         "to_route": "/c/rss.xml",
     },
+    {
+        "from_route": "/indiafoss/speakers/<slug>",
+        "to_route": "indiafoss/speaker_talks",
+    },
 ]
 
 # add methods and filters to jinja environment
@@ -85,6 +89,19 @@ doc_events = {
         "before_insert": [
             "fossunited.ticketing.doctype.foss_event_ticket.foss_event_ticket.validate_payment_before_insert"
         ],
+    },
+    # ToDO email is sent by frappe only when assigned from desk, we will have custom mail
+    # when a reviewer is assigned to a proposal so we give dashboard link itself to open
+    "ToDo": {
+        "after_insert": "fossunited.utils.notifications.notify_cfp_reviewer_assignment",
+    },
+    "Event Media": {
+        "on_update": "fossunited.fossunited.event_media.clear_speakers_cache",
+        "on_trash": "fossunited.fossunited.event_media.clear_speakers_cache",
+    },
+    "FOSS Event CFP Submission": {
+        "on_update": "fossunited.fossunited.event_media.clear_speakers_cache",
+        "on_trash": "fossunited.fossunited.event_media.clear_speakers_cache",
     },
 }
 

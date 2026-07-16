@@ -40,7 +40,6 @@
         </div>
       </div>
 
-      <!-- Controls -->
       <div class="v3-controls mb-4">
         <div class="v3-controls-left">
           <div class="v3-search-input v3-search-wide">
@@ -53,27 +52,104 @@
             />
             <i class="ti ti-search v3-text-tertiary" aria-hidden="true"></i>
           </div>
+          <a
+            class="v3-text-tertiary"
+            aria-label="Search tips"
+            data-toggle="tooltip"
+            data-container="body"
+            data-placement="top"
+            title="Search bangs: event:name, location:city, date:2026-01 - combine with commas"
+          ><i class="ti ti-help"></i></a>
         </div>
 
         <div class="v3-controls-right">
           {% if page_type == "upcoming" %}
             <a
               href="/events/timeline/rss.xml"
-              class="v3-text-secondary mr-4"
-              title="Subscribe to Upcoming Events"
+              class="v3-btn v3-btn-secondary v3-btn-icon-only"
               aria-label="Subscribe to Upcoming Events RSS feed"
+              data-toggle="tooltip"
+              data-placement="bottom"
+              title="Catchup on Upcoming event via RSS"
             >
               <i class="ti ti-rss" aria-hidden="true"></i>
             </a>
+
+            <div class="position-relative d-inline-block">
+              <button id="download-ics-toggle" class="v3-btn v3-btn-secondary d-flex align-items-center gap-2" aria-label="Subscribe to Calendar" aria-haspopup="true" aria-expanded="false">
+                <i class="ti ti-calendar-event" aria-hidden="true"></i>
+                Subscribe
+                <i class="ti ti-chevron-down" aria-hidden="true" style="font-size: 0.85em; opacity: 0.7;"></i>
+              </button>
+
+              <div id="ics-dropdown-menu" aria-label="Calendar subscription options" class="v3-select-dropdown mt-1 p-1" style="display: block; position: absolute; right: 0; top: 100%; z-index: 1050; min-width: 240px; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s; background: var(--v3-card-bg); border: 1px solid var(--v3-button-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.08);">
+                <a href="#" class="v3-dropdown-item"
+                  onclick="
+                    event.preventDefault();
+                    const icsUrl = 'https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics';
+                    navigator.clipboard.writeText(icsUrl).then(() => {
+                      alert('Calendar link copied to clipboard!\n\nTo finish subscribing in Proton:\n1. Scroll down to \'My calendars\'\n2. Click \'Add calendar from URL\'\n3. Paste the link.');
+                      window.open('https://calendar.proton.me/u/0/settings/calendars', '_blank');
+                    });
+                  ">
+                  <i class="ti ti-shield-check v3-text-secondary" aria-hidden="true"></i> Subscribe with Proton
+                </a>
+                <a class="v3-dropdown-item" href="https://calendar.google.com/calendar/render?cid=webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics" target="_blank" rel="noopener noreferrer">
+                  <i class="ti ti-brand-google v3-text-secondary" aria-hidden="true"></i> Subscribe with Google
+                </a>
+                <a class="v3-dropdown-item" href="webcal://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics">
+                  <i class="ti ti-brand-apple v3-text-secondary" aria-hidden="true"></i> Subscribe with Apple
+                </a>
+                <div style="height: 1px; background: var(--v3-button-border); margin: 4px 0;"></div>
+                <a class="v3-dropdown-item d-flex align-items-center justify-content-between" href="/api/method/fossunited.api.chapter.upcoming_events_ics">
+                  <div class="d-flex align-items-center gap-2">
+                    <i class="ti ti-download v3-text-secondary" aria-hidden="true"></i> Download .ics File
+                  </div>
+                  <div class="p-1" role="button" tabindex="0" aria-label="Copy calendar URL" title="Copy URL" style="margin: -4px; cursor: pointer;"
+                       onclick="
+                         event.preventDefault();
+                         event.stopPropagation();
+                         const icon = this.querySelector('i');
+                         navigator.clipboard.writeText('https://fossunited.org/api/method/fossunited.api.chapter.upcoming_events_ics').then(() => {
+                           icon.className = 'ti ti-check text-success';
+                           setTimeout(() => { icon.className = 'ti ti-copy v3-text-secondary'; }, 2000);
+                         });
+                       "
+                       onkeydown="
+                         if (event.key === 'Enter' || event.key === ' ') {
+                           event.preventDefault();
+                           this.click();
+                         }
+                       ">
+                    <i class="ti ti-copy v3-text-secondary" aria-hidden="true"></i>
+                  </div>
+                </a>
+                <div class="px-3 pt-1 pb-2">
+                  <small class="v3-text-tertiary" style="font-size: 0.75rem;">
+                    <i class="ti ti-refresh" aria-hidden="true" style="font-size: 0.7rem;"></i>
+                    Subscriptions auto-update when events change
+                  </small>
+                </div>
+              </div>
+            </div>
           {% endif %}
-          <button id="filter-toggle" class="v3-btn v3-btn-secondary" type="button" aria-expanded="false" aria-controls="filters-panel">
+
+          <button
+            id="filter-toggle"
+            class="v3-btn v3-btn-secondary"
+            type="button"
+            aria-expanded="false"
+            aria-controls="filters-panel"
+            data-toggle="tooltip"
+            data-placement="bottom"
+            title="Toggle filters"
+          >
             Filter
             <i class="ti ti-adjustments-filled" aria-hidden="true"></i>
           </button>
         </div>
       </div>
 
-      <!-- Filters panel -->
       <div id="filters-panel" class="v3-card mb-4 d-none">
         <div class="v3-controls">
           <div class="v3-controls-left gap-2 flex-wrap align-items-end">
@@ -116,18 +192,9 @@
             </label>
           </div>
 
-          {% if page_type == "upcoming" %}
-            <div class="v3-controls-right">
-              <button id="download-ics" class="v3-btn v3-btn-dark" aria-label="Download events as ICS calendar file">
-                <i class="ti ti-download" aria-hidden="true"></i>
-                Download ICS
-              </button>
-            </div>
-          {% endif %}
         </div>
       </div>
 
-      <!-- Category toggle -->
       <div class="v3-card btn-group w-100 mb-4 p-2" role="group" aria-label="Event category filter">
         <button id="toggle-city" class="v3-btn v3-text-primary v3-btn-secondary w-50" aria-pressed="true">
           City Events
@@ -135,7 +202,6 @@
         <button id="toggle-club" class="v3-btn v3-text-primary w-50" aria-pressed="false">Club Events</button>
       </div>
 
-      <!-- Page navigation -->
       <div class="d-flex justify-content-center gap-3 mb-4">
         <a
           href="/events/timeline"
@@ -151,23 +217,19 @@
         </a>
       </div>
 
-      <!-- Year pagination (Past events only) -->
       {% if page_type == "completed" %}
         <div class="p-2 mb-4">
           <div class="v3-pagination mb-4" id="year-pagination"></div>
         </div>
       {% endif %}
 
-      <!-- Timeline -->
       <div id="timeline-container"></div>
 
-      <!-- Empty state -->
       <div id="empty-state" class="text-center py-5 d-none">
         <div class="display-4 opacity-25">🔍</div>
         <h4 class="v3-text-secondary mt-3">No {{ page_type }} events found</h4>
       </div>
 
-      <!-- Event cards (hidden) -->
       {% set all_events = timeline_events %}
       <div id="event-cards-template" class="d-none">
         {% for event in all_events %}
@@ -228,7 +290,8 @@
         filtersPanel: document.getElementById('filters-panel'),
         toggleCity: document.getElementById('toggle-city'),
         toggleClub: document.getElementById('toggle-club'),
-        downloadIcs: document.getElementById('download-ics'),
+        downloadIcsToggle: document.getElementById('download-ics-toggle'),
+        icsDropdown: document.getElementById('ics-dropdown-menu'),
         yearPagination: document.getElementById('year-pagination'),
       }
 
@@ -428,15 +491,15 @@
              class="d-flex align-items-center mb-3 timeline-month-header"
              role="button"
              tabindex="0"
-             aria-expanded="true"
-             onclick="toggleSection('${sectionId}')"
+             data-toggle="collapse"
+             data-target="#${sectionId}"
            >
              <i class="ti ti-circle-filled  mr-2 v3-grant-stat-label ${statusClass}"></i>
              <h5 class="v3-text-primary mb-2">${month}</h5>
              <i class="ti ti-chevron-down v3-toggle-icon transition"></i>
            </div>
 
-           <div id="${sectionId}">
+           <div id="${sectionId}" class="collapse show">
              <div class="row v3-timeline-grid"></div>
            </div>
          `
@@ -546,6 +609,8 @@
           start: parsed.start,
           end: parsed.end,
         })
+        state._parsedStart = parsed.start ? new Date(parsed.start) : null
+        state._parsedEnd = parsed.end ? new Date(parsed.end) : null
 
         dom.startDate.value = parsed.start
         dom.endDate.value = parsed.end
@@ -553,13 +618,14 @@
       }
 
       dom.startDate.onchange = (e) => {
-          state.filters.start = e.target.value
-          state._parsedStart = e.target.value ? new Date(e.target.value) : null
-          render()
+        state.filters.start = e.target.value
+        state._parsedStart = e.target.value ? new Date(e.target.value) : null
+        render()
       }
 
       dom.endDate.onchange = (e) => {
         state.filters.end = e.target.value
+        state._parsedEnd = e.target.value ? new Date(e.target.value) : null
         render()
       }
 
@@ -592,27 +658,6 @@
         render()
       }
 
-      if (dom.downloadIcs) {
-        dom.downloadIcs.onclick = () => {
-        const ids = wrappers
-          .filter(passesFilters)
-          .map((w) => w.dataset.eventId)
-          .filter(Boolean)
-
-          if (!ids.length) return alert('No events to export')
-        if (ids.length > 30) {
-          return alert('Please narrow filters to 30 events or fewer to export.')
-        }
-
-          const a = document.createElement('a')
-          a.href = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + encodeURIComponent(JSON.stringify(ids)) + '&download=1'
-          a.download = 'events.ics'
-          document.body.appendChild(a)
-          a.click()
-          document.body.removeChild(a)
-        }
-      }
-
       // Read ?s= URL param to pre-populate search
       const _urlSearch = new URLSearchParams(window.location.search).get('s')
       if (_urlSearch) {
@@ -624,8 +669,45 @@
           start: _parsed.start,
           end: _parsed.end,
         })
+        state._parsedStart = _parsed.start ? new Date(_parsed.start) : null
+        state._parsedEnd = _parsed.end ? new Date(_parsed.end) : null
         dom.startDate.value = _parsed.start
         dom.endDate.value = _parsed.end
+      }
+
+      if (dom.downloadIcsToggle && dom.icsDropdown) {
+        function openIcsDropdown() {
+          dom.icsDropdown.style.opacity = '1'
+          dom.icsDropdown.style.visibility = 'visible'
+          dom.icsDropdown.style.transform = 'translateY(0)'
+          dom.downloadIcsToggle.setAttribute('aria-expanded', 'true')
+        }
+
+        function closeIcsDropdown(returnFocus) {
+          dom.icsDropdown.style.opacity = '0'
+          dom.icsDropdown.style.visibility = 'hidden'
+          dom.icsDropdown.style.transform = 'translateY(-4px)'
+          dom.downloadIcsToggle.setAttribute('aria-expanded', 'false')
+          if (returnFocus) dom.downloadIcsToggle.focus()
+        }
+
+        dom.downloadIcsToggle.onclick = (e) => {
+          e.stopPropagation()
+          const isOpen = dom.downloadIcsToggle.getAttribute('aria-expanded') === 'true'
+          isOpen ? closeIcsDropdown(false) : openIcsDropdown()
+        }
+
+        document.addEventListener('click', (e) => {
+          if (!dom.downloadIcsToggle.contains(e.target) && !dom.icsDropdown.contains(e.target)) {
+            closeIcsDropdown(false)
+          }
+        })
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && dom.downloadIcsToggle.getAttribute('aria-expanded') === 'true') {
+            closeIcsDropdown(true)
+          }
+        })
       }
 
       // Initialize
@@ -633,4 +715,5 @@
       render()
     })()
   </script>
+  <script>frappe.ready(function(){ $('[data-toggle="tooltip"]').tooltip(); })</script>
 {% endblock %}

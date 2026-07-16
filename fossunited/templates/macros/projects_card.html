@@ -14,7 +14,7 @@
             href="{{ item.link }}"
             class="v3-sponsor tier-2"
             target="_blank"
-            {% if item.description %}title="{{ item.description }}"{% endif %}
+            {% if item.description %}data-toggle="tooltip" title="{{ item.description }}"{% endif %}
           >
             {% if item.image or item.logo %}
               <img

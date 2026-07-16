@@ -14,9 +14,11 @@ class FOSSEventCFPReview(Document):
         from frappe.types import DF
 
         email: DF.Data | None
+        must_have: DF.Check
         parent: DF.Data
         parentfield: DF.Data
         parenttype: DF.Data
+        private_comment: DF.SmallText | None
         remarks: DF.SmallText | None
         reviewer: DF.Data | None
         reviewer_profile: DF.Link | None

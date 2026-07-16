@@ -19,11 +19,8 @@
   "route",
   "navbar_controls_section",
   "show_speakers",
-  "show_rsvp",
-  "show_schedule",
-  "column_break_moaa",
-  "show_cfp",
   "show_photos",
+  "show_schedule",
   "chapter_information_section",
   "chapter",
   "column_break_tzza",
@@ -59,6 +56,8 @@
   "project_showcase",
   "community_partners_section",
   "community_partners",
+  "arbitrary_timeline_data_section",
+  "event_data",
   "volunteers_tab",
   "event_members_section",
   "event_members",
@@ -273,22 +272,6 @@
   },
   {
    "default": "0",
-   "fieldname": "show_rsvp",
-   "fieldtype": "Check",
-   "label": "Show RSVP"
-  },
-  {
-   "fieldname": "column_break_moaa",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "show_cfp",
-   "fieldtype": "Check",
-   "label": "Show CFP"
-  },
-  {
-   "default": "0",
    "fieldname": "show_photos",
    "fieldtype": "Check",
    "label": "Show Photos"
@@ -491,6 +474,18 @@
    "fieldtype": "Check",
    "label": "Feedback sent?",
    "read_only": 1
+  },
+  {
+   "fieldname": "arbitrary_timeline_data_section",
+   "fieldtype": "Section Break",
+   "label": "Arbitrary Timeline Data"
+  },
+  {
+   "description": "Data to store updating data fields for IndiaFOSS event specifically.\nEg: Timeline dates, co-chairs, certain links, showing items in macro cards",
+   "fieldname": "event_data",
+   "fieldtype": "JSON",
+   "label": "Event data",
+   "permlevel": 4
   }
  ],
  "has_web_view": 1,
@@ -523,7 +518,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-05-07 16:53:25.160146",
+ "modified": "2026-06-29 15:58:17.947880",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
@@ -559,6 +554,14 @@
    "read": 1,
    "role": "Guest",
    "select": 1
+  },
+  {
+   "delete": 1,
+   "export": 1,
+   "permlevel": 4,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
   }
  ],
  "row_format": "Dynamic",

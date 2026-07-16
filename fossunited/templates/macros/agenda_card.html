@@ -74,6 +74,8 @@
                                   src="{{ speaker.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
                                   alt="{{ speaker.full_name }}"
                                   class="v3-speaker-img"
+                                  data-toggle="tooltip"
+                                  title="{{ speaker.full_name }}"
                                 />
                                 {% endfor %}
                               </div>

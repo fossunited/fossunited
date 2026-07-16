@@ -33,7 +33,7 @@
 
 </style>
 
-<div class="v3-page"><div class="container px-3 mb-4 d-flex flex-column gap-8" style="max-width: 800px;">
+<div class="v3-page"><div class="container px-3 mb-8 pb-4 d-flex flex-column gap-8" style="max-width: 800px;">
 
   <div class="d-flex justify-content-between align-items-center">
     {{ breadcrumb(breadcrumbs) }}
@@ -90,23 +90,25 @@
         <a
           href="/dashboard/my-proposals/edit/{{ doc.name }}"
           class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
-          title="Edit full proposal in dashboard"
+          title="Open proposal in dashboard"
           data-toggle="tooltip"
         >
           <i class="ti ti-external-link" aria-hidden="true"></i>
           Dashboard
         </a>
-        <button
-          type="button"
-          class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
-          onclick="cfpEditAll()"
-          title="Quick-edit this proposal inline"
-          data-toggle="tooltip"
-          aria-label="Quick edit proposal"
-        >
-          <i class="ti ti-pencil" aria-hidden="true"></i>
-          Edit
-        </button>
+        {% if can_edit_proposal %}
+          <button
+            type="button"
+            class="v3-btn v3-btn--sm v3-border v3-bg-card v3-text-secondary"
+            onclick="cfpEditAll()"
+            title="Quick-edit this proposal inline"
+            data-toggle="tooltip"
+            aria-label="Quick edit proposal"
+          >
+            <i class="ti ti-pencil" aria-hidden="true"></i>
+            Edit
+          </button>
+        {% endif %}
       {% endif %}
       {{ like_button() }}
     </div>
@@ -127,6 +129,16 @@
       </a>
     {% endif %}
   </div>
+
+  {% if is_owner %}
+    <div class="text-sm v3-text-tertiary">
+      {% if can_edit_proposal %}
+        You can edit your proposal while the CFP is open.
+      {% else %}
+        Editing closed: the CFP is closed.
+      {% endif %}
+    </div>
+  {% endif %}
 
   {% if submitter_profile %}
     {{ profile_headshot(submitter_profile.full_name, submitter_profile.photo, submitter_profile.url) }}
@@ -153,7 +165,7 @@
 {% if content %}
 <fieldset class="prose-box border rounded p-3">
   <legend class="v3-text-tertiary medium w-fit px-2 mb-0">{{ label }}</legend>
-  <div class="v3-text-primary">{{ content }}</div>
+  <div class="v3-text-primary v3-html-content">{{ content }}</div>
 </fieldset>
 {% endif %}
 {% endmacro %}
@@ -249,8 +261,9 @@
     />
   {% if sp_url %}</a>{% else %}</div>{% endif %}
   {% if speaker.social_link %}
+    {% set social_url = speaker.social_link if speaker.social_link.startswith('http://') or speaker.social_link.startswith('https://') else 'https://' + speaker.social_link %}
     <a
-      href="{{ speaker.social_link | e }}"
+      href="{{ social_url | e }}"
       target="_blank"
       rel="noopener noreferrer"
       aria-label="{{ speaker.full_name }}'s social profile"
@@ -277,24 +290,27 @@
 
 
 {% macro render_reviews() %}
+{% if not hide_review %}
 <div class="d-flex flex-column gap-3">
   <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
 
   <div class="d-flex flex-column gap-2">
     {% if not doc.reviews %}
       <div class="v3-text-tertiary text-sm">No reviews yet.</div>
+    {% else %}
+      {% for review in doc.reviews %}
+        {{ review_card(review) }}
+        {% if not loop.last %}<hr class="my-2" />{% endif %}
+      {% endfor %}
     {% endif %}
-    {% for review in doc.reviews %}
-      {{ review_card(review) }}
-      {% if not loop.last %}<hr class="my-2" />{% endif %}
-    {% endfor %}
   </div>
 </div>
+{% endif %}
 {% endmacro %}
 
 {% block script %}
 {{ super() }}
-{% if is_owner %}
+{% if is_owner and can_edit_proposal %}
 <script>
 frappe.ready(function() {
   frappe.require('controls.bundle.js')
@@ -394,7 +410,7 @@ function _openCfpDialog(doc) {
 
 {% macro review_card(review) %}
 <div class="d-flex flex-column my-2 gap-1">
-  <div class="v3-text-primary">{{ review.remarks }}</div>
+  <div class="v3-text-primary v3-html-content">{{ review.remarks }}</div>
   <div class="d-flex align-items-center gap-2">
     <span class="v3-text-secondary text-sm">Reviewer #{{ review.idx }}</span>
     <i class="ti ti-circle-filled v3-text-tertiary dot-sep" aria-hidden="true"></i>

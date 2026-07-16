@@ -6,10 +6,253 @@
 
 📌 **Project Board**: [FOSS United GitHub Project](https://github.com/orgs/fossunited/projects/3/views/1)
 
-Please find the TLDR reports for each blog in blog posts and forum thread:
+Please find the TLDR reports for each month in blog posts and forum thread:
 
 - Blog post: [https://fossunited.org/blog/tech-report](https://fossunited.org/blog/tech-report)
 - Forum thread: [https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431](https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431)
+
+## June 2026
+
+The FOSS Hack 2026 results and projects pages got a lot of polish, the CFP reviewer workflow now can assign proposals to reviewers and they get email notify, profiles has badges (hackathon winners + Forklore maintainers), the custom text editor was replaced with frappe-ui's, and local development setup got a real onboarding story with seed data and a one-command demo.
+
+### PR & Feature Highlights
+
+#### CFP Reviewer Assignment Workflow ([#1592](https://github.com/fossunited/fossunited/pull/1592))
+
+- [#1592](https://github.com/fossunited/fossunited/pull/1592) **Assign proposals to reviewers from the dashboard + notify them**
+  Organisers can now assign a proposal to a specific reviewer right from the CFP insights dashboard. The assignment (`ToDo`) uses Frappe's native `assign_to` mechanism (`frappe/desk/form/assign_to.py :: notify_assignment()`) and sends a custom email to the assigned reviewer with an `assigned_by` field so we internally know who routed it to them.
+  - Tests added for proposal assignment ([commit 20ed5acf](https://github.com/fossunited/fossunited/commit/20ed5acf)).
+
+- **Auto-close CFP form by deadline** ([commit 12f1ff53](https://github.com/fossunited/fossunited/commit/12f1ff53))
+  A CFP form now closes automatically once the deadline passes, so organisers don't have to manually flip the status to "Closed". The deadline dictates the cutoff. Added unit tests to make this deterministic.
+
+- **CFP title field + invited-talk inserts** ([commit 7c3654f4](https://github.com/fossunited/fossunited/commit/7c3654f4))
+  A `title` field added to the CFP form makes it easier to link and insert submissions. System Managers can now insert a CFP submission even after the deadline (for invited talks). Also fixes a footer jump caused by `min-height: 100vh` on the page, switched to `flex-fill` to occupy the space. System manager can still insert proposal via desk even after close (Invited talks).
+
+- **Sort and filter on the proposals list** ([commit 7d4d4dd1](https://github.com/fossunited/fossunited/commit/7d4d4dd1), [commit 77564c5c](https://github.com/fossunited/fossunited/commit/77564c5c))
+  All Proposals page now has sort-by filters, and the likes sort count field was fixed.
+
+- **Proposal list loading UX** ([commit ddc56f40](https://github.com/fossunited/fossunited/commit/ddc56f40), [commit 919aeb2a](https://github.com/fossunited/fossunited/commit/919aeb2a))
+  The per-item popover and tooltip were slowing down long proposal lists. Proposals now lazy-load in batches via element visibility, loading more as you scroll or filter ([commit 919aeb2a](https://github.com/fossunited/fossunited/commit/919aeb2a) is the actual fix replacing the earlier loading-indicator approach). Added a "clear search + filter" helper button so when no proposal matches, users can reset and recover the list. The "Assigned to me" filter is hidden when an event has no assigned proposals.
+
+  - Reviewer assignment toggle fixes: disable the assigned toggle when nothing is assigned ([commit 64aa0636](https://github.com/fossunited/fossunited/commit/64aa0636)); a newly added reviewer now reflects immediately on the insight list ([commit a8f409cf](https://github.com/fossunited/fossunited/commit/a8f409cf)); apply filter correctly after untoggling the assigned switch ([commit 96b70409](https://github.com/fossunited/fossunited/commit/96b70409)).
+
+#### Event Manage Simplification
+
+- **Remove the CFP/RSVP "Manage" tab and the show toggles** ([commit 74caa0e6](https://github.com/fossunited/fossunited/commit/74caa0e6), [commit 6970a9b5](https://github.com/fossunited/fossunited/commit/6970a9b5))
+  The "Show RSVP/CFP" switch was redundant and could contradict the actual form state. Visibility is now driven by logic, not a checkbox: RSVP shows until the max count is reached, CFP shows until the deadline passes (or an organiser closes it). The event page now simply displays each form if it exists. The `show_cfp` and `show_rsvp` fields were removed from the Event doctype.
+
+- **Schedule CTA + volunteer sorting** ([commit a7618c70](https://github.com/fossunited/fossunited/commit/a7618c70))
+  Event page shows a schedule button when a schedule exists, the "talk to proposals" link stays available after the event/CFP ends, and volunteers are now sorted A-Z instead of raw child-table order.
+
+#### FOSS Hack 2026: Results & Projects
+
+- **Winner links and badges on results** ([commit 948fe991](https://github.com/fossunited/fossunited/commit/948fe991), [commit bbda2387](https://github.com/fossunited/fossunited/commit/bbda2387), [commit 0f47a21e](https://github.com/fossunited/fossunited/commit/0f47a21e))
+  Winners on the results page now link to their partner project; listings show a winner/commendation badge; if a project only has a contributing repo, it links straight to the repo.
+
+- **Team identity on projects** ([commit 8a4c259c](https://github.com/fossunited/fossunited/commit/8a4c259c), [commit ba3d6ee6](https://github.com/fossunited/fossunited/commit/ba3d6ee6))
+  Results now treat the project as the primary link and auto-derive the team from it. `team_name` is carried on the project and results pages so a team's identity travels with its work.
+
+- **Issue/PR counts + contribution filter on projects** ([commit 7062130c](https://github.com/fossunited/fossunited/commit/7062130c), [commit 2f6aa141](https://github.com/fossunited/fossunited/commit/2f6aa141))
+  Each project on the projects page now shows linked issue/PR counts so the list can be sorted by activity, useful for spotting contribution-ready projects. A checkbox filter for contribution projects was added.
+
+- **Results query + photo fallback** ([commit 21657c92](https://github.com/fossunited/fossunited/commit/21657c92), [commit 26b52439](https://github.com/fossunited/fossunited/commit/26b52439))
+  Results query optimized via `get_all`; team listing falls back to the FOSS profile photo when no headshot is set.
+
+- **Free ticket coupons for approved speakers** ([#1605](https://github.com/fossunited/fossunited/pull/1605))
+  A button on the Free Ticket Code doctype bulk-sends free ticket coupons to all approved-proposal speakers. The function is idempotent: it checks which speaker emails already received a coupon and only sends to the remaining ones, so it can be re-run safely. It reads both the CFP email and the speaker email fields. API permission checks were refactored into a reusable decorator (chapter/event member only) instead of duplicated `has_valid_permission` calls.
+
+#### Profile Badges
+
+- **Hackathon winner badges** ([#1609](https://github.com/fossunited/fossunited/pull/1609))
+  Winner badges now show on user profile pages and on project pages. Repeat-winner counts are supported in the backend as a backup (not surfaced yet). Includes a subtle glow effect.
+
+- **Forklore maintainer badge** ([commit 18021f16](https://github.com/fossunited/fossunited/commit/18021f16))
+  Partially addresses [#1279](https://github.com/fossunited/fossunited/issues/1279). A client-side check matches a profile's username or GitHub link against Forklore maintainer identifiers; on a match, a Forklore badge appears on the profile linking to the Forklore page. (The badge only links out, so a stolen username is not a real concern here.) The shared `hackathon_badges.html` macro was renamed to `profile_badge.html`.
+
+#### Text Editor: frappe-ui Replacement
+
+- **Replace custom Tiptap editor with frappe-ui's editor** ([commit 897a7795](https://github.com/fossunited/fossunited/commit/897a7795))
+  The custom Tiptap-based `TextEditor` and `CommentBox` were replaced with frappe-ui's editor as a near drop-in. Net result: ~480 lines removed, less maintenance, and we lean on frappe-ui's upkeep instead of our own. Applied everywhere the editor was used.
+  - Related: HTML rendering page spacing fix ([commit 2fd32163](https://github.com/fossunited/fossunited/commit/2fd32163)).
+
+#### Local Development & Onboarding
+
+- **Local development infrastructure + onboarding** ([#1611](https://github.com/fossunited/fossunited/pull/1611))
+  A Justfile-driven local dev setup with a reliable end-to-end `just demo`: waits for MariaDB to accept connections before `bench reinstall`, a development guide, and docker-compose cleanup. First contribution from **James Reilly**.
+
+- **Boilerplate seed data** ([#1457](https://github.com/fossunited/fossunited/pull/1457))
+  A robust, `developer_mode`-guarded seed script that generates chapters, events, CFPs, and hackathons so a fresh bench install has immediate test data. Safely restores `ignore_permissions` state, i18n-wraps the developer-mode guard, and only resets passwords for newly created users. First contribution from **Jasil**.
+  - Follow-up: seed script no longer errors when a doctype is missing ([commit 392e33a2](https://github.com/fossunited/fossunited/commit/392e33a2)).
+
+  - Plan is to expand this py file into a tool like script, so easily with args, new fake doctype items can be added and so. Also seed.py file seems high maintenance, so gotta refactor with factory tests to keep it very simple.
+
+#### Tests
+
+- **Event Grant, Project Grant, and Hackathon Project factories** ([#1622](https://github.com/fossunited/fossunited/pull/1622))
+  More factory coverage continuing the test-factory migration, contributed by **Jasil**.
+
+#### IndiaFOSS 2026
+
+- **Themed devroom pattern banners** ([commit 4f0f9e10](https://github.com/fossunited/fossunited/commit/4f0f9e10))
+  Each devroom now has its own themed pattern banner. Designed by **Jeswin Josu**.
+- **Deadline + stats** ([commit e9e31ab2](https://github.com/fossunited/fossunited/commit/e9e31ab2), [commit 7a79e2cb](https://github.com/fossunited/fossunited/commit/7a79e2cb))
+  Manual control over the "deadline extended" date; stats link enabled in the header.
+- **Remove devroom logo from landing** ([commit a50029a4](https://github.com/fossunited/fossunited/commit/a50029a4))
+  Devroom logo dropped from the landing page since each devroom already has its own illustration (Jeswin's call).
+
+#### RSVP
+
+- **"Registration full" instead of 404** ([commit 5443a9ba](https://github.com/fossunited/fossunited/commit/5443a9ba), [commit bd454a6c](https://github.com/fossunited/fossunited/commit/bd454a6c))
+  When an RSVP reaches its max count, the page now shows a clear "registration full" message instead of a 404. Test updated to assert RSVP is blocked when full.
+- **Stop unpublishing the RSVP form after an event concludes** ([commit a7ec8489](https://github.com/fossunited/fossunited/commit/a7ec8489))
+  The concluding scheduler task no longer unpublishes the RSVP form, so the page stays reachable.
+
+#### Internal & Bug Fixes
+
+- Replaced the custom `toggleSection` JS with Bootstrap 4's native collapse ([commit b94aabf5](https://github.com/fossunited/fossunited/commit/b94aabf5)).
+- Fixed import count for the query builder on user profiles ([commit de10ad2d](https://github.com/fossunited/fossunited/commit/de10ad2d)).
+
+---
+
+### Contributor Spotlight
+
+- **Jasil Faras**: lowered the barrier to entry for everyone after them, seed data so a fresh install is usable, plus grant and hackathon-project test factories ([#1457](https://github.com/fossunited/fossunited/pull/1457), [#1622](https://github.com/fossunited/fossunited/pull/1622))
+- **James Reilly**: a one-command local demo and onboarding setup ([#1611](https://github.com/fossunited/fossunited/pull/1611))
+- **Jeswin Josu**: Themed devroom banners and IndiaFOSS 2026 design, man behind most of Fossunited assets (Open Design) ([commit 4f0f9e10](https://github.com/fossunited/fossunited/commit/4f0f9e10))
+
+---
+
+## May 2026
+
+> Project stats: [git commands before reading code](https://piechowski.io/post/git-commands-before-reading-code/)
+
+This month had focus on "Maintainers May" program and IndiaFOSS 2026 works were kick started, the landing page went live with devrooms, post-event feedback emails now automated, jobs board got search and filters, city community page shows an India map with chapter locations. Big internal push on test factory migration from Harsh Tandiya.
+
+### PR Highlights
+
+#### IndiaFOSS 2026 Landing Page
+
+- [#1595](https://github.com/fossunited/fossunited/pull/1595) **IndiaFOSS 2026 Page**
+  Full landing page for IndiaFOSS 2026 with image assets, sponsors, and a devrooms section. An `event_data` JSON field was added to the Event doctype to let organisers push arbitrary structured data for the page from desk without a code change.
+
+  Design assets: Jeswin Josu
+
+  Visit: [IndiaFOSS 2026](https://fossunited.org/indiafoss/2026) & [Devrooms IF2026](https://fossunited.org/indiafoss/2026/devrooms)
+
+#### Maintainers May
+
+- [#1581](https://github.com/fossunited/fossunited/pull/1581) **Maintainers May Landing Page**
+  Forklore themed main landing page for the Maintainers May campaign. Shows all "maintainers meetups", OG meta tags for social previews. WIP sections use the `frappe.msgprint` disabled-button pattern (since tooltip doesn't work on mobile) so visitors get a clear "coming soon" message instead of a dead button.
+
+  Visit: [Maintainers May](https://fossunited.org/maintainers-may)
+
+#### City Community Map
+
+- India GeoJSON map added to the communities page using Frappe's bundled Leaflet. All active FOSS United chapters are plotted by city coordinates, giving a visual picture of geographic spread. GeoJSON file is India-only (state boundaries) to keep the map focused.
+
+  Visit: [FOSS United Communities](https://fossunited.org/city-communities)
+
+#### Post-Event Feedback Notifications
+
+- [#1579](https://github.com/fossunited/fossunited/pull/1579) **Automated Feedback Email After Event**
+  After an event concludes, attendees now automatically receive a feedback link via email. Sent as a Frappe's newsletter for bulk async approach. Triggered by the event scheduler, with a field on the doctype to prevent re-sending on accidental status changes. All programmatic email sends are now grouped under a `fossunited/utils/notifications.py` utility file.
+
+Feedback web form is made in two way:
+1. [RSVP Chapter events](https://fossunited.org/chapter-events-feedback/new) - Only for generic RSVP events (form takes 5-10 mins)
+2. [Paid ticket Chapter events](https://fossunited.org/main-events-feedback/new) - For Big main FOSS festivals (takes 15 mins to answer them all)
+
+Note: Frappe native web-form does not have MCQ or table checkbox, better to feature request to forms-pro by BWH harsh.
+
+#### Jobs Board
+
+- [#1572](https://github.com/fossunited/fossunited/pull/1572) **Search, Filters, and `closed_on` Date**
+  Jobs listing page now has a search bar and category filter. A `closed_on` date field added to job postings to record when a position was actually closed - useful for archiving and distinguishing stale listings from recently closed ones.
+
+  Visit: [FOSS United Jobs](https://fossunited.org/jobs)
+
+#### Buy Tickets
+
+- [#1599](https://github.com/fossunited/fossunited/pull/1599) **Remaining Slots + Billing Summary Aside**
+  Ticket selection step now shows remaining slot count per tier - buyers see limited tickets before choosing. Billing step shows a right-aside summary panel: selected tiers, attendee count, t-shirt add-ons, and final amount visible without scrolling down to the form.
+
+#### Event Header Collapse
+
+- `EventHeader` component (shown at the top of event pages in dashboard) now has a collapse toggle to save space. Users who already know the event details can hide the header to get straight to the registration list or ticket insights below.
+
+#### Event Volunteer Enhancements
+
+- `Logistics` added as a role option in the volunteer interest form, covers coordinator roles that didn't fit existing options.
+- New field to collect a video URL on volunteer interest forms, helps event teams understand volunteers interest/motivation for the event.
+
+#### CFP Improvements
+
+- Speaker form now pre-fills from the submitter's FOSS profile and from their recent CFP submission. Less re-entry for repeat speakers.
+- Reviewer list page has a new filter toggle to show only proposals with an open `ToDo` assigned to the current reviewer. Tooltip added to the toggle for context.
+  - We decided to not track via ToDO, but just do dashboard way of assigning and noting their reviews. Might soon merge [#1592](https://github.com/fossunited/fossunited/pull/1592) for completing this.
+- [#1590](https://github.com/fossunited/fossunited/pull/1590) Fixed docs URL on the `/clubs` page. Credits: Siddharth
+
+#### Ticketing
+
+- Tier that bundles a t-shirt (price included, not an add-on) is now properly tracked via backend. `includes_tshirt` flag on the tier - handles size collection and logistics tracking separately from the optional t-shirt add-on flow. Useful for contributor tickets (e.g., IndiaFOSS contributor tier).
+- T-shirt size picker only shown when the attendee opts in. Was rendering unconditionally before.
+- Ticket transfer doctype controller now validates properly before processing a transfer.
+
+#### Tests
+
+Factory-based test pattern continues rolling out across the suite:
+
+- [#1593](https://github.com/fossunited/fossunited/pull/1593) Hackathon test factories + wave 1 factory migration.
+- [#1585](https://github.com/fossunited/fossunited/pull/1585) Free ticket tests refactored to use factories.
+- [#1584](https://github.com/fossunited/fossunited/pull/1584) User profile and volunteers tests refactored.
+- [#1583](https://github.com/fossunited/fossunited/pull/1583) Ticketing tests refactored to factories.
+Credits: Harsh Tandiya
+- `create_order` API tested for sync with front-end validation logic.
+- Bunch of tests to ensure payments and ticketing workflow is more rigid and future changes won't break page UI or backend.
+- Tests added for `permission_query_conditions` hooks (carried over from April's security work).
+
+#### Calendar Subscription ([#1600](https://github.com/fossunited/fossunited/pull/1600))
+
+- The static "Download .ics" button on the events timeline page is replaced with a subscription dropdown - Proton Calendar, Google Calendar, Apple Calendar, and a direct .ics download with copy-to-clipboard.
+- Backend: `upcoming_events_ics` now sets `X-WR-CALNAME`, `REFRESH-INTERVAL`, and `X-PUBLISHED-TTL` headers so calendar clients auto-refresh the feed hourly instead of treating it as a one-time download
+- Contributor: Adimalupu Ganesh
+
+#### Documentation
+
+- [#1588](https://github.com/fossunited/fossunited/pull/1588) Incident response checklist improved — clearer structure and more actionable steps. Credits: Siddharth
+- [#1580](https://github.com/fossunited/fossunited/pull/1580) Clubs overview and incident response docs updated. Credits: Siddharth
+
+#### Internal Refactors
+
+- `video_embed` Jinja macro extracted into its own macro file, was inline in templates before. Reusable across event pages, CFP page & others and also embed thumbnail first for minimal look.
+- Timeline page and `rss.xml` now share the same event-fetch logic since it was duplicated before.
+- `generate_ics` function in `api.chapter` broken into smaller composable functions and added a function `upcoming_events_ics` to sync all upcoming events (ics file) into calendar app of choice..
+
+#### Bug Fixes
+
+- ICS download on event pages replaced with an anchor link - was a `<button>` before, which breaks `target="_blank"` download behavior in some browsers.
+- Payment metadata now records a tier price/title snapshot at purchase time - avoids stale data if tier details are edited after payment.
+- Feedback notification email now enqueued (non-blocking) instead of sent inline during the request.
+- Event scheduler: concluding task now correctly triggers the feedback email send.
+- `RenderField` component shows field description in markdown rendering, was plain text before.
+- FAQ answer `md_to_html` was called twice on the same field - removed the duplicate call.
+- Event card: date and location now wrap to multiple rows when text is long, was overflowing the card.
+- CFP form header now applies prose typography on mobile screens (was desktop-only before).
+- IndiaFOSS devroom people card shows role as the description line; icon background added.
+- Proposal ToDo assignment now closes correctly when proposal status changes.
+- All CSS media queries moved to bottom of stylesheet - fixes cascade order issues that were causing timeline marker styles to apply out of sequence.
+
+---
+
+### Contributor Spotlight
+
+- Harsh Tandiya: test factory migration across ticketing, profile, hackathon, and free ticket tests ([#1593](https://github.com/fossunited/fossunited/pull/1593), [#1585](https://github.com/fossunited/fossunited/pull/1585), [#1584](https://github.com/fossunited/fossunited/pull/1584), [#1583](https://github.com/fossunited/fossunited/pull/1583))
+- Siddharth: incident response checklist + clubs docs ([#1588](https://github.com/fossunited/fossunited/pull/1588), [#1580](https://github.com/fossunited/fossunited/pull/1580), [#1590](https://github.com/fossunited/fossunited/pull/1590))
+- Poruri Sai Rahul: project status badge on README ([#1582](https://github.com/fossunited/fossunited/pull/1582))
+- Adimalupu Ganesh: upgrade static calendar download to subscription dropdown
+([#1600](https://github.com/fossunited/fossunited/pull/1600))
+
+---
 
 ## April 2026
 

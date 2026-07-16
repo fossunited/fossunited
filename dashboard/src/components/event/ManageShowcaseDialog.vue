@@ -8,7 +8,13 @@
     <template #body-content>
       <div class="flex flex-col gap-3">
         <FormControl v-model="showcase.showcase_name" label="Showcase Name" required />
-        <FormControl v-model="showcase.link" label="Website Link" type="url" required>
+        <FormControl
+          v-model="showcase.link"
+          label="Website Link"
+          type="url"
+          required
+          @blur="showcase.link = ensureHttpsPrefix(showcase.link)"
+        >
           <template #prefix>
             <IconLink class="w-4" />
           </template>
@@ -36,6 +42,7 @@ import { inject, ref } from 'vue'
 import { Dialog, FormControl, ErrorMessage, createResource } from 'frappe-ui'
 import { IconLink } from '@tabler/icons-vue'
 import FileUploaderArea from '@/components/ui/FileUploaderArea.vue'
+import { ensureHttpsPrefix } from '@/helpers/utils'
 
 const event = inject('event')
 const errorMessages = ref('')

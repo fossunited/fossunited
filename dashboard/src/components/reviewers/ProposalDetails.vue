@@ -28,6 +28,10 @@
         <IconArrowUpRight class="w-4 h-4" />
       </a>
     </div>
+    <CustomAnswers
+      v-if="showCustomAnswers && submission.data.custom_answers?.length"
+      :answers="submission.data.custom_answers"
+    />
     <TabButtons v-if="tabs.length > 1" v-model="activeTab" class="w-fit" :buttons="tabs" />
     <div v-if="activeTab === 0" class="flex flex-col gap-4">
       <ProseContainer label="Session Description" :value="submission.data.talk_description" />
@@ -43,7 +47,7 @@
       </div>
     </div>
     <div
-      v-else-if="activeTab === 1 && !hasAnonymousSpeaker.data.anonymise_proposals"
+      v-else-if="activeTab === 1 && !cfpFlags.data.anonymise_proposals"
       class="flex flex-col gap-2"
     >
       <ProposalSpeakers :speakers="submission.data.speakers" />
@@ -68,6 +72,7 @@ import ProseContainer from '@/components/ui/ProseContainer.vue'
 import ProposalBadgeGroup from './ProposalBadgeGroup.vue'
 import RenderReferences from '@/components/cfp-public/RenderReferences.vue'
 import RenderSessionCategories from '@/components/cfp-public/RenderSessionCategories.vue'
+import CustomAnswers from '@/components/cfp-public/CustomAnswers.vue'
 import ReviewSection from './ReviewSection.vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -95,12 +100,14 @@ const tabs = ref([
 ])
 const activeTab = ref(0)
 
-const hasAnonymousSpeaker = createResource({
+const showCustomAnswers = ref(false)
+
+const cfpFlags = createResource({
   url: 'frappe.client.get_value',
   makeParams() {
     return {
       doctype: 'FOSS Event CFP',
-      fieldname: 'anonymise_proposals',
+      fieldname: ['anonymise_proposals', 'has_public_custom_responses'],
       filters: { event: route.params.id },
     }
   },
@@ -111,6 +118,7 @@ const hasAnonymousSpeaker = createResource({
         value: 1,
       })
     }
+    showCustomAnswers.value = !!data.has_public_custom_responses
   },
   auto: true,
 })

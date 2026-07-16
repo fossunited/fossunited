@@ -24,13 +24,10 @@
     {% set badge_type = "icon" %}
   {% endif %}
 
-  <div
+  <a
+    href="/{{ cfp_status_block.form_route | e }}"
     class="v3-clickable cfp-card-v3"
-    onclick="window.location.href='/{{ cfp_status_block.form_route | e }}'"
-    role="button"
-    tabindex="0"
     aria-label="Call for Proposals - {{ badge_text }}"
-    onkeypress="if(event.key==='Enter'||event.key===' ')window.location.href='/{{ cfp_status_block.form_route | e }}'"
   >
     <div class="ev-cfp-header">
       <div class="ev-cfp-title">Call for Proposals</div>
@@ -62,7 +59,7 @@
         </div>
       <i class="ti ti-arrow-right" aria-hidden="true"></i>
     </div>
-  </div>
+  </a>
 {% endmacro %}
 
 
@@ -129,6 +126,7 @@
 {% endblock %}
 
 {% block content %}
+  {% set ics_url = '/api/method/fossunited.api.chapter.generate_ics?event_ids=' + ([doc.name] | tojson | urlencode) + '&download=1' %}
   <style>
     body {
       background: var(--v3-main-bg);
@@ -303,15 +301,17 @@
             <!-- Date/Time/Location -->
             <div style="margin-top: 3px;">
               <div class="ev-detail-row">
-                <div
+                <a
+                  href="{{ ics_url }}"
                   class="ev-icon"
-                  onclick="downloadEventIcs()"
-                  type="button"
-                  aria-label="Add event to calendar"
-                  title="Download to calendar"
+                  download="{{ doc.event_name.replace(' ', '_') }}.ics"
+                  aria-label="Download calendar file"
+                  data-toggle="tooltip"
+                  data-placement="right"
+                  title="Download calendar (.ics)"
                 >
                   <i class="ti ti-calendar-plus" aria-hidden="true"></i>
-                </div>
+                </a>
                 <div class="ev-detail-text">
                   <div class="ev-detail-primary">
                     {% if doc.event_start_date.strftime("%Y-%m-%d") != doc.event_end_date.strftime("%Y-%m-%d") %}
@@ -337,6 +337,7 @@
                 href="{{ doc.map_link }}"
                 class="ev-detail-row ev-detail-link"
                 aria-label="View {{ doc.event_location or 'event location' }} on map"
+                title="View {{ doc.event_location or 'event location' }} on map"
               >
                 {% else %}
                 <div class="ev-detail-row">
@@ -357,19 +358,9 @@
             <!-- Buttons -->
           <div>
               <div class="v3-btn-group" role="group" aria-label="Event actions">
-                  {% if status_concluded and doc.livestream_embed_link %}
-                    <a
-                      href="{{ doc.livestream_embed_link }}"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="v3-btn v3-btn-secondary"
-                      aria-label="Watch event recording on YouTube"
-                    >
-                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
-                      <span>Watch</span>
-                    </a>
 
-                  {% elif status_live %}
+                  {# Primary CTA: registration → schedule fallback #}
+                  {% if status_live %}
                     {% if doc.is_paid_event %}
                       <a
                         href="/dashboard/buy-tickets?event={{ doc.name }}"
@@ -378,7 +369,7 @@
                       >
                         Buy Ticket
                       </a>
-                    {% elif doc.show_rsvp and rsvp_status_block.is_published %}
+                    {% elif rsvp_status_block.is_published %}
                       {% if registration_status %}
                         <a
                           href="/{{ rsvp_status_block.form_route }}"
@@ -396,10 +387,43 @@
                           Register
                         </a>
                       {% endif %}
+                    {% elif schedule_data %}
+                      <a
+                        href="#schedule-heading"
+                        class="v3-btn v3-btn-primary"
+                        aria-label="View event schedule"
+                      >
+                        <i class="ti ti-calendar-event" aria-hidden="true"></i>
+                        Schedule
+                      </a>
                     {% endif %}
+                  {% elif status_concluded and schedule_data %}
+                    <a
+                      href="#schedule-heading"
+                      class="v3-btn v3-btn-primary"
+                      aria-label="View event schedule"
+                    >
+                      <i class="ti ti-calendar-event" aria-hidden="true"></i>
+                      Schedule
+                    </a>
                   {% endif %}
 
-                  {% if doc.show_cfp and cfp_status_block.has_doc %}
+                  {# Watch recording — shown whenever embed link is set #}
+                  {% if doc.livestream_embed_link %}
+                    <a
+                      href="{{ doc.livestream_embed_link }}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="v3-btn v3-btn-secondary"
+                      aria-label="Watch event recording on YouTube"
+                    >
+                      <i class="ti ti-brand-youtube" style="font-size: 1.1rem;" aria-hidden="true"></i>
+                      <span>Watch</span>
+                    </a>
+                  {% endif %}
+
+                  {# Talk Proposals — show when CFP is active OR proposals already exist #}
+                  {% if cfp_status_block.has_doc or event_stats.proposals > 0 %}
                     <a
                       href="{{ all_cfp_link }}"
                       class="v3-btn v3-btn-secondary"
@@ -410,15 +434,14 @@
                     </a>
                   {% endif %}
 
-
                   {% if can_manage_event %}
-                <a
-                  href="{{ event_dashboard_url }}"
-                  class="v3-btn v3-btn-secondary v3-btn-icon-only"
-                  aria-label="Edit event details"
-                >
-                  <i class="ti ti-edit" aria-hidden="true"></i>
-                </a>
+                    <a
+                      href="{{ event_dashboard_url }}"
+                      class="v3-btn v3-btn-secondary v3-btn-icon-only"
+                      aria-label="Edit event details"
+                    >
+                      <i class="ti ti-edit" aria-hidden="true"></i>
+                    </a>
                   {% endif %}
                 </div>
 
@@ -435,7 +458,7 @@
           <!-- Main Column -->
           <main class="v3-content-main">
             <!-- Recording (concluded events with embed link) -->
-            {% if status_concluded and doc.livestream_embed_link %}
+            {% if doc.livestream_embed_link %}
               <section class="v3-card" aria-label="Event Recording">
                 <h2 class="v3-section-title">
                   <i class="ti ti-brand-youtube" aria-hidden="true"></i>
@@ -466,19 +489,19 @@
                 </a>
                 {% endif %}
 
-                <div class="v3-text-primary prose" style="font-size: 1rem; line-height: 1.5rem;">
+                <div class="v3-text-primary v3-html-content" style="font-size: 1rem; line-height: 1.5rem;">
                   {{ doc.event_description }}
                 </div>
               </section>
             {% endif %}
 
             <!-- CFP Card (Mobile) -->
-            {% if doc.show_cfp and cfp_status_block.has_doc %}
+            {% if cfp_status_block.has_doc %}
               <div class="show-mobile-only">{{ cfp_block(cfp_status_block, doc) }}</div>
             {% endif %}
 
             <!-- Schedule -->
-            {% if doc.show_schedule and schedule_data %}
+            {% if schedule_data %}
               <section class="ev-agenda-section" aria-labelledby="schedule-heading">
                 <h2 id="schedule-heading" class="sr-only">Event Schedule</h2>
                 {{ agenda_card(schedule_data, doc.route, 10) }}
@@ -511,12 +534,12 @@
           <!-- Sidebar -->
           <div class="v3-content-sidebar" aria-label="Event information sidebar">
             <!-- CFP Card (Desktop) -->
-            {% if doc.show_cfp and cfp_status_block.has_doc %}
+            {% if cfp_status_block.has_doc %}
               <div class="show-desktop-only">{{ cfp_block(cfp_status_block, doc) }}</div>
             {% endif %}
 
             <!-- Speakers -->
-            {% if doc.show_speakers and speakers %}
+            {% if speakers %}
               <section class="ev-speakers-section" aria-labelledby="speakers-heading">
                 <h2 id="speakers-heading" class="sr-only">Event Speakers</h2>
                 {{ people_card(speakers, 'speakers', submissions) }}
@@ -631,11 +654,6 @@
       </div>
     </div>
 
-    {%- from 'fossunited/templates/macros/ics_download.html' import ics_download -%}
-    {{ ics_download(
-      event_ids=[doc.name],
-      filename=doc.event_name.replace(' ', '_') + '.ics',
-      fn_name='downloadEventIcs',
-    ) }}
+    <script>frappe.ready(function(){ $('[data-toggle="tooltip"]').tooltip() })</script>
   </div>
 {% endblock %}

@@ -61,6 +61,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         custom_fields: DF.Table[FOSSEventField]
         deck_link: DF.Data | None
         event_bio: DF.Data | None
+        event_data: DF.JSON | None
         event_description: DF.TextEditor | None
         event_end_date: DF.Datetime
         event_location: DF.Data | None
@@ -96,9 +97,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         proposal_page_description: DF.Text | None
         route: DF.Data | None
         schedule_page_description: DF.LongText | None
-        show_cfp: DF.Check
         show_photos: DF.Check
-        show_rsvp: DF.Check
         show_schedule: DF.Check
         show_speakers: DF.Check
         sponsor_list: DF.Table[FOSSEventSponsor]
@@ -123,7 +122,6 @@ class FOSSChapterEvent(WebsiteGenerator):
             and self.status == "Concluded"
             and not self.feedback_sent
             and self.event_end_date
-            and datetime.now() >= frappe.utils.get_datetime(self.event_end_date)
         ):
             frappe.enqueue(
                 "fossunited.utils.notifications.send_event_feedback_request",
@@ -313,7 +311,7 @@ class FOSSChapterEvent(WebsiteGenerator):
                     "route": profile.get("route", ""),
                 }
             )
-        return members
+        return sorted(members, key=lambda m: (m["full_name"] or "").lower())
 
     def get_speakers(self):
         submissions = frappe.db.get_all(

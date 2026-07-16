@@ -9,28 +9,18 @@ from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_days, now_datetime
 
-from fossunited.api.chapter import check_if_chapter_member
 from fossunited.doctype_ids import (
     EVENT,
     EVENT_CHECKIN,
     EVENT_TICKET,
     FREE_TICKET_APPLY,
     FREE_TICKET_CODE,
+    PROPOSAL,
     RAZORPAY_PAYMENT,
+    SPEAKER,
     TICKET_TRANSFER,
 )
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
-@rate_limit(limit=5, seconds=60 * 60 * 12)
-def check_ticket_validity(ticket_id: str):
-    """
-    Check if the ticket is valid or not
-    """
-    is_ticket_valid = frappe.db.exists(EVENT_TICKET, ticket_id)
-
-    return bool(is_ticket_valid)
+from fossunited.utils.decorators import require_chapter_or_event_member
 
 
 # nosemgrep: guest-whitelisted-method
@@ -75,17 +65,6 @@ def create_transfer_request(ticket: str, receiver_details: dict):
 
 # nosemgrep: guest-whitelisted-method
 @frappe.whitelist(allow_guest=True)
-def get_transfer_doc_validity(transfer_id: str):
-    """
-    Check the validity of transfer doc/id
-    """
-    is_valid_id = frappe.db.exists(TICKET_TRANSFER, transfer_id)
-
-    return bool(is_valid_id)
-
-
-# nosemgrep: guest-whitelisted-method
-@frappe.whitelist(allow_guest=True)
 @rate_limit(limit=4, seconds=60 * 60 * 12)
 def get_transfer_details(id: str):
     """
@@ -113,19 +92,13 @@ def change_transfer_status(transfer_id: str, status: str):
             frappe.AuthenticationError,
         )
 
-    doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
-    ticket = frappe.get_doc(EVENT_TICKET, doc.ticket)
-    if frappe.session.user not in [ticket.email, doc.receiver_email]:
-        frappe.throw(
-            _("You are not authorized to modify this transfer"),
-            frappe.PermissionError,
-        )
-
     if status not in ["Completed", "Cancelled"]:
         frappe.throw(_("Invalid status provided for ticket transfer"))
 
+    doc = frappe.get_doc(TICKET_TRANSFER, transfer_id)
     doc.status = status
-    doc.save()
+    # Auth enforced in controller before_save — ignore doctype write perm
+    doc.save(ignore_permissions=True)
     return True
 
 
@@ -326,6 +299,7 @@ def get_percentage_change(today: float, yesterday: float) -> float:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event_id")
 def get_tickets_with_custom_fields(event_id: str) -> list:
     """
     Get all tickets with their custom field answers merged as dynamic fields.
@@ -337,8 +311,6 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
     Returns:
         dict: Dictionary containing tickets list and custom field names
     """
-    if not has_valid_permission(event_id):
-        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     from frappe.query_builder import DocType
     from frappe.query_builder.functions import Coalesce
@@ -379,45 +351,16 @@ def get_tickets_with_custom_fields(event_id: str) -> list:
     for row in results:
         ticket_id = row["name"]
         if ticket_id not in tickets_map:
-            tickets_map[ticket_id] = {
+            ticket_data = {
                 k: v for k, v in row.items() if k not in ("question", "response", "name")
             }
+            if not ticket_data.get("wants_tshirt"):
+                ticket_data["tshirt_size"] = None
+            tickets_map[ticket_id] = ticket_data
         if row["question"]:
             tickets_map[ticket_id][row["question"]] = row["response"] or ""
 
     return list(tickets_map.values())
-
-
-def has_valid_permission(event_id: str) -> bool:
-    """
-    Check if the user has valid permission to view the tickets for the event
-
-    Args:
-        event_id (str): Event ID
-
-    Returns:
-        bool: True if the user has valid permission, False otherwise
-    """
-    session_user = frappe.session.user
-
-    # Allow if user has "Chapter Team Member" role AND is a member of the chapter
-    if frappe.db.exists("Has Role", {"role": "Chapter Team Member", "parent": session_user}):
-        chapter_id = frappe.db.get_value(EVENT, event_id, "chapter")
-        if chapter_id and check_if_chapter_member(chapter_id, session_user):
-            return True
-
-    # Allow if user is listed as an event member
-    if frappe.db.exists(
-        "FOSS Chapter Event Member",
-        {
-            "parent": event_id,
-            "parenttype": EVENT,
-            "email": session_user,
-        },
-    ):
-        return True
-
-    return False
 
 
 @frappe.whitelist()
@@ -514,11 +457,9 @@ def get_free_pass_insights(event_id: str) -> dict:
 
 
 @frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
 def get_event_free_codes(event: str):
     """Get all free ticket codes for an event"""
-
-    if not has_valid_permission(event):
-        frappe.throw(_("You are not authorized to view the tickets for this event"))
 
     codes = frappe.get_all(
         FREE_TICKET_CODE,
@@ -538,6 +479,105 @@ def get_event_free_codes(event: str):
     )
 
     return codes
+
+
+def _get_approved_speaker_emails_for_event(event: str) -> dict[str, tuple[str, int]]:
+    """Return {email: (full_name, talk_count)} for unique speakers across approved proposals.
+
+    talk_count is the number of approved proposals this speaker appears in.
+    Speaker child rows take priority; proposal-level email is a fallback when no child rows exist.
+    """
+    proposals = frappe.get_all(
+        PROPOSAL,
+        filters={"event": event, "status": "Approved"},
+        fields=["name", "email", "full_name"],
+    )
+    if not proposals:
+        return {}
+
+    proposal_names = [p.name for p in proposals]
+    speaker_rows = frappe.get_all(
+        SPEAKER,
+        filters={"parent": ["in", proposal_names], "parenttype": PROPOSAL},
+        fields=["email", "full_name", "parent"],
+    )
+
+    rows_by_proposal = {}
+    for r in speaker_rows:
+        rows_by_proposal.setdefault(r.parent, []).append(r)
+
+    email_data = {}  # email → [full_name, talk_count]
+
+    for p in proposals:
+        p_emails = set()
+
+        for r in rows_by_proposal.get(p.name, []):
+            if r.email:
+                key = r.email.strip().lower()
+                p_emails.add(key)
+                email_data.setdefault(key, [r.full_name or "", 0])
+
+        # Fallback: proposal-level email if no speaker child rows on this proposal
+        if not p_emails and p.email:
+            key = p.email.strip().lower()
+            p_emails.add(key)
+            email_data.setdefault(key, [p.full_name or "", 0])
+
+        for key in p_emails:
+            email_data[key][1] += 1
+
+    return {email: (name, count) for email, (name, count) in email_data.items()}
+
+
+def _get_existing_coupon_emails_for_event(event: str) -> set[str]:
+    existing = frappe.get_all(FREE_TICKET_CODE, filters={"event": event}, pluck="mapped_email")
+    return {e.strip().lower() for e in existing if e}
+
+
+@frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
+def get_speaker_coupon_preview(event: str) -> dict:
+    """Return stats on how many speaker coupons would be created."""
+    info = _get_approved_speaker_emails_for_event(event)
+    existing = _get_existing_coupon_emails_for_event(event)
+    already_has = len(set(info) & existing)
+    return {
+        "total": len(info),
+        "already_has": already_has,
+        "will_create": len(info) - already_has,
+    }
+
+
+@frappe.whitelist()
+@require_chapter_or_event_member(event_id="event")
+def bulk_create_speaker_coupons(event: str, max_count: int = 1) -> dict:
+    """
+    Idempotently create EventFreeTicketCode docs for approved CFP speakers.
+
+    Skips speakers who already have a coupon for this event.
+    """
+
+    max_count = int(max_count)
+    if not 1 <= max_count <= 3:
+        frappe.throw(_("max_count must be between 1 and 3"))
+
+    info = _get_approved_speaker_emails_for_event(event)
+    existing = _get_existing_coupon_emails_for_event(event)
+    to_create = {e: v for e, v in info.items() if e not in existing}
+
+    for email, (full_name, talk_count) in to_create.items():
+        frappe.get_doc(
+            {
+                "doctype": FREE_TICKET_CODE,
+                "event": event,
+                "mapped_email": email,
+                "full_name": full_name,
+                "tier": "Speaker/Workshop Host",
+                "max_count": max_count * talk_count,
+            }
+        ).insert(ignore_permissions=True)
+
+    return {"created": len(to_create), "skipped": len(info) - len(to_create)}
 
 
 # nosemgrep: guest-whitelisted-method

@@ -1,0 +1,113 @@
+{% extends "templates/foss_base.html" %}
+{% from "fossunited/templates/macros/indiafoss.html" import if_header, if_footer %}
+{% from "fossunited/templates/macros/video_embed.html" import video_embed %}
+{% from "fossunited/templates/macros/meta_block.html" import meta_tags %}
+
+{% set SOCIAL_ICONS = {
+  "linkedin": "brand-linkedin", "x": "brand-x", "instagram": "brand-instagram",
+  "github": "brand-github", "website": "world"
+} %}
+
+{% block meta_block %}{{ meta_tags(pagetitle, description, image) }}{% endblock %}
+{% block title %}{{ pagetitle }} | FOSS United{% endblock %}
+
+{% block page_content %}
+  <div class="v3-page">
+    <div class="v3-page-wide">
+      {{ if_header(years, current_year, show_statistics=False, show_archive=True, show_speakers=True) }}
+
+      <main id="main-content" role="main" class="d-flex flex-column gap-6 mt-4 pb-section">
+        <nav aria-label="Breadcrumb" class="text-sm v3-text-tertiary">
+          <a class="v3-text-secondary" href="/indiafoss/speakers">Speakers</a>
+          <span class="mx-1">›</span>
+          <span>{{ speaker.name | e }}</span>
+        </nav>
+
+        {# Speaker header card. Avatar + name/designation link to the FOSS User Profile
+           when one exists; socials stay as their own links (no nested anchors). #}
+        <div class="v3-card d-flex align-items-center gap-3 p-3">
+          {% if speaker.profile_route %}
+            <a href="{{ speaker.profile_route }}" class="flex-shrink-0" aria-label="{{ speaker.name | e }} profile">
+              <img class="v3-avatar-lg" alt="{{ speaker.name | e }}" src="{{ speaker.avatar }}" />
+            </a>
+          {% else %}
+            <img class="v3-avatar-lg" alt="{{ speaker.name | e }}" src="{{ speaker.avatar }}" />
+          {% endif %}
+          <div class="d-flex flex-column">
+            {% if speaker.profile_route %}<a href="{{ speaker.profile_route }}" class="text-decoration-none d-flex flex-column">{% else %}<div class="d-flex flex-column">{% endif %}
+              <h1 class="v3-text-primary text-xl mb-1">{{ speaker.name | e }}</h1>
+              {% if speaker.designation %}<span class="v3-text-secondary">{{ speaker.designation | e }}{% if speaker.organization %}, {{ speaker.organization | e }}{% endif %}</span>{% endif %}
+            {% if speaker.profile_route %}</a>{% else %}</div>{% endif %}
+            {% if speaker.socials %}
+              <div class="d-flex align-items-center gap-3 mt-2">
+                {% for k, url in speaker.socials.items() %}
+                  <a href="{{ url }}" target="_blank" rel="noopener noreferrer"
+                     class="v3-text-secondary" aria-label="{{ k }}">
+                    <i class="ti ti-{{ SOCIAL_ICONS.get(k, 'link') }}" style="font-size:1.25rem;"></i>
+                  </a>
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        {# Talk cards: each is a BS4 collapsible section. Header (title + badges) toggles the body.
+           Body row = video (left on desktop) + refs/proposal (right on desktop, ABOVE video on mobile
+           via order utilities); description spans full width below. Key takeaways intentionally omitted. #}
+        {% for t in talks %}
+          {% set body_id = "talk-" ~ loop.index %}
+          {% set has_side = t.link or t.references %}
+          <article class="v3-card p-3 p-md-4">
+            <div class="v3-clickable d-flex align-items-start gap-2" role="button"
+                 data-toggle="collapse" data-target="#{{ body_id }}"
+                 aria-expanded="true" aria-controls="{{ body_id }}">
+              <i class="ti ti-chevron-down flex-shrink-0 mt-1" aria-hidden="true"></i>
+              <div class="flex-grow-1">
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                  {% if t.video_type %}<span class="v3-media-badge" style="background:var(--v3-button-border);color:var(--v3-text-color2);">{{ t.video_type | e }}</span>{% endif %}
+                  {% if t.edition %}<span class="text-xs text-uppercase semi-bold v3-text-tertiary">{{ t.edition | e }}</span>{% endif %}
+                </div>
+                <h2 class="v3-text-primary text-lg mb-0">{{ t.title | e }}</h2>
+              </div>
+            </div>
+
+            <div class="collapse show mt-3" id="{{ body_id }}">
+              <div class="row">
+                {% if has_side %}
+                  <div class="col-12 col-md-6 order-md-2 mb-3 mb-md-0">
+                    <div class="v3-talk-refs">
+                      {% if t.link %}
+                        <a class="v3-btn v3-btn-secondary v3-btn--sm" href="{{ t.link }}"
+                           {% if t.external %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                          <i class="ti ti-external-link"></i> View proposal
+                        </a>
+                      {% endif %}
+                      {% for ref in t.references %}
+                        <a class="v3-btn v3-btn-secondary v3-btn--sm" href="{{ ref }}" target="_blank" rel="noopener noreferrer">
+                          <i class="ti ti-link"></i> Reference link
+                        </a>
+                      {% endfor %}
+                    </div>
+                  </div>
+                {% endif %}
+                {% if t.youtube_id %}
+                  <div class="col-12 {% if has_side %}col-md-6 order-md-1{% endif %}">
+                    {{ video_embed(youtube_id=t.youtube_id, title=t.title) }}
+                  </div>
+                {% endif %}
+              </div>
+
+              {% if t.tier == 'internal' and t.description %}
+                <div class="mt-3">
+                  <p class="semi-bold v3-text-secondary mb-2">Session Description</p>
+                  <div class="v3-text-primary from-markdown">{{ t.description | safe }}</div>
+                </div>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </main>
+    </div>
+    {{ if_footer() }}
+  </div>
+{% endblock %}

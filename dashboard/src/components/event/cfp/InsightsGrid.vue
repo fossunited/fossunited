@@ -1,13 +1,17 @@
 <script setup>
 import InsightCard from '@/components/ui/InsightCard.vue'
 import { IconArrowUp } from '@tabler/icons-vue'
-import { createResource, Badge } from 'frappe-ui'
+import { createResource, Badge, Tooltip } from 'frappe-ui'
 import { statusIndicatorColor } from '@/helpers/cfp'
 
 const props = defineProps({
   eventId: {
     type: String,
     required: true,
+  },
+  currentFilter: {
+    type: String,
+    default: '',
   },
 })
 
@@ -28,6 +32,14 @@ function handleClick(label) {
   emit('select-insight', filterValue)
 }
 
+function filterValueFor(label) {
+  return label === 'Total' ? '' : label
+}
+
+function tooltipText(label) {
+  return label === 'Total' ? 'Show all proposals' : `Filter by: ${label}`
+}
+
 const getClasses = {
   'Total Submissions': 'md:col-span-2 lg:col-span-1',
 }
@@ -37,27 +49,34 @@ const getClasses = {
   <div class="flex flex-col gap-4 my-2 w-full">
     <h4 class="text-xl font-medium">Insights</h4>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-      <InsightCard
+      <Tooltip
         v-for="insight in insights.data"
         :key="insight.name"
         :class="getClasses[insight.label]"
-        :title="insight.label"
-        :value="insight.count"
-        @click="() => handleClick(insight.label)"
+        :text="tooltipText(insight.label)"
+        placement="top"
       >
-        <template v-if="insight.today" #post-value>
-          <Badge class="w-fit" theme="green">
-            <IconArrowUp class="w-3 h-3" />
-            <span> {{ insight.today }} </span>
-          </Badge>
-        </template>
-        <template #description>
-          <div
-            class="w-full h-1 rounded-full bg-opacity-50"
-            :class="'bg-' + statusIndicatorColor(insight.label)"
-          ></div>
-        </template>
-      </InsightCard>
+        <InsightCard
+          class="h-full"
+          :title="insight.label"
+          :value="insight.count"
+          :is-active="filterValueFor(insight.label) === currentFilter"
+          @click="() => handleClick(insight.label)"
+        >
+          <template v-if="insight.today" #post-value>
+            <Badge class="w-fit" theme="green">
+              <IconArrowUp class="w-3 h-3" />
+              <span> {{ insight.today }} </span>
+            </Badge>
+          </template>
+          <template #description>
+            <div
+              class="w-full h-1 rounded-full bg-opacity-50"
+              :class="'bg-' + statusIndicatorColor(insight.label)"
+            ></div>
+          </template>
+        </InsightCard>
+      </Tooltip>
     </div>
   </div>
 </template>

@@ -8,7 +8,7 @@
       <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
         <div class="flex flex-col gap-2">
           <FormControl
-            v-model="cfp_doc.allow_edit"
+            v-model="cfp_doc.allow_cfp_edit"
             type="checkbox"
             label="Allow Proposal Edit"
             description=""
@@ -32,6 +32,18 @@
         </div>
         <div class="flex flex-col gap-2">
           <FormControl
+            v-model="cfp_doc.hide_review"
+            type="checkbox"
+            label="Hide Reviews"
+            description=""
+            size="md"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >Hide the reviews section from the public proposal page.</span
+          >
+        </div>
+        <div class="flex flex-col gap-2">
+          <FormControl
             v-model="cfp_doc.only_workshops"
             type="checkbox"
             label="Only Workshops"
@@ -51,6 +63,18 @@
             @change="validateOnlyOneType"
           />
           <span class="text-sm text-ink-gray-5">Only accept talk proposals.</span>
+        </div>
+        <div class="flex flex-col gap-2">
+          <FormControl
+            v-model="cfp_doc.deadline"
+            type="datetime-local"
+            label="Submission Deadline"
+            size="md"
+          />
+          <span class="text-sm text-ink-gray-5"
+            >The form auto-closes once this date and time passes. Leave empty to keep it open and
+            close the form manually with Publish/Unpublish.</span
+          >
         </div>
         <TextEditor
           class="col-span-2"
@@ -77,6 +101,19 @@
     </div>
     <div>
       <div class="font-semibold text-ink-gray-8 border-b-2 pb-2">Custom Fields</div>
+      <div class="flex flex-col gap-2 mt-4">
+        <FormControl
+          v-model="cfp_doc.has_public_custom_responses"
+          type="checkbox"
+          label="Public Custom Responses"
+          size="md"
+        />
+        <span class="text-sm text-ink-gray-5"
+          >Show answers to these custom questions publicly on the proposal page. Be careful: do not
+          make responses public if any question collects sensitive data such as phone numbers or
+          email addresses.</span
+        >
+      </div>
       <Button
         class="mt-3"
         size="md"
@@ -255,6 +292,9 @@ let cfp_doc = reactive({
   allow_cfp_edit: 0,
   only_workshops: 0,
   only_talk_proposals: 0,
+  deadline: '',
+  hide_review: 1,
+  has_public_custom_responses: 0,
   cfp_form_description: '',
   cfp_custom_questions: [],
 })

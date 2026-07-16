@@ -1,149 +1,69 @@
 <template>
-  <div class="border rounded p-4 bg-surface-white w-full">
-    <EditorContent :editor="editor" />
-    <div class="flex justify-between items-center pt-2 mt-4">
-      <div class="flex gap-1">
-        <button
-          class="p-1 rounded-sm"
-          :disabled="!editor.can().chain().focus().toggleBold().run()"
-          :class="{ 'bg-surface-gray-3': editor.isActive('bold') }"
-          @click="editor.chain().focus().toggleBold().run()"  aria-label="Bold"
-        >
-          <IconBold class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :disabled="!editor.can().chain().focus().toggleItalic().run()"
-          :class="{ 'bg-surface-gray-3': editor.isActive('italic') }"
-          @click="editor.chain().focus().toggleItalic().run()" aria-label="Italic"
-        >
-          <IconItalic class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :disabled="!editor.can().chain().focus().toggleUnderline().run()"
-          :class="{ 'bg-surface-gray-3': editor.isActive('underline') }"
-          @click="editor.chain().focus().toggleUnderline().run()" aria-label="Underline"
-        >
-          <IconUnderline class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :disabled="!editor.can().chain().focus().toggleStrike().run()"
-          :class="{ 'bg-surface-gray-3': editor.isActive('strike') }"
-          @click="editor.chain().focus().toggleStrike().run()" aria-label="Strikethrough"
-        >
-          <IconStrikethrough class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :class="{ 'bg-surface-gray-3': editor.isActive('bulletList') }"
-       @click="editor.chain().focus().toggleBulletList().run()" aria-label="Bullet list">
-          <IconList class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :class="{ 'bg-surface-gray-3': editor.isActive('orderedList') }"
-          @click="editor.chain().focus().toggleOrderedList().run()" aria-label="Ordered list"
-        >
-          <IconListNumbers class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
-        <button
-          class="p-1 rounded-sm"
-          :class="{ 'bg-surface-gray-3': editor.isActive('blockquote') }"
-          @click="editor.chain().focus().toggleBlockquote().run()" aria-label="Blockquote"
-        >
-          <IconBlockquote class="w-4 h-4 sm:w-5 sm:h-5" />
-        </button>
+  <TextEditor
+    ref="editorRef"
+    editor-class="prose-sm max-w-none min-h-[6rem] max-h-[20rem] overflow-y-auto"
+    :content="modelValue"
+    placeholder="Write a comment…"
+    @change="emit('update:modelValue', $event)"
+  >
+    <template #top>
+      <TextEditorFixedMenu class="-ml-1 mb-2 overflow-x-auto" :buttons="menuButtons" />
+    </template>
+
+    <template #editor="{ editor }">
+      <EditorContent
+        class="border rounded-lg p-3 focus-within:ring-1 focus-within:ring-outline-gray-3"
+        :editor="editor"
+      />
+    </template>
+
+    <template #bottom>
+      <div class="mt-2 flex items-center justify-end">
+        <Button :label="buttonLabel" variant="solid" @click="submit" />
       </div>
-      <Button :label="buttonLabel" variant="solid" @click="submit" />
-    </div>
-  </div>
+    </template>
+  </TextEditor>
 </template>
 
 <script setup>
-import {
-  IconBold,
-  IconItalic,
-  IconUnderline,
-  IconStrikethrough,
-  IconList,
-  IconListNumbers,
-  IconBlockquote,
-} from '@tabler/icons-vue'
-import { ref, onBeforeUnmount, inject } from 'vue'
-import { Editor, EditorContent } from '@tiptap/vue-3'
-import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
-import Placeholder from '@tiptap/extension-placeholder'
+import { ref, inject } from 'vue'
+import { EditorContent } from '@tiptap/vue-3'
+import { Button, TextEditor, TextEditorFixedMenu, createResource } from 'frappe-ui'
 import { toast } from 'vue-sonner'
-import { createResource } from 'frappe-ui'
 
 const session = inject('$session')
 const emit = defineEmits(['update:modelValue', 'commented'])
 
 const props = defineProps({
-  modelValue: {
-    type: String,
-    default: '',
-  },
-  hasCustomActions: {
-    type: Boolean,
-    default: false,
-  },
-  customActions: {
-    type: Array,
-    default: () => [],
-  },
-  buttonLabel: {
-    type: String,
-    default: 'Comment',
-  },
-  doctype: {
-    type: String,
-    default: null,
-  },
-  docname: {
-    type: String,
-    default: null,
-  },
+  modelValue: { type: String, default: '' },
+  hasCustomActions: { type: Boolean, default: false },
+  customActions: { type: Array, default: () => [] },
+  buttonLabel: { type: String, default: 'Comment' },
+  doctype: { type: String, default: null },
+  docname: { type: String, default: null },
 })
 
-const editor = new Editor({
-  content: props.modelValue,
-  onUpdate: ({ editor }) => {
-    emit('update:modelValue', editor.getHTML())
-  },
-  editorProps: {
-    attributes: {
-      class: 'w-full h-[6rem] focus:outline-none prose prose-sm overflow-y-auto',
-      placeholder: 'Write a comment…',
-    },
-  },
-  extensions: [
-    StarterKit,
-    Underline,
-    Placeholder.configure({
-      placeholder: 'Write a comment…',
-    }),
-  ],
-})
-
-onBeforeUnmount(() => {
-  editor.destroy()
-})
+const editorRef = ref(null)
+const menuButtons = [
+  'Bold',
+  'Italic',
+  'Strikethrough',
+  'Separator',
+  'Bullet List',
+  'Numbered List',
+  'Separator',
+  'Blockquote',
+  'Code',
+  'Link',
+]
 
 const submit = () => {
-  if (!props.hasCustomActions) {
-    defaultCommentAction()
+  if (props.hasCustomActions) {
+    props.customActions.forEach((action) => action())
     emit('commented')
     return
   }
-
-  props.customActions.forEach((action) => {
-    action()
-    emit('commented')
-  })
+  defaultCommentAction()
 }
 
 const defaultCommentAction = () => {
@@ -151,6 +71,8 @@ const defaultCommentAction = () => {
     toast.error('Comment action failed, missing doctype or docname')
     return
   }
+
+  const content = editorRef.value?.editor?.getHTML() ?? ''
 
   createResource({
     url: 'frappe.client.insert',
@@ -162,19 +84,16 @@ const defaultCommentAction = () => {
           comment_email: session.user,
           reference_doctype: props.doctype,
           reference_docname: props.docname,
-          content: editor.getHTML(),
+          content,
           ignore_permissions: true,
         },
       }
     },
     auto: true,
     onSuccess() {
-      editor.commands.clearContent()
+      editorRef.value?.editor?.commands.clearContent()
       emit('commented')
     },
   })
 }
-
-const buttonClass = (isActive) =>
-  `px-2 py-1 text-sm rounded ${isActive ? 'bg-surface-gray-3' : 'hover:bg-surface-gray-2'}`
 </script>

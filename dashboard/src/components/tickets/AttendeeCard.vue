@@ -2,26 +2,28 @@
   <div
     class="bg-surface-white border border-outline-gray-2 rounded-lg p-6 md:p-8 flex flex-col gap-6"
   >
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-1.5">
-        <IconUserCircle class="w-6 h-6 text-ink-gray-7" />
-        <span class="font-semibold text-ink-gray-9 tracking-tight">
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-1.5 min-w-0">
+        <IconUserCircle class="w-5 h-5 shrink-0 text-ink-gray-7" />
+        <span class="font-semibold text-ink-gray-9 tracking-tight truncate">
           Attendee Details #{{ index + 1 }}
         </span>
       </div>
-      <span
-        class="bg-green-100 text-green-700 text-xs font-semibold tracking-wider uppercase px-3 py-1.5 rounded-lg"
-      >
-        {{ tierTitle }}
-      </span>
-      <button
-        v-if="canDelete"
-        class="bg-red-50 rounded-lg p-2.5 hover:bg-red-100 transition-colors"
-        :aria-label="`Remove attendee #${index + 1}`"
-        @click="$emit('delete')"
-      >
-        <IconTrash class="w-5 h-5 text-red-500" />
-      </button>
+      <div class="flex items-center gap-1.5 shrink-0">
+        <span
+          class="bg-green-100 text-green-700 text-[10px] font-semibold tracking-wider uppercase px-2 py-1 rounded-md"
+        >
+          {{ tierTitle }}
+        </span>
+        <button
+          v-if="canDelete"
+          class="bg-red-50 rounded-lg p-1.5 hover:bg-red-100 transition-colors"
+          :aria-label="`Remove attendee ${attendee.full_name || `#${index + 1}`}`"
+          @click="$emit('delete')"
+        >
+          <IconTrash class="w-4 h-4 text-red-500" />
+        </button>
+      </div>
     </div>
 
     <div class="flex flex-col gap-6">
@@ -61,7 +63,7 @@
           label="Institution"
           size="sm"
           variant="subtle"
-          placeholder="Institution / College"
+          placeholder="Organization / Institution"
           @update:model-value="update('organization', $event)"
         />
       </div>
@@ -83,32 +85,26 @@
       </div>
 
       <!-- T-shirt -->
-      <div v-if="tshirtIncluded" class="flex flex-col gap-3">
-        <div class="flex items-center gap-2 text-sm text-ink-green-3">
+      <div v-if="tshirtIncluded || showTshirt" class="flex flex-col gap-3">
+        <div v-if="tshirtIncluded" class="flex items-center gap-2 text-sm text-ink-green-3">
           <IconShirt class="w-4 h-4 shrink-0" aria-hidden="true" />
           <span>T-shirt included with this tier</span>
         </div>
         <FormControl
-          :model-value="attendee.tshirt_size"
-          type="select"
-          :options="tshirtSizes"
-          size="sm"
-          variant="subtle"
-          label="T-shirt size"
-          placeholder="Select size"
-          required
-          class="min-w-[110px]"
-          @update:model-value="update('tshirt_size', $event)"
-        />
-      </div>
-      <div v-else-if="showTshirt" class="flex items-center gap-4 flex-wrap">
-        <FormControl
+          v-else
           :model-value="attendee.wants_tshirt"
           type="checkbox"
           size="sm"
           variant="subtle"
           label="I want a T-shirt"
-          @update:model-value="update('wants_tshirt', $event)"
+          @update:model-value="
+            (value) =>
+              emit('update:attendee', {
+                ...attendee,
+                wants_tshirt: value,
+                tshirt_size: value ? attendee.tshirt_size : '',
+              })
+          "
         />
         <div v-if="attendee.wants_tshirt" class="flex items-center gap-2">
           <FormControl
@@ -117,12 +113,15 @@
             :options="tshirtSizes"
             size="sm"
             variant="subtle"
+            :label="tshirtIncluded ? 'T-shirt size' : undefined"
             placeholder="Select size"
             required
             class="min-w-[110px]"
             @update:model-value="update('tshirt_size', $event)"
           />
-          <span class="text-sm text-ink-gray-5">(+ ₹{{ tshirtPrice }})</span>
+          <span v-if="!tshirtIncluded" class="text-sm text-ink-gray-5"
+            >(+ ₹{{ tshirtPrice }})</span
+          >
         </div>
       </div>
     </div>

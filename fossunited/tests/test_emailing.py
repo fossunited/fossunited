@@ -10,86 +10,66 @@ from fossunited.api.emailing import (
     send_campaign,
     send_test_email,
 )
-from fossunited.doctype_ids import CHAPTER, EMAIL_GROUP, EVENT
-
-from .utils import insert_test_chapter, insert_test_event
+from fossunited.doctype_ids import EMAIL_GROUP
+from fossunited.tests.factories.foss_chapter_event_factory import FOSSChapterEventFactory
+from fossunited.tests.factories.foss_chapter_factory import FOSSChapterFactory
+from fossunited.tests.factories.user_factory import UserFactory
 
 fake = Faker()
 
 
 class TestEmailing(FrappeTestCase):
     def setUp(self):
-        self.core_team_email = "test1@example.com"
-        self.chapter = insert_test_chapter(members=[self.core_team_email])
-        self.event = insert_test_event(chapter=self.chapter)
+        self.core_team_user = UserFactory.create("with_foss_website_user_role")
+        self.chapter = FOSSChapterFactory.create(
+            "with_members", members=[self.core_team_user.name]
+        )
+        self.event = FOSSChapterEventFactory.create(chapter=self.chapter.name)
 
         self.setup_campaign()
 
-    def tearDown(self):
-        frappe.set_user("Administrator")
-        frappe.delete_doc(CHAPTER, self.chapter.name, force=True)
-        frappe.delete_doc(EVENT, self.event.name, force=True)
-        # Delete all email groups for the event
-        groups = frappe.get_all(
-            "Email Group",
-            filters={"reference_document": self.event.name},
-            pluck="name",
-        )
-        for group_name in groups:
-            frappe.delete_doc("Email Group", group_name, force=True)
-
     def setup_campaign(self):
-        frappe.set_user(self.core_team_email)
+        with self.set_user(self.core_team_user.name):
+            email_group = frappe.get_doc(
+                EMAIL_GROUP,
+                {
+                    "reference_document": self.event.name,
+                    "document_type": self.event.doctype,
+                    "group_type": "Event Participants",
+                },
+            )
 
-        email_group = frappe.get_doc(
-            EMAIL_GROUP,
-            {
-                "reference_document": self.event.name,
-                "document_type": self.event.doctype,
-                "group_type": "Event Participants",
-            },
-        )
+            for _ in range(3):
+                add_to_email_group(email_group.name, fake.unique.email())
 
-        recipient_emails = [
-            "test2@example.com",
-            "test3@example.com",
-            "test5@example.com",
-        ]
-        for email in recipient_emails:
-            add_to_email_group(email_group.name, email)
-
-        recipient_groups = [
-            {
-                "label": email_group.group_type,
-                "value": email_group.name,
-                "description": "",
+            recipient_groups = [
+                {
+                    "label": email_group.group_type,
+                    "value": email_group.name,
+                    "description": "",
+                }
+            ]
+            newsletter_data = {
+                "subject": fake.sentence(),
+                "content_type": "Rich Text",
+                "message": fake.paragraph(),
+                "email_group": recipient_groups,
+                "attachments": [],
             }
-        ]
-        newsletter_data = {
-            "subject": fake.sentence(),
-            "content_type": "Rich Text",
-            "message": fake.paragraph(),
-            "email_group": recipient_groups,
-            "attachments": [],
-        }
-        self.newsletter = create_newsletter_campaign(
-            data=newsletter_data,
-            reference_document=self.event.name,
-            document_type=self.event.doctype,
-            chapter=self.chapter.name,
-        )
+            self.newsletter = create_newsletter_campaign(
+                data=newsletter_data,
+                reference_document=self.event.name,
+                document_type=self.event.doctype,
+                chapter=self.chapter.name,
+            )
 
     def test_send_test_email(self):
-        frappe.set_user(self.core_team_email)
-
-        test_email = fake.email()
-
-        send_test_email(campaign_id=self.newsletter.name, email=test_email)
+        with self.set_user(self.core_team_user.name):
+            send_test_email(campaign_id=self.newsletter.name, email=fake.email())
 
     def test_send_campaign(self):
-        frappe.set_user(self.core_team_email)
-
-        send_campaign(campaign_id=self.newsletter.name)
+        with self.set_user(self.core_team_user.name):
+            send_campaign(campaign_id=self.newsletter.name)
 
     def test_create_email_group_creates_group(self):
         group = create_email_group(
@@ -104,14 +84,12 @@ class TestEmailing(FrappeTestCase):
         self.assertEqual(group.chapter, self.chapter.name)
 
     def test_create_email_group_returns_existing(self):
-        # First call creates it
         group1 = create_email_group(
             type="Event Participants",
             reference_document=self.event.name,
             document_type=self.event.doctype,
         )
 
-        # Second call should not create a new one
         group2 = create_email_group(
             type="Event Participants",
             reference_document=self.event.name,
@@ -129,7 +107,7 @@ class TestEmailing(FrappeTestCase):
             reference_document=self.event.name,
             document_type=self.event.doctype,
         )
-        email = "added@example.com"
+        email = fake.unique.email()
         add_to_email_group(group.name, email)
 
         self.assertTrue(
@@ -142,7 +120,7 @@ class TestEmailing(FrappeTestCase):
             reference_document=self.event.name,
             document_type=self.event.doctype,
         )
-        email = "remove@example.com"
+        email = fake.unique.email()
         add_to_email_group(group.name, email)
 
         self.assertTrue(
@@ -157,4 +135,4 @@ class TestEmailing(FrappeTestCase):
 
     def test_add_to_nonexistent_email_group_raises(self):
         with self.assertRaises(frappe.DoesNotExistError):
-            add_to_email_group("non-existent-group", "test@example.com")
+            add_to_email_group("non-existent-group", fake.email())

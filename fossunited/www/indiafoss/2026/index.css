@@ -1,0 +1,55 @@
+/* ── Skip link ──────────────────────────────── */
+.skip-link {
+  position: absolute; top: -40px; left: 0; z-index: 9999;
+  background: var(--v3-primary-button); color: #fff;
+  padding: .5rem 1rem; font-size: .875rem; text-decoration: none; border-radius: 0 0 6px 0;
+}
+.skip-link:focus { top: 0; }
+
+/* .if-nav-link / .if-nav-ticket moved to custom.css (shared across IndiaFOSS pages) */
+
+/* ── Hero (IndiaFOSS-specific sizing) ───────── */
+/* Full-bleed bg image, natural 1200x438. >=1200 fits exactly; narrower crops
+   left/right at center (height fixed, width reduces). Text always white. */
+.if-hero {
+  position: relative; overflow: hidden; text-align: center;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;
+  height: 500px; padding: 32px 24px 72px;
+  /* zoom to fill 500px height (width proportional ~1370), crop sides at center */
+  background: #1a1a1a url("/files/if26-hero.webp") center center / auto 500px no-repeat;
+  border-radius: 16px;
+  color: #fafafa;
+  -webkit-user-select: none; -moz-user-select: none; user-select: none;
+}
+/* Buttons: dark-theme look on the always-dark hero in both page themes.
+   Styled directly (not via --v3-* var override) so the var doesn't cascade
+   into child backgrounds. primary = white, secondary = gray. */
+.if-hero .v3-btn-dark,
+.if-hero .v3-btn-dark:hover { background: #fafafa; color: #141414; }
+.if-hero .v3-btn-secondary,
+.if-hero .v3-btn-secondary:hover { background: hsla(0, 0%, 29%, 1); color: #fafafa; }
+.if-hero img, .if-hero svg { -webkit-user-drag: none; user-drag: none; pointer-events: none; }
+@media (max-width: 767px) { .if-hero > svg { width: 75%; height: auto; } }
+/* <600px: dedicated mobile artwork, cover-fit, less top / more bottom padding */
+@media (max-width: 599px) {
+  .if-hero {
+    background-image: url("/files/if26-hero-mobile.webp");
+    background-size: cover;
+    background-position: center;
+    height: 500px;
+    padding: 24px 20px 72px;
+  }
+}
+.if-hero-logo { max-height: 80px; width: auto; display: block; }
+.if-hero-meta { font-size: .8125rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #fafafa; margin: 0; text-decoration: none; }
+.if-hero-meta-link { color: inherit; text-decoration: none; border-bottom: 1px dotted currentColor; }
+.if-hero-meta-link:hover { opacity: .75; color: inherit; text-decoration: none; }
+.if-hero-desc { max-width: 540px; color: #f4f4f4; margin: 0; }
+/* Tagline white on dark image regardless of theme */
+.if-hero .if-tagline { color: #fff; }
+
+/* .if-tagline moved to custom.css (shared). Hero-specific override kept below. */
+
+
+/* ── Toggle icon rotation ───────────────────── */
+[data-toggle="collapse"][aria-expanded="true"] .v3-toggle-icon { transform: rotate(180deg); }

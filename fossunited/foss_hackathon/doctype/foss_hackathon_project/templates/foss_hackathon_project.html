@@ -1,6 +1,7 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import breadcrumb, theme_toggle %}
 {% from "fossunited/templates/macros/issue_pr_table.html" import issue_pr_table %}
+{% from "fossunited/templates/macros/profile_badge.html" import profile_badge %}
 
 {% block page_content %}
   <div class="v3-page">
@@ -19,7 +20,12 @@
         >
           <div class="flex-fill">
             <div class="d-flex flex-column flex-md-row align-items-md-center mb-3">
-              <h1 class="v3-text-primary mb-2 mb-md-0 text-2xl">{{ doc.title }}</h1>
+              <div class="d-flex align-items-center gap-3 mb-2 mb-md-0">
+                {% if winner_status %}
+                  {{ profile_badge("hackathon-winner", href=results_route, title=winner_status + " of " + hackathon.hackathon_name) }}
+                {% endif %}
+                <h1 class="v3-text-primary text-2xl mb-0">{{ doc.title }}</h1>
+              </div>
 
               <div class="ml-md-auto d-flex align-items-center flex-wrap">
                 {% if doc.is_contribution_project and not doc.is_partner_project %}
@@ -90,7 +96,7 @@
   <div class="v3-card mb-4">
     <div class="v3-section-title">
       <i class="ti ti-users"></i>
-      <span>Team Members</span>
+      <span>Team: {{ team.team_name or "Members" }}</span>
     </div>
     <div class="v3-speakers-grid gap-2">
       {% for member in team_members %}
@@ -129,6 +135,8 @@
 
 {% block page_script %}
   <script>
+    frappe.ready(() => $('[data-toggle="tooltip"]').tooltip())
+
     function toggle_like(e) {
       let liked = $('#project-like-button').data('liked')
       liked = liked === 'True' ? 'False' : 'Yes'

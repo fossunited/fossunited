@@ -558,10 +558,13 @@ def send_campaign(campaign_id: str):
     args:
         campaign: id of campaign / newsletter doctype
     """
-    campaign = frappe.get_doc(CAMPAIGN, campaign_id)
-    campaign.flags.ignore_permissions = 1
-    campaign.send_emails()
-    campaign.save()
+    frappe.enqueue_doc(
+        CAMPAIGN,
+        campaign_id,
+        "send_emails",
+        queue="long",
+        enqueue_after_commit=True,
+    )
 
 
 @frappe.whitelist()

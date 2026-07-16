@@ -140,6 +140,140 @@ The dashboard will be available at:
 
 ---
 
+## Seed Script
+
+The seed script populates a fresh site with realistic development data so you
+can explore the full platform immediately after install — chapters, events,
+RSVPs, CFPs, and a hackathon — without having to create records manually.
+
+### Running the Script
+
+> **Important:** The seed script requires `frappe_factory_bot`. Please install it first:
+> ```sh
+> bench get-app https://github.com/TomasBarry/frappe_factory_bot
+> ```
+
+For Frappe Manager / Manual Bench installations:
+```sh
+bench execute fossunited.dev.seed.seed
+```
+
+For Devcontainer (Docker/Podman) environments:
+```sh
+<docker|podman> exec -w /workspace/development/fossu-bench/sites devcontainer-frappe-1 \
+    ../env/bin/python /workspace/development/run_seed.py
+```
+
+The script is **idempotent** — running it multiple times on the same database
+is safe. Existing records are detected and skipped.
+
+### Data Hierarchy
+
+The script creates a tree of related records:
+
+```text
+Users (8)
+├── Attendees (2)          attendee-{1,2}@example.com
+├── Speakers (2)           speaker-{1,2}@example.com
+└── Chapter Leads (4)      {bangalore,mumbai,kochi,campus}-lead@example.com
+
+Chapters (4)
+├── FOSS Bangalore          City Community
+├── FOSS Mumbai             City Community
+├── FOSS Kochi              City Community
+└── Campus Chapter          Student Club
+
+Events (13)  — one of each template per City Community chapter, plus one test conference
+├── FOSS Meetup 2026        status: Live     (3 chapters × 1)
+├── FOSS Conference 2025    status: Concluded
+├── FOSS Workshop 2026      status: Draft    (unpublished)
+├── Mini FOSS Hackathon     status: Live
+└── Paid Test Conference    status: Live     (1 dedicated event for mock tickets)
+
+RSVPs (6 forms)  — one per Live event, each with 2 submissions
+CFPs  (6 forms)  — one per Live event, each with 2 talk submissions
+Tickets (1)      — one prototype ticket attached to the Paid Test Conference
+
+Hackathon — FOSSIT Hackathon (Campus Chapter)
+├── Teams (4)              Phoenix / Aurora / Nebula / Comet
+├── Localhost (1)          Kochi LocalHost
+└── Projects (4)           one per team
+```
+
+**What each Doctype represents:**
+
+| Doctype | Purpose |
+|---|---|
+| **Chapter** | A regional FOSS group (City Community) or campus group (Student Club). The top-level organising unit. |
+| **Event** | A meetup, conference, workshop, or hackathon organised by a Chapter. |
+| **Event Ticket** | A generated ticket for an attendee of a paid or registered event. |
+| **Event RSVP** | A registration form attached to an Event. Tracks attendee count and collects custom questions. |
+| **RSVP Submission** | A single attendee's RSVP response linked to the form. |
+| **Event CFP** | A Call for Proposals form attached to an Event. Accepts speaker submissions with a deadline. |
+| **CFP Submission** | A single speaker's talk proposal linked to the CFP form. |
+| **Hackathon** | A standalone hackathon record linked to a Chapter, with its own registration and localhost venue. |
+| **Hackathon Team** | A participating team inside a Hackathon. |
+| **Hackathon Project** | A project submitted by a team, with repo link, description, and optional "contribution project" flag. |
+| User Profile | The public-facing profile for every registered user on the platform. |
+
+---
+
+## Reviewer Workflow Demo
+
+To test the Pretalx-inspired reviewer workflow with pre-populated demo data, use the provided demo script:
+
+```bash
+./development/demo.sh
+```
+
+This script will:
+1. Start the necessary containers (MariaDB, Redis, Frappe).
+2. Setup a local Frappe bench.
+3. Build the Vite-based dashboard.
+4. Seed demo data including events, CFP submissions, and a demo reviewer.
+
+**Access Details:**
+- **URL:** [http://fossunited.localhost:8000](http://fossunited.localhost:8000)
+- **Demo Reviewer:** `mock-reviewer@example.com`
+- **Password:** `password` (default for all seeded users)
+
+The demo uses your local repository changes, allowing for rapid iteration and testing of the new reviewer experience.
+
+### What to Expect in the UI
+
+
+| Record type | Count |
+|---|---|
+| Users | 9 |
+| User Profiles | 9 |
+| Chapters | 4 |
+| Events | 13 |
+| Event Tickets | 1 |
+| RSVP forms | 6 |
+| RSVP submissions | 12 |
+| CFP forms | 6 |
+| CFP submissions | 12 |
+| Hackathon | 1 |
+| Hackathon Teams | 4 |
+| Hackathon Projects | 4 |
+
+### Default Credentials
+
+All seed users share the same password.
+
+| Role | Email | Password |
+|---|---|---|
+| Attendee | attendee-1@example.com | `password` |
+| Attendee | attendee-2@example.com | `password` |
+| Speaker | speaker-1@example.com | `password` |
+| Speaker | speaker-2@example.com | `password` |
+| Chapter Lead (Bangalore) | bangalore-lead@example.com | `password` |
+| Chapter Lead (Mumbai) | mumbai-lead@example.com | `password` |
+| Chapter Lead (Kochi) | kochi-lead@example.com | `password` |
+| Chapter Lead (Campus) | campus-lead@example.com | `password` |
+
+---
+
 ## Pre-commit Hooks
 
 To automatically run linters before commits:

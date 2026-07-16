@@ -1,7 +1,8 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import add_to_date, now_datetime
 
-from fossunited.doctype_ids import EVENT, PROPOSAL
+from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL
 from fossunited.tests.factories import (
     FOSSChapterEventFactory,
     FOSSChapterFactory,
@@ -63,6 +64,25 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.submission.save()
         self.submission.reload()
 
+    # --- deadline auto-close tests ---
+
+    def test_submit_past_deadline_throws(self):
+        past_cfp = FOSSEventCFPFactory.create(
+            event=self.event.name,
+            deadline=add_to_date(now_datetime(), days=-1),
+            status="Live",
+        )
+        frappe.set_user(CoreTeam)
+        with self.assertRaises(frappe.PermissionError):
+            FOSSEventCFPSubmissionFactory.create(
+                linked_cfp=past_cfp.name,
+                event=self.event.name,
+                submitted_by=CoreTeam,
+            )
+        # submit path rejects but does not write; status flips only on the next read
+        self.assertEqual(frappe.db.get_value(EVENT_CFP, past_cfp.name, "status"), "Live")
+        past_cfp.delete(force=True)
+
     # --- permission tests ---
 
     def test_owner_can_edit_l1_field(self):
@@ -91,6 +111,119 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         sub.reload()
         self.assertNotEqual(sub.status, "Approved")
         sub.delete(force=True, ignore_permissions=True)
+
+    # --- proposer edit-lock tests ---
+
+    def _closed_submission(self, **cfp_overrides):
+        """A submission whose CFP is closed to proposer edits, owned by Submitter."""
+        cfp = FOSSEventCFPFactory.create(event=self.event.name, **cfp_overrides)
+        sub = FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=cfp.name,
+            event=self.event.name,
+            submitted_by=Submitter,
+            email=Submitter,
+        )
+        return cfp, sub
+
+    def test_proposer_edit_blocked_when_allow_cfp_edit_off(self):
+        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
+        frappe.set_user(Submitter)
+        sub.talk_title = "Edited after lock"
+        with self.assertRaises(frappe.PermissionError):
+            sub.save()
+
+    def test_proposer_edit_blocked_past_deadline(self):
+        _, sub = self._closed_submission(
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
+        )
+        frappe.set_user(Submitter)
+        sub.talk_description = "Edited after deadline"
+        with self.assertRaises(frappe.PermissionError):
+            sub.save()
+
+    def test_proposer_edit_blocked_when_status_closed(self):
+        _, sub = self._closed_submission(
+            allow_cfp_edit=1,
+            status="Closed",
+            deadline=add_to_date(now_datetime(), days=3),
+        )
+        frappe.set_user(Submitter)
+        sub.talk_title = "Edited while closed"
+        with self.assertRaises(frappe.PermissionError):
+            sub.save()
+
+    def test_proposer_edit_allowed_when_window_open(self):
+        cfp = FOSSEventCFPFactory.create(
+            event=self.event.name,
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=3),
+        )
+        sub = FOSSEventCFPSubmissionFactory.create(
+            linked_cfp=cfp.name,
+            event=self.event.name,
+            submitted_by=Submitter,
+            email=Submitter,
+        )
+        frappe.set_user(Submitter)
+        sub.talk_title = "Edited within window"
+        sub.save()  # must not raise
+        sub.reload()
+        self.assertEqual(sub.talk_title, "Edited within window")
+
+    def test_proposer_can_withdraw_after_close(self):
+        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
+        frappe.set_user(Submitter)
+        sub.is_withdrawn = 1
+        sub.save()  # withdraw is not a content change -> allowed
+        sub.reload()
+        self.assertEqual(sub.status, "Withdrawn")
+
+    def test_reviewer_can_review_after_close(self):
+        _, sub = self._closed_submission(
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
+        )
+        frappe.set_user(Reviewer)
+        sub.append("reviews", {"reviewer": Reviewer, "email": Reviewer, "to_approve": "Yes"})
+        sub.save()  # no content change -> allowed
+        sub.reload()
+        self.assertEqual(len(sub.reviews), 1)
+
+    def test_reviewer_review_after_close_with_unsanitised_description(self):
+        # Regression: a stored description that is not sanitise-stable (legacy row)
+        # must not trip the edit lock when a reviewer saves the parent on a closed
+        # CFP. validate() sanitises talk_description before before_save, so the
+        # naive before/after compare would otherwise see a phantom content change.
+        _, sub = self._closed_submission(
+            allow_cfp_edit=1,
+            status="Live",
+            deadline=add_to_date(now_datetime(), days=-1),
+        )
+        frappe.db.set_value(
+            PROPOSAL,
+            sub.name,
+            "talk_description",
+            '<p onclick="x()">Hi</p><script>bad()</script>',
+            update_modified=False,
+        )
+        frappe.set_user(Reviewer)
+        sub = frappe.get_doc(PROPOSAL, sub.name)
+        sub.append("reviews", {"reviewer": Reviewer, "email": Reviewer, "to_approve": "Yes"})
+        sub.save()  # must not raise despite the dirty stored description
+        sub.reload()
+        self.assertEqual(len(sub.reviews), 1)
+
+    def test_system_manager_can_edit_after_close(self):
+        _, sub = self._closed_submission(allow_cfp_edit=0, status="Live")
+        frappe.set_user("Administrator")
+        sub.talk_title = "Edited by admin"
+        sub.save()  # System Manager bypass
+        sub.reload()
+        self.assertEqual(sub.talk_title, "Edited by admin")
 
     def test_owner_cannot_write_reviews(self):
         # reviews at L2 — "All" has no L2 write
@@ -243,6 +376,7 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         self.cfp.status = "Closed"
         self.cfp.save()
         try:
+            frappe.set_user(CoreTeam)
             with self.assertRaises(frappe.PermissionError):
                 FOSSEventCFPSubmissionFactory.create(
                     linked_cfp=self.cfp.name,
@@ -258,31 +392,6 @@ class TestFOSSEventCFPSubmission(FrappeTestCase):
         with self.assertRaises(frappe.PermissionError):
             self.submission.session_type = "Invited Talk"
             self.submission.save()
-
-    def test_new_review_notifies_proposer(self):
-        frappe.set_user(CoreTeam)
-        frappe.db.delete("Email Queue")
-        self._add_review(CoreTeam, "Yes", "Great proposal!")
-        self.assertTrue(
-            frappe.db.exists(
-                "Email Queue",
-                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
-            )
-        )
-
-    def test_review_remarks_change_notifies_proposer(self):
-        frappe.set_user(CoreTeam)
-        self._add_review(CoreTeam, "Maybe", "Needs more detail.")
-        self.submission.reload()
-        frappe.db.delete("Email Queue")
-        self.submission.reviews[0].remarks = "Actually looks great now!"
-        self.submission.save()
-        self.assertTrue(
-            frappe.db.exists(
-                "Email Queue",
-                {"reference_doctype": PROPOSAL, "reference_name": self.submission.name},
-            )
-        )
 
 
 class TestCFPHasPermission(FrappeTestCase):

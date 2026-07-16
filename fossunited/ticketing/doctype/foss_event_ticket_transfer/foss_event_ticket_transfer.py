@@ -38,9 +38,27 @@ class FOSSEventTicketTransfer(Document):
 
     def before_save(self):
         if self.has_value_changed("status"):
+            self.validate_status_change_permission()
             if self.status == "Completed":
                 self.validate_ticket_exists()
                 self.transfer_ticket()
+
+    def validate_status_change_permission(self):
+        if "System Manager" in frappe.get_roles():
+            return
+        if self.status == "Completed" and frappe.session.user != self.owner_email:
+            frappe.throw(
+                _("Only the ticket owner can approve a transfer"),
+                frappe.PermissionError,
+            )
+        if self.status == "Cancelled" and frappe.session.user not in [
+            self.owner_email,
+            self.receiver_email,
+        ]:
+            frappe.throw(
+                _("You are not authorized to cancel this transfer"),
+                frappe.PermissionError,
+            )
 
     def validate(self):
         self.validate_ticket_exists()
@@ -101,5 +119,5 @@ class FOSSEventTicketTransfer(Document):
         # avoid scam of people tranferring old event tickets
         if event_status != "Live":
             frappe.throw(
-                f"Tickets can only be transferred for Live events. Current status: {event_status}"
+                f"Tickets can only be transferred for Live events. Given ticket is for: {event_status} event"
             )

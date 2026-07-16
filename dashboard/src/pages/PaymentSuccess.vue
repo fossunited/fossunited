@@ -81,9 +81,7 @@
 
         <p class="text-xs text-ink-gray-4">
           For any assistance, email
-          <a href="mailto:foundation@fossunited.org" class="underline"
-            >foundation@fossunited.org</a
-          >
+          <a :href="`mailto:${contactEmail}`" class="underline">{{ contactEmail }}</a>
         </p>
       </div>
     </main>
@@ -91,7 +89,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { createResource, Button } from 'frappe-ui'
 import Header from '@/components/Header.vue'
@@ -115,6 +113,10 @@ const event = createResource({
   makeParams: () => ({ name: eventId }),
   auto: Boolean(eventId),
 })
+
+const contactEmail = computed(
+  () => event.data?.chapter_email || 'indiafoss@fossunited.org',
+)
 
 const tickets = createResource({
   url: 'fossunited.api.tickets.search_tickets',

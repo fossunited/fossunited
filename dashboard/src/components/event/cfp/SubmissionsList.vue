@@ -24,6 +24,24 @@
       </button>
     </div>
 
+    <!-- Select-type custom questions surfaced as compact dropdowns -->
+    <div v-if="customSelectFields.length" class="flex flex-wrap items-center gap-3">
+      <div
+        v-for="field in customSelectFields"
+        :key="field.fieldname"
+        class="flex items-center gap-1.5"
+      >
+        <span class="text-xs text-ink-gray-5 whitespace-nowrap">{{ controlLabel(field) }}</span>
+        <FormControl
+          type="select"
+          size="sm"
+          :options="controlOptions(field)"
+          :model-value="getSelectValue(field.fieldname)"
+          @update:model-value="setSelectValue(field.fieldname, $event)"
+        />
+      </div>
+    </div>
+
     <!-- Filter row -->
     <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex items-center gap-4">
@@ -32,10 +50,25 @@
           <Switch v-if="reviewerMode" v-model="showNotReviewed" label="Hide reviewed (By Me)" />
         </Tooltip>
         <Tooltip text="Only show submissions assigned to you">
-          <Switch v-if="reviewerMode" v-model="showAssignedOnly" label="Assigned to me" />
+          <Switch
+            v-if="reviewerMode && eventUsesAssignment"
+            v-model="showAssignedOnly"
+            label="Assigned to me"
+          />
         </Tooltip>
       </div>
-      <span class="text-xs text-ink-gray-5">Count: {{ cfpSubmissions.data?.length }}</span>
+      <div class="flex items-center gap-2">
+        <FormControl
+          v-model="sortBy"
+          type="select"
+          :options="SORT_OPTIONS"
+          size="sm"
+          class="text-xs"
+        />
+        <span class="text-xs text-ink-gray-5 whitespace-nowrap"
+          >Count: {{ cfpSubmissions.data?.length }}</span
+        >
+      </div>
     </div>
   </div>
 
@@ -45,14 +78,29 @@
   </div>
   <div v-else-if="cfpSubmissions.data" class="flex flex-col">
     <SubmissionListItem
-      v-for="submission in cfpSubmissions.data"
+      v-for="submission in renderedSubmissions"
       :key="submission.name"
       :submission="submission"
+      :sort-by="sortBy"
       tabindex="0"
       @open:submission="handleOpenSubmission($event)"
     />
-    <div v-if="cfpSubmissions.data.length === 0" class="py-4">
-      <span class="text-sm text-ink-gray-5">No submissions found.</span>
+    <!-- Sentinel: rendering the next page when it scrolls into view. -->
+    <div v-if="hasMoreToRender" ref="listEnd" class="flex items-center justify-center py-4">
+      <LoadingIndicator class="w-5 h-5" />
+    </div>
+    <div v-if="cfpSubmissions.data.length === 0" class="py-6 flex flex-col items-center gap-2">
+      <span class="text-sm text-ink-gray-5">
+        {{ searchActive || filtersActive ? 'No submissions match.' : 'No submissions found.' }}
+      </span>
+      <div v-if="searchActive || filtersActive" class="flex items-center gap-2">
+        <Button v-if="searchActive" variant="subtle" size="sm" @click="clearSearch">
+          Clear search
+        </Button>
+        <Button v-if="filtersActive" variant="subtle" size="sm" @click="clearFilters">
+          Clear filters
+        </Button>
+      </div>
     </div>
   </div>
 </template>
@@ -62,10 +110,17 @@ import SubmissionListItem from './SubmissionListItem.vue'
 import Filter from '@/components/ui/Filter.vue'
 import { getCfpFilterFields, filterSubmissions } from '@/helpers/cfp'
 import { useRoute } from 'vue-router'
-import { useStorage } from '@vueuse/core'
+import { useStorage, useElementVisibility } from '@vueuse/core'
 import { ref, watch, computed } from 'vue'
-import { createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
+import { Button, createResource, FormControl, LoadingIndicator, Switch, Tooltip } from 'frappe-ui'
 import { IconSearch } from '@tabler/icons-vue'
+import { toast } from 'vue-sonner'
+
+// Module-level: resets on page refresh, survives component remounts within same load.
+const _assignedToggleCache = new Map()
+// Tracks events where the "all assigned reviewed" auto-untoggle already fired this page load.
+// Prevents re-firing when user manually re-enables the toggle.
+const _autoUntoggleFiredCache = new Set()
 
 const props = defineProps({
   event: {
@@ -88,9 +143,76 @@ const storageKey = props.reviewerMode
 const searchQuery = ref('')
 const selectedStatus = ref('')
 const showNotReviewed = ref(true)
-const showAssignedOnly = ref(true)
+const sortBy = ref('creation_desc')
+
+// Lazy/incremental rendering: mount one page of rows, then grow as the list end
+// scrolls into view. Keeps the initial render instant even with hundreds of
+// proposals (each row mounts a Popover + Tooltips, so rendering all at once is slow).
+const PAGE_SIZE = 30
+const visibleCount = ref(PAGE_SIZE)
+const listEnd = ref(null)
+const listEndVisible = useElementVisibility(listEnd)
+
+const renderedSubmissions = computed(() =>
+  (cfpSubmissions.data ?? []).slice(0, visibleCount.value),
+)
+const hasMoreToRender = computed(() => (cfpSubmissions.data?.length ?? 0) > visibleCount.value)
+
+watch(listEndVisible, (visible) => {
+  if (visible && hasMoreToRender.value) visibleCount.value += PAGE_SIZE
+})
+
+// Restore from cache if user already toggled this session; default false until smart default runs.
+const showAssignedOnly = ref(_assignedToggleCache.get(props.event) ?? false)
+
+watch(showAssignedOnly, (val) => {
+  _assignedToggleCache.set(props.event, val)
+})
+
 const filters = useStorage(storageKey, {})
 const docfields = await getCfpFilterFields(route.params.id)
+
+// Surface Select-type custom questions as compact dropdowns outside the Filter
+// dropdown. Backend gates these fields (organizers always; pure reviewers only
+// when responses are public), so nothing renders when hidden.
+const customSelectFields = computed(() =>
+  (docfields.data ?? []).filter(
+    (f) => f.fieldtype === 'Select' && f.fieldname?.startsWith('custom_question'),
+  ),
+)
+
+const controlLabel = (field) => field.label.replace(/ \(Custom question\)$/, '')
+
+const controlOptions = (field) => [
+  { label: 'All', value: '' },
+  ...String(field.options || '')
+    .split('\n')
+    .filter(Boolean)
+    .map((o) => ({ label: o, value: o })),
+]
+
+const getSelectValue = (fieldname) => filters.value[fieldname]?.[1] ?? ''
+
+const setSelectValue = (fieldname, value) => {
+  if (value) {
+    filters.value[fieldname] = ['=', value]
+  } else {
+    delete filters.value[fieldname]
+  }
+}
+
+const SORT_OPTIONS = computed(() => {
+  const options = [
+    { label: 'Newest first', value: 'creation_desc' },
+    { label: 'Oldest first', value: 'creation_asc' },
+    { label: 'Review count ↓', value: 'review_count_desc' },
+    { label: 'Title A–Z', value: 'title_asc' },
+  ]
+  if (!props.reviewerMode) {
+    options.splice(3, 0, { label: 'Assigned count ↓', value: 'assigned_count_desc' })
+  }
+  return options
+})
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All', activeClass: 'bg-surface-gray-7 text-ink-white' },
@@ -102,6 +224,34 @@ const STATUS_OPTIONS = [
   { value: 'Approved', label: 'Approved', activeClass: 'bg-green-100 text-green-700' },
   { value: 'Rejected', label: 'Rejected', activeClass: 'bg-red-100 text-red-700' },
 ]
+
+// Show the "Assigned to me" toggle only when the event actually uses the
+// assignment feature (some proposal is assigned to a reviewer). Events that
+// don't use assignment hide the toggle entirely.
+const eventUsesAssignment = computed(() =>
+  (cfpSubmissions.originalData ?? []).some((s) => s._assigned_users?.length > 0),
+)
+
+// Track the two narrowing axes separately so the empty state can offer to clear
+// each on its own (e.g. matches may be hidden behind the "Assigned to me" toggle).
+const searchActive = computed(() => !!searchQuery.value)
+const filtersActive = computed(
+  () =>
+    !!selectedStatus.value ||
+    Object.keys(filters.value).length > 0 ||
+    (props.reviewerMode && (showNotReviewed.value || showAssignedOnly.value)),
+)
+
+function clearSearch() {
+  searchQuery.value = ''
+}
+
+function clearFilters() {
+  selectedStatus.value = ''
+  filters.value = {}
+  showNotReviewed.value = false
+  showAssignedOnly.value = false
+}
 
 const statusOptions = computed(() => {
   if (props.reviewerMode) return STATUS_OPTIONS
@@ -120,13 +270,19 @@ const cfpSubmissions = createResource({
     cfpSubmissions.originalData = filtered
     return filtered
   },
-  onSuccess() {
+  onSuccess(data) {
+    if (props.reviewerMode && !_assignedToggleCache.has(props.event)) {
+      const usesAssignment = data.some((s) => s._assigned_users?.length > 0)
+      const assignedToMe = data.some((s) => s._is_assigned === 'Yes')
+      showAssignedOnly.value = assignedToMe
+      // Only nudge when the event uses assignment but nothing landed on this
+      // reviewer; otherwise the toggle is hidden and the toast would be noise.
+      if (usesAssignment && !assignedToMe) {
+        toast('No proposals assigned to you - showing all.')
+      }
+    }
     applyFilters()
   },
-})
-
-defineExpose({
-  reloadSubmissions: () => cfpSubmissions.reload(),
 })
 
 function applyFilters() {
@@ -145,26 +301,82 @@ function applyFilters() {
     data = data.filter((s) => s.status === selectedStatus.value)
   }
 
-  const fieldFilters = {
+  const baseFieldFilters = {
     ...filters.value,
     ...(props.reviewerMode && showNotReviewed.value && !filters.value?._is_reviewed
       ? { _is_reviewed: ['=', 'No'] }
       : {}),
-    ...(props.reviewerMode && showAssignedOnly.value ? { _is_assigned: ['=', 'Yes'] } : {}),
   }
 
-  if (Object.keys(fieldFilters).length > 0) {
-    data = filterSubmissions(data, fieldFilters)
+  if (Object.keys(baseFieldFilters).length > 0) {
+    data = filterSubmissions(data, baseFieldFilters)
   }
+
+  // Check assigned filter separately so we can detect "all assigned are reviewed".
+  if (props.reviewerMode && showAssignedOnly.value) {
+    const assignedData = filterSubmissions(data, { _is_assigned: ['=', 'Yes'] })
+    if (
+      assignedData.length === 0 &&
+      data.length > 0 &&
+      !_autoUntoggleFiredCache.has(props.event)
+    ) {
+      // Reviewer finished all assigned proposals — auto-untoggle once per page load.
+      // After this fires, user can manually re-enable without it fighting back.
+      // Don't return: continue with current data so showNotReviewed filter stays applied.
+      _autoUntoggleFiredCache.add(props.event)
+      showAssignedOnly.value = false
+      toast('All your assigned proposals are reviewed — showing all.')
+    } else {
+      data = assignedData
+    }
+  }
+
+  data = [...data].sort((a, b) => {
+    switch (sortBy.value) {
+      case 'creation_asc':
+        return new Date(a.creation) - new Date(b.creation)
+      case 'review_count_desc':
+        return (b._review_count ?? 0) - (a._review_count ?? 0)
+      case 'assigned_count_desc':
+        return (b._assigned_users?.length ?? 0) - (a._assigned_users?.length ?? 0)
+      case 'title_asc':
+        return (a.talk_title || '').localeCompare(b.talk_title || '')
+      default:
+        return new Date(b.creation) - new Date(a.creation)
+    }
+  })
 
   cfpSubmissions.data = data
+  // New filter/search/sort result: collapse back to the first page.
+  visibleCount.value = PAGE_SIZE
 }
 
-watch([filters, searchQuery, selectedStatus], applyFilters, { deep: true })
+watch([filters, searchQuery, selectedStatus, sortBy], applyFilters, { deep: true })
 watch([showNotReviewed, showAssignedOnly], applyFilters)
+
+function patchAssignedUsers(name, newUsers) {
+  const patcher = (item) => {
+    if (item.name !== name) return
+    const verdictMap = Object.fromEntries(
+      (item._assigned_users ?? []).map((u) => [u.user, u._review_verdict]),
+    )
+    item._assigned_users = newUsers.map((u) => ({
+      ...u,
+      _review_verdict: verdictMap[u.user] ?? null,
+    }))
+    item._is_assigned = newUsers.length > 0 ? 'Yes' : 'No'
+  }
+  cfpSubmissions.originalData?.forEach(patcher)
+  applyFilters()
+}
 
 function handleOpenSubmission(submission) {
   submission._is_seen = true
   emit('open:submission', submission.name)
 }
+
+defineExpose({
+  reloadSubmissions: () => cfpSubmissions.reload(),
+  patchAssignedUsers,
+})
 </script>
