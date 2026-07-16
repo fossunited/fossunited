@@ -28,7 +28,7 @@ Open licensing, software patents, digital rights, and the legal structure of dig
 3. **Fellowships and paths into this work:**
     - **[Policy in Action Program by YLAC (Young Leaders for Active Citizenship)](https://theylacproject.com/policy-in-action-program/):** a month long engagement for young professionals and university students who are keen to explore the fields of public policy and development. The program is designed to deliver core skills in policy analysis, advocacy and leadership, along with the experience of working on live projects for policymakers – MPs, MLAs, ministries and other government institutions.
     - **[Graduate Certificate in Public Policy by Takshashila Institution](https://takshashila.org.in/pages/policy-school/gcpp.html) :** The GCPP is a 12-week programme offered in three different specialisations. The programme targets dynamic individuals who wish to enter the growing professional sphere of public policy, public affairs, governance, and leadership.
-    
+
 4. **Communities and organisations:**
     - **Agami** (agami.in): A non-profit working on innovation in law and justice in India. Has built the Justice Hub (an open data platform for legal data), supported OpenNyAI (open source AI for the justice system), and convenes a community of technologists and lawyers. Explicitly values open source approaches.
     - **Internet Freedom Foundation (IFF)** (internetfreedom.in): India's primary digital rights organisation. Works on surveillance, data protection, and platform accountability. Publishes policy briefs and analysis under open licences.
