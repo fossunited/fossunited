@@ -42,7 +42,7 @@ This telegram group is also bridged with out [matrix server](https://matrix.to/#
 
 Use our official social media accounts to promote events and updates. Tag these accounts when sharing content:
 
-- [Twitter](https://twitter.com/FOSSUnited)
+<!-- - [Twitter](https://twitter.com/FOSSUnited) -->
 - [LinkedIn](https://www.linkedin.com/company/fossunited/)
 - [Instagram](https://instagram.com/fossunited)
 - [Mastodon](https://mas.to/@fossunited)

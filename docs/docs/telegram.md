@@ -5,7 +5,7 @@
 - [Bangalore](https://t.me/FOSSUnitedBLR)
 - [Mumbai](https://t.me/FOSSUnitedMumbai)
 - [Chennai](https://t.me/FOSSUnitedChennai)
-- [Kochi](https://t.me/FOSSUnitedKochi)
+<!-- - [Kochi](https://t.me/FOSSUnitedKochi) -->
 - [Hyderabad](https://t.me/FOSSUnitedHyd)
 - [Delhi](https://t.me/FOSSUnitedDelhi)
 - [Pune](https://t.me/FOSSUnitedPune)
@@ -20,9 +20,10 @@
 ### **Common Groups**
 
 - [FOSS United Public](https://t.me/FOSSUnited)
-- [FOSS Events Organizers](https://t.me/FOSSEvent)
+- [FOSS Clubs](https://t.me/fossclubs)
 - [FOSS Hack Public](https://t.me/FOSSHack)
+<!-- - [FOSS Events Organizers](https://t.me/FOSSEvent) -->
 
-### Channels
+<!-- ### Channels
 
-- [FOSS Events](https://t.me/FOSSEvents)
+- [FOSS Events](https://t.me/FOSSEvents) -->

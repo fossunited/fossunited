@@ -30,7 +30,7 @@ Volunteering at FOSS United offers a multitude of benefits that can enrich both 
 
 14. **Cultural Exchange**: Engage with a diverse community, fostering cultural understanding and exchange of ideas.
 
-## Get featured in Volunteers page
+## Get featured on the [Volunteers page](https://docs.fossunited.org/volunteering/)
 
 ![Volunteers page](./assets/volunteers-page.png)
 

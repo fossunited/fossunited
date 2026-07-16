@@ -48,13 +48,13 @@ Volunteers can contribute in a wide variety of ways. Here are some of the main a
    Refer to the [design templates by the Chennai team](https://forum.fossunited.org/t/foss-united-events-design-templates/2820) for inspiration.
 
 4. **Marketing and Outreach**
-   Help promote events, write blog posts, manage newsletters, and grow the community on platforms like [Twitter](https://twitter.com/FOSSUnited), [LinkedIn](https://www.linkedin.com/company/fossunited/), and [Instagram](https://instagram.com/fossunited).
+   Help promote events, write blog posts, manage newsletters, and grow the community on platforms like [LinkedIn](https://www.linkedin.com/company/fossunited/), and [Instagram](https://instagram.com/fossunited).
 
 5. **Educational Programs**
-   Contribute to initiatives like [FOSS Clubs](https://fossunited.org/clubs) and [Mon School](https://mon.school/) through mentoring, content creation, or coordination.
+   Contribute to initiatives like [FOSS Clubs](https://fossunited.org/clubs) through mentoring, content creation, or coordination.
 
 6. **Public Policy and Advocacy**
-   Support our work on open-source policy, government engagement, and research.
+   Support our work on [open-source policy](https://fossunited.org/public-policy), government engagement, and research.
 
 7. **Fundraising and Financial Support**
    Assist in sponsorship efforts, donor communications, or event budgeting.
@@ -62,12 +62,9 @@ Volunteers can contribute in a wide variety of ways. Here are some of the main a
    - Individuals can donate [any amount](https://pages.razorpay.com/fossunited) (donations are eligible for 80G and CSR tax benefits)
 
 8. **Code Contributions**
-   Developers can contribute code to projects supported by FOSS United or help maintain tools used by the community.
+   Developers can contribute code to projects supported by FOSS United or help maintain tools used by the community. Check out [forklore.in](https://forklore.in).
 
-9. **Join Specialized Teams**
-   Depending on your interests, join focused groups working on policy, education, tech infrastructure, or community development.
-
-10. **Propose Your Own Contribution**
+9. **Propose Your Own Contribution**
    Have a unique skill or project idea? We’re open to custom contributions that align with our mission.
 
 Interested? Reach out to us on [team@fossunited.org](mailto:team@fossunited.org).
