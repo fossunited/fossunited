@@ -94,7 +94,7 @@ This task tests that you can navigate the Git workflow from start to finish with
 1. Fork the course repository.
 2. Clone your fork locally: `git clone <your-fork-url>`
 3. Create a new branch: `git checkout -b add-[your-name]`
-4. Create a file in the `students/` directory named `[branch]-[rollno].md`. Follow the template exactly: your name, your engineering branch, one piece of software you use daily that you discovered is open source in Week 1, and a link to your learning log.
+4. Create a file in the `students/` directory named `[branch]-[your-name].md`. Follow the template exactly: your name, your engineering branch, one piece of software you use daily that you discovered is open source in Week 1, and a link to your learning log.
 5. Commit the file with a clear message: `git commit -m "Add [your name] to student roster"`
 6. Push your branch and open a pull request. The PR description must answer: what is the licence of one tool you use daily, and what does that licence allow someone else to do with the code?
 
@@ -106,7 +106,7 @@ The faculty coordinator reviews all pull requests in class. Common problems (mer
 
 **Week 4: Licences, rights, and the legal layer**
 
-Cover the main open source licences: MIT, Apache 2.0, GPL (v2 and v3), AGPL. Explain copyleft versus permissive licences. Introduce the "viral" property of copyleft: if you distribute code that incorporates a GPL library, the whole distribution must go under the GPL. Introduce Creative Commons for content and explain why a code licence should not be used for documentation and vice versa. Cover AGPL specifically, because many students will encounter it: AGPL closes the "cloud loophole" in GPL by requiring source disclosure even when the software is accessed over a network rather than distributed.
+Cover the main open source licences: MIT, Apache 2.0, GPL (v2 and v3), AGPL. Explain copyleft versus permissive licences. Introduce properties of copyleft: if you distribute code that incorporates a GPL library, the whole distribution must go under the GPL. Introduce Creative Commons for content and explain why a code licence should not be used for documentation and vice versa. Cover AGPL specifically, because many students will encounter it. AGPL closes the "cloud loophole" in GPL by requiring source disclosure even when the software is accessed over a network rather than distributed.
 
 ***Activity 1: Rapid-fire compatibility scenarios (15 minutes, class discussion)***
 
@@ -139,7 +139,7 @@ Broaden from software to the digital commons as a wider concept. Cover Wikipedia
 
 1. **OpenStreetMap:** Every student maps at least five features of the college campus on OpenStreetMap that are missing or incorrect: building entrances, labs, canteens, cycle stands, accessibility ramps. This is a real contribution to a global commons. The faculty coordinator pre-approves the edits before students submit them. Students document their additions with before-and-after screenshots in their learning log.
 
-2. ***Wikipedia:*** Every student finds the Wikipedia article for their college and either creates it (if it does not exist) or substantially improves it with cited sources: founding year, notable alumni, research output, accreditations. The faculty coordinator reviews the draft before it goes live. Students who cannot find enough cited sources document that problem and explain what sources would need to exist for the article to be written.
+2. ***Wikipedia:*** Every student makes an edit to their college's wiki page that is maintained by the student and the faculty incharge. You can add details about existing clubs, add a log of their activity and describe student contributions. The faculty coordinator reviews the draft before it goes live.
 
 ***Written work:*** 500-word reflection comparing the experience of contributing to OpenStreetMap and Wikipedia. What did each community's norms and review processes feel like? What would you contribute next?
 
@@ -178,7 +178,7 @@ Once the plan is approved, the student owns the execution. The faculty coordinat
 
 Each Phase 2 session is two hours, split equally between a structured check-in and working time. The faculty coordinator runs systematic check-ins with individuals or with teams. The coordinator is also encouraged to look for industry professionals who can mentor students during Phase 2. The goal is to move from lectures to sustained, mentored contribution to a real project.
 
-**Weeks 9 to 12:** Students make their first substantive contribution to their chosen project. This goes beyond the First Flight: it should address a real issue, add meaningful documentation, improve a feature, or fix a genuine bug. Each contribution requires faculty pre-approval before it is submitted upstream. Students update their learning log each week.
+**Weeks 9 to 12:** Students make their first substantive contribution to their chosen project. This goes beyond the First Flight: it should address a real issue, add meaningful documentation, improve a feature, or fix a genuine bug. While, each contribution does not require faculty pre-approval before it is submitted upstream, students should reach out to the faculty for coherence check whenever required. Students are required to update their learning log each week.
 
 **Week 13:** Students deepen their engagement with their project community. They should be participating in discussion threads, responding to maintainer feedback, and, if their first contribution was accepted, planning for a second one. Students write their first public blog post in Week 13 (see Assessment). Writing for an external audience is a different exercise from writing in a private log.
 
