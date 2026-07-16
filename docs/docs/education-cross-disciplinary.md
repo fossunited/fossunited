@@ -26,9 +26,9 @@ Open licensing, software patents, digital rights, and the legal structure of dig
 2. **Simplify for the community:** Open source projects and FOSS organisations often need help translating complex bills and acts into plain language. The IT Act, the Digital Personal Data Protection Act, and the National Data Governance Framework are relevant to every FOSS practitioner. A well-written explainer published under CC BY is a contribution to the commons.
 
 3. **Fellowships and paths into this work:**
-    - **[YLAC (Young Leaders for Active Citizenship)](ylac.org):** A fellowship program for young people interested in public policy, governance, and civil society. Relevant for students who want to work at the intersection of technology law and public interest.
-    - **[Takshashila Institution](takshashila.org.in) :** A graduate certificate in public policy with a strong technology policy curriculum. Alumni include people working on digital rights, data governance, and open source policy.
-
+    - **[Policy in Action Program by YLAC (Young Leaders for Active Citizenship)](https://theylacproject.com/policy-in-action-program/):** a month long engagement for young professionals and university students who are keen to explore the fields of public policy and development. The program is designed to deliver core skills in policy analysis, advocacy and leadership, along with the experience of working on live projects for policymakers – MPs, MLAs, ministries and other government institutions.
+    - **[Graduate Certificate in Public Policy by Takshashila Institution](https://takshashila.org.in/pages/policy-school/gcpp.html) :** The GCPP is a 12-week programme offered in three different specialisations. The programme targets dynamic individuals who wish to enter the growing professional sphere of public policy, public affairs, governance, and leadership.
+    
 4. **Communities and organisations:**
     - **Agami** (agami.in): A non-profit working on innovation in law and justice in India. Has built the Justice Hub (an open data platform for legal data), supported OpenNyAI (open source AI for the justice system), and convenes a community of technologists and lawyers. Explicitly values open source approaches.
     - **Internet Freedom Foundation (IFF)** (internetfreedom.in): India's primary digital rights organisation. Works on surveillance, data protection, and platform accountability. Publishes policy briefs and analysis under open licences.
