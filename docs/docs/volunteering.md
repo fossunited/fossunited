@@ -54,7 +54,7 @@ Volunteers can contribute in a wide variety of ways. Here are some of the main a
    Contribute to initiatives like [FOSS Clubs](https://fossunited.org/clubs) through mentoring, content creation, or coordination.
 
 6. **Public Policy and Advocacy**
-   Support our work on [open-source policy](https://fossunited.org/public-policy), government engagement, and research. Read
+   Support our work on [open-source policy](https://fossunited.org/public-policy), government engagement, and research.
 
 7. **Fundraising and Financial Support**
    Assist in sponsorship efforts, donor communications, or event budgeting.
