@@ -38,7 +38,7 @@ By the end of this course, students will be able to:
 - Describe the digital commons with real examples from India and globally
 - Write publicly about open source for an external audience
 - Engage with open source communities online and in person
-- Make at least one verifiable, pre-approved contributions to a public open source project or digital commons resource.
+- Make at least one verifiable, pre-approved contribution to a public open source project or digital commons resource.
 
 ### Contribution policy
 
@@ -100,7 +100,7 @@ This task tests that you can navigate the Git workflow from start to finish with
 
 The faculty coordinator reviews all pull requests in class. Common problems (merge conflicts, wrong file names, missing fields) are shown to the group in real time.
 
-***Activity:*** Practice Git and common secenarios and conflicts using free hands-on resources such as [Learn Git Branching](https://learngitbranching.js.org/).
+***Activity:*** Practice Git and common scenarios and conflicts using free hands-on resources such as [Learn Git Branching](https://learngitbranching.js.org/).
 
 ***Reading:*** Scott Chacon and Ben Straub, "Pro Git" (git-scm.com/book, free online, CC BY-NC-SA licensed). Official Git documentation at git-scm.com/docs.
 
@@ -176,7 +176,7 @@ Once the plan is approved, the student owns the execution. The faculty coordinat
 
 ### Phase 2: Sustained contribution (Weeks 9 to 14)
 
-Each Phase 2 session is two hours: one hour of structured check-in and one hour of working time. The faculty coordinator has systematic checkins with individuals or with teams. The coordinator is also encouraged to look for industry professionals who can mentor students during Phase 2. The goal is to move from lectures to sustained, mentored contribution to a real project.
+Each Phase 2 session is two hours: one hour of structured check-in and one hour of working time. The faculty coordinator has systematic check-ins with individuals or with teams. The coordinator is also encouraged to look for industry professionals who can mentor students during Phase 2. The goal is to move from lectures to sustained, mentored contribution to a real project.
 
 **Weeks 9 to 12:** Students make their first substantive contribution to their chosen project. This goes beyond the First Flight: it should address a real issue, add meaningful documentation, improve a feature, or fix a genuine bug. Each contribution requires faculty pre-approval before it is submitted upstream. Students update their learning log each week.
 
@@ -208,7 +208,7 @@ Seven components across three groups, totalling 100%.
 
 **Contribution log (25%)**
 
-A documented record of at least one substantive contributions across the semester, plus the First Flight completed in Week 3. Each entry must include a link to the contribution and a 150-word reflection written after submission. The project and scope were approved in Week 8; individual contributions after that are the student's responsibility.
+A documented record of at least one substantive contribution across the semester, plus the First Flight completed in Week 3. Each entry must include a link to the contribution and a 150-word reflection written after submission. The project and scope were approved in Week 8; individual contributions after that are the student's responsibility.
 
 Contributions rejected upstream are still assessed on quality of the attempt. A contribution rejected because the maintainer said "this is already handled in another issue" is worth full marks if the student can explain what they learned. A large pull request with poor documentation is worth less than a clear, well-scoped bug report.
 
