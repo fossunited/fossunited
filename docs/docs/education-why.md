@@ -26,9 +26,7 @@ NPTEL, run by the seven IITs, has built the country's most-used engineering educ
 
 ### 4. Research that gets read, cited, and built upon
 
-A large-scale study of 3.3 million papers found that open access papers receive, on average, 50% more citations than paywalled equivalents.<sup>[12]</sup> Citations to open access papers also come from a wider range of institutions and countries.
-
-For engineering faculty in India, whose work often touches infrastructure, manufacturing, climate, and health. These are problems shared across the developing world, and the argument for open publication is not ideological; it is practical.
+A large-scale study of 3.3 million papers found that open access papers receive, on average, 50% more citations than paywalled equivalents.<sup>[12]</sup> Citations to open access papers also come from a wider range of institutions and countries. For engineering faculty in India, whose work often touches infrastructure, manufacturing, climate, and health. The problems they work on are shared across the developing world, and the argument for open publication is not ideological; it is practical.
 
 ### 5. Institutional credibility and industry partnerships
 
