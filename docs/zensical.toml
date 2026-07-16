@@ -35,6 +35,8 @@ nav = [
     {"Managing Localhost" = "localhost.md"}
   ]},
 
+  {"Education" = [
+  
   {"FOSS Clubs"=[
     {"Overview" = "clubs.md"},
     {"Onboarding" = "clubs-onboarding.md"},
@@ -53,15 +55,7 @@ nav = [
     {"Financial Support" = "clubs-financial-support.md"},
   ]},
 
-  {"Getting Involved" =[
-    {"Individuals" = [
-    {"Overview" = "volunteering.md"},
-    {"Volunteering Perks" = "volunteering-perks.md"},
-    {"Marketing Events on Social Media" = "social-media.md"},
-    {"Telegram & Communication Channels" = "telegram.md"}
-    ]},
-
-    {"Educational Institutions"= [
+  {"Educational Institutions"= [
       {"Table of Contents" = "education.md"},
       {"Overview" = "education-overview.md"},
       {"Get started" = "education-start-here.md"},
@@ -74,6 +68,18 @@ nav = [
       {"Cross Disciplinary Efforts" = "education-cross-disciplinary.md" },
       {"FOSS Alternatives" = "education-foss-alternatives.md" },
     ]},
+  
+  ]},
+  
+  {"Getting Involved" =[
+    {"Individuals" = [
+    {"Overview" = "volunteering.md"},
+    {"Volunteering Perks" = "volunteering-perks.md"},
+    {"Marketing Events on Social Media" = "social-media.md"},
+    {"Telegram & Communication Channels" = "telegram.md"}
+    ]},
+
+    
   ]},
 
 
