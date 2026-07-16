@@ -176,13 +176,13 @@ Once the plan is approved, the student owns the execution. The faculty coordinat
 
 ### Phase 2: Sustained contribution (Weeks 9 to 14)
 
-Each Phase 2 session is two hours: one hour of structured check-in and one hour of working time. The faculty coordinator has systematic check-ins with individuals or with teams. The coordinator is also encouraged to look for industry professionals who can mentor students during Phase 2. The goal is to move from lectures to sustained, mentored contribution to a real project.
+Each Phase 2 session is two hours, split equally between a structured check-in and working time. The faculty coordinator runs systematic check-ins with individuals or with teams. The coordinator is also encouraged to look for industry professionals who can mentor students during Phase 2. The goal is to move from lectures to sustained, mentored contribution to a real project.
 
 **Weeks 9 to 12:** Students make their first substantive contribution to their chosen project. This goes beyond the First Flight: it should address a real issue, add meaningful documentation, improve a feature, or fix a genuine bug. Each contribution requires faculty pre-approval before it is submitted upstream. Students update their learning log each week.
 
-**Weeks 13:** Students deepen their engagement with their project community. They should be participating in discussion threads, responding to maintainer feedback, and if their first contribution was accepted, planning for a second one. Students write their first public blog post in Week 13 (see Assessment). Writing for an external audience is a different exercise from writing in a private log.
+**Week 13:** Students deepen their engagement with their project community. They should be participating in discussion threads, responding to maintainer feedback, and, if their first contribution was accepted, planning for a second one. Students write their first public blog post in Week 13 (see Assessment). Writing for an external audience is a different exercise from writing in a private log.
 
-**Weeks 14:** Students prepare for their final presentation and work toward completing their second contribution. The faculty coordinator holds individual or team reviews to check the quality and documentation of contributions before the final session.
+**Week 14:** Students prepare for their final presentation and work toward completing their second contribution. The faculty coordinator holds individual or team reviews to check the quality and documentation of contributions before the final session.
 
 ### Phase 3: Final presentations (Week 15)
 
@@ -208,7 +208,7 @@ Seven components across three groups, totalling 100%.
 
 **Contribution log (25%)**
 
-A documented record of at least one substantive contribution across the semester, plus the First Flight completed in Week 3. Each entry must include a link to the contribution and a 150-word reflection written after submission. The project and scope were approved in Week 8; individual contributions after that are the student's responsibility.
+Students must provide a documented record of at least one substantive contribution across the semester, plus the First Flight completed in Week 3. Each entry must include a link to the contribution and a 150-word reflection written after submission. The project and scope were approved in Week 8; individual contributions after that are the student's responsibility.
 
 Contributions rejected upstream are still assessed on quality of the attempt. A contribution rejected because the maintainer said "this is already handled in another issue" is worth full marks if the student can explain what they learned. A large pull request with poor documentation is worth less than a clear, well-scoped bug report.
 
