@@ -18,7 +18,7 @@ A guide to adopt Free and Open Source Software, Open Education, and Digital Comm
     - [Playbook C: Large College and Deemed University](education-playbooks.md#playbook-c-large-college-and-deemed-university-7000-to-20000-students)
     - [Playbook D: Technical University](education-playbooks.md#playbook-d-technical-university-20000-students)
 - [Digital Commons: Course Guide](education-curriculum.md#digital-commons-course-guide): A complete 15-week, 2-credit elective
-- [Ideal Program Manager](#who-should-run-this-program): The ideal persona to lead your open source efforts.
+- [Ideal Program Manager](education-program-manager.md#who-should-run-this-program): The ideal persona to lead your open source efforts.
 - [Beyond engineering: Other disciplines](education-cross-disciplinary.md): How institutions from other disciplies can contribute to and benefit from the open source ecosystem, with specific communities for each.
 - [FOSS tools by discipline](education-foss-alternatives.md): A reference table mapping engineering branches to tools they use, FOSS alternatives, and where it is already in use.
 - [Licensing quick reference](education-licensing.md): Plain-English summaries of the licences you will encounter most often, with a practical rule of thumb for choosing one.
