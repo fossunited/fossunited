@@ -118,6 +118,6 @@ FOSS tools installed in a lab that no one knows how to use are just files on a s
 
 - **Join the Education Workgroup:** This is work in progress but FOSS United's Education Workgroup will be where faculty, administrators, and practitioners work collectively on curriculum frameworks, event formats, and shared resources for open source in Indian higher education.
 
-> **FOSS United can help:** FOSS Clubs, City Communities, IndiaFOSS, FOSS Hack and Season of Commites are all active programs. Your institution can plug into any of these with a single email to foundation@fossunited.org.
+> **FOSS United can help:** FOSS Clubs, City Communities, IndiaFOSS, FOSS Hack and Season of Commits are all active programs. Your institution can plug into any of these with a single email to foundation@fossunited.org.
 
 ---
