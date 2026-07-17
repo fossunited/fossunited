@@ -130,6 +130,11 @@ website_redirects = [
     },
     # fosshack
     {"source": r"^fosshack/(\d{4})/results/?$", "target": "/fosshack/results?year=\\1"},
+    # blog
+    {
+        "source": r"^https://(.+)$",
+        "target": r"https://\1",
+    },
 ]
 
 # Installation
