@@ -28,6 +28,11 @@
       <a href="/post-a-job" class="v3-btn v3-btn-primary v3-btn--sm">Post a Job</a>
     </div>
 
+    <p class="v3-text-tertiary small mb-4">
+      For more openings in the social sector, check out
+      <a href="https://aikyamjobs.org/" target="_blank" rel="noopener noreferrer" class="font-weight-bold underline">Aikyam Jobs</a>.
+    </p>
+
     <!-- Controls -->
     <div class="v3-controls my-4">
       <div class="v3-controls-left">
@@ -159,12 +164,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  function cloneAll(sel) {
-    return Array.from(document.querySelectorAll(sel)).map(function (el) { return el.cloneNode(true); });
-  }
-
-  var originals = cloneAll('.job-item');
-  var expiredOriginals = cloneAll('.job-item-expired');
+  var originals = Array.from(document.querySelectorAll('.job-item'));
+  var expiredOriginals = Array.from(document.querySelectorAll('.job-item-expired'));
 
   var search = document.getElementById('job-search');
   var filterType = document.getElementById('filter-type');
@@ -185,17 +186,14 @@ document.addEventListener('DOMContentLoaded', function () {
   [filterType, groupBy, sort].forEach(function (el) { el.addEventListener('change', applyFilters); });
 
   function filterAndSort(pool, query, type, sortVal) {
-    var result = pool.map(function (el) { return el.cloneNode(true); });
-    if (query) {
-      result = result.filter(function (el) {
-        return el.dataset.title.indexOf(query) !== -1 ||
-               el.dataset.company.indexOf(query) !== -1 ||
-               el.dataset.location.indexOf(query) !== -1;
-      });
-    }
-    if (type) {
-      result = result.filter(function (el) { return el.dataset.type === type; });
-    }
+   var result = pool.filter(function (el) {
+     if (query &&
+         el.dataset.title.indexOf(query) === -1 &&
+         el.dataset.company.indexOf(query) === -1 &&
+         el.dataset.location.indexOf(query) === -1) return false;
+     if (type && el.dataset.type !== type) return false;
+     return true;
+   });
     result.sort(function (a, b) {
       if (sortVal === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
       if (sortVal === 'date-asc')  return new Date(a.dataset.date) - new Date(b.dataset.date);
@@ -209,7 +207,11 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderInto(target, items, groupByVal) {
     target.innerHTML = '';
     if (groupByVal === 'flat' || items.length === 0) {
-      items.forEach(function (el) { target.appendChild(el); });
+    items.forEach(function (el) {
+        el.classList.remove('col-lg-6');
+        el.classList.add('col-lg-4');
+        target.appendChild(el); // moves the live node, no copy
+    });
       return;
     }
     if (groupByVal === 'company') {
@@ -266,8 +268,9 @@ document.addEventListener('DOMContentLoaded', function () {
     var row = document.createElement('div');
     row.className = 'row';
     items.forEach(function (item) {
-      item.className = item.className.replace('col-lg-4', 'col-lg-6');
-      row.appendChild(item);
+    item.classList.remove('col-lg-4');
+    item.classList.add('col-lg-6');
+    row.appendChild(item);
     });
 
     var header = document.createElement('div');
