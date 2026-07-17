@@ -52,6 +52,7 @@
   "reviews_tab",
   "cfp_reviews_section",
   "reviews",
+  "reason",
   "review_scores_section",
   "positive_reviews",
   "negative_reviews",
@@ -378,12 +379,19 @@
    "fieldtype": "Check",
    "label": "Accept Code of Conduct",
    "permlevel": 1
+  },
+  {
+   "description": "Organiser reason/notes to inform for why rejected or any personalized message to be sent to proposer (Particularly added for IF26 emails)",
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection (or Notes)",
+   "permlevel": 3
   }
  ],
  "has_web_view": 1,
  "is_published_field": "is_published",
  "links": [],
- "modified": "2026-04-29 23:16:20.436113",
+ "modified": "2026-07-17 17:32:14.198805",
  "modified_by": "Administrator",
  "module": "FOSSUnited",
  "name": "FOSS Event CFP Submission",
@@ -444,23 +452,27 @@
   {
    "create": 1,
    "delete": 1,
+   "export": 1,
    "read": 1,
    "role": "Chapter Team Member",
    "select": 1,
    "write": 1
   },
   {
+   "export": 1,
    "permlevel": 1,
    "read": 1,
    "role": "Chapter Team Member"
   },
   {
+   "export": 1,
    "permlevel": 2,
    "read": 1,
    "role": "Chapter Team Member",
    "write": 1
   },
   {
+   "export": 1,
    "permlevel": 3,
    "read": 1,
    "role": "Chapter Team Member",
@@ -496,6 +508,11 @@
    "read": 1,
    "role": "All",
    "write": 1
+  },
+  {
+   "permlevel": 1,
+   "read": 1,
+   "role": "CFP Reviewer"
   }
  ],
  "row_format": "Dynamic",

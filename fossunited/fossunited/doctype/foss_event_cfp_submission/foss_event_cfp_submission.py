@@ -100,6 +100,7 @@ class FOSSEventCFPSubmission(WebsiteGenerator):
         organization: DF.Data | None
         picture_url: DF.Data | None
         positive_reviews: DF.Data | None
+        reason: DF.SmallText | None
         references: DF.Table[CFPSubmissionReference]
         reviews: DF.Table[FOSSEventCFPReview]
         route: DF.Data | None
