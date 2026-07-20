@@ -3419,7 +3419,8 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .tl-month { font-size: .625rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--v3-text-color2); }
 .tl-row { background: var(--v3-main-bg); border-radius: 8px; height: 48px; flex: 1; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; overflow: hidden; }
 .tl-name { font-size: 1rem; letter-spacing: -.02em; color: var(--v3-text-color); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.tl-count-num { font-weight: 800; line-height: 1.2; letter-spacing: -.04em; color: var(--v3-primary-button); }
+/* tabular-nums: fixed digit width so the ticking clock never reflows */
+.tl-count-num { font-weight: 800; line-height: 1.2; letter-spacing: -.04em; color: var(--v3-primary-button); font-variant-numeric: tabular-nums; }
 .tl-count-label { line-height: 1.2; color: var(--v3-text-color2); }
 
 /* ── Illustration strip (hover reveals photo) ───────────────── */
@@ -3578,7 +3579,6 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
   .m-event-thumb { display: none; }
   .m-page .col-lg-7, .m-page .col-lg-5,
   .m-page .col-md-4, .m-page .col-md-8 { flex: 0 0 100%; max-width: 100%; }
-  .gap-section { gap: 3rem; }
   .mt-section  { margin-top: 3rem; }
   .mb-section  { margin-bottom: 3rem; }
   .pb-section  { padding-bottom: 3rem; }

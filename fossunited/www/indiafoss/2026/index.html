@@ -84,17 +84,22 @@
         <div class="v3-flex-3 relative isolate">
 
           <div class="tl-card" role="region" aria-label="Timeline progress">
-            {# Countdown heading #}
-            <div class="d-flex align-items-center justify-content-between gap-2"
-                 aria-label="{% if countdown_state == 'live' %}IndiaFOSS is live{% elif countdown_state == 'concluded' %}IndiaFOSS 2026 concluded{% else %}{{ countdown_days }} days until IndiaFOSS{% endif %}">
-              <div class="d-flex align-items-baseline gap-2">
-                {% if countdown_state == 'live' %}
+            {# Countdown heading — JS ticks D/H/M(/S) from data-start/end; markup below is SSR fallback #}
+            <div class="d-flex align-items-center justify-content-between gap-2">
+              <div id="if-countdown" class="d-flex align-items-start gap-3"
+                   data-start="{{ countdown.start }}" data-end="{{ countdown.end }}"
+                   aria-label="Time until IndiaFOSS 2026">
+                {% if countdown.state == 'live' %}
                   <span class="tl-count-num text-4xl" style="color: rgba(16,185,129,1);">It's Live!</span>
-                {% elif countdown_state == 'concluded' %}
+                {% elif countdown.state == 'concluded' %}
                   <span class="tl-count-num text-4xl">Concluded</span>
                 {% else %}
-                  <span class="tl-count-num text-4xl">{{ countdown_days or '' }}</span>
-                  <span class="tl-count-label text-xl semi-bold">days until IndiaFOSS</span>
+                  {% set lbl = 'text-xs text-uppercase semi-bold v3-text-tertiary mt-1' %}
+                  <div class="d-flex flex-column align-items-center"><span class="tl-count-num text-4xl" data-cd="d">{{ countdown.days or 0 }}</span><span class="{{ lbl }}">days</span></div>
+                  <div class="d-flex flex-column align-items-center"><span class="tl-count-num text-4xl" data-cd="h">00</span><span class="{{ lbl }}">hrs</span></div>
+                  <div class="d-flex flex-column align-items-center"><span class="tl-count-num text-4xl" data-cd="m">00</span><span class="{{ lbl }}">min</span></div>
+                  <div class="d-none flex-column align-items-center" data-cd-sec><span class="tl-count-num text-4xl" data-cd="s">00</span><span class="{{ lbl }}">sec</span></div>
+                  <span class="text-lg semi-bold v3-text-secondary align-self-center">until IndiaFOSS 2026</span>
                 {% endif %}
               </div>
             </div>
@@ -658,8 +663,8 @@
 
           {# Right — support cards (sidebar on desktop, full-width row below on tablet/mobile) #}
           {% set support = [
-            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': '', 'has_form': true, 'icon': 'ti-baby-carriage'},
-            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': '', 'has_form': true, 'icon': 'ti-accessible'},
+            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': 'https://fossunited.org/indiafoss/childcare/new', 'has_form': true, 'icon': 'ti-baby-carriage'},
+            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': 'https://fossunited.org/indiafoss/accessibility/new', 'has_form': true, 'icon': 'ti-accessible'},
             {'title': 'Low Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '', 'has_form': false, 'icon': 'ti-leaf'},
           ] %}
           <div class="v3-flex-1" aria-label="Support and accessibility">
@@ -744,6 +749,39 @@ frappe.ready(function() { $('[data-toggle="tooltip"]').tooltip(); });
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
     });
   });
+})();
+
+// Countdown: tick D/H/M(/S) from fixed timestamps; seconds shown only in the last week
+(function() {
+  var el = document.getElementById('if-countdown');
+  if (!el || !el.dataset.start) return;
+  var IST = '+05:30';  // event is in India; IST has no DST
+  var start = +new Date(el.dataset.start + IST), end = +new Date(el.dataset.end + IST);
+  var sec = el.querySelector('[data-cd-sec]');
+  var anim = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var units = [['d', 864e5, 1e9], ['h', 36e5, 24], ['m', 6e4, 60], ['s', 1e3, 60]];  // key, ms, wrap
+  var timer = setInterval(tick, 1000); tick();
+
+  function tick() {
+    var now = Date.now(), diff = start - now;
+    if (diff <= 0) {  // reached start: flip to Live, or Concluded once past end
+      clearInterval(timer);
+      el.innerHTML = now >= end ? '<span class="tl-count-num text-4xl">Concluded</span>'
+        : '<span class="tl-count-num text-4xl" style="color:rgba(16,185,129,1)">It\'s Live!</span>';
+      return;
+    }
+    units.forEach(function(u) {
+      var node = el.querySelector('[data-cd="' + u[0] + '"]'), v = Math.floor(diff / u[1]) % u[2];
+      var s = (v < 10 ? '0' : '') + v;
+      if (node.textContent === s) return;  // unchanged: skip rewrite + animation
+      node.textContent = s;
+      if (anim && node.animate) node.animate(
+        [{ transform: 'translateY(-45%)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 220, easing: 'ease-out' });
+    });
+    sec.classList.toggle('d-none', diff >= 6048e5);  // 7 days
+    sec.classList.toggle('d-flex', diff < 6048e5);
+  }
 })();
 
 // Progress bar: clamp chip positions to stay within bar width

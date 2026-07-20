@@ -34,7 +34,7 @@ def get_context(context):
 
     context.map_link = event.get("map_link") or event_data.get("map_link") or ""
     context.cta_buttons = _get_cta_buttons(event, cfp, event_data.get("cta_buttons"))
-    context.countdown_days, context.countdown_state = _get_countdown(event)
+    context.countdown = _get_countdown(event)
     context.event_date_str = _get_date_str(event)
     context.event_location = event.event_location or ""
 
@@ -171,8 +171,7 @@ def _empty_context(context):
     )
     context.update(
         cta_buttons=[_btn("Get Tickets", "", primary=True)],
-        countdown_days=None,
-        countdown_state="upcoming",
+        countdown=frappe._dict(start="", end="", state="upcoming", days=None),
         event_date_str="2026",
         event_location="Bengaluru",
         map_link="",
@@ -357,16 +356,24 @@ def _get_cta_buttons(event, cfp, custom=None):
 
 
 def _get_countdown(event):
+    """Fixed start/end unix-ms for the JS clock, plus an SSR state/days fallback.
+
+    The client owns the live ticking (D/H/M/S) and the state flip, so a cached page
+    stays correct: it recomputes from these timestamps, not from render-time "today".
+    """
     if not event.event_start_date:
-        return None, "upcoming"
-    today = frappe.utils.getdate(frappe.utils.today())
-    start = frappe.utils.getdate(event.event_start_date)
-    end = frappe.utils.getdate(event.event_end_date or event.event_start_date)
-    if today > end:
-        return None, "concluded"
-    if today >= start:
-        return None, "live"
-    return (start - today).days, "upcoming"
+        return frappe._dict(start="", end="", state="upcoming", days=None)
+    now = frappe.utils.now_datetime()
+    start = frappe.utils.get_datetime(event.event_start_date)
+    end = frappe.utils.get_datetime(event.event_end_date or event.event_start_date)
+    state = "concluded" if now > end else "live" if now >= start else "upcoming"
+    # Append +05:30 offset (IST) client side
+    return frappe._dict(
+        start=start.isoformat(timespec="seconds"),
+        end=end.isoformat(timespec="seconds"),
+        state=state,
+        days=(start.date() - now.date()).days if state == "upcoming" else None,
+    )
 
 
 def _get_date_str(event):
