@@ -91,9 +91,13 @@ def get_context(context):
     cfp_tl = _get_cfp_timeline_items(cfp, today)
     manual_labels = {item.get("label") for item in manual_tl}
     cfp_tl = [item for item in cfp_tl if item.get("label") not in manual_labels]
+    # Order by closing date (the actionable deadline); milestones with no end fall
+    # back to their single start date.
     merged_tl = sorted(
         manual_tl + cfp_tl,
-        key=lambda x: _parse_date(x.get("start")) or datetime.date.max,
+        key=lambda x: (
+            _parse_date(x.get("end")) or _parse_date(x.get("start")) or datetime.date.max
+        ),
     )
     context.timeline = _enrich_timeline(merged_tl, today)
     # Ticket availability is authoritative from the Event doctype (tickets_status),
@@ -101,7 +105,6 @@ def get_context(context):
     for item in context.timeline:
         if item.get("url") == "/indiafoss/tickets":
             item["resolved_status"] = tickets_status
-            item["deadline_fmt"] = ""
     context.progress_segments, context.progress_markers = _get_progress_bar(
         context.timeline, today
     )
@@ -199,8 +202,10 @@ def _enrich_timeline(items, today):
     Add display fields to each item in place, all derived from its [start, end]
     window vs today. The only thing to hand-maintain is the two dates.
 
-    day_num/month_str : start-date badge.
-    deadline_fmt      : end date, shown in the status badge ("Closed . 15 Jul").
+    day_num/month_str : the *context* date badge -- the opening date while the
+                        item is still upcoming, then the closing date once open.
+    range_info        : "Opens 12 Aug . Closes 1 Oct" for the per-row info tooltip
+                        (form items with both dates); "" for a milestone.
     resolved_status   : "" (milestone / not yet open) | live | closing | closed.
     closing_days      : days until end when closing (<= 7), else None.
     extended          : cosmetic passthrough -> badge reads "Extended".
@@ -212,15 +217,23 @@ def _enrich_timeline(items, today):
         start_d = _parse_date(item.get("start"))
         end_d = _parse_date(item.get("end"))
 
+        open_now = bool(end_d) and bool(start_d) and today >= start_d
+        badge_d = end_d if open_now else start_d
         item["day_num"] = (
-            start_d.strftime("%-d")
-            if start_d
+            badge_d.strftime("%-d")
+            if badge_d
             else (item.get("start", "")[8:10].lstrip("0") or "?")
         )
-        item["month_str"] = start_d.strftime("%b") if start_d else ""
-        item["deadline_fmt"] = end_d.strftime("%-d %b") if end_d else ""
+        item["month_str"] = badge_d.strftime("%b") if badge_d else ""
         item["closing_days"] = None
         item["extended"] = bool(item.get("extended"))
+        if start_d and end_d:
+            o = "Opened" if today >= start_d else "Opens"
+            c = "Closed" if today > end_d else "Closes"
+            info = f"{o} {start_d.strftime('%-d %b')} · {c} {end_d.strftime('%-d %b')}"
+            item["range_info"] = info + " (extended)" if item["extended"] else info
+        else:
+            item["range_info"] = ""
 
         if not start_d or not end_d or today < start_d:
             item["resolved_status"] = ""  # milestone, or window not yet open

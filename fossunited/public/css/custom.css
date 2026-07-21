@@ -3417,6 +3417,8 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .tl-date { background: var(--v3-main-bg); border-radius: 8px; width: 48px; height: 48px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .tl-day   { font-weight: 300; line-height: 1; letter-spacing: -.02em; color: var(--v3-text-color); }
 .tl-month { font-size: .625rem; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--v3-text-color2); }
+.tl-info  { font-size: .9rem; flex-shrink: 0; color: var(--v3-text-color2); opacity: .55; cursor: help; }
+.tl-info:hover, .tl-info:focus { opacity: 1; }
 .tl-row { background: var(--v3-main-bg); border-radius: 8px; height: 48px; flex: 1; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 8px; overflow: hidden; }
 .tl-name { font-size: 1rem; letter-spacing: -.02em; color: var(--v3-text-color); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* tabular-nums: fixed digit width so the ticking clock never reflows */

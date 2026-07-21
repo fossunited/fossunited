@@ -168,16 +168,22 @@
               {% else %}
                 <span></span>
               {% endif %}
-              <button class="v3-btn v3-btn-secondary v3-btn--sm"
-                      style="text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; flex-shrink: 0;"
-                      type="button"
-                      data-toggle="collapse"
-                      data-target="#tl-expanded"
-                      aria-controls="tl-expanded"
-                      aria-expanded="false">
-                Full Timeline
-                <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
-              </button>
+              <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                <i class="ti ti-info-circle v3-text-tertiary" style="font-size: 1rem; cursor: help;"
+                   tabindex="0" role="img" data-toggle="tooltip" data-placement="top" data-container="body"
+                   aria-label="Upcoming items show their opening date; open ones show the deadline/closing date."
+                   title="Upcoming items show their opening date; open ones show the deadline/closing date."></i>
+                <button class="v3-btn v3-btn-secondary v3-btn--sm"
+                        style="text-transform: uppercase; letter-spacing: .06em; white-space: nowrap;"
+                        type="button"
+                        data-toggle="collapse"
+                        data-target="#tl-expanded"
+                        aria-controls="tl-expanded"
+                        aria-expanded="false">
+                  Full Timeline
+                  <i class="ti ti-chevron-down v3-toggle-icon" aria-hidden="true"></i>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -210,12 +216,17 @@
                   {% elif st == 'closing' %}
                     <span class="v3-tag v3-status--warning flex-shrink-0">
                       <i class="ti ti-clock" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>
-                      {% if item.closing_days == 0 %}Closing today{% else %}Closing in {{ item.closing_days }} {{ 'day' if item.closing_days == 1 else 'days' }}{% endif %}{% if item.deadline_fmt %} &middot; {{ item.deadline_fmt }}{% endif %}
+                      {% if item.closing_days == 0 %}Closing today{% else %}Closing in {{ item.closing_days }} {{ 'day' if item.closing_days == 1 else 'days' }}{% endif %}
                     </span>
                   {% elif st == 'closed' %}
                     <span class="v3-tag v3-status--error flex-shrink-0">
-                      <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed{% if item.deadline_fmt %} &middot; {{ item.deadline_fmt }}{% endif %}
+                      <i class="ti ti-ban" style="font-size:.7rem;margin-right:3px;" aria-hidden="true"></i>Closed
                     </span>
+                  {% endif %}
+                  {% if item.range_info %}
+                    <i class="ti ti-info-circle tl-info" tabindex="0" role="img"
+                       data-toggle="tooltip" data-placement="top" data-container="body"
+                       aria-label="{{ item.range_info }}" title="{{ item.range_info }}"></i>
                   {% endif %}
                 </div>
               </div>
