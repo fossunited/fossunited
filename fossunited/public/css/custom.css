@@ -3799,6 +3799,15 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .v3-html-content p                        { margin-bottom: 0.75rem; }
 .v3-html-content p:last-child             { margin-bottom: 0; }
 .v3-html-content li > p                   { margin-bottom: 0; }
+/* Collapse empty paragraphs from legacy Quill content (Enter = <p><br></p>).
+   Separation is already provided by the p margin-bottom above, so a stacked
+   blank line just doubles the gap. Covers both <p></p> and <p><br></p>. */
+.v3-html-content p:empty                  { display: none; }
+/* Editors end paragraphs with a trailing <br> (e.g. <p>text.<br></p>, or a bare
+   <p><br></p> blank line), adding an extra line. Hide only a break with nothing
+   after it; <p>a<br>b</p> keeps its inner break. For <p><br></p> the paragraph
+   collapses to a small margin-only gap, which reads as an intentional blank line. */
+.v3-html-content p > br:last-child        { display: none; }
 .v3-html-content :is(h1,h2,h3,h4,h5,h6)  { margin-top: 1rem; margin-bottom: 0.5rem; }
 .v3-html-content :is(h1,h2,h3,h4,h5,h6):first-child { margin-top: 0; }
 .v3-html-content ul,
