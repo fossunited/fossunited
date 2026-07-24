@@ -11,192 +11,95 @@
       </Button>
     </template>
     <template #body>
-      <!-- Filters for small screens -->
-      <template v-if="isSmallScreen">
-        <div class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl">
-          <div class="min-w-[300px] p-2">
-            <div v-if="filters.length">
+      <div
+        class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl max-w-[calc(100vw-1.5rem)]"
+      >
+        <div class="w-[min(260px,calc(100vw-2rem))] p-2 text-sm">
+          <div v-if="filters.length">
+            <div
+              v-for="(filter, i) in filters"
+              id="filter-list"
+              :key="i"
+              class="mb-3 flex flex-col gap-2 p-2"
+            >
               <div
-                v-for="(filter, i) in filters"
-                id="filter-list"
-                :key="i"
-                class="mb-3 flex flex-col gap-4"
+                class="flex-shrink-0 text-sm text-ink-gray-5 flex justify-between w-full items-center"
               >
-                <div class="flex flex-col gap-2 items-start p-2">
-                  <div
-                    class="flex-shrink-0 text-base text-ink-gray-5 flex justify-between w-full items-center"
-                  >
-                    <span>
-                      {{ i == 0 ? 'Where' : 'And' }}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      label="Remove"
-                      class="text-sm text-ink-gray-8"
-                      size="sm"
-                      @click="removeFilter(i)"
-                    />
-                  </div>
-                  <div id="fieldname" class="flex-1 w-full">
-                    <Autocomplete
-                      v-model="filters[i].field"
-                      :options="fields"
-                      @update:model-value="editFilter(filter, i, $event)"
-                    >
-                    </Autocomplete>
-                  </div>
-                  <div id="operator" class="flex-shrink-0 w-full">
-                    <FormControl
-                      v-model="model[filter.fieldname][0]"
-                      type="select"
-                      :model-value="filter.operator"
-                      :options="getOperators(filter.field.fieldtype)"
-                      placeholder="Operator"
-                    />
-                  </div>
-                  <div id="value" class="flex-1 w-full">
-                    <SearchComplete
-                      v-if="
-                        typeLink.includes(filter.field.fieldtype) &&
-                        ['=', '!='].includes(filter.operator)
-                      "
-                      v-model="model[filter.fieldname][1]"
-                      :doctype="filter.field.options"
-                      :value="filter.value"
-                      placeholder="Value"
-                    />
-                    <component
-                      :is="getValueSelector(filter.field.fieldtype, filter.field.options)"
-                      v-else
-                      v-model="model[filter.fieldname][1]"
-                      placeholder="Value"
-                    />
-                  </div>
-                </div>
+                <span>
+                  {{ i == 0 ? 'Where' : 'And' }}
+                </span>
+                <Button
+                  variant="ghost"
+                  label="Remove"
+                  class="text-sm text-ink-gray-8"
+                  size="sm"
+                  @click="removeFilter(i)"
+                />
               </div>
-            </div>
-            <div v-else class="mb-3 flex h-7 items-center px-3 text-sm text-ink-gray-5">
-              Empty - Choose a field to filter by
-            </div>
-            <div class="flex items-center justify-between gap-2">
               <Autocomplete
+                v-model="filters[i].field"
                 :options="fields"
-                placeholder="Filter by..."
-                @update:model-value="(option) => option && addFilter(option.value)"
+                @update:model-value="editFilter(filter, i, $event)"
               >
-                <template #target="{ togglePopover }">
-                  <Button
-                    class="!text-ink-gray-5"
-                    variant="ghost"
-                    label="Add filter"
-                    @click="togglePopover()"
-                  >
-                    <template #prefix>
-                      <FeatherIcon name="plus" class="h-4" />
-                    </template>
-                  </Button>
-                </template>
               </Autocomplete>
-              <Button
-                v-if="filters.length"
-                class="!text-ink-gray-5"
-                variant="ghost"
-                label="Clear all filter"
-                @click="model = {}"
+              <FormControl
+                v-model="model[filter.fieldname][0]"
+                type="select"
+                size="sm"
+                :model-value="filter.operator"
+                :options="getOperators(filter.field.fieldtype)"
+                placeholder="Operator"
+              />
+              <SearchComplete
+                v-if="
+                  typeLink.includes(filter.field.fieldtype) &&
+                  ['=', '!='].includes(filter.operator)
+                "
+                v-model="model[filter.fieldname][1]"
+                :doctype="filter.field.options"
+                :value="filter.value"
+                placeholder="Value"
+              />
+              <component
+                :is="getValueSelector(filter.field.fieldtype, filter.field.options)"
+                v-else
+                v-model="model[filter.fieldname][1]"
+                placeholder="Value"
               />
             </div>
           </div>
-        </div>
-      </template>
-      <!-- Filters for large screens -->
-      <template v-else>
-        <div class="my-2 rounded-lg border border-outline-gray-1 bg-surface-white shadow-xl">
-          <div class="min-w-[400px] p-2">
-            <div v-if="filters.length">
-              <div
-                v-for="(filter, i) in filters"
-                id="filter-list"
-                :key="i"
-                class="mb-3 flex items-center justify-between gap-2"
-              >
-                <div class="flex flex-1 items-center gap-2">
-                  <div class="w-13 flex-shrink-0 pl-2 text-end text-base text-ink-gray-5">
-                    {{ i == 0 ? 'Where' : 'And' }}
-                  </div>
-                  <div id="fieldname" class="!min-w-[140px] flex-1">
-                    <Autocomplete
-                      v-model="filters[i].field"
-                      :options="fields"
-                      @update:model-value="editFilter(filter, i, $event)"
-                    >
-                    </Autocomplete>
-                  </div>
-                  <div id="operator" class="!min-w-[140px] flex-shrink-0">
-                    <FormControl
-                      v-model="model[filter.fieldname][0]"
-                      type="select"
-                      :model-value="filter.operator"
-                      :options="getOperators(filter.field.fieldtype)"
-                      placeholder="Operator"
-                    />
-                  </div>
-                  <div id="value" class="!min-w-[140px] flex-1">
-                    <SearchComplete
-                      v-if="
-                        typeLink.includes(filter.field.fieldtype) &&
-                        ['=', '!='].includes(filter.operator)
-                      "
-                      v-model="model[filter.fieldname][1]"
-                      :doctype="filter.field.options"
-                      :value="filter.value"
-                      placeholder="Value"
-                    />
-                    <component
-                      :is="getValueSelector(filter.field.fieldtype, filter.field.options)"
-                      v-else
-                      v-model="model[filter.fieldname][1]"
-                      placeholder="Value"
-                    />
-                  </div>
-                </div>
-                <div class="flex-shrink-0">
-                  <Button variant="ghost" icon="x" @click="removeFilter(i)" />
-                </div>
-              </div>
-            </div>
-            <div v-else class="mb-3 flex h-7 items-center px-3 text-sm text-ink-gray-5">
-              Empty - Choose a field to filter by
-            </div>
-            <div class="flex items-center justify-between gap-2">
-              <Autocomplete
-                :options="fields"
-                placeholder="Filter by..."
-                @update:model-value="(option) => option && addFilter(option.value)"
-              >
-                <template #target="{ togglePopover }">
-                  <Button
-                    class="!text-ink-gray-5"
-                    variant="ghost"
-                    label="Add filter"
-                    @click="togglePopover()"
-                  >
-                    <template #prefix>
-                      <FeatherIcon name="plus" class="h-4" />
-                    </template>
-                  </Button>
-                </template>
-              </Autocomplete>
-              <Button
-                v-if="filters.length"
-                class="!text-ink-gray-5"
-                variant="ghost"
-                label="Clear all filter"
-                @click="model = {}"
-              />
-            </div>
+          <div v-else class="mb-3 flex h-7 items-center px-3 text-sm text-ink-gray-5">
+            Empty - Choose a field to filter by
+          </div>
+          <div class="flex items-center justify-between gap-2">
+            <Autocomplete
+              :options="fields"
+              placeholder="Filter by..."
+              @update:model-value="(option) => option && addFilter(option.value)"
+            >
+              <template #target="{ togglePopover }">
+                <Button
+                  class="!text-ink-gray-5"
+                  variant="ghost"
+                  label="Add filter"
+                  @click="togglePopover()"
+                >
+                  <template #prefix>
+                    <FeatherIcon name="plus" class="h-4" />
+                  </template>
+                </Button>
+              </template>
+            </Autocomplete>
+            <Button
+              v-if="filters.length"
+              class="!text-ink-gray-5"
+              variant="ghost"
+              label="Clear all filter"
+              @click="model = {}"
+            />
           </div>
         </div>
-      </template>
+      </div>
     </template>
   </NestedPopover>
 </template>
@@ -207,7 +110,6 @@ import { computed, h } from 'vue'
 import NestedPopover from './NestedPopover.vue'
 import SearchComplete from './SearchComplete.vue'
 import { IconFilter2 } from '@tabler/icons-vue'
-import { isSmallScreen } from '@/helpers/utils'
 
 const typeCheck = ['Check']
 const typeLink = ['Link']
@@ -225,7 +127,6 @@ const props = defineProps({
     default: () => [],
   },
 })
-
 
 const fields = computed(() => {
   const fields = props.docfields
@@ -335,10 +236,11 @@ function getValueSelector(fieldtype, options) {
     const _options = fieldtype == 'Check' ? ['Yes', 'No'] : getSelectOptions(options)
     return h(FormControl, {
       type: 'select',
+      size: 'sm',
       options: _options,
     })
   } else {
-    return h(FormControl, { type: 'text' })
+    return h(FormControl, { type: 'text', size: 'sm' })
   }
 }
 

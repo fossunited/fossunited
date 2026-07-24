@@ -4,6 +4,20 @@
     /* issue with frappe-ui reka-ui, it has z-index due to AutoComplete being used in Drawer*/
     /* we can either reduce z of drawer or increase popover     */
   z-index: 999 !important;
+  /* reka-ui exposes this var precisely so consumers can clamp width, but
+     frappe-ui's Popover/Autocomplete never applies it - so a long option
+     label (e.g. Filter's field/custom-question picker) can render wider
+     than the viewport on small screens.
+     Every change here shows how poorly frappe-ui is maintained with migrations/updates
+     Hopefully with updates these issues should vanish away.
+  */
+  max-width: var(--reka-popover-content-available-width, 100vw);
+}
+
+/* Combobox/Select option rows render at text-base regardless of the
+   surrounding form controls' size - shrink to match. */
+[role="option"] {
+  font-size: 0.875rem;
 }
 
 /* dropdown portal */

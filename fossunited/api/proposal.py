@@ -46,6 +46,7 @@ def get_event_proposals(event: str) -> dict:
             Proposal.status,
             Proposal.session_categories,
             Proposal.intended_audience,
+            Proposal.is_first_talk,
             Proposal.creation,
             Proposal.modified,
         )
@@ -234,7 +235,7 @@ def get_public_proposal_filters(
         {
             "fieldname": "status",
             "fieldtype": "Select",
-            "options": "Approved\nRejected\nReview Pending\nScreening",
+            "options": "Approved\nRejected\nReview Pending\nScreening\nWithdrawn",
             "label": "Review Status",
         },
         {
@@ -254,6 +255,11 @@ def get_public_proposal_filters(
             "fieldname": "intended_audience",
             "fieldtype": "Select",
             "options": "Beginner\nIntermediate\nAdvanced",
+        },
+        {
+            "label": "Session Category",
+            "fieldname": "session_categories",
+            "fieldtype": "Text",
         },
     ]
 
