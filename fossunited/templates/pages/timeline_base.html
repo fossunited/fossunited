@@ -1,6 +1,6 @@
 {% extends "templates/foss_base.html" %}
 {% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
-{% from "fossunited/templates/macros/event_card.html" import event_card %}
+{% from "fossunited/templates/macros/event_card.html" import event_card, event_list_row %}
 
 {% block head %}
   {{ super() }}
@@ -134,6 +134,15 @@
             </div>
           {% endif %}
 
+          <div class="v3-view-toggle" role="group" aria-label="View mode">
+            <button id="view-grid" class="v3-view-toggle__btn v3-view-toggle__btn--active" type="button" aria-pressed="true" title="Card view">
+              <i class="ti ti-layout-grid" aria-hidden="true"></i>
+            </button>
+            <button id="view-list" class="v3-view-toggle__btn" type="button" aria-pressed="false" title="List view">
+              <i class="ti ti-list" aria-hidden="true"></i>
+            </button>
+          </div>
+
           <button
             id="filter-toggle"
             class="v3-btn v3-btn-secondary"
@@ -249,6 +258,26 @@
           </div>
         {% endfor %}
       </div>
+
+      <!-- Event list rows (hidden) -->
+      <div id="event-rows-template" class="d-none">
+        {% for event in all_events %}
+          <div
+            class="timeline-row-wrapper"
+            data-event-id="{{ event.name }}"
+            data-name="{{ event.event_name }}"
+            data-location="{{ event.event_location }}"
+            data-city="{{ event._chapter_city or '' }}"
+            data-start="{{ event._start }}"
+            data-end="{{ event._end }}"
+            data-is-past="{{ 'true' if event._is_past else 'false' }}"
+            data-must-attend="{{ 'true' if event.must_attend else 'false' }}"
+            data-chapter-type="{{ event._chapter_type }}"
+          >
+            {{ event_list_row(event) }}
+          </div>
+        {% endfor %}
+      </div>
     </div>
   </div>
 
@@ -262,6 +291,7 @@
       // State
       const state = {
         category: 'city',
+        viewMode: localStorage.getItem('fossunited-view-mode') || 'grid',
         filters: {
           search: '',
           city: '',
@@ -293,9 +323,15 @@
         downloadIcsToggle: document.getElementById('download-ics-toggle'),
         icsDropdown: document.getElementById('ics-dropdown-menu'),
         yearPagination: document.getElementById('year-pagination'),
+        viewGrid: document.getElementById('view-grid'),
+        viewList: document.getElementById('view-list'),
       }
 
       const wrappers = Array.from(document.querySelectorAll('.timeline-event-wrapper'))
+      const rowWrappers = Array.from(document.querySelectorAll('.timeline-row-wrapper'))
+
+      const rowsByEventId = {}
+      rowWrappers.forEach(rw => { rowsByEventId[rw.dataset.eventId] = rw })
 
       // Lazy loading observer
       const lazyImageObserver = new IntersectionObserver(
@@ -478,6 +514,7 @@
         const sortedKeys = Object.keys(groups).sort((a, b) =>
           reverse ? b.localeCompare(a) : a.localeCompare(b),
         )
+        const isList = state.viewMode === 'list'
 
         return sortedKeys.map((key) => {
           const { display: month, items: list } = groups[key]
@@ -486,6 +523,8 @@
 
           const sectionId = `month-${key}`
           const statusClass = isUpcoming ? 'v3-text-success' : 'v3-text-tertiary'
+          const containerClass = isList ? 'v3-timeline-list' : 'row v3-timeline-grid'
+
           group.innerHTML = `
            <div
              class="d-flex align-items-center mb-3 timeline-month-header"
@@ -500,18 +539,25 @@
            </div>
 
            <div id="${sectionId}" class="collapse show">
-             <div class="row v3-timeline-grid"></div>
+             <div class="${containerClass}">
+               ${isList ? '<div class="v3-timeline-list__header"><span>Name</span><span>Date</span><span>Location</span></div>' : ''}
+             </div>
            </div>
          `
 
-          const row = group.querySelector('.v3-timeline-grid')
+          const container = group.querySelector(isList ? '.v3-timeline-list' : '.v3-timeline-grid')
           list
             .sort((a, b) => (reverse ? b.d - a.d : a.d - b.d))
             .forEach(({ w }) => {
-              const col = document.createElement('div')
-              col.className = 'mb-4'
-              col.appendChild(w.cloneNode(true))
-              row.appendChild(col)
+              if (isList) {
+                const rw = rowsByEventId[w.dataset.eventId]
+                if (rw) container.appendChild(rw.cloneNode(true))
+              } else {
+                const col = document.createElement('div')
+                col.className = 'mb-4'
+                col.appendChild(w.cloneNode(true))
+                container.appendChild(col)
+              }
             })
 
           return group
@@ -675,6 +721,19 @@
         dom.endDate.value = _parsed.end
       }
 
+      function setViewMode(mode) {
+        state.viewMode = mode
+        localStorage.setItem('fossunited-view-mode', mode)
+        dom.viewGrid.classList.toggle('v3-view-toggle__btn--active', mode === 'grid')
+        dom.viewList.classList.toggle('v3-view-toggle__btn--active', mode === 'list')
+        dom.viewGrid.setAttribute('aria-pressed', mode === 'grid')
+        dom.viewList.setAttribute('aria-pressed', mode === 'list')
+        render()
+      }
+
+      dom.viewGrid.onclick = () => setViewMode('grid')
+      dom.viewList.onclick = () => setViewMode('list')
+
       if (dom.downloadIcsToggle && dom.icsDropdown) {
         function openIcsDropdown() {
           dom.icsDropdown.style.opacity = '1'
@@ -711,6 +770,12 @@
       }
 
       // Initialize
+      if (state.viewMode === 'list') {
+        dom.viewGrid.classList.remove('v3-view-toggle__btn--active')
+        dom.viewList.classList.add('v3-view-toggle__btn--active')
+        dom.viewGrid.setAttribute('aria-pressed', 'false')
+        dom.viewList.setAttribute('aria-pressed', 'true')
+      }
       setupPagination()
       render()
     })()

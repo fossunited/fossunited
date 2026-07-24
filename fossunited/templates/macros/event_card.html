@@ -115,3 +115,38 @@
     </div>
   </a>
 {% endmacro %}
+
+{% macro event_list_row(event) %}
+  {% set event_name = event.event_name or event.hackathon_name %}
+  {% set start_date = event.event_start_date or event.start_date %}
+  {% set end_date = event.event_end_date or event.end_date or start_date %}
+  {% set location = event.event_location or event.location or event.hackathon_type or "TBA" %}
+
+  <a
+    href="{{ event.external_event_url or '/' ~ (event.route or '').lstrip('/') }}"
+    class="v3-event-list-row"
+    {% if event.is_external_event %}
+      target="_blank" rel="noopener noreferrer"
+    {% endif %}
+  >
+    <div class="v3-event-list-row__name">{{ event_name }}</div>
+    <div class="v3-event-list-row__date">
+      {% set sd = frappe.utils.get_datetime(start_date) %}
+      {% set ed = frappe.utils.get_datetime(end_date or start_date) %}
+      {% set same_day = sd.date() == ed.date() %}
+      {% set same_month = sd.strftime("%Y-%m") == ed.strftime("%Y-%m") %}
+      {% set same_year = sd.year == ed.year %}
+
+      {% if same_day %}
+        {{ frappe.utils.formatdate(sd, "d MMM yyyy") }}
+      {% elif same_month %}
+        {{ frappe.utils.formatdate(sd, "d") }} – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
+      {% elif same_year %}
+        {{ frappe.utils.formatdate(sd, "d MMM") }} – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
+      {% else %}
+        {{ frappe.utils.formatdate(sd, "d MMM yyyy") }} – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
+      {% endif %}
+    </div>
+    <div class="v3-event-list-row__location">{{ location }}</div>
+  </a>
+{% endmacro %}
