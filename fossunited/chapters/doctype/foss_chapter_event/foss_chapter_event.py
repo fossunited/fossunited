@@ -519,7 +519,7 @@ def get_event_connection_counts(events: str | list):
         rows = frappe.db.get_all(
             doctype,
             filters={"event": ["in", events]},
-            fields=["event", "count(*) as count"],
+            fields=["event", {"COUNT": "*", "as": "count"}],
             group_by="event",
         )
         return {r.event: r.count for r in rows}

@@ -172,9 +172,10 @@ def get_checkin_insights(event_id: str) -> dict:
     Returns:
         dict: {"daily_data": [{"title": date, "total_sold": count, "tickets_sold_today": 0}, ...]}
     """
-    event_start_date, event_end_date = frappe.db.get_value(
-        EVENT, event_id, ["event_start_date", "event_end_date"]
+    event_dates = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"], as_dict=True
     )
+    event_start_date, event_end_date = event_dates.event_start_date, event_dates.event_end_date
 
     # Get all tickets for this event
     tickets = frappe.get_all(EVENT_TICKET, filters={"event": event_id}, pluck="name")

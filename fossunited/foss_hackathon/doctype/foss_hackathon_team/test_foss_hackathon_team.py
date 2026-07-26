@@ -140,7 +140,7 @@ class TestFOSSHackathonTeam(FrappeTestCase):
         self.assertTrue(frappe.db.exists(HACKATHON_TEAM, team_name))
 
         # Temporarily disable test flag to allow auto-delete
-        frappe.flags.in_test = False
+        frappe.in_test = False
 
         try:
             team = frappe.get_doc(HACKATHON_TEAM, team_name)
@@ -152,4 +152,4 @@ class TestFOSSHackathonTeam(FrappeTestCase):
             frappe.db.commit()  # nosemgrep
             self.assertFalse(frappe.db.exists(HACKATHON_TEAM, team_name))
         finally:
-            frappe.flags.in_test = True
+            frappe.in_test = True

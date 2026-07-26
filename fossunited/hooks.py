@@ -20,6 +20,8 @@ _css_v = str(int(_os.path.getmtime(_css_file))) if _os.path.exists(_css_file) el
 web_include_css = [f"/assets/fossunited/css/custom.css?v={_css_v}"]
 web_include_js = ["website.bundle.js"]
 
+required_apps = ["frappe/newsletter", "frappe/blog"]
+
 # Jinja
 # -----
 
@@ -151,7 +153,7 @@ permission_query_conditions = {
     "FOSS Event RSVP Submission": "fossunited.fossunited.permissions.rsvp_submission_query",
 }
 
-override_doctype_class = {
+extend_doctype_class = {
     "Newsletter": "fossunited.overrides.newsletter_extend.NewsletterExtend",
 }
 

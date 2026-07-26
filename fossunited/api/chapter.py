@@ -90,8 +90,7 @@ def check_if_chapter_or_event_core_member(event: str) -> bool:
     This API function is intended to only apply for cases where every time event is created
     they would not add themselves to event_members table
     """
-    event_doc = frappe.get_doc(EVENT, event, ["name"])
-    chapter_id = event_doc.chapter
+    chapter_id = frappe.db.get_value(EVENT, event, "chapter")
     is_team = bool(
         check_if_event_member(event) or check_if_chapter_member(chapter_id, frappe.session.user)
     )

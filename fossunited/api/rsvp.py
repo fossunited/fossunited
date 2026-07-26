@@ -108,9 +108,10 @@ def if_rsvp_show_checkins(event_id: str) -> bool:
     Check if check-ins should be shown (event has started).
     Returns: boolean
     """
-    event_start_date, event_end_date = frappe.db.get_value(
-        EVENT, event_id, ["event_start_date", "event_end_date"]
+    event_dates = frappe.db.get_value(
+        EVENT, event_id, ["event_start_date", "event_end_date"], as_dict=True
     )
+    event_start_date, event_end_date = event_dates.event_start_date, event_dates.event_end_date
     if not event_start_date or not event_end_date:
         return False
     today = getdate(nowdate())
