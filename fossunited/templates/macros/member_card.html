@@ -1,5 +1,9 @@
-{% macro member_card(member) %}
-  <a class="member-card" href="/{{ member.route }}" aria-label="{{ member.full_name }}, {{ member.role }}">
+{% macro member_card(member, past=false) %}
+  <a
+    class="member-card{% if past %} member-card--past{% endif %}"
+    href="/{{ member.route }}"
+    aria-label="{{ member.full_name }}, {{ member.role }}"
+  >
     <img src="{{ member.profile_picture }}" alt="{{ member.full_name }}" class="member-card--image" />
     <div class="member-card--contents">
       <div class="member-card--name">{{ member.full_name }}</div>

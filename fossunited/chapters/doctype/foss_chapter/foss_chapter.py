@@ -9,11 +9,15 @@ from fossunited.api.emailing import create_email_group
 from fossunited.doctype_ids import (
     CHAPTER,
     CITY_COMMUNITY,
+    DEFAULT_USER_PHOTO,
     EVENT,
+    EVENT_VOLUNTEER,
     HACKATHON,
     STUDENT_CLUB,
     USER_PROFILE,
 )
+
+PAST_ORGANISER_EVENT_THRESHOLD = 3
 
 
 class FOSSChapter(WebsiteGenerator):
@@ -194,6 +198,7 @@ class FOSSChapter(WebsiteGenerator):
         context.upcoming_events = self.get_upcoming_events() + self.get_upcoming_hackathons()
         context.past_events = self.get_past_events() + self.get_past_hackathons()
         context.members = self.get_members()
+        context.past_members = self.get_past_members()
         context.social_links = self.get_social_links()
 
     # make the chapter name upper case if it is a city community
@@ -255,14 +260,59 @@ class FOSSChapter(WebsiteGenerator):
                     "full_name": member.full_name,
                     "role": member.role,
                     "profile_picture": (
-                        profile.profile_photo
-                        if profile.profile_photo
-                        else "/assets/fossunited/images/defaults/user_profile_image.png"
+                        profile.profile_photo if profile.profile_photo else DEFAULT_USER_PHOTO
                     ),
                     "route": profile.route,
                 }
             )
         return members
+
+    def get_past_members(self):
+        event_names = frappe.get_all(
+            EVENT,
+            filters={"chapter": self.name, "is_published": 1},
+            pluck="name",
+        )
+        if not event_names:
+            return []
+
+        excluded_profiles = [d.chapter_member for d in self.chapter_members] + [""]
+
+        volunteer_counts = frappe.get_all(
+            EVENT_VOLUNTEER,
+            filters={
+                "parenttype": EVENT,
+                "parent": ["in", event_names],
+                "role": "Core Team Member",
+                "member": ["not in", excluded_profiles],
+            },
+            fields=["member", "full_name", "count(name) as count"],
+            group_by="member",
+        )
+        qualifying = [
+            row for row in volunteer_counts if row.count >= PAST_ORGANISER_EVENT_THRESHOLD
+        ]
+        if not qualifying:
+            return []
+
+        profiles = {
+            p.name: p
+            for p in frappe.get_all(
+                USER_PROFILE,
+                filters={"name": ["in", [row.member for row in qualifying]]},
+                fields=["name", "profile_photo", "route"],
+            )
+        }
+        past_members = [
+            {
+                "full_name": row.full_name,
+                "role": f"Core Team · {row.count} event{'s' if row.count != 1 else ''}",
+                "profile_picture": profiles[row.member].profile_photo or DEFAULT_USER_PHOTO,
+                "route": profiles[row.member].route,
+            }
+            for row in qualifying
+        ]
+        return sorted(past_members, key=lambda m: m["role"], reverse=True)
 
     def get_social_links(self):
         # social fields in order to appear: WYSIWYG

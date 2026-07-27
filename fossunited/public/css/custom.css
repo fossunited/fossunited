@@ -1084,10 +1084,17 @@ h6 {
 
 .member-card {
   width: 9.375rem;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   border-radius: 0.75rem;
-  background: #fff;
+  padding: 0.625rem;
+  background: transparent;
+  transition: background 0.2s ease;
+}
+
+.member-card:hover {
+  background: var(--v3-card-bg);
 }
 
 .member-card--image {
@@ -1095,14 +1102,17 @@ h6 {
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: 0.75rem;
+}
+
+.member-card--past .member-card--image {
   filter: grayscale(100%);
 }
 
 .member-card--contents {
   display: flex;
   flex-direction: column;
-  width: 9.375rem;
-  padding: 0.625rem 0rem;
+  width: 100%;
+  padding: 0.625rem 0rem 0;
   justify-content: center;
   align-items: flex-start;
   gap: 0.045rem;
@@ -1113,14 +1123,14 @@ h6 {
   font-weight: var(--fw-semibold);
   line-height: 150%;
   letter-spacing: -0.045rem;
+  color: var(--v3-text-color);
 }
 
 .member-card--role {
   font-size: var(--text-sm);
   font-weight: 500;
+  color: var(--v3-text-color2);
 }
-
-/* -------------- */
 
 /* FOSS Event Pages */
 
@@ -1335,7 +1345,7 @@ h6 {
   }
 
   .members-grid-6 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     place-items: center;
     gap: 1.5rem;
   }
@@ -2739,8 +2749,8 @@ a.hover-underline:hover {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: visible;
-  clip-path: inset(0 round 16px);
+  overflow: hidden;
+  border-radius: 16px;
 }
 
 .v3-event-card__banner {
@@ -2751,7 +2761,6 @@ a.hover-underline:hover {
   height: 100%;
   object-fit: cover;
   z-index: 1;
-  border-radius: 16px;
 }
 
 .v3-event-card__overlay {
