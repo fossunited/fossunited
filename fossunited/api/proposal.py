@@ -2,6 +2,7 @@ import frappe
 from frappe import qb
 
 from fossunited.doctype_ids import EVENT, EVENT_CFP, PROPOSAL, SPEAKER
+from fossunited.fossunited.utils import get_select_field_options
 
 
 # nosemgrep: guest-whitelisted-method
@@ -231,37 +232,28 @@ def _get_bulk_custom_answers_data(proposal_names: list) -> dict:
 def get_public_proposal_filters(
     event: str,
 ):
+    SELECT_FILTER_FIELDS = [
+        ("status", "Review Status"),
+        ("session_type", "Session Type"),
+        ("is_first_talk", "Is First Talk?"),
+        ("intended_audience", "Intended Audience"),
+    ]
     filter_fields = [
         {
-            "fieldname": "status",
+            "fieldname": fieldname,
             "fieldtype": "Select",
-            "options": "Approved\nRejected\nReview Pending\nScreening\nWithdrawn",
-            "label": "Review Status",
-        },
-        {
-            "fieldname": "session_type",
-            "fieldtype": "Select",
-            "options": "Talk\nLightning Talk\nWorkshop\nPanel Discussion\nBirds of Feather(BoF)",
-            "label": "Session Type",
-        },
-        {
-            "fieldname": "is_first_talk",
-            "fieldtype": "Select",
-            "options": "Yes\nNo",
-            "label": "Is First Talk?",
-        },
-        {
-            "label": "Intended Audience",
-            "fieldname": "intended_audience",
-            "fieldtype": "Select",
-            "options": "Beginner\nIntermediate\nAdvanced",
-        },
+            "options": "\n".join(get_select_field_options(PROPOSAL, fieldname)),
+            "label": label,
+        }
+        for fieldname, label in SELECT_FILTER_FIELDS
+    ]
+    filter_fields.append(
         {
             "label": "Session Category",
             "fieldname": "session_categories",
             "fieldtype": "Text",
-        },
-    ]
+        }
+    )
 
     cfp = frappe.db.get_value(
         EVENT_CFP,
