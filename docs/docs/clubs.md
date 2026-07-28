@@ -8,7 +8,7 @@ FOSS Clubs are campus communities that we support. When you start a FOSS Club or
 
 By being recognised as an official club, you gain access to FOSS United's team of program managers, mentorship from the community, the opportunity to showcase your work in front of a broader audience, career networking opportunities and potential funding (subject to club activity). You bring the energy and passion for open source to your campus.
 
-As a FOSS Club, you will mentor students at your college to cultivate a school of thought aligned with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons). The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and ask that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
+As a FOSS Club, you will mentor students at your college to cultivate a school of thought aligned with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons). The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and asks that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
 
 ### i. Who should apply and why?
 Applications are encouraged from students who:
