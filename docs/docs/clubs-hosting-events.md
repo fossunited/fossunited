@@ -1,7 +1,7 @@
 # Hosting Events
 
 ### What type of events can we host?
-You can host any event that aligns with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons) and avoids the promotion of proprietary software or ideologies. The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and ask that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
+You can host any event that aligns with the principles of the [Digital Commons](https://en.wikipedia.org/wiki/Digital_commons) and avoids the promotion of proprietary software or ideologies. The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and asks that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
 
 Whenever in doubt, get in touch with our [program managers](https://cal.com/team/fossunited/learners-program).
 
