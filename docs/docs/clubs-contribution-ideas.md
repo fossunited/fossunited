@@ -2,7 +2,7 @@
 
 To help you get started, here's a list of contributions you can make and events you can run to engage your club members. These have been divided into the following tracks: [Technical](#the-technical-track), [Creative & Media](#the-creative--media-track), [Advocacy](#the-advocacy-track), [Community & Organization](#the-community--organization-track) and [Governance & Legal](#the-governance--legal-track).
 
-Note: The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and ask that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
+Note: The FOSS United Foundation does not partner with Web3/Blockchain events and organisations, and asks that you don't organise any such activities as part of the FOSS Club. Read more about our [thoughts on Blockchain](https://fossunited.org/blog/technology/a-note-on-blockchain).
 
 If you have other ideas, feel free to book a call to discuss with the foundation team.
 
