@@ -10,5 +10,6 @@ Some doctypes also have:
 - a `test_*.py`, for unit tests
 - a `templates/` folder, for doctypes rendered on the website
 
-New doctypes should be added via `bench`, not created by hand, so the
-generated files stay consistent with the rest here.
+New doctypes should be created via the Desk UI (with developer mode
+enabled), not written by hand, so Frappe generates the standard file set
+consistently.
