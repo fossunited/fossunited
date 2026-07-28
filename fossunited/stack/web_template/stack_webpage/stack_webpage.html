@@ -1,0 +1,189 @@
+{% from "fossunited/templates/macros/breadcrumb.html" import v3_navbar %}
+
+{% macro tool_icon(item) %}
+  {% set color_idx = item.title|length % 6 %}
+  {% if item.icon %}
+    <img src="{{ item.icon }}" alt="{{ item.title }} logo" class="stack-icon rounded flex-shrink-0" />
+  {% elif 'github.com' in (item.link or '') or 'gitlab.com' in (item.link or '') %}
+    <div class="stack-icon stack-icon-bg-{{ color_idx }} rounded d-flex align-items-center justify-content-center flex-shrink-0">
+      <i class="ti {{ 'ti-brand-gitlab' if 'gitlab.com' in item.link else 'ti-brand-github' }} text-white"></i>
+    </div>
+  {% else %}
+    <div class="stack-icon stack-icon-bg-{{ color_idx }} rounded d-flex align-items-center justify-content-center flex-shrink-0 text-white font-weight-bold">
+      {{ item.title[0]|upper }}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+{% macro status_tag(status) %}
+  {% if status and status != 'Active' %}
+    <span class="v3-tag v3-tag--category">{{ status }}</span>
+  {% endif %}
+{% endmacro %}
+
+{% macro tool_links(item) %}
+  <div class="d-flex flex-wrap gap-2 mt-2">
+    {% if item.link %}
+      <a href="{{ item.link }}" target="_blank" rel="noopener noreferrer" class="v3-btn v3-btn-secondary v3-btn--sm">
+        <i class="ti ti-external-link"></i> Visit
+      </a>
+    {% endif %}
+    {% if item.hosted_url %}
+      <a href="{{ item.hosted_url }}" target="_blank" rel="noopener noreferrer" class="v3-btn v3-btn-dark v3-btn--sm">
+        <i class="ti ti-arrow-up-right"></i> See it in use
+      </a>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro tool_row(item, idx) %}
+  <div>
+    <button
+      type="button"
+      class="v3-btn v3-btn--sm d-flex align-items-center gap-3 w-100 p-2 text-left text-decoration-none"
+      data-toggle="collapse"
+      data-target="#tool-{{ idx }}"
+      aria-expanded="false"
+      aria-controls="tool-{{ idx }}"
+    >
+      {{ tool_icon(item) }}
+      <span class="v3-text-primary font-weight-bold text-sm flex-grow-1 stack-tool-title">{{ item.title }}</span>
+      <i class="ti ti-chevron-down v3-text-tertiary"></i>
+    </button>
+    {% if item.description or item.link or item.hosted_url or (item.status and item.status != 'Active') %}
+      <div class="collapse pl-2 pb-2" id="tool-{{ idx }}">
+        {{ status_tag(item.status) }}
+        {% if item.description %}
+          <div class="v3-text-secondary text-xs">{{ frappe.utils.md_to_html(item.description) }}</div>
+        {% endif %}
+        {{ tool_links(item) }}
+      </div>
+    {% endif %}
+  </div>
+{% endmacro %}
+
+<link rel="stylesheet" href="/assets/fossunited/css/custom.css" />
+
+<div class="v3-page">
+  <div class="v3-container v3-container-wide d-flex flex-column gap-8 pb-section">
+    {{ v3_navbar() }}
+
+    <div class="d-flex align-items-center gap-4 flex-nowrap">
+      {% set logos = frappe.get_all(doctype="Stack", filters={"icon": ["!=", ""]}, pluck="icon", page_length=6) %}
+      {% if logos %}
+        <div class="stack-logo-stack flex-shrink-0">
+          <div class="stack-logo-track">
+            {% for logo in logos + logos %}
+              <img src="{{ logo }}" alt="" class="stack-logo-item" />
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      <h1 class="v3-text-primary text-2xl mb-0">{{ title }}</h1>
+    </div>
+
+    {% if about %}
+      <div class="v3-text-secondary">{{ frappe.utils.md_to_html(about) }}</div>
+    {% endif %}
+
+    {% set stack_dict = get_stack_dict() %}
+    <div class="row">
+      {% for category, items in stack_dict.items() %}
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="v3-card h-100 d-flex flex-column gap-3 p-4">
+            <h4 class="v3-text-primary mb-0">{{ category }}</h4>
+            <div class="d-flex flex-column">
+              {% for item in items %}
+                {{ tool_row(item, category|replace(' ', '-')|lower ~ '-' ~ loop.index0) }}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% set inactive_items = get_inactive_stack() %}
+    {% if inactive_items %}
+      <div class="d-flex flex-column gap-3">
+        <h4 class="v3-text-tertiary mb-0">Not Actively Used / Deprecated</h4>
+        <div class="row">
+          {% for item in inactive_items %}
+            <div class="col-12 col-md-4 col-lg-3 mb-3">
+              <div class="v3-card h-100 p-4">
+                {{ tool_row(item, 'inactive-' ~ loop.index0) }}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if credits %}
+      <div class="d-flex flex-column gap-3">
+        <h2 class="v3-text-primary">{{ credits_heading or 'Credits & Contributors' }}</h2>
+        <div class="v3-text-secondary">{{ frappe.utils.md_to_html(credits) }}</div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .stack-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: contain;
+    background: var(--v3-card-bg);
+  }
+  .stack-icon-bg-0 { background: #4184f3; }
+  .stack-icon-bg-1 { background: #4eaf52; }
+  .stack-icon-bg-2 { background: #f4b400; }
+  .stack-icon-bg-3 { background: #db4437; }
+  .stack-icon-bg-4 { background: #9c27b0; }
+  .stack-icon-bg-5 { background: #00acc1; }
+
+  .stack-inactive { opacity: 0.55; }
+
+  .stack-tool-title { min-width: 0; overflow-wrap: anywhere; white-space: normal; }
+  @media (max-width: 575.98px) {
+    .stack-tool-title { font-size: 0.75rem; }
+  }
+
+  .stack-logo-stack {
+    width: 8rem;
+    height: 6rem;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stack-logo-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: stack-logo-scroll 6s linear infinite;
+    animation-play-state: paused;
+  }
+  .stack-logo-stack:hover .stack-logo-track {
+    animation-play-state: running;
+  }
+  .stack-logo-item {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.125rem;
+    background: #fff;
+    object-fit: contain;
+    transform: skewX(-35deg) skewY(-10deg) rotate(15deg);
+    flex-shrink: 0;
+    transition: margin-top 0.2s ease;
+  }
+  .stack-logo-item:not(:first-child) { margin-top: -2.25rem; }
+  .stack-logo-stack:hover .stack-logo-item:not(:first-child) { margin-top: -1.5rem; }
+  {% for i in range(1, logos|length * 2 + 1) %}
+  .stack-logo-item:nth-child({{ i }}) { z-index: {{ logos|length * 2 + 1 - i }}; }
+  {% endfor %}
+  @keyframes stack-logo-scroll {
+    from { transform: translateY(0); }
+    to { transform: translateY(-50%); }
+  }
+</style>

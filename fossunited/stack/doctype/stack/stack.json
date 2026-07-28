@@ -1,15 +1,18 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "hash",
+ "autoname": "field:title",
  "creation": "2024-11-07 12:26:04.097329",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "title",
+  "status",
   "link",
+  "hosted_url",
   "category",
-  "icon"
+  "icon",
+  "description"
  ],
  "fields": [
   {
@@ -22,15 +25,15 @@
   {
    "fieldname": "icon",
    "fieldtype": "Attach Image",
-   "label": "Icon",
-   "reqd": 1
+   "label": "Icon"
   },
   {
    "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Title",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "link",
@@ -38,15 +41,35 @@
    "label": "Link",
    "options": "URL",
    "reqd": 1
+  },
+  {
+   "description": "Short description on usage or inform visitors more about it from personal experience.",
+   "fieldname": "description",
+   "fieldtype": "Markdown Editor",
+   "label": "Description"
+  },
+  {
+   "description": "Hosted instance/webpage URL for quick jump",
+   "fieldname": "hosted_url",
+   "fieldtype": "Data",
+   "label": "Live Hosted Link",
+   "options": "URL"
+  },
+  {
+   "default": "Active",
+   "description": "To group if not used or being used.",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Active\nNot Actively Used\nDeprecated"
   }
  ],
- "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 13:43:44.934216",
+ "modified": "2026-07-28 21:43:44.229356",
  "modified_by": "Administrator",
  "module": "Stack",
  "name": "Stack",
- "naming_rule": "Random",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -67,8 +90,22 @@
   }
  ],
  "row_format": "Dynamic",
+ "show_title_field_in_link": 1,
  "sort_field": "creation",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Green",
+   "title": "Active"
+  },
+  {
+   "color": "Blue",
+   "title": "Not Actively Used"
+  },
+  {
+   "color": "Gray",
+   "title": "Deprecated"
+  }
+ ],
  "title_field": "title"
 }

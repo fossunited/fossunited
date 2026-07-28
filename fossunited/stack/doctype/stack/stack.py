@@ -15,8 +15,11 @@ class Stack(Document):
         from frappe.types import DF
 
         category: DF.Data
-        icon: DF.AttachImage
+        description: DF.MarkdownEditor | None
+        hosted_url: DF.Data | None
+        icon: DF.AttachImage | None
         link: DF.Data
+        status: DF.Literal["Active", "Not Actively Used", "Deprecated"]
         title: DF.Data
     # end: auto-generated types
 
