@@ -129,8 +129,8 @@
       target="_blank" rel="noopener noreferrer"
     {% endif %}
   >
-    <div class="v3-event-list-row__name">{{ event_name }}</div>
-    <div class="v3-event-list-row__date">
+    <div class="v3-event-list-row__name truncate">{{ event_name }}</div>
+    <div class="v3-event-list-row__date text-nowrap">
       {% set sd = frappe.utils.get_datetime(start_date) %}
       {% set ed = frappe.utils.get_datetime(end_date or start_date) %}
       {% set same_day = sd.date() == ed.date() %}
@@ -147,6 +147,6 @@
         {{ frappe.utils.formatdate(sd, "d MMM yyyy") }} – {{ frappe.utils.formatdate(ed, "d MMM yyyy") }}
       {% endif %}
     </div>
-    <div class="v3-event-list-row__location">{{ location }}</div>
+    <div class="v3-event-list-row__location truncate">{{ location }}</div>
   </a>
 {% endmacro %}

@@ -3696,35 +3696,14 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .v3-view-toggle .btn {
   width: 36px;
   height: 36px;
-  padding: 0;
-  border: none;
-  border-radius: 0;
   background: var(--v3-card-bg);
   color: var(--v3-text-color2);
   font-size: 1.1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
-.v3-view-toggle .btn:hover {
-  background: var(--v3-button-border);
-}
-.v3-view-toggle .btn:focus-visible {
-  outline: 2px solid var(--v3-text-color2);
-  outline-offset: -2px;
-  z-index: 1;
-}
-.v3-view-toggle .btn.active {
-  background: var(--v3-text-color2);
-  color: var(--v3-main-bg);
-}
-.v3-view-toggle .btn.active:hover {
-  background: var(--v3-text-color2);
-}
-summary:focus-visible {
-  outline: 2px solid var(--v3-text-color2);
-  outline-offset: 2px;
-}
+.v3-view-toggle .btn:hover { background: var(--v3-button-border); }
+.v3-view-toggle .btn:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; z-index: 1; }
+.v3-view-toggle .btn.active { background: var(--v3-text-color2); color: var(--v3-main-bg); }
+summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: 2px; }
 
 /* List view */
 .v3-timeline-list {
@@ -3764,27 +3743,9 @@ summary:focus-visible {
   color: var(--v3-text-color);
 }
 
-.v3-event-list-row__name {
-  font-weight: 500;
-  font-size: 0.9375rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.v3-event-list-row__date {
-  font-size: 0.8125rem;
-  color: var(--v3-text-color2);
-  white-space: nowrap;
-}
-
-.v3-event-list-row__location {
-  font-size: 0.8125rem;
-  color: var(--v3-text-color2);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+.v3-event-list-row__name { font-weight: 500; font-size: 0.9375rem; }
+.v3-event-list-row__date,
+.v3-event-list-row__location { font-size: 0.8125rem; color: var(--v3-text-color2); }
 
 @media (max-width: 768px) {
   .v3-timeline-list__header {
