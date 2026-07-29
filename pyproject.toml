@@ -15,6 +15,9 @@ dependencies = [
     "ics~=0.7.2",
     "pre-commit>=4.2.0",
     "tatsu<5.10.0",
+    # Pin to setuptools==81.0.0: last version shipping pkg_resources (removed in setuptools>=82).
+    # bump above py-packages so nothing depends on it. TODO: ^ bump razorpay
+    "setuptools==81.0.0",
 ]
 
 [project.optional-dependencies]

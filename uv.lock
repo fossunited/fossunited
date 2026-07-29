@@ -580,6 +580,7 @@ dependencies = [
     { name = "pre-commit" },
     { name = "pygithub" },
     { name = "razorpay" },
+    { name = "setuptools" },
     { name = "tatsu", version = "5.8.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "tatsu", version = "5.9.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
 ]
@@ -623,6 +624,7 @@ requires-dist = [
     { name = "razorpay", specifier = "~=1.4.2" },
     { name = "ruff", marker = "extra == 'dev'" },
     { name = "semgrep", marker = "extra == 'dev'" },
+    { name = "setuptools", specifier = "==81.0.0" },
     { name = "tatsu", specifier = "<5.10.0" },
     { name = "tinycss2", marker = "extra == 'dev'" },
     { name = "ty", marker = "extra == 'dev'" },
