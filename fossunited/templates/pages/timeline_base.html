@@ -134,11 +134,11 @@
             </div>
           {% endif %}
 
-          <div class="v3-view-toggle" role="group" aria-label="View mode">
-            <button id="view-grid" class="v3-view-toggle__btn v3-view-toggle__btn--active" type="button" aria-pressed="true" title="Card view">
+          <div class="btn-group v3-view-toggle" role="group" aria-label="View mode">
+            <button id="view-grid" class="btn active" type="button" aria-pressed="true" title="Card view">
               <i class="ti ti-layout-grid" aria-hidden="true"></i>
             </button>
-            <button id="view-list" class="v3-view-toggle__btn" type="button" aria-pressed="false" title="List view">
+            <button id="view-list" class="btn" type="button" aria-pressed="false" title="List view">
               <i class="ti ti-list" aria-hidden="true"></i>
             </button>
           </div>
@@ -724,8 +724,8 @@
       function setViewMode(mode) {
         state.viewMode = mode
         localStorage.setItem('fossunited-view-mode', mode)
-        dom.viewGrid.classList.toggle('v3-view-toggle__btn--active', mode === 'grid')
-        dom.viewList.classList.toggle('v3-view-toggle__btn--active', mode === 'list')
+        dom.viewGrid.classList.toggle('active', mode === 'grid')
+        dom.viewList.classList.toggle('active', mode === 'list')
         dom.viewGrid.setAttribute('aria-pressed', mode === 'grid')
         dom.viewList.setAttribute('aria-pressed', mode === 'list')
         render()
@@ -771,8 +771,8 @@
 
       // Initialize
       if (state.viewMode === 'list') {
-        dom.viewGrid.classList.remove('v3-view-toggle__btn--active')
-        dom.viewList.classList.add('v3-view-toggle__btn--active')
+        dom.viewGrid.classList.remove('active')
+        dom.viewList.classList.add('active')
         dom.viewGrid.setAttribute('aria-pressed', 'false')
         dom.viewList.setAttribute('aria-pressed', 'true')
       }

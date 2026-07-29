@@ -3689,37 +3689,41 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 
 /* View toggle */
 .v3-view-toggle {
-  display: inline-flex;
   border: 1px solid var(--v3-button-border);
   border-radius: 0.5rem;
   overflow: hidden;
 }
-
-.v3-view-toggle__btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.v3-view-toggle .btn {
   width: 36px;
   height: 36px;
+  padding: 0;
   border: none;
+  border-radius: 0;
   background: var(--v3-card-bg);
   color: var(--v3-text-color2);
-  cursor: pointer;
-  transition: all 0.15s;
   font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.v3-view-toggle__btn:hover {
+.v3-view-toggle .btn:hover {
   background: var(--v3-button-border);
 }
-
-.v3-view-toggle__btn--active {
+.v3-view-toggle .btn:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: -2px;
+  z-index: 1;
+}
+.v3-view-toggle .btn.active {
   background: var(--v3-text-color2);
   color: var(--v3-main-bg);
 }
-
-.v3-view-toggle__btn--active:hover {
+.v3-view-toggle .btn.active:hover {
   background: var(--v3-text-color2);
+}
+summary:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: 2px;
 }
 
 /* List view */
