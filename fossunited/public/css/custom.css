@@ -3952,3 +3952,69 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
 .if-tagline svg { width: 40px; height: auto; }
 .if-footer-tagline .if-tagline { color: #fafafa; }
+
+/* ── View Toggle (shared) ─────────────────────────────────────────── */
+.v3-view-toggle {
+  border: 1px solid var(--v3-button-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.v3-view-toggle .btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--v3-text-color2);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.v3-view-toggle .btn:hover {
+  background: var(--v3-button-border);
+}
+.v3-view-toggle .btn:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: -2px;
+  z-index: 1;
+}
+.v3-view-toggle .btn.active {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+}
+summary:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: 2px;
+}
+
+/* ── Clubs: List Mode ──────────────────────────────────────────────── */
+#active-clubs-group.v3-list-mode,
+#past-clubs-group.v3-list-mode {
+  gap: 0 !important;
+}
+#active-clubs-group.v3-list-mode .club-card,
+#past-clubs-group.v3-list-mode .club-card {
+  padding: 0.75rem 1rem;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--v3-button-border);
+  background: transparent;
+}
+#active-clubs-group.v3-list-mode .club-card:hover,
+#past-clubs-group.v3-list-mode .club-card:hover {
+  background: var(--v3-card-bg);
+}
+#active-clubs-group.v3-list-mode .club-card > .grid,
+#past-clubs-group.v3-list-mode .club-card > .grid {
+  display: none;
+}
+#active-clubs-group.v3-list-mode .club-card img,
+#past-clubs-group.v3-list-mode .club-card img {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+#active-clubs-group.v3-list-mode .club-card > .flex.gap-4,
+#past-clubs-group.v3-list-mode .club-card > .flex.gap-4 {
+  gap: 0.75rem;
+}
