@@ -66,10 +66,10 @@
           <option value="title-desc">Title Z–A</option>
         </select>
         <div class="btn-group v3-view-toggle" role="group" aria-label="View mode">
-          <button type="button" class="btn active" data-view="grid" title="Grid view" aria-pressed="true">
+          <button type="button" class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0 active" data-view="grid" title="Grid view" aria-pressed="true">
             <i class="ti ti-layout-grid" aria-hidden="true"></i>
           </button>
-          <button type="button" class="btn" data-view="list" title="List view" aria-pressed="false">
+          <button type="button" class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0" data-view="list" title="List view" aria-pressed="false">
             <i class="ti ti-list" aria-hidden="true"></i>
           </button>
         </div>
@@ -302,6 +302,16 @@ document.addEventListener('DOMContentLoaded', function () {
     var isList = mode === 'list';
     container.classList.toggle('v3-list-mode', isList);
     if (expiredContainer) expiredContainer.classList.toggle('v3-list-mode', isList);
+    document.querySelectorAll('.job-item, .job-item-expired').forEach(function (el) {
+      el.classList.toggle('col-lg-4', !isList);
+      el.classList.toggle('col-md-6', !isList);
+      el.classList.toggle('col-12', isList);
+      el.classList.toggle('mb-3', !isList);
+      el.classList.toggle('p-0', isList);
+    });
+    document.querySelectorAll('#active-jobs .v3-card > small, #active-jobs .v3-card > .mt-auto, #active-jobs .v3-card > div:empty, #expired-jobs .v3-card > small, #expired-jobs .v3-card > .mt-auto, #expired-jobs .v3-card > div:empty').forEach(function (el) {
+      el.classList.toggle('d-none', isList);
+    });
     document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
       var isActive = btn.dataset.view === mode;
       btn.classList.toggle('active', isActive);
