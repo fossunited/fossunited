@@ -65,6 +65,8 @@
   function setViewMode(mode) {
     var isList = mode === 'list';
     $('#active-clubs-group, #past-clubs-group').toggleClass('v3-list-mode', isList);
+    $('.club-card > .grid').toggleClass('d-none', isList);
+    $('.club-card > .flex.gap-4').css('gap', isList ? '0.75rem' : '');
     $('.v3-view-toggle .btn').each(function () {
       var isActive = $(this).data('view') === mode;
       $(this).toggleClass('active', isActive);
@@ -156,10 +158,10 @@
         />
       </div>
       <div class="btn-group v3-view-toggle" role="group" aria-label="View mode">
-        <button type="button" class="btn active" data-view="grid" title="Grid view" aria-pressed="true">
+        <button type="button" class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0 active" data-view="grid" title="Grid view" aria-pressed="true">
           <i class="ti ti-layout-grid" aria-hidden="true"></i>
         </button>
-        <button type="button" class="btn" data-view="list" title="List view" aria-pressed="false">
+        <button type="button" class="btn d-inline-flex align-items-center justify-content-center p-0 border-0 rounded-0" data-view="list" title="List view" aria-pressed="false">
           <i class="ti ti-list" aria-hidden="true"></i>
         </button>
       </div>
