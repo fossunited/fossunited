@@ -3952,3 +3952,89 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .if-tagline { display: inline-flex; align-items: flex-end; gap: 8px; font-size: .6875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--v3-text-color); text-decoration: none; }
 .if-tagline svg { width: 40px; height: auto; }
 .if-footer-tagline .if-tagline { color: #fafafa; }
+
+/* ── View Toggle (shared) ─────────────────────────────────────────── */
+.v3-view-toggle {
+  border: 1px solid var(--v3-button-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.v3-view-toggle .btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--v3-text-color2);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.v3-view-toggle .btn:hover {
+  background: var(--v3-button-border);
+}
+.v3-view-toggle .btn:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: -2px;
+  z-index: 1;
+}
+.v3-view-toggle .btn.active {
+  background: var(--v3-text-color);
+  color: var(--v3-main-bg);
+}
+summary:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: 2px;
+}
+
+/* ── Job Board: List Mode ──────────────────────────────────────────── */
+#active-jobs.v3-list-mode .job-item,
+#active-jobs.v3-list-mode .job-item-expired,
+#expired-jobs.v3-list-mode .job-item,
+#expired-jobs.v3-list-mode .job-item-expired {
+  flex: 0 0 100% !important;
+  max-width: 100% !important;
+  margin-bottom: 0 !important;
+  padding: 0;
+}
+#active-jobs.v3-list-mode > .job-item > .v3-card,
+#active-jobs.v3-list-mode .job-item-expired > .v3-card,
+#expired-jobs.v3-list-mode > .job-item > .v3-card,
+#expired-jobs.v3-list-mode .job-item-expired > .v3-card {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  height: auto !important;
+  border-radius: 0;
+  border: none;
+  border-bottom: 1px solid var(--v3-button-border);
+  box-shadow: none;
+  background: transparent;
+}
+#active-jobs.v3-list-mode .v3-card:hover,
+#expired-jobs.v3-list-mode .v3-card:hover {
+  background: var(--v3-card-bg);
+}
+#active-jobs.v3-list-mode .v3-card > *,
+#expired-jobs.v3-list-mode .v3-card > * {
+  margin-bottom: 0 !important;
+}
+#active-jobs.v3-list-mode .v3-card > .d-flex:first-child,
+#expired-jobs.v3-list-mode .v3-card > .d-flex:first-child {
+  flex: 1;
+  min-width: 0;
+}
+#active-jobs.v3-list-mode .v3-card > small,
+#expired-jobs.v3-list-mode .v3-card > small {
+  display: none;
+}
+#active-jobs.v3-list-mode .v3-card > .mt-auto,
+#expired-jobs.v3-list-mode .v3-card > .mt-auto {
+  display: none;
+}
+#active-jobs.v3-list-mode .v3-card > div:empty,
+#expired-jobs.v3-list-mode .v3-card > div:empty {
+  display: none;
+}

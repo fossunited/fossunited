@@ -65,6 +65,14 @@
           <option value="title-asc">Title A–Z</option>
           <option value="title-desc">Title Z–A</option>
         </select>
+        <div class="btn-group v3-view-toggle" role="group" aria-label="View mode">
+          <button type="button" class="btn active" data-view="grid" title="Grid view" aria-pressed="true">
+            <i class="ti ti-layout-grid" aria-hidden="true"></i>
+          </button>
+          <button type="button" class="btn" data-view="list" title="List view" aria-pressed="false">
+            <i class="ti ti-list" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -289,6 +297,25 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapper.appendChild(card);
     return wrapper;
   }
+
+  function setViewMode(mode) {
+    var isList = mode === 'list';
+    container.classList.toggle('v3-list-mode', isList);
+    if (expiredContainer) expiredContainer.classList.toggle('v3-list-mode', isList);
+    document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
+      var isActive = btn.dataset.view === mode;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', isActive);
+    });
+    localStorage.setItem('fossunited-view-mode', mode);
+  }
+
+  document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
+    btn.addEventListener('click', function () { setViewMode(this.dataset.view); });
+  });
+
+  var savedMode = localStorage.getItem('fossunited-view-mode');
+  if (savedMode === 'list') setViewMode('list');
 });
 </script>
 
