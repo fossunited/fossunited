@@ -16,7 +16,8 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
 - Install [`uv`](https://github.com/astral-sh/uv) python manager and `docker`
 - `uv init` in a new directory
 - `uv add frappe-manager`
-- `uv run fm create foss.localhost`
+- `uv run fm create foss.localhost --apps frappe:version-15`
+  `uv run fm info foss.localhost` will show all credential details for that build instance.
 - `uv run fm start` — choose site as it shows in menu
 - `uv run fm shell` — enter into docker container shell and run further steps there
 - For frappe >= v16, install newsletter first:
@@ -35,7 +36,9 @@ Our recommended setup is via [docker](https://www.docker.com/) + [frappe manager
   - `bench --site break.site install-app fossunited`
   - `bench --site break.site set-config allow_tests true`
 
-- Open `foss.localhost` in your browser and start exploring!
+- Open `http://foss.localhost/app` in your browser and start exploring!
+  Login as "Administrator" with password `admin` (as shown in `fm info foss.localhost`)
+
 - Dashboard page can be accessed via `foss.localhost/dashboard`
 
 Note: Since dashboard is not running as live dev server, you'd need to `bench build --apps fossunited` for changes to update.
@@ -151,6 +154,7 @@ RSVPs, CFPs, and a hackathon — without having to create records manually.
 > **Important:** The seed script requires `frappe_factory_bot`. Please install it first:
 > ```sh
 > bench get-app https://github.com/TomasBarry/frappe_factory_bot
+> bench install-app frappe_factory_bot
 > ```
 
 For Frappe Manager / Manual Bench installations:
