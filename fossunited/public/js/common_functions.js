@@ -421,11 +421,18 @@ function setParams(obj) {
 var VIEW_MODE_KEY = 'fossunited-view-mode'
 
 function getViewMode() {
-  return localStorage.getItem(VIEW_MODE_KEY) || 'grid'
+  try {
+    var v = localStorage.getItem(VIEW_MODE_KEY)
+    return v === 'list' ? 'list' : 'grid'
+  } catch (e) {
+    return 'grid'
+  }
 }
 
 function saveViewMode(mode) {
-  localStorage.setItem(VIEW_MODE_KEY, mode)
+  try {
+    localStorage.setItem(VIEW_MODE_KEY, mode === 'list' ? 'list' : 'grid')
+  } catch (e) {}
 }
 
 // expose all globally via window
