@@ -121,6 +121,7 @@
   {% set start_date = event.event_start_date or event.start_date %}
   {% set end_date = event.event_end_date or event.end_date or start_date %}
   {% set location = event.event_location or event.location or event.hackathon_type or "TBA" %}
+  {% set chapter_name = event._chapter_name or '' %}
 
   <a
     href="{{ event.external_event_url or '/' ~ (event.route or '').lstrip('/') }}"
@@ -129,7 +130,11 @@
       target="_blank" rel="noopener noreferrer"
     {% endif %}
   >
-    <div class="v3-event-list-row__name truncate">{{ event_name }}</div>
+    <div class="v3-event-list-row__name truncate">
+      {{ event_name }}
+      {% if event.must_attend %}{{ event_must_attend_tag() }}{% endif %}
+    </div>
+    <div class="v3-event-list-row__chapter truncate">{{ chapter_name }}</div>
     <div class="v3-event-list-row__date text-nowrap">
       {% set sd = frappe.utils.get_datetime(start_date) %}
       {% set ed = frappe.utils.get_datetime(end_date or start_date) %}

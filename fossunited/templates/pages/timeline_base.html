@@ -291,7 +291,7 @@
       // State
       const state = {
         category: 'city',
-        viewMode: localStorage.getItem('fossunited-view-mode') || 'grid',
+        viewMode: getViewMode(),
         filters: {
           search: '',
           city: '',
@@ -540,7 +540,7 @@
 
            <div id="${sectionId}" class="collapse show">
              <div class="${containerClass}">
-               ${isList ? '<div class="v3-timeline-list__header"><span>Name</span><span>Date</span><span>Location</span></div>' : ''}
+               ${isList ? '<div class="v3-timeline-list__header"><span>Name</span><span>Chapter</span><span>Date</span><span>Location</span></div>' : ''}
              </div>
            </div>
          `
@@ -723,7 +723,7 @@
 
       function setViewMode(mode) {
         state.viewMode = mode
-        localStorage.setItem('fossunited-view-mode', mode)
+        saveViewMode(mode)
         dom.viewGrid.classList.toggle('active', mode === 'grid')
         dom.viewList.classList.toggle('active', mode === 'list')
         dom.viewGrid.setAttribute('aria-pressed', mode === 'grid')

@@ -3703,6 +3703,7 @@ a.m-text-1:hover, a.m-text-2:hover { filter: brightness(1.2); color: inherit; te
 .v3-view-toggle .btn:hover { background: var(--v3-button-border); }
 .v3-view-toggle .btn:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; z-index: 1; }
 .v3-view-toggle .btn.active { background: var(--v3-text-color2); color: var(--v3-main-bg); }
+.timeline-month-header:focus-visible,
 summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: 2px; }
 
 /* List view */
@@ -3714,7 +3715,7 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 
 .v3-timeline-list__header {
   display: grid;
-  grid-template-columns: 1fr 160px 200px;
+  grid-template-columns: 1fr 180px 140px 180px;
   gap: 1rem;
   padding: 0.5rem 1rem;
   font-size: 0.75rem;
@@ -3727,7 +3728,7 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 
 .v3-event-list-row {
   display: grid;
-  grid-template-columns: 1fr 160px 200px;
+  grid-template-columns: 1fr 180px 140px 180px;
   gap: 1rem;
   padding: 0.75rem 1rem;
   text-decoration: none;
@@ -3743,7 +3744,9 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   color: var(--v3-text-color);
 }
 
-.v3-event-list-row__name { font-weight: 500; font-size: 0.9375rem; }
+.v3-event-list-row__name { font-weight: 500; font-size: 0.9375rem; display: flex; align-items: center; gap: 0.5rem; }
+.v3-event-list-row__name .v3-tag { flex-shrink: 0; }
+.v3-event-list-row__chapter,
 .v3-event-list-row__date,
 .v3-event-list-row__location { font-size: 0.8125rem; color: var(--v3-text-color2); }
 
@@ -3761,6 +3764,8 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   .v3-event-list-row__name {
     white-space: normal;
   }
+
+  .v3-event-list-row__chapter { display: none; }
 
   .v3-event-list-row__date,
   .v3-event-list-row__location {

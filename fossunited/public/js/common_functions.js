@@ -319,6 +319,16 @@ function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 
+var VIEW_MODE_KEY = 'fossunited-view-mode'
+
+function getViewMode() {
+  return localStorage.getItem(VIEW_MODE_KEY) || 'grid'
+}
+
+function saveViewMode(mode) {
+  localStorage.setItem(VIEW_MODE_KEY, mode)
+}
+
 function toggleSection(id) {
   const content = document.getElementById(id)
   if (!content) return
@@ -382,6 +392,9 @@ Object.assign(window, {
   formatTimeOnly,
   formatShortDate,
   truncateStr,
+  VIEW_MODE_KEY,
+  getViewMode,
+  saveViewMode,
   toggleSection,
   debounce,
   buildPageWindow,
