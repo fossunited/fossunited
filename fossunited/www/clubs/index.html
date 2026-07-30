@@ -72,14 +72,13 @@
       $(this).toggleClass('active', isActive);
       $(this).attr('aria-pressed', isActive);
     });
-    localStorage.setItem('fossunited-view-mode', mode);
+    saveViewMode(mode);
   }
 
   $(function() {
     $('#club-search').on('input search', filterClubs);
     $('.v3-view-toggle .btn').on('click', function () { setViewMode($(this).data('view')); });
-    var savedMode = localStorage.getItem('fossunited-view-mode');
-    if (savedMode === 'list') setViewMode('list');
+    if (getViewMode() === 'list') setViewMode('list');
   });
 </script>
 {% endblock %}
