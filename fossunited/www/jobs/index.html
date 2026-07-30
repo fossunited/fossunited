@@ -317,15 +317,14 @@ document.addEventListener('DOMContentLoaded', function () {
       btn.classList.toggle('active', isActive);
       btn.setAttribute('aria-pressed', isActive);
     });
-    localStorage.setItem('fossunited-view-mode', mode);
+    saveViewMode(mode);
   }
 
   document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
     btn.addEventListener('click', function () { setViewMode(this.dataset.view); });
   });
 
-  var savedMode = localStorage.getItem('fossunited-view-mode');
-  if (savedMode === 'list') setViewMode('list');
+  if (getViewMode() === 'list') setViewMode('list');
 });
 </script>
 
