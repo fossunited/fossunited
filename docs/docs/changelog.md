@@ -4,12 +4,106 @@
 <!-- https://github.com/fossunited/fossunited/pull/ -->
 <!-- https://github.com/fossunited/fossunited/issues -->
 
-📌 **Project Board**: [FOSS United GitHub Project](https://github.com/orgs/fossunited/projects/3/views/1)
+<!-- 📌 **Project Board**: [FOSS United GitHub Project](https://github.com/orgs/fossunited/projects/3/views/1) -->
 
 Please find the TLDR reports for each month in blog posts and forum thread:
 
 - Blog post: [https://fossunited.org/blog/tech-report](https://fossunited.org/blog/tech-report)
 - Forum thread: [https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431](https://forum.fossunited.org/t/foss-united-monthly-tech-report/6431)
+
+> Project stats: [git commands before reading code](https://piechowski.io/post/git-commands-before-reading-code/)
+
+## July 2026
+
+July marks one year of these monthly tech reports (they started in August 2025). Beyond the platform, two sibling sites shipped this month: [forklore.in](https://forklore.in) was migrated off [Nuxt.js](https://nuxtseo.com) to [Eleventy (11ty)](https://11ty.dev) to keep it a simple static site, and we launched [licencetolearn.in](https://licencetolearn.in) (built with the Zola SSG), a campaign to publish RTI responses from India's premier institutes. On the platform itself, the CFP review process got a big internal overhaul for the IndiaFOSS 2026 co-chairs, an IndiaFOSS talks archive went live, and the `/stack` page was rebuilt to double as a credits page.
+
+### PR & Feature Highlights
+
+#### CFP Review Process Overhaul
+
+- **Favourite + private comment for reviewers** ([#1627](https://github.com/fossunited/fossunited/pull/1627))
+  Two internal fields added to a CFP submission at the request of the IndiaFOSS 2026 co-chairs (Shree, Rahul, James): `must_have` (a strong-preference marker, shown as a heart icon) and `private_comment` (internal notes shared between reviewers and organisers).
+
+- **Control proposer editing** ([commit 589066e4](https://github.com/fossunited/fossunited/commit/589066e4), fixes [#1628](https://github.com/fossunited/fossunited/issues/1628))
+  Proposers can edit their proposal only while the CFP deadline hasn't passed and the status allows it (deadline AND the "Allow edit" boolean, both must hold). Reviewers and organisers can still review and change status; System Managers can still edit anything via desk. Tests added for the editing controller ([commit 1c102688](https://github.com/fossunited/fossunited/commit/1c102688)).
+
+- **Hide reviews by default + custom QnA** ([commit 129d64af](https://github.com/fossunited/fossunited/commit/129d64af), [commit a40e2109](https://github.com/fossunited/fossunited/commit/a40e2109))
+  Proposal reviews are hidden by default now. Custom question/answer responses are shown to organisers and reviewers on the submission detail view.
+
+- **Reviewer workflow polish**
+  - Private note auto-saves after a pause in the review comment box ([commit de54f23d](https://github.com/fossunited/fossunited/commit/de54f23d))
+  - A reviewer's comment no longer trips the "unsaved changes" guard ([commit 6f6c033a](https://github.com/fossunited/fossunited/commit/6f6c033a))
+  - Proposers are no longer notified on each review ([commit e5d254d5](https://github.com/fossunited/fossunited/commit/e5d254d5)), they'll be notified during final acceptance/reject email.
+  - `MyProposals` shows a proposal list in the sidebar for quick navigation ([commit ee2dd222](https://github.com/fossunited/fossunited/commit/ee2dd222))
+  - An "IndiaFOSS Chair" role can edit CFP submissions ([commit e12685c6](https://github.com/fossunited/fossunited/commit/e12685c6))
+  - A reason/notes field added to submissions ([commit b15090a7](https://github.com/fossunited/fossunited/commit/b15090a7))
+  - Proposal meta filter fields now read dynamically from the doctype ([commit 76b8c2f9](https://github.com/fossunited/fossunited/commit/76b8c2f9)).
+
+#### IndiaFOSS Talks Archive
+
+Visit: <https://fossunited.org/indiafoss/archive>
+
+- **Archive page aggregating all IndiaFOSS talks** ([#1635](https://github.com/fossunited/fossunited/pull/1635))
+  A new `Event Media` doctype holds YouTube URLs (video type matched to the proposal fetch) and powers an archive page aggregating every IndiaFOSS talk. Built so it can expand to aggregate other events too.
+  - Talks/videos now cross-link to their proposal and schedule slot via Event Media ([commit 025b3a3d](https://github.com/fossunited/fossunited/commit/025b3a3d)).
+  - Archive speaker cards link to the speaker's FOSS profile ([commit 7e1b2256](https://github.com/fossunited/fossunited/commit/7e1b2256)); page collapses to a single column on mobile ([commit 49da6ccf](https://github.com/fossunited/fossunited/commit/49da6ccf)).
+
+#### IndiaFOSS 2026 Landing
+
+Visit: <https://fossunited.org/indiafoss/2026>
+
+- **Themed background + lighter hero** ([commit a6a1ccf4](https://github.com/fossunited/fossunited/commit/a6a1ccf4), [commit 0c080d20](https://github.com/fossunited/fossunited/commit/0c080d20))
+  Added a pattern/themed background image; hero image converted to WebP to cut its size.
+- **Live countdown + timeline** ([commit 46a5daed](https://github.com/fossunited/fossunited/commit/46a5daed), [commit bfaefbf7](https://github.com/fossunited/fossunited/commit/bfaefbf7), [commit 8a9d7a7f](https://github.com/fossunited/fossunited/commit/8a9d7a7f)) (FR by flossboxin)
+  Live hours:minutes:seconds counter; timeline list ordered by deadline/close date; timeline and action card mapped together. Description content updated ([commit 3866d3d9](https://github.com/fossunited/fossunited/commit/3866d3d9)).
+
+#### Stack / Credits Page ([commit 874e93ca](https://github.com/fossunited/fossunited/commit/874e93ca))
+
+Visit: <https://fossunited.org/stack>
+
+- The two stack templates were collapsed into a single web template. New fields on the Stack doctype enrich the page: a `description` (personal memo / info), `hosted_url` (link to the live instance), and a `status`. Optionally shows a credits section below, so the tools we use and the contributors behind each bit get credited. Intent is to eventually merge `/stack` and `/credits` into one page.
+
+#### HTTPS Link Normalization
+
+- **Normalize speaker social links** ([#1634](https://github.com/fossunited/fossunited/pull/1634))
+  Speaker social link `href` values are normalized to include the `https://` scheme so links don't resolve as relative paths. First contribution from **Akshit Tyagi**.
+  - Speaker social link field changed to a URL type ([commit 8bd431d6](https://github.com/fossunited/fossunited/commit/8bd431d6)); an `ensureHttps` helper applied across other frontend places ([commit 93b5063d](https://github.com/fossunited/fossunited/commit/93b5063d)); a hook redirects `https`-prefixed URLs to the external page ([commit 5ff6444b](https://github.com/fossunited/fossunited/commit/5ff6444b)).
+
+#### Dashboard Performance
+
+- **Deduplicate session profile API requests** ([#1631](https://github.com/fossunited/fossunited/pull/1631))
+  The dashboard was firing duplicate session user-profile API requests; these are now deduplicated. First contribution from **Paramveer singh**.
+
+#### Documentation (Education / Licence to Learn)
+
+Visit: <https://docs.fossunited.org/education>
+
+- **Education curriculum docs** ([#1641](https://github.com/fossunited/fossunited/pull/1641))
+  A large documentation push for the education program: education pillars, policy, licensing, a digital commons course guide for institutions, cross-disciplinary curriculum, program-manager guidelines, and updated references/statistics. Credits: Siddharth.
+- **FOSS Club guidelines** ([#1639](https://github.com/fossunited/fossunited/pull/1639), plus several fixes)
+  Event hosting guidelines updated, including the FOSS Club position on Web3/Blockchain events; grammar and formatting passes across club and contribution docs. Credits: Siddharth.
+
+#### Chapters, Jobs & UI
+
+- Past chapter members are now shown on the chapter page ([commit 1f82dd6b](https://github.com/fossunited/fossunited/commit/1f82dd6b)).
+- Jobs page links to the Aikyam jobs board for the social sector listing ([commit 75bc10d5](https://github.com/fossunited/fossunited/commit/75bc10d5)).
+- Filter component simplified to a more compact layout ([commit b2f44890](https://github.com/fossunited/fossunited/commit/b2f44890)).
+- Removed a trailing line break in the text editor output ([commit 3e82ea9c](https://github.com/fossunited/fossunited/commit/3e82ea9c)).
+
+#### Build / Internal
+
+- Pinned `setuptools` ([commit 7036719b](https://github.com/fossunited/fossunited/commit/7036719b)); bumped razorpay and other Python packages ([#1665](https://github.com/fossunited/fossunited/pull/1665)); removed the deprecated `show_rsvp/cfp` field from the seed script ([commit e37fb070](https://github.com/fossunited/fossunited/commit/e37fb070)).
+
+---
+
+### Contributor Spotlight
+
+- **Siddharth**: the education documentation push and FOSS Club guideline updates ([#1641](https://github.com/fossunited/fossunited/pull/1641), [#1639](https://github.com/fossunited/fossunited/pull/1639))
+- **Akshit Tyagi**: Normalize speaker social link scheme ([#1634](https://github.com/fossunited/fossunited/pull/1634))
+- **Paramveer singh**: Deduplicate session profile API requests ([#1631](https://github.com/fossunited/fossunited/pull/1631))
+- **Anshika Yadav**: doctype directory README ([#1657](https://github.com/fossunited/fossunited/pull/1657))
+
+---
 
 ## June 2026
 

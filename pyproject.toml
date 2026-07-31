@@ -88,5 +88,4 @@ fossunited = { workspace = true }
 [dependency-groups]
 dev = [
     "fossunited[dev]",
-    "zensical>=0.0.43",
 ]
