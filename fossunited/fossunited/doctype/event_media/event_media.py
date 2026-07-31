@@ -30,7 +30,6 @@ class EventMedia(Document):
             "Keynote",
             "Panel Discussion",
             "Workshop",
-            "Live Stream",
             "Lightning Talk",
             "Birds of Feather(BoF)",
             "Invited Talk",

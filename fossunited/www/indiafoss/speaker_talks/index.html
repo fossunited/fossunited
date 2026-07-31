@@ -100,7 +100,7 @@
               {% if t.tier == 'internal' and t.description %}
                 <div class="mt-3">
                   <p class="semi-bold v3-text-secondary mb-2">Session Description</p>
-                  <div class="v3-text-primary from-markdown">{{ t.description | safe }}</div>
+                  <div class="v3-text-primary v3-html-content from-markdown">{{ t.description | safe }}</div>
                 </div>
               {% endif %}
             </div>
