@@ -258,12 +258,17 @@ watch(filteredSubmissions, (val) => {
     <div class="flex flex-col gap-4 w-full mb-12">
       <FormControl v-model="searchTitle" label="Search" variant="outline" icon-left="search">
         <template #suffix>
-          <IconSearch class="w-4" />
+          <IconSearch class="w-4" aria-hidden="true" />
         </template>
       </FormControl>
       <div class="flex flex-wrap items-center gap-2">
-        <Select v-model="filteredStatus" :options="statusOptions" class="shrink-0" />
-        <Select v-model="sortBy" :options="SORT_OPTIONS" class="shrink-0" />
+        <Select
+          v-model="filteredStatus"
+          :options="statusOptions"
+          aria-label="Filter by status"
+          class="shrink-0"
+        />
+        <Select v-model="sortBy" :options="SORT_OPTIONS" aria-label="Sort proposals" class="shrink-0" />
         <Filter v-if="filterFields.data" v-model="filters" :docfields="filterFields.data" />
         <button
           v-if="hasActiveFilters"
@@ -275,13 +280,14 @@ watch(filteredSubmissions, (val) => {
         </button>
         <button
           class="flex items-center ml-auto bg-surface-gray-7 text-ink-white px-3 py-2 rounded text-sm hover:bg-surface-gray-6 shrink-0"
+          aria-label="Download list as CSV"
           @click="downloadCSV"
         >
           <IconDownload class="w-4 h-4 mr-1" aria-hidden="true" />
-          <span>CSV</span>
+          <span aria-hidden="true">CSV</span>
         </button>
       </div>
-      <p v-if="submissions.originalData" class="text-sm text-ink-gray-5">
+      <p v-if="submissions.originalData" class="text-sm text-ink-gray-5" role="status" aria-live="polite">
         Showing {{ filteredSubmissions.length }} of {{ totalCount }} proposals
       </p>
       <SubmissionsList
@@ -291,6 +297,8 @@ watch(filteredSubmissions, (val) => {
       <div
         v-if="submissions.data?.length === 0"
         class="w-full flex justify-center items-center text-base text-ink-gray-5"
+        role="status"
+        aria-live="polite"
       >
         No proposals found
       </div>
