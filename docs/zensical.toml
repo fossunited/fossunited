@@ -19,6 +19,13 @@ nav = [
   ]},
 
   {"Events & Participation" = [
+
+    {"Guidelines" = [
+      {"Event Checklist" = "event-checklist.md"},
+      {"What to Do at the Event" = "event.md"}
+    ]},
+
+    {"FOSS United Platform for Organisers" = [
     {"Creating an Event" = "create-event.md"},
     {"Event RSVPs" = "event-rsvp.md"},
     {"Attending Events" = "attend-event.md"},
@@ -27,7 +34,8 @@ nav = [
     {"Reviewing Proposals" = "reviewing-proposals.md"},
     {"Creating Event Schedule" = "event-schedule.md"},
     {"Event Mailing" = "event_mailing.md"},
-    {"What to Do at the Event" = "event.md"}
+    ]},
+
   ]},
 
   {"FOSS Hackathon" = [
