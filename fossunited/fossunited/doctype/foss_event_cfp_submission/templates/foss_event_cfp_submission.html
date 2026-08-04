@@ -103,7 +103,6 @@
             onclick="cfpEditAll()"
             title="Quick-edit this proposal inline"
             data-toggle="tooltip"
-            aria-label="Quick edit proposal"
           >
             <i class="ti ti-pencil" aria-hidden="true"></i>
             Edit
@@ -174,7 +173,7 @@
 {% macro references() %}
 {% if doc.references %}
 <div>
-  <h3 class="v3-text-tertiary text-base medium mb-2">References</h3>
+  <h2 class="v3-text-tertiary text-base medium mb-2">References</h2>
   <div class="d-flex flex-column gap-2">
     {% for reference in doc.references %}
       <div class="d-flex align-items-center gap-2">
@@ -196,7 +195,7 @@
 {% macro render_session_categories() %}
 {% if session_categories %}
 <div>
-  <h3 class="v3-text-tertiary text-base medium mb-2">Session Categories</h3>
+  <h2 class="v3-text-tertiary text-base medium mb-2">Session Categories</h2>
   <div class="d-flex flex-wrap gap-2">
     {% for category in session_categories %}
       <div class="border border-section rounded p-2 d-flex align-items-center gap-2 v3-text-secondary text-sm v3-bg-primary">
@@ -222,7 +221,7 @@
 
 {% macro render_speakers() %}
 <div>
-  <h3 class="v3-text-tertiary text-base medium mb-2">Speakers</h3>
+  <h2 class="v3-text-tertiary text-base medium mb-2">Speakers</h2>
   <div class="d-flex flex-column gap-2">
     {% for speaker in doc.speakers %}
       {{ speaker_card(speaker) }}
@@ -281,7 +280,7 @@
 <div class="d-flex flex-column gap-4">
   {% for response in doc.custom_answers %}
     <div class="d-flex flex-column gap-1">
-      <h5 class="v3-text-tertiary text-base">{{ response.question }}</h5>
+      <h2 class="v3-text-tertiary text-base">{{ response.question }}</h2>
       <div class="v3-text-primary">{{ response.response }}</div>
     </div>
   {% endfor %}
@@ -292,7 +291,7 @@
 {% macro render_reviews() %}
 {% if not hide_review %}
 <div class="d-flex flex-column gap-3">
-  <h3 class="v3-text-tertiary text-base medium">Reviews</h3>
+  <h2 class="v3-text-tertiary text-base medium">Reviews</h2>
 
   <div class="d-flex flex-column gap-2">
     {% if not doc.reviews %}

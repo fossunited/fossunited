@@ -16,6 +16,8 @@
 
     <main id="main-content" role="main" class="d-flex flex-column gap-section mt-4 pb-section">
 
+      <h1 class="sr-only">IndiaFOSS 2026</h1>
+
       {# Hero + Timeline grouped tight — 40px gap between them, normal gap-section to rest #}
       <div class="d-flex flex-column gap-10">
 
@@ -106,7 +108,8 @@
 
             {# Week-based progress bar — chips above/below on desktop, bar only on mobile #}
             {% if progress_segments %}
-            <div class="pb-wrap" role="progressbar" aria-label="Event timeline progress">
+            <div class="pb-wrap" role="progressbar" aria-label="Event timeline progress"
+                 aria-valuenow="{{ progress_pct }}" aria-valuemin="0" aria-valuemax="100">
 
               {# Chips ABOVE the bar — desktop only #}
               <div class="pb-above" aria-hidden="true">
@@ -170,7 +173,7 @@
               {% endif %}
               <div class="d-flex align-items-center gap-2 flex-shrink-0">
                 <i class="ti ti-info-circle v3-text-tertiary" style="font-size: 1rem; cursor: help;"
-                   tabindex="0" role="img" data-toggle="tooltip" data-placement="top" data-container="body"
+                   tabindex="0" data-toggle="tooltip" data-placement="top" data-container="body"
                    aria-label="Upcoming items show their opening date; open ones show the deadline/closing date."
                    title="Upcoming items show their opening date; open ones show the deadline/closing date."></i>
                 <button class="v3-btn v3-btn-secondary v3-btn--sm"
@@ -350,7 +353,7 @@
             </div>
 
             {# Mobile illustration grid — 3 rows: [illust] [2 pills] [illust] #}
-            <div class="illust-mobile-grid" aria-label="Session types at IndiaFOSS" aria-hidden="true">
+            <div class="illust-mobile-grid" aria-label="Session types at IndiaFOSS">
               {% set rows = [
                 (illust_types[0], illust_types[1]),
                 (illust_types[2], illust_types[3]),
@@ -608,7 +611,8 @@
                    role="tab"
                    id="tab-btn-{{ tab_id }}"
                    aria-controls="panel-{{ tab_id }}"
-                   aria-selected="{{ 'true' if loop.first else 'false' }}">
+                   aria-selected="{{ 'true' if loop.first else 'false' }}"
+                   tabindex="{{ '0' if loop.first else '-1' }}">
                   {{ tab_label }}
                 </a>
               </li>

@@ -583,7 +583,7 @@
                   <img
                     class="{% if k in ['x', 'matrix-light'] %}bg-white img-rounded{% endif %}"
                     src="https://svgl.app/library/{{ k }}.svg"
-                    alt="{{ k|title }} icon"
+                    alt=""
                   />
                 </a>
                 {% endfor %}
@@ -623,7 +623,13 @@
                  var element = document.getElementById(mapId)
 
                  if (element) {
-                   var map = L.map(element).setView([lat, lng], 14)
+                   var map = L.map(element, {
+                     zoomControl: false,
+                     dragging: false,
+                     touchZoom: false,
+                     scrollWheelZoom: false,
+                     keyboard: false,
+                   }).setView([lat, lng], 14)
 
                    map.attributionControl.setPrefix('')
                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

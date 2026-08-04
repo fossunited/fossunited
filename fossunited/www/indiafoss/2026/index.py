@@ -108,6 +108,9 @@ def get_context(context):
     context.progress_segments, context.progress_markers = _get_progress_bar(
         context.timeline, today
     )
+    context.progress_pct = round(
+        max(0.0, min(100.0, (today - BAR_START).days * 100.0 / (BAR_END - BAR_START).days)), 1
+    )
     context.action_cards = _enrich_action_cards(
         event_data.get("action_cards", []), context.timeline, today
     )

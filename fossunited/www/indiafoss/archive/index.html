@@ -141,7 +141,7 @@
                               <img
                                 class="v3-avatar-xs"
                                 loading="lazy"
-                                alt="{{ s.name | e }}"
+                                alt=""
                                 data-toggle="tooltip"
                                 title="{{ s.name | e }}{% if s.organization %}· {{ s.organization | e }}{% endif %}"
                                 src="{{ s.photo or '/assets/fossunited/images/defaults/user_profile_image.png' }}"
@@ -275,20 +275,23 @@
 
       function groupHeading(key, targetId, n) {
         const h = document.createElement('h2')
-        h.className =
-          'if-arc-ghead v3-clickable col-12 d-flex align-items-center gap-2 ' +
-          'border-bottom pb-2 mt-3 mb-3 v3-text-secondary text-uppercase text-sm'
-        h.setAttribute('role', 'button')
-        h.setAttribute('data-toggle', 'collapse')
-        h.setAttribute('data-target', '#' + targetId)
-        h.setAttribute('aria-expanded', 'true')
-        h.setAttribute('aria-controls', targetId)
+        h.className = 'if-arc-ghead col-12 mt-3 mb-3 text-uppercase text-sm'
+        const btn = document.createElement('button')
+        btn.type = 'button'
+        btn.className =
+          'v3-clickable w-100 d-flex align-items-center gap-2 ' +
+          'border-bottom pb-2 v3-text-secondary bg-transparent border-0 p-0 text-left'
+        btn.setAttribute('data-toggle', 'collapse')
+        btn.setAttribute('data-target', '#' + targetId)
+        btn.setAttribute('aria-expanded', 'true')
+        btn.setAttribute('aria-controls', targetId)
         const chev = document.createElement('i')
         chev.className = 'ti ti-chevron-down'
         chev.setAttribute('aria-hidden', 'true')
         const span = document.createElement('span')
         span.textContent = key + ' (' + n + ')'
-        h.append(chev, span)
+        btn.append(chev, span)
+        h.append(btn)
         return h
       }
 
