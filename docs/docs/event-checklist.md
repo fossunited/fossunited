@@ -21,7 +21,7 @@ Make a note of the timeline we usually follow.
     - [ ] Nearest emergency services
 - [ ] Work on the run of show and event plan ([example](https://docs.google.com/spreadsheets/d/1XaIf3ZYkXVYLM2_07SMc6yyCwOCvmiZO318LMCAvxog/edit?gid=0#gid=0))
     - [ ] Ensure [DEI initiatives](https://discover-cookbook.numfocus.org/2.0/en/intro.html) are part of the event plan.
-- [ ] Identify vendors for food, A/V, food, chairs, tables (if needed) and get a quote from them
+- [ ] Identify vendors for food, A/V, chairs, tables (if needed) and get a quote from them
 - [ ] Start selecting volunteers for the event (if needed)
 - [ ] Make social media and marketing content (reference on [Penpot](https://drive.google.com/file/d/1HadV-KEyogKyvbzxwT_2WAR3JzP27V2E/view) and [Figma](https://www.figma.com/design/dfTCzPNwORsJmJVmB3QtMj/FOSS-Clubs-Design-Guidelines---Community?node-id=1-84&p=f))
     - [ ] Event announcements
@@ -36,7 +36,7 @@ Make a note of the timeline we usually follow.
 - [ ] Reach out to speakers/guests and finalise them
 - [ ] Make content for social media about the final speakers/guests
 - [ ] Announce speakers/guests on social media
-- [ ] Make a presentation for the event (example) with
+- [ ] Make a presentation for the event with
     - [ ] Opening slides
     - [ ] [FOSS United Code of Conduct](https://fossunited.org/code-of-conduct)
     - [ ] Plan for the day
@@ -54,11 +54,11 @@ Make a note of the timeline we usually follow.
 - [ ] Reach out to vendors for any final updates
 - [ ] Share the event plan with speakers, volunteers, and your team
 - [ ] Have backup plans for no-shows and tech failures
-- [ ] Tell the volunteers and team
-    - [ ] The task allocation
+- [ ] Plan for a team meeting (volunteers and core team) to discuss
+    - [ ] Task allocation
+    - [ ] Event Plan
     - [ ] [FOSS United Code of Conduct](https://fossunited.org/code-of-conduct)
     - [ ] Venue layout
-    - [ ] Revise the event plan
 
 ### Day of event
 - [ ] Arrive at least an hour before the door opens for participants
