@@ -60,7 +60,7 @@
                      data-types="{{ s.types | join('|') }}"
                      data-search="{{ (s.name ~ ' ' ~ s.designation ~ ' ' ~ s.organization) | lower | e }}">
                   <a class="v3-speaker-card" href="/indiafoss/speakers/{{ s.slug }}"
-                     aria-label="{{ s.name | e }} — {{ s.talk_count }} talks">
+                     aria-label="{{ s.name | e }} has given {{ s.talk_count }} talk{{ 's' if s.talk_count != 1 else '' }}">
                     <img class="v3-people-avatar" loading="lazy" alt="{{ s.name | e }}" src="{{ s.avatar }}" />
                     <div class="d-flex flex-column" style="min-width:0;">
                       <div class="v3-people-name semi-bold">{{ s.name | e }}</div>
