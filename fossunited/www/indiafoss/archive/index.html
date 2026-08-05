@@ -16,7 +16,7 @@
           <h1 class="v3-page-title v3-text-primary mb-2">IndiaFOSS Archive</h1>
           <p class="v3-text-secondary mb-0">
             Every recorded talk from IndiaFOSS, the annual FOSS & Digital Commons Festival by the
-            FOSS United community. Featuring total of <u>{{ total }}</u> talks.
+            FOSS United community. Featuring total of <strong>{{ total }}</strong> talks.
           </p>
         </header>
 
@@ -60,20 +60,24 @@
             <div class="sticky-top" style="top:1rem">
               <p class="text-uppercase semi-bold text-sm v3-text-secondary mb-3">Filters</p>
 
-              <p class="v3-text-secondary mb-2">IndiaFOSS Edition</p>
-              <div class="d-flex flex-column gap-1 mb-4" data-filter="edition" data-mode="single">
-                <button type="button" class="v3-pill w-100 is-active" data-value="">All</button>
-                {% for e in editions %}
-                  <button type="button" class="v3-pill w-100" data-value="{{ e }}">{{ e }}</button>
-                {% endfor %}
-              </div>
+              <fieldset class="mb-4" style="border:0;padding:0;margin:0;">
+                <legend class="v3-text-secondary mb-2" style="font-size:inherit;font-weight:inherit;">IndiaFOSS Edition</legend>
+                <div class="d-flex flex-column gap-1" data-filter="edition" data-mode="single">
+                  <button type="button" class="v3-pill w-100 is-active" data-value="" aria-pressed="true">All</button>
+                  {% for e in editions %}
+                    <button type="button" class="v3-pill w-100" data-value="{{ e }}" aria-pressed="false">{{ e }}</button>
+                  {% endfor %}
+                </div>
+              </fieldset>
 
-              <p class="v3-text-secondary mb-2">Session Type</p>
-              <div class="d-flex flex-wrap gap-1" data-filter="type" data-mode="multi">
-                {% for t in session_types %}
-                  <button type="button" class="v3-pill" data-value="{{ t }}">{{ t }}</button>
-                {% endfor %}
-              </div>
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="v3-text-secondary mb-2" style="font-size:inherit;font-weight:inherit;">Session Type</legend>
+                <div class="d-flex flex-wrap gap-1" data-filter="type" data-mode="multi">
+                  {% for t in session_types %}
+                    <button type="button" class="v3-pill" data-value="{{ t }}" aria-pressed="false">{{ t }}</button>
+                  {% endfor %}
+                </div>
+              </fieldset>
             </div>
           </aside>
 
@@ -94,12 +98,14 @@
                   <div class="v3-hover-shadow rounded h-100 p-2">
                     <div class="position-relative">
                       {% if m.youtube_id %}
-                        {{ video_embed(youtube_id=m.youtube_id, title=m.title) }}
+                        {{ video_embed(youtube_id=m.youtube_id, title=m.title, speaker=m.speaker, event=m.edition) }}
                       {% else %}
                         <div
                           class="m-video-aspect rounded d-flex align-items-center justify-content-center v3-bg-subtle"
+                          role="img"
                           data-toggle="tooltip"
                           title="No recording available"
+                          aria-label="No recording available"
                         >
                           <i class="ti ti-video-off v3-text-tertiary" aria-hidden="true"></i>
                         </div>
@@ -350,7 +356,7 @@
           ? grouped
             ? total + ' talk' + (total === 1 ? '' : 's')
             : 'Showing ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' of ' + total
-          : ''
+          : 'No talks match your filters.'
 
         renderPager(pages)
         persist()
@@ -394,18 +400,24 @@
           .scrollIntoView({ behavior: 'smooth', block: 'start' })
       }
 
-      // Filter pill clicks (single = edition, multi = type). Selected pill = ACTIVE class.
+      // Filter pill clicks (single = edition, multi = type). Selected pill = ACTIVE class
+      // + aria-pressed, so screen readers get the same selected-state signal sighted users see.
       document.querySelectorAll('[data-filter]').forEach((box) => {
         const single = box.dataset.mode === 'single'
         box.addEventListener('click', (e) => {
           const pill = e.target.closest('button[data-value]')
           if (!pill || !box.contains(pill)) return
           if (single) {
-            box.querySelectorAll('button[data-value]').forEach((p) => p.classList.remove(ACTIVE))
+            box.querySelectorAll('button[data-value]').forEach((p) => {
+              p.classList.remove(ACTIVE)
+              p.setAttribute('aria-pressed', 'false')
+            })
             pill.classList.add(ACTIVE)
+            pill.setAttribute('aria-pressed', 'true')
             state.edition = pill.dataset.value
           } else {
             pill.classList.toggle(ACTIVE)
+            pill.setAttribute('aria-pressed', pill.classList.contains(ACTIVE) ? 'true' : 'false')
             state.types.clear()
             box
               .querySelectorAll('button.' + ACTIVE)
@@ -453,12 +465,16 @@
         search.value = state.q
         sortEl.value = state.sort
         groupEl.value = state.group
-        document
-          .querySelectorAll('[data-filter="edition"] button[data-value]')
-          .forEach((p) => p.classList.toggle(ACTIVE, (p.dataset.value || '') === state.edition))
-        document
-          .querySelectorAll('[data-filter="type"] button[data-value]')
-          .forEach((p) => p.classList.toggle(ACTIVE, state.types.has(p.dataset.value)))
+        document.querySelectorAll('[data-filter="edition"] button[data-value]').forEach((p) => {
+          const active = (p.dataset.value || '') === state.edition
+          p.classList.toggle(ACTIVE, active)
+          p.setAttribute('aria-pressed', active ? 'true' : 'false')
+        })
+        document.querySelectorAll('[data-filter="type"] button[data-value]').forEach((p) => {
+          const active = state.types.has(p.dataset.value)
+          p.classList.toggle(ACTIVE, active)
+          p.setAttribute('aria-pressed', active ? 'true' : 'false')
+        })
       }
 
       search.addEventListener(

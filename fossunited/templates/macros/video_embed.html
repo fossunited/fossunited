@@ -1,13 +1,16 @@
-{% macro video_embed(url, title, youtube_id=None) %}
+{% macro video_embed(url, title, youtube_id=None, speaker=None, event=None) %}
 {% if url or youtube_id %}
   {% if youtube_id %}
+    {%- set video_label = 'Watch talk: ' ~ title if (speaker or event) else 'Watch ' ~ title -%}
+    {%- if speaker %}{% set video_label = video_label ~ ', given by ' ~ speaker %}{% endif -%}
+    {%- if event %}{% set video_label = video_label ~ ', at ' ~ event %}{% endif -%}
     <link rel="preconnect" href="https://www.youtube-nocookie.com">
     <link rel="preconnect" href="https://i.ytimg.com">
     <div class="m-video-aspect rounded overflow-hidden cursor-pointer"
          id="ve-{{ youtube_id }}"
          role="button"
          tabindex="0"
-         aria-label="Play {{ title | e }}"
+         aria-label="{{ video_label | e }}"
          data-yt="{{ youtube_id }}">
       {# mqdefault = native 16:9 (320x180), no letterbox bars; matches the 16:9
          box exactly. hqdefault is 4:3 with baked-in black bars. #}

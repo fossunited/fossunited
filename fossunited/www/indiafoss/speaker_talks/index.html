@@ -58,18 +58,21 @@
           {% set body_id = "talk-" ~ loop.index %}
           {% set has_side = t.link or t.references %}
           <article class="v3-card p-3 p-md-4">
-            <div class="v3-clickable d-flex align-items-start gap-2" role="button"
-                 data-toggle="collapse" data-target="#{{ body_id }}"
-                 aria-expanded="true" aria-controls="{{ body_id }}">
-              <i class="ti ti-chevron-down flex-shrink-0 mt-1" aria-hidden="true"></i>
-              <div class="flex-grow-1">
-                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
-                  {% if t.video_type %}<span class="v3-media-badge" style="background:var(--v3-button-border);color:var(--v3-text-color2);">{{ t.video_type | e }}</span>{% endif %}
-                  {% if t.edition %}<span class="text-xs text-uppercase semi-bold v3-text-tertiary">{{ t.edition | e }}</span>{% endif %}
-                </div>
-                <h2 class="v3-text-primary text-lg mb-0">{{ t.title | e }}</h2>
-              </div>
-            </div>
+            <h2 class="mb-0">
+              <button type="button"
+                      class="v3-clickable d-flex align-items-start gap-2 w-100 border-0 bg-transparent p-0 text-left"
+                      data-toggle="collapse" data-target="#{{ body_id }}"
+                      aria-expanded="true" aria-controls="{{ body_id }}">
+                <i class="ti ti-chevron-down flex-shrink-0 mt-1" aria-hidden="true"></i>
+                <span class="flex-grow-1">
+                  <span class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                    {% if t.video_type %}<span class="v3-media-badge" style="background:var(--v3-button-border);color:var(--v3-text-color2);">{{ t.video_type | e }}</span>{% endif %}
+                    {% if t.edition %}<span class="text-xs text-uppercase semi-bold v3-text-tertiary">{{ t.edition | e }}</span>{% endif %}
+                  </span>
+                  <span class="v3-text-primary text-lg d-block">{{ t.title | e }}</span>
+                </span>
+              </button>
+            </h2>
 
             <div class="collapse show mt-3" id="{{ body_id }}">
               <div class="row">
@@ -92,7 +95,7 @@
                 {% endif %}
                 {% if t.youtube_id %}
                   <div class="col-12 {% if has_side %}col-md-6 order-md-1{% endif %}">
-                    {{ video_embed(youtube_id=t.youtube_id, title=t.title) }}
+                    {{ video_embed(youtube_id=t.youtube_id, title=t.title, speaker=speaker.name, event=t.edition) }}
                   </div>
                 {% endif %}
               </div>
