@@ -40,8 +40,9 @@
     {{ theme_toggle() }}
   </div>
 
+  {% set _video_speaker = doc.speakers[0].full_name if (doc.speakers and not anonymous_cfps) else None %}
   {{ talk_header() }}
-  {% if talk_video %}{{ video_embed(talk_video, doc.talk_title, youtube_id=youtube_embed_id) }}{% endif %}
+  {% if talk_video %}{{ video_embed(talk_video, doc.talk_title, youtube_id=youtube_embed_id, speaker=_video_speaker) }}{% endif %}
   {{ prose_container("Session Description", doc.talk_description) }}
   {{ prose_container("Key Takeaways", doc.key_takeaways) }}
   {{ references() }}

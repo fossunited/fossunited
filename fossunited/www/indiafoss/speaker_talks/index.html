@@ -95,7 +95,7 @@
                 {% endif %}
                 {% if t.youtube_id %}
                   <div class="col-12 {% if has_side %}col-md-6 order-md-1{% endif %}">
-                    {{ video_embed(youtube_id=t.youtube_id, title=t.title) }}
+                    {{ video_embed(youtube_id=t.youtube_id, title=t.title, speaker=speaker.name, event=t.edition) }}
                   </div>
                 {% endif %}
               </div>
