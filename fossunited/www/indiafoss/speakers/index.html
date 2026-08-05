@@ -14,7 +14,7 @@
         <header>
           <h1 class="v3-page-title v3-text-primary mb-2">IndiaFOSS Speakers</h1>
           <p class="v3-text-secondary mb-0">
-            Everyone who has spoken at IndiaFOSS. <u>{{ total }}</u> speakers across all editions.
+            Everyone who has spoken at IndiaFOSS. <strong>{{ total }}</strong> speakers across all editions.
           </p>
         </header>
 
@@ -125,7 +125,7 @@
         grid.hidden = total === 0
         count.textContent = total
           ? 'Showing ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' of ' + total
-          : ''
+          : 'No speakers match your filters.'
         renderPager(pages)
         persist()
       }

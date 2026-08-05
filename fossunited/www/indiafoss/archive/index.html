@@ -16,7 +16,7 @@
           <h1 class="v3-page-title v3-text-primary mb-2">IndiaFOSS Archive</h1>
           <p class="v3-text-secondary mb-0">
             Every recorded talk from IndiaFOSS, the annual FOSS & Digital Commons Festival by the
-            FOSS United community. Featuring total of <u>{{ total }}</u> talks.
+            FOSS United community. Featuring total of <strong>{{ total }}</strong> talks.
           </p>
         </header>
 
@@ -98,8 +98,10 @@
                       {% else %}
                         <div
                           class="m-video-aspect rounded d-flex align-items-center justify-content-center v3-bg-subtle"
+                          role="img"
                           data-toggle="tooltip"
                           title="No recording available"
+                          aria-label="No recording available"
                         >
                           <i class="ti ti-video-off v3-text-tertiary" aria-hidden="true"></i>
                         </div>
@@ -350,7 +352,7 @@
           ? grouped
             ? total + ' talk' + (total === 1 ? '' : 's')
             : 'Showing ' + (start + 1) + '–' + Math.min(start + PAGE_SIZE, total) + ' of ' + total
-          : ''
+          : 'No talks match your filters.'
 
         renderPager(pages)
         persist()
