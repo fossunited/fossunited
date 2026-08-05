@@ -202,10 +202,12 @@
                   <span class="tl-month">{{ item.month_str }}</span>
                 </div>
                 <div class="tl-row">
+                  {% set tl_when = item.day_num ~ ' ' ~ item.month_str %}
                   {% if item_url %}
-                    <a href="{{ item_url }}" class="tl-name" target="_blank" rel="noopener noreferrer">{{ item.label }}</a>
+                    <a href="{{ item_url }}" class="tl-name" target="_blank" rel="noopener noreferrer"
+                       aria-label="{{ item.label }} on {{ tl_when }}">{{ item.label }}</a>
                   {% else %}
-                    <span class="tl-name">{{ item.label }}</span>
+                    <span class="tl-name" aria-label="{{ item.label }} on {{ tl_when }}">{{ item.label }}</span>
                   {% endif %}
                   {% if item.extended and st in ('live', 'closing') %}
                     <span class="v3-tag v3-status--warning flex-shrink-0">
@@ -249,15 +251,14 @@
                 {% set badge = card.get('resolved_badge') or '' %}
                 {% set state = card.get('badge_state') or '' %}
                 {% set is_closed = (card.get('clickable') == false) %}
+                <div role="listitem" style="display:contents">
                 {% if card.url %}
                   <a href="{{ card.url }}"
                      class="v3-action-card"
-                     role="listitem"
                      {% if is_closed %}style="pointer-events:none;opacity:0.55;" aria-disabled="true" tabindex="-1"{% endif %}
                      aria-label="{{ card.label }}{% if badge %} — {{ badge }}{% endif %}">
                 {% else %}
                   <div class="v3-action-card"
-                       role="listitem"
                        style="cursor: default;"
                        aria-label="{{ card.label }} — coming soon">
                 {% endif %}
@@ -295,6 +296,7 @@
                     {% endif %}
                   </div>
                 {% if card.url %}</a>{% else %}</div>{% endif %}
+                </div>
               {% endfor %}
             </div>
           </div>
@@ -461,20 +463,23 @@
         {% set tier2_groups = sponsors | rejectattr('is_tier1') | list %}
 
         {% if tier1_groups %}
-          <div class="if-sponsor-grid-t1" role="list" aria-label="Premier sponsors">
+          {% set tier1_names = tier1_groups | map(attribute='tier') | unique | list %}
+          <div class="if-sponsor-grid-t1" role="list" aria-label="{{ tier1_names | join(', ') }} sponsors">
             {% for grp in tier1_groups %}
               {% for s in grp.sponsor_list %}
-                <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
-                   class="if-sponsor-logo" role="listitem"
-                   data-toggle="tooltip" data-container="body"
-                   title="{{ s.sponsor_name }}"
-                   aria-label="{{ s.sponsor_name }}">
-                  {% if s.image %}
-                    <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
-                  {% else %}
-                    <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
-                  {% endif %}
-                </a>
+                <div role="listitem" style="display:contents">
+                  <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
+                     class="if-sponsor-logo"
+                     data-toggle="tooltip" data-container="body"
+                     title="{{ s.sponsor_name }}"
+                     aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                    {% if s.image %}
+                      <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
+                    {% else %}
+                      <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
+                    {% endif %}
+                  </a>
+                </div>
               {% endfor %}
             {% endfor %}
           </div>
@@ -482,20 +487,23 @@
 
         {% if tier2_groups %}
           {% if tier1_groups %}<div class="if-tier-sep" aria-hidden="true"></div>{% endif %}
-          <div class="if-sponsor-grid-t2" role="list" aria-label="Supporting sponsors">
+          {% set tier2_names = tier2_groups | map(attribute='tier') | unique | list %}
+          <div class="if-sponsor-grid-t2" role="list" aria-label="{{ tier2_names | join(', ') }} sponsors">
             {% for grp in tier2_groups %}
               {% for s in grp.sponsor_list %}
-                <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
-                   class="if-sponsor-logo" role="listitem"
-                   data-toggle="tooltip" data-container="body"
-                   title="{{ s.sponsor_name }}"
-                   aria-label="{{ s.sponsor_name }}">
-                  {% if s.image %}
-                    <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
-                  {% else %}
-                    <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
-                  {% endif %}
-                </a>
+                <div role="listitem" style="display:contents">
+                  <a href="{{ s.link }}" target="_blank" rel="noopener noreferrer"
+                     class="if-sponsor-logo"
+                     data-toggle="tooltip" data-container="body"
+                     title="{{ s.sponsor_name }}"
+                     aria-label="{{ s.sponsor_name }}, {{ grp.tier }} sponsor">
+                    {% if s.image %}
+                      <img src="{{ s.image }}" alt="{{ s.sponsor_name }} logo">
+                    {% else %}
+                      <span class="text-sm" style="color:#888;padding:8px;">{{ s.sponsor_name }}</span>
+                    {% endif %}
+                  </a>
+                </div>
               {% endfor %}
             {% endfor %}
           </div>
@@ -521,17 +529,19 @@
         </div>
         <div class="if-sponsor-grid-cp" role="list" aria-label="Community partners">
           {% for p in partners %}
-            <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer"
-               class="if-sponsor-logo" role="listitem"
-               data-toggle="tooltip" data-container="body" data-placement="top"
-               title="{{ p.org_name }}"
-               aria-label="{{ p.org_name }}">
-              {% if p.logo %}
-                <img src="{{ p.logo }}" alt="{{ p.org_name }} logo">
-              {% else %}
-                <span class="text-sm" style="color:#888;padding:8px;">{{ p.org_name }}</span>
-              {% endif %}
-            </a>
+            <div role="listitem" style="display:contents">
+              <a href="{{ p.link }}" target="_blank" rel="noopener noreferrer"
+                 class="if-sponsor-logo"
+                 data-toggle="tooltip" data-container="body" data-placement="top"
+                 title="{{ p.org_name }}"
+                 aria-label="{{ p.org_name }}">
+                {% if p.logo %}
+                  <img src="{{ p.logo }}" alt="{{ p.org_name }} logo">
+                {% else %}
+                  <span class="text-sm" style="color:#888;padding:8px;">{{ p.org_name }}</span>
+                {% endif %}
+              </a>
+            </div>
           {% endfor %}
         </div>
       </section>
@@ -567,20 +577,21 @@
         <div class="if-devroom-wrap">
         <div class="if-devroom-grid" role="list" aria-label="Devroom tracks">
           {% for dr in devrooms %}
-            <a href="/indiafoss/2026/devrooms/{{ dr.slug }}"
-               class="if-devroom-card"
-               role="listitem"
-               aria-label="{{ dr.title }} devroom">
+            <div role="listitem" style="display:contents">
+              <a href="/indiafoss/2026/devrooms/{{ dr.slug }}"
+                 class="if-devroom-card"
+                 aria-label="View {{ dr.title }} devroom">
 
-              <div class="if-devroom-banner-svg" aria-hidden="true">
-                {% include dr.svg_path %}
-              </div>
+                <div class="if-devroom-banner-svg" aria-hidden="true">
+                  {% include dr.svg_path %}
+                </div>
 
-              <div class="d-flex align-items-center gap-2">
-                <span class="if-devroom-title">{{ dr.title }}</span>
-              </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="if-devroom-title">{{ dr.title }}</span>
+                </div>
 
-            </a>
+              </a>
+            </div>
           {% endfor %}
         </div>
         </div>
@@ -648,14 +659,40 @@
         </div>
       </section>
 
-      {# ── 7. FAQ ───────────────────────────────────── #}
-      {% if faqs %}
-      <section id="faq" aria-labelledby="faq-heading">
-        <div class="v3-col-3-1">
+      {# 7. SUPPORT & ACCESSIBILITY (shown early for A11Y tabbing) #}
+      {% set support = [
+        {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': 'https://fossunited.org/indiafoss/childcare/new', 'has_form': true, 'icon': 'ti-baby-carriage'},
+        {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': 'https://fossunited.org/indiafoss/accessibility/new', 'has_form': true, 'icon': 'ti-accessible'},
+        {'title': 'Low Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '', 'has_form': false, 'icon': 'ti-leaf'},
+      ] %}
+      <section aria-labelledby="support-heading">
+        <div class="{{ 'v3-col-3-1' if faqs else '' }}">
 
-          {# Left — FAQ accordion #}
-          <div class="v3-flex-3 v3-card p-4 d-flex flex-column gap-4">
-            <h2 id="faq-heading" class="text-2xl semi-bold v3-text-primary mb-0">FAQ</h2>
+          {# DOM-first (screen-reader reading order reaches this before FAQ) but visually
+             ordered to the right/narrow column via CSS order — matches original layout. #}
+          <div class="{{ 'v3-flex-1' if faqs else '' }}" {% if faqs %}style="order: 2;"{% endif %}>
+            <h2 id="support-heading" class="text-2xl semi-bold v3-text-primary mb-3">Support &amp; Accessibility</h2>
+            <div class="support-cards">
+              {% for card in support %}
+                <div class="support-card v3-text-secondary v3-card p-4 d-flex flex-column gap-2">
+                  <i class="ti {{ card.icon }} support-icon text-4xl" aria-hidden="true"></i>
+                  <p class="semi-bold mb-0">{{ card.title }}</p>
+                  <p class="text-sm  mb-0">{{ card.desc }}</p>
+                  {% if card.form_url %}
+                    <a href="{{ card.form_url }}" class="text-sm" style="text-decoration: underline;">Fill the {{ card.title }} form</a>
+                  {% elif card.has_form %}
+                    <p class="text-sm v3-text-tertiary mb-0">Form opening soon.</p>
+                  {% endif %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          {# DOM-second (deprioritized for screen readers) but visually restored to the
+             left/wide column via CSS order, matching the original layout. #}
+          {% if faqs %}
+          <div class="v3-flex-3 v3-card p-4 d-flex flex-column gap-4" style="order: 1;">
+            <h2 id="faq-heading" class="text-xl semi-bold v3-text-primary mb-0">FAQ</h2>
             <div role="list" aria-label="Frequently asked questions">
               {% for item in faqs %}
                 <div class="faq-item" role="listitem">
@@ -675,33 +712,10 @@
               {% endfor %}
             </div>
           </div>
-
-          {# Right — support cards (sidebar on desktop, full-width row below on tablet/mobile) #}
-          {% set support = [
-            {'title': 'Child Care',    'desc': 'On-site childcare during both the conference days.',                    'form_url': 'https://fossunited.org/indiafoss/childcare/new', 'has_form': true, 'icon': 'ti-baby-carriage'},
-            {'title': 'Accessibility', 'desc': 'We give support to make the conference accessible for all.',            'form_url': 'https://fossunited.org/indiafoss/accessibility/new', 'has_form': true, 'icon': 'ti-accessible'},
-            {'title': 'Low Waste',    'desc': 'Bring your own bottles. Help our conference produce low waste output.', 'form_url': '', 'has_form': false, 'icon': 'ti-leaf'},
-          ] %}
-          <div class="v3-flex-1" aria-label="Support and accessibility">
-            <div class="support-cards">
-              {% for card in support %}
-                <div class="support-card v3-card p-4 d-flex flex-column gap-2">
-                  <i class="ti {{ card.icon }} support-icon text-4xl" aria-hidden="true"></i>
-                  <p class="semi-bold v3-text-secondary mb-0">{{ card.title }}</p>
-                  <p class="text-sm v3-text-secondary mb-0">{{ card.desc }}</p>
-                  {% if card.form_url %}
-                    <a href="{{ card.form_url }}" class="text-sm" style="text-decoration: underline; color: inherit;">Fill this form</a>
-                  {% elif card.has_form %}
-                    <p class="text-sm v3-text-tertiary mb-0">Form opening soon.</p>
-                  {% endif %}
-                </div>
-              {% endfor %}
-            </div>
-          </div>
+          {% endif %}
 
         </div>
       </section>
-      {% endif %}
 
     </main>
 
