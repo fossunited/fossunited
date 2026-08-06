@@ -238,6 +238,17 @@ a:hover {
   color: inherit;
 }
 
+/* Prose links: color alone doesn't distinguish a link (WCAG 1.4.1) — BS4
+   underlines on :hover only, so underline by default too, in text content. */
+p > a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+p > a:hover {
+  filter: brightness(1.2);
+}
+
 button {
   display: flex;
   align-items: center;
@@ -1690,17 +1701,6 @@ body:has(.v3-page) {
 
 .v3-page *:not(.no-font-inherit) {
   font-family: inherit;
-}
-
-/* V3 Links - No underline, opacity on hover */
-.v3-page a {
-  text-decoration: none;
-  transition: opacity 0.2s;
-}
-
-.v3-page a:hover {
-  text-decoration: none;
-  opacity: 0.9;
 }
 
 /* V3 Clickable Div - For divs that act as links */
