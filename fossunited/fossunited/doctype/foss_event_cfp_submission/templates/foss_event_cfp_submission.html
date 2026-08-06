@@ -149,14 +149,15 @@
 
 {% macro status_badge(status, theme_map) %}
   {% set t = theme_map.get(status, 'gray') %}
+  {% set label = 'Proposal status is ' ~ status ~ '.' %}
   {% if t == 'green' %}
-    <span class="v3-status v3-status--success">{{ status }}</span>
+    <span class="v3-status v3-status--success" aria-label="{{ label }}">{{ status }}</span>
   {% elif t == 'red' %}
-    <span class="v3-status v3-status--error">{{ status }}</span>
+    <span class="v3-status v3-status--error" aria-label="{{ label }}">{{ status }}</span>
   {% elif t in ('orange', 'yellow') %}
-    <span class="v3-status v3-status--warning">{{ status }}</span>
+    <span class="v3-status v3-status--warning" aria-label="{{ label }}">{{ status }}</span>
   {% else %}
-    <span class="v3-tag v3-tag--category">{{ status }}</span>
+    <span class="v3-tag v3-tag--category" aria-label="{{ label }}">{{ status }}</span>
   {% endif %}
 {% endmacro %}
 
