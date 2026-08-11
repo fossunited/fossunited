@@ -63,7 +63,7 @@
 
 
 {% macro talk_header() %}
-<div class="d-flex flex-column gap-2">
+<header class="d-flex flex-column gap-2">
   <div class="d-flex align-items-center gap-2 flex-wrap">
     <span class="v3-tag v3-tag--category">{{ doc.session_type }}</span>
     <span class="v3-tag v3-tag--category">
@@ -143,21 +143,21 @@
   {% if submitter_profile %}
     {{ profile_headshot(submitter_profile.full_name, submitter_profile.photo, submitter_profile.url) }}
   {% endif %}
-</div>
+</header>
 {% endmacro %}
 
 
 {% macro status_badge(status, theme_map) %}
   {% set t = theme_map.get(status, 'gray') %}
-  {% set label = 'Proposal status is ' ~ status ~ '.' %}
+  {% set prefix = '<span class="sr-only">Proposal status is </span>' %}
   {% if t == 'green' %}
-    <span class="v3-status v3-status--success" aria-label="{{ label }}">{{ status }}</span>
+    <span class="v3-status v3-status--success">{{ prefix | safe }}{{ status }}</span>
   {% elif t == 'red' %}
-    <span class="v3-status v3-status--error" aria-label="{{ label }}">{{ status }}</span>
+    <span class="v3-status v3-status--error">{{ prefix | safe }}{{ status }}</span>
   {% elif t in ('orange', 'yellow') %}
-    <span class="v3-status v3-status--warning" aria-label="{{ label }}">{{ status }}</span>
+    <span class="v3-status v3-status--warning">{{ prefix | safe }}{{ status }}</span>
   {% else %}
-    <span class="v3-tag v3-tag--category" aria-label="{{ label }}">{{ status }}</span>
+    <span class="v3-tag v3-tag--category">{{ prefix | safe }}{{ status }}</span>
   {% endif %}
 {% endmacro %}
 
@@ -174,11 +174,11 @@
 
 {% macro references() %}
 {% if doc.references %}
-<div>
-  <h2 class="v3-text-tertiary text-base medium mb-2">References</h2>
-  <div class="d-flex flex-column gap-2">
+<section aria-labelledby="cfp-references-heading">
+  <h2 id="cfp-references-heading" class="v3-text-tertiary text-base medium mb-2">References</h2>
+  <div class="d-flex flex-column gap-2" role="list">
     {% for reference in doc.references %}
-      <div class="d-flex align-items-center gap-2">
+      <div class="d-flex align-items-center gap-2" role="listitem">
         <i class="ti ti-link v3-text-secondary text-lg" aria-hidden="true"></i>
         <a
           class="v3-text-secondary"
@@ -189,23 +189,23 @@
       </div>
     {% endfor %}
   </div>
-</div>
+</section>
 {% endif %}
 {% endmacro %}
 
 
 {% macro render_session_categories() %}
 {% if session_categories %}
-<div>
-  <h2 class="v3-text-tertiary text-base medium mb-2">Session Categories</h2>
-  <div class="d-flex flex-wrap gap-2">
+<section aria-labelledby="cfp-categories-heading">
+  <h2 id="cfp-categories-heading" class="v3-text-tertiary text-base medium mb-2">Session Categories</h2>
+  <div class="d-flex flex-wrap gap-2" role="list">
     {% for category in session_categories %}
-      <div class="border border-section rounded p-2 d-flex align-items-center gap-2 v3-text-secondary text-sm v3-bg-primary">
+      <div class="border border-section rounded p-2 d-flex align-items-center gap-2 v3-text-secondary text-sm v3-bg-primary" role="listitem">
         {{ category }}
       </div>
     {% endfor %}
   </div>
-</div>
+</section>
 {% endif %}
 {% endmacro %}
 
@@ -222,21 +222,21 @@
 
 
 {% macro render_speakers() %}
-<div>
-  <h2 class="v3-text-tertiary text-base medium mb-2">Speakers</h2>
-  <div class="d-flex flex-column gap-2">
+<section aria-labelledby="cfp-speakers-heading">
+  <h2 id="cfp-speakers-heading" class="v3-text-tertiary text-base medium mb-2">Speakers</h2>
+  <div class="d-flex flex-column gap-2" role="list">
     {% for speaker in doc.speakers %}
       {{ speaker_card(speaker) }}
     {% endfor %}
   </div>
-</div>
+</section>
 {% endmacro %}
 
 
 {% macro speaker_card(speaker) %}
 {% set sp_url = speaker_profile_map.get(speaker.email) %}
-<div class="border border-section rounded p-3 d-flex flex-column gap-2">
-  {% if sp_url %}<a href="{{ sp_url }}" class="d-flex align-items-start justify-content-between gap-6 text-decoration-none">{% else %}<div class="d-flex align-items-start justify-content-between gap-6">{% endif %}
+<div class="border border-section rounded p-3 d-flex flex-column gap-2" role="listitem">
+  {% if sp_url %}<a href="{{ sp_url }}" class="d-flex align-items-start justify-content-between gap-6 text-decoration-none" aria-label="View {{ speaker.full_name }}'s profile">{% else %}<div class="d-flex align-items-start justify-content-between gap-6">{% endif %}
     <div class="d-flex flex-column gap-1 speaker-col">
       <span class="v3-text-primary text-lg semi-bold mb-0">{{ speaker.full_name }}</span>
       {% if speaker.designation or speaker.organization %}
@@ -281,10 +281,10 @@
 {% macro render_custom_responses() %}
 <div class="d-flex flex-column gap-4">
   {% for response in doc.custom_answers %}
-    <div class="d-flex flex-column gap-1">
-      <h2 class="v3-text-tertiary text-base">{{ response.question }}</h2>
+    <section aria-labelledby="cfp-custom-answer-{{ loop.index }}" class="d-flex flex-column gap-1">
+      <h2 id="cfp-custom-answer-{{ loop.index }}" class="v3-text-tertiary text-base">{{ response.question }}</h2>
       <div class="v3-text-primary">{{ response.response }}</div>
-    </div>
+    </section>
   {% endfor %}
 </div>
 {% endmacro %}
@@ -292,8 +292,8 @@
 
 {% macro render_reviews() %}
 {% if not hide_review %}
-<div class="d-flex flex-column gap-3">
-  <h2 class="v3-text-tertiary text-base medium">Reviews</h2>
+<section aria-labelledby="cfp-reviews-heading" class="d-flex flex-column gap-3">
+  <h2 id="cfp-reviews-heading" class="v3-text-tertiary text-base medium">Reviews</h2>
 
   <div class="d-flex flex-column gap-2">
     {% if not doc.reviews %}
@@ -305,7 +305,7 @@
       {% endfor %}
     {% endif %}
   </div>
-</div>
+</section>
 {% endif %}
 {% endmacro %}
 
