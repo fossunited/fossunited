@@ -13,7 +13,7 @@
     "@tabler/icons-vue": "^3.33.0",
     "@tiptap/extension-underline": "^2.4.0",
     "dayjs": "^1.11.11",
-    "dompurify": "^3.4.12",
+    "dompurify": "^3.4.13",
     "feather-icons": "^4.29.2",
     "frappe-ui": "^0.1.160",
     "ics": "^3.7.6",
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.13",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.23",
     "prettier": "3.2.5",
     "tailwindcss": "^3.2.7",
     "vite": "^6.4.3"
