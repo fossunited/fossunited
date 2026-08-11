@@ -3743,9 +3743,15 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   text-decoration: none;
   color: var(--v3-text-color);
 }
+.v3-event-list-row:focus-visible {
+  outline: 2px solid var(--v3-text-color2);
+  outline-offset: -2px;
+  z-index: 1;
+}
 
-.v3-event-list-row__name { font-weight: 500; font-size: 0.9375rem; display: flex; align-items: center; gap: 0.5rem; }
+.v3-event-list-row__name { font-weight: 500; font-size: 0.9375rem; display: flex; align-items: center; gap: 0.5rem; min-width: 0; }
 .v3-event-list-row__name .v3-tag { flex-shrink: 0; }
+.v3-event-list-row__name .truncate { min-width: 0; flex: 1; }
 .v3-event-list-row__chapter,
 .v3-event-list-row__date,
 .v3-event-list-row__location { font-size: 0.8125rem; color: var(--v3-text-color2); }
