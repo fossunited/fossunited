@@ -6,10 +6,9 @@
     {%- if event %}{% set video_label = video_label ~ ', at ' ~ event %}{% endif -%}
     <link rel="preconnect" href="https://www.youtube-nocookie.com">
     <link rel="preconnect" href="https://i.ytimg.com">
-    <div class="m-video-aspect rounded overflow-hidden cursor-pointer"
+    <button type="button"
+         class="m-video-aspect rounded overflow-hidden cursor-pointer"
          id="ve-{{ youtube_id }}"
-         role="button"
-         tabindex="0"
          aria-label="{{ video_label | e }}"
          data-yt="{{ youtube_id }}">
       {# mqdefault = native 16:9 (320x180), no letterbox bars; matches the 16:9
@@ -20,9 +19,11 @@
       <div class="m-play-btn" aria-hidden="true">
         <i class="ti ti-player-play-filled text-white" style="font-size: 1.5rem;"></i>
       </div>
-    </div>
+    </button>
     <script>
       document.getElementById('ve-{{ youtube_id }}').addEventListener('click', function () {
+        if (this.dataset.playing) return;
+        this.dataset.playing = '1';
         var f = document.createElement('iframe');
         f.src = 'https://www.youtube-nocookie.com/embed/{{ youtube_id }}?autoplay=1&rel=0&modestbranding=1&iv_load_policy=3&color=white';
         f.allow = 'autoplay; encrypted-media';
