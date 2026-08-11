@@ -44,6 +44,7 @@ def get_foss_timeline_items(is_upcoming=True):
             "event_type",
             "modified",
             "chapter.chapter_type as _chapter_type",
+            "chapter.chapter_name as _chapter_name",
             "chapter.city as _chapter_city",
         ],
     )
@@ -63,6 +64,7 @@ def get_foss_timeline_items(is_upcoming=True):
             "hackathon_description as event_description",
             "modified",
             "chapter.chapter_type as _chapter_type",
+            "chapter.chapter_name as _chapter_name",
             "chapter.city as _chapter_city",
         ],
     )
@@ -102,6 +104,7 @@ def get_foss_timeline_items(is_upcoming=True):
                 "banner_image": None,
                 "chapter": frappe._dict({**_GRANTS_CHAPTER, "city": city}),
                 "_chapter_type": "City Community",
+                "_chapter_name": "FOSS Event Grants",
                 "_chapter_city": city,
                 "event_location": location,
                 "must_attend": (g.get("grant_amount") or 0) > 10000,

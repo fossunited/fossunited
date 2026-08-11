@@ -355,6 +355,23 @@ function truncateStr(title, len) {
   return title.length > len ? title.substring(0, len) + '...' : title
 }
 
+var VIEW_MODE_KEY = 'fossunited-view-mode'
+
+function getViewMode() {
+  try {
+    var v = localStorage.getItem(VIEW_MODE_KEY)
+    return v === 'list' ? 'list' : 'grid'
+  } catch (e) {
+    return 'grid'
+  }
+}
+
+function saveViewMode(mode) {
+  try {
+    localStorage.setItem(VIEW_MODE_KEY, mode === 'list' ? 'list' : 'grid')
+  } catch (e) {}
+}
+
 function toggleSection(id) {
   const content = document.getElementById(id)
   if (!content) return
@@ -419,6 +436,9 @@ Object.assign(window, {
   formatTimeOnly,
   formatShortDate,
   truncateStr,
+  VIEW_MODE_KEY,
+  getViewMode,
+  saveViewMode,
   toggleSection,
   debounce,
   buildPageWindow,
