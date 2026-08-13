@@ -7,6 +7,7 @@ Usage::
 
     # For Frappe Manager / Manual Bench installations:
     bench execute fossunited.dev.seed.seed
+    bench execute fossunited.dev.seed.seed_indiafoss_2026
     bench execute fossunited.dev.seed.teardown_all
 
     # For Devcontainer (Docker/Podman) environments:
@@ -27,7 +28,9 @@ Lead       {bangalore,mumbai,kochi,campus}-lead@...      password
 Idempotent — safe to run repeatedly on the same database.
 """
 
+import json
 import random
+from contextlib import contextmanager
 from datetime import datetime, timedelta
 
 import frappe
@@ -317,6 +320,30 @@ HACKATHON_CFG = {
 # ===========================================================================
 
 
+@contextmanager
+def seed_transaction(task_name="Seed operation"):
+    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
+    prev_in_test = frappe.flags.get("in_test", False)
+    frappe.flags.ignore_permissions = True
+    frappe.flags.in_test = True
+
+    try:
+        yield
+        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
+        try:
+            frappe.clear_cache()
+            logger.info("%s completed successfully", task_name)
+        except Exception:
+            logger.warning("%s committed, but cache clear failed", task_name, exc_info=True)
+    except Exception:
+        frappe.db.rollback()
+        logger.exception("%s failed before commit — transaction rolled back", task_name)
+        raise
+    finally:
+        frappe.flags.ignore_permissions = prev_ignore_permissions
+        frappe.flags.in_test = prev_in_test
+
+
 def ensure_record(doctype, filters, insert_fn, *args, **kwargs):
     """
     Check if a record exists using `filters`. If it does, return the existing doc.
@@ -381,12 +408,7 @@ def seed():
     if not frappe.conf.get("developer_mode"):
         frappe.throw(_("Seed script can only be run in developer mode."))
 
-    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
-    prev_in_test = frappe.flags.get("in_test", False)
-    frappe.flags.ignore_permissions = True
-    frappe.flags.in_test = True
-
-    try:
+    with seed_transaction("Seeding development data"):
         logger.info("Seeding development data")
 
         users = _create_users()
@@ -402,21 +424,6 @@ def seed():
         _create_cfps(events["live"])
         _create_hackathon(chapters)
         _bootstrap_ticket_prototype()
-
-        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
-        try:
-            frappe.clear_cache()
-            logger.info("Seed data created successfully")
-        except Exception:
-            logger.warning("Seed data committed, but cache clear failed", exc_info=True)
-
-    except Exception:
-        frappe.db.rollback()
-        logger.exception("Seed script failed before commit — transaction rolled back")
-        raise
-    finally:
-        frappe.flags.ignore_permissions = prev_ignore_permissions
-        frappe.flags.in_test = prev_in_test
 
 
 def _create_users():
@@ -1304,12 +1311,9 @@ def generate_mock_data(doctype, count=10):
 
     cfg = _get_mock_config(doctype)
     strategy = cfg["strategy"]
-    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
-    frappe.flags.ignore_permissions = True
-
     created, failed = 0, 0
 
-    try:
+    with seed_transaction(f"Mock generation for {doctype}"):
         generation_context = {}
         prototype = None
         if strategy == GENERATION_STRATEGY_CLONE:
@@ -1336,12 +1340,6 @@ def generate_mock_data(doctype, count=10):
                     "Failed creating mock %s (%d/%d)", doctype, idx + 1, count
                 )
 
-        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
-        try:
-            frappe.clear_cache()
-        except Exception:
-            logger.warning("Mock data committed, but cache clear failed", exc_info=True)
-
         summary = {
             "doctype": doctype,
             "requested": count,
@@ -1351,15 +1349,6 @@ def generate_mock_data(doctype, count=10):
         }
         logger.info("Mock generation summary: %s", summary)
         return summary
-
-    except Exception:
-        frappe.db.rollback()
-        logger.exception(
-            "Mock generation failed before commit — transaction rolled back"
-        )
-        raise
-    finally:
-        frappe.flags.ignore_permissions = prev_ignore_permissions
 
 
 def teardown_mock_data(doctype=None):
@@ -1372,39 +1361,18 @@ def teardown_mock_data(doctype=None):
     else:
         selected = registry
 
-    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
-    frappe.flags.ignore_permissions = True
-
-    try:
+    with seed_transaction("Mock teardown"):
         summary = {}
         for dt, cfg in selected.items():
             summary[dt] = cfg["teardown"]()
 
-        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
-        try:
-            frappe.clear_cache()
-        except Exception:
-            logger.warning(
-                "Mock teardown committed, but cache clear failed", exc_info=True
-            )
-
         logger.info("Mock teardown summary: %s", summary)
         return summary
-
-    except Exception:
-        frappe.db.rollback()
-        logger.exception("Mock teardown failed before commit — transaction rolled back")
-        raise
-    finally:
-        frappe.flags.ignore_permissions = prev_ignore_permissions
 
 
 def teardown_all():
     """Delete all MOCK-prefixed seed records in reverse dependency order."""
     _require_developer_mode("Seed teardown")
-
-    prev_ignore_permissions = frappe.flags.get("ignore_permissions", False)
-    frappe.flags.ignore_permissions = True
 
     def _delete_many(doctype, names):
         deleted = 0
@@ -1412,7 +1380,7 @@ def teardown_all():
             deleted += int(_safe_delete(doctype, name))
         return deleted
 
-    try:
+    with seed_transaction("Seed teardown"):
         mock_event_names = set(
             frappe.get_all(
                 EVENT,
@@ -1655,23 +1623,538 @@ def teardown_all():
         summary[USER_PROFILE] = _delete_many(USER_PROFILE, mock_profile_names)
         summary["User"] = _delete_many("User", list(mock_user_names))
 
-        frappe.db.commit()  # nosemgrep: frappe-semgrep-rules.rules.frappe-manual-commit
-        try:
-            frappe.clear_cache()
-        except Exception:
-            logger.warning(
-                "Seed teardown committed, but cache clear failed", exc_info=True
+        # --- Explicit teardown for IndiaFOSS replica ---
+        # We do not use the MOCK_PREFIX for this event because we require 1:1 visual
+        # parity for UI/accessibility testing. Therefore, it must be explicitly deleted.
+        indiafoss_event = frappe.db.get_value(EVENT, {"event_name": "IndiaFOSS 2026"})
+        if indiafoss_event:
+            summary["Devroom Custom"] = _delete_many(
+                "Devroom Custom", frappe.get_all("Devroom Custom", filters={"event": indiafoss_event}, pluck="name", ignore_permissions=True)
             )
+            summary["IndiaFOSS CFP"] = _delete_many(
+                "FOSS Event CFP", frappe.get_all("FOSS Event CFP", filters={"event": indiafoss_event}, pluck="name", ignore_permissions=True)
+            )
+            summary["IndiaFOSS 2026"] = _delete_many(EVENT, [indiafoss_event])
+
+            mock_indiafoss_emails = ["mock1@example.com", "mock2@example.com", "mock3@example.com"]
+            summary["IndiaFOSS Mock Profiles"] = _delete_many(
+                USER_PROFILE,
+                frappe.get_all(USER_PROFILE, filters={"user": ["in", mock_indiafoss_emails]}, pluck="name", ignore_permissions=True)
+            )
+            summary["IndiaFOSS Mock Users"] = _delete_many(
+                "User",
+                frappe.get_all("User", filters={"email": ["in", mock_indiafoss_emails]}, pluck="name", ignore_permissions=True)
+            )
+        if frappe.db.exists(CHAPTER, "INDIAFOSS-City Community"):
+            summary["IndiaFOSS Chapter"] = _delete_many(CHAPTER, ["INDIAFOSS-City Community"])
+        # -----------------------------------------------------
 
         logger.info("Seed teardown summary: %s", summary)
         return summary
 
-    except Exception:
-        frappe.db.rollback()
-        logger.exception("Seed teardown failed before commit — transaction rolled back")
-        raise
-    finally:
-        frappe.flags.ignore_permissions = prev_ignore_permissions
+
+INDIAFOSS_2026_CFG = {
+    "event_data": {
+        "faqs": [
+            {
+                "question": "So, what exactly is IndiaFOSS 2026?",
+                "answer": "<p>IndiaFOSS is India's biggest, most vibrant festival celebrating Free and Open Source Software! It's not just a gathering; it's a celebration of software innovation and the people who make it happen. Whether you are a seasoned developer, an aspiring enthusiast, or someone with a passion for technology, IndiaFOSS invites you to be part of this vibrant community.</p>"
+            },
+            {
+                "question": "Am I cool enough for IndiaFOSS?",
+                "answer": "<p>If you love the digital commons and are a curious cat (or a cat in general), you belong! From long-time community maintainers to students contributing to the commons for the first time, and everyone in between. If the world of digital commons and open source piques your interest, come on in!</p>"
+            },
+            {
+                "question": "Why should I attend IndiaFOSS 2026? What's in it for me?",
+                "answer": "<p>Well, for starters, you get to hang out with the coolest people in the commons, discover intriguing new projects, get feedback on your own projects and stand a chance to attend some very cool hands-on workshops and parallel events to make the most of your annual FOSS and digital commons pilgrimage.</p>"
+            },
+            {
+                "question": "What if my talk proposal gets accepted?",
+                "answer": "<p>If your talk is accepted, you'll receive free ticket coupon for attending the event (In case you've alredy bought, you can share it with your peers). The schedule page will list when your talk is planned and alloted. </p>"
+            },
+            {
+                "question": "When is IndiaFOSS 2026 happening?",
+                "answer": "<p>The main events of IndiaFOSS 2026 will be held on 26th and 27th September, 2026 at the <a href=\"https://osmapp.org/#19.39/12.9432/77.5963\">NIMHANS Convention Centre at Bengaluru, Karnataka</a>. But we will have parallel events lined up through that week, stay tuned to find out :) </p>"
+            },
+            {
+                "question": "How do I buy a ticket?",
+                "answer": "<p>Tickets are available through our official website: <a href=\"https://fossunited.org/indiafoss/tickets\">https://fossunited.org/indiafoss/tickets</a>. Make sure you buy tickets in time; you snooze you lose, early bird gets the worm, etc etc.</p>"
+            },
+            {
+                "question": "Why are tickets sold out or disabled?",
+                "answer": "<p>Tickets are in limited count and you can check for <a href=\"https://fossunited.org/indiafoss/2026/stats\">stats page</a> for sold numbers and limit.</p>"
+            },
+            {
+                "question": "Is there an early bird discount?",
+                "answer": "<p>We have a limited number of community subsidized tickets available at a discounted price. Grab them while you can!</p>"
+            },
+            {
+                "question": "I'm a student. Are there special student passes or discounts?",
+                "answer": "<p>Yes! Discounted student tickets are available in limited quantities. Proof of active student status will be required at the venue. If you are graduating before the conference, you will not be eligible for a student pass.</p>"
+            },
+            {
+                "question": "What if I buy a student ticket but am unable to present proof?",
+                "answer": "<p>Unfortunately, your ticket won't be valid. You could possibly buy a regular ticket if available on the day of the event.</p>"
+            },
+            {
+                "question": "Is accommodation available?",
+                "answer": "<p>While we don't provide direct accommodation, we have curated some hotels and guesthouses near the venue that you could check out: <a href=\"https://fossunited.org/indiafoss/guide\">https://fossunited.org/indiafoss/guide</a>. Booking early is always better. If you need support attending IndiaFOSS, consider applying for a diversity scholarship.</p>"
+            },
+            {
+                "question": "I need a visa to travel to India. Can you help with an invitation letter?",
+                "answer": "<p>Oh boy. Please reach out to <a href=\"&#x6d;a&#x69;&#x6c;t&#111;&#x3a;&#x69;&#x6e;&#x64;&#105;a&#x66;&#111;&#115;&#115;&#x40;&#x66;&#x6f;&#115;&#x73;&#117;&#x6e;i&#x74;&#101;&#x64;&#x2e;&#x6f;&#x72;&#103;\">&#x69;&#x6e;&#x64;&#105;a&#x66;&#111;&#115;&#115;&#x40;&#x66;&#x6f;&#115;&#x73;&#117;&#x6e;i&#x74;&#101;&#x64;&#x2e;&#x6f;&#x72;&#103;</a>.</p>"
+            },
+            {
+                "question": "I have an amazing FOSS talk/workshop idea! Can I speak at IndiaFOSS 2026?",
+                "answer": "<p>We'd love to hear it! Our Call for Proposals (CFP) is open and closes soon as show in Timeline above. Get your thinking caps on and prepare to wow us! Details are at <a href=\"https://fossunited.org/dashboard/cfp/apply/indiafoss/2026\">https://fossunited.org/dashboard/cfp/apply/indiafoss/2026</a>.</p>"
+            },
+            {
+                "question": "What kind of topics or tracks can I expect?",
+                "answer": "<p>Everything FOSS! From deep dives into kernel development, cloud-native tech, AI/ML with open tools, web technologies, mobile FOSS, cybersecurity, to building and sustaining FOSS communities, open hardware, and the societal impact of open source. If it's open, it's on the agenda! This year, we are excited to host eight devrooms, running in parallel with the main track. Each devroom is a 3-hour community-organised mini-conference, catering to various focus areas. Check out the devrooms at <a href=\"https://fossunited.org/indiafoss/2026/devrooms\">https://fossunited.org/indiafoss/2026/devrooms</a>.</p>"
+            },
+            {
+                "question": "Will the sessions be recorded? I can't be in two places at once (yet).",
+                "answer": "<p>Yes, all talks from the main track will be <a href=\"https://www.youtube.com/@FOSSUnited/streams\">live-streamed</a>. Recordings for the main track and devrooms will be made available in a few weeks after the conference, so you can always re-watch your favourites or explore new ones. However, the workshop sessions won\u2019t be available online.</p>"
+            },
+            {
+                "question": "I'm new to FOSS. Will there be beginner-friendly content?",
+                "answer": "<p>Definitely! We aim to have a mix of content catering to all levels. Look out for introductory talks, workshops, and community booths where you can ask all your \"newbie\" questions without fear. We were all beginners once!</p>"
+            },
+            {
+                "question": "What are Devrooms?",
+                "answer": "<p>Devrooms are half-day mini-conferences in parallel to the main conference run by independent communities and focused on specific topics related to the community\u2019s interest or other aspects of FOSS. Check: <a href=\"https://fossunited.org/indiafoss/2026/devrooms\">https://fossunited.org/indiafoss/2026/devrooms</a></p>"
+            },
+            {
+                "question": "What are the devrooms available?",
+                "answer": "<p>Compilers, Programming Languages and Systems, Android Open Source Project (AOSP), Open Hardware, Security, Documentation &amp; Technical Writing, Open Design, Cloud &amp; DevOps and Real Time Operating Systems (RTOS) Devroom </p>"
+            },
+            {
+                "question": "What are the guidelines for submitting a proposal for devrooms?",
+                "answer": "<p>Make sure the proposal is relevant to the track and the talk pertains to FOSS. Keep the proposal descriptive and include references.</p>"
+            },
+            {
+                "question": "Why should you consider joining a devroom?",
+                "answer": "<p>It is simple. Devrooms help you nerd out with your comrades around shared niche interests. An excellent filter for you to make the most of your time! </p>"
+            },
+            {
+                "question": "What is to be expected in a workshop?",
+                "answer": "<p>Workshops are meant to be a hands-on session on a specific topic, involving live demos rather than talk or presentations, giving practical exposure.</p>"
+            },
+            {
+                "question": "What are the prerequisites for attending a workshop?",
+                "answer": "<p>In order to have the best experience, make sure you have a basic understanding of topics covered in the workshop and bring the needed materials (laptops, peripherals, etc.) as mentioned in workshop guidelines.</p>"
+            },
+            {
+                "question": "What are the guidelines for submitting a workshop?",
+                "answer": "<p>Ensure you describe the pre-requisites (bill of materials, participant knowledge, etc.) and the agenda of the workshop.</p>"
+            },
+            {
+                "question": "What are the guidelines for accepted workshops?",
+                "answer": "<p>Accepted workshops must submit prerequisites and are advised to prepare guides or workbooks for participants to follow through.</p>"
+            },
+            {
+                "question": "Is there a Code of Conduct? How can I report violations?",
+                "answer": "<p>IndiaFOSS 2026 is dedicated to providing a harassment-free and inclusive experience for everyone. You can read our Code of Conduct here: <a href=\"https://fossunited.org/code-of-conduct\">https://fossunited.org/code-of-conduct</a>. Please reach out to <a href=\"&#109;&#x61;&#105;l&#116;&#x6f;:&#99;&#111;c&#64;&#102;&#111;&#115;&#x73;&#x75;&#110;&#105;&#x74;&#x65;&#x64;&#46;&#111;r&#103;\">&#99;&#111;c&#64;&#102;&#111;&#115;&#x73;&#x75;&#110;&#105;&#x74;&#x65;&#x64;&#46;&#111;r&#103;</a> or +91 9900982939 if you need help.</p>"
+            },
+            {
+                "question": "How can my company sponsor IndiaFOSS 2026? We love FOSS!",
+                "answer": "<p>That's fantastic! Supporting IndiaFOSS means supporting the entire FOSS ecosystem in India. Please check out our <a href=\"https://fossunited.org/files/Sponsorship-Deck-IF26.pdf\">sponsorship prospectus</a> or email us at <a href=\"m&#x61;i&#x6c;t&#111;&#x3a;&#105;n&#100;&#x69;&#97;&#102;os&#115;&#64;&#x66;&#x6f;&#115;&#115;&#117;&#x6e;&#x69;&#116;&#101;&#100;&#46;&#x6f;&#114;&#x67;\">&#105;n&#100;&#x69;&#97;&#102;os&#115;&#64;&#x66;&#x6f;&#115;&#115;&#117;&#x6e;&#x69;&#116;&#101;&#100;&#46;&#x6f;&#114;&#x67;</a>.</p>"
+            },
+            {
+                "question": "What about food and, most importantly, Caffeine?",
+                "answer": "<p>Fear not, weary traveller! Your registration includes lunch and refreshments on conference days. And yes, there will be coffee.</p>"
+            },
+            {
+                "question": "Dietary Restrictions?",
+                "answer": "<p>Please email us your dietary restrictions at <a href=\"&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#58;&#105;&#110;&#x64;&#x69;&#x61;&#x66;&#x6f;&#x73;&#115;&#64;f&#111;&#x73;&#115;&#117;&#x6e;&#105;&#116;&#x65;&#100;&#46;o&#x72;g\">&#105;&#110;&#x64;&#x69;&#x61;&#x66;&#x6f;&#x73;&#115;&#64;f&#111;&#x73;&#115;&#117;&#x6e;&#105;&#116;&#x65;&#100;&#46;o&#x72;g</a>. We will try our best to accommodate you, but no promises.</p>"
+            },
+            {
+                "question": "I have a question that's not listed here. Who do I ping?",
+                "answer": "<p>For any other queries, please feel free to reach out to us at <a href=\"&#109;&#97;i&#x6c;&#116;o&#x3a;&#105;&#x6e;&#100;&#105;&#x61;&#x66;&#x6f;&#x73;&#115;&#x40;&#102;o&#x73;&#x73;u&#110;&#x69;&#116;&#x65;&#100;&#x2e;&#111;&#114;&#103;\">&#105;&#x6e;&#100;&#105;&#x61;&#x66;&#x6f;&#x73;&#115;&#x40;&#102;o&#x73;&#x73;u&#110;&#x69;&#116;&#x65;&#100;&#x2e;&#111;&#114;&#103;</a> or join our <a href=\"https://t.me/fossunited\">Telegram channel</a>. We have a dedicated IndiaFOSS 2026 subtopic in our channel.</p>"
+            },
+            {
+                "question": "Where can I find updates about IndiaFOSS 2026?",
+                "answer": "<p>Follow us on Mastodon, X, LinkedIn, and subscribe to our <a href=\"https://fossunited.org/newsletter\">newsletter</a> on our website! Don't be a stranger!</p>"
+            },
+            {
+                "question": "I bought a ticket, but I can\u2019t attend. Can I get a refund?",
+                "answer": "<p>The tickets for IndiaFOSS 2026 are non-refundable, so we can\u2019t process a refund, but you can transfer your ticket to someone. Check out our refund and transfer policy here - <a href=\"https://fossunited.org/refund-transfer-policy\">https://fossunited.org/refund-transfer-policy</a></p>"
+            },
+            {
+                "question": "Liability of ticket transfer?",
+                "answer": "<p>FOSS United does not bear any liability for the transfer of any ticket whatsoever. Please coordinate among yourselves to tick all the boxes, and be careful while transferring. While transferring a ticket, please enter the new email ID carefully</p>"
+            },
+            {
+                "question": "What if I try to re-use a transferred ticket?",
+                "answer": "<p>Ehhhhh. We have an ownership history for each ticket and a QR-based sign-in. Any attempts at forging, soliciting entry, et al will be under the purview of the conference chairs, and their decision will be final.</p>"
+            },
+            {
+                "question": "All this sounds great, but I can\u2019t afford a ticket and/or travel to the conference",
+                "answer": "<p>We do have a diversity scholarship program to help people attend the conference. The scholarship application will open in a few weeks.</p>"
+            },
+            {
+                "question": "Is FOSS United a Football Club?",
+                "answer": "<p>Unfortunately, not yet.</p>"
+            }
+        ],
+        "topics": [
+            {
+                "url": "",
+                "icon": "ti-brand-open-source",
+                "label": "FOSS Product Showcase"
+            },
+            {
+                "url": "",
+                "icon": "ti-users-group",
+                "label": "Communities Showcase"
+            },
+            {
+                "url": "",
+                "icon": "ti-gavel",
+                "label": "Technology Policy & FOSS"
+            },
+            {
+                "url": "",
+                "icon": "ti-plant",
+                "label": "Funding & Sustainability"
+            },
+            {
+                "url": "",
+                "icon": "ti-chart-area-line",
+                "label": "Open Data"
+            },
+            {
+                "url": "",
+                "icon": "ti-settings-code",
+                "label": "Open Hardware"
+            },
+            {
+                "url": "",
+                "icon": "ti-microscope",
+                "label": "Open Science"
+            },
+            {
+                "url": "",
+                "icon": "ti-heart-handshake",
+                "label": "FOSS for Society"
+            },
+            {
+                "url": "",
+                "icon": "ti-message-chatbot",
+                "label": "Free/Libre AI"
+            },
+            {
+                "url": "",
+                "icon": "ti-palette",
+                "label": "Open Design"
+            },
+            {
+                "url": "",
+                "icon": "ti-school",
+                "label": "FOSS for Academia"
+            }
+        ],
+        "rewind_stats": {
+            "people": "2500+",
+            "days": 3,
+            "main_sessions": "60+",
+            "devroom_sessions": "30+",
+            "pre_events": "10+"
+        },
+        "action_cards": [
+            {
+                "url": "/indiafoss/talks",
+                "icon": "ti-podium",
+                "label": "Talk Proposals",
+                "description": ""
+            },
+            {
+                "url": "/indiafoss/2026/devrooms",
+                "icon": "ti-building-circus",
+                "label": "Devrooms",
+                "description": ""
+            },
+            {
+                "url": "/indiafoss/2026/booths",
+                "icon": "ti-building-store",
+                "label": "Booths Showcased",
+                "description": ""
+            },
+            {
+                "url": "/indiafoss/pre-events",
+                "icon": "ti-confetti",
+                "label": "Pre-Events",
+                "description": "Call for Pre-Events",
+                "badge": "Live"
+            },
+            {
+                "url": "https://fossunited.org/indiafoss/diversity/new",
+                "icon": "ti-school",
+                "label": "Diversity Scholarship",
+                "description": "Diversity scholarship for IndiaFOSS",
+                "deadline": "2026-08-07"
+            }
+        ],
+        "timeline": [
+            {
+                "label": "Tickets Opening",
+                "start": "2026-04-28",
+                "url": "/indiafoss/tickets"
+            },
+            {
+                "label": "CFP",
+                "start": "2026-04-01",
+                "end": "2026-06-28",
+                "pin": "CFP"
+            },
+            {
+                "label": "Booth Applications",
+                "start": "2026-05-01",
+                "end": "2026-07-22",
+                "pin": "BOOTH"
+            },
+            {
+                "label": "Diversity Scholarship",
+                "start": "2026-06-01",
+                "end": "2026-08-07",
+                "pin": "DIVERSITY"
+            },
+            {
+                "label": "Schedule Publish",
+                "start": "2026-09-01",
+                "pin": "SCHEDULE",
+                "description": "Full schedule goes live"
+            },
+            {
+                "label": "Pre-Events",
+                "start": "2026-09-05",
+                "pin": "PRE-EVENTS",
+                "card": True,
+                "url": "/indiafoss/pre-events",
+                "description": "Call for Pre-Events"
+            },
+            {
+                "label": "IndiaFOSS Event Day",
+                "start": "2026-09-26"
+            }
+        ],
+        "cta_buttons": [
+            {"label": "Get Tickets", "url": "/indiafoss/tickets", "primary": True},
+            {"label": "View Proposals", "url": "/indiafoss/proposals", "primary": False}
+        ],
+        "co_chairs": [
+            "mock1@example.com",
+            "mock2@example.com"
+        ],
+        "devrooms": {
+            "Open Design": ["mock3@example.com"]
+        }
+    },
+    "devrooms": [
+        {
+            "title": "Android Open Source Project (AOSP)",
+            "slug": "aosp"
+        },
+        {
+            "title": "Cloud & DevOps",
+            "slug": "devops"
+        },
+        {
+            "title": "Compilers, Programming Languages, and Systems",
+            "slug": "compilers"
+        },
+        {
+            "title": "Documentation & Technical Writing",
+            "slug": "docs"
+        },
+        {
+            "title": "Open Design",
+            "slug": "design"
+        },
+        {
+            "title": "Open Hardware",
+            "slug": "hardware"
+        },
+        {
+            "title": "Real Time Operating Systems (RTOS)",
+            "slug": "rtos"
+        },
+        {
+            "title": "Security",
+            "slug": "security"
+        }
+    ],
+    "partners": []
+}
+
+
+
+def seed_indiafoss_2026():
+    """Create IndiaFOSS 2026 mock data based on production replica for accessibility testing."""
+    if not frappe.conf.get("developer_mode"):
+        frappe.throw(_("Seed script can only be run in developer mode."))
+
+    with seed_transaction("IndiaFOSS 2026 replica seeding"):
+        logger.info("Seeding IndiaFOSS 2026 replica data")
+
+        # 1. Create Mock Profiles (Must be done first to associate them with the Event)
+        mock_emails = ["mock1@example.com", "mock2@example.com", "mock3@example.com"]
+        profile_ids = {}
+        for i, email in enumerate(mock_emails):
+            if not frappe.db.exists("User", email):
+                frappe.get_doc({
+                    "doctype": "User",
+                    "email": email,
+                    "first_name": f"Mock Human {i+1}",
+                    "send_welcome_email": 0
+                }).insert(ignore_permissions=True)
+
+            profile_id = frappe.db.exists("FOSS User Profile", {"user": email})
+            if not profile_id:
+                p = frappe.get_doc({
+                    "doctype": "FOSS User Profile",
+                    "user": email,
+                    "full_name": f"Mock Human {i+1}",
+                    "bio": "Open source enthusiast",
+                    "github_username": f"mockhuman{i+1}"
+                })
+                p.flags.ignore_links = True
+                p.insert(ignore_permissions=True)
+                profile_ids[email] = p.name
+            else:
+                profile_ids[email] = profile_id
+
+        # 2. Ensure a mock Chapter exists to associate with the event
+        if not frappe.db.exists("FOSS Chapter", "INDIAFOSS-City Community"):
+            chapter = frappe.get_doc({
+                "doctype": "FOSS Chapter",
+                "chapter_name": "INDIAFOSS",
+                "chapter_type": "City Community",
+                "city": "Bengaluru",
+                "slug": "indiafoss",
+                "email": "indiafoss@fossunited.org"
+            })
+            chapter.flags.ignore_links = True
+            chapter.insert(ignore_permissions=True)
+            logger.info("Created IndiaFOSS mock chapter")
+        else:
+            chapter = frappe.get_doc("FOSS Chapter", "INDIAFOSS-City Community")
+
+        # 3. Create the Event
+        event_name = "IndiaFOSS 2026"
+        mock_sponsors = [
+            {"tier": "Platinum", "sponsor_name": "Samāgata Foundation", "link": "https://samagata.org/"},
+            {"tier": "Platinum", "sponsor_name": "ZERODHA", "link": "https://zerodha.com/"},
+            {"tier": "Gold", "sponsor_name": "Frappe", "link": "https://frappe.io/"},
+            {"tier": "Gold", "sponsor_name": "Bruno", "link": "https://usebruno.com/"},
+            {"tier": "Gold", "sponsor_name": "ente", "link": "https://ente.io/"},
+            {"tier": "Gold", "sponsor_name": "Red Hat", "link": "https://redhat.com/"},
+            {"tier": "Gold", "sponsor_name": "tangled", "link": "https://tangled.sh/"}
+        ]
+
+        event_members = [
+            {"member": profile_ids[email], "full_name": f"Mock Human {i+1}"}
+            for i, email in enumerate(mock_emails)
+        ]
+
+        existing_event_id = frappe.db.exists(EVENT, {"event_name": event_name})
+        if not existing_event_id:
+            event = frappe.get_doc({
+                "doctype": EVENT,
+                "chapter": chapter.name,
+                "event_name": event_name,
+                "event_permalink": "2026",
+                "event_type": "Conference",
+                "status": "Live",
+                "is_published": 1,
+                "event_start_date": "2026-09-26 09:00:00",
+                "event_end_date": "2026-09-27 17:00:00",
+                "event_location": "Bengaluru",
+                "is_paid_event": 1,
+                "tickets_status": "Live",
+                "deck_link": "https://fossunited.org/files/Sponsorship-Deck-IF26.pdf",
+                "sponsor_list": mock_sponsors,
+                "event_data": json.dumps(INDIAFOSS_2026_CFG.get("event_data", {})),
+                "event_members": event_members
+            })
+            event.flags.ignore_links = True
+            event.insert(ignore_permissions=True)
+            logger.info(f"Created Event {event.name}")
+        else:
+            event = frappe.get_doc(EVENT, existing_event_id)
+            event.flags.ignore_links = True
+            event.event_data = json.dumps(INDIAFOSS_2026_CFG.get("event_data", {}))
+            event.deck_link = "https://fossunited.org/files/Sponsorship-Deck-IF26.pdf"
+            event.set("sponsor_list", mock_sponsors)
+            event.set("event_members", event_members)
+            event.save(ignore_permissions=True)
+            logger.info(f"Updated Event {event.name} with mock data and sponsors")
+
+        # 4. Ensure the Custom DocType exists
+        # TODO: Move Devroom Custom DocType to standard fixtures.
+        devroom_fields = [
+            {"fieldname": "title", "fieldtype": "Data", "label": "Title", "reqd": 1, "unique": 1},
+            {"fieldname": "slug", "fieldtype": "Data", "label": "Slug"},
+            {"fieldname": "logo", "fieldtype": "Attach Image", "label": "Logo"},
+            {"fieldname": "event", "fieldtype": "Link", "options": EVENT, "label": "Event"}
+        ]
+
+        if not frappe.db.exists("DocType", "Devroom Custom"):
+            frappe.get_doc({
+                "doctype": "DocType",
+                "name": "Devroom Custom",
+                "module": "Core",
+                "custom": 1,
+                "autoname": "field:title",
+                "fields": devroom_fields,
+                "permissions": [{"role": "System Manager", "read": 1, "write": 1}]
+            }).insert(ignore_permissions=True)
+            logger.info("Created missing Devroom Custom DocType locally")
+        else:
+            dt = frappe.get_doc("DocType", "Devroom Custom")
+            for f in dt.fields:
+                if f.fieldname == "event":
+                    if f.options != EVENT:
+                        f.options = EVENT
+                        dt.save(ignore_permissions=True)
+                        logger.info("Updated Devroom Custom DocType field 'event' options")
+                    break
+
+        # 5. Create Devrooms
+        for d in INDIAFOSS_2026_CFG.get("devrooms", []):
+            dr_name = frappe.db.exists("Devroom Custom", {"title": d["title"]})
+            if dr_name:
+                dr = frappe.get_doc("Devroom Custom", dr_name)
+                if dr.event != event.name:
+                    dr.event = event.name
+                    dr.flags.ignore_links = True
+                    dr.save(ignore_permissions=True)
+            else:
+                dr = frappe.get_doc({
+                    "doctype": "Devroom Custom",
+                    "title": d["title"],
+                    "slug": d["slug"],
+                    "event": event.name
+                })
+                dr.flags.ignore_links = True
+                dr.insert(ignore_permissions=True)
+
+        # 6. Create CFP to hold reviewers
+        if not frappe.db.exists("FOSS Event CFP", {"event": event.name}):
+            cfp = frappe.get_doc({
+                "doctype": "FOSS Event CFP",
+                "event": event.name,
+                "deadline": "2026-06-28",
+                "cfp_reviewers": [
+                    {"reviewer": profile_ids[email]}
+                    for email in mock_emails[:2]
+                ]
+            })
+            cfp.flags.ignore_links = True
+            cfp.insert(ignore_permissions=True)
+            logger.info("Created mock FOSS Event CFP with reviewers")
+
+        logger.info("Successfully seeded IndiaFOSS 2026 replica!")
 
 
 if __name__ == "__main__":
