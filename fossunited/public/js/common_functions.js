@@ -418,28 +418,8 @@ function setParams(obj) {
   history.replaceState(null, '', qs ? `${location.pathname}?${qs}` : location.pathname)
 }
 
-var VIEW_MODE_KEY = 'fossunited-view-mode'
-
-function getViewMode() {
-  try {
-    var v = localStorage.getItem(VIEW_MODE_KEY)
-    return v === 'list' ? 'list' : 'grid'
-  } catch (e) {
-    return 'grid'
-  }
-}
-
-function saveViewMode(mode) {
-  try {
-    localStorage.setItem(VIEW_MODE_KEY, mode === 'list' ? 'list' : 'grid')
-  } catch (e) {}
-}
-
 // expose all globally via window
 Object.assign(window, {
-  VIEW_MODE_KEY,
-  getViewMode,
-  saveViewMode,
   makeQuill,
   setNavbarControl,
   publish_form,
