@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
       el.classList.toggle('mb-3', !isList);
       el.classList.toggle('p-0', isList);
     });
-    document.querySelectorAll('.job-item .v3-card > small, .job-item .v3-card > .mt-auto, .job-item .v3-card > div:empty, .job-item-expired .v3-card > small, .job-item-expired .v3-card > .mt-auto, .job-item-expired .v3-card > div:empty').forEach(function (el) {
+    document.querySelectorAll('.job-item .v3-card > small, .job-item .v3-card > div:empty, .job-item-expired .v3-card > small, .job-item-expired .v3-card > div:empty').forEach(function (el) {
       el.classList.toggle('d-none', isList);
     });
     document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
