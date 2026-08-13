@@ -169,7 +169,9 @@
 
   </div>
 </div>
+{% endblock %}
 
+{% block page_script %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   var originals = Array.from(document.querySelectorAll('.job-item'));
@@ -215,11 +217,7 @@ document.addEventListener('DOMContentLoaded', function () {
   function renderInto(target, items, groupByVal) {
     target.innerHTML = '';
     if (groupByVal === 'flat' || items.length === 0) {
-    items.forEach(function (el) {
-        el.classList.remove('col-lg-6');
-        el.classList.add('col-lg-4');
-        target.appendChild(el); // moves the live node, no copy
-    });
+      items.forEach(function (el) { target.appendChild(el); });
       return;
     }
     if (groupByVal === 'company') {
@@ -270,16 +268,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (expiredCountEl) expiredCountEl.textContent = expiredFiltered.length;
     if (expiredDetails) expiredDetails.open = hasFilter && expiredFiltered.length > 0;
+
+    setViewMode(getViewMode());
   }
 
   function makeSection(title, icon, items) {
     var row = document.createElement('div');
     row.className = 'row';
-    items.forEach(function (item) {
-    item.classList.remove('col-lg-4');
-    item.classList.add('col-lg-6');
-    row.appendChild(item);
-    });
+    items.forEach(function (item) { row.appendChild(item); });
 
     var header = document.createElement('div');
     header.className = 'd-flex align-items-center gap-2 mb-3';
@@ -300,16 +296,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function setViewMode(mode) {
     var isList = mode === 'list';
+    var isGrouped = groupBy.value !== 'flat';
     container.classList.toggle('v3-list-mode', isList);
     if (expiredContainer) expiredContainer.classList.toggle('v3-list-mode', isList);
     document.querySelectorAll('.job-item, .job-item-expired').forEach(function (el) {
-      el.classList.toggle('col-lg-4', !isList);
-      el.classList.toggle('col-md-6', !isList);
-      el.classList.toggle('col-12', isList);
+      el.classList.remove('col-lg-4', 'col-lg-6', 'col-md-6', 'col-12');
+      if (isList) {
+        el.classList.add('col-12');
+      } else if (isGrouped) {
+        el.classList.add('col-lg-6', 'col-md-6');
+      } else {
+        el.classList.add('col-lg-4', 'col-md-6');
+      }
       el.classList.toggle('mb-3', !isList);
       el.classList.toggle('p-0', isList);
     });
-    document.querySelectorAll('#active-jobs .v3-card > small, #active-jobs .v3-card > .mt-auto, #active-jobs .v3-card > div:empty, #expired-jobs .v3-card > small, #expired-jobs .v3-card > .mt-auto, #expired-jobs .v3-card > div:empty').forEach(function (el) {
+    document.querySelectorAll('.job-item .v3-card > small, .job-item .v3-card > .mt-auto, .job-item .v3-card > div:empty, .job-item-expired .v3-card > small, .job-item-expired .v3-card > .mt-auto, .job-item-expired .v3-card > div:empty').forEach(function (el) {
       el.classList.toggle('d-none', isList);
     });
     document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
@@ -327,5 +329,4 @@ document.addEventListener('DOMContentLoaded', function () {
   if (getViewMode() === 'list') setViewMode('list');
 });
 </script>
-
 {% endblock %}

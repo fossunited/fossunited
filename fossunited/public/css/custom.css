@@ -3953,20 +3953,9 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .if-tagline svg { width: 40px; height: auto; }
 .if-footer-tagline .if-tagline { color: #fafafa; }
 
-/* ── View Toggle (shared) ─────────────────────────────────────────── */
-.v3-view-toggle {
-  border: 1px solid var(--v3-button-border);
-  border-radius: 6px;
-  overflow: hidden;
-}
-.v3-view-toggle .btn { width: 32px; height: 32px; color: var(--v3-text-color2); }
-.v3-view-toggle .btn:hover { background: var(--v3-button-border); }
-.v3-view-toggle .btn:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; z-index: 1; }
-.v3-view-toggle .btn.active { background: var(--v3-text-color); color: var(--v3-main-bg); }
-summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: 2px; }
-
 /* ── Job Board: List Mode ──────────────────────────────────────────── */
-.v3-list-mode .v3-card {
+.v3-list-mode .job-item .v3-card,
+.v3-list-mode .job-item-expired .v3-card {
   flex-direction: row !important;
   align-items: center;
   gap: 1rem;
@@ -3978,6 +3967,15 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
   box-shadow: none;
   background: transparent;
 }
-.v3-list-mode .v3-card:hover { background: var(--v3-card-bg); }
-.v3-list-mode .v3-card > * { margin-bottom: 0 !important; }
-.v3-list-mode .v3-card > .d-flex:first-child { flex: 1; min-width: 0; }
+.v3-list-mode .job-item .v3-card:hover,
+.v3-list-mode .job-item-expired .v3-card:hover { background: var(--v3-card-bg); }
+.v3-list-mode .job-item .v3-card > *,
+.v3-list-mode .job-item-expired .v3-card > * { margin-bottom: 0 !important; flex-shrink: 0; }
+.v3-list-mode .job-item .v3-card > .d-flex:first-child,
+.v3-list-mode .job-item-expired .v3-card > .d-flex:first-child { flex: 1; min-width: 0; }
+.v3-list-mode .job-item .v3-card > .d-flex:first-child h6,
+.v3-list-mode .job-item-expired .v3-card > .d-flex:first-child h6 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.v3-list-mode .job-item .ti-building,
+.v3-list-mode .job-item .ti-map-pin,
+.v3-list-mode .job-item-expired .ti-building,
+.v3-list-mode .job-item-expired .ti-map-pin { display: none; }
