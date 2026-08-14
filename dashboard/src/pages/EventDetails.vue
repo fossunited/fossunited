@@ -211,6 +211,19 @@
           side="md"
           description="Prefer OpenStreetMap (OSM) links, e.g., https://osmapp.org/"
         />
+        <FormControl
+          v-model="event.doc.catering"
+          :type="'select'"
+          :options="[
+            { label: 'None', value: 'None' },
+            { label: 'Lunch only', value: 'Lunch only' },
+            { label: 'Breakfast + Lunch', value: 'Breakfast + Lunch' },
+            { label: 'Coffee/Tea only', value: 'Coffee/Tea only' },
+          ]"
+          size="md"
+          label="Lunch & Food"
+          description="If event provides any catering for attendees. Shown on the ticket page."
+        />
       </div>
     </div>
 
