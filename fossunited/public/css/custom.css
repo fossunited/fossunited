@@ -3954,28 +3954,87 @@ summary:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset
 .if-footer-tagline .if-tagline { color: #fafafa; }
 
 /* ── Job Board: List Mode ──────────────────────────────────────────── */
-.v3-list-mode .job-item .v3-card,
-.v3-list-mode .job-item-expired .v3-card {
-  flex-direction: row !important;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 1rem;
-  height: auto !important;
-  border-radius: 0;
-  border: none;
-  border-bottom: 1px solid var(--v3-button-border);
-  box-shadow: none;
-  background: transparent;
+.v3-job-list-wrap {
+  display: block;
+  width: 100%;
 }
-.v3-list-mode .job-item .v3-card:hover,
-.v3-list-mode .job-item-expired .v3-card:hover { background: var(--v3-card-bg); }
-.v3-list-mode .job-item .v3-card > *,
-.v3-list-mode .job-item-expired .v3-card > * { margin-bottom: 0 !important; flex-shrink: 0; }
-.v3-list-mode .job-item .v3-card > .d-flex:first-child,
-.v3-list-mode .job-item-expired .v3-card > .d-flex:first-child { flex: 1; min-width: 0; }
-.v3-list-mode .job-item .v3-card > .d-flex:first-child h6,
-.v3-list-mode .job-item-expired .v3-card > .d-flex:first-child h6 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.v3-list-mode .job-item .ti-building,
-.v3-list-mode .job-item .ti-map-pin,
-.v3-list-mode .job-item-expired .ti-building,
-.v3-list-mode .job-item-expired .ti-map-pin { display: none; }
+.v3-job-list {
+  display: block;
+  width: 100%;
+}
+.v3-job-list-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px 120px;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--v3-text-color2);
+  border-bottom: 1px solid var(--v3-button-border);
+}
+.v3-job-list-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 120px 120px;
+  gap: 1rem;
+  min-height: 56px;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+  color: var(--v3-text-color);
+  border-bottom: 1px solid var(--v3-button-border);
+  transition: background 0.1s;
+  align-items: center;
+}
+.v3-job-list-row:hover { background: var(--v3-button-border); text-decoration: none; color: var(--v3-text-color); }
+.v3-job-list-row:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; z-index: 1; }
+.v3-job-list-header span,
+.v3-job-list-row > span { text-align: left; }
+.v3-job-list-row__title { font-weight: 600; font-size: 0.9375rem; }
+.v3-job-list-row__company,
+.v3-job-list-row__location,
+.v3-job-list-row__date { font-size: 0.8125rem; color: var(--v3-text-color2); }
+.v3-job-list-row__type { font-size: 0.8125rem; }
+.v3-job-list-row .truncate { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+@media (max-width: 992px) {
+  .v3-job-list-header,
+  .v3-job-list-row {
+    grid-template-columns: 2fr 1fr 1fr 110px;
+  }
+  .v3-job-list-header span:last-child,
+  .v3-job-list-row__type { display: none; }
+}
+
+@media (max-width: 768px) {
+  .v3-job-list-header { display: none; }
+  .v3-job-list-row {
+    grid-template-columns: 1fr auto;
+    gap: 0.35rem 0.75rem;
+    min-height: 0;
+    padding: 0.8rem 0.75rem 0.8rem 1rem;
+  }
+  .v3-job-list-row__title {
+    grid-column: 1;
+    white-space: normal;
+  }
+  .v3-job-list-row__type {
+    display: block;
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .v3-job-list-row__company {
+    grid-column: 1 / -1;
+    font-weight: 500;
+  }
+  .v3-job-list-row__location,
+  .v3-job-list-row__date {
+    grid-column: 1 / -1;
+    font-size: 0.75rem;
+  }
+}
+
+/* ── Job Board: Clickable Grid Cards ──────────────────────────────── */
+.job-item .v3-card, .job-item-expired .v3-card { cursor: pointer; }
+.job-item .v3-card:hover, .job-item-expired .v3-card:hover { border-color: var(--v3-text-color2); }
+.job-item .v3-card:focus-visible, .job-item-expired .v3-card:focus-visible { outline: 2px solid var(--v3-text-color2); outline-offset: -2px; }

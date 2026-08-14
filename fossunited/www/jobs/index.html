@@ -85,32 +85,31 @@
 
     <div id="active-jobs" class="row">
       {% for job in active_jobs %}
+      {% set posted_on = job.publish_date or job.creation %}
       <div class="col-lg-4 col-md-6 mb-3 job-item"
         data-title="{{ job.job_title | lower }}"
         data-company="{{ job.company_name | lower }}"
         data-company-display="{{ job.company_name }}"
         data-location="{{ job.job_location | lower }}"
         data-type="{{ job.job_type }}"
-        data-date="{{ job.publish_date or job.creation }}">
-        <div class="v3-card h-100 d-flex flex-column">
+        data-date="{{ posted_on }}"
+        data-route="/jobs/{{ job.name }}"
+        data-date-display="{{ frappe.utils.pretty_date(posted_on) }}">
+        <a href="/jobs/{{ job.name }}" class="v3-card h-100 d-flex flex-column text-decoration-none" aria-label="{{ job.job_title }} at {{ job.company_name }}, {{ job.job_location }}">
           <div class="d-flex justify-content-between align-items-start mb-2">
             <h6 class="v3-text-primary mb-0">{{ job.job_title }}</h6>
             <span class="v3-tag v3-tag--success ml-2 text-nowrap">{{ job.job_type }}</span>
           </div>
-          {% set posted_on = job.publish_date or job.creation %}
           <small class="v3-text-tertiary mb-3">Posted {{ frappe.utils.pretty_date(posted_on) }}</small>
           <div class="d-flex align-items-center mb-1">
-            <i class="ti ti-building mr-1 v3-text-tertiary"></i>
-            <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer" class="v3-text-secondary">{{ job.company_name }}</a>
+            <i class="ti ti-building mr-1 v3-text-tertiary" aria-hidden="true"></i>
+            <span class="v3-text-secondary">{{ job.company_name }}</span>
           </div>
           <div class="d-flex align-items-center mb-3">
-            <i class="ti ti-map-pin mr-1 v3-text-tertiary"></i>
+            <i class="ti ti-map-pin mr-1 v3-text-tertiary" aria-hidden="true"></i>
             <span class="v3-text-secondary">{{ job.job_location }}</span>
           </div>
-          <div class="mt-auto">
-            <a href="/jobs/{{ job.name }}" class="v3-btn v3-btn-primary v3-btn--sm w-100 text-center">View Details</a>
-          </div>
-        </div>
+        </a>
       </div>
       {% endfor %}
     </div>
@@ -130,19 +129,21 @@
       </summary>
       <div id="expired-jobs" class="row mt-3">
         {% for job in expired_jobs %}
+        {% set posted_on = job.publish_date or job.creation %}
         <div class="col-lg-4 col-md-6 mb-3 job-item-expired"
           data-title="{{ job.job_title | lower }}"
           data-company="{{ job.company_name | lower }}"
           data-company-display="{{ job.company_name }}"
           data-location="{{ job.job_location | lower }}"
           data-type="{{ job.job_type }}"
-          data-date="{{ job.publish_date or job.creation }}">
-          <div class="v3-card h-100 d-flex flex-column">
+          data-date="{{ posted_on }}"
+          data-route="/jobs/{{ job.name }}"
+          data-date-display="{{ frappe.utils.format_date(posted_on, 'MMM dd, yyyy') }}">
+          <a href="/jobs/{{ job.name }}" class="v3-card h-100 d-flex flex-column text-decoration-none" aria-label="{{ job.job_title }} at {{ job.company_name }}, {{ job.job_location }}">
             <div class="d-flex justify-content-between align-items-start mb-2">
               <h6 class="v3-text-primary mb-0">{{ job.job_title }}</h6>
               <span class="v3-tag v3-tag--category ml-2 text-nowrap">{{ job.job_type }}</span>
             </div>
-            {% set posted_on = job.publish_date or job.creation %}
             <small class="v3-text-tertiary">Posted {{ frappe.utils.format_date(posted_on, "MMM dd, yyyy") }}</small>
             {% if job.closed_date %}
             <small class="v3-text-tertiary d-block mb-3">Closed {{ frappe.utils.format_date(job.closed_date, "MMM dd, yyyy") }}</small>
@@ -150,17 +151,14 @@
             <div class="mb-3"></div>
             {% endif %}
             <div class="d-flex align-items-center mb-1">
-              <i class="ti ti-building mr-1 v3-text-tertiary"></i>
-              <a href="{{ job.company_website }}" target="_blank" rel="noopener noreferrer" class="v3-text-secondary">{{ job.company_name }}</a>
+              <i class="ti ti-building mr-1 v3-text-tertiary" aria-hidden="true"></i>
+              <span class="v3-text-secondary">{{ job.company_name }}</span>
             </div>
             <div class="d-flex align-items-center mb-3">
-              <i class="ti ti-map-pin mr-1 v3-text-tertiary"></i>
+              <i class="ti ti-map-pin mr-1 v3-text-tertiary" aria-hidden="true"></i>
               <span class="v3-text-secondary">{{ job.job_location }}</span>
             </div>
-            <div class="mt-auto">
-              <a href="/jobs/{{ job.name }}" class="v3-btn v3-btn-secondary v3-btn--sm w-100 text-center">View Details</a>
-            </div>
-          </div>
+          </a>
         </div>
         {% endfor %}
       </div>
@@ -196,51 +194,118 @@ document.addEventListener('DOMContentLoaded', function () {
   [filterType, groupBy, sort].forEach(function (el) { el.addEventListener('change', applyFilters); });
 
   function filterAndSort(pool, query, type, sortVal) {
-   var result = pool.filter(function (el) {
-     if (query &&
-         el.dataset.title.indexOf(query) === -1 &&
-         el.dataset.company.indexOf(query) === -1 &&
-         el.dataset.location.indexOf(query) === -1) return false;
-     if (type && el.dataset.type !== type) return false;
-     return true;
-   });
-    result.sort(function (a, b) {
+    return pool.filter(function (el) {
+      if (query &&
+          el.dataset.title.indexOf(query) === -1 &&
+          el.dataset.company.indexOf(query) === -1 &&
+          el.dataset.location.indexOf(query) === -1) return false;
+      if (type && el.dataset.type !== type) return false;
+      return true;
+    }).sort(function (a, b) {
       if (sortVal === 'date-desc') return new Date(b.dataset.date) - new Date(a.dataset.date);
       if (sortVal === 'date-asc')  return new Date(a.dataset.date) - new Date(b.dataset.date);
       if (sortVal === 'title-asc') return a.dataset.title.localeCompare(b.dataset.title);
       if (sortVal === 'title-desc') return b.dataset.title.localeCompare(a.dataset.title);
       return 0;
     });
-    return result;
   }
 
-  function renderInto(target, items, groupByVal) {
-    target.innerHTML = '';
-    if (groupByVal === 'flat' || items.length === 0) {
-      items.forEach(function (el) { target.appendChild(el); });
-      return;
-    }
+  function makeListRow(el) {
+    var d = el.dataset;
+    var row = document.createElement('a');
+    row.href = d.route;
+    row.className = 'v3-job-list-row';
+    row.setAttribute('aria-label', el.querySelector('h6').textContent + ' at ' + d.companyDisplay + ', ' + el.querySelector('.ti-map-pin').nextElementSibling.textContent);
+
+    var title = document.createElement('span');
+    title.className = 'v3-job-list-row__title truncate';
+    title.textContent = el.querySelector('h6').textContent;
+
+    var company = document.createElement('span');
+    company.className = 'v3-job-list-row__company truncate';
+    company.textContent = d.companyDisplay;
+
+    var location = document.createElement('span');
+    location.className = 'v3-job-list-row__location truncate';
+    location.textContent = el.querySelector('.ti-map-pin').nextElementSibling.textContent;
+
+    var date = document.createElement('span');
+    date.className = 'v3-job-list-row__date text-nowrap';
+    date.textContent = d.dateDisplay || '';
+
+    var type = document.createElement('span');
+    type.className = 'v3-job-list-row__type';
+    var tag = document.createElement('span');
+    tag.className = 'v3-tag ' + (el.classList.contains('job-item-expired') ? 'v3-tag--category' : 'v3-tag--success') + ' text-nowrap';
+    tag.textContent = d.type;
+    type.appendChild(tag);
+
+    row.appendChild(title);
+    row.appendChild(company);
+    row.appendChild(location);
+    row.appendChild(date);
+    row.appendChild(type);
+    return row;
+  }
+
+  var listHeader = '<div class="v3-job-list-header" aria-hidden="true">' +
+    '<span>Title</span><span>Company</span><span>Location</span><span>Posted</span><span>Type</span></div>';
+
+  function buildList(items) {
+    var list = document.createElement('div');
+    list.className = 'v3-job-list';
+    list.innerHTML = listHeader;
+    items.forEach(function (el) { list.appendChild(makeListRow(el)); });
+    return list;
+  }
+
+  function groupItems(items, groupByVal) {
     if (groupByVal === 'company') {
       var groups = {}, order = [];
       items.forEach(function (el) {
         var key = el.dataset.company;
-        if (!groups[key]) { groups[key] = { display: el.dataset.companyDisplay, items: [] }; order.push(key); }
+        if (!groups[key]) { groups[key] = { display: el.dataset.companyDisplay, icon: 'ti-building', items: [] }; order.push(key); }
         groups[key].items.push(el);
       });
-      order.forEach(function (key) {
-        var g = groups[key];
-        target.appendChild(makeSection(g.display, 'ti-building', g.items));
-      });
-    } else if (groupByVal === 'type') {
+      return order.map(function (key) { return groups[key]; });
+    }
+    if (groupByVal === 'type') {
       var tgroups = {};
       items.forEach(function (el) {
         if (!tgroups[el.dataset.type]) tgroups[el.dataset.type] = [];
         tgroups[el.dataset.type].push(el);
       });
-      ['Full Time', 'Part Time', 'Intern', 'Freelance', 'Contract'].forEach(function (t) {
-        if (tgroups[t]) target.appendChild(makeSection(t, 'ti-briefcase', tgroups[t]));
-      });
+      return ['Full Time', 'Part Time', 'Intern', 'Freelance', 'Contract']
+        .filter(function (t) { return tgroups[t]; })
+        .map(function (t) { return { display: t, icon: 'ti-briefcase', items: tgroups[t] }; });
     }
+    return null;
+  }
+
+  function renderInto(target, items, groupByVal, isList) {
+    target.innerHTML = '';
+    if (items.length === 0) return;
+
+    var grouped = groupByVal !== 'flat' ? groupItems(items, groupByVal) : null;
+
+    if (isList) {
+      if (!grouped) {
+        target.appendChild(buildList(items));
+      } else {
+        grouped.forEach(function (g) {
+          target.appendChild(makeSection(g.display, g.icon, g.items, true));
+        });
+      }
+      return;
+    }
+
+    if (!grouped) {
+      items.forEach(function (el) { target.appendChild(el); });
+      return;
+    }
+    grouped.forEach(function (g) {
+      target.appendChild(makeSection(g.display, g.icon, g.items, false));
+    });
   }
 
   function applyFilters() {
@@ -248,6 +313,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var type = filterType.value;
     var groupByVal = groupBy.value;
     var sortVal = sort.value;
+    var isList = getViewMode() === 'list';
 
     var filtered = filterAndSort(originals, query, type, sortVal);
     var expiredFiltered = filterAndSort(expiredOriginals, query, type, sortVal);
@@ -263,30 +329,52 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     noResults.classList.toggle('d-none', total > 0);
 
-    renderInto(container, filtered, groupByVal);
-    renderInto(expiredContainer, expiredFiltered, groupByVal);
+    setContainerMode(container, isList);
+    if (expiredContainer) setContainerMode(expiredContainer, isList);
+
+    renderInto(container, filtered, groupByVal, isList);
+    if (expiredContainer) renderInto(expiredContainer, expiredFiltered, groupByVal, isList);
 
     if (expiredCountEl) expiredCountEl.textContent = expiredFiltered.length;
     if (expiredDetails) expiredDetails.open = hasFilter && expiredFiltered.length > 0;
 
-    setViewMode(getViewMode());
+    setColumnClasses(isList, groupByVal !== 'flat');
   }
 
-  function makeSection(title, icon, items) {
-    var row = document.createElement('div');
-    row.className = 'row';
-    items.forEach(function (item) { row.appendChild(item); });
+  function setContainerMode(target, isList) {
+    target.classList.toggle('row', !isList);
+    target.classList.toggle('v3-job-list-wrap', isList);
+  }
 
+  function makeSection(title, icon, items, isList) {
     var header = document.createElement('div');
     header.className = 'd-flex align-items-center gap-2 mb-3';
-    header.innerHTML = '<i class="ti ' + icon + ' v3-text-tertiary"></i>' +
-      '<h6 class="v3-text-primary mb-0 flex-grow-1">' + title + '</h6>' +
-      '<span class="v3-tag v3-tag--category">' + items.length + ' job' + (items.length !== 1 ? 's' : '') + '</span>';
+    var hi = document.createElement('i');
+    hi.className = 'ti ' + icon + ' v3-text-tertiary';
+    hi.setAttribute('aria-hidden', 'true');
+    var hTitle = document.createElement('h6');
+    hTitle.className = 'v3-text-primary mb-0 flex-grow-1';
+    hTitle.textContent = title;
+    var hCount = document.createElement('span');
+    hCount.className = 'v3-tag v3-tag--category';
+    hCount.textContent = items.length + ' job' + (items.length !== 1 ? 's' : '');
+    header.appendChild(hi);
+    header.appendChild(hTitle);
+    header.appendChild(hCount);
+
+    var body;
+    if (isList) {
+      body = buildList(items);
+    } else {
+      body = document.createElement('div');
+      body.className = 'row';
+      items.forEach(function (item) { body.appendChild(item); });
+    }
 
     var card = document.createElement('div');
     card.className = 'v3-card';
     card.appendChild(header);
-    card.appendChild(row);
+    card.appendChild(body);
 
     var wrapper = document.createElement('div');
     wrapper.className = 'col-12 mb-3';
@@ -294,39 +382,33 @@ document.addEventListener('DOMContentLoaded', function () {
     return wrapper;
   }
 
-  function setViewMode(mode) {
-    var isList = mode === 'list';
-    var isGrouped = groupBy.value !== 'flat';
-    container.classList.toggle('v3-list-mode', isList);
-    if (expiredContainer) expiredContainer.classList.toggle('v3-list-mode', isList);
+  function setColumnClasses(isList, isGrouped) {
+    if (isList) return;
     document.querySelectorAll('.job-item, .job-item-expired').forEach(function (el) {
-      el.classList.remove('col-lg-4', 'col-lg-6', 'col-md-6', 'col-12');
-      if (isList) {
-        el.classList.add('col-12');
-      } else if (isGrouped) {
+      el.classList.remove('col-lg-4', 'col-lg-6', 'col-md-6');
+      if (isGrouped) {
         el.classList.add('col-lg-6', 'col-md-6');
       } else {
         el.classList.add('col-lg-4', 'col-md-6');
       }
-      el.classList.toggle('mb-3', !isList);
-      el.classList.toggle('p-0', isList);
     });
-    document.querySelectorAll('.job-item .v3-card > small, .job-item .v3-card > div:empty, .job-item-expired .v3-card > small, .job-item-expired .v3-card > div:empty').forEach(function (el) {
-      el.classList.toggle('d-none', isList);
-    });
+  }
+
+  function setViewMode(mode) {
+    saveViewMode(mode);
     document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
       var isActive = btn.dataset.view === mode;
       btn.classList.toggle('active', isActive);
       btn.setAttribute('aria-pressed', isActive);
     });
-    saveViewMode(mode);
+    applyFilters();
   }
 
   document.querySelectorAll('.v3-view-toggle .btn').forEach(function (btn) {
     btn.addEventListener('click', function () { setViewMode(this.dataset.view); });
   });
 
-  if (getViewMode() === 'list') setViewMode('list');
+  setViewMode(getViewMode());
 });
 </script>
 {% endblock %}
