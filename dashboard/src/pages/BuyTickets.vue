@@ -331,9 +331,12 @@
                               : 'Without T-shirt'
                         }}</span>
                       </div>
-                      <div class="flex items-center gap-1.5 text-sm text-ink-gray-7">
+                      <div
+                        v-if="event.data.catering && event.data.catering !== 'None'"
+                        class="flex items-center gap-1.5 text-sm text-ink-gray-7"
+                      >
                         <IconSoup class="w-5 h-5" />
-                        <span>Breakfast + Lunch included</span>
+                        <span>{{ event.data.catering }} included</span>
                       </div>
                     </div>
                     <p
