@@ -37,17 +37,25 @@
     var activeFilter = $('.filter-btn.active').data('filter') || 'all';
     var visible = 0;
 
-    $('.club-card').each(function() {
-      var $c = $(this);
-      var matchSearch = !query || ['name','city','state'].some(k => ($c.data(k)||'').includes(query));
-      var matchFilter = activeFilter === 'all' || $c.data('status') === activeFilter;
+    var currentMode = getViewMode();
+    $('.club-entry').each(function() {
+      var $e = $(this);
+      var matchSearch = !query || ['name','city','state'].some(k => ($e.data(k)||'').includes(query));
+      var matchFilter = activeFilter === 'all' || $e.data('status') === activeFilter;
       var show = matchSearch && matchFilter;
-      $c.toggle(show).data('shown', show);
-      if (show) visible++;
+      $e.data('shown', show);
+      var isCard = $e.hasClass('club-card');
+      var isRow = $e.hasClass('v3-club-list-row');
+      if (isCard) {
+        $e.toggle(show && currentMode !== 'list');
+      } else if (isRow) {
+        $e.toggle(show && currentMode === 'list');
+      }
+      if (show && isCard) visible++;
     });
 
     $('#active-clubs-group, #past-clubs-group').each(function() {
-      var hasVisible = $(this).find('.club-card').filter(function() {
+      var hasVisible = $(this).find('.club-entry').filter(function() {
         return $(this).data('shown') !== false;
       }).length > 0;
       $(this).toggle(hasVisible);
@@ -64,15 +72,16 @@
 
   function setViewMode(mode) {
     var isList = mode === 'list';
-    $('#active-clubs-group, #past-clubs-group').toggleClass('v3-list-mode', isList);
-    $('.club-card > .grid').toggleClass('d-none', isList);
-    $('.club-card > .flex.gap-4').css('gap', isList ? '0.75rem' : '');
+    $('.club-card').toggle(!isList);
+    $('.v3-club-list-header, .v3-club-list-row').toggle(isList);
+    $('#active-clubs-group, #past-clubs-group').toggleClass('v3-club-list-active', isList);
     $('.v3-view-toggle .btn').each(function () {
       var isActive = $(this).data('view') === mode;
       $(this).toggleClass('active', isActive);
       $(this).attr('aria-pressed', isActive);
     });
     saveViewMode(mode);
+    filterClubs();
   }
 
   $(function() {
@@ -147,13 +156,15 @@
   <div id="clubs-section" class="flex flex-col gap-4">
     <div class="d-flex gap-2 align-items-center">
       <div style="position: relative; flex: 1;">
-        <i class="ti ti-search text-gray-400" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;"></i>
+        <i class="ti ti-search text-gray-400" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); pointer-events: none;" aria-hidden="true"></i>
+        <label for="club-search" class="sr-only">Search clubs</label>
         <input
           id="club-search"
           type="search"
           placeholder="Search by name, city, state..."
           class="w-full border rounded-lg py-2 pl-10 pr-4 text-sm bg-white"
           style="border-color: var(--v3-button-border); background: var(--v3-card-bg); color: var(--v3-text-color);"
+          aria-label="Search clubs"
         />
       </div>
       <div class="btn-group v3-view-toggle" role="group" aria-label="View mode">
@@ -165,7 +176,7 @@
         </button>
       </div>
     </div>
-    <div class="flex flex-wrap gap-2">
+    <div class="flex flex-wrap gap-2" role="group" aria-label="Filter by status">
       <button class="btn btn-sm btn-subtle filter-btn active" data-filter="all" onclick="setFilter(this)">All</button>
       <button class="btn btn-sm btn-subtle filter-btn" data-filter="active" onclick="setFilter(this)">Active</button>
       <button class="btn btn-sm btn-subtle filter-btn" data-filter="new" onclick="setFilter(this)">New</button>
@@ -178,68 +189,129 @@
 {% macro active_clubs_section() %}
   <div id="active-clubs-group" class="flex flex-col gap-10">
     <h3 class="text-xl font-semibold">Active Clubs</h3>
-    {% for club in active_clubs %}{{ club_card(club) }}{% endfor %}
+    {{ club_list_header() }}
+    {% for club in active_clubs %}
+      {{ club_card(club) }}
+      {{ club_list_row(club) }}
+    {% endfor %}
   </div>
 {% endmacro %}
 
 {% macro past_clubs_section() %}
   <div id="past-clubs-group" class="flex flex-col gap-10">
     <h3 class="text-xl font-semibold">Past Clubs</h3>
-    {% for club in past_clubs %}{{ club_card(club) }}{% endfor %}
+    {{ club_list_header() }}
+    {% for club in past_clubs %}
+      {{ club_card(club) }}
+      {{ club_list_row(club) }}
+    {% endfor %}
   </div>
+{% endmacro %}
+
+{% macro club_list_header() %}
+  <div class="v3-club-list-header" style="display: none;" aria-hidden="true">
+    <span>Club</span>
+    <span>Location</span>
+    <span>Status</span>
+  </div>
+{% endmacro %}
+
+{% macro club_list_row(club) %}
+  <a
+    href="{{ club.route }}"
+    class="v3-club-list-row club-entry"
+    style="display: none;"
+    aria-label="{{ club.chapter_name }}"
+    data-name="{{ club.chapter_name | lower }}"
+    data-city="{{ club.city | lower }}"
+    data-state="{{ club.state | lower }}"
+    data-status="{{ 'new' if club.is_new_club else ('independent' if club.is_independent else ('inactive' if club.is_inactive else 'active')) }}"
+  >
+    <div class="v3-club-list-row__name">
+      {% if club.chapter_logo %}
+        <img src="{{ club.chapter_logo }}" alt="" aria-hidden="true" />
+      {% else %}
+        <img src="/assets/fossunited/images/clubs/club_logo_w_glow.svg" alt="" aria-hidden="true" />
+      {% endif %}
+      <div class="v3-club-list-row__name-text">
+        <h4>{{ club.chapter_name }}</h4>
+      </div>
+      {% if club.has_live_event %}
+        {{ badge(label="Live", theme="green", prefix=live_ping(), additional_classes='!text-xs !rounded-md v3-tag') }}
+      {% elif club.has_upcoming_event %}
+        {{ badge(label="Upcoming", theme="green", additional_classes='!text-xs !rounded-md v3-tag') }}
+      {% endif %}
+    </div>
+    <div class="v3-club-list-row__location">
+      <i class="ti ti-map-pin" aria-hidden="true"></i>
+      {{ club.city }}, {{ club.state }}
+    </div>
+    <div class="v3-club-list-row__status">
+      {% if club.is_inactive %}
+        {{ badge(label=club.chapter_status, theme="gray", additional_classes='!text-xs !rounded-md') }}
+      {% elif club.is_independent %}
+        {{ badge(label="Independent", theme="gray", additional_classes='!text-xs !rounded-md') }}
+      {% elif club.is_new_club %}
+        {{ badge(label="New", theme="blue", additional_classes='!text-xs !rounded-md') }}
+      {% else %}
+        {{ badge(label="Active", theme="green", additional_classes='!text-xs !rounded-md') }}
+      {% endif %}
+    </div>
+  </a>
 {% endmacro %}
 
 {% macro club_card(club) %}
   <a
     href="{{ club.route }}"
-    class="club-card flex flex-col gap-4 p-6 bg-white rounded-lg border hover:!border-gray-400 transition-colors ease-in-out duration-300 no-underline"
+    class="club-card club-entry flex flex-col gap-4 p-6 bg-white rounded-lg border hover:!border-gray-400 transition-colors ease-in-out duration-300 no-underline"
+    aria-label="{{ club.chapter_name }} — {{ club.city }}, {{ club.state }}"
     data-name="{{ club.chapter_name | lower }}"
     data-city="{{ club.city | lower }}"
     data-state="{{ club.state | lower }}"
     data-status="{{ 'new' if club.is_new_club else ('independent' if club.is_independent else ('inactive' if club.is_inactive else 'active')) }}"
   >
     {% if club.is_new_club %}
-      {{ badge(label="New Club", theme="gray", variant="solid", prefix="<i class='ti ti-star-filled text-yellow-400'></i>", additional_classes=' w-fit font-semibold tracking-wide !rounded-md -mt-8 ') }}
+      {{ badge(label="New Club", theme="gray", variant="solid", prefix="<i class='ti ti-star-filled text-yellow-400'></i>", additional_classes=' w-fit font-semibold tracking-wide !rounded-md -mt-8 club-badge-new ') }}
     {% endif %}
     <div class="flex gap-4">
       {% if club.chapter_logo %}
         <img
           src="{{ club.chapter_logo }}"
-          alt="Club Logo"
+          alt="" aria-hidden="true"
           class="w-24 h-24 object-contain p-1 rounded-lg border"
         />
       {% else %}
         <img
           src="/assets/fossunited/images/clubs/club_logo_w_glow.svg"
-          alt="Club logo with glow"
+          alt="" aria-hidden="true"
           class="w-24 h-24 object-contain p-1 rounded-lg border"
         />
       {% endif %}
       <div class="flex flex-col gap-2">
         <h4 class="text-base font-semibold">{{ club.chapter_name }}</h4>
         <div class="flex gap-1 items-center text-gray-500">
-          <i class="ti ti-map-pin"></i>
+          <i class="ti ti-map-pin" aria-hidden="true"></i>
           <span class="text-sm">{{ club.city }}, {{ club.state }}</span>
         </div>
         {% if club.has_live_event %}
-          <div class="">
+          <div class="club-event-badge">
             {{ badge(label="Happening now", theme="green", prefix=live_ping(), additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
           </div>
         {% elif club.has_upcoming_event %}
-          <div class="">
+          <div class="club-event-badge">
             {{ badge(label="Upcoming event", theme="green", prefix=live_ping(), additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
           </div>
         {% endif %}
         {% if club.is_inactive %}
-          {{ badge(label=club.chapter_status, theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+          {{ badge(label=club.chapter_status, theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2 club-badge-status') }}
         {% endif %}
         {% if club.is_independent %}
-          {{ badge(label="Independent", theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2') }}
+          {{ badge(label="Independent", theme="gray", additional_classes='!text-xs w-fit font-semibold tracking-wide !rounded-md !gap-2 club-badge-status') }}
         {% endif %}
       </div>
     </div>
     <div
-      class="grid grid-cols-2 md:grid-cols-3 items-center md:divide-x-2  border bg-gray-50 rounded"
+      class="club-stats grid grid-cols-2 md:grid-cols-3 items-center md:divide-x-2 border bg-gray-50 rounded"
     >
       {% for item in club.stats %}
         <div
