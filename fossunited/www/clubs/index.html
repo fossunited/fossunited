@@ -73,7 +73,8 @@
   function setViewMode(mode) {
     var isList = mode === 'list';
     $('.club-card').toggle(!isList);
-    $('.v3-club-list-header, .v3-club-list-row').toggle(isList);
+    $('.v3-club-list-header').css('display', isList ? '' : 'none');
+    $('.v3-club-list-row').toggle(isList);
     $('#active-clubs-group, #past-clubs-group').toggleClass('v3-club-list-active', isList);
     $('.v3-view-toggle .btn').each(function () {
       var isActive = $(this).data('view') === mode;
