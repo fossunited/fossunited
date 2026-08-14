@@ -55,6 +55,7 @@ class FOSSChapterEvent(WebsiteGenerator):
         from fossunited.ticketing.doctype.foss_ticket_tier.foss_ticket_tier import FOSSTicketTier
 
         banner_image: DF.AttachImage | None
+        catering: DF.Literal["None", "Lunch only", "Breakfast + Lunch", "Coffee/Tea only"]
         chapter: DF.Link | None
         chapter_name: DF.Data | None
         community_partners: DF.Table[FOSSEventCommunityPartner]

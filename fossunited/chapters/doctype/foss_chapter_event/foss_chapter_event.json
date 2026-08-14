@@ -71,6 +71,7 @@
   "tickets_tab",
   "is_paid_event",
   "tickets_status",
+  "catering",
   "tiers",
   "ticket_form_description",
   "section_break_idyt",
@@ -486,6 +487,13 @@
    "fieldtype": "JSON",
    "label": "Event data",
    "permlevel": 4
+  },
+  {
+   "description": "If event provides any catering for attendees (Coffee, lunch or none)",
+   "fieldname": "catering",
+   "fieldtype": "Select",
+   "label": "Lunch & Food",
+   "options": "None\nLunch only\nBreakfast + Lunch\nCoffee/Tea only"
   }
  ],
  "has_web_view": 1,
@@ -518,7 +526,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2026-06-29 15:58:17.947880",
+ "modified": "2026-08-14 12:53:55.260169",
  "modified_by": "Administrator",
  "module": "Chapters",
  "name": "FOSS Chapter Event",
