@@ -74,6 +74,6 @@ If you have other ideas, feel free to book a call to discuss with the foundation
 
 
 
-> Have other ideas to suggest? Send us a PR [here](https://github.com/fossunited/fossunited/tree/develop/docs/docs).
+> Have other ideas to suggest? Send us a [PR with your idea](https://github.com/fossunited/fossunited/tree/develop/docs/docs).
 
 ---
