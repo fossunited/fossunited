@@ -165,6 +165,9 @@ before_migrate = "fossunited.migrate.before_migrate"
 # Scheduler Events
 # ----------------
 scheduler_events = {
+    "hourly": [
+        "fossunited.payments.doctype.razorpay_payment.razorpay_payment.retry_pending_refunds",
+    ],
     "daily_long": [
         "fossunited.scheduled_tasks.conclude_events",
     ],

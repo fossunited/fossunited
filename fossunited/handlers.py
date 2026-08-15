@@ -6,6 +6,7 @@ from fossunited.doctype_ids import (
     RAZORPAY_SETTINGS,
     RAZORPAY_WEBHOOK_LOG,
 )
+from fossunited.payments.doctype.razorpay_payment.razorpay_payment import capture_payment
 from fossunited.utils.payments import get_razorpay_client
 
 
@@ -43,16 +44,15 @@ def handle_razorpay_webhook():
     if not order_exists:
         return
 
-    payment_doc = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
-
-    if event == "payment.captured" and payment_doc.status != "Captured":
-        payment_doc.status = "Captured"
-        payment_doc.save()
-    elif event == "refund.processed" and not payment_doc.status == "Refunded":
-        refund_entity = form_dict["payload"]["refund"]["entity"]
-        payment_doc.status = "Refunded"
-        payment_doc.refund_id = refund_entity["id"]
-        payment_doc.save()
+    if event == "payment.captured":
+        capture_payment(razorpay_order_id, razorpay_payment_id)
+    elif event == "refund.processed":
+        payment_doc = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
+        if payment_doc.status != "Refunded":
+            refund_entity = form_dict["payload"]["refund"]["entity"]
+            payment_doc.status = "Refunded"
+            payment_doc.refund_id = refund_entity["id"]
+            payment_doc.save()
 
     frappe.set_user(current_user)  # nosemgrep: frappe-setuser
 
