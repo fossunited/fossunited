@@ -181,8 +181,7 @@ def handle_payment_on_update(doc: "RazorpayPayment", event: str):
             validate_ticket_fulfillment(doc)
             FOSSEventTicket.create_tickets_for_payment(doc)
         except TicketTierMismatchError as e:
-            doc.status = "Refund Pending"
-            doc.db_update()
+            doc.db_set("status", "Refund Pending", update_modified=False)
             frappe.enqueue(
                 "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
                 payment_name=doc.name,
@@ -204,6 +203,30 @@ class TicketTierMismatchError(frappe.ValidationError):
     pass
 
 
+def validate_tier_availability(tier, event_name: str, count: int):
+    if tier.parent != event_name:
+        frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
+    if not tier.enabled:
+        frappe.throw(
+            _("Ticket tier '{0}' is not enabled.").format(tier.title),
+            TicketTierMismatchError,
+        )
+    if tier.valid_till and tier.valid_till < datetime.today().date():
+        frappe.throw(
+            _("Ticket tier '{0}' has expired.").format(tier.title),
+            TicketTierMismatchError,
+        )
+    existing_count = frappe.db.count(
+        EVENT_TICKET,
+        filters={"tier": tier.title, "event": event_name},
+    )
+    if tier.maximum_tickets and (existing_count + count) > tier.maximum_tickets:
+        frappe.throw(
+            _("Not enough seats in '{0}'. Houseful!").format(tier.title),
+            TicketTierMismatchError,
+        )
+
+
 def validate_ticket_fulfillment(doc: "RazorpayPayment"):
     payment_meta_data: dict = frappe.parse_json(doc.meta_data)
     tier_counts: dict = payment_meta_data.get("tier_counts") or {}
@@ -220,25 +243,11 @@ def validate_ticket_fulfillment(doc: "RazorpayPayment"):
         count = int(count or 0)
         if count <= 0:
             continue
-        if not frappe.db.exists(TICKET_TIER, tier_name):
+        try:
+            tier = frappe.get_doc(TICKET_TIER, tier_name)
+        except frappe.DoesNotExistError:
             frappe.throw(_("Ticket tier no longer exists."), TicketTierMismatchError)
-        tier = frappe.get_doc(TICKET_TIER, tier_name)
-        if tier.parent != event_name:
-            frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
-        if not tier.enabled:
-            frappe.throw(f"Ticket tier '{tier.title}' is not enabled.", TicketTierMismatchError)
-        if tier.valid_till and tier.valid_till < datetime.today().date():
-            frappe.throw(f"Ticket tier '{tier.title}' has expired.", TicketTierMismatchError)
-
-        existing_count = frappe.db.count(
-            EVENT_TICKET,
-            filters={"tier": tier.title, "event": event_name},
-        )
-        if tier.maximum_tickets and (existing_count + count) > tier.maximum_tickets:
-            frappe.throw(
-                f"Not enough seats in '{tier.title}'. Houseful!",
-                TicketTierMismatchError,
-            )
+        validate_tier_availability(tier, event_name, count)
 
 
 def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
@@ -258,37 +267,11 @@ def validate_payment_before_insert(doc: "RazorpayPayment", event: str):
         if count <= 0:
             continue
 
-        price, tier_event = frappe.db.get_value(TICKET_TIER, tier_name, ["price", "parent"])
-        if tier_event != event_name:
-            frappe.throw(_("A tier does not belong to this event."), TicketTierMismatchError)
-
+        price = frappe.db.get_value(TICKET_TIER, tier_name, "price")
         tier_details = frappe.get_doc(TICKET_TIER, tier_name)
         tshirt_included_by_tier[tier_name] = bool(tier_details.tshirt_included)
 
-        if not tier_details.enabled:
-            frappe.throw(
-                f"Ticket tier '{tier_details.title}' is not enabled.",
-                TicketTierMismatchError,
-            )
-
-        if tier_details.valid_till and tier_details.valid_till < datetime.today().date():
-            frappe.throw(
-                f"Ticket tier '{tier_details.title}' has expired.",
-                TicketTierMismatchError,
-            )
-
-        existing_count = frappe.db.count(
-            EVENT_TICKET,
-            filters={"tier": tier_details.title, "event": event_name},
-        )
-        if (
-            tier_details.maximum_tickets
-            and (existing_count + count) > tier_details.maximum_tickets
-        ):
-            frappe.throw(
-                f"Not enough seats in '{tier_details.title}'. Houseful!",
-                TicketTierMismatchError,
-            )
+        validate_tier_availability(tier_details, event_name, count)
 
         calculated_amount += float(price) * count
 

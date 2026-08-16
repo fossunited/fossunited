@@ -23,38 +23,38 @@ def handle_razorpay_webhook():
         "Administrator"
     )
 
-    payment_entity = form_dict["payload"]["payment"]["entity"]
-    razorpay_order_id = payment_entity["order_id"]
-    razorpay_payment_id = payment_entity["id"]
-    event = form_dict.get("event")
+    try:
+        payment_entity = form_dict["payload"]["payment"]["entity"]
+        razorpay_order_id = payment_entity["order_id"]
+        razorpay_payment_id = payment_entity["id"]
+        event = form_dict.get("event")
 
-    # Create webhook log
-    frappe.get_doc(
-        {
-            "doctype": RAZORPAY_WEBHOOK_LOG,
-            "event": event,
-            "order_id": razorpay_order_id,
-            "payment_id": razorpay_payment_id,
-            "payload": frappe.as_json(form_dict, indent=2),
-        }
-    ).insert().submit()
+        # Create webhook log
+        frappe.get_doc(
+            {
+                "doctype": RAZORPAY_WEBHOOK_LOG,
+                "event": event,
+                "order_id": razorpay_order_id,
+                "payment_id": razorpay_payment_id,
+                "payload": frappe.as_json(form_dict, indent=2),
+            }
+        ).insert().submit()
 
-    order_exists = frappe.db.exists(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
+        order_exists = frappe.db.exists(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
+        if not order_exists:
+            return
 
-    if not order_exists:
-        return
-
-    if event == "payment.captured":
-        capture_payment(razorpay_order_id, razorpay_payment_id)
-    elif event == "refund.processed":
-        payment_doc = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
-        if payment_doc.status != "Refunded":
-            refund_entity = form_dict["payload"]["refund"]["entity"]
-            payment_doc.status = "Refunded"
-            payment_doc.refund_id = refund_entity["id"]
-            payment_doc.save()
-
-    frappe.set_user(current_user)  # nosemgrep: frappe-setuser
+        if event == "payment.captured":
+            capture_payment(razorpay_order_id, razorpay_payment_id)
+        elif event == "refund.processed":
+            payment_doc = frappe.get_doc(RAZORPAY_PAYMENT, {"order_id": razorpay_order_id})
+            if payment_doc.status != "Refunded":
+                refund_entity = form_dict["payload"]["refund"]["entity"]
+                payment_doc.status = "Refunded"
+                payment_doc.refund_id = refund_entity["id"]
+                payment_doc.save()
+    finally:
+        frappe.set_user(current_user)  # nosemgrep: frappe-setuser
 
 
 def verify_webhook_signature(payload):

@@ -54,7 +54,7 @@ class RazorpayPayment(Document):
 
         client = get_razorpay_client()
         refund_amount = int(get_in_razorpay_money(self.amount))
-        refund = client.payment.refund(self.payment_id, refund_amount)
+        refund = client.payment.refund(self.payment_id, {"amount": refund_amount})
 
         self.refund_id = refund["id"]
         if refund["status"] == "processed":
@@ -76,6 +76,7 @@ class RazorpayPayment(Document):
             frappe.errprint(payments)
             if payments[0]["status"] == "captured":
                 capture_payment(self.order_id, payments[0]["id"])
+                self.reload()
             elif payments[0]["status"] == "refunded":
                 self.status = "Refunded"
                 self.save()
@@ -94,8 +95,15 @@ class RazorpayPayment(Document):
 
 
 def process_refund(payment_name: str):
+    frappe.db.get_value(RAZORPAY_PAYMENT, payment_name, "name", for_update=True)
     payment = frappe.get_doc(RAZORPAY_PAYMENT, payment_name)
     if payment.status != "Refund Pending" or payment.refund_id:
+        return payment.status
+    if not payment.payment_id:
+        frappe.log_error(
+            title="Refund Skipped: Missing Payment ID",
+            message=f"Payment: {payment.name}",
+        )
         return payment.status
 
     client = get_razorpay_client()
@@ -108,10 +116,6 @@ def process_refund(payment_name: str):
         headers={"X-Refund-Idempotency": f"fossunited-{payment.name}"},
     )
 
-    frappe.db.get_value(RAZORPAY_PAYMENT, payment.name, "name", for_update=True)
-    payment.reload()
-    if payment.status == "Refunded":
-        return payment.status
     payment.refund_id = refund["id"]
     payment.status = "Refunded" if refund["status"] == "processed" else "Refund Pending"
     payment.save(ignore_permissions=True)
@@ -135,6 +139,7 @@ def capture_payment(order_id: str, payment_id: str):
     payment.status = "Captured"
     payment.payment_id = payment_id
     payment.save(ignore_permissions=True)
+    payment.reload()
     return payment.status
 
 
@@ -145,4 +150,9 @@ def retry_pending_refunds():
         pluck="name",
     )
     for payment_name in payments:
-        frappe.enqueue(process_refund, payment_name=payment_name)
+        frappe.enqueue(
+            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
+            payment_name=payment_name,
+            job_id=f"process_refund::{payment_name}",
+            deduplicate=True,
+        )

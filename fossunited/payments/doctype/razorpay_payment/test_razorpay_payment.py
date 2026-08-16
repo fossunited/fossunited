@@ -105,7 +105,11 @@ class TestRazorpayPayment(FrappeTestCase):
         self.assertEqual(payment.status, "Refund Pending")
         self.assertEqual(payment.payment_id, "pay_expired")
         self.assertFalse(frappe.db.exists(EVENT_TICKET, {"razorpay_payment": payment.name}))
-        enqueue.assert_called_once()
+        enqueue.assert_called_once_with(
+            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
+            payment_name=payment.name,
+            enqueue_after_commit=True,
+        )
 
     def test_sold_out_pending_payment_is_refunded_on_capture(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)
@@ -130,7 +134,11 @@ class TestRazorpayPayment(FrappeTestCase):
         payment.reload()
         self.assertEqual(payment.status, "Refund Pending")
         self.assertEqual(frappe.db.count(EVENT_TICKET, {"event": self.event.name}), 1)
-        enqueue.assert_called_once()
+        enqueue.assert_called_once_with(
+            "fossunited.payments.doctype.razorpay_payment.razorpay_payment.process_refund",
+            payment_name=payment.name,
+            enqueue_after_commit=True,
+        )
 
     def test_capture_replay_does_not_duplicate_or_refund_ticket(self):
         payment = RazorpayPaymentFactory.create(event=self.event.name)

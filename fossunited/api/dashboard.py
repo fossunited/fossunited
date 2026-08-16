@@ -158,7 +158,7 @@ def handle_payment_success(order_id: str, payment_id: str, signature: str):
         }
     )
 
-    capture_payment(order_id, payment_id)
+    return {"status": capture_payment(order_id, payment_id)}
 
 
 # nosemgrep: guest-whitelisted-method
