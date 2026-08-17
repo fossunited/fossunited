@@ -23,9 +23,11 @@
             label="Speaker Coupons"
             icon-left="users"
             :disabled="!canCreateSpeakerCoupons"
-            :title="canCreateSpeakerCoupons
-              ? 'Auto-create free ticket coupons for approved CFP speakers who don\'t have one yet'
-              : 'Only available while event is Live and before the event starts'"
+            :title="
+              canCreateSpeakerCoupons
+                ? 'Auto-create free ticket coupons for approved CFP speakers who don\'t have one yet'
+                : 'Only available while event is Live and before the event starts'
+            "
             @click="showSpeakerDialog = true"
           />
         </div>
@@ -85,7 +87,8 @@
         <div class="flex flex-col gap-4">
           <p v-if="speakerPreview.loading" class="text-sm text-ink-gray-5">Loading…</p>
           <div v-else-if="speakerPreview.data" class="text-sm text-ink-gray-7">
-            <span class="font-medium">{{ speakerPreview.data.total }}</span> speaker(s) from all approved proposals ·
+            <span class="font-medium">{{ speakerPreview.data.total }}</span> speaker(s) from all
+            approved proposals ·
             <span class="font-medium">{{ speakerPreview.data.already_has }}</span> already have
             coupons ·
             <span class="font-medium text-ink-green-3">{{ speakerPreview.data.will_create }}</span>
@@ -108,8 +111,15 @@
           variant="solid"
           label="Create Coupons"
           :loading="bulkCreate.loading"
-          :disabled="!speakerPreview.data || speakerPreview.data.will_create === 0 || bulkCreate.loading"
-          @click="() => { speakerPreviewErr = ''; bulkCreate.fetch() }"
+          :disabled="
+            !speakerPreview.data || speakerPreview.data.will_create === 0 || bulkCreate.loading
+          "
+          @click="
+            () => {
+              speakerPreviewErr = ''
+              bulkCreate.fetch()
+            }
+          "
         />
       </template>
     </Dialog>
@@ -135,7 +145,7 @@ const route = useRoute()
 
 // Allow Speaker Coupons only while the event is live and hasn't started yet
 const canCreateSpeakerCoupons = computed(() => {
-  const { status, event_start_date } = props.event
+  const { status, event_start_date } = props.event.data || {}
   if (!status || !event_start_date) return false
   return status === 'Live' && new Date() < new Date(event_start_date)
 })
@@ -148,7 +158,7 @@ const freeCodes = createResource({
   url: 'fossunited.api.tickets.get_event_free_codes',
   makeParams() {
     return {
-      event: props.event.name || route.params.id,
+      event: props.event.data?.name || route.params.id,
     }
   },
   auto: true,
@@ -160,13 +170,13 @@ const speakerPreviewErr = ref('')
 
 const speakerPreview = createResource({
   url: 'fossunited.api.tickets.get_speaker_coupon_preview',
-  makeParams: () => ({ event: props.event.name || route.params.id }),
+  makeParams: () => ({ event: props.event.data?.name || route.params.id }),
 })
 
 const bulkCreate = createResource({
   url: 'fossunited.api.tickets.bulk_create_speaker_coupons',
   makeParams: () => ({
-    event: props.event.name || route.params.id,
+    event: props.event.data?.name || route.params.id,
     max_count: speakerMaxCount.value,
   }),
   onSuccess(r) {
